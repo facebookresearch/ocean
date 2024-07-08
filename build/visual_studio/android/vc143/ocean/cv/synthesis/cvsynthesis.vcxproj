@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{044BA163-7C12-4137-AB73-22CA6BEB0443}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>cvsynthesis</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>cvsynthesis</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="cvsynthesis_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="cvsynthesis_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="cvsynthesis_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="cvsynthesis_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Constraint.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Creator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Creator1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorFrame.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorI.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorInformationCost4NeighborhoodI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorInformationSpatialCostI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorInpaintingContentF1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorInpaintingContentI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorSubset.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Initializer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Initializer1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerAppearanceMapping.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerAppearanceMappingAreaConstrainedI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerAppearanceMappingF1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerAppearanceMappingI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerAreaConstrained.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerCoarserMappingAdaptionAreaConstrainedI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerCoarserMappingAdaptionF1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerCoarserMappingAdaptionI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerCoarserMappingAdaptionSpatialCostMaskI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerContourMappingI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerConvertMappingF1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerCopyMappingI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerHomographyMappingAdaptionF1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerI.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerMoveMappingI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerRandomized.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerRandomMappingAreaConstrainedI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerRandomMappingI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerShrinkingErosionI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerShrinkingErosionRandomizedI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerShrinkingPatchMatchingI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerSubset.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Layer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\LayerF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\LayerF1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\LayerI.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\LayerI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Mapping.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\MappingF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\MappingF1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\MappingI.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\MappingI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\MappingI2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Operator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Optimizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Optimizer1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Optimizer4NeighborhoodAreaConstrainedI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Optimizer4NeighborhoodHighPerformanceF1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Optimizer4NeighborhoodHighPerformanceI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Optimizer4NeighborhoodHighPerformanceSkippingI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Optimizer4NeighborhoodReferenceFrameF1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Optimizer4NeighborhoodStructuralConstrainedI1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\OptimizerF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\OptimizerI.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\OptimizerSubset.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Synthesis.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\SynthesisPyramid.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\SynthesisPyramidF1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\SynthesisPyramidI1.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Constraint.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorInpaintingContentF1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorInpaintingContentI1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\CreatorSubset.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerContourMappingI1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerConvertMappingF1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerCopyMappingI1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerHomographyMappingAdaptionF1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerMoveMappingI1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerRandomMappingAreaConstrainedI1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerRandomMappingI1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerShrinkingErosionI1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerShrinkingErosionRandomizedI1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerShrinkingPatchMatchingI1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\InitializerSubset.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\Layer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\LayerF1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\LayerI1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\MappingF1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\MappingI1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\MappingI2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\OptimizerSubset.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\SynthesisPyramid.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\SynthesisPyramidF1.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\synthesis\SynthesisPyramidI1.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

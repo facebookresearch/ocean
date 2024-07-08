@@ -1,0 +1,126 @@
+#!/usr/bin/env python2
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
+"""
+Python 2.2 Script
+
+Builds the HTML documentation of the Ocean Framework with the doxygen tool.
+
+Call:
+    build.py
+
+Uses the environment variable 'OCEAN_DEVELOPMENT_PATH' to find the root of the
+ocean development path.
+"""
+
+import os
+import sys
+import shutil
+
+#
+#  The root path.
+#
+ROOTPATH = os.getenv("OCEAN_DEVELOPMENT_PATH")
+
+#
+#  Subdirectory of the doxygen output.
+#  The directory is erased/created before the doxygen run.
+#
+DESTPATH_DIR = os.path.normpath("bin/doc/doxygen/ocean")
+
+#
+#  List of file names to copy into the destination directory.
+#
+COPY_FILES = [
+]
+
+#
+#  Filename of the doxygen configuration.
+#
+CONFIG_FILE = os.path.normpath("build/doc/doxygen/ocean/doxygen.cfg")
+
+if "nofigures" in sys.argv:
+    CONFIG_FILE = os.path.normpath(
+        "build/doc/doxygen/ocean/doxygen_nofigures.cfg"
+    )
+
+
+#
+#  Checks the root path.
+#  All the filenames and directories above are relative to this
+#  root path. The root path must be an absolute path.
+#
+def checkRootPath():
+    if ROOTPATH is None or not os.path.isdir(ROOTPATH):
+        raise (
+            "OCEAN_DEVELOPMENT_PATH environment variables not set for Ocean "
+            "development."
+        )
+    return
+
+
+#
+#  Keeps an empty destination path.
+#
+def clearDestination():
+    pathname = os.path.join(ROOTPATH, DESTPATH_DIR)
+    if os.path.isdir(pathname):
+        shutil.rmtree(pathname, True)
+    os.makedirs(pathname)
+    return
+
+
+#
+#  Copies the files into the destination directory.
+#
+def copyFiles():
+    destpath = os.path.join(ROOTPATH, DESTPATH_DIR)
+    for name in COPY_FILES:
+        source = os.path.join(ROOTPATH, name)
+        dest = os.path.join(destpath, os.path.basename(name))
+        try:
+            os.link(source, dest)
+        except Exception:
+            shutil.copyfile(source, dest)
+    return
+
+
+#
+#  Runs the doxygen program in the work path.
+#
+def runDoxygen():
+    #   workpath = os.path.join(ROOTPATH, WORK_DIR)
+    #   orgpath = os.getcwd()
+    os.chdir(ROOTPATH)
+    os.system("doxygen " + os.path.join(ROOTPATH, CONFIG_FILE))
+    #   os.chdir( orgpath )
+    return
+
+
+#
+#  Builds the documentation with doxygen.
+#
+def build():
+    checkRootPath()
+    clearDestination()
+    copyFiles()
+    runDoxygen()
+    return
+
+
+#
+#  M A I N
+#
+def main():
+    build()
+    return
+
+
+#
+#  Startup
+#
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{665A9CC1-7577-4101-B078-02668AD481C5}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>trackingoffline</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>trackingoffline</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="trackingoffline_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="trackingoffline_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="trackingoffline_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="trackingoffline_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\Frame2FrameTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\FrameTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\OfflineTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\PatternTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\PlanarRectangleTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\PlaneTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\PointPaths.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\SLAMPlaneTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\SLAMTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\TrackerEvent.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\Frame2FrameTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\FrameTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\Offline.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\OfflinePose.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\OfflineTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\PatternTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\PlanarRectangleTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\PlaneTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\PointPaths.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\SLAMPlaneTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\SLAMTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\offline\TrackerEvent.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

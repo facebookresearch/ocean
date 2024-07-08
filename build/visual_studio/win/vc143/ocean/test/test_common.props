@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Dependency Test</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_test_common_imported>True</ocean_test_common_imported>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_static_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_static_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_shared_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_shared_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x64_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\win_x86_vc143_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\base\base_use.props"/>
+  </ImportGroup>
+</Project>

@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F304BCE9-1F34-4473-B205-E958E0B1AD29}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>io</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>io</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="io_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="io_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="io_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="io_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Base64.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Bitstream.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\CameraCalibrationManager.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Compression.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Directory.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\File.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\FileConfig.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\FileManager.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\FileResolver.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\IO.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\JSONConfig.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Path.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\ProjectFile.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Scanner.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Utilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\XMLConfig.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Base64.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Bitstream.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\CameraCalibrationManager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Compression.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Directory.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\File.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\FileConfig.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\FileManager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\FileResolver.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\JSONConfig.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Path.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\ProjectFile.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Scanner.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Utilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\XMLConfig.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

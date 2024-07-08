@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{52dabbad-0158-420d-acfe-9d03dd69b496}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{5f6a1729-f919-496c-a272-760370d2248a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Java Files">
+      <UniqueIdentifier>{644a3dc3-639a-455a-b9eb-b01a35dab343}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Battery.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\NativeInterfaceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Processor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Utilities.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Android.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Permission.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIEnvironment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ResourceManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\jni\RenderingGLESceneGraphJni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdl\obj\jni\SceneDescriptionSDLOBJJni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\jni\SceneDescriptionSDXX3DJni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\base\jni\BaseJni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\jni\MediaAndroidJni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\jni\MediaOpenImageLibrariesJni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\pattern\jni\DevicesPatternJni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\arcore\jni\DevicesARCoreJni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\jni\DevicesAndroidJni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ProcessorMonitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\PowerMonitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Bitmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\base\jni\BaseJni.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\NativeInterfaceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\jni\MediaAndroidJni.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\jni\MediaOpenImageLibrariesJni.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\jni\RenderingGLESceneGraphJni.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdl\obj\jni\SceneDescriptionSDLOBJJni.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\jni\SceneDescriptionSDXX3DJni.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Permission.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Processor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ResourceManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIEnvironment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Utilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Battery.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\arcore\jni\DevicesARCoreJni.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\pattern\jni\DevicesPatternJni.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\jni\DevicesAndroidJni.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ProcessorMonitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\PowerMonitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Bitmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\media\android\MediaAndroidJni.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\MediaOpenImageLibrariesJni.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\RenderingGLESceneGraphJni.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdl\obj\SceneDescriptionSDLOBJJni.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdl\obj\SceneDescriptionSDLOBJJni.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Assets.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\base\BaseJni.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\devices\android\DevicesAndroidJni.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\devices\android\DevicesARCoreJni.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\devices\android\DevicesBlobJni.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\devices\android\DevicesPatternJni.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\platform\android\OceanLocationManager.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\SceneDescriptionSDXX3DJni.java" />
+  </ItemGroup>
+</Project>

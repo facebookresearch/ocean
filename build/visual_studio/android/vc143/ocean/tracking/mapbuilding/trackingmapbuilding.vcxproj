@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{CAFE5115-5178-4466-BA4E-8647896A32F4}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>trackingmapbuilding</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>trackingmapbuilding</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="trackingmapbuilding_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="trackingmapbuilding_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="trackingmapbuilding_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="trackingmapbuilding_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\DescriptorHandling.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\MapBuilding.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\MapMerging.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\MultiViewMapCreator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\PatchTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\PoseEstimation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\PoseEstimationT.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\Relocalizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\RelocalizerMono.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\RelocalizerStereo.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\TrackerMono.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\Unified.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\UnifiedDescriptor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\UnifiedDescriptorMap.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\UnifiedDescriptors.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\UnifiedFeatureMap.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\UnifiedMatching.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\UnifiedPoseEstimation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\Utilities.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\DescriptorHandling.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\MapMerging.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\MultiViewMapCreator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\PatchTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\PoseEstimation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\Relocalizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\RelocalizerMono.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\RelocalizerStereo.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\TrackerMono.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\Unified.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\UnifiedMatching.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\UnifiedPoseEstimation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\Utilities.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

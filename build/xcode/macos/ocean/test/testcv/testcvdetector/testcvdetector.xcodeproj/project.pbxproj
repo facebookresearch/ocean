@@ -1,0 +1,1221 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5074FFEA2347D965008CC7E4 /* TestFREAKDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5074FFE92347D965008CC7E4 /* TestFREAKDescriptor.h */; };
+		5074FFEB2347D965008CC7E4 /* TestFREAKDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5074FFE92347D965008CC7E4 /* TestFREAKDescriptor.h */; };
+		5074FFEC2347D965008CC7E4 /* TestFREAKDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5074FFE92347D965008CC7E4 /* TestFREAKDescriptor.h */; };
+		5074FFED2347D965008CC7E4 /* TestFREAKDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5074FFE92347D965008CC7E4 /* TestFREAKDescriptor.h */; };
+		5074FFEF2347D975008CC7E4 /* TestFREAKDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5074FFEE2347D975008CC7E4 /* TestFREAKDescriptor.cpp */; };
+		5074FFF02347D975008CC7E4 /* TestFREAKDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5074FFEE2347D975008CC7E4 /* TestFREAKDescriptor.cpp */; };
+		5074FFF12347D975008CC7E4 /* TestFREAKDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5074FFEE2347D975008CC7E4 /* TestFREAKDescriptor.cpp */; };
+		5074FFF22347D975008CC7E4 /* TestFREAKDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5074FFEE2347D975008CC7E4 /* TestFREAKDescriptor.cpp */; };
+		5A2D01302477174C001E63F2 /* TestFrameChangeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A2D012F2477174C001E63F2 /* TestFrameChangeDetector.h */; };
+		5A2D01312477174C001E63F2 /* TestFrameChangeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A2D012F2477174C001E63F2 /* TestFrameChangeDetector.h */; };
+		5A2D01322477174C001E63F2 /* TestFrameChangeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A2D012F2477174C001E63F2 /* TestFrameChangeDetector.h */; };
+		5A2D01332477174C001E63F2 /* TestFrameChangeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A2D012F2477174C001E63F2 /* TestFrameChangeDetector.h */; };
+		5A2D01352477176F001E63F2 /* TestFrameChangeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A2D01342477176F001E63F2 /* TestFrameChangeDetector.cpp */; };
+		5A2D01362477176F001E63F2 /* TestFrameChangeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A2D01342477176F001E63F2 /* TestFrameChangeDetector.cpp */; };
+		5A2D01372477176F001E63F2 /* TestFrameChangeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A2D01342477176F001E63F2 /* TestFrameChangeDetector.cpp */; };
+		5A2D01382477176F001E63F2 /* TestFrameChangeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A2D01342477176F001E63F2 /* TestFrameChangeDetector.cpp */; };
+		5DD14A4F1D953CBB00CCA9F0 /* TestCVDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177A1C69F8B600325BD2 /* TestCVDetector.cpp */; };
+		5DD14A511D953CBB00CCA9F0 /* TestHarrisDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177C1C69F8B600325BD2 /* TestHarrisDetector.cpp */; };
+		5DD14A521D953CBB00CCA9F0 /* TestFASTDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177B1C69F8B600325BD2 /* TestFASTDetector.cpp */; };
+		5DD14A541D953CBB00CCA9F0 /* TestORBDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177E1C69F8B600325BD2 /* TestORBDetector.cpp */; };
+		5DD14A581D953CBB00CCA9F0 /* TestHarrisDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17881C69F8D500325BD2 /* TestHarrisDetector.h */; };
+		5DD14A591D953CBB00CCA9F0 /* TestORBDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE178A1C69F8D500325BD2 /* TestORBDetector.h */; };
+		5DD14A5A1D953CBB00CCA9F0 /* TestFASTDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17871C69F8D500325BD2 /* TestFASTDetector.h */; };
+		5DD14A5C1D953CBB00CCA9F0 /* TestCVDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17861C69F8D500325BD2 /* TestCVDetector.h */; };
+		5DDE17801C69F8B600325BD2 /* TestCVDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177A1C69F8B600325BD2 /* TestCVDetector.cpp */; };
+		5DDE17811C69F8B600325BD2 /* TestFASTDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177B1C69F8B600325BD2 /* TestFASTDetector.cpp */; };
+		5DDE17821C69F8B600325BD2 /* TestHarrisDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177C1C69F8B600325BD2 /* TestHarrisDetector.cpp */; };
+		5DDE17841C69F8B600325BD2 /* TestORBDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177E1C69F8B600325BD2 /* TestORBDetector.cpp */; };
+		5DDE178C1C69F8D500325BD2 /* TestCVDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17861C69F8D500325BD2 /* TestCVDetector.h */; };
+		5DDE178D1C69F8D500325BD2 /* TestFASTDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17871C69F8D500325BD2 /* TestFASTDetector.h */; };
+		5DDE178E1C69F8D500325BD2 /* TestHarrisDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17881C69F8D500325BD2 /* TestHarrisDetector.h */; };
+		5DDE17901C69F8D500325BD2 /* TestORBDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE178A1C69F8D500325BD2 /* TestORBDetector.h */; };
+		5DDE17931C69F91400325BD2 /* TestCVDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177A1C69F8B600325BD2 /* TestCVDetector.cpp */; };
+		5DDE17951C69F91400325BD2 /* TestHarrisDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177C1C69F8B600325BD2 /* TestHarrisDetector.cpp */; };
+		5DDE17961C69F91400325BD2 /* TestFASTDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177B1C69F8B600325BD2 /* TestFASTDetector.cpp */; };
+		5DDE17981C69F91400325BD2 /* TestORBDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177E1C69F8B600325BD2 /* TestORBDetector.cpp */; };
+		5DDE179C1C69F91400325BD2 /* TestHarrisDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17881C69F8D500325BD2 /* TestHarrisDetector.h */; };
+		5DDE179D1C69F91400325BD2 /* TestORBDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE178A1C69F8D500325BD2 /* TestORBDetector.h */; };
+		5DDE179E1C69F91400325BD2 /* TestFASTDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17871C69F8D500325BD2 /* TestFASTDetector.h */; };
+		5DDE17A01C69F91400325BD2 /* TestCVDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17861C69F8D500325BD2 /* TestCVDetector.h */; };
+		930630C9225BC624007CA1F0 /* TestLineDetectorHough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930630C8225BC624007CA1F0 /* TestLineDetectorHough.cpp */; };
+		930630CA225BC624007CA1F0 /* TestLineDetectorHough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930630C8225BC624007CA1F0 /* TestLineDetectorHough.cpp */; };
+		930630CB225BC624007CA1F0 /* TestLineDetectorHough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930630C8225BC624007CA1F0 /* TestLineDetectorHough.cpp */; };
+		930630CC225BC624007CA1F0 /* TestLineDetectorHough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930630C8225BC624007CA1F0 /* TestLineDetectorHough.cpp */; };
+		930630CE225BC63D007CA1F0 /* TestLineDetectorHough.h in Headers */ = {isa = PBXBuildFile; fileRef = 930630CD225BC63D007CA1F0 /* TestLineDetectorHough.h */; };
+		930630CF225BC63D007CA1F0 /* TestLineDetectorHough.h in Headers */ = {isa = PBXBuildFile; fileRef = 930630CD225BC63D007CA1F0 /* TestLineDetectorHough.h */; };
+		930630D0225BC63D007CA1F0 /* TestLineDetectorHough.h in Headers */ = {isa = PBXBuildFile; fileRef = 930630CD225BC63D007CA1F0 /* TestLineDetectorHough.h */; };
+		930630D1225BC63D007CA1F0 /* TestLineDetectorHough.h in Headers */ = {isa = PBXBuildFile; fileRef = 930630CD225BC63D007CA1F0 /* TestLineDetectorHough.h */; };
+		930D182621CC9FE50067F705 /* TestMessengerCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D182521CC9FE50067F705 /* TestMessengerCodeDetector.cpp */; };
+		930D182721CC9FE50067F705 /* TestMessengerCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D182521CC9FE50067F705 /* TestMessengerCodeDetector.cpp */; };
+		930D182821CC9FE50067F705 /* TestMessengerCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D182521CC9FE50067F705 /* TestMessengerCodeDetector.cpp */; };
+		930D182921CC9FE50067F705 /* TestMessengerCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D182521CC9FE50067F705 /* TestMessengerCodeDetector.cpp */; };
+		930D182B21CC9FF40067F705 /* TestMessengerCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D182A21CC9FF30067F705 /* TestMessengerCodeDetector.h */; };
+		930D182C21CC9FF40067F705 /* TestMessengerCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D182A21CC9FF30067F705 /* TestMessengerCodeDetector.h */; };
+		930D182D21CC9FF40067F705 /* TestMessengerCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D182A21CC9FF30067F705 /* TestMessengerCodeDetector.h */; };
+		930D182E21CC9FF40067F705 /* TestMessengerCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D182A21CC9FF30067F705 /* TestMessengerCodeDetector.h */; };
+		930D74D5219E2BF500861D36 /* TestHemiCube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D74D4219E2BF400861D36 /* TestHemiCube.cpp */; };
+		930D74D6219E2BF500861D36 /* TestHemiCube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D74D4219E2BF400861D36 /* TestHemiCube.cpp */; };
+		930D74D7219E2BF500861D36 /* TestHemiCube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D74D4219E2BF400861D36 /* TestHemiCube.cpp */; };
+		930D74D8219E2BF500861D36 /* TestHemiCube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D74D4219E2BF400861D36 /* TestHemiCube.cpp */; };
+		930D74DA219E2C0400861D36 /* TestHemiCube.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D74D9219E2C0400861D36 /* TestHemiCube.h */; };
+		930D74DB219E2C0400861D36 /* TestHemiCube.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D74D9219E2C0400861D36 /* TestHemiCube.h */; };
+		930D74DC219E2C0400861D36 /* TestHemiCube.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D74D9219E2C0400861D36 /* TestHemiCube.h */; };
+		930D74DD219E2C0400861D36 /* TestHemiCube.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D74D9219E2C0400861D36 /* TestHemiCube.h */; };
+		93325EC9215D78DA009CBA15 /* TestLineEvaluator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93325EC8215D78DA009CBA15 /* TestLineEvaluator.h */; };
+		93325ECA215D78DA009CBA15 /* TestLineEvaluator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93325EC8215D78DA009CBA15 /* TestLineEvaluator.h */; };
+		93325ECB215D78DA009CBA15 /* TestLineEvaluator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93325EC8215D78DA009CBA15 /* TestLineEvaluator.h */; };
+		93325ECC215D78DA009CBA15 /* TestLineEvaluator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93325EC8215D78DA009CBA15 /* TestLineEvaluator.h */; };
+		93325ECE215D78EA009CBA15 /* TestLineEvaluator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93325ECD215D78EA009CBA15 /* TestLineEvaluator.cpp */; };
+		93325ECF215D78EA009CBA15 /* TestLineEvaluator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93325ECD215D78EA009CBA15 /* TestLineEvaluator.cpp */; };
+		93325ED0215D78EA009CBA15 /* TestLineEvaluator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93325ECD215D78EA009CBA15 /* TestLineEvaluator.cpp */; };
+		93325ED1215D78EA009CBA15 /* TestLineEvaluator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93325ECD215D78EA009CBA15 /* TestLineEvaluator.cpp */; };
+		93418056245E471F002285ED /* TestShapeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 93418055245E471F002285ED /* TestShapeDetector.h */; };
+		93418057245E471F002285ED /* TestShapeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 93418055245E471F002285ED /* TestShapeDetector.h */; };
+		93418058245E471F002285ED /* TestShapeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 93418055245E471F002285ED /* TestShapeDetector.h */; };
+		93418059245E471F002285ED /* TestShapeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 93418055245E471F002285ED /* TestShapeDetector.h */; };
+		9341805B245E473E002285ED /* TestShapeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9341805A245E473E002285ED /* TestShapeDetector.cpp */; };
+		9341805C245E473E002285ED /* TestShapeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9341805A245E473E002285ED /* TestShapeDetector.cpp */; };
+		9341805D245E473E002285ED /* TestShapeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9341805A245E473E002285ED /* TestShapeDetector.cpp */; };
+		9341805E245E473E002285ED /* TestShapeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9341805A245E473E002285ED /* TestShapeDetector.cpp */; };
+		9352CC5821BF2D840092647A /* TestLineDetectorULF.h in Headers */ = {isa = PBXBuildFile; fileRef = 9352CC5721BF2D830092647A /* TestLineDetectorULF.h */; };
+		9352CC5921BF2D840092647A /* TestLineDetectorULF.h in Headers */ = {isa = PBXBuildFile; fileRef = 9352CC5721BF2D830092647A /* TestLineDetectorULF.h */; };
+		9352CC5A21BF2D840092647A /* TestLineDetectorULF.h in Headers */ = {isa = PBXBuildFile; fileRef = 9352CC5721BF2D830092647A /* TestLineDetectorULF.h */; };
+		9352CC5B21BF2D840092647A /* TestLineDetectorULF.h in Headers */ = {isa = PBXBuildFile; fileRef = 9352CC5721BF2D830092647A /* TestLineDetectorULF.h */; };
+		9352CC5D21BF2D9E0092647A /* TestLineDetectorULF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9352CC5C21BF2D9E0092647A /* TestLineDetectorULF.cpp */; };
+		9352CC5E21BF2D9E0092647A /* TestLineDetectorULF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9352CC5C21BF2D9E0092647A /* TestLineDetectorULF.cpp */; };
+		9352CC5F21BF2D9E0092647A /* TestLineDetectorULF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9352CC5C21BF2D9E0092647A /* TestLineDetectorULF.cpp */; };
+		9352CC6021BF2D9E0092647A /* TestLineDetectorULF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9352CC5C21BF2D9E0092647A /* TestLineDetectorULF.cpp */; };
+		9375D3BD2697630F0045DC7F /* TestFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9375D3BC2697630F0045DC7F /* TestFeatureDetector.cpp */; };
+		9375D3BE2697630F0045DC7F /* TestFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9375D3BC2697630F0045DC7F /* TestFeatureDetector.cpp */; };
+		9375D3BF2697630F0045DC7F /* TestFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9375D3BC2697630F0045DC7F /* TestFeatureDetector.cpp */; };
+		9375D3C02697630F0045DC7F /* TestFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9375D3BC2697630F0045DC7F /* TestFeatureDetector.cpp */; };
+		9375D3C2269763260045DC7F /* TestFeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9375D3C1269763260045DC7F /* TestFeatureDetector.h */; };
+		9375D3C3269763260045DC7F /* TestFeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9375D3C1269763260045DC7F /* TestFeatureDetector.h */; };
+		9375D3C4269763260045DC7F /* TestFeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9375D3C1269763260045DC7F /* TestFeatureDetector.h */; };
+		9375D3C5269763260045DC7F /* TestFeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9375D3C1269763260045DC7F /* TestFeatureDetector.h */; };
+		93CA5EC3294D31420030DF3D /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CA5EC2294D31410030DF3D /* Utilities.h */; };
+		93CA5EC4294D31420030DF3D /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CA5EC2294D31410030DF3D /* Utilities.h */; };
+		93CA5EC5294D31420030DF3D /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CA5EC2294D31410030DF3D /* Utilities.h */; };
+		93CA5EC6294D31420030DF3D /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CA5EC2294D31410030DF3D /* Utilities.h */; };
+		93CA5EC8294D31550030DF3D /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93CA5EC7294D31550030DF3D /* Utilities.cpp */; };
+		93CA5EC9294D31550030DF3D /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93CA5EC7294D31550030DF3D /* Utilities.cpp */; };
+		93CA5ECA294D31550030DF3D /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93CA5EC7294D31550030DF3D /* Utilities.cpp */; };
+		93CA5ECB294D31550030DF3D /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93CA5EC7294D31550030DF3D /* Utilities.cpp */; };
+		93EC024827028626001BB6D9 /* TestDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 93EC024727028626001BB6D9 /* TestDescriptor.h */; };
+		93EC024927028626001BB6D9 /* TestDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 93EC024727028626001BB6D9 /* TestDescriptor.h */; };
+		93EC024A27028626001BB6D9 /* TestDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 93EC024727028626001BB6D9 /* TestDescriptor.h */; };
+		93EC024B27028626001BB6D9 /* TestDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 93EC024727028626001BB6D9 /* TestDescriptor.h */; };
+		93EC024D2702863E001BB6D9 /* TestDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93EC024C2702863E001BB6D9 /* TestDescriptor.cpp */; };
+		93EC024E2702863E001BB6D9 /* TestDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93EC024C2702863E001BB6D9 /* TestDescriptor.cpp */; };
+		93EC024F2702863E001BB6D9 /* TestDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93EC024C2702863E001BB6D9 /* TestDescriptor.cpp */; };
+		93EC02502702863E001BB6D9 /* TestDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93EC024C2702863E001BB6D9 /* TestDescriptor.cpp */; };
+		C0A452661E89455600970811 /* TestPointTracking.h in Headers */ = {isa = PBXBuildFile; fileRef = C0A452651E89455600970811 /* TestPointTracking.h */; };
+		C0A452671E89456000970811 /* TestPointTracking.h in Headers */ = {isa = PBXBuildFile; fileRef = C0A452651E89455600970811 /* TestPointTracking.h */; };
+		C0A452681E89456100970811 /* TestPointTracking.h in Headers */ = {isa = PBXBuildFile; fileRef = C0A452651E89455600970811 /* TestPointTracking.h */; };
+		C0A452691E89456200970811 /* TestPointTracking.h in Headers */ = {isa = PBXBuildFile; fileRef = C0A452651E89455600970811 /* TestPointTracking.h */; };
+		C0A4526B1E89457700970811 /* TestPointTracking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A4526A1E89457700970811 /* TestPointTracking.cpp */; };
+		C0A4526C1E89457E00970811 /* TestPointTracking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A4526A1E89457700970811 /* TestPointTracking.cpp */; };
+		C0A4526D1E89457F00970811 /* TestPointTracking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A4526A1E89457700970811 /* TestPointTracking.cpp */; };
+		C0A4526E1E89457F00970811 /* TestPointTracking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A4526A1E89457700970811 /* TestPointTracking.cpp */; };
+		C0E9B0D91DACEC0700895C4B /* TestCVDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177A1C69F8B600325BD2 /* TestCVDetector.cpp */; };
+		C0E9B0DB1DACEC0700895C4B /* TestHarrisDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177C1C69F8B600325BD2 /* TestHarrisDetector.cpp */; };
+		C0E9B0DC1DACEC0700895C4B /* TestFASTDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177B1C69F8B600325BD2 /* TestFASTDetector.cpp */; };
+		C0E9B0DE1DACEC0700895C4B /* TestORBDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DDE177E1C69F8B600325BD2 /* TestORBDetector.cpp */; };
+		C0E9B0E21DACEC0700895C4B /* TestHarrisDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17881C69F8D500325BD2 /* TestHarrisDetector.h */; };
+		C0E9B0E31DACEC0700895C4B /* TestORBDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE178A1C69F8D500325BD2 /* TestORBDetector.h */; };
+		C0E9B0E41DACEC0700895C4B /* TestFASTDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17871C69F8D500325BD2 /* TestFASTDetector.h */; };
+		C0E9B0E61DACEC0700895C4B /* TestCVDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DDE17861C69F8D500325BD2 /* TestCVDetector.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5074FFE92347D965008CC7E4 /* TestFREAKDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFREAKDescriptor.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestFREAKDescriptor.h; sourceTree = "<group>"; };
+		5074FFEE2347D975008CC7E4 /* TestFREAKDescriptor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFREAKDescriptor.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestFREAKDescriptor.cpp; sourceTree = "<group>"; };
+		5A2D012F2477174C001E63F2 /* TestFrameChangeDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameChangeDetector.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestFrameChangeDetector.h; sourceTree = "<group>"; };
+		5A2D01342477176F001E63F2 /* TestFrameChangeDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameChangeDetector.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestFrameChangeDetector.cpp; sourceTree = "<group>"; };
+		5DACDC5D1C69F75700D5D6B0 /* libOceanTestCVDetectorD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVDetectorD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD14A601D953CBB00CCA9F0 /* libOceanTestCVDetectorD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVDetectorD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DDE177A1C69F8B600325BD2 /* TestCVDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCVDetector.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestCVDetector.cpp; sourceTree = "<group>"; };
+		5DDE177B1C69F8B600325BD2 /* TestFASTDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFASTDetector.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestFASTDetector.cpp; sourceTree = "<group>"; };
+		5DDE177C1C69F8B600325BD2 /* TestHarrisDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestHarrisDetector.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestHarrisDetector.cpp; sourceTree = "<group>"; };
+		5DDE177E1C69F8B600325BD2 /* TestORBDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestORBDetector.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestORBDetector.cpp; sourceTree = "<group>"; };
+		5DDE17861C69F8D500325BD2 /* TestCVDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestCVDetector.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestCVDetector.h; sourceTree = "<group>"; };
+		5DDE17871C69F8D500325BD2 /* TestFASTDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFASTDetector.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestFASTDetector.h; sourceTree = "<group>"; };
+		5DDE17881C69F8D500325BD2 /* TestHarrisDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestHarrisDetector.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestHarrisDetector.h; sourceTree = "<group>"; };
+		5DDE178A1C69F8D500325BD2 /* TestORBDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestORBDetector.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestORBDetector.h; sourceTree = "<group>"; };
+		5DDE17A41C69F91400325BD2 /* libOceanTestCVDetectorD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVDetectorD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		930630C8225BC624007CA1F0 /* TestLineDetectorHough.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestLineDetectorHough.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestLineDetectorHough.cpp; sourceTree = "<group>"; };
+		930630CD225BC63D007CA1F0 /* TestLineDetectorHough.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestLineDetectorHough.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestLineDetectorHough.h; sourceTree = "<group>"; };
+		930D182521CC9FE50067F705 /* TestMessengerCodeDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestMessengerCodeDetector.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestMessengerCodeDetector.cpp; sourceTree = "<group>"; };
+		930D182A21CC9FF30067F705 /* TestMessengerCodeDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestMessengerCodeDetector.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestMessengerCodeDetector.h; sourceTree = "<group>"; };
+		930D74D4219E2BF400861D36 /* TestHemiCube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestHemiCube.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestHemiCube.cpp; sourceTree = "<group>"; };
+		930D74D9219E2C0400861D36 /* TestHemiCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestHemiCube.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestHemiCube.h; sourceTree = "<group>"; };
+		93325EC8215D78DA009CBA15 /* TestLineEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestLineEvaluator.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestLineEvaluator.h; sourceTree = "<group>"; };
+		93325ECD215D78EA009CBA15 /* TestLineEvaluator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestLineEvaluator.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestLineEvaluator.cpp; sourceTree = "<group>"; };
+		93418055245E471F002285ED /* TestShapeDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestShapeDetector.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestShapeDetector.h; sourceTree = "<group>"; };
+		9341805A245E473E002285ED /* TestShapeDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestShapeDetector.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestShapeDetector.cpp; sourceTree = "<group>"; };
+		9352CC5721BF2D830092647A /* TestLineDetectorULF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestLineDetectorULF.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestLineDetectorULF.h; sourceTree = "<group>"; };
+		9352CC5C21BF2D9E0092647A /* TestLineDetectorULF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestLineDetectorULF.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestLineDetectorULF.cpp; sourceTree = "<group>"; };
+		9375D3BC2697630F0045DC7F /* TestFeatureDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFeatureDetector.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestFeatureDetector.cpp; sourceTree = "<group>"; };
+		9375D3C1269763260045DC7F /* TestFeatureDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFeatureDetector.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestFeatureDetector.h; sourceTree = "<group>"; };
+		93CA5EC2294D31410030DF3D /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/Utilities.h; sourceTree = "<group>"; };
+		93CA5EC7294D31550030DF3D /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/Utilities.cpp; sourceTree = "<group>"; };
+		93EC024727028626001BB6D9 /* TestDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDescriptor.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestDescriptor.h; sourceTree = "<group>"; };
+		93EC024C2702863E001BB6D9 /* TestDescriptor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestDescriptor.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestDescriptor.cpp; sourceTree = "<group>"; };
+		C0A452651E89455600970811 /* TestPointTracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestPointTracking.h; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestPointTracking.h; sourceTree = "<group>"; };
+		C0A4526A1E89457700970811 /* TestPointTracking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestPointTracking.cpp; path = ../../../../../../../impl/ocean/test/testcv/testdetector/TestPointTracking.cpp; sourceTree = "<group>"; };
+		C0E9B0EB1DACEC0700895C4B /* libOceanTestCVDetectorD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVDetectorD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DACDC5A1C69F75700D5D6B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A551D953CBB00CCA9F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DDE17991C69F91400325BD2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0DF1DACEC0700895C4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DACDC541C69F75700D5D6B0 = {
+			isa = PBXGroup;
+			children = (
+				5DDE17781C69F89D00325BD2 /* Header Files */,
+				5DDE17771C69F88F00325BD2 /* Source Files */,
+				5DACDC5E1C69F75700D5D6B0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DACDC5E1C69F75700D5D6B0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DACDC5D1C69F75700D5D6B0 /* libOceanTestCVDetectorD.a */,
+				5DDE17A41C69F91400325BD2 /* libOceanTestCVDetectorD.dylib */,
+				5DD14A601D953CBB00CCA9F0 /* libOceanTestCVDetectorD.a */,
+				C0E9B0EB1DACEC0700895C4B /* libOceanTestCVDetectorD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DDE17771C69F88F00325BD2 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DDE177A1C69F8B600325BD2 /* TestCVDetector.cpp */,
+				93EC024C2702863E001BB6D9 /* TestDescriptor.cpp */,
+				5DDE177B1C69F8B600325BD2 /* TestFASTDetector.cpp */,
+				9375D3BC2697630F0045DC7F /* TestFeatureDetector.cpp */,
+				5A2D01342477176F001E63F2 /* TestFrameChangeDetector.cpp */,
+				5074FFEE2347D975008CC7E4 /* TestFREAKDescriptor.cpp */,
+				5DDE177C1C69F8B600325BD2 /* TestHarrisDetector.cpp */,
+				930D74D4219E2BF400861D36 /* TestHemiCube.cpp */,
+				930630C8225BC624007CA1F0 /* TestLineDetectorHough.cpp */,
+				9352CC5C21BF2D9E0092647A /* TestLineDetectorULF.cpp */,
+				93325ECD215D78EA009CBA15 /* TestLineEvaluator.cpp */,
+				930D182521CC9FE50067F705 /* TestMessengerCodeDetector.cpp */,
+				5DDE177E1C69F8B600325BD2 /* TestORBDetector.cpp */,
+				C0A4526A1E89457700970811 /* TestPointTracking.cpp */,
+				9341805A245E473E002285ED /* TestShapeDetector.cpp */,
+				93CA5EC7294D31550030DF3D /* Utilities.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DDE17781C69F89D00325BD2 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DDE17861C69F8D500325BD2 /* TestCVDetector.h */,
+				93EC024727028626001BB6D9 /* TestDescriptor.h */,
+				5DDE17871C69F8D500325BD2 /* TestFASTDetector.h */,
+				9375D3C1269763260045DC7F /* TestFeatureDetector.h */,
+				5A2D012F2477174C001E63F2 /* TestFrameChangeDetector.h */,
+				5074FFE92347D965008CC7E4 /* TestFREAKDescriptor.h */,
+				5DDE17881C69F8D500325BD2 /* TestHarrisDetector.h */,
+				930D74D9219E2C0400861D36 /* TestHemiCube.h */,
+				930630CD225BC63D007CA1F0 /* TestLineDetectorHough.h */,
+				9352CC5721BF2D830092647A /* TestLineDetectorULF.h */,
+				93325EC8215D78DA009CBA15 /* TestLineEvaluator.h */,
+				930D182A21CC9FF30067F705 /* TestMessengerCodeDetector.h */,
+				5DDE178A1C69F8D500325BD2 /* TestORBDetector.h */,
+				C0A452651E89455600970811 /* TestPointTracking.h */,
+				93418055245E471F002285ED /* TestShapeDetector.h */,
+				93CA5EC2294D31410030DF3D /* Utilities.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5DACDC5B1C69F75700D5D6B0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A2D01302477174C001E63F2 /* TestFrameChangeDetector.h in Headers */,
+				930D74DA219E2C0400861D36 /* TestHemiCube.h in Headers */,
+				9352CC5821BF2D840092647A /* TestLineDetectorULF.h in Headers */,
+				93CA5EC3294D31420030DF3D /* Utilities.h in Headers */,
+				93418056245E471F002285ED /* TestShapeDetector.h in Headers */,
+				5DDE178E1C69F8D500325BD2 /* TestHarrisDetector.h in Headers */,
+				930630CE225BC63D007CA1F0 /* TestLineDetectorHough.h in Headers */,
+				930D182B21CC9FF40067F705 /* TestMessengerCodeDetector.h in Headers */,
+				93EC024827028626001BB6D9 /* TestDescriptor.h in Headers */,
+				5DDE17901C69F8D500325BD2 /* TestORBDetector.h in Headers */,
+				5DDE178D1C69F8D500325BD2 /* TestFASTDetector.h in Headers */,
+				93325EC9215D78DA009CBA15 /* TestLineEvaluator.h in Headers */,
+				5DDE178C1C69F8D500325BD2 /* TestCVDetector.h in Headers */,
+				C0A452661E89455600970811 /* TestPointTracking.h in Headers */,
+				5074FFEA2347D965008CC7E4 /* TestFREAKDescriptor.h in Headers */,
+				9375D3C2269763260045DC7F /* TestFeatureDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A561D953CBB00CCA9F0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A2D01322477174C001E63F2 /* TestFrameChangeDetector.h in Headers */,
+				930D74DC219E2C0400861D36 /* TestHemiCube.h in Headers */,
+				93418058245E471F002285ED /* TestShapeDetector.h in Headers */,
+				93CA5EC5294D31420030DF3D /* Utilities.h in Headers */,
+				9352CC5A21BF2D840092647A /* TestLineDetectorULF.h in Headers */,
+				5DD14A581D953CBB00CCA9F0 /* TestHarrisDetector.h in Headers */,
+				93EC024A27028626001BB6D9 /* TestDescriptor.h in Headers */,
+				930630D0225BC63D007CA1F0 /* TestLineDetectorHough.h in Headers */,
+				930D182D21CC9FF40067F705 /* TestMessengerCodeDetector.h in Headers */,
+				5DD14A591D953CBB00CCA9F0 /* TestORBDetector.h in Headers */,
+				5DD14A5A1D953CBB00CCA9F0 /* TestFASTDetector.h in Headers */,
+				93325ECB215D78DA009CBA15 /* TestLineEvaluator.h in Headers */,
+				5DD14A5C1D953CBB00CCA9F0 /* TestCVDetector.h in Headers */,
+				5074FFEC2347D965008CC7E4 /* TestFREAKDescriptor.h in Headers */,
+				C0A452681E89456100970811 /* TestPointTracking.h in Headers */,
+				9375D3C4269763260045DC7F /* TestFeatureDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DDE179A1C69F91400325BD2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A2D01312477174C001E63F2 /* TestFrameChangeDetector.h in Headers */,
+				930D74DB219E2C0400861D36 /* TestHemiCube.h in Headers */,
+				93418057245E471F002285ED /* TestShapeDetector.h in Headers */,
+				93CA5EC4294D31420030DF3D /* Utilities.h in Headers */,
+				9352CC5921BF2D840092647A /* TestLineDetectorULF.h in Headers */,
+				5DDE179C1C69F91400325BD2 /* TestHarrisDetector.h in Headers */,
+				93EC024927028626001BB6D9 /* TestDescriptor.h in Headers */,
+				930630CF225BC63D007CA1F0 /* TestLineDetectorHough.h in Headers */,
+				930D182C21CC9FF40067F705 /* TestMessengerCodeDetector.h in Headers */,
+				5DDE179D1C69F91400325BD2 /* TestORBDetector.h in Headers */,
+				5DDE179E1C69F91400325BD2 /* TestFASTDetector.h in Headers */,
+				93325ECA215D78DA009CBA15 /* TestLineEvaluator.h in Headers */,
+				5DDE17A01C69F91400325BD2 /* TestCVDetector.h in Headers */,
+				5074FFEB2347D965008CC7E4 /* TestFREAKDescriptor.h in Headers */,
+				C0A452671E89456000970811 /* TestPointTracking.h in Headers */,
+				9375D3C3269763260045DC7F /* TestFeatureDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0E01DACEC0700895C4B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A2D01332477174C001E63F2 /* TestFrameChangeDetector.h in Headers */,
+				930D74DD219E2C0400861D36 /* TestHemiCube.h in Headers */,
+				93418059245E471F002285ED /* TestShapeDetector.h in Headers */,
+				93CA5EC6294D31420030DF3D /* Utilities.h in Headers */,
+				9352CC5B21BF2D840092647A /* TestLineDetectorULF.h in Headers */,
+				C0E9B0E21DACEC0700895C4B /* TestHarrisDetector.h in Headers */,
+				93EC024B27028626001BB6D9 /* TestDescriptor.h in Headers */,
+				930630D1225BC63D007CA1F0 /* TestLineDetectorHough.h in Headers */,
+				930D182E21CC9FF40067F705 /* TestMessengerCodeDetector.h in Headers */,
+				C0E9B0E31DACEC0700895C4B /* TestORBDetector.h in Headers */,
+				C0E9B0E41DACEC0700895C4B /* TestFASTDetector.h in Headers */,
+				93325ECC215D78DA009CBA15 /* TestLineEvaluator.h in Headers */,
+				C0E9B0E61DACEC0700895C4B /* TestCVDetector.h in Headers */,
+				5074FFED2347D965008CC7E4 /* TestFREAKDescriptor.h in Headers */,
+				C0A452691E89456200970811 /* TestPointTracking.h in Headers */,
+				9375D3C5269763260045DC7F /* TestFeatureDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5DACDC5C1C69F75700D5D6B0 /* testcvdetector x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DACDC681C69F75700D5D6B0 /* Build configuration list for PBXNativeTarget "testcvdetector x64 (Static)" */;
+			buildPhases = (
+				5DACDC591C69F75700D5D6B0 /* Sources */,
+				5DACDC5A1C69F75700D5D6B0 /* Frameworks */,
+				5DACDC5B1C69F75700D5D6B0 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvdetector x64 (Static)";
+			productName = testcvdetector;
+			productReference = 5DACDC5D1C69F75700D5D6B0 /* libOceanTestCVDetectorD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DD14A4D1D953CBB00CCA9F0 /* testcvdetector arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD14A5D1D953CBB00CCA9F0 /* Build configuration list for PBXNativeTarget "testcvdetector arm64 (Static)" */;
+			buildPhases = (
+				5DD14A4E1D953CBB00CCA9F0 /* Sources */,
+				5DD14A551D953CBB00CCA9F0 /* Frameworks */,
+				5DD14A561D953CBB00CCA9F0 /* Headers */,
+				5DD14A611D953DE800CCA9F0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvdetector arm64 (Static)";
+			productName = testcvdetector;
+			productReference = 5DD14A601D953CBB00CCA9F0 /* libOceanTestCVDetectorD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DDE17911C69F91400325BD2 /* testcvdetector x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DDE17A11C69F91400325BD2 /* Build configuration list for PBXNativeTarget "testcvdetector x64 (Shared)" */;
+			buildPhases = (
+				5DDE17921C69F91400325BD2 /* Sources */,
+				5DDE17991C69F91400325BD2 /* Frameworks */,
+				5DDE179A1C69F91400325BD2 /* Headers */,
+				C0E9B0EC1DACECD500895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvdetector x64 (Shared)";
+			productName = testcvdetector;
+			productReference = 5DDE17A41C69F91400325BD2 /* libOceanTestCVDetectorD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C0E9B0D71DACEC0700895C4B /* testcvdetector arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0E9B0E81DACEC0700895C4B /* Build configuration list for PBXNativeTarget "testcvdetector arm64 (Shared)" */;
+			buildPhases = (
+				C0E9B0D81DACEC0700895C4B /* Sources */,
+				C0E9B0DF1DACEC0700895C4B /* Frameworks */,
+				C0E9B0E01DACEC0700895C4B /* Headers */,
+				C0E9B0E71DACEC0700895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvdetector arm64 (Shared)";
+			productName = testcvdetector;
+			productReference = C0E9B0EB1DACEC0700895C4B /* libOceanTestCVDetectorD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DACDC551C69F75700D5D6B0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DACDC5C1C69F75700D5D6B0 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DACDC581C69F75700D5D6B0 /* Build configuration list for PBXProject "testcvdetector" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DACDC541C69F75700D5D6B0;
+			productRefGroup = 5DACDC5E1C69F75700D5D6B0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DACDC5C1C69F75700D5D6B0 /* testcvdetector x64 (Static) */,
+				5DDE17911C69F91400325BD2 /* testcvdetector x64 (Shared) */,
+				5DD14A4D1D953CBB00CCA9F0 /* testcvdetector arm64 (Static) */,
+				C0E9B0D71DACEC0700895C4B /* testcvdetector arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DD14A611D953DE800CCA9F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../copy_arm_static.sh \"../../../../../../../bin/test/lib/\"";
+		};
+		C0E9B0E71DACEC0700895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../codesign.sh\n../../../../copy_arm_shared.sh \"../../../../../../../bin/test/lib/\"";
+		};
+		C0E9B0EC1DACECD500895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DACDC591C69F75700D5D6B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0A4526B1E89457700970811 /* TestPointTracking.cpp in Sources */,
+				9341805B245E473E002285ED /* TestShapeDetector.cpp in Sources */,
+				93325ECE215D78EA009CBA15 /* TestLineEvaluator.cpp in Sources */,
+				93CA5EC8294D31550030DF3D /* Utilities.cpp in Sources */,
+				5074FFEF2347D975008CC7E4 /* TestFREAKDescriptor.cpp in Sources */,
+				5DDE17801C69F8B600325BD2 /* TestCVDetector.cpp in Sources */,
+				9352CC5D21BF2D9E0092647A /* TestLineDetectorULF.cpp in Sources */,
+				5DDE17821C69F8B600325BD2 /* TestHarrisDetector.cpp in Sources */,
+				5DDE17811C69F8B600325BD2 /* TestFASTDetector.cpp in Sources */,
+				930D74D5219E2BF500861D36 /* TestHemiCube.cpp in Sources */,
+				5DDE17841C69F8B600325BD2 /* TestORBDetector.cpp in Sources */,
+				9375D3BD2697630F0045DC7F /* TestFeatureDetector.cpp in Sources */,
+				5A2D01352477176F001E63F2 /* TestFrameChangeDetector.cpp in Sources */,
+				93EC024D2702863E001BB6D9 /* TestDescriptor.cpp in Sources */,
+				930D182621CC9FE50067F705 /* TestMessengerCodeDetector.cpp in Sources */,
+				930630C9225BC624007CA1F0 /* TestLineDetectorHough.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A4E1D953CBB00CCA9F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0A4526D1E89457F00970811 /* TestPointTracking.cpp in Sources */,
+				9341805D245E473E002285ED /* TestShapeDetector.cpp in Sources */,
+				5074FFF12347D975008CC7E4 /* TestFREAKDescriptor.cpp in Sources */,
+				93CA5ECA294D31550030DF3D /* Utilities.cpp in Sources */,
+				93325ED0215D78EA009CBA15 /* TestLineEvaluator.cpp in Sources */,
+				5DD14A4F1D953CBB00CCA9F0 /* TestCVDetector.cpp in Sources */,
+				9352CC5F21BF2D9E0092647A /* TestLineDetectorULF.cpp in Sources */,
+				5DD14A511D953CBB00CCA9F0 /* TestHarrisDetector.cpp in Sources */,
+				5DD14A521D953CBB00CCA9F0 /* TestFASTDetector.cpp in Sources */,
+				930D74D7219E2BF500861D36 /* TestHemiCube.cpp in Sources */,
+				9375D3BF2697630F0045DC7F /* TestFeatureDetector.cpp in Sources */,
+				5A2D01372477176F001E63F2 /* TestFrameChangeDetector.cpp in Sources */,
+				93EC024F2702863E001BB6D9 /* TestDescriptor.cpp in Sources */,
+				5DD14A541D953CBB00CCA9F0 /* TestORBDetector.cpp in Sources */,
+				930D182821CC9FE50067F705 /* TestMessengerCodeDetector.cpp in Sources */,
+				930630CB225BC624007CA1F0 /* TestLineDetectorHough.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DDE17921C69F91400325BD2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0A4526C1E89457E00970811 /* TestPointTracking.cpp in Sources */,
+				9341805C245E473E002285ED /* TestShapeDetector.cpp in Sources */,
+				5074FFF02347D975008CC7E4 /* TestFREAKDescriptor.cpp in Sources */,
+				93CA5EC9294D31550030DF3D /* Utilities.cpp in Sources */,
+				93325ECF215D78EA009CBA15 /* TestLineEvaluator.cpp in Sources */,
+				5DDE17931C69F91400325BD2 /* TestCVDetector.cpp in Sources */,
+				9352CC5E21BF2D9E0092647A /* TestLineDetectorULF.cpp in Sources */,
+				5DDE17951C69F91400325BD2 /* TestHarrisDetector.cpp in Sources */,
+				5DDE17961C69F91400325BD2 /* TestFASTDetector.cpp in Sources */,
+				930D74D6219E2BF500861D36 /* TestHemiCube.cpp in Sources */,
+				9375D3BE2697630F0045DC7F /* TestFeatureDetector.cpp in Sources */,
+				5A2D01362477176F001E63F2 /* TestFrameChangeDetector.cpp in Sources */,
+				93EC024E2702863E001BB6D9 /* TestDescriptor.cpp in Sources */,
+				5DDE17981C69F91400325BD2 /* TestORBDetector.cpp in Sources */,
+				930D182721CC9FE50067F705 /* TestMessengerCodeDetector.cpp in Sources */,
+				930630CA225BC624007CA1F0 /* TestLineDetectorHough.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0D81DACEC0700895C4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0A4526E1E89457F00970811 /* TestPointTracking.cpp in Sources */,
+				9341805E245E473E002285ED /* TestShapeDetector.cpp in Sources */,
+				5074FFF22347D975008CC7E4 /* TestFREAKDescriptor.cpp in Sources */,
+				93CA5ECB294D31550030DF3D /* Utilities.cpp in Sources */,
+				93325ED1215D78EA009CBA15 /* TestLineEvaluator.cpp in Sources */,
+				C0E9B0D91DACEC0700895C4B /* TestCVDetector.cpp in Sources */,
+				9352CC6021BF2D9E0092647A /* TestLineDetectorULF.cpp in Sources */,
+				C0E9B0DB1DACEC0700895C4B /* TestHarrisDetector.cpp in Sources */,
+				C0E9B0DC1DACEC0700895C4B /* TestFASTDetector.cpp in Sources */,
+				930D74D8219E2BF500861D36 /* TestHemiCube.cpp in Sources */,
+				9375D3C02697630F0045DC7F /* TestFeatureDetector.cpp in Sources */,
+				5A2D01382477176F001E63F2 /* TestFrameChangeDetector.cpp in Sources */,
+				93EC02502702863E001BB6D9 /* TestDescriptor.cpp in Sources */,
+				C0E9B0DE1DACEC0700895C4B /* TestORBDetector.cpp in Sources */,
+				930D182921CC9FE50067F705 /* TestMessengerCodeDetector.cpp in Sources */,
+				930630CC225BC624007CA1F0 /* TestLineDetectorHough.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DACDC661C69F75700D5D6B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DACDC671C69F75700D5D6B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DACDC691C69F75700D5D6B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvdetector/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvdetector/osx_x64_xc9_static_debug;
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorD;
+				PRODUCT_NAME = OceanTestCVDetectorD;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DACDC6A1C69F75700D5D6B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvdetector/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvdetector/osx_x64_xc9_static;
+				PRODUCT_MODULE_NAME = OceanTestCVDetector;
+				PRODUCT_NAME = OceanTestCVDetector;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DD14A5E1D953CBB00CCA9F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorD;
+				PRODUCT_NAME = OceanTestCVDetectorD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD14A5F1D953CBB00CCA9F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestCVDetector;
+				PRODUCT_NAME = OceanTestCVDetector;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DDE17A21C69F91400325BD2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvdetector/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvdetector/osx_x64_xc9_shared_debug;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVDetectorD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanPlatformD",
+					"-lOceanSystemD",
+				);
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorD;
+				PRODUCT_NAME = OceanTestCVDetectorD;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DDE17A31C69F91400325BD2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvdetector/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvdetector/osx_x64_xc9_shared;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVDetector",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanPlatform",
+					"-lOceanSystem",
+				);
+				PRODUCT_MODULE_NAME = OceanTestCVDetector;
+				PRODUCT_NAME = OceanTestCVDetector;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C0E9B0E91DACEC0700895C4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVDetectorD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanPlatformD",
+					"-lOceanSystemD",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorD;
+				PRODUCT_NAME = OceanTestCVDetectorD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C0E9B0EA1DACEC0700895C4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVDetector",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanPlatform",
+					"-lOceanSystem",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestCVDetector;
+				PRODUCT_NAME = OceanTestCVDetector;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvdetector/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DACDC581C69F75700D5D6B0 /* Build configuration list for PBXProject "testcvdetector" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DACDC661C69F75700D5D6B0 /* Debug */,
+				5DACDC671C69F75700D5D6B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DACDC681C69F75700D5D6B0 /* Build configuration list for PBXNativeTarget "testcvdetector x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DACDC691C69F75700D5D6B0 /* Debug */,
+				5DACDC6A1C69F75700D5D6B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD14A5D1D953CBB00CCA9F0 /* Build configuration list for PBXNativeTarget "testcvdetector arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD14A5E1D953CBB00CCA9F0 /* Debug */,
+				5DD14A5F1D953CBB00CCA9F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DDE17A11C69F91400325BD2 /* Build configuration list for PBXNativeTarget "testcvdetector x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DDE17A21C69F91400325BD2 /* Debug */,
+				5DDE17A31C69F91400325BD2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0E9B0E81DACEC0700895C4B /* Build configuration list for PBXNativeTarget "testcvdetector arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0E9B0E91DACEC0700895C4B /* Debug */,
+				C0E9B0EA1DACEC0700895C4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DACDC551C69F75700D5D6B0 /* Project object */;
+}

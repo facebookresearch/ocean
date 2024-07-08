@@ -1,0 +1,45 @@
+#OX3D V3.0 utf8
+
+# Copyright (c) Meta Platforms, Inc. and affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+
+# This node is not part of the standard X3D specification, this node is an extension by Ocean allowing for easy realization of Augmented Reality applications
+TrackerTransform
+{
+	# specifies the tracker to be used: use the Pattern 6DOF tracker here
+	tracker "Pattern 6DOF Tracker"
+
+	# use the background (video) image of the viewer as tracker input
+	trackerInput "BACKGROUND"
+
+	# the object to be tracked has to be placed in relation to the camera position
+	insideOut FALSE
+
+	# define the tracking pattern used for tracking (would be an id of a marker if we would use marker tracking). In this example we use a well known image used for testing and comparing tracking algorithms
+	object "tropical-island-with-toucans.jpeg"
+
+	# defining the size of the pattern/marker to be used in meter, we define the horizontal length, the vertical length is automatically determined by the ratio of the 'map', it's a 3D value for future features as e.g., for 3D feature maps
+	objectSize 0.251 0 0
+
+	# we want the virtual object not to be visible if the tracker fails to detect the tracking pattern/marker
+	alwaysVisible FALSE
+
+	# standard X3D content in order to define the content and its location in relation to the tracked map
+	children
+	[
+		Transform
+		{
+			scale 0.05 0.05 0.05
+			translation 0.1255 0 0.1
+			rotation 0 1 0 1.57
+
+			children Inline
+			{
+				# the X3D standard does not allow to inline non-X3D content, however we allow this
+				url "trex.obj"
+			}
+		}
+	]
+}

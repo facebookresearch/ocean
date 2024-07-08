@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean SceneDescription SDL OBJ</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_scenedescriptionsdlobj_build_imported>True</ocean_scenedescriptionsdlobj_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_scenedescriptionsdlobj_common_imported)' != 'True'" Project="scenedescriptionsdlobj_common.props"/>
+    <Import Condition="'$(ocean_plugin_build_imported)' != 'True'" Project="..\..\..\ocean_plugin_build.props"/>
+  </ImportGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <TargetName>OceanSceneDescriptionSDLOBJD</TargetName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <TargetName>OceanSceneDescriptionSDLOBJ</TargetName>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Shared Debug' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <ClCompile>
+      <PreprocessorDefinitions>USE_OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>

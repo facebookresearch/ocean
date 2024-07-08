@@ -1,0 +1,1049 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D427E471D913D1300135BA7 /* SLAM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E421D913D1300135BA7 /* SLAM.cpp */; };
+		5D427E481D913D1300135BA7 /* SLAM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E421D913D1300135BA7 /* SLAM.cpp */; };
+		5D427E491D913D1300135BA7 /* SLAMDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E431D913D1300135BA7 /* SLAMDevice.cpp */; };
+		5D427E4A1D913D1300135BA7 /* SLAMDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E431D913D1300135BA7 /* SLAMDevice.cpp */; };
+		5D427E4B1D913D1300135BA7 /* SLAMFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E441D913D1300135BA7 /* SLAMFactory.cpp */; };
+		5D427E4C1D913D1300135BA7 /* SLAMFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E441D913D1300135BA7 /* SLAMFactory.cpp */; };
+		5D427E4D1D913D1300135BA7 /* SLAMTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E451D913D1300135BA7 /* SLAMTracker6DOF.cpp */; };
+		5D427E4E1D913D1300135BA7 /* SLAMTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E451D913D1300135BA7 /* SLAMTracker6DOF.cpp */; };
+		5D427E4F1D913D1300135BA7 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E461D913D1300135BA7 /* Plugin.cpp */; };
+		5D427E501D913D1300135BA7 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E461D913D1300135BA7 /* Plugin.cpp */; };
+		5D427E561D913D2400135BA7 /* SLAM.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E511D913D2400135BA7 /* SLAM.h */; };
+		5D427E571D913D2400135BA7 /* SLAM.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E511D913D2400135BA7 /* SLAM.h */; };
+		5D427E581D913D2400135BA7 /* SLAMDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E521D913D2400135BA7 /* SLAMDevice.h */; };
+		5D427E591D913D2400135BA7 /* SLAMDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E521D913D2400135BA7 /* SLAMDevice.h */; };
+		5D427E5A1D913D2400135BA7 /* SLAMFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E531D913D2400135BA7 /* SLAMFactory.h */; };
+		5D427E5B1D913D2400135BA7 /* SLAMFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E531D913D2400135BA7 /* SLAMFactory.h */; };
+		5D427E5C1D913D2400135BA7 /* SLAMTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E541D913D2400135BA7 /* SLAMTracker6DOF.h */; };
+		5D427E5D1D913D2400135BA7 /* SLAMTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E541D913D2400135BA7 /* SLAMTracker6DOF.h */; };
+		5D427E5E1D913D2400135BA7 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E551D913D2400135BA7 /* Plugin.h */; };
+		5D427E5F1D913D2400135BA7 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E551D913D2400135BA7 /* Plugin.h */; };
+		5D427E721D91495E00135BA7 /* SLAMTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E451D913D1300135BA7 /* SLAMTracker6DOF.cpp */; };
+		5D427E731D91495E00135BA7 /* SLAMDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E431D913D1300135BA7 /* SLAMDevice.cpp */; };
+		5D427E741D91495E00135BA7 /* SLAM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E421D913D1300135BA7 /* SLAM.cpp */; };
+		5D427E751D91495E00135BA7 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E461D913D1300135BA7 /* Plugin.cpp */; };
+		5D427E761D91495E00135BA7 /* SLAMFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E441D913D1300135BA7 /* SLAMFactory.cpp */; };
+		5D427E791D91495E00135BA7 /* SLAM.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E511D913D2400135BA7 /* SLAM.h */; };
+		5D427E7A1D91495E00135BA7 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E551D913D2400135BA7 /* Plugin.h */; };
+		5D427E7B1D91495E00135BA7 /* SLAMDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E521D913D2400135BA7 /* SLAMDevice.h */; };
+		5D427E7C1D91495E00135BA7 /* SLAMFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E531D913D2400135BA7 /* SLAMFactory.h */; };
+		5D427E7D1D91495E00135BA7 /* SLAMTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E541D913D2400135BA7 /* SLAMTracker6DOF.h */; };
+		C041EBF51DABDB8600BF5D76 /* SLAMTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E451D913D1300135BA7 /* SLAMTracker6DOF.cpp */; };
+		C041EBF61DABDB8600BF5D76 /* SLAMDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E431D913D1300135BA7 /* SLAMDevice.cpp */; };
+		C041EBF71DABDB8600BF5D76 /* SLAM.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E421D913D1300135BA7 /* SLAM.cpp */; };
+		C041EBF81DABDB8600BF5D76 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E461D913D1300135BA7 /* Plugin.cpp */; };
+		C041EBF91DABDB8600BF5D76 /* SLAMFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D427E441D913D1300135BA7 /* SLAMFactory.cpp */; };
+		C041EBFC1DABDB8600BF5D76 /* SLAM.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E511D913D2400135BA7 /* SLAM.h */; };
+		C041EBFD1DABDB8600BF5D76 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E551D913D2400135BA7 /* Plugin.h */; };
+		C041EBFE1DABDB8600BF5D76 /* SLAMDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E521D913D2400135BA7 /* SLAMDevice.h */; };
+		C041EBFF1DABDB8600BF5D76 /* SLAMFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E531D913D2400135BA7 /* SLAMFactory.h */; };
+		C041EC001DABDB8600BF5D76 /* SLAMTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D427E541D913D2400135BA7 /* SLAMTracker6DOF.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D12BC9C1BF264E300A56828 /* libOceanDevicesSLAMD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanDevicesSLAMD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D12BDB21BF267A400A56828 /* OceanDevicesSLAMD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanDevicesSLAMD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D12BDB51BF26EA000A56828 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../res/ocean/devices/slam/osx/Info.plist; sourceTree = "<group>"; };
+		5D427E421D913D1300135BA7 /* SLAM.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SLAM.cpp; path = ../../../../../../impl/ocean/devices/slam/SLAM.cpp; sourceTree = "<group>"; };
+		5D427E431D913D1300135BA7 /* SLAMDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SLAMDevice.cpp; path = ../../../../../../impl/ocean/devices/slam/SLAMDevice.cpp; sourceTree = "<group>"; };
+		5D427E441D913D1300135BA7 /* SLAMFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SLAMFactory.cpp; path = ../../../../../../impl/ocean/devices/slam/SLAMFactory.cpp; sourceTree = "<group>"; };
+		5D427E451D913D1300135BA7 /* SLAMTracker6DOF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SLAMTracker6DOF.cpp; path = ../../../../../../impl/ocean/devices/slam/SLAMTracker6DOF.cpp; sourceTree = "<group>"; };
+		5D427E461D913D1300135BA7 /* Plugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plugin.cpp; path = ../../../../../../impl/ocean/devices/slam/Plugin.cpp; sourceTree = "<group>"; };
+		5D427E511D913D2400135BA7 /* SLAM.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLAM.h; path = ../../../../../../impl/ocean/devices/slam/SLAM.h; sourceTree = "<group>"; };
+		5D427E521D913D2400135BA7 /* SLAMDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLAMDevice.h; path = ../../../../../../impl/ocean/devices/slam/SLAMDevice.h; sourceTree = "<group>"; };
+		5D427E531D913D2400135BA7 /* SLAMFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLAMFactory.h; path = ../../../../../../impl/ocean/devices/slam/SLAMFactory.h; sourceTree = "<group>"; };
+		5D427E541D913D2400135BA7 /* SLAMTracker6DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLAMTracker6DOF.h; path = ../../../../../../impl/ocean/devices/slam/SLAMTracker6DOF.h; sourceTree = "<group>"; };
+		5D427E551D913D2400135BA7 /* Plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plugin.h; path = ../../../../../../impl/ocean/devices/slam/Plugin.h; sourceTree = "<group>"; };
+		5D427E811D91495E00135BA7 /* libOceanDevicesSLAMD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanDevicesSLAMD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C041EC061DABDB8600BF5D76 /* OceanDevicesSLAMD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanDevicesSLAMD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D12BC991BF264E300A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD821BF267A400A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D427E771D91495E00135BA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EBFA1DABDB8600BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D12BC931BF264E300A56828 = {
+			isa = PBXGroup;
+			children = (
+				5D12BCFF1BF2662D00A56828 /* Header Files */,
+				5D12BCAA1BF265D300A56828 /* Source Files */,
+				5D12BDB31BF26E6000A56828 /* Resource Files */,
+				5D12BC9D1BF264E300A56828 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D12BC9D1BF264E300A56828 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BC9C1BF264E300A56828 /* libOceanDevicesSLAMD.a */,
+				5D12BDB21BF267A400A56828 /* OceanDevicesSLAMD.plugin */,
+				5D427E811D91495E00135BA7 /* libOceanDevicesSLAMD.a */,
+				C041EC061DABDB8600BF5D76 /* OceanDevicesSLAMD.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D12BCAA1BF265D300A56828 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D427E421D913D1300135BA7 /* SLAM.cpp */,
+				5D427E431D913D1300135BA7 /* SLAMDevice.cpp */,
+				5D427E441D913D1300135BA7 /* SLAMFactory.cpp */,
+				5D427E451D913D1300135BA7 /* SLAMTracker6DOF.cpp */,
+				5D427E461D913D1300135BA7 /* Plugin.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D12BCFF1BF2662D00A56828 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D427E511D913D2400135BA7 /* SLAM.h */,
+				5D427E521D913D2400135BA7 /* SLAMDevice.h */,
+				5D427E531D913D2400135BA7 /* SLAMFactory.h */,
+				5D427E541D913D2400135BA7 /* SLAMTracker6DOF.h */,
+				5D427E551D913D2400135BA7 /* Plugin.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5D12BDB31BF26E6000A56828 /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BDB51BF26EA000A56828 /* Info.plist */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D12BC9A1BF264E300A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D427E561D913D2400135BA7 /* SLAM.h in Headers */,
+				5D427E5E1D913D2400135BA7 /* Plugin.h in Headers */,
+				5D427E581D913D2400135BA7 /* SLAMDevice.h in Headers */,
+				5D427E5A1D913D2400135BA7 /* SLAMFactory.h in Headers */,
+				5D427E5C1D913D2400135BA7 /* SLAMTracker6DOF.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD831BF267A400A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D427E571D913D2400135BA7 /* SLAM.h in Headers */,
+				5D427E5F1D913D2400135BA7 /* Plugin.h in Headers */,
+				5D427E591D913D2400135BA7 /* SLAMDevice.h in Headers */,
+				5D427E5B1D913D2400135BA7 /* SLAMFactory.h in Headers */,
+				5D427E5D1D913D2400135BA7 /* SLAMTracker6DOF.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D427E781D91495E00135BA7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D427E791D91495E00135BA7 /* SLAM.h in Headers */,
+				5D427E7A1D91495E00135BA7 /* Plugin.h in Headers */,
+				5D427E7B1D91495E00135BA7 /* SLAMDevice.h in Headers */,
+				5D427E7C1D91495E00135BA7 /* SLAMFactory.h in Headers */,
+				5D427E7D1D91495E00135BA7 /* SLAMTracker6DOF.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EBFB1DABDB8600BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EBFC1DABDB8600BF5D76 /* SLAM.h in Headers */,
+				C041EBFD1DABDB8600BF5D76 /* Plugin.h in Headers */,
+				C041EBFE1DABDB8600BF5D76 /* SLAMDevice.h in Headers */,
+				C041EBFF1DABDB8600BF5D76 /* SLAMFactory.h in Headers */,
+				C041EC001DABDB8600BF5D76 /* SLAMTracker6DOF.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D12BC9B1BF264E300A56828 /* devicesslam x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BCA71BF264E300A56828 /* Build configuration list for PBXNativeTarget "devicesslam x64 (Static)" */;
+			buildPhases = (
+				5D12BC981BF264E300A56828 /* Sources */,
+				5D12BC991BF264E300A56828 /* Frameworks */,
+				5D12BC9A1BF264E300A56828 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "devicesslam x64 (Static)";
+			productName = devicesslam;
+			productReference = 5D12BC9C1BF264E300A56828 /* libOceanDevicesSLAMD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D12BD561BF267A400A56828 /* devicesslam x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BDAF1BF267A400A56828 /* Build configuration list for PBXNativeTarget "devicesslam x64 (Shared)" */;
+			buildPhases = (
+				5D12BD571BF267A400A56828 /* Sources */,
+				5D12BD821BF267A400A56828 /* Frameworks */,
+				5D12BD831BF267A400A56828 /* Headers */,
+				5D12BDB61BF26EAB00A56828 /* Resources */,
+				5D12BDB81BF26EBE00A56828 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "devicesslam x64 (Shared)";
+			productName = devicesslam;
+			productReference = 5D12BDB21BF267A400A56828 /* OceanDevicesSLAMD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+		5D427E701D91495E00135BA7 /* devicesslam arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D427E7E1D91495E00135BA7 /* Build configuration list for PBXNativeTarget "devicesslam arm64 (Static)" */;
+			buildPhases = (
+				5D427E711D91495E00135BA7 /* Sources */,
+				5D427E771D91495E00135BA7 /* Frameworks */,
+				5D427E781D91495E00135BA7 /* Headers */,
+				5D427E821D9149A100135BA7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "devicesslam arm64 (Static)";
+			productName = devicesslam;
+			productReference = 5D427E811D91495E00135BA7 /* libOceanDevicesSLAMD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EBF31DABDB8600BF5D76 /* devicesslam arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EC031DABDB8600BF5D76 /* Build configuration list for PBXNativeTarget "devicesslam arm64 (Shared)" */;
+			buildPhases = (
+				C041EBF41DABDB8600BF5D76 /* Sources */,
+				C041EBFA1DABDB8600BF5D76 /* Frameworks */,
+				C041EBFB1DABDB8600BF5D76 /* Headers */,
+				C041EC011DABDB8600BF5D76 /* Resources */,
+				C041EC021DABDB8600BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "devicesslam arm64 (Shared)";
+			productName = devicesslam;
+			productReference = C041EC061DABDB8600BF5D76 /* OceanDevicesSLAMD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D12BC941BF264E300A56828 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D12BC9B1BF264E300A56828 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D12BC971BF264E300A56828 /* Build configuration list for PBXProject "devicesslam" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D12BC931BF264E300A56828;
+			productRefGroup = 5D12BC9D1BF264E300A56828 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D12BC9B1BF264E300A56828 /* devicesslam x64 (Static) */,
+				5D12BD561BF267A400A56828 /* devicesslam x64 (Shared) */,
+				5D427E701D91495E00135BA7 /* devicesslam arm64 (Static) */,
+				C041EBF31DABDB8600BF5D76 /* devicesslam arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5D12BDB61BF26EAB00A56828 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC011DABDB8600BF5D76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D12BDB81BF26EBE00A56828 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+		5D427E821D9149A100135BA7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EC021DABDB8600BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D12BC981BF264E300A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D427E4D1D913D1300135BA7 /* SLAMTracker6DOF.cpp in Sources */,
+				5D427E491D913D1300135BA7 /* SLAMDevice.cpp in Sources */,
+				5D427E471D913D1300135BA7 /* SLAM.cpp in Sources */,
+				5D427E4F1D913D1300135BA7 /* Plugin.cpp in Sources */,
+				5D427E4B1D913D1300135BA7 /* SLAMFactory.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD571BF267A400A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D427E4E1D913D1300135BA7 /* SLAMTracker6DOF.cpp in Sources */,
+				5D427E4A1D913D1300135BA7 /* SLAMDevice.cpp in Sources */,
+				5D427E481D913D1300135BA7 /* SLAM.cpp in Sources */,
+				5D427E501D913D1300135BA7 /* Plugin.cpp in Sources */,
+				5D427E4C1D913D1300135BA7 /* SLAMFactory.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D427E711D91495E00135BA7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D427E721D91495E00135BA7 /* SLAMTracker6DOF.cpp in Sources */,
+				5D427E731D91495E00135BA7 /* SLAMDevice.cpp in Sources */,
+				5D427E741D91495E00135BA7 /* SLAM.cpp in Sources */,
+				5D427E751D91495E00135BA7 /* Plugin.cpp in Sources */,
+				5D427E761D91495E00135BA7 /* SLAMFactory.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EBF41DABDB8600BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EBF51DABDB8600BF5D76 /* SLAMTracker6DOF.cpp in Sources */,
+				C041EBF61DABDB8600BF5D76 /* SLAMDevice.cpp in Sources */,
+				C041EBF71DABDB8600BF5D76 /* SLAM.cpp in Sources */,
+				C041EBF81DABDB8600BF5D76 /* Plugin.cpp in Sources */,
+				C041EBF91DABDB8600BF5D76 /* SLAMFactory.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D12BCA51BF264E300A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D12BCA61BF264E300A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D12BCA81BF264E300A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/devicesslam/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/devicesslam/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanDevicesSLAMD;
+				PRODUCT_NAME = OceanDevicesSLAMD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D12BCA91BF264E300A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/devicesslam/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/devicesslam/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanDevicesSLAM;
+				PRODUCT_NAME = OceanDevicesSLAM;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D12BDB01BF267A400A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/devicesslam/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/devices/slam/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/devicesslam/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVDetectorD",
+					"-lOceanDevicesD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+				);
+				PRODUCT_MODULE_NAME = OceanDevicesSLAMD;
+				PRODUCT_NAME = OceanDevicesSLAMD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		5D12BDB11BF267A400A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/devicesslam/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/devices/slam/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/devicesslam/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVDetector",
+					"-lOceanDevices",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+				);
+				PRODUCT_MODULE_NAME = OceanDevicesSLAM;
+				PRODUCT_NAME = OceanDevicesSLAM;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		5D427E7F1D91495E00135BA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanDevicesSLAMD;
+				PRODUCT_NAME = OceanDevicesSLAMD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D427E801D91495E00135BA7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanDevicesSLAM;
+				PRODUCT_NAME = OceanDevicesSLAM;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EC041DABDB8600BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/devices/slam/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVDetectorD",
+					"-lOceanDevicesD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanDevicesSLAMD;
+				PRODUCT_NAME = OceanDevicesSLAMD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				STRIP_STYLE = "non-global";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		C041EC051DABDB8600BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/devices/slam/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVDetector",
+					"-lOceanDevices",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanDevicesSLAM;
+				PRODUCT_NAME = OceanDevicesSLAM;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				STRIP_STYLE = "non-global";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/devicesslam/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D12BC971BF264E300A56828 /* Build configuration list for PBXProject "devicesslam" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BCA51BF264E300A56828 /* Debug */,
+				5D12BCA61BF264E300A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BCA71BF264E300A56828 /* Build configuration list for PBXNativeTarget "devicesslam x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BCA81BF264E300A56828 /* Debug */,
+				5D12BCA91BF264E300A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BDAF1BF267A400A56828 /* Build configuration list for PBXNativeTarget "devicesslam x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BDB01BF267A400A56828 /* Debug */,
+				5D12BDB11BF267A400A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D427E7E1D91495E00135BA7 /* Build configuration list for PBXNativeTarget "devicesslam arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D427E7F1D91495E00135BA7 /* Debug */,
+				5D427E801D91495E00135BA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EC031DABDB8600BF5D76 /* Build configuration list for PBXNativeTarget "devicesslam arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EC041DABDB8600BF5D76 /* Debug */,
+				C041EC051DABDB8600BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D12BC941BF264E300A56828 /* Project object */;
+}

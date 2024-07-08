@@ -1,0 +1,1111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "1300"
+   version = "2.0">
+   <BuildAction
+      parallelizeBuildables = "NO"
+      buildImplicitDependencies = "NO">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D188D0E1B90C39A00FA7DD7"
+               BuildableName = "libOceanBase.a"
+               BlueprintName = "base x64 (Static)"
+               ReferencedContainer = "container:ocean/base/base.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D188D0E1B90C39A00FA7DD7"
+               BuildableName = "libOceanMath.a"
+               BlueprintName = "math x64 (Static)"
+               ReferencedContainer = "container:ocean/math/math.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DCE0D5B1BAAC126002E9E7D"
+               BuildableName = "libOceanGeometry.a"
+               BlueprintName = "geometry x64 (Static)"
+               ReferencedContainer = "container:ocean/geometry/geometry.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D63F5D21B97678700E2498E"
+               BuildableName = "libOceanIO.a"
+               BlueprintName = "io x64 (Static)"
+               ReferencedContainer = "container:ocean/io/io.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D188D0E1B90C39A00FA7DD7"
+               BuildableName = "libOceanCV.a"
+               BlueprintName = "cv x64 (Static)"
+               ReferencedContainer = "container:ocean/cv/cv.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D7D92561BA9D0AF00D38120"
+               BuildableName = "libOceanCVAdvanced.a"
+               BlueprintName = "cvadvanced x64 (Static)"
+               ReferencedContainer = "container:ocean/cv/advanced/cvadvanced.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D7D93041BA9D8F700D38120"
+               BuildableName = "libOceanCVDetector.a"
+               BlueprintName = "cvdetector x64 (Static)"
+               ReferencedContainer = "container:ocean/cv/detector/cvdetector.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DCE0D351BAABD17002E9E7D"
+               BuildableName = "libOceanCVDetectorQRCodes.a"
+               BlueprintName = "cvdetectorqrcodes x64 (Static)"
+               ReferencedContainer = "container:ocean/cv/detector/qrcodes/cvdetectorqrcodes.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D7D93501BA9DC5700D38120"
+               BuildableName = "libOceanCVFonts.a"
+               BlueprintName = "cvfonts x64 (Static)"
+               ReferencedContainer = "container:ocean/cv/fonts/cvfonts.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D7D93501BA9DC5700D38120"
+               BuildableName = "libOceanCVSegmentation.a"
+               BlueprintName = "cvsegmentation x64 (Static)"
+               ReferencedContainer = "container:ocean/cv/segmentation/cvsegmentation.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D7D939A1BA9DF8000D38120"
+               BuildableName = "libOceanCVSynthesis.a"
+               BlueprintName = "cvsynthesis x64 (Static)"
+               ReferencedContainer = "container:ocean/cv/synthesis/cvsynthesis.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DE84E111BAB07F5009C920C"
+               BuildableName = "libOceanNetwork.a"
+               BlueprintName = "network x64 (Static)"
+               ReferencedContainer = "container:ocean/network/network.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D63F60A1B976B6900E2498E"
+               BuildableName = "libOceanSystem.a"
+               BlueprintName = "system x64 (Static)"
+               ReferencedContainer = "container:ocean/system/system.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D63F5271B973AC700E2498E"
+               BuildableName = "libOceanMedia.a"
+               BlueprintName = "media x64 (Static)"
+               ReferencedContainer = "container:ocean/media/media.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D63F5A61B9760C100E2498E"
+               BuildableName = "libOceanMediaAVFoundation.a"
+               BlueprintName = "mediaavfoundation x64 (Static)"
+               ReferencedContainer = "container:ocean/media/avfoundation/mediaavfoundation.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D63F5A61B9760C100E2498E"
+               BuildableName = "libOceanMediaFFmpeg.a"
+               BlueprintName = "mediaffmpeg x64 (Static)"
+               ReferencedContainer = "container:ocean/media/ffmpeg/mediaffmpeg.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D63F5A61B9760C100E2498E"
+               BuildableName = "libOceanMediaImageIO.a"
+               BlueprintName = "mediaimageio x64 (Static)"
+               ReferencedContainer = "container:ocean/media/imageio/mediaimageio.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D63F5A61B9760C100E2498E"
+               BuildableName = "libOceanMediaOpenImageLibraries.a"
+               BlueprintName = "mediaopenimagelibraries x64 (Static)"
+               ReferencedContainer = "container:ocean/media/openimagelibraries/mediaopenimagelibraries.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D63F5A61B9760C100E2498E"
+               BuildableName = "libOceanMediaSpecial.a"
+               BlueprintName = "mediaspecial x64 (Static)"
+               ReferencedContainer = "container:ocean/media/special/mediaspecial.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D12BB001BF23B4100A56828"
+               BuildableName = "libOceanDevices.a"
+               BlueprintName = "devices x64 (Static)"
+               ReferencedContainer = "container:ocean/devices/devices.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D12BB001BF23B4100A56828"
+               BuildableName = "libOceanRendering.a"
+               BlueprintName = "rendering x64 (Static)"
+               ReferencedContainer = "container:ocean/rendering/rendering.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D12BC9B1BF264E300A56828"
+               BuildableName = "libOceanRenderingGlobalIllumination.a"
+               BlueprintName = "renderingglobalillumination x64 (Static)"
+               ReferencedContainer = "container:ocean/rendering/globalillumination/renderingglobalillumination.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D12BC9B1BF264E300A56828"
+               BuildableName = "libOceanRenderingGLESceneGraph.a"
+               BlueprintName = "renderingglescenegraph x64 (Static)"
+               ReferencedContainer = "container:ocean/rendering/glescenegraph/renderingglescenegraph.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D12BB001BF23B4100A56828"
+               BuildableName = "libOceanSceneDescription.a"
+               BlueprintName = "scenedescription x64 (Static)"
+               ReferencedContainer = "container:ocean/scenedescription/scenedescription.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D12BC9B1BF264E300A56828"
+               BuildableName = "libOceanSceneDescriptionSDLOBJ.a"
+               BlueprintName = "scenedescriptionsdlobj x64 (Static)"
+               ReferencedContainer = "container:ocean/scenedescription/sdl/obj/scenedescriptionsdlobj.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D12BC9B1BF264E300A56828"
+               BuildableName = "libOceanSceneDescriptionSDXX3D.a"
+               BlueprintName = "scenedescriptionsdxx3d x64 (Static)"
+               ReferencedContainer = "container:ocean/scenedescription/sdx/x3d/scenedescriptionsdxx3d.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DCE53E31BB3FF19009C258F"
+               BuildableName = "libOceanPlatform.a"
+               BlueprintName = "platform x64 (Static)"
+               ReferencedContainer = "container:ocean/platform/platform.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DCD18A01BB54C3B00656104"
+               BuildableName = "libOceanPlatformApple.a"
+               BlueprintName = "platformapple x64 (Static)"
+               ReferencedContainer = "container:ocean/platform/apple/platformapple.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DCD18A01BB54C3B00656104"
+               BuildableName = "libOceanPlatformAppleMacOS.a"
+               BlueprintName = "platformapplemacos x64 (Static)"
+               ReferencedContainer = "container:ocean/platform/apple/macos/platformapplemacos.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D823D231BCD048000F9FE4A"
+               BuildableName = "libOceanPlatformGL.a"
+               BlueprintName = "platformgl x64 (Static)"
+               ReferencedContainer = "container:ocean/platform/gl/platformgl.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D936F2E1BC6AB1D0046ACD4"
+               BuildableName = "libOceanPlatformGLES.a"
+               BlueprintName = "platformgles x64 (Static)"
+               ReferencedContainer = "container:ocean/platform/gles/platformgles.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D823D231BCD048000F9FE4A"
+               BuildableName = "libOceanPlatformWxWidgets.a"
+               BlueprintName = "platformwxwidgets x64 (Static)"
+               ReferencedContainer = "container:ocean/platform/wxwidgets/platformwxwidgets.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DF8868D1BAAF4C400E9F349"
+               BuildableName = "libOceanTracking.a"
+               BlueprintName = "tracking x64 (Static)"
+               ReferencedContainer = "container:ocean/tracking/tracking.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D936F2E1BC6AB1D0046ACD4"
+               BuildableName = "libOceanTrackingPattern.a"
+               BlueprintName = "trackingpattern x64 (Static)"
+               ReferencedContainer = "container:ocean/tracking/pattern/trackingpattern.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DE84D351BAAFC32009C920C"
+               BuildableName = "libOceanTrackingOffline.a"
+               BlueprintName = "trackingoffline x64 (Static)"
+               ReferencedContainer = "container:ocean/tracking/offline/trackingoffline.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D936F2E1BC6AB1D0046ACD4"
+               BuildableName = "libOceanTrackingORB.a"
+               BlueprintName = "trackingorb x64 (Static)"
+               ReferencedContainer = "container:ocean/tracking/orb/trackingorb.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DE84D351BAAFC32009C920C"
+               BuildableName = "libOceanTrackingPoint.a"
+               BlueprintName = "trackingpoint x64 (Static)"
+               ReferencedContainer = "container:ocean/tracking/point/trackingpoint.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D936F2E1BC6AB1D0046ACD4"
+               BuildableName = "libOceanTrackingRMV.a"
+               BlueprintName = "trackingrmv x64 (Static)"
+               ReferencedContainer = "container:ocean/tracking/rmv/trackingrmv.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D12BC9B1BF264E300A56828"
+               BuildableName = "libOceanDevicesPattern.a"
+               BlueprintName = "devicespattern x64 (Static)"
+               ReferencedContainer = "container:ocean/devices/pattern/devicespattern.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D12BC9B1BF264E300A56828"
+               BuildableName = "libOceanDevicesRMV.a"
+               BlueprintName = "devicesrmv x64 (Static)"
+               ReferencedContainer = "container:ocean/devices/rmv/devicesrmv.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D12BC9B1BF264E300A56828"
+               BuildableName = "libOceanDevicesSLAM.a"
+               BlueprintName = "devicesslam x64 (Static)"
+               ReferencedContainer = "container:ocean/devices/slam/devicesslam.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D188D0E1B90C39A00FA7DD7"
+               BuildableName = "libOceanTestBase.a"
+               BlueprintName = "testbase x64 (Static)"
+               ReferencedContainer = "container:ocean/test/testbase/testbase.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D67D3CE1B9375BA00138225"
+               BuildableName = "libOceanTestCV.a"
+               BlueprintName = "testcv x64 (Static)"
+               ReferencedContainer = "container:ocean/test/testcv/testcv.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DD0C0331BD549E800ABBC5B"
+               BuildableName = "libOceanTestCVAdvanced.a"
+               BlueprintName = "testcvadvanced x64 (Static)"
+               ReferencedContainer = "container:ocean/test/testcv/testadvanced/testcvadvanced.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DACDC5C1C69F75700D5D6B0"
+               BuildableName = "libOceanTestCVDetector.a"
+               BlueprintName = "testcvdetector x64 (Static)"
+               ReferencedContainer = "container:ocean/test/testcv/testcvdetector/testcvdetector.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DEAE99C1C87609D0035D95A"
+               BuildableName = "libOceanTestCVSegmentation.a"
+               BlueprintName = "testcvsegmentation x64 (Static)"
+               ReferencedContainer = "container:ocean/test/testcv/testcvsegmentation/testcvsegmentation.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D67D3CE1B9375BA00138225"
+               BuildableName = "libOceanTestDevices.a"
+               BlueprintName = "testdevices x64 (Static)"
+               ReferencedContainer = "container:ocean/test/testdevices/testdevices.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DB3A26C1BAB36660000B274"
+               BuildableName = "libOceanTestMath.a"
+               BlueprintName = "testmath x64 (Static)"
+               ReferencedContainer = "container:ocean/test/testmath/testmath.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DB3A1FD1BAB25F40000B274"
+               BuildableName = "libOceanTestGeometry.a"
+               BlueprintName = "testgeometry x64 (Static)"
+               ReferencedContainer = "container:ocean/test/testgeometry/testgeometry.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DD0BFD51BD525E000ABBC5B"
+               BuildableName = "libOceanTestIO.a"
+               BlueprintName = "testio x64 (Static)"
+               ReferencedContainer = "container:ocean/test/testio/testio.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DD0BFD51BD525E000ABBC5B"
+               BuildableName = "libOceanTestMedia.a"
+               BlueprintName = "testmedia x64 (Static)"
+               ReferencedContainer = "container:ocean/test/testmedia/testmedia.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D9C339C1B91E3FE00D6B89A"
+               BuildableName = "testbaseosx"
+               BlueprintName = "testbaseosx x64 (Static)"
+               ReferencedContainer = "container:application/ocean/test/base/testbase/macos/testbaseosx.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DB3A2F01BAB38C50000B274"
+               BuildableName = "testmath"
+               BlueprintName = "testmath x64 (Static)"
+               ReferencedContainer = "container:application/ocean/test/math/testmath/macos/testmath.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DB3A2551BAB28EA0000B274"
+               BuildableName = "testgeometryosx"
+               BlueprintName = "testgeometryosx x64 (Static)"
+               ReferencedContainer = "container:application/ocean/test/geometry/testgeometry/macos/testgeometryosx.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DD0C01B1BD52AC100ABBC5B"
+               BuildableName = "testio"
+               BlueprintName = "testio x64 (Static)"
+               ReferencedContainer = "container:application/ocean/test/io/testio/macos/testio.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D67D44C1B939A1300138225"
+               BuildableName = "testcvosx"
+               BlueprintName = "testcvosx x64 (Static)"
+               ReferencedContainer = "container:application/ocean/test/cv/testcv/macos/testcvosx.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D63F58F1B9744B100E2498E"
+               BuildableName = "testmedia"
+               BlueprintName = "testmedia x64 (Static)"
+               ReferencedContainer = "container:application/ocean/test/media/testmedia/macos/testmedia.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D3FAE341C64A8EF00C9644A"
+               BuildableName = "testcvadvanced"
+               BlueprintName = "testcvadvanced x64 (Static)"
+               ReferencedContainer = "container:application/ocean/test/cv/testcv/testcvadvanced/macos/testcvadvanced.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DDE17AD1C69FDB200325BD2"
+               BuildableName = "testcvdetectorosx"
+               BlueprintName = "testcvdetectorosx x64 (Static)"
+               ReferencedContainer = "container:application/ocean/test/cv/testcv/testcvdetector/macos/testcvdetectorosx.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DEAE9841C875DA70035D95A"
+               BuildableName = "testcvsegmentation"
+               BlueprintName = "testcvsegmentation x64 (Static)"
+               ReferencedContainer = "container:application/ocean/test/cv/testcv/testcvsegmentation/macos/testcvsegmentation.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D273BFC1C638B5900301196"
+               BuildableName = "testocean"
+               BlueprintName = "testocean x64 (Static)"
+               ReferencedContainer = "container:application/ocean/test/testocean/macos/testocean.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D936F7F1BC6BA840046ACD4"
+               BuildableName = "demobasesharedmemoryclient"
+               BlueprintName = "demobasesharedmemoryclient x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/base/sharedmemory/client/macos/demobasesharedmemoryclient.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D936F971BC6BE3C0046ACD4"
+               BuildableName = "demobasesharedmemoryserver"
+               BlueprintName = "demobasesharedmemoryserver x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/base/sharedmemory/server/macos/demobasesharedmemoryserver.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D0140B21C16E92100C5E27F"
+               BuildableName = "demonetworktcpclient"
+               BlueprintName = "demonetworktcpclient x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/network/tcpclient/demonetworktcpclient/demonetworktcpclient.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D01409A1C16E55B00C5E27F"
+               BuildableName = "demonetowkrtcpserver"
+               BlueprintName = "demonetworktcpserver x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/network/tcpserver/macos/demonetworktcpserver.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D936EC11BC6805F0046ACD4"
+               BuildableName = "demonetworkmaintenancereceiver"
+               BlueprintName = "demonetworkmaintenancereceiver x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/network/maintenancereceiver/macos/demonetworkmaintenancereceiver.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
+               BuildableName = "demoplatformosxobjc.app"
+               BlueprintName = "demoplatformosxobjc x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/platform/osxobjc/macos/demoplatformosxobjc.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DCC56C01BB2E02200661170"
+               BuildableName = "demoplatformosxswift.app"
+               BlueprintName = "demoplatformosxswift x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/platform/osxswift/macos/demoplatformosxswift.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DCC56C01BB2E02200661170"
+               BuildableName = "demomathlookup.app"
+               BlueprintName = "demomathlookup x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/math/lookup/macos/demomathlookup.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D2228E91BB027CA00298788"
+               BuildableName = "demomediamoviepreview.app"
+               BlueprintName = "demomediamoviepreview x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/media/moviepreview/wxw/demomediamoviepreview.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
+               BuildableName = "demomediavideopreviewosx.app"
+               BlueprintName = "demomediavideopreviewosx x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/media/videopreview/macos/demomediavideopreviewosx.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
+               BuildableName = "demotrackingfeaturetrackerosx.app"
+               BlueprintName = "demotrackingfeaturetrackerosx x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/tracking/featuretracker/macos/demotrackingfeaturetrackerosx.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5D01409A1C16E55B00C5E27F"
+               BuildableName = "democvadvancedpanoramaextractor"
+               BlueprintName = "democvadvancedpanoramaextractor x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/cv/advanced/panoramaextractor/macos/democvadvancedpanoramaextractor.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "5DD7935E1BBBDF7300E76616"
+               BuildableName = "demotrackinghomographyimagealignerosx.app"
+               BlueprintName = "demotrackinghomographyimagealignerosx x64 (Static)"
+               ReferencedContainer = "container:application/ocean/demo/tracking/homographyimagealigner/macos/demotrackinghomographyimagealignerosx.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "5D9C339C1B91E3FE00D6B89A"
+            BuildableName = "testbaseosx"
+            BlueprintName = "testbaseosx x64 (Static)"
+            ReferencedContainer = "container:application/ocean/test/base/testbase/macos/testbaseosx.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <Testables>
+      </Testables>
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      askForAppToLaunch = "Yes"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES"
+      launchAutomaticallySubstyle = "2">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "5D9C339C1B91E3FE00D6B89A"
+            BuildableName = "testbaseosx"
+            BlueprintName = "testbaseosx x64 (Static)"
+            ReferencedContainer = "container:application/ocean/test/base/testbase/macos/testbaseosx.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Debug"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES"
+      askForAppToLaunch = "Yes"
+      launchAutomaticallySubstyle = "2">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "5D188D0E1B90C39A00FA7DD7"
+            BuildableName = "libOceanBase.a"
+            BlueprintName = "base x64 (Static)"
+            ReferencedContainer = "container:ocean/base/base.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Debug"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>

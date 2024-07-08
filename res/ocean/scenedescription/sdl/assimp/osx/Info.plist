@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>OceanSceneDescriptionSDLAssimp</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>OceanSceneDescriptionSDLAssimp</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>Copyright 2004-present Facebook</string>
+	<key>OceanPluginDependences</key>
+	<string>MEDIA RENDERING</string>
+	<key>OceanPluginDescription</key>
+	<string>This plugin provides an assimp-supported file scene description loader.</string>
+	<key>OceanPluginName</key>
+	<string>Ocean SceneDescription Loader Assimp</string>
+	<key>OceanPluginPriority</key>
+	<integer>0</integer>
+	<key>OceanPluginType</key>
+	<string>SCENEDESCRIPTION</string>
+</dict>
+</plist>

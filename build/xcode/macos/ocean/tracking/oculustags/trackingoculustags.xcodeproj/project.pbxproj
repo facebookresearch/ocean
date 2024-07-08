@@ -1,0 +1,1020 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		501A88CC23EE958E00F84EC5 /* OculusTagDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 501A88CB23EE958E00F84EC5 /* OculusTagDebugElements.h */; };
+		501A88CD23EE958E00F84EC5 /* OculusTagDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 501A88CB23EE958E00F84EC5 /* OculusTagDebugElements.h */; };
+		501A88CE23EE958E00F84EC5 /* OculusTagDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 501A88CB23EE958E00F84EC5 /* OculusTagDebugElements.h */; };
+		501A88CF23EE958E00F84EC5 /* OculusTagDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 501A88CB23EE958E00F84EC5 /* OculusTagDebugElements.h */; };
+		5045599F23D0F3D80005E1FE /* OculusTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5045599E23D0F3D80005E1FE /* OculusTag.cpp */; };
+		504559A023D0F3D80005E1FE /* OculusTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5045599E23D0F3D80005E1FE /* OculusTag.cpp */; };
+		504559A123D0F3D80005E1FE /* OculusTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5045599E23D0F3D80005E1FE /* OculusTag.cpp */; };
+		504559A223D0F3D80005E1FE /* OculusTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5045599E23D0F3D80005E1FE /* OculusTag.cpp */; };
+		507A89D028B94FA000374559 /* OculusTag.h in Headers */ = {isa = PBXBuildFile; fileRef = 507A89CE28B94FA000374559 /* OculusTag.h */; };
+		507A89D128B94FA000374559 /* OculusTag.h in Headers */ = {isa = PBXBuildFile; fileRef = 507A89CE28B94FA000374559 /* OculusTag.h */; };
+		507A89D228B94FA000374559 /* OculusTag.h in Headers */ = {isa = PBXBuildFile; fileRef = 507A89CE28B94FA000374559 /* OculusTag.h */; };
+		507A89D328B94FA000374559 /* OculusTag.h in Headers */ = {isa = PBXBuildFile; fileRef = 507A89CE28B94FA000374559 /* OculusTag.h */; };
+		507A89D428B94FA000374559 /* OculusTags.h in Headers */ = {isa = PBXBuildFile; fileRef = 507A89CF28B94FA000374559 /* OculusTags.h */; };
+		507A89D528B94FA000374559 /* OculusTags.h in Headers */ = {isa = PBXBuildFile; fileRef = 507A89CF28B94FA000374559 /* OculusTags.h */; };
+		507A89D628B94FA000374559 /* OculusTags.h in Headers */ = {isa = PBXBuildFile; fileRef = 507A89CF28B94FA000374559 /* OculusTags.h */; };
+		507A89D728B94FA000374559 /* OculusTags.h in Headers */ = {isa = PBXBuildFile; fileRef = 507A89CF28B94FA000374559 /* OculusTags.h */; };
+		50942E8D242035240008B432 /* QuadDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50942E8C242035240008B432 /* QuadDetector.h */; };
+		50942E8E242035240008B432 /* QuadDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50942E8C242035240008B432 /* QuadDetector.h */; };
+		50942E8F242035240008B432 /* QuadDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50942E8C242035240008B432 /* QuadDetector.h */; };
+		50942E90242035240008B432 /* QuadDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50942E8C242035240008B432 /* QuadDetector.h */; };
+		50942E92242035340008B432 /* QuadDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50942E91242035340008B432 /* QuadDetector.cpp */; };
+		50942E93242035340008B432 /* QuadDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50942E91242035340008B432 /* QuadDetector.cpp */; };
+		50942E94242035340008B432 /* QuadDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50942E91242035340008B432 /* QuadDetector.cpp */; };
+		50942E95242035340008B432 /* QuadDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50942E91242035340008B432 /* QuadDetector.cpp */; };
+		50B0C787239F4715007A96ED /* OculusTagTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C786239F4715007A96ED /* OculusTagTracker.cpp */; };
+		50B0C788239F4715007A96ED /* OculusTagTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C786239F4715007A96ED /* OculusTagTracker.cpp */; };
+		50B0C789239F4715007A96ED /* OculusTagTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C786239F4715007A96ED /* OculusTagTracker.cpp */; };
+		50B0C78A239F4715007A96ED /* OculusTagTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C786239F4715007A96ED /* OculusTagTracker.cpp */; };
+		50B0C78D239F48CD007A96ED /* OculusTagDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50B0C78B239F48CD007A96ED /* OculusTagDetector.h */; };
+		50B0C78E239F48CD007A96ED /* OculusTagDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50B0C78B239F48CD007A96ED /* OculusTagDetector.h */; };
+		50B0C78F239F48CD007A96ED /* OculusTagDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50B0C78B239F48CD007A96ED /* OculusTagDetector.h */; };
+		50B0C790239F48CD007A96ED /* OculusTagDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50B0C78B239F48CD007A96ED /* OculusTagDetector.h */; };
+		50B0C791239F48CD007A96ED /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50B0C78C239F48CD007A96ED /* Utilities.h */; };
+		50B0C792239F48CD007A96ED /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50B0C78C239F48CD007A96ED /* Utilities.h */; };
+		50B0C793239F48CD007A96ED /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50B0C78C239F48CD007A96ED /* Utilities.h */; };
+		50B0C794239F48CD007A96ED /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50B0C78C239F48CD007A96ED /* Utilities.h */; };
+		50B0C797239F48EA007A96ED /* OculusTagDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C795239F48EA007A96ED /* OculusTagDetector.cpp */; };
+		50B0C798239F48EA007A96ED /* OculusTagDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C795239F48EA007A96ED /* OculusTagDetector.cpp */; };
+		50B0C799239F48EA007A96ED /* OculusTagDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C795239F48EA007A96ED /* OculusTagDetector.cpp */; };
+		50B0C79A239F48EA007A96ED /* OculusTagDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C795239F48EA007A96ED /* OculusTagDetector.cpp */; };
+		50B0C79B239F48EA007A96ED /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C796239F48EA007A96ED /* Utilities.cpp */; };
+		50B0C79C239F48EA007A96ED /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C796239F48EA007A96ED /* Utilities.cpp */; };
+		50B0C79D239F48EA007A96ED /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C796239F48EA007A96ED /* Utilities.cpp */; };
+		50B0C79E239F48EA007A96ED /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50B0C796239F48EA007A96ED /* Utilities.cpp */; };
+		93F9792C230A022000E594EF /* OculusTagTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F9792B230A022000E594EF /* OculusTagTracker.h */; };
+		93F9792D230A022000E594EF /* OculusTagTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F9792B230A022000E594EF /* OculusTagTracker.h */; };
+		93F9792E230A022000E594EF /* OculusTagTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F9792B230A022000E594EF /* OculusTagTracker.h */; };
+		93F9792F230A022000E594EF /* OculusTagTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F9792B230A022000E594EF /* OculusTagTracker.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		501A88CB23EE958E00F84EC5 /* OculusTagDebugElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OculusTagDebugElements.h; path = ../../../../../../impl/ocean/tracking/oculustags/OculusTagDebugElements.h; sourceTree = "<group>"; };
+		5045599E23D0F3D80005E1FE /* OculusTag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OculusTag.cpp; path = ../../../../../../impl/ocean/tracking/oculustags/OculusTag.cpp; sourceTree = "<group>"; };
+		507A89CE28B94FA000374559 /* OculusTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OculusTag.h; path = ../../../../../../impl/ocean/tracking/oculustags/OculusTag.h; sourceTree = "<group>"; };
+		507A89CF28B94FA000374559 /* OculusTags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OculusTags.h; path = ../../../../../../impl/ocean/tracking/oculustags/OculusTags.h; sourceTree = "<group>"; };
+		50942E8C242035240008B432 /* QuadDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QuadDetector.h; path = ../../../../../../impl/ocean/tracking/oculustags/QuadDetector.h; sourceTree = "<group>"; };
+		50942E91242035340008B432 /* QuadDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QuadDetector.cpp; path = ../../../../../../impl/ocean/tracking/oculustags/QuadDetector.cpp; sourceTree = "<group>"; };
+		50B0C786239F4715007A96ED /* OculusTagTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OculusTagTracker.cpp; path = ../../../../../../impl/ocean/tracking/oculustags/OculusTagTracker.cpp; sourceTree = "<group>"; };
+		50B0C78B239F48CD007A96ED /* OculusTagDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OculusTagDetector.h; path = ../../../../../../impl/ocean/tracking/oculustags/OculusTagDetector.h; sourceTree = "<group>"; };
+		50B0C78C239F48CD007A96ED /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../impl/ocean/tracking/oculustags/Utilities.h; sourceTree = "<group>"; };
+		50B0C795239F48EA007A96ED /* OculusTagDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OculusTagDetector.cpp; path = ../../../../../../impl/ocean/tracking/oculustags/OculusTagDetector.cpp; sourceTree = "<group>"; };
+		50B0C796239F48EA007A96ED /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../../impl/ocean/tracking/oculustags/Utilities.cpp; sourceTree = "<group>"; };
+		5D936F2F1BC6AB1D0046ACD4 /* libOceanTrackingOculusTagsD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingOculusTagsD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D936F761BC6AC7A0046ACD4 /* libOceanTrackingOculusTagsD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingOculusTagsD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9864301D8B634100DEDB00 /* libOceanTrackingOculusTagsD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingOculusTagsD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		93F9792B230A022000E594EF /* OculusTagTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OculusTagTracker.h; path = ../../../../../../impl/ocean/tracking/oculustags/OculusTagTracker.h; sourceTree = "<group>"; };
+		C041EEF51DABFBA900BF5D76 /* libOceanTrackingOculusTagsD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingOculusTagsD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D936F2C1BC6AB1D0046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936F691BC6AC7A0046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9864231D8B634100DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EEE71DABFBA900BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D936F261BC6AB1D0046ACD4 = {
+			isa = PBXGroup;
+			children = (
+				5D936F4E1BC6AC300046ACD4 /* Header Files */,
+				5D936F3D1BC6ABE50046ACD4 /* Source Files */,
+				5D936F301BC6AB1D0046ACD4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D936F301BC6AB1D0046ACD4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D936F2F1BC6AB1D0046ACD4 /* libOceanTrackingOculusTagsD.a */,
+				5D936F761BC6AC7A0046ACD4 /* libOceanTrackingOculusTagsD.dylib */,
+				5D9864301D8B634100DEDB00 /* libOceanTrackingOculusTagsD.a */,
+				C041EEF51DABFBA900BF5D76 /* libOceanTrackingOculusTagsD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D936F3D1BC6ABE50046ACD4 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5045599E23D0F3D80005E1FE /* OculusTag.cpp */,
+				50B0C795239F48EA007A96ED /* OculusTagDetector.cpp */,
+				50B0C786239F4715007A96ED /* OculusTagTracker.cpp */,
+				50942E91242035340008B432 /* QuadDetector.cpp */,
+				50B0C796239F48EA007A96ED /* Utilities.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D936F4E1BC6AC300046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				507A89CE28B94FA000374559 /* OculusTag.h */,
+				501A88CB23EE958E00F84EC5 /* OculusTagDebugElements.h */,
+				50B0C78B239F48CD007A96ED /* OculusTagDetector.h */,
+				507A89CF28B94FA000374559 /* OculusTags.h */,
+				93F9792B230A022000E594EF /* OculusTagTracker.h */,
+				50942E8C242035240008B432 /* QuadDetector.h */,
+				50B0C78C239F48CD007A96ED /* Utilities.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D936F2D1BC6AB1D0046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93F9792C230A022000E594EF /* OculusTagTracker.h in Headers */,
+				50B0C791239F48CD007A96ED /* Utilities.h in Headers */,
+				50B0C78D239F48CD007A96ED /* OculusTagDetector.h in Headers */,
+				501A88CC23EE958E00F84EC5 /* OculusTagDebugElements.h in Headers */,
+				507A89D028B94FA000374559 /* OculusTag.h in Headers */,
+				50942E8D242035240008B432 /* QuadDetector.h in Headers */,
+				507A89D428B94FA000374559 /* OculusTags.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936F6A1BC6AC7A0046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93F9792D230A022000E594EF /* OculusTagTracker.h in Headers */,
+				50B0C792239F48CD007A96ED /* Utilities.h in Headers */,
+				50B0C78E239F48CD007A96ED /* OculusTagDetector.h in Headers */,
+				501A88CD23EE958E00F84EC5 /* OculusTagDebugElements.h in Headers */,
+				507A89D128B94FA000374559 /* OculusTag.h in Headers */,
+				50942E8E242035240008B432 /* QuadDetector.h in Headers */,
+				507A89D528B94FA000374559 /* OculusTags.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9864241D8B634100DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93F9792E230A022000E594EF /* OculusTagTracker.h in Headers */,
+				50B0C793239F48CD007A96ED /* Utilities.h in Headers */,
+				50B0C78F239F48CD007A96ED /* OculusTagDetector.h in Headers */,
+				501A88CE23EE958E00F84EC5 /* OculusTagDebugElements.h in Headers */,
+				507A89D228B94FA000374559 /* OculusTag.h in Headers */,
+				50942E8F242035240008B432 /* QuadDetector.h in Headers */,
+				507A89D628B94FA000374559 /* OculusTags.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EEE81DABFBA900BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93F9792F230A022000E594EF /* OculusTagTracker.h in Headers */,
+				50B0C794239F48CD007A96ED /* Utilities.h in Headers */,
+				50B0C790239F48CD007A96ED /* OculusTagDetector.h in Headers */,
+				501A88CF23EE958E00F84EC5 /* OculusTagDebugElements.h in Headers */,
+				507A89D328B94FA000374559 /* OculusTag.h in Headers */,
+				50942E90242035240008B432 /* QuadDetector.h in Headers */,
+				507A89D728B94FA000374559 /* OculusTags.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D936F2E1BC6AB1D0046ACD4 /* trackingoculustags x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D936F3A1BC6AB1D0046ACD4 /* Build configuration list for PBXNativeTarget "trackingoculustags x64 (Static)" */;
+			buildPhases = (
+				5D936F2B1BC6AB1D0046ACD4 /* Sources */,
+				5D936F2C1BC6AB1D0046ACD4 /* Frameworks */,
+				5D936F2D1BC6AB1D0046ACD4 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingoculustags x64 (Static)";
+			productName = trackingoculustags;
+			productReference = 5D936F2F1BC6AB1D0046ACD4 /* libOceanTrackingOculusTagsD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D936F5F1BC6AC7A0046ACD4 /* trackingoculustags x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D936F731BC6AC7A0046ACD4 /* Build configuration list for PBXNativeTarget "trackingoculustags x64 (Shared)" */;
+			buildPhases = (
+				5D936F601BC6AC7A0046ACD4 /* Sources */,
+				5D936F691BC6AC7A0046ACD4 /* Frameworks */,
+				5D936F6A1BC6AC7A0046ACD4 /* Headers */,
+				C041EEF61DABFC6A00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingoculustags x64 (Shared)";
+			productName = trackingoculustags;
+			productReference = 5D936F761BC6AC7A0046ACD4 /* libOceanTrackingOculusTagsD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9864191D8B634100DEDB00 /* trackingoculustags arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D98642D1D8B634100DEDB00 /* Build configuration list for PBXNativeTarget "trackingoculustags arm64 (Static)" */;
+			buildPhases = (
+				5D98641A1D8B634100DEDB00 /* Sources */,
+				5D9864231D8B634100DEDB00 /* Frameworks */,
+				5D9864241D8B634100DEDB00 /* Headers */,
+				5D837F5A1D8F10FD00939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingoculustags arm64 (Static)";
+			productName = trackingoculustags;
+			productReference = 5D9864301D8B634100DEDB00 /* libOceanTrackingOculusTagsD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EEDD1DABFBA900BF5D76 /* trackingoculustags arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EEF21DABFBA900BF5D76 /* Build configuration list for PBXNativeTarget "trackingoculustags arm64 (Shared)" */;
+			buildPhases = (
+				C041EEDE1DABFBA900BF5D76 /* Sources */,
+				C041EEE71DABFBA900BF5D76 /* Frameworks */,
+				C041EEE81DABFBA900BF5D76 /* Headers */,
+				C041EEF11DABFBA900BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingoculustags arm64 (Shared)";
+			productName = trackingoculustags;
+			productReference = C041EEF51DABFBA900BF5D76 /* libOceanTrackingOculusTagsD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D936F271BC6AB1D0046ACD4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D936F2E1BC6AB1D0046ACD4 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D936F2A1BC6AB1D0046ACD4 /* Build configuration list for PBXProject "trackingoculustags" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D936F261BC6AB1D0046ACD4;
+			productRefGroup = 5D936F301BC6AB1D0046ACD4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D936F2E1BC6AB1D0046ACD4 /* trackingoculustags x64 (Static) */,
+				5D936F5F1BC6AC7A0046ACD4 /* trackingoculustags x64 (Shared) */,
+				5D9864191D8B634100DEDB00 /* trackingoculustags arm64 (Static) */,
+				C041EEDD1DABFBA900BF5D76 /* trackingoculustags arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F5A1D8F10FD00939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EEF11DABFBA900BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EEF61DABFC6A00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D936F2B1BC6AB1D0046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50B0C787239F4715007A96ED /* OculusTagTracker.cpp in Sources */,
+				5045599F23D0F3D80005E1FE /* OculusTag.cpp in Sources */,
+				50B0C797239F48EA007A96ED /* OculusTagDetector.cpp in Sources */,
+				50942E92242035340008B432 /* QuadDetector.cpp in Sources */,
+				50B0C79B239F48EA007A96ED /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936F601BC6AC7A0046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50B0C788239F4715007A96ED /* OculusTagTracker.cpp in Sources */,
+				504559A023D0F3D80005E1FE /* OculusTag.cpp in Sources */,
+				50B0C798239F48EA007A96ED /* OculusTagDetector.cpp in Sources */,
+				50942E93242035340008B432 /* QuadDetector.cpp in Sources */,
+				50B0C79C239F48EA007A96ED /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98641A1D8B634100DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50B0C789239F4715007A96ED /* OculusTagTracker.cpp in Sources */,
+				504559A123D0F3D80005E1FE /* OculusTag.cpp in Sources */,
+				50B0C799239F48EA007A96ED /* OculusTagDetector.cpp in Sources */,
+				50942E94242035340008B432 /* QuadDetector.cpp in Sources */,
+				50B0C79D239F48EA007A96ED /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EEDE1DABFBA900BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50B0C78A239F4715007A96ED /* OculusTagTracker.cpp in Sources */,
+				504559A223D0F3D80005E1FE /* OculusTag.cpp in Sources */,
+				50B0C79A239F48EA007A96ED /* OculusTagDetector.cpp in Sources */,
+				50942E95242035340008B432 /* QuadDetector.cpp in Sources */,
+				50B0C79E239F48EA007A96ED /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D936F381BC6AB1D0046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D936F391BC6AB1D0046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D936F3B1BC6AB1D0046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingoculustags/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingoculustags/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingOculusTagsD;
+				PRODUCT_NAME = OceanTrackingOculusTagsD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D936F3C1BC6AB1D0046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingoculustags/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingoculustags/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingOculusTags;
+				PRODUCT_NAME = OceanTrackingOculusTags;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D936F741BC6AC7A0046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingoculustags/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingoculustags/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanTrackingD",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingOculusTagsD;
+				PRODUCT_NAME = OceanTrackingOculusTagsD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D936F751BC6AC7A0046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingoculustags/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingoculustags/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanTracking",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingOculusTags;
+				PRODUCT_NAME = OceanTrackingOculusTags;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D98642E1D8B634100DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingOculusTagsD;
+				PRODUCT_NAME = OceanTrackingOculusTagsD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D98642F1D8B634100DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingOculusTags;
+				PRODUCT_NAME = OceanTrackingOculusTags;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EEF31DABFBA900BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanTrackingD",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingOculusTagsD;
+				PRODUCT_NAME = OceanTrackingOculusTagsD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EEF41DABFBA900BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanTracking",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingOculusTags;
+				PRODUCT_NAME = OceanTrackingOculusTags;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingoculustags/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D936F2A1BC6AB1D0046ACD4 /* Build configuration list for PBXProject "trackingoculustags" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936F381BC6AB1D0046ACD4 /* Debug */,
+				5D936F391BC6AB1D0046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D936F3A1BC6AB1D0046ACD4 /* Build configuration list for PBXNativeTarget "trackingoculustags x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936F3B1BC6AB1D0046ACD4 /* Debug */,
+				5D936F3C1BC6AB1D0046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D936F731BC6AC7A0046ACD4 /* Build configuration list for PBXNativeTarget "trackingoculustags x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936F741BC6AC7A0046ACD4 /* Debug */,
+				5D936F751BC6AC7A0046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D98642D1D8B634100DEDB00 /* Build configuration list for PBXNativeTarget "trackingoculustags arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D98642E1D8B634100DEDB00 /* Debug */,
+				5D98642F1D8B634100DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EEF21DABFBA900BF5D76 /* Build configuration list for PBXNativeTarget "trackingoculustags arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EEF31DABFBA900BF5D76 /* Debug */,
+				C041EEF41DABFBA900BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D936F271BC6AB1D0046ACD4 /* Project object */;
+}

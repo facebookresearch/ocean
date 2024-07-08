@@ -1,0 +1,12 @@
+// Copyright (c) Meta Platforms, Inc. and affiliates.
+//
+// This source code is licensed under the MIT license found in the
+// LICENSE file in the root directory of this source tree.
+
+// Clone this file and rename it to development_team.xcconfig. Then define the variables below.
+
+// The team ID of your Apple development account.
+DEVELOPMENT_TEAM =
+
+// If required, add the name of a provisioning profile below. Otherwise comment out that line.
+PROVISIONING_PROFILE_SPECIFIER =

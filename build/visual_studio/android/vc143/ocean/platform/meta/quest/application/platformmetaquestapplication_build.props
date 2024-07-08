@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean Platform Meta Quest Application</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_platformmetaquestapplication_build_imported>True</ocean_platformmetaquestapplication_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_platformmetaquestapplication_common_imported)' != 'True'" Project="platformmetaquestapplication_common.props"/>
+    <Import Condition="'$(ocean_library_build_imported)' != 'True'" Project="..\..\..\..\ocean_library_build.props"/>
+  </ImportGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <TargetName>libOceanPlatformMetaQuestApplicationD</TargetName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <TargetName>libOceanPlatformMetaQuestApplication</TargetName>
+  </PropertyGroup>
+</Project>

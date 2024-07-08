@@ -1,0 +1,1484 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		50CC40532855645B00005882 /* PinholeCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC40522855645B00005882 /* PinholeCamera.h */; };
+		50CC40542855645B00005882 /* PinholeCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC40522855645B00005882 /* PinholeCamera.h */; };
+		50CC40552855645B00005882 /* PinholeCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC40522855645B00005882 /* PinholeCamera.h */; };
+		50CC40562855645B00005882 /* PinholeCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CC40522855645B00005882 /* PinholeCamera.h */; };
+		50CC40582855648700005882 /* PinholeCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50CC40572855648700005882 /* PinholeCamera.cpp */; };
+		50CC40592855648700005882 /* PinholeCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50CC40572855648700005882 /* PinholeCamera.cpp */; };
+		50CC405A2855648700005882 /* PinholeCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50CC40572855648700005882 /* PinholeCamera.cpp */; };
+		50CC405B2855648700005882 /* PinholeCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50CC40572855648700005882 /* PinholeCamera.cpp */; };
+		5D188F041B90F80100FA7DD7 /* Approximation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F031B90F80100FA7DD7 /* Approximation.cpp */; };
+		5D188F141B90F82400FA7DD7 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F051B90F82400FA7DD7 /* BoundingBox.cpp */; };
+		5D188F151B90F82400FA7DD7 /* BoundingSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F061B90F82400FA7DD7 /* BoundingSphere.cpp */; };
+		5D188F171B90F82400FA7DD7 /* Box3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F081B90F82400FA7DD7 /* Box3.cpp */; };
+		5D188F191B90F82400FA7DD7 /* DiscreteCosineTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0A1B90F82400FA7DD7 /* DiscreteCosineTransform.cpp */; };
+		5D188F1B1B90F82400FA7DD7 /* FourierTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0C1B90F82400FA7DD7 /* FourierTransformation.cpp */; };
+		5D188F1C1B90F82400FA7DD7 /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0D1B90F82400FA7DD7 /* Matrix.cpp */; };
+		5D188F1D1B90F82400FA7DD7 /* Pose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0E1B90F82400FA7DD7 /* Pose.cpp */; };
+		5D188F1E1B90F82400FA7DD7 /* SparseMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0F1B90F82400FA7DD7 /* SparseMatrix.cpp */; };
+		5D188F201B90F82400FA7DD7 /* SphericalExponentialMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F111B90F82400FA7DD7 /* SphericalExponentialMap.cpp */; };
+		5D222A301BB16B2E00298788 /* Pose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0E1B90F82400FA7DD7 /* Pose.cpp */; };
+		5D222A341BB16B2E00298788 /* Approximation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F031B90F80100FA7DD7 /* Approximation.cpp */; };
+		5D222A351BB16B2E00298788 /* SparseMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0F1B90F82400FA7DD7 /* SparseMatrix.cpp */; };
+		5D222A381BB16B2E00298788 /* FourierTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0C1B90F82400FA7DD7 /* FourierTransformation.cpp */; };
+		5D222A391BB16B2E00298788 /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0D1B90F82400FA7DD7 /* Matrix.cpp */; };
+		5D222A3A1BB16B2E00298788 /* BoundingSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F061B90F82400FA7DD7 /* BoundingSphere.cpp */; };
+		5D222A3B1BB16B2E00298788 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F051B90F82400FA7DD7 /* BoundingBox.cpp */; };
+		5D222A3C1BB16B2E00298788 /* DiscreteCosineTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0A1B90F82400FA7DD7 /* DiscreteCosineTransform.cpp */; };
+		5D222A3E1BB16B2E00298788 /* SphericalExponentialMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F111B90F82400FA7DD7 /* SphericalExponentialMap.cpp */; };
+		5D222A3F1BB16B2E00298788 /* Box3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F081B90F82400FA7DD7 /* Box3.cpp */; };
+		5D491CC01D8F55DE00C4099B /* Pose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0E1B90F82400FA7DD7 /* Pose.cpp */; };
+		5D491CC41D8F55DE00C4099B /* Approximation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F031B90F80100FA7DD7 /* Approximation.cpp */; };
+		5D491CC51D8F55DE00C4099B /* SparseMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0F1B90F82400FA7DD7 /* SparseMatrix.cpp */; };
+		5D491CC81D8F55DE00C4099B /* FourierTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0C1B90F82400FA7DD7 /* FourierTransformation.cpp */; };
+		5D491CC91D8F55DE00C4099B /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0D1B90F82400FA7DD7 /* Matrix.cpp */; };
+		5D491CCA1D8F55DE00C4099B /* BoundingSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F061B90F82400FA7DD7 /* BoundingSphere.cpp */; };
+		5D491CCB1D8F55DE00C4099B /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F051B90F82400FA7DD7 /* BoundingBox.cpp */; };
+		5D491CCC1D8F55DE00C4099B /* DiscreteCosineTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0A1B90F82400FA7DD7 /* DiscreteCosineTransform.cpp */; };
+		5D491CCE1D8F55DE00C4099B /* SphericalExponentialMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F111B90F82400FA7DD7 /* SphericalExponentialMap.cpp */; };
+		5D491CCF1D8F55DE00C4099B /* Box3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F081B90F82400FA7DD7 /* Box3.cpp */; };
+		5D491CD21D8F55DE00C4099B /* Box3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F51BC7FE510046ACD4 /* Box3.h */; };
+		5D491CD31D8F55DE00C4099B /* FiniteLine2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FD1BC7FE510046ACD4 /* FiniteLine2.h */; };
+		5D491CD41D8F55DE00C4099B /* Quaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710B1BC7FE510046ACD4 /* Quaternion.h */; };
+		5D491CD51D8F55DE00C4099B /* SuccessionSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371151BC7FE510046ACD4 /* SuccessionSubset.h */; };
+		5D491CD61D8F55DE00C4099B /* BoundingSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F31BC7FE510046ACD4 /* BoundingSphere.h */; };
+		5D491CD71D8F55DE00C4099B /* Lookup2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371041BC7FE510046ACD4 /* Lookup2.h */; };
+		5D491CD81D8F55DE00C4099B /* Triangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371161BC7FE510046ACD4 /* Triangle.h */; };
+		5D491CD91D8F55DE00C4099B /* Rotation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710D1BC7FE510046ACD4 /* Rotation.h */; };
+		5D491CDA1D8F55DE00C4099B /* Variance.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371191BC7FE510046ACD4 /* Variance.h */; };
+		5D491CDB1D8F55DE00C4099B /* Line3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371031BC7FE510046ACD4 /* Line3.h */; };
+		5D491CDC1D8F55DE00C4099B /* Line2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371021BC7FE510046ACD4 /* Line2.h */; };
+		5D491CDD1D8F55DE00C4099B /* DiscreteCosineTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F91BC7FE510046ACD4 /* DiscreteCosineTransform.h */; };
+		5D491CDE1D8F55DE00C4099B /* ExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FC1BC7FE510046ACD4 /* ExponentialMap.h */; };
+		5D491CDF1D8F55DE00C4099B /* FiniteLine3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FE1BC7FE510046ACD4 /* FiniteLine3.h */; };
+		5D491CE01D8F55DE00C4099B /* Triangle2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371171BC7FE510046ACD4 /* Triangle2.h */; };
+		5D491CE11D8F55DE00C4099B /* SparseMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710E1BC7FE510046ACD4 /* SparseMatrix.h */; };
+		5D491CE21D8F55DE00C4099B /* HomogenousMatrix4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371001BC7FE510046ACD4 /* HomogenousMatrix4.h */; };
+		5D491CE31D8F55DE00C4099B /* Random.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710C1BC7FE510046ACD4 /* Random.h */; };
+		5D491CE41D8F55DE00C4099B /* Numeric.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371081BC7FE510046ACD4 /* Numeric.h */; };
+		5D491CE51D8F55DE00C4099B /* SphericalExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371101BC7FE510046ACD4 /* SphericalExponentialMap.h */; };
+		5D491CE61D8F55DE00C4099B /* Vector2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711A1BC7FE510046ACD4 /* Vector2.h */; };
+		5D491CE71D8F55DE00C4099B /* Vector4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711C1BC7FE510046ACD4 /* Vector4.h */; };
+		5D491CE81D8F55DE00C4099B /* StaticMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371141BC7FE510046ACD4 /* StaticMatrix.h */; };
+		5D491CEA1D8F55DE00C4099B /* Pose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710A1BC7FE510046ACD4 /* Pose.h */; };
+		5D491CEB1D8F55DE00C4099B /* BoundingBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F21BC7FE510046ACD4 /* BoundingBox.h */; };
+		5D491CEC1D8F55DE00C4099B /* Equation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FA1BC7FE510046ACD4 /* Equation.h */; };
+		5D491CED1D8F55DE00C4099B /* Sphere3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710F1BC7FE510046ACD4 /* Sphere3.h */; };
+		5D491CEE1D8F55DE00C4099B /* FourierTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FF1BC7FE510046ACD4 /* FourierTransformation.h */; };
+		5D491CF01D8F55DE00C4099B /* Approximation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F11BC7FE510046ACD4 /* Approximation.h */; };
+		5D491CF11D8F55DE00C4099B /* SquareMatrix4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371131BC7FE510046ACD4 /* SquareMatrix4.h */; };
+		5D491CF21D8F55DE00C4099B /* Interpolation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371011BC7FE510046ACD4 /* Interpolation.h */; };
+		5D491CF31D8F55DE00C4099B /* ClusteringKMeans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F71BC7FE510046ACD4 /* ClusteringKMeans.h */; };
+		5D491CF41D8F55DE00C4099B /* SquareMatrix2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371111BC7FE510046ACD4 /* SquareMatrix2.h */; };
+		5D491CF51D8F55DE00C4099B /* Plane3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371091BC7FE510046ACD4 /* Plane3.h */; };
+		5D491CF61D8F55DE00C4099B /* Triangle3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371181BC7FE510046ACD4 /* Triangle3.h */; };
+		5D491CF71D8F55DE00C4099B /* Matrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371071BC7FE510046ACD4 /* Matrix.h */; };
+		5D491CF81D8F55DE00C4099B /* Euler.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FB1BC7FE510046ACD4 /* Euler.h */; };
+		5D491CF91D8F55DE00C4099B /* Vector3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711B1BC7FE510046ACD4 /* Vector3.h */; };
+		5D491CFA1D8F55DE00C4099B /* Box2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F41BC7FE510046ACD4 /* Box2.h */; };
+		5D491CFB1D8F55DE00C4099B /* SquareMatrix3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371121BC7FE510046ACD4 /* SquareMatrix3.h */; };
+		5D491CFC1D8F55DE00C4099B /* Complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F81BC7FE510046ACD4 /* Complex.h */; };
+		5D93711D1BC7FE510046ACD4 /* Approximation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F11BC7FE510046ACD4 /* Approximation.h */; };
+		5D93711E1BC7FE510046ACD4 /* BoundingBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F21BC7FE510046ACD4 /* BoundingBox.h */; };
+		5D93711F1BC7FE510046ACD4 /* BoundingSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F31BC7FE510046ACD4 /* BoundingSphere.h */; };
+		5D9371201BC7FE510046ACD4 /* Box2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F41BC7FE510046ACD4 /* Box2.h */; };
+		5D9371211BC7FE510046ACD4 /* Box3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F51BC7FE510046ACD4 /* Box3.h */; };
+		5D9371231BC7FE510046ACD4 /* ClusteringKMeans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F71BC7FE510046ACD4 /* ClusteringKMeans.h */; };
+		5D9371241BC7FE510046ACD4 /* Complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F81BC7FE510046ACD4 /* Complex.h */; };
+		5D9371251BC7FE510046ACD4 /* DiscreteCosineTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F91BC7FE510046ACD4 /* DiscreteCosineTransform.h */; };
+		5D9371261BC7FE510046ACD4 /* Equation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FA1BC7FE510046ACD4 /* Equation.h */; };
+		5D9371271BC7FE510046ACD4 /* Euler.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FB1BC7FE510046ACD4 /* Euler.h */; };
+		5D9371281BC7FE510046ACD4 /* ExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FC1BC7FE510046ACD4 /* ExponentialMap.h */; };
+		5D9371291BC7FE510046ACD4 /* FiniteLine2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FD1BC7FE510046ACD4 /* FiniteLine2.h */; };
+		5D93712A1BC7FE510046ACD4 /* FiniteLine3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FE1BC7FE510046ACD4 /* FiniteLine3.h */; };
+		5D93712B1BC7FE510046ACD4 /* FourierTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FF1BC7FE510046ACD4 /* FourierTransformation.h */; };
+		5D93712C1BC7FE510046ACD4 /* HomogenousMatrix4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371001BC7FE510046ACD4 /* HomogenousMatrix4.h */; };
+		5D93712D1BC7FE510046ACD4 /* Interpolation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371011BC7FE510046ACD4 /* Interpolation.h */; };
+		5D93712E1BC7FE510046ACD4 /* Line2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371021BC7FE510046ACD4 /* Line2.h */; };
+		5D93712F1BC7FE510046ACD4 /* Line3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371031BC7FE510046ACD4 /* Line3.h */; };
+		5D9371301BC7FE510046ACD4 /* Lookup2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371041BC7FE510046ACD4 /* Lookup2.h */; };
+		5D9371331BC7FE510046ACD4 /* Matrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371071BC7FE510046ACD4 /* Matrix.h */; };
+		5D9371341BC7FE510046ACD4 /* Numeric.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371081BC7FE510046ACD4 /* Numeric.h */; };
+		5D9371351BC7FE510046ACD4 /* Plane3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371091BC7FE510046ACD4 /* Plane3.h */; };
+		5D9371361BC7FE510046ACD4 /* Pose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710A1BC7FE510046ACD4 /* Pose.h */; };
+		5D9371371BC7FE510046ACD4 /* Quaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710B1BC7FE510046ACD4 /* Quaternion.h */; };
+		5D9371381BC7FE510046ACD4 /* Random.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710C1BC7FE510046ACD4 /* Random.h */; };
+		5D9371391BC7FE510046ACD4 /* Rotation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710D1BC7FE510046ACD4 /* Rotation.h */; };
+		5D93713A1BC7FE510046ACD4 /* SparseMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710E1BC7FE510046ACD4 /* SparseMatrix.h */; };
+		5D93713B1BC7FE510046ACD4 /* Sphere3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710F1BC7FE510046ACD4 /* Sphere3.h */; };
+		5D93713C1BC7FE510046ACD4 /* SphericalExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371101BC7FE510046ACD4 /* SphericalExponentialMap.h */; };
+		5D93713D1BC7FE510046ACD4 /* SquareMatrix2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371111BC7FE510046ACD4 /* SquareMatrix2.h */; };
+		5D93713E1BC7FE510046ACD4 /* SquareMatrix3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371121BC7FE510046ACD4 /* SquareMatrix3.h */; };
+		5D93713F1BC7FE510046ACD4 /* SquareMatrix4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371131BC7FE510046ACD4 /* SquareMatrix4.h */; };
+		5D9371401BC7FE510046ACD4 /* StaticMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371141BC7FE510046ACD4 /* StaticMatrix.h */; };
+		5D9371411BC7FE510046ACD4 /* SuccessionSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371151BC7FE510046ACD4 /* SuccessionSubset.h */; };
+		5D9371421BC7FE510046ACD4 /* Triangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371161BC7FE510046ACD4 /* Triangle.h */; };
+		5D9371431BC7FE510046ACD4 /* Triangle2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371171BC7FE510046ACD4 /* Triangle2.h */; };
+		5D9371441BC7FE510046ACD4 /* Triangle3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371181BC7FE510046ACD4 /* Triangle3.h */; };
+		5D9371451BC7FE510046ACD4 /* Variance.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371191BC7FE510046ACD4 /* Variance.h */; };
+		5D9371461BC7FE510046ACD4 /* Vector2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711A1BC7FE510046ACD4 /* Vector2.h */; };
+		5D9371471BC7FE510046ACD4 /* Vector3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711B1BC7FE510046ACD4 /* Vector3.h */; };
+		5D9371481BC7FE510046ACD4 /* Vector4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711C1BC7FE510046ACD4 /* Vector4.h */; };
+		5D9371491BC7FE5A0046ACD4 /* Approximation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F11BC7FE510046ACD4 /* Approximation.h */; };
+		5D93714A1BC7FE5A0046ACD4 /* BoundingBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F21BC7FE510046ACD4 /* BoundingBox.h */; };
+		5D93714B1BC7FE5A0046ACD4 /* BoundingSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F31BC7FE510046ACD4 /* BoundingSphere.h */; };
+		5D93714C1BC7FE5A0046ACD4 /* Box2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F41BC7FE510046ACD4 /* Box2.h */; };
+		5D93714D1BC7FE5A0046ACD4 /* Box3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F51BC7FE510046ACD4 /* Box3.h */; };
+		5D93714F1BC7FE5A0046ACD4 /* ClusteringKMeans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F71BC7FE510046ACD4 /* ClusteringKMeans.h */; };
+		5D9371501BC7FE5A0046ACD4 /* Complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F81BC7FE510046ACD4 /* Complex.h */; };
+		5D9371511BC7FE5A0046ACD4 /* DiscreteCosineTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F91BC7FE510046ACD4 /* DiscreteCosineTransform.h */; };
+		5D9371521BC7FE5A0046ACD4 /* Equation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FA1BC7FE510046ACD4 /* Equation.h */; };
+		5D9371531BC7FE5A0046ACD4 /* Euler.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FB1BC7FE510046ACD4 /* Euler.h */; };
+		5D9371541BC7FE5A0046ACD4 /* ExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FC1BC7FE510046ACD4 /* ExponentialMap.h */; };
+		5D9371551BC7FE5A0046ACD4 /* FiniteLine2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FD1BC7FE510046ACD4 /* FiniteLine2.h */; };
+		5D9371561BC7FE5A0046ACD4 /* FiniteLine3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FE1BC7FE510046ACD4 /* FiniteLine3.h */; };
+		5D9371571BC7FE5A0046ACD4 /* FourierTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FF1BC7FE510046ACD4 /* FourierTransformation.h */; };
+		5D9371581BC7FE5A0046ACD4 /* HomogenousMatrix4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371001BC7FE510046ACD4 /* HomogenousMatrix4.h */; };
+		5D9371591BC7FE5A0046ACD4 /* Interpolation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371011BC7FE510046ACD4 /* Interpolation.h */; };
+		5D93715A1BC7FE5A0046ACD4 /* Line2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371021BC7FE510046ACD4 /* Line2.h */; };
+		5D93715B1BC7FE5A0046ACD4 /* Line3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371031BC7FE510046ACD4 /* Line3.h */; };
+		5D93715C1BC7FE5A0046ACD4 /* Lookup2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371041BC7FE510046ACD4 /* Lookup2.h */; };
+		5D93715F1BC7FE5A0046ACD4 /* Matrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371071BC7FE510046ACD4 /* Matrix.h */; };
+		5D9371601BC7FE5A0046ACD4 /* Numeric.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371081BC7FE510046ACD4 /* Numeric.h */; };
+		5D9371611BC7FE5A0046ACD4 /* Plane3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371091BC7FE510046ACD4 /* Plane3.h */; };
+		5D9371621BC7FE5A0046ACD4 /* Pose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710A1BC7FE510046ACD4 /* Pose.h */; };
+		5D9371631BC7FE5A0046ACD4 /* Quaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710B1BC7FE510046ACD4 /* Quaternion.h */; };
+		5D9371641BC7FE5A0046ACD4 /* Random.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710C1BC7FE510046ACD4 /* Random.h */; };
+		5D9371651BC7FE5A0046ACD4 /* Rotation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710D1BC7FE510046ACD4 /* Rotation.h */; };
+		5D9371661BC7FE5A0046ACD4 /* SparseMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710E1BC7FE510046ACD4 /* SparseMatrix.h */; };
+		5D9371671BC7FE5A0046ACD4 /* Sphere3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710F1BC7FE510046ACD4 /* Sphere3.h */; };
+		5D9371681BC7FE5A0046ACD4 /* SphericalExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371101BC7FE510046ACD4 /* SphericalExponentialMap.h */; };
+		5D9371691BC7FE5A0046ACD4 /* SquareMatrix2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371111BC7FE510046ACD4 /* SquareMatrix2.h */; };
+		5D93716A1BC7FE5A0046ACD4 /* SquareMatrix3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371121BC7FE510046ACD4 /* SquareMatrix3.h */; };
+		5D93716B1BC7FE5A0046ACD4 /* SquareMatrix4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371131BC7FE510046ACD4 /* SquareMatrix4.h */; };
+		5D93716C1BC7FE5A0046ACD4 /* StaticMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371141BC7FE510046ACD4 /* StaticMatrix.h */; };
+		5D93716D1BC7FE5A0046ACD4 /* SuccessionSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371151BC7FE510046ACD4 /* SuccessionSubset.h */; };
+		5D93716E1BC7FE5A0046ACD4 /* Triangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371161BC7FE510046ACD4 /* Triangle.h */; };
+		5D93716F1BC7FE5A0046ACD4 /* Triangle2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371171BC7FE510046ACD4 /* Triangle2.h */; };
+		5D9371701BC7FE5A0046ACD4 /* Triangle3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371181BC7FE510046ACD4 /* Triangle3.h */; };
+		5D9371711BC7FE5A0046ACD4 /* Variance.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371191BC7FE510046ACD4 /* Variance.h */; };
+		5D9371721BC7FE5A0046ACD4 /* Vector2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711A1BC7FE510046ACD4 /* Vector2.h */; };
+		5D9371731BC7FE5A0046ACD4 /* Vector3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711B1BC7FE510046ACD4 /* Vector3.h */; };
+		5D9371741BC7FE5A0046ACD4 /* Vector4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711C1BC7FE510046ACD4 /* Vector4.h */; };
+		5D9862201D8B5A6400DEDB00 /* Pose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0E1B90F82400FA7DD7 /* Pose.cpp */; };
+		5D9862241D8B5A6400DEDB00 /* Approximation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F031B90F80100FA7DD7 /* Approximation.cpp */; };
+		5D9862251D8B5A6400DEDB00 /* SparseMatrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0F1B90F82400FA7DD7 /* SparseMatrix.cpp */; };
+		5D9862281D8B5A6400DEDB00 /* FourierTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0C1B90F82400FA7DD7 /* FourierTransformation.cpp */; };
+		5D9862291D8B5A6400DEDB00 /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0D1B90F82400FA7DD7 /* Matrix.cpp */; };
+		5D98622A1D8B5A6400DEDB00 /* BoundingSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F061B90F82400FA7DD7 /* BoundingSphere.cpp */; };
+		5D98622B1D8B5A6400DEDB00 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F051B90F82400FA7DD7 /* BoundingBox.cpp */; };
+		5D98622C1D8B5A6400DEDB00 /* DiscreteCosineTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F0A1B90F82400FA7DD7 /* DiscreteCosineTransform.cpp */; };
+		5D98622E1D8B5A6400DEDB00 /* SphericalExponentialMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F111B90F82400FA7DD7 /* SphericalExponentialMap.cpp */; };
+		5D98622F1D8B5A6400DEDB00 /* Box3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D188F081B90F82400FA7DD7 /* Box3.cpp */; };
+		5D9862321D8B5A6400DEDB00 /* Box3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F51BC7FE510046ACD4 /* Box3.h */; };
+		5D9862331D8B5A6400DEDB00 /* FiniteLine2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FD1BC7FE510046ACD4 /* FiniteLine2.h */; };
+		5D9862341D8B5A6400DEDB00 /* Quaternion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710B1BC7FE510046ACD4 /* Quaternion.h */; };
+		5D9862351D8B5A6400DEDB00 /* SuccessionSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371151BC7FE510046ACD4 /* SuccessionSubset.h */; };
+		5D9862361D8B5A6400DEDB00 /* BoundingSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F31BC7FE510046ACD4 /* BoundingSphere.h */; };
+		5D9862371D8B5A6400DEDB00 /* Lookup2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371041BC7FE510046ACD4 /* Lookup2.h */; };
+		5D9862381D8B5A6400DEDB00 /* Triangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371161BC7FE510046ACD4 /* Triangle.h */; };
+		5D9862391D8B5A6400DEDB00 /* Rotation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710D1BC7FE510046ACD4 /* Rotation.h */; };
+		5D98623A1D8B5A6400DEDB00 /* Variance.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371191BC7FE510046ACD4 /* Variance.h */; };
+		5D98623B1D8B5A6400DEDB00 /* Line3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371031BC7FE510046ACD4 /* Line3.h */; };
+		5D98623C1D8B5A6400DEDB00 /* Line2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371021BC7FE510046ACD4 /* Line2.h */; };
+		5D98623D1D8B5A6400DEDB00 /* DiscreteCosineTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F91BC7FE510046ACD4 /* DiscreteCosineTransform.h */; };
+		5D98623E1D8B5A6400DEDB00 /* ExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FC1BC7FE510046ACD4 /* ExponentialMap.h */; };
+		5D98623F1D8B5A6400DEDB00 /* FiniteLine3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FE1BC7FE510046ACD4 /* FiniteLine3.h */; };
+		5D9862401D8B5A6400DEDB00 /* Triangle2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371171BC7FE510046ACD4 /* Triangle2.h */; };
+		5D9862411D8B5A6400DEDB00 /* SparseMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710E1BC7FE510046ACD4 /* SparseMatrix.h */; };
+		5D9862421D8B5A6400DEDB00 /* HomogenousMatrix4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371001BC7FE510046ACD4 /* HomogenousMatrix4.h */; };
+		5D9862431D8B5A6400DEDB00 /* Random.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710C1BC7FE510046ACD4 /* Random.h */; };
+		5D9862441D8B5A6400DEDB00 /* Numeric.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371081BC7FE510046ACD4 /* Numeric.h */; };
+		5D9862451D8B5A6400DEDB00 /* SphericalExponentialMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371101BC7FE510046ACD4 /* SphericalExponentialMap.h */; };
+		5D9862461D8B5A6400DEDB00 /* Vector2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711A1BC7FE510046ACD4 /* Vector2.h */; };
+		5D9862471D8B5A6400DEDB00 /* Vector4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711C1BC7FE510046ACD4 /* Vector4.h */; };
+		5D9862481D8B5A6400DEDB00 /* StaticMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371141BC7FE510046ACD4 /* StaticMatrix.h */; };
+		5D98624A1D8B5A6400DEDB00 /* Pose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710A1BC7FE510046ACD4 /* Pose.h */; };
+		5D98624B1D8B5A6400DEDB00 /* BoundingBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F21BC7FE510046ACD4 /* BoundingBox.h */; };
+		5D98624C1D8B5A6400DEDB00 /* Equation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FA1BC7FE510046ACD4 /* Equation.h */; };
+		5D98624D1D8B5A6400DEDB00 /* Sphere3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93710F1BC7FE510046ACD4 /* Sphere3.h */; };
+		5D98624E1D8B5A6400DEDB00 /* FourierTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FF1BC7FE510046ACD4 /* FourierTransformation.h */; };
+		5D9862501D8B5A6400DEDB00 /* Approximation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F11BC7FE510046ACD4 /* Approximation.h */; };
+		5D9862511D8B5A6400DEDB00 /* SquareMatrix4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371131BC7FE510046ACD4 /* SquareMatrix4.h */; };
+		5D9862521D8B5A6400DEDB00 /* Interpolation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371011BC7FE510046ACD4 /* Interpolation.h */; };
+		5D9862531D8B5A6400DEDB00 /* ClusteringKMeans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F71BC7FE510046ACD4 /* ClusteringKMeans.h */; };
+		5D9862541D8B5A6400DEDB00 /* SquareMatrix2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371111BC7FE510046ACD4 /* SquareMatrix2.h */; };
+		5D9862551D8B5A6400DEDB00 /* Plane3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371091BC7FE510046ACD4 /* Plane3.h */; };
+		5D9862561D8B5A6400DEDB00 /* Triangle3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371181BC7FE510046ACD4 /* Triangle3.h */; };
+		5D9862571D8B5A6400DEDB00 /* Matrix.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371071BC7FE510046ACD4 /* Matrix.h */; };
+		5D9862581D8B5A6400DEDB00 /* Euler.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370FB1BC7FE510046ACD4 /* Euler.h */; };
+		5D9862591D8B5A6400DEDB00 /* Vector3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D93711B1BC7FE510046ACD4 /* Vector3.h */; };
+		5D98625A1D8B5A6400DEDB00 /* Box2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F41BC7FE510046ACD4 /* Box2.h */; };
+		5D98625B1D8B5A6400DEDB00 /* SquareMatrix3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9371121BC7FE510046ACD4 /* SquareMatrix3.h */; };
+		5D98625C1D8B5A6400DEDB00 /* Complex.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D9370F81BC7FE510046ACD4 /* Complex.h */; };
+		9300C93C27CE164400806E93 /* Frustum.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C93B27CE164400806E93 /* Frustum.h */; };
+		9300C93D27CE164400806E93 /* Frustum.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C93B27CE164400806E93 /* Frustum.h */; };
+		9300C93E27CE164400806E93 /* Frustum.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C93B27CE164400806E93 /* Frustum.h */; };
+		9300C93F27CE164400806E93 /* Frustum.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C93B27CE164400806E93 /* Frustum.h */; };
+		930FAD60230F5A7200D197B5 /* ToonUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 930FAD5F230F5A7200D197B5 /* ToonUtilities.h */; };
+		930FAD61230F5A7200D197B5 /* ToonUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 930FAD5F230F5A7200D197B5 /* ToonUtilities.h */; };
+		930FAD62230F5A7200D197B5 /* ToonUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 930FAD5F230F5A7200D197B5 /* ToonUtilities.h */; };
+		930FAD63230F5A7200D197B5 /* ToonUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 930FAD5F230F5A7200D197B5 /* ToonUtilities.h */; };
+		933E9B44241DA1EE00489BE5 /* SampleMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B43241DA1EE00489BE5 /* SampleMap.h */; };
+		933E9B45241DA1EE00489BE5 /* SampleMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B43241DA1EE00489BE5 /* SampleMap.h */; };
+		933E9B46241DA1EE00489BE5 /* SampleMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B43241DA1EE00489BE5 /* SampleMap.h */; };
+		933E9B47241DA1EE00489BE5 /* SampleMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B43241DA1EE00489BE5 /* SampleMap.h */; };
+		9355A8F12794C23200F12C46 /* RateCalculator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9355A8F02794C23100F12C46 /* RateCalculator.h */; };
+		9355A8F22794C23200F12C46 /* RateCalculator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9355A8F02794C23100F12C46 /* RateCalculator.h */; };
+		9355A8F32794C23200F12C46 /* RateCalculator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9355A8F02794C23100F12C46 /* RateCalculator.h */; };
+		9355A8F42794C23200F12C46 /* RateCalculator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9355A8F02794C23100F12C46 /* RateCalculator.h */; };
+		9355A8F62794C24300F12C46 /* RateCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9355A8F52794C24300F12C46 /* RateCalculator.cpp */; };
+		9355A8F72794C24300F12C46 /* RateCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9355A8F52794C24300F12C46 /* RateCalculator.cpp */; };
+		9355A8F82794C24300F12C46 /* RateCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9355A8F52794C24300F12C46 /* RateCalculator.cpp */; };
+		9355A8F92794C24300F12C46 /* RateCalculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9355A8F52794C24300F12C46 /* RateCalculator.cpp */; };
+		9364F07A1FE461AE00D0EF4C /* ClusteringSpectral.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9364F0791FE461AD00D0EF4C /* ClusteringSpectral.cpp */; };
+		9364F07B1FE461AE00D0EF4C /* ClusteringSpectral.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9364F0791FE461AD00D0EF4C /* ClusteringSpectral.cpp */; };
+		9364F07C1FE461AE00D0EF4C /* ClusteringSpectral.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9364F0791FE461AD00D0EF4C /* ClusteringSpectral.cpp */; };
+		9364F07D1FE461AE00D0EF4C /* ClusteringSpectral.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9364F0791FE461AD00D0EF4C /* ClusteringSpectral.cpp */; };
+		9372739323D91A4A00B6D90A /* SophusUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 9372739223D91A4A00B6D90A /* SophusUtilities.h */; };
+		9372739423D91A4A00B6D90A /* SophusUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 9372739223D91A4A00B6D90A /* SophusUtilities.h */; };
+		9372739523D91A4A00B6D90A /* SophusUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 9372739223D91A4A00B6D90A /* SophusUtilities.h */; };
+		9372739623D91A4A00B6D90A /* SophusUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 9372739223D91A4A00B6D90A /* SophusUtilities.h */; };
+		937570372384FA5500D3AA05 /* FisheyeCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 937570362384FA5500D3AA05 /* FisheyeCamera.h */; };
+		937570382384FA5500D3AA05 /* FisheyeCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 937570362384FA5500D3AA05 /* FisheyeCamera.h */; };
+		937570392384FA5500D3AA05 /* FisheyeCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 937570362384FA5500D3AA05 /* FisheyeCamera.h */; };
+		9375703A2384FA5500D3AA05 /* FisheyeCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 937570362384FA5500D3AA05 /* FisheyeCamera.h */; };
+		9380ACAA2410283E0071E691 /* RGBAColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9380ACA92410283E0071E691 /* RGBAColor.h */; };
+		9380ACAB2410283E0071E691 /* RGBAColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9380ACA92410283E0071E691 /* RGBAColor.h */; };
+		9380ACAC2410283E0071E691 /* RGBAColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9380ACA92410283E0071E691 /* RGBAColor.h */; };
+		9380ACAD2410283E0071E691 /* RGBAColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9380ACA92410283E0071E691 /* RGBAColor.h */; };
+		9380ACAF241028450071E691 /* HSVAColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9380ACAE241028450071E691 /* HSVAColor.h */; };
+		9380ACB0241028450071E691 /* HSVAColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9380ACAE241028450071E691 /* HSVAColor.h */; };
+		9380ACB1241028450071E691 /* HSVAColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9380ACAE241028450071E691 /* HSVAColor.h */; };
+		9380ACB2241028450071E691 /* HSVAColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9380ACAE241028450071E691 /* HSVAColor.h */; };
+		9380ACB4241028500071E691 /* RGBAColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9380ACB3241028500071E691 /* RGBAColor.cpp */; };
+		9380ACB5241028500071E691 /* RGBAColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9380ACB3241028500071E691 /* RGBAColor.cpp */; };
+		9380ACB6241028500071E691 /* RGBAColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9380ACB3241028500071E691 /* RGBAColor.cpp */; };
+		9380ACB7241028500071E691 /* RGBAColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9380ACB3241028500071E691 /* RGBAColor.cpp */; };
+		9380ACB9241028570071E691 /* HSVAColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9380ACB8241028570071E691 /* HSVAColor.cpp */; };
+		9380ACBA241028570071E691 /* HSVAColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9380ACB8241028570071E691 /* HSVAColor.cpp */; };
+		9380ACBB241028570071E691 /* HSVAColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9380ACB8241028570071E691 /* HSVAColor.cpp */; };
+		9380ACBC241028570071E691 /* HSVAColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9380ACB8241028570071E691 /* HSVAColor.cpp */; };
+		93BF612B270D6BCF00F1675C /* AnyCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 93BF612A270D6BCF00F1675C /* AnyCamera.h */; };
+		93BF612C270D6BCF00F1675C /* AnyCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 93BF612A270D6BCF00F1675C /* AnyCamera.h */; };
+		93BF612D270D6BCF00F1675C /* AnyCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 93BF612A270D6BCF00F1675C /* AnyCamera.h */; };
+		93BF612E270D6BCF00F1675C /* AnyCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 93BF612A270D6BCF00F1675C /* AnyCamera.h */; };
+		93F9E173287CB234003C4783 /* Camera.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F9E172287CB234003C4783 /* Camera.h */; };
+		93F9E174287CB234003C4783 /* Camera.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F9E172287CB234003C4783 /* Camera.h */; };
+		93F9E175287CB234003C4783 /* Camera.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F9E172287CB234003C4783 /* Camera.h */; };
+		93F9E176287CB234003C4783 /* Camera.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F9E172287CB234003C4783 /* Camera.h */; };
+		93FE35BE2361151E00108484 /* Cone3.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FE35BD2361151E00108484 /* Cone3.h */; };
+		93FE35BF2361151E00108484 /* Cone3.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FE35BD2361151E00108484 /* Cone3.h */; };
+		93FE35C02361151E00108484 /* Cone3.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FE35BD2361151E00108484 /* Cone3.h */; };
+		93FE35C12361151E00108484 /* Cone3.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FE35BD2361151E00108484 /* Cone3.h */; };
+		C09DFB751E9B86800013811D /* ClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB721E9B86800013811D /* ClusteringSpectral.h */; };
+		C09DFB761E9B86800013811D /* MathUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB731E9B86800013811D /* MathUtilities.h */; };
+		C09DFB771E9B86800013811D /* AutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */; };
+		C09DFB781E9B86840013811D /* ClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB721E9B86800013811D /* ClusteringSpectral.h */; };
+		C09DFB791E9B86840013811D /* ClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB721E9B86800013811D /* ClusteringSpectral.h */; };
+		C09DFB7A1E9B86850013811D /* ClusteringSpectral.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB721E9B86800013811D /* ClusteringSpectral.h */; };
+		C09DFB7B1E9B86870013811D /* MathUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB731E9B86800013811D /* MathUtilities.h */; };
+		C09DFB7C1E9B86880013811D /* MathUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB731E9B86800013811D /* MathUtilities.h */; };
+		C09DFB7D1E9B86880013811D /* MathUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB731E9B86800013811D /* MathUtilities.h */; };
+		C09DFB7E1E9B868B0013811D /* AutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */; };
+		C09DFB7F1E9B868C0013811D /* AutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */; };
+		C09DFB801E9B868D0013811D /* AutomaticDifferentiation.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		50CC40522855645B00005882 /* PinholeCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PinholeCamera.h; path = ../../../../../impl/ocean/math/PinholeCamera.h; sourceTree = "<group>"; };
+		50CC40572855648700005882 /* PinholeCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PinholeCamera.cpp; path = ../../../../../impl/ocean/math/PinholeCamera.cpp; sourceTree = "<group>"; };
+		5D188D0F1B90C39A00FA7DD7 /* libOceanMathD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMathD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D188F031B90F80100FA7DD7 /* Approximation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Approximation.cpp; path = ../../../../../impl/ocean/math/Approximation.cpp; sourceTree = "<group>"; };
+		5D188F051B90F82400FA7DD7 /* BoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BoundingBox.cpp; path = ../../../../../impl/ocean/math/BoundingBox.cpp; sourceTree = "<group>"; };
+		5D188F061B90F82400FA7DD7 /* BoundingSphere.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BoundingSphere.cpp; path = ../../../../../impl/ocean/math/BoundingSphere.cpp; sourceTree = "<group>"; };
+		5D188F081B90F82400FA7DD7 /* Box3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Box3.cpp; path = ../../../../../impl/ocean/math/Box3.cpp; sourceTree = "<group>"; wrapsLines = 0; };
+		5D188F0A1B90F82400FA7DD7 /* DiscreteCosineTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DiscreteCosineTransform.cpp; path = ../../../../../impl/ocean/math/DiscreteCosineTransform.cpp; sourceTree = "<group>"; };
+		5D188F0C1B90F82400FA7DD7 /* FourierTransformation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FourierTransformation.cpp; path = ../../../../../impl/ocean/math/FourierTransformation.cpp; sourceTree = "<group>"; };
+		5D188F0D1B90F82400FA7DD7 /* Matrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Matrix.cpp; path = ../../../../../impl/ocean/math/Matrix.cpp; sourceTree = "<group>"; };
+		5D188F0E1B90F82400FA7DD7 /* Pose.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pose.cpp; path = ../../../../../impl/ocean/math/Pose.cpp; sourceTree = "<group>"; };
+		5D188F0F1B90F82400FA7DD7 /* SparseMatrix.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SparseMatrix.cpp; path = ../../../../../impl/ocean/math/SparseMatrix.cpp; sourceTree = "<group>"; };
+		5D188F111B90F82400FA7DD7 /* SphericalExponentialMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SphericalExponentialMap.cpp; path = ../../../../../impl/ocean/math/SphericalExponentialMap.cpp; sourceTree = "<group>"; };
+		5D222A451BB16B2E00298788 /* libOceanMathD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMathD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D491D001D8F55DE00C4099B /* libOceanMathD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMathD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9370F11BC7FE510046ACD4 /* Approximation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Approximation.h; path = ../../../../../impl/ocean/math/Approximation.h; sourceTree = "<group>"; };
+		5D9370F21BC7FE510046ACD4 /* BoundingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BoundingBox.h; path = ../../../../../impl/ocean/math/BoundingBox.h; sourceTree = "<group>"; };
+		5D9370F31BC7FE510046ACD4 /* BoundingSphere.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BoundingSphere.h; path = ../../../../../impl/ocean/math/BoundingSphere.h; sourceTree = "<group>"; };
+		5D9370F41BC7FE510046ACD4 /* Box2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Box2.h; path = ../../../../../impl/ocean/math/Box2.h; sourceTree = "<group>"; };
+		5D9370F51BC7FE510046ACD4 /* Box3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Box3.h; path = ../../../../../impl/ocean/math/Box3.h; sourceTree = "<group>"; };
+		5D9370F71BC7FE510046ACD4 /* ClusteringKMeans.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClusteringKMeans.h; path = ../../../../../impl/ocean/math/ClusteringKMeans.h; sourceTree = "<group>"; };
+		5D9370F81BC7FE510046ACD4 /* Complex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Complex.h; path = ../../../../../impl/ocean/math/Complex.h; sourceTree = "<group>"; };
+		5D9370F91BC7FE510046ACD4 /* DiscreteCosineTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DiscreteCosineTransform.h; path = ../../../../../impl/ocean/math/DiscreteCosineTransform.h; sourceTree = "<group>"; };
+		5D9370FA1BC7FE510046ACD4 /* Equation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Equation.h; path = ../../../../../impl/ocean/math/Equation.h; sourceTree = "<group>"; };
+		5D9370FB1BC7FE510046ACD4 /* Euler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Euler.h; path = ../../../../../impl/ocean/math/Euler.h; sourceTree = "<group>"; };
+		5D9370FC1BC7FE510046ACD4 /* ExponentialMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExponentialMap.h; path = ../../../../../impl/ocean/math/ExponentialMap.h; sourceTree = "<group>"; };
+		5D9370FD1BC7FE510046ACD4 /* FiniteLine2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FiniteLine2.h; path = ../../../../../impl/ocean/math/FiniteLine2.h; sourceTree = "<group>"; };
+		5D9370FE1BC7FE510046ACD4 /* FiniteLine3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FiniteLine3.h; path = ../../../../../impl/ocean/math/FiniteLine3.h; sourceTree = "<group>"; };
+		5D9370FF1BC7FE510046ACD4 /* FourierTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FourierTransformation.h; path = ../../../../../impl/ocean/math/FourierTransformation.h; sourceTree = "<group>"; };
+		5D9371001BC7FE510046ACD4 /* HomogenousMatrix4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomogenousMatrix4.h; path = ../../../../../impl/ocean/math/HomogenousMatrix4.h; sourceTree = "<group>"; };
+		5D9371011BC7FE510046ACD4 /* Interpolation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Interpolation.h; path = ../../../../../impl/ocean/math/Interpolation.h; sourceTree = "<group>"; };
+		5D9371021BC7FE510046ACD4 /* Line2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Line2.h; path = ../../../../../impl/ocean/math/Line2.h; sourceTree = "<group>"; };
+		5D9371031BC7FE510046ACD4 /* Line3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Line3.h; path = ../../../../../impl/ocean/math/Line3.h; sourceTree = "<group>"; };
+		5D9371041BC7FE510046ACD4 /* Lookup2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Lookup2.h; path = ../../../../../impl/ocean/math/Lookup2.h; sourceTree = "<group>"; };
+		5D9371071BC7FE510046ACD4 /* Matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Matrix.h; path = ../../../../../impl/ocean/math/Matrix.h; sourceTree = "<group>"; };
+		5D9371081BC7FE510046ACD4 /* Numeric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Numeric.h; path = ../../../../../impl/ocean/math/Numeric.h; sourceTree = "<group>"; };
+		5D9371091BC7FE510046ACD4 /* Plane3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plane3.h; path = ../../../../../impl/ocean/math/Plane3.h; sourceTree = "<group>"; };
+		5D93710A1BC7FE510046ACD4 /* Pose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pose.h; path = ../../../../../impl/ocean/math/Pose.h; sourceTree = "<group>"; };
+		5D93710B1BC7FE510046ACD4 /* Quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Quaternion.h; path = ../../../../../impl/ocean/math/Quaternion.h; sourceTree = "<group>"; };
+		5D93710C1BC7FE510046ACD4 /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = ../../../../../impl/ocean/math/Random.h; sourceTree = "<group>"; };
+		5D93710D1BC7FE510046ACD4 /* Rotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Rotation.h; path = ../../../../../impl/ocean/math/Rotation.h; sourceTree = "<group>"; };
+		5D93710E1BC7FE510046ACD4 /* SparseMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SparseMatrix.h; path = ../../../../../impl/ocean/math/SparseMatrix.h; sourceTree = "<group>"; };
+		5D93710F1BC7FE510046ACD4 /* Sphere3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sphere3.h; path = ../../../../../impl/ocean/math/Sphere3.h; sourceTree = "<group>"; };
+		5D9371101BC7FE510046ACD4 /* SphericalExponentialMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SphericalExponentialMap.h; path = ../../../../../impl/ocean/math/SphericalExponentialMap.h; sourceTree = "<group>"; };
+		5D9371111BC7FE510046ACD4 /* SquareMatrix2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SquareMatrix2.h; path = ../../../../../impl/ocean/math/SquareMatrix2.h; sourceTree = "<group>"; };
+		5D9371121BC7FE510046ACD4 /* SquareMatrix3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SquareMatrix3.h; path = ../../../../../impl/ocean/math/SquareMatrix3.h; sourceTree = "<group>"; };
+		5D9371131BC7FE510046ACD4 /* SquareMatrix4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SquareMatrix4.h; path = ../../../../../impl/ocean/math/SquareMatrix4.h; sourceTree = "<group>"; };
+		5D9371141BC7FE510046ACD4 /* StaticMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StaticMatrix.h; path = ../../../../../impl/ocean/math/StaticMatrix.h; sourceTree = "<group>"; };
+		5D9371151BC7FE510046ACD4 /* SuccessionSubset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SuccessionSubset.h; path = ../../../../../impl/ocean/math/SuccessionSubset.h; sourceTree = "<group>"; };
+		5D9371161BC7FE510046ACD4 /* Triangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Triangle.h; path = ../../../../../impl/ocean/math/Triangle.h; sourceTree = "<group>"; };
+		5D9371171BC7FE510046ACD4 /* Triangle2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Triangle2.h; path = ../../../../../impl/ocean/math/Triangle2.h; sourceTree = "<group>"; };
+		5D9371181BC7FE510046ACD4 /* Triangle3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Triangle3.h; path = ../../../../../impl/ocean/math/Triangle3.h; sourceTree = "<group>"; };
+		5D9371191BC7FE510046ACD4 /* Variance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Variance.h; path = ../../../../../impl/ocean/math/Variance.h; sourceTree = "<group>"; };
+		5D93711A1BC7FE510046ACD4 /* Vector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector2.h; path = ../../../../../impl/ocean/math/Vector2.h; sourceTree = "<group>"; };
+		5D93711B1BC7FE510046ACD4 /* Vector3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector3.h; path = ../../../../../impl/ocean/math/Vector3.h; sourceTree = "<group>"; };
+		5D93711C1BC7FE510046ACD4 /* Vector4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Vector4.h; path = ../../../../../impl/ocean/math/Vector4.h; sourceTree = "<group>"; };
+		5D9862601D8B5A6400DEDB00 /* libOceanMathD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMathD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9300C93B27CE164400806E93 /* Frustum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Frustum.h; path = ../../../../../impl/ocean/math/Frustum.h; sourceTree = "<group>"; };
+		930FAD5F230F5A7200D197B5 /* ToonUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToonUtilities.h; path = ../../../../../impl/ocean/math/ToonUtilities.h; sourceTree = "<group>"; };
+		933E9B43241DA1EE00489BE5 /* SampleMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SampleMap.h; path = ../../../../../impl/ocean/math/SampleMap.h; sourceTree = "<group>"; };
+		9355A8F02794C23100F12C46 /* RateCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RateCalculator.h; path = ../../../../../impl/ocean/math/RateCalculator.h; sourceTree = "<group>"; };
+		9355A8F52794C24300F12C46 /* RateCalculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RateCalculator.cpp; path = ../../../../../impl/ocean/math/RateCalculator.cpp; sourceTree = "<group>"; };
+		9364F0791FE461AD00D0EF4C /* ClusteringSpectral.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ClusteringSpectral.cpp; path = ../../../../../impl/ocean/math/ClusteringSpectral.cpp; sourceTree = "<group>"; };
+		9372739223D91A4A00B6D90A /* SophusUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SophusUtilities.h; path = ../../../../../impl/ocean/math/SophusUtilities.h; sourceTree = "<group>"; };
+		937570362384FA5500D3AA05 /* FisheyeCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FisheyeCamera.h; path = ../../../../../impl/ocean/math/FisheyeCamera.h; sourceTree = "<group>"; };
+		9380ACA92410283E0071E691 /* RGBAColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RGBAColor.h; path = ../../../../../impl/ocean/math/RGBAColor.h; sourceTree = "<group>"; };
+		9380ACAE241028450071E691 /* HSVAColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HSVAColor.h; path = ../../../../../impl/ocean/math/HSVAColor.h; sourceTree = "<group>"; };
+		9380ACB3241028500071E691 /* RGBAColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RGBAColor.cpp; path = ../../../../../impl/ocean/math/RGBAColor.cpp; sourceTree = "<group>"; };
+		9380ACB8241028570071E691 /* HSVAColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HSVAColor.cpp; path = ../../../../../impl/ocean/math/HSVAColor.cpp; sourceTree = "<group>"; };
+		93BF612A270D6BCF00F1675C /* AnyCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnyCamera.h; path = ../../../../../impl/ocean/math/AnyCamera.h; sourceTree = "<group>"; };
+		93F9E172287CB234003C4783 /* Camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Camera.h; path = ../../../../../impl/ocean/math/Camera.h; sourceTree = "<group>"; };
+		93FE35BD2361151E00108484 /* Cone3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cone3.h; path = ../../../../../impl/ocean/math/Cone3.h; sourceTree = "<group>"; };
+		C09DFB721E9B86800013811D /* ClusteringSpectral.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ClusteringSpectral.h; path = ../../../../../impl/ocean/math/ClusteringSpectral.h; sourceTree = "<group>"; };
+		C09DFB731E9B86800013811D /* MathUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MathUtilities.h; path = ../../../../../impl/ocean/math/MathUtilities.h; sourceTree = "<group>"; };
+		C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AutomaticDifferentiation.h; path = ../../../../../impl/ocean/math/AutomaticDifferentiation.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D188D0C1B90C39A00FA7DD7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D222A401BB16B2E00298788 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D491CD01D8F55DE00C4099B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862301D8B5A6400DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D188D061B90C39A00FA7DD7 = {
+			isa = PBXGroup;
+			children = (
+				5D9370F01BC7FE3E0046ACD4 /* Header Files */,
+				5D188D111B90C39A00FA7DD7 /* Source Files */,
+				5D188D101B90C39A00FA7DD7 /* Products */,
+			);
+			sourceTree = "<group>";
+			usesTabs = 1;
+		};
+		5D188D101B90C39A00FA7DD7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D188D0F1B90C39A00FA7DD7 /* libOceanMathD.a */,
+				5D222A451BB16B2E00298788 /* libOceanMathD.dylib */,
+				5D9862601D8B5A6400DEDB00 /* libOceanMathD.a */,
+				5D491D001D8F55DE00C4099B /* libOceanMathD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D188D111B90C39A00FA7DD7 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D188F031B90F80100FA7DD7 /* Approximation.cpp */,
+				5D188F051B90F82400FA7DD7 /* BoundingBox.cpp */,
+				5D188F061B90F82400FA7DD7 /* BoundingSphere.cpp */,
+				5D188F081B90F82400FA7DD7 /* Box3.cpp */,
+				9364F0791FE461AD00D0EF4C /* ClusteringSpectral.cpp */,
+				5D188F0A1B90F82400FA7DD7 /* DiscreteCosineTransform.cpp */,
+				5D188F0C1B90F82400FA7DD7 /* FourierTransformation.cpp */,
+				9380ACB8241028570071E691 /* HSVAColor.cpp */,
+				5D188F0D1B90F82400FA7DD7 /* Matrix.cpp */,
+				50CC40572855648700005882 /* PinholeCamera.cpp */,
+				5D188F0E1B90F82400FA7DD7 /* Pose.cpp */,
+				9355A8F52794C24300F12C46 /* RateCalculator.cpp */,
+				9380ACB3241028500071E691 /* RGBAColor.cpp */,
+				5D188F0F1B90F82400FA7DD7 /* SparseMatrix.cpp */,
+				5D188F111B90F82400FA7DD7 /* SphericalExponentialMap.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = SOURCE_ROOT;
+		};
+		5D9370F01BC7FE3E0046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				93BF612A270D6BCF00F1675C /* AnyCamera.h */,
+				5D9370F11BC7FE510046ACD4 /* Approximation.h */,
+				5D9370F21BC7FE510046ACD4 /* BoundingBox.h */,
+				5D9370F31BC7FE510046ACD4 /* BoundingSphere.h */,
+				5D9370F41BC7FE510046ACD4 /* Box2.h */,
+				5D9370F51BC7FE510046ACD4 /* Box3.h */,
+				93F9E172287CB234003C4783 /* Camera.h */,
+				5D9370F71BC7FE510046ACD4 /* ClusteringKMeans.h */,
+				C09DFB721E9B86800013811D /* ClusteringSpectral.h */,
+				5D9370F81BC7FE510046ACD4 /* Complex.h */,
+				93FE35BD2361151E00108484 /* Cone3.h */,
+				5D9370F91BC7FE510046ACD4 /* DiscreteCosineTransform.h */,
+				5D9370FA1BC7FE510046ACD4 /* Equation.h */,
+				5D9370FB1BC7FE510046ACD4 /* Euler.h */,
+				5D9370FC1BC7FE510046ACD4 /* ExponentialMap.h */,
+				5D9370FD1BC7FE510046ACD4 /* FiniteLine2.h */,
+				5D9370FE1BC7FE510046ACD4 /* FiniteLine3.h */,
+				937570362384FA5500D3AA05 /* FisheyeCamera.h */,
+				5D9370FF1BC7FE510046ACD4 /* FourierTransformation.h */,
+				9300C93B27CE164400806E93 /* Frustum.h */,
+				5D9371001BC7FE510046ACD4 /* HomogenousMatrix4.h */,
+				9380ACAE241028450071E691 /* HSVAColor.h */,
+				5D9371011BC7FE510046ACD4 /* Interpolation.h */,
+				5D9371021BC7FE510046ACD4 /* Line2.h */,
+				5D9371031BC7FE510046ACD4 /* Line3.h */,
+				5D9371041BC7FE510046ACD4 /* Lookup2.h */,
+				C09DFB731E9B86800013811D /* MathUtilities.h */,
+				5D9371071BC7FE510046ACD4 /* Matrix.h */,
+				5D9371081BC7FE510046ACD4 /* Numeric.h */,
+				50CC40522855645B00005882 /* PinholeCamera.h */,
+				5D9371091BC7FE510046ACD4 /* Plane3.h */,
+				5D93710A1BC7FE510046ACD4 /* Pose.h */,
+				5D93710B1BC7FE510046ACD4 /* Quaternion.h */,
+				5D93710C1BC7FE510046ACD4 /* Random.h */,
+				9355A8F02794C23100F12C46 /* RateCalculator.h */,
+				9380ACA92410283E0071E691 /* RGBAColor.h */,
+				5D93710D1BC7FE510046ACD4 /* Rotation.h */,
+				933E9B43241DA1EE00489BE5 /* SampleMap.h */,
+				C09DFB741E9B86800013811D /* AutomaticDifferentiation.h */,
+				9372739223D91A4A00B6D90A /* SophusUtilities.h */,
+				5D93710E1BC7FE510046ACD4 /* SparseMatrix.h */,
+				5D93710F1BC7FE510046ACD4 /* Sphere3.h */,
+				5D9371101BC7FE510046ACD4 /* SphericalExponentialMap.h */,
+				5D9371111BC7FE510046ACD4 /* SquareMatrix2.h */,
+				5D9371121BC7FE510046ACD4 /* SquareMatrix3.h */,
+				5D9371131BC7FE510046ACD4 /* SquareMatrix4.h */,
+				5D9371141BC7FE510046ACD4 /* StaticMatrix.h */,
+				5D9371151BC7FE510046ACD4 /* SuccessionSubset.h */,
+				930FAD5F230F5A7200D197B5 /* ToonUtilities.h */,
+				5D9371161BC7FE510046ACD4 /* Triangle.h */,
+				5D9371171BC7FE510046ACD4 /* Triangle2.h */,
+				5D9371181BC7FE510046ACD4 /* Triangle3.h */,
+				5D9371191BC7FE510046ACD4 /* Variance.h */,
+				5D93711A1BC7FE510046ACD4 /* Vector2.h */,
+				5D93711B1BC7FE510046ACD4 /* Vector3.h */,
+				5D93711C1BC7FE510046ACD4 /* Vector4.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D188D0D1B90C39A00FA7DD7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9371211BC7FE510046ACD4 /* Box3.h in Headers */,
+				5D9371291BC7FE510046ACD4 /* FiniteLine2.h in Headers */,
+				5D9371371BC7FE510046ACD4 /* Quaternion.h in Headers */,
+				5D9371411BC7FE510046ACD4 /* SuccessionSubset.h in Headers */,
+				5D93711F1BC7FE510046ACD4 /* BoundingSphere.h in Headers */,
+				5D9371301BC7FE510046ACD4 /* Lookup2.h in Headers */,
+				5D9371421BC7FE510046ACD4 /* Triangle.h in Headers */,
+				5D9371391BC7FE510046ACD4 /* Rotation.h in Headers */,
+				C09DFB751E9B86800013811D /* ClusteringSpectral.h in Headers */,
+				5D9371451BC7FE510046ACD4 /* Variance.h in Headers */,
+				5D93712F1BC7FE510046ACD4 /* Line3.h in Headers */,
+				5D93712E1BC7FE510046ACD4 /* Line2.h in Headers */,
+				5D9371251BC7FE510046ACD4 /* DiscreteCosineTransform.h in Headers */,
+				9372739323D91A4A00B6D90A /* SophusUtilities.h in Headers */,
+				5D9371281BC7FE510046ACD4 /* ExponentialMap.h in Headers */,
+				9380ACAF241028450071E691 /* HSVAColor.h in Headers */,
+				5D93712A1BC7FE510046ACD4 /* FiniteLine3.h in Headers */,
+				9300C93C27CE164400806E93 /* Frustum.h in Headers */,
+				93BF612B270D6BCF00F1675C /* AnyCamera.h in Headers */,
+				5D9371431BC7FE510046ACD4 /* Triangle2.h in Headers */,
+				5D93713A1BC7FE510046ACD4 /* SparseMatrix.h in Headers */,
+				C09DFB761E9B86800013811D /* MathUtilities.h in Headers */,
+				5D93712C1BC7FE510046ACD4 /* HomogenousMatrix4.h in Headers */,
+				5D9371381BC7FE510046ACD4 /* Random.h in Headers */,
+				5D9371341BC7FE510046ACD4 /* Numeric.h in Headers */,
+				5D93713C1BC7FE510046ACD4 /* SphericalExponentialMap.h in Headers */,
+				5D9371461BC7FE510046ACD4 /* Vector2.h in Headers */,
+				933E9B44241DA1EE00489BE5 /* SampleMap.h in Headers */,
+				5D9371481BC7FE510046ACD4 /* Vector4.h in Headers */,
+				50CC40532855645B00005882 /* PinholeCamera.h in Headers */,
+				5D9371401BC7FE510046ACD4 /* StaticMatrix.h in Headers */,
+				93F9E173287CB234003C4783 /* Camera.h in Headers */,
+				5D9371361BC7FE510046ACD4 /* Pose.h in Headers */,
+				5D93711E1BC7FE510046ACD4 /* BoundingBox.h in Headers */,
+				5D9371261BC7FE510046ACD4 /* Equation.h in Headers */,
+				5D93713B1BC7FE510046ACD4 /* Sphere3.h in Headers */,
+				5D93712B1BC7FE510046ACD4 /* FourierTransformation.h in Headers */,
+				930FAD60230F5A7200D197B5 /* ToonUtilities.h in Headers */,
+				5D93711D1BC7FE510046ACD4 /* Approximation.h in Headers */,
+				93FE35BE2361151E00108484 /* Cone3.h in Headers */,
+				5D93713F1BC7FE510046ACD4 /* SquareMatrix4.h in Headers */,
+				5D93712D1BC7FE510046ACD4 /* Interpolation.h in Headers */,
+				5D9371231BC7FE510046ACD4 /* ClusteringKMeans.h in Headers */,
+				5D93713D1BC7FE510046ACD4 /* SquareMatrix2.h in Headers */,
+				5D9371351BC7FE510046ACD4 /* Plane3.h in Headers */,
+				5D9371441BC7FE510046ACD4 /* Triangle3.h in Headers */,
+				C09DFB771E9B86800013811D /* AutomaticDifferentiation.h in Headers */,
+				5D9371331BC7FE510046ACD4 /* Matrix.h in Headers */,
+				5D9371271BC7FE510046ACD4 /* Euler.h in Headers */,
+				937570372384FA5500D3AA05 /* FisheyeCamera.h in Headers */,
+				5D9371471BC7FE510046ACD4 /* Vector3.h in Headers */,
+				9380ACAA2410283E0071E691 /* RGBAColor.h in Headers */,
+				5D9371201BC7FE510046ACD4 /* Box2.h in Headers */,
+				5D93713E1BC7FE510046ACD4 /* SquareMatrix3.h in Headers */,
+				9355A8F12794C23200F12C46 /* RateCalculator.h in Headers */,
+				5D9371241BC7FE510046ACD4 /* Complex.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D222A411BB16B2E00298788 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D93714D1BC7FE5A0046ACD4 /* Box3.h in Headers */,
+				5D9371551BC7FE5A0046ACD4 /* FiniteLine2.h in Headers */,
+				5D9371631BC7FE5A0046ACD4 /* Quaternion.h in Headers */,
+				5D93716D1BC7FE5A0046ACD4 /* SuccessionSubset.h in Headers */,
+				5D93714B1BC7FE5A0046ACD4 /* BoundingSphere.h in Headers */,
+				5D93715C1BC7FE5A0046ACD4 /* Lookup2.h in Headers */,
+				5D93716E1BC7FE5A0046ACD4 /* Triangle.h in Headers */,
+				5D9371651BC7FE5A0046ACD4 /* Rotation.h in Headers */,
+				C09DFB781E9B86840013811D /* ClusteringSpectral.h in Headers */,
+				5D9371711BC7FE5A0046ACD4 /* Variance.h in Headers */,
+				5D93715B1BC7FE5A0046ACD4 /* Line3.h in Headers */,
+				5D93715A1BC7FE5A0046ACD4 /* Line2.h in Headers */,
+				5D9371511BC7FE5A0046ACD4 /* DiscreteCosineTransform.h in Headers */,
+				9372739423D91A4A00B6D90A /* SophusUtilities.h in Headers */,
+				5D9371541BC7FE5A0046ACD4 /* ExponentialMap.h in Headers */,
+				9380ACB0241028450071E691 /* HSVAColor.h in Headers */,
+				5D9371561BC7FE5A0046ACD4 /* FiniteLine3.h in Headers */,
+				9300C93D27CE164400806E93 /* Frustum.h in Headers */,
+				93BF612C270D6BCF00F1675C /* AnyCamera.h in Headers */,
+				5D93716F1BC7FE5A0046ACD4 /* Triangle2.h in Headers */,
+				5D9371661BC7FE5A0046ACD4 /* SparseMatrix.h in Headers */,
+				C09DFB7B1E9B86870013811D /* MathUtilities.h in Headers */,
+				5D9371581BC7FE5A0046ACD4 /* HomogenousMatrix4.h in Headers */,
+				5D9371641BC7FE5A0046ACD4 /* Random.h in Headers */,
+				5D9371601BC7FE5A0046ACD4 /* Numeric.h in Headers */,
+				5D9371681BC7FE5A0046ACD4 /* SphericalExponentialMap.h in Headers */,
+				5D9371721BC7FE5A0046ACD4 /* Vector2.h in Headers */,
+				933E9B45241DA1EE00489BE5 /* SampleMap.h in Headers */,
+				5D9371741BC7FE5A0046ACD4 /* Vector4.h in Headers */,
+				50CC40542855645B00005882 /* PinholeCamera.h in Headers */,
+				5D93716C1BC7FE5A0046ACD4 /* StaticMatrix.h in Headers */,
+				93F9E174287CB234003C4783 /* Camera.h in Headers */,
+				5D9371621BC7FE5A0046ACD4 /* Pose.h in Headers */,
+				5D93714A1BC7FE5A0046ACD4 /* BoundingBox.h in Headers */,
+				5D9371521BC7FE5A0046ACD4 /* Equation.h in Headers */,
+				5D9371671BC7FE5A0046ACD4 /* Sphere3.h in Headers */,
+				5D9371571BC7FE5A0046ACD4 /* FourierTransformation.h in Headers */,
+				930FAD61230F5A7200D197B5 /* ToonUtilities.h in Headers */,
+				5D9371491BC7FE5A0046ACD4 /* Approximation.h in Headers */,
+				93FE35BF2361151E00108484 /* Cone3.h in Headers */,
+				5D93716B1BC7FE5A0046ACD4 /* SquareMatrix4.h in Headers */,
+				5D9371591BC7FE5A0046ACD4 /* Interpolation.h in Headers */,
+				5D93714F1BC7FE5A0046ACD4 /* ClusteringKMeans.h in Headers */,
+				5D9371691BC7FE5A0046ACD4 /* SquareMatrix2.h in Headers */,
+				5D9371611BC7FE5A0046ACD4 /* Plane3.h in Headers */,
+				5D9371701BC7FE5A0046ACD4 /* Triangle3.h in Headers */,
+				C09DFB7E1E9B868B0013811D /* AutomaticDifferentiation.h in Headers */,
+				5D93715F1BC7FE5A0046ACD4 /* Matrix.h in Headers */,
+				5D9371531BC7FE5A0046ACD4 /* Euler.h in Headers */,
+				937570382384FA5500D3AA05 /* FisheyeCamera.h in Headers */,
+				5D9371731BC7FE5A0046ACD4 /* Vector3.h in Headers */,
+				9380ACAB2410283E0071E691 /* RGBAColor.h in Headers */,
+				5D93714C1BC7FE5A0046ACD4 /* Box2.h in Headers */,
+				5D93716A1BC7FE5A0046ACD4 /* SquareMatrix3.h in Headers */,
+				9355A8F22794C23200F12C46 /* RateCalculator.h in Headers */,
+				5D9371501BC7FE5A0046ACD4 /* Complex.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D491CD11D8F55DE00C4099B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D491CD21D8F55DE00C4099B /* Box3.h in Headers */,
+				5D491CD31D8F55DE00C4099B /* FiniteLine2.h in Headers */,
+				5D491CD41D8F55DE00C4099B /* Quaternion.h in Headers */,
+				5D491CD51D8F55DE00C4099B /* SuccessionSubset.h in Headers */,
+				5D491CD61D8F55DE00C4099B /* BoundingSphere.h in Headers */,
+				5D491CD71D8F55DE00C4099B /* Lookup2.h in Headers */,
+				5D491CD81D8F55DE00C4099B /* Triangle.h in Headers */,
+				5D491CD91D8F55DE00C4099B /* Rotation.h in Headers */,
+				C09DFB7A1E9B86850013811D /* ClusteringSpectral.h in Headers */,
+				5D491CDA1D8F55DE00C4099B /* Variance.h in Headers */,
+				5D491CDB1D8F55DE00C4099B /* Line3.h in Headers */,
+				5D491CDC1D8F55DE00C4099B /* Line2.h in Headers */,
+				5D491CDD1D8F55DE00C4099B /* DiscreteCosineTransform.h in Headers */,
+				9372739623D91A4A00B6D90A /* SophusUtilities.h in Headers */,
+				5D491CDE1D8F55DE00C4099B /* ExponentialMap.h in Headers */,
+				9380ACB2241028450071E691 /* HSVAColor.h in Headers */,
+				5D491CDF1D8F55DE00C4099B /* FiniteLine3.h in Headers */,
+				9300C93F27CE164400806E93 /* Frustum.h in Headers */,
+				93BF612E270D6BCF00F1675C /* AnyCamera.h in Headers */,
+				5D491CE01D8F55DE00C4099B /* Triangle2.h in Headers */,
+				5D491CE11D8F55DE00C4099B /* SparseMatrix.h in Headers */,
+				C09DFB7D1E9B86880013811D /* MathUtilities.h in Headers */,
+				5D491CE21D8F55DE00C4099B /* HomogenousMatrix4.h in Headers */,
+				5D491CE31D8F55DE00C4099B /* Random.h in Headers */,
+				5D491CE41D8F55DE00C4099B /* Numeric.h in Headers */,
+				5D491CE51D8F55DE00C4099B /* SphericalExponentialMap.h in Headers */,
+				5D491CE61D8F55DE00C4099B /* Vector2.h in Headers */,
+				933E9B47241DA1EE00489BE5 /* SampleMap.h in Headers */,
+				5D491CE71D8F55DE00C4099B /* Vector4.h in Headers */,
+				50CC40562855645B00005882 /* PinholeCamera.h in Headers */,
+				5D491CE81D8F55DE00C4099B /* StaticMatrix.h in Headers */,
+				93F9E176287CB234003C4783 /* Camera.h in Headers */,
+				5D491CEA1D8F55DE00C4099B /* Pose.h in Headers */,
+				5D491CEB1D8F55DE00C4099B /* BoundingBox.h in Headers */,
+				5D491CEC1D8F55DE00C4099B /* Equation.h in Headers */,
+				5D491CED1D8F55DE00C4099B /* Sphere3.h in Headers */,
+				5D491CEE1D8F55DE00C4099B /* FourierTransformation.h in Headers */,
+				930FAD63230F5A7200D197B5 /* ToonUtilities.h in Headers */,
+				5D491CF01D8F55DE00C4099B /* Approximation.h in Headers */,
+				93FE35C12361151E00108484 /* Cone3.h in Headers */,
+				5D491CF11D8F55DE00C4099B /* SquareMatrix4.h in Headers */,
+				5D491CF21D8F55DE00C4099B /* Interpolation.h in Headers */,
+				5D491CF31D8F55DE00C4099B /* ClusteringKMeans.h in Headers */,
+				5D491CF41D8F55DE00C4099B /* SquareMatrix2.h in Headers */,
+				5D491CF51D8F55DE00C4099B /* Plane3.h in Headers */,
+				5D491CF61D8F55DE00C4099B /* Triangle3.h in Headers */,
+				C09DFB7F1E9B868C0013811D /* AutomaticDifferentiation.h in Headers */,
+				5D491CF71D8F55DE00C4099B /* Matrix.h in Headers */,
+				5D491CF81D8F55DE00C4099B /* Euler.h in Headers */,
+				9375703A2384FA5500D3AA05 /* FisheyeCamera.h in Headers */,
+				5D491CF91D8F55DE00C4099B /* Vector3.h in Headers */,
+				9380ACAD2410283E0071E691 /* RGBAColor.h in Headers */,
+				5D491CFA1D8F55DE00C4099B /* Box2.h in Headers */,
+				5D491CFB1D8F55DE00C4099B /* SquareMatrix3.h in Headers */,
+				9355A8F42794C23200F12C46 /* RateCalculator.h in Headers */,
+				5D491CFC1D8F55DE00C4099B /* Complex.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862311D8B5A6400DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9862321D8B5A6400DEDB00 /* Box3.h in Headers */,
+				5D9862331D8B5A6400DEDB00 /* FiniteLine2.h in Headers */,
+				5D9862341D8B5A6400DEDB00 /* Quaternion.h in Headers */,
+				5D9862351D8B5A6400DEDB00 /* SuccessionSubset.h in Headers */,
+				5D9862361D8B5A6400DEDB00 /* BoundingSphere.h in Headers */,
+				5D9862371D8B5A6400DEDB00 /* Lookup2.h in Headers */,
+				5D9862381D8B5A6400DEDB00 /* Triangle.h in Headers */,
+				5D9862391D8B5A6400DEDB00 /* Rotation.h in Headers */,
+				C09DFB791E9B86840013811D /* ClusteringSpectral.h in Headers */,
+				5D98623A1D8B5A6400DEDB00 /* Variance.h in Headers */,
+				5D98623B1D8B5A6400DEDB00 /* Line3.h in Headers */,
+				5D98623C1D8B5A6400DEDB00 /* Line2.h in Headers */,
+				5D98623D1D8B5A6400DEDB00 /* DiscreteCosineTransform.h in Headers */,
+				9372739523D91A4A00B6D90A /* SophusUtilities.h in Headers */,
+				5D98623E1D8B5A6400DEDB00 /* ExponentialMap.h in Headers */,
+				9380ACB1241028450071E691 /* HSVAColor.h in Headers */,
+				5D98623F1D8B5A6400DEDB00 /* FiniteLine3.h in Headers */,
+				9300C93E27CE164400806E93 /* Frustum.h in Headers */,
+				93BF612D270D6BCF00F1675C /* AnyCamera.h in Headers */,
+				5D9862401D8B5A6400DEDB00 /* Triangle2.h in Headers */,
+				5D9862411D8B5A6400DEDB00 /* SparseMatrix.h in Headers */,
+				C09DFB7C1E9B86880013811D /* MathUtilities.h in Headers */,
+				5D9862421D8B5A6400DEDB00 /* HomogenousMatrix4.h in Headers */,
+				5D9862431D8B5A6400DEDB00 /* Random.h in Headers */,
+				5D9862441D8B5A6400DEDB00 /* Numeric.h in Headers */,
+				5D9862451D8B5A6400DEDB00 /* SphericalExponentialMap.h in Headers */,
+				5D9862461D8B5A6400DEDB00 /* Vector2.h in Headers */,
+				933E9B46241DA1EE00489BE5 /* SampleMap.h in Headers */,
+				5D9862471D8B5A6400DEDB00 /* Vector4.h in Headers */,
+				50CC40552855645B00005882 /* PinholeCamera.h in Headers */,
+				5D9862481D8B5A6400DEDB00 /* StaticMatrix.h in Headers */,
+				93F9E175287CB234003C4783 /* Camera.h in Headers */,
+				5D98624A1D8B5A6400DEDB00 /* Pose.h in Headers */,
+				5D98624B1D8B5A6400DEDB00 /* BoundingBox.h in Headers */,
+				5D98624C1D8B5A6400DEDB00 /* Equation.h in Headers */,
+				5D98624D1D8B5A6400DEDB00 /* Sphere3.h in Headers */,
+				5D98624E1D8B5A6400DEDB00 /* FourierTransformation.h in Headers */,
+				930FAD62230F5A7200D197B5 /* ToonUtilities.h in Headers */,
+				5D9862501D8B5A6400DEDB00 /* Approximation.h in Headers */,
+				93FE35C02361151E00108484 /* Cone3.h in Headers */,
+				5D9862511D8B5A6400DEDB00 /* SquareMatrix4.h in Headers */,
+				5D9862521D8B5A6400DEDB00 /* Interpolation.h in Headers */,
+				5D9862531D8B5A6400DEDB00 /* ClusteringKMeans.h in Headers */,
+				5D9862541D8B5A6400DEDB00 /* SquareMatrix2.h in Headers */,
+				5D9862551D8B5A6400DEDB00 /* Plane3.h in Headers */,
+				5D9862561D8B5A6400DEDB00 /* Triangle3.h in Headers */,
+				C09DFB801E9B868D0013811D /* AutomaticDifferentiation.h in Headers */,
+				5D9862571D8B5A6400DEDB00 /* Matrix.h in Headers */,
+				5D9862581D8B5A6400DEDB00 /* Euler.h in Headers */,
+				937570392384FA5500D3AA05 /* FisheyeCamera.h in Headers */,
+				5D9862591D8B5A6400DEDB00 /* Vector3.h in Headers */,
+				9380ACAC2410283E0071E691 /* RGBAColor.h in Headers */,
+				5D98625A1D8B5A6400DEDB00 /* Box2.h in Headers */,
+				5D98625B1D8B5A6400DEDB00 /* SquareMatrix3.h in Headers */,
+				9355A8F32794C23200F12C46 /* RateCalculator.h in Headers */,
+				5D98625C1D8B5A6400DEDB00 /* Complex.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D188D0E1B90C39A00FA7DD7 /* math x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D188D1A1B90C39B00FA7DD7 /* Build configuration list for PBXNativeTarget "math x64 (Static)" */;
+			buildPhases = (
+				5D188D0B1B90C39A00FA7DD7 /* Sources */,
+				5D188D0C1B90C39A00FA7DD7 /* Frameworks */,
+				5D188D0D1B90C39A00FA7DD7 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "math x64 (Static)";
+			productName = math;
+			productReference = 5D188D0F1B90C39A00FA7DD7 /* libOceanMathD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D222A2E1BB16B2E00298788 /* math x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D222A421BB16B2E00298788 /* Build configuration list for PBXNativeTarget "math x64 (Shared)" */;
+			buildPhases = (
+				5D222A2F1BB16B2E00298788 /* Sources */,
+				5D222A401BB16B2E00298788 /* Frameworks */,
+				5D222A411BB16B2E00298788 /* Headers */,
+				C041EC5F1DABEB4E00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "math x64 (Shared)";
+			productName = math;
+			productReference = 5D222A451BB16B2E00298788 /* libOceanMathD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D491CBE1D8F55DE00C4099B /* math arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D491CFD1D8F55DE00C4099B /* Build configuration list for PBXNativeTarget "math arm64 (Shared)" */;
+			buildPhases = (
+				5D491CBF1D8F55DE00C4099B /* Sources */,
+				5D491CD01D8F55DE00C4099B /* Frameworks */,
+				5D491CD11D8F55DE00C4099B /* Headers */,
+				5D491D011D8F56D000C4099B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "math arm64 (Shared)";
+			productName = math;
+			productReference = 5D491D001D8F55DE00C4099B /* libOceanMathD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D98621E1D8B5A6400DEDB00 /* math arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D98625D1D8B5A6400DEDB00 /* Build configuration list for PBXNativeTarget "math arm64 (Static)" */;
+			buildPhases = (
+				5D98621F1D8B5A6400DEDB00 /* Sources */,
+				5D9862301D8B5A6400DEDB00 /* Frameworks */,
+				5D9862311D8B5A6400DEDB00 /* Headers */,
+				5D837F501D8F100400939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "math arm64 (Static)";
+			productName = math;
+			productReference = 5D9862601D8B5A6400DEDB00 /* libOceanMathD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D188D071B90C39A00FA7DD7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D188D0E1B90C39A00FA7DD7 = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+				};
+			};
+			buildConfigurationList = 5D188D0A1B90C39A00FA7DD7 /* Build configuration list for PBXProject "math" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D188D061B90C39A00FA7DD7;
+			productRefGroup = 5D188D101B90C39A00FA7DD7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D188D0E1B90C39A00FA7DD7 /* math x64 (Static) */,
+				5D222A2E1BB16B2E00298788 /* math x64 (Shared) */,
+				5D98621E1D8B5A6400DEDB00 /* math arm64 (Static) */,
+				5D491CBE1D8F55DE00C4099B /* math arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D491D011D8F56D000C4099B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../codesign.sh\n../../copy_arm_shared.sh \"../../../../../bin/lib/\"";
+		};
+		5D837F501D8F100400939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../copy_arm_static.sh \"../../../../../bin/lib/\"";
+		};
+		C041EC5F1DABEB4E00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D188D0B1B90C39A00FA7DD7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D188F1D1B90F82400FA7DD7 /* Pose.cpp in Sources */,
+				9364F07A1FE461AE00D0EF4C /* ClusteringSpectral.cpp in Sources */,
+				5D188F041B90F80100FA7DD7 /* Approximation.cpp in Sources */,
+				5D188F1E1B90F82400FA7DD7 /* SparseMatrix.cpp in Sources */,
+				5D188F1B1B90F82400FA7DD7 /* FourierTransformation.cpp in Sources */,
+				5D188F1C1B90F82400FA7DD7 /* Matrix.cpp in Sources */,
+				5D188F151B90F82400FA7DD7 /* BoundingSphere.cpp in Sources */,
+				9380ACB4241028500071E691 /* RGBAColor.cpp in Sources */,
+				5D188F141B90F82400FA7DD7 /* BoundingBox.cpp in Sources */,
+				5D188F191B90F82400FA7DD7 /* DiscreteCosineTransform.cpp in Sources */,
+				50CC40582855648700005882 /* PinholeCamera.cpp in Sources */,
+				5D188F201B90F82400FA7DD7 /* SphericalExponentialMap.cpp in Sources */,
+				9355A8F62794C24300F12C46 /* RateCalculator.cpp in Sources */,
+				5D188F171B90F82400FA7DD7 /* Box3.cpp in Sources */,
+				9380ACB9241028570071E691 /* HSVAColor.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D222A2F1BB16B2E00298788 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D222A301BB16B2E00298788 /* Pose.cpp in Sources */,
+				9364F07B1FE461AE00D0EF4C /* ClusteringSpectral.cpp in Sources */,
+				5D222A341BB16B2E00298788 /* Approximation.cpp in Sources */,
+				5D222A351BB16B2E00298788 /* SparseMatrix.cpp in Sources */,
+				5D222A381BB16B2E00298788 /* FourierTransformation.cpp in Sources */,
+				5D222A391BB16B2E00298788 /* Matrix.cpp in Sources */,
+				5D222A3A1BB16B2E00298788 /* BoundingSphere.cpp in Sources */,
+				9380ACB5241028500071E691 /* RGBAColor.cpp in Sources */,
+				5D222A3B1BB16B2E00298788 /* BoundingBox.cpp in Sources */,
+				5D222A3C1BB16B2E00298788 /* DiscreteCosineTransform.cpp in Sources */,
+				50CC40592855648700005882 /* PinholeCamera.cpp in Sources */,
+				5D222A3E1BB16B2E00298788 /* SphericalExponentialMap.cpp in Sources */,
+				9355A8F72794C24300F12C46 /* RateCalculator.cpp in Sources */,
+				5D222A3F1BB16B2E00298788 /* Box3.cpp in Sources */,
+				9380ACBA241028570071E691 /* HSVAColor.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D491CBF1D8F55DE00C4099B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D491CC01D8F55DE00C4099B /* Pose.cpp in Sources */,
+				9364F07D1FE461AE00D0EF4C /* ClusteringSpectral.cpp in Sources */,
+				5D491CC41D8F55DE00C4099B /* Approximation.cpp in Sources */,
+				5D491CC51D8F55DE00C4099B /* SparseMatrix.cpp in Sources */,
+				5D491CC81D8F55DE00C4099B /* FourierTransformation.cpp in Sources */,
+				5D491CC91D8F55DE00C4099B /* Matrix.cpp in Sources */,
+				5D491CCA1D8F55DE00C4099B /* BoundingSphere.cpp in Sources */,
+				9380ACB7241028500071E691 /* RGBAColor.cpp in Sources */,
+				5D491CCB1D8F55DE00C4099B /* BoundingBox.cpp in Sources */,
+				5D491CCC1D8F55DE00C4099B /* DiscreteCosineTransform.cpp in Sources */,
+				50CC405B2855648700005882 /* PinholeCamera.cpp in Sources */,
+				5D491CCE1D8F55DE00C4099B /* SphericalExponentialMap.cpp in Sources */,
+				9355A8F92794C24300F12C46 /* RateCalculator.cpp in Sources */,
+				5D491CCF1D8F55DE00C4099B /* Box3.cpp in Sources */,
+				9380ACBC241028570071E691 /* HSVAColor.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98621F1D8B5A6400DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9862201D8B5A6400DEDB00 /* Pose.cpp in Sources */,
+				9364F07C1FE461AE00D0EF4C /* ClusteringSpectral.cpp in Sources */,
+				5D9862241D8B5A6400DEDB00 /* Approximation.cpp in Sources */,
+				5D9862251D8B5A6400DEDB00 /* SparseMatrix.cpp in Sources */,
+				5D9862281D8B5A6400DEDB00 /* FourierTransformation.cpp in Sources */,
+				5D9862291D8B5A6400DEDB00 /* Matrix.cpp in Sources */,
+				5D98622A1D8B5A6400DEDB00 /* BoundingSphere.cpp in Sources */,
+				9380ACB6241028500071E691 /* RGBAColor.cpp in Sources */,
+				5D98622B1D8B5A6400DEDB00 /* BoundingBox.cpp in Sources */,
+				5D98622C1D8B5A6400DEDB00 /* DiscreteCosineTransform.cpp in Sources */,
+				50CC405A2855648700005882 /* PinholeCamera.cpp in Sources */,
+				5D98622E1D8B5A6400DEDB00 /* SphericalExponentialMap.cpp in Sources */,
+				9355A8F82794C24300F12C46 /* RateCalculator.cpp in Sources */,
+				5D98622F1D8B5A6400DEDB00 /* Box3.cpp in Sources */,
+				9380ACBB241028570071E691 /* HSVAColor.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D188D181B90C39B00FA7DD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_static_debug;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+					../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D188D191B90C39B00FA7DD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_static;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+					../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_static;
+				SDKROOT = macosx;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D188D1B1B90C39B00FA7DD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				MACH_O_TYPE = staticlib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMathD;
+				PRODUCT_NAME = OceanMathD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+			};
+			name = Debug;
+		};
+		5D188D1C1B90C39B00FA7DD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				MACH_O_TYPE = staticlib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMath;
+				PRODUCT_NAME = OceanMath;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static;
+			};
+			name = Release;
+		};
+		5D222A431BB16B2E00298788 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lOceanBaseD";
+				PRODUCT_MODULE_NAME = OceanMathD;
+				PRODUCT_NAME = OceanMathD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+			};
+			name = Debug;
+		};
+		5D222A441BB16B2E00298788 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/math/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lOceanBase";
+				PRODUCT_MODULE_NAME = OceanMath;
+				PRODUCT_NAME = OceanMath;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared;
+			};
+			name = Release;
+		};
+		5D491CFE1D8F55DE00C4099B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lOceanBaseD";
+				PRODUCT_MODULE_NAME = OceanMathD;
+				PRODUCT_NAME = OceanMathD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+			};
+			name = Debug;
+		};
+		5D491CFF1D8F55DE00C4099B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-lOceanBase";
+				PRODUCT_MODULE_NAME = OceanMath;
+				PRODUCT_NAME = OceanMath;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+			};
+			name = Release;
+		};
+		5D98625E1D8B5A6400DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				MACH_O_TYPE = staticlib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMathD;
+				PRODUCT_NAME = OceanMathD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+			};
+			name = Debug;
+		};
+		5D98625F1D8B5A6400DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				MACH_O_TYPE = staticlib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMath;
+				PRODUCT_NAME = OceanMath;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/math/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D188D0A1B90C39A00FA7DD7 /* Build configuration list for PBXProject "math" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D188D181B90C39B00FA7DD7 /* Debug */,
+				5D188D191B90C39B00FA7DD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D188D1A1B90C39B00FA7DD7 /* Build configuration list for PBXNativeTarget "math x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D188D1B1B90C39B00FA7DD7 /* Debug */,
+				5D188D1C1B90C39B00FA7DD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D222A421BB16B2E00298788 /* Build configuration list for PBXNativeTarget "math x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D222A431BB16B2E00298788 /* Debug */,
+				5D222A441BB16B2E00298788 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D491CFD1D8F55DE00C4099B /* Build configuration list for PBXNativeTarget "math arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D491CFE1D8F55DE00C4099B /* Debug */,
+				5D491CFF1D8F55DE00C4099B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D98625D1D8B5A6400DEDB00 /* Build configuration list for PBXNativeTarget "math arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D98625E1D8B5A6400DEDB00 /* Debug */,
+				5D98625F1D8B5A6400DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D188D071B90C39A00FA7DD7 /* Project object */;
+}

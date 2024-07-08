@@ -1,0 +1,1274 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		50873DC9235E1DA8003C4E11 /* ShapeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50873DC8235E1DA8003C4E11 /* ShapeDetector.h */; };
+		50873DCA235E1DA8003C4E11 /* ShapeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50873DC8235E1DA8003C4E11 /* ShapeDetector.h */; };
+		50873DCB235E1DA8003C4E11 /* ShapeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50873DC8235E1DA8003C4E11 /* ShapeDetector.h */; };
+		50873DCC235E1DA8003C4E11 /* ShapeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50873DC8235E1DA8003C4E11 /* ShapeDetector.h */; };
+		50873DCE235E1DC6003C4E11 /* ShapeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50873DCD235E1DC6003C4E11 /* ShapeDetector.cpp */; };
+		50873DCF235E1DC6003C4E11 /* ShapeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50873DCD235E1DC6003C4E11 /* ShapeDetector.cpp */; };
+		50873DD0235E1DC6003C4E11 /* ShapeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50873DCD235E1DC6003C4E11 /* ShapeDetector.cpp */; };
+		50873DD1235E1DC6003C4E11 /* ShapeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50873DCD235E1DC6003C4E11 /* ShapeDetector.cpp */; };
+		50873DD3235F707D003C4E11 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50873DD2235F707D003C4E11 /* Utilities.h */; };
+		50873DD4235F707D003C4E11 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50873DD2235F707D003C4E11 /* Utilities.h */; };
+		50873DD5235F707D003C4E11 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50873DD2235F707D003C4E11 /* Utilities.h */; };
+		50873DD6235F707D003C4E11 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50873DD2235F707D003C4E11 /* Utilities.h */; };
+		50873DD8235F709C003C4E11 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50873DD7235F709C003C4E11 /* Utilities.cpp */; };
+		50873DD9235F709C003C4E11 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50873DD7235F709C003C4E11 /* Utilities.cpp */; };
+		50873DDA235F709C003C4E11 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50873DD7235F709C003C4E11 /* Utilities.cpp */; };
+		50873DDB235F709C003C4E11 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50873DD7235F709C003C4E11 /* Utilities.cpp */; };
+		50F349902359107A00A5CA5C /* FREAKDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 50F3498F2359107A00A5CA5C /* FREAKDescriptor.h */; };
+		50F349912359107A00A5CA5C /* FREAKDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 50F3498F2359107A00A5CA5C /* FREAKDescriptor.h */; };
+		50F349922359107A00A5CA5C /* FREAKDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 50F3498F2359107A00A5CA5C /* FREAKDescriptor.h */; };
+		50F349932359107A00A5CA5C /* FREAKDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 50F3498F2359107A00A5CA5C /* FREAKDescriptor.h */; };
+		5A2D013A2477178B001E63F2 /* FrameChangeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A2D01392477178B001E63F2 /* FrameChangeDetector.h */; };
+		5A2D013B2477178B001E63F2 /* FrameChangeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A2D01392477178B001E63F2 /* FrameChangeDetector.h */; };
+		5A2D013C2477178B001E63F2 /* FrameChangeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A2D01392477178B001E63F2 /* FrameChangeDetector.h */; };
+		5A2D013D2477178B001E63F2 /* FrameChangeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A2D01392477178B001E63F2 /* FrameChangeDetector.h */; };
+		5A2D013F247717A2001E63F2 /* FrameChangeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A2D013E247717A2001E63F2 /* FrameChangeDetector.cpp */; };
+		5A2D0140247717A2001E63F2 /* FrameChangeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A2D013E247717A2001E63F2 /* FrameChangeDetector.cpp */; };
+		5A2D0141247717A2001E63F2 /* FrameChangeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A2D013E247717A2001E63F2 /* FrameChangeDetector.cpp */; };
+		5A2D0142247717A2001E63F2 /* FrameChangeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A2D013E247717A2001E63F2 /* FrameChangeDetector.cpp */; };
+		5D222C451BB18A7B00298788 /* FeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93161BA9DA5300D38120 /* FeatureDetector.cpp */; };
+		5D222C461BB18A7B00298788 /* HarrisCornerDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93171BA9DA5300D38120 /* HarrisCornerDetector.cpp */; };
+		5D222C471BB18A7B00298788 /* ORBFeatureOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931A1BA9DA5300D38120 /* ORBFeatureOrientation.cpp */; };
+		5D222C481BB18A7B00298788 /* ORBSamplingPattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931B1BA9DA5300D38120 /* ORBSamplingPattern.cpp */; };
+		5D222C491BB18A7B00298788 /* FASTFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */; };
+		5D222C4A1BB18A7B00298788 /* LineDetectorHough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93181BA9DA5300D38120 /* LineDetectorHough.cpp */; };
+		5D222C4B1BB18A7B00298788 /* CalibrationPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */; };
+		5D222C4C1BB18A7B00298788 /* ORBFeatureDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93191BA9DA5300D38120 /* ORBFeatureDescriptor.cpp */; };
+		5D222C4F1BB18A7B00298788 /* CalibrationPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */; };
+		5D222C501BB18A7B00298788 /* Feature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93291BA9DA6500D38120 /* Feature.h */; };
+		5D222C521BB18A7B00298788 /* FASTFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93271BA9DA6500D38120 /* FASTFeature.h */; };
+		5D222C531BB18A7B00298788 /* Descriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93251BA9DA6500D38120 /* Descriptor.h */; };
+		5D222C541BB18A7B00298788 /* ORBFeatureOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93321BA9DA6500D38120 /* ORBFeatureOrientation.h */; };
+		5D222C551BB18A7B00298788 /* PointFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93351BA9DA6500D38120 /* PointFeature.h */; };
+		5D222C561BB18A7B00298788 /* OrientedPointFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93341BA9DA6500D38120 /* OrientedPointFeature.h */; };
+		5D222C571BB18A7B00298788 /* ORBSamplingPattern.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93331BA9DA6500D38120 /* ORBSamplingPattern.h */; };
+		5D222C581BB18A7B00298788 /* ORBDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932E1BA9DA6500D38120 /* ORBDescriptor.h */; };
+		5D222C591BB18A7B00298788 /* FeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932A1BA9DA6500D38120 /* FeatureDetector.h */; };
+		5D222C5A1BB18A7B00298788 /* Detector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93261BA9DA6500D38120 /* Detector.h */; };
+		5D222C5B1BB18A7B00298788 /* HarrisCorner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932B1BA9DA6500D38120 /* HarrisCorner.h */; };
+		5D222C5C1BB18A7B00298788 /* ORBFeatureDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93301BA9DA6500D38120 /* ORBFeatureDescriptor.h */; };
+		5D222C5D1BB18A7B00298788 /* HarrisCornerDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932C1BA9DA6500D38120 /* HarrisCornerDetector.h */; };
+		5D222C5E1BB18A7B00298788 /* ORBFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932F1BA9DA6500D38120 /* ORBFeature.h */; };
+		5D222C5F1BB18A7B00298788 /* LineDetectorHough.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932D1BA9DA6500D38120 /* LineDetectorHough.h */; };
+		5D222C601BB18A7B00298788 /* FASTFeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93281BA9DA6500D38120 /* FASTFeatureDetector.h */; };
+		5D7D931C1BA9DA5300D38120 /* CalibrationPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */; };
+		5D7D931D1BA9DA5300D38120 /* FASTFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */; };
+		5D7D931E1BA9DA5300D38120 /* FeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93161BA9DA5300D38120 /* FeatureDetector.cpp */; };
+		5D7D931F1BA9DA5300D38120 /* HarrisCornerDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93171BA9DA5300D38120 /* HarrisCornerDetector.cpp */; };
+		5D7D93201BA9DA5300D38120 /* LineDetectorHough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93181BA9DA5300D38120 /* LineDetectorHough.cpp */; };
+		5D7D93211BA9DA5300D38120 /* ORBFeatureDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93191BA9DA5300D38120 /* ORBFeatureDescriptor.cpp */; };
+		5D7D93221BA9DA5300D38120 /* ORBFeatureOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931A1BA9DA5300D38120 /* ORBFeatureOrientation.cpp */; };
+		5D7D93231BA9DA5300D38120 /* ORBSamplingPattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931B1BA9DA5300D38120 /* ORBSamplingPattern.cpp */; };
+		5D7D93361BA9DA6500D38120 /* CalibrationPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */; };
+		5D7D93371BA9DA6500D38120 /* Descriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93251BA9DA6500D38120 /* Descriptor.h */; };
+		5D7D93381BA9DA6500D38120 /* Detector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93261BA9DA6500D38120 /* Detector.h */; };
+		5D7D93391BA9DA6500D38120 /* FASTFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93271BA9DA6500D38120 /* FASTFeature.h */; };
+		5D7D933A1BA9DA6500D38120 /* FASTFeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93281BA9DA6500D38120 /* FASTFeatureDetector.h */; };
+		5D7D933B1BA9DA6500D38120 /* Feature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93291BA9DA6500D38120 /* Feature.h */; };
+		5D7D933C1BA9DA6500D38120 /* FeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932A1BA9DA6500D38120 /* FeatureDetector.h */; };
+		5D7D933D1BA9DA6500D38120 /* HarrisCorner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932B1BA9DA6500D38120 /* HarrisCorner.h */; };
+		5D7D933E1BA9DA6500D38120 /* HarrisCornerDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932C1BA9DA6500D38120 /* HarrisCornerDetector.h */; };
+		5D7D933F1BA9DA6500D38120 /* LineDetectorHough.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932D1BA9DA6500D38120 /* LineDetectorHough.h */; };
+		5D7D93401BA9DA6500D38120 /* ORBDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932E1BA9DA6500D38120 /* ORBDescriptor.h */; };
+		5D7D93411BA9DA6500D38120 /* ORBFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932F1BA9DA6500D38120 /* ORBFeature.h */; };
+		5D7D93421BA9DA6500D38120 /* ORBFeatureDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93301BA9DA6500D38120 /* ORBFeatureDescriptor.h */; };
+		5D7D93441BA9DA6500D38120 /* ORBFeatureOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93321BA9DA6500D38120 /* ORBFeatureOrientation.h */; };
+		5D7D93451BA9DA6500D38120 /* ORBSamplingPattern.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93331BA9DA6500D38120 /* ORBSamplingPattern.h */; };
+		5D7D93461BA9DA6500D38120 /* OrientedPointFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93341BA9DA6500D38120 /* OrientedPointFeature.h */; };
+		5D7D93471BA9DA6500D38120 /* PointFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93351BA9DA6500D38120 /* PointFeature.h */; };
+		5D9860ED1D8B531D00DEDB00 /* FeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93161BA9DA5300D38120 /* FeatureDetector.cpp */; };
+		5D9860EE1D8B531D00DEDB00 /* HarrisCornerDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93171BA9DA5300D38120 /* HarrisCornerDetector.cpp */; };
+		5D9860EF1D8B531D00DEDB00 /* ORBFeatureOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931A1BA9DA5300D38120 /* ORBFeatureOrientation.cpp */; };
+		5D9860F01D8B531D00DEDB00 /* ORBSamplingPattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931B1BA9DA5300D38120 /* ORBSamplingPattern.cpp */; };
+		5D9860F11D8B531D00DEDB00 /* FASTFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */; };
+		5D9860F21D8B531D00DEDB00 /* LineDetectorHough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93181BA9DA5300D38120 /* LineDetectorHough.cpp */; };
+		5D9860F31D8B531D00DEDB00 /* CalibrationPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */; };
+		5D9860F41D8B531D00DEDB00 /* ORBFeatureDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93191BA9DA5300D38120 /* ORBFeatureDescriptor.cpp */; };
+		5D9860F71D8B531D00DEDB00 /* CalibrationPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */; };
+		5D9860F81D8B531D00DEDB00 /* Feature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93291BA9DA6500D38120 /* Feature.h */; };
+		5D9860FA1D8B531D00DEDB00 /* FASTFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93271BA9DA6500D38120 /* FASTFeature.h */; };
+		5D9860FB1D8B531D00DEDB00 /* Descriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93251BA9DA6500D38120 /* Descriptor.h */; };
+		5D9860FC1D8B531D00DEDB00 /* ORBFeatureOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93321BA9DA6500D38120 /* ORBFeatureOrientation.h */; };
+		5D9860FD1D8B531D00DEDB00 /* PointFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93351BA9DA6500D38120 /* PointFeature.h */; };
+		5D9860FE1D8B531D00DEDB00 /* OrientedPointFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93341BA9DA6500D38120 /* OrientedPointFeature.h */; };
+		5D9860FF1D8B531D00DEDB00 /* ORBSamplingPattern.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93331BA9DA6500D38120 /* ORBSamplingPattern.h */; };
+		5D9861001D8B531D00DEDB00 /* ORBDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932E1BA9DA6500D38120 /* ORBDescriptor.h */; };
+		5D9861011D8B531D00DEDB00 /* FeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932A1BA9DA6500D38120 /* FeatureDetector.h */; };
+		5D9861021D8B531D00DEDB00 /* Detector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93261BA9DA6500D38120 /* Detector.h */; };
+		5D9861031D8B531D00DEDB00 /* HarrisCorner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932B1BA9DA6500D38120 /* HarrisCorner.h */; };
+		5D9861041D8B531D00DEDB00 /* ORBFeatureDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93301BA9DA6500D38120 /* ORBFeatureDescriptor.h */; };
+		5D9861051D8B531D00DEDB00 /* HarrisCornerDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932C1BA9DA6500D38120 /* HarrisCornerDetector.h */; };
+		5D9861061D8B531D00DEDB00 /* ORBFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932F1BA9DA6500D38120 /* ORBFeature.h */; };
+		5D9861071D8B531D00DEDB00 /* LineDetectorHough.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932D1BA9DA6500D38120 /* LineDetectorHough.h */; };
+		5D9861081D8B531D00DEDB00 /* FASTFeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93281BA9DA6500D38120 /* FASTFeatureDetector.h */; };
+		930D74DF219E2C5E00861D36 /* HemiCube.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D74DE219E2C5E00861D36 /* HemiCube.h */; };
+		930D74E0219E2C5E00861D36 /* HemiCube.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D74DE219E2C5E00861D36 /* HemiCube.h */; };
+		930D74E1219E2C5E00861D36 /* HemiCube.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D74DE219E2C5E00861D36 /* HemiCube.h */; };
+		930D74E2219E2C5E00861D36 /* HemiCube.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D74DE219E2C5E00861D36 /* HemiCube.h */; };
+		930D74E4219E2C6E00861D36 /* HemiCube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D74E3219E2C6E00861D36 /* HemiCube.cpp */; };
+		930D74E5219E2C6E00861D36 /* HemiCube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D74E3219E2C6E00861D36 /* HemiCube.cpp */; };
+		930D74E6219E2C6E00861D36 /* HemiCube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D74E3219E2C6E00861D36 /* HemiCube.cpp */; };
+		930D74E7219E2C6E00861D36 /* HemiCube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930D74E3219E2C6E00861D36 /* HemiCube.cpp */; };
+		9326FA6221C8DB8A004FB69C /* MessengerCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326FA6121C8DB89004FB69C /* MessengerCodeDetector.cpp */; };
+		9326FA6321C8DB8A004FB69C /* MessengerCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326FA6121C8DB89004FB69C /* MessengerCodeDetector.cpp */; };
+		9326FA6421C8DB8A004FB69C /* MessengerCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326FA6121C8DB89004FB69C /* MessengerCodeDetector.cpp */; };
+		9326FA6521C8DB8A004FB69C /* MessengerCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326FA6121C8DB89004FB69C /* MessengerCodeDetector.cpp */; };
+		9326FA6721C8DBA0004FB69C /* MessengerCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326FA6621C8DBA0004FB69C /* MessengerCodeDetector.h */; };
+		9326FA6821C8DBA0004FB69C /* MessengerCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326FA6621C8DBA0004FB69C /* MessengerCodeDetector.h */; };
+		9326FA6921C8DBA0004FB69C /* MessengerCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326FA6621C8DBA0004FB69C /* MessengerCodeDetector.h */; };
+		9326FA6A21C8DBA0004FB69C /* MessengerCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326FA6621C8DBA0004FB69C /* MessengerCodeDetector.h */; };
+		93325ED8215D7930009CBA15 /* LineEvaluator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93325ED7215D7930009CBA15 /* LineEvaluator.h */; };
+		93325ED9215D7930009CBA15 /* LineEvaluator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93325ED7215D7930009CBA15 /* LineEvaluator.h */; };
+		93325EDA215D7930009CBA15 /* LineEvaluator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93325ED7215D7930009CBA15 /* LineEvaluator.h */; };
+		93325EDB215D7930009CBA15 /* LineEvaluator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93325ED7215D7930009CBA15 /* LineEvaluator.h */; };
+		93C1FBB221BDD35600651880 /* LineDetectorULF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C1FBB121BDD35600651880 /* LineDetectorULF.cpp */; };
+		93C1FBB321BDD35600651880 /* LineDetectorULF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C1FBB121BDD35600651880 /* LineDetectorULF.cpp */; };
+		93C1FBB421BDD35600651880 /* LineDetectorULF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C1FBB121BDD35600651880 /* LineDetectorULF.cpp */; };
+		93C1FBB521BDD35600651880 /* LineDetectorULF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C1FBB121BDD35600651880 /* LineDetectorULF.cpp */; };
+		93C1FBB721BDD36400651880 /* LineDetectorULF.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C1FBB621BDD36400651880 /* LineDetectorULF.h */; };
+		93C1FBB821BDD36400651880 /* LineDetectorULF.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C1FBB621BDD36400651880 /* LineDetectorULF.h */; };
+		93C1FBB921BDD36400651880 /* LineDetectorULF.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C1FBB621BDD36400651880 /* LineDetectorULF.h */; };
+		93C1FBBA21BDD36400651880 /* LineDetectorULF.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C1FBB621BDD36400651880 /* LineDetectorULF.h */; };
+		C041EAEC1DABD68100BF5D76 /* FeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93161BA9DA5300D38120 /* FeatureDetector.cpp */; };
+		C041EAED1DABD68100BF5D76 /* HarrisCornerDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93171BA9DA5300D38120 /* HarrisCornerDetector.cpp */; };
+		C041EAEE1DABD68100BF5D76 /* ORBFeatureOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931A1BA9DA5300D38120 /* ORBFeatureOrientation.cpp */; };
+		C041EAEF1DABD68100BF5D76 /* ORBSamplingPattern.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D931B1BA9DA5300D38120 /* ORBSamplingPattern.cpp */; };
+		C041EAF01DABD68100BF5D76 /* FASTFeatureDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */; };
+		C041EAF11DABD68100BF5D76 /* LineDetectorHough.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93181BA9DA5300D38120 /* LineDetectorHough.cpp */; };
+		C041EAF21DABD68100BF5D76 /* CalibrationPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */; };
+		C041EAF31DABD68100BF5D76 /* ORBFeatureDescriptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93191BA9DA5300D38120 /* ORBFeatureDescriptor.cpp */; };
+		C041EAF61DABD68100BF5D76 /* CalibrationPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */; };
+		C041EAF71DABD68100BF5D76 /* Feature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93291BA9DA6500D38120 /* Feature.h */; };
+		C041EAF91DABD68100BF5D76 /* FASTFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93271BA9DA6500D38120 /* FASTFeature.h */; };
+		C041EAFA1DABD68100BF5D76 /* Descriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93251BA9DA6500D38120 /* Descriptor.h */; };
+		C041EAFB1DABD68100BF5D76 /* ORBFeatureOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93321BA9DA6500D38120 /* ORBFeatureOrientation.h */; };
+		C041EAFC1DABD68100BF5D76 /* PointFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93351BA9DA6500D38120 /* PointFeature.h */; };
+		C041EAFD1DABD68100BF5D76 /* OrientedPointFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93341BA9DA6500D38120 /* OrientedPointFeature.h */; };
+		C041EAFE1DABD68100BF5D76 /* ORBSamplingPattern.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93331BA9DA6500D38120 /* ORBSamplingPattern.h */; };
+		C041EAFF1DABD68100BF5D76 /* ORBDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932E1BA9DA6500D38120 /* ORBDescriptor.h */; };
+		C041EB001DABD68100BF5D76 /* FeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932A1BA9DA6500D38120 /* FeatureDetector.h */; };
+		C041EB011DABD68100BF5D76 /* Detector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93261BA9DA6500D38120 /* Detector.h */; };
+		C041EB021DABD68100BF5D76 /* HarrisCorner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932B1BA9DA6500D38120 /* HarrisCorner.h */; };
+		C041EB031DABD68100BF5D76 /* ORBFeatureDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93301BA9DA6500D38120 /* ORBFeatureDescriptor.h */; };
+		C041EB041DABD68100BF5D76 /* HarrisCornerDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932C1BA9DA6500D38120 /* HarrisCornerDetector.h */; };
+		C041EB051DABD68100BF5D76 /* ORBFeature.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932F1BA9DA6500D38120 /* ORBFeature.h */; };
+		C041EB061DABD68100BF5D76 /* LineDetectorHough.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D932D1BA9DA6500D38120 /* LineDetectorHough.h */; };
+		C041EB071DABD68100BF5D76 /* FASTFeatureDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93281BA9DA6500D38120 /* FASTFeatureDetector.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		50873DC8235E1DA8003C4E11 /* ShapeDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShapeDetector.h; path = ../../../../../../impl/ocean/cv/detector/ShapeDetector.h; sourceTree = "<group>"; };
+		50873DCD235E1DC6003C4E11 /* ShapeDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ShapeDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/ShapeDetector.cpp; sourceTree = "<group>"; };
+		50873DD2235F707D003C4E11 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../impl/ocean/cv/detector/Utilities.h; sourceTree = "<group>"; };
+		50873DD7235F709C003C4E11 /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../../impl/ocean/cv/detector/Utilities.cpp; sourceTree = "<group>"; };
+		50F3498F2359107A00A5CA5C /* FREAKDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FREAKDescriptor.h; path = ../../../../../../impl/ocean/cv/detector/FREAKDescriptor.h; sourceTree = "<group>"; };
+		5A2D01392477178B001E63F2 /* FrameChangeDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameChangeDetector.h; path = ../../../../../../impl/ocean/cv/detector/FrameChangeDetector.h; sourceTree = "<group>"; };
+		5A2D013E247717A2001E63F2 /* FrameChangeDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameChangeDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/FrameChangeDetector.cpp; sourceTree = "<group>"; };
+		5D222C641BB18A7B00298788 /* libOceanCVDetectorD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D7D93051BA9D8F700D38120 /* libOceanCVDetectorD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CalibrationPatternDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/CalibrationPatternDetector.cpp; sourceTree = "<group>"; };
+		5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FASTFeatureDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/FASTFeatureDetector.cpp; sourceTree = "<group>"; };
+		5D7D93161BA9DA5300D38120 /* FeatureDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FeatureDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/FeatureDetector.cpp; sourceTree = "<group>"; };
+		5D7D93171BA9DA5300D38120 /* HarrisCornerDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HarrisCornerDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/HarrisCornerDetector.cpp; sourceTree = "<group>"; };
+		5D7D93181BA9DA5300D38120 /* LineDetectorHough.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LineDetectorHough.cpp; path = ../../../../../../impl/ocean/cv/detector/LineDetectorHough.cpp; sourceTree = "<group>"; };
+		5D7D93191BA9DA5300D38120 /* ORBFeatureDescriptor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ORBFeatureDescriptor.cpp; path = ../../../../../../impl/ocean/cv/detector/ORBFeatureDescriptor.cpp; sourceTree = "<group>"; };
+		5D7D931A1BA9DA5300D38120 /* ORBFeatureOrientation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ORBFeatureOrientation.cpp; path = ../../../../../../impl/ocean/cv/detector/ORBFeatureOrientation.cpp; sourceTree = "<group>"; };
+		5D7D931B1BA9DA5300D38120 /* ORBSamplingPattern.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ORBSamplingPattern.cpp; path = ../../../../../../impl/ocean/cv/detector/ORBSamplingPattern.cpp; sourceTree = "<group>"; };
+		5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CalibrationPatternDetector.h; path = ../../../../../../impl/ocean/cv/detector/CalibrationPatternDetector.h; sourceTree = "<group>"; };
+		5D7D93251BA9DA6500D38120 /* Descriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Descriptor.h; path = ../../../../../../impl/ocean/cv/detector/Descriptor.h; sourceTree = "<group>"; };
+		5D7D93261BA9DA6500D38120 /* Detector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Detector.h; path = ../../../../../../impl/ocean/cv/detector/Detector.h; sourceTree = "<group>"; };
+		5D7D93271BA9DA6500D38120 /* FASTFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FASTFeature.h; path = ../../../../../../impl/ocean/cv/detector/FASTFeature.h; sourceTree = "<group>"; };
+		5D7D93281BA9DA6500D38120 /* FASTFeatureDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FASTFeatureDetector.h; path = ../../../../../../impl/ocean/cv/detector/FASTFeatureDetector.h; sourceTree = "<group>"; };
+		5D7D93291BA9DA6500D38120 /* Feature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Feature.h; path = ../../../../../../impl/ocean/cv/detector/Feature.h; sourceTree = "<group>"; };
+		5D7D932A1BA9DA6500D38120 /* FeatureDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeatureDetector.h; path = ../../../../../../impl/ocean/cv/detector/FeatureDetector.h; sourceTree = "<group>"; };
+		5D7D932B1BA9DA6500D38120 /* HarrisCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HarrisCorner.h; path = ../../../../../../impl/ocean/cv/detector/HarrisCorner.h; sourceTree = "<group>"; };
+		5D7D932C1BA9DA6500D38120 /* HarrisCornerDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HarrisCornerDetector.h; path = ../../../../../../impl/ocean/cv/detector/HarrisCornerDetector.h; sourceTree = "<group>"; };
+		5D7D932D1BA9DA6500D38120 /* LineDetectorHough.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LineDetectorHough.h; path = ../../../../../../impl/ocean/cv/detector/LineDetectorHough.h; sourceTree = "<group>"; };
+		5D7D932E1BA9DA6500D38120 /* ORBDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ORBDescriptor.h; path = ../../../../../../impl/ocean/cv/detector/ORBDescriptor.h; sourceTree = "<group>"; };
+		5D7D932F1BA9DA6500D38120 /* ORBFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ORBFeature.h; path = ../../../../../../impl/ocean/cv/detector/ORBFeature.h; sourceTree = "<group>"; };
+		5D7D93301BA9DA6500D38120 /* ORBFeatureDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ORBFeatureDescriptor.h; path = ../../../../../../impl/ocean/cv/detector/ORBFeatureDescriptor.h; sourceTree = "<group>"; };
+		5D7D93321BA9DA6500D38120 /* ORBFeatureOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ORBFeatureOrientation.h; path = ../../../../../../impl/ocean/cv/detector/ORBFeatureOrientation.h; sourceTree = "<group>"; };
+		5D7D93331BA9DA6500D38120 /* ORBSamplingPattern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ORBSamplingPattern.h; path = ../../../../../../impl/ocean/cv/detector/ORBSamplingPattern.h; sourceTree = "<group>"; };
+		5D7D93341BA9DA6500D38120 /* OrientedPointFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OrientedPointFeature.h; path = ../../../../../../impl/ocean/cv/detector/OrientedPointFeature.h; sourceTree = "<group>"; };
+		5D7D93351BA9DA6500D38120 /* PointFeature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PointFeature.h; path = ../../../../../../impl/ocean/cv/detector/PointFeature.h; sourceTree = "<group>"; };
+		5D98610C1D8B531D00DEDB00 /* libOceanCVDetectorD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		930D74DE219E2C5E00861D36 /* HemiCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HemiCube.h; path = ../../../../../../impl/ocean/cv/detector/HemiCube.h; sourceTree = "<group>"; };
+		930D74E3219E2C6E00861D36 /* HemiCube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HemiCube.cpp; path = ../../../../../../impl/ocean/cv/detector/HemiCube.cpp; sourceTree = "<group>"; };
+		9326FA6121C8DB89004FB69C /* MessengerCodeDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MessengerCodeDetector.cpp; path = ../../../../../../impl/ocean/cv/detector/MessengerCodeDetector.cpp; sourceTree = "<group>"; };
+		9326FA6621C8DBA0004FB69C /* MessengerCodeDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessengerCodeDetector.h; path = ../../../../../../impl/ocean/cv/detector/MessengerCodeDetector.h; sourceTree = "<group>"; };
+		93325ED7215D7930009CBA15 /* LineEvaluator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LineEvaluator.h; path = ../../../../../../impl/ocean/cv/detector/LineEvaluator.h; sourceTree = "<group>"; };
+		93C1FBB121BDD35600651880 /* LineDetectorULF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LineDetectorULF.cpp; path = ../../../../../../impl/ocean/cv/detector/LineDetectorULF.cpp; sourceTree = "<group>"; };
+		93C1FBB621BDD36400651880 /* LineDetectorULF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LineDetectorULF.h; path = ../../../../../../impl/ocean/cv/detector/LineDetectorULF.h; sourceTree = "<group>"; };
+		C041EB0C1DABD68100BF5D76 /* libOceanCVDetectorD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D222C4D1BB18A7B00298788 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D7D93021BA9D8F700D38120 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9860F51D8B531D00DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EAF41DABD68100BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D7D92FC1BA9D8F700D38120 = {
+			isa = PBXGroup;
+			children = (
+				5D9371791BC7FEBB0046ACD4 /* Header Files */,
+				5D7D93131BA9D93D00D38120 /* Source Files */,
+				5D7D93061BA9D8F700D38120 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D7D93061BA9D8F700D38120 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D7D93051BA9D8F700D38120 /* libOceanCVDetectorD.a */,
+				5D222C641BB18A7B00298788 /* libOceanCVDetectorD.dylib */,
+				5D98610C1D8B531D00DEDB00 /* libOceanCVDetectorD.a */,
+				C041EB0C1DABD68100BF5D76 /* libOceanCVDetectorD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D7D93131BA9D93D00D38120 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D7D93141BA9DA5300D38120 /* CalibrationPatternDetector.cpp */,
+				5D7D93151BA9DA5300D38120 /* FASTFeatureDetector.cpp */,
+				5D7D93161BA9DA5300D38120 /* FeatureDetector.cpp */,
+				5A2D013E247717A2001E63F2 /* FrameChangeDetector.cpp */,
+				5D7D93171BA9DA5300D38120 /* HarrisCornerDetector.cpp */,
+				930D74E3219E2C6E00861D36 /* HemiCube.cpp */,
+				5D7D93181BA9DA5300D38120 /* LineDetectorHough.cpp */,
+				93C1FBB121BDD35600651880 /* LineDetectorULF.cpp */,
+				9326FA6121C8DB89004FB69C /* MessengerCodeDetector.cpp */,
+				5D7D93191BA9DA5300D38120 /* ORBFeatureDescriptor.cpp */,
+				5D7D931A1BA9DA5300D38120 /* ORBFeatureOrientation.cpp */,
+				5D7D931B1BA9DA5300D38120 /* ORBSamplingPattern.cpp */,
+				50873DCD235E1DC6003C4E11 /* ShapeDetector.cpp */,
+				50873DD7235F709C003C4E11 /* Utilities.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D9371791BC7FEBB0046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D7D93241BA9DA6500D38120 /* CalibrationPatternDetector.h */,
+				5D7D93251BA9DA6500D38120 /* Descriptor.h */,
+				5D7D93261BA9DA6500D38120 /* Detector.h */,
+				5D7D93271BA9DA6500D38120 /* FASTFeature.h */,
+				5D7D93281BA9DA6500D38120 /* FASTFeatureDetector.h */,
+				5D7D93291BA9DA6500D38120 /* Feature.h */,
+				5D7D932A1BA9DA6500D38120 /* FeatureDetector.h */,
+				5A2D01392477178B001E63F2 /* FrameChangeDetector.h */,
+				50F3498F2359107A00A5CA5C /* FREAKDescriptor.h */,
+				5D7D932B1BA9DA6500D38120 /* HarrisCorner.h */,
+				5D7D932C1BA9DA6500D38120 /* HarrisCornerDetector.h */,
+				930D74DE219E2C5E00861D36 /* HemiCube.h */,
+				5D7D932D1BA9DA6500D38120 /* LineDetectorHough.h */,
+				93C1FBB621BDD36400651880 /* LineDetectorULF.h */,
+				93325ED7215D7930009CBA15 /* LineEvaluator.h */,
+				9326FA6621C8DBA0004FB69C /* MessengerCodeDetector.h */,
+				5D7D932E1BA9DA6500D38120 /* ORBDescriptor.h */,
+				5D7D932F1BA9DA6500D38120 /* ORBFeature.h */,
+				5D7D93301BA9DA6500D38120 /* ORBFeatureDescriptor.h */,
+				5D7D93321BA9DA6500D38120 /* ORBFeatureOrientation.h */,
+				5D7D93331BA9DA6500D38120 /* ORBSamplingPattern.h */,
+				5D7D93341BA9DA6500D38120 /* OrientedPointFeature.h */,
+				5D7D93351BA9DA6500D38120 /* PointFeature.h */,
+				50873DC8235E1DA8003C4E11 /* ShapeDetector.h */,
+				50873DD2235F707D003C4E11 /* Utilities.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D222C4E1BB18A7B00298788 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D222C4F1BB18A7B00298788 /* CalibrationPatternDetector.h in Headers */,
+				50873DD4235F707D003C4E11 /* Utilities.h in Headers */,
+				5D222C501BB18A7B00298788 /* Feature.h in Headers */,
+				93325ED9215D7930009CBA15 /* LineEvaluator.h in Headers */,
+				5D222C521BB18A7B00298788 /* FASTFeature.h in Headers */,
+				5D222C531BB18A7B00298788 /* Descriptor.h in Headers */,
+				5D222C541BB18A7B00298788 /* ORBFeatureOrientation.h in Headers */,
+				5D222C551BB18A7B00298788 /* PointFeature.h in Headers */,
+				5D222C561BB18A7B00298788 /* OrientedPointFeature.h in Headers */,
+				93C1FBB821BDD36400651880 /* LineDetectorULF.h in Headers */,
+				50F349912359107A00A5CA5C /* FREAKDescriptor.h in Headers */,
+				5D222C571BB18A7B00298788 /* ORBSamplingPattern.h in Headers */,
+				5D222C581BB18A7B00298788 /* ORBDescriptor.h in Headers */,
+				5D222C591BB18A7B00298788 /* FeatureDetector.h in Headers */,
+				5D222C5A1BB18A7B00298788 /* Detector.h in Headers */,
+				5A2D013B2477178B001E63F2 /* FrameChangeDetector.h in Headers */,
+				5D222C5B1BB18A7B00298788 /* HarrisCorner.h in Headers */,
+				5D222C5C1BB18A7B00298788 /* ORBFeatureDescriptor.h in Headers */,
+				5D222C5D1BB18A7B00298788 /* HarrisCornerDetector.h in Headers */,
+				930D74E0219E2C5E00861D36 /* HemiCube.h in Headers */,
+				5D222C5E1BB18A7B00298788 /* ORBFeature.h in Headers */,
+				5D222C5F1BB18A7B00298788 /* LineDetectorHough.h in Headers */,
+				9326FA6821C8DBA0004FB69C /* MessengerCodeDetector.h in Headers */,
+				50873DCA235E1DA8003C4E11 /* ShapeDetector.h in Headers */,
+				5D222C601BB18A7B00298788 /* FASTFeatureDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D7D93031BA9D8F700D38120 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D7D93361BA9DA6500D38120 /* CalibrationPatternDetector.h in Headers */,
+				5D7D933B1BA9DA6500D38120 /* Feature.h in Headers */,
+				50873DC9235E1DA8003C4E11 /* ShapeDetector.h in Headers */,
+				5A2D013A2477178B001E63F2 /* FrameChangeDetector.h in Headers */,
+				5D7D93391BA9DA6500D38120 /* FASTFeature.h in Headers */,
+				930D74DF219E2C5E00861D36 /* HemiCube.h in Headers */,
+				5D7D93371BA9DA6500D38120 /* Descriptor.h in Headers */,
+				5D7D93441BA9DA6500D38120 /* ORBFeatureOrientation.h in Headers */,
+				5D7D93471BA9DA6500D38120 /* PointFeature.h in Headers */,
+				93325ED8215D7930009CBA15 /* LineEvaluator.h in Headers */,
+				5D7D93461BA9DA6500D38120 /* OrientedPointFeature.h in Headers */,
+				5D7D93451BA9DA6500D38120 /* ORBSamplingPattern.h in Headers */,
+				5D7D93401BA9DA6500D38120 /* ORBDescriptor.h in Headers */,
+				50F349902359107A00A5CA5C /* FREAKDescriptor.h in Headers */,
+				5D7D933C1BA9DA6500D38120 /* FeatureDetector.h in Headers */,
+				5D7D93381BA9DA6500D38120 /* Detector.h in Headers */,
+				9326FA6721C8DBA0004FB69C /* MessengerCodeDetector.h in Headers */,
+				50873DD3235F707D003C4E11 /* Utilities.h in Headers */,
+				5D7D933D1BA9DA6500D38120 /* HarrisCorner.h in Headers */,
+				5D7D93421BA9DA6500D38120 /* ORBFeatureDescriptor.h in Headers */,
+				5D7D933E1BA9DA6500D38120 /* HarrisCornerDetector.h in Headers */,
+				5D7D93411BA9DA6500D38120 /* ORBFeature.h in Headers */,
+				93C1FBB721BDD36400651880 /* LineDetectorULF.h in Headers */,
+				5D7D933F1BA9DA6500D38120 /* LineDetectorHough.h in Headers */,
+				5D7D933A1BA9DA6500D38120 /* FASTFeatureDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9860F61D8B531D00DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9860F71D8B531D00DEDB00 /* CalibrationPatternDetector.h in Headers */,
+				50873DD5235F707D003C4E11 /* Utilities.h in Headers */,
+				5D9860F81D8B531D00DEDB00 /* Feature.h in Headers */,
+				93325EDA215D7930009CBA15 /* LineEvaluator.h in Headers */,
+				5D9860FA1D8B531D00DEDB00 /* FASTFeature.h in Headers */,
+				5D9860FB1D8B531D00DEDB00 /* Descriptor.h in Headers */,
+				5D9860FC1D8B531D00DEDB00 /* ORBFeatureOrientation.h in Headers */,
+				5D9860FD1D8B531D00DEDB00 /* PointFeature.h in Headers */,
+				5D9860FE1D8B531D00DEDB00 /* OrientedPointFeature.h in Headers */,
+				93C1FBB921BDD36400651880 /* LineDetectorULF.h in Headers */,
+				50F349922359107A00A5CA5C /* FREAKDescriptor.h in Headers */,
+				5D9860FF1D8B531D00DEDB00 /* ORBSamplingPattern.h in Headers */,
+				5D9861001D8B531D00DEDB00 /* ORBDescriptor.h in Headers */,
+				5D9861011D8B531D00DEDB00 /* FeatureDetector.h in Headers */,
+				5D9861021D8B531D00DEDB00 /* Detector.h in Headers */,
+				5A2D013C2477178B001E63F2 /* FrameChangeDetector.h in Headers */,
+				5D9861031D8B531D00DEDB00 /* HarrisCorner.h in Headers */,
+				5D9861041D8B531D00DEDB00 /* ORBFeatureDescriptor.h in Headers */,
+				5D9861051D8B531D00DEDB00 /* HarrisCornerDetector.h in Headers */,
+				930D74E1219E2C5E00861D36 /* HemiCube.h in Headers */,
+				5D9861061D8B531D00DEDB00 /* ORBFeature.h in Headers */,
+				5D9861071D8B531D00DEDB00 /* LineDetectorHough.h in Headers */,
+				9326FA6921C8DBA0004FB69C /* MessengerCodeDetector.h in Headers */,
+				50873DCB235E1DA8003C4E11 /* ShapeDetector.h in Headers */,
+				5D9861081D8B531D00DEDB00 /* FASTFeatureDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EAF51DABD68100BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EAF61DABD68100BF5D76 /* CalibrationPatternDetector.h in Headers */,
+				50873DD6235F707D003C4E11 /* Utilities.h in Headers */,
+				C041EAF71DABD68100BF5D76 /* Feature.h in Headers */,
+				93325EDB215D7930009CBA15 /* LineEvaluator.h in Headers */,
+				C041EAF91DABD68100BF5D76 /* FASTFeature.h in Headers */,
+				C041EAFA1DABD68100BF5D76 /* Descriptor.h in Headers */,
+				C041EAFB1DABD68100BF5D76 /* ORBFeatureOrientation.h in Headers */,
+				C041EAFC1DABD68100BF5D76 /* PointFeature.h in Headers */,
+				C041EAFD1DABD68100BF5D76 /* OrientedPointFeature.h in Headers */,
+				93C1FBBA21BDD36400651880 /* LineDetectorULF.h in Headers */,
+				50F349932359107A00A5CA5C /* FREAKDescriptor.h in Headers */,
+				C041EAFE1DABD68100BF5D76 /* ORBSamplingPattern.h in Headers */,
+				C041EAFF1DABD68100BF5D76 /* ORBDescriptor.h in Headers */,
+				C041EB001DABD68100BF5D76 /* FeatureDetector.h in Headers */,
+				C041EB011DABD68100BF5D76 /* Detector.h in Headers */,
+				5A2D013D2477178B001E63F2 /* FrameChangeDetector.h in Headers */,
+				C041EB021DABD68100BF5D76 /* HarrisCorner.h in Headers */,
+				C041EB031DABD68100BF5D76 /* ORBFeatureDescriptor.h in Headers */,
+				C041EB041DABD68100BF5D76 /* HarrisCornerDetector.h in Headers */,
+				930D74E2219E2C5E00861D36 /* HemiCube.h in Headers */,
+				C041EB051DABD68100BF5D76 /* ORBFeature.h in Headers */,
+				C041EB061DABD68100BF5D76 /* LineDetectorHough.h in Headers */,
+				9326FA6A21C8DBA0004FB69C /* MessengerCodeDetector.h in Headers */,
+				50873DCC235E1DA8003C4E11 /* ShapeDetector.h in Headers */,
+				C041EB071DABD68100BF5D76 /* FASTFeatureDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D222C431BB18A7B00298788 /* cvdetector x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D222C611BB18A7B00298788 /* Build configuration list for PBXNativeTarget "cvdetector x64 (Shared)" */;
+			buildPhases = (
+				5D222C441BB18A7B00298788 /* Sources */,
+				5D222C4D1BB18A7B00298788 /* Frameworks */,
+				5D222C4E1BB18A7B00298788 /* Headers */,
+				C041EB0D1DABD78700BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvdetector x64 (Shared)";
+			productName = cvdetector;
+			productReference = 5D222C641BB18A7B00298788 /* libOceanCVDetectorD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D7D93041BA9D8F700D38120 /* cvdetector x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D7D93101BA9D8F700D38120 /* Build configuration list for PBXNativeTarget "cvdetector x64 (Static)" */;
+			buildPhases = (
+				5D7D93011BA9D8F700D38120 /* Sources */,
+				5D7D93021BA9D8F700D38120 /* Frameworks */,
+				5D7D93031BA9D8F700D38120 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvdetector x64 (Static)";
+			productName = cvdetector;
+			productReference = 5D7D93051BA9D8F700D38120 /* libOceanCVDetectorD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9860EB1D8B531D00DEDB00 /* cvdetector arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9861091D8B531D00DEDB00 /* Build configuration list for PBXNativeTarget "cvdetector arm64 (Static)" */;
+			buildPhases = (
+				5D9860EC1D8B531D00DEDB00 /* Sources */,
+				5D9860F51D8B531D00DEDB00 /* Frameworks */,
+				5D9860F61D8B531D00DEDB00 /* Headers */,
+				5D837F481D8F0F3900939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvdetector arm64 (Static)";
+			productName = cvdetector;
+			productReference = 5D98610C1D8B531D00DEDB00 /* libOceanCVDetectorD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EAEA1DABD68100BF5D76 /* cvdetector arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EB091DABD68100BF5D76 /* Build configuration list for PBXNativeTarget "cvdetector arm64 (Shared)" */;
+			buildPhases = (
+				C041EAEB1DABD68100BF5D76 /* Sources */,
+				C041EAF41DABD68100BF5D76 /* Frameworks */,
+				C041EAF51DABD68100BF5D76 /* Headers */,
+				C041EB081DABD68100BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvdetector arm64 (Shared)";
+			productName = cvdetector;
+			productReference = C041EB0C1DABD68100BF5D76 /* libOceanCVDetectorD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D7D92FD1BA9D8F700D38120 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D7D93041BA9D8F700D38120 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D7D93001BA9D8F700D38120 /* Build configuration list for PBXProject "cvdetector" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D7D92FC1BA9D8F700D38120;
+			productRefGroup = 5D7D93061BA9D8F700D38120 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D7D93041BA9D8F700D38120 /* cvdetector x64 (Static) */,
+				5D222C431BB18A7B00298788 /* cvdetector x64 (Shared) */,
+				5D9860EB1D8B531D00DEDB00 /* cvdetector arm64 (Static) */,
+				C041EAEA1DABD68100BF5D76 /* cvdetector arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F481D8F0F3900939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EB081DABD68100BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EB0D1DABD78700BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D222C441BB18A7B00298788 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D222C451BB18A7B00298788 /* FeatureDetector.cpp in Sources */,
+				93C1FBB321BDD35600651880 /* LineDetectorULF.cpp in Sources */,
+				5D222C461BB18A7B00298788 /* HarrisCornerDetector.cpp in Sources */,
+				50873DCF235E1DC6003C4E11 /* ShapeDetector.cpp in Sources */,
+				5D222C471BB18A7B00298788 /* ORBFeatureOrientation.cpp in Sources */,
+				5D222C481BB18A7B00298788 /* ORBSamplingPattern.cpp in Sources */,
+				50873DD9235F709C003C4E11 /* Utilities.cpp in Sources */,
+				5A2D0140247717A2001E63F2 /* FrameChangeDetector.cpp in Sources */,
+				5D222C491BB18A7B00298788 /* FASTFeatureDetector.cpp in Sources */,
+				5D222C4A1BB18A7B00298788 /* LineDetectorHough.cpp in Sources */,
+				5D222C4B1BB18A7B00298788 /* CalibrationPatternDetector.cpp in Sources */,
+				5D222C4C1BB18A7B00298788 /* ORBFeatureDescriptor.cpp in Sources */,
+				930D74E5219E2C6E00861D36 /* HemiCube.cpp in Sources */,
+				9326FA6321C8DB8A004FB69C /* MessengerCodeDetector.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D7D93011BA9D8F700D38120 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D7D931E1BA9DA5300D38120 /* FeatureDetector.cpp in Sources */,
+				93C1FBB221BDD35600651880 /* LineDetectorULF.cpp in Sources */,
+				5D7D931F1BA9DA5300D38120 /* HarrisCornerDetector.cpp in Sources */,
+				9326FA6221C8DB8A004FB69C /* MessengerCodeDetector.cpp in Sources */,
+				5A2D013F247717A2001E63F2 /* FrameChangeDetector.cpp in Sources */,
+				5D7D93221BA9DA5300D38120 /* ORBFeatureOrientation.cpp in Sources */,
+				930D74E4219E2C6E00861D36 /* HemiCube.cpp in Sources */,
+				5D7D93231BA9DA5300D38120 /* ORBSamplingPattern.cpp in Sources */,
+				50873DD8235F709C003C4E11 /* Utilities.cpp in Sources */,
+				5D7D931D1BA9DA5300D38120 /* FASTFeatureDetector.cpp in Sources */,
+				50873DCE235E1DC6003C4E11 /* ShapeDetector.cpp in Sources */,
+				5D7D93201BA9DA5300D38120 /* LineDetectorHough.cpp in Sources */,
+				5D7D931C1BA9DA5300D38120 /* CalibrationPatternDetector.cpp in Sources */,
+				5D7D93211BA9DA5300D38120 /* ORBFeatureDescriptor.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9860EC1D8B531D00DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9860ED1D8B531D00DEDB00 /* FeatureDetector.cpp in Sources */,
+				93C1FBB421BDD35600651880 /* LineDetectorULF.cpp in Sources */,
+				5D9860EE1D8B531D00DEDB00 /* HarrisCornerDetector.cpp in Sources */,
+				50873DD0235E1DC6003C4E11 /* ShapeDetector.cpp in Sources */,
+				5D9860EF1D8B531D00DEDB00 /* ORBFeatureOrientation.cpp in Sources */,
+				5D9860F01D8B531D00DEDB00 /* ORBSamplingPattern.cpp in Sources */,
+				50873DDA235F709C003C4E11 /* Utilities.cpp in Sources */,
+				5A2D0141247717A2001E63F2 /* FrameChangeDetector.cpp in Sources */,
+				5D9860F11D8B531D00DEDB00 /* FASTFeatureDetector.cpp in Sources */,
+				5D9860F21D8B531D00DEDB00 /* LineDetectorHough.cpp in Sources */,
+				5D9860F31D8B531D00DEDB00 /* CalibrationPatternDetector.cpp in Sources */,
+				5D9860F41D8B531D00DEDB00 /* ORBFeatureDescriptor.cpp in Sources */,
+				930D74E6219E2C6E00861D36 /* HemiCube.cpp in Sources */,
+				9326FA6421C8DB8A004FB69C /* MessengerCodeDetector.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EAEB1DABD68100BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EAEC1DABD68100BF5D76 /* FeatureDetector.cpp in Sources */,
+				93C1FBB521BDD35600651880 /* LineDetectorULF.cpp in Sources */,
+				C041EAED1DABD68100BF5D76 /* HarrisCornerDetector.cpp in Sources */,
+				50873DD1235E1DC6003C4E11 /* ShapeDetector.cpp in Sources */,
+				C041EAEE1DABD68100BF5D76 /* ORBFeatureOrientation.cpp in Sources */,
+				C041EAEF1DABD68100BF5D76 /* ORBSamplingPattern.cpp in Sources */,
+				50873DDB235F709C003C4E11 /* Utilities.cpp in Sources */,
+				5A2D0142247717A2001E63F2 /* FrameChangeDetector.cpp in Sources */,
+				C041EAF01DABD68100BF5D76 /* FASTFeatureDetector.cpp in Sources */,
+				C041EAF11DABD68100BF5D76 /* LineDetectorHough.cpp in Sources */,
+				C041EAF21DABD68100BF5D76 /* CalibrationPatternDetector.cpp in Sources */,
+				C041EAF31DABD68100BF5D76 /* ORBFeatureDescriptor.cpp in Sources */,
+				930D74E7219E2C6E00861D36 /* HemiCube.cpp in Sources */,
+				9326FA6521C8DB8A004FB69C /* MessengerCodeDetector.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D222C621BB18A7B00298788 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvdetector/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvdetector/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanCVDetectorD;
+				PRODUCT_NAME = OceanCVDetectorD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D222C631BB18A7B00298788 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvdetector/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvdetector/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanGeometry",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanCVDetector;
+				PRODUCT_NAME = OceanCVDetector;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D7D930E1BA9D8F700D38120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D7D930F1BA9D8F700D38120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D7D93111BA9D8F700D38120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvdetector/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvdetector/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVDetectorD;
+				PRODUCT_NAME = OceanCVDetectorD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D7D93121BA9D8F700D38120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvdetector/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvdetector/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVDetector;
+				PRODUCT_NAME = OceanCVDetector;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D98610A1D8B531D00DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVDetectorD;
+				PRODUCT_NAME = OceanCVDetectorD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D98610B1D8B531D00DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVDetector;
+				PRODUCT_NAME = OceanCVDetector;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EB0A1DABD68100BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanCVDetectorD;
+				PRODUCT_NAME = OceanCVDetectorD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EB0B1DABD68100BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanGeometry",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanCVDetector;
+				PRODUCT_NAME = OceanCVDetector;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvdetector/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D222C611BB18A7B00298788 /* Build configuration list for PBXNativeTarget "cvdetector x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D222C621BB18A7B00298788 /* Debug */,
+				5D222C631BB18A7B00298788 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D7D93001BA9D8F700D38120 /* Build configuration list for PBXProject "cvdetector" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D7D930E1BA9D8F700D38120 /* Debug */,
+				5D7D930F1BA9D8F700D38120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D7D93101BA9D8F700D38120 /* Build configuration list for PBXNativeTarget "cvdetector x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D7D93111BA9D8F700D38120 /* Debug */,
+				5D7D93121BA9D8F700D38120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9861091D8B531D00DEDB00 /* Build configuration list for PBXNativeTarget "cvdetector arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D98610A1D8B531D00DEDB00 /* Debug */,
+				5D98610B1D8B531D00DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EB091DABD68100BF5D76 /* Build configuration list for PBXNativeTarget "cvdetector arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EB0A1DABD68100BF5D76 /* Debug */,
+				C041EB0B1DABD68100BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D7D92FD1BA9D8F700D38120 /* Project object */;
+}

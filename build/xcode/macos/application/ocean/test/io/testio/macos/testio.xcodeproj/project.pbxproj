@@ -1,0 +1,378 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5DD0C0291BD52CF000ABBC5B /* TestIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0281BD52CF000ABBC5B /* TestIO.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5DD0C01A1BD52AC100ABBC5B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		5DD0C01C1BD52AC100ABBC5B /* testio */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = testio; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD0C0281BD52CF000ABBC5B /* TestIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestIO.cpp; path = ../../../../../../../../../impl/application/ocean/test/io/testio/TestIO.cpp; sourceTree = "<group>"; };
+		5DD0C02A1BD5325A00ABBC5B /* TestIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestIO.h; path = ../../../../../../../../../impl/application/ocean/test/io/testio/TestIO.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DD0C0191BD52AC100ABBC5B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DD0C0131BD52AC100ABBC5B = {
+			isa = PBXGroup;
+			children = (
+				5DD0C0271BD52C0100ABBC5B /* Header Files */,
+				5DD0C0261BD52BFA00ABBC5B /* Source Files */,
+				5DD0C01D1BD52AC100ABBC5B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DD0C01D1BD52AC100ABBC5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DD0C01C1BD52AC100ABBC5B /* testio */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DD0C0261BD52BFA00ABBC5B /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DD0C0281BD52CF000ABBC5B /* TestIO.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DD0C0271BD52C0100ABBC5B /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DD0C02A1BD5325A00ABBC5B /* TestIO.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5DD0C01B1BD52AC100ABBC5B /* testio x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD0C0231BD52AC100ABBC5B /* Build configuration list for PBXNativeTarget "testio x64 (Static)" */;
+			buildPhases = (
+				5DD0C0181BD52AC100ABBC5B /* Sources */,
+				5DD0C0191BD52AC100ABBC5B /* Frameworks */,
+				5DD0C01A1BD52AC100ABBC5B /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testio x64 (Static)";
+			productName = testio;
+			productReference = 5DD0C01C1BD52AC100ABBC5B /* testio */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DD0C0141BD52AC100ABBC5B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DD0C01B1BD52AC100ABBC5B = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DD0C0171BD52AC100ABBC5B /* Build configuration list for PBXProject "testio" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DD0C0131BD52AC100ABBC5B;
+			productRefGroup = 5DD0C01D1BD52AC100ABBC5B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DD0C01B1BD52AC100ABBC5B /* testio x64 (Static) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DD0C0181BD52AC100ABBC5B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DD0C0291BD52CF000ABBC5B /* TestIO.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DD0C0211BD52AC100ABBC5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DD0C0221BD52AC100ABBC5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DD0C0241BD52AC100ABBC5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CODE_SIGN_IDENTITY = "-";
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../../bin/application/ocean/test/io/osx/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../../bin/tmp/impl/application/ocean/test/testio/osx/osx_x64_xc9_static_debug;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../../../../../../../../bin/lib/osx_x64_xc9_static_debug,
+					../../../../../../../../../bin/test/lib/osx_x64_xc9_static_debug,
+					../../../../../../../../../3rdparty/zlib/lib/osx_x64_xc9_static_debug,
+				);
+				OBJROOT = ../../../../../../../../../bin/tmp/impl/application/ocean/test/testio/osx/osx_x64_xc9_static_debug;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanIOD",
+					"-lOceanTestIOD",
+					"-lzlib",
+					"-framework",
+					Foundation,
+				);
+				PRODUCT_MODULE_NAME = testio;
+				PRODUCT_NAME = testio;
+				SYMROOT = ../../../../../../../../../bin/application/ocean/test/io/osx/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD0C0251BD52AC100ABBC5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CODE_SIGN_IDENTITY = "-";
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../../bin/application/ocean/test/io/osx/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../../bin/tmp/impl/application/ocean/test/testio/osx/osx_x64_xc9_static;
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../../../../../../../../bin/lib/osx_x64_xc9_static,
+					../../../../../../../../../bin/test/lib/osx_x64_xc9_static,
+					../../../../../../../../../3rdparty/zlib/lib/osx_x64_xc9_static,
+				);
+				OBJROOT = ../../../../../../../../../bin/tmp/impl/application/ocean/test/testio/osx/osx_x64_xc9_static;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanIO",
+					"-lOceanTestIO",
+					"-lzlib",
+					"-framework",
+					Foundation,
+				);
+				PRODUCT_MODULE_NAME = testio;
+				PRODUCT_NAME = testio;
+				SYMROOT = ../../../../../../../../../bin/application/ocean/test/io/osx/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DD0C0171BD52AC100ABBC5B /* Build configuration list for PBXProject "testio" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD0C0211BD52AC100ABBC5B /* Debug */,
+				5DD0C0221BD52AC100ABBC5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD0C0231BD52AC100ABBC5B /* Build configuration list for PBXNativeTarget "testio x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD0C0241BD52AC100ABBC5B /* Debug */,
+				5DD0C0251BD52AC100ABBC5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DD0C0141BD52AC100ABBC5B /* Project object */;
+}

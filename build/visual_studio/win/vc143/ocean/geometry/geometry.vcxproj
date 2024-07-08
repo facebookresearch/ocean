@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Shared Debug|Win32">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|Win32">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|x64">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|Win32">
+      <Configuration>Shared Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|Win32">
+      <Configuration>Static Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|Win32">
+      <Configuration>Static Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|x64">
+      <Configuration>Static Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|Win32">
+      <Configuration>Static Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x64">
+      <Configuration>Static Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4ACA5022-EA21-4578-835A-9F96D3123A12}</ProjectGuid>
+    <RootNamespace>geometry</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="geometry_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\AbsoluteTransformation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\CameraCalibration.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Delaunay.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\EpipolarGeometry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Error.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Estimator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Grid.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Homography.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Jacobian.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\JLinkage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\MultipleViewGeometry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationCamera.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationHomography.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationLine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationObjectPoint.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationOrientation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationPlane.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationPose.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationTransformation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Normalization.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\P3P.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\P4P.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\PerspectivePose.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\PnP.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Quadric.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\RANSAC.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\SpatialDistribution.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\StereoscopicGeometry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Utilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\VanishingProjection.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\AbsoluteTransformation.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\CameraCalibration.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Delaunay.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\EpipolarGeometry.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Error.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Estimator.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Geometry.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Grid.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Homography.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Jacobian.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\JLinkage.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\MultipleViewGeometry.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimization.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationCamera.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationHomography.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationLine.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationObjectPoint.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationOrientation.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationPlane.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationPose.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearOptimizationTransformation.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearUniversalOptimizationDense.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\NonLinearUniversalOptimizationSparse.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Normalization.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Octree.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\P3P.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\P4P.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\PerspectivePose.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\PnP.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Quadric.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\RANSAC.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\SpatialDistribution.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\StereoscopicGeometry.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Utilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\VanishingProjection.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

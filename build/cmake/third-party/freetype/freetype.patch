@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 8dbca01e..ba9a15ee 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -475,9 +475,9 @@ if (WIN32)
+ endif ()
+ 
+ if (BUILD_SHARED_LIBS)
+-  set_target_properties(freetype PROPERTIES
+-    VERSION ${LIBRARY_VERSION}
+-    SOVERSION ${LIBRARY_SOVERSION})
++#  set_target_properties(freetype PROPERTIES
++#    VERSION ${LIBRARY_VERSION}
++#    SOVERSION ${LIBRARY_SOVERSION})
+ endif ()
+ 
+ # Pick up ftconfig.h and ftoption.h generated above, first.

@@ -1,0 +1,1081 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		507AFD5C27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507AFD5B27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp */; };
+		507AFD5D27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507AFD5B27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp */; };
+		507AFD5E27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507AFD5B27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp */; };
+		507AFD5F27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507AFD5B27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp */; };
+		507AFD6127B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 507AFD6027B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h */; };
+		507AFD6227B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 507AFD6027B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h */; };
+		507AFD6327B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 507AFD6027B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h */; };
+		507AFD6427B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 507AFD6027B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h */; };
+		50A87D3A274DB84E0002A518 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50A87D39274DB84E0002A518 /* TestUtilities.h */; };
+		50A87D3B274DB84E0002A518 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50A87D39274DB84E0002A518 /* TestUtilities.h */; };
+		50A87D3C274DB84E0002A518 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50A87D39274DB84E0002A518 /* TestUtilities.h */; };
+		50A87D3D274DB84E0002A518 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50A87D39274DB84E0002A518 /* TestUtilities.h */; };
+		50A87D3F274DB8790002A518 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A87D3E274DB8790002A518 /* TestUtilities.cpp */; };
+		50A87D40274DB8790002A518 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A87D3E274DB8790002A518 /* TestUtilities.cpp */; };
+		50A87D41274DB8790002A518 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A87D3E274DB8790002A518 /* TestUtilities.cpp */; };
+		50A87D42274DB8790002A518 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A87D3E274DB8790002A518 /* TestUtilities.cpp */; };
+		50AE058F270813A300242F7A /* TestQRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058A270813A300242F7A /* TestQRCodeDecoder.h */; };
+		50AE0590270813A300242F7A /* TestQRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058A270813A300242F7A /* TestQRCodeDecoder.h */; };
+		50AE0591270813A300242F7A /* TestQRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058A270813A300242F7A /* TestQRCodeDecoder.h */; };
+		50AE0592270813A300242F7A /* TestQRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058A270813A300242F7A /* TestQRCodeDecoder.h */; };
+		50AE0593270813A300242F7A /* TestFinderPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058B270813A300242F7A /* TestFinderPatternDetector.h */; };
+		50AE0594270813A300242F7A /* TestFinderPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058B270813A300242F7A /* TestFinderPatternDetector.h */; };
+		50AE0595270813A300242F7A /* TestFinderPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058B270813A300242F7A /* TestFinderPatternDetector.h */; };
+		50AE0596270813A300242F7A /* TestFinderPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058B270813A300242F7A /* TestFinderPatternDetector.h */; };
+		50AE0597270813A300242F7A /* TestQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058C270813A300242F7A /* TestQRCodeDetector2D.h */; };
+		50AE0598270813A300242F7A /* TestQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058C270813A300242F7A /* TestQRCodeDetector2D.h */; };
+		50AE0599270813A300242F7A /* TestQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058C270813A300242F7A /* TestQRCodeDetector2D.h */; };
+		50AE059A270813A300242F7A /* TestQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058C270813A300242F7A /* TestQRCodeDetector2D.h */; };
+		50AE059B270813A300242F7A /* TestCVDetectorQRCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058D270813A300242F7A /* TestCVDetectorQRCodes.h */; };
+		50AE059C270813A300242F7A /* TestCVDetectorQRCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058D270813A300242F7A /* TestCVDetectorQRCodes.h */; };
+		50AE059D270813A300242F7A /* TestCVDetectorQRCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058D270813A300242F7A /* TestCVDetectorQRCodes.h */; };
+		50AE059E270813A300242F7A /* TestCVDetectorQRCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058D270813A300242F7A /* TestCVDetectorQRCodes.h */; };
+		50AE059F270813A300242F7A /* TestQRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058E270813A300242F7A /* TestQRCodeEncoder.h */; };
+		50AE05A0270813A300242F7A /* TestQRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058E270813A300242F7A /* TestQRCodeEncoder.h */; };
+		50AE05A1270813A300242F7A /* TestQRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058E270813A300242F7A /* TestQRCodeEncoder.h */; };
+		50AE05A2270813A300242F7A /* TestQRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE058E270813A300242F7A /* TestQRCodeEncoder.h */; };
+		50AE05A8270813C200242F7A /* TestQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A3270813C200242F7A /* TestQRCodeDetector2D.cpp */; };
+		50AE05A9270813C200242F7A /* TestQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A3270813C200242F7A /* TestQRCodeDetector2D.cpp */; };
+		50AE05AA270813C200242F7A /* TestQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A3270813C200242F7A /* TestQRCodeDetector2D.cpp */; };
+		50AE05AB270813C200242F7A /* TestQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A3270813C200242F7A /* TestQRCodeDetector2D.cpp */; };
+		50AE05AC270813C200242F7A /* TestCVDetectorQRCodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A4270813C200242F7A /* TestCVDetectorQRCodes.cpp */; };
+		50AE05AD270813C200242F7A /* TestCVDetectorQRCodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A4270813C200242F7A /* TestCVDetectorQRCodes.cpp */; };
+		50AE05AE270813C200242F7A /* TestCVDetectorQRCodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A4270813C200242F7A /* TestCVDetectorQRCodes.cpp */; };
+		50AE05AF270813C200242F7A /* TestCVDetectorQRCodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A4270813C200242F7A /* TestCVDetectorQRCodes.cpp */; };
+		50AE05B0270813C200242F7A /* TestFinderPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A5270813C200242F7A /* TestFinderPatternDetector.cpp */; };
+		50AE05B1270813C200242F7A /* TestFinderPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A5270813C200242F7A /* TestFinderPatternDetector.cpp */; };
+		50AE05B2270813C200242F7A /* TestFinderPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A5270813C200242F7A /* TestFinderPatternDetector.cpp */; };
+		50AE05B3270813C200242F7A /* TestFinderPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A5270813C200242F7A /* TestFinderPatternDetector.cpp */; };
+		50AE05B4270813C300242F7A /* TestQRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A6270813C200242F7A /* TestQRCodeEncoder.cpp */; };
+		50AE05B5270813C300242F7A /* TestQRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A6270813C200242F7A /* TestQRCodeEncoder.cpp */; };
+		50AE05B6270813C300242F7A /* TestQRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A6270813C200242F7A /* TestQRCodeEncoder.cpp */; };
+		50AE05B7270813C300242F7A /* TestQRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A6270813C200242F7A /* TestQRCodeEncoder.cpp */; };
+		50AE05B8270813C300242F7A /* TestQRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A7270813C200242F7A /* TestQRCodeDecoder.cpp */; };
+		50AE05B9270813C300242F7A /* TestQRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A7270813C200242F7A /* TestQRCodeDecoder.cpp */; };
+		50AE05BA270813C300242F7A /* TestQRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A7270813C200242F7A /* TestQRCodeDecoder.cpp */; };
+		50AE05BB270813C300242F7A /* TestQRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE05A7270813C200242F7A /* TestQRCodeDecoder.cpp */; };
+		50C09C96274F019800809E83 /* TestAlignmentPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50C09C95274F019800809E83 /* TestAlignmentPatternDetector.h */; };
+		50C09C97274F019800809E83 /* TestAlignmentPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50C09C95274F019800809E83 /* TestAlignmentPatternDetector.h */; };
+		50C09C98274F019800809E83 /* TestAlignmentPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50C09C95274F019800809E83 /* TestAlignmentPatternDetector.h */; };
+		50C09C99274F019800809E83 /* TestAlignmentPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50C09C95274F019800809E83 /* TestAlignmentPatternDetector.h */; };
+		50C09C9B274F01B100809E83 /* TestAlignmentPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50C09C9A274F01B100809E83 /* TestAlignmentPatternDetector.cpp */; };
+		50C09C9C274F01B100809E83 /* TestAlignmentPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50C09C9A274F01B100809E83 /* TestAlignmentPatternDetector.cpp */; };
+		50C09C9D274F01B100809E83 /* TestAlignmentPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50C09C9A274F01B100809E83 /* TestAlignmentPatternDetector.cpp */; };
+		50C09C9E274F01B100809E83 /* TestAlignmentPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50C09C9A274F01B100809E83 /* TestAlignmentPatternDetector.cpp */; };
+		93CF17022A425D0A009432F8 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CF17012A425D0A009432F8 /* Utilities.h */; };
+		93CF17032A425D0A009432F8 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CF17012A425D0A009432F8 /* Utilities.h */; };
+		93CF17042A425D0A009432F8 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CF17012A425D0A009432F8 /* Utilities.h */; };
+		93CF17052A425D0A009432F8 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93CF17012A425D0A009432F8 /* Utilities.h */; };
+		93CF17072A425D19009432F8 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93CF17062A425D19009432F8 /* Utilities.cpp */; };
+		93CF17082A425D19009432F8 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93CF17062A425D19009432F8 /* Utilities.cpp */; };
+		93CF17092A425D19009432F8 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93CF17062A425D19009432F8 /* Utilities.cpp */; };
+		93CF170A2A425D19009432F8 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93CF17062A425D19009432F8 /* Utilities.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		507AFD5B27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestLegacyQRCodeDetector2D.cpp; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestLegacyQRCodeDetector2D.cpp; sourceTree = "<group>"; };
+		507AFD6027B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestLegacyQRCodeDetector2D.h; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestLegacyQRCodeDetector2D.h; sourceTree = "<group>"; };
+		50A87D39274DB84E0002A518 /* TestUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestUtilities.h; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestUtilities.h; sourceTree = "<group>"; };
+		50A87D3E274DB8790002A518 /* TestUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestUtilities.cpp; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestUtilities.cpp; sourceTree = "<group>"; };
+		50AE058A270813A300242F7A /* TestQRCodeDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestQRCodeDecoder.h; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestQRCodeDecoder.h; sourceTree = "<group>"; };
+		50AE058B270813A300242F7A /* TestFinderPatternDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFinderPatternDetector.h; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestFinderPatternDetector.h; sourceTree = "<group>"; };
+		50AE058C270813A300242F7A /* TestQRCodeDetector2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestQRCodeDetector2D.h; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestQRCodeDetector2D.h; sourceTree = "<group>"; };
+		50AE058D270813A300242F7A /* TestCVDetectorQRCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestCVDetectorQRCodes.h; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestCVDetectorQRCodes.h; sourceTree = "<group>"; };
+		50AE058E270813A300242F7A /* TestQRCodeEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestQRCodeEncoder.h; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestQRCodeEncoder.h; sourceTree = "<group>"; };
+		50AE05A3270813C200242F7A /* TestQRCodeDetector2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestQRCodeDetector2D.cpp; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestQRCodeDetector2D.cpp; sourceTree = "<group>"; };
+		50AE05A4270813C200242F7A /* TestCVDetectorQRCodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCVDetectorQRCodes.cpp; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestCVDetectorQRCodes.cpp; sourceTree = "<group>"; };
+		50AE05A5270813C200242F7A /* TestFinderPatternDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFinderPatternDetector.cpp; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestFinderPatternDetector.cpp; sourceTree = "<group>"; };
+		50AE05A6270813C200242F7A /* TestQRCodeEncoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestQRCodeEncoder.cpp; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestQRCodeEncoder.cpp; sourceTree = "<group>"; };
+		50AE05A7270813C200242F7A /* TestQRCodeDecoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestQRCodeDecoder.cpp; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestQRCodeDecoder.cpp; sourceTree = "<group>"; };
+		50C09C95274F019800809E83 /* TestAlignmentPatternDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAlignmentPatternDetector.h; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestAlignmentPatternDetector.h; sourceTree = "<group>"; };
+		50C09C9A274F01B100809E83 /* TestAlignmentPatternDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAlignmentPatternDetector.cpp; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/TestAlignmentPatternDetector.cpp; sourceTree = "<group>"; };
+		5DACDC5D1C69F75700D5D6B0 /* libOceanTestCVDetectorQRCodesD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVDetectorQRCodesD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD14A601D953CBB00CCA9F0 /* libOceanTestCVDetectorQRCodesD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVDetectorQRCodesD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DDE17A41C69F91400325BD2 /* libOceanTestCVDetectorQRCodesD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVDetectorQRCodesD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		93CF17012A425D0A009432F8 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/Utilities.h; sourceTree = "<group>"; };
+		93CF17062A425D19009432F8 /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../../../../impl/ocean/test/testcv/testdetector/testqrcodes/Utilities.cpp; sourceTree = "<group>"; };
+		C0E9B0EB1DACEC0700895C4B /* libOceanTestCVDetectorQRCodesD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVDetectorQRCodesD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DACDC5A1C69F75700D5D6B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A551D953CBB00CCA9F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DDE17991C69F91400325BD2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0DF1DACEC0700895C4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DACDC541C69F75700D5D6B0 = {
+			isa = PBXGroup;
+			children = (
+				5DDE17781C69F89D00325BD2 /* Header Files */,
+				5DDE17771C69F88F00325BD2 /* Source Files */,
+				5DACDC5E1C69F75700D5D6B0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DACDC5E1C69F75700D5D6B0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DACDC5D1C69F75700D5D6B0 /* libOceanTestCVDetectorQRCodesD.a */,
+				5DDE17A41C69F91400325BD2 /* libOceanTestCVDetectorQRCodesD.dylib */,
+				5DD14A601D953CBB00CCA9F0 /* libOceanTestCVDetectorQRCodesD.a */,
+				C0E9B0EB1DACEC0700895C4B /* libOceanTestCVDetectorQRCodesD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DDE17771C69F88F00325BD2 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				50C09C9A274F01B100809E83 /* TestAlignmentPatternDetector.cpp */,
+				50AE05A4270813C200242F7A /* TestCVDetectorQRCodes.cpp */,
+				50AE05A5270813C200242F7A /* TestFinderPatternDetector.cpp */,
+				507AFD5B27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp */,
+				50AE05A7270813C200242F7A /* TestQRCodeDecoder.cpp */,
+				50AE05A3270813C200242F7A /* TestQRCodeDetector2D.cpp */,
+				50AE05A6270813C200242F7A /* TestQRCodeEncoder.cpp */,
+				50A87D3E274DB8790002A518 /* TestUtilities.cpp */,
+				93CF17062A425D19009432F8 /* Utilities.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DDE17781C69F89D00325BD2 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				50C09C95274F019800809E83 /* TestAlignmentPatternDetector.h */,
+				50AE058D270813A300242F7A /* TestCVDetectorQRCodes.h */,
+				50AE058B270813A300242F7A /* TestFinderPatternDetector.h */,
+				507AFD6027B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h */,
+				50AE058A270813A300242F7A /* TestQRCodeDecoder.h */,
+				50AE058C270813A300242F7A /* TestQRCodeDetector2D.h */,
+				50AE058E270813A300242F7A /* TestQRCodeEncoder.h */,
+				50A87D39274DB84E0002A518 /* TestUtilities.h */,
+				93CF17012A425D0A009432F8 /* Utilities.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5DACDC5B1C69F75700D5D6B0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93CF17022A425D0A009432F8 /* Utilities.h in Headers */,
+				50AE058F270813A300242F7A /* TestQRCodeDecoder.h in Headers */,
+				50AE059B270813A300242F7A /* TestCVDetectorQRCodes.h in Headers */,
+				50AE0597270813A300242F7A /* TestQRCodeDetector2D.h in Headers */,
+				50A87D3A274DB84E0002A518 /* TestUtilities.h in Headers */,
+				50AE0593270813A300242F7A /* TestFinderPatternDetector.h in Headers */,
+				507AFD6127B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h in Headers */,
+				50AE059F270813A300242F7A /* TestQRCodeEncoder.h in Headers */,
+				50C09C96274F019800809E83 /* TestAlignmentPatternDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A561D953CBB00CCA9F0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93CF17042A425D0A009432F8 /* Utilities.h in Headers */,
+				50AE0591270813A300242F7A /* TestQRCodeDecoder.h in Headers */,
+				50AE059D270813A300242F7A /* TestCVDetectorQRCodes.h in Headers */,
+				50AE0599270813A300242F7A /* TestQRCodeDetector2D.h in Headers */,
+				50A87D3C274DB84E0002A518 /* TestUtilities.h in Headers */,
+				50AE0595270813A300242F7A /* TestFinderPatternDetector.h in Headers */,
+				507AFD6327B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h in Headers */,
+				50AE05A1270813A300242F7A /* TestQRCodeEncoder.h in Headers */,
+				50C09C98274F019800809E83 /* TestAlignmentPatternDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DDE179A1C69F91400325BD2 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93CF17032A425D0A009432F8 /* Utilities.h in Headers */,
+				50AE0590270813A300242F7A /* TestQRCodeDecoder.h in Headers */,
+				50AE059C270813A300242F7A /* TestCVDetectorQRCodes.h in Headers */,
+				50AE0598270813A300242F7A /* TestQRCodeDetector2D.h in Headers */,
+				50A87D3B274DB84E0002A518 /* TestUtilities.h in Headers */,
+				50AE0594270813A300242F7A /* TestFinderPatternDetector.h in Headers */,
+				507AFD6227B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h in Headers */,
+				50AE05A0270813A300242F7A /* TestQRCodeEncoder.h in Headers */,
+				50C09C97274F019800809E83 /* TestAlignmentPatternDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0E01DACEC0700895C4B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93CF17052A425D0A009432F8 /* Utilities.h in Headers */,
+				50AE0592270813A300242F7A /* TestQRCodeDecoder.h in Headers */,
+				50AE059E270813A300242F7A /* TestCVDetectorQRCodes.h in Headers */,
+				50AE059A270813A300242F7A /* TestQRCodeDetector2D.h in Headers */,
+				50A87D3D274DB84E0002A518 /* TestUtilities.h in Headers */,
+				50AE0596270813A300242F7A /* TestFinderPatternDetector.h in Headers */,
+				507AFD6427B5BA2200E4DBB3 /* TestLegacyQRCodeDetector2D.h in Headers */,
+				50AE05A2270813A300242F7A /* TestQRCodeEncoder.h in Headers */,
+				50C09C99274F019800809E83 /* TestAlignmentPatternDetector.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5DACDC5C1C69F75700D5D6B0 /* testcvdetectorqrcodes x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DACDC681C69F75700D5D6B0 /* Build configuration list for PBXNativeTarget "testcvdetectorqrcodes x64 (Static)" */;
+			buildPhases = (
+				5DACDC591C69F75700D5D6B0 /* Sources */,
+				5DACDC5A1C69F75700D5D6B0 /* Frameworks */,
+				5DACDC5B1C69F75700D5D6B0 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvdetectorqrcodes x64 (Static)";
+			productName = testcvdetectorqrcodes;
+			productReference = 5DACDC5D1C69F75700D5D6B0 /* libOceanTestCVDetectorQRCodesD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DD14A4D1D953CBB00CCA9F0 /* testcvdetectorqrcodes arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD14A5D1D953CBB00CCA9F0 /* Build configuration list for PBXNativeTarget "testcvdetectorqrcodes arm64 (Static)" */;
+			buildPhases = (
+				5DD14A4E1D953CBB00CCA9F0 /* Sources */,
+				5DD14A551D953CBB00CCA9F0 /* Frameworks */,
+				5DD14A561D953CBB00CCA9F0 /* Headers */,
+				5DD14A611D953DE800CCA9F0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvdetectorqrcodes arm64 (Static)";
+			productName = testcvdetectorqrcodes;
+			productReference = 5DD14A601D953CBB00CCA9F0 /* libOceanTestCVDetectorQRCodesD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DDE17911C69F91400325BD2 /* testcvdetectorqrcodes x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DDE17A11C69F91400325BD2 /* Build configuration list for PBXNativeTarget "testcvdetectorqrcodes x64 (Shared)" */;
+			buildPhases = (
+				5DDE17921C69F91400325BD2 /* Sources */,
+				5DDE17991C69F91400325BD2 /* Frameworks */,
+				5DDE179A1C69F91400325BD2 /* Headers */,
+				C0E9B0EC1DACECD500895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvdetectorqrcodes x64 (Shared)";
+			productName = testcvdetectorqrcodes;
+			productReference = 5DDE17A41C69F91400325BD2 /* libOceanTestCVDetectorQRCodesD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C0E9B0D71DACEC0700895C4B /* testcvdetectorqrcodes arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0E9B0E81DACEC0700895C4B /* Build configuration list for PBXNativeTarget "testcvdetectorqrcodes arm64 (Shared)" */;
+			buildPhases = (
+				C0E9B0D81DACEC0700895C4B /* Sources */,
+				C0E9B0DF1DACEC0700895C4B /* Frameworks */,
+				C0E9B0E01DACEC0700895C4B /* Headers */,
+				C0E9B0E71DACEC0700895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvdetectorqrcodes arm64 (Shared)";
+			productName = testcvdetectorqrcodes;
+			productReference = C0E9B0EB1DACEC0700895C4B /* libOceanTestCVDetectorQRCodesD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DACDC551C69F75700D5D6B0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DACDC5C1C69F75700D5D6B0 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DACDC581C69F75700D5D6B0 /* Build configuration list for PBXProject "testcvdetectorqrcodes" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DACDC541C69F75700D5D6B0;
+			productRefGroup = 5DACDC5E1C69F75700D5D6B0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DACDC5C1C69F75700D5D6B0 /* testcvdetectorqrcodes x64 (Static) */,
+				5DDE17911C69F91400325BD2 /* testcvdetectorqrcodes x64 (Shared) */,
+				5DD14A4D1D953CBB00CCA9F0 /* testcvdetectorqrcodes arm64 (Static) */,
+				C0E9B0D71DACEC0700895C4B /* testcvdetectorqrcodes arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DD14A611D953DE800CCA9F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../../copy_arm_static.sh \"../../../../../../../../bin/test/lib/\"";
+		};
+		C0E9B0E71DACEC0700895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../../codesign.sh\n../../../../../copy_arm_shared.sh \"../../../../../../../../bin/test/lib/\"";
+		};
+		C0E9B0EC1DACECD500895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DACDC591C69F75700D5D6B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50AE05B4270813C300242F7A /* TestQRCodeEncoder.cpp in Sources */,
+				50AE05AC270813C200242F7A /* TestCVDetectorQRCodes.cpp in Sources */,
+				507AFD5C27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp in Sources */,
+				50A87D3F274DB8790002A518 /* TestUtilities.cpp in Sources */,
+				50AE05B8270813C300242F7A /* TestQRCodeDecoder.cpp in Sources */,
+				50AE05A8270813C200242F7A /* TestQRCodeDetector2D.cpp in Sources */,
+				50AE05B0270813C200242F7A /* TestFinderPatternDetector.cpp in Sources */,
+				50C09C9B274F01B100809E83 /* TestAlignmentPatternDetector.cpp in Sources */,
+				93CF17072A425D19009432F8 /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A4E1D953CBB00CCA9F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50AE05B6270813C300242F7A /* TestQRCodeEncoder.cpp in Sources */,
+				50AE05AE270813C200242F7A /* TestCVDetectorQRCodes.cpp in Sources */,
+				507AFD5E27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp in Sources */,
+				50A87D41274DB8790002A518 /* TestUtilities.cpp in Sources */,
+				50AE05BA270813C300242F7A /* TestQRCodeDecoder.cpp in Sources */,
+				50AE05AA270813C200242F7A /* TestQRCodeDetector2D.cpp in Sources */,
+				50AE05B2270813C200242F7A /* TestFinderPatternDetector.cpp in Sources */,
+				50C09C9D274F01B100809E83 /* TestAlignmentPatternDetector.cpp in Sources */,
+				93CF17092A425D19009432F8 /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DDE17921C69F91400325BD2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50AE05B5270813C300242F7A /* TestQRCodeEncoder.cpp in Sources */,
+				50AE05AD270813C200242F7A /* TestCVDetectorQRCodes.cpp in Sources */,
+				507AFD5D27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp in Sources */,
+				50A87D40274DB8790002A518 /* TestUtilities.cpp in Sources */,
+				50AE05B9270813C300242F7A /* TestQRCodeDecoder.cpp in Sources */,
+				50AE05A9270813C200242F7A /* TestQRCodeDetector2D.cpp in Sources */,
+				50AE05B1270813C200242F7A /* TestFinderPatternDetector.cpp in Sources */,
+				50C09C9C274F01B100809E83 /* TestAlignmentPatternDetector.cpp in Sources */,
+				93CF17082A425D19009432F8 /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0D81DACEC0700895C4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50AE05B7270813C300242F7A /* TestQRCodeEncoder.cpp in Sources */,
+				50AE05AF270813C200242F7A /* TestCVDetectorQRCodes.cpp in Sources */,
+				507AFD5F27B5B9CE00E4DBB3 /* TestLegacyQRCodeDetector2D.cpp in Sources */,
+				50A87D42274DB8790002A518 /* TestUtilities.cpp in Sources */,
+				50AE05BB270813C300242F7A /* TestQRCodeDecoder.cpp in Sources */,
+				50AE05AB270813C200242F7A /* TestQRCodeDetector2D.cpp in Sources */,
+				50AE05B3270813C200242F7A /* TestFinderPatternDetector.cpp in Sources */,
+				50C09C9E274F01B100809E83 /* TestAlignmentPatternDetector.cpp in Sources */,
+				93CF170A2A425D19009432F8 /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DACDC661C69F75700D5D6B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DACDC671C69F75700D5D6B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DACDC691C69F75700D5D6B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../impl,
+					../../../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/osx_x64_xc9_static_debug;
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorQRCodesD;
+				PRODUCT_NAME = OceanTestCVDetectorQRCodesD;
+				SYMROOT = ../../../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DACDC6A1C69F75700D5D6B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../bin/test/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../impl,
+					../../../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/osx_x64_xc9_static;
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorQRCodes;
+				PRODUCT_NAME = OceanTestCVDetectorQRCodes;
+				SYMROOT = ../../../../../../../../bin/test/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DD14A5E1D953CBB00CCA9F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../impl,
+					../../../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorQRCodesD;
+				PRODUCT_NAME = OceanTestCVDetectorQRCodesD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD14A5F1D953CBB00CCA9F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../impl,
+					../../../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorQRCodes;
+				PRODUCT_NAME = OceanTestCVDetectorQRCodes;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DDE17A21C69F91400325BD2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../impl,
+					../../../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/osx_x64_xc9_shared_debug;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVDetectorD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanPlatformD",
+					"-lOceanSystemD",
+				);
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorQRCodesD;
+				PRODUCT_NAME = OceanTestCVDetectorQRCodesD;
+				SYMROOT = ../../../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DDE17A31C69F91400325BD2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../impl,
+					../../../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/osx_x64_xc9_shared;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVDetector",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanPlatform",
+					"-lOceanSystem",
+				);
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorQRCodes;
+				PRODUCT_NAME = OceanTestCVDetectorQRCodes;
+				SYMROOT = ../../../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C0E9B0E91DACEC0700895C4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../impl,
+					../../../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVDetectorD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanPlatformD",
+					"-lOceanSystemD",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorQRCodesD;
+				PRODUCT_NAME = OceanTestCVDetectorQRCodesD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C0E9B0EA1DACEC0700895C4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../impl,
+					../../../../../../../../../3rdparty/eigen/3.3.8/impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVDetector",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanPlatform",
+					"-lOceanSystem",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestCVDetectorQRCodes;
+				PRODUCT_NAME = OceanTestCVDetectorQRCodes;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../../bin/tmp/impl/ocean/testcvdetectorqrcodes/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DACDC581C69F75700D5D6B0 /* Build configuration list for PBXProject "testcvdetectorqrcodes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DACDC661C69F75700D5D6B0 /* Debug */,
+				5DACDC671C69F75700D5D6B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DACDC681C69F75700D5D6B0 /* Build configuration list for PBXNativeTarget "testcvdetectorqrcodes x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DACDC691C69F75700D5D6B0 /* Debug */,
+				5DACDC6A1C69F75700D5D6B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD14A5D1D953CBB00CCA9F0 /* Build configuration list for PBXNativeTarget "testcvdetectorqrcodes arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD14A5E1D953CBB00CCA9F0 /* Debug */,
+				5DD14A5F1D953CBB00CCA9F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DDE17A11C69F91400325BD2 /* Build configuration list for PBXNativeTarget "testcvdetectorqrcodes x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DDE17A21C69F91400325BD2 /* Debug */,
+				5DDE17A31C69F91400325BD2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0E9B0E81DACEC0700895C4B /* Build configuration list for PBXNativeTarget "testcvdetectorqrcodes arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0E9B0E91DACEC0700895C4B /* Debug */,
+				C0E9B0EA1DACEC0700895C4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DACDC551C69F75700D5D6B0 /* Project object */;
+}

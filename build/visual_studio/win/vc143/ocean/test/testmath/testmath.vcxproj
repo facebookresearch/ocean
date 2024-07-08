@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Shared Debug|Win32">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|Win32">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|x64">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|Win32">
+      <Configuration>Shared Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|Win32">
+      <Configuration>Static Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|Win32">
+      <Configuration>Static Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|x64">
+      <Configuration>Static Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|Win32">
+      <Configuration>Static Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x64">
+      <Configuration>Static Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAnyCamera.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestApproximation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBoundingBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBoundingSphere.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBox2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBox3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCone3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCylinder3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestExponentialMap.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFourierTransformation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFrustum.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestHSVAColor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestPinholeCamera.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRateCalculator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRGBAColor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSampleMap.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestEquation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestEuler.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFiniteLine2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFiniteLine3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestHomogenousMatrix4.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestInterpolation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLine2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLine3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLinearAlgebra.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLookup2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMath.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMathUtilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMatrix.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestNumeric.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestPlane3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestQuaternion.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRandom.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRotation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAutomaticDifferentiation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSparseMatrix.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSphere3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix4.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestStaticMatrix.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestTriangle2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVariance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector4.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAnyCamera.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestApproximation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBoundingBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBoundingSphere.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBox2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBox3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCone3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCylinder3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestExponentialMap.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFourierTransformation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFrustum.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestHSVAColor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestPinholeCamera.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRateCalculator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRGBAColor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSampleMap.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestEquation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestEuler.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFiniteLine2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFiniteLine3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestHomogenousMatrix4.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestInterpolation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLine2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLine3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLinearAlgebra.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLookup2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMath.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMathUtilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMatrix.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestNumeric.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestPlane3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestQuaternion.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRandom.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRotation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAutomaticDifferentiation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSparseMatrix.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSphere3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix4.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestStaticMatrix.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestTriangle2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVariance.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector4.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{CEA4EDB7-EFB5-4CB0-AB46-18BA72F2D088}</ProjectGuid>
+    <RootNamespace>testmath</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

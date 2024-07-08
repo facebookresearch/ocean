@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Ocean Test CV TestCVSynthesis</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationtestcvtestcvsynthesis_build_imported>True</ocean_applicationtestcvtestcvsynthesis_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationtestcv_build_imported)' != 'True'" Project="..\..\..\application_test_cv_build.props" />
+    <Import Condition="'$(ocean_application_console_build_imported)' != 'True'" Project="..\..\..\..\..\application_console_build.props" />
+    <Import Condition="'$(ocean_cv_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\cv\cv_use.props" />
+    <Import Condition="'$(ocean_testcvsynthesis_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\test\testcv\testsynthesis\testcvsynthesis_use.props" />
+  </ImportGroup>
+</Project>

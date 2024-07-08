@@ -1,0 +1,461 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C0EE96031E76A8CE004C1D6C /* TestCVOpenCV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE96021E76A8CE004C1D6C /* TestCVOpenCV.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5DB3A2EF1BAB38C50000B274 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		5DB3A2F11BAB38C50000B274 /* testopencv */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = testopencv; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0EE96011E76A8A5004C1D6C /* TestCVOpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestCVOpenCV.h; path = ../../../../../../../../../../impl/application/ocean/test/cv/testcv/testopencv/TestCVOpenCV.h; sourceTree = "<group>"; };
+		C0EE96021E76A8CE004C1D6C /* TestCVOpenCV.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCVOpenCV.cpp; path = ../../../../../../../../../../impl/application/ocean/test/cv/testcv/testopencv/TestCVOpenCV.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DB3A2EE1BAB38C50000B274 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D936ED81BC69C790046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				C0EE96011E76A8A5004C1D6C /* TestCVOpenCV.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DB3A2E81BAB38C50000B274 = {
+			isa = PBXGroup;
+			children = (
+				5D936ED81BC69C790046ACD4 /* Header Files */,
+				5DB3A2FB1BAB39EE0000B274 /* Source Files */,
+				5DB3A2F21BAB38C50000B274 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DB3A2F21BAB38C50000B274 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DB3A2F11BAB38C50000B274 /* testopencv */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DB3A2FB1BAB39EE0000B274 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				C0EE96021E76A8CE004C1D6C /* TestCVOpenCV.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5DB3A2F01BAB38C50000B274 /* testopencv x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DB3A2F81BAB38C50000B274 /* Build configuration list for PBXNativeTarget "testopencv x64 (Static)" */;
+			buildPhases = (
+				5DB3A2ED1BAB38C50000B274 /* Sources */,
+				5DB3A2EE1BAB38C50000B274 /* Frameworks */,
+				5DB3A2EF1BAB38C50000B274 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testopencv x64 (Static)";
+			productName = testopencv;
+			productReference = 5DB3A2F11BAB38C50000B274 /* testopencv */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DB3A2E91BAB38C50000B274 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0930;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DB3A2F01BAB38C50000B274 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DB3A2EC1BAB38C50000B274 /* Build configuration list for PBXProject "testopencv" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5DB3A2E81BAB38C50000B274;
+			productRefGroup = 5DB3A2F21BAB38C50000B274 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DB3A2F01BAB38C50000B274 /* testopencv x64 (Static) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DB3A2ED1BAB38C50000B274 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0EE96031E76A8CE004C1D6C /* TestCVOpenCV.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DB3A2F61BAB38C50000B274 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DB3A2F71BAB38C50000B274 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DB3A2F91BAB38C50000B274 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../../../bin/application/ocean/test/cv/osx/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../../../bin/tmp/impl/application/ocean/test/testopencv/osx/osx_x64_xc9_static_debug;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../../../../../../../../../bin/lib/osx_x64_xc9_static_debug,
+					../../../../../../../../../../bin/test/lib/osx_x64_xc9_static_debug,
+					../../../../../../../../../../3rdparty/opencv/3.2/lib/osx_x64_xc9_static_debug,
+					../../../../../../../../../../3rdparty/opencv/3.2/3rdparty/lib/osx_x64_xc9_static_debug,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../../../../bin/tmp/impl/application/ocean/test/testopencv/osx/osx_x64_xc9_static_debug;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanPlatformD",
+					"-lOceanSystemD",
+					"-lOceanTestCVD",
+					"-lOceanTestCVOpenCVD",
+					"-lopencv_calib3d",
+					"-lopencv_core",
+					"-lopencv_features2d",
+					"-lopencv_flann",
+					"-lopencv_highgui",
+					"-lopencv_imgcodecs",
+					"-lopencv_imgproc",
+					"-lopencv_ml",
+					"-lopencv_objdetect",
+					"-lopencv_photo",
+					"-lopencv_shape",
+					"-lopencv_stitching",
+					"-lopencv_superres",
+					"-lopencv_video",
+					"-lopencv_videoio",
+					"-lopencv_videostab",
+					"-lopencv_xfeatures2d",
+					"-lIlmImf",
+					"-lippicv",
+					"-llibjasper",
+					"-llibjpeg",
+					"-llibpng",
+					"-llibtiff",
+					"-llibwebp",
+					"-lzlib",
+					"-framework",
+					Cocoa,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					QuartzCore,
+					"-framework",
+					Accelerate,
+				);
+				PRODUCT_MODULE_NAME = testopencv;
+				PRODUCT_NAME = testopencv;
+				SYMROOT = ../../../../../../../../../../bin/application/ocean/test/cv/osx/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DB3A2FA1BAB38C50000B274 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../../../bin/application/ocean/test/cv/osx/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../../../bin/tmp/impl/application/ocean/test/testopencv/osx/osx_x64_xc9_static;
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					../../../../../../../../../../bin/lib/osx_x64_xc9_static,
+					../../../../../../../../../../bin/test/lib/osx_x64_xc9_static,
+					../../../../../../../../../../3rdparty/opencv/3.2/lib/osx_x64_xc9_static,
+					../../../../../../../../../../3rdparty/opencv/3.2/3rdparty/lib/osx_x64_xc9_static,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../../../../bin/tmp/impl/application/ocean/test/testopencv/osx/osx_x64_xc9_static;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanPlatform",
+					"-lOceanSystem",
+					"-lOceanTestCV",
+					"-lOceanTestCVOpenCV",
+					"-lopencv_calib3d",
+					"-lopencv_core",
+					"-lopencv_features2d",
+					"-lopencv_flann",
+					"-lopencv_highgui",
+					"-lopencv_imgcodecs",
+					"-lopencv_imgproc",
+					"-lopencv_ml",
+					"-lopencv_objdetect",
+					"-lopencv_photo",
+					"-lopencv_shape",
+					"-lopencv_stitching",
+					"-lopencv_superres",
+					"-lopencv_video",
+					"-lopencv_videoio",
+					"-lopencv_videostab",
+					"-lopencv_xfeatures2d",
+					"-lIlmImf",
+					"-lippicv",
+					"-llibjasper",
+					"-llibjpeg",
+					"-llibpng",
+					"-llibtiff",
+					"-llibwebp",
+					"-lzlib",
+					"-framework",
+					Cocoa,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					QuartzCore,
+					"-framework",
+					Accelerate,
+				);
+				PRODUCT_MODULE_NAME = testopencv;
+				PRODUCT_NAME = testopencv;
+				SYMROOT = ../../../../../../../../../../bin/application/ocean/test/cv/osx/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DB3A2EC1BAB38C50000B274 /* Build configuration list for PBXProject "testopencv" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DB3A2F61BAB38C50000B274 /* Debug */,
+				5DB3A2F71BAB38C50000B274 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DB3A2F81BAB38C50000B274 /* Build configuration list for PBXNativeTarget "testopencv x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DB3A2F91BAB38C50000B274 /* Debug */,
+				5DB3A2FA1BAB38C50000B274 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DB3A2E91BAB38C50000B274 /* Project object */;
+}

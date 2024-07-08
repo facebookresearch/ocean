@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "demomiscimageannotator", "demomiscimageannotator.vcxproj", "{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Static Debug|x64 = Static Debug|x64
+		Static Debug|x86 = Static Debug|x86
+		Static Profile|x64 = Static Profile|x64
+		Static Profile|x86 = Static Profile|x86
+		Static Release|x64 = Static Release|x64
+		Static Release|x86 = Static Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Debug|x64.Build.0 = Static Debug|x64
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Debug|x86.ActiveCfg = Static Debug|Win32
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Debug|x86.Build.0 = Static Debug|Win32
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Profile|x64.ActiveCfg = Static Profile|x64
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Profile|x64.Build.0 = Static Profile|x64
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Profile|x86.ActiveCfg = Static Profile|Win32
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Profile|x86.Build.0 = Static Profile|Win32
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Release|x64.ActiveCfg = Static Release|x64
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Release|x64.Build.0 = Static Release|x64
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Release|x86.ActiveCfg = Static Release|Win32
+		{1E7FBB5B-43DD-4531-AB1B-1BC5E64E4BBD}.Static Release|x86.Build.0 = Static Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

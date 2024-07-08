@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Demo Java</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationdemojava_build_imported>True</ocean_applicationdemojava_build_imported>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <GradleOutputDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm64_cl50_static_debug\gradle\outputs\apk\ARM8\debug\</GradleOutputDir>
+   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <GradleOutputDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm_cl50_static_debug\gradle\outputs\apk\ARM7\debug\</GradleOutputDir>
+   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <GradleOutputDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm64_cl50_static\gradle\outputs\apk\ARM8\release\</GradleOutputDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+   <GradleOutputDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm_cl50_static\gradle\outputs\apk\ARM7\release\</GradleOutputDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|ARM64'">
+    <GradleOutputDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm64_cl50_shared_debug\gradle\outputs\apk\ARM8\debug\</GradleOutputDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|ARM'">
+    <GradleOutputDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm_cl50_shared_debug\gradle\outputs\apk\ARM7\debug\</GradleOutputDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|ARM64'">
+    <GradleOutputDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm64_cl50_shared\gradle\outputs\apk\ARM8\release\</GradleOutputDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|ARM'">
+    <GradleOutputDir>$(OCEAN_DEVELOPMENT_PATH)\bin\tmp\impl\application\ocean\demo\$(ProjectName)\android\android_arm_cl50_shared\gradle\outputs\apk\ARM7\release\</GradleOutputDir>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <GradlePackage Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64' Or '$(Configuration)|$(Platform)'=='Shared Debug|ARM64'">
+      <AssembleParameter>assembleARM8Debug</AssembleParameter>
+      <ApkFileName>app-ARM8-debug.apk</ApkFileName>
+      <AdditionalOptions>-PgradleBuildDirectory=$(IntDir) -PoceanBuildString=android_arm64_cl50_static_debug -PgradleArchitecture=arm64-v8a</AdditionalOptions>
+    </GradlePackage>
+    <GradlePackage Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM' Or '$(Configuration)|$(Platform)'=='Shared Debug|ARM'">
+      <AssembleParameter>assembleARM7Debug</AssembleParameter>
+      <ApkFileName>app-ARM7-debug.apk</ApkFileName>
+      <AdditionalOptions>-PgradleBuildDirectory=$(IntDir) -PoceanBuildString=android_arm_cl50_static_debug -PgradleArchitecture=armeabi-v7a</AdditionalOptions>
+    </GradlePackage>
+    <GradlePackage Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64' Or '$(Configuration)|$(Platform)'=='Shared Release|ARM64'">
+      <AssembleParameter>assembleARM8Release</AssembleParameter>
+      <ApkFileName>app-ARM8-release-unsigned.apk</ApkFileName>
+      <AdditionalOptions>-PgradleBuildDirectory=$(IntDir) -PoceanBuildString=android_arm64_cl50_static -PgradleArchitecture=arm64-v8a</AdditionalOptions>
+    </GradlePackage>
+    <GradlePackage Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM' Or '$(Configuration)|$(Platform)'=='Shared Release|ARM'">
+      <AssembleParameter>assembleARM7Release</AssembleParameter>
+      <ApkFileName>app-ARM7-release-unsigned.apk</ApkFileName>
+      <AdditionalOptions>-PgradleBuildDirectory=$(IntDir) -PoceanBuildString=android_arm_cl50_static -PgradleArchitecture=armeabi-v7a</AdditionalOptions>
+    </GradlePackage>
+  </ItemDefinitionGroup>
+</Project>

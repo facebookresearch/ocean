@@ -1,0 +1,79 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 57cbed5..0f0beca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,3 +1,6 @@
++# Meta: modified by replacing all occurences of CMAKE_SOURCE_DIR with CMAKE_CURRENT_LIST_DIR
++#       and commenting out add_subdirectory() calls for doc, examples, test
++#
+ #-----------------------------------------------------------------------------
+ #
+ #  CMake config
+@@ -8,7 +11,7 @@
+ 
+ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+ 
+-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
++list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+ 
+ #-----------------------------------------------------------------------------
+ 
+@@ -31,7 +34,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+ # the README, but you can also set this to a different path, for instance
+ # to change the setting while doing development.
+ 
+-set(MVT_FIXTURES "${CMAKE_SOURCE_DIR}/test/mvt-fixtures" CACHE PATH "mvt-fixtures directory for tests")
++set(MVT_FIXTURES "${CMAKE_CURRENT_LIST_DIR}/test/mvt-fixtures" CACHE PATH "mvt-fixtures directory for tests")
+ 
+ #-----------------------------------------------------------------------------
+ 
+@@ -48,7 +51,7 @@ else()
+     endif()
+ endif()
+ 
+-include_directories("${CMAKE_SOURCE_DIR}/include")
++include_directories("${CMAKE_CURRENT_LIST_DIR}/include")
+ 
+ set(PROTOZERO_DATA_VIEW "" CACHE STRING "Type used for vtzero::data_view")
+ if(NOT PROTOZERO_DATA_VIEW STREQUAL "")
+@@ -82,9 +85,9 @@ if(CLANG_TIDY)
+     add_custom_target(clang-tidy
+         ${CLANG_TIDY}
+         -p ${CMAKE_BINARY_DIR}
+-        ${CMAKE_SOURCE_DIR}/examples/*.cpp
+-        ${CMAKE_SOURCE_DIR}/test/*.cpp
+-        ${CMAKE_SOURCE_DIR}/test/t/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/examples/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/t/*.cpp
+     )
+ else()
+     message(STATUS "Looking for clang-tidy - not found")
+@@ -105,9 +108,9 @@ if(CPPCHECK)
+     add_custom_target(cppcheck
+         ${CPPCHECK}
+         -Uassert --std=c++11 --enable=all
+-        ${CMAKE_SOURCE_DIR}/examples/*.cpp
+-        ${CMAKE_SOURCE_DIR}/test/*.cpp
+-        ${CMAKE_SOURCE_DIR}/test/t/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/examples/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/*.cpp
++        ${CMAKE_CURRENT_LIST_DIR}/test/t/*.cpp
+     )
+ else()
+     message(STATUS "Looking for cppcheck - not found")
+@@ -147,11 +150,11 @@ install(DIRECTORY include/vtzero DESTINATION include)
+ 
+ enable_testing()
+ 
+-add_subdirectory(doc)
++#add_subdirectory(doc)
+ 
+-add_subdirectory(examples)
++#add_subdirectory(examples)
+ 
+-add_subdirectory(test)
++#add_subdirectory(test)
+ 
+ 
+ #-----------------------------------------------------------------------------

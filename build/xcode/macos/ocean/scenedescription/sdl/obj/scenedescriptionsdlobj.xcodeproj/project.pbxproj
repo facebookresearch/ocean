@@ -1,0 +1,1123 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5DF0B9621D8FEA9600BE5D21 /* Material.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9591D8FEA9600BE5D21 /* Material.h */; };
+		5DF0B9631D8FEA9600BE5D21 /* Material.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9591D8FEA9600BE5D21 /* Material.h */; };
+		5DF0B9641D8FEA9600BE5D21 /* MtlParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95A1D8FEA9600BE5D21 /* MtlParser.h */; };
+		5DF0B9651D8FEA9600BE5D21 /* MtlParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95A1D8FEA9600BE5D21 /* MtlParser.h */; };
+		5DF0B9661D8FEA9600BE5D21 /* MtlScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95B1D8FEA9600BE5D21 /* MtlScanner.h */; };
+		5DF0B9671D8FEA9600BE5D21 /* MtlScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95B1D8FEA9600BE5D21 /* MtlScanner.h */; };
+		5DF0B9681D8FEA9600BE5D21 /* OBJ.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95C1D8FEA9600BE5D21 /* OBJ.h */; };
+		5DF0B9691D8FEA9600BE5D21 /* OBJ.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95C1D8FEA9600BE5D21 /* OBJ.h */; };
+		5DF0B96A1D8FEA9600BE5D21 /* OBJLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95D1D8FEA9600BE5D21 /* OBJLibrary.h */; };
+		5DF0B96B1D8FEA9600BE5D21 /* OBJLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95D1D8FEA9600BE5D21 /* OBJLibrary.h */; };
+		5DF0B96C1D8FEA9600BE5D21 /* OBJParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95E1D8FEA9600BE5D21 /* OBJParser.h */; };
+		5DF0B96D1D8FEA9600BE5D21 /* OBJParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95E1D8FEA9600BE5D21 /* OBJParser.h */; };
+		5DF0B96E1D8FEA9600BE5D21 /* OBJScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95F1D8FEA9600BE5D21 /* OBJScanner.h */; };
+		5DF0B96F1D8FEA9600BE5D21 /* OBJScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95F1D8FEA9600BE5D21 /* OBJScanner.h */; };
+		5DF0B9701D8FEA9600BE5D21 /* OBJScene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9601D8FEA9600BE5D21 /* OBJScene.h */; };
+		5DF0B9711D8FEA9600BE5D21 /* OBJScene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9601D8FEA9600BE5D21 /* OBJScene.h */; };
+		5DF0B9721D8FEA9600BE5D21 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9611D8FEA9600BE5D21 /* Plugin.h */; };
+		5DF0B9731D8FEA9600BE5D21 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9611D8FEA9600BE5D21 /* Plugin.h */; };
+		5DF0B97D1D8FEAA800BE5D21 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9741D8FEAA800BE5D21 /* Material.cpp */; };
+		5DF0B97E1D8FEAA800BE5D21 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9741D8FEAA800BE5D21 /* Material.cpp */; };
+		5DF0B97F1D8FEAA800BE5D21 /* MtlParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9751D8FEAA800BE5D21 /* MtlParser.cpp */; };
+		5DF0B9801D8FEAA800BE5D21 /* MtlParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9751D8FEAA800BE5D21 /* MtlParser.cpp */; };
+		5DF0B9811D8FEAA800BE5D21 /* MtlScanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9761D8FEAA800BE5D21 /* MtlScanner.cpp */; };
+		5DF0B9821D8FEAA800BE5D21 /* MtlScanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9761D8FEAA800BE5D21 /* MtlScanner.cpp */; };
+		5DF0B9831D8FEAA800BE5D21 /* OBJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9771D8FEAA800BE5D21 /* OBJ.cpp */; };
+		5DF0B9841D8FEAA800BE5D21 /* OBJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9771D8FEAA800BE5D21 /* OBJ.cpp */; };
+		5DF0B9851D8FEAA800BE5D21 /* OBJLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9781D8FEAA800BE5D21 /* OBJLibrary.cpp */; };
+		5DF0B9861D8FEAA800BE5D21 /* OBJLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9781D8FEAA800BE5D21 /* OBJLibrary.cpp */; };
+		5DF0B9871D8FEAA800BE5D21 /* OBJParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9791D8FEAA800BE5D21 /* OBJParser.cpp */; };
+		5DF0B9881D8FEAA800BE5D21 /* OBJParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9791D8FEAA800BE5D21 /* OBJParser.cpp */; };
+		5DF0B9891D8FEAA800BE5D21 /* OBJScanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97A1D8FEAA800BE5D21 /* OBJScanner.cpp */; };
+		5DF0B98A1D8FEAA800BE5D21 /* OBJScanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97A1D8FEAA800BE5D21 /* OBJScanner.cpp */; };
+		5DF0B98B1D8FEAA800BE5D21 /* OBJScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97B1D8FEAA800BE5D21 /* OBJScene.cpp */; };
+		5DF0B98C1D8FEAA800BE5D21 /* OBJScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97B1D8FEAA800BE5D21 /* OBJScene.cpp */; };
+		5DF0B98D1D8FEAA800BE5D21 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97C1D8FEAA800BE5D21 /* Plugin.cpp */; };
+		5DF0B98E1D8FEAA800BE5D21 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97C1D8FEAA800BE5D21 /* Plugin.cpp */; };
+		5DF0B9931D8FF64400BE5D21 /* OBJParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9791D8FEAA800BE5D21 /* OBJParser.cpp */; };
+		5DF0B9941D8FF64400BE5D21 /* MtlParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9751D8FEAA800BE5D21 /* MtlParser.cpp */; };
+		5DF0B9951D8FF64400BE5D21 /* OBJLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9781D8FEAA800BE5D21 /* OBJLibrary.cpp */; };
+		5DF0B9961D8FF64400BE5D21 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97C1D8FEAA800BE5D21 /* Plugin.cpp */; };
+		5DF0B9971D8FF64400BE5D21 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9741D8FEAA800BE5D21 /* Material.cpp */; };
+		5DF0B9981D8FF64400BE5D21 /* MtlScanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9761D8FEAA800BE5D21 /* MtlScanner.cpp */; };
+		5DF0B9991D8FF64400BE5D21 /* OBJScanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97A1D8FEAA800BE5D21 /* OBJScanner.cpp */; };
+		5DF0B99A1D8FF64400BE5D21 /* OBJScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97B1D8FEAA800BE5D21 /* OBJScene.cpp */; };
+		5DF0B99B1D8FF64400BE5D21 /* OBJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9771D8FEAA800BE5D21 /* OBJ.cpp */; };
+		5DF0B99E1D8FF64400BE5D21 /* OBJScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95F1D8FEA9600BE5D21 /* OBJScanner.h */; };
+		5DF0B99F1D8FF64400BE5D21 /* OBJScene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9601D8FEA9600BE5D21 /* OBJScene.h */; };
+		5DF0B9A01D8FF64400BE5D21 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9611D8FEA9600BE5D21 /* Plugin.h */; };
+		5DF0B9A11D8FF64400BE5D21 /* Material.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9591D8FEA9600BE5D21 /* Material.h */; };
+		5DF0B9A21D8FF64400BE5D21 /* OBJParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95E1D8FEA9600BE5D21 /* OBJParser.h */; };
+		5DF0B9A31D8FF64400BE5D21 /* MtlParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95A1D8FEA9600BE5D21 /* MtlParser.h */; };
+		5DF0B9A41D8FF64400BE5D21 /* OBJ.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95C1D8FEA9600BE5D21 /* OBJ.h */; };
+		5DF0B9A51D8FF64400BE5D21 /* OBJLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95D1D8FEA9600BE5D21 /* OBJLibrary.h */; };
+		5DF0B9A61D8FF64400BE5D21 /* MtlScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95B1D8FEA9600BE5D21 /* MtlScanner.h */; };
+		C041EDCB1DABF56C00BF5D76 /* OBJParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9791D8FEAA800BE5D21 /* OBJParser.cpp */; };
+		C041EDCC1DABF56C00BF5D76 /* MtlParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9751D8FEAA800BE5D21 /* MtlParser.cpp */; };
+		C041EDCD1DABF56C00BF5D76 /* OBJLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9781D8FEAA800BE5D21 /* OBJLibrary.cpp */; };
+		C041EDCE1DABF56C00BF5D76 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97C1D8FEAA800BE5D21 /* Plugin.cpp */; };
+		C041EDCF1DABF56C00BF5D76 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9741D8FEAA800BE5D21 /* Material.cpp */; };
+		C041EDD01DABF56C00BF5D76 /* MtlScanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9761D8FEAA800BE5D21 /* MtlScanner.cpp */; };
+		C041EDD11DABF56C00BF5D76 /* OBJScanner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97A1D8FEAA800BE5D21 /* OBJScanner.cpp */; };
+		C041EDD21DABF56C00BF5D76 /* OBJScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B97B1D8FEAA800BE5D21 /* OBJScene.cpp */; };
+		C041EDD31DABF56C00BF5D76 /* OBJ.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0B9771D8FEAA800BE5D21 /* OBJ.cpp */; };
+		C041EDD61DABF56C00BF5D76 /* OBJScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95F1D8FEA9600BE5D21 /* OBJScanner.h */; };
+		C041EDD71DABF56C00BF5D76 /* OBJScene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9601D8FEA9600BE5D21 /* OBJScene.h */; };
+		C041EDD81DABF56C00BF5D76 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9611D8FEA9600BE5D21 /* Plugin.h */; };
+		C041EDD91DABF56C00BF5D76 /* Material.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B9591D8FEA9600BE5D21 /* Material.h */; };
+		C041EDDA1DABF56C00BF5D76 /* OBJParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95E1D8FEA9600BE5D21 /* OBJParser.h */; };
+		C041EDDB1DABF56C00BF5D76 /* MtlParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95A1D8FEA9600BE5D21 /* MtlParser.h */; };
+		C041EDDC1DABF56C00BF5D76 /* OBJ.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95C1D8FEA9600BE5D21 /* OBJ.h */; };
+		C041EDDD1DABF56C00BF5D76 /* OBJLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95D1D8FEA9600BE5D21 /* OBJLibrary.h */; };
+		C041EDDE1DABF56C00BF5D76 /* MtlScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0B95B1D8FEA9600BE5D21 /* MtlScanner.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D12BC9C1BF264E300A56828 /* libOceanSceneDescriptionSDLOBJD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanSceneDescriptionSDLOBJD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D12BDB21BF267A400A56828 /* OceanSceneDescriptionSDLOBJD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanSceneDescriptionSDLOBJD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DF0B9591D8FEA9600BE5D21 /* Material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Material.h; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/Material.h; sourceTree = "<group>"; };
+		5DF0B95A1D8FEA9600BE5D21 /* MtlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MtlParser.h; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/MtlParser.h; sourceTree = "<group>"; };
+		5DF0B95B1D8FEA9600BE5D21 /* MtlScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MtlScanner.h; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/MtlScanner.h; sourceTree = "<group>"; };
+		5DF0B95C1D8FEA9600BE5D21 /* OBJ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OBJ.h; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/OBJ.h; sourceTree = "<group>"; };
+		5DF0B95D1D8FEA9600BE5D21 /* OBJLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OBJLibrary.h; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/OBJLibrary.h; sourceTree = "<group>"; };
+		5DF0B95E1D8FEA9600BE5D21 /* OBJParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OBJParser.h; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/OBJParser.h; sourceTree = "<group>"; };
+		5DF0B95F1D8FEA9600BE5D21 /* OBJScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OBJScanner.h; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/OBJScanner.h; sourceTree = "<group>"; };
+		5DF0B9601D8FEA9600BE5D21 /* OBJScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OBJScene.h; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/OBJScene.h; sourceTree = "<group>"; };
+		5DF0B9611D8FEA9600BE5D21 /* Plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plugin.h; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/Plugin.h; sourceTree = "<group>"; };
+		5DF0B9741D8FEAA800BE5D21 /* Material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Material.cpp; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/Material.cpp; sourceTree = "<group>"; };
+		5DF0B9751D8FEAA800BE5D21 /* MtlParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MtlParser.cpp; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/MtlParser.cpp; sourceTree = "<group>"; };
+		5DF0B9761D8FEAA800BE5D21 /* MtlScanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MtlScanner.cpp; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/MtlScanner.cpp; sourceTree = "<group>"; };
+		5DF0B9771D8FEAA800BE5D21 /* OBJ.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OBJ.cpp; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/OBJ.cpp; sourceTree = "<group>"; };
+		5DF0B9781D8FEAA800BE5D21 /* OBJLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OBJLibrary.cpp; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/OBJLibrary.cpp; sourceTree = "<group>"; };
+		5DF0B9791D8FEAA800BE5D21 /* OBJParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OBJParser.cpp; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/OBJParser.cpp; sourceTree = "<group>"; };
+		5DF0B97A1D8FEAA800BE5D21 /* OBJScanner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OBJScanner.cpp; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/OBJScanner.cpp; sourceTree = "<group>"; };
+		5DF0B97B1D8FEAA800BE5D21 /* OBJScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OBJScene.cpp; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/OBJScene.cpp; sourceTree = "<group>"; };
+		5DF0B97C1D8FEAA800BE5D21 /* Plugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plugin.cpp; path = ../../../../../../../impl/ocean/scenedescription/sdl/obj/Plugin.cpp; sourceTree = "<group>"; };
+		5DF0B98F1D8FEECD00BE5D21 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../res/ocean/scenedescription/sdl/obj/osx/Info.plist; sourceTree = "<group>"; };
+		5DF0B9AA1D8FF64400BE5D21 /* libOceanSceneDescriptionSDLOBJD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanSceneDescriptionSDLOBJD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C041EDE41DABF56D00BF5D76 /* OceanSceneDescriptionSDLOBJD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanSceneDescriptionSDLOBJD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D12BC991BF264E300A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD821BF267A400A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF0B99C1D8FF64400BE5D21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EDD41DABF56C00BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D12BC931BF264E300A56828 = {
+			isa = PBXGroup;
+			children = (
+				5D12BCFF1BF2662D00A56828 /* Header Files */,
+				5D12BCAA1BF265D300A56828 /* Source Files */,
+				5D12BDB31BF26E6000A56828 /* Resource Files */,
+				5D12BC9D1BF264E300A56828 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D12BC9D1BF264E300A56828 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BC9C1BF264E300A56828 /* libOceanSceneDescriptionSDLOBJD.a */,
+				5D12BDB21BF267A400A56828 /* OceanSceneDescriptionSDLOBJD.plugin */,
+				5DF0B9AA1D8FF64400BE5D21 /* libOceanSceneDescriptionSDLOBJD.a */,
+				C041EDE41DABF56D00BF5D76 /* OceanSceneDescriptionSDLOBJD.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D12BCAA1BF265D300A56828 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DF0B9741D8FEAA800BE5D21 /* Material.cpp */,
+				5DF0B9751D8FEAA800BE5D21 /* MtlParser.cpp */,
+				5DF0B9761D8FEAA800BE5D21 /* MtlScanner.cpp */,
+				5DF0B9771D8FEAA800BE5D21 /* OBJ.cpp */,
+				5DF0B9781D8FEAA800BE5D21 /* OBJLibrary.cpp */,
+				5DF0B9791D8FEAA800BE5D21 /* OBJParser.cpp */,
+				5DF0B97A1D8FEAA800BE5D21 /* OBJScanner.cpp */,
+				5DF0B97B1D8FEAA800BE5D21 /* OBJScene.cpp */,
+				5DF0B97C1D8FEAA800BE5D21 /* Plugin.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D12BCFF1BF2662D00A56828 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DF0B9591D8FEA9600BE5D21 /* Material.h */,
+				5DF0B95A1D8FEA9600BE5D21 /* MtlParser.h */,
+				5DF0B95B1D8FEA9600BE5D21 /* MtlScanner.h */,
+				5DF0B95C1D8FEA9600BE5D21 /* OBJ.h */,
+				5DF0B95D1D8FEA9600BE5D21 /* OBJLibrary.h */,
+				5DF0B95E1D8FEA9600BE5D21 /* OBJParser.h */,
+				5DF0B95F1D8FEA9600BE5D21 /* OBJScanner.h */,
+				5DF0B9601D8FEA9600BE5D21 /* OBJScene.h */,
+				5DF0B9611D8FEA9600BE5D21 /* Plugin.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5D12BDB31BF26E6000A56828 /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DF0B98F1D8FEECD00BE5D21 /* Info.plist */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D12BC9A1BF264E300A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0B96E1D8FEA9600BE5D21 /* OBJScanner.h in Headers */,
+				5DF0B9701D8FEA9600BE5D21 /* OBJScene.h in Headers */,
+				5DF0B9721D8FEA9600BE5D21 /* Plugin.h in Headers */,
+				5DF0B9621D8FEA9600BE5D21 /* Material.h in Headers */,
+				5DF0B96C1D8FEA9600BE5D21 /* OBJParser.h in Headers */,
+				5DF0B9641D8FEA9600BE5D21 /* MtlParser.h in Headers */,
+				5DF0B9681D8FEA9600BE5D21 /* OBJ.h in Headers */,
+				5DF0B96A1D8FEA9600BE5D21 /* OBJLibrary.h in Headers */,
+				5DF0B9661D8FEA9600BE5D21 /* MtlScanner.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD831BF267A400A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0B96F1D8FEA9600BE5D21 /* OBJScanner.h in Headers */,
+				5DF0B9711D8FEA9600BE5D21 /* OBJScene.h in Headers */,
+				5DF0B9731D8FEA9600BE5D21 /* Plugin.h in Headers */,
+				5DF0B9631D8FEA9600BE5D21 /* Material.h in Headers */,
+				5DF0B96D1D8FEA9600BE5D21 /* OBJParser.h in Headers */,
+				5DF0B9651D8FEA9600BE5D21 /* MtlParser.h in Headers */,
+				5DF0B9691D8FEA9600BE5D21 /* OBJ.h in Headers */,
+				5DF0B96B1D8FEA9600BE5D21 /* OBJLibrary.h in Headers */,
+				5DF0B9671D8FEA9600BE5D21 /* MtlScanner.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF0B99D1D8FF64400BE5D21 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0B99E1D8FF64400BE5D21 /* OBJScanner.h in Headers */,
+				5DF0B99F1D8FF64400BE5D21 /* OBJScene.h in Headers */,
+				5DF0B9A01D8FF64400BE5D21 /* Plugin.h in Headers */,
+				5DF0B9A11D8FF64400BE5D21 /* Material.h in Headers */,
+				5DF0B9A21D8FF64400BE5D21 /* OBJParser.h in Headers */,
+				5DF0B9A31D8FF64400BE5D21 /* MtlParser.h in Headers */,
+				5DF0B9A41D8FF64400BE5D21 /* OBJ.h in Headers */,
+				5DF0B9A51D8FF64400BE5D21 /* OBJLibrary.h in Headers */,
+				5DF0B9A61D8FF64400BE5D21 /* MtlScanner.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EDD51DABF56C00BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EDD61DABF56C00BF5D76 /* OBJScanner.h in Headers */,
+				C041EDD71DABF56C00BF5D76 /* OBJScene.h in Headers */,
+				C041EDD81DABF56C00BF5D76 /* Plugin.h in Headers */,
+				C041EDD91DABF56C00BF5D76 /* Material.h in Headers */,
+				C041EDDA1DABF56C00BF5D76 /* OBJParser.h in Headers */,
+				C041EDDB1DABF56C00BF5D76 /* MtlParser.h in Headers */,
+				C041EDDC1DABF56C00BF5D76 /* OBJ.h in Headers */,
+				C041EDDD1DABF56C00BF5D76 /* OBJLibrary.h in Headers */,
+				C041EDDE1DABF56C00BF5D76 /* MtlScanner.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D12BC9B1BF264E300A56828 /* scenedescriptionsdlobj x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BCA71BF264E300A56828 /* Build configuration list for PBXNativeTarget "scenedescriptionsdlobj x64 (Static)" */;
+			buildPhases = (
+				5D12BC981BF264E300A56828 /* Sources */,
+				5D12BC991BF264E300A56828 /* Frameworks */,
+				5D12BC9A1BF264E300A56828 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "scenedescriptionsdlobj x64 (Static)";
+			productName = scenedescriptionsdlobj;
+			productReference = 5D12BC9C1BF264E300A56828 /* libOceanSceneDescriptionSDLOBJD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D12BD561BF267A400A56828 /* scenedescriptionsdlobj x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BDAF1BF267A400A56828 /* Build configuration list for PBXNativeTarget "scenedescriptionsdlobj x64 (Shared)" */;
+			buildPhases = (
+				5D12BD571BF267A400A56828 /* Sources */,
+				5D12BD821BF267A400A56828 /* Frameworks */,
+				5D12BD831BF267A400A56828 /* Headers */,
+				5D12BDB61BF26EAB00A56828 /* Resources */,
+				5D12BDB81BF26EBE00A56828 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "scenedescriptionsdlobj x64 (Shared)";
+			productName = scenedescriptionsdlobj;
+			productReference = 5D12BDB21BF267A400A56828 /* OceanSceneDescriptionSDLOBJD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+		5DF0B9911D8FF64400BE5D21 /* scenedescriptionsdlobj arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DF0B9A71D8FF64400BE5D21 /* Build configuration list for PBXNativeTarget "scenedescriptionsdlobj arm64 (Static)" */;
+			buildPhases = (
+				5DF0B9921D8FF64400BE5D21 /* Sources */,
+				5DF0B99C1D8FF64400BE5D21 /* Frameworks */,
+				5DF0B99D1D8FF64400BE5D21 /* Headers */,
+				5DF0B9AB1D8FF68F00BE5D21 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "scenedescriptionsdlobj arm64 (Static)";
+			productName = scenedescriptionsdlobj;
+			productReference = 5DF0B9AA1D8FF64400BE5D21 /* libOceanSceneDescriptionSDLOBJD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EDC91DABF56C00BF5D76 /* scenedescriptionsdlobj arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EDE11DABF56C00BF5D76 /* Build configuration list for PBXNativeTarget "scenedescriptionsdlobj arm64 (Shared)" */;
+			buildPhases = (
+				C041EDCA1DABF56C00BF5D76 /* Sources */,
+				C041EDD41DABF56C00BF5D76 /* Frameworks */,
+				C041EDD51DABF56C00BF5D76 /* Headers */,
+				C041EDDF1DABF56C00BF5D76 /* Resources */,
+				C041EDE01DABF56C00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "scenedescriptionsdlobj arm64 (Shared)";
+			productName = scenedescriptionsdlobj;
+			productReference = C041EDE41DABF56D00BF5D76 /* OceanSceneDescriptionSDLOBJD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D12BC941BF264E300A56828 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D12BC9B1BF264E300A56828 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D12BC971BF264E300A56828 /* Build configuration list for PBXProject "scenedescriptionsdlobj" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D12BC931BF264E300A56828;
+			productRefGroup = 5D12BC9D1BF264E300A56828 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D12BC9B1BF264E300A56828 /* scenedescriptionsdlobj x64 (Static) */,
+				5D12BD561BF267A400A56828 /* scenedescriptionsdlobj x64 (Shared) */,
+				5DF0B9911D8FF64400BE5D21 /* scenedescriptionsdlobj arm64 (Static) */,
+				C041EDC91DABF56C00BF5D76 /* scenedescriptionsdlobj arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5D12BDB61BF26EAB00A56828 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EDDF1DABF56C00BF5D76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D12BDB81BF26EBE00A56828 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../codesign.sh\n../../../../copy_plugin.sh \"../../../../../../../bin/plugins/\"";
+		};
+		5DF0B9AB1D8FF68F00BE5D21 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../copy_arm_static.sh \"../../../../../../../bin/lib/\"";
+		};
+		C041EDE01DABF56C00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../codesign.sh\n../../../../copy_arm_shared.sh \"../../../../../../../bin/lib/\"\n../../../../copy_plugin.sh \"../../../../../../../bin/plugins/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D12BC981BF264E300A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0B9871D8FEAA800BE5D21 /* OBJParser.cpp in Sources */,
+				5DF0B97F1D8FEAA800BE5D21 /* MtlParser.cpp in Sources */,
+				5DF0B9851D8FEAA800BE5D21 /* OBJLibrary.cpp in Sources */,
+				5DF0B98D1D8FEAA800BE5D21 /* Plugin.cpp in Sources */,
+				5DF0B97D1D8FEAA800BE5D21 /* Material.cpp in Sources */,
+				5DF0B9811D8FEAA800BE5D21 /* MtlScanner.cpp in Sources */,
+				5DF0B9891D8FEAA800BE5D21 /* OBJScanner.cpp in Sources */,
+				5DF0B98B1D8FEAA800BE5D21 /* OBJScene.cpp in Sources */,
+				5DF0B9831D8FEAA800BE5D21 /* OBJ.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD571BF267A400A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0B9881D8FEAA800BE5D21 /* OBJParser.cpp in Sources */,
+				5DF0B9801D8FEAA800BE5D21 /* MtlParser.cpp in Sources */,
+				5DF0B9861D8FEAA800BE5D21 /* OBJLibrary.cpp in Sources */,
+				5DF0B98E1D8FEAA800BE5D21 /* Plugin.cpp in Sources */,
+				5DF0B97E1D8FEAA800BE5D21 /* Material.cpp in Sources */,
+				5DF0B9821D8FEAA800BE5D21 /* MtlScanner.cpp in Sources */,
+				5DF0B98A1D8FEAA800BE5D21 /* OBJScanner.cpp in Sources */,
+				5DF0B98C1D8FEAA800BE5D21 /* OBJScene.cpp in Sources */,
+				5DF0B9841D8FEAA800BE5D21 /* OBJ.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF0B9921D8FF64400BE5D21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0B9931D8FF64400BE5D21 /* OBJParser.cpp in Sources */,
+				5DF0B9941D8FF64400BE5D21 /* MtlParser.cpp in Sources */,
+				5DF0B9951D8FF64400BE5D21 /* OBJLibrary.cpp in Sources */,
+				5DF0B9961D8FF64400BE5D21 /* Plugin.cpp in Sources */,
+				5DF0B9971D8FF64400BE5D21 /* Material.cpp in Sources */,
+				5DF0B9981D8FF64400BE5D21 /* MtlScanner.cpp in Sources */,
+				5DF0B9991D8FF64400BE5D21 /* OBJScanner.cpp in Sources */,
+				5DF0B99A1D8FF64400BE5D21 /* OBJScene.cpp in Sources */,
+				5DF0B99B1D8FF64400BE5D21 /* OBJ.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EDCA1DABF56C00BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EDCB1DABF56C00BF5D76 /* OBJParser.cpp in Sources */,
+				C041EDCC1DABF56C00BF5D76 /* MtlParser.cpp in Sources */,
+				C041EDCD1DABF56C00BF5D76 /* OBJLibrary.cpp in Sources */,
+				C041EDCE1DABF56C00BF5D76 /* Plugin.cpp in Sources */,
+				C041EDCF1DABF56C00BF5D76 /* Material.cpp in Sources */,
+				C041EDD01DABF56C00BF5D76 /* MtlScanner.cpp in Sources */,
+				C041EDD11DABF56C00BF5D76 /* OBJScanner.cpp in Sources */,
+				C041EDD21DABF56C00BF5D76 /* OBJScene.cpp in Sources */,
+				C041EDD31DABF56C00BF5D76 /* OBJ.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D12BCA51BF264E300A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D12BCA61BF264E300A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D12BCA81BF264E300A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/scenedescription/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/scenedescription/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanSceneDescriptionSDLOBJD;
+				PRODUCT_NAME = OceanSceneDescriptionSDLOBJD;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D12BCA91BF264E300A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/scenedescription/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/scenedescription/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanSceneDescriptionSDLOBJ;
+				PRODUCT_NAME = OceanSceneDescriptionSDLOBJ;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D12BDB01BF267A400A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/scenedescription/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../res/ocean/scenedescription/sdl/obj/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/scenedescription/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanRenderingD",
+					"-lOceanSceneDescriptionD",
+					"-lOceanSystemD",
+				);
+				PRODUCT_MODULE_NAME = OceanSceneDescriptionSDLOBJD;
+				PRODUCT_NAME = OceanSceneDescriptionSDLOBJD;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		5D12BDB11BF267A400A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/scenedescription/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../res/ocean/scenedescription/sdl/obj/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/scenedescription/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanRendering",
+					"-lOceanSceneDescription",
+					"-lOceanSystem",
+				);
+				PRODUCT_MODULE_NAME = OceanSceneDescriptionSDLOBJ;
+				PRODUCT_NAME = OceanSceneDescriptionSDLOBJ;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		5DF0B9A81D8FF64400BE5D21 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanSceneDescriptionSDLOBJD;
+				PRODUCT_NAME = OceanSceneDescriptionSDLOBJD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DF0B9A91D8FF64400BE5D21 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanSceneDescriptionSDLOBJ;
+				PRODUCT_NAME = OceanSceneDescriptionSDLOBJ;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EDE21DABF56C00BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../res/ocean/scenedescription/sdl/obj/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanRenderingD",
+					"-lOceanSceneDescriptionD",
+					"-lOceanSystemD",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanSceneDescriptionSDLOBJD;
+				PRODUCT_NAME = OceanSceneDescriptionSDLOBJD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		C041EDE31DABF56C00BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../res/ocean/scenedescription/sdl/obj/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanRendering",
+					"-lOceanSceneDescription",
+					"-lOceanSystem",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanSceneDescriptionSDLOBJ;
+				PRODUCT_NAME = OceanSceneDescriptionSDLOBJ;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/scenedescription/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D12BC971BF264E300A56828 /* Build configuration list for PBXProject "scenedescriptionsdlobj" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BCA51BF264E300A56828 /* Debug */,
+				5D12BCA61BF264E300A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BCA71BF264E300A56828 /* Build configuration list for PBXNativeTarget "scenedescriptionsdlobj x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BCA81BF264E300A56828 /* Debug */,
+				5D12BCA91BF264E300A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BDAF1BF267A400A56828 /* Build configuration list for PBXNativeTarget "scenedescriptionsdlobj x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BDB01BF267A400A56828 /* Debug */,
+				5D12BDB11BF267A400A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DF0B9A71D8FF64400BE5D21 /* Build configuration list for PBXNativeTarget "scenedescriptionsdlobj arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DF0B9A81D8FF64400BE5D21 /* Debug */,
+				5DF0B9A91D8FF64400BE5D21 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EDE11DABF56C00BF5D76 /* Build configuration list for PBXNativeTarget "scenedescriptionsdlobj arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EDE21DABF56C00BF5D76 /* Debug */,
+				C041EDE31DABF56C00BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D12BC941BF264E300A56828 /* Project object */;
+}

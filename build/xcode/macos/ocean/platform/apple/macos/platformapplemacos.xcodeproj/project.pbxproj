@@ -1,0 +1,686 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D5425721BE908AC0042480E /* FlippedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D5425711BE908AC0042480E /* FlippedView.h */; };
+		5D5425731BE908AC0042480E /* FlippedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D5425711BE908AC0042480E /* FlippedView.h */; };
+		5DCA5F5D1BE7E653008CC004 /* ImageList.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCA5F5C1BE7E653008CC004 /* ImageList.h */; };
+		5DCA5F5E1BE7E653008CC004 /* ImageList.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCA5F5C1BE7E653008CC004 /* ImageList.h */; };
+		5DCA5F661BE7E7E8008CC004 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCA5F651BE7E7E8008CC004 /* Image.h */; };
+		5DCA5F671BE7E7E8008CC004 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCA5F651BE7E7E8008CC004 /* Image.h */; };
+		5DCD18B11BB54DEB00656104 /* Keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCD18B01BB54DEB00656104 /* Keyboard.cpp */; };
+		5DCD18B51BB54E2700656104 /* Keyboard.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCD18B31BB54E2700656104 /* Keyboard.h */; };
+		5DCD18BA1BB5663000656104 /* Mouse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCD18B91BB5663000656104 /* Mouse.h */; };
+		5DCD18BD1BB56ABF00656104 /* Keyboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCD18B01BB54DEB00656104 /* Keyboard.cpp */; };
+		5DCD18C11BB56ABF00656104 /* Mouse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCD18B91BB5663000656104 /* Mouse.h */; };
+		5DCD18C21BB56ABF00656104 /* Keyboard.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCD18B31BB54E2700656104 /* Keyboard.h */; };
+		5DD0BFC81BD1547700ABBC5B /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0BFC71BD1547700ABBC5B /* Utilities.h */; };
+		5DD0BFC91BD1547700ABBC5B /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0BFC71BD1547700ABBC5B /* Utilities.h */; };
+		5DEB46C61C6CB32F00F618DC /* Screen.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEB46C51C6CB32F00F618DC /* Screen.h */; };
+		5DEB46C71C6CB32F00F618DC /* Screen.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEB46C51C6CB32F00F618DC /* Screen.h */; };
+		930EA5C6206EE68F003DB1EE /* MacOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 930EA5C5206EE68F003DB1EE /* MacOS.h */; };
+		930EA5C7206EE68F003DB1EE /* MacOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 930EA5C5206EE68F003DB1EE /* MacOS.h */; };
+		935733FE2026B951007ECB18 /* ContextMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 935733FD2026B950007ECB18 /* ContextMenu.h */; };
+		935733FF2026B951007ECB18 /* ContextMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 935733FD2026B950007ECB18 /* ContextMenu.h */; };
+		935734012026B999007ECB18 /* ContextMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 935734002026B999007ECB18 /* ContextMenu.mm */; };
+		935734022026B999007ECB18 /* ContextMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 935734002026B999007ECB18 /* ContextMenu.mm */; };
+		937724351FA7D6A50013D716 /* FrameMediumView.h in Headers */ = {isa = PBXBuildFile; fileRef = 937724331FA7D6A50013D716 /* FrameMediumView.h */; };
+		937724361FA7D6A50013D716 /* FrameMediumView.h in Headers */ = {isa = PBXBuildFile; fileRef = 937724331FA7D6A50013D716 /* FrameMediumView.h */; };
+		937724371FA7D6A50013D716 /* FrameView.h in Headers */ = {isa = PBXBuildFile; fileRef = 937724341FA7D6A50013D716 /* FrameView.h */; };
+		937724381FA7D6A50013D716 /* FrameView.h in Headers */ = {isa = PBXBuildFile; fileRef = 937724341FA7D6A50013D716 /* FrameView.h */; };
+		9377243B1FA7D6BF0013D716 /* FrameMediumView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 937724391FA7D6BF0013D716 /* FrameMediumView.mm */; };
+		9377243C1FA7D6BF0013D716 /* FrameMediumView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 937724391FA7D6BF0013D716 /* FrameMediumView.mm */; };
+		9377243D1FA7D6BF0013D716 /* FrameView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9377243A1FA7D6BF0013D716 /* FrameView.mm */; };
+		9377243E1FA7D6BF0013D716 /* FrameView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9377243A1FA7D6BF0013D716 /* FrameView.mm */; };
+		939030BB20252AA500F8B140 /* TreeView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 939030BA20252AA400F8B140 /* TreeView.mm */; };
+		939030BC20252AA500F8B140 /* TreeView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 939030BA20252AA400F8B140 /* TreeView.mm */; };
+		939030BE20252ABC00F8B140 /* TreeView.h in Headers */ = {isa = PBXBuildFile; fileRef = 939030BD20252ABC00F8B140 /* TreeView.h */; };
+		939030BF20252ABC00F8B140 /* TreeView.h in Headers */ = {isa = PBXBuildFile; fileRef = 939030BD20252ABC00F8B140 /* TreeView.h */; };
+		93D2332E1F9566AB00F8BCAD /* Utilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233261F9566AA00F8BCAD /* Utilities.mm */; };
+		93D2332F1F9566AB00F8BCAD /* Utilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233261F9566AA00F8BCAD /* Utilities.mm */; };
+		93D233321F9566AB00F8BCAD /* FlippedView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233281F9566AB00F8BCAD /* FlippedView.mm */; };
+		93D233331F9566AB00F8BCAD /* FlippedView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233281F9566AB00F8BCAD /* FlippedView.mm */; };
+		93D233341F9566AB00F8BCAD /* Mouse.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233291F9566AB00F8BCAD /* Mouse.mm */; };
+		93D233351F9566AB00F8BCAD /* Mouse.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233291F9566AB00F8BCAD /* Mouse.mm */; };
+		93D233361F9566AB00F8BCAD /* Image.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D2332A1F9566AB00F8BCAD /* Image.mm */; };
+		93D233371F9566AB00F8BCAD /* Image.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D2332A1F9566AB00F8BCAD /* Image.mm */; };
+		93D2333A1F9566AB00F8BCAD /* ImageList.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D2332C1F9566AB00F8BCAD /* ImageList.mm */; };
+		93D2333B1F9566AB00F8BCAD /* ImageList.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D2332C1F9566AB00F8BCAD /* ImageList.mm */; };
+		93D2333C1F9566AB00F8BCAD /* Screen.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D2332D1F9566AB00F8BCAD /* Screen.mm */; };
+		93D2333D1F9566AB00F8BCAD /* Screen.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D2332D1F9566AB00F8BCAD /* Screen.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D5425711BE908AC0042480E /* FlippedView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FlippedView.h; path = ../../../../../../../impl/ocean/platform/apple/macos/FlippedView.h; sourceTree = "<group>"; };
+		5DCA5F5C1BE7E653008CC004 /* ImageList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageList.h; path = ../../../../../../../impl/ocean/platform/apple/macos/ImageList.h; sourceTree = "<group>"; };
+		5DCA5F651BE7E7E8008CC004 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = ../../../../../../../impl/ocean/platform/apple/macos/Image.h; sourceTree = "<group>"; };
+		5DCD18A11BB54C3B00656104 /* libOceanPlatformAppleMacOSD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanPlatformAppleMacOSD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DCD18B01BB54DEB00656104 /* Keyboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Keyboard.cpp; path = ../../../../../../../impl/ocean/platform/apple/macos/Keyboard.cpp; sourceTree = "<group>"; };
+		5DCD18B31BB54E2700656104 /* Keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Keyboard.h; path = ../../../../../../../impl/ocean/platform/apple/macos/Keyboard.h; sourceTree = "<group>"; };
+		5DCD18B91BB5663000656104 /* Mouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mouse.h; path = ../../../../../../../impl/ocean/platform/apple/macos/Mouse.h; sourceTree = "<group>"; };
+		5DCD18C71BB56ABF00656104 /* libOceanPlatformAppleMacOSD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanPlatformAppleMacOSD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD0BFC71BD1547700ABBC5B /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../../impl/ocean/platform/apple/macos/Utilities.h; sourceTree = "<group>"; };
+		5DEB46C51C6CB32F00F618DC /* Screen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Screen.h; path = ../../../../../../../impl/ocean/platform/apple/macos/Screen.h; sourceTree = "<group>"; };
+		930EA5C5206EE68F003DB1EE /* MacOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MacOS.h; path = ../../../../../../../impl/ocean/platform/apple/macos/MacOS.h; sourceTree = "<group>"; };
+		935733FD2026B950007ECB18 /* ContextMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContextMenu.h; path = ../../../../../../../impl/ocean/platform/apple/macos/ContextMenu.h; sourceTree = "<group>"; };
+		935734002026B999007ECB18 /* ContextMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ContextMenu.mm; path = ../../../../../../../impl/ocean/platform/apple/macos/ContextMenu.mm; sourceTree = "<group>"; };
+		937724331FA7D6A50013D716 /* FrameMediumView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameMediumView.h; path = ../../../../../../../impl/ocean/platform/apple/macos/FrameMediumView.h; sourceTree = "<group>"; };
+		937724341FA7D6A50013D716 /* FrameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameView.h; path = ../../../../../../../impl/ocean/platform/apple/macos/FrameView.h; sourceTree = "<group>"; };
+		937724391FA7D6BF0013D716 /* FrameMediumView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FrameMediumView.mm; path = ../../../../../../../impl/ocean/platform/apple/macos/FrameMediumView.mm; sourceTree = "<group>"; };
+		9377243A1FA7D6BF0013D716 /* FrameView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FrameView.mm; path = ../../../../../../../impl/ocean/platform/apple/macos/FrameView.mm; sourceTree = "<group>"; };
+		939030BA20252AA400F8B140 /* TreeView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TreeView.mm; path = ../../../../../../../impl/ocean/platform/apple/macos/TreeView.mm; sourceTree = "<group>"; };
+		939030BD20252ABC00F8B140 /* TreeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TreeView.h; path = ../../../../../../../impl/ocean/platform/apple/macos/TreeView.h; sourceTree = "<group>"; };
+		93D233261F9566AA00F8BCAD /* Utilities.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Utilities.mm; path = ../../../../../../../impl/ocean/platform/apple/macos/Utilities.mm; sourceTree = "<group>"; };
+		93D233281F9566AB00F8BCAD /* FlippedView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = FlippedView.mm; path = ../../../../../../../impl/ocean/platform/apple/macos/FlippedView.mm; sourceTree = "<group>"; };
+		93D233291F9566AB00F8BCAD /* Mouse.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Mouse.mm; path = ../../../../../../../impl/ocean/platform/apple/macos/Mouse.mm; sourceTree = "<group>"; };
+		93D2332A1F9566AB00F8BCAD /* Image.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Image.mm; path = ../../../../../../../impl/ocean/platform/apple/macos/Image.mm; sourceTree = "<group>"; };
+		93D2332C1F9566AB00F8BCAD /* ImageList.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = ImageList.mm; path = ../../../../../../../impl/ocean/platform/apple/macos/ImageList.mm; sourceTree = "<group>"; };
+		93D2332D1F9566AB00F8BCAD /* Screen.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Screen.mm; path = ../../../../../../../impl/ocean/platform/apple/macos/Screen.mm; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DCD189E1BB54C3B00656104 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCD18BF1BB56ABF00656104 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DCD18981BB54C3B00656104 = {
+			isa = PBXGroup;
+			children = (
+				5DCD18B21BB54E1100656104 /* Header Files */,
+				5DCD18AF1BB54D7F00656104 /* Source Files */,
+				5DCD18A21BB54C3B00656104 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DCD18A21BB54C3B00656104 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DCD18A11BB54C3B00656104 /* libOceanPlatformAppleMacOSD.a */,
+				5DCD18C71BB56ABF00656104 /* libOceanPlatformAppleMacOSD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DCD18AF1BB54D7F00656104 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				935734002026B999007ECB18 /* ContextMenu.mm */,
+				93D233281F9566AB00F8BCAD /* FlippedView.mm */,
+				937724391FA7D6BF0013D716 /* FrameMediumView.mm */,
+				9377243A1FA7D6BF0013D716 /* FrameView.mm */,
+				93D2332A1F9566AB00F8BCAD /* Image.mm */,
+				93D2332C1F9566AB00F8BCAD /* ImageList.mm */,
+				5DCD18B01BB54DEB00656104 /* Keyboard.cpp */,
+				93D233291F9566AB00F8BCAD /* Mouse.mm */,
+				93D2332D1F9566AB00F8BCAD /* Screen.mm */,
+				939030BA20252AA400F8B140 /* TreeView.mm */,
+				93D233261F9566AA00F8BCAD /* Utilities.mm */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DCD18B21BB54E1100656104 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				935733FD2026B950007ECB18 /* ContextMenu.h */,
+				5D5425711BE908AC0042480E /* FlippedView.h */,
+				937724331FA7D6A50013D716 /* FrameMediumView.h */,
+				937724341FA7D6A50013D716 /* FrameView.h */,
+				5DCA5F651BE7E7E8008CC004 /* Image.h */,
+				5DCA5F5C1BE7E653008CC004 /* ImageList.h */,
+				5DCD18B31BB54E2700656104 /* Keyboard.h */,
+				5DCD18B91BB5663000656104 /* Mouse.h */,
+				930EA5C5206EE68F003DB1EE /* MacOS.h */,
+				5DEB46C51C6CB32F00F618DC /* Screen.h */,
+				939030BD20252ABC00F8B140 /* TreeView.h */,
+				5DD0BFC71BD1547700ABBC5B /* Utilities.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5DCD189F1BB54C3B00656104 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DCA5F661BE7E7E8008CC004 /* Image.h in Headers */,
+				937724351FA7D6A50013D716 /* FrameMediumView.h in Headers */,
+				5D5425721BE908AC0042480E /* FlippedView.h in Headers */,
+				937724371FA7D6A50013D716 /* FrameView.h in Headers */,
+				5DEB46C61C6CB32F00F618DC /* Screen.h in Headers */,
+				5DCD18BA1BB5663000656104 /* Mouse.h in Headers */,
+				5DCD18B51BB54E2700656104 /* Keyboard.h in Headers */,
+				939030BE20252ABC00F8B140 /* TreeView.h in Headers */,
+				5DD0BFC81BD1547700ABBC5B /* Utilities.h in Headers */,
+				5DCA5F5D1BE7E653008CC004 /* ImageList.h in Headers */,
+				935733FE2026B951007ECB18 /* ContextMenu.h in Headers */,
+				930EA5C6206EE68F003DB1EE /* MacOS.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCD18C01BB56ABF00656104 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DCA5F671BE7E7E8008CC004 /* Image.h in Headers */,
+				937724361FA7D6A50013D716 /* FrameMediumView.h in Headers */,
+				5D5425731BE908AC0042480E /* FlippedView.h in Headers */,
+				937724381FA7D6A50013D716 /* FrameView.h in Headers */,
+				5DEB46C71C6CB32F00F618DC /* Screen.h in Headers */,
+				5DCD18C11BB56ABF00656104 /* Mouse.h in Headers */,
+				5DCD18C21BB56ABF00656104 /* Keyboard.h in Headers */,
+				939030BF20252ABC00F8B140 /* TreeView.h in Headers */,
+				5DD0BFC91BD1547700ABBC5B /* Utilities.h in Headers */,
+				5DCA5F5E1BE7E653008CC004 /* ImageList.h in Headers */,
+				935733FF2026B951007ECB18 /* ContextMenu.h in Headers */,
+				930EA5C7206EE68F003DB1EE /* MacOS.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5DCD18A01BB54C3B00656104 /* platformapplemacos x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DCD18AC1BB54C3B00656104 /* Build configuration list for PBXNativeTarget "platformapplemacos x64 (Static)" */;
+			buildPhases = (
+				5DCD189D1BB54C3B00656104 /* Sources */,
+				5DCD189E1BB54C3B00656104 /* Frameworks */,
+				5DCD189F1BB54C3B00656104 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "platformapplemacos x64 (Static)";
+			productName = platformapplemacos;
+			productReference = 5DCD18A11BB54C3B00656104 /* libOceanPlatformAppleMacOSD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DCD18BB1BB56ABF00656104 /* platformapplemacos x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DCD18C41BB56ABF00656104 /* Build configuration list for PBXNativeTarget "platformapplemacos x64 (Shared)" */;
+			buildPhases = (
+				5DCD18BC1BB56ABF00656104 /* Sources */,
+				5DCD18BF1BB56ABF00656104 /* Frameworks */,
+				5DCD18C01BB56ABF00656104 /* Headers */,
+				C041ECA71DABF06B00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "platformapplemacos x64 (Shared)";
+			productName = platformapplemacos;
+			productReference = 5DCD18C71BB56ABF00656104 /* libOceanPlatformAppleMacOSD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DCD18991BB54C3B00656104 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DCD18A01BB54C3B00656104 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DCD189C1BB54C3B00656104 /* Build configuration list for PBXProject "platformapplemacos" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DCD18981BB54C3B00656104;
+			productRefGroup = 5DCD18A21BB54C3B00656104 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DCD18A01BB54C3B00656104 /* platformapplemacos x64 (Static) */,
+				5DCD18BB1BB56ABF00656104 /* platformapplemacos x64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C041ECA71DABF06B00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DCD189D1BB54C3B00656104 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93D2332E1F9566AB00F8BCAD /* Utilities.mm in Sources */,
+				93D233321F9566AB00F8BCAD /* FlippedView.mm in Sources */,
+				93D233341F9566AB00F8BCAD /* Mouse.mm in Sources */,
+				93D2333A1F9566AB00F8BCAD /* ImageList.mm in Sources */,
+				9377243D1FA7D6BF0013D716 /* FrameView.mm in Sources */,
+				93D233361F9566AB00F8BCAD /* Image.mm in Sources */,
+				939030BB20252AA500F8B140 /* TreeView.mm in Sources */,
+				9377243B1FA7D6BF0013D716 /* FrameMediumView.mm in Sources */,
+				5DCD18B11BB54DEB00656104 /* Keyboard.cpp in Sources */,
+				93D2333C1F9566AB00F8BCAD /* Screen.mm in Sources */,
+				935734012026B999007ECB18 /* ContextMenu.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCD18BC1BB56ABF00656104 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93D2332F1F9566AB00F8BCAD /* Utilities.mm in Sources */,
+				93D233331F9566AB00F8BCAD /* FlippedView.mm in Sources */,
+				93D233351F9566AB00F8BCAD /* Mouse.mm in Sources */,
+				93D2333B1F9566AB00F8BCAD /* ImageList.mm in Sources */,
+				9377243E1FA7D6BF0013D716 /* FrameView.mm in Sources */,
+				93D233371F9566AB00F8BCAD /* Image.mm in Sources */,
+				939030BC20252AA500F8B140 /* TreeView.mm in Sources */,
+				9377243C1FA7D6BF0013D716 /* FrameMediumView.mm in Sources */,
+				5DCD18BD1BB56ABF00656104 /* Keyboard.cpp in Sources */,
+				93D2333D1F9566AB00F8BCAD /* Screen.mm in Sources */,
+				935734022026B999007ECB18 /* ContextMenu.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DCD18AA1BB54C3B00656104 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DCD18AB1BB54C3B00656104 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DCD18AD1BB54C3B00656104 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/platformapplemacos/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/platformapplemacos/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanPlatformAppleMacOSD;
+				PRODUCT_NAME = OceanPlatformAppleMacOSD;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DCD18AE1BB54C3B00656104 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/platformapplemacos/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/platformapplemacos/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanPlatformAppleMacOS;
+				PRODUCT_NAME = OceanPlatformAppleMacOS;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DCD18C51BB56ABF00656104 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/platformapplemacos/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/platformapplemacos/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanMediaD",
+					"-lOceanPlatformAppleD",
+					"-framework",
+					AppKit,
+					"-framework",
+					Carbon,
+				);
+				PRODUCT_MODULE_NAME = OceanPlatformAppleMacOSD;
+				PRODUCT_NAME = OceanPlatformAppleMacOSD;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DCD18C61BB56ABF00656104 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/platformapplemacos/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/platformapplemacos/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanMedia",
+					"-lOceanPlatformApple",
+					"-framework",
+					AppKit,
+					"-framework",
+					Carbon,
+				);
+				PRODUCT_MODULE_NAME = OceanPlatformAppleMacOS;
+				PRODUCT_NAME = OceanPlatformAppleMacOS;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DCD189C1BB54C3B00656104 /* Build configuration list for PBXProject "platformapplemacos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCD18AA1BB54C3B00656104 /* Debug */,
+				5DCD18AB1BB54C3B00656104 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DCD18AC1BB54C3B00656104 /* Build configuration list for PBXNativeTarget "platformapplemacos x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCD18AD1BB54C3B00656104 /* Debug */,
+				5DCD18AE1BB54C3B00656104 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DCD18C41BB56ABF00656104 /* Build configuration list for PBXNativeTarget "platformapplemacos x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCD18C51BB56ABF00656104 /* Debug */,
+				5DCD18C61BB56ABF00656104 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DCD18991BB54C3B00656104 /* Project object */;
+}

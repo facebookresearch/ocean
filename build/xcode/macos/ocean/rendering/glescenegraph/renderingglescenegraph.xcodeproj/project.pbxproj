@@ -1,0 +1,2219 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D3FC5681D8BF5B800AF4130 /* GLESAbsoluteTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5361D8BF5B800AF4130 /* GLESAbsoluteTransform.h */; };
+		5D3FC5691D8BF5B800AF4130 /* GLESAbsoluteTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5361D8BF5B800AF4130 /* GLESAbsoluteTransform.h */; };
+		5D3FC56A1D8BF5B800AF4130 /* GLESAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5371D8BF5B800AF4130 /* GLESAttribute.h */; };
+		5D3FC56B1D8BF5B800AF4130 /* GLESAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5371D8BF5B800AF4130 /* GLESAttribute.h */; };
+		5D3FC56C1D8BF5B800AF4130 /* GLESAttributeSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5381D8BF5B800AF4130 /* GLESAttributeSet.h */; };
+		5D3FC56D1D8BF5B800AF4130 /* GLESAttributeSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5381D8BF5B800AF4130 /* GLESAttributeSet.h */; };
+		5D3FC56E1D8BF5B800AF4130 /* GLESBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5391D8BF5B800AF4130 /* GLESBackground.h */; };
+		5D3FC56F1D8BF5B800AF4130 /* GLESBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5391D8BF5B800AF4130 /* GLESBackground.h */; };
+		5D3FC5701D8BF5B800AF4130 /* GLESBlendAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53A1D8BF5B800AF4130 /* GLESBlendAttribute.h */; };
+		5D3FC5711D8BF5B800AF4130 /* GLESBlendAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53A1D8BF5B800AF4130 /* GLESBlendAttribute.h */; };
+		5D3FC5721D8BF5B800AF4130 /* GLESBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53B1D8BF5B800AF4130 /* GLESBox.h */; };
+		5D3FC5731D8BF5B800AF4130 /* GLESBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53B1D8BF5B800AF4130 /* GLESBox.h */; };
+		5D3FC5741D8BF5B800AF4130 /* GLESceneGraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53C1D8BF5B800AF4130 /* GLESceneGraph.h */; };
+		5D3FC5751D8BF5B800AF4130 /* GLESceneGraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53C1D8BF5B800AF4130 /* GLESceneGraph.h */; };
+		5D3FC5761D8BF5B800AF4130 /* GLESCone.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53D1D8BF5B800AF4130 /* GLESCone.h */; };
+		5D3FC5771D8BF5B800AF4130 /* GLESCone.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53D1D8BF5B800AF4130 /* GLESCone.h */; };
+		5D3FC5781D8BF5B800AF4130 /* GLESCylinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53E1D8BF5B800AF4130 /* GLESCylinder.h */; };
+		5D3FC5791D8BF5B800AF4130 /* GLESCylinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53E1D8BF5B800AF4130 /* GLESCylinder.h */; };
+		5D3FC57A1D8BF5B800AF4130 /* GLESDepthAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53F1D8BF5B800AF4130 /* GLESDepthAttribute.h */; };
+		5D3FC57B1D8BF5B800AF4130 /* GLESDepthAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53F1D8BF5B800AF4130 /* GLESDepthAttribute.h */; };
+		5D3FC57C1D8BF5B800AF4130 /* GLESDirectionalLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5401D8BF5B800AF4130 /* GLESDirectionalLight.h */; };
+		5D3FC57D1D8BF5B800AF4130 /* GLESDirectionalLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5401D8BF5B800AF4130 /* GLESDirectionalLight.h */; };
+		5D3FC57E1D8BF5B800AF4130 /* GLESDynamicLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5411D8BF5B800AF4130 /* GLESDynamicLibrary.h */; };
+		5D3FC57F1D8BF5B800AF4130 /* GLESDynamicLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5411D8BF5B800AF4130 /* GLESDynamicLibrary.h */; };
+		5D3FC5821D8BF5B800AF4130 /* GLESFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5431D8BF5B800AF4130 /* GLESFactory.h */; };
+		5D3FC5831D8BF5B800AF4130 /* GLESFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5431D8BF5B800AF4130 /* GLESFactory.h */; };
+		5D3FC5861D8BF5B800AF4130 /* GLESFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5451D8BF5B800AF4130 /* GLESFramebuffer.h */; };
+		5D3FC5871D8BF5B800AF4130 /* GLESFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5451D8BF5B800AF4130 /* GLESFramebuffer.h */; };
+		5D3FC5881D8BF5B800AF4130 /* GLESGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5461D8BF5B800AF4130 /* GLESGeometry.h */; };
+		5D3FC5891D8BF5B800AF4130 /* GLESGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5461D8BF5B800AF4130 /* GLESGeometry.h */; };
+		5D3FC58A1D8BF5B800AF4130 /* GLESGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5471D8BF5B800AF4130 /* GLESGroup.h */; };
+		5D3FC58B1D8BF5B800AF4130 /* GLESGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5471D8BF5B800AF4130 /* GLESGroup.h */; };
+		5D3FC58C1D8BF5B800AF4130 /* GLESIndependentPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5481D8BF5B800AF4130 /* GLESIndependentPrimitive.h */; };
+		5D3FC58D1D8BF5B800AF4130 /* GLESIndependentPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5481D8BF5B800AF4130 /* GLESIndependentPrimitive.h */; };
+		5D3FC58E1D8BF5B800AF4130 /* GLESLightSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5491D8BF5B800AF4130 /* GLESLightSource.h */; };
+		5D3FC58F1D8BF5B800AF4130 /* GLESLightSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5491D8BF5B800AF4130 /* GLESLightSource.h */; };
+		5D3FC5901D8BF5B800AF4130 /* GLESMaterial.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54A1D8BF5B800AF4130 /* GLESMaterial.h */; };
+		5D3FC5911D8BF5B800AF4130 /* GLESMaterial.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54A1D8BF5B800AF4130 /* GLESMaterial.h */; };
+		5D3FC5921D8BF5B800AF4130 /* GLESNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54B1D8BF5B800AF4130 /* GLESNode.h */; };
+		5D3FC5931D8BF5B800AF4130 /* GLESNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54B1D8BF5B800AF4130 /* GLESNode.h */; };
+		5D3FC5941D8BF5B800AF4130 /* GLESObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */; };
+		5D3FC5951D8BF5B800AF4130 /* GLESObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */; };
+		5D3FC5961D8BF5B800AF4130 /* GLESPerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */; };
+		5D3FC5971D8BF5B800AF4130 /* GLESPerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */; };
+		5D3FC5981D8BF5B800AF4130 /* GLESPointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54E1D8BF5B800AF4130 /* GLESPointLight.h */; };
+		5D3FC5991D8BF5B800AF4130 /* GLESPointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54E1D8BF5B800AF4130 /* GLESPointLight.h */; };
+		5D3FC59A1D8BF5B800AF4130 /* GLESPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54F1D8BF5B800AF4130 /* GLESPrimitive.h */; };
+		5D3FC59B1D8BF5B800AF4130 /* GLESPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54F1D8BF5B800AF4130 /* GLESPrimitive.h */; };
+		5D3FC59C1D8BF5B800AF4130 /* GLESPrimitiveAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5501D8BF5B800AF4130 /* GLESPrimitiveAttribute.h */; };
+		5D3FC59D1D8BF5B800AF4130 /* GLESPrimitiveAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5501D8BF5B800AF4130 /* GLESPrimitiveAttribute.h */; };
+		5D3FC59E1D8BF5B800AF4130 /* GLESProgramManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5511D8BF5B800AF4130 /* GLESProgramManager.h */; };
+		5D3FC59F1D8BF5B800AF4130 /* GLESProgramManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5511D8BF5B800AF4130 /* GLESProgramManager.h */; };
+		5D3FC5A01D8BF5B800AF4130 /* GLESRenderable.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5521D8BF5B800AF4130 /* GLESRenderable.h */; };
+		5D3FC5A11D8BF5B800AF4130 /* GLESRenderable.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5521D8BF5B800AF4130 /* GLESRenderable.h */; };
+		5D3FC5A21D8BF5B800AF4130 /* GLESScene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5531D8BF5B800AF4130 /* GLESScene.h */; };
+		5D3FC5A31D8BF5B800AF4130 /* GLESScene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5531D8BF5B800AF4130 /* GLESScene.h */; };
+		5D3FC5A41D8BF5B800AF4130 /* GLESShader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5541D8BF5B800AF4130 /* GLESShader.h */; };
+		5D3FC5A51D8BF5B800AF4130 /* GLESShader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5541D8BF5B800AF4130 /* GLESShader.h */; };
+		5D3FC5A61D8BF5B800AF4130 /* GLESShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5551D8BF5B800AF4130 /* GLESShaderProgram.h */; };
+		5D3FC5A71D8BF5B800AF4130 /* GLESShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5551D8BF5B800AF4130 /* GLESShaderProgram.h */; };
+		5D3FC5A81D8BF5B800AF4130 /* GLESShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5561D8BF5B800AF4130 /* GLESShape.h */; };
+		5D3FC5A91D8BF5B800AF4130 /* GLESShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5561D8BF5B800AF4130 /* GLESShape.h */; };
+		5D3FC5AA1D8BF5B800AF4130 /* GLESSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5571D8BF5B800AF4130 /* GLESSphere.h */; };
+		5D3FC5AB1D8BF5B800AF4130 /* GLESSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5571D8BF5B800AF4130 /* GLESSphere.h */; };
+		5D3FC5AC1D8BF5B800AF4130 /* GLESSpotLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5581D8BF5B800AF4130 /* GLESSpotLight.h */; };
+		5D3FC5AD1D8BF5B800AF4130 /* GLESSpotLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5581D8BF5B800AF4130 /* GLESSpotLight.h */; };
+		5D3FC5AE1D8BF5B800AF4130 /* GLESStripPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5591D8BF5B800AF4130 /* GLESStripPrimitive.h */; };
+		5D3FC5AF1D8BF5B800AF4130 /* GLESStripPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5591D8BF5B800AF4130 /* GLESStripPrimitive.h */; };
+		5D3FC5B01D8BF5B800AF4130 /* GLESSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55A1D8BF5B800AF4130 /* GLESSwitch.h */; };
+		5D3FC5B11D8BF5B800AF4130 /* GLESSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55A1D8BF5B800AF4130 /* GLESSwitch.h */; };
+		5D3FC5B21D8BF5B800AF4130 /* GLESTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55B1D8BF5B800AF4130 /* GLESTexture.h */; };
+		5D3FC5B31D8BF5B800AF4130 /* GLESTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55B1D8BF5B800AF4130 /* GLESTexture.h */; };
+		5D3FC5B41D8BF5B800AF4130 /* GLESTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55C1D8BF5B800AF4130 /* GLESTexture2D.h */; };
+		5D3FC5B51D8BF5B800AF4130 /* GLESTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55C1D8BF5B800AF4130 /* GLESTexture2D.h */; };
+		5D3FC5B61D8BF5B800AF4130 /* GLESTextures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55D1D8BF5B800AF4130 /* GLESTextures.h */; };
+		5D3FC5B71D8BF5B800AF4130 /* GLESTextures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55D1D8BF5B800AF4130 /* GLESTextures.h */; };
+		5D3FC5B81D8BF5B800AF4130 /* GLESTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55E1D8BF5B800AF4130 /* GLESTransform.h */; };
+		5D3FC5B91D8BF5B800AF4130 /* GLESTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55E1D8BF5B800AF4130 /* GLESTransform.h */; };
+		5D3FC5BA1D8BF5B800AF4130 /* GLESTriangleFans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55F1D8BF5B800AF4130 /* GLESTriangleFans.h */; };
+		5D3FC5BB1D8BF5B800AF4130 /* GLESTriangleFans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55F1D8BF5B800AF4130 /* GLESTriangleFans.h */; };
+		5D3FC5BC1D8BF5B800AF4130 /* GLESTriangles.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5601D8BF5B800AF4130 /* GLESTriangles.h */; };
+		5D3FC5BD1D8BF5B800AF4130 /* GLESTriangles.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5601D8BF5B800AF4130 /* GLESTriangles.h */; };
+		5D3FC5BE1D8BF5B800AF4130 /* GLESTriangleStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5611D8BF5B800AF4130 /* GLESTriangleStrips.h */; };
+		5D3FC5BF1D8BF5B800AF4130 /* GLESTriangleStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5611D8BF5B800AF4130 /* GLESTriangleStrips.h */; };
+		5D3FC5C01D8BF5B800AF4130 /* GLESUndistortedBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5621D8BF5B800AF4130 /* GLESUndistortedBackground.h */; };
+		5D3FC5C11D8BF5B800AF4130 /* GLESUndistortedBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5621D8BF5B800AF4130 /* GLESUndistortedBackground.h */; };
+		5D3FC5C21D8BF5B800AF4130 /* GLESVertexSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5631D8BF5B800AF4130 /* GLESVertexSet.h */; };
+		5D3FC5C31D8BF5B800AF4130 /* GLESVertexSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5631D8BF5B800AF4130 /* GLESVertexSet.h */; };
+		5D3FC5C61D8BF5B800AF4130 /* GLESView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5651D8BF5B800AF4130 /* GLESView.h */; };
+		5D3FC5C71D8BF5B800AF4130 /* GLESView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5651D8BF5B800AF4130 /* GLESView.h */; };
+		5D3FC5FE1D8BF5C900AF4130 /* GLESAbsoluteTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CC1D8BF5C800AF4130 /* GLESAbsoluteTransform.cpp */; };
+		5D3FC5FF1D8BF5C900AF4130 /* GLESAbsoluteTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CC1D8BF5C800AF4130 /* GLESAbsoluteTransform.cpp */; };
+		5D3FC6001D8BF5C900AF4130 /* GLESAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CD1D8BF5C800AF4130 /* GLESAttribute.cpp */; };
+		5D3FC6011D8BF5C900AF4130 /* GLESAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CD1D8BF5C800AF4130 /* GLESAttribute.cpp */; };
+		5D3FC6021D8BF5C900AF4130 /* GLESAttributeSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CE1D8BF5C800AF4130 /* GLESAttributeSet.cpp */; };
+		5D3FC6031D8BF5C900AF4130 /* GLESAttributeSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CE1D8BF5C800AF4130 /* GLESAttributeSet.cpp */; };
+		5D3FC6041D8BF5C900AF4130 /* GLESBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CF1D8BF5C800AF4130 /* GLESBackground.cpp */; };
+		5D3FC6051D8BF5C900AF4130 /* GLESBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CF1D8BF5C800AF4130 /* GLESBackground.cpp */; };
+		5D3FC6061D8BF5C900AF4130 /* GLESBlendAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D01D8BF5C800AF4130 /* GLESBlendAttribute.cpp */; };
+		5D3FC6071D8BF5C900AF4130 /* GLESBlendAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D01D8BF5C800AF4130 /* GLESBlendAttribute.cpp */; };
+		5D3FC6081D8BF5C900AF4130 /* GLESBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D11D8BF5C800AF4130 /* GLESBox.cpp */; };
+		5D3FC6091D8BF5C900AF4130 /* GLESBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D11D8BF5C800AF4130 /* GLESBox.cpp */; };
+		5D3FC60A1D8BF5C900AF4130 /* GLESceneGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D21D8BF5C800AF4130 /* GLESceneGraph.cpp */; };
+		5D3FC60B1D8BF5C900AF4130 /* GLESceneGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D21D8BF5C800AF4130 /* GLESceneGraph.cpp */; };
+		5D3FC60C1D8BF5C900AF4130 /* GLESCone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D31D8BF5C800AF4130 /* GLESCone.cpp */; };
+		5D3FC60D1D8BF5C900AF4130 /* GLESCone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D31D8BF5C800AF4130 /* GLESCone.cpp */; };
+		5D3FC60E1D8BF5C900AF4130 /* GLESCylinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D41D8BF5C800AF4130 /* GLESCylinder.cpp */; };
+		5D3FC60F1D8BF5C900AF4130 /* GLESCylinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D41D8BF5C800AF4130 /* GLESCylinder.cpp */; };
+		5D3FC6101D8BF5C900AF4130 /* GLESDepthAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D51D8BF5C800AF4130 /* GLESDepthAttribute.cpp */; };
+		5D3FC6111D8BF5C900AF4130 /* GLESDepthAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D51D8BF5C800AF4130 /* GLESDepthAttribute.cpp */; };
+		5D3FC6121D8BF5C900AF4130 /* GLESDirectionalLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D61D8BF5C900AF4130 /* GLESDirectionalLight.cpp */; };
+		5D3FC6131D8BF5C900AF4130 /* GLESDirectionalLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D61D8BF5C900AF4130 /* GLESDirectionalLight.cpp */; };
+		5D3FC6141D8BF5C900AF4130 /* GLESDynamicLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D71D8BF5C900AF4130 /* GLESDynamicLibrary.cpp */; };
+		5D3FC6151D8BF5C900AF4130 /* GLESDynamicLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D71D8BF5C900AF4130 /* GLESDynamicLibrary.cpp */; };
+		5D3FC6181D8BF5C900AF4130 /* GLESFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D91D8BF5C900AF4130 /* GLESFactory.cpp */; };
+		5D3FC6191D8BF5C900AF4130 /* GLESFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D91D8BF5C900AF4130 /* GLESFactory.cpp */; };
+		5D3FC61C1D8BF5C900AF4130 /* GLESFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DB1D8BF5C900AF4130 /* GLESFramebuffer.cpp */; };
+		5D3FC61D1D8BF5C900AF4130 /* GLESFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DB1D8BF5C900AF4130 /* GLESFramebuffer.cpp */; };
+		5D3FC61E1D8BF5C900AF4130 /* GLESGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DC1D8BF5C900AF4130 /* GLESGeometry.cpp */; };
+		5D3FC61F1D8BF5C900AF4130 /* GLESGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DC1D8BF5C900AF4130 /* GLESGeometry.cpp */; };
+		5D3FC6201D8BF5C900AF4130 /* GLESGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DD1D8BF5C900AF4130 /* GLESGroup.cpp */; };
+		5D3FC6211D8BF5C900AF4130 /* GLESGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DD1D8BF5C900AF4130 /* GLESGroup.cpp */; };
+		5D3FC6221D8BF5C900AF4130 /* GLESIndependentPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DE1D8BF5C900AF4130 /* GLESIndependentPrimitive.cpp */; };
+		5D3FC6231D8BF5C900AF4130 /* GLESIndependentPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DE1D8BF5C900AF4130 /* GLESIndependentPrimitive.cpp */; };
+		5D3FC6241D8BF5C900AF4130 /* GLESLightSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DF1D8BF5C900AF4130 /* GLESLightSource.cpp */; };
+		5D3FC6251D8BF5C900AF4130 /* GLESLightSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DF1D8BF5C900AF4130 /* GLESLightSource.cpp */; };
+		5D3FC6261D8BF5C900AF4130 /* GLESMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E01D8BF5C900AF4130 /* GLESMaterial.cpp */; };
+		5D3FC6271D8BF5C900AF4130 /* GLESMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E01D8BF5C900AF4130 /* GLESMaterial.cpp */; };
+		5D3FC6281D8BF5C900AF4130 /* GLESNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E11D8BF5C900AF4130 /* GLESNode.cpp */; };
+		5D3FC6291D8BF5C900AF4130 /* GLESNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E11D8BF5C900AF4130 /* GLESNode.cpp */; };
+		5D3FC62A1D8BF5C900AF4130 /* GLESObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E21D8BF5C900AF4130 /* GLESObject.cpp */; };
+		5D3FC62B1D8BF5C900AF4130 /* GLESObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E21D8BF5C900AF4130 /* GLESObject.cpp */; };
+		5D3FC62C1D8BF5C900AF4130 /* GLESPerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */; };
+		5D3FC62D1D8BF5C900AF4130 /* GLESPerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */; };
+		5D3FC62E1D8BF5C900AF4130 /* GLESPointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E41D8BF5C900AF4130 /* GLESPointLight.cpp */; };
+		5D3FC62F1D8BF5C900AF4130 /* GLESPointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E41D8BF5C900AF4130 /* GLESPointLight.cpp */; };
+		5D3FC6301D8BF5C900AF4130 /* GLESPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E51D8BF5C900AF4130 /* GLESPrimitive.cpp */; };
+		5D3FC6311D8BF5C900AF4130 /* GLESPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E51D8BF5C900AF4130 /* GLESPrimitive.cpp */; };
+		5D3FC6321D8BF5C900AF4130 /* GLESPrimitiveAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E61D8BF5C900AF4130 /* GLESPrimitiveAttribute.cpp */; };
+		5D3FC6331D8BF5C900AF4130 /* GLESPrimitiveAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E61D8BF5C900AF4130 /* GLESPrimitiveAttribute.cpp */; };
+		5D3FC6341D8BF5C900AF4130 /* GLESProgramManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E71D8BF5C900AF4130 /* GLESProgramManager.cpp */; };
+		5D3FC6351D8BF5C900AF4130 /* GLESProgramManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E71D8BF5C900AF4130 /* GLESProgramManager.cpp */; };
+		5D3FC6361D8BF5C900AF4130 /* GLESRenderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E81D8BF5C900AF4130 /* GLESRenderable.cpp */; };
+		5D3FC6371D8BF5C900AF4130 /* GLESRenderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E81D8BF5C900AF4130 /* GLESRenderable.cpp */; };
+		5D3FC6381D8BF5C900AF4130 /* GLESScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E91D8BF5C900AF4130 /* GLESScene.cpp */; };
+		5D3FC6391D8BF5C900AF4130 /* GLESScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E91D8BF5C900AF4130 /* GLESScene.cpp */; };
+		5D3FC63A1D8BF5C900AF4130 /* GLESShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EA1D8BF5C900AF4130 /* GLESShader.cpp */; };
+		5D3FC63B1D8BF5C900AF4130 /* GLESShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EA1D8BF5C900AF4130 /* GLESShader.cpp */; };
+		5D3FC63C1D8BF5C900AF4130 /* GLESShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EB1D8BF5C900AF4130 /* GLESShaderProgram.cpp */; };
+		5D3FC63D1D8BF5C900AF4130 /* GLESShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EB1D8BF5C900AF4130 /* GLESShaderProgram.cpp */; };
+		5D3FC63E1D8BF5C900AF4130 /* GLESShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EC1D8BF5C900AF4130 /* GLESShape.cpp */; };
+		5D3FC63F1D8BF5C900AF4130 /* GLESShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EC1D8BF5C900AF4130 /* GLESShape.cpp */; };
+		5D3FC6401D8BF5C900AF4130 /* GLESSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5ED1D8BF5C900AF4130 /* GLESSphere.cpp */; };
+		5D3FC6411D8BF5C900AF4130 /* GLESSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5ED1D8BF5C900AF4130 /* GLESSphere.cpp */; };
+		5D3FC6421D8BF5C900AF4130 /* GLESSpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EE1D8BF5C900AF4130 /* GLESSpotLight.cpp */; };
+		5D3FC6431D8BF5C900AF4130 /* GLESSpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EE1D8BF5C900AF4130 /* GLESSpotLight.cpp */; };
+		5D3FC6441D8BF5C900AF4130 /* GLESStripPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EF1D8BF5C900AF4130 /* GLESStripPrimitive.cpp */; };
+		5D3FC6451D8BF5C900AF4130 /* GLESStripPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EF1D8BF5C900AF4130 /* GLESStripPrimitive.cpp */; };
+		5D3FC6461D8BF5C900AF4130 /* GLESSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F01D8BF5C900AF4130 /* GLESSwitch.cpp */; };
+		5D3FC6471D8BF5C900AF4130 /* GLESSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F01D8BF5C900AF4130 /* GLESSwitch.cpp */; };
+		5D3FC6481D8BF5C900AF4130 /* GLESTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F11D8BF5C900AF4130 /* GLESTexture.cpp */; };
+		5D3FC6491D8BF5C900AF4130 /* GLESTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F11D8BF5C900AF4130 /* GLESTexture.cpp */; };
+		5D3FC64A1D8BF5C900AF4130 /* GLESTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F21D8BF5C900AF4130 /* GLESTexture2D.cpp */; };
+		5D3FC64B1D8BF5C900AF4130 /* GLESTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F21D8BF5C900AF4130 /* GLESTexture2D.cpp */; };
+		5D3FC64C1D8BF5C900AF4130 /* GLESTextures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F31D8BF5C900AF4130 /* GLESTextures.cpp */; };
+		5D3FC64D1D8BF5C900AF4130 /* GLESTextures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F31D8BF5C900AF4130 /* GLESTextures.cpp */; };
+		5D3FC64E1D8BF5C900AF4130 /* GLESTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F41D8BF5C900AF4130 /* GLESTransform.cpp */; };
+		5D3FC64F1D8BF5C900AF4130 /* GLESTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F41D8BF5C900AF4130 /* GLESTransform.cpp */; };
+		5D3FC6501D8BF5C900AF4130 /* GLESTriangleFans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F51D8BF5C900AF4130 /* GLESTriangleFans.cpp */; };
+		5D3FC6511D8BF5C900AF4130 /* GLESTriangleFans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F51D8BF5C900AF4130 /* GLESTriangleFans.cpp */; };
+		5D3FC6521D8BF5C900AF4130 /* GLESTriangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F61D8BF5C900AF4130 /* GLESTriangles.cpp */; };
+		5D3FC6531D8BF5C900AF4130 /* GLESTriangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F61D8BF5C900AF4130 /* GLESTriangles.cpp */; };
+		5D3FC6541D8BF5C900AF4130 /* GLESTriangleStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F71D8BF5C900AF4130 /* GLESTriangleStrips.cpp */; };
+		5D3FC6551D8BF5C900AF4130 /* GLESTriangleStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F71D8BF5C900AF4130 /* GLESTriangleStrips.cpp */; };
+		5D3FC6561D8BF5C900AF4130 /* GLESUndistortedBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F81D8BF5C900AF4130 /* GLESUndistortedBackground.cpp */; };
+		5D3FC6571D8BF5C900AF4130 /* GLESUndistortedBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F81D8BF5C900AF4130 /* GLESUndistortedBackground.cpp */; };
+		5D3FC6581D8BF5C900AF4130 /* GLESVertexSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F91D8BF5C900AF4130 /* GLESVertexSet.cpp */; };
+		5D3FC6591D8BF5C900AF4130 /* GLESVertexSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F91D8BF5C900AF4130 /* GLESVertexSet.cpp */; };
+		5D3FC65C1D8BF5C900AF4130 /* GLESView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5FB1D8BF5C900AF4130 /* GLESView.cpp */; };
+		5D3FC65D1D8BF5C900AF4130 /* GLESView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5FB1D8BF5C900AF4130 /* GLESView.cpp */; };
+		5D3FC6641D8BFA5300AF4130 /* GLESShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EB1D8BF5C900AF4130 /* GLESShaderProgram.cpp */; };
+		5D3FC6651D8BFA5300AF4130 /* GLESPerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */; };
+		5D3FC6661D8BFA5300AF4130 /* GLESTriangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F61D8BF5C900AF4130 /* GLESTriangles.cpp */; };
+		5D3FC6671D8BFA5300AF4130 /* GLESView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5FB1D8BF5C900AF4130 /* GLESView.cpp */; };
+		5D3FC6681D8BFA5300AF4130 /* GLESSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F01D8BF5C900AF4130 /* GLESSwitch.cpp */; };
+		5D3FC6691D8BFA5300AF4130 /* GLESPrimitiveAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E61D8BF5C900AF4130 /* GLESPrimitiveAttribute.cpp */; };
+		5D3FC66A1D8BFA5300AF4130 /* GLESTriangleStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F71D8BF5C900AF4130 /* GLESTriangleStrips.cpp */; };
+		5D3FC66C1D8BFA5300AF4130 /* GLESDynamicLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D71D8BF5C900AF4130 /* GLESDynamicLibrary.cpp */; };
+		5D3FC66D1D8BFA5300AF4130 /* GLESSpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EE1D8BF5C900AF4130 /* GLESSpotLight.cpp */; };
+		5D3FC66E1D8BFA5300AF4130 /* GLESShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EC1D8BF5C900AF4130 /* GLESShape.cpp */; };
+		5D3FC66F1D8BFA5300AF4130 /* GLESUndistortedBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F81D8BF5C900AF4130 /* GLESUndistortedBackground.cpp */; };
+		5D3FC6701D8BFA5300AF4130 /* GLESPointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E41D8BF5C900AF4130 /* GLESPointLight.cpp */; };
+		5D3FC6711D8BFA5300AF4130 /* GLESFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D91D8BF5C900AF4130 /* GLESFactory.cpp */; };
+		5D3FC6721D8BFA5300AF4130 /* GLESGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DC1D8BF5C900AF4130 /* GLESGeometry.cpp */; };
+		5D3FC6731D8BFA5300AF4130 /* GLESTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F21D8BF5C900AF4130 /* GLESTexture2D.cpp */; };
+		5D3FC6741D8BFA5300AF4130 /* GLESTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F11D8BF5C900AF4130 /* GLESTexture.cpp */; };
+		5D3FC6761D8BFA5300AF4130 /* GLESAttributeSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CE1D8BF5C800AF4130 /* GLESAttributeSet.cpp */; };
+		5D3FC6771D8BFA5300AF4130 /* GLESLightSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DF1D8BF5C900AF4130 /* GLESLightSource.cpp */; };
+		5D3FC6781D8BFA5300AF4130 /* GLESBlendAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D01D8BF5C800AF4130 /* GLESBlendAttribute.cpp */; };
+		5D3FC6791D8BFA5300AF4130 /* GLESPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E51D8BF5C900AF4130 /* GLESPrimitive.cpp */; };
+		5D3FC67A1D8BFA5300AF4130 /* GLESVertexSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F91D8BF5C900AF4130 /* GLESVertexSet.cpp */; };
+		5D3FC67B1D8BFA5300AF4130 /* GLESFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DB1D8BF5C900AF4130 /* GLESFramebuffer.cpp */; };
+		5D3FC67C1D8BFA5300AF4130 /* GLESceneGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D21D8BF5C800AF4130 /* GLESceneGraph.cpp */; };
+		5D3FC67D1D8BFA5300AF4130 /* GLESAbsoluteTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CC1D8BF5C800AF4130 /* GLESAbsoluteTransform.cpp */; };
+		5D3FC67E1D8BFA5300AF4130 /* GLESBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CF1D8BF5C800AF4130 /* GLESBackground.cpp */; };
+		5D3FC67F1D8BFA5300AF4130 /* GLESStripPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EF1D8BF5C900AF4130 /* GLESStripPrimitive.cpp */; };
+		5D3FC6801D8BFA5300AF4130 /* GLESCone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D31D8BF5C800AF4130 /* GLESCone.cpp */; };
+		5D3FC6811D8BFA5300AF4130 /* GLESBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D11D8BF5C800AF4130 /* GLESBox.cpp */; };
+		5D3FC6821D8BFA5300AF4130 /* GLESDepthAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D51D8BF5C800AF4130 /* GLESDepthAttribute.cpp */; };
+		5D3FC6831D8BFA5300AF4130 /* GLESMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E01D8BF5C900AF4130 /* GLESMaterial.cpp */; };
+		5D3FC6841D8BFA5300AF4130 /* GLESShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EA1D8BF5C900AF4130 /* GLESShader.cpp */; };
+		5D3FC6851D8BFA5300AF4130 /* GLESTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F41D8BF5C900AF4130 /* GLESTransform.cpp */; };
+		5D3FC6861D8BFA5300AF4130 /* GLESNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E11D8BF5C900AF4130 /* GLESNode.cpp */; };
+		5D3FC6871D8BFA5300AF4130 /* GLESScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E91D8BF5C900AF4130 /* GLESScene.cpp */; };
+		5D3FC6881D8BFA5300AF4130 /* GLESIndependentPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DE1D8BF5C900AF4130 /* GLESIndependentPrimitive.cpp */; };
+		5D3FC6891D8BFA5300AF4130 /* GLESGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DD1D8BF5C900AF4130 /* GLESGroup.cpp */; };
+		5D3FC68A1D8BFA5300AF4130 /* GLESDirectionalLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D61D8BF5C900AF4130 /* GLESDirectionalLight.cpp */; };
+		5D3FC68B1D8BFA5300AF4130 /* GLESTriangleFans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F51D8BF5C900AF4130 /* GLESTriangleFans.cpp */; };
+		5D3FC68D1D8BFA5300AF4130 /* GLESTextures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F31D8BF5C900AF4130 /* GLESTextures.cpp */; };
+		5D3FC68E1D8BFA5300AF4130 /* GLESCylinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D41D8BF5C800AF4130 /* GLESCylinder.cpp */; };
+		5D3FC68F1D8BFA5300AF4130 /* GLESObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E21D8BF5C900AF4130 /* GLESObject.cpp */; };
+		5D3FC6901D8BFA5300AF4130 /* GLESProgramManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E71D8BF5C900AF4130 /* GLESProgramManager.cpp */; };
+		5D3FC6911D8BFA5300AF4130 /* GLESAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CD1D8BF5C800AF4130 /* GLESAttribute.cpp */; };
+		5D3FC6931D8BFA5300AF4130 /* GLESRenderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E81D8BF5C900AF4130 /* GLESRenderable.cpp */; };
+		5D3FC6941D8BFA5300AF4130 /* GLESSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5ED1D8BF5C900AF4130 /* GLESSphere.cpp */; };
+		5D3FC6971D8BFA5300AF4130 /* GLESRenderable.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5521D8BF5B800AF4130 /* GLESRenderable.h */; };
+		5D3FC6991D8BFA5300AF4130 /* GLESNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54B1D8BF5B800AF4130 /* GLESNode.h */; };
+		5D3FC69A1D8BFA5300AF4130 /* GLESShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5551D8BF5B800AF4130 /* GLESShaderProgram.h */; };
+		5D3FC69B1D8BFA5300AF4130 /* GLESCone.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53D1D8BF5B800AF4130 /* GLESCone.h */; };
+		5D3FC69C1D8BFA5300AF4130 /* GLESAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5371D8BF5B800AF4130 /* GLESAttribute.h */; };
+		5D3FC69D1D8BFA5300AF4130 /* GLESView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5651D8BF5B800AF4130 /* GLESView.h */; };
+		5D3FC69E1D8BFA5300AF4130 /* GLESDepthAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53F1D8BF5B800AF4130 /* GLESDepthAttribute.h */; };
+		5D3FC69F1D8BFA5300AF4130 /* GLESTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55C1D8BF5B800AF4130 /* GLESTexture2D.h */; };
+		5D3FC6A01D8BFA5300AF4130 /* GLESSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55A1D8BF5B800AF4130 /* GLESSwitch.h */; };
+		5D3FC6A11D8BFA5300AF4130 /* GLESPointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54E1D8BF5B800AF4130 /* GLESPointLight.h */; };
+		5D3FC6A21D8BFA5300AF4130 /* GLESIndependentPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5481D8BF5B800AF4130 /* GLESIndependentPrimitive.h */; };
+		5D3FC6A31D8BFA5300AF4130 /* GLESDynamicLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5411D8BF5B800AF4130 /* GLESDynamicLibrary.h */; };
+		5D3FC6A41D8BFA5300AF4130 /* GLESProgramManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5511D8BF5B800AF4130 /* GLESProgramManager.h */; };
+		5D3FC6A51D8BFA5300AF4130 /* GLESMaterial.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54A1D8BF5B800AF4130 /* GLESMaterial.h */; };
+		5D3FC6A61D8BFA5300AF4130 /* GLESPrimitiveAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5501D8BF5B800AF4130 /* GLESPrimitiveAttribute.h */; };
+		5D3FC6A71D8BFA5300AF4130 /* GLESCylinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53E1D8BF5B800AF4130 /* GLESCylinder.h */; };
+		5D3FC6A81D8BFA5300AF4130 /* GLESBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5391D8BF5B800AF4130 /* GLESBackground.h */; };
+		5D3FC6A91D8BFA5300AF4130 /* GLESGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5471D8BF5B800AF4130 /* GLESGroup.h */; };
+		5D3FC6AA1D8BFA5300AF4130 /* GLESSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5571D8BF5B800AF4130 /* GLESSphere.h */; };
+		5D3FC6AB1D8BFA5300AF4130 /* GLESTextures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55D1D8BF5B800AF4130 /* GLESTextures.h */; };
+		5D3FC6AC1D8BFA5300AF4130 /* GLESPerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */; };
+		5D3FC6AD1D8BFA5300AF4130 /* GLESPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54F1D8BF5B800AF4130 /* GLESPrimitive.h */; };
+		5D3FC6AE1D8BFA5300AF4130 /* GLESObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */; };
+		5D3FC6AF1D8BFA5300AF4130 /* GLESShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5561D8BF5B800AF4130 /* GLESShape.h */; };
+		5D3FC6B01D8BFA5300AF4130 /* GLESShader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5541D8BF5B800AF4130 /* GLESShader.h */; };
+		5D3FC6B11D8BFA5300AF4130 /* GLESFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5451D8BF5B800AF4130 /* GLESFramebuffer.h */; };
+		5D3FC6B31D8BFA5300AF4130 /* GLESStripPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5591D8BF5B800AF4130 /* GLESStripPrimitive.h */; };
+		5D3FC6B41D8BFA5300AF4130 /* GLESTriangleStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5611D8BF5B800AF4130 /* GLESTriangleStrips.h */; };
+		5D3FC6B61D8BFA5300AF4130 /* GLESLightSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5491D8BF5B800AF4130 /* GLESLightSource.h */; };
+		5D3FC6B71D8BFA5300AF4130 /* GLESUndistortedBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5621D8BF5B800AF4130 /* GLESUndistortedBackground.h */; };
+		5D3FC6B81D8BFA5300AF4130 /* GLESceneGraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53C1D8BF5B800AF4130 /* GLESceneGraph.h */; };
+		5D3FC6B91D8BFA5300AF4130 /* GLESFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5431D8BF5B800AF4130 /* GLESFactory.h */; };
+		5D3FC6BA1D8BFA5300AF4130 /* GLESAbsoluteTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5361D8BF5B800AF4130 /* GLESAbsoluteTransform.h */; };
+		5D3FC6BB1D8BFA5300AF4130 /* GLESGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5461D8BF5B800AF4130 /* GLESGeometry.h */; };
+		5D3FC6BC1D8BFA5300AF4130 /* GLESBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53B1D8BF5B800AF4130 /* GLESBox.h */; };
+		5D3FC6BD1D8BFA5300AF4130 /* GLESDirectionalLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5401D8BF5B800AF4130 /* GLESDirectionalLight.h */; };
+		5D3FC6BE1D8BFA5300AF4130 /* GLESTriangleFans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55F1D8BF5B800AF4130 /* GLESTriangleFans.h */; };
+		5D3FC6C01D8BFA5300AF4130 /* GLESVertexSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5631D8BF5B800AF4130 /* GLESVertexSet.h */; };
+		5D3FC6C11D8BFA5300AF4130 /* GLESTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55B1D8BF5B800AF4130 /* GLESTexture.h */; };
+		5D3FC6C21D8BFA5300AF4130 /* GLESBlendAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53A1D8BF5B800AF4130 /* GLESBlendAttribute.h */; };
+		5D3FC6C31D8BFA5300AF4130 /* GLESTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55E1D8BF5B800AF4130 /* GLESTransform.h */; };
+		5D3FC6C41D8BFA5300AF4130 /* GLESScene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5531D8BF5B800AF4130 /* GLESScene.h */; };
+		5D3FC6C51D8BFA5300AF4130 /* GLESTriangles.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5601D8BF5B800AF4130 /* GLESTriangles.h */; };
+		5D3FC6C61D8BFA5300AF4130 /* GLESAttributeSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5381D8BF5B800AF4130 /* GLESAttributeSet.h */; };
+		5D3FC6C71D8BFA5300AF4130 /* GLESSpotLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5581D8BF5B800AF4130 /* GLESSpotLight.h */; };
+		5F2D60151E2F724F00CB35C0 /* GLESPhantomAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F2D60141E2F724F00CB35C0 /* GLESPhantomAttribute.h */; };
+		5F2D60191E2F805C00CB35C0 /* GLESPhantomAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2D60181E2F805C00CB35C0 /* GLESPhantomAttribute.cpp */; };
+		5F2D601A1E2F863700CB35C0 /* GLESPhantomAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2D60181E2F805C00CB35C0 /* GLESPhantomAttribute.cpp */; };
+		5F2D601B1E2F863800CB35C0 /* GLESPhantomAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2D60181E2F805C00CB35C0 /* GLESPhantomAttribute.cpp */; };
+		5F2D601C1E2F863900CB35C0 /* GLESPhantomAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2D60181E2F805C00CB35C0 /* GLESPhantomAttribute.cpp */; };
+		9303057A2645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930305792645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp */; };
+		9303057B2645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930305792645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp */; };
+		9303057C2645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930305792645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp */; };
+		9303057D2645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930305792645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp */; };
+		932689DD23D7C32D002A5162 /* GLESStereoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 932689DC23D7C32D002A5162 /* GLESStereoView.h */; };
+		932689DE23D7C32D002A5162 /* GLESStereoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 932689DC23D7C32D002A5162 /* GLESStereoView.h */; };
+		932689DF23D7C32D002A5162 /* GLESStereoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 932689DC23D7C32D002A5162 /* GLESStereoView.h */; };
+		932689E023D7C32D002A5162 /* GLESStereoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 932689DC23D7C32D002A5162 /* GLESStereoView.h */; };
+		932689E223D7C367002A5162 /* GLESStereoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932689E123D7C367002A5162 /* GLESStereoView.cpp */; };
+		932689E323D7C367002A5162 /* GLESStereoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932689E123D7C367002A5162 /* GLESStereoView.cpp */; };
+		932689E423D7C367002A5162 /* GLESStereoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932689E123D7C367002A5162 /* GLESStereoView.cpp */; };
+		932689E523D7C367002A5162 /* GLESStereoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932689E123D7C367002A5162 /* GLESStereoView.cpp */; };
+		9326C9A327554E7E008DABF2 /* GLESFrameTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326C9A227554E7E008DABF2 /* GLESFrameTexture2D.h */; };
+		9326C9A427554E7E008DABF2 /* GLESFrameTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326C9A227554E7E008DABF2 /* GLESFrameTexture2D.h */; };
+		9326C9A527554E7E008DABF2 /* GLESFrameTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326C9A227554E7E008DABF2 /* GLESFrameTexture2D.h */; };
+		9326C9A627554E7E008DABF2 /* GLESFrameTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326C9A227554E7E008DABF2 /* GLESFrameTexture2D.h */; };
+		9326C9AD27554EB3008DABF2 /* GLESFrameTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326C9AC27554EB3008DABF2 /* GLESFrameTexture2D.cpp */; };
+		9326C9AE27554EB3008DABF2 /* GLESFrameTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326C9AC27554EB3008DABF2 /* GLESFrameTexture2D.cpp */; };
+		9326C9AF27554EB3008DABF2 /* GLESFrameTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326C9AC27554EB3008DABF2 /* GLESFrameTexture2D.cpp */; };
+		9326C9B027554EB3008DABF2 /* GLESFrameTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326C9AC27554EB3008DABF2 /* GLESFrameTexture2D.cpp */; };
+		932CAF6E26C11170004C36E0 /* GLESText.h in Headers */ = {isa = PBXBuildFile; fileRef = 932CAF6D26C11170004C36E0 /* GLESText.h */; };
+		932CAF6F26C11170004C36E0 /* GLESText.h in Headers */ = {isa = PBXBuildFile; fileRef = 932CAF6D26C11170004C36E0 /* GLESText.h */; };
+		932CAF7026C11170004C36E0 /* GLESText.h in Headers */ = {isa = PBXBuildFile; fileRef = 932CAF6D26C11170004C36E0 /* GLESText.h */; };
+		932CAF7126C11170004C36E0 /* GLESText.h in Headers */ = {isa = PBXBuildFile; fileRef = 932CAF6D26C11170004C36E0 /* GLESText.h */; };
+		932CAF7326C1119A004C36E0 /* GLESText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932CAF7226C1119A004C36E0 /* GLESText.cpp */; };
+		932CAF7426C1119A004C36E0 /* GLESText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932CAF7226C1119A004C36E0 /* GLESText.cpp */; };
+		932CAF7526C1119A004C36E0 /* GLESText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932CAF7226C1119A004C36E0 /* GLESText.cpp */; };
+		932CAF7626C1119A004C36E0 /* GLESText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932CAF7226C1119A004C36E0 /* GLESText.cpp */; };
+		932DFDE4261AC6E60063BEDA /* GLESEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932DFDE3261AC6E60063BEDA /* GLESEngine.cpp */; };
+		932DFDE5261AC6E60063BEDA /* GLESEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932DFDE3261AC6E60063BEDA /* GLESEngine.cpp */; };
+		932DFDE6261AC6E60063BEDA /* GLESEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932DFDE3261AC6E60063BEDA /* GLESEngine.cpp */; };
+		932DFDE7261AC6E60063BEDA /* GLESEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932DFDE3261AC6E60063BEDA /* GLESEngine.cpp */; };
+		932DFDED261AC6FC0063BEDA /* GLESEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 932DFDEC261AC6FC0063BEDA /* GLESEngine.h */; };
+		932DFDEE261AC6FC0063BEDA /* GLESEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 932DFDEC261AC6FC0063BEDA /* GLESEngine.h */; };
+		932DFDEF261AC6FC0063BEDA /* GLESEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 932DFDEC261AC6FC0063BEDA /* GLESEngine.h */; };
+		932DFDF0261AC6FC0063BEDA /* GLESEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 932DFDEC261AC6FC0063BEDA /* GLESEngine.h */; };
+		93320B7325F6ECAE00B10E4A /* GLESTextureFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93320B7225F6ECAE00B10E4A /* GLESTextureFramebuffer.h */; };
+		93320B7425F6ECAE00B10E4A /* GLESTextureFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93320B7225F6ECAE00B10E4A /* GLESTextureFramebuffer.h */; };
+		93320B7525F6ECAE00B10E4A /* GLESTextureFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93320B7225F6ECAE00B10E4A /* GLESTextureFramebuffer.h */; };
+		93320B7625F6ECAE00B10E4A /* GLESTextureFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93320B7225F6ECAE00B10E4A /* GLESTextureFramebuffer.h */; };
+		93320B8A25F6ECE300B10E4A /* GLESTextureFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93320B8925F6ECE300B10E4A /* GLESTextureFramebuffer.cpp */; };
+		93320B8B25F6ECE300B10E4A /* GLESTextureFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93320B8925F6ECE300B10E4A /* GLESTextureFramebuffer.cpp */; };
+		93320B8C25F6ECE300B10E4A /* GLESTextureFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93320B8925F6ECE300B10E4A /* GLESTextureFramebuffer.cpp */; };
+		93320B8D25F6ECE300B10E4A /* GLESTextureFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93320B8925F6ECE300B10E4A /* GLESTextureFramebuffer.cpp */; };
+		933C6310264B9C8100A8CD5B /* GLESLOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933C630F264B9C8000A8CD5B /* GLESLOD.cpp */; };
+		933C6311264B9C8100A8CD5B /* GLESLOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933C630F264B9C8000A8CD5B /* GLESLOD.cpp */; };
+		933C6312264B9C8100A8CD5B /* GLESLOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933C630F264B9C8000A8CD5B /* GLESLOD.cpp */; };
+		933C6313264B9C8100A8CD5B /* GLESLOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933C630F264B9C8000A8CD5B /* GLESLOD.cpp */; };
+		933C6315264B9C9500A8CD5B /* GLESLOD.h in Headers */ = {isa = PBXBuildFile; fileRef = 933C6314264B9C9500A8CD5B /* GLESLOD.h */; };
+		933C6316264B9C9500A8CD5B /* GLESLOD.h in Headers */ = {isa = PBXBuildFile; fileRef = 933C6314264B9C9500A8CD5B /* GLESLOD.h */; };
+		933C6317264B9C9500A8CD5B /* GLESLOD.h in Headers */ = {isa = PBXBuildFile; fileRef = 933C6314264B9C9500A8CD5B /* GLESLOD.h */; };
+		933C6318264B9C9500A8CD5B /* GLESLOD.h in Headers */ = {isa = PBXBuildFile; fileRef = 933C6314264B9C9500A8CD5B /* GLESLOD.h */; };
+		9341AEC02788BA9700B73898 /* GLESTextureFramebuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9341AEBF2788BA9700B73898 /* GLESTextureFramebuffer.mm */; };
+		9341AEC12788BA9700B73898 /* GLESTextureFramebuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9341AEBF2788BA9700B73898 /* GLESTextureFramebuffer.mm */; };
+		9341AEC22788BA9700B73898 /* GLESTextureFramebuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9341AEBF2788BA9700B73898 /* GLESTextureFramebuffer.mm */; };
+		9341AEC32788BA9700B73898 /* GLESTextureFramebuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9341AEBF2788BA9700B73898 /* GLESTextureFramebuffer.mm */; };
+		934A16342634E9B90069AF69 /* GLESBitmapFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 934A162F2634E9B90069AF69 /* GLESBitmapFramebuffer.h */; };
+		934A16352634E9B90069AF69 /* GLESBitmapFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 934A162F2634E9B90069AF69 /* GLESBitmapFramebuffer.h */; };
+		934A16362634E9B90069AF69 /* GLESBitmapFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 934A162F2634E9B90069AF69 /* GLESBitmapFramebuffer.h */; };
+		934A16372634E9B90069AF69 /* GLESBitmapFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 934A162F2634E9B90069AF69 /* GLESBitmapFramebuffer.h */; };
+		936857D6254236F900AE73D6 /* GLESTraverser.h in Headers */ = {isa = PBXBuildFile; fileRef = 936857D5254236F900AE73D6 /* GLESTraverser.h */; };
+		936857D7254236F900AE73D6 /* GLESTraverser.h in Headers */ = {isa = PBXBuildFile; fileRef = 936857D5254236F900AE73D6 /* GLESTraverser.h */; };
+		936857D8254236F900AE73D6 /* GLESTraverser.h in Headers */ = {isa = PBXBuildFile; fileRef = 936857D5254236F900AE73D6 /* GLESTraverser.h */; };
+		936857D9254236FA00AE73D6 /* GLESTraverser.h in Headers */ = {isa = PBXBuildFile; fileRef = 936857D5254236F900AE73D6 /* GLESTraverser.h */; };
+		936857DF2542371000AE73D6 /* GLESTraverser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 936857DE2542371000AE73D6 /* GLESTraverser.cpp */; };
+		936857E02542371000AE73D6 /* GLESTraverser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 936857DE2542371000AE73D6 /* GLESTraverser.cpp */; };
+		936857E12542371000AE73D6 /* GLESTraverser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 936857DE2542371000AE73D6 /* GLESTraverser.cpp */; };
+		936857E22542371000AE73D6 /* GLESTraverser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 936857DE2542371000AE73D6 /* GLESTraverser.cpp */; };
+		93686C3A26AF3E9B003CAF6E /* GLESPoints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93686C3926AF3E9B003CAF6E /* GLESPoints.cpp */; };
+		93686C3B26AF3E9B003CAF6E /* GLESPoints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93686C3926AF3E9B003CAF6E /* GLESPoints.cpp */; };
+		93686C3C26AF3E9B003CAF6E /* GLESPoints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93686C3926AF3E9B003CAF6E /* GLESPoints.cpp */; };
+		93686C3D26AF3E9B003CAF6E /* GLESPoints.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93686C3926AF3E9B003CAF6E /* GLESPoints.cpp */; };
+		93686C3F26AF3EB1003CAF6E /* GLESPoints.h in Headers */ = {isa = PBXBuildFile; fileRef = 93686C3E26AF3EB1003CAF6E /* GLESPoints.h */; };
+		93686C4026AF3EB1003CAF6E /* GLESPoints.h in Headers */ = {isa = PBXBuildFile; fileRef = 93686C3E26AF3EB1003CAF6E /* GLESPoints.h */; };
+		93686C4126AF3EB1003CAF6E /* GLESPoints.h in Headers */ = {isa = PBXBuildFile; fileRef = 93686C3E26AF3EB1003CAF6E /* GLESPoints.h */; };
+		93686C4226AF3EB1003CAF6E /* GLESPoints.h in Headers */ = {isa = PBXBuildFile; fileRef = 93686C3E26AF3EB1003CAF6E /* GLESPoints.h */; };
+		93A3E6F828F72DBC003E5044 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F328F72DBB003E5044 /* Plugin.h */; };
+		93A3E6F928F72DBC003E5044 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F328F72DBB003E5044 /* Plugin.h */; };
+		93A3E6FA28F72DBC003E5044 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F328F72DBB003E5044 /* Plugin.h */; };
+		93A3E6FB28F72DBC003E5044 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F328F72DBB003E5044 /* Plugin.h */; };
+		93A3E70028F72DBC003E5044 /* GLESEngineApple.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F528F72DBB003E5044 /* GLESEngineApple.h */; };
+		93A3E70128F72DBC003E5044 /* GLESEngineApple.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F528F72DBB003E5044 /* GLESEngineApple.h */; };
+		93A3E70228F72DBC003E5044 /* GLESEngineApple.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F528F72DBB003E5044 /* GLESEngineApple.h */; };
+		93A3E70328F72DBC003E5044 /* GLESEngineApple.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F528F72DBB003E5044 /* GLESEngineApple.h */; };
+		93A3E70428F72DBC003E5044 /* Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F628F72DBC003E5044 /* Apple.h */; };
+		93A3E70528F72DBC003E5044 /* Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F628F72DBC003E5044 /* Apple.h */; };
+		93A3E70628F72DBC003E5044 /* Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F628F72DBC003E5044 /* Apple.h */; };
+		93A3E70728F72DBC003E5044 /* Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F628F72DBC003E5044 /* Apple.h */; };
+		93A3E70828F72DBC003E5044 /* GLESWindowFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F728F72DBC003E5044 /* GLESWindowFramebuffer.h */; };
+		93A3E70928F72DBC003E5044 /* GLESWindowFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F728F72DBC003E5044 /* GLESWindowFramebuffer.h */; };
+		93A3E70A28F72DBC003E5044 /* GLESWindowFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F728F72DBC003E5044 /* GLESWindowFramebuffer.h */; };
+		93A3E70B28F72DBC003E5044 /* GLESWindowFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A3E6F728F72DBC003E5044 /* GLESWindowFramebuffer.h */; };
+		93A3E71128F72DD8003E5044 /* Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70C28F72DD7003E5044 /* Apple.cpp */; };
+		93A3E71228F72DD8003E5044 /* Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70C28F72DD7003E5044 /* Apple.cpp */; };
+		93A3E71328F72DD8003E5044 /* Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70C28F72DD7003E5044 /* Apple.cpp */; };
+		93A3E71428F72DD8003E5044 /* Apple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70C28F72DD7003E5044 /* Apple.cpp */; };
+		93A3E71528F72DD8003E5044 /* GLESEngineApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70D28F72DD7003E5044 /* GLESEngineApple.cpp */; };
+		93A3E71628F72DD8003E5044 /* GLESEngineApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70D28F72DD7003E5044 /* GLESEngineApple.cpp */; };
+		93A3E71728F72DD8003E5044 /* GLESEngineApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70D28F72DD7003E5044 /* GLESEngineApple.cpp */; };
+		93A3E71828F72DD8003E5044 /* GLESEngineApple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70D28F72DD7003E5044 /* GLESEngineApple.cpp */; };
+		93A3E71D28F72DD8003E5044 /* GLESWindowFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70F28F72DD7003E5044 /* GLESWindowFramebuffer.cpp */; };
+		93A3E71E28F72DD8003E5044 /* GLESWindowFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70F28F72DD7003E5044 /* GLESWindowFramebuffer.cpp */; };
+		93A3E71F28F72DD8003E5044 /* GLESWindowFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70F28F72DD7003E5044 /* GLESWindowFramebuffer.cpp */; };
+		93A3E72028F72DD8003E5044 /* GLESWindowFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E70F28F72DD7003E5044 /* GLESWindowFramebuffer.cpp */; };
+		93A3E72128F72DD8003E5044 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E71028F72DD7003E5044 /* Plugin.cpp */; };
+		93A3E72228F72DD8003E5044 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E71028F72DD7003E5044 /* Plugin.cpp */; };
+		93A3E72328F72DD8003E5044 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E71028F72DD7003E5044 /* Plugin.cpp */; };
+		93A3E72428F72DD8003E5044 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A3E71028F72DD7003E5044 /* Plugin.cpp */; };
+		93ADFB7F297A19DE00651F48 /* GLESLines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB7D297A19DE00651F48 /* GLESLines.cpp */; };
+		93ADFB80297A19DE00651F48 /* GLESLines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB7D297A19DE00651F48 /* GLESLines.cpp */; };
+		93ADFB81297A19DE00651F48 /* GLESLines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB7D297A19DE00651F48 /* GLESLines.cpp */; };
+		93ADFB82297A19DE00651F48 /* GLESLines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB7D297A19DE00651F48 /* GLESLines.cpp */; };
+		93ADFB83297A19DE00651F48 /* GLESLineStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB7E297A19DE00651F48 /* GLESLineStrips.cpp */; };
+		93ADFB84297A19DE00651F48 /* GLESLineStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB7E297A19DE00651F48 /* GLESLineStrips.cpp */; };
+		93ADFB85297A19DE00651F48 /* GLESLineStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB7E297A19DE00651F48 /* GLESLineStrips.cpp */; };
+		93ADFB86297A19DE00651F48 /* GLESLineStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB7E297A19DE00651F48 /* GLESLineStrips.cpp */; };
+		93ADFB89297A19FA00651F48 /* GLESLines.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB87297A19FA00651F48 /* GLESLines.h */; };
+		93ADFB8A297A19FA00651F48 /* GLESLines.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB87297A19FA00651F48 /* GLESLines.h */; };
+		93ADFB8B297A19FA00651F48 /* GLESLines.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB87297A19FA00651F48 /* GLESLines.h */; };
+		93ADFB8C297A19FA00651F48 /* GLESLines.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB87297A19FA00651F48 /* GLESLines.h */; };
+		93ADFB8D297A19FA00651F48 /* GLESLineStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB88297A19FA00651F48 /* GLESLineStrips.h */; };
+		93ADFB8E297A19FA00651F48 /* GLESLineStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB88297A19FA00651F48 /* GLESLineStrips.h */; };
+		93ADFB8F297A19FA00651F48 /* GLESLineStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB88297A19FA00651F48 /* GLESLineStrips.h */; };
+		93ADFB90297A19FA00651F48 /* GLESLineStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB88297A19FA00651F48 /* GLESLineStrips.h */; };
+		93DC6AFE26BB0BA20021A07C /* GLESMediaTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DC6AFD26BB0BA20021A07C /* GLESMediaTexture2D.h */; };
+		93DC6AFF26BB0BA20021A07C /* GLESMediaTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DC6AFD26BB0BA20021A07C /* GLESMediaTexture2D.h */; };
+		93DC6B0026BB0BA20021A07C /* GLESMediaTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DC6AFD26BB0BA20021A07C /* GLESMediaTexture2D.h */; };
+		93DC6B0126BB0BA20021A07C /* GLESMediaTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DC6AFD26BB0BA20021A07C /* GLESMediaTexture2D.h */; };
+		93DC6B0D26BB0BD60021A07C /* GLESMediaTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DC6B0C26BB0BD60021A07C /* GLESMediaTexture2D.cpp */; };
+		93DC6B0E26BB0BD60021A07C /* GLESMediaTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DC6B0C26BB0BD60021A07C /* GLESMediaTexture2D.cpp */; };
+		93DC6B0F26BB0BD60021A07C /* GLESMediaTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DC6B0C26BB0BD60021A07C /* GLESMediaTexture2D.cpp */; };
+		93DC6B1026BB0BD60021A07C /* GLESMediaTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DC6B0C26BB0BD60021A07C /* GLESMediaTexture2D.cpp */; };
+		93F1C4C5243EFB6C00217EF1 /* GLESStereoAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F1C4C4243EFB6C00217EF1 /* GLESStereoAttribute.cpp */; };
+		93F1C4C6243EFB6C00217EF1 /* GLESStereoAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F1C4C4243EFB6C00217EF1 /* GLESStereoAttribute.cpp */; };
+		93F1C4C7243EFB6C00217EF1 /* GLESStereoAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F1C4C4243EFB6C00217EF1 /* GLESStereoAttribute.cpp */; };
+		93F1C4C8243EFB6C00217EF1 /* GLESStereoAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F1C4C4243EFB6C00217EF1 /* GLESStereoAttribute.cpp */; };
+		93F1C4CA243EFB8700217EF1 /* GLESStereoAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F1C4C9243EFB8700217EF1 /* GLESStereoAttribute.h */; };
+		93F1C4CB243EFB8700217EF1 /* GLESStereoAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F1C4C9243EFB8700217EF1 /* GLESStereoAttribute.h */; };
+		93F1C4CC243EFB8700217EF1 /* GLESStereoAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F1C4C9243EFB8700217EF1 /* GLESStereoAttribute.h */; };
+		93F1C4CD243EFB8700217EF1 /* GLESStereoAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F1C4C9243EFB8700217EF1 /* GLESStereoAttribute.h */; };
+		C041ED321DABF21100BF5D76 /* GLESShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EB1D8BF5C900AF4130 /* GLESShaderProgram.cpp */; };
+		C041ED331DABF21100BF5D76 /* GLESPerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */; };
+		C041ED341DABF21100BF5D76 /* GLESTriangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F61D8BF5C900AF4130 /* GLESTriangles.cpp */; };
+		C041ED351DABF21100BF5D76 /* GLESView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5FB1D8BF5C900AF4130 /* GLESView.cpp */; };
+		C041ED361DABF21100BF5D76 /* GLESSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F01D8BF5C900AF4130 /* GLESSwitch.cpp */; };
+		C041ED371DABF21100BF5D76 /* GLESPrimitiveAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E61D8BF5C900AF4130 /* GLESPrimitiveAttribute.cpp */; };
+		C041ED381DABF21100BF5D76 /* GLESTriangleStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F71D8BF5C900AF4130 /* GLESTriangleStrips.cpp */; };
+		C041ED3A1DABF21100BF5D76 /* GLESDynamicLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D71D8BF5C900AF4130 /* GLESDynamicLibrary.cpp */; };
+		C041ED3B1DABF21100BF5D76 /* GLESSpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EE1D8BF5C900AF4130 /* GLESSpotLight.cpp */; };
+		C041ED3C1DABF21100BF5D76 /* GLESShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EC1D8BF5C900AF4130 /* GLESShape.cpp */; };
+		C041ED3D1DABF21100BF5D76 /* GLESUndistortedBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F81D8BF5C900AF4130 /* GLESUndistortedBackground.cpp */; };
+		C041ED3E1DABF21100BF5D76 /* GLESPointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E41D8BF5C900AF4130 /* GLESPointLight.cpp */; };
+		C041ED3F1DABF21100BF5D76 /* GLESFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D91D8BF5C900AF4130 /* GLESFactory.cpp */; };
+		C041ED401DABF21100BF5D76 /* GLESGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DC1D8BF5C900AF4130 /* GLESGeometry.cpp */; };
+		C041ED411DABF21100BF5D76 /* GLESTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F21D8BF5C900AF4130 /* GLESTexture2D.cpp */; };
+		C041ED421DABF21100BF5D76 /* GLESTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F11D8BF5C900AF4130 /* GLESTexture.cpp */; };
+		C041ED441DABF21100BF5D76 /* GLESAttributeSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CE1D8BF5C800AF4130 /* GLESAttributeSet.cpp */; };
+		C041ED451DABF21100BF5D76 /* GLESLightSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DF1D8BF5C900AF4130 /* GLESLightSource.cpp */; };
+		C041ED461DABF21100BF5D76 /* GLESBlendAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D01D8BF5C800AF4130 /* GLESBlendAttribute.cpp */; };
+		C041ED471DABF21100BF5D76 /* GLESPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E51D8BF5C900AF4130 /* GLESPrimitive.cpp */; };
+		C041ED481DABF21100BF5D76 /* GLESVertexSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F91D8BF5C900AF4130 /* GLESVertexSet.cpp */; };
+		C041ED4A1DABF21100BF5D76 /* GLESFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DB1D8BF5C900AF4130 /* GLESFramebuffer.cpp */; };
+		C041ED4B1DABF21100BF5D76 /* GLESceneGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D21D8BF5C800AF4130 /* GLESceneGraph.cpp */; };
+		C041ED4C1DABF21100BF5D76 /* GLESAbsoluteTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CC1D8BF5C800AF4130 /* GLESAbsoluteTransform.cpp */; };
+		C041ED4D1DABF21100BF5D76 /* GLESBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CF1D8BF5C800AF4130 /* GLESBackground.cpp */; };
+		C041ED4E1DABF21100BF5D76 /* GLESStripPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EF1D8BF5C900AF4130 /* GLESStripPrimitive.cpp */; };
+		C041ED4F1DABF21100BF5D76 /* GLESCone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D31D8BF5C800AF4130 /* GLESCone.cpp */; };
+		C041ED501DABF21100BF5D76 /* GLESBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D11D8BF5C800AF4130 /* GLESBox.cpp */; };
+		C041ED511DABF21100BF5D76 /* GLESDepthAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D51D8BF5C800AF4130 /* GLESDepthAttribute.cpp */; };
+		C041ED521DABF21100BF5D76 /* GLESMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E01D8BF5C900AF4130 /* GLESMaterial.cpp */; };
+		C041ED531DABF21100BF5D76 /* GLESShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5EA1D8BF5C900AF4130 /* GLESShader.cpp */; };
+		C041ED551DABF21100BF5D76 /* GLESTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F41D8BF5C900AF4130 /* GLESTransform.cpp */; };
+		C041ED561DABF21100BF5D76 /* GLESNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E11D8BF5C900AF4130 /* GLESNode.cpp */; };
+		C041ED571DABF21100BF5D76 /* GLESScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E91D8BF5C900AF4130 /* GLESScene.cpp */; };
+		C041ED581DABF21100BF5D76 /* GLESIndependentPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DE1D8BF5C900AF4130 /* GLESIndependentPrimitive.cpp */; };
+		C041ED591DABF21100BF5D76 /* GLESGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5DD1D8BF5C900AF4130 /* GLESGroup.cpp */; };
+		C041ED5A1DABF21100BF5D76 /* GLESDirectionalLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D61D8BF5C900AF4130 /* GLESDirectionalLight.cpp */; };
+		C041ED5B1DABF21100BF5D76 /* GLESTriangleFans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F51D8BF5C900AF4130 /* GLESTriangleFans.cpp */; };
+		C041ED5C1DABF21100BF5D76 /* GLESTextures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5F31D8BF5C900AF4130 /* GLESTextures.cpp */; };
+		C041ED5D1DABF21100BF5D76 /* GLESCylinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5D41D8BF5C800AF4130 /* GLESCylinder.cpp */; };
+		C041ED5E1DABF21100BF5D76 /* GLESObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E21D8BF5C900AF4130 /* GLESObject.cpp */; };
+		C041ED5F1DABF21100BF5D76 /* GLESProgramManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E71D8BF5C900AF4130 /* GLESProgramManager.cpp */; };
+		C041ED601DABF21100BF5D76 /* GLESAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5CD1D8BF5C800AF4130 /* GLESAttribute.cpp */; };
+		C041ED621DABF21100BF5D76 /* GLESRenderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5E81D8BF5C900AF4130 /* GLESRenderable.cpp */; };
+		C041ED631DABF21100BF5D76 /* GLESSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D3FC5ED1D8BF5C900AF4130 /* GLESSphere.cpp */; };
+		C041ED661DABF21100BF5D76 /* GLESRenderable.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5521D8BF5B800AF4130 /* GLESRenderable.h */; };
+		C041ED671DABF21100BF5D76 /* GLESNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54B1D8BF5B800AF4130 /* GLESNode.h */; };
+		C041ED681DABF21100BF5D76 /* GLESShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5551D8BF5B800AF4130 /* GLESShaderProgram.h */; };
+		C041ED691DABF21100BF5D76 /* GLESCone.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53D1D8BF5B800AF4130 /* GLESCone.h */; };
+		C041ED6A1DABF21100BF5D76 /* GLESAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5371D8BF5B800AF4130 /* GLESAttribute.h */; };
+		C041ED6B1DABF21100BF5D76 /* GLESView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5651D8BF5B800AF4130 /* GLESView.h */; };
+		C041ED6C1DABF21100BF5D76 /* GLESDepthAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53F1D8BF5B800AF4130 /* GLESDepthAttribute.h */; };
+		C041ED6D1DABF21100BF5D76 /* GLESTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55C1D8BF5B800AF4130 /* GLESTexture2D.h */; };
+		C041ED6E1DABF21100BF5D76 /* GLESSwitch.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55A1D8BF5B800AF4130 /* GLESSwitch.h */; };
+		C041ED6F1DABF21100BF5D76 /* GLESPointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54E1D8BF5B800AF4130 /* GLESPointLight.h */; };
+		C041ED701DABF21100BF5D76 /* GLESIndependentPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5481D8BF5B800AF4130 /* GLESIndependentPrimitive.h */; };
+		C041ED711DABF21100BF5D76 /* GLESDynamicLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5411D8BF5B800AF4130 /* GLESDynamicLibrary.h */; };
+		C041ED721DABF21100BF5D76 /* GLESProgramManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5511D8BF5B800AF4130 /* GLESProgramManager.h */; };
+		C041ED731DABF21100BF5D76 /* GLESMaterial.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54A1D8BF5B800AF4130 /* GLESMaterial.h */; };
+		C041ED741DABF21100BF5D76 /* GLESPrimitiveAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5501D8BF5B800AF4130 /* GLESPrimitiveAttribute.h */; };
+		C041ED751DABF21100BF5D76 /* GLESCylinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53E1D8BF5B800AF4130 /* GLESCylinder.h */; };
+		C041ED761DABF21100BF5D76 /* GLESBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5391D8BF5B800AF4130 /* GLESBackground.h */; };
+		C041ED771DABF21100BF5D76 /* GLESGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5471D8BF5B800AF4130 /* GLESGroup.h */; };
+		C041ED781DABF21100BF5D76 /* GLESSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5571D8BF5B800AF4130 /* GLESSphere.h */; };
+		C041ED791DABF21100BF5D76 /* GLESTextures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55D1D8BF5B800AF4130 /* GLESTextures.h */; };
+		C041ED7A1DABF21100BF5D76 /* GLESPerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */; };
+		C041ED7B1DABF21100BF5D76 /* GLESPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54F1D8BF5B800AF4130 /* GLESPrimitive.h */; };
+		C041ED7C1DABF21100BF5D76 /* GLESObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */; };
+		C041ED7D1DABF21100BF5D76 /* GLESShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5561D8BF5B800AF4130 /* GLESShape.h */; };
+		C041ED7E1DABF21100BF5D76 /* GLESShader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5541D8BF5B800AF4130 /* GLESShader.h */; };
+		C041ED801DABF21100BF5D76 /* GLESFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5451D8BF5B800AF4130 /* GLESFramebuffer.h */; };
+		C041ED831DABF21100BF5D76 /* GLESStripPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5591D8BF5B800AF4130 /* GLESStripPrimitive.h */; };
+		C041ED841DABF21100BF5D76 /* GLESTriangleStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5611D8BF5B800AF4130 /* GLESTriangleStrips.h */; };
+		C041ED861DABF21100BF5D76 /* GLESLightSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5491D8BF5B800AF4130 /* GLESLightSource.h */; };
+		C041ED871DABF21100BF5D76 /* GLESUndistortedBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5621D8BF5B800AF4130 /* GLESUndistortedBackground.h */; };
+		C041ED881DABF21100BF5D76 /* GLESceneGraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53C1D8BF5B800AF4130 /* GLESceneGraph.h */; };
+		C041ED891DABF21100BF5D76 /* GLESFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5431D8BF5B800AF4130 /* GLESFactory.h */; };
+		C041ED8A1DABF21100BF5D76 /* GLESAbsoluteTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5361D8BF5B800AF4130 /* GLESAbsoluteTransform.h */; };
+		C041ED8B1DABF21100BF5D76 /* GLESGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5461D8BF5B800AF4130 /* GLESGeometry.h */; };
+		C041ED8C1DABF21100BF5D76 /* GLESBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53B1D8BF5B800AF4130 /* GLESBox.h */; };
+		C041ED8D1DABF21100BF5D76 /* GLESDirectionalLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5401D8BF5B800AF4130 /* GLESDirectionalLight.h */; };
+		C041ED8E1DABF21100BF5D76 /* GLESTriangleFans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55F1D8BF5B800AF4130 /* GLESTriangleFans.h */; };
+		C041ED901DABF21100BF5D76 /* GLESVertexSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5631D8BF5B800AF4130 /* GLESVertexSet.h */; };
+		C041ED911DABF21100BF5D76 /* GLESTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55B1D8BF5B800AF4130 /* GLESTexture.h */; };
+		C041ED921DABF21100BF5D76 /* GLESBlendAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC53A1D8BF5B800AF4130 /* GLESBlendAttribute.h */; };
+		C041ED931DABF21100BF5D76 /* GLESTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC55E1D8BF5B800AF4130 /* GLESTransform.h */; };
+		C041ED941DABF21100BF5D76 /* GLESScene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5531D8BF5B800AF4130 /* GLESScene.h */; };
+		C041ED951DABF21100BF5D76 /* GLESTriangles.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5601D8BF5B800AF4130 /* GLESTriangles.h */; };
+		C041ED961DABF21100BF5D76 /* GLESAttributeSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5381D8BF5B800AF4130 /* GLESAttributeSet.h */; };
+		C041ED971DABF21100BF5D76 /* GLESSpotLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D3FC5581D8BF5B800AF4130 /* GLESSpotLight.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D12BC9C1BF264E300A56828 /* libOceanRenderingGLESceneGraphD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanRenderingGLESceneGraphD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D12BDB21BF267A400A56828 /* OceanRenderingGLESceneGraphD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanRenderingGLESceneGraphD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D12BDB51BF26EA000A56828 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../res/ocean/rendering/glescenegraph/osx/Info.plist; sourceTree = "<group>"; };
+		5D3FC5361D8BF5B800AF4130 /* GLESAbsoluteTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESAbsoluteTransform.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESAbsoluteTransform.h; sourceTree = "<group>"; };
+		5D3FC5371D8BF5B800AF4130 /* GLESAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESAttribute.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESAttribute.h; sourceTree = "<group>"; };
+		5D3FC5381D8BF5B800AF4130 /* GLESAttributeSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESAttributeSet.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESAttributeSet.h; sourceTree = "<group>"; };
+		5D3FC5391D8BF5B800AF4130 /* GLESBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESBackground.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESBackground.h; sourceTree = "<group>"; };
+		5D3FC53A1D8BF5B800AF4130 /* GLESBlendAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESBlendAttribute.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESBlendAttribute.h; sourceTree = "<group>"; };
+		5D3FC53B1D8BF5B800AF4130 /* GLESBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESBox.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESBox.h; sourceTree = "<group>"; };
+		5D3FC53C1D8BF5B800AF4130 /* GLESceneGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESceneGraph.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESceneGraph.h; sourceTree = "<group>"; };
+		5D3FC53D1D8BF5B800AF4130 /* GLESCone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESCone.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESCone.h; sourceTree = "<group>"; };
+		5D3FC53E1D8BF5B800AF4130 /* GLESCylinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESCylinder.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESCylinder.h; sourceTree = "<group>"; };
+		5D3FC53F1D8BF5B800AF4130 /* GLESDepthAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESDepthAttribute.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESDepthAttribute.h; sourceTree = "<group>"; };
+		5D3FC5401D8BF5B800AF4130 /* GLESDirectionalLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESDirectionalLight.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESDirectionalLight.h; sourceTree = "<group>"; };
+		5D3FC5411D8BF5B800AF4130 /* GLESDynamicLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESDynamicLibrary.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESDynamicLibrary.h; sourceTree = "<group>"; };
+		5D3FC5431D8BF5B800AF4130 /* GLESFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESFactory.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESFactory.h; sourceTree = "<group>"; };
+		5D3FC5451D8BF5B800AF4130 /* GLESFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESFramebuffer.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESFramebuffer.h; sourceTree = "<group>"; };
+		5D3FC5461D8BF5B800AF4130 /* GLESGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESGeometry.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESGeometry.h; sourceTree = "<group>"; };
+		5D3FC5471D8BF5B800AF4130 /* GLESGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESGroup.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESGroup.h; sourceTree = "<group>"; };
+		5D3FC5481D8BF5B800AF4130 /* GLESIndependentPrimitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESIndependentPrimitive.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESIndependentPrimitive.h; sourceTree = "<group>"; };
+		5D3FC5491D8BF5B800AF4130 /* GLESLightSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESLightSource.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESLightSource.h; sourceTree = "<group>"; };
+		5D3FC54A1D8BF5B800AF4130 /* GLESMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESMaterial.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESMaterial.h; sourceTree = "<group>"; };
+		5D3FC54B1D8BF5B800AF4130 /* GLESNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESNode.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESNode.h; sourceTree = "<group>"; };
+		5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESObject.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESObject.h; sourceTree = "<group>"; };
+		5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESPerspectiveView.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPerspectiveView.h; sourceTree = "<group>"; };
+		5D3FC54E1D8BF5B800AF4130 /* GLESPointLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESPointLight.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPointLight.h; sourceTree = "<group>"; };
+		5D3FC54F1D8BF5B800AF4130 /* GLESPrimitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESPrimitive.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPrimitive.h; sourceTree = "<group>"; };
+		5D3FC5501D8BF5B800AF4130 /* GLESPrimitiveAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESPrimitiveAttribute.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPrimitiveAttribute.h; sourceTree = "<group>"; };
+		5D3FC5511D8BF5B800AF4130 /* GLESProgramManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESProgramManager.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESProgramManager.h; sourceTree = "<group>"; };
+		5D3FC5521D8BF5B800AF4130 /* GLESRenderable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESRenderable.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESRenderable.h; sourceTree = "<group>"; };
+		5D3FC5531D8BF5B800AF4130 /* GLESScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESScene.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESScene.h; sourceTree = "<group>"; };
+		5D3FC5541D8BF5B800AF4130 /* GLESShader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESShader.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESShader.h; sourceTree = "<group>"; };
+		5D3FC5551D8BF5B800AF4130 /* GLESShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESShaderProgram.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESShaderProgram.h; sourceTree = "<group>"; };
+		5D3FC5561D8BF5B800AF4130 /* GLESShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESShape.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESShape.h; sourceTree = "<group>"; };
+		5D3FC5571D8BF5B800AF4130 /* GLESSphere.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESSphere.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESSphere.h; sourceTree = "<group>"; };
+		5D3FC5581D8BF5B800AF4130 /* GLESSpotLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESSpotLight.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESSpotLight.h; sourceTree = "<group>"; };
+		5D3FC5591D8BF5B800AF4130 /* GLESStripPrimitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESStripPrimitive.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESStripPrimitive.h; sourceTree = "<group>"; };
+		5D3FC55A1D8BF5B800AF4130 /* GLESSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESSwitch.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESSwitch.h; sourceTree = "<group>"; };
+		5D3FC55B1D8BF5B800AF4130 /* GLESTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESTexture.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTexture.h; sourceTree = "<group>"; };
+		5D3FC55C1D8BF5B800AF4130 /* GLESTexture2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESTexture2D.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTexture2D.h; sourceTree = "<group>"; };
+		5D3FC55D1D8BF5B800AF4130 /* GLESTextures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESTextures.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTextures.h; sourceTree = "<group>"; };
+		5D3FC55E1D8BF5B800AF4130 /* GLESTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESTransform.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTransform.h; sourceTree = "<group>"; };
+		5D3FC55F1D8BF5B800AF4130 /* GLESTriangleFans.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESTriangleFans.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTriangleFans.h; sourceTree = "<group>"; };
+		5D3FC5601D8BF5B800AF4130 /* GLESTriangles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESTriangles.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTriangles.h; sourceTree = "<group>"; };
+		5D3FC5611D8BF5B800AF4130 /* GLESTriangleStrips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESTriangleStrips.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTriangleStrips.h; sourceTree = "<group>"; };
+		5D3FC5621D8BF5B800AF4130 /* GLESUndistortedBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESUndistortedBackground.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESUndistortedBackground.h; sourceTree = "<group>"; };
+		5D3FC5631D8BF5B800AF4130 /* GLESVertexSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESVertexSet.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESVertexSet.h; sourceTree = "<group>"; };
+		5D3FC5651D8BF5B800AF4130 /* GLESView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESView.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESView.h; sourceTree = "<group>"; };
+		5D3FC5CC1D8BF5C800AF4130 /* GLESAbsoluteTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESAbsoluteTransform.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESAbsoluteTransform.cpp; sourceTree = "<group>"; };
+		5D3FC5CD1D8BF5C800AF4130 /* GLESAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESAttribute.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESAttribute.cpp; sourceTree = "<group>"; };
+		5D3FC5CE1D8BF5C800AF4130 /* GLESAttributeSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESAttributeSet.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESAttributeSet.cpp; sourceTree = "<group>"; };
+		5D3FC5CF1D8BF5C800AF4130 /* GLESBackground.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESBackground.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESBackground.cpp; sourceTree = "<group>"; };
+		5D3FC5D01D8BF5C800AF4130 /* GLESBlendAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESBlendAttribute.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESBlendAttribute.cpp; sourceTree = "<group>"; };
+		5D3FC5D11D8BF5C800AF4130 /* GLESBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESBox.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESBox.cpp; sourceTree = "<group>"; };
+		5D3FC5D21D8BF5C800AF4130 /* GLESceneGraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESceneGraph.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESceneGraph.cpp; sourceTree = "<group>"; };
+		5D3FC5D31D8BF5C800AF4130 /* GLESCone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESCone.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESCone.cpp; sourceTree = "<group>"; };
+		5D3FC5D41D8BF5C800AF4130 /* GLESCylinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESCylinder.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESCylinder.cpp; sourceTree = "<group>"; };
+		5D3FC5D51D8BF5C800AF4130 /* GLESDepthAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESDepthAttribute.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESDepthAttribute.cpp; sourceTree = "<group>"; };
+		5D3FC5D61D8BF5C900AF4130 /* GLESDirectionalLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESDirectionalLight.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESDirectionalLight.cpp; sourceTree = "<group>"; };
+		5D3FC5D71D8BF5C900AF4130 /* GLESDynamicLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESDynamicLibrary.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESDynamicLibrary.cpp; sourceTree = "<group>"; };
+		5D3FC5D91D8BF5C900AF4130 /* GLESFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESFactory.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESFactory.cpp; sourceTree = "<group>"; };
+		5D3FC5DB1D8BF5C900AF4130 /* GLESFramebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESFramebuffer.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESFramebuffer.cpp; sourceTree = "<group>"; };
+		5D3FC5DC1D8BF5C900AF4130 /* GLESGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESGeometry.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESGeometry.cpp; sourceTree = "<group>"; };
+		5D3FC5DD1D8BF5C900AF4130 /* GLESGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESGroup.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESGroup.cpp; sourceTree = "<group>"; };
+		5D3FC5DE1D8BF5C900AF4130 /* GLESIndependentPrimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESIndependentPrimitive.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESIndependentPrimitive.cpp; sourceTree = "<group>"; };
+		5D3FC5DF1D8BF5C900AF4130 /* GLESLightSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESLightSource.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESLightSource.cpp; sourceTree = "<group>"; };
+		5D3FC5E01D8BF5C900AF4130 /* GLESMaterial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESMaterial.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESMaterial.cpp; sourceTree = "<group>"; };
+		5D3FC5E11D8BF5C900AF4130 /* GLESNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESNode.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESNode.cpp; sourceTree = "<group>"; };
+		5D3FC5E21D8BF5C900AF4130 /* GLESObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESObject.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESObject.cpp; sourceTree = "<group>"; };
+		5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESPerspectiveView.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPerspectiveView.cpp; sourceTree = "<group>"; };
+		5D3FC5E41D8BF5C900AF4130 /* GLESPointLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESPointLight.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPointLight.cpp; sourceTree = "<group>"; };
+		5D3FC5E51D8BF5C900AF4130 /* GLESPrimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESPrimitive.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPrimitive.cpp; sourceTree = "<group>"; };
+		5D3FC5E61D8BF5C900AF4130 /* GLESPrimitiveAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESPrimitiveAttribute.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPrimitiveAttribute.cpp; sourceTree = "<group>"; };
+		5D3FC5E71D8BF5C900AF4130 /* GLESProgramManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESProgramManager.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESProgramManager.cpp; sourceTree = "<group>"; };
+		5D3FC5E81D8BF5C900AF4130 /* GLESRenderable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESRenderable.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESRenderable.cpp; sourceTree = "<group>"; };
+		5D3FC5E91D8BF5C900AF4130 /* GLESScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESScene.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESScene.cpp; sourceTree = "<group>"; };
+		5D3FC5EA1D8BF5C900AF4130 /* GLESShader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESShader.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESShader.cpp; sourceTree = "<group>"; };
+		5D3FC5EB1D8BF5C900AF4130 /* GLESShaderProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESShaderProgram.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESShaderProgram.cpp; sourceTree = "<group>"; };
+		5D3FC5EC1D8BF5C900AF4130 /* GLESShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESShape.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESShape.cpp; sourceTree = "<group>"; };
+		5D3FC5ED1D8BF5C900AF4130 /* GLESSphere.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESSphere.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESSphere.cpp; sourceTree = "<group>"; };
+		5D3FC5EE1D8BF5C900AF4130 /* GLESSpotLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESSpotLight.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESSpotLight.cpp; sourceTree = "<group>"; };
+		5D3FC5EF1D8BF5C900AF4130 /* GLESStripPrimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESStripPrimitive.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESStripPrimitive.cpp; sourceTree = "<group>"; };
+		5D3FC5F01D8BF5C900AF4130 /* GLESSwitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESSwitch.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESSwitch.cpp; sourceTree = "<group>"; };
+		5D3FC5F11D8BF5C900AF4130 /* GLESTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESTexture.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTexture.cpp; sourceTree = "<group>"; };
+		5D3FC5F21D8BF5C900AF4130 /* GLESTexture2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESTexture2D.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTexture2D.cpp; sourceTree = "<group>"; };
+		5D3FC5F31D8BF5C900AF4130 /* GLESTextures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESTextures.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTextures.cpp; sourceTree = "<group>"; };
+		5D3FC5F41D8BF5C900AF4130 /* GLESTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESTransform.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTransform.cpp; sourceTree = "<group>"; };
+		5D3FC5F51D8BF5C900AF4130 /* GLESTriangleFans.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESTriangleFans.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTriangleFans.cpp; sourceTree = "<group>"; };
+		5D3FC5F61D8BF5C900AF4130 /* GLESTriangles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESTriangles.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTriangles.cpp; sourceTree = "<group>"; };
+		5D3FC5F71D8BF5C900AF4130 /* GLESTriangleStrips.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESTriangleStrips.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTriangleStrips.cpp; sourceTree = "<group>"; };
+		5D3FC5F81D8BF5C900AF4130 /* GLESUndistortedBackground.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESUndistortedBackground.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESUndistortedBackground.cpp; sourceTree = "<group>"; };
+		5D3FC5F91D8BF5C900AF4130 /* GLESVertexSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESVertexSet.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESVertexSet.cpp; sourceTree = "<group>"; };
+		5D3FC5FB1D8BF5C900AF4130 /* GLESView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESView.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESView.cpp; sourceTree = "<group>"; };
+		5D3FC6CB1D8BFA5300AF4130 /* libOceanRenderingGLESceneGraphD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanRenderingGLESceneGraphD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F2D60141E2F724F00CB35C0 /* GLESPhantomAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESPhantomAttribute.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPhantomAttribute.h; sourceTree = "<group>"; };
+		5F2D60181E2F805C00CB35C0 /* GLESPhantomAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESPhantomAttribute.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPhantomAttribute.cpp; sourceTree = "<group>"; };
+		930305792645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESBitmapFramebuffer.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/apple/GLESBitmapFramebuffer.cpp; sourceTree = "<group>"; };
+		932689DC23D7C32D002A5162 /* GLESStereoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESStereoView.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESStereoView.h; sourceTree = "<group>"; };
+		932689E123D7C367002A5162 /* GLESStereoView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESStereoView.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESStereoView.cpp; sourceTree = "<group>"; };
+		9326C9A227554E7E008DABF2 /* GLESFrameTexture2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESFrameTexture2D.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESFrameTexture2D.h; sourceTree = "<group>"; };
+		9326C9AC27554EB3008DABF2 /* GLESFrameTexture2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESFrameTexture2D.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESFrameTexture2D.cpp; sourceTree = "<group>"; };
+		932CAF6D26C11170004C36E0 /* GLESText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESText.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESText.h; sourceTree = "<group>"; };
+		932CAF7226C1119A004C36E0 /* GLESText.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESText.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESText.cpp; sourceTree = "<group>"; };
+		932DFDE3261AC6E60063BEDA /* GLESEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESEngine.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESEngine.cpp; sourceTree = "<group>"; };
+		932DFDEC261AC6FC0063BEDA /* GLESEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESEngine.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESEngine.h; sourceTree = "<group>"; };
+		93320B7225F6ECAE00B10E4A /* GLESTextureFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESTextureFramebuffer.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTextureFramebuffer.h; sourceTree = "<group>"; };
+		93320B8925F6ECE300B10E4A /* GLESTextureFramebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESTextureFramebuffer.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTextureFramebuffer.cpp; sourceTree = "<group>"; };
+		933C630F264B9C8000A8CD5B /* GLESLOD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESLOD.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESLOD.cpp; sourceTree = "<group>"; };
+		933C6314264B9C9500A8CD5B /* GLESLOD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESLOD.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESLOD.h; sourceTree = "<group>"; };
+		9341AEBF2788BA9700B73898 /* GLESTextureFramebuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = GLESTextureFramebuffer.mm; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTextureFramebuffer.mm; sourceTree = "<group>"; };
+		934A162F2634E9B90069AF69 /* GLESBitmapFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESBitmapFramebuffer.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/apple/GLESBitmapFramebuffer.h; sourceTree = "<group>"; };
+		936857D5254236F900AE73D6 /* GLESTraverser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESTraverser.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTraverser.h; sourceTree = "<group>"; };
+		936857DE2542371000AE73D6 /* GLESTraverser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESTraverser.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESTraverser.cpp; sourceTree = "<group>"; };
+		93686C3926AF3E9B003CAF6E /* GLESPoints.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESPoints.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPoints.cpp; sourceTree = "<group>"; };
+		93686C3E26AF3EB1003CAF6E /* GLESPoints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESPoints.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESPoints.h; sourceTree = "<group>"; };
+		93A3E6F328F72DBB003E5044 /* Plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plugin.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/apple/Plugin.h; sourceTree = "<group>"; };
+		93A3E6F528F72DBB003E5044 /* GLESEngineApple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESEngineApple.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/apple/GLESEngineApple.h; sourceTree = "<group>"; };
+		93A3E6F628F72DBC003E5044 /* Apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Apple.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/apple/Apple.h; sourceTree = "<group>"; };
+		93A3E6F728F72DBC003E5044 /* GLESWindowFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESWindowFramebuffer.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/apple/GLESWindowFramebuffer.h; sourceTree = "<group>"; };
+		93A3E70C28F72DD7003E5044 /* Apple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Apple.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/apple/Apple.cpp; sourceTree = "<group>"; };
+		93A3E70D28F72DD7003E5044 /* GLESEngineApple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESEngineApple.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/apple/GLESEngineApple.cpp; sourceTree = "<group>"; };
+		93A3E70F28F72DD7003E5044 /* GLESWindowFramebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESWindowFramebuffer.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/apple/GLESWindowFramebuffer.cpp; sourceTree = "<group>"; };
+		93A3E71028F72DD7003E5044 /* Plugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plugin.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/apple/Plugin.cpp; sourceTree = "<group>"; };
+		93ADFB7D297A19DE00651F48 /* GLESLines.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESLines.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESLines.cpp; sourceTree = "<group>"; };
+		93ADFB7E297A19DE00651F48 /* GLESLineStrips.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESLineStrips.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESLineStrips.cpp; sourceTree = "<group>"; };
+		93ADFB87297A19FA00651F48 /* GLESLines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESLines.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESLines.h; sourceTree = "<group>"; };
+		93ADFB88297A19FA00651F48 /* GLESLineStrips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESLineStrips.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESLineStrips.h; sourceTree = "<group>"; };
+		93DC6AFD26BB0BA20021A07C /* GLESMediaTexture2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESMediaTexture2D.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESMediaTexture2D.h; sourceTree = "<group>"; };
+		93DC6B0C26BB0BD60021A07C /* GLESMediaTexture2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESMediaTexture2D.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESMediaTexture2D.cpp; sourceTree = "<group>"; };
+		93F1C4C4243EFB6C00217EF1 /* GLESStereoAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GLESStereoAttribute.cpp; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESStereoAttribute.cpp; sourceTree = "<group>"; };
+		93F1C4C9243EFB8700217EF1 /* GLESStereoAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLESStereoAttribute.h; path = ../../../../../../impl/ocean/rendering/glescenegraph/GLESStereoAttribute.h; sourceTree = "<group>"; };
+		C041ED9D1DABF21100BF5D76 /* OceanRenderingGLESceneGraphD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanRenderingGLESceneGraphD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D12BC991BF264E300A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD821BF267A400A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D3FC6951D8BFA5300AF4130 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041ED641DABF21100BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D12BC931BF264E300A56828 = {
+			isa = PBXGroup;
+			children = (
+				5D12BCFF1BF2662D00A56828 /* Header Files */,
+				5D12BCAA1BF265D300A56828 /* Source Files */,
+				5D12BDB31BF26E6000A56828 /* Resource Files */,
+				5D12BC9D1BF264E300A56828 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D12BC9D1BF264E300A56828 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BC9C1BF264E300A56828 /* libOceanRenderingGLESceneGraphD.a */,
+				5D12BDB21BF267A400A56828 /* OceanRenderingGLESceneGraphD.plugin */,
+				5D3FC6CB1D8BFA5300AF4130 /* libOceanRenderingGLESceneGraphD.a */,
+				C041ED9D1DABF21100BF5D76 /* OceanRenderingGLESceneGraphD.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D12BCAA1BF265D300A56828 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				93A3E70C28F72DD7003E5044 /* Apple.cpp */,
+				5D3FC5CC1D8BF5C800AF4130 /* GLESAbsoluteTransform.cpp */,
+				5D3FC5CD1D8BF5C800AF4130 /* GLESAttribute.cpp */,
+				5D3FC5CE1D8BF5C800AF4130 /* GLESAttributeSet.cpp */,
+				5D3FC5CF1D8BF5C800AF4130 /* GLESBackground.cpp */,
+				930305792645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp */,
+				5D3FC5D01D8BF5C800AF4130 /* GLESBlendAttribute.cpp */,
+				5D3FC5D11D8BF5C800AF4130 /* GLESBox.cpp */,
+				5D3FC5D21D8BF5C800AF4130 /* GLESceneGraph.cpp */,
+				5D3FC5D31D8BF5C800AF4130 /* GLESCone.cpp */,
+				5D3FC5D41D8BF5C800AF4130 /* GLESCylinder.cpp */,
+				5D3FC5D51D8BF5C800AF4130 /* GLESDepthAttribute.cpp */,
+				5D3FC5D61D8BF5C900AF4130 /* GLESDirectionalLight.cpp */,
+				5D3FC5D71D8BF5C900AF4130 /* GLESDynamicLibrary.cpp */,
+				932DFDE3261AC6E60063BEDA /* GLESEngine.cpp */,
+				93A3E70D28F72DD7003E5044 /* GLESEngineApple.cpp */,
+				5D3FC5D91D8BF5C900AF4130 /* GLESFactory.cpp */,
+				5D3FC5DB1D8BF5C900AF4130 /* GLESFramebuffer.cpp */,
+				9326C9AC27554EB3008DABF2 /* GLESFrameTexture2D.cpp */,
+				5D3FC5DC1D8BF5C900AF4130 /* GLESGeometry.cpp */,
+				5D3FC5DD1D8BF5C900AF4130 /* GLESGroup.cpp */,
+				5D3FC5DE1D8BF5C900AF4130 /* GLESIndependentPrimitive.cpp */,
+				5D3FC5DF1D8BF5C900AF4130 /* GLESLightSource.cpp */,
+				93ADFB7D297A19DE00651F48 /* GLESLines.cpp */,
+				93ADFB7E297A19DE00651F48 /* GLESLineStrips.cpp */,
+				933C630F264B9C8000A8CD5B /* GLESLOD.cpp */,
+				5D3FC5E01D8BF5C900AF4130 /* GLESMaterial.cpp */,
+				93DC6B0C26BB0BD60021A07C /* GLESMediaTexture2D.cpp */,
+				5D3FC5E11D8BF5C900AF4130 /* GLESNode.cpp */,
+				5D3FC5E21D8BF5C900AF4130 /* GLESObject.cpp */,
+				5D3FC5E31D8BF5C900AF4130 /* GLESPerspectiveView.cpp */,
+				5F2D60181E2F805C00CB35C0 /* GLESPhantomAttribute.cpp */,
+				5D3FC5E41D8BF5C900AF4130 /* GLESPointLight.cpp */,
+				93686C3926AF3E9B003CAF6E /* GLESPoints.cpp */,
+				5D3FC5E51D8BF5C900AF4130 /* GLESPrimitive.cpp */,
+				5D3FC5E61D8BF5C900AF4130 /* GLESPrimitiveAttribute.cpp */,
+				5D3FC5E71D8BF5C900AF4130 /* GLESProgramManager.cpp */,
+				5D3FC5E81D8BF5C900AF4130 /* GLESRenderable.cpp */,
+				5D3FC5E91D8BF5C900AF4130 /* GLESScene.cpp */,
+				5D3FC5EA1D8BF5C900AF4130 /* GLESShader.cpp */,
+				5D3FC5EB1D8BF5C900AF4130 /* GLESShaderProgram.cpp */,
+				5D3FC5EC1D8BF5C900AF4130 /* GLESShape.cpp */,
+				5D3FC5ED1D8BF5C900AF4130 /* GLESSphere.cpp */,
+				5D3FC5EE1D8BF5C900AF4130 /* GLESSpotLight.cpp */,
+				93F1C4C4243EFB6C00217EF1 /* GLESStereoAttribute.cpp */,
+				932689E123D7C367002A5162 /* GLESStereoView.cpp */,
+				5D3FC5EF1D8BF5C900AF4130 /* GLESStripPrimitive.cpp */,
+				5D3FC5F01D8BF5C900AF4130 /* GLESSwitch.cpp */,
+				932CAF7226C1119A004C36E0 /* GLESText.cpp */,
+				5D3FC5F11D8BF5C900AF4130 /* GLESTexture.cpp */,
+				5D3FC5F21D8BF5C900AF4130 /* GLESTexture2D.cpp */,
+				93320B8925F6ECE300B10E4A /* GLESTextureFramebuffer.cpp */,
+				9341AEBF2788BA9700B73898 /* GLESTextureFramebuffer.mm */,
+				5D3FC5F31D8BF5C900AF4130 /* GLESTextures.cpp */,
+				5D3FC5F41D8BF5C900AF4130 /* GLESTransform.cpp */,
+				936857DE2542371000AE73D6 /* GLESTraverser.cpp */,
+				5D3FC5F51D8BF5C900AF4130 /* GLESTriangleFans.cpp */,
+				5D3FC5F61D8BF5C900AF4130 /* GLESTriangles.cpp */,
+				5D3FC5F71D8BF5C900AF4130 /* GLESTriangleStrips.cpp */,
+				5D3FC5F81D8BF5C900AF4130 /* GLESUndistortedBackground.cpp */,
+				5D3FC5F91D8BF5C900AF4130 /* GLESVertexSet.cpp */,
+				5D3FC5FB1D8BF5C900AF4130 /* GLESView.cpp */,
+				93A3E70F28F72DD7003E5044 /* GLESWindowFramebuffer.cpp */,
+				93A3E71028F72DD7003E5044 /* Plugin.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D12BCFF1BF2662D00A56828 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				93A3E6F628F72DBC003E5044 /* Apple.h */,
+				5D3FC5361D8BF5B800AF4130 /* GLESAbsoluteTransform.h */,
+				5D3FC5371D8BF5B800AF4130 /* GLESAttribute.h */,
+				5D3FC5381D8BF5B800AF4130 /* GLESAttributeSet.h */,
+				5D3FC5391D8BF5B800AF4130 /* GLESBackground.h */,
+				934A162F2634E9B90069AF69 /* GLESBitmapFramebuffer.h */,
+				5D3FC53A1D8BF5B800AF4130 /* GLESBlendAttribute.h */,
+				5D3FC53B1D8BF5B800AF4130 /* GLESBox.h */,
+				5D3FC53C1D8BF5B800AF4130 /* GLESceneGraph.h */,
+				5D3FC53D1D8BF5B800AF4130 /* GLESCone.h */,
+				5D3FC53E1D8BF5B800AF4130 /* GLESCylinder.h */,
+				5D3FC53F1D8BF5B800AF4130 /* GLESDepthAttribute.h */,
+				5D3FC5401D8BF5B800AF4130 /* GLESDirectionalLight.h */,
+				5D3FC5411D8BF5B800AF4130 /* GLESDynamicLibrary.h */,
+				932DFDEC261AC6FC0063BEDA /* GLESEngine.h */,
+				93A3E6F528F72DBB003E5044 /* GLESEngineApple.h */,
+				5D3FC5431D8BF5B800AF4130 /* GLESFactory.h */,
+				5D3FC5451D8BF5B800AF4130 /* GLESFramebuffer.h */,
+				9326C9A227554E7E008DABF2 /* GLESFrameTexture2D.h */,
+				5D3FC5461D8BF5B800AF4130 /* GLESGeometry.h */,
+				5D3FC5471D8BF5B800AF4130 /* GLESGroup.h */,
+				5D3FC5481D8BF5B800AF4130 /* GLESIndependentPrimitive.h */,
+				5D3FC5491D8BF5B800AF4130 /* GLESLightSource.h */,
+				93ADFB87297A19FA00651F48 /* GLESLines.h */,
+				93ADFB88297A19FA00651F48 /* GLESLineStrips.h */,
+				933C6314264B9C9500A8CD5B /* GLESLOD.h */,
+				5D3FC54A1D8BF5B800AF4130 /* GLESMaterial.h */,
+				93DC6AFD26BB0BA20021A07C /* GLESMediaTexture2D.h */,
+				5D3FC54B1D8BF5B800AF4130 /* GLESNode.h */,
+				5D3FC54C1D8BF5B800AF4130 /* GLESObject.h */,
+				5D3FC54D1D8BF5B800AF4130 /* GLESPerspectiveView.h */,
+				5F2D60141E2F724F00CB35C0 /* GLESPhantomAttribute.h */,
+				5D3FC54E1D8BF5B800AF4130 /* GLESPointLight.h */,
+				93686C3E26AF3EB1003CAF6E /* GLESPoints.h */,
+				5D3FC54F1D8BF5B800AF4130 /* GLESPrimitive.h */,
+				5D3FC5501D8BF5B800AF4130 /* GLESPrimitiveAttribute.h */,
+				5D3FC5511D8BF5B800AF4130 /* GLESProgramManager.h */,
+				5D3FC5521D8BF5B800AF4130 /* GLESRenderable.h */,
+				5D3FC5531D8BF5B800AF4130 /* GLESScene.h */,
+				5D3FC5541D8BF5B800AF4130 /* GLESShader.h */,
+				5D3FC5551D8BF5B800AF4130 /* GLESShaderProgram.h */,
+				5D3FC5561D8BF5B800AF4130 /* GLESShape.h */,
+				5D3FC5571D8BF5B800AF4130 /* GLESSphere.h */,
+				5D3FC5581D8BF5B800AF4130 /* GLESSpotLight.h */,
+				93F1C4C9243EFB8700217EF1 /* GLESStereoAttribute.h */,
+				932689DC23D7C32D002A5162 /* GLESStereoView.h */,
+				5D3FC5591D8BF5B800AF4130 /* GLESStripPrimitive.h */,
+				5D3FC55A1D8BF5B800AF4130 /* GLESSwitch.h */,
+				932CAF6D26C11170004C36E0 /* GLESText.h */,
+				5D3FC55B1D8BF5B800AF4130 /* GLESTexture.h */,
+				5D3FC55C1D8BF5B800AF4130 /* GLESTexture2D.h */,
+				93320B7225F6ECAE00B10E4A /* GLESTextureFramebuffer.h */,
+				5D3FC55D1D8BF5B800AF4130 /* GLESTextures.h */,
+				5D3FC55E1D8BF5B800AF4130 /* GLESTransform.h */,
+				936857D5254236F900AE73D6 /* GLESTraverser.h */,
+				5D3FC55F1D8BF5B800AF4130 /* GLESTriangleFans.h */,
+				5D3FC5601D8BF5B800AF4130 /* GLESTriangles.h */,
+				5D3FC5611D8BF5B800AF4130 /* GLESTriangleStrips.h */,
+				5D3FC5621D8BF5B800AF4130 /* GLESUndistortedBackground.h */,
+				5D3FC5631D8BF5B800AF4130 /* GLESVertexSet.h */,
+				5D3FC5651D8BF5B800AF4130 /* GLESView.h */,
+				93A3E6F728F72DBC003E5044 /* GLESWindowFramebuffer.h */,
+				93A3E6F328F72DBB003E5044 /* Plugin.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5D12BDB31BF26E6000A56828 /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BDB51BF26EA000A56828 /* Info.plist */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D12BC9A1BF264E300A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D3FC5A01D8BF5B800AF4130 /* GLESRenderable.h in Headers */,
+				5D3FC5921D8BF5B800AF4130 /* GLESNode.h in Headers */,
+				5D3FC5A61D8BF5B800AF4130 /* GLESShaderProgram.h in Headers */,
+				932DFDED261AC6FC0063BEDA /* GLESEngine.h in Headers */,
+				5D3FC5761D8BF5B800AF4130 /* GLESCone.h in Headers */,
+				5D3FC56A1D8BF5B800AF4130 /* GLESAttribute.h in Headers */,
+				5D3FC5C61D8BF5B800AF4130 /* GLESView.h in Headers */,
+				93ADFB89297A19FA00651F48 /* GLESLines.h in Headers */,
+				5D3FC57A1D8BF5B800AF4130 /* GLESDepthAttribute.h in Headers */,
+				93ADFB8D297A19FA00651F48 /* GLESLineStrips.h in Headers */,
+				5D3FC5B41D8BF5B800AF4130 /* GLESTexture2D.h in Headers */,
+				5D3FC5B01D8BF5B800AF4130 /* GLESSwitch.h in Headers */,
+				5F2D60151E2F724F00CB35C0 /* GLESPhantomAttribute.h in Headers */,
+				5D3FC5981D8BF5B800AF4130 /* GLESPointLight.h in Headers */,
+				932CAF6E26C11170004C36E0 /* GLESText.h in Headers */,
+				93F1C4CA243EFB8700217EF1 /* GLESStereoAttribute.h in Headers */,
+				5D3FC58C1D8BF5B800AF4130 /* GLESIndependentPrimitive.h in Headers */,
+				5D3FC57E1D8BF5B800AF4130 /* GLESDynamicLibrary.h in Headers */,
+				9326C9A327554E7E008DABF2 /* GLESFrameTexture2D.h in Headers */,
+				5D3FC59E1D8BF5B800AF4130 /* GLESProgramManager.h in Headers */,
+				936857D6254236F900AE73D6 /* GLESTraverser.h in Headers */,
+				5D3FC5901D8BF5B800AF4130 /* GLESMaterial.h in Headers */,
+				5D3FC59C1D8BF5B800AF4130 /* GLESPrimitiveAttribute.h in Headers */,
+				93A3E6F828F72DBC003E5044 /* Plugin.h in Headers */,
+				5D3FC5781D8BF5B800AF4130 /* GLESCylinder.h in Headers */,
+				5D3FC56E1D8BF5B800AF4130 /* GLESBackground.h in Headers */,
+				5D3FC58A1D8BF5B800AF4130 /* GLESGroup.h in Headers */,
+				93320B7325F6ECAE00B10E4A /* GLESTextureFramebuffer.h in Headers */,
+				5D3FC5AA1D8BF5B800AF4130 /* GLESSphere.h in Headers */,
+				5D3FC5B61D8BF5B800AF4130 /* GLESTextures.h in Headers */,
+				5D3FC5961D8BF5B800AF4130 /* GLESPerspectiveView.h in Headers */,
+				5D3FC59A1D8BF5B800AF4130 /* GLESPrimitive.h in Headers */,
+				5D3FC5941D8BF5B800AF4130 /* GLESObject.h in Headers */,
+				5D3FC5A81D8BF5B800AF4130 /* GLESShape.h in Headers */,
+				5D3FC5A41D8BF5B800AF4130 /* GLESShader.h in Headers */,
+				93DC6AFE26BB0BA20021A07C /* GLESMediaTexture2D.h in Headers */,
+				5D3FC5861D8BF5B800AF4130 /* GLESFramebuffer.h in Headers */,
+				5D3FC5AE1D8BF5B800AF4130 /* GLESStripPrimitive.h in Headers */,
+				5D3FC5BE1D8BF5B800AF4130 /* GLESTriangleStrips.h in Headers */,
+				5D3FC58E1D8BF5B800AF4130 /* GLESLightSource.h in Headers */,
+				5D3FC5C01D8BF5B800AF4130 /* GLESUndistortedBackground.h in Headers */,
+				5D3FC5741D8BF5B800AF4130 /* GLESceneGraph.h in Headers */,
+				93A3E70028F72DBC003E5044 /* GLESEngineApple.h in Headers */,
+				5D3FC5821D8BF5B800AF4130 /* GLESFactory.h in Headers */,
+				5D3FC5681D8BF5B800AF4130 /* GLESAbsoluteTransform.h in Headers */,
+				5D3FC5881D8BF5B800AF4130 /* GLESGeometry.h in Headers */,
+				5D3FC5721D8BF5B800AF4130 /* GLESBox.h in Headers */,
+				93A3E70828F72DBC003E5044 /* GLESWindowFramebuffer.h in Headers */,
+				933C6315264B9C9500A8CD5B /* GLESLOD.h in Headers */,
+				934A16342634E9B90069AF69 /* GLESBitmapFramebuffer.h in Headers */,
+				5D3FC57C1D8BF5B800AF4130 /* GLESDirectionalLight.h in Headers */,
+				93A3E70428F72DBC003E5044 /* Apple.h in Headers */,
+				5D3FC5BA1D8BF5B800AF4130 /* GLESTriangleFans.h in Headers */,
+				5D3FC5C21D8BF5B800AF4130 /* GLESVertexSet.h in Headers */,
+				5D3FC5B21D8BF5B800AF4130 /* GLESTexture.h in Headers */,
+				5D3FC5701D8BF5B800AF4130 /* GLESBlendAttribute.h in Headers */,
+				932689DD23D7C32D002A5162 /* GLESStereoView.h in Headers */,
+				5D3FC5B81D8BF5B800AF4130 /* GLESTransform.h in Headers */,
+				5D3FC5A21D8BF5B800AF4130 /* GLESScene.h in Headers */,
+				5D3FC5BC1D8BF5B800AF4130 /* GLESTriangles.h in Headers */,
+				5D3FC56C1D8BF5B800AF4130 /* GLESAttributeSet.h in Headers */,
+				93686C3F26AF3EB1003CAF6E /* GLESPoints.h in Headers */,
+				5D3FC5AC1D8BF5B800AF4130 /* GLESSpotLight.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD831BF267A400A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D3FC5A11D8BF5B800AF4130 /* GLESRenderable.h in Headers */,
+				5D3FC5931D8BF5B800AF4130 /* GLESNode.h in Headers */,
+				5D3FC5A71D8BF5B800AF4130 /* GLESShaderProgram.h in Headers */,
+				5D3FC5771D8BF5B800AF4130 /* GLESCone.h in Headers */,
+				5D3FC56B1D8BF5B800AF4130 /* GLESAttribute.h in Headers */,
+				5D3FC5C71D8BF5B800AF4130 /* GLESView.h in Headers */,
+				93DC6AFF26BB0BA20021A07C /* GLESMediaTexture2D.h in Headers */,
+				5D3FC57B1D8BF5B800AF4130 /* GLESDepthAttribute.h in Headers */,
+				5D3FC5B51D8BF5B800AF4130 /* GLESTexture2D.h in Headers */,
+				5D3FC5B11D8BF5B800AF4130 /* GLESSwitch.h in Headers */,
+				5D3FC5991D8BF5B800AF4130 /* GLESPointLight.h in Headers */,
+				93A3E6F928F72DBC003E5044 /* Plugin.h in Headers */,
+				5D3FC58D1D8BF5B800AF4130 /* GLESIndependentPrimitive.h in Headers */,
+				5D3FC57F1D8BF5B800AF4130 /* GLESDynamicLibrary.h in Headers */,
+				5D3FC59F1D8BF5B800AF4130 /* GLESProgramManager.h in Headers */,
+				5D3FC5911D8BF5B800AF4130 /* GLESMaterial.h in Headers */,
+				5D3FC59D1D8BF5B800AF4130 /* GLESPrimitiveAttribute.h in Headers */,
+				5D3FC5791D8BF5B800AF4130 /* GLESCylinder.h in Headers */,
+				5D3FC56F1D8BF5B800AF4130 /* GLESBackground.h in Headers */,
+				93ADFB8A297A19FA00651F48 /* GLESLines.h in Headers */,
+				5D3FC58B1D8BF5B800AF4130 /* GLESGroup.h in Headers */,
+				5D3FC5AB1D8BF5B800AF4130 /* GLESSphere.h in Headers */,
+				5D3FC5B71D8BF5B800AF4130 /* GLESTextures.h in Headers */,
+				5D3FC5971D8BF5B800AF4130 /* GLESPerspectiveView.h in Headers */,
+				5D3FC59B1D8BF5B800AF4130 /* GLESPrimitive.h in Headers */,
+				93A3E70928F72DBC003E5044 /* GLESWindowFramebuffer.h in Headers */,
+				5D3FC5951D8BF5B800AF4130 /* GLESObject.h in Headers */,
+				5D3FC5A91D8BF5B800AF4130 /* GLESShape.h in Headers */,
+				933C6316264B9C9500A8CD5B /* GLESLOD.h in Headers */,
+				93ADFB8E297A19FA00651F48 /* GLESLineStrips.h in Headers */,
+				934A16352634E9B90069AF69 /* GLESBitmapFramebuffer.h in Headers */,
+				93686C4026AF3EB1003CAF6E /* GLESPoints.h in Headers */,
+				5D3FC5A51D8BF5B800AF4130 /* GLESShader.h in Headers */,
+				5D3FC5871D8BF5B800AF4130 /* GLESFramebuffer.h in Headers */,
+				5D3FC5AF1D8BF5B800AF4130 /* GLESStripPrimitive.h in Headers */,
+				5D3FC5BF1D8BF5B800AF4130 /* GLESTriangleStrips.h in Headers */,
+				93320B7425F6ECAE00B10E4A /* GLESTextureFramebuffer.h in Headers */,
+				5D3FC58F1D8BF5B800AF4130 /* GLESLightSource.h in Headers */,
+				5D3FC5C11D8BF5B800AF4130 /* GLESUndistortedBackground.h in Headers */,
+				5D3FC5751D8BF5B800AF4130 /* GLESceneGraph.h in Headers */,
+				5D3FC5831D8BF5B800AF4130 /* GLESFactory.h in Headers */,
+				5D3FC5691D8BF5B800AF4130 /* GLESAbsoluteTransform.h in Headers */,
+				5D3FC5891D8BF5B800AF4130 /* GLESGeometry.h in Headers */,
+				5D3FC5731D8BF5B800AF4130 /* GLESBox.h in Headers */,
+				5D3FC57D1D8BF5B800AF4130 /* GLESDirectionalLight.h in Headers */,
+				932DFDEE261AC6FC0063BEDA /* GLESEngine.h in Headers */,
+				5D3FC5BB1D8BF5B800AF4130 /* GLESTriangleFans.h in Headers */,
+				936857D7254236F900AE73D6 /* GLESTraverser.h in Headers */,
+				932689DE23D7C32D002A5162 /* GLESStereoView.h in Headers */,
+				5D3FC5C31D8BF5B800AF4130 /* GLESVertexSet.h in Headers */,
+				5D3FC5B31D8BF5B800AF4130 /* GLESTexture.h in Headers */,
+				5D3FC5711D8BF5B800AF4130 /* GLESBlendAttribute.h in Headers */,
+				5D3FC5B91D8BF5B800AF4130 /* GLESTransform.h in Headers */,
+				93F1C4CB243EFB8700217EF1 /* GLESStereoAttribute.h in Headers */,
+				932CAF6F26C11170004C36E0 /* GLESText.h in Headers */,
+				93A3E70128F72DBC003E5044 /* GLESEngineApple.h in Headers */,
+				5D3FC5A31D8BF5B800AF4130 /* GLESScene.h in Headers */,
+				5D3FC5BD1D8BF5B800AF4130 /* GLESTriangles.h in Headers */,
+				5D3FC56D1D8BF5B800AF4130 /* GLESAttributeSet.h in Headers */,
+				93A3E70528F72DBC003E5044 /* Apple.h in Headers */,
+				5D3FC5AD1D8BF5B800AF4130 /* GLESSpotLight.h in Headers */,
+				9326C9A427554E7E008DABF2 /* GLESFrameTexture2D.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D3FC6961D8BFA5300AF4130 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D3FC6971D8BFA5300AF4130 /* GLESRenderable.h in Headers */,
+				5D3FC6991D8BFA5300AF4130 /* GLESNode.h in Headers */,
+				5D3FC69A1D8BFA5300AF4130 /* GLESShaderProgram.h in Headers */,
+				5D3FC69B1D8BFA5300AF4130 /* GLESCone.h in Headers */,
+				5D3FC69C1D8BFA5300AF4130 /* GLESAttribute.h in Headers */,
+				5D3FC69D1D8BFA5300AF4130 /* GLESView.h in Headers */,
+				93DC6B0026BB0BA20021A07C /* GLESMediaTexture2D.h in Headers */,
+				5D3FC69E1D8BFA5300AF4130 /* GLESDepthAttribute.h in Headers */,
+				5D3FC69F1D8BFA5300AF4130 /* GLESTexture2D.h in Headers */,
+				5D3FC6A01D8BFA5300AF4130 /* GLESSwitch.h in Headers */,
+				5D3FC6A11D8BFA5300AF4130 /* GLESPointLight.h in Headers */,
+				93A3E6FA28F72DBC003E5044 /* Plugin.h in Headers */,
+				5D3FC6A21D8BFA5300AF4130 /* GLESIndependentPrimitive.h in Headers */,
+				5D3FC6A31D8BFA5300AF4130 /* GLESDynamicLibrary.h in Headers */,
+				5D3FC6A41D8BFA5300AF4130 /* GLESProgramManager.h in Headers */,
+				5D3FC6A51D8BFA5300AF4130 /* GLESMaterial.h in Headers */,
+				5D3FC6A61D8BFA5300AF4130 /* GLESPrimitiveAttribute.h in Headers */,
+				5D3FC6A71D8BFA5300AF4130 /* GLESCylinder.h in Headers */,
+				5D3FC6A81D8BFA5300AF4130 /* GLESBackground.h in Headers */,
+				93ADFB8B297A19FA00651F48 /* GLESLines.h in Headers */,
+				5D3FC6A91D8BFA5300AF4130 /* GLESGroup.h in Headers */,
+				5D3FC6AA1D8BFA5300AF4130 /* GLESSphere.h in Headers */,
+				5D3FC6AB1D8BFA5300AF4130 /* GLESTextures.h in Headers */,
+				5D3FC6AC1D8BFA5300AF4130 /* GLESPerspectiveView.h in Headers */,
+				5D3FC6AD1D8BFA5300AF4130 /* GLESPrimitive.h in Headers */,
+				93A3E70A28F72DBC003E5044 /* GLESWindowFramebuffer.h in Headers */,
+				5D3FC6AE1D8BFA5300AF4130 /* GLESObject.h in Headers */,
+				5D3FC6AF1D8BFA5300AF4130 /* GLESShape.h in Headers */,
+				933C6317264B9C9500A8CD5B /* GLESLOD.h in Headers */,
+				93ADFB8F297A19FA00651F48 /* GLESLineStrips.h in Headers */,
+				934A16362634E9B90069AF69 /* GLESBitmapFramebuffer.h in Headers */,
+				93686C4126AF3EB1003CAF6E /* GLESPoints.h in Headers */,
+				5D3FC6B01D8BFA5300AF4130 /* GLESShader.h in Headers */,
+				5D3FC6B11D8BFA5300AF4130 /* GLESFramebuffer.h in Headers */,
+				5D3FC6B31D8BFA5300AF4130 /* GLESStripPrimitive.h in Headers */,
+				5D3FC6B41D8BFA5300AF4130 /* GLESTriangleStrips.h in Headers */,
+				93320B7525F6ECAE00B10E4A /* GLESTextureFramebuffer.h in Headers */,
+				5D3FC6B61D8BFA5300AF4130 /* GLESLightSource.h in Headers */,
+				5D3FC6B71D8BFA5300AF4130 /* GLESUndistortedBackground.h in Headers */,
+				5D3FC6B81D8BFA5300AF4130 /* GLESceneGraph.h in Headers */,
+				5D3FC6B91D8BFA5300AF4130 /* GLESFactory.h in Headers */,
+				5D3FC6BA1D8BFA5300AF4130 /* GLESAbsoluteTransform.h in Headers */,
+				5D3FC6BB1D8BFA5300AF4130 /* GLESGeometry.h in Headers */,
+				5D3FC6BC1D8BFA5300AF4130 /* GLESBox.h in Headers */,
+				5D3FC6BD1D8BFA5300AF4130 /* GLESDirectionalLight.h in Headers */,
+				932DFDEF261AC6FC0063BEDA /* GLESEngine.h in Headers */,
+				5D3FC6BE1D8BFA5300AF4130 /* GLESTriangleFans.h in Headers */,
+				936857D8254236F900AE73D6 /* GLESTraverser.h in Headers */,
+				932689DF23D7C32D002A5162 /* GLESStereoView.h in Headers */,
+				5D3FC6C01D8BFA5300AF4130 /* GLESVertexSet.h in Headers */,
+				5D3FC6C11D8BFA5300AF4130 /* GLESTexture.h in Headers */,
+				5D3FC6C21D8BFA5300AF4130 /* GLESBlendAttribute.h in Headers */,
+				5D3FC6C31D8BFA5300AF4130 /* GLESTransform.h in Headers */,
+				93F1C4CC243EFB8700217EF1 /* GLESStereoAttribute.h in Headers */,
+				932CAF7026C11170004C36E0 /* GLESText.h in Headers */,
+				93A3E70228F72DBC003E5044 /* GLESEngineApple.h in Headers */,
+				5D3FC6C41D8BFA5300AF4130 /* GLESScene.h in Headers */,
+				5D3FC6C51D8BFA5300AF4130 /* GLESTriangles.h in Headers */,
+				5D3FC6C61D8BFA5300AF4130 /* GLESAttributeSet.h in Headers */,
+				93A3E70628F72DBC003E5044 /* Apple.h in Headers */,
+				5D3FC6C71D8BFA5300AF4130 /* GLESSpotLight.h in Headers */,
+				9326C9A527554E7E008DABF2 /* GLESFrameTexture2D.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041ED651DABF21100BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041ED661DABF21100BF5D76 /* GLESRenderable.h in Headers */,
+				C041ED671DABF21100BF5D76 /* GLESNode.h in Headers */,
+				C041ED681DABF21100BF5D76 /* GLESShaderProgram.h in Headers */,
+				C041ED691DABF21100BF5D76 /* GLESCone.h in Headers */,
+				C041ED6A1DABF21100BF5D76 /* GLESAttribute.h in Headers */,
+				C041ED6B1DABF21100BF5D76 /* GLESView.h in Headers */,
+				93DC6B0126BB0BA20021A07C /* GLESMediaTexture2D.h in Headers */,
+				C041ED6C1DABF21100BF5D76 /* GLESDepthAttribute.h in Headers */,
+				C041ED6D1DABF21100BF5D76 /* GLESTexture2D.h in Headers */,
+				C041ED6E1DABF21100BF5D76 /* GLESSwitch.h in Headers */,
+				C041ED6F1DABF21100BF5D76 /* GLESPointLight.h in Headers */,
+				93A3E6FB28F72DBC003E5044 /* Plugin.h in Headers */,
+				C041ED701DABF21100BF5D76 /* GLESIndependentPrimitive.h in Headers */,
+				C041ED711DABF21100BF5D76 /* GLESDynamicLibrary.h in Headers */,
+				C041ED721DABF21100BF5D76 /* GLESProgramManager.h in Headers */,
+				C041ED731DABF21100BF5D76 /* GLESMaterial.h in Headers */,
+				C041ED741DABF21100BF5D76 /* GLESPrimitiveAttribute.h in Headers */,
+				C041ED751DABF21100BF5D76 /* GLESCylinder.h in Headers */,
+				C041ED761DABF21100BF5D76 /* GLESBackground.h in Headers */,
+				93ADFB8C297A19FA00651F48 /* GLESLines.h in Headers */,
+				C041ED771DABF21100BF5D76 /* GLESGroup.h in Headers */,
+				C041ED781DABF21100BF5D76 /* GLESSphere.h in Headers */,
+				C041ED791DABF21100BF5D76 /* GLESTextures.h in Headers */,
+				C041ED7A1DABF21100BF5D76 /* GLESPerspectiveView.h in Headers */,
+				C041ED7B1DABF21100BF5D76 /* GLESPrimitive.h in Headers */,
+				93A3E70B28F72DBC003E5044 /* GLESWindowFramebuffer.h in Headers */,
+				C041ED7C1DABF21100BF5D76 /* GLESObject.h in Headers */,
+				C041ED7D1DABF21100BF5D76 /* GLESShape.h in Headers */,
+				933C6318264B9C9500A8CD5B /* GLESLOD.h in Headers */,
+				93ADFB90297A19FA00651F48 /* GLESLineStrips.h in Headers */,
+				934A16372634E9B90069AF69 /* GLESBitmapFramebuffer.h in Headers */,
+				93686C4226AF3EB1003CAF6E /* GLESPoints.h in Headers */,
+				C041ED7E1DABF21100BF5D76 /* GLESShader.h in Headers */,
+				C041ED801DABF21100BF5D76 /* GLESFramebuffer.h in Headers */,
+				C041ED831DABF21100BF5D76 /* GLESStripPrimitive.h in Headers */,
+				C041ED841DABF21100BF5D76 /* GLESTriangleStrips.h in Headers */,
+				93320B7625F6ECAE00B10E4A /* GLESTextureFramebuffer.h in Headers */,
+				C041ED861DABF21100BF5D76 /* GLESLightSource.h in Headers */,
+				C041ED871DABF21100BF5D76 /* GLESUndistortedBackground.h in Headers */,
+				C041ED881DABF21100BF5D76 /* GLESceneGraph.h in Headers */,
+				C041ED891DABF21100BF5D76 /* GLESFactory.h in Headers */,
+				C041ED8A1DABF21100BF5D76 /* GLESAbsoluteTransform.h in Headers */,
+				C041ED8B1DABF21100BF5D76 /* GLESGeometry.h in Headers */,
+				C041ED8C1DABF21100BF5D76 /* GLESBox.h in Headers */,
+				C041ED8D1DABF21100BF5D76 /* GLESDirectionalLight.h in Headers */,
+				932DFDF0261AC6FC0063BEDA /* GLESEngine.h in Headers */,
+				C041ED8E1DABF21100BF5D76 /* GLESTriangleFans.h in Headers */,
+				936857D9254236FA00AE73D6 /* GLESTraverser.h in Headers */,
+				932689E023D7C32D002A5162 /* GLESStereoView.h in Headers */,
+				C041ED901DABF21100BF5D76 /* GLESVertexSet.h in Headers */,
+				C041ED911DABF21100BF5D76 /* GLESTexture.h in Headers */,
+				C041ED921DABF21100BF5D76 /* GLESBlendAttribute.h in Headers */,
+				C041ED931DABF21100BF5D76 /* GLESTransform.h in Headers */,
+				93F1C4CD243EFB8700217EF1 /* GLESStereoAttribute.h in Headers */,
+				932CAF7126C11170004C36E0 /* GLESText.h in Headers */,
+				93A3E70328F72DBC003E5044 /* GLESEngineApple.h in Headers */,
+				C041ED941DABF21100BF5D76 /* GLESScene.h in Headers */,
+				C041ED951DABF21100BF5D76 /* GLESTriangles.h in Headers */,
+				C041ED961DABF21100BF5D76 /* GLESAttributeSet.h in Headers */,
+				93A3E70728F72DBC003E5044 /* Apple.h in Headers */,
+				C041ED971DABF21100BF5D76 /* GLESSpotLight.h in Headers */,
+				9326C9A627554E7E008DABF2 /* GLESFrameTexture2D.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D12BC9B1BF264E300A56828 /* renderingglescenegraph x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BCA71BF264E300A56828 /* Build configuration list for PBXNativeTarget "renderingglescenegraph x64 (Static)" */;
+			buildPhases = (
+				5D12BC981BF264E300A56828 /* Sources */,
+				5D12BC991BF264E300A56828 /* Frameworks */,
+				5D12BC9A1BF264E300A56828 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "renderingglescenegraph x64 (Static)";
+			productName = renderingglescenegraph;
+			productReference = 5D12BC9C1BF264E300A56828 /* libOceanRenderingGLESceneGraphD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D12BD561BF267A400A56828 /* renderingglescenegraph x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BDAF1BF267A400A56828 /* Build configuration list for PBXNativeTarget "renderingglescenegraph x64 (Shared)" */;
+			buildPhases = (
+				5D12BD571BF267A400A56828 /* Sources */,
+				5D12BD821BF267A400A56828 /* Frameworks */,
+				5D12BD831BF267A400A56828 /* Headers */,
+				5D12BDB61BF26EAB00A56828 /* Resources */,
+				5D12BDB81BF26EBE00A56828 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "renderingglescenegraph x64 (Shared)";
+			productName = renderingglescenegraph;
+			productReference = 5D12BDB21BF267A400A56828 /* OceanRenderingGLESceneGraphD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+		5D3FC6621D8BFA5300AF4130 /* renderingglescenegraph arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D3FC6C81D8BFA5300AF4130 /* Build configuration list for PBXNativeTarget "renderingglescenegraph arm64 (Static)" */;
+			buildPhases = (
+				5D3FC6631D8BFA5300AF4130 /* Sources */,
+				5D3FC6951D8BFA5300AF4130 /* Frameworks */,
+				5D3FC6961D8BFA5300AF4130 /* Headers */,
+				5D837F571D8F10C200939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "renderingglescenegraph arm64 (Static)";
+			productName = renderingglescenegraph;
+			productReference = 5D3FC6CB1D8BFA5300AF4130 /* libOceanRenderingGLESceneGraphD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041ED301DABF21100BF5D76 /* renderingglescenegraph arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041ED9A1DABF21100BF5D76 /* Build configuration list for PBXNativeTarget "renderingglescenegraph arm64 (Shared)" */;
+			buildPhases = (
+				C041ED311DABF21100BF5D76 /* Sources */,
+				C041ED641DABF21100BF5D76 /* Frameworks */,
+				C041ED651DABF21100BF5D76 /* Headers */,
+				C041ED981DABF21100BF5D76 /* Resources */,
+				C041ED991DABF21100BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "renderingglescenegraph arm64 (Shared)";
+			productName = renderingglescenegraph;
+			productReference = C041ED9D1DABF21100BF5D76 /* OceanRenderingGLESceneGraphD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D12BC941BF264E300A56828 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D12BC9B1BF264E300A56828 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D12BC971BF264E300A56828 /* Build configuration list for PBXProject "renderingglescenegraph" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D12BC931BF264E300A56828;
+			productRefGroup = 5D12BC9D1BF264E300A56828 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D12BC9B1BF264E300A56828 /* renderingglescenegraph x64 (Static) */,
+				5D12BD561BF267A400A56828 /* renderingglescenegraph x64 (Shared) */,
+				5D3FC6621D8BFA5300AF4130 /* renderingglescenegraph arm64 (Static) */,
+				C041ED301DABF21100BF5D76 /* renderingglescenegraph arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5D12BDB61BF26EAB00A56828 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041ED981DABF21100BF5D76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D12BDB81BF26EBE00A56828 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+		5D837F571D8F10C200939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		C041ED991DABF21100BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D12BC981BF264E300A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A3E71128F72DD8003E5044 /* Apple.cpp in Sources */,
+				5D3FC63C1D8BF5C900AF4130 /* GLESShaderProgram.cpp in Sources */,
+				5D3FC62C1D8BF5C900AF4130 /* GLESPerspectiveView.cpp in Sources */,
+				5D3FC6521D8BF5C900AF4130 /* GLESTriangles.cpp in Sources */,
+				93A3E71528F72DD8003E5044 /* GLESEngineApple.cpp in Sources */,
+				5D3FC65C1D8BF5C900AF4130 /* GLESView.cpp in Sources */,
+				5D3FC6461D8BF5C900AF4130 /* GLESSwitch.cpp in Sources */,
+				93F1C4C5243EFB6C00217EF1 /* GLESStereoAttribute.cpp in Sources */,
+				5D3FC6321D8BF5C900AF4130 /* GLESPrimitiveAttribute.cpp in Sources */,
+				5D3FC6541D8BF5C900AF4130 /* GLESTriangleStrips.cpp in Sources */,
+				5D3FC6141D8BF5C900AF4130 /* GLESDynamicLibrary.cpp in Sources */,
+				9341AEC02788BA9700B73898 /* GLESTextureFramebuffer.mm in Sources */,
+				5D3FC6421D8BF5C900AF4130 /* GLESSpotLight.cpp in Sources */,
+				5D3FC63E1D8BF5C900AF4130 /* GLESShape.cpp in Sources */,
+				933C6310264B9C8100A8CD5B /* GLESLOD.cpp in Sources */,
+				5D3FC6561D8BF5C900AF4130 /* GLESUndistortedBackground.cpp in Sources */,
+				5D3FC62E1D8BF5C900AF4130 /* GLESPointLight.cpp in Sources */,
+				5D3FC6181D8BF5C900AF4130 /* GLESFactory.cpp in Sources */,
+				93A3E71D28F72DD8003E5044 /* GLESWindowFramebuffer.cpp in Sources */,
+				5D3FC61E1D8BF5C900AF4130 /* GLESGeometry.cpp in Sources */,
+				5D3FC64A1D8BF5C900AF4130 /* GLESTexture2D.cpp in Sources */,
+				5D3FC6481D8BF5C900AF4130 /* GLESTexture.cpp in Sources */,
+				5D3FC6021D8BF5C900AF4130 /* GLESAttributeSet.cpp in Sources */,
+				5D3FC6241D8BF5C900AF4130 /* GLESLightSource.cpp in Sources */,
+				5D3FC6061D8BF5C900AF4130 /* GLESBlendAttribute.cpp in Sources */,
+				5D3FC6301D8BF5C900AF4130 /* GLESPrimitive.cpp in Sources */,
+				5D3FC6581D8BF5C900AF4130 /* GLESVertexSet.cpp in Sources */,
+				5D3FC61C1D8BF5C900AF4130 /* GLESFramebuffer.cpp in Sources */,
+				5D3FC60A1D8BF5C900AF4130 /* GLESceneGraph.cpp in Sources */,
+				936857DF2542371000AE73D6 /* GLESTraverser.cpp in Sources */,
+				932DFDE4261AC6E60063BEDA /* GLESEngine.cpp in Sources */,
+				5D3FC5FE1D8BF5C900AF4130 /* GLESAbsoluteTransform.cpp in Sources */,
+				5D3FC6041D8BF5C900AF4130 /* GLESBackground.cpp in Sources */,
+				5D3FC6441D8BF5C900AF4130 /* GLESStripPrimitive.cpp in Sources */,
+				5D3FC60C1D8BF5C900AF4130 /* GLESCone.cpp in Sources */,
+				5D3FC6081D8BF5C900AF4130 /* GLESBox.cpp in Sources */,
+				93320B8A25F6ECE300B10E4A /* GLESTextureFramebuffer.cpp in Sources */,
+				5D3FC6101D8BF5C900AF4130 /* GLESDepthAttribute.cpp in Sources */,
+				5D3FC6261D8BF5C900AF4130 /* GLESMaterial.cpp in Sources */,
+				5D3FC63A1D8BF5C900AF4130 /* GLESShader.cpp in Sources */,
+				93A3E72128F72DD8003E5044 /* Plugin.cpp in Sources */,
+				5F2D60191E2F805C00CB35C0 /* GLESPhantomAttribute.cpp in Sources */,
+				9326C9AD27554EB3008DABF2 /* GLESFrameTexture2D.cpp in Sources */,
+				93ADFB83297A19DE00651F48 /* GLESLineStrips.cpp in Sources */,
+				5D3FC64E1D8BF5C900AF4130 /* GLESTransform.cpp in Sources */,
+				5D3FC6281D8BF5C900AF4130 /* GLESNode.cpp in Sources */,
+				5D3FC6381D8BF5C900AF4130 /* GLESScene.cpp in Sources */,
+				5D3FC6221D8BF5C900AF4130 /* GLESIndependentPrimitive.cpp in Sources */,
+				5D3FC6201D8BF5C900AF4130 /* GLESGroup.cpp in Sources */,
+				5D3FC6121D8BF5C900AF4130 /* GLESDirectionalLight.cpp in Sources */,
+				5D3FC6501D8BF5C900AF4130 /* GLESTriangleFans.cpp in Sources */,
+				5D3FC64C1D8BF5C900AF4130 /* GLESTextures.cpp in Sources */,
+				5D3FC60E1D8BF5C900AF4130 /* GLESCylinder.cpp in Sources */,
+				5D3FC62A1D8BF5C900AF4130 /* GLESObject.cpp in Sources */,
+				5D3FC6341D8BF5C900AF4130 /* GLESProgramManager.cpp in Sources */,
+				93DC6B0D26BB0BD60021A07C /* GLESMediaTexture2D.cpp in Sources */,
+				5D3FC6001D8BF5C900AF4130 /* GLESAttribute.cpp in Sources */,
+				93ADFB7F297A19DE00651F48 /* GLESLines.cpp in Sources */,
+				93686C3A26AF3E9B003CAF6E /* GLESPoints.cpp in Sources */,
+				5D3FC6361D8BF5C900AF4130 /* GLESRenderable.cpp in Sources */,
+				5D3FC6401D8BF5C900AF4130 /* GLESSphere.cpp in Sources */,
+				932CAF7326C1119A004C36E0 /* GLESText.cpp in Sources */,
+				932689E223D7C367002A5162 /* GLESStereoView.cpp in Sources */,
+				9303057A2645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD571BF267A400A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A3E71228F72DD8003E5044 /* Apple.cpp in Sources */,
+				5D3FC63D1D8BF5C900AF4130 /* GLESShaderProgram.cpp in Sources */,
+				5D3FC62D1D8BF5C900AF4130 /* GLESPerspectiveView.cpp in Sources */,
+				5D3FC6531D8BF5C900AF4130 /* GLESTriangles.cpp in Sources */,
+				93A3E71628F72DD8003E5044 /* GLESEngineApple.cpp in Sources */,
+				5D3FC65D1D8BF5C900AF4130 /* GLESView.cpp in Sources */,
+				5D3FC6471D8BF5C900AF4130 /* GLESSwitch.cpp in Sources */,
+				93F1C4C6243EFB6C00217EF1 /* GLESStereoAttribute.cpp in Sources */,
+				5D3FC6331D8BF5C900AF4130 /* GLESPrimitiveAttribute.cpp in Sources */,
+				5D3FC6551D8BF5C900AF4130 /* GLESTriangleStrips.cpp in Sources */,
+				5D3FC6151D8BF5C900AF4130 /* GLESDynamicLibrary.cpp in Sources */,
+				9341AEC12788BA9700B73898 /* GLESTextureFramebuffer.mm in Sources */,
+				5D3FC6431D8BF5C900AF4130 /* GLESSpotLight.cpp in Sources */,
+				5D3FC63F1D8BF5C900AF4130 /* GLESShape.cpp in Sources */,
+				933C6311264B9C8100A8CD5B /* GLESLOD.cpp in Sources */,
+				5D3FC6571D8BF5C900AF4130 /* GLESUndistortedBackground.cpp in Sources */,
+				5D3FC62F1D8BF5C900AF4130 /* GLESPointLight.cpp in Sources */,
+				5D3FC6191D8BF5C900AF4130 /* GLESFactory.cpp in Sources */,
+				93A3E71E28F72DD8003E5044 /* GLESWindowFramebuffer.cpp in Sources */,
+				5D3FC61F1D8BF5C900AF4130 /* GLESGeometry.cpp in Sources */,
+				5D3FC64B1D8BF5C900AF4130 /* GLESTexture2D.cpp in Sources */,
+				5D3FC6491D8BF5C900AF4130 /* GLESTexture.cpp in Sources */,
+				5D3FC6031D8BF5C900AF4130 /* GLESAttributeSet.cpp in Sources */,
+				5D3FC6251D8BF5C900AF4130 /* GLESLightSource.cpp in Sources */,
+				5D3FC6071D8BF5C900AF4130 /* GLESBlendAttribute.cpp in Sources */,
+				5D3FC6311D8BF5C900AF4130 /* GLESPrimitive.cpp in Sources */,
+				5D3FC6591D8BF5C900AF4130 /* GLESVertexSet.cpp in Sources */,
+				5D3FC61D1D8BF5C900AF4130 /* GLESFramebuffer.cpp in Sources */,
+				5D3FC60B1D8BF5C900AF4130 /* GLESceneGraph.cpp in Sources */,
+				936857E02542371000AE73D6 /* GLESTraverser.cpp in Sources */,
+				932DFDE5261AC6E60063BEDA /* GLESEngine.cpp in Sources */,
+				5D3FC5FF1D8BF5C900AF4130 /* GLESAbsoluteTransform.cpp in Sources */,
+				5D3FC6051D8BF5C900AF4130 /* GLESBackground.cpp in Sources */,
+				5D3FC6451D8BF5C900AF4130 /* GLESStripPrimitive.cpp in Sources */,
+				5D3FC60D1D8BF5C900AF4130 /* GLESCone.cpp in Sources */,
+				5D3FC6091D8BF5C900AF4130 /* GLESBox.cpp in Sources */,
+				93320B8B25F6ECE300B10E4A /* GLESTextureFramebuffer.cpp in Sources */,
+				5D3FC6111D8BF5C900AF4130 /* GLESDepthAttribute.cpp in Sources */,
+				5D3FC6271D8BF5C900AF4130 /* GLESMaterial.cpp in Sources */,
+				5D3FC63B1D8BF5C900AF4130 /* GLESShader.cpp in Sources */,
+				93A3E72228F72DD8003E5044 /* Plugin.cpp in Sources */,
+				5F2D601A1E2F863700CB35C0 /* GLESPhantomAttribute.cpp in Sources */,
+				9326C9AE27554EB3008DABF2 /* GLESFrameTexture2D.cpp in Sources */,
+				93ADFB84297A19DE00651F48 /* GLESLineStrips.cpp in Sources */,
+				5D3FC64F1D8BF5C900AF4130 /* GLESTransform.cpp in Sources */,
+				5D3FC6291D8BF5C900AF4130 /* GLESNode.cpp in Sources */,
+				5D3FC6391D8BF5C900AF4130 /* GLESScene.cpp in Sources */,
+				5D3FC6231D8BF5C900AF4130 /* GLESIndependentPrimitive.cpp in Sources */,
+				5D3FC6211D8BF5C900AF4130 /* GLESGroup.cpp in Sources */,
+				5D3FC6131D8BF5C900AF4130 /* GLESDirectionalLight.cpp in Sources */,
+				5D3FC6511D8BF5C900AF4130 /* GLESTriangleFans.cpp in Sources */,
+				5D3FC64D1D8BF5C900AF4130 /* GLESTextures.cpp in Sources */,
+				5D3FC60F1D8BF5C900AF4130 /* GLESCylinder.cpp in Sources */,
+				5D3FC62B1D8BF5C900AF4130 /* GLESObject.cpp in Sources */,
+				5D3FC6351D8BF5C900AF4130 /* GLESProgramManager.cpp in Sources */,
+				93DC6B0E26BB0BD60021A07C /* GLESMediaTexture2D.cpp in Sources */,
+				5D3FC6011D8BF5C900AF4130 /* GLESAttribute.cpp in Sources */,
+				93ADFB80297A19DE00651F48 /* GLESLines.cpp in Sources */,
+				93686C3B26AF3E9B003CAF6E /* GLESPoints.cpp in Sources */,
+				5D3FC6371D8BF5C900AF4130 /* GLESRenderable.cpp in Sources */,
+				5D3FC6411D8BF5C900AF4130 /* GLESSphere.cpp in Sources */,
+				932CAF7426C1119A004C36E0 /* GLESText.cpp in Sources */,
+				932689E323D7C367002A5162 /* GLESStereoView.cpp in Sources */,
+				9303057B2645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D3FC6631D8BFA5300AF4130 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A3E71328F72DD8003E5044 /* Apple.cpp in Sources */,
+				5D3FC6641D8BFA5300AF4130 /* GLESShaderProgram.cpp in Sources */,
+				5D3FC6651D8BFA5300AF4130 /* GLESPerspectiveView.cpp in Sources */,
+				5D3FC6661D8BFA5300AF4130 /* GLESTriangles.cpp in Sources */,
+				93A3E71728F72DD8003E5044 /* GLESEngineApple.cpp in Sources */,
+				5D3FC6671D8BFA5300AF4130 /* GLESView.cpp in Sources */,
+				5D3FC6681D8BFA5300AF4130 /* GLESSwitch.cpp in Sources */,
+				93F1C4C7243EFB6C00217EF1 /* GLESStereoAttribute.cpp in Sources */,
+				5D3FC6691D8BFA5300AF4130 /* GLESPrimitiveAttribute.cpp in Sources */,
+				5D3FC66A1D8BFA5300AF4130 /* GLESTriangleStrips.cpp in Sources */,
+				5D3FC66C1D8BFA5300AF4130 /* GLESDynamicLibrary.cpp in Sources */,
+				9341AEC22788BA9700B73898 /* GLESTextureFramebuffer.mm in Sources */,
+				5D3FC66D1D8BFA5300AF4130 /* GLESSpotLight.cpp in Sources */,
+				5D3FC66E1D8BFA5300AF4130 /* GLESShape.cpp in Sources */,
+				933C6312264B9C8100A8CD5B /* GLESLOD.cpp in Sources */,
+				5D3FC66F1D8BFA5300AF4130 /* GLESUndistortedBackground.cpp in Sources */,
+				5D3FC6701D8BFA5300AF4130 /* GLESPointLight.cpp in Sources */,
+				5D3FC6711D8BFA5300AF4130 /* GLESFactory.cpp in Sources */,
+				93A3E71F28F72DD8003E5044 /* GLESWindowFramebuffer.cpp in Sources */,
+				5D3FC6721D8BFA5300AF4130 /* GLESGeometry.cpp in Sources */,
+				5D3FC6731D8BFA5300AF4130 /* GLESTexture2D.cpp in Sources */,
+				5D3FC6741D8BFA5300AF4130 /* GLESTexture.cpp in Sources */,
+				5D3FC6761D8BFA5300AF4130 /* GLESAttributeSet.cpp in Sources */,
+				5D3FC6771D8BFA5300AF4130 /* GLESLightSource.cpp in Sources */,
+				5D3FC6781D8BFA5300AF4130 /* GLESBlendAttribute.cpp in Sources */,
+				5D3FC6791D8BFA5300AF4130 /* GLESPrimitive.cpp in Sources */,
+				5D3FC67A1D8BFA5300AF4130 /* GLESVertexSet.cpp in Sources */,
+				5D3FC67B1D8BFA5300AF4130 /* GLESFramebuffer.cpp in Sources */,
+				5D3FC67C1D8BFA5300AF4130 /* GLESceneGraph.cpp in Sources */,
+				936857E12542371000AE73D6 /* GLESTraverser.cpp in Sources */,
+				932DFDE6261AC6E60063BEDA /* GLESEngine.cpp in Sources */,
+				5D3FC67D1D8BFA5300AF4130 /* GLESAbsoluteTransform.cpp in Sources */,
+				5D3FC67E1D8BFA5300AF4130 /* GLESBackground.cpp in Sources */,
+				5D3FC67F1D8BFA5300AF4130 /* GLESStripPrimitive.cpp in Sources */,
+				5D3FC6801D8BFA5300AF4130 /* GLESCone.cpp in Sources */,
+				5D3FC6811D8BFA5300AF4130 /* GLESBox.cpp in Sources */,
+				93320B8C25F6ECE300B10E4A /* GLESTextureFramebuffer.cpp in Sources */,
+				5D3FC6821D8BFA5300AF4130 /* GLESDepthAttribute.cpp in Sources */,
+				5D3FC6831D8BFA5300AF4130 /* GLESMaterial.cpp in Sources */,
+				5D3FC6841D8BFA5300AF4130 /* GLESShader.cpp in Sources */,
+				93A3E72328F72DD8003E5044 /* Plugin.cpp in Sources */,
+				5F2D601B1E2F863800CB35C0 /* GLESPhantomAttribute.cpp in Sources */,
+				9326C9AF27554EB3008DABF2 /* GLESFrameTexture2D.cpp in Sources */,
+				93ADFB85297A19DE00651F48 /* GLESLineStrips.cpp in Sources */,
+				5D3FC6851D8BFA5300AF4130 /* GLESTransform.cpp in Sources */,
+				5D3FC6861D8BFA5300AF4130 /* GLESNode.cpp in Sources */,
+				5D3FC6871D8BFA5300AF4130 /* GLESScene.cpp in Sources */,
+				5D3FC6881D8BFA5300AF4130 /* GLESIndependentPrimitive.cpp in Sources */,
+				5D3FC6891D8BFA5300AF4130 /* GLESGroup.cpp in Sources */,
+				5D3FC68A1D8BFA5300AF4130 /* GLESDirectionalLight.cpp in Sources */,
+				5D3FC68B1D8BFA5300AF4130 /* GLESTriangleFans.cpp in Sources */,
+				5D3FC68D1D8BFA5300AF4130 /* GLESTextures.cpp in Sources */,
+				5D3FC68E1D8BFA5300AF4130 /* GLESCylinder.cpp in Sources */,
+				5D3FC68F1D8BFA5300AF4130 /* GLESObject.cpp in Sources */,
+				5D3FC6901D8BFA5300AF4130 /* GLESProgramManager.cpp in Sources */,
+				93DC6B0F26BB0BD60021A07C /* GLESMediaTexture2D.cpp in Sources */,
+				5D3FC6911D8BFA5300AF4130 /* GLESAttribute.cpp in Sources */,
+				93ADFB81297A19DE00651F48 /* GLESLines.cpp in Sources */,
+				93686C3C26AF3E9B003CAF6E /* GLESPoints.cpp in Sources */,
+				5D3FC6931D8BFA5300AF4130 /* GLESRenderable.cpp in Sources */,
+				5D3FC6941D8BFA5300AF4130 /* GLESSphere.cpp in Sources */,
+				932CAF7526C1119A004C36E0 /* GLESText.cpp in Sources */,
+				932689E423D7C367002A5162 /* GLESStereoView.cpp in Sources */,
+				9303057C2645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041ED311DABF21100BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A3E71428F72DD8003E5044 /* Apple.cpp in Sources */,
+				C041ED321DABF21100BF5D76 /* GLESShaderProgram.cpp in Sources */,
+				C041ED331DABF21100BF5D76 /* GLESPerspectiveView.cpp in Sources */,
+				C041ED341DABF21100BF5D76 /* GLESTriangles.cpp in Sources */,
+				93A3E71828F72DD8003E5044 /* GLESEngineApple.cpp in Sources */,
+				C041ED351DABF21100BF5D76 /* GLESView.cpp in Sources */,
+				C041ED361DABF21100BF5D76 /* GLESSwitch.cpp in Sources */,
+				93F1C4C8243EFB6C00217EF1 /* GLESStereoAttribute.cpp in Sources */,
+				C041ED371DABF21100BF5D76 /* GLESPrimitiveAttribute.cpp in Sources */,
+				C041ED381DABF21100BF5D76 /* GLESTriangleStrips.cpp in Sources */,
+				C041ED3A1DABF21100BF5D76 /* GLESDynamicLibrary.cpp in Sources */,
+				9341AEC32788BA9700B73898 /* GLESTextureFramebuffer.mm in Sources */,
+				C041ED3B1DABF21100BF5D76 /* GLESSpotLight.cpp in Sources */,
+				C041ED3C1DABF21100BF5D76 /* GLESShape.cpp in Sources */,
+				933C6313264B9C8100A8CD5B /* GLESLOD.cpp in Sources */,
+				C041ED3D1DABF21100BF5D76 /* GLESUndistortedBackground.cpp in Sources */,
+				C041ED3E1DABF21100BF5D76 /* GLESPointLight.cpp in Sources */,
+				C041ED3F1DABF21100BF5D76 /* GLESFactory.cpp in Sources */,
+				93A3E72028F72DD8003E5044 /* GLESWindowFramebuffer.cpp in Sources */,
+				C041ED401DABF21100BF5D76 /* GLESGeometry.cpp in Sources */,
+				C041ED411DABF21100BF5D76 /* GLESTexture2D.cpp in Sources */,
+				C041ED421DABF21100BF5D76 /* GLESTexture.cpp in Sources */,
+				C041ED441DABF21100BF5D76 /* GLESAttributeSet.cpp in Sources */,
+				C041ED451DABF21100BF5D76 /* GLESLightSource.cpp in Sources */,
+				C041ED461DABF21100BF5D76 /* GLESBlendAttribute.cpp in Sources */,
+				C041ED471DABF21100BF5D76 /* GLESPrimitive.cpp in Sources */,
+				C041ED481DABF21100BF5D76 /* GLESVertexSet.cpp in Sources */,
+				C041ED4A1DABF21100BF5D76 /* GLESFramebuffer.cpp in Sources */,
+				C041ED4B1DABF21100BF5D76 /* GLESceneGraph.cpp in Sources */,
+				936857E22542371000AE73D6 /* GLESTraverser.cpp in Sources */,
+				932DFDE7261AC6E60063BEDA /* GLESEngine.cpp in Sources */,
+				C041ED4C1DABF21100BF5D76 /* GLESAbsoluteTransform.cpp in Sources */,
+				C041ED4D1DABF21100BF5D76 /* GLESBackground.cpp in Sources */,
+				C041ED4E1DABF21100BF5D76 /* GLESStripPrimitive.cpp in Sources */,
+				C041ED4F1DABF21100BF5D76 /* GLESCone.cpp in Sources */,
+				C041ED501DABF21100BF5D76 /* GLESBox.cpp in Sources */,
+				93320B8D25F6ECE300B10E4A /* GLESTextureFramebuffer.cpp in Sources */,
+				C041ED511DABF21100BF5D76 /* GLESDepthAttribute.cpp in Sources */,
+				C041ED521DABF21100BF5D76 /* GLESMaterial.cpp in Sources */,
+				C041ED531DABF21100BF5D76 /* GLESShader.cpp in Sources */,
+				93A3E72428F72DD8003E5044 /* Plugin.cpp in Sources */,
+				5F2D601C1E2F863900CB35C0 /* GLESPhantomAttribute.cpp in Sources */,
+				9326C9B027554EB3008DABF2 /* GLESFrameTexture2D.cpp in Sources */,
+				93ADFB86297A19DE00651F48 /* GLESLineStrips.cpp in Sources */,
+				C041ED551DABF21100BF5D76 /* GLESTransform.cpp in Sources */,
+				C041ED561DABF21100BF5D76 /* GLESNode.cpp in Sources */,
+				C041ED571DABF21100BF5D76 /* GLESScene.cpp in Sources */,
+				C041ED581DABF21100BF5D76 /* GLESIndependentPrimitive.cpp in Sources */,
+				C041ED591DABF21100BF5D76 /* GLESGroup.cpp in Sources */,
+				C041ED5A1DABF21100BF5D76 /* GLESDirectionalLight.cpp in Sources */,
+				C041ED5B1DABF21100BF5D76 /* GLESTriangleFans.cpp in Sources */,
+				C041ED5C1DABF21100BF5D76 /* GLESTextures.cpp in Sources */,
+				C041ED5D1DABF21100BF5D76 /* GLESCylinder.cpp in Sources */,
+				C041ED5E1DABF21100BF5D76 /* GLESObject.cpp in Sources */,
+				C041ED5F1DABF21100BF5D76 /* GLESProgramManager.cpp in Sources */,
+				93DC6B1026BB0BD60021A07C /* GLESMediaTexture2D.cpp in Sources */,
+				C041ED601DABF21100BF5D76 /* GLESAttribute.cpp in Sources */,
+				93ADFB82297A19DE00651F48 /* GLESLines.cpp in Sources */,
+				93686C3D26AF3E9B003CAF6E /* GLESPoints.cpp in Sources */,
+				C041ED621DABF21100BF5D76 /* GLESRenderable.cpp in Sources */,
+				C041ED631DABF21100BF5D76 /* GLESSphere.cpp in Sources */,
+				932CAF7626C1119A004C36E0 /* GLESText.cpp in Sources */,
+				932689E523D7C367002A5162 /* GLESStereoView.cpp in Sources */,
+				9303057D2645E4C2009B76A0 /* GLESBitmapFramebuffer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D12BCA51BF264E300A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D12BCA61BF264E300A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D12BCA81BF264E300A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+					"GLES_SILENCE_DEPRECATION=1",
+					GL_SILENCE_DEPRECATION,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanRenderingGLESceneGraphD;
+				PRODUCT_NAME = OceanRenderingGLESceneGraphD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D12BCA91BF264E300A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+					"GLES_SILENCE_DEPRECATION=1",
+					GL_SILENCE_DEPRECATION,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanRenderingGLESceneGraph;
+				PRODUCT_NAME = OceanRenderingGLESceneGraph;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D12BDB01BF267A400A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+					"GLES_SILENCE_DEPRECATION=1",
+					GL_SILENCE_DEPRECATION,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/rendering/glescenegraph/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanMathD",
+					"-lOceanRenderingD",
+					"-lOceanSystemD",
+					"-framework",
+					OpenGL,
+				);
+				PRODUCT_MODULE_NAME = OceanRenderingGLESceneGraphD;
+				PRODUCT_NAME = OceanRenderingGLESceneGraphD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		5D12BDB11BF267A400A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+					"GLES_SILENCE_DEPRECATION=1",
+					GL_SILENCE_DEPRECATION,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/rendering/glescenegraph/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanMath",
+					"-lOceanRendering",
+					"-lOceanSystem",
+					"-framework",
+					OpenGL,
+				);
+				PRODUCT_MODULE_NAME = OceanRenderingGLESceneGraph;
+				PRODUCT_NAME = OceanRenderingGLESceneGraph;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		5D3FC6C91D8BFA5300AF4130 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+					"GLES_SILENCE_DEPRECATION=1",
+					GL_SILENCE_DEPRECATION,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanRenderingGLESceneGraphD;
+				PRODUCT_NAME = OceanRenderingGLESceneGraphD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D3FC6CA1D8BFA5300AF4130 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+					"GLES_SILENCE_DEPRECATION=1",
+					GL_SILENCE_DEPRECATION,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanRenderingGLESceneGraph;
+				PRODUCT_NAME = OceanRenderingGLESceneGraph;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041ED9B1DABF21100BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+					"GLES_SILENCE_DEPRECATION=1",
+					GL_SILENCE_DEPRECATION,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/rendering/glescenegraph/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanMathD",
+					"-lOceanRenderingD",
+					"-lOceanSystemD",
+					"-framework",
+					OpenGLES,
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanRenderingGLESceneGraphD;
+				PRODUCT_NAME = OceanRenderingGLESceneGraphD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		C041ED9C1DABF21100BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+					"GLES_SILENCE_DEPRECATION=1",
+					GL_SILENCE_DEPRECATION,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/rendering/glescenegraph/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanMath",
+					"-lOceanRendering",
+					"-lOceanSystem",
+					"-framework",
+					OpenGLES,
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanRenderingGLESceneGraph;
+				PRODUCT_NAME = OceanRenderingGLESceneGraph;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D12BC971BF264E300A56828 /* Build configuration list for PBXProject "renderingglescenegraph" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BCA51BF264E300A56828 /* Debug */,
+				5D12BCA61BF264E300A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BCA71BF264E300A56828 /* Build configuration list for PBXNativeTarget "renderingglescenegraph x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BCA81BF264E300A56828 /* Debug */,
+				5D12BCA91BF264E300A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BDAF1BF267A400A56828 /* Build configuration list for PBXNativeTarget "renderingglescenegraph x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BDB01BF267A400A56828 /* Debug */,
+				5D12BDB11BF267A400A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D3FC6C81D8BFA5300AF4130 /* Build configuration list for PBXNativeTarget "renderingglescenegraph arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D3FC6C91D8BFA5300AF4130 /* Debug */,
+				5D3FC6CA1D8BFA5300AF4130 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041ED9A1DABF21100BF5D76 /* Build configuration list for PBXNativeTarget "renderingglescenegraph arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041ED9B1DABF21100BF5D76 /* Debug */,
+				C041ED9C1DABF21100BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D12BC941BF264E300A56828 /* Project object */;
+}

@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "container:"
+      name = "application">
+      <FileRef
+         location = "group:/Users/nilsplath/fbsource/xplat/ocean/build/xcode/macos/ocean_development_team.xcconfig">
+      </FileRef>
+      <Group
+         location = "container:"
+         name = "ocean">
+         <Group
+            location = "container:"
+            name = "demo">
+            <Group
+               location = "container:"
+               name = "base">
+               <FileRef
+                  location = "group:application/ocean/demo/base/console/democonsole.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/base/sharedmemory/server/macos/demobasesharedmemoryserver.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/base/sharedmemory/client/macos/demobasesharedmemoryclient.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "cv">
+               <Group
+                  location = "container:"
+                  name = "advanced">
+                  <FileRef
+                     location = "group:application/ocean/demo/cv/advanced/panoramaextractor/macos/democvadvancedpanoramaextractor.xcodeproj">
+                  </FileRef>
+               </Group>
+               <Group
+                  location = "container:"
+                  name = "detector">
+                  <Group
+                     location = "container:"
+                     name = "barcodes">
+                     <FileRef
+                        location = "group:application/ocean/demo/cv/detector/barcodes/detector2d/macos/democvdetectorbarcodesdetector2dosx.xcodeproj">
+                     </FileRef>
+                  </Group>
+                  <Group
+                     location = "container:"
+                     name = "qrcodes">
+                     <FileRef
+                        location = "group:application/ocean/demo/cv/detector/qrcodes/detector2d/ios/democvdetectorqrcodesdetector2dios.xcodeproj">
+                     </FileRef>
+                     <FileRef
+                        location = "group:application/ocean/demo/cv/detector/qrcodes/detector2d/macos/democvdetectorqrcodesdetector2dosx.xcodeproj">
+                     </FileRef>
+                  </Group>
+                  <FileRef
+                     location = "group:application/ocean/demo/cv/detector/linedetector/ios/democvdetectorlinedetectorios.xcodeproj">
+                  </FileRef>
+               </Group>
+            </Group>
+            <Group
+               location = "container:"
+               name = "math">
+               <FileRef
+                  location = "group:application/ocean/demo/math/lookup/macos/demomathlookup.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "media">
+               <FileRef
+                  location = "group:application/ocean/demo/media/moviepreview/wxw/demomediamoviepreview.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/media/videopreview/ios/demomediavideopreviewios.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/media/videopreview/macos/demomediavideopreviewosx.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "misc">
+               <FileRef
+                  location = "group:application/ocean/demo/misc/appinspector/macos/demomiscappinspectorosx.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "network">
+               <FileRef
+                  location = "group:application/ocean/demo/network/maintenancereceiver/macos/demonetworkmaintenancereceiver.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/network/tcpclient/demonetworktcpclient/demonetworktcpclient.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/network/tcpserver/macos/demonetworktcpserver.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "platform">
+               <FileRef
+                  location = "group:application/ocean/demo/platform/osxobjc/macos/demoplatformosxobjc.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/platform/osxswift/macos/demoplatformosxswift.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "tracking">
+               <FileRef
+                  location = "group:application/ocean/demo/tracking/featuretracker/ios/demotrackingfeaturetrackerios.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/tracking/featuretracker/macos/demotrackingfeaturetrackerosx.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/tracking/homographyimagealigner/ios/demotrackinghomographyimagealignerios.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/tracking/homographyimagealigner/macos/demotrackinghomographyimagealignerosx.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/tracking/pointtracker/ios/demotrackingpointtrackerios.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/demo/tracking/pointtracker/macos/demotrackingpointtrackerosx.xcodeproj">
+               </FileRef>
+            </Group>
+         </Group>
+         <Group
+            location = "container:"
+            name = "test">
+            <Group
+               location = "container:"
+               name = "base">
+               <FileRef
+                  location = "group:application/ocean/test/base/testbase/ios/testbaseios.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/base/testbase/macos/testbaseosx.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "cv">
+               <FileRef
+                  location = "group:application/ocean/test/cv/testcv/ios/testcvios.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/cv/testcv/macos/testcvosx.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/cv/testcv/testcvadvanced/macos/testcvadvanced.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/cv/testcv/testcvadvanced/ios/testcvadvanced.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/cv/testcv/testcvdetector/ios/testcvdetectorios.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/cv/testcv/testcvdetector/macos/testcvdetectorosx.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/cv/testcv/testcvdetector/testcvdetectorqrcodes/ios/testcvdetectorqrcodesios.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/cv/testcv/testcvdetector/testcvdetectorqrcodes/macos/testcvdetectorqrcodesosx.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/cv/testcv/testcvsegmentation/macos/testcvsegmentation.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/cv/testcv/testcvsegmentation/ios/testcvsegmentation.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "geometry">
+               <FileRef
+                  location = "group:application/ocean/test/geometry/testgeometry/macos/testgeometryosx.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/geometry/testgeometry/ios/testgeometryios.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "io">
+               <FileRef
+                  location = "group:application/ocean/test/io/testio/macos/testio.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "math">
+               <FileRef
+                  location = "group:application/ocean/test/math/testmath/macos/testmath.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/math/testmath/ios/testmathios.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "media">
+               <FileRef
+                  location = "group:application/ocean/test/media/testmedia/macos/testmedia.xcodeproj">
+               </FileRef>
+            </Group>
+            <Group
+               location = "container:"
+               name = "tracking">
+               <FileRef
+                  location = "group:application/ocean/test/tracking/testtracking/ios/testtrackingios.xcodeproj">
+               </FileRef>
+               <FileRef
+                  location = "group:application/ocean/test/tracking/testtracking/macos/testtrackingosx.xcodeproj">
+               </FileRef>
+            </Group>
+            <FileRef
+               location = "group:application/ocean/test/testocean/macos/testocean.xcodeproj">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:application/ocean/shark/ios/shark.xcodeproj">
+         </FileRef>
+      </Group>
+   </Group>
+   <Group
+      location = "container:"
+      name = "ocean">
+      <Group
+         location = "container:"
+         name = "test">
+         <FileRef
+            location = "group:ocean/test/test.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testbase/testbase.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testcv/testcv.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testcv/testadvanced/testcvadvanced.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testcv/testcvdetector/testcvdetector.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testcv/testcvdetector/testcvdetectorqrcodes/testcvdetectorqrcodes.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testcv/testcvsegmentation/testcvsegmentation.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testdevices/testdevices.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testgeometry/testgeometry.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testio/testio.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testmath/testmath.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testmedia/testmedia.xcodeproj">
+         </FileRef>
+         <FileRef
+            location = "group:ocean/test/testtracking/testtracking.xcodeproj">
+         </FileRef>
+      </Group>
+      <FileRef
+         location = "group:ocean/base/base.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/cv/cv.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/cv/advanced/cvadvanced.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/cv/detector/cvdetector.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/cv/detector/barcodes/cvdetectorbarcodes.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/cv/detector/qrcodes/cvdetectorqrcodes.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/cv/fonts/cvfonts.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/cv/segmentation/cvsegmentation.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/cv/synthesis/cvsynthesis.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/devices/devices.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/devices/ios/devicesios.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/devices/pattern/devicespattern.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/devices/rmv/devicesrmv.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/devices/slam/devicesslam.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/geometry/geometry.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/io/io.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/io/image/ioimage.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/math/math.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/media/media.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/media/avfoundation/mediaavfoundation.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/media/ffmpeg/mediaffmpeg.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/media/imageio/mediaimageio.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/media/openimagelibraries/mediaopenimagelibraries.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/media/special/mediaspecial.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/network/network.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/platform/platform.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/platform/apple/platformapple.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/platform/apple/ios/platformappleios.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/platform/apple/macos/platformapplemacos.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/platform/gl/platformgl.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/platform/gles/platformgles.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/platform/wxwidgets/platformwxwidgets.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/rendering/rendering.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/rendering/glescenegraph/renderingglescenegraph.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/rendering/globalillumination/renderingglobalillumination.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/scenedescription/scenedescription.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/scenedescription/sdl/obj/scenedescriptionsdlobj.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/scenedescription/sdx/x3d/scenedescriptionsdxx3d.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/system/system.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/tracking/tracking.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/tracking/oculustags/trackingoculustags.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/tracking/offline/trackingoffline.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/tracking/orb/trackingorb.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/tracking/pattern/trackingpattern.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/tracking/point/trackingpoint.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/tracking/qrcodes/trackingqrcodes.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:ocean/tracking/rmv/trackingrmv.xcodeproj">
+      </FileRef>
+   </Group>
+</Workspace>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "container:"
+      name = "application">
+      <FileRef
+         location = "group:ios/testopencv.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:osx/testopencv.xcodeproj">
+      </FileRef>
+   </Group>
+   <Group
+      location = "container:"
+      name = "ocean">
+      <FileRef
+         location = "group:../../../../../../ocean/base/base.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../../../../../../ocean/cv/cv.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../../../../../../ocean/geometry/geometry.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../../../../../../ocean/io/io.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../../../../../../ocean/math/math.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../../../../../../ocean/media/media.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../../../../../../ocean/platform/platform.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../../../../../../ocean/platform/apple/platformapple.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../../../../../../ocean/system/system.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../../../../../../ocean/test/testcv/testcv.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:../../../../../../ocean/test/testcv/testopencv/testopencv.xcodeproj">
+      </FileRef>
+   </Group>
+</Workspace>

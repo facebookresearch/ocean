@@ -1,0 +1,597 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9304748321F6AD9B006855DC /* TestAVFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 9304748221F6AD9B006855DC /* TestAVFoundation.h */; };
+		9304748421F6AD9B006855DC /* TestAVFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = 9304748221F6AD9B006855DC /* TestAVFoundation.h */; };
+		9304748621F6ADAE006855DC /* TestAVFoundation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9304748521F6ADAE006855DC /* TestAVFoundation.mm */; };
+		9304748721F6ADAE006855DC /* TestAVFoundation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9304748521F6ADAE006855DC /* TestAVFoundation.mm */; };
+		9329C62B26465CD500954308 /* TestSpecial.h in Headers */ = {isa = PBXBuildFile; fileRef = 9329C62A26465CD400954308 /* TestSpecial.h */; };
+		9329C62C26465CD500954308 /* TestSpecial.h in Headers */ = {isa = PBXBuildFile; fileRef = 9329C62A26465CD400954308 /* TestSpecial.h */; };
+		9329C62E26465CE100954308 /* TestSpecial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9329C62D26465CE100954308 /* TestSpecial.cpp */; };
+		9329C62F26465CE100954308 /* TestSpecial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9329C62D26465CE100954308 /* TestSpecial.cpp */; };
+		93905F95299ABB6E00F3D66C /* TestMovie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93905F94299ABB6E00F3D66C /* TestMovie.cpp */; };
+		93905F96299ABB6E00F3D66C /* TestMovie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93905F94299ABB6E00F3D66C /* TestMovie.cpp */; };
+		93905F98299ABB7A00F3D66C /* TestMovie.h in Headers */ = {isa = PBXBuildFile; fileRef = 93905F97299ABB7A00F3D66C /* TestMovie.h */; };
+		93905F99299ABB7A00F3D66C /* TestMovie.h in Headers */ = {isa = PBXBuildFile; fileRef = 93905F97299ABB7A00F3D66C /* TestMovie.h */; };
+		93A371122139ED2C00C209C8 /* TestImageIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A371112139ED2C00C209C8 /* TestImageIO.cpp */; };
+		93A371132139ED2C00C209C8 /* TestImageIO.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A371112139ED2C00C209C8 /* TestImageIO.cpp */; };
+		93A371152139ED4000C209C8 /* TestImageIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A371142139ED4000C209C8 /* TestImageIO.h */; };
+		93A371162139ED4000C209C8 /* TestImageIO.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A371142139ED4000C209C8 /* TestImageIO.h */; };
+		93B32FF32017FF7400D94149 /* TestMedia.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FF12017FF7300D94149 /* TestMedia.h */; };
+		93B32FF52017FF7400D94149 /* TestMedia.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FF12017FF7300D94149 /* TestMedia.h */; };
+		93B32FF72017FF7400D94149 /* TestOpenImageLibraries.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FF22017FF7400D94149 /* TestOpenImageLibraries.h */; };
+		93B32FF92017FF7400D94149 /* TestOpenImageLibraries.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FF22017FF7400D94149 /* TestOpenImageLibraries.h */; };
+		93B32FFD2017FF7E00D94149 /* TestOpenImageLibraries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32FFB2017FF7E00D94149 /* TestOpenImageLibraries.cpp */; };
+		93B32FFF2017FF7E00D94149 /* TestOpenImageLibraries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32FFB2017FF7E00D94149 /* TestOpenImageLibraries.cpp */; };
+		93B330012017FF7E00D94149 /* TestMedia.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32FFC2017FF7E00D94149 /* TestMedia.cpp */; };
+		93B330032017FF7E00D94149 /* TestMedia.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32FFC2017FF7E00D94149 /* TestMedia.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5DD0BFD61BD525E000ABBC5B /* libOceanTestMediaD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestMediaD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD14AA91D953F8B00CCA9F0 /* libOceanTestMediaD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestMediaD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9304748221F6AD9B006855DC /* TestAVFoundation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAVFoundation.h; path = ../../../../../../impl/ocean/test/testmedia/TestAVFoundation.h; sourceTree = "<group>"; };
+		9304748521F6ADAE006855DC /* TestAVFoundation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TestAVFoundation.mm; path = ../../../../../../impl/ocean/test/testmedia/TestAVFoundation.mm; sourceTree = "<group>"; };
+		9329C62A26465CD400954308 /* TestSpecial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSpecial.h; path = ../../../../../../impl/ocean/test/testmedia/TestSpecial.h; sourceTree = "<group>"; };
+		9329C62D26465CE100954308 /* TestSpecial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSpecial.cpp; path = ../../../../../../impl/ocean/test/testmedia/TestSpecial.cpp; sourceTree = "<group>"; };
+		93905F94299ABB6E00F3D66C /* TestMovie.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestMovie.cpp; path = ../../../../../../impl/ocean/test/testmedia/TestMovie.cpp; sourceTree = "<group>"; };
+		93905F97299ABB7A00F3D66C /* TestMovie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestMovie.h; path = ../../../../../../impl/ocean/test/testmedia/TestMovie.h; sourceTree = "<group>"; };
+		93A371112139ED2C00C209C8 /* TestImageIO.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestImageIO.cpp; path = ../../../../../../impl/ocean/test/testmedia/TestImageIO.cpp; sourceTree = "<group>"; };
+		93A371142139ED4000C209C8 /* TestImageIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestImageIO.h; path = ../../../../../../impl/ocean/test/testmedia/TestImageIO.h; sourceTree = "<group>"; };
+		93B32FF12017FF7300D94149 /* TestMedia.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestMedia.h; path = ../../../../../../impl/ocean/test/testmedia/TestMedia.h; sourceTree = "<group>"; };
+		93B32FF22017FF7400D94149 /* TestOpenImageLibraries.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestOpenImageLibraries.h; path = ../../../../../../impl/ocean/test/testmedia/TestOpenImageLibraries.h; sourceTree = "<group>"; };
+		93B32FFB2017FF7E00D94149 /* TestOpenImageLibraries.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestOpenImageLibraries.cpp; path = ../../../../../../impl/ocean/test/testmedia/TestOpenImageLibraries.cpp; sourceTree = "<group>"; };
+		93B32FFC2017FF7E00D94149 /* TestMedia.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestMedia.cpp; path = ../../../../../../impl/ocean/test/testmedia/TestMedia.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DD0BFD31BD525E000ABBC5B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14AA11D953F8B00CCA9F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DD0BFCD1BD525E000ABBC5B = {
+			isa = PBXGroup;
+			children = (
+				5DD0BFEB1BD526C700ABBC5B /* Header Files */,
+				5DD0BFE41BD526AC00ABBC5B /* Source Files */,
+				5DD0BFD71BD525E000ABBC5B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DD0BFD71BD525E000ABBC5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DD0BFD61BD525E000ABBC5B /* libOceanTestMediaD.a */,
+				5DD14AA91D953F8B00CCA9F0 /* libOceanTestMediaD.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DD0BFE41BD526AC00ABBC5B /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				9304748521F6ADAE006855DC /* TestAVFoundation.mm */,
+				93A371112139ED2C00C209C8 /* TestImageIO.cpp */,
+				93B32FFC2017FF7E00D94149 /* TestMedia.cpp */,
+				93905F94299ABB6E00F3D66C /* TestMovie.cpp */,
+				93B32FFB2017FF7E00D94149 /* TestOpenImageLibraries.cpp */,
+				9329C62D26465CE100954308 /* TestSpecial.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DD0BFEB1BD526C700ABBC5B /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				9304748221F6AD9B006855DC /* TestAVFoundation.h */,
+				93A371142139ED4000C209C8 /* TestImageIO.h */,
+				93B32FF12017FF7300D94149 /* TestMedia.h */,
+				93905F97299ABB7A00F3D66C /* TestMovie.h */,
+				93B32FF22017FF7400D94149 /* TestOpenImageLibraries.h */,
+				9329C62A26465CD400954308 /* TestSpecial.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5DD0BFD41BD525E000ABBC5B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9329C62B26465CD500954308 /* TestSpecial.h in Headers */,
+				93B32FF72017FF7400D94149 /* TestOpenImageLibraries.h in Headers */,
+				93A371152139ED4000C209C8 /* TestImageIO.h in Headers */,
+				93905F98299ABB7A00F3D66C /* TestMovie.h in Headers */,
+				9304748321F6AD9B006855DC /* TestAVFoundation.h in Headers */,
+				93B32FF32017FF7400D94149 /* TestMedia.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14AA21D953F8B00CCA9F0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9329C62C26465CD500954308 /* TestSpecial.h in Headers */,
+				93B32FF92017FF7400D94149 /* TestOpenImageLibraries.h in Headers */,
+				93A371162139ED4000C209C8 /* TestImageIO.h in Headers */,
+				93905F99299ABB7A00F3D66C /* TestMovie.h in Headers */,
+				9304748421F6AD9B006855DC /* TestAVFoundation.h in Headers */,
+				93B32FF52017FF7400D94149 /* TestMedia.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5DD0BFD51BD525E000ABBC5B /* testmedia x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD0BFE11BD525E000ABBC5B /* Build configuration list for PBXNativeTarget "testmedia x64 (Static)" */;
+			buildPhases = (
+				5DD0BFD21BD525E000ABBC5B /* Sources */,
+				5DD0BFD31BD525E000ABBC5B /* Frameworks */,
+				5DD0BFD41BD525E000ABBC5B /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testmedia x64 (Static)";
+			productName = testmedia;
+			productReference = 5DD0BFD61BD525E000ABBC5B /* libOceanTestMediaD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DD14A9C1D953F8B00CCA9F0 /* testmedia arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD14AA61D953F8B00CCA9F0 /* Build configuration list for PBXNativeTarget "testmedia arm64 (Static)" */;
+			buildPhases = (
+				5DD14A9D1D953F8B00CCA9F0 /* Sources */,
+				5DD14AA11D953F8B00CCA9F0 /* Frameworks */,
+				5DD14AA21D953F8B00CCA9F0 /* Headers */,
+				5DD14AF01D953FF400CCA9F0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testmedia arm64 (Static)";
+			productName = testmedia;
+			productReference = 5DD14AA91D953F8B00CCA9F0 /* libOceanTestMediaD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DD0BFCE1BD525E000ABBC5B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DD0BFD51BD525E000ABBC5B = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DD0BFD11BD525E000ABBC5B /* Build configuration list for PBXProject "testmedia" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DD0BFCD1BD525E000ABBC5B;
+			productRefGroup = 5DD0BFD71BD525E000ABBC5B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DD0BFD51BD525E000ABBC5B /* testmedia x64 (Static) */,
+				5DD14A9C1D953F8B00CCA9F0 /* testmedia arm64 (Static) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DD14AF01D953FF400CCA9F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/test/lib/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DD0BFD21BD525E000ABBC5B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9329C62E26465CE100954308 /* TestSpecial.cpp in Sources */,
+				93B330012017FF7E00D94149 /* TestMedia.cpp in Sources */,
+				93905F95299ABB6E00F3D66C /* TestMovie.cpp in Sources */,
+				93A371122139ED2C00C209C8 /* TestImageIO.cpp in Sources */,
+				93B32FFD2017FF7E00D94149 /* TestOpenImageLibraries.cpp in Sources */,
+				9304748621F6ADAE006855DC /* TestAVFoundation.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A9D1D953F8B00CCA9F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9329C62F26465CE100954308 /* TestSpecial.cpp in Sources */,
+				93B330032017FF7E00D94149 /* TestMedia.cpp in Sources */,
+				93905F96299ABB6E00F3D66C /* TestMovie.cpp in Sources */,
+				93A371132139ED2C00C209C8 /* TestImageIO.cpp in Sources */,
+				93B32FFF2017FF7E00D94149 /* TestOpenImageLibraries.cpp in Sources */,
+				9304748721F6ADAE006855DC /* TestAVFoundation.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DD0BFDF1BD525E000ABBC5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DD0BFE01BD525E000ABBC5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DD0BFE21BD525E000ABBC5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testmedia/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+					OCEAN_DO_NOT_TEST_VRS,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testmedia/osx_x64_xc9_static_debug;
+				PRODUCT_MODULE_NAME = OceanTestMediaD;
+				PRODUCT_NAME = OceanTestMediaD;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD0BFE31BD525E000ABBC5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testmedia/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+					OCEAN_DO_NOT_TEST_VRS,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testmedia/osx_x64_xc9_static;
+				PRODUCT_MODULE_NAME = OceanTestMedia;
+				PRODUCT_NAME = OceanTestMedia;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DD14AA71D953F8B00CCA9F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testmedia/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testmedia/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testmedia/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestMediaD;
+				PRODUCT_NAME = OceanTestMediaD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testmedia/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD14AA81D953F8B00CCA9F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testmedia/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testmedia/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testmedia/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestMedia;
+				PRODUCT_NAME = OceanTestMedia;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testmedia/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DD0BFD11BD525E000ABBC5B /* Build configuration list for PBXProject "testmedia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD0BFDF1BD525E000ABBC5B /* Debug */,
+				5DD0BFE01BD525E000ABBC5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD0BFE11BD525E000ABBC5B /* Build configuration list for PBXNativeTarget "testmedia x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD0BFE21BD525E000ABBC5B /* Debug */,
+				5DD0BFE31BD525E000ABBC5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD14AA61D953F8B00CCA9F0 /* Build configuration list for PBXNativeTarget "testmedia arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD14AA71D953F8B00CCA9F0 /* Debug */,
+				5DD14AA81D953F8B00CCA9F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DD0BFCE1BD525E000ABBC5B /* Project object */;
+}

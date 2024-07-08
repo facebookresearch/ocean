@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "testtracking", "testtracking.vcxproj", "{0540057E-2A94-4E71-9517-B11F0C9B6DB3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Shared Debug|x64 = Shared Debug|x64
+		Shared Debug|x86 = Shared Debug|x86
+		Shared Profile|x64 = Shared Profile|x64
+		Shared Profile|x86 = Shared Profile|x86
+		Shared Release|x64 = Shared Release|x64
+		Shared Release|x86 = Shared Release|x86
+		Static Debug|x64 = Static Debug|x64
+		Static Debug|x86 = Static Debug|x86
+		Static Profile|x64 = Static Profile|x64
+		Static Profile|x86 = Static Profile|x86
+		Static Release|x64 = Static Release|x64
+		Static Release|x86 = Static Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Debug|x86.ActiveCfg = Shared Debug|Win32
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Debug|x86.Build.0 = Shared Debug|Win32
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Profile|x64.ActiveCfg = Shared Profile|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Profile|x64.Build.0 = Shared Profile|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Profile|x86.ActiveCfg = Shared Profile|Win32
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Profile|x86.Build.0 = Shared Profile|Win32
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Release|x64.Build.0 = Shared Release|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Release|x86.ActiveCfg = Shared Release|Win32
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Shared Release|x86.Build.0 = Shared Release|Win32
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Debug|x64.Build.0 = Static Debug|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Debug|x86.ActiveCfg = Static Debug|Win32
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Debug|x86.Build.0 = Static Debug|Win32
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Profile|x64.ActiveCfg = Static Profile|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Profile|x64.Build.0 = Static Profile|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Profile|x86.ActiveCfg = Static Profile|Win32
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Profile|x86.Build.0 = Static Profile|Win32
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Release|x64.ActiveCfg = Static Release|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Release|x64.Build.0 = Static Release|x64
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Release|x86.ActiveCfg = Static Release|Win32
+		{0540057E-2A94-4E71-9517-B11F0C9B6DB3}.Static Release|x86.Build.0 = Static Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

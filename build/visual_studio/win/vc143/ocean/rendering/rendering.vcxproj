@@ -1,0 +1,323 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Shared Debug|Win32">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Debug|x64">
+      <Configuration>Shared Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|Win32">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Profile|x64">
+      <Configuration>Shared Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|Win32">
+      <Configuration>Shared Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shared Release|x64">
+      <Configuration>Shared Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|Win32">
+      <Configuration>Static Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|x64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|Win32">
+      <Configuration>Static Profile</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Profile|x64">
+      <Configuration>Static Profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|Win32">
+      <Configuration>Static Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|x64">
+      <Configuration>Static Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F9B20D15-EBAC-41DC-A373-BFD33591BEE9}</ProjectGuid>
+    <RootNamespace>rendering</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="rendering_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\AbsoluteTransform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Attribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\AttributeSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Background.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Billboard.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\BitmapFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\BlendAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Box.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Cone.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Cylinder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\DepthAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\DirectionalLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\DynamicObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Engine.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Factory.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Framebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\FrameTexture2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Geometry.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Group.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\IndependentPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\LightSource.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Lines.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\LineStrips.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\LOD.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Manager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Material.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\MediaTexture2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Node.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Object.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\ObjectRef.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\ParallelView.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\PerspectiveView.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\PhantomAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\PointLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Points.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Primitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\PrimitiveAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Quads.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\QuadStrips.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Renderable.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Scene.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\ShaderProgram.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Shape.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\SkyBackground.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Sphere.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\SpotLight.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\StereoAttribute.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\StereoView.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\StripPrimitive.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Switch.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Text.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Texture.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Texture2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\TextureFramebuffer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Textures.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Transform.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\TriangleFace.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\TriangleFans.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Triangles.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\TriangleStrips.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\UndistortedBackground.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\Utilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\VertexSet.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\View.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\rendering\WindowFramebuffer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\AbsoluteTransform.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Attribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\AttributeSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Background.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Billboard.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\BitmapFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\BlendAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Box.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Cone.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Cylinder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\DepthAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\DirectionalLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\DynamicObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Engine.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Factory.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Framebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\FrameTexture2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Geometry.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Group.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\IndependentPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\LightSource.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Lines.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\LineStrips.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\LOD.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Manager.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Material.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\MediaTexture2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Node.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Object.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\ObjectRef.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Objects.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\ParallelView.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\PerspectiveView.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\PhantomAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\PointLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Points.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Primitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\PrimitiveAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\QuadFace.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Quads.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\QuadStrips.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Renderable.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Rendering.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Scene.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\ShaderProgram.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Shape.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\SkyBackground.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Sphere.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\SpotLight.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\StereoAttribute.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\StereoView.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\StripPrimitive.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Switch.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Text.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Texture.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Texture2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\TextureFramebuffer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Textures.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Transform.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\TriangleFace.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\TriangleFans.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Triangles.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\TriangleStrips.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\UndistortedBackground.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\Utilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\VertexSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\View.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\rendering\WindowFramebuffer.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

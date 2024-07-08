@@ -1,0 +1,82 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+// @nolint
+
+ext
+{
+	/**
+	 * Returns the gradle build directory based on a project property which can be spedified with '-PgradleBuildDirectory=...'
+	 * @return The build directory, an empty string otherwise
+	 */
+	ocean_determineBuildDirFromProjectProperty =
+	{
+		->
+
+		if (gradleBuildDirectory != null && gradleBuildDirectory != "")
+		{
+			return "${gradleBuildDirectory}\\gradle"
+		}
+
+		logger.error("The build directory could not be determined because the project property 'gradleBuildDirectory' is not defined")
+
+		return "";
+	}
+
+	/**
+	 * Returns Ocean's build string based on a project property which can be spedified with '-PoceanBuildString=...'
+	 * @return The build directory, an empty string otherwise
+	 */
+	ocean_determineBuildStringFromProjectProperty =
+	{
+		->
+
+		if (oceanBuildString != null && oceanBuildString != "")
+		{
+			return oceanBuildString
+		}
+
+		logger.error("The build string could not be determined because the project property 'PoceanBuildString' is not defined")
+
+		return "";
+	}
+
+	ocean_determineGradleArchitectureFromProjectPropery =
+	{
+		->
+
+		if (gradleArchitecture != null && gradleArchitecture != "")
+		{
+			return gradleArchitecture
+		}
+
+		logger.error("The build architecture could not be determined because the project property 'gradleArchitecture' is not defined")
+
+		return "";
+	}
+
+	ocean_developmentPath =
+	{
+		->
+
+		/// The Ocean development path
+		def oceanDir = "$System.env.OCEAN_DEVELOPMENT_PATH"
+
+		if (oceanDir != null && oceanDir != "")
+		{
+			logger.debug("oceanDir: ${oceanDir}")
+
+			return oceanDir
+		}
+		else
+		{
+			logger.error("Failed to determine Ocean development directory")
+		}
+
+		return ""
+	}
+}

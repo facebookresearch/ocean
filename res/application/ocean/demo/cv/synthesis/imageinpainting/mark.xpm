@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/* XPM */
+static const char* xpm_mark[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 6 1",
+"  c #3365B7",
+". c #3B6CBC",
+"X c #3F6FBE",
+"o c #5480CA",
+"O c #6992D7",
+"+ c None",
+/* pixels */
+"++++++++++++++++",
+"++++++++++++++++",
+"++++++OOOO++++++",
+"++++OOOOOOOO++++",
+"+++OOOOOOOOOO+++",
+"++OOOOOOOOOOOO++",
+"++OOOOoXXoOOOO++",
+"++OOOO.  .OOOO++",
+"++OOOOoXXoOOOO++",
+"++OOOOOOOOOOOO++",
+"+++OOOOOOOOOO+++",
+"++++OOOOOOOO++++",
+"++++++OOOO++++++",
+"++++++++++++++++",
+"++++++++++++++++"
+};

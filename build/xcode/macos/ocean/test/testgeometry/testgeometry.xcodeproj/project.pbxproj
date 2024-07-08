@@ -1,0 +1,1438 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D5B12461E65BA67007FFA21 /* TestError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5B12451E65BA67007FFA21 /* TestError.cpp */; };
+		5D5B12471E65BA67007FFA21 /* TestError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5B12451E65BA67007FFA21 /* TestError.cpp */; };
+		5D5B12481E65BA67007FFA21 /* TestError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5B12451E65BA67007FFA21 /* TestError.cpp */; };
+		5D5B12491E65BA67007FFA21 /* TestError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D5B12451E65BA67007FFA21 /* TestError.cpp */; };
+		5D5B124B1E65BA7A007FFA21 /* TestError.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D5B124A1E65BA7A007FFA21 /* TestError.h */; };
+		5D5B124C1E65BA7A007FFA21 /* TestError.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D5B124A1E65BA7A007FFA21 /* TestError.h */; };
+		5D5B124D1E65BA7A007FFA21 /* TestError.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D5B124A1E65BA7A007FFA21 /* TestError.h */; };
+		5D5B124E1E65BA7A007FFA21 /* TestError.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D5B124A1E65BA7A007FFA21 /* TestError.h */; };
+		5D68615B1D87181900BDA349 /* TestNonLinearOptimizationCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D68615A1D87181900BDA349 /* TestNonLinearOptimizationCamera.cpp */; };
+		5D68615C1D87181900BDA349 /* TestNonLinearOptimizationCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D68615A1D87181900BDA349 /* TestNonLinearOptimizationCamera.cpp */; };
+		5D68615E1D87182500BDA349 /* TestNonLinearOptimizationCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D68615D1D87182500BDA349 /* TestNonLinearOptimizationCamera.h */; };
+		5D68615F1D87182500BDA349 /* TestNonLinearOptimizationCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D68615D1D87182500BDA349 /* TestNonLinearOptimizationCamera.h */; };
+		5D9370831BC6D0D80046ACD4 /* TestJacobian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2121BAB27AD0000B274 /* TestJacobian.cpp */; };
+		5D9370841BC6D0D80046ACD4 /* TestPnP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21A1BAB27AD0000B274 /* TestPnP.cpp */; };
+		5D9370851BC6D0D80046ACD4 /* TestSpatialDistribution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21B1BAB27AD0000B274 /* TestSpatialDistribution.cpp */; };
+		5D9370861BC6D0D80046ACD4 /* TestEpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20F1BAB27AD0000B274 /* TestEpipolarGeometry.cpp */; };
+		5D9370871BC6D0D80046ACD4 /* TestHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2111BAB27AD0000B274 /* TestHomography.cpp */; };
+		5D9370881BC6D0D80046ACD4 /* TestGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2101BAB27AD0000B274 /* TestGeometry.cpp */; };
+		5D9370891BC6D0D80046ACD4 /* TestNonLinearOptimizationLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2141BAB27AD0000B274 /* TestNonLinearOptimizationLine.cpp */; };
+		5D93708A1BC6D0D80046ACD4 /* TestP4P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2191BAB27AD0000B274 /* TestP4P.cpp */; };
+		5D93708B1BC6D0D80046ACD4 /* TestAbsoluteTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20D1BAB27AD0000B274 /* TestAbsoluteTransformation.cpp */; };
+		5D93708C1BC6D0D80046ACD4 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21C1BAB27AD0000B274 /* Utilities.cpp */; };
+		5D93708D1BC6D0D80046ACD4 /* TestNonLinearOptimizationObjectPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2151BAB27AD0000B274 /* TestNonLinearOptimizationObjectPoint.cpp */; };
+		5D93708E1BC6D0D80046ACD4 /* TestNonLinearOptimizationPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2171BAB27AD0000B274 /* TestNonLinearOptimizationPlane.cpp */; };
+		5D93708F1BC6D0D80046ACD4 /* TestNonLinearOptimizationOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2161BAB27AD0000B274 /* TestNonLinearOptimizationOrientation.cpp */; };
+		5D9370901BC6D0D80046ACD4 /* TestCameraCalibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20E1BAB27AD0000B274 /* TestCameraCalibration.cpp */; };
+		5D9370911BC6D0D80046ACD4 /* TestP3P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2181BAB27AD0000B274 /* TestP3P.cpp */; };
+		5D9370941BC6D0D80046ACD4 /* TestNonLinearOptimizationPlane.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2371BAB27C30000B274 /* TestNonLinearOptimizationPlane.h */; };
+		5D9370951BC6D0D80046ACD4 /* TestP4P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2391BAB27C30000B274 /* TestP4P.h */; };
+		5D9370961BC6D0D80046ACD4 /* TestGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2301BAB27C30000B274 /* TestGeometry.h */; };
+		5D9370971BC6D0D80046ACD4 /* TestJacobian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2321BAB27C30000B274 /* TestJacobian.h */; };
+		5D9370981BC6D0D80046ACD4 /* TestNonLinearOptimizationLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2341BAB27C30000B274 /* TestNonLinearOptimizationLine.h */; };
+		5D9370991BC6D0D80046ACD4 /* TestSpatialDistribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23B1BAB27C30000B274 /* TestSpatialDistribution.h */; };
+		5D93709A1BC6D0D80046ACD4 /* TestNonLinearOptimizationOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2361BAB27C30000B274 /* TestNonLinearOptimizationOrientation.h */; };
+		5D93709C1BC6D0D80046ACD4 /* TestP3P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2381BAB27C30000B274 /* TestP3P.h */; };
+		5D93709D1BC6D0D80046ACD4 /* TestHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2311BAB27C30000B274 /* TestHomography.h */; };
+		5D93709E1BC6D0D80046ACD4 /* TestNonLinearOptimizationObjectPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2351BAB27C30000B274 /* TestNonLinearOptimizationObjectPoint.h */; };
+		5D93709F1BC6D0D80046ACD4 /* TestCameraCalibration.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22E1BAB27C30000B274 /* TestCameraCalibration.h */; };
+		5D9370A01BC6D0D80046ACD4 /* TestEpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22F1BAB27C30000B274 /* TestEpipolarGeometry.h */; };
+		5D9370A11BC6D0D80046ACD4 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23C1BAB27C30000B274 /* Utilities.h */; };
+		5D9370A21BC6D0D80046ACD4 /* TestAbsoluteTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22D1BAB27C30000B274 /* TestAbsoluteTransformation.h */; };
+		5D9370A31BC6D0D80046ACD4 /* TestPnP.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23A1BAB27C30000B274 /* TestPnP.h */; };
+		5DB3A21D1BAB27AD0000B274 /* TestAbsoluteTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20D1BAB27AD0000B274 /* TestAbsoluteTransformation.cpp */; };
+		5DB3A21E1BAB27AD0000B274 /* TestCameraCalibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20E1BAB27AD0000B274 /* TestCameraCalibration.cpp */; };
+		5DB3A21F1BAB27AD0000B274 /* TestEpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20F1BAB27AD0000B274 /* TestEpipolarGeometry.cpp */; };
+		5DB3A2201BAB27AD0000B274 /* TestGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2101BAB27AD0000B274 /* TestGeometry.cpp */; };
+		5DB3A2211BAB27AD0000B274 /* TestHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2111BAB27AD0000B274 /* TestHomography.cpp */; };
+		5DB3A2221BAB27AD0000B274 /* TestJacobian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2121BAB27AD0000B274 /* TestJacobian.cpp */; };
+		5DB3A2241BAB27AD0000B274 /* TestNonLinearOptimizationLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2141BAB27AD0000B274 /* TestNonLinearOptimizationLine.cpp */; };
+		5DB3A2251BAB27AD0000B274 /* TestNonLinearOptimizationObjectPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2151BAB27AD0000B274 /* TestNonLinearOptimizationObjectPoint.cpp */; };
+		5DB3A2261BAB27AD0000B274 /* TestNonLinearOptimizationOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2161BAB27AD0000B274 /* TestNonLinearOptimizationOrientation.cpp */; };
+		5DB3A2271BAB27AD0000B274 /* TestNonLinearOptimizationPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2171BAB27AD0000B274 /* TestNonLinearOptimizationPlane.cpp */; };
+		5DB3A2281BAB27AD0000B274 /* TestP3P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2181BAB27AD0000B274 /* TestP3P.cpp */; };
+		5DB3A2291BAB27AD0000B274 /* TestP4P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2191BAB27AD0000B274 /* TestP4P.cpp */; };
+		5DB3A22A1BAB27AD0000B274 /* TestPnP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21A1BAB27AD0000B274 /* TestPnP.cpp */; };
+		5DB3A22B1BAB27AD0000B274 /* TestSpatialDistribution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21B1BAB27AD0000B274 /* TestSpatialDistribution.cpp */; };
+		5DB3A22C1BAB27AD0000B274 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21C1BAB27AD0000B274 /* Utilities.cpp */; };
+		5DB3A23D1BAB27C30000B274 /* TestAbsoluteTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22D1BAB27C30000B274 /* TestAbsoluteTransformation.h */; };
+		5DB3A23E1BAB27C30000B274 /* TestCameraCalibration.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22E1BAB27C30000B274 /* TestCameraCalibration.h */; };
+		5DB3A23F1BAB27C30000B274 /* TestEpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22F1BAB27C30000B274 /* TestEpipolarGeometry.h */; };
+		5DB3A2401BAB27C30000B274 /* TestGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2301BAB27C30000B274 /* TestGeometry.h */; };
+		5DB3A2411BAB27C30000B274 /* TestHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2311BAB27C30000B274 /* TestHomography.h */; };
+		5DB3A2421BAB27C30000B274 /* TestJacobian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2321BAB27C30000B274 /* TestJacobian.h */; };
+		5DB3A2441BAB27C30000B274 /* TestNonLinearOptimizationLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2341BAB27C30000B274 /* TestNonLinearOptimizationLine.h */; };
+		5DB3A2451BAB27C30000B274 /* TestNonLinearOptimizationObjectPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2351BAB27C30000B274 /* TestNonLinearOptimizationObjectPoint.h */; };
+		5DB3A2461BAB27C30000B274 /* TestNonLinearOptimizationOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2361BAB27C30000B274 /* TestNonLinearOptimizationOrientation.h */; };
+		5DB3A2471BAB27C30000B274 /* TestNonLinearOptimizationPlane.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2371BAB27C30000B274 /* TestNonLinearOptimizationPlane.h */; };
+		5DB3A2481BAB27C30000B274 /* TestP3P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2381BAB27C30000B274 /* TestP3P.h */; };
+		5DB3A2491BAB27C30000B274 /* TestP4P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2391BAB27C30000B274 /* TestP4P.h */; };
+		5DB3A24A1BAB27C30000B274 /* TestPnP.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23A1BAB27C30000B274 /* TestPnP.h */; };
+		5DB3A24B1BAB27C30000B274 /* TestSpatialDistribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23B1BAB27C30000B274 /* TestSpatialDistribution.h */; };
+		5DB3A24C1BAB27C30000B274 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23C1BAB27C30000B274 /* Utilities.h */; };
+		5DB726E31EE99A4200143665 /* TestDelaunay.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E631EC5BDDB001CE713 /* TestDelaunay.h */; };
+		5DB726E41EE99A4300143665 /* TestDelaunay.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E631EC5BDDB001CE713 /* TestDelaunay.h */; };
+		5DB726E51EE99A4300143665 /* TestDelaunay.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E631EC5BDDB001CE713 /* TestDelaunay.h */; };
+		5DB726E61EE99A4800143665 /* TestDelaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E671EC5BDF5001CE713 /* TestDelaunay.cpp */; };
+		5DB726E71EE99A4900143665 /* TestDelaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E671EC5BDF5001CE713 /* TestDelaunay.cpp */; };
+		5DB726E81EE99A4900143665 /* TestDelaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E671EC5BDF5001CE713 /* TestDelaunay.cpp */; };
+		5DB774661EE999C900C14BB2 /* TestMultipleViewGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E641EC5BDDB001CE713 /* TestMultipleViewGeometry.h */; };
+		5DB774671EE999CA00C14BB2 /* TestMultipleViewGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E641EC5BDDB001CE713 /* TestMultipleViewGeometry.h */; };
+		5DB774681EE999CB00C14BB2 /* TestMultipleViewGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E641EC5BDDB001CE713 /* TestMultipleViewGeometry.h */; };
+		5DB774691EE999D000C14BB2 /* TestMultipleViewGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E681EC5BDF5001CE713 /* TestMultipleViewGeometry.cpp */; };
+		5DB7746A1EE999D100C14BB2 /* TestMultipleViewGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E681EC5BDF5001CE713 /* TestMultipleViewGeometry.cpp */; };
+		5DB7746B1EE999D100C14BB2 /* TestMultipleViewGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E681EC5BDF5001CE713 /* TestMultipleViewGeometry.cpp */; };
+		5DD14A721D953F2B00CCA9F0 /* TestJacobian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2121BAB27AD0000B274 /* TestJacobian.cpp */; };
+		5DD14A731D953F2B00CCA9F0 /* TestNonLinearOptimizationCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D68615A1D87181900BDA349 /* TestNonLinearOptimizationCamera.cpp */; };
+		5DD14A741D953F2B00CCA9F0 /* TestNonLinearOptimizationPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9D01C8F28AE0035D95A /* TestNonLinearOptimizationPose.cpp */; };
+		5DD14A751D953F2B00CCA9F0 /* TestPnP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21A1BAB27AD0000B274 /* TestPnP.cpp */; };
+		5DD14A761D953F2B00CCA9F0 /* TestSpatialDistribution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21B1BAB27AD0000B274 /* TestSpatialDistribution.cpp */; };
+		5DD14A771D953F2B00CCA9F0 /* TestEpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20F1BAB27AD0000B274 /* TestEpipolarGeometry.cpp */; };
+		5DD14A781D953F2B00CCA9F0 /* TestHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2111BAB27AD0000B274 /* TestHomography.cpp */; };
+		5DD14A791D953F2B00CCA9F0 /* TestGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2101BAB27AD0000B274 /* TestGeometry.cpp */; };
+		5DD14A7A1D953F2B00CCA9F0 /* TestNonLinearOptimizationLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2141BAB27AD0000B274 /* TestNonLinearOptimizationLine.cpp */; };
+		5DD14A7B1D953F2B00CCA9F0 /* TestP4P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2191BAB27AD0000B274 /* TestP4P.cpp */; };
+		5DD14A7C1D953F2B00CCA9F0 /* TestAbsoluteTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20D1BAB27AD0000B274 /* TestAbsoluteTransformation.cpp */; };
+		5DD14A7D1D953F2B00CCA9F0 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21C1BAB27AD0000B274 /* Utilities.cpp */; };
+		5DD14A7E1D953F2B00CCA9F0 /* TestNonLinearOptimizationObjectPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2151BAB27AD0000B274 /* TestNonLinearOptimizationObjectPoint.cpp */; };
+		5DD14A7F1D953F2B00CCA9F0 /* TestNonLinearOptimizationPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2171BAB27AD0000B274 /* TestNonLinearOptimizationPlane.cpp */; };
+		5DD14A801D953F2B00CCA9F0 /* TestNonLinearOptimizationOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2161BAB27AD0000B274 /* TestNonLinearOptimizationOrientation.cpp */; };
+		5DD14A811D953F2B00CCA9F0 /* TestCameraCalibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20E1BAB27AD0000B274 /* TestCameraCalibration.cpp */; };
+		5DD14A821D953F2B00CCA9F0 /* TestP3P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2181BAB27AD0000B274 /* TestP3P.cpp */; };
+		5DD14A851D953F2B00CCA9F0 /* TestNonLinearOptimizationPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9CD1C8F28A10035D95A /* TestNonLinearOptimizationPose.h */; };
+		5DD14A861D953F2B00CCA9F0 /* TestNonLinearOptimizationPlane.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2371BAB27C30000B274 /* TestNonLinearOptimizationPlane.h */; };
+		5DD14A871D953F2B00CCA9F0 /* TestP4P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2391BAB27C30000B274 /* TestP4P.h */; };
+		5DD14A881D953F2B00CCA9F0 /* TestGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2301BAB27C30000B274 /* TestGeometry.h */; };
+		5DD14A891D953F2B00CCA9F0 /* TestJacobian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2321BAB27C30000B274 /* TestJacobian.h */; };
+		5DD14A8A1D953F2B00CCA9F0 /* TestNonLinearOptimizationLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2341BAB27C30000B274 /* TestNonLinearOptimizationLine.h */; };
+		5DD14A8B1D953F2B00CCA9F0 /* TestSpatialDistribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23B1BAB27C30000B274 /* TestSpatialDistribution.h */; };
+		5DD14A8C1D953F2B00CCA9F0 /* TestNonLinearOptimizationOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2361BAB27C30000B274 /* TestNonLinearOptimizationOrientation.h */; };
+		5DD14A8E1D953F2B00CCA9F0 /* TestP3P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2381BAB27C30000B274 /* TestP3P.h */; };
+		5DD14A8F1D953F2B00CCA9F0 /* TestHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2311BAB27C30000B274 /* TestHomography.h */; };
+		5DD14A901D953F2B00CCA9F0 /* TestNonLinearOptimizationCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D68615D1D87182500BDA349 /* TestNonLinearOptimizationCamera.h */; };
+		5DD14A911D953F2B00CCA9F0 /* TestNonLinearOptimizationObjectPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2351BAB27C30000B274 /* TestNonLinearOptimizationObjectPoint.h */; };
+		5DD14A921D953F2B00CCA9F0 /* TestCameraCalibration.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22E1BAB27C30000B274 /* TestCameraCalibration.h */; };
+		5DD14A931D953F2B00CCA9F0 /* TestEpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22F1BAB27C30000B274 /* TestEpipolarGeometry.h */; };
+		5DD14A941D953F2B00CCA9F0 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23C1BAB27C30000B274 /* Utilities.h */; };
+		5DD14A951D953F2B00CCA9F0 /* TestAbsoluteTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22D1BAB27C30000B274 /* TestAbsoluteTransformation.h */; };
+		5DD14A961D953F2B00CCA9F0 /* TestPnP.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23A1BAB27C30000B274 /* TestPnP.h */; };
+		5DEAE9CE1C8F28A10035D95A /* TestNonLinearOptimizationPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9CD1C8F28A10035D95A /* TestNonLinearOptimizationPose.h */; };
+		5DEAE9CF1C8F28A10035D95A /* TestNonLinearOptimizationPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9CD1C8F28A10035D95A /* TestNonLinearOptimizationPose.h */; };
+		5DEAE9D11C8F28AE0035D95A /* TestNonLinearOptimizationPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9D01C8F28AE0035D95A /* TestNonLinearOptimizationPose.cpp */; };
+		5DEAE9D21C8F28AE0035D95A /* TestNonLinearOptimizationPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9D01C8F28AE0035D95A /* TestNonLinearOptimizationPose.cpp */; };
+		5FE46E651EC5BDDB001CE713 /* TestDelaunay.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E631EC5BDDB001CE713 /* TestDelaunay.h */; };
+		5FE46E661EC5BDDB001CE713 /* TestMultipleViewGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E641EC5BDDB001CE713 /* TestMultipleViewGeometry.h */; };
+		5FE46E691EC5BDF5001CE713 /* TestDelaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E671EC5BDF5001CE713 /* TestDelaunay.cpp */; };
+		5FE46E6A1EC5BDF5001CE713 /* TestMultipleViewGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E681EC5BDF5001CE713 /* TestMultipleViewGeometry.cpp */; };
+		9310181A2B69B13600F42150 /* TestStereoscopicGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 931018192B69B13600F42150 /* TestStereoscopicGeometry.h */; };
+		9310181B2B69B13600F42150 /* TestStereoscopicGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 931018192B69B13600F42150 /* TestStereoscopicGeometry.h */; };
+		9310181C2B69B13600F42150 /* TestStereoscopicGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 931018192B69B13600F42150 /* TestStereoscopicGeometry.h */; };
+		9310181D2B69B13600F42150 /* TestStereoscopicGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 931018192B69B13600F42150 /* TestStereoscopicGeometry.h */; };
+		9310181F2B69B14200F42150 /* TestStereoscopicGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9310181E2B69B14200F42150 /* TestStereoscopicGeometry.cpp */; };
+		931018202B69B14200F42150 /* TestStereoscopicGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9310181E2B69B14200F42150 /* TestStereoscopicGeometry.cpp */; };
+		931018212B69B14200F42150 /* TestStereoscopicGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9310181E2B69B14200F42150 /* TestStereoscopicGeometry.cpp */; };
+		931018222B69B14200F42150 /* TestStereoscopicGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9310181E2B69B14200F42150 /* TestStereoscopicGeometry.cpp */; };
+		932C58451FCE32D10074D698 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 932C58441FCE32D00074D698 /* TestUtilities.h */; };
+		932C58461FCE32D10074D698 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 932C58441FCE32D00074D698 /* TestUtilities.h */; };
+		932C58471FCE32D10074D698 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 932C58441FCE32D00074D698 /* TestUtilities.h */; };
+		932C58481FCE32D10074D698 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 932C58441FCE32D00074D698 /* TestUtilities.h */; };
+		932C584A1FCE32E50074D698 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932C58491FCE32E40074D698 /* TestUtilities.cpp */; };
+		932C584B1FCE32E50074D698 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932C58491FCE32E40074D698 /* TestUtilities.cpp */; };
+		932C584C1FCE32E50074D698 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932C58491FCE32E40074D698 /* TestUtilities.cpp */; };
+		932C584D1FCE32E50074D698 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932C58491FCE32E40074D698 /* TestUtilities.cpp */; };
+		93942E3D247DCDFF00082597 /* TestRANSAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93942E3C247DCDFF00082597 /* TestRANSAC.cpp */; };
+		93942E3E247DCDFF00082597 /* TestRANSAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93942E3C247DCDFF00082597 /* TestRANSAC.cpp */; };
+		93942E3F247DCDFF00082597 /* TestRANSAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93942E3C247DCDFF00082597 /* TestRANSAC.cpp */; };
+		93942E40247DCDFF00082597 /* TestRANSAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93942E3C247DCDFF00082597 /* TestRANSAC.cpp */; };
+		93942E42247DCE1400082597 /* TestRANSAC.h in Headers */ = {isa = PBXBuildFile; fileRef = 93942E41247DCE1400082597 /* TestRANSAC.h */; };
+		93942E43247DCE1400082597 /* TestRANSAC.h in Headers */ = {isa = PBXBuildFile; fileRef = 93942E41247DCE1400082597 /* TestRANSAC.h */; };
+		93942E44247DCE1400082597 /* TestRANSAC.h in Headers */ = {isa = PBXBuildFile; fileRef = 93942E41247DCE1400082597 /* TestRANSAC.h */; };
+		93942E45247DCE1400082597 /* TestRANSAC.h in Headers */ = {isa = PBXBuildFile; fileRef = 93942E41247DCE1400082597 /* TestRANSAC.h */; };
+		93C9F05A22E1051500737C27 /* TestNonLinearOptimizationTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C9F05922E1051400737C27 /* TestNonLinearOptimizationTransformation.h */; };
+		93C9F05B22E1051500737C27 /* TestNonLinearOptimizationTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C9F05922E1051400737C27 /* TestNonLinearOptimizationTransformation.h */; };
+		93C9F05C22E1051500737C27 /* TestNonLinearOptimizationTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C9F05922E1051400737C27 /* TestNonLinearOptimizationTransformation.h */; };
+		93C9F05D22E1051500737C27 /* TestNonLinearOptimizationTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C9F05922E1051400737C27 /* TestNonLinearOptimizationTransformation.h */; };
+		93C9F05F22E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C9F05E22E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp */; };
+		93C9F06022E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C9F05E22E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp */; };
+		93C9F06122E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C9F05E22E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp */; };
+		93C9F06222E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C9F05E22E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp */; };
+		93D095852B0300FE0094DE65 /* TestEstimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93D095842B0300FE0094DE65 /* TestEstimator.h */; };
+		93D095862B0300FE0094DE65 /* TestEstimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93D095842B0300FE0094DE65 /* TestEstimator.h */; };
+		93D095872B0300FE0094DE65 /* TestEstimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93D095842B0300FE0094DE65 /* TestEstimator.h */; };
+		93D095882B0300FE0094DE65 /* TestEstimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 93D095842B0300FE0094DE65 /* TestEstimator.h */; };
+		93D0958A2B03010E0094DE65 /* TestEstimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93D095892B03010E0094DE65 /* TestEstimator.cpp */; };
+		93D0958B2B03010E0094DE65 /* TestEstimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93D095892B03010E0094DE65 /* TestEstimator.cpp */; };
+		93D0958C2B03010E0094DE65 /* TestEstimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93D095892B03010E0094DE65 /* TestEstimator.cpp */; };
+		93D0958D2B03010E0094DE65 /* TestEstimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93D095892B03010E0094DE65 /* TestEstimator.cpp */; };
+		93DFCBB226FBCFA6007C7B14 /* TestOctree.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DFCBB126FBCFA6007C7B14 /* TestOctree.h */; };
+		93DFCBB326FBCFA6007C7B14 /* TestOctree.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DFCBB126FBCFA6007C7B14 /* TestOctree.h */; };
+		93DFCBB426FBCFA6007C7B14 /* TestOctree.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DFCBB126FBCFA6007C7B14 /* TestOctree.h */; };
+		93DFCBB526FBCFA6007C7B14 /* TestOctree.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DFCBB126FBCFA6007C7B14 /* TestOctree.h */; };
+		93DFCBB726FBCFBA007C7B14 /* TestOctree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DFCBB626FBCFBA007C7B14 /* TestOctree.cpp */; };
+		93DFCBB826FBCFBA007C7B14 /* TestOctree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DFCBB626FBCFBA007C7B14 /* TestOctree.cpp */; };
+		93DFCBB926FBCFBA007C7B14 /* TestOctree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DFCBB626FBCFBA007C7B14 /* TestOctree.cpp */; };
+		93DFCBBA26FBCFBA007C7B14 /* TestOctree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DFCBB626FBCFBA007C7B14 /* TestOctree.cpp */; };
+		C09DFB5F1E9B823C0013811D /* TestNonLinearOptimizationHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB5E1E9B823C0013811D /* TestNonLinearOptimizationHomography.h */; };
+		C09DFB611E9B82630013811D /* TestNonLinearOptimizationHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB601E9B82630013811D /* TestNonLinearOptimizationHomography.cpp */; };
+		C09DFB6C1E9B83FE0013811D /* TestNonLinearOptimizationHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB5E1E9B823C0013811D /* TestNonLinearOptimizationHomography.h */; };
+		C09DFB6D1E9B83FF0013811D /* TestNonLinearOptimizationHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB5E1E9B823C0013811D /* TestNonLinearOptimizationHomography.h */; };
+		C09DFB6E1E9B83FF0013811D /* TestNonLinearOptimizationHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = C09DFB5E1E9B823C0013811D /* TestNonLinearOptimizationHomography.h */; };
+		C09DFB6F1E9B84060013811D /* TestNonLinearOptimizationHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB601E9B82630013811D /* TestNonLinearOptimizationHomography.cpp */; };
+		C09DFB701E9B84060013811D /* TestNonLinearOptimizationHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB601E9B82630013811D /* TestNonLinearOptimizationHomography.cpp */; };
+		C09DFB711E9B84060013811D /* TestNonLinearOptimizationHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09DFB601E9B82630013811D /* TestNonLinearOptimizationHomography.cpp */; };
+		C0E9B0FE1DACEDB600895C4B /* TestJacobian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2121BAB27AD0000B274 /* TestJacobian.cpp */; };
+		C0E9B0FF1DACEDB600895C4B /* TestNonLinearOptimizationCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D68615A1D87181900BDA349 /* TestNonLinearOptimizationCamera.cpp */; };
+		C0E9B1001DACEDB600895C4B /* TestNonLinearOptimizationPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9D01C8F28AE0035D95A /* TestNonLinearOptimizationPose.cpp */; };
+		C0E9B1011DACEDB600895C4B /* TestPnP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21A1BAB27AD0000B274 /* TestPnP.cpp */; };
+		C0E9B1021DACEDB600895C4B /* TestSpatialDistribution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21B1BAB27AD0000B274 /* TestSpatialDistribution.cpp */; };
+		C0E9B1031DACEDB600895C4B /* TestEpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20F1BAB27AD0000B274 /* TestEpipolarGeometry.cpp */; };
+		C0E9B1041DACEDB600895C4B /* TestHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2111BAB27AD0000B274 /* TestHomography.cpp */; };
+		C0E9B1051DACEDB600895C4B /* TestGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2101BAB27AD0000B274 /* TestGeometry.cpp */; };
+		C0E9B1061DACEDB600895C4B /* TestNonLinearOptimizationLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2141BAB27AD0000B274 /* TestNonLinearOptimizationLine.cpp */; };
+		C0E9B1071DACEDB600895C4B /* TestP4P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2191BAB27AD0000B274 /* TestP4P.cpp */; };
+		C0E9B1081DACEDB600895C4B /* TestAbsoluteTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20D1BAB27AD0000B274 /* TestAbsoluteTransformation.cpp */; };
+		C0E9B1091DACEDB600895C4B /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A21C1BAB27AD0000B274 /* Utilities.cpp */; };
+		C0E9B10A1DACEDB600895C4B /* TestNonLinearOptimizationObjectPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2151BAB27AD0000B274 /* TestNonLinearOptimizationObjectPoint.cpp */; };
+		C0E9B10B1DACEDB600895C4B /* TestNonLinearOptimizationPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2171BAB27AD0000B274 /* TestNonLinearOptimizationPlane.cpp */; };
+		C0E9B10C1DACEDB600895C4B /* TestNonLinearOptimizationOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2161BAB27AD0000B274 /* TestNonLinearOptimizationOrientation.cpp */; };
+		C0E9B10D1DACEDB600895C4B /* TestCameraCalibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A20E1BAB27AD0000B274 /* TestCameraCalibration.cpp */; };
+		C0E9B10E1DACEDB600895C4B /* TestP3P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB3A2181BAB27AD0000B274 /* TestP3P.cpp */; };
+		C0E9B1111DACEDB600895C4B /* TestNonLinearOptimizationPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9CD1C8F28A10035D95A /* TestNonLinearOptimizationPose.h */; };
+		C0E9B1121DACEDB600895C4B /* TestNonLinearOptimizationPlane.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2371BAB27C30000B274 /* TestNonLinearOptimizationPlane.h */; };
+		C0E9B1131DACEDB600895C4B /* TestP4P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2391BAB27C30000B274 /* TestP4P.h */; };
+		C0E9B1141DACEDB600895C4B /* TestGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2301BAB27C30000B274 /* TestGeometry.h */; };
+		C0E9B1151DACEDB600895C4B /* TestJacobian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2321BAB27C30000B274 /* TestJacobian.h */; };
+		C0E9B1161DACEDB600895C4B /* TestNonLinearOptimizationLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2341BAB27C30000B274 /* TestNonLinearOptimizationLine.h */; };
+		C0E9B1171DACEDB600895C4B /* TestSpatialDistribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23B1BAB27C30000B274 /* TestSpatialDistribution.h */; };
+		C0E9B1181DACEDB600895C4B /* TestNonLinearOptimizationOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2361BAB27C30000B274 /* TestNonLinearOptimizationOrientation.h */; };
+		C0E9B11A1DACEDB600895C4B /* TestP3P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2381BAB27C30000B274 /* TestP3P.h */; };
+		C0E9B11B1DACEDB600895C4B /* TestHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2311BAB27C30000B274 /* TestHomography.h */; };
+		C0E9B11C1DACEDB600895C4B /* TestNonLinearOptimizationCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D68615D1D87182500BDA349 /* TestNonLinearOptimizationCamera.h */; };
+		C0E9B11D1DACEDB600895C4B /* TestNonLinearOptimizationObjectPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A2351BAB27C30000B274 /* TestNonLinearOptimizationObjectPoint.h */; };
+		C0E9B11E1DACEDB600895C4B /* TestCameraCalibration.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22E1BAB27C30000B274 /* TestCameraCalibration.h */; };
+		C0E9B11F1DACEDB600895C4B /* TestEpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22F1BAB27C30000B274 /* TestEpipolarGeometry.h */; };
+		C0E9B1201DACEDB600895C4B /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23C1BAB27C30000B274 /* Utilities.h */; };
+		C0E9B1211DACEDB600895C4B /* TestAbsoluteTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A22D1BAB27C30000B274 /* TestAbsoluteTransformation.h */; };
+		C0E9B1221DACEDB600895C4B /* TestPnP.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB3A23A1BAB27C30000B274 /* TestPnP.h */; };
+		C0F6E5D61E1E934F00F90052 /* TestJLinkage.h in Headers */ = {isa = PBXBuildFile; fileRef = C0F6E5D51E1E934F00F90052 /* TestJLinkage.h */; };
+		C0F6E5D81E1E935E00F90052 /* TestJLinkage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0F6E5D71E1E935E00F90052 /* TestJLinkage.cpp */; };
+		C0F6E6161E1EA8F800F90052 /* TestJLinkage.h in Headers */ = {isa = PBXBuildFile; fileRef = C0F6E5D51E1E934F00F90052 /* TestJLinkage.h */; };
+		C0F6E6171E1EA8F800F90052 /* TestJLinkage.h in Headers */ = {isa = PBXBuildFile; fileRef = C0F6E5D51E1E934F00F90052 /* TestJLinkage.h */; };
+		C0F6E6181E1EA8F800F90052 /* TestJLinkage.h in Headers */ = {isa = PBXBuildFile; fileRef = C0F6E5D51E1E934F00F90052 /* TestJLinkage.h */; };
+		C0F6E6191E1EA8FB00F90052 /* TestJLinkage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0F6E5D71E1E935E00F90052 /* TestJLinkage.cpp */; };
+		C0F6E61A1E1EA8FC00F90052 /* TestJLinkage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0F6E5D71E1E935E00F90052 /* TestJLinkage.cpp */; };
+		C0F6E61B1E1EA8FC00F90052 /* TestJLinkage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0F6E5D71E1E935E00F90052 /* TestJLinkage.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D5B12451E65BA67007FFA21 /* TestError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestError.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestError.cpp; sourceTree = "<group>"; };
+		5D5B124A1E65BA7A007FFA21 /* TestError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestError.h; path = ../../../../../../impl/ocean/test/testgeometry/TestError.h; sourceTree = "<group>"; };
+		5D68615A1D87181900BDA349 /* TestNonLinearOptimizationCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestNonLinearOptimizationCamera.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationCamera.cpp; sourceTree = "<group>"; };
+		5D68615D1D87182500BDA349 /* TestNonLinearOptimizationCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestNonLinearOptimizationCamera.h; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationCamera.h; sourceTree = "<group>"; };
+		5D9370A71BC6D0D80046ACD4 /* libOceanTestGeometryD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestGeometryD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DB3A1FE1BAB25F40000B274 /* libOceanTestGeometryD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestGeometryD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DB3A20D1BAB27AD0000B274 /* TestAbsoluteTransformation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAbsoluteTransformation.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestAbsoluteTransformation.cpp; sourceTree = "<group>"; };
+		5DB3A20E1BAB27AD0000B274 /* TestCameraCalibration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCameraCalibration.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestCameraCalibration.cpp; sourceTree = "<group>"; };
+		5DB3A20F1BAB27AD0000B274 /* TestEpipolarGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestEpipolarGeometry.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestEpipolarGeometry.cpp; sourceTree = "<group>"; };
+		5DB3A2101BAB27AD0000B274 /* TestGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestGeometry.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestGeometry.cpp; sourceTree = "<group>"; };
+		5DB3A2111BAB27AD0000B274 /* TestHomography.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestHomography.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestHomography.cpp; sourceTree = "<group>"; };
+		5DB3A2121BAB27AD0000B274 /* TestJacobian.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestJacobian.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestJacobian.cpp; sourceTree = "<group>"; };
+		5DB3A2141BAB27AD0000B274 /* TestNonLinearOptimizationLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestNonLinearOptimizationLine.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationLine.cpp; sourceTree = "<group>"; };
+		5DB3A2151BAB27AD0000B274 /* TestNonLinearOptimizationObjectPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestNonLinearOptimizationObjectPoint.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationObjectPoint.cpp; sourceTree = "<group>"; };
+		5DB3A2161BAB27AD0000B274 /* TestNonLinearOptimizationOrientation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestNonLinearOptimizationOrientation.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationOrientation.cpp; sourceTree = "<group>"; };
+		5DB3A2171BAB27AD0000B274 /* TestNonLinearOptimizationPlane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestNonLinearOptimizationPlane.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationPlane.cpp; sourceTree = "<group>"; };
+		5DB3A2181BAB27AD0000B274 /* TestP3P.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestP3P.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestP3P.cpp; sourceTree = "<group>"; };
+		5DB3A2191BAB27AD0000B274 /* TestP4P.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestP4P.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestP4P.cpp; sourceTree = "<group>"; };
+		5DB3A21A1BAB27AD0000B274 /* TestPnP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestPnP.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestPnP.cpp; sourceTree = "<group>"; };
+		5DB3A21B1BAB27AD0000B274 /* TestSpatialDistribution.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSpatialDistribution.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestSpatialDistribution.cpp; sourceTree = "<group>"; };
+		5DB3A21C1BAB27AD0000B274 /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../../impl/ocean/test/testgeometry/Utilities.cpp; sourceTree = "<group>"; };
+		5DB3A22D1BAB27C30000B274 /* TestAbsoluteTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAbsoluteTransformation.h; path = ../../../../../../impl/ocean/test/testgeometry/TestAbsoluteTransformation.h; sourceTree = "<group>"; };
+		5DB3A22E1BAB27C30000B274 /* TestCameraCalibration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestCameraCalibration.h; path = ../../../../../../impl/ocean/test/testgeometry/TestCameraCalibration.h; sourceTree = "<group>"; };
+		5DB3A22F1BAB27C30000B274 /* TestEpipolarGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestEpipolarGeometry.h; path = ../../../../../../impl/ocean/test/testgeometry/TestEpipolarGeometry.h; sourceTree = "<group>"; };
+		5DB3A2301BAB27C30000B274 /* TestGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestGeometry.h; path = ../../../../../../impl/ocean/test/testgeometry/TestGeometry.h; sourceTree = "<group>"; };
+		5DB3A2311BAB27C30000B274 /* TestHomography.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestHomography.h; path = ../../../../../../impl/ocean/test/testgeometry/TestHomography.h; sourceTree = "<group>"; };
+		5DB3A2321BAB27C30000B274 /* TestJacobian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestJacobian.h; path = ../../../../../../impl/ocean/test/testgeometry/TestJacobian.h; sourceTree = "<group>"; };
+		5DB3A2341BAB27C30000B274 /* TestNonLinearOptimizationLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestNonLinearOptimizationLine.h; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationLine.h; sourceTree = "<group>"; };
+		5DB3A2351BAB27C30000B274 /* TestNonLinearOptimizationObjectPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestNonLinearOptimizationObjectPoint.h; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationObjectPoint.h; sourceTree = "<group>"; };
+		5DB3A2361BAB27C30000B274 /* TestNonLinearOptimizationOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestNonLinearOptimizationOrientation.h; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationOrientation.h; sourceTree = "<group>"; };
+		5DB3A2371BAB27C30000B274 /* TestNonLinearOptimizationPlane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestNonLinearOptimizationPlane.h; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationPlane.h; sourceTree = "<group>"; };
+		5DB3A2381BAB27C30000B274 /* TestP3P.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestP3P.h; path = ../../../../../../impl/ocean/test/testgeometry/TestP3P.h; sourceTree = "<group>"; };
+		5DB3A2391BAB27C30000B274 /* TestP4P.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestP4P.h; path = ../../../../../../impl/ocean/test/testgeometry/TestP4P.h; sourceTree = "<group>"; };
+		5DB3A23A1BAB27C30000B274 /* TestPnP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestPnP.h; path = ../../../../../../impl/ocean/test/testgeometry/TestPnP.h; sourceTree = "<group>"; };
+		5DB3A23B1BAB27C30000B274 /* TestSpatialDistribution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSpatialDistribution.h; path = ../../../../../../impl/ocean/test/testgeometry/TestSpatialDistribution.h; sourceTree = "<group>"; };
+		5DB3A23C1BAB27C30000B274 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../impl/ocean/test/testgeometry/Utilities.h; sourceTree = "<group>"; };
+		5DD14A9A1D953F2B00CCA9F0 /* libOceanTestGeometryD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestGeometryD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DEAE9CD1C8F28A10035D95A /* TestNonLinearOptimizationPose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestNonLinearOptimizationPose.h; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationPose.h; sourceTree = "<group>"; };
+		5DEAE9D01C8F28AE0035D95A /* TestNonLinearOptimizationPose.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestNonLinearOptimizationPose.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationPose.cpp; sourceTree = "<group>"; };
+		5FE46E631EC5BDDB001CE713 /* TestDelaunay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDelaunay.h; path = ../../../../../../impl/ocean/test/testgeometry/TestDelaunay.h; sourceTree = "<group>"; };
+		5FE46E641EC5BDDB001CE713 /* TestMultipleViewGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestMultipleViewGeometry.h; path = ../../../../../../impl/ocean/test/testgeometry/TestMultipleViewGeometry.h; sourceTree = "<group>"; };
+		5FE46E671EC5BDF5001CE713 /* TestDelaunay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestDelaunay.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestDelaunay.cpp; sourceTree = "<group>"; };
+		5FE46E681EC5BDF5001CE713 /* TestMultipleViewGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestMultipleViewGeometry.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestMultipleViewGeometry.cpp; sourceTree = "<group>"; };
+		931018192B69B13600F42150 /* TestStereoscopicGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestStereoscopicGeometry.h; path = ../../../../../../impl/ocean/test/testgeometry/TestStereoscopicGeometry.h; sourceTree = "<group>"; };
+		9310181E2B69B14200F42150 /* TestStereoscopicGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestStereoscopicGeometry.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestStereoscopicGeometry.cpp; sourceTree = "<group>"; };
+		932C58441FCE32D00074D698 /* TestUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestUtilities.h; path = ../../../../../../impl/ocean/test/testgeometry/TestUtilities.h; sourceTree = "<group>"; };
+		932C58491FCE32E40074D698 /* TestUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestUtilities.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestUtilities.cpp; sourceTree = "<group>"; };
+		93942E3C247DCDFF00082597 /* TestRANSAC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestRANSAC.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestRANSAC.cpp; sourceTree = "<group>"; };
+		93942E41247DCE1400082597 /* TestRANSAC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestRANSAC.h; path = ../../../../../../impl/ocean/test/testgeometry/TestRANSAC.h; sourceTree = "<group>"; };
+		93C9F05922E1051400737C27 /* TestNonLinearOptimizationTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestNonLinearOptimizationTransformation.h; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationTransformation.h; sourceTree = "<group>"; };
+		93C9F05E22E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestNonLinearOptimizationTransformation.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationTransformation.cpp; sourceTree = "<group>"; };
+		93D095842B0300FE0094DE65 /* TestEstimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestEstimator.h; path = ../../../../../../impl/ocean/test/testgeometry/TestEstimator.h; sourceTree = "<group>"; };
+		93D095892B03010E0094DE65 /* TestEstimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestEstimator.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestEstimator.cpp; sourceTree = "<group>"; };
+		93DFCBB126FBCFA6007C7B14 /* TestOctree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestOctree.h; path = ../../../../../../impl/ocean/test/testgeometry/TestOctree.h; sourceTree = "<group>"; };
+		93DFCBB626FBCFBA007C7B14 /* TestOctree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestOctree.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestOctree.cpp; sourceTree = "<group>"; };
+		C09DFB5E1E9B823C0013811D /* TestNonLinearOptimizationHomography.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestNonLinearOptimizationHomography.h; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationHomography.h; sourceTree = "<group>"; };
+		C09DFB601E9B82630013811D /* TestNonLinearOptimizationHomography.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestNonLinearOptimizationHomography.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestNonLinearOptimizationHomography.cpp; sourceTree = "<group>"; };
+		C0E9B1271DACEDB600895C4B /* libOceanTestGeometryD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestGeometryD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0F6E5D51E1E934F00F90052 /* TestJLinkage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestJLinkage.h; path = ../../../../../../impl/ocean/test/testgeometry/TestJLinkage.h; sourceTree = "<group>"; };
+		C0F6E5D71E1E935E00F90052 /* TestJLinkage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestJLinkage.cpp; path = ../../../../../../impl/ocean/test/testgeometry/TestJLinkage.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D9370921BC6D0D80046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DB3A1FB1BAB25F40000B274 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A831D953F2B00CCA9F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B10F1DACEDB600895C4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D93707F1BC6D0AF0046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DB3A22D1BAB27C30000B274 /* TestAbsoluteTransformation.h */,
+				5DB3A22E1BAB27C30000B274 /* TestCameraCalibration.h */,
+				5FE46E631EC5BDDB001CE713 /* TestDelaunay.h */,
+				5DB3A22F1BAB27C30000B274 /* TestEpipolarGeometry.h */,
+				5D5B124A1E65BA7A007FFA21 /* TestError.h */,
+				93D095842B0300FE0094DE65 /* TestEstimator.h */,
+				5DB3A2301BAB27C30000B274 /* TestGeometry.h */,
+				5DB3A2311BAB27C30000B274 /* TestHomography.h */,
+				5DB3A2321BAB27C30000B274 /* TestJacobian.h */,
+				C0F6E5D51E1E934F00F90052 /* TestJLinkage.h */,
+				5FE46E641EC5BDDB001CE713 /* TestMultipleViewGeometry.h */,
+				5D68615D1D87182500BDA349 /* TestNonLinearOptimizationCamera.h */,
+				C09DFB5E1E9B823C0013811D /* TestNonLinearOptimizationHomography.h */,
+				5DB3A2341BAB27C30000B274 /* TestNonLinearOptimizationLine.h */,
+				5DB3A2351BAB27C30000B274 /* TestNonLinearOptimizationObjectPoint.h */,
+				5DB3A2361BAB27C30000B274 /* TestNonLinearOptimizationOrientation.h */,
+				5DB3A2371BAB27C30000B274 /* TestNonLinearOptimizationPlane.h */,
+				5DEAE9CD1C8F28A10035D95A /* TestNonLinearOptimizationPose.h */,
+				93C9F05922E1051400737C27 /* TestNonLinearOptimizationTransformation.h */,
+				93DFCBB126FBCFA6007C7B14 /* TestOctree.h */,
+				5DB3A2381BAB27C30000B274 /* TestP3P.h */,
+				5DB3A2391BAB27C30000B274 /* TestP4P.h */,
+				5DB3A23A1BAB27C30000B274 /* TestPnP.h */,
+				93942E41247DCE1400082597 /* TestRANSAC.h */,
+				5DB3A23B1BAB27C30000B274 /* TestSpatialDistribution.h */,
+				931018192B69B13600F42150 /* TestStereoscopicGeometry.h */,
+				932C58441FCE32D00074D698 /* TestUtilities.h */,
+				5DB3A23C1BAB27C30000B274 /* Utilities.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DB3A1F51BAB25F40000B274 = {
+			isa = PBXGroup;
+			children = (
+				5D93707F1BC6D0AF0046ACD4 /* Header Files */,
+				5DB3A20C1BAB27980000B274 /* Source Files */,
+				5DB3A1FF1BAB25F40000B274 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DB3A1FF1BAB25F40000B274 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DB3A1FE1BAB25F40000B274 /* libOceanTestGeometryD.a */,
+				5D9370A71BC6D0D80046ACD4 /* libOceanTestGeometryD.dylib */,
+				5DD14A9A1D953F2B00CCA9F0 /* libOceanTestGeometryD.a */,
+				C0E9B1271DACEDB600895C4B /* libOceanTestGeometryD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DB3A20C1BAB27980000B274 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DB3A20D1BAB27AD0000B274 /* TestAbsoluteTransformation.cpp */,
+				5DB3A20E1BAB27AD0000B274 /* TestCameraCalibration.cpp */,
+				5FE46E671EC5BDF5001CE713 /* TestDelaunay.cpp */,
+				5DB3A20F1BAB27AD0000B274 /* TestEpipolarGeometry.cpp */,
+				5D5B12451E65BA67007FFA21 /* TestError.cpp */,
+				93D095892B03010E0094DE65 /* TestEstimator.cpp */,
+				5DB3A2101BAB27AD0000B274 /* TestGeometry.cpp */,
+				5DB3A2111BAB27AD0000B274 /* TestHomography.cpp */,
+				5DB3A2121BAB27AD0000B274 /* TestJacobian.cpp */,
+				C0F6E5D71E1E935E00F90052 /* TestJLinkage.cpp */,
+				5FE46E681EC5BDF5001CE713 /* TestMultipleViewGeometry.cpp */,
+				5D68615A1D87181900BDA349 /* TestNonLinearOptimizationCamera.cpp */,
+				C09DFB601E9B82630013811D /* TestNonLinearOptimizationHomography.cpp */,
+				5DB3A2141BAB27AD0000B274 /* TestNonLinearOptimizationLine.cpp */,
+				5DB3A2151BAB27AD0000B274 /* TestNonLinearOptimizationObjectPoint.cpp */,
+				5DB3A2161BAB27AD0000B274 /* TestNonLinearOptimizationOrientation.cpp */,
+				5DB3A2171BAB27AD0000B274 /* TestNonLinearOptimizationPlane.cpp */,
+				5DEAE9D01C8F28AE0035D95A /* TestNonLinearOptimizationPose.cpp */,
+				93C9F05E22E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp */,
+				93DFCBB626FBCFBA007C7B14 /* TestOctree.cpp */,
+				5DB3A2181BAB27AD0000B274 /* TestP3P.cpp */,
+				5DB3A2191BAB27AD0000B274 /* TestP4P.cpp */,
+				5DB3A21A1BAB27AD0000B274 /* TestPnP.cpp */,
+				93942E3C247DCDFF00082597 /* TestRANSAC.cpp */,
+				5DB3A21B1BAB27AD0000B274 /* TestSpatialDistribution.cpp */,
+				9310181E2B69B14200F42150 /* TestStereoscopicGeometry.cpp */,
+				932C58491FCE32E40074D698 /* TestUtilities.cpp */,
+				5DB3A21C1BAB27AD0000B274 /* Utilities.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D9370931BC6D0D80046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DEAE9CF1C8F28A10035D95A /* TestNonLinearOptimizationPose.h in Headers */,
+				5D9370941BC6D0D80046ACD4 /* TestNonLinearOptimizationPlane.h in Headers */,
+				C09DFB6C1E9B83FE0013811D /* TestNonLinearOptimizationHomography.h in Headers */,
+				93C9F05B22E1051500737C27 /* TestNonLinearOptimizationTransformation.h in Headers */,
+				5D9370951BC6D0D80046ACD4 /* TestP4P.h in Headers */,
+				93942E43247DCE1400082597 /* TestRANSAC.h in Headers */,
+				5D9370961BC6D0D80046ACD4 /* TestGeometry.h in Headers */,
+				5DB726E41EE99A4300143665 /* TestDelaunay.h in Headers */,
+				5D9370971BC6D0D80046ACD4 /* TestJacobian.h in Headers */,
+				5D9370981BC6D0D80046ACD4 /* TestNonLinearOptimizationLine.h in Headers */,
+				93DFCBB326FBCFA6007C7B14 /* TestOctree.h in Headers */,
+				93D095862B0300FE0094DE65 /* TestEstimator.h in Headers */,
+				5D9370991BC6D0D80046ACD4 /* TestSpatialDistribution.h in Headers */,
+				5D93709A1BC6D0D80046ACD4 /* TestNonLinearOptimizationOrientation.h in Headers */,
+				5D93709C1BC6D0D80046ACD4 /* TestP3P.h in Headers */,
+				5D93709D1BC6D0D80046ACD4 /* TestHomography.h in Headers */,
+				5D68615F1D87182500BDA349 /* TestNonLinearOptimizationCamera.h in Headers */,
+				C0F6E6161E1EA8F800F90052 /* TestJLinkage.h in Headers */,
+				5D93709E1BC6D0D80046ACD4 /* TestNonLinearOptimizationObjectPoint.h in Headers */,
+				9310181B2B69B13600F42150 /* TestStereoscopicGeometry.h in Headers */,
+				5DB774661EE999C900C14BB2 /* TestMultipleViewGeometry.h in Headers */,
+				932C58461FCE32D10074D698 /* TestUtilities.h in Headers */,
+				5D93709F1BC6D0D80046ACD4 /* TestCameraCalibration.h in Headers */,
+				5D9370A01BC6D0D80046ACD4 /* TestEpipolarGeometry.h in Headers */,
+				5D9370A11BC6D0D80046ACD4 /* Utilities.h in Headers */,
+				5D5B124C1E65BA7A007FFA21 /* TestError.h in Headers */,
+				5D9370A21BC6D0D80046ACD4 /* TestAbsoluteTransformation.h in Headers */,
+				5D9370A31BC6D0D80046ACD4 /* TestPnP.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DB3A1FC1BAB25F40000B274 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DEAE9CE1C8F28A10035D95A /* TestNonLinearOptimizationPose.h in Headers */,
+				5DB3A2471BAB27C30000B274 /* TestNonLinearOptimizationPlane.h in Headers */,
+				C09DFB5F1E9B823C0013811D /* TestNonLinearOptimizationHomography.h in Headers */,
+				93C9F05A22E1051500737C27 /* TestNonLinearOptimizationTransformation.h in Headers */,
+				5DB3A2491BAB27C30000B274 /* TestP4P.h in Headers */,
+				93942E42247DCE1400082597 /* TestRANSAC.h in Headers */,
+				5DB3A2401BAB27C30000B274 /* TestGeometry.h in Headers */,
+				5DB3A2421BAB27C30000B274 /* TestJacobian.h in Headers */,
+				5DB3A2441BAB27C30000B274 /* TestNonLinearOptimizationLine.h in Headers */,
+				5DB3A24B1BAB27C30000B274 /* TestSpatialDistribution.h in Headers */,
+				93DFCBB226FBCFA6007C7B14 /* TestOctree.h in Headers */,
+				93D095852B0300FE0094DE65 /* TestEstimator.h in Headers */,
+				5DB3A2461BAB27C30000B274 /* TestNonLinearOptimizationOrientation.h in Headers */,
+				5FE46E661EC5BDDB001CE713 /* TestMultipleViewGeometry.h in Headers */,
+				5DB3A2481BAB27C30000B274 /* TestP3P.h in Headers */,
+				5DB3A2411BAB27C30000B274 /* TestHomography.h in Headers */,
+				5D68615E1D87182500BDA349 /* TestNonLinearOptimizationCamera.h in Headers */,
+				C0F6E5D61E1E934F00F90052 /* TestJLinkage.h in Headers */,
+				5DB3A2451BAB27C30000B274 /* TestNonLinearOptimizationObjectPoint.h in Headers */,
+				9310181A2B69B13600F42150 /* TestStereoscopicGeometry.h in Headers */,
+				5DB3A23E1BAB27C30000B274 /* TestCameraCalibration.h in Headers */,
+				932C58451FCE32D10074D698 /* TestUtilities.h in Headers */,
+				5FE46E651EC5BDDB001CE713 /* TestDelaunay.h in Headers */,
+				5DB3A23F1BAB27C30000B274 /* TestEpipolarGeometry.h in Headers */,
+				5DB3A24C1BAB27C30000B274 /* Utilities.h in Headers */,
+				5D5B124B1E65BA7A007FFA21 /* TestError.h in Headers */,
+				5DB3A23D1BAB27C30000B274 /* TestAbsoluteTransformation.h in Headers */,
+				5DB3A24A1BAB27C30000B274 /* TestPnP.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A841D953F2B00CCA9F0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DD14A851D953F2B00CCA9F0 /* TestNonLinearOptimizationPose.h in Headers */,
+				5DD14A861D953F2B00CCA9F0 /* TestNonLinearOptimizationPlane.h in Headers */,
+				C09DFB6D1E9B83FF0013811D /* TestNonLinearOptimizationHomography.h in Headers */,
+				93C9F05C22E1051500737C27 /* TestNonLinearOptimizationTransformation.h in Headers */,
+				5DD14A871D953F2B00CCA9F0 /* TestP4P.h in Headers */,
+				93942E44247DCE1400082597 /* TestRANSAC.h in Headers */,
+				5DD14A881D953F2B00CCA9F0 /* TestGeometry.h in Headers */,
+				5DB726E31EE99A4200143665 /* TestDelaunay.h in Headers */,
+				5DD14A891D953F2B00CCA9F0 /* TestJacobian.h in Headers */,
+				5DD14A8A1D953F2B00CCA9F0 /* TestNonLinearOptimizationLine.h in Headers */,
+				93DFCBB426FBCFA6007C7B14 /* TestOctree.h in Headers */,
+				93D095872B0300FE0094DE65 /* TestEstimator.h in Headers */,
+				5DD14A8B1D953F2B00CCA9F0 /* TestSpatialDistribution.h in Headers */,
+				5DD14A8C1D953F2B00CCA9F0 /* TestNonLinearOptimizationOrientation.h in Headers */,
+				5DD14A8E1D953F2B00CCA9F0 /* TestP3P.h in Headers */,
+				5DD14A8F1D953F2B00CCA9F0 /* TestHomography.h in Headers */,
+				5DD14A901D953F2B00CCA9F0 /* TestNonLinearOptimizationCamera.h in Headers */,
+				C0F6E6171E1EA8F800F90052 /* TestJLinkage.h in Headers */,
+				5DD14A911D953F2B00CCA9F0 /* TestNonLinearOptimizationObjectPoint.h in Headers */,
+				9310181C2B69B13600F42150 /* TestStereoscopicGeometry.h in Headers */,
+				5DB774671EE999CA00C14BB2 /* TestMultipleViewGeometry.h in Headers */,
+				932C58471FCE32D10074D698 /* TestUtilities.h in Headers */,
+				5DD14A921D953F2B00CCA9F0 /* TestCameraCalibration.h in Headers */,
+				5DD14A931D953F2B00CCA9F0 /* TestEpipolarGeometry.h in Headers */,
+				5DD14A941D953F2B00CCA9F0 /* Utilities.h in Headers */,
+				5D5B124D1E65BA7A007FFA21 /* TestError.h in Headers */,
+				5DD14A951D953F2B00CCA9F0 /* TestAbsoluteTransformation.h in Headers */,
+				5DD14A961D953F2B00CCA9F0 /* TestPnP.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B1101DACEDB600895C4B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0E9B1111DACEDB600895C4B /* TestNonLinearOptimizationPose.h in Headers */,
+				C0E9B1121DACEDB600895C4B /* TestNonLinearOptimizationPlane.h in Headers */,
+				C09DFB6E1E9B83FF0013811D /* TestNonLinearOptimizationHomography.h in Headers */,
+				93C9F05D22E1051500737C27 /* TestNonLinearOptimizationTransformation.h in Headers */,
+				C0E9B1131DACEDB600895C4B /* TestP4P.h in Headers */,
+				93942E45247DCE1400082597 /* TestRANSAC.h in Headers */,
+				C0E9B1141DACEDB600895C4B /* TestGeometry.h in Headers */,
+				5DB726E51EE99A4300143665 /* TestDelaunay.h in Headers */,
+				C0E9B1151DACEDB600895C4B /* TestJacobian.h in Headers */,
+				C0E9B1161DACEDB600895C4B /* TestNonLinearOptimizationLine.h in Headers */,
+				93DFCBB526FBCFA6007C7B14 /* TestOctree.h in Headers */,
+				93D095882B0300FE0094DE65 /* TestEstimator.h in Headers */,
+				C0E9B1171DACEDB600895C4B /* TestSpatialDistribution.h in Headers */,
+				C0E9B1181DACEDB600895C4B /* TestNonLinearOptimizationOrientation.h in Headers */,
+				C0E9B11A1DACEDB600895C4B /* TestP3P.h in Headers */,
+				C0E9B11B1DACEDB600895C4B /* TestHomography.h in Headers */,
+				C0E9B11C1DACEDB600895C4B /* TestNonLinearOptimizationCamera.h in Headers */,
+				C0F6E6181E1EA8F800F90052 /* TestJLinkage.h in Headers */,
+				C0E9B11D1DACEDB600895C4B /* TestNonLinearOptimizationObjectPoint.h in Headers */,
+				9310181D2B69B13600F42150 /* TestStereoscopicGeometry.h in Headers */,
+				5DB774681EE999CB00C14BB2 /* TestMultipleViewGeometry.h in Headers */,
+				932C58481FCE32D10074D698 /* TestUtilities.h in Headers */,
+				C0E9B11E1DACEDB600895C4B /* TestCameraCalibration.h in Headers */,
+				C0E9B11F1DACEDB600895C4B /* TestEpipolarGeometry.h in Headers */,
+				C0E9B1201DACEDB600895C4B /* Utilities.h in Headers */,
+				5D5B124E1E65BA7A007FFA21 /* TestError.h in Headers */,
+				C0E9B1211DACEDB600895C4B /* TestAbsoluteTransformation.h in Headers */,
+				C0E9B1221DACEDB600895C4B /* TestPnP.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D9370801BC6D0D80046ACD4 /* testgeometry x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9370A41BC6D0D80046ACD4 /* Build configuration list for PBXNativeTarget "testgeometry x64 (Shared)" */;
+			buildPhases = (
+				5D9370811BC6D0D80046ACD4 /* Sources */,
+				5D9370921BC6D0D80046ACD4 /* Frameworks */,
+				5D9370931BC6D0D80046ACD4 /* Headers */,
+				C0E9B1281DACEE4D00895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testgeometry x64 (Shared)";
+			productName = testgeometry;
+			productReference = 5D9370A71BC6D0D80046ACD4 /* libOceanTestGeometryD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DB3A1FD1BAB25F40000B274 /* testgeometry x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DB3A2091BAB25F40000B274 /* Build configuration list for PBXNativeTarget "testgeometry x64 (Static)" */;
+			buildPhases = (
+				5DB3A1FA1BAB25F40000B274 /* Sources */,
+				5DB3A1FB1BAB25F40000B274 /* Frameworks */,
+				5DB3A1FC1BAB25F40000B274 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testgeometry x64 (Static)";
+			productName = testgeometry;
+			productReference = 5DB3A1FE1BAB25F40000B274 /* libOceanTestGeometryD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DD14A6F1D953F2B00CCA9F0 /* testgeometry arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD14A971D953F2B00CCA9F0 /* Build configuration list for PBXNativeTarget "testgeometry arm64 (Static)" */;
+			buildPhases = (
+				5DD14A701D953F2B00CCA9F0 /* Sources */,
+				5DD14A831D953F2B00CCA9F0 /* Frameworks */,
+				5DD14A841D953F2B00CCA9F0 /* Headers */,
+				5DD14A9B1D953F4200CCA9F0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testgeometry arm64 (Static)";
+			productName = testgeometry;
+			productReference = 5DD14A9A1D953F2B00CCA9F0 /* libOceanTestGeometryD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C0E9B0FB1DACEDB600895C4B /* testgeometry arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0E9B1241DACEDB600895C4B /* Build configuration list for PBXNativeTarget "testgeometry arm64 (Shared)" */;
+			buildPhases = (
+				C0E9B0FC1DACEDB600895C4B /* Sources */,
+				C0E9B10F1DACEDB600895C4B /* Frameworks */,
+				C0E9B1101DACEDB600895C4B /* Headers */,
+				C0E9B1231DACEDB600895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testgeometry arm64 (Shared)";
+			productName = testgeometry;
+			productReference = C0E9B1271DACEDB600895C4B /* libOceanTestGeometryD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DB3A1F61BAB25F40000B274 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DB3A1FD1BAB25F40000B274 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DB3A1F91BAB25F40000B274 /* Build configuration list for PBXProject "testgeometry" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DB3A1F51BAB25F40000B274;
+			productRefGroup = 5DB3A1FF1BAB25F40000B274 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DB3A1FD1BAB25F40000B274 /* testgeometry x64 (Static) */,
+				5D9370801BC6D0D80046ACD4 /* testgeometry x64 (Shared) */,
+				5DD14A6F1D953F2B00CCA9F0 /* testgeometry arm64 (Static) */,
+				C0E9B0FB1DACEDB600895C4B /* testgeometry arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DD14A9B1D953F4200CCA9F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/test/lib/\"";
+		};
+		C0E9B1231DACEDB600895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/test/lib/\"";
+		};
+		C0E9B1281DACEE4D00895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D9370811BC6D0D80046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93C9F06022E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp in Sources */,
+				5DB774691EE999D000C14BB2 /* TestMultipleViewGeometry.cpp in Sources */,
+				5D9370831BC6D0D80046ACD4 /* TestJacobian.cpp in Sources */,
+				5D68615C1D87181900BDA349 /* TestNonLinearOptimizationCamera.cpp in Sources */,
+				93942E3E247DCDFF00082597 /* TestRANSAC.cpp in Sources */,
+				5DEAE9D21C8F28AE0035D95A /* TestNonLinearOptimizationPose.cpp in Sources */,
+				5D9370841BC6D0D80046ACD4 /* TestPnP.cpp in Sources */,
+				93DFCBB826FBCFBA007C7B14 /* TestOctree.cpp in Sources */,
+				5D9370851BC6D0D80046ACD4 /* TestSpatialDistribution.cpp in Sources */,
+				5D5B12471E65BA67007FFA21 /* TestError.cpp in Sources */,
+				5D9370861BC6D0D80046ACD4 /* TestEpipolarGeometry.cpp in Sources */,
+				5D9370871BC6D0D80046ACD4 /* TestHomography.cpp in Sources */,
+				931018202B69B14200F42150 /* TestStereoscopicGeometry.cpp in Sources */,
+				5D9370881BC6D0D80046ACD4 /* TestGeometry.cpp in Sources */,
+				5D9370891BC6D0D80046ACD4 /* TestNonLinearOptimizationLine.cpp in Sources */,
+				5D93708A1BC6D0D80046ACD4 /* TestP4P.cpp in Sources */,
+				C09DFB6F1E9B84060013811D /* TestNonLinearOptimizationHomography.cpp in Sources */,
+				5D93708B1BC6D0D80046ACD4 /* TestAbsoluteTransformation.cpp in Sources */,
+				5D93708C1BC6D0D80046ACD4 /* Utilities.cpp in Sources */,
+				5D93708D1BC6D0D80046ACD4 /* TestNonLinearOptimizationObjectPoint.cpp in Sources */,
+				5DB726E61EE99A4800143665 /* TestDelaunay.cpp in Sources */,
+				C0F6E6191E1EA8FB00F90052 /* TestJLinkage.cpp in Sources */,
+				5D93708E1BC6D0D80046ACD4 /* TestNonLinearOptimizationPlane.cpp in Sources */,
+				5D93708F1BC6D0D80046ACD4 /* TestNonLinearOptimizationOrientation.cpp in Sources */,
+				932C584B1FCE32E50074D698 /* TestUtilities.cpp in Sources */,
+				93D0958B2B03010E0094DE65 /* TestEstimator.cpp in Sources */,
+				5D9370901BC6D0D80046ACD4 /* TestCameraCalibration.cpp in Sources */,
+				5D9370911BC6D0D80046ACD4 /* TestP3P.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DB3A1FA1BAB25F40000B274 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93C9F05F22E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp in Sources */,
+				5DB3A2221BAB27AD0000B274 /* TestJacobian.cpp in Sources */,
+				5D68615B1D87181900BDA349 /* TestNonLinearOptimizationCamera.cpp in Sources */,
+				5DEAE9D11C8F28AE0035D95A /* TestNonLinearOptimizationPose.cpp in Sources */,
+				93942E3D247DCDFF00082597 /* TestRANSAC.cpp in Sources */,
+				5DB3A22A1BAB27AD0000B274 /* TestPnP.cpp in Sources */,
+				5FE46E6A1EC5BDF5001CE713 /* TestMultipleViewGeometry.cpp in Sources */,
+				93DFCBB726FBCFBA007C7B14 /* TestOctree.cpp in Sources */,
+				5DB3A22B1BAB27AD0000B274 /* TestSpatialDistribution.cpp in Sources */,
+				5D5B12461E65BA67007FFA21 /* TestError.cpp in Sources */,
+				5DB3A21F1BAB27AD0000B274 /* TestEpipolarGeometry.cpp in Sources */,
+				5DB3A2211BAB27AD0000B274 /* TestHomography.cpp in Sources */,
+				9310181F2B69B14200F42150 /* TestStereoscopicGeometry.cpp in Sources */,
+				5DB3A2201BAB27AD0000B274 /* TestGeometry.cpp in Sources */,
+				5DB3A2241BAB27AD0000B274 /* TestNonLinearOptimizationLine.cpp in Sources */,
+				5DB3A2291BAB27AD0000B274 /* TestP4P.cpp in Sources */,
+				C09DFB611E9B82630013811D /* TestNonLinearOptimizationHomography.cpp in Sources */,
+				5DB3A21D1BAB27AD0000B274 /* TestAbsoluteTransformation.cpp in Sources */,
+				5DB3A22C1BAB27AD0000B274 /* Utilities.cpp in Sources */,
+				5FE46E691EC5BDF5001CE713 /* TestDelaunay.cpp in Sources */,
+				5DB3A2251BAB27AD0000B274 /* TestNonLinearOptimizationObjectPoint.cpp in Sources */,
+				C0F6E5D81E1E935E00F90052 /* TestJLinkage.cpp in Sources */,
+				5DB3A2271BAB27AD0000B274 /* TestNonLinearOptimizationPlane.cpp in Sources */,
+				5DB3A2261BAB27AD0000B274 /* TestNonLinearOptimizationOrientation.cpp in Sources */,
+				932C584A1FCE32E50074D698 /* TestUtilities.cpp in Sources */,
+				93D0958A2B03010E0094DE65 /* TestEstimator.cpp in Sources */,
+				5DB3A21E1BAB27AD0000B274 /* TestCameraCalibration.cpp in Sources */,
+				5DB3A2281BAB27AD0000B274 /* TestP3P.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A701D953F2B00CCA9F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93C9F06122E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp in Sources */,
+				5DB7746A1EE999D100C14BB2 /* TestMultipleViewGeometry.cpp in Sources */,
+				5DD14A721D953F2B00CCA9F0 /* TestJacobian.cpp in Sources */,
+				5DD14A731D953F2B00CCA9F0 /* TestNonLinearOptimizationCamera.cpp in Sources */,
+				93942E3F247DCDFF00082597 /* TestRANSAC.cpp in Sources */,
+				5DD14A741D953F2B00CCA9F0 /* TestNonLinearOptimizationPose.cpp in Sources */,
+				5DD14A751D953F2B00CCA9F0 /* TestPnP.cpp in Sources */,
+				93DFCBB926FBCFBA007C7B14 /* TestOctree.cpp in Sources */,
+				5DD14A761D953F2B00CCA9F0 /* TestSpatialDistribution.cpp in Sources */,
+				5D5B12481E65BA67007FFA21 /* TestError.cpp in Sources */,
+				5DD14A771D953F2B00CCA9F0 /* TestEpipolarGeometry.cpp in Sources */,
+				5DD14A781D953F2B00CCA9F0 /* TestHomography.cpp in Sources */,
+				931018212B69B14200F42150 /* TestStereoscopicGeometry.cpp in Sources */,
+				5DD14A791D953F2B00CCA9F0 /* TestGeometry.cpp in Sources */,
+				5DD14A7A1D953F2B00CCA9F0 /* TestNonLinearOptimizationLine.cpp in Sources */,
+				5DD14A7B1D953F2B00CCA9F0 /* TestP4P.cpp in Sources */,
+				C09DFB701E9B84060013811D /* TestNonLinearOptimizationHomography.cpp in Sources */,
+				5DD14A7C1D953F2B00CCA9F0 /* TestAbsoluteTransformation.cpp in Sources */,
+				5DD14A7D1D953F2B00CCA9F0 /* Utilities.cpp in Sources */,
+				5DD14A7E1D953F2B00CCA9F0 /* TestNonLinearOptimizationObjectPoint.cpp in Sources */,
+				5DB726E71EE99A4900143665 /* TestDelaunay.cpp in Sources */,
+				C0F6E61A1E1EA8FC00F90052 /* TestJLinkage.cpp in Sources */,
+				5DD14A7F1D953F2B00CCA9F0 /* TestNonLinearOptimizationPlane.cpp in Sources */,
+				5DD14A801D953F2B00CCA9F0 /* TestNonLinearOptimizationOrientation.cpp in Sources */,
+				932C584C1FCE32E50074D698 /* TestUtilities.cpp in Sources */,
+				93D0958C2B03010E0094DE65 /* TestEstimator.cpp in Sources */,
+				5DD14A811D953F2B00CCA9F0 /* TestCameraCalibration.cpp in Sources */,
+				5DD14A821D953F2B00CCA9F0 /* TestP3P.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0FC1DACEDB600895C4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93C9F06222E1052600737C27 /* TestNonLinearOptimizationTransformation.cpp in Sources */,
+				5DB7746B1EE999D100C14BB2 /* TestMultipleViewGeometry.cpp in Sources */,
+				C0E9B0FE1DACEDB600895C4B /* TestJacobian.cpp in Sources */,
+				C0E9B0FF1DACEDB600895C4B /* TestNonLinearOptimizationCamera.cpp in Sources */,
+				93942E40247DCDFF00082597 /* TestRANSAC.cpp in Sources */,
+				C0E9B1001DACEDB600895C4B /* TestNonLinearOptimizationPose.cpp in Sources */,
+				C0E9B1011DACEDB600895C4B /* TestPnP.cpp in Sources */,
+				93DFCBBA26FBCFBA007C7B14 /* TestOctree.cpp in Sources */,
+				C0E9B1021DACEDB600895C4B /* TestSpatialDistribution.cpp in Sources */,
+				5D5B12491E65BA67007FFA21 /* TestError.cpp in Sources */,
+				C0E9B1031DACEDB600895C4B /* TestEpipolarGeometry.cpp in Sources */,
+				C0E9B1041DACEDB600895C4B /* TestHomography.cpp in Sources */,
+				931018222B69B14200F42150 /* TestStereoscopicGeometry.cpp in Sources */,
+				C0E9B1051DACEDB600895C4B /* TestGeometry.cpp in Sources */,
+				C0E9B1061DACEDB600895C4B /* TestNonLinearOptimizationLine.cpp in Sources */,
+				C0E9B1071DACEDB600895C4B /* TestP4P.cpp in Sources */,
+				C09DFB711E9B84060013811D /* TestNonLinearOptimizationHomography.cpp in Sources */,
+				C0E9B1081DACEDB600895C4B /* TestAbsoluteTransformation.cpp in Sources */,
+				C0E9B1091DACEDB600895C4B /* Utilities.cpp in Sources */,
+				C0E9B10A1DACEDB600895C4B /* TestNonLinearOptimizationObjectPoint.cpp in Sources */,
+				5DB726E81EE99A4900143665 /* TestDelaunay.cpp in Sources */,
+				C0F6E61B1E1EA8FC00F90052 /* TestJLinkage.cpp in Sources */,
+				C0E9B10B1DACEDB600895C4B /* TestNonLinearOptimizationPlane.cpp in Sources */,
+				C0E9B10C1DACEDB600895C4B /* TestNonLinearOptimizationOrientation.cpp in Sources */,
+				932C584D1FCE32E50074D698 /* TestUtilities.cpp in Sources */,
+				93D0958D2B03010E0094DE65 /* TestEstimator.cpp in Sources */,
+				C0E9B10D1DACEDB600895C4B /* TestCameraCalibration.cpp in Sources */,
+				C0E9B10E1DACEDB600895C4B /* TestP3P.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D9370A51BC6D0D80046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testgeometry/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testgeometry/osx_x64_xc9_shared_debug;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+					"-lOceanSystemD",
+				);
+				PRODUCT_MODULE_NAME = OceanTestGeometryD;
+				PRODUCT_NAME = OceanTestGeometryD;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D9370A61BC6D0D80046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testgeometry/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testgeometry/osx_x64_xc9_shared;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanGeometry",
+					"-lOceanMath",
+					"-lOceanSystem",
+				);
+				PRODUCT_MODULE_NAME = OceanTestGeometry;
+				PRODUCT_NAME = OceanTestGeometry;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DB3A2071BAB25F40000B274 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DB3A2081BAB25F40000B274 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DB3A20A1BAB25F40000B274 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testgeometry/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testgeometry/osx_x64_xc9_static_debug;
+				PRODUCT_MODULE_NAME = OceanTestGeometryD;
+				PRODUCT_NAME = OceanTestGeometryD;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DB3A20B1BAB25F40000B274 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testgeometry/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testgeometry/osx_x64_xc9_static;
+				PRODUCT_MODULE_NAME = OceanTestGeometry;
+				PRODUCT_NAME = OceanTestGeometry;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DD14A981D953F2B00CCA9F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestGeometryD;
+				PRODUCT_NAME = OceanTestGeometryD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD14A991D953F2B00CCA9F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestGeometry;
+				PRODUCT_NAME = OceanTestGeometry;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C0E9B1251DACEDB600895C4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+					"-lOceanSystemD",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestGeometryD;
+				PRODUCT_NAME = OceanTestGeometryD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C0E9B1261DACEDB600895C4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanGeometry",
+					"-lOceanMath",
+					"-lOceanSystem",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestGeometry;
+				PRODUCT_NAME = OceanTestGeometry;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testgeometry/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D9370A41BC6D0D80046ACD4 /* Build configuration list for PBXNativeTarget "testgeometry x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9370A51BC6D0D80046ACD4 /* Debug */,
+				5D9370A61BC6D0D80046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DB3A1F91BAB25F40000B274 /* Build configuration list for PBXProject "testgeometry" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DB3A2071BAB25F40000B274 /* Debug */,
+				5DB3A2081BAB25F40000B274 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DB3A2091BAB25F40000B274 /* Build configuration list for PBXNativeTarget "testgeometry x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DB3A20A1BAB25F40000B274 /* Debug */,
+				5DB3A20B1BAB25F40000B274 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD14A971D953F2B00CCA9F0 /* Build configuration list for PBXNativeTarget "testgeometry arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD14A981D953F2B00CCA9F0 /* Debug */,
+				5DD14A991D953F2B00CCA9F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0E9B1241DACEDB600895C4B /* Build configuration list for PBXNativeTarget "testgeometry arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0E9B1251DACEDB600895C4B /* Debug */,
+				C0E9B1261DACEDB600895C4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DB3A1F61BAB25F40000B274 /* Project object */;
+}

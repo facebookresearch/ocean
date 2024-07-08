@@ -1,0 +1,15 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved.
+#
+# This file is licensed under the Art Attribution License 1.0 found in the
+# LICENSE file in this directory.
+
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v5.0.0)
+
+newmtl material_quest3_controllers
+Ka 1 1 1
+Kd 1 1 1
+Ke 0 0 0
+Ks 0 0 0
+illum 2
+map_Kd quest3Controllers_BaseColor_AO.png

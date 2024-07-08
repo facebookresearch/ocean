@@ -1,0 +1,4 @@
+libusb
+android_native_app_glue
+arcore-android-sdk
+libyuv

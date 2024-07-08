@@ -1,0 +1,244 @@
+# This workflow builds and tests Ocean on Linux (static)
+# Based on : https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
+name: Build Ocean on Linux (static)
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    # Execute this workflow:
+    # Mon-Sun, every 24 hours at 6 am (UTC)
+    - cron: '0 6 * * *'
+  # Have the ability to trigger this job manually through the API
+  workflow_dispatch:
+
+env:
+  OCEAN_LINK_TYPE: static
+
+  OCEAN_THIRDPARTY_BUILD_PATH: ${{ github.workspace }}/ocean_thirdparty_build
+  OCEAN_THIRDPARTY_INSTALL_PATH: ${{ github.workspace }}/ocean_thirdparty_install
+
+  OCEAN_BUILD_PATH: ${{ github.workspace }}/ocean_build
+  OCEAN_INSTALL_PATH: ${{ github.workspace }}/ocean_install
+
+jobs:
+  build:
+    name: Linux (${{ matrix.build_config }}, static)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [debug, release]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -y -o Acquire::Retries=5 \
+            git ninja-build zip libx11-dev libgtk-3-dev \
+            liblzma-dev libgl1-mesa-dev libxcb-glx0-dev \
+            libdeflate-dev libudev-dev zlib1g-dev
+
+      # - name: Install a newer CMake
+      #   run: |
+      #     sudo apt purge --auto-remove cmake
+      #     wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
+      #     sudo apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ jammy main'
+      #     sudo apt update
+      #     sudo apt install -y cmake
+
+      - name: Build and install third-party libraries for Ocean
+        run: |
+          ${{ github.workspace }}/build/cmake/build_thirdparty_linuxunix.sh \
+            -i ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }} \
+            -b ${{ env.OCEAN_THIRDPARTY_BUILD_PATH }} \
+            -c ${{ matrix.build_config }} \
+            -l ${{ env.OCEAN_LINK_TYPE }}
+
+      - name: Build and install Ocean
+        run: |
+          ${{ github.workspace }}/build/cmake/build_ocean_linuxunix.sh \
+            -i ${{ env.OCEAN_INSTALL_PATH }} \
+            -b ${{ env.OCEAN_BUILD_PATH }} \
+            -c ${{ matrix.build_config }} \
+            -l ${{ env.OCEAN_LINK_TYPE }} \
+            -t ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
+
+      - name: Archive build artifacts (debug)
+        if: success() && matrix.build_config == 'debug'
+        run: |
+          tar -cvzf ocean-build-Debug.tar.gz ${{ env.OCEAN_BUILD_PATH }}/linux_static_Debug
+
+      - name: Archive build artifacts (release)
+        if: success() && matrix.build_config == 'release'
+        run: |
+          tar -cvzf ocean-build-Release.tar.gz ${{ env.OCEAN_BUILD_PATH }}/linux_static_Release
+
+      - name: Upload build archive (debug)
+        if: success() && matrix.build_config == 'debug'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ocean-build-Debug
+          path: ./ocean-build-Debug.tar.gz
+          compression-level: 0
+
+      - name: Upload build archive (release)
+        if: success() && matrix.build_config == 'release'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ocean-build-Release
+          path: ./ocean-build-Release.tar.gz
+          compression-level: 0
+
+  testbase:
+    name: Run ctest in testbase (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testbase
+          # Exclude tests that are known to fail
+          ctest-args: '-E TestHighPerformanceTimer|TestSignal|TestFrame.UpdateMemory|TestStereoscopicGeometry.CameraPose_6DOF_100'
+
+  testcv:
+    name: Run ctest in testcv (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testcv
+          # Exclude tests that are known to fail
+          # This suite takes too long when running in sequence, but running in parallel causes intermittent errors, so allow up to one failure per test
+          ctest-args: '-E TestFASTDetector.StandardStrength -j 16 --repeat until-pass:2'
+
+  testdevices:
+    name: Run ctest in testdevices (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testdevices
+
+  testgeometry:
+    name: Run ctest in testgeometry (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testgeometry
+
+  testio:
+    name: Run ctest in testio (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testio
+          # Exclude tests that are known to fail
+          ctest-args: '-E TestBasemap'
+
+  testmath:
+    name: Run ctest in testmath (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testmath
+          ctest-args: '-E TestEquation.CubicEquation'
+
+  testmedia:
+    name: Run ctest in testmedia (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testmedia
+
+  testnetwork:
+    name: Run ctest in testnetwork (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testnetwork
+
+  testtracking:
+    name: Run ctest in testtracking (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testtracking

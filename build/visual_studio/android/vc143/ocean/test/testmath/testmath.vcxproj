@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{94915B62-58D2-4133-BDB9-01DE6E294154}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>testmath</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>testmath</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="testmath_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAnyCamera.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestApproximation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBoundingBox.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBoundingSphere.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBox2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBox3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCone3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCylinder3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestEquation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestEuler.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestExponentialMap.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFiniteLine2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFiniteLine3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFourierTransformation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFrustum.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestHomogenousMatrix4.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestHSVAColor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestInterpolation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLine2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLine3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLinearAlgebra.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLookup2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMath.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMathUtilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMatrix.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestNumeric.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestPinholeCamera.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestPlane3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestQuaternion.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRandom.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRateCalculator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRGBAColor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRotation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSampleMap.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAutomaticDifferentiation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSparseMatrix.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSphere3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix4.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestStaticMatrix.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestTriangle2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVariance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector2.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector4.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAnyCamera.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestApproximation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBoundingBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBoundingSphere.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBox2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestBox3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCone3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCylinder3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestEquation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestEuler.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestExponentialMap.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFiniteLine2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFiniteLine3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFourierTransformation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFrustum.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestHomogenousMatrix4.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestHSVAColor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestInterpolation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLine2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLine3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLinearAlgebra.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestLookup2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMath.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMathUtilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestMatrix.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestNumeric.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestPinholeCamera.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestPlane3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestQuaternion.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRandom.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRateCalculator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRGBAColor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestRotation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSampleMap.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestAutomaticDifferentiation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSparseMatrix.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSphere3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestSquareMatrix4.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestStaticMatrix.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestTriangle2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVariance.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector2.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector3.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestVector4.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

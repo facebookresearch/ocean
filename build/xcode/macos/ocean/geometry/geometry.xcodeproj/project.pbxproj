@@ -1,0 +1,1518 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D222B0B1BB176CC00298788 /* NonLinearOptimizationLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D751BAAC24D002E9E7D /* NonLinearOptimizationLine.cpp */; };
+		5D222B0C1BB176CC00298788 /* Quadric.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7E1BAAC24D002E9E7D /* Quadric.cpp */; };
+		5D222B0D1BB176CC00298788 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D821BAAC24D002E9E7D /* Utilities.cpp */; };
+		5D222B0E1BB176CC00298788 /* SpatialDistribution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D801BAAC24D002E9E7D /* SpatialDistribution.cpp */; };
+		5D222B0F1BB176CC00298788 /* AbsoluteTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6B1BAAC24D002E9E7D /* AbsoluteTransformation.cpp */; };
+		5D222B101BB176CC00298788 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6F1BAAC24D002E9E7D /* Error.cpp */; };
+		5D222B111BB176CC00298788 /* PerspectivePose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7C1BAAC24D002E9E7D /* PerspectivePose.cpp */; };
+		5D222B121BB176CC00298788 /* Normalization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D791BAAC24D002E9E7D /* Normalization.cpp */; };
+		5D222B131BB176CC00298788 /* NonLinearOptimizationObjectPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D761BAAC24D002E9E7D /* NonLinearOptimizationObjectPoint.cpp */; };
+		5D222B141BB176CC00298788 /* EpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6E1BAAC24D002E9E7D /* EpipolarGeometry.cpp */; };
+		5D222B151BB176CC00298788 /* StereoscopicGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D811BAAC24D002E9E7D /* StereoscopicGeometry.cpp */; };
+		5D222B171BB176CC00298788 /* PnP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7D1BAAC24D002E9E7D /* PnP.cpp */; };
+		5D222B181BB176CC00298788 /* NonLinearOptimizationCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D741BAAC24D002E9E7D /* NonLinearOptimizationCamera.cpp */; };
+		5D222B191BB176CC00298788 /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D701BAAC24D002E9E7D /* Grid.cpp */; };
+		5D222B1A1BB176CC00298788 /* VanishingProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D831BAAC24D002E9E7D /* VanishingProjection.cpp */; };
+		5D222B1B1BB176CC00298788 /* RANSAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7F1BAAC24D002E9E7D /* RANSAC.cpp */; };
+		5D222B1C1BB176CC00298788 /* NonLinearOptimizationPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D781BAAC24D002E9E7D /* NonLinearOptimizationPlane.cpp */; };
+		5D222B1D1BB176CC00298788 /* Jacobian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D721BAAC24D002E9E7D /* Jacobian.cpp */; };
+		5D222B1E1BB176CC00298788 /* P3P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7A1BAAC24D002E9E7D /* P3P.cpp */; };
+		5D222B1F1BB176CC00298788 /* P4P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7B1BAAC24D002E9E7D /* P4P.cpp */; };
+		5D222B201BB176CC00298788 /* CameraCalibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6C1BAAC24D002E9E7D /* CameraCalibration.cpp */; };
+		5D222B211BB176CC00298788 /* NonLinearOptimizationOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D771BAAC24D002E9E7D /* NonLinearOptimizationOrientation.cpp */; };
+		5D222B221BB176CC00298788 /* Homography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D711BAAC24D002E9E7D /* Homography.cpp */; };
+		5D222B231BB176CC00298788 /* Delaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6D1BAAC24D002E9E7D /* Delaunay.cpp */; };
+		5D222B261BB176CC00298788 /* Quadric.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB41BAAC25B002E9E7D /* Quadric.h */; };
+		5D222B271BB176CC00298788 /* VanishingProjection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB91BAAC25B002E9E7D /* VanishingProjection.h */; };
+		5D222B281BB176CC00298788 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB81BAAC25B002E9E7D /* Utilities.h */; };
+		5D222B291BB176CC00298788 /* SpatialDistribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB61BAAC25B002E9E7D /* SpatialDistribution.h */; };
+		5D222B2A1BB176CC00298788 /* Homography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA51BAAC25B002E9E7D /* Homography.h */; };
+		5D222B2B1BB176CC00298788 /* NonLinearOptimizationLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA91BAAC25B002E9E7D /* NonLinearOptimizationLine.h */; };
+		5D222B2C1BB176CC00298788 /* StereoscopicGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB71BAAC25B002E9E7D /* StereoscopicGeometry.h */; };
+		5D222B2D1BB176CC00298788 /* P3P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB01BAAC25B002E9E7D /* P3P.h */; };
+		5D222B2E1BB176CC00298788 /* NonLinearOptimizationCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA81BAAC25B002E9E7D /* NonLinearOptimizationCamera.h */; };
+		5D222B2F1BB176CC00298788 /* Jacobian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA61BAAC25B002E9E7D /* Jacobian.h */; };
+		5D222B301BB176CC00298788 /* EpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA01BAAC25B002E9E7D /* EpipolarGeometry.h */; };
+		5D222B311BB176CC00298788 /* CameraCalibration.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9E1BAAC25B002E9E7D /* CameraCalibration.h */; };
+		5D222B321BB176CC00298788 /* NonLinearOptimizationObjectPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAA1BAAC25B002E9E7D /* NonLinearOptimizationObjectPoint.h */; };
+		5D222B331BB176CC00298788 /* PerspectivePose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB21BAAC25B002E9E7D /* PerspectivePose.h */; };
+		5D222B341BB176CC00298788 /* Grid.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA41BAAC25B002E9E7D /* Grid.h */; };
+		5D222B351BB176CC00298788 /* Error.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA11BAAC25B002E9E7D /* Error.h */; };
+		5D222B361BB176CC00298788 /* RANSAC.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB51BAAC25B002E9E7D /* RANSAC.h */; };
+		5D222B371BB176CC00298788 /* NonLinearOptimization.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA71BAAC25B002E9E7D /* NonLinearOptimization.h */; };
+		5D222B381BB176CC00298788 /* NonLinearUniversalOptimizationSparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAE1BAAC25B002E9E7D /* NonLinearUniversalOptimizationSparse.h */; };
+		5D222B391BB176CC00298788 /* AbsoluteTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9D1BAAC25B002E9E7D /* AbsoluteTransformation.h */; };
+		5D222B3A1BB176CC00298788 /* NonLinearOptimizationOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAB1BAAC25B002E9E7D /* NonLinearOptimizationOrientation.h */; };
+		5D222B3B1BB176CC00298788 /* Delaunay.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9F1BAAC25B002E9E7D /* Delaunay.h */; };
+		5D222B3C1BB176CC00298788 /* PnP.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB31BAAC25B002E9E7D /* PnP.h */; };
+		5D222B3D1BB176CC00298788 /* Estimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA21BAAC25B002E9E7D /* Estimator.h */; };
+		5D222B3E1BB176CC00298788 /* Geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA31BAAC25B002E9E7D /* Geometry.h */; };
+		5D222B3F1BB176CC00298788 /* Normalization.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAF1BAAC25B002E9E7D /* Normalization.h */; };
+		5D222B401BB176CC00298788 /* P4P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB11BAAC25B002E9E7D /* P4P.h */; };
+		5D222B411BB176CC00298788 /* NonLinearUniversalOptimizationDense.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAD1BAAC25B002E9E7D /* NonLinearUniversalOptimizationDense.h */; };
+		5D222B421BB176CC00298788 /* NonLinearOptimizationPlane.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAC1BAAC25B002E9E7D /* NonLinearOptimizationPlane.h */; };
+		5D9861A71D8B574E00DEDB00 /* NonLinearOptimizationLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D751BAAC24D002E9E7D /* NonLinearOptimizationLine.cpp */; };
+		5D9861A81D8B574E00DEDB00 /* Quadric.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7E1BAAC24D002E9E7D /* Quadric.cpp */; };
+		5D9861A91D8B574E00DEDB00 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D821BAAC24D002E9E7D /* Utilities.cpp */; };
+		5D9861AA1D8B574E00DEDB00 /* SpatialDistribution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D801BAAC24D002E9E7D /* SpatialDistribution.cpp */; };
+		5D9861AB1D8B574E00DEDB00 /* AbsoluteTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6B1BAAC24D002E9E7D /* AbsoluteTransformation.cpp */; };
+		5D9861AC1D8B574E00DEDB00 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6F1BAAC24D002E9E7D /* Error.cpp */; };
+		5D9861AD1D8B574E00DEDB00 /* PerspectivePose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7C1BAAC24D002E9E7D /* PerspectivePose.cpp */; };
+		5D9861AE1D8B574E00DEDB00 /* Normalization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D791BAAC24D002E9E7D /* Normalization.cpp */; };
+		5D9861AF1D8B574E00DEDB00 /* NonLinearOptimizationObjectPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D761BAAC24D002E9E7D /* NonLinearOptimizationObjectPoint.cpp */; };
+		5D9861B01D8B574E00DEDB00 /* EpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6E1BAAC24D002E9E7D /* EpipolarGeometry.cpp */; };
+		5D9861B11D8B574E00DEDB00 /* StereoscopicGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D811BAAC24D002E9E7D /* StereoscopicGeometry.cpp */; };
+		5D9861B21D8B574E00DEDB00 /* NonLinearOptimizationHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9C41C8F143B0035D95A /* NonLinearOptimizationHomography.cpp */; };
+		5D9861B41D8B574E00DEDB00 /* PnP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7D1BAAC24D002E9E7D /* PnP.cpp */; };
+		5D9861B51D8B574E00DEDB00 /* NonLinearOptimizationCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D741BAAC24D002E9E7D /* NonLinearOptimizationCamera.cpp */; };
+		5D9861B61D8B574E00DEDB00 /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D701BAAC24D002E9E7D /* Grid.cpp */; };
+		5D9861B71D8B574E00DEDB00 /* VanishingProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D831BAAC24D002E9E7D /* VanishingProjection.cpp */; };
+		5D9861B81D8B574E00DEDB00 /* NonLinearOptimizationPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9C71C8F285C0035D95A /* NonLinearOptimizationPose.cpp */; };
+		5D9861B91D8B574E00DEDB00 /* RANSAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7F1BAAC24D002E9E7D /* RANSAC.cpp */; };
+		5D9861BA1D8B574E00DEDB00 /* NonLinearOptimizationPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D781BAAC24D002E9E7D /* NonLinearOptimizationPlane.cpp */; };
+		5D9861BB1D8B574E00DEDB00 /* Jacobian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D721BAAC24D002E9E7D /* Jacobian.cpp */; };
+		5D9861BC1D8B574E00DEDB00 /* P3P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7A1BAAC24D002E9E7D /* P3P.cpp */; };
+		5D9861BD1D8B574E00DEDB00 /* P4P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7B1BAAC24D002E9E7D /* P4P.cpp */; };
+		5D9861BE1D8B574E00DEDB00 /* CameraCalibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6C1BAAC24D002E9E7D /* CameraCalibration.cpp */; };
+		5D9861BF1D8B574E00DEDB00 /* NonLinearOptimizationOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D771BAAC24D002E9E7D /* NonLinearOptimizationOrientation.cpp */; };
+		5D9861C01D8B574E00DEDB00 /* Homography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D711BAAC24D002E9E7D /* Homography.cpp */; };
+		5D9861C11D8B574E00DEDB00 /* Delaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6D1BAAC24D002E9E7D /* Delaunay.cpp */; };
+		5D9861C41D8B574E00DEDB00 /* Quadric.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB41BAAC25B002E9E7D /* Quadric.h */; };
+		5D9861C51D8B574E00DEDB00 /* VanishingProjection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB91BAAC25B002E9E7D /* VanishingProjection.h */; };
+		5D9861C61D8B574E00DEDB00 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB81BAAC25B002E9E7D /* Utilities.h */; };
+		5D9861C71D8B574E00DEDB00 /* SpatialDistribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB61BAAC25B002E9E7D /* SpatialDistribution.h */; };
+		5D9861C81D8B574E00DEDB00 /* Homography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA51BAAC25B002E9E7D /* Homography.h */; };
+		5D9861C91D8B574E00DEDB00 /* NonLinearOptimizationLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA91BAAC25B002E9E7D /* NonLinearOptimizationLine.h */; };
+		5D9861CA1D8B574E00DEDB00 /* NonLinearOptimizationHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9C11C8F142A0035D95A /* NonLinearOptimizationHomography.h */; };
+		5D9861CB1D8B574E00DEDB00 /* StereoscopicGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB71BAAC25B002E9E7D /* StereoscopicGeometry.h */; };
+		5D9861CC1D8B574E00DEDB00 /* P3P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB01BAAC25B002E9E7D /* P3P.h */; };
+		5D9861CD1D8B574E00DEDB00 /* NonLinearOptimizationCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA81BAAC25B002E9E7D /* NonLinearOptimizationCamera.h */; };
+		5D9861CE1D8B574E00DEDB00 /* Jacobian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA61BAAC25B002E9E7D /* Jacobian.h */; };
+		5D9861CF1D8B574E00DEDB00 /* EpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA01BAAC25B002E9E7D /* EpipolarGeometry.h */; };
+		5D9861D01D8B574E00DEDB00 /* CameraCalibration.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9E1BAAC25B002E9E7D /* CameraCalibration.h */; };
+		5D9861D11D8B574E00DEDB00 /* NonLinearOptimizationObjectPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAA1BAAC25B002E9E7D /* NonLinearOptimizationObjectPoint.h */; };
+		5D9861D21D8B574E00DEDB00 /* PerspectivePose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB21BAAC25B002E9E7D /* PerspectivePose.h */; };
+		5D9861D31D8B574E00DEDB00 /* Grid.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA41BAAC25B002E9E7D /* Grid.h */; };
+		5D9861D41D8B574E00DEDB00 /* Error.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA11BAAC25B002E9E7D /* Error.h */; };
+		5D9861D51D8B574E00DEDB00 /* RANSAC.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB51BAAC25B002E9E7D /* RANSAC.h */; };
+		5D9861D61D8B574E00DEDB00 /* NonLinearOptimization.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA71BAAC25B002E9E7D /* NonLinearOptimization.h */; };
+		5D9861D71D8B574E00DEDB00 /* NonLinearUniversalOptimizationSparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAE1BAAC25B002E9E7D /* NonLinearUniversalOptimizationSparse.h */; };
+		5D9861D81D8B574E00DEDB00 /* AbsoluteTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9D1BAAC25B002E9E7D /* AbsoluteTransformation.h */; };
+		5D9861D91D8B574E00DEDB00 /* NonLinearOptimizationOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAB1BAAC25B002E9E7D /* NonLinearOptimizationOrientation.h */; };
+		5D9861DA1D8B574E00DEDB00 /* Delaunay.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9F1BAAC25B002E9E7D /* Delaunay.h */; };
+		5D9861DB1D8B574E00DEDB00 /* PnP.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB31BAAC25B002E9E7D /* PnP.h */; };
+		5D9861DC1D8B574E00DEDB00 /* Estimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA21BAAC25B002E9E7D /* Estimator.h */; };
+		5D9861DD1D8B574E00DEDB00 /* Geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA31BAAC25B002E9E7D /* Geometry.h */; };
+		5D9861DE1D8B574E00DEDB00 /* Normalization.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAF1BAAC25B002E9E7D /* Normalization.h */; };
+		5D9861DF1D8B574E00DEDB00 /* P4P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB11BAAC25B002E9E7D /* P4P.h */; };
+		5D9861E01D8B574E00DEDB00 /* NonLinearUniversalOptimizationDense.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAD1BAAC25B002E9E7D /* NonLinearUniversalOptimizationDense.h */; };
+		5D9861E11D8B574E00DEDB00 /* NonLinearOptimizationPlane.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAC1BAAC25B002E9E7D /* NonLinearOptimizationPlane.h */; };
+		5D9861E21D8B574E00DEDB00 /* NonLinearOptimizationPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9CA1C8F286B0035D95A /* NonLinearOptimizationPose.h */; };
+		5DB774591EE9942E00C14BB2 /* MultipleViewGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E6F1EC5BF0C001CE713 /* MultipleViewGeometry.cpp */; };
+		5DB7745A1EE9942E00C14BB2 /* MultipleViewGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E6F1EC5BF0C001CE713 /* MultipleViewGeometry.cpp */; };
+		5DB7745B1EE9942F00C14BB2 /* MultipleViewGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E6F1EC5BF0C001CE713 /* MultipleViewGeometry.cpp */; };
+		5DB7746C1EE999DD00C14BB2 /* MultipleViewGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E6B1EC5BE49001CE713 /* MultipleViewGeometry.h */; };
+		5DB7746D1EE999DE00C14BB2 /* MultipleViewGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E6B1EC5BE49001CE713 /* MultipleViewGeometry.h */; };
+		5DB7746E1EE999DF00C14BB2 /* MultipleViewGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E6B1EC5BE49001CE713 /* MultipleViewGeometry.h */; };
+		5DCE0D841BAAC24D002E9E7D /* AbsoluteTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6B1BAAC24D002E9E7D /* AbsoluteTransformation.cpp */; };
+		5DCE0D851BAAC24D002E9E7D /* CameraCalibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6C1BAAC24D002E9E7D /* CameraCalibration.cpp */; };
+		5DCE0D861BAAC24D002E9E7D /* Delaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6D1BAAC24D002E9E7D /* Delaunay.cpp */; };
+		5DCE0D871BAAC24D002E9E7D /* EpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6E1BAAC24D002E9E7D /* EpipolarGeometry.cpp */; };
+		5DCE0D881BAAC24D002E9E7D /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6F1BAAC24D002E9E7D /* Error.cpp */; };
+		5DCE0D891BAAC24D002E9E7D /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D701BAAC24D002E9E7D /* Grid.cpp */; };
+		5DCE0D8A1BAAC24D002E9E7D /* Homography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D711BAAC24D002E9E7D /* Homography.cpp */; };
+		5DCE0D8B1BAAC24D002E9E7D /* Jacobian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D721BAAC24D002E9E7D /* Jacobian.cpp */; };
+		5DCE0D8D1BAAC24D002E9E7D /* NonLinearOptimizationCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D741BAAC24D002E9E7D /* NonLinearOptimizationCamera.cpp */; };
+		5DCE0D8E1BAAC24D002E9E7D /* NonLinearOptimizationLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D751BAAC24D002E9E7D /* NonLinearOptimizationLine.cpp */; };
+		5DCE0D8F1BAAC24D002E9E7D /* NonLinearOptimizationObjectPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D761BAAC24D002E9E7D /* NonLinearOptimizationObjectPoint.cpp */; };
+		5DCE0D901BAAC24D002E9E7D /* NonLinearOptimizationOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D771BAAC24D002E9E7D /* NonLinearOptimizationOrientation.cpp */; };
+		5DCE0D911BAAC24D002E9E7D /* NonLinearOptimizationPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D781BAAC24D002E9E7D /* NonLinearOptimizationPlane.cpp */; };
+		5DCE0D921BAAC24D002E9E7D /* Normalization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D791BAAC24D002E9E7D /* Normalization.cpp */; };
+		5DCE0D931BAAC24D002E9E7D /* P3P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7A1BAAC24D002E9E7D /* P3P.cpp */; };
+		5DCE0D941BAAC24D002E9E7D /* P4P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7B1BAAC24D002E9E7D /* P4P.cpp */; };
+		5DCE0D951BAAC24D002E9E7D /* PerspectivePose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7C1BAAC24D002E9E7D /* PerspectivePose.cpp */; };
+		5DCE0D961BAAC24D002E9E7D /* PnP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7D1BAAC24D002E9E7D /* PnP.cpp */; };
+		5DCE0D971BAAC24D002E9E7D /* Quadric.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7E1BAAC24D002E9E7D /* Quadric.cpp */; };
+		5DCE0D981BAAC24D002E9E7D /* RANSAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7F1BAAC24D002E9E7D /* RANSAC.cpp */; };
+		5DCE0D991BAAC24D002E9E7D /* SpatialDistribution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D801BAAC24D002E9E7D /* SpatialDistribution.cpp */; };
+		5DCE0D9A1BAAC24D002E9E7D /* StereoscopicGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D811BAAC24D002E9E7D /* StereoscopicGeometry.cpp */; };
+		5DCE0D9B1BAAC24D002E9E7D /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D821BAAC24D002E9E7D /* Utilities.cpp */; };
+		5DCE0D9C1BAAC24D002E9E7D /* VanishingProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D831BAAC24D002E9E7D /* VanishingProjection.cpp */; };
+		5DCE0DBA1BAAC25B002E9E7D /* AbsoluteTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9D1BAAC25B002E9E7D /* AbsoluteTransformation.h */; };
+		5DCE0DBB1BAAC25B002E9E7D /* CameraCalibration.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9E1BAAC25B002E9E7D /* CameraCalibration.h */; };
+		5DCE0DBC1BAAC25B002E9E7D /* Delaunay.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9F1BAAC25B002E9E7D /* Delaunay.h */; };
+		5DCE0DBD1BAAC25B002E9E7D /* EpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA01BAAC25B002E9E7D /* EpipolarGeometry.h */; };
+		5DCE0DBE1BAAC25B002E9E7D /* Error.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA11BAAC25B002E9E7D /* Error.h */; };
+		5DCE0DBF1BAAC25B002E9E7D /* Estimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA21BAAC25B002E9E7D /* Estimator.h */; };
+		5DCE0DC01BAAC25B002E9E7D /* Geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA31BAAC25B002E9E7D /* Geometry.h */; };
+		5DCE0DC11BAAC25B002E9E7D /* Grid.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA41BAAC25B002E9E7D /* Grid.h */; };
+		5DCE0DC21BAAC25B002E9E7D /* Homography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA51BAAC25B002E9E7D /* Homography.h */; };
+		5DCE0DC31BAAC25B002E9E7D /* Jacobian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA61BAAC25B002E9E7D /* Jacobian.h */; };
+		5DCE0DC41BAAC25B002E9E7D /* NonLinearOptimization.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA71BAAC25B002E9E7D /* NonLinearOptimization.h */; };
+		5DCE0DC51BAAC25B002E9E7D /* NonLinearOptimizationCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA81BAAC25B002E9E7D /* NonLinearOptimizationCamera.h */; };
+		5DCE0DC61BAAC25B002E9E7D /* NonLinearOptimizationLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA91BAAC25B002E9E7D /* NonLinearOptimizationLine.h */; };
+		5DCE0DC71BAAC25B002E9E7D /* NonLinearOptimizationObjectPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAA1BAAC25B002E9E7D /* NonLinearOptimizationObjectPoint.h */; };
+		5DCE0DC81BAAC25B002E9E7D /* NonLinearOptimizationOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAB1BAAC25B002E9E7D /* NonLinearOptimizationOrientation.h */; };
+		5DCE0DC91BAAC25B002E9E7D /* NonLinearOptimizationPlane.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAC1BAAC25B002E9E7D /* NonLinearOptimizationPlane.h */; };
+		5DCE0DCA1BAAC25B002E9E7D /* NonLinearUniversalOptimizationDense.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAD1BAAC25B002E9E7D /* NonLinearUniversalOptimizationDense.h */; };
+		5DCE0DCB1BAAC25B002E9E7D /* NonLinearUniversalOptimizationSparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAE1BAAC25B002E9E7D /* NonLinearUniversalOptimizationSparse.h */; };
+		5DCE0DCC1BAAC25B002E9E7D /* Normalization.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAF1BAAC25B002E9E7D /* Normalization.h */; };
+		5DCE0DCD1BAAC25B002E9E7D /* P3P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB01BAAC25B002E9E7D /* P3P.h */; };
+		5DCE0DCE1BAAC25B002E9E7D /* P4P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB11BAAC25B002E9E7D /* P4P.h */; };
+		5DCE0DCF1BAAC25B002E9E7D /* PerspectivePose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB21BAAC25B002E9E7D /* PerspectivePose.h */; };
+		5DCE0DD01BAAC25B002E9E7D /* PnP.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB31BAAC25B002E9E7D /* PnP.h */; };
+		5DCE0DD11BAAC25B002E9E7D /* Quadric.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB41BAAC25B002E9E7D /* Quadric.h */; };
+		5DCE0DD21BAAC25B002E9E7D /* RANSAC.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB51BAAC25B002E9E7D /* RANSAC.h */; };
+		5DCE0DD31BAAC25B002E9E7D /* SpatialDistribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB61BAAC25B002E9E7D /* SpatialDistribution.h */; };
+		5DCE0DD41BAAC25B002E9E7D /* StereoscopicGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB71BAAC25B002E9E7D /* StereoscopicGeometry.h */; };
+		5DCE0DD51BAAC25B002E9E7D /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB81BAAC25B002E9E7D /* Utilities.h */; };
+		5DCE0DD61BAAC25B002E9E7D /* VanishingProjection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB91BAAC25B002E9E7D /* VanishingProjection.h */; };
+		5DEAE9C21C8F142A0035D95A /* NonLinearOptimizationHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9C11C8F142A0035D95A /* NonLinearOptimizationHomography.h */; };
+		5DEAE9C31C8F142A0035D95A /* NonLinearOptimizationHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9C11C8F142A0035D95A /* NonLinearOptimizationHomography.h */; };
+		5DEAE9C51C8F143C0035D95A /* NonLinearOptimizationHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9C41C8F143B0035D95A /* NonLinearOptimizationHomography.cpp */; };
+		5DEAE9C61C8F143C0035D95A /* NonLinearOptimizationHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9C41C8F143B0035D95A /* NonLinearOptimizationHomography.cpp */; };
+		5DEAE9C81C8F285C0035D95A /* NonLinearOptimizationPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9C71C8F285C0035D95A /* NonLinearOptimizationPose.cpp */; };
+		5DEAE9C91C8F285C0035D95A /* NonLinearOptimizationPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9C71C8F285C0035D95A /* NonLinearOptimizationPose.cpp */; };
+		5DEAE9CB1C8F286B0035D95A /* NonLinearOptimizationPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9CA1C8F286B0035D95A /* NonLinearOptimizationPose.h */; };
+		5DEAE9CC1C8F286B0035D95A /* NonLinearOptimizationPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9CA1C8F286B0035D95A /* NonLinearOptimizationPose.h */; };
+		5FE46E6C1EC5BE49001CE713 /* MultipleViewGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE46E6B1EC5BE49001CE713 /* MultipleViewGeometry.h */; };
+		5FE46E701EC5BF0C001CE713 /* MultipleViewGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE46E6F1EC5BF0C001CE713 /* MultipleViewGeometry.cpp */; };
+		9312E8842B1674B100745EF9 /* Estimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9312E8832B1674B100745EF9 /* Estimator.cpp */; };
+		9312E8852B1674B100745EF9 /* Estimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9312E8832B1674B100745EF9 /* Estimator.cpp */; };
+		9312E8862B1674B100745EF9 /* Estimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9312E8832B1674B100745EF9 /* Estimator.cpp */; };
+		9312E8872B1674B100745EF9 /* Estimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9312E8832B1674B100745EF9 /* Estimator.cpp */; };
+		93C9F06422E107A800737C27 /* NonLinearOptimizationTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C9F06322E107A800737C27 /* NonLinearOptimizationTransformation.h */; };
+		93C9F06522E107A800737C27 /* NonLinearOptimizationTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C9F06322E107A800737C27 /* NonLinearOptimizationTransformation.h */; };
+		93C9F06622E107A800737C27 /* NonLinearOptimizationTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C9F06322E107A800737C27 /* NonLinearOptimizationTransformation.h */; };
+		93C9F06722E107A800737C27 /* NonLinearOptimizationTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C9F06322E107A800737C27 /* NonLinearOptimizationTransformation.h */; };
+		93C9F06922E107B700737C27 /* NonLinearOptimizationTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C9F06822E107B700737C27 /* NonLinearOptimizationTransformation.cpp */; };
+		93C9F06A22E107B700737C27 /* NonLinearOptimizationTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C9F06822E107B700737C27 /* NonLinearOptimizationTransformation.cpp */; };
+		93C9F06B22E107B700737C27 /* NonLinearOptimizationTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C9F06822E107B700737C27 /* NonLinearOptimizationTransformation.cpp */; };
+		93C9F06C22E107B700737C27 /* NonLinearOptimizationTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C9F06822E107B700737C27 /* NonLinearOptimizationTransformation.cpp */; };
+		93DFCBAD26FBCF90007C7B14 /* Octree.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DFCBAC26FBCF90007C7B14 /* Octree.h */; };
+		93DFCBAE26FBCF90007C7B14 /* Octree.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DFCBAC26FBCF90007C7B14 /* Octree.h */; };
+		93DFCBAF26FBCF90007C7B14 /* Octree.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DFCBAC26FBCF90007C7B14 /* Octree.h */; };
+		93DFCBB026FBCF90007C7B14 /* Octree.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DFCBAC26FBCF90007C7B14 /* Octree.h */; };
+		C041EC0A1DABE37200BF5D76 /* NonLinearOptimizationLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D751BAAC24D002E9E7D /* NonLinearOptimizationLine.cpp */; };
+		C041EC0B1DABE37200BF5D76 /* Quadric.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7E1BAAC24D002E9E7D /* Quadric.cpp */; };
+		C041EC0C1DABE37200BF5D76 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D821BAAC24D002E9E7D /* Utilities.cpp */; };
+		C041EC0D1DABE37200BF5D76 /* SpatialDistribution.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D801BAAC24D002E9E7D /* SpatialDistribution.cpp */; };
+		C041EC0E1DABE37200BF5D76 /* AbsoluteTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6B1BAAC24D002E9E7D /* AbsoluteTransformation.cpp */; };
+		C041EC0F1DABE37200BF5D76 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6F1BAAC24D002E9E7D /* Error.cpp */; };
+		C041EC101DABE37200BF5D76 /* PerspectivePose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7C1BAAC24D002E9E7D /* PerspectivePose.cpp */; };
+		C041EC111DABE37200BF5D76 /* Normalization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D791BAAC24D002E9E7D /* Normalization.cpp */; };
+		C041EC121DABE37200BF5D76 /* NonLinearOptimizationObjectPoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D761BAAC24D002E9E7D /* NonLinearOptimizationObjectPoint.cpp */; };
+		C041EC131DABE37200BF5D76 /* EpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6E1BAAC24D002E9E7D /* EpipolarGeometry.cpp */; };
+		C041EC141DABE37200BF5D76 /* StereoscopicGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D811BAAC24D002E9E7D /* StereoscopicGeometry.cpp */; };
+		C041EC151DABE37200BF5D76 /* NonLinearOptimizationHomography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9C41C8F143B0035D95A /* NonLinearOptimizationHomography.cpp */; };
+		C041EC171DABE37200BF5D76 /* PnP.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7D1BAAC24D002E9E7D /* PnP.cpp */; };
+		C041EC181DABE37200BF5D76 /* NonLinearOptimizationCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D741BAAC24D002E9E7D /* NonLinearOptimizationCamera.cpp */; };
+		C041EC191DABE37200BF5D76 /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D701BAAC24D002E9E7D /* Grid.cpp */; };
+		C041EC1A1DABE37200BF5D76 /* VanishingProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D831BAAC24D002E9E7D /* VanishingProjection.cpp */; };
+		C041EC1B1DABE37200BF5D76 /* NonLinearOptimizationPose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9C71C8F285C0035D95A /* NonLinearOptimizationPose.cpp */; };
+		C041EC1C1DABE37200BF5D76 /* RANSAC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7F1BAAC24D002E9E7D /* RANSAC.cpp */; };
+		C041EC1D1DABE37200BF5D76 /* NonLinearOptimizationPlane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D781BAAC24D002E9E7D /* NonLinearOptimizationPlane.cpp */; };
+		C041EC1E1DABE37200BF5D76 /* Jacobian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D721BAAC24D002E9E7D /* Jacobian.cpp */; };
+		C041EC1F1DABE37200BF5D76 /* P3P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7A1BAAC24D002E9E7D /* P3P.cpp */; };
+		C041EC201DABE37200BF5D76 /* P4P.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7B1BAAC24D002E9E7D /* P4P.cpp */; };
+		C041EC211DABE37200BF5D76 /* CameraCalibration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6C1BAAC24D002E9E7D /* CameraCalibration.cpp */; };
+		C041EC221DABE37200BF5D76 /* NonLinearOptimizationOrientation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D771BAAC24D002E9E7D /* NonLinearOptimizationOrientation.cpp */; };
+		C041EC231DABE37200BF5D76 /* Homography.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D711BAAC24D002E9E7D /* Homography.cpp */; };
+		C041EC241DABE37200BF5D76 /* Delaunay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D6D1BAAC24D002E9E7D /* Delaunay.cpp */; };
+		C041EC271DABE37200BF5D76 /* Quadric.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB41BAAC25B002E9E7D /* Quadric.h */; };
+		C041EC281DABE37200BF5D76 /* VanishingProjection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB91BAAC25B002E9E7D /* VanishingProjection.h */; };
+		C041EC291DABE37200BF5D76 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB81BAAC25B002E9E7D /* Utilities.h */; };
+		C041EC2A1DABE37200BF5D76 /* SpatialDistribution.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB61BAAC25B002E9E7D /* SpatialDistribution.h */; };
+		C041EC2B1DABE37200BF5D76 /* Homography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA51BAAC25B002E9E7D /* Homography.h */; };
+		C041EC2C1DABE37200BF5D76 /* NonLinearOptimizationLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA91BAAC25B002E9E7D /* NonLinearOptimizationLine.h */; };
+		C041EC2D1DABE37200BF5D76 /* NonLinearOptimizationHomography.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9C11C8F142A0035D95A /* NonLinearOptimizationHomography.h */; };
+		C041EC2E1DABE37200BF5D76 /* StereoscopicGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB71BAAC25B002E9E7D /* StereoscopicGeometry.h */; };
+		C041EC2F1DABE37200BF5D76 /* P3P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB01BAAC25B002E9E7D /* P3P.h */; };
+		C041EC301DABE37200BF5D76 /* NonLinearOptimizationCamera.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA81BAAC25B002E9E7D /* NonLinearOptimizationCamera.h */; };
+		C041EC311DABE37200BF5D76 /* Jacobian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA61BAAC25B002E9E7D /* Jacobian.h */; };
+		C041EC321DABE37200BF5D76 /* EpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA01BAAC25B002E9E7D /* EpipolarGeometry.h */; };
+		C041EC331DABE37200BF5D76 /* CameraCalibration.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9E1BAAC25B002E9E7D /* CameraCalibration.h */; };
+		C041EC341DABE37200BF5D76 /* NonLinearOptimizationObjectPoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAA1BAAC25B002E9E7D /* NonLinearOptimizationObjectPoint.h */; };
+		C041EC351DABE37200BF5D76 /* PerspectivePose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB21BAAC25B002E9E7D /* PerspectivePose.h */; };
+		C041EC361DABE37200BF5D76 /* Grid.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA41BAAC25B002E9E7D /* Grid.h */; };
+		C041EC371DABE37200BF5D76 /* Error.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA11BAAC25B002E9E7D /* Error.h */; };
+		C041EC381DABE37200BF5D76 /* RANSAC.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB51BAAC25B002E9E7D /* RANSAC.h */; };
+		C041EC391DABE37200BF5D76 /* NonLinearOptimization.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA71BAAC25B002E9E7D /* NonLinearOptimization.h */; };
+		C041EC3A1DABE37200BF5D76 /* NonLinearUniversalOptimizationSparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAE1BAAC25B002E9E7D /* NonLinearUniversalOptimizationSparse.h */; };
+		C041EC3B1DABE37200BF5D76 /* AbsoluteTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9D1BAAC25B002E9E7D /* AbsoluteTransformation.h */; };
+		C041EC3C1DABE37200BF5D76 /* NonLinearOptimizationOrientation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAB1BAAC25B002E9E7D /* NonLinearOptimizationOrientation.h */; };
+		C041EC3D1DABE37200BF5D76 /* Delaunay.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0D9F1BAAC25B002E9E7D /* Delaunay.h */; };
+		C041EC3E1DABE37200BF5D76 /* PnP.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB31BAAC25B002E9E7D /* PnP.h */; };
+		C041EC3F1DABE37200BF5D76 /* Estimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA21BAAC25B002E9E7D /* Estimator.h */; };
+		C041EC401DABE37200BF5D76 /* Geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DA31BAAC25B002E9E7D /* Geometry.h */; };
+		C041EC411DABE37200BF5D76 /* Normalization.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAF1BAAC25B002E9E7D /* Normalization.h */; };
+		C041EC421DABE37200BF5D76 /* P4P.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DB11BAAC25B002E9E7D /* P4P.h */; };
+		C041EC431DABE37200BF5D76 /* NonLinearUniversalOptimizationDense.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAD1BAAC25B002E9E7D /* NonLinearUniversalOptimizationDense.h */; };
+		C041EC441DABE37200BF5D76 /* NonLinearOptimizationPlane.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCE0DAC1BAAC25B002E9E7D /* NonLinearOptimizationPlane.h */; };
+		C041EC451DABE37200BF5D76 /* NonLinearOptimizationPose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9CA1C8F286B0035D95A /* NonLinearOptimizationPose.h */; };
+		C0F6E5D21E1E931E00F90052 /* JLinkage.h in Headers */ = {isa = PBXBuildFile; fileRef = C0F6E5D11E1E931E00F90052 /* JLinkage.h */; };
+		C0F6E5D41E1E933200F90052 /* JLinkage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0F6E5D31E1E933200F90052 /* JLinkage.cpp */; };
+		C0F6E5FE1E1EA8AC00F90052 /* JLinkage.h in Headers */ = {isa = PBXBuildFile; fileRef = C0F6E5D11E1E931E00F90052 /* JLinkage.h */; };
+		C0F6E5FF1E1EA8AD00F90052 /* JLinkage.h in Headers */ = {isa = PBXBuildFile; fileRef = C0F6E5D11E1E931E00F90052 /* JLinkage.h */; };
+		C0F6E6001E1EA8AD00F90052 /* JLinkage.h in Headers */ = {isa = PBXBuildFile; fileRef = C0F6E5D11E1E931E00F90052 /* JLinkage.h */; };
+		C0F6E6011E1EA8B100F90052 /* JLinkage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0F6E5D31E1E933200F90052 /* JLinkage.cpp */; };
+		C0F6E6021E1EA8B100F90052 /* JLinkage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0F6E5D31E1E933200F90052 /* JLinkage.cpp */; };
+		C0F6E6031E1EA8B200F90052 /* JLinkage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0F6E5D31E1E933200F90052 /* JLinkage.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D222B461BB176CC00298788 /* libOceanGeometryD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanGeometryD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9861E61D8B574E00DEDB00 /* libOceanGeometryD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanGeometryD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DCE0D5C1BAAC126002E9E7D /* libOceanGeometryD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanGeometryD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DCE0D6B1BAAC24D002E9E7D /* AbsoluteTransformation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AbsoluteTransformation.cpp; path = ../../../../../impl/ocean/geometry/AbsoluteTransformation.cpp; sourceTree = "<group>"; };
+		5DCE0D6C1BAAC24D002E9E7D /* CameraCalibration.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CameraCalibration.cpp; path = ../../../../../impl/ocean/geometry/CameraCalibration.cpp; sourceTree = "<group>"; };
+		5DCE0D6D1BAAC24D002E9E7D /* Delaunay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Delaunay.cpp; path = ../../../../../impl/ocean/geometry/Delaunay.cpp; sourceTree = "<group>"; };
+		5DCE0D6E1BAAC24D002E9E7D /* EpipolarGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EpipolarGeometry.cpp; path = ../../../../../impl/ocean/geometry/EpipolarGeometry.cpp; sourceTree = "<group>"; };
+		5DCE0D6F1BAAC24D002E9E7D /* Error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Error.cpp; path = ../../../../../impl/ocean/geometry/Error.cpp; sourceTree = "<group>"; };
+		5DCE0D701BAAC24D002E9E7D /* Grid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Grid.cpp; path = ../../../../../impl/ocean/geometry/Grid.cpp; sourceTree = "<group>"; };
+		5DCE0D711BAAC24D002E9E7D /* Homography.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Homography.cpp; path = ../../../../../impl/ocean/geometry/Homography.cpp; sourceTree = "<group>"; };
+		5DCE0D721BAAC24D002E9E7D /* Jacobian.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Jacobian.cpp; path = ../../../../../impl/ocean/geometry/Jacobian.cpp; sourceTree = "<group>"; };
+		5DCE0D741BAAC24D002E9E7D /* NonLinearOptimizationCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NonLinearOptimizationCamera.cpp; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationCamera.cpp; sourceTree = "<group>"; };
+		5DCE0D751BAAC24D002E9E7D /* NonLinearOptimizationLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NonLinearOptimizationLine.cpp; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationLine.cpp; sourceTree = "<group>"; };
+		5DCE0D761BAAC24D002E9E7D /* NonLinearOptimizationObjectPoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NonLinearOptimizationObjectPoint.cpp; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationObjectPoint.cpp; sourceTree = "<group>"; };
+		5DCE0D771BAAC24D002E9E7D /* NonLinearOptimizationOrientation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NonLinearOptimizationOrientation.cpp; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationOrientation.cpp; sourceTree = "<group>"; };
+		5DCE0D781BAAC24D002E9E7D /* NonLinearOptimizationPlane.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NonLinearOptimizationPlane.cpp; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationPlane.cpp; sourceTree = "<group>"; };
+		5DCE0D791BAAC24D002E9E7D /* Normalization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Normalization.cpp; path = ../../../../../impl/ocean/geometry/Normalization.cpp; sourceTree = "<group>"; };
+		5DCE0D7A1BAAC24D002E9E7D /* P3P.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = P3P.cpp; path = ../../../../../impl/ocean/geometry/P3P.cpp; sourceTree = "<group>"; };
+		5DCE0D7B1BAAC24D002E9E7D /* P4P.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = P4P.cpp; path = ../../../../../impl/ocean/geometry/P4P.cpp; sourceTree = "<group>"; };
+		5DCE0D7C1BAAC24D002E9E7D /* PerspectivePose.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PerspectivePose.cpp; path = ../../../../../impl/ocean/geometry/PerspectivePose.cpp; sourceTree = "<group>"; };
+		5DCE0D7D1BAAC24D002E9E7D /* PnP.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PnP.cpp; path = ../../../../../impl/ocean/geometry/PnP.cpp; sourceTree = "<group>"; };
+		5DCE0D7E1BAAC24D002E9E7D /* Quadric.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Quadric.cpp; path = ../../../../../impl/ocean/geometry/Quadric.cpp; sourceTree = "<group>"; };
+		5DCE0D7F1BAAC24D002E9E7D /* RANSAC.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RANSAC.cpp; path = ../../../../../impl/ocean/geometry/RANSAC.cpp; sourceTree = "<group>"; };
+		5DCE0D801BAAC24D002E9E7D /* SpatialDistribution.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpatialDistribution.cpp; path = ../../../../../impl/ocean/geometry/SpatialDistribution.cpp; sourceTree = "<group>"; };
+		5DCE0D811BAAC24D002E9E7D /* StereoscopicGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StereoscopicGeometry.cpp; path = ../../../../../impl/ocean/geometry/StereoscopicGeometry.cpp; sourceTree = "<group>"; };
+		5DCE0D821BAAC24D002E9E7D /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../impl/ocean/geometry/Utilities.cpp; sourceTree = "<group>"; };
+		5DCE0D831BAAC24D002E9E7D /* VanishingProjection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VanishingProjection.cpp; path = ../../../../../impl/ocean/geometry/VanishingProjection.cpp; sourceTree = "<group>"; };
+		5DCE0D9D1BAAC25B002E9E7D /* AbsoluteTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AbsoluteTransformation.h; path = ../../../../../impl/ocean/geometry/AbsoluteTransformation.h; sourceTree = "<group>"; };
+		5DCE0D9E1BAAC25B002E9E7D /* CameraCalibration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CameraCalibration.h; path = ../../../../../impl/ocean/geometry/CameraCalibration.h; sourceTree = "<group>"; };
+		5DCE0D9F1BAAC25B002E9E7D /* Delaunay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Delaunay.h; path = ../../../../../impl/ocean/geometry/Delaunay.h; sourceTree = "<group>"; };
+		5DCE0DA01BAAC25B002E9E7D /* EpipolarGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EpipolarGeometry.h; path = ../../../../../impl/ocean/geometry/EpipolarGeometry.h; sourceTree = "<group>"; };
+		5DCE0DA11BAAC25B002E9E7D /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Error.h; path = ../../../../../impl/ocean/geometry/Error.h; sourceTree = "<group>"; };
+		5DCE0DA21BAAC25B002E9E7D /* Estimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Estimator.h; path = ../../../../../impl/ocean/geometry/Estimator.h; sourceTree = "<group>"; };
+		5DCE0DA31BAAC25B002E9E7D /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Geometry.h; path = ../../../../../impl/ocean/geometry/Geometry.h; sourceTree = "<group>"; };
+		5DCE0DA41BAAC25B002E9E7D /* Grid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Grid.h; path = ../../../../../impl/ocean/geometry/Grid.h; sourceTree = "<group>"; };
+		5DCE0DA51BAAC25B002E9E7D /* Homography.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Homography.h; path = ../../../../../impl/ocean/geometry/Homography.h; sourceTree = "<group>"; };
+		5DCE0DA61BAAC25B002E9E7D /* Jacobian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Jacobian.h; path = ../../../../../impl/ocean/geometry/Jacobian.h; sourceTree = "<group>"; };
+		5DCE0DA71BAAC25B002E9E7D /* NonLinearOptimization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonLinearOptimization.h; path = ../../../../../impl/ocean/geometry/NonLinearOptimization.h; sourceTree = "<group>"; };
+		5DCE0DA81BAAC25B002E9E7D /* NonLinearOptimizationCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonLinearOptimizationCamera.h; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationCamera.h; sourceTree = "<group>"; };
+		5DCE0DA91BAAC25B002E9E7D /* NonLinearOptimizationLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonLinearOptimizationLine.h; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationLine.h; sourceTree = "<group>"; };
+		5DCE0DAA1BAAC25B002E9E7D /* NonLinearOptimizationObjectPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonLinearOptimizationObjectPoint.h; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationObjectPoint.h; sourceTree = "<group>"; };
+		5DCE0DAB1BAAC25B002E9E7D /* NonLinearOptimizationOrientation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonLinearOptimizationOrientation.h; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationOrientation.h; sourceTree = "<group>"; };
+		5DCE0DAC1BAAC25B002E9E7D /* NonLinearOptimizationPlane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonLinearOptimizationPlane.h; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationPlane.h; sourceTree = "<group>"; };
+		5DCE0DAD1BAAC25B002E9E7D /* NonLinearUniversalOptimizationDense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonLinearUniversalOptimizationDense.h; path = ../../../../../impl/ocean/geometry/NonLinearUniversalOptimizationDense.h; sourceTree = "<group>"; };
+		5DCE0DAE1BAAC25B002E9E7D /* NonLinearUniversalOptimizationSparse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonLinearUniversalOptimizationSparse.h; path = ../../../../../impl/ocean/geometry/NonLinearUniversalOptimizationSparse.h; sourceTree = "<group>"; };
+		5DCE0DAF1BAAC25B002E9E7D /* Normalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Normalization.h; path = ../../../../../impl/ocean/geometry/Normalization.h; sourceTree = "<group>"; };
+		5DCE0DB01BAAC25B002E9E7D /* P3P.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = P3P.h; path = ../../../../../impl/ocean/geometry/P3P.h; sourceTree = "<group>"; };
+		5DCE0DB11BAAC25B002E9E7D /* P4P.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = P4P.h; path = ../../../../../impl/ocean/geometry/P4P.h; sourceTree = "<group>"; };
+		5DCE0DB21BAAC25B002E9E7D /* PerspectivePose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PerspectivePose.h; path = ../../../../../impl/ocean/geometry/PerspectivePose.h; sourceTree = "<group>"; };
+		5DCE0DB31BAAC25B002E9E7D /* PnP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PnP.h; path = ../../../../../impl/ocean/geometry/PnP.h; sourceTree = "<group>"; };
+		5DCE0DB41BAAC25B002E9E7D /* Quadric.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Quadric.h; path = ../../../../../impl/ocean/geometry/Quadric.h; sourceTree = "<group>"; };
+		5DCE0DB51BAAC25B002E9E7D /* RANSAC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RANSAC.h; path = ../../../../../impl/ocean/geometry/RANSAC.h; sourceTree = "<group>"; };
+		5DCE0DB61BAAC25B002E9E7D /* SpatialDistribution.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SpatialDistribution.h; path = ../../../../../impl/ocean/geometry/SpatialDistribution.h; sourceTree = "<group>"; };
+		5DCE0DB71BAAC25B002E9E7D /* StereoscopicGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StereoscopicGeometry.h; path = ../../../../../impl/ocean/geometry/StereoscopicGeometry.h; sourceTree = "<group>"; };
+		5DCE0DB81BAAC25B002E9E7D /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../impl/ocean/geometry/Utilities.h; sourceTree = "<group>"; };
+		5DCE0DB91BAAC25B002E9E7D /* VanishingProjection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VanishingProjection.h; path = ../../../../../impl/ocean/geometry/VanishingProjection.h; sourceTree = "<group>"; };
+		5DEAE9C11C8F142A0035D95A /* NonLinearOptimizationHomography.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonLinearOptimizationHomography.h; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationHomography.h; sourceTree = "<group>"; };
+		5DEAE9C41C8F143B0035D95A /* NonLinearOptimizationHomography.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NonLinearOptimizationHomography.cpp; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationHomography.cpp; sourceTree = "<group>"; };
+		5DEAE9C71C8F285C0035D95A /* NonLinearOptimizationPose.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NonLinearOptimizationPose.cpp; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationPose.cpp; sourceTree = "<group>"; };
+		5DEAE9CA1C8F286B0035D95A /* NonLinearOptimizationPose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonLinearOptimizationPose.h; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationPose.h; sourceTree = "<group>"; };
+		5FE46E6B1EC5BE49001CE713 /* MultipleViewGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultipleViewGeometry.h; path = ../../../../../impl/ocean/geometry/MultipleViewGeometry.h; sourceTree = "<group>"; };
+		5FE46E6F1EC5BF0C001CE713 /* MultipleViewGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MultipleViewGeometry.cpp; path = ../../../../../impl/ocean/geometry/MultipleViewGeometry.cpp; sourceTree = "<group>"; };
+		9312E8832B1674B100745EF9 /* Estimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Estimator.cpp; path = ../../../../../impl/ocean/geometry/Estimator.cpp; sourceTree = "<group>"; };
+		93C9F06322E107A800737C27 /* NonLinearOptimizationTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NonLinearOptimizationTransformation.h; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationTransformation.h; sourceTree = "<group>"; };
+		93C9F06822E107B700737C27 /* NonLinearOptimizationTransformation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NonLinearOptimizationTransformation.cpp; path = ../../../../../impl/ocean/geometry/NonLinearOptimizationTransformation.cpp; sourceTree = "<group>"; };
+		93DFCBAC26FBCF90007C7B14 /* Octree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Octree.h; path = ../../../../../impl/ocean/geometry/Octree.h; sourceTree = "<group>"; };
+		C041EC4A1DABE37200BF5D76 /* libOceanGeometryD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanGeometryD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0F6E5D11E1E931E00F90052 /* JLinkage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JLinkage.h; path = ../../../../../impl/ocean/geometry/JLinkage.h; sourceTree = "<group>"; };
+		C0F6E5D31E1E933200F90052 /* JLinkage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JLinkage.cpp; path = ../../../../../impl/ocean/geometry/JLinkage.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D222B241BB176CC00298788 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9861C21D8B574E00DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCE0D591BAAC126002E9E7D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC251DABE37200BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D222B081BB176A900298788 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DCE0D9D1BAAC25B002E9E7D /* AbsoluteTransformation.h */,
+				5DCE0D9E1BAAC25B002E9E7D /* CameraCalibration.h */,
+				5DCE0D9F1BAAC25B002E9E7D /* Delaunay.h */,
+				5DCE0DA01BAAC25B002E9E7D /* EpipolarGeometry.h */,
+				5DCE0DA11BAAC25B002E9E7D /* Error.h */,
+				5DCE0DA21BAAC25B002E9E7D /* Estimator.h */,
+				5DCE0DA31BAAC25B002E9E7D /* Geometry.h */,
+				5DCE0DA41BAAC25B002E9E7D /* Grid.h */,
+				5DCE0DA51BAAC25B002E9E7D /* Homography.h */,
+				5DCE0DA61BAAC25B002E9E7D /* Jacobian.h */,
+				C0F6E5D11E1E931E00F90052 /* JLinkage.h */,
+				5FE46E6B1EC5BE49001CE713 /* MultipleViewGeometry.h */,
+				5DCE0DA71BAAC25B002E9E7D /* NonLinearOptimization.h */,
+				5DCE0DA81BAAC25B002E9E7D /* NonLinearOptimizationCamera.h */,
+				5DEAE9C11C8F142A0035D95A /* NonLinearOptimizationHomography.h */,
+				5DCE0DA91BAAC25B002E9E7D /* NonLinearOptimizationLine.h */,
+				5DCE0DAA1BAAC25B002E9E7D /* NonLinearOptimizationObjectPoint.h */,
+				5DCE0DAB1BAAC25B002E9E7D /* NonLinearOptimizationOrientation.h */,
+				5DCE0DAC1BAAC25B002E9E7D /* NonLinearOptimizationPlane.h */,
+				5DEAE9CA1C8F286B0035D95A /* NonLinearOptimizationPose.h */,
+				93C9F06322E107A800737C27 /* NonLinearOptimizationTransformation.h */,
+				5DCE0DAD1BAAC25B002E9E7D /* NonLinearUniversalOptimizationDense.h */,
+				5DCE0DAE1BAAC25B002E9E7D /* NonLinearUniversalOptimizationSparse.h */,
+				5DCE0DAF1BAAC25B002E9E7D /* Normalization.h */,
+				93DFCBAC26FBCF90007C7B14 /* Octree.h */,
+				5DCE0DB01BAAC25B002E9E7D /* P3P.h */,
+				5DCE0DB11BAAC25B002E9E7D /* P4P.h */,
+				5DCE0DB21BAAC25B002E9E7D /* PerspectivePose.h */,
+				5DCE0DB31BAAC25B002E9E7D /* PnP.h */,
+				5DCE0DB41BAAC25B002E9E7D /* Quadric.h */,
+				5DCE0DB51BAAC25B002E9E7D /* RANSAC.h */,
+				5DCE0DB61BAAC25B002E9E7D /* SpatialDistribution.h */,
+				5DCE0DB71BAAC25B002E9E7D /* StereoscopicGeometry.h */,
+				5DCE0DB81BAAC25B002E9E7D /* Utilities.h */,
+				5DCE0DB91BAAC25B002E9E7D /* VanishingProjection.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DCE0D531BAAC126002E9E7D = {
+			isa = PBXGroup;
+			children = (
+				5D222B081BB176A900298788 /* Header Files */,
+				5DCE0D6A1BAAC231002E9E7D /* Source Files */,
+				5DCE0D5D1BAAC126002E9E7D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DCE0D5D1BAAC126002E9E7D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DCE0D5C1BAAC126002E9E7D /* libOceanGeometryD.a */,
+				5D222B461BB176CC00298788 /* libOceanGeometryD.dylib */,
+				5D9861E61D8B574E00DEDB00 /* libOceanGeometryD.a */,
+				C041EC4A1DABE37200BF5D76 /* libOceanGeometryD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DCE0D6A1BAAC231002E9E7D /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DCE0D6B1BAAC24D002E9E7D /* AbsoluteTransformation.cpp */,
+				5DCE0D6C1BAAC24D002E9E7D /* CameraCalibration.cpp */,
+				5DCE0D6D1BAAC24D002E9E7D /* Delaunay.cpp */,
+				5DCE0D6E1BAAC24D002E9E7D /* EpipolarGeometry.cpp */,
+				5DCE0D6F1BAAC24D002E9E7D /* Error.cpp */,
+				9312E8832B1674B100745EF9 /* Estimator.cpp */,
+				5DCE0D701BAAC24D002E9E7D /* Grid.cpp */,
+				5DCE0D711BAAC24D002E9E7D /* Homography.cpp */,
+				5DCE0D721BAAC24D002E9E7D /* Jacobian.cpp */,
+				C0F6E5D31E1E933200F90052 /* JLinkage.cpp */,
+				5FE46E6F1EC5BF0C001CE713 /* MultipleViewGeometry.cpp */,
+				5DCE0D741BAAC24D002E9E7D /* NonLinearOptimizationCamera.cpp */,
+				5DEAE9C41C8F143B0035D95A /* NonLinearOptimizationHomography.cpp */,
+				5DCE0D751BAAC24D002E9E7D /* NonLinearOptimizationLine.cpp */,
+				5DCE0D761BAAC24D002E9E7D /* NonLinearOptimizationObjectPoint.cpp */,
+				5DCE0D771BAAC24D002E9E7D /* NonLinearOptimizationOrientation.cpp */,
+				5DCE0D781BAAC24D002E9E7D /* NonLinearOptimizationPlane.cpp */,
+				5DEAE9C71C8F285C0035D95A /* NonLinearOptimizationPose.cpp */,
+				93C9F06822E107B700737C27 /* NonLinearOptimizationTransformation.cpp */,
+				5DCE0D791BAAC24D002E9E7D /* Normalization.cpp */,
+				5DCE0D7A1BAAC24D002E9E7D /* P3P.cpp */,
+				5DCE0D7B1BAAC24D002E9E7D /* P4P.cpp */,
+				5DCE0D7C1BAAC24D002E9E7D /* PerspectivePose.cpp */,
+				5DCE0D7D1BAAC24D002E9E7D /* PnP.cpp */,
+				5DCE0D7E1BAAC24D002E9E7D /* Quadric.cpp */,
+				5DCE0D7F1BAAC24D002E9E7D /* RANSAC.cpp */,
+				5DCE0D801BAAC24D002E9E7D /* SpatialDistribution.cpp */,
+				5DCE0D811BAAC24D002E9E7D /* StereoscopicGeometry.cpp */,
+				5DCE0D821BAAC24D002E9E7D /* Utilities.cpp */,
+				5DCE0D831BAAC24D002E9E7D /* VanishingProjection.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D222B251BB176CC00298788 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D222B261BB176CC00298788 /* Quadric.h in Headers */,
+				5D222B271BB176CC00298788 /* VanishingProjection.h in Headers */,
+				5D222B281BB176CC00298788 /* Utilities.h in Headers */,
+				5DB7746C1EE999DD00C14BB2 /* MultipleViewGeometry.h in Headers */,
+				5D222B291BB176CC00298788 /* SpatialDistribution.h in Headers */,
+				5D222B2A1BB176CC00298788 /* Homography.h in Headers */,
+				C0F6E5FE1E1EA8AC00F90052 /* JLinkage.h in Headers */,
+				5D222B2B1BB176CC00298788 /* NonLinearOptimizationLine.h in Headers */,
+				5DEAE9C31C8F142A0035D95A /* NonLinearOptimizationHomography.h in Headers */,
+				5D222B2C1BB176CC00298788 /* StereoscopicGeometry.h in Headers */,
+				5D222B2D1BB176CC00298788 /* P3P.h in Headers */,
+				5D222B2E1BB176CC00298788 /* NonLinearOptimizationCamera.h in Headers */,
+				5D222B2F1BB176CC00298788 /* Jacobian.h in Headers */,
+				5D222B301BB176CC00298788 /* EpipolarGeometry.h in Headers */,
+				5D222B311BB176CC00298788 /* CameraCalibration.h in Headers */,
+				5D222B321BB176CC00298788 /* NonLinearOptimizationObjectPoint.h in Headers */,
+				5D222B331BB176CC00298788 /* PerspectivePose.h in Headers */,
+				93C9F06522E107A800737C27 /* NonLinearOptimizationTransformation.h in Headers */,
+				5D222B341BB176CC00298788 /* Grid.h in Headers */,
+				5D222B351BB176CC00298788 /* Error.h in Headers */,
+				5D222B361BB176CC00298788 /* RANSAC.h in Headers */,
+				5D222B371BB176CC00298788 /* NonLinearOptimization.h in Headers */,
+				5D222B381BB176CC00298788 /* NonLinearUniversalOptimizationSparse.h in Headers */,
+				5D222B391BB176CC00298788 /* AbsoluteTransformation.h in Headers */,
+				5D222B3A1BB176CC00298788 /* NonLinearOptimizationOrientation.h in Headers */,
+				5D222B3B1BB176CC00298788 /* Delaunay.h in Headers */,
+				5D222B3C1BB176CC00298788 /* PnP.h in Headers */,
+				5D222B3D1BB176CC00298788 /* Estimator.h in Headers */,
+				5D222B3E1BB176CC00298788 /* Geometry.h in Headers */,
+				5D222B3F1BB176CC00298788 /* Normalization.h in Headers */,
+				93DFCBAE26FBCF90007C7B14 /* Octree.h in Headers */,
+				5D222B401BB176CC00298788 /* P4P.h in Headers */,
+				5D222B411BB176CC00298788 /* NonLinearUniversalOptimizationDense.h in Headers */,
+				5D222B421BB176CC00298788 /* NonLinearOptimizationPlane.h in Headers */,
+				5DEAE9CC1C8F286B0035D95A /* NonLinearOptimizationPose.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9861C31D8B574E00DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9861C41D8B574E00DEDB00 /* Quadric.h in Headers */,
+				5D9861C51D8B574E00DEDB00 /* VanishingProjection.h in Headers */,
+				5D9861C61D8B574E00DEDB00 /* Utilities.h in Headers */,
+				5DB7746D1EE999DE00C14BB2 /* MultipleViewGeometry.h in Headers */,
+				5D9861C71D8B574E00DEDB00 /* SpatialDistribution.h in Headers */,
+				5D9861C81D8B574E00DEDB00 /* Homography.h in Headers */,
+				C0F6E5FF1E1EA8AD00F90052 /* JLinkage.h in Headers */,
+				5D9861C91D8B574E00DEDB00 /* NonLinearOptimizationLine.h in Headers */,
+				5D9861CA1D8B574E00DEDB00 /* NonLinearOptimizationHomography.h in Headers */,
+				5D9861CB1D8B574E00DEDB00 /* StereoscopicGeometry.h in Headers */,
+				5D9861CC1D8B574E00DEDB00 /* P3P.h in Headers */,
+				5D9861CD1D8B574E00DEDB00 /* NonLinearOptimizationCamera.h in Headers */,
+				5D9861CE1D8B574E00DEDB00 /* Jacobian.h in Headers */,
+				5D9861CF1D8B574E00DEDB00 /* EpipolarGeometry.h in Headers */,
+				5D9861D01D8B574E00DEDB00 /* CameraCalibration.h in Headers */,
+				5D9861D11D8B574E00DEDB00 /* NonLinearOptimizationObjectPoint.h in Headers */,
+				5D9861D21D8B574E00DEDB00 /* PerspectivePose.h in Headers */,
+				93C9F06622E107A800737C27 /* NonLinearOptimizationTransformation.h in Headers */,
+				5D9861D31D8B574E00DEDB00 /* Grid.h in Headers */,
+				5D9861D41D8B574E00DEDB00 /* Error.h in Headers */,
+				5D9861D51D8B574E00DEDB00 /* RANSAC.h in Headers */,
+				5D9861D61D8B574E00DEDB00 /* NonLinearOptimization.h in Headers */,
+				5D9861D71D8B574E00DEDB00 /* NonLinearUniversalOptimizationSparse.h in Headers */,
+				5D9861D81D8B574E00DEDB00 /* AbsoluteTransformation.h in Headers */,
+				5D9861D91D8B574E00DEDB00 /* NonLinearOptimizationOrientation.h in Headers */,
+				5D9861DA1D8B574E00DEDB00 /* Delaunay.h in Headers */,
+				5D9861DB1D8B574E00DEDB00 /* PnP.h in Headers */,
+				5D9861DC1D8B574E00DEDB00 /* Estimator.h in Headers */,
+				5D9861DD1D8B574E00DEDB00 /* Geometry.h in Headers */,
+				5D9861DE1D8B574E00DEDB00 /* Normalization.h in Headers */,
+				93DFCBAF26FBCF90007C7B14 /* Octree.h in Headers */,
+				5D9861DF1D8B574E00DEDB00 /* P4P.h in Headers */,
+				5D9861E01D8B574E00DEDB00 /* NonLinearUniversalOptimizationDense.h in Headers */,
+				5D9861E11D8B574E00DEDB00 /* NonLinearOptimizationPlane.h in Headers */,
+				5D9861E21D8B574E00DEDB00 /* NonLinearOptimizationPose.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCE0D5A1BAAC126002E9E7D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DCE0DD11BAAC25B002E9E7D /* Quadric.h in Headers */,
+				5DCE0DD61BAAC25B002E9E7D /* VanishingProjection.h in Headers */,
+				5DCE0DD51BAAC25B002E9E7D /* Utilities.h in Headers */,
+				5FE46E6C1EC5BE49001CE713 /* MultipleViewGeometry.h in Headers */,
+				5DCE0DD31BAAC25B002E9E7D /* SpatialDistribution.h in Headers */,
+				5DCE0DC21BAAC25B002E9E7D /* Homography.h in Headers */,
+				C0F6E5D21E1E931E00F90052 /* JLinkage.h in Headers */,
+				5DCE0DC61BAAC25B002E9E7D /* NonLinearOptimizationLine.h in Headers */,
+				5DEAE9C21C8F142A0035D95A /* NonLinearOptimizationHomography.h in Headers */,
+				5DCE0DD41BAAC25B002E9E7D /* StereoscopicGeometry.h in Headers */,
+				5DCE0DCD1BAAC25B002E9E7D /* P3P.h in Headers */,
+				5DCE0DC51BAAC25B002E9E7D /* NonLinearOptimizationCamera.h in Headers */,
+				5DCE0DC31BAAC25B002E9E7D /* Jacobian.h in Headers */,
+				5DCE0DBD1BAAC25B002E9E7D /* EpipolarGeometry.h in Headers */,
+				5DCE0DBB1BAAC25B002E9E7D /* CameraCalibration.h in Headers */,
+				5DCE0DC71BAAC25B002E9E7D /* NonLinearOptimizationObjectPoint.h in Headers */,
+				5DCE0DCF1BAAC25B002E9E7D /* PerspectivePose.h in Headers */,
+				93C9F06422E107A800737C27 /* NonLinearOptimizationTransformation.h in Headers */,
+				5DCE0DC11BAAC25B002E9E7D /* Grid.h in Headers */,
+				5DCE0DBE1BAAC25B002E9E7D /* Error.h in Headers */,
+				5DCE0DD21BAAC25B002E9E7D /* RANSAC.h in Headers */,
+				5DCE0DC41BAAC25B002E9E7D /* NonLinearOptimization.h in Headers */,
+				5DCE0DCB1BAAC25B002E9E7D /* NonLinearUniversalOptimizationSparse.h in Headers */,
+				5DCE0DBA1BAAC25B002E9E7D /* AbsoluteTransformation.h in Headers */,
+				5DCE0DC81BAAC25B002E9E7D /* NonLinearOptimizationOrientation.h in Headers */,
+				5DCE0DBC1BAAC25B002E9E7D /* Delaunay.h in Headers */,
+				5DCE0DD01BAAC25B002E9E7D /* PnP.h in Headers */,
+				5DCE0DBF1BAAC25B002E9E7D /* Estimator.h in Headers */,
+				5DCE0DC01BAAC25B002E9E7D /* Geometry.h in Headers */,
+				5DCE0DCC1BAAC25B002E9E7D /* Normalization.h in Headers */,
+				93DFCBAD26FBCF90007C7B14 /* Octree.h in Headers */,
+				5DCE0DCE1BAAC25B002E9E7D /* P4P.h in Headers */,
+				5DCE0DCA1BAAC25B002E9E7D /* NonLinearUniversalOptimizationDense.h in Headers */,
+				5DCE0DC91BAAC25B002E9E7D /* NonLinearOptimizationPlane.h in Headers */,
+				5DEAE9CB1C8F286B0035D95A /* NonLinearOptimizationPose.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC261DABE37200BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EC271DABE37200BF5D76 /* Quadric.h in Headers */,
+				C041EC281DABE37200BF5D76 /* VanishingProjection.h in Headers */,
+				C041EC291DABE37200BF5D76 /* Utilities.h in Headers */,
+				5DB7746E1EE999DF00C14BB2 /* MultipleViewGeometry.h in Headers */,
+				C041EC2A1DABE37200BF5D76 /* SpatialDistribution.h in Headers */,
+				C041EC2B1DABE37200BF5D76 /* Homography.h in Headers */,
+				C0F6E6001E1EA8AD00F90052 /* JLinkage.h in Headers */,
+				C041EC2C1DABE37200BF5D76 /* NonLinearOptimizationLine.h in Headers */,
+				C041EC2D1DABE37200BF5D76 /* NonLinearOptimizationHomography.h in Headers */,
+				C041EC2E1DABE37200BF5D76 /* StereoscopicGeometry.h in Headers */,
+				C041EC2F1DABE37200BF5D76 /* P3P.h in Headers */,
+				C041EC301DABE37200BF5D76 /* NonLinearOptimizationCamera.h in Headers */,
+				C041EC311DABE37200BF5D76 /* Jacobian.h in Headers */,
+				C041EC321DABE37200BF5D76 /* EpipolarGeometry.h in Headers */,
+				C041EC331DABE37200BF5D76 /* CameraCalibration.h in Headers */,
+				C041EC341DABE37200BF5D76 /* NonLinearOptimizationObjectPoint.h in Headers */,
+				C041EC351DABE37200BF5D76 /* PerspectivePose.h in Headers */,
+				93C9F06722E107A800737C27 /* NonLinearOptimizationTransformation.h in Headers */,
+				C041EC361DABE37200BF5D76 /* Grid.h in Headers */,
+				C041EC371DABE37200BF5D76 /* Error.h in Headers */,
+				C041EC381DABE37200BF5D76 /* RANSAC.h in Headers */,
+				C041EC391DABE37200BF5D76 /* NonLinearOptimization.h in Headers */,
+				C041EC3A1DABE37200BF5D76 /* NonLinearUniversalOptimizationSparse.h in Headers */,
+				C041EC3B1DABE37200BF5D76 /* AbsoluteTransformation.h in Headers */,
+				C041EC3C1DABE37200BF5D76 /* NonLinearOptimizationOrientation.h in Headers */,
+				C041EC3D1DABE37200BF5D76 /* Delaunay.h in Headers */,
+				C041EC3E1DABE37200BF5D76 /* PnP.h in Headers */,
+				C041EC3F1DABE37200BF5D76 /* Estimator.h in Headers */,
+				C041EC401DABE37200BF5D76 /* Geometry.h in Headers */,
+				C041EC411DABE37200BF5D76 /* Normalization.h in Headers */,
+				93DFCBB026FBCF90007C7B14 /* Octree.h in Headers */,
+				C041EC421DABE37200BF5D76 /* P4P.h in Headers */,
+				C041EC431DABE37200BF5D76 /* NonLinearUniversalOptimizationDense.h in Headers */,
+				C041EC441DABE37200BF5D76 /* NonLinearOptimizationPlane.h in Headers */,
+				C041EC451DABE37200BF5D76 /* NonLinearOptimizationPose.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D222B091BB176CC00298788 /* geometry x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D222B431BB176CC00298788 /* Build configuration list for PBXNativeTarget "geometry x64 (Shared)" */;
+			buildPhases = (
+				5D222B0A1BB176CC00298788 /* Sources */,
+				5D222B241BB176CC00298788 /* Frameworks */,
+				5D222B251BB176CC00298788 /* Headers */,
+				C041EC4B1DABE3FE00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "geometry x64 (Shared)";
+			productName = geometry;
+			productReference = 5D222B461BB176CC00298788 /* libOceanGeometryD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9861A51D8B574E00DEDB00 /* geometry arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9861E31D8B574E00DEDB00 /* Build configuration list for PBXNativeTarget "geometry arm64 (Static)" */;
+			buildPhases = (
+				5D9861A61D8B574E00DEDB00 /* Sources */,
+				5D9861C21D8B574E00DEDB00 /* Frameworks */,
+				5D9861C31D8B574E00DEDB00 /* Headers */,
+				5D837F4C1D8F0FA100939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "geometry arm64 (Static)";
+			productName = geometry;
+			productReference = 5D9861E61D8B574E00DEDB00 /* libOceanGeometryD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DCE0D5B1BAAC126002E9E7D /* geometry x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DCE0D671BAAC126002E9E7D /* Build configuration list for PBXNativeTarget "geometry x64 (Static)" */;
+			buildPhases = (
+				5DCE0D581BAAC126002E9E7D /* Sources */,
+				5DCE0D591BAAC126002E9E7D /* Frameworks */,
+				5DCE0D5A1BAAC126002E9E7D /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "geometry x64 (Static)";
+			productName = geometry;
+			productReference = 5DCE0D5C1BAAC126002E9E7D /* libOceanGeometryD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EC081DABE37200BF5D76 /* geometry arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EC471DABE37200BF5D76 /* Build configuration list for PBXNativeTarget "geometry arm64 (Shared)" */;
+			buildPhases = (
+				C041EC091DABE37200BF5D76 /* Sources */,
+				C041EC251DABE37200BF5D76 /* Frameworks */,
+				C041EC261DABE37200BF5D76 /* Headers */,
+				C041EC461DABE37200BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "geometry arm64 (Shared)";
+			productName = geometry;
+			productReference = C041EC4A1DABE37200BF5D76 /* libOceanGeometryD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DCE0D541BAAC126002E9E7D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DCE0D5B1BAAC126002E9E7D = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DCE0D571BAAC126002E9E7D /* Build configuration list for PBXProject "geometry" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DCE0D531BAAC126002E9E7D;
+			productRefGroup = 5DCE0D5D1BAAC126002E9E7D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DCE0D5B1BAAC126002E9E7D /* geometry x64 (Static) */,
+				5D222B091BB176CC00298788 /* geometry x64 (Shared) */,
+				5D9861A51D8B574E00DEDB00 /* geometry arm64 (Static) */,
+				C041EC081DABE37200BF5D76 /* geometry arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F4C1D8F0FA100939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../copy_arm_static.sh \"../../../../../bin/lib/\"";
+		};
+		C041EC461DABE37200BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../codesign.sh\n../../copy_arm_shared.sh \"../../../../../bin/lib/\"";
+		};
+		C041EC4B1DABE3FE00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D222B0A1BB176CC00298788 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D222B0B1BB176CC00298788 /* NonLinearOptimizationLine.cpp in Sources */,
+				5D222B0C1BB176CC00298788 /* Quadric.cpp in Sources */,
+				5D222B0D1BB176CC00298788 /* Utilities.cpp in Sources */,
+				5D222B0E1BB176CC00298788 /* SpatialDistribution.cpp in Sources */,
+				9312E8852B1674B100745EF9 /* Estimator.cpp in Sources */,
+				5D222B0F1BB176CC00298788 /* AbsoluteTransformation.cpp in Sources */,
+				93C9F06A22E107B700737C27 /* NonLinearOptimizationTransformation.cpp in Sources */,
+				5D222B101BB176CC00298788 /* Error.cpp in Sources */,
+				5D222B111BB176CC00298788 /* PerspectivePose.cpp in Sources */,
+				5D222B121BB176CC00298788 /* Normalization.cpp in Sources */,
+				5D222B131BB176CC00298788 /* NonLinearOptimizationObjectPoint.cpp in Sources */,
+				5D222B141BB176CC00298788 /* EpipolarGeometry.cpp in Sources */,
+				5D222B151BB176CC00298788 /* StereoscopicGeometry.cpp in Sources */,
+				5DEAE9C61C8F143C0035D95A /* NonLinearOptimizationHomography.cpp in Sources */,
+				5D222B171BB176CC00298788 /* PnP.cpp in Sources */,
+				5D222B181BB176CC00298788 /* NonLinearOptimizationCamera.cpp in Sources */,
+				5D222B191BB176CC00298788 /* Grid.cpp in Sources */,
+				5D222B1A1BB176CC00298788 /* VanishingProjection.cpp in Sources */,
+				5DB774591EE9942E00C14BB2 /* MultipleViewGeometry.cpp in Sources */,
+				5DEAE9C91C8F285C0035D95A /* NonLinearOptimizationPose.cpp in Sources */,
+				5D222B1B1BB176CC00298788 /* RANSAC.cpp in Sources */,
+				5D222B1C1BB176CC00298788 /* NonLinearOptimizationPlane.cpp in Sources */,
+				5D222B1D1BB176CC00298788 /* Jacobian.cpp in Sources */,
+				5D222B1E1BB176CC00298788 /* P3P.cpp in Sources */,
+				5D222B1F1BB176CC00298788 /* P4P.cpp in Sources */,
+				5D222B201BB176CC00298788 /* CameraCalibration.cpp in Sources */,
+				5D222B211BB176CC00298788 /* NonLinearOptimizationOrientation.cpp in Sources */,
+				5D222B221BB176CC00298788 /* Homography.cpp in Sources */,
+				C0F6E6011E1EA8B100F90052 /* JLinkage.cpp in Sources */,
+				5D222B231BB176CC00298788 /* Delaunay.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9861A61D8B574E00DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9861A71D8B574E00DEDB00 /* NonLinearOptimizationLine.cpp in Sources */,
+				5D9861A81D8B574E00DEDB00 /* Quadric.cpp in Sources */,
+				5D9861A91D8B574E00DEDB00 /* Utilities.cpp in Sources */,
+				5D9861AA1D8B574E00DEDB00 /* SpatialDistribution.cpp in Sources */,
+				9312E8862B1674B100745EF9 /* Estimator.cpp in Sources */,
+				5D9861AB1D8B574E00DEDB00 /* AbsoluteTransformation.cpp in Sources */,
+				93C9F06B22E107B700737C27 /* NonLinearOptimizationTransformation.cpp in Sources */,
+				5D9861AC1D8B574E00DEDB00 /* Error.cpp in Sources */,
+				5D9861AD1D8B574E00DEDB00 /* PerspectivePose.cpp in Sources */,
+				5D9861AE1D8B574E00DEDB00 /* Normalization.cpp in Sources */,
+				5D9861AF1D8B574E00DEDB00 /* NonLinearOptimizationObjectPoint.cpp in Sources */,
+				5D9861B01D8B574E00DEDB00 /* EpipolarGeometry.cpp in Sources */,
+				5D9861B11D8B574E00DEDB00 /* StereoscopicGeometry.cpp in Sources */,
+				5D9861B21D8B574E00DEDB00 /* NonLinearOptimizationHomography.cpp in Sources */,
+				5D9861B41D8B574E00DEDB00 /* PnP.cpp in Sources */,
+				5D9861B51D8B574E00DEDB00 /* NonLinearOptimizationCamera.cpp in Sources */,
+				5D9861B61D8B574E00DEDB00 /* Grid.cpp in Sources */,
+				5D9861B71D8B574E00DEDB00 /* VanishingProjection.cpp in Sources */,
+				5DB7745A1EE9942E00C14BB2 /* MultipleViewGeometry.cpp in Sources */,
+				5D9861B81D8B574E00DEDB00 /* NonLinearOptimizationPose.cpp in Sources */,
+				5D9861B91D8B574E00DEDB00 /* RANSAC.cpp in Sources */,
+				5D9861BA1D8B574E00DEDB00 /* NonLinearOptimizationPlane.cpp in Sources */,
+				5D9861BB1D8B574E00DEDB00 /* Jacobian.cpp in Sources */,
+				5D9861BC1D8B574E00DEDB00 /* P3P.cpp in Sources */,
+				5D9861BD1D8B574E00DEDB00 /* P4P.cpp in Sources */,
+				5D9861BE1D8B574E00DEDB00 /* CameraCalibration.cpp in Sources */,
+				5D9861BF1D8B574E00DEDB00 /* NonLinearOptimizationOrientation.cpp in Sources */,
+				5D9861C01D8B574E00DEDB00 /* Homography.cpp in Sources */,
+				C0F6E6021E1EA8B100F90052 /* JLinkage.cpp in Sources */,
+				5D9861C11D8B574E00DEDB00 /* Delaunay.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCE0D581BAAC126002E9E7D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DCE0D8E1BAAC24D002E9E7D /* NonLinearOptimizationLine.cpp in Sources */,
+				5DCE0D971BAAC24D002E9E7D /* Quadric.cpp in Sources */,
+				5DCE0D9B1BAAC24D002E9E7D /* Utilities.cpp in Sources */,
+				5DCE0D991BAAC24D002E9E7D /* SpatialDistribution.cpp in Sources */,
+				9312E8842B1674B100745EF9 /* Estimator.cpp in Sources */,
+				5DCE0D841BAAC24D002E9E7D /* AbsoluteTransformation.cpp in Sources */,
+				93C9F06922E107B700737C27 /* NonLinearOptimizationTransformation.cpp in Sources */,
+				5DCE0D881BAAC24D002E9E7D /* Error.cpp in Sources */,
+				5DCE0D951BAAC24D002E9E7D /* PerspectivePose.cpp in Sources */,
+				5DCE0D921BAAC24D002E9E7D /* Normalization.cpp in Sources */,
+				5DCE0D8F1BAAC24D002E9E7D /* NonLinearOptimizationObjectPoint.cpp in Sources */,
+				5DCE0D871BAAC24D002E9E7D /* EpipolarGeometry.cpp in Sources */,
+				5DCE0D9A1BAAC24D002E9E7D /* StereoscopicGeometry.cpp in Sources */,
+				5DEAE9C51C8F143C0035D95A /* NonLinearOptimizationHomography.cpp in Sources */,
+				5DCE0D961BAAC24D002E9E7D /* PnP.cpp in Sources */,
+				5DCE0D8D1BAAC24D002E9E7D /* NonLinearOptimizationCamera.cpp in Sources */,
+				5DCE0D891BAAC24D002E9E7D /* Grid.cpp in Sources */,
+				5DCE0D9C1BAAC24D002E9E7D /* VanishingProjection.cpp in Sources */,
+				5FE46E701EC5BF0C001CE713 /* MultipleViewGeometry.cpp in Sources */,
+				5DEAE9C81C8F285C0035D95A /* NonLinearOptimizationPose.cpp in Sources */,
+				5DCE0D981BAAC24D002E9E7D /* RANSAC.cpp in Sources */,
+				5DCE0D911BAAC24D002E9E7D /* NonLinearOptimizationPlane.cpp in Sources */,
+				5DCE0D8B1BAAC24D002E9E7D /* Jacobian.cpp in Sources */,
+				5DCE0D931BAAC24D002E9E7D /* P3P.cpp in Sources */,
+				5DCE0D941BAAC24D002E9E7D /* P4P.cpp in Sources */,
+				5DCE0D851BAAC24D002E9E7D /* CameraCalibration.cpp in Sources */,
+				5DCE0D901BAAC24D002E9E7D /* NonLinearOptimizationOrientation.cpp in Sources */,
+				5DCE0D8A1BAAC24D002E9E7D /* Homography.cpp in Sources */,
+				C0F6E5D41E1E933200F90052 /* JLinkage.cpp in Sources */,
+				5DCE0D861BAAC24D002E9E7D /* Delaunay.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC091DABE37200BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EC0A1DABE37200BF5D76 /* NonLinearOptimizationLine.cpp in Sources */,
+				C041EC0B1DABE37200BF5D76 /* Quadric.cpp in Sources */,
+				C041EC0C1DABE37200BF5D76 /* Utilities.cpp in Sources */,
+				C041EC0D1DABE37200BF5D76 /* SpatialDistribution.cpp in Sources */,
+				9312E8872B1674B100745EF9 /* Estimator.cpp in Sources */,
+				C041EC0E1DABE37200BF5D76 /* AbsoluteTransformation.cpp in Sources */,
+				93C9F06C22E107B700737C27 /* NonLinearOptimizationTransformation.cpp in Sources */,
+				C041EC0F1DABE37200BF5D76 /* Error.cpp in Sources */,
+				C041EC101DABE37200BF5D76 /* PerspectivePose.cpp in Sources */,
+				C041EC111DABE37200BF5D76 /* Normalization.cpp in Sources */,
+				C041EC121DABE37200BF5D76 /* NonLinearOptimizationObjectPoint.cpp in Sources */,
+				C041EC131DABE37200BF5D76 /* EpipolarGeometry.cpp in Sources */,
+				C041EC141DABE37200BF5D76 /* StereoscopicGeometry.cpp in Sources */,
+				C041EC151DABE37200BF5D76 /* NonLinearOptimizationHomography.cpp in Sources */,
+				C041EC171DABE37200BF5D76 /* PnP.cpp in Sources */,
+				C041EC181DABE37200BF5D76 /* NonLinearOptimizationCamera.cpp in Sources */,
+				C041EC191DABE37200BF5D76 /* Grid.cpp in Sources */,
+				C041EC1A1DABE37200BF5D76 /* VanishingProjection.cpp in Sources */,
+				5DB7745B1EE9942F00C14BB2 /* MultipleViewGeometry.cpp in Sources */,
+				C041EC1B1DABE37200BF5D76 /* NonLinearOptimizationPose.cpp in Sources */,
+				C041EC1C1DABE37200BF5D76 /* RANSAC.cpp in Sources */,
+				C041EC1D1DABE37200BF5D76 /* NonLinearOptimizationPlane.cpp in Sources */,
+				C041EC1E1DABE37200BF5D76 /* Jacobian.cpp in Sources */,
+				C041EC1F1DABE37200BF5D76 /* P3P.cpp in Sources */,
+				C041EC201DABE37200BF5D76 /* P4P.cpp in Sources */,
+				C041EC211DABE37200BF5D76 /* CameraCalibration.cpp in Sources */,
+				C041EC221DABE37200BF5D76 /* NonLinearOptimizationOrientation.cpp in Sources */,
+				C041EC231DABE37200BF5D76 /* Homography.cpp in Sources */,
+				C0F6E6031E1EA8B200F90052 /* JLinkage.cpp in Sources */,
+				C041EC241DABE37200BF5D76 /* Delaunay.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D222B441BB176CC00298788 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/geometry/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/geometry/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanGeometryD;
+				PRODUCT_NAME = OceanGeometryD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D222B451BB176CC00298788 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/geometry/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/geometry/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanGeometry;
+				PRODUCT_NAME = OceanGeometry;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D9861E41D8B574E00DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanGeometryD;
+				PRODUCT_NAME = OceanGeometryD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D9861E51D8B574E00DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanGeometry;
+				PRODUCT_NAME = OceanGeometry;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DCE0D651BAAC126002E9E7D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DCE0D661BAAC126002E9E7D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DCE0D681BAAC126002E9E7D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/geometry/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/geometry/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanGeometryD;
+				PRODUCT_NAME = OceanGeometryD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DCE0D691BAAC126002E9E7D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/geometry/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/geometry/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanGeometry;
+				PRODUCT_NAME = OceanGeometry;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EC481DABE37200BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanGeometryD;
+				PRODUCT_NAME = OceanGeometryD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EC491DABE37200BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanGeometry;
+				PRODUCT_NAME = OceanGeometry;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/geometry/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D222B431BB176CC00298788 /* Build configuration list for PBXNativeTarget "geometry x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D222B441BB176CC00298788 /* Debug */,
+				5D222B451BB176CC00298788 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9861E31D8B574E00DEDB00 /* Build configuration list for PBXNativeTarget "geometry arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9861E41D8B574E00DEDB00 /* Debug */,
+				5D9861E51D8B574E00DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DCE0D571BAAC126002E9E7D /* Build configuration list for PBXProject "geometry" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCE0D651BAAC126002E9E7D /* Debug */,
+				5DCE0D661BAAC126002E9E7D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DCE0D671BAAC126002E9E7D /* Build configuration list for PBXNativeTarget "geometry x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCE0D681BAAC126002E9E7D /* Debug */,
+				5DCE0D691BAAC126002E9E7D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EC471DABE37200BF5D76 /* Build configuration list for PBXNativeTarget "geometry arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EC481DABE37200BF5D76 /* Debug */,
+				C041EC491DABE37200BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DCE0D541BAAC126002E9E7D /* Project object */;
+}

@@ -1,0 +1,1112 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5044442127B72BBF00B2E4B0 /* QRCodeDetector3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5044442027B72BBF00B2E4B0 /* QRCodeDetector3D.h */; };
+		5044442227B72BBF00B2E4B0 /* QRCodeDetector3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5044442027B72BBF00B2E4B0 /* QRCodeDetector3D.h */; };
+		5044442327B72BBF00B2E4B0 /* QRCodeDetector3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5044442027B72BBF00B2E4B0 /* QRCodeDetector3D.h */; };
+		5044442427B72BBF00B2E4B0 /* QRCodeDetector3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5044442027B72BBF00B2E4B0 /* QRCodeDetector3D.h */; };
+		5044442627B72BE300B2E4B0 /* QRCodeDetector3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5044442527B72BE300B2E4B0 /* QRCodeDetector3D.cpp */; };
+		5044442727B72BE300B2E4B0 /* QRCodeDetector3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5044442527B72BE300B2E4B0 /* QRCodeDetector3D.cpp */; };
+		5044442827B72BE300B2E4B0 /* QRCodeDetector3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5044442527B72BE300B2E4B0 /* QRCodeDetector3D.cpp */; };
+		5044442927B72BE300B2E4B0 /* QRCodeDetector3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5044442527B72BE300B2E4B0 /* QRCodeDetector3D.cpp */; };
+		507AFD5727B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507AFD5627B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp */; };
+		507AFD5827B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507AFD5627B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp */; };
+		507AFD5927B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507AFD5627B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp */; };
+		507AFD5A27B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507AFD5627B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp */; };
+		507CAAF727B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 507CAAF627B301E9006F5468 /* LegacyQRCodeDetector2D.h */; };
+		507CAAF827B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 507CAAF627B301E9006F5468 /* LegacyQRCodeDetector2D.h */; };
+		507CAAF927B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 507CAAF627B301E9006F5468 /* LegacyQRCodeDetector2D.h */; };
+		507CAAFA27B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 507CAAF627B301E9006F5468 /* LegacyQRCodeDetector2D.h */; };
+		507CAAFC27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507CAAFB27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp */; };
+		507CAAFD27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507CAAFB27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp */; };
+		507CAAFE27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507CAAFB27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp */; };
+		507CAAFF27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507CAAFB27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp */; };
+		50AE05552708109700242F7A /* QRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE054E2708109700242F7A /* QRCodeEncoder.h */; };
+		50AE05562708109700242F7A /* QRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE054E2708109700242F7A /* QRCodeEncoder.h */; };
+		50AE05572708109700242F7A /* QRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE054E2708109700242F7A /* QRCodeEncoder.h */; };
+		50AE05582708109700242F7A /* QRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE054E2708109700242F7A /* QRCodeEncoder.h */; };
+		50AE05592708109700242F7A /* QRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE054F2708109700242F7A /* QRCodeDecoder.h */; };
+		50AE055A2708109700242F7A /* QRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE054F2708109700242F7A /* QRCodeDecoder.h */; };
+		50AE055B2708109700242F7A /* QRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE054F2708109700242F7A /* QRCodeDecoder.h */; };
+		50AE055C2708109700242F7A /* QRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE054F2708109700242F7A /* QRCodeDecoder.h */; };
+		50AE055D2708109700242F7A /* FinderPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05502708109700242F7A /* FinderPatternDetector.h */; };
+		50AE055E2708109700242F7A /* FinderPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05502708109700242F7A /* FinderPatternDetector.h */; };
+		50AE055F2708109700242F7A /* FinderPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05502708109700242F7A /* FinderPatternDetector.h */; };
+		50AE05602708109700242F7A /* FinderPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05502708109700242F7A /* FinderPatternDetector.h */; };
+		50AE05612708109700242F7A /* QRCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05512708109700242F7A /* QRCodes.h */; };
+		50AE05622708109700242F7A /* QRCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05512708109700242F7A /* QRCodes.h */; };
+		50AE05632708109700242F7A /* QRCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05512708109700242F7A /* QRCodes.h */; };
+		50AE05642708109700242F7A /* QRCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05512708109700242F7A /* QRCodes.h */; };
+		50AE05652708109700242F7A /* QRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05522708109700242F7A /* QRCodeDetector2D.h */; };
+		50AE05662708109700242F7A /* QRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05522708109700242F7A /* QRCodeDetector2D.h */; };
+		50AE05672708109700242F7A /* QRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05522708109700242F7A /* QRCodeDetector2D.h */; };
+		50AE05682708109700242F7A /* QRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05522708109700242F7A /* QRCodeDetector2D.h */; };
+		50AE05692708109700242F7A /* QRCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05532708109700242F7A /* QRCode.h */; };
+		50AE056A2708109700242F7A /* QRCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05532708109700242F7A /* QRCode.h */; };
+		50AE056B2708109700242F7A /* QRCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05532708109700242F7A /* QRCode.h */; };
+		50AE056C2708109700242F7A /* QRCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05532708109700242F7A /* QRCode.h */; };
+		50AE056D2708109700242F7A /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05542708109700242F7A /* Utilities.h */; };
+		50AE056E2708109700242F7A /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05542708109700242F7A /* Utilities.h */; };
+		50AE056F2708109700242F7A /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05542708109700242F7A /* Utilities.h */; };
+		50AE05702708109700242F7A /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50AE05542708109700242F7A /* Utilities.h */; };
+		50AE0576270810B700242F7A /* QRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0571270810B700242F7A /* QRCodeEncoder.cpp */; };
+		50AE0577270810B700242F7A /* QRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0571270810B700242F7A /* QRCodeEncoder.cpp */; };
+		50AE0578270810B700242F7A /* QRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0571270810B700242F7A /* QRCodeEncoder.cpp */; };
+		50AE0579270810B700242F7A /* QRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0571270810B700242F7A /* QRCodeEncoder.cpp */; };
+		50AE057A270810B700242F7A /* QRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0572270810B700242F7A /* QRCodeDecoder.cpp */; };
+		50AE057B270810B700242F7A /* QRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0572270810B700242F7A /* QRCodeDecoder.cpp */; };
+		50AE057C270810B700242F7A /* QRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0572270810B700242F7A /* QRCodeDecoder.cpp */; };
+		50AE057D270810B700242F7A /* QRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0572270810B700242F7A /* QRCodeDecoder.cpp */; };
+		50AE0582270810B700242F7A /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0574270810B700242F7A /* Utilities.cpp */; };
+		50AE0583270810B700242F7A /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0574270810B700242F7A /* Utilities.cpp */; };
+		50AE0584270810B700242F7A /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0574270810B700242F7A /* Utilities.cpp */; };
+		50AE0585270810B700242F7A /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0574270810B700242F7A /* Utilities.cpp */; };
+		50AE0586270810B700242F7A /* FinderPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0575270810B700242F7A /* FinderPatternDetector.cpp */; };
+		50AE0587270810B700242F7A /* FinderPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0575270810B700242F7A /* FinderPatternDetector.cpp */; };
+		50AE0588270810B700242F7A /* FinderPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0575270810B700242F7A /* FinderPatternDetector.cpp */; };
+		50AE0589270810B700242F7A /* FinderPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50AE0575270810B700242F7A /* FinderPatternDetector.cpp */; };
+		50C73EBF2733976C004E80DA /* QRCodeDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 50C73EBE2733976B004E80DA /* QRCodeDebugElements.h */; };
+		50C73EC02733976C004E80DA /* QRCodeDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 50C73EBE2733976B004E80DA /* QRCodeDebugElements.h */; };
+		50C73EC12733976C004E80DA /* QRCodeDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 50C73EBE2733976B004E80DA /* QRCodeDebugElements.h */; };
+		50C73EC22733976C004E80DA /* QRCodeDebugElements.h in Headers */ = {isa = PBXBuildFile; fileRef = 50C73EBE2733976B004E80DA /* QRCodeDebugElements.h */; };
+		50E610CB274DBB2F00DA6E6A /* TransitionDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50E610CA274DBB2F00DA6E6A /* TransitionDetector.h */; };
+		50E610CC274DBB2F00DA6E6A /* TransitionDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50E610CA274DBB2F00DA6E6A /* TransitionDetector.h */; };
+		50E610CD274DBB2F00DA6E6A /* TransitionDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50E610CA274DBB2F00DA6E6A /* TransitionDetector.h */; };
+		50E610CE274DBB2F00DA6E6A /* TransitionDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50E610CA274DBB2F00DA6E6A /* TransitionDetector.h */; };
+		50E610D0274DBB4600DA6E6A /* TransitionDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50E610CF274DBB4600DA6E6A /* TransitionDetector.cpp */; };
+		50E610D1274DBB4600DA6E6A /* TransitionDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50E610CF274DBB4600DA6E6A /* TransitionDetector.cpp */; };
+		50E610D2274DBB4600DA6E6A /* TransitionDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50E610CF274DBB4600DA6E6A /* TransitionDetector.cpp */; };
+		50E610D3274DBB4600DA6E6A /* TransitionDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50E610CF274DBB4600DA6E6A /* TransitionDetector.cpp */; };
+		50ED88DC2811DBE00024E01F /* QRCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ED88DB2811DBE00024E01F /* QRCodeDetector.h */; };
+		50ED88DD2811DBE00024E01F /* QRCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ED88DB2811DBE00024E01F /* QRCodeDetector.h */; };
+		50ED88DE2811DBE00024E01F /* QRCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ED88DB2811DBE00024E01F /* QRCodeDetector.h */; };
+		50ED88DF2811DBE00024E01F /* QRCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ED88DB2811DBE00024E01F /* QRCodeDetector.h */; };
+		50ED88E12811DC0A0024E01F /* QRCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ED88E02811DC0A0024E01F /* QRCodeDetector.cpp */; };
+		50ED88E22811DC0A0024E01F /* QRCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ED88E02811DC0A0024E01F /* QRCodeDetector.cpp */; };
+		50ED88E32811DC0A0024E01F /* QRCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ED88E02811DC0A0024E01F /* QRCodeDetector.cpp */; };
+		50ED88E42811DC0A0024E01F /* QRCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ED88E02811DC0A0024E01F /* QRCodeDetector.cpp */; };
+		50F61DE627471EA4003833F2 /* AlignmentPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50F61DE527471EA4003833F2 /* AlignmentPatternDetector.h */; };
+		50F61DE727471EA4003833F2 /* AlignmentPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50F61DE527471EA4003833F2 /* AlignmentPatternDetector.h */; };
+		50F61DE827471EA4003833F2 /* AlignmentPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50F61DE527471EA4003833F2 /* AlignmentPatternDetector.h */; };
+		50F61DE927471EA4003833F2 /* AlignmentPatternDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 50F61DE527471EA4003833F2 /* AlignmentPatternDetector.h */; };
+		50F61DEB27471EBC003833F2 /* AlignmentPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50F61DEA27471EBC003833F2 /* AlignmentPatternDetector.cpp */; };
+		50F61DEC27471EBC003833F2 /* AlignmentPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50F61DEA27471EBC003833F2 /* AlignmentPatternDetector.cpp */; };
+		50F61DED27471EBC003833F2 /* AlignmentPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50F61DEA27471EBC003833F2 /* AlignmentPatternDetector.cpp */; };
+		50F61DEE27471EBC003833F2 /* AlignmentPatternDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50F61DEA27471EBC003833F2 /* AlignmentPatternDetector.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5044442027B72BBF00B2E4B0 /* QRCodeDetector3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCodeDetector3D.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDetector3D.h; sourceTree = "<group>"; };
+		5044442527B72BE300B2E4B0 /* QRCodeDetector3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QRCodeDetector3D.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDetector3D.cpp; sourceTree = "<group>"; };
+		507AFD5627B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QRCodeDetector2D.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDetector2D.cpp; sourceTree = "<group>"; };
+		507CAAF627B301E9006F5468 /* LegacyQRCodeDetector2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LegacyQRCodeDetector2D.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/LegacyQRCodeDetector2D.h; sourceTree = "<group>"; };
+		507CAAFB27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LegacyQRCodeDetector2D.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/LegacyQRCodeDetector2D.cpp; sourceTree = "<group>"; };
+		50AE054E2708109700242F7A /* QRCodeEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCodeEncoder.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeEncoder.h; sourceTree = "<group>"; };
+		50AE054F2708109700242F7A /* QRCodeDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCodeDecoder.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDecoder.h; sourceTree = "<group>"; };
+		50AE05502708109700242F7A /* FinderPatternDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FinderPatternDetector.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/FinderPatternDetector.h; sourceTree = "<group>"; };
+		50AE05512708109700242F7A /* QRCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCodes.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodes.h; sourceTree = "<group>"; };
+		50AE05522708109700242F7A /* QRCodeDetector2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCodeDetector2D.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDetector2D.h; sourceTree = "<group>"; };
+		50AE05532708109700242F7A /* QRCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCode.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCode.h; sourceTree = "<group>"; };
+		50AE05542708109700242F7A /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/Utilities.h; sourceTree = "<group>"; };
+		50AE0571270810B700242F7A /* QRCodeEncoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QRCodeEncoder.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeEncoder.cpp; sourceTree = "<group>"; };
+		50AE0572270810B700242F7A /* QRCodeDecoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QRCodeDecoder.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDecoder.cpp; sourceTree = "<group>"; };
+		50AE0574270810B700242F7A /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/Utilities.cpp; sourceTree = "<group>"; };
+		50AE0575270810B700242F7A /* FinderPatternDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FinderPatternDetector.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/FinderPatternDetector.cpp; sourceTree = "<group>"; };
+		50C73EBE2733976B004E80DA /* QRCodeDebugElements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCodeDebugElements.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDebugElements.h; sourceTree = "<group>"; };
+		50E610CA274DBB2F00DA6E6A /* TransitionDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TransitionDetector.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/TransitionDetector.h; sourceTree = "<group>"; };
+		50E610CF274DBB4600DA6E6A /* TransitionDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TransitionDetector.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/TransitionDetector.cpp; sourceTree = "<group>"; };
+		50ED88DB2811DBE00024E01F /* QRCodeDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCodeDetector.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDetector.h; sourceTree = "<group>"; };
+		50ED88E02811DC0A0024E01F /* QRCodeDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QRCodeDetector.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDetector.cpp; sourceTree = "<group>"; };
+		50F61DE527471EA4003833F2 /* AlignmentPatternDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlignmentPatternDetector.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/AlignmentPatternDetector.h; sourceTree = "<group>"; };
+		50F61DEA27471EBC003833F2 /* AlignmentPatternDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AlignmentPatternDetector.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/AlignmentPatternDetector.cpp; sourceTree = "<group>"; };
+		5D222C741BB18C2E00298788 /* libOceanCVDetectorQRCodesD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorQRCodesD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D98611B1D8B549400DEDB00 /* libOceanCVDetectorQRCodesD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorQRCodesD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DCE0D361BAABD17002E9E7D /* libOceanCVDetectorQRCodesD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorQRCodesD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C041EB1D1DABD7D800BF5D76 /* libOceanCVDetectorQRCodesD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorQRCodesD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D222C6A1BB18C2E00298788 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9861111D8B549400DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCE0D331BAABD17002E9E7D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB121DABD7D700BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D222C651BB18C1400298788 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				50F61DE527471EA4003833F2 /* AlignmentPatternDetector.h */,
+				50AE05502708109700242F7A /* FinderPatternDetector.h */,
+				507CAAF627B301E9006F5468 /* LegacyQRCodeDetector2D.h */,
+				50AE05532708109700242F7A /* QRCode.h */,
+				50C73EBE2733976B004E80DA /* QRCodeDebugElements.h */,
+				50AE054F2708109700242F7A /* QRCodeDecoder.h */,
+				50ED88DB2811DBE00024E01F /* QRCodeDetector.h */,
+				50AE05522708109700242F7A /* QRCodeDetector2D.h */,
+				5044442027B72BBF00B2E4B0 /* QRCodeDetector3D.h */,
+				50AE054E2708109700242F7A /* QRCodeEncoder.h */,
+				50AE05512708109700242F7A /* QRCodes.h */,
+				50E610CA274DBB2F00DA6E6A /* TransitionDetector.h */,
+				50AE05542708109700242F7A /* Utilities.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DCE0D2D1BAABD17002E9E7D = {
+			isa = PBXGroup;
+			children = (
+				5D222C651BB18C1400298788 /* Header Files */,
+				5DCE0D441BAABFC1002E9E7D /* Source Files */,
+				5DCE0D371BAABD17002E9E7D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DCE0D371BAABD17002E9E7D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DCE0D361BAABD17002E9E7D /* libOceanCVDetectorQRCodesD.a */,
+				5D222C741BB18C2E00298788 /* libOceanCVDetectorQRCodesD.dylib */,
+				5D98611B1D8B549400DEDB00 /* libOceanCVDetectorQRCodesD.a */,
+				C041EB1D1DABD7D800BF5D76 /* libOceanCVDetectorQRCodesD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DCE0D441BAABFC1002E9E7D /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				50F61DEA27471EBC003833F2 /* AlignmentPatternDetector.cpp */,
+				50AE0575270810B700242F7A /* FinderPatternDetector.cpp */,
+				507CAAFB27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp */,
+				50AE0572270810B700242F7A /* QRCodeDecoder.cpp */,
+				50ED88E02811DC0A0024E01F /* QRCodeDetector.cpp */,
+				507AFD5627B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp */,
+				5044442527B72BE300B2E4B0 /* QRCodeDetector3D.cpp */,
+				50AE0571270810B700242F7A /* QRCodeEncoder.cpp */,
+				50E610CF274DBB4600DA6E6A /* TransitionDetector.cpp */,
+				50AE0574270810B700242F7A /* Utilities.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D222C6B1BB18C2E00298788 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50AE056A2708109700242F7A /* QRCode.h in Headers */,
+				50ED88DD2811DBE00024E01F /* QRCodeDetector.h in Headers */,
+				50F61DE727471EA4003833F2 /* AlignmentPatternDetector.h in Headers */,
+				50AE056E2708109700242F7A /* Utilities.h in Headers */,
+				50E610CC274DBB2F00DA6E6A /* TransitionDetector.h in Headers */,
+				50AE05622708109700242F7A /* QRCodes.h in Headers */,
+				507CAAF827B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */,
+				50AE05562708109700242F7A /* QRCodeEncoder.h in Headers */,
+				50AE055E2708109700242F7A /* FinderPatternDetector.h in Headers */,
+				50C73EC02733976C004E80DA /* QRCodeDebugElements.h in Headers */,
+				50AE055A2708109700242F7A /* QRCodeDecoder.h in Headers */,
+				50AE05662708109700242F7A /* QRCodeDetector2D.h in Headers */,
+				5044442227B72BBF00B2E4B0 /* QRCodeDetector3D.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9861121D8B549400DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50AE056B2708109700242F7A /* QRCode.h in Headers */,
+				50ED88DE2811DBE00024E01F /* QRCodeDetector.h in Headers */,
+				50F61DE827471EA4003833F2 /* AlignmentPatternDetector.h in Headers */,
+				50AE056F2708109700242F7A /* Utilities.h in Headers */,
+				50E610CD274DBB2F00DA6E6A /* TransitionDetector.h in Headers */,
+				50AE05632708109700242F7A /* QRCodes.h in Headers */,
+				507CAAF927B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */,
+				50AE05572708109700242F7A /* QRCodeEncoder.h in Headers */,
+				50AE055F2708109700242F7A /* FinderPatternDetector.h in Headers */,
+				50C73EC12733976C004E80DA /* QRCodeDebugElements.h in Headers */,
+				50AE055B2708109700242F7A /* QRCodeDecoder.h in Headers */,
+				50AE05672708109700242F7A /* QRCodeDetector2D.h in Headers */,
+				5044442327B72BBF00B2E4B0 /* QRCodeDetector3D.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCE0D341BAABD17002E9E7D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50AE05692708109700242F7A /* QRCode.h in Headers */,
+				50ED88DC2811DBE00024E01F /* QRCodeDetector.h in Headers */,
+				50F61DE627471EA4003833F2 /* AlignmentPatternDetector.h in Headers */,
+				50AE056D2708109700242F7A /* Utilities.h in Headers */,
+				50E610CB274DBB2F00DA6E6A /* TransitionDetector.h in Headers */,
+				50AE05612708109700242F7A /* QRCodes.h in Headers */,
+				507CAAF727B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */,
+				50AE05552708109700242F7A /* QRCodeEncoder.h in Headers */,
+				50AE055D2708109700242F7A /* FinderPatternDetector.h in Headers */,
+				50C73EBF2733976C004E80DA /* QRCodeDebugElements.h in Headers */,
+				50AE05592708109700242F7A /* QRCodeDecoder.h in Headers */,
+				50AE05652708109700242F7A /* QRCodeDetector2D.h in Headers */,
+				5044442127B72BBF00B2E4B0 /* QRCodeDetector3D.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB131DABD7D700BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50AE056C2708109700242F7A /* QRCode.h in Headers */,
+				50ED88DF2811DBE00024E01F /* QRCodeDetector.h in Headers */,
+				50F61DE927471EA4003833F2 /* AlignmentPatternDetector.h in Headers */,
+				50AE05702708109700242F7A /* Utilities.h in Headers */,
+				50E610CE274DBB2F00DA6E6A /* TransitionDetector.h in Headers */,
+				50AE05642708109700242F7A /* QRCodes.h in Headers */,
+				507CAAFA27B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */,
+				50AE05582708109700242F7A /* QRCodeEncoder.h in Headers */,
+				50AE05602708109700242F7A /* FinderPatternDetector.h in Headers */,
+				50C73EC22733976C004E80DA /* QRCodeDebugElements.h in Headers */,
+				50AE055C2708109700242F7A /* QRCodeDecoder.h in Headers */,
+				50AE05682708109700242F7A /* QRCodeDetector2D.h in Headers */,
+				5044442427B72BBF00B2E4B0 /* QRCodeDetector3D.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D222C661BB18C2E00298788 /* cvdetectorqrcodes x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D222C711BB18C2E00298788 /* Build configuration list for PBXNativeTarget "cvdetectorqrcodes x64 (Shared)" */;
+			buildPhases = (
+				5D222C671BB18C2E00298788 /* Sources */,
+				5D222C6A1BB18C2E00298788 /* Frameworks */,
+				5D222C6B1BB18C2E00298788 /* Headers */,
+				C041EB1E1DABD89100BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvdetectorqrcodes x64 (Shared)";
+			productName = cvdetectorqrcodes;
+			productReference = 5D222C741BB18C2E00298788 /* libOceanCVDetectorQRCodesD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D98610D1D8B549400DEDB00 /* cvdetectorqrcodes arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9861181D8B549400DEDB00 /* Build configuration list for PBXNativeTarget "cvdetectorqrcodes arm64 (Static)" */;
+			buildPhases = (
+				5D98610E1D8B549400DEDB00 /* Sources */,
+				5D9861111D8B549400DEDB00 /* Frameworks */,
+				5D9861121D8B549400DEDB00 /* Headers */,
+				5D837F491D8F0F4B00939AD7 /* Run Script */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvdetectorqrcodes arm64 (Static)";
+			productName = cvdetectorqrcodes;
+			productReference = 5D98611B1D8B549400DEDB00 /* libOceanCVDetectorQRCodesD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DCE0D351BAABD17002E9E7D /* cvdetectorqrcodes x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DCE0D411BAABD17002E9E7D /* Build configuration list for PBXNativeTarget "cvdetectorqrcodes x64 (Static)" */;
+			buildPhases = (
+				5DCE0D321BAABD17002E9E7D /* Sources */,
+				5DCE0D331BAABD17002E9E7D /* Frameworks */,
+				5DCE0D341BAABD17002E9E7D /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvdetectorqrcodes x64 (Static)";
+			productName = cvdetectorqrcodes;
+			productReference = 5DCE0D361BAABD17002E9E7D /* libOceanCVDetectorQRCodesD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EB0E1DABD7D700BF5D76 /* cvdetectorqrcodes arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EB1A1DABD7D700BF5D76 /* Build configuration list for PBXNativeTarget "cvdetectorqrcodes arm64 (Shared)" */;
+			buildPhases = (
+				C041EB0F1DABD7D700BF5D76 /* Sources */,
+				C041EB121DABD7D700BF5D76 /* Frameworks */,
+				C041EB131DABD7D700BF5D76 /* Headers */,
+				C041EB191DABD7D700BF5D76 /* Run Script */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvdetectorqrcodes arm64 (Shared)";
+			productName = cvdetectorqrcodes;
+			productReference = C041EB1D1DABD7D800BF5D76 /* libOceanCVDetectorQRCodesD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DCE0D2E1BAABD17002E9E7D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DCE0D351BAABD17002E9E7D = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DCE0D311BAABD17002E9E7D /* Build configuration list for PBXProject "cvdetectorqrcodes" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DCE0D2D1BAABD17002E9E7D;
+			productRefGroup = 5DCE0D371BAABD17002E9E7D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DCE0D351BAABD17002E9E7D /* cvdetectorqrcodes x64 (Static) */,
+				5D222C661BB18C2E00298788 /* cvdetectorqrcodes x64 (Shared) */,
+				5D98610D1D8B549400DEDB00 /* cvdetectorqrcodes arm64 (Static) */,
+				C041EB0E1DABD7D700BF5D76 /* cvdetectorqrcodes arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F491D8F0F4B00939AD7 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../copy_arm_static.sh \"../../../../../../../bin/lib/\"";
+		};
+		C041EB191DABD7D700BF5D76 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../codesign.sh\n../../../../copy_arm_shared.sh \"../../../../../../../bin/lib/\"";
+		};
+		C041EB1E1DABD89100BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D222C671BB18C2E00298788 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5044442727B72BE300B2E4B0 /* QRCodeDetector3D.cpp in Sources */,
+				50AE0583270810B700242F7A /* Utilities.cpp in Sources */,
+				50F61DEC27471EBC003833F2 /* AlignmentPatternDetector.cpp in Sources */,
+				50AE057B270810B700242F7A /* QRCodeDecoder.cpp in Sources */,
+				507AFD5827B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp in Sources */,
+				50AE0587270810B700242F7A /* FinderPatternDetector.cpp in Sources */,
+				50E610D1274DBB4600DA6E6A /* TransitionDetector.cpp in Sources */,
+				50AE0577270810B700242F7A /* QRCodeEncoder.cpp in Sources */,
+				507CAAFD27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */,
+				50ED88E22811DC0A0024E01F /* QRCodeDetector.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98610E1D8B549400DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5044442827B72BE300B2E4B0 /* QRCodeDetector3D.cpp in Sources */,
+				50AE0584270810B700242F7A /* Utilities.cpp in Sources */,
+				50F61DED27471EBC003833F2 /* AlignmentPatternDetector.cpp in Sources */,
+				50AE057C270810B700242F7A /* QRCodeDecoder.cpp in Sources */,
+				507AFD5927B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp in Sources */,
+				50AE0588270810B700242F7A /* FinderPatternDetector.cpp in Sources */,
+				50E610D2274DBB4600DA6E6A /* TransitionDetector.cpp in Sources */,
+				50AE0578270810B700242F7A /* QRCodeEncoder.cpp in Sources */,
+				507CAAFE27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */,
+				50ED88E32811DC0A0024E01F /* QRCodeDetector.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCE0D321BAABD17002E9E7D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5044442627B72BE300B2E4B0 /* QRCodeDetector3D.cpp in Sources */,
+				50AE0582270810B700242F7A /* Utilities.cpp in Sources */,
+				50F61DEB27471EBC003833F2 /* AlignmentPatternDetector.cpp in Sources */,
+				50AE057A270810B700242F7A /* QRCodeDecoder.cpp in Sources */,
+				507AFD5727B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp in Sources */,
+				50AE0586270810B700242F7A /* FinderPatternDetector.cpp in Sources */,
+				50E610D0274DBB4600DA6E6A /* TransitionDetector.cpp in Sources */,
+				50AE0576270810B700242F7A /* QRCodeEncoder.cpp in Sources */,
+				507CAAFC27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */,
+				50ED88E12811DC0A0024E01F /* QRCodeDetector.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB0F1DABD7D700BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5044442927B72BE300B2E4B0 /* QRCodeDetector3D.cpp in Sources */,
+				50AE0585270810B700242F7A /* Utilities.cpp in Sources */,
+				50F61DEE27471EBC003833F2 /* AlignmentPatternDetector.cpp in Sources */,
+				50AE057D270810B700242F7A /* QRCodeDecoder.cpp in Sources */,
+				507AFD5A27B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp in Sources */,
+				50AE0589270810B700242F7A /* FinderPatternDetector.cpp in Sources */,
+				50E610D3274DBB4600DA6E6A /* TransitionDetector.cpp in Sources */,
+				50AE0579270810B700242F7A /* QRCodeEncoder.cpp in Sources */,
+				507CAAFF27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */,
+				50ED88E42811DC0A0024E01F /* QRCodeDetector.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D222C721BB18C2E00298788 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/osx_x64_xc9_shared_debug;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanCVDetectorQRCodesD;
+				PRODUCT_NAME = OceanCVDetectorQRCodesD;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D222C731BB18C2E00298788 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanGeometry",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanCVDetectorQRCodes;
+				PRODUCT_NAME = OceanCVDetectorQRCodes;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D9861191D8B549400DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVDetectorQRCodesD;
+				PRODUCT_NAME = OceanCVDetectorQRCodesD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D98611A1D8B549400DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVDetectorQRCodes;
+				PRODUCT_NAME = OceanCVDetectorQRCodes;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DCE0D3F1BAABD17002E9E7D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DCE0D401BAABD17002E9E7D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DCE0D421BAABD17002E9E7D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/osx_x64_xc9_static_debug;
+				PRODUCT_MODULE_NAME = OceanCVDetectorQRCodesD;
+				PRODUCT_NAME = OceanCVDetectorQRCodesD;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DCE0D431BAABD17002E9E7D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVDetectorQRCodes;
+				PRODUCT_NAME = OceanCVDetectorQRCodes;
+				SYMROOT = ../../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EB1B1DABD7D700BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanCVDetectorQRCodesD;
+				PRODUCT_NAME = OceanCVDetectorQRCodesD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EB1C1DABD7D700BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanGeometry",
+					"-lOceanMath",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanCVDetectorQRCodes;
+				PRODUCT_NAME = OceanCVDetectorQRCodes;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/cvdetectorqrcodes/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D222C711BB18C2E00298788 /* Build configuration list for PBXNativeTarget "cvdetectorqrcodes x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D222C721BB18C2E00298788 /* Debug */,
+				5D222C731BB18C2E00298788 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9861181D8B549400DEDB00 /* Build configuration list for PBXNativeTarget "cvdetectorqrcodes arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9861191D8B549400DEDB00 /* Debug */,
+				5D98611A1D8B549400DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DCE0D311BAABD17002E9E7D /* Build configuration list for PBXProject "cvdetectorqrcodes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCE0D3F1BAABD17002E9E7D /* Debug */,
+				5DCE0D401BAABD17002E9E7D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DCE0D411BAABD17002E9E7D /* Build configuration list for PBXNativeTarget "cvdetectorqrcodes x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCE0D421BAABD17002E9E7D /* Debug */,
+				5DCE0D431BAABD17002E9E7D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EB1A1DABD7D700BF5D76 /* Build configuration list for PBXNativeTarget "cvdetectorqrcodes arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EB1B1DABD7D700BF5D76 /* Debug */,
+				C041EB1C1DABD7D700BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DCE0D2E1BAABD17002E9E7D /* Project object */;
+}

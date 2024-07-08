@@ -1,0 +1,1077 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9EC7DC352AFD4FE800F1775B /* FFMLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC302AFD4FE800F1775B /* FFMLibrary.h */; };
+		9EC7DC362AFD4FE800F1775B /* FFMLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC302AFD4FE800F1775B /* FFMLibrary.h */; };
+		9EC7DC372AFD4FE800F1775B /* FFMLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC302AFD4FE800F1775B /* FFMLibrary.h */; };
+		9EC7DC382AFD4FE800F1775B /* FFMLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC302AFD4FE800F1775B /* FFMLibrary.h */; };
+		9EC7DC392AFD4FE800F1775B /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC312AFD4FE800F1775B /* Plugin.h */; };
+		9EC7DC3A2AFD4FE800F1775B /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC312AFD4FE800F1775B /* Plugin.h */; };
+		9EC7DC3B2AFD4FE800F1775B /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC312AFD4FE800F1775B /* Plugin.h */; };
+		9EC7DC3C2AFD4FE800F1775B /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC312AFD4FE800F1775B /* Plugin.h */; };
+		9EC7DC3D2AFD4FE800F1775B /* FFMMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC322AFD4FE800F1775B /* FFMMedium.h */; };
+		9EC7DC3E2AFD4FE800F1775B /* FFMMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC322AFD4FE800F1775B /* FFMMedium.h */; };
+		9EC7DC3F2AFD4FE800F1775B /* FFMMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC322AFD4FE800F1775B /* FFMMedium.h */; };
+		9EC7DC402AFD4FE800F1775B /* FFMMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC322AFD4FE800F1775B /* FFMMedium.h */; };
+		9EC7DC412AFD4FE800F1775B /* FFMMovie.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC332AFD4FE800F1775B /* FFMMovie.h */; };
+		9EC7DC422AFD4FE800F1775B /* FFMMovie.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC332AFD4FE800F1775B /* FFMMovie.h */; };
+		9EC7DC432AFD4FE800F1775B /* FFMMovie.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC332AFD4FE800F1775B /* FFMMovie.h */; };
+		9EC7DC442AFD4FE800F1775B /* FFMMovie.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC332AFD4FE800F1775B /* FFMMovie.h */; };
+		9EC7DC452AFD4FE800F1775B /* FFmpeg.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC342AFD4FE800F1775B /* FFmpeg.h */; };
+		9EC7DC462AFD4FE800F1775B /* FFmpeg.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC342AFD4FE800F1775B /* FFmpeg.h */; };
+		9EC7DC472AFD4FE800F1775B /* FFmpeg.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC342AFD4FE800F1775B /* FFmpeg.h */; };
+		9EC7DC482AFD4FE800F1775B /* FFmpeg.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC342AFD4FE800F1775B /* FFmpeg.h */; };
+		9EC7DC4E2AFD502000F1775B /* FFMMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC492AFD501F00F1775B /* FFMMedium.cpp */; };
+		9EC7DC4F2AFD502000F1775B /* FFMMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC492AFD501F00F1775B /* FFMMedium.cpp */; };
+		9EC7DC502AFD502000F1775B /* FFMMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC492AFD501F00F1775B /* FFMMedium.cpp */; };
+		9EC7DC512AFD502000F1775B /* FFMMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC492AFD501F00F1775B /* FFMMedium.cpp */; };
+		9EC7DC522AFD502000F1775B /* FFMMovie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4A2AFD501F00F1775B /* FFMMovie.cpp */; };
+		9EC7DC532AFD502000F1775B /* FFMMovie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4A2AFD501F00F1775B /* FFMMovie.cpp */; };
+		9EC7DC542AFD502000F1775B /* FFMMovie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4A2AFD501F00F1775B /* FFMMovie.cpp */; };
+		9EC7DC552AFD502000F1775B /* FFMMovie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4A2AFD501F00F1775B /* FFMMovie.cpp */; };
+		9EC7DC562AFD502000F1775B /* FFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4B2AFD502000F1775B /* FFmpeg.cpp */; };
+		9EC7DC572AFD502000F1775B /* FFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4B2AFD502000F1775B /* FFmpeg.cpp */; };
+		9EC7DC582AFD502000F1775B /* FFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4B2AFD502000F1775B /* FFmpeg.cpp */; };
+		9EC7DC592AFD502000F1775B /* FFmpeg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4B2AFD502000F1775B /* FFmpeg.cpp */; };
+		9EC7DC5A2AFD502000F1775B /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4C2AFD502000F1775B /* Plugin.cpp */; };
+		9EC7DC5B2AFD502000F1775B /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4C2AFD502000F1775B /* Plugin.cpp */; };
+		9EC7DC5C2AFD502000F1775B /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4C2AFD502000F1775B /* Plugin.cpp */; };
+		9EC7DC5D2AFD502000F1775B /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4C2AFD502000F1775B /* Plugin.cpp */; };
+		9EC7DC5E2AFD502000F1775B /* FFMLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4D2AFD502000F1775B /* FFMLibrary.cpp */; };
+		9EC7DC5F2AFD502000F1775B /* FFMLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4D2AFD502000F1775B /* FFMLibrary.cpp */; };
+		9EC7DC602AFD502000F1775B /* FFMLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4D2AFD502000F1775B /* FFMLibrary.cpp */; };
+		9EC7DC612AFD502000F1775B /* FFMLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC4D2AFD502000F1775B /* FFMLibrary.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D0A01B51BC2D2ED0008C798 /* OceanMediaFFmpegD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanMediaFFmpegD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D63F5A71B9760C100E2498E /* libOceanMediaFFmpegD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMediaFFmpegD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9862CE1D8B5C2400DEDB00 /* libOceanMediaFFmpegD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMediaFFmpegD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EC7DC302AFD4FE800F1775B /* FFMLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFMLibrary.h; path = ../../../../../../impl/ocean/media/ffmpeg/FFMLibrary.h; sourceTree = "<group>"; };
+		9EC7DC312AFD4FE800F1775B /* Plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plugin.h; path = ../../../../../../impl/ocean/media/ffmpeg/Plugin.h; sourceTree = "<group>"; };
+		9EC7DC322AFD4FE800F1775B /* FFMMedium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFMMedium.h; path = ../../../../../../impl/ocean/media/ffmpeg/FFMMedium.h; sourceTree = "<group>"; };
+		9EC7DC332AFD4FE800F1775B /* FFMMovie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFMMovie.h; path = ../../../../../../impl/ocean/media/ffmpeg/FFMMovie.h; sourceTree = "<group>"; };
+		9EC7DC342AFD4FE800F1775B /* FFmpeg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFmpeg.h; path = ../../../../../../impl/ocean/media/ffmpeg/FFmpeg.h; sourceTree = "<group>"; };
+		9EC7DC492AFD501F00F1775B /* FFMMedium.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FFMMedium.cpp; path = ../../../../../../impl/ocean/media/ffmpeg/FFMMedium.cpp; sourceTree = "<group>"; };
+		9EC7DC4A2AFD501F00F1775B /* FFMMovie.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FFMMovie.cpp; path = ../../../../../../impl/ocean/media/ffmpeg/FFMMovie.cpp; sourceTree = "<group>"; };
+		9EC7DC4B2AFD502000F1775B /* FFmpeg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FFmpeg.cpp; path = ../../../../../../impl/ocean/media/ffmpeg/FFmpeg.cpp; sourceTree = "<group>"; };
+		9EC7DC4C2AFD502000F1775B /* Plugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plugin.cpp; path = ../../../../../../impl/ocean/media/ffmpeg/Plugin.cpp; sourceTree = "<group>"; };
+		9EC7DC4D2AFD502000F1775B /* FFMLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FFMLibrary.cpp; path = ../../../../../../impl/ocean/media/ffmpeg/FFMLibrary.cpp; sourceTree = "<group>"; };
+		9EC7DC622AFD55D500F1775B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../res/ocean/media/ffmpeg/osx/Info.plist; sourceTree = "<group>"; };
+		C041EC7A1DABEC6C00BF5D76 /* OceanMediaFFmpegD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanMediaFFmpegD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D0A01A61BC2D2ED0008C798 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5A41B9760C100E2498E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862C21D8B5C2400DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC6B1DABEC6C00BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D0A01851BC2D2A00008C798 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				9EC7DC302AFD4FE800F1775B /* FFMLibrary.h */,
+				9EC7DC322AFD4FE800F1775B /* FFMMedium.h */,
+				9EC7DC332AFD4FE800F1775B /* FFMMovie.h */,
+				9EC7DC342AFD4FE800F1775B /* FFmpeg.h */,
+				9EC7DC312AFD4FE800F1775B /* Plugin.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5D63F59E1B9760C100E2498E = {
+			isa = PBXGroup;
+			children = (
+				5D0A01851BC2D2A00008C798 /* Header Files */,
+				5D63F5A81B9760C100E2498E /* Products */,
+				5DD0C0A11BD5631700ABBC5B /* Resource Files */,
+				5D63F5B51B97611400E2498E /* Source Files */,
+			);
+			sourceTree = "<group>";
+		};
+		5D63F5A81B9760C100E2498E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D63F5A71B9760C100E2498E /* libOceanMediaFFmpegD.a */,
+				5D0A01B51BC2D2ED0008C798 /* OceanMediaFFmpegD.plugin */,
+				5D9862CE1D8B5C2400DEDB00 /* libOceanMediaFFmpegD.a */,
+				C041EC7A1DABEC6C00BF5D76 /* OceanMediaFFmpegD.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D63F5B51B97611400E2498E /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				9EC7DC4D2AFD502000F1775B /* FFMLibrary.cpp */,
+				9EC7DC492AFD501F00F1775B /* FFMMedium.cpp */,
+				9EC7DC4A2AFD501F00F1775B /* FFMMovie.cpp */,
+				9EC7DC4B2AFD502000F1775B /* FFmpeg.cpp */,
+				9EC7DC4C2AFD502000F1775B /* Plugin.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DD0C0A11BD5631700ABBC5B /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				9EC7DC622AFD55D500F1775B /* Info.plist */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D0A01A71BC2D2ED0008C798 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EC7DC362AFD4FE800F1775B /* FFMLibrary.h in Headers */,
+				9EC7DC462AFD4FE800F1775B /* FFmpeg.h in Headers */,
+				9EC7DC422AFD4FE800F1775B /* FFMMovie.h in Headers */,
+				9EC7DC3A2AFD4FE800F1775B /* Plugin.h in Headers */,
+				9EC7DC3E2AFD4FE800F1775B /* FFMMedium.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5A51B9760C100E2498E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EC7DC352AFD4FE800F1775B /* FFMLibrary.h in Headers */,
+				9EC7DC452AFD4FE800F1775B /* FFmpeg.h in Headers */,
+				9EC7DC412AFD4FE800F1775B /* FFMMovie.h in Headers */,
+				9EC7DC392AFD4FE800F1775B /* Plugin.h in Headers */,
+				9EC7DC3D2AFD4FE800F1775B /* FFMMedium.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862C31D8B5C2400DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EC7DC372AFD4FE800F1775B /* FFMLibrary.h in Headers */,
+				9EC7DC472AFD4FE800F1775B /* FFmpeg.h in Headers */,
+				9EC7DC432AFD4FE800F1775B /* FFMMovie.h in Headers */,
+				9EC7DC3B2AFD4FE800F1775B /* Plugin.h in Headers */,
+				9EC7DC3F2AFD4FE800F1775B /* FFMMedium.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC6C1DABEC6C00BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EC7DC382AFD4FE800F1775B /* FFMLibrary.h in Headers */,
+				9EC7DC482AFD4FE800F1775B /* FFmpeg.h in Headers */,
+				9EC7DC442AFD4FE800F1775B /* FFMMovie.h in Headers */,
+				9EC7DC3C2AFD4FE800F1775B /* Plugin.h in Headers */,
+				9EC7DC402AFD4FE800F1775B /* FFMMedium.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D0A019A1BC2D2ED0008C798 /* mediaffmpeg x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D0A01B21BC2D2ED0008C798 /* Build configuration list for PBXNativeTarget "mediaffmpeg x64 (Shared)" */;
+			buildPhases = (
+				5D0A019B1BC2D2ED0008C798 /* Sources */,
+				5D0A01A61BC2D2ED0008C798 /* Frameworks */,
+				5D0A01A71BC2D2ED0008C798 /* Headers */,
+				5DD0C0A51BD5665E00ABBC5B /* Resources */,
+				5DD0C0C11BD6A48D00ABBC5B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaffmpeg x64 (Shared)";
+			productName = mediaffmpeg;
+			productReference = 5D0A01B51BC2D2ED0008C798 /* OceanMediaFFmpegD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+		5D63F5A61B9760C100E2498E /* mediaffmpeg x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D63F5B21B9760C100E2498E /* Build configuration list for PBXNativeTarget "mediaffmpeg x64 (Static)" */;
+			buildPhases = (
+				5D63F5A31B9760C100E2498E /* Sources */,
+				5D63F5A41B9760C100E2498E /* Frameworks */,
+				5D63F5A51B9760C100E2498E /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaffmpeg x64 (Static)";
+			productName = mediaffmpeg;
+			productReference = 5D63F5A71B9760C100E2498E /* libOceanMediaFFmpegD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9862B91D8B5C2400DEDB00 /* mediaffmpeg arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9862CB1D8B5C2400DEDB00 /* Build configuration list for PBXNativeTarget "mediaffmpeg arm64 (Static)" */;
+			buildPhases = (
+				5D9862BA1D8B5C2400DEDB00 /* Sources */,
+				5D9862C21D8B5C2400DEDB00 /* Frameworks */,
+				5D9862C31D8B5C2400DEDB00 /* Headers */,
+				5D837F521D8F102D00939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaffmpeg arm64 (Static)";
+			productName = mediaffmpeg;
+			productReference = 5D9862CE1D8B5C2400DEDB00 /* libOceanMediaFFmpegD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EC611DABEC6C00BF5D76 /* mediaffmpeg arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EC771DABEC6C00BF5D76 /* Build configuration list for PBXNativeTarget "mediaffmpeg arm64 (Shared)" */;
+			buildPhases = (
+				C041EC621DABEC6C00BF5D76 /* Sources */,
+				C041EC6B1DABEC6C00BF5D76 /* Frameworks */,
+				C041EC6C1DABEC6C00BF5D76 /* Headers */,
+				C041EC751DABEC6C00BF5D76 /* Resources */,
+				C041EC761DABEC6C00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaffmpeg arm64 (Shared)";
+			productName = mediaffmpeg;
+			productReference = C041EC7A1DABEC6C00BF5D76 /* OceanMediaFFmpegD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D63F59F1B9760C100E2498E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D63F5A61B9760C100E2498E = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D63F5A21B9760C100E2498E /* Build configuration list for PBXProject "mediaffmpeg" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D63F59E1B9760C100E2498E;
+			productRefGroup = 5D63F5A81B9760C100E2498E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D63F5A61B9760C100E2498E /* mediaffmpeg x64 (Static) */,
+				5D0A019A1BC2D2ED0008C798 /* mediaffmpeg x64 (Shared) */,
+				5D9862B91D8B5C2400DEDB00 /* mediaffmpeg arm64 (Static) */,
+				C041EC611DABEC6C00BF5D76 /* mediaffmpeg arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5DD0C0A51BD5665E00ABBC5B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC751DABEC6C00BF5D76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F521D8F102D00939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		5DD0C0C11BD6A48D00ABBC5B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+		C041EC761DABEC6C00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D0A019B1BC2D2ED0008C798 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EC7DC572AFD502000F1775B /* FFmpeg.cpp in Sources */,
+				9EC7DC532AFD502000F1775B /* FFMMovie.cpp in Sources */,
+				9EC7DC5B2AFD502000F1775B /* Plugin.cpp in Sources */,
+				9EC7DC5F2AFD502000F1775B /* FFMLibrary.cpp in Sources */,
+				9EC7DC4F2AFD502000F1775B /* FFMMedium.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5A31B9760C100E2498E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EC7DC562AFD502000F1775B /* FFmpeg.cpp in Sources */,
+				9EC7DC522AFD502000F1775B /* FFMMovie.cpp in Sources */,
+				9EC7DC5A2AFD502000F1775B /* Plugin.cpp in Sources */,
+				9EC7DC5E2AFD502000F1775B /* FFMLibrary.cpp in Sources */,
+				9EC7DC4E2AFD502000F1775B /* FFMMedium.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862BA1D8B5C2400DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EC7DC582AFD502000F1775B /* FFmpeg.cpp in Sources */,
+				9EC7DC542AFD502000F1775B /* FFMMovie.cpp in Sources */,
+				9EC7DC5C2AFD502000F1775B /* Plugin.cpp in Sources */,
+				9EC7DC602AFD502000F1775B /* FFMLibrary.cpp in Sources */,
+				9EC7DC502AFD502000F1775B /* FFMMedium.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC621DABEC6C00BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EC7DC592AFD502000F1775B /* FFmpeg.cpp in Sources */,
+				9EC7DC552AFD502000F1775B /* FFMMovie.cpp in Sources */,
+				9EC7DC5D2AFD502000F1775B /* Plugin.cpp in Sources */,
+				9EC7DC612AFD502000F1775B /* FFMLibrary.cpp in Sources */,
+				9EC7DC512AFD502000F1775B /* FFMMedium.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D0A01B31BC2D2ED0008C798 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaffmpeg/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					"../../../../../../../../../../arvr/third-party/ffmpeg/ffmpeg",
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/ffmpeg/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaffmpeg/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanPlatformAppleD",
+					"-lOceanSystemD",
+					"-lavformat",
+				);
+				PRODUCT_MODULE_NAME = OceanMediaFFmpegD;
+				PRODUCT_NAME = OceanMediaFFmpegD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		5D0A01B41BC2D2ED0008C798 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaffmpeg/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					"../../../../../../../../../../arvr/third-party/ffmpeg/ffmpeg",
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/ffmpeg/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaffmpeg/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanIO",
+					"-lOceanMedia",
+					"-lOceanSystem",
+					"-lavformat",
+				);
+				PRODUCT_MODULE_NAME = OceanMediaFFmpeg;
+				PRODUCT_NAME = OceanMediaFFmpeg;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		5D63F5B01B9760C100E2498E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D63F5B11B9760C100E2498E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D63F5B31B9760C100E2498E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaffmpeg/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/ffmpeg/5.1.3/impl,
+					../../../../../../3rdparty/ffmpeg/5.1.3/h/osx_x64_static,
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaffmpeg/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaFFmpegD;
+				PRODUCT_NAME = OceanMediaFFmpegD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D63F5B41B9760C100E2498E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaffmpeg/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/ffmpeg/5.1.3/impl,
+					../../../../../../3rdparty/ffmpeg/5.1.3/h/osx_x64_static,
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaffmpeg/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaFFmpeg;
+				PRODUCT_NAME = OceanMediaFFmpeg;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D9862CC1D8B5C2400DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					"../../../../../../../../../../arvr/third-party/ffmpeg/ffmpeg",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaFFmpegD;
+				PRODUCT_NAME = OceanMediaFFmpegD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D9862CD1D8B5C2400DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					"../../../../../../../../../../arvr/third-party/ffmpeg/ffmpeg",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaFFmpeg;
+				PRODUCT_NAME = OceanMediaFFmpeg;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EC781DABEC6C00BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					"../../../../../../../../../../arvr/third-party/ffmpeg/ffmpeg",
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/ffmpeg/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanIOD",
+					"-lOceanMediaD",
+					"-lOceanSystemD",
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					Foundation,
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanMediaFFmpegD;
+				PRODUCT_NAME = OceanMediaFFmpegD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		C041EC791DABEC6C00BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					"../../../../../../../../../../arvr/third-party/ffmpeg/ffmpeg",
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/ffmpeg/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanIO",
+					"-lOceanMedia",
+					"-lOceanSystem",
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					Foundation,
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanMediaFFmpeg;
+				PRODUCT_NAME = OceanMediaFFmpeg;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaffmpeg/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D0A01B21BC2D2ED0008C798 /* Build configuration list for PBXNativeTarget "mediaffmpeg x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D0A01B31BC2D2ED0008C798 /* Debug */,
+				5D0A01B41BC2D2ED0008C798 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D63F5A21B9760C100E2498E /* Build configuration list for PBXProject "mediaffmpeg" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D63F5B01B9760C100E2498E /* Debug */,
+				5D63F5B11B9760C100E2498E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D63F5B21B9760C100E2498E /* Build configuration list for PBXNativeTarget "mediaffmpeg x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D63F5B31B9760C100E2498E /* Debug */,
+				5D63F5B41B9760C100E2498E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9862CB1D8B5C2400DEDB00 /* Build configuration list for PBXNativeTarget "mediaffmpeg arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9862CC1D8B5C2400DEDB00 /* Debug */,
+				5D9862CD1D8B5C2400DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EC771DABEC6C00BF5D76 /* Build configuration list for PBXNativeTarget "mediaffmpeg arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EC781DABEC6C00BF5D76 /* Debug */,
+				C041EC791DABEC6C00BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D63F59F1B9760C100E2498E /* Project object */;
+}

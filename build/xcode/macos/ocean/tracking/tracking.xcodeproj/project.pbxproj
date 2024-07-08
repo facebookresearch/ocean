@@ -1,0 +1,1254 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D936EDF1BC6A5DE0046ACD4 /* Solver3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C61BAAF64800E9F349 /* Solver3.cpp */; };
+		5D936EE01BC6A5DE0046ACD4 /* PlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C21BAAF64800E9F349 /* PlaneFinder.cpp */; };
+		5D936EE11BC6A5DE0046ACD4 /* PointCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C31BAAF64800E9F349 /* PointCorrespondences.cpp */; };
+		5D936EE21BC6A5DE0046ACD4 /* SphericalEnvironment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C71BAAF64800E9F349 /* SphericalEnvironment.cpp */; };
+		5D936EE31BC6A5DE0046ACD4 /* VisualTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886CB1BAAF64800E9F349 /* VisualTracker.cpp */; };
+		5D936EE41BC6A5DE0046ACD4 /* HomographyPlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886BF1BAAF64800E9F349 /* HomographyPlaneFinder.cpp */; };
+		5D936EE61BC6A5DE0046ACD4 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886CA1BAAF64800E9F349 /* Utilities.cpp */; };
+		5D936EE81BC6A5DE0046ACD4 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886BD1BAAF64800E9F349 /* Database.cpp */; };
+		5D936EEA1BC6A5DE0046ACD4 /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C81BAAF64800E9F349 /* Tracker.cpp */; };
+		5D936EEB1BC6A5DE0046ACD4 /* MotionModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C01BAAF64800E9F349 /* MotionModel.cpp */; };
+		5D936EEC1BC6A5DE0046ACD4 /* MultiViewPlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C11BAAF64800E9F349 /* MultiViewPlaneFinder.cpp */; };
+		5D936EED1BC6A5DE0046ACD4 /* PoseProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C41BAAF64800E9F349 /* PoseProjection.cpp */; };
+		5D936EF01BC6A5DE0046ACD4 /* CorrespondenceSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF8869D1BAAF63400E9F349 /* CorrespondenceSet.h */; };
+		5D936EF21BC6A5DE0046ACD4 /* MotionModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A11BAAF63400E9F349 /* MotionModel.h */; };
+		5D936EF31BC6A5DE0046ACD4 /* PointCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A41BAAF63400E9F349 /* PointCorrespondences.h */; };
+		5D936EF41BC6A5DE0046ACD4 /* SphericalEnvironment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A81BAAF63400E9F349 /* SphericalEnvironment.h */; };
+		5D936EF51BC6A5DE0046ACD4 /* VisualTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AC1BAAF63400E9F349 /* VisualTracker.h */; };
+		5D936EF61BC6A5DE0046ACD4 /* Solver3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A71BAAF63400E9F349 /* Solver3.h */; };
+		5D936EF71BC6A5DE0046ACD4 /* Tracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A91BAAF63400E9F349 /* Tracker.h */; };
+		5D936EF81BC6A5DE0046ACD4 /* PlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A31BAAF63400E9F349 /* PlaneFinder.h */; };
+		5D936EF91BC6A5DE0046ACD4 /* Database.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF8869E1BAAF63400E9F349 /* Database.h */; };
+		5D936EFA1BC6A5DE0046ACD4 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AB1BAAF63400E9F349 /* Utilities.h */; };
+		5D936EFB1BC6A5DE0046ACD4 /* PoseProjection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A51BAAF63400E9F349 /* PoseProjection.h */; };
+		5D936EFC1BC6A5DE0046ACD4 /* MultiViewPlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A21BAAF63400E9F349 /* MultiViewPlaneFinder.h */; };
+		5D936EFD1BC6A5DE0046ACD4 /* Tracking.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AA1BAAF63400E9F349 /* Tracking.h */; };
+		5D936EFF1BC6A5DE0046ACD4 /* HomographyPlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A01BAAF63400E9F349 /* HomographyPlaneFinder.h */; };
+		5D9863F01D8B628E00DEDB00 /* Solver3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C61BAAF64800E9F349 /* Solver3.cpp */; };
+		5D9863F11D8B628E00DEDB00 /* PlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C21BAAF64800E9F349 /* PlaneFinder.cpp */; };
+		5D9863F21D8B628E00DEDB00 /* PointCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C31BAAF64800E9F349 /* PointCorrespondences.cpp */; };
+		5D9863F31D8B628E00DEDB00 /* HomographyImageAlignmentDense.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC2BD11D3F828A00032841 /* HomographyImageAlignmentDense.cpp */; };
+		5D9863F41D8B628E00DEDB00 /* SphericalEnvironment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C71BAAF64800E9F349 /* SphericalEnvironment.cpp */; };
+		5D9863F51D8B628E00DEDB00 /* VisualTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886CB1BAAF64800E9F349 /* VisualTracker.cpp */; };
+		5D9863F61D8B628E00DEDB00 /* HomographyPlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886BF1BAAF64800E9F349 /* HomographyPlaneFinder.cpp */; };
+		5D9863F81D8B628E00DEDB00 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886CA1BAAF64800E9F349 /* Utilities.cpp */; };
+		5D9863FA1D8B628E00DEDB00 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886BD1BAAF64800E9F349 /* Database.cpp */; };
+		5D9863FC1D8B628E00DEDB00 /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C81BAAF64800E9F349 /* Tracker.cpp */; };
+		5D9863FD1D8B628E00DEDB00 /* MotionModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C01BAAF64800E9F349 /* MotionModel.cpp */; };
+		5D9863FE1D8B628E00DEDB00 /* MultiViewPlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C11BAAF64800E9F349 /* MultiViewPlaneFinder.cpp */; };
+		5D9863FF1D8B628E00DEDB00 /* PoseProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C41BAAF64800E9F349 /* PoseProjection.cpp */; };
+		5D9864001D8B628E00DEDB00 /* HomographyImageAlignmentSparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD2BA251D61B9E20062D5BF /* HomographyImageAlignmentSparse.cpp */; };
+		5D9864031D8B628E00DEDB00 /* CorrespondenceSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF8869D1BAAF63400E9F349 /* CorrespondenceSet.h */; };
+		5D9864051D8B628E00DEDB00 /* HomographyImageAlignmentSparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD2BA221D61B9D30062D5BF /* HomographyImageAlignmentSparse.h */; };
+		5D9864061D8B628E00DEDB00 /* MotionModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A11BAAF63400E9F349 /* MotionModel.h */; };
+		5D9864071D8B628E00DEDB00 /* PointCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A41BAAF63400E9F349 /* PointCorrespondences.h */; };
+		5D9864081D8B628E00DEDB00 /* SphericalEnvironment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A81BAAF63400E9F349 /* SphericalEnvironment.h */; };
+		5D9864091D8B628E00DEDB00 /* VisualTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AC1BAAF63400E9F349 /* VisualTracker.h */; };
+		5D98640A1D8B628E00DEDB00 /* Solver3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A71BAAF63400E9F349 /* Solver3.h */; };
+		5D98640B1D8B628E00DEDB00 /* Tracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A91BAAF63400E9F349 /* Tracker.h */; };
+		5D98640C1D8B628E00DEDB00 /* PlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A31BAAF63400E9F349 /* PlaneFinder.h */; };
+		5D98640D1D8B628E00DEDB00 /* Database.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF8869E1BAAF63400E9F349 /* Database.h */; };
+		5D98640E1D8B628E00DEDB00 /* HomographyImageAlignmentDense.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCC2BD41D3F82A500032841 /* HomographyImageAlignmentDense.h */; };
+		5D98640F1D8B628E00DEDB00 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AB1BAAF63400E9F349 /* Utilities.h */; };
+		5D9864101D8B628E00DEDB00 /* PoseProjection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A51BAAF63400E9F349 /* PoseProjection.h */; };
+		5D9864111D8B628E00DEDB00 /* MultiViewPlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A21BAAF63400E9F349 /* MultiViewPlaneFinder.h */; };
+		5D9864121D8B628E00DEDB00 /* Tracking.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AA1BAAF63400E9F349 /* Tracking.h */; };
+		5D9864141D8B628E00DEDB00 /* HomographyPlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A01BAAF63400E9F349 /* HomographyPlaneFinder.h */; };
+		5DCC2BD21D3F828A00032841 /* HomographyImageAlignmentDense.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC2BD11D3F828A00032841 /* HomographyImageAlignmentDense.cpp */; };
+		5DCC2BD31D3F828A00032841 /* HomographyImageAlignmentDense.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC2BD11D3F828A00032841 /* HomographyImageAlignmentDense.cpp */; };
+		5DCC2BD51D3F82A500032841 /* HomographyImageAlignmentDense.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCC2BD41D3F82A500032841 /* HomographyImageAlignmentDense.h */; };
+		5DCC2BD61D3F82A500032841 /* HomographyImageAlignmentDense.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCC2BD41D3F82A500032841 /* HomographyImageAlignmentDense.h */; };
+		5DD2BA231D61B9D30062D5BF /* HomographyImageAlignmentSparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD2BA221D61B9D30062D5BF /* HomographyImageAlignmentSparse.h */; };
+		5DD2BA241D61B9D30062D5BF /* HomographyImageAlignmentSparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD2BA221D61B9D30062D5BF /* HomographyImageAlignmentSparse.h */; };
+		5DD2BA261D61B9E20062D5BF /* HomographyImageAlignmentSparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD2BA251D61B9E20062D5BF /* HomographyImageAlignmentSparse.cpp */; };
+		5DD2BA271D61B9E20062D5BF /* HomographyImageAlignmentSparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD2BA251D61B9E20062D5BF /* HomographyImageAlignmentSparse.cpp */; };
+		5DF886AD1BAAF63400E9F349 /* CorrespondenceSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF8869D1BAAF63400E9F349 /* CorrespondenceSet.h */; };
+		5DF886AE1BAAF63400E9F349 /* Database.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF8869E1BAAF63400E9F349 /* Database.h */; };
+		5DF886B01BAAF63400E9F349 /* HomographyPlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A01BAAF63400E9F349 /* HomographyPlaneFinder.h */; };
+		5DF886B11BAAF63400E9F349 /* MotionModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A11BAAF63400E9F349 /* MotionModel.h */; };
+		5DF886B21BAAF63400E9F349 /* MultiViewPlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A21BAAF63400E9F349 /* MultiViewPlaneFinder.h */; };
+		5DF886B31BAAF63400E9F349 /* PlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A31BAAF63400E9F349 /* PlaneFinder.h */; };
+		5DF886B41BAAF63400E9F349 /* PointCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A41BAAF63400E9F349 /* PointCorrespondences.h */; };
+		5DF886B51BAAF63400E9F349 /* PoseProjection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A51BAAF63400E9F349 /* PoseProjection.h */; };
+		5DF886B71BAAF63400E9F349 /* Solver3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A71BAAF63400E9F349 /* Solver3.h */; };
+		5DF886B81BAAF63400E9F349 /* SphericalEnvironment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A81BAAF63400E9F349 /* SphericalEnvironment.h */; };
+		5DF886B91BAAF63400E9F349 /* Tracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A91BAAF63400E9F349 /* Tracker.h */; };
+		5DF886BA1BAAF63400E9F349 /* Tracking.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AA1BAAF63400E9F349 /* Tracking.h */; };
+		5DF886BB1BAAF63400E9F349 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AB1BAAF63400E9F349 /* Utilities.h */; };
+		5DF886BC1BAAF63400E9F349 /* VisualTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AC1BAAF63400E9F349 /* VisualTracker.h */; };
+		5DF886CC1BAAF64800E9F349 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886BD1BAAF64800E9F349 /* Database.cpp */; };
+		5DF886CE1BAAF64800E9F349 /* HomographyPlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886BF1BAAF64800E9F349 /* HomographyPlaneFinder.cpp */; };
+		5DF886CF1BAAF64800E9F349 /* MotionModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C01BAAF64800E9F349 /* MotionModel.cpp */; };
+		5DF886D01BAAF64800E9F349 /* MultiViewPlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C11BAAF64800E9F349 /* MultiViewPlaneFinder.cpp */; };
+		5DF886D11BAAF64800E9F349 /* PlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C21BAAF64800E9F349 /* PlaneFinder.cpp */; };
+		5DF886D21BAAF64800E9F349 /* PointCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C31BAAF64800E9F349 /* PointCorrespondences.cpp */; };
+		5DF886D31BAAF64800E9F349 /* PoseProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C41BAAF64800E9F349 /* PoseProjection.cpp */; };
+		5DF886D51BAAF64800E9F349 /* Solver3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C61BAAF64800E9F349 /* Solver3.cpp */; };
+		5DF886D61BAAF64800E9F349 /* SphericalEnvironment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C71BAAF64800E9F349 /* SphericalEnvironment.cpp */; };
+		5DF886D71BAAF64800E9F349 /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C81BAAF64800E9F349 /* Tracker.cpp */; };
+		5DF886D91BAAF64800E9F349 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886CA1BAAF64800E9F349 /* Utilities.cpp */; };
+		5DF886DA1BAAF64800E9F349 /* VisualTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886CB1BAAF64800E9F349 /* VisualTracker.cpp */; };
+		9353AF962C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */; };
+		9353AF972C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */; };
+		9353AF982C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */; };
+		9353AF992C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */; };
+		9353AF9B2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */; };
+		9353AF9C2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */; };
+		9353AF9D2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */; };
+		9353AF9E2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */; };
+		9377C277267C038E00CB2431 /* SmoothedTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 9377C276267C038E00CB2431 /* SmoothedTransformation.h */; };
+		9377C278267C038E00CB2431 /* SmoothedTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 9377C276267C038E00CB2431 /* SmoothedTransformation.h */; };
+		9377C279267C038E00CB2431 /* SmoothedTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 9377C276267C038E00CB2431 /* SmoothedTransformation.h */; };
+		9377C27A267C038E00CB2431 /* SmoothedTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 9377C276267C038E00CB2431 /* SmoothedTransformation.h */; };
+		9377C27C267C03A400CB2431 /* SmoothedTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9377C27B267C03A400CB2431 /* SmoothedTransformation.cpp */; };
+		9377C27D267C03A400CB2431 /* SmoothedTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9377C27B267C03A400CB2431 /* SmoothedTransformation.cpp */; };
+		9377C27E267C03A400CB2431 /* SmoothedTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9377C27B267C03A400CB2431 /* SmoothedTransformation.cpp */; };
+		9377C27F267C03A400CB2431 /* SmoothedTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9377C27B267C03A400CB2431 /* SmoothedTransformation.cpp */; };
+		939F45ED26F8401A00941A9E /* VocabularyTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 939F45EC26F8401A00941A9E /* VocabularyTree.h */; };
+		939F45EE26F8401A00941A9E /* VocabularyTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 939F45EC26F8401A00941A9E /* VocabularyTree.h */; };
+		939F45EF26F8401A00941A9E /* VocabularyTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 939F45EC26F8401A00941A9E /* VocabularyTree.h */; };
+		939F45F026F8401A00941A9E /* VocabularyTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 939F45EC26F8401A00941A9E /* VocabularyTree.h */; };
+		C01187341E606832002FD71E /* HomographyTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = C01187331E606832002FD71E /* HomographyTracker.h */; };
+		C01187361E60684C002FD71E /* HomographyTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C01187351E60684C002FD71E /* HomographyTracker.cpp */; };
+		C041EEB21DABFA5E00BF5D76 /* Solver3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C61BAAF64800E9F349 /* Solver3.cpp */; };
+		C041EEB31DABFA5E00BF5D76 /* PlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C21BAAF64800E9F349 /* PlaneFinder.cpp */; };
+		C041EEB41DABFA5E00BF5D76 /* PointCorrespondences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C31BAAF64800E9F349 /* PointCorrespondences.cpp */; };
+		C041EEB51DABFA5E00BF5D76 /* HomographyImageAlignmentDense.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC2BD11D3F828A00032841 /* HomographyImageAlignmentDense.cpp */; };
+		C041EEB61DABFA5E00BF5D76 /* SphericalEnvironment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C71BAAF64800E9F349 /* SphericalEnvironment.cpp */; };
+		C041EEB71DABFA5E00BF5D76 /* VisualTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886CB1BAAF64800E9F349 /* VisualTracker.cpp */; };
+		C041EEB81DABFA5E00BF5D76 /* HomographyPlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886BF1BAAF64800E9F349 /* HomographyPlaneFinder.cpp */; };
+		C041EEBA1DABFA5E00BF5D76 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886CA1BAAF64800E9F349 /* Utilities.cpp */; };
+		C041EEBC1DABFA5E00BF5D76 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886BD1BAAF64800E9F349 /* Database.cpp */; };
+		C041EEBE1DABFA5E00BF5D76 /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C81BAAF64800E9F349 /* Tracker.cpp */; };
+		C041EEBF1DABFA5E00BF5D76 /* MotionModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C01BAAF64800E9F349 /* MotionModel.cpp */; };
+		C041EEC01DABFA5E00BF5D76 /* MultiViewPlaneFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C11BAAF64800E9F349 /* MultiViewPlaneFinder.cpp */; };
+		C041EEC11DABFA5E00BF5D76 /* PoseProjection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF886C41BAAF64800E9F349 /* PoseProjection.cpp */; };
+		C041EEC21DABFA5E00BF5D76 /* HomographyImageAlignmentSparse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD2BA251D61B9E20062D5BF /* HomographyImageAlignmentSparse.cpp */; };
+		C041EEC51DABFA5E00BF5D76 /* CorrespondenceSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF8869D1BAAF63400E9F349 /* CorrespondenceSet.h */; };
+		C041EEC71DABFA5E00BF5D76 /* HomographyImageAlignmentSparse.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD2BA221D61B9D30062D5BF /* HomographyImageAlignmentSparse.h */; };
+		C041EEC81DABFA5E00BF5D76 /* MotionModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A11BAAF63400E9F349 /* MotionModel.h */; };
+		C041EEC91DABFA5E00BF5D76 /* PointCorrespondences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A41BAAF63400E9F349 /* PointCorrespondences.h */; };
+		C041EECA1DABFA5E00BF5D76 /* SphericalEnvironment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A81BAAF63400E9F349 /* SphericalEnvironment.h */; };
+		C041EECB1DABFA5E00BF5D76 /* VisualTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AC1BAAF63400E9F349 /* VisualTracker.h */; };
+		C041EECC1DABFA5E00BF5D76 /* Solver3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A71BAAF63400E9F349 /* Solver3.h */; };
+		C041EECD1DABFA5E00BF5D76 /* Tracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A91BAAF63400E9F349 /* Tracker.h */; };
+		C041EECE1DABFA5E00BF5D76 /* PlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A31BAAF63400E9F349 /* PlaneFinder.h */; };
+		C041EECF1DABFA5E00BF5D76 /* Database.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF8869E1BAAF63400E9F349 /* Database.h */; };
+		C041EED01DABFA5E00BF5D76 /* HomographyImageAlignmentDense.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCC2BD41D3F82A500032841 /* HomographyImageAlignmentDense.h */; };
+		C041EED11DABFA5E00BF5D76 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AB1BAAF63400E9F349 /* Utilities.h */; };
+		C041EED21DABFA5E00BF5D76 /* PoseProjection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A51BAAF63400E9F349 /* PoseProjection.h */; };
+		C041EED31DABFA5E00BF5D76 /* MultiViewPlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A21BAAF63400E9F349 /* MultiViewPlaneFinder.h */; };
+		C041EED41DABFA5E00BF5D76 /* Tracking.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886AA1BAAF63400E9F349 /* Tracking.h */; };
+		C041EED61DABFA5E00BF5D76 /* HomographyPlaneFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF886A01BAAF63400E9F349 /* HomographyPlaneFinder.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D936F031BC6A5DE0046ACD4 /* libOceanTrackingD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9864181D8B628E00DEDB00 /* libOceanTrackingD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DCC2BD11D3F828A00032841 /* HomographyImageAlignmentDense.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HomographyImageAlignmentDense.cpp; path = ../../../../../impl/ocean/tracking/HomographyImageAlignmentDense.cpp; sourceTree = "<group>"; };
+		5DCC2BD41D3F82A500032841 /* HomographyImageAlignmentDense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomographyImageAlignmentDense.h; path = ../../../../../impl/ocean/tracking/HomographyImageAlignmentDense.h; sourceTree = "<group>"; };
+		5DD2BA221D61B9D30062D5BF /* HomographyImageAlignmentSparse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomographyImageAlignmentSparse.h; path = ../../../../../impl/ocean/tracking/HomographyImageAlignmentSparse.h; sourceTree = "<group>"; };
+		5DD2BA251D61B9E20062D5BF /* HomographyImageAlignmentSparse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HomographyImageAlignmentSparse.cpp; path = ../../../../../impl/ocean/tracking/HomographyImageAlignmentSparse.cpp; sourceTree = "<group>"; };
+		5DF8868E1BAAF4C400E9F349 /* libOceanTrackingD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DF8869D1BAAF63400E9F349 /* CorrespondenceSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CorrespondenceSet.h; path = ../../../../../impl/ocean/tracking/CorrespondenceSet.h; sourceTree = "<group>"; };
+		5DF8869E1BAAF63400E9F349 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Database.h; path = ../../../../../impl/ocean/tracking/Database.h; sourceTree = "<group>"; };
+		5DF886A01BAAF63400E9F349 /* HomographyPlaneFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomographyPlaneFinder.h; path = ../../../../../impl/ocean/tracking/HomographyPlaneFinder.h; sourceTree = "<group>"; };
+		5DF886A11BAAF63400E9F349 /* MotionModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MotionModel.h; path = ../../../../../impl/ocean/tracking/MotionModel.h; sourceTree = "<group>"; };
+		5DF886A21BAAF63400E9F349 /* MultiViewPlaneFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MultiViewPlaneFinder.h; path = ../../../../../impl/ocean/tracking/MultiViewPlaneFinder.h; sourceTree = "<group>"; };
+		5DF886A31BAAF63400E9F349 /* PlaneFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlaneFinder.h; path = ../../../../../impl/ocean/tracking/PlaneFinder.h; sourceTree = "<group>"; };
+		5DF886A41BAAF63400E9F349 /* PointCorrespondences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PointCorrespondences.h; path = ../../../../../impl/ocean/tracking/PointCorrespondences.h; sourceTree = "<group>"; };
+		5DF886A51BAAF63400E9F349 /* PoseProjection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PoseProjection.h; path = ../../../../../impl/ocean/tracking/PoseProjection.h; sourceTree = "<group>"; };
+		5DF886A71BAAF63400E9F349 /* Solver3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Solver3.h; path = ../../../../../impl/ocean/tracking/Solver3.h; sourceTree = "<group>"; };
+		5DF886A81BAAF63400E9F349 /* SphericalEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SphericalEnvironment.h; path = ../../../../../impl/ocean/tracking/SphericalEnvironment.h; sourceTree = "<group>"; };
+		5DF886A91BAAF63400E9F349 /* Tracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tracker.h; path = ../../../../../impl/ocean/tracking/Tracker.h; sourceTree = "<group>"; };
+		5DF886AA1BAAF63400E9F349 /* Tracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tracking.h; path = ../../../../../impl/ocean/tracking/Tracking.h; sourceTree = "<group>"; };
+		5DF886AB1BAAF63400E9F349 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../impl/ocean/tracking/Utilities.h; sourceTree = "<group>"; };
+		5DF886AC1BAAF63400E9F349 /* VisualTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VisualTracker.h; path = ../../../../../impl/ocean/tracking/VisualTracker.h; sourceTree = "<group>"; };
+		5DF886BD1BAAF64800E9F349 /* Database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Database.cpp; path = ../../../../../impl/ocean/tracking/Database.cpp; sourceTree = "<group>"; };
+		5DF886BF1BAAF64800E9F349 /* HomographyPlaneFinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HomographyPlaneFinder.cpp; path = ../../../../../impl/ocean/tracking/HomographyPlaneFinder.cpp; sourceTree = "<group>"; };
+		5DF886C01BAAF64800E9F349 /* MotionModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MotionModel.cpp; path = ../../../../../impl/ocean/tracking/MotionModel.cpp; sourceTree = "<group>"; };
+		5DF886C11BAAF64800E9F349 /* MultiViewPlaneFinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MultiViewPlaneFinder.cpp; path = ../../../../../impl/ocean/tracking/MultiViewPlaneFinder.cpp; sourceTree = "<group>"; };
+		5DF886C21BAAF64800E9F349 /* PlaneFinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlaneFinder.cpp; path = ../../../../../impl/ocean/tracking/PlaneFinder.cpp; sourceTree = "<group>"; };
+		5DF886C31BAAF64800E9F349 /* PointCorrespondences.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PointCorrespondences.cpp; path = ../../../../../impl/ocean/tracking/PointCorrespondences.cpp; sourceTree = "<group>"; };
+		5DF886C41BAAF64800E9F349 /* PoseProjection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PoseProjection.cpp; path = ../../../../../impl/ocean/tracking/PoseProjection.cpp; sourceTree = "<group>"; };
+		5DF886C61BAAF64800E9F349 /* Solver3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Solver3.cpp; path = ../../../../../impl/ocean/tracking/Solver3.cpp; sourceTree = "<group>"; };
+		5DF886C71BAAF64800E9F349 /* SphericalEnvironment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SphericalEnvironment.cpp; path = ../../../../../impl/ocean/tracking/SphericalEnvironment.cpp; sourceTree = "<group>"; };
+		5DF886C81BAAF64800E9F349 /* Tracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Tracker.cpp; path = ../../../../../impl/ocean/tracking/Tracker.cpp; sourceTree = "<group>"; };
+		5DF886CA1BAAF64800E9F349 /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../impl/ocean/tracking/Utilities.cpp; sourceTree = "<group>"; };
+		5DF886CB1BAAF64800E9F349 /* VisualTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VisualTracker.cpp; path = ../../../../../impl/ocean/tracking/VisualTracker.cpp; sourceTree = "<group>"; };
+		9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnidirectionalCorrespondences.cpp; path = ../../../../../impl/ocean/tracking/UnidirectionalCorrespondences.cpp; sourceTree = "<group>"; };
+		9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnidirectionalCorrespondences.h; path = ../../../../../impl/ocean/tracking/UnidirectionalCorrespondences.h; sourceTree = "<group>"; };
+		9377C276267C038E00CB2431 /* SmoothedTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmoothedTransformation.h; path = ../../../../../impl/ocean/tracking/SmoothedTransformation.h; sourceTree = "<group>"; };
+		9377C27B267C03A400CB2431 /* SmoothedTransformation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SmoothedTransformation.cpp; path = ../../../../../impl/ocean/tracking/SmoothedTransformation.cpp; sourceTree = "<group>"; };
+		939F45EC26F8401A00941A9E /* VocabularyTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VocabularyTree.h; path = ../../../../../impl/ocean/tracking/VocabularyTree.h; sourceTree = "<group>"; };
+		C01187331E606832002FD71E /* HomographyTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomographyTracker.h; path = ../../../../../impl/ocean/tracking/HomographyTracker.h; sourceTree = "<group>"; };
+		C01187351E60684C002FD71E /* HomographyTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HomographyTracker.cpp; path = ../../../../../impl/ocean/tracking/HomographyTracker.cpp; sourceTree = "<group>"; };
+		C041EEDB1DABFA5E00BF5D76 /* libOceanTrackingD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D936EEE1BC6A5DE0046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9864011D8B628E00DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF8868B1BAAF4C400E9F349 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EEC31DABFA5E00BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D936EDC1BC6A5B60046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DF8869D1BAAF63400E9F349 /* CorrespondenceSet.h */,
+				5DF8869E1BAAF63400E9F349 /* Database.h */,
+				5DCC2BD41D3F82A500032841 /* HomographyImageAlignmentDense.h */,
+				5DD2BA221D61B9D30062D5BF /* HomographyImageAlignmentSparse.h */,
+				5DF886A01BAAF63400E9F349 /* HomographyPlaneFinder.h */,
+				C01187331E606832002FD71E /* HomographyTracker.h */,
+				5DF886A11BAAF63400E9F349 /* MotionModel.h */,
+				5DF886A21BAAF63400E9F349 /* MultiViewPlaneFinder.h */,
+				5DF886A31BAAF63400E9F349 /* PlaneFinder.h */,
+				5DF886A41BAAF63400E9F349 /* PointCorrespondences.h */,
+				5DF886A51BAAF63400E9F349 /* PoseProjection.h */,
+				9377C276267C038E00CB2431 /* SmoothedTransformation.h */,
+				5DF886A71BAAF63400E9F349 /* Solver3.h */,
+				5DF886A81BAAF63400E9F349 /* SphericalEnvironment.h */,
+				5DF886A91BAAF63400E9F349 /* Tracker.h */,
+				5DF886AA1BAAF63400E9F349 /* Tracking.h */,
+				9353AF9A2C2CE88D000146CC /* UnidirectionalCorrespondences.h */,
+				5DF886AB1BAAF63400E9F349 /* Utilities.h */,
+				5DF886AC1BAAF63400E9F349 /* VisualTracker.h */,
+				939F45EC26F8401A00941A9E /* VocabularyTree.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DF886851BAAF4C400E9F349 = {
+			isa = PBXGroup;
+			children = (
+				5D936EDC1BC6A5B60046ACD4 /* Header Files */,
+				5DF8869C1BAAF61A00E9F349 /* Source Files */,
+				5DF8868F1BAAF4C400E9F349 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DF8868F1BAAF4C400E9F349 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DF8868E1BAAF4C400E9F349 /* libOceanTrackingD.a */,
+				5D936F031BC6A5DE0046ACD4 /* libOceanTrackingD.dylib */,
+				5D9864181D8B628E00DEDB00 /* libOceanTrackingD.a */,
+				C041EEDB1DABFA5E00BF5D76 /* libOceanTrackingD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DF8869C1BAAF61A00E9F349 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DF886BD1BAAF64800E9F349 /* Database.cpp */,
+				5DCC2BD11D3F828A00032841 /* HomographyImageAlignmentDense.cpp */,
+				5DD2BA251D61B9E20062D5BF /* HomographyImageAlignmentSparse.cpp */,
+				5DF886BF1BAAF64800E9F349 /* HomographyPlaneFinder.cpp */,
+				C01187351E60684C002FD71E /* HomographyTracker.cpp */,
+				5DF886C01BAAF64800E9F349 /* MotionModel.cpp */,
+				5DF886C11BAAF64800E9F349 /* MultiViewPlaneFinder.cpp */,
+				5DF886C21BAAF64800E9F349 /* PlaneFinder.cpp */,
+				5DF886C31BAAF64800E9F349 /* PointCorrespondences.cpp */,
+				5DF886C41BAAF64800E9F349 /* PoseProjection.cpp */,
+				9377C27B267C03A400CB2431 /* SmoothedTransformation.cpp */,
+				5DF886C61BAAF64800E9F349 /* Solver3.cpp */,
+				5DF886C71BAAF64800E9F349 /* SphericalEnvironment.cpp */,
+				5DF886C81BAAF64800E9F349 /* Tracker.cpp */,
+				9353AF952C2CE885000146CC /* UnidirectionalCorrespondences.cpp */,
+				5DF886CA1BAAF64800E9F349 /* Utilities.cpp */,
+				5DF886CB1BAAF64800E9F349 /* VisualTracker.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D936EEF1BC6A5DE0046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936EF01BC6A5DE0046ACD4 /* CorrespondenceSet.h in Headers */,
+				5DD2BA241D61B9D30062D5BF /* HomographyImageAlignmentSparse.h in Headers */,
+				5D936EF21BC6A5DE0046ACD4 /* MotionModel.h in Headers */,
+				5D936EF31BC6A5DE0046ACD4 /* PointCorrespondences.h in Headers */,
+				5D936EF41BC6A5DE0046ACD4 /* SphericalEnvironment.h in Headers */,
+				5D936EF51BC6A5DE0046ACD4 /* VisualTracker.h in Headers */,
+				5D936EF61BC6A5DE0046ACD4 /* Solver3.h in Headers */,
+				5D936EF71BC6A5DE0046ACD4 /* Tracker.h in Headers */,
+				5D936EF81BC6A5DE0046ACD4 /* PlaneFinder.h in Headers */,
+				5D936EF91BC6A5DE0046ACD4 /* Database.h in Headers */,
+				9377C278267C038E00CB2431 /* SmoothedTransformation.h in Headers */,
+				5DCC2BD61D3F82A500032841 /* HomographyImageAlignmentDense.h in Headers */,
+				5D936EFA1BC6A5DE0046ACD4 /* Utilities.h in Headers */,
+				5D936EFB1BC6A5DE0046ACD4 /* PoseProjection.h in Headers */,
+				9353AF9C2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */,
+				5D936EFC1BC6A5DE0046ACD4 /* MultiViewPlaneFinder.h in Headers */,
+				5D936EFD1BC6A5DE0046ACD4 /* Tracking.h in Headers */,
+				939F45EE26F8401A00941A9E /* VocabularyTree.h in Headers */,
+				5D936EFF1BC6A5DE0046ACD4 /* HomographyPlaneFinder.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9864021D8B628E00DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9864031D8B628E00DEDB00 /* CorrespondenceSet.h in Headers */,
+				5D9864051D8B628E00DEDB00 /* HomographyImageAlignmentSparse.h in Headers */,
+				5D9864061D8B628E00DEDB00 /* MotionModel.h in Headers */,
+				5D9864071D8B628E00DEDB00 /* PointCorrespondences.h in Headers */,
+				5D9864081D8B628E00DEDB00 /* SphericalEnvironment.h in Headers */,
+				5D9864091D8B628E00DEDB00 /* VisualTracker.h in Headers */,
+				5D98640A1D8B628E00DEDB00 /* Solver3.h in Headers */,
+				5D98640B1D8B628E00DEDB00 /* Tracker.h in Headers */,
+				5D98640C1D8B628E00DEDB00 /* PlaneFinder.h in Headers */,
+				5D98640D1D8B628E00DEDB00 /* Database.h in Headers */,
+				9377C279267C038E00CB2431 /* SmoothedTransformation.h in Headers */,
+				5D98640E1D8B628E00DEDB00 /* HomographyImageAlignmentDense.h in Headers */,
+				5D98640F1D8B628E00DEDB00 /* Utilities.h in Headers */,
+				5D9864101D8B628E00DEDB00 /* PoseProjection.h in Headers */,
+				9353AF9D2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */,
+				5D9864111D8B628E00DEDB00 /* MultiViewPlaneFinder.h in Headers */,
+				5D9864121D8B628E00DEDB00 /* Tracking.h in Headers */,
+				939F45EF26F8401A00941A9E /* VocabularyTree.h in Headers */,
+				5D9864141D8B628E00DEDB00 /* HomographyPlaneFinder.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF8868C1BAAF4C400E9F349 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9353AF9B2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */,
+				5DF886AD1BAAF63400E9F349 /* CorrespondenceSet.h in Headers */,
+				5DD2BA231D61B9D30062D5BF /* HomographyImageAlignmentSparse.h in Headers */,
+				5DF886B11BAAF63400E9F349 /* MotionModel.h in Headers */,
+				5DF886B41BAAF63400E9F349 /* PointCorrespondences.h in Headers */,
+				5DF886B81BAAF63400E9F349 /* SphericalEnvironment.h in Headers */,
+				5DF886BC1BAAF63400E9F349 /* VisualTracker.h in Headers */,
+				939F45ED26F8401A00941A9E /* VocabularyTree.h in Headers */,
+				9377C277267C038E00CB2431 /* SmoothedTransformation.h in Headers */,
+				5DF886B71BAAF63400E9F349 /* Solver3.h in Headers */,
+				5DF886B91BAAF63400E9F349 /* Tracker.h in Headers */,
+				5DF886B31BAAF63400E9F349 /* PlaneFinder.h in Headers */,
+				5DF886AE1BAAF63400E9F349 /* Database.h in Headers */,
+				5DCC2BD51D3F82A500032841 /* HomographyImageAlignmentDense.h in Headers */,
+				5DF886BB1BAAF63400E9F349 /* Utilities.h in Headers */,
+				5DF886B51BAAF63400E9F349 /* PoseProjection.h in Headers */,
+				5DF886B21BAAF63400E9F349 /* MultiViewPlaneFinder.h in Headers */,
+				5DF886BA1BAAF63400E9F349 /* Tracking.h in Headers */,
+				C01187341E606832002FD71E /* HomographyTracker.h in Headers */,
+				5DF886B01BAAF63400E9F349 /* HomographyPlaneFinder.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EEC41DABFA5E00BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EEC51DABFA5E00BF5D76 /* CorrespondenceSet.h in Headers */,
+				C041EEC71DABFA5E00BF5D76 /* HomographyImageAlignmentSparse.h in Headers */,
+				C041EEC81DABFA5E00BF5D76 /* MotionModel.h in Headers */,
+				C041EEC91DABFA5E00BF5D76 /* PointCorrespondences.h in Headers */,
+				C041EECA1DABFA5E00BF5D76 /* SphericalEnvironment.h in Headers */,
+				C041EECB1DABFA5E00BF5D76 /* VisualTracker.h in Headers */,
+				C041EECC1DABFA5E00BF5D76 /* Solver3.h in Headers */,
+				C041EECD1DABFA5E00BF5D76 /* Tracker.h in Headers */,
+				C041EECE1DABFA5E00BF5D76 /* PlaneFinder.h in Headers */,
+				C041EECF1DABFA5E00BF5D76 /* Database.h in Headers */,
+				9377C27A267C038E00CB2431 /* SmoothedTransformation.h in Headers */,
+				C041EED01DABFA5E00BF5D76 /* HomographyImageAlignmentDense.h in Headers */,
+				C041EED11DABFA5E00BF5D76 /* Utilities.h in Headers */,
+				C041EED21DABFA5E00BF5D76 /* PoseProjection.h in Headers */,
+				9353AF9E2C2CE88D000146CC /* UnidirectionalCorrespondences.h in Headers */,
+				C041EED31DABFA5E00BF5D76 /* MultiViewPlaneFinder.h in Headers */,
+				C041EED41DABFA5E00BF5D76 /* Tracking.h in Headers */,
+				939F45F026F8401A00941A9E /* VocabularyTree.h in Headers */,
+				C041EED61DABFA5E00BF5D76 /* HomographyPlaneFinder.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D936EDD1BC6A5DE0046ACD4 /* tracking x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D936F001BC6A5DE0046ACD4 /* Build configuration list for PBXNativeTarget "tracking x64 (Shared)" */;
+			buildPhases = (
+				5D936EDE1BC6A5DE0046ACD4 /* Sources */,
+				5D936EEE1BC6A5DE0046ACD4 /* Frameworks */,
+				5D936EEF1BC6A5DE0046ACD4 /* Headers */,
+				C041EEDC1DABFB6C00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "tracking x64 (Shared)";
+			productName = tracking;
+			productReference = 5D936F031BC6A5DE0046ACD4 /* libOceanTrackingD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9863EE1D8B628E00DEDB00 /* tracking arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9864151D8B628E00DEDB00 /* Build configuration list for PBXNativeTarget "tracking arm64 (Static)" */;
+			buildPhases = (
+				5D9863EF1D8B628E00DEDB00 /* Sources */,
+				5D9864011D8B628E00DEDB00 /* Frameworks */,
+				5D9864021D8B628E00DEDB00 /* Headers */,
+				5D837F591D8F10EA00939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "tracking arm64 (Static)";
+			productName = tracking;
+			productReference = 5D9864181D8B628E00DEDB00 /* libOceanTrackingD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DF8868D1BAAF4C400E9F349 /* tracking x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DF886991BAAF4C400E9F349 /* Build configuration list for PBXNativeTarget "tracking x64 (Static)" */;
+			buildPhases = (
+				5DF8868A1BAAF4C400E9F349 /* Sources */,
+				5DF8868B1BAAF4C400E9F349 /* Frameworks */,
+				5DF8868C1BAAF4C400E9F349 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "tracking x64 (Static)";
+			productName = tracking;
+			productReference = 5DF8868E1BAAF4C400E9F349 /* libOceanTrackingD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EEB01DABFA5E00BF5D76 /* tracking arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EED81DABFA5E00BF5D76 /* Build configuration list for PBXNativeTarget "tracking arm64 (Shared)" */;
+			buildPhases = (
+				C041EEB11DABFA5E00BF5D76 /* Sources */,
+				C041EEC31DABFA5E00BF5D76 /* Frameworks */,
+				C041EEC41DABFA5E00BF5D76 /* Headers */,
+				C041EED71DABFA5E00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "tracking arm64 (Shared)";
+			productName = tracking;
+			productReference = C041EEDB1DABFA5E00BF5D76 /* libOceanTrackingD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DF886861BAAF4C400E9F349 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DF8868D1BAAF4C400E9F349 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DF886891BAAF4C400E9F349 /* Build configuration list for PBXProject "tracking" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DF886851BAAF4C400E9F349;
+			productRefGroup = 5DF8868F1BAAF4C400E9F349 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DF8868D1BAAF4C400E9F349 /* tracking x64 (Static) */,
+				5D936EDD1BC6A5DE0046ACD4 /* tracking x64 (Shared) */,
+				5D9863EE1D8B628E00DEDB00 /* tracking arm64 (Static) */,
+				C041EEB01DABFA5E00BF5D76 /* tracking arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F591D8F10EA00939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../copy_arm_static.sh \"../../../../../bin/lib/\"";
+		};
+		C041EED71DABFA5E00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../codesign.sh\n../../copy_arm_shared.sh \"../../../../../bin/lib/\"";
+		};
+		C041EEDC1DABFB6C00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D936EDE1BC6A5DE0046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936EDF1BC6A5DE0046ACD4 /* Solver3.cpp in Sources */,
+				5D936EE01BC6A5DE0046ACD4 /* PlaneFinder.cpp in Sources */,
+				5D936EE11BC6A5DE0046ACD4 /* PointCorrespondences.cpp in Sources */,
+				5DCC2BD31D3F828A00032841 /* HomographyImageAlignmentDense.cpp in Sources */,
+				5D936EE21BC6A5DE0046ACD4 /* SphericalEnvironment.cpp in Sources */,
+				9377C27D267C03A400CB2431 /* SmoothedTransformation.cpp in Sources */,
+				5D936EE31BC6A5DE0046ACD4 /* VisualTracker.cpp in Sources */,
+				5D936EE41BC6A5DE0046ACD4 /* HomographyPlaneFinder.cpp in Sources */,
+				5D936EE61BC6A5DE0046ACD4 /* Utilities.cpp in Sources */,
+				5D936EE81BC6A5DE0046ACD4 /* Database.cpp in Sources */,
+				5D936EEA1BC6A5DE0046ACD4 /* Tracker.cpp in Sources */,
+				9353AF972C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */,
+				5D936EEB1BC6A5DE0046ACD4 /* MotionModel.cpp in Sources */,
+				5D936EEC1BC6A5DE0046ACD4 /* MultiViewPlaneFinder.cpp in Sources */,
+				5D936EED1BC6A5DE0046ACD4 /* PoseProjection.cpp in Sources */,
+				5DD2BA271D61B9E20062D5BF /* HomographyImageAlignmentSparse.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9863EF1D8B628E00DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9863F01D8B628E00DEDB00 /* Solver3.cpp in Sources */,
+				5D9863F11D8B628E00DEDB00 /* PlaneFinder.cpp in Sources */,
+				5D9863F21D8B628E00DEDB00 /* PointCorrespondences.cpp in Sources */,
+				5D9863F31D8B628E00DEDB00 /* HomographyImageAlignmentDense.cpp in Sources */,
+				5D9863F41D8B628E00DEDB00 /* SphericalEnvironment.cpp in Sources */,
+				9377C27E267C03A400CB2431 /* SmoothedTransformation.cpp in Sources */,
+				5D9863F51D8B628E00DEDB00 /* VisualTracker.cpp in Sources */,
+				5D9863F61D8B628E00DEDB00 /* HomographyPlaneFinder.cpp in Sources */,
+				5D9863F81D8B628E00DEDB00 /* Utilities.cpp in Sources */,
+				5D9863FA1D8B628E00DEDB00 /* Database.cpp in Sources */,
+				5D9863FC1D8B628E00DEDB00 /* Tracker.cpp in Sources */,
+				9353AF982C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */,
+				5D9863FD1D8B628E00DEDB00 /* MotionModel.cpp in Sources */,
+				5D9863FE1D8B628E00DEDB00 /* MultiViewPlaneFinder.cpp in Sources */,
+				5D9863FF1D8B628E00DEDB00 /* PoseProjection.cpp in Sources */,
+				5D9864001D8B628E00DEDB00 /* HomographyImageAlignmentSparse.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF8868A1BAAF4C400E9F349 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF886D51BAAF64800E9F349 /* Solver3.cpp in Sources */,
+				5DF886D11BAAF64800E9F349 /* PlaneFinder.cpp in Sources */,
+				5DF886D21BAAF64800E9F349 /* PointCorrespondences.cpp in Sources */,
+				5DCC2BD21D3F828A00032841 /* HomographyImageAlignmentDense.cpp in Sources */,
+				9377C27C267C03A400CB2431 /* SmoothedTransformation.cpp in Sources */,
+				5DF886D61BAAF64800E9F349 /* SphericalEnvironment.cpp in Sources */,
+				5DF886DA1BAAF64800E9F349 /* VisualTracker.cpp in Sources */,
+				5DF886CE1BAAF64800E9F349 /* HomographyPlaneFinder.cpp in Sources */,
+				5DF886D91BAAF64800E9F349 /* Utilities.cpp in Sources */,
+				5DF886CC1BAAF64800E9F349 /* Database.cpp in Sources */,
+				5DF886D71BAAF64800E9F349 /* Tracker.cpp in Sources */,
+				5DF886CF1BAAF64800E9F349 /* MotionModel.cpp in Sources */,
+				5DF886D01BAAF64800E9F349 /* MultiViewPlaneFinder.cpp in Sources */,
+				5DF886D31BAAF64800E9F349 /* PoseProjection.cpp in Sources */,
+				C01187361E60684C002FD71E /* HomographyTracker.cpp in Sources */,
+				9353AF962C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */,
+				5DD2BA261D61B9E20062D5BF /* HomographyImageAlignmentSparse.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EEB11DABFA5E00BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EEB21DABFA5E00BF5D76 /* Solver3.cpp in Sources */,
+				C041EEB31DABFA5E00BF5D76 /* PlaneFinder.cpp in Sources */,
+				C041EEB41DABFA5E00BF5D76 /* PointCorrespondences.cpp in Sources */,
+				C041EEB51DABFA5E00BF5D76 /* HomographyImageAlignmentDense.cpp in Sources */,
+				C041EEB61DABFA5E00BF5D76 /* SphericalEnvironment.cpp in Sources */,
+				9377C27F267C03A400CB2431 /* SmoothedTransformation.cpp in Sources */,
+				C041EEB71DABFA5E00BF5D76 /* VisualTracker.cpp in Sources */,
+				C041EEB81DABFA5E00BF5D76 /* HomographyPlaneFinder.cpp in Sources */,
+				C041EEBA1DABFA5E00BF5D76 /* Utilities.cpp in Sources */,
+				C041EEBC1DABFA5E00BF5D76 /* Database.cpp in Sources */,
+				C041EEBE1DABFA5E00BF5D76 /* Tracker.cpp in Sources */,
+				9353AF992C2CE885000146CC /* UnidirectionalCorrespondences.cpp in Sources */,
+				C041EEBF1DABFA5E00BF5D76 /* MotionModel.cpp in Sources */,
+				C041EEC01DABFA5E00BF5D76 /* MultiViewPlaneFinder.cpp in Sources */,
+				C041EEC11DABFA5E00BF5D76 /* PoseProjection.cpp in Sources */,
+				C041EEC21DABFA5E00BF5D76 /* HomographyImageAlignmentSparse.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D936F011BC6A5DE0046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/tracking/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/tracking/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanCVSegmentationD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingD;
+				PRODUCT_NAME = OceanTrackingD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D936F021BC6A5DE0046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/tracking/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/tracking/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanCVSegmentation",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+				);
+				PRODUCT_MODULE_NAME = OceanTracking;
+				PRODUCT_NAME = OceanTracking;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D9864161D8B628E00DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingD;
+				PRODUCT_NAME = OceanTrackingD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D9864171D8B628E00DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTracking;
+				PRODUCT_NAME = OceanTracking;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DF886971BAAF4C400E9F349 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DF886981BAAF4C400E9F349 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DF8869A1BAAF4C400E9F349 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/tracking/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/tracking/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingD;
+				PRODUCT_NAME = OceanTrackingD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DF8869B1BAAF4C400E9F349 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/tracking/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/tracking/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTracking;
+				PRODUCT_NAME = OceanTracking;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EED91DABFA5E00BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanCVSegmentationD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingD;
+				PRODUCT_NAME = OceanTrackingD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EEDA1DABFA5E00BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanCVSegmentation",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+				);
+				PRODUCT_MODULE_NAME = OceanTracking;
+				PRODUCT_NAME = OceanTracking;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/tracking/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D936F001BC6A5DE0046ACD4 /* Build configuration list for PBXNativeTarget "tracking x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936F011BC6A5DE0046ACD4 /* Debug */,
+				5D936F021BC6A5DE0046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9864151D8B628E00DEDB00 /* Build configuration list for PBXNativeTarget "tracking arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9864161D8B628E00DEDB00 /* Debug */,
+				5D9864171D8B628E00DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DF886891BAAF4C400E9F349 /* Build configuration list for PBXProject "tracking" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DF886971BAAF4C400E9F349 /* Debug */,
+				5DF886981BAAF4C400E9F349 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DF886991BAAF4C400E9F349 /* Build configuration list for PBXNativeTarget "tracking x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DF8869A1BAAF4C400E9F349 /* Debug */,
+				5DF8869B1BAAF4C400E9F349 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EED81DABFA5E00BF5D76 /* Build configuration list for PBXNativeTarget "tracking arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EED91DABFA5E00BF5D76 /* Debug */,
+				C041EEDA1DABFA5E00BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DF886861BAAF4C400E9F349 /* Project object */;
+}

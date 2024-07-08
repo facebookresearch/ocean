@@ -1,0 +1,1766 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D7D93C61BA9E0F700D38120 /* Constraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AA1BA9E0F700D38120 /* Constraint.cpp */; };
+		5D7D93C71BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AB1BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp */; };
+		5D7D93C81BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AC1BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp */; };
+		5D7D93C91BA9E0F700D38120 /* CreatorSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */; };
+		5D7D93CE1BA9E0F700D38120 /* InitializerContourMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */; };
+		5D7D93CF1BA9E0F700D38120 /* InitializerConvertMappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */; };
+		5D7D93D01BA9E0F700D38120 /* InitializerCopyMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B41BA9E0F700D38120 /* InitializerCopyMappingI1.cpp */; };
+		5D7D93D11BA9E0F700D38120 /* InitializerHomographyMappingAdaptionF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B51BA9E0F700D38120 /* InitializerHomographyMappingAdaptionF1.cpp */; };
+		5D7D93D21BA9E0F700D38120 /* InitializerMoveMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B61BA9E0F700D38120 /* InitializerMoveMappingI1.cpp */; };
+		5D7D93D31BA9E0F700D38120 /* InitializerRandomMappingAreaConstrainedI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B71BA9E0F700D38120 /* InitializerRandomMappingAreaConstrainedI1.cpp */; };
+		5D7D93D41BA9E0F700D38120 /* InitializerRandomMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B81BA9E0F700D38120 /* InitializerRandomMappingI1.cpp */; };
+		5D7D93D51BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B91BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp */; };
+		5D7D93D61BA9E0F700D38120 /* InitializerShrinkingErosionRandomizedI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BA1BA9E0F700D38120 /* InitializerShrinkingErosionRandomizedI1.cpp */; };
+		5D7D93D71BA9E0F700D38120 /* InitializerShrinkingPatchMatchingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BB1BA9E0F700D38120 /* InitializerShrinkingPatchMatchingI1.cpp */; };
+		5D7D93D81BA9E0F700D38120 /* InitializerSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BC1BA9E0F700D38120 /* InitializerSubset.cpp */; };
+		5D7D93D91BA9E0F700D38120 /* Layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BD1BA9E0F700D38120 /* Layer.cpp */; };
+		5D7D93DA1BA9E0F700D38120 /* LayerF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BE1BA9E0F700D38120 /* LayerF1.cpp */; };
+		5D7D93DB1BA9E0F700D38120 /* LayerI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BF1BA9E0F700D38120 /* LayerI1.cpp */; };
+		5D7D93DC1BA9E0F700D38120 /* MappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C01BA9E0F700D38120 /* MappingF1.cpp */; };
+		5D7D93DD1BA9E0F700D38120 /* MappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C11BA9E0F700D38120 /* MappingI1.cpp */; };
+		5D7D93DE1BA9E0F700D38120 /* MappingI2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C21BA9E0F700D38120 /* MappingI2.cpp */; };
+		5D7D93DF1BA9E0F700D38120 /* OptimizerSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C31BA9E0F700D38120 /* OptimizerSubset.cpp */; };
+		5D7D93E01BA9E0F700D38120 /* SynthesisPyramidF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C41BA9E0F700D38120 /* SynthesisPyramidF1.cpp */; };
+		5D7D93E11BA9E0F700D38120 /* SynthesisPyramidI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C51BA9E0F700D38120 /* SynthesisPyramidI1.cpp */; };
+		5D7D93ED1BA9E10E00D38120 /* Constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E21BA9E10E00D38120 /* Constraint.h */; };
+		5D7D93EE1BA9E10E00D38120 /* Creator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E31BA9E10E00D38120 /* Creator.h */; };
+		5D7D93EF1BA9E10E00D38120 /* Creator1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E41BA9E10E00D38120 /* Creator1.h */; };
+		5D7D93F01BA9E10E00D38120 /* CreatorF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E51BA9E10E00D38120 /* CreatorF.h */; };
+		5D7D93F11BA9E10E00D38120 /* CreatorFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E61BA9E10E00D38120 /* CreatorFrame.h */; };
+		5D7D93F21BA9E10E00D38120 /* CreatorI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E71BA9E10E00D38120 /* CreatorI.h */; };
+		5D7D93F31BA9E10E00D38120 /* CreatorInformationCost4NeighborhoodI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E81BA9E10E00D38120 /* CreatorInformationCost4NeighborhoodI1.h */; };
+		5D7D93F41BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E91BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h */; };
+		5D7D93F51BA9E10E00D38120 /* CreatorInpaintingContentF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EA1BA9E10E00D38120 /* CreatorInpaintingContentF1.h */; };
+		5D7D93F61BA9E10E00D38120 /* CreatorInpaintingContentI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EB1BA9E10E00D38120 /* CreatorInpaintingContentI1.h */; };
+		5D7D93F71BA9E10E00D38120 /* CreatorSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EC1BA9E10E00D38120 /* CreatorSubset.h */; };
+		5D7D94351BA9E12100D38120 /* Initializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FC1BA9E12100D38120 /* Initializer.h */; };
+		5D7D94361BA9E12100D38120 /* Initializer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FD1BA9E12100D38120 /* Initializer1.h */; };
+		5D7D94371BA9E12100D38120 /* InitializerAppearanceMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FE1BA9E12100D38120 /* InitializerAppearanceMapping.h */; };
+		5D7D94381BA9E12100D38120 /* InitializerAppearanceMappingAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FF1BA9E12100D38120 /* InitializerAppearanceMappingAreaConstrainedI1.h */; };
+		5D7D94391BA9E12100D38120 /* InitializerAppearanceMappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94001BA9E12100D38120 /* InitializerAppearanceMappingF1.h */; };
+		5D7D943A1BA9E12100D38120 /* InitializerAppearanceMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94011BA9E12100D38120 /* InitializerAppearanceMappingI1.h */; };
+		5D7D943B1BA9E12100D38120 /* InitializerAreaConstrained.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94021BA9E12100D38120 /* InitializerAreaConstrained.h */; };
+		5D7D943C1BA9E12100D38120 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94031BA9E12100D38120 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h */; };
+		5D7D943D1BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94041BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h */; };
+		5D7D943E1BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94051BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h */; };
+		5D7D943F1BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94061BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h */; };
+		5D7D94401BA9E12100D38120 /* InitializerContourMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94071BA9E12100D38120 /* InitializerContourMappingI1.h */; };
+		5D7D94411BA9E12100D38120 /* InitializerConvertMappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94081BA9E12100D38120 /* InitializerConvertMappingF1.h */; };
+		5D7D94421BA9E12100D38120 /* InitializerCopyMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94091BA9E12100D38120 /* InitializerCopyMappingI1.h */; };
+		5D7D94431BA9E12100D38120 /* InitializerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940A1BA9E12100D38120 /* InitializerF.h */; };
+		5D7D94441BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940B1BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h */; };
+		5D7D94451BA9E12100D38120 /* InitializerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940C1BA9E12100D38120 /* InitializerI.h */; };
+		5D7D94461BA9E12100D38120 /* InitializerMoveMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940D1BA9E12100D38120 /* InitializerMoveMappingI1.h */; };
+		5D7D94471BA9E12100D38120 /* InitializerRandomized.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940E1BA9E12100D38120 /* InitializerRandomized.h */; };
+		5D7D94481BA9E12100D38120 /* InitializerRandomMappingAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940F1BA9E12100D38120 /* InitializerRandomMappingAreaConstrainedI1.h */; };
+		5D7D94491BA9E12100D38120 /* InitializerRandomMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94101BA9E12100D38120 /* InitializerRandomMappingI1.h */; };
+		5D7D944A1BA9E12100D38120 /* InitializerShrinkingErosionI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94111BA9E12100D38120 /* InitializerShrinkingErosionI1.h */; };
+		5D7D944B1BA9E12100D38120 /* InitializerShrinkingErosionRandomizedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94121BA9E12100D38120 /* InitializerShrinkingErosionRandomizedI1.h */; };
+		5D7D944C1BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94131BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h */; };
+		5D7D944D1BA9E12100D38120 /* InitializerSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94141BA9E12100D38120 /* InitializerSubset.h */; };
+		5D7D944E1BA9E12100D38120 /* Layer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94151BA9E12100D38120 /* Layer.h */; };
+		5D7D944F1BA9E12100D38120 /* LayerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94161BA9E12100D38120 /* LayerF.h */; };
+		5D7D94501BA9E12100D38120 /* LayerF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94171BA9E12100D38120 /* LayerF1.h */; };
+		5D7D94511BA9E12100D38120 /* LayerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94181BA9E12100D38120 /* LayerI.h */; };
+		5D7D94521BA9E12100D38120 /* LayerI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94191BA9E12100D38120 /* LayerI1.h */; };
+		5D7D94541BA9E12100D38120 /* Mapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941B1BA9E12100D38120 /* Mapping.h */; };
+		5D7D94551BA9E12100D38120 /* MappingF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941C1BA9E12100D38120 /* MappingF.h */; };
+		5D7D94561BA9E12100D38120 /* MappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941D1BA9E12100D38120 /* MappingF1.h */; };
+		5D7D94571BA9E12100D38120 /* MappingI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941E1BA9E12100D38120 /* MappingI.h */; };
+		5D7D94581BA9E12100D38120 /* MappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941F1BA9E12100D38120 /* MappingI1.h */; };
+		5D7D94591BA9E12100D38120 /* MappingI2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94201BA9E12100D38120 /* MappingI2.h */; };
+		5D7D945A1BA9E12100D38120 /* Operator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94211BA9E12100D38120 /* Operator.h */; };
+		5D7D945B1BA9E12100D38120 /* Optimizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94221BA9E12100D38120 /* Optimizer.h */; };
+		5D7D945C1BA9E12100D38120 /* Optimizer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94231BA9E12100D38120 /* Optimizer1.h */; };
+		5D7D945D1BA9E12100D38120 /* Optimizer4NeighborhoodAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94241BA9E12100D38120 /* Optimizer4NeighborhoodAreaConstrainedI1.h */; };
+		5D7D945E1BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94251BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceF1.h */; };
+		5D7D945F1BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94261BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceI1.h */; };
+		5D7D94601BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94271BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h */; };
+		5D7D94611BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94281BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h */; };
+		5D7D94621BA9E12100D38120 /* Optimizer4NeighborhoodReferenceFrameF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94291BA9E12100D38120 /* Optimizer4NeighborhoodReferenceFrameF1.h */; };
+		5D7D94631BA9E12100D38120 /* Optimizer4NeighborhoodStructuralConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942A1BA9E12100D38120 /* Optimizer4NeighborhoodStructuralConstrainedI1.h */; };
+		5D7D94641BA9E12100D38120 /* OptimizerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942B1BA9E12100D38120 /* OptimizerF.h */; };
+		5D7D94651BA9E12100D38120 /* OptimizerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942C1BA9E12100D38120 /* OptimizerI.h */; };
+		5D7D94661BA9E12100D38120 /* OptimizerSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942D1BA9E12100D38120 /* OptimizerSubset.h */; };
+		5D7D94671BA9E12100D38120 /* Synthesis.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942E1BA9E12100D38120 /* Synthesis.h */; };
+		5D7D94681BA9E12100D38120 /* SynthesisPyramidF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942F1BA9E12100D38120 /* SynthesisPyramidF1.h */; };
+		5D7D94691BA9E12100D38120 /* SynthesisPyramidI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94301BA9E12100D38120 /* SynthesisPyramidI1.h */; };
+		5D936E001BC548CB0046ACD4 /* MappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C01BA9E0F700D38120 /* MappingF1.cpp */; };
+		5D936E011BC548CB0046ACD4 /* CreatorSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */; };
+		5D936E021BC548CB0046ACD4 /* LayerI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BF1BA9E0F700D38120 /* LayerI1.cpp */; };
+		5D936E031BC548CB0046ACD4 /* InitializerContourMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */; };
+		5D936E051BC548CB0046ACD4 /* SynthesisPyramidI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C51BA9E0F700D38120 /* SynthesisPyramidI1.cpp */; };
+		5D936E061BC548CB0046ACD4 /* LayerF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BE1BA9E0F700D38120 /* LayerF1.cpp */; };
+		5D936E081BC548CB0046ACD4 /* InitializerShrinkingErosionI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B91BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp */; };
+		5D936E0A1BC548CB0046ACD4 /* InitializerRandomMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B81BA9E0F700D38120 /* InitializerRandomMappingI1.cpp */; };
+		5D936E0C1BC548CB0046ACD4 /* InitializerConvertMappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */; };
+		5D936E0D1BC548CB0046ACD4 /* MappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C11BA9E0F700D38120 /* MappingI1.cpp */; };
+		5D936E0E1BC548CB0046ACD4 /* InitializerMoveMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B61BA9E0F700D38120 /* InitializerMoveMappingI1.cpp */; };
+		5D936E0F1BC548CB0046ACD4 /* CreatorInpaintingContentF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AB1BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp */; };
+		5D936E101BC548CB0046ACD4 /* InitializerHomographyMappingAdaptionF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B51BA9E0F700D38120 /* InitializerHomographyMappingAdaptionF1.cpp */; };
+		5D936E111BC548CB0046ACD4 /* InitializerShrinkingPatchMatchingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BB1BA9E0F700D38120 /* InitializerShrinkingPatchMatchingI1.cpp */; };
+		5D936E121BC548CB0046ACD4 /* InitializerRandomMappingAreaConstrainedI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B71BA9E0F700D38120 /* InitializerRandomMappingAreaConstrainedI1.cpp */; };
+		5D936E131BC548CB0046ACD4 /* MappingI2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C21BA9E0F700D38120 /* MappingI2.cpp */; };
+		5D936E141BC548CB0046ACD4 /* Constraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AA1BA9E0F700D38120 /* Constraint.cpp */; };
+		5D936E151BC548CB0046ACD4 /* CreatorInpaintingContentI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AC1BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp */; };
+		5D936E161BC548CB0046ACD4 /* OptimizerSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C31BA9E0F700D38120 /* OptimizerSubset.cpp */; };
+		5D936E171BC548CB0046ACD4 /* InitializerSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BC1BA9E0F700D38120 /* InitializerSubset.cpp */; };
+		5D936E181BC548CB0046ACD4 /* InitializerCopyMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B41BA9E0F700D38120 /* InitializerCopyMappingI1.cpp */; };
+		5D936E191BC548CB0046ACD4 /* InitializerShrinkingErosionRandomizedI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BA1BA9E0F700D38120 /* InitializerShrinkingErosionRandomizedI1.cpp */; };
+		5D936E1A1BC548CB0046ACD4 /* Layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BD1BA9E0F700D38120 /* Layer.cpp */; };
+		5D936E1B1BC548CB0046ACD4 /* SynthesisPyramidF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C41BA9E0F700D38120 /* SynthesisPyramidF1.cpp */; };
+		5D936E1E1BC548CB0046ACD4 /* Optimizer4NeighborhoodHighPerformanceI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94261BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceI1.h */; };
+		5D936E1F1BC548CB0046ACD4 /* InitializerRandomMappingAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940F1BA9E12100D38120 /* InitializerRandomMappingAreaConstrainedI1.h */; };
+		5D936E201BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94031BA9E12100D38120 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h */; };
+		5D936E211BC548CB0046ACD4 /* Optimizer4NeighborhoodStructuralConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942A1BA9E12100D38120 /* Optimizer4NeighborhoodStructuralConstrainedI1.h */; };
+		5D936E221BC548CB0046ACD4 /* MappingF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941C1BA9E12100D38120 /* MappingF.h */; };
+		5D936E231BC548CB0046ACD4 /* Optimizer4NeighborhoodAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94241BA9E12100D38120 /* Optimizer4NeighborhoodAreaConstrainedI1.h */; };
+		5D936E241BC548CB0046ACD4 /* MappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941F1BA9E12100D38120 /* MappingI1.h */; };
+		5D936E251BC548CB0046ACD4 /* Constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E21BA9E10E00D38120 /* Constraint.h */; };
+		5D936E261BC548CB0046ACD4 /* LayerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94161BA9E12100D38120 /* LayerF.h */; };
+		5D936E271BC548CB0046ACD4 /* Creator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E31BA9E10E00D38120 /* Creator.h */; };
+		5D936E281BC548CB0046ACD4 /* InitializerAppearanceMappingAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FF1BA9E12100D38120 /* InitializerAppearanceMappingAreaConstrainedI1.h */; };
+		5D936E291BC548CB0046ACD4 /* CreatorSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EC1BA9E10E00D38120 /* CreatorSubset.h */; };
+		5D936E2A1BC548CB0046ACD4 /* CreatorInpaintingContentF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EA1BA9E10E00D38120 /* CreatorInpaintingContentF1.h */; };
+		5D936E2B1BC548CB0046ACD4 /* InitializerContourMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94071BA9E12100D38120 /* InitializerContourMappingI1.h */; };
+		5D936E2C1BC548CB0046ACD4 /* Optimizer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94231BA9E12100D38120 /* Optimizer1.h */; };
+		5D936E2D1BC548CB0046ACD4 /* Synthesis.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942E1BA9E12100D38120 /* Synthesis.h */; };
+		5D936E2F1BC548CB0046ACD4 /* InitializerAppearanceMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94011BA9E12100D38120 /* InitializerAppearanceMappingI1.h */; };
+		5D936E301BC548CB0046ACD4 /* InitializerShrinkingPatchMatchingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94131BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h */; };
+		5D936E311BC548CB0046ACD4 /* Mapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941B1BA9E12100D38120 /* Mapping.h */; };
+		5D936E321BC548CB0046ACD4 /* InitializerAppearanceMappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94001BA9E12100D38120 /* InitializerAppearanceMappingF1.h */; };
+		5D936E341BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94041BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h */; };
+		5D936E351BC548CB0046ACD4 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94271BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h */; };
+		5D936E361BC548CB0046ACD4 /* Operator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94211BA9E12100D38120 /* Operator.h */; };
+		5D936E381BC548CB0046ACD4 /* CreatorInformationSpatialCostI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E91BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h */; };
+		5D936E391BC548CB0046ACD4 /* InitializerHomographyMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940B1BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h */; };
+		5D936E3A1BC548CB0046ACD4 /* LayerF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94171BA9E12100D38120 /* LayerF1.h */; };
+		5D936E3B1BC548CB0046ACD4 /* InitializerShrinkingErosionI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94111BA9E12100D38120 /* InitializerShrinkingErosionI1.h */; };
+		5D936E3C1BC548CB0046ACD4 /* Optimizer4NeighborhoodHighPerformanceF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94251BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceF1.h */; };
+		5D936E3D1BC548CB0046ACD4 /* Initializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FC1BA9E12100D38120 /* Initializer.h */; };
+		5D936E3E1BC548CB0046ACD4 /* InitializerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940A1BA9E12100D38120 /* InitializerF.h */; };
+		5D936E3F1BC548CB0046ACD4 /* CreatorF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E51BA9E10E00D38120 /* CreatorF.h */; };
+		5D936E401BC548CB0046ACD4 /* SynthesisPyramidF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942F1BA9E12100D38120 /* SynthesisPyramidF1.h */; };
+		5D936E411BC548CB0046ACD4 /* InitializerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940C1BA9E12100D38120 /* InitializerI.h */; };
+		5D936E421BC548CB0046ACD4 /* CreatorInformationCost4NeighborhoodI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E81BA9E10E00D38120 /* CreatorInformationCost4NeighborhoodI1.h */; };
+		5D936E431BC548CB0046ACD4 /* LayerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94181BA9E12100D38120 /* LayerI.h */; };
+		5D936E441BC548CB0046ACD4 /* InitializerAppearanceMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FE1BA9E12100D38120 /* InitializerAppearanceMapping.h */; };
+		5D936E451BC548CB0046ACD4 /* MappingI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941E1BA9E12100D38120 /* MappingI.h */; };
+		5D936E461BC548CB0046ACD4 /* InitializerRandomMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94101BA9E12100D38120 /* InitializerRandomMappingI1.h */; };
+		5D936E471BC548CB0046ACD4 /* LayerI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94191BA9E12100D38120 /* LayerI1.h */; };
+		5D936E481BC548CB0046ACD4 /* InitializerMoveMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940D1BA9E12100D38120 /* InitializerMoveMappingI1.h */; };
+		5D936E491BC548CB0046ACD4 /* CreatorInpaintingContentI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EB1BA9E10E00D38120 /* CreatorInpaintingContentI1.h */; };
+		5D936E4A1BC548CB0046ACD4 /* Initializer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FD1BA9E12100D38120 /* Initializer1.h */; };
+		5D936E4B1BC548CB0046ACD4 /* InitializerShrinkingErosionRandomizedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94121BA9E12100D38120 /* InitializerShrinkingErosionRandomizedI1.h */; };
+		5D936E4C1BC548CB0046ACD4 /* CreatorFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E61BA9E10E00D38120 /* CreatorFrame.h */; };
+		5D936E4D1BC548CB0046ACD4 /* Optimizer4NeighborhoodReferenceFrameF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94291BA9E12100D38120 /* Optimizer4NeighborhoodReferenceFrameF1.h */; };
+		5D936E4E1BC548CB0046ACD4 /* OptimizerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942C1BA9E12100D38120 /* OptimizerI.h */; };
+		5D936E4F1BC548CB0046ACD4 /* MappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941D1BA9E12100D38120 /* MappingF1.h */; };
+		5D936E501BC548CB0046ACD4 /* InitializerRandomized.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940E1BA9E12100D38120 /* InitializerRandomized.h */; };
+		5D936E511BC548CB0046ACD4 /* InitializerCopyMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94091BA9E12100D38120 /* InitializerCopyMappingI1.h */; };
+		5D936E521BC548CB0046ACD4 /* SynthesisPyramidI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94301BA9E12100D38120 /* SynthesisPyramidI1.h */; };
+		5D936E541BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94051BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h */; };
+		5D936E551BC548CB0046ACD4 /* Optimizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94221BA9E12100D38120 /* Optimizer.h */; };
+		5D936E571BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94061BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h */; };
+		5D936E581BC548CB0046ACD4 /* InitializerSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94141BA9E12100D38120 /* InitializerSubset.h */; };
+		5D936E591BC548CB0046ACD4 /* Layer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94151BA9E12100D38120 /* Layer.h */; };
+		5D936E5A1BC548CB0046ACD4 /* InitializerAreaConstrained.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94021BA9E12100D38120 /* InitializerAreaConstrained.h */; };
+		5D936E5B1BC548CB0046ACD4 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94281BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h */; };
+		5D936E5C1BC548CB0046ACD4 /* MappingI2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94201BA9E12100D38120 /* MappingI2.h */; };
+		5D936E5D1BC548CB0046ACD4 /* OptimizerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942B1BA9E12100D38120 /* OptimizerF.h */; };
+		5D936E5E1BC548CB0046ACD4 /* OptimizerSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942D1BA9E12100D38120 /* OptimizerSubset.h */; };
+		5D936E5F1BC548CB0046ACD4 /* Creator1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E41BA9E10E00D38120 /* Creator1.h */; };
+		5D936E601BC548CB0046ACD4 /* CreatorI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E71BA9E10E00D38120 /* CreatorI.h */; };
+		5D936E611BC548CB0046ACD4 /* InitializerConvertMappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94081BA9E12100D38120 /* InitializerConvertMappingF1.h */; };
+		5D98613F1D8B567A00DEDB00 /* MappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C01BA9E0F700D38120 /* MappingF1.cpp */; };
+		5D9861401D8B567A00DEDB00 /* CreatorSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */; };
+		5D9861411D8B567A00DEDB00 /* LayerI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BF1BA9E0F700D38120 /* LayerI1.cpp */; };
+		5D9861421D8B567A00DEDB00 /* InitializerContourMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */; };
+		5D9861441D8B567A00DEDB00 /* SynthesisPyramidI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C51BA9E0F700D38120 /* SynthesisPyramidI1.cpp */; };
+		5D9861451D8B567A00DEDB00 /* LayerF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BE1BA9E0F700D38120 /* LayerF1.cpp */; };
+		5D9861471D8B567A00DEDB00 /* InitializerShrinkingErosionI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B91BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp */; };
+		5D9861491D8B567A00DEDB00 /* InitializerRandomMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B81BA9E0F700D38120 /* InitializerRandomMappingI1.cpp */; };
+		5D98614B1D8B567A00DEDB00 /* InitializerConvertMappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */; };
+		5D98614C1D8B567A00DEDB00 /* MappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C11BA9E0F700D38120 /* MappingI1.cpp */; };
+		5D98614D1D8B567A00DEDB00 /* InitializerMoveMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B61BA9E0F700D38120 /* InitializerMoveMappingI1.cpp */; };
+		5D98614E1D8B567A00DEDB00 /* CreatorInpaintingContentF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AB1BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp */; };
+		5D98614F1D8B567A00DEDB00 /* InitializerHomographyMappingAdaptionF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B51BA9E0F700D38120 /* InitializerHomographyMappingAdaptionF1.cpp */; };
+		5D9861501D8B567A00DEDB00 /* InitializerShrinkingPatchMatchingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BB1BA9E0F700D38120 /* InitializerShrinkingPatchMatchingI1.cpp */; };
+		5D9861511D8B567A00DEDB00 /* InitializerRandomMappingAreaConstrainedI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B71BA9E0F700D38120 /* InitializerRandomMappingAreaConstrainedI1.cpp */; };
+		5D9861521D8B567A00DEDB00 /* MappingI2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C21BA9E0F700D38120 /* MappingI2.cpp */; };
+		5D9861531D8B567A00DEDB00 /* Constraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AA1BA9E0F700D38120 /* Constraint.cpp */; };
+		5D9861541D8B567A00DEDB00 /* CreatorInpaintingContentI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AC1BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp */; };
+		5D9861551D8B567A00DEDB00 /* OptimizerSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C31BA9E0F700D38120 /* OptimizerSubset.cpp */; };
+		5D9861561D8B567A00DEDB00 /* InitializerSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BC1BA9E0F700D38120 /* InitializerSubset.cpp */; };
+		5D9861571D8B567A00DEDB00 /* InitializerCopyMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B41BA9E0F700D38120 /* InitializerCopyMappingI1.cpp */; };
+		5D9861581D8B567A00DEDB00 /* InitializerShrinkingErosionRandomizedI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BA1BA9E0F700D38120 /* InitializerShrinkingErosionRandomizedI1.cpp */; };
+		5D9861591D8B567A00DEDB00 /* Layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BD1BA9E0F700D38120 /* Layer.cpp */; };
+		5D98615A1D8B567A00DEDB00 /* SynthesisPyramidF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C41BA9E0F700D38120 /* SynthesisPyramidF1.cpp */; };
+		5D98615D1D8B567A00DEDB00 /* Optimizer4NeighborhoodHighPerformanceI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94261BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceI1.h */; };
+		5D98615E1D8B567A00DEDB00 /* InitializerRandomMappingAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940F1BA9E12100D38120 /* InitializerRandomMappingAreaConstrainedI1.h */; };
+		5D98615F1D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94031BA9E12100D38120 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h */; };
+		5D9861601D8B567A00DEDB00 /* Optimizer4NeighborhoodStructuralConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942A1BA9E12100D38120 /* Optimizer4NeighborhoodStructuralConstrainedI1.h */; };
+		5D9861611D8B567A00DEDB00 /* MappingF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941C1BA9E12100D38120 /* MappingF.h */; };
+		5D9861621D8B567A00DEDB00 /* Optimizer4NeighborhoodAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94241BA9E12100D38120 /* Optimizer4NeighborhoodAreaConstrainedI1.h */; };
+		5D9861631D8B567A00DEDB00 /* MappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941F1BA9E12100D38120 /* MappingI1.h */; };
+		5D9861641D8B567A00DEDB00 /* Constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E21BA9E10E00D38120 /* Constraint.h */; };
+		5D9861651D8B567A00DEDB00 /* LayerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94161BA9E12100D38120 /* LayerF.h */; };
+		5D9861661D8B567A00DEDB00 /* Creator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E31BA9E10E00D38120 /* Creator.h */; };
+		5D9861671D8B567A00DEDB00 /* InitializerAppearanceMappingAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FF1BA9E12100D38120 /* InitializerAppearanceMappingAreaConstrainedI1.h */; };
+		5D9861681D8B567A00DEDB00 /* CreatorSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EC1BA9E10E00D38120 /* CreatorSubset.h */; };
+		5D9861691D8B567A00DEDB00 /* CreatorInpaintingContentF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EA1BA9E10E00D38120 /* CreatorInpaintingContentF1.h */; };
+		5D98616A1D8B567A00DEDB00 /* InitializerContourMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94071BA9E12100D38120 /* InitializerContourMappingI1.h */; };
+		5D98616B1D8B567A00DEDB00 /* Optimizer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94231BA9E12100D38120 /* Optimizer1.h */; };
+		5D98616C1D8B567A00DEDB00 /* Synthesis.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942E1BA9E12100D38120 /* Synthesis.h */; };
+		5D98616E1D8B567A00DEDB00 /* InitializerAppearanceMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94011BA9E12100D38120 /* InitializerAppearanceMappingI1.h */; };
+		5D98616F1D8B567A00DEDB00 /* InitializerShrinkingPatchMatchingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94131BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h */; };
+		5D9861701D8B567A00DEDB00 /* Mapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941B1BA9E12100D38120 /* Mapping.h */; };
+		5D9861711D8B567A00DEDB00 /* InitializerAppearanceMappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94001BA9E12100D38120 /* InitializerAppearanceMappingF1.h */; };
+		5D9861731D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94041BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h */; };
+		5D9861741D8B567A00DEDB00 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94271BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h */; };
+		5D9861751D8B567A00DEDB00 /* Operator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94211BA9E12100D38120 /* Operator.h */; };
+		5D9861771D8B567A00DEDB00 /* CreatorInformationSpatialCostI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E91BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h */; };
+		5D9861781D8B567A00DEDB00 /* InitializerHomographyMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940B1BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h */; };
+		5D9861791D8B567A00DEDB00 /* LayerF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94171BA9E12100D38120 /* LayerF1.h */; };
+		5D98617A1D8B567A00DEDB00 /* InitializerShrinkingErosionI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94111BA9E12100D38120 /* InitializerShrinkingErosionI1.h */; };
+		5D98617B1D8B567A00DEDB00 /* Optimizer4NeighborhoodHighPerformanceF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94251BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceF1.h */; };
+		5D98617C1D8B567A00DEDB00 /* Initializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FC1BA9E12100D38120 /* Initializer.h */; };
+		5D98617D1D8B567A00DEDB00 /* InitializerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940A1BA9E12100D38120 /* InitializerF.h */; };
+		5D98617E1D8B567A00DEDB00 /* CreatorF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E51BA9E10E00D38120 /* CreatorF.h */; };
+		5D98617F1D8B567A00DEDB00 /* SynthesisPyramidF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942F1BA9E12100D38120 /* SynthesisPyramidF1.h */; };
+		5D9861801D8B567A00DEDB00 /* InitializerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940C1BA9E12100D38120 /* InitializerI.h */; };
+		5D9861811D8B567A00DEDB00 /* CreatorInformationCost4NeighborhoodI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E81BA9E10E00D38120 /* CreatorInformationCost4NeighborhoodI1.h */; };
+		5D9861821D8B567A00DEDB00 /* LayerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94181BA9E12100D38120 /* LayerI.h */; };
+		5D9861831D8B567A00DEDB00 /* InitializerAppearanceMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FE1BA9E12100D38120 /* InitializerAppearanceMapping.h */; };
+		5D9861841D8B567A00DEDB00 /* MappingI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941E1BA9E12100D38120 /* MappingI.h */; };
+		5D9861851D8B567A00DEDB00 /* InitializerRandomMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94101BA9E12100D38120 /* InitializerRandomMappingI1.h */; };
+		5D9861861D8B567A00DEDB00 /* LayerI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94191BA9E12100D38120 /* LayerI1.h */; };
+		5D9861871D8B567A00DEDB00 /* InitializerMoveMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940D1BA9E12100D38120 /* InitializerMoveMappingI1.h */; };
+		5D9861881D8B567A00DEDB00 /* CreatorInpaintingContentI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EB1BA9E10E00D38120 /* CreatorInpaintingContentI1.h */; };
+		5D9861891D8B567A00DEDB00 /* Initializer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FD1BA9E12100D38120 /* Initializer1.h */; };
+		5D98618A1D8B567A00DEDB00 /* InitializerShrinkingErosionRandomizedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94121BA9E12100D38120 /* InitializerShrinkingErosionRandomizedI1.h */; };
+		5D98618B1D8B567A00DEDB00 /* CreatorFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E61BA9E10E00D38120 /* CreatorFrame.h */; };
+		5D98618C1D8B567A00DEDB00 /* Optimizer4NeighborhoodReferenceFrameF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94291BA9E12100D38120 /* Optimizer4NeighborhoodReferenceFrameF1.h */; };
+		5D98618D1D8B567A00DEDB00 /* OptimizerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942C1BA9E12100D38120 /* OptimizerI.h */; };
+		5D98618E1D8B567A00DEDB00 /* MappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941D1BA9E12100D38120 /* MappingF1.h */; };
+		5D98618F1D8B567A00DEDB00 /* InitializerRandomized.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940E1BA9E12100D38120 /* InitializerRandomized.h */; };
+		5D9861901D8B567A00DEDB00 /* InitializerCopyMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94091BA9E12100D38120 /* InitializerCopyMappingI1.h */; };
+		5D9861911D8B567A00DEDB00 /* SynthesisPyramidI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94301BA9E12100D38120 /* SynthesisPyramidI1.h */; };
+		5D9861931D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94051BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h */; };
+		5D9861941D8B567A00DEDB00 /* Optimizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94221BA9E12100D38120 /* Optimizer.h */; };
+		5D9861961D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94061BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h */; };
+		5D9861971D8B567A00DEDB00 /* InitializerSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94141BA9E12100D38120 /* InitializerSubset.h */; };
+		5D9861981D8B567A00DEDB00 /* Layer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94151BA9E12100D38120 /* Layer.h */; };
+		5D9861991D8B567A00DEDB00 /* InitializerAreaConstrained.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94021BA9E12100D38120 /* InitializerAreaConstrained.h */; };
+		5D98619A1D8B567A00DEDB00 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94281BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h */; };
+		5D98619B1D8B567A00DEDB00 /* MappingI2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94201BA9E12100D38120 /* MappingI2.h */; };
+		5D98619C1D8B567A00DEDB00 /* OptimizerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942B1BA9E12100D38120 /* OptimizerF.h */; };
+		5D98619D1D8B567A00DEDB00 /* OptimizerSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942D1BA9E12100D38120 /* OptimizerSubset.h */; };
+		5D98619E1D8B567A00DEDB00 /* Creator1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E41BA9E10E00D38120 /* Creator1.h */; };
+		5D98619F1D8B567A00DEDB00 /* CreatorI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E71BA9E10E00D38120 /* CreatorI.h */; };
+		5D9861A01D8B567A00DEDB00 /* InitializerConvertMappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94081BA9E12100D38120 /* InitializerConvertMappingF1.h */; };
+		5DB7745D1EE9977800C14BB2 /* SynthesisPyramid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB7745C1EE9977800C14BB2 /* SynthesisPyramid.cpp */; };
+		5DB7745E1EE9977800C14BB2 /* SynthesisPyramid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB7745C1EE9977800C14BB2 /* SynthesisPyramid.cpp */; };
+		5DB7745F1EE9977800C14BB2 /* SynthesisPyramid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB7745C1EE9977800C14BB2 /* SynthesisPyramid.cpp */; };
+		5DB774601EE9977800C14BB2 /* SynthesisPyramid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB7745C1EE9977800C14BB2 /* SynthesisPyramid.cpp */; };
+		5DB774621EE9979A00C14BB2 /* SynthesisPyramid.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB774611EE9979A00C14BB2 /* SynthesisPyramid.h */; };
+		5DB774631EE9979A00C14BB2 /* SynthesisPyramid.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB774611EE9979A00C14BB2 /* SynthesisPyramid.h */; };
+		5DB774641EE9979A00C14BB2 /* SynthesisPyramid.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB774611EE9979A00C14BB2 /* SynthesisPyramid.h */; };
+		5DB774651EE9979A00C14BB2 /* SynthesisPyramid.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB774611EE9979A00C14BB2 /* SynthesisPyramid.h */; };
+		C041EB441DABD98100BF5D76 /* MappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C01BA9E0F700D38120 /* MappingF1.cpp */; };
+		C041EB451DABD98100BF5D76 /* CreatorSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */; };
+		C041EB461DABD98100BF5D76 /* LayerI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BF1BA9E0F700D38120 /* LayerI1.cpp */; };
+		C041EB471DABD98100BF5D76 /* InitializerContourMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */; };
+		C041EB491DABD98100BF5D76 /* SynthesisPyramidI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C51BA9E0F700D38120 /* SynthesisPyramidI1.cpp */; };
+		C041EB4A1DABD98100BF5D76 /* LayerF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BE1BA9E0F700D38120 /* LayerF1.cpp */; };
+		C041EB4C1DABD98100BF5D76 /* InitializerShrinkingErosionI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B91BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp */; };
+		C041EB4E1DABD98100BF5D76 /* InitializerRandomMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B81BA9E0F700D38120 /* InitializerRandomMappingI1.cpp */; };
+		C041EB501DABD98100BF5D76 /* InitializerConvertMappingF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */; };
+		C041EB511DABD98100BF5D76 /* MappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C11BA9E0F700D38120 /* MappingI1.cpp */; };
+		C041EB521DABD98100BF5D76 /* InitializerMoveMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B61BA9E0F700D38120 /* InitializerMoveMappingI1.cpp */; };
+		C041EB531DABD98100BF5D76 /* CreatorInpaintingContentF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AB1BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp */; };
+		C041EB541DABD98100BF5D76 /* InitializerHomographyMappingAdaptionF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B51BA9E0F700D38120 /* InitializerHomographyMappingAdaptionF1.cpp */; };
+		C041EB551DABD98100BF5D76 /* InitializerShrinkingPatchMatchingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BB1BA9E0F700D38120 /* InitializerShrinkingPatchMatchingI1.cpp */; };
+		C041EB561DABD98100BF5D76 /* InitializerRandomMappingAreaConstrainedI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B71BA9E0F700D38120 /* InitializerRandomMappingAreaConstrainedI1.cpp */; };
+		C041EB571DABD98100BF5D76 /* MappingI2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C21BA9E0F700D38120 /* MappingI2.cpp */; };
+		C041EB581DABD98100BF5D76 /* Constraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AA1BA9E0F700D38120 /* Constraint.cpp */; };
+		C041EB591DABD98100BF5D76 /* CreatorInpaintingContentI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93AC1BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp */; };
+		C041EB5A1DABD98100BF5D76 /* OptimizerSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C31BA9E0F700D38120 /* OptimizerSubset.cpp */; };
+		C041EB5B1DABD98100BF5D76 /* InitializerSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BC1BA9E0F700D38120 /* InitializerSubset.cpp */; };
+		C041EB5C1DABD98100BF5D76 /* InitializerCopyMappingI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93B41BA9E0F700D38120 /* InitializerCopyMappingI1.cpp */; };
+		C041EB5D1DABD98100BF5D76 /* InitializerShrinkingErosionRandomizedI1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BA1BA9E0F700D38120 /* InitializerShrinkingErosionRandomizedI1.cpp */; };
+		C041EB5E1DABD98100BF5D76 /* Layer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93BD1BA9E0F700D38120 /* Layer.cpp */; };
+		C041EB5F1DABD98100BF5D76 /* SynthesisPyramidF1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93C41BA9E0F700D38120 /* SynthesisPyramidF1.cpp */; };
+		C041EB621DABD98100BF5D76 /* Optimizer4NeighborhoodHighPerformanceI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94261BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceI1.h */; };
+		C041EB631DABD98100BF5D76 /* InitializerRandomMappingAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940F1BA9E12100D38120 /* InitializerRandomMappingAreaConstrainedI1.h */; };
+		C041EB641DABD98100BF5D76 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94031BA9E12100D38120 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h */; };
+		C041EB651DABD98100BF5D76 /* Optimizer4NeighborhoodStructuralConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942A1BA9E12100D38120 /* Optimizer4NeighborhoodStructuralConstrainedI1.h */; };
+		C041EB661DABD98100BF5D76 /* MappingF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941C1BA9E12100D38120 /* MappingF.h */; };
+		C041EB671DABD98100BF5D76 /* Optimizer4NeighborhoodAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94241BA9E12100D38120 /* Optimizer4NeighborhoodAreaConstrainedI1.h */; };
+		C041EB681DABD98100BF5D76 /* MappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941F1BA9E12100D38120 /* MappingI1.h */; };
+		C041EB691DABD98100BF5D76 /* Constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E21BA9E10E00D38120 /* Constraint.h */; };
+		C041EB6A1DABD98100BF5D76 /* LayerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94161BA9E12100D38120 /* LayerF.h */; };
+		C041EB6B1DABD98100BF5D76 /* Creator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E31BA9E10E00D38120 /* Creator.h */; };
+		C041EB6C1DABD98100BF5D76 /* InitializerAppearanceMappingAreaConstrainedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FF1BA9E12100D38120 /* InitializerAppearanceMappingAreaConstrainedI1.h */; };
+		C041EB6D1DABD98100BF5D76 /* CreatorSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EC1BA9E10E00D38120 /* CreatorSubset.h */; };
+		C041EB6E1DABD98100BF5D76 /* CreatorInpaintingContentF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EA1BA9E10E00D38120 /* CreatorInpaintingContentF1.h */; };
+		C041EB6F1DABD98100BF5D76 /* InitializerContourMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94071BA9E12100D38120 /* InitializerContourMappingI1.h */; };
+		C041EB701DABD98100BF5D76 /* Optimizer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94231BA9E12100D38120 /* Optimizer1.h */; };
+		C041EB711DABD98100BF5D76 /* Synthesis.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942E1BA9E12100D38120 /* Synthesis.h */; };
+		C041EB731DABD98100BF5D76 /* InitializerAppearanceMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94011BA9E12100D38120 /* InitializerAppearanceMappingI1.h */; };
+		C041EB741DABD98100BF5D76 /* InitializerShrinkingPatchMatchingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94131BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h */; };
+		C041EB751DABD98100BF5D76 /* Mapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941B1BA9E12100D38120 /* Mapping.h */; };
+		C041EB761DABD98100BF5D76 /* InitializerAppearanceMappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94001BA9E12100D38120 /* InitializerAppearanceMappingF1.h */; };
+		C041EB781DABD98100BF5D76 /* InitializerCoarserMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94041BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h */; };
+		C041EB791DABD98100BF5D76 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94271BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h */; };
+		C041EB7A1DABD98100BF5D76 /* Operator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94211BA9E12100D38120 /* Operator.h */; };
+		C041EB7C1DABD98100BF5D76 /* CreatorInformationSpatialCostI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E91BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h */; };
+		C041EB7D1DABD98100BF5D76 /* InitializerHomographyMappingAdaptionF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940B1BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h */; };
+		C041EB7E1DABD98100BF5D76 /* LayerF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94171BA9E12100D38120 /* LayerF1.h */; };
+		C041EB7F1DABD98100BF5D76 /* InitializerShrinkingErosionI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94111BA9E12100D38120 /* InitializerShrinkingErosionI1.h */; };
+		C041EB801DABD98100BF5D76 /* Optimizer4NeighborhoodHighPerformanceF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94251BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceF1.h */; };
+		C041EB811DABD98100BF5D76 /* Initializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FC1BA9E12100D38120 /* Initializer.h */; };
+		C041EB821DABD98100BF5D76 /* InitializerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940A1BA9E12100D38120 /* InitializerF.h */; };
+		C041EB831DABD98100BF5D76 /* CreatorF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E51BA9E10E00D38120 /* CreatorF.h */; };
+		C041EB841DABD98100BF5D76 /* SynthesisPyramidF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942F1BA9E12100D38120 /* SynthesisPyramidF1.h */; };
+		C041EB851DABD98100BF5D76 /* InitializerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940C1BA9E12100D38120 /* InitializerI.h */; };
+		C041EB861DABD98100BF5D76 /* CreatorInformationCost4NeighborhoodI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E81BA9E10E00D38120 /* CreatorInformationCost4NeighborhoodI1.h */; };
+		C041EB871DABD98100BF5D76 /* LayerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94181BA9E12100D38120 /* LayerI.h */; };
+		C041EB881DABD98100BF5D76 /* InitializerAppearanceMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FE1BA9E12100D38120 /* InitializerAppearanceMapping.h */; };
+		C041EB891DABD98100BF5D76 /* MappingI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941E1BA9E12100D38120 /* MappingI.h */; };
+		C041EB8A1DABD98100BF5D76 /* InitializerRandomMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94101BA9E12100D38120 /* InitializerRandomMappingI1.h */; };
+		C041EB8B1DABD98100BF5D76 /* LayerI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94191BA9E12100D38120 /* LayerI1.h */; };
+		C041EB8C1DABD98100BF5D76 /* InitializerMoveMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940D1BA9E12100D38120 /* InitializerMoveMappingI1.h */; };
+		C041EB8D1DABD98100BF5D76 /* CreatorInpaintingContentI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93EB1BA9E10E00D38120 /* CreatorInpaintingContentI1.h */; };
+		C041EB8E1DABD98100BF5D76 /* Initializer1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93FD1BA9E12100D38120 /* Initializer1.h */; };
+		C041EB8F1DABD98100BF5D76 /* InitializerShrinkingErosionRandomizedI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94121BA9E12100D38120 /* InitializerShrinkingErosionRandomizedI1.h */; };
+		C041EB901DABD98100BF5D76 /* CreatorFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E61BA9E10E00D38120 /* CreatorFrame.h */; };
+		C041EB911DABD98100BF5D76 /* Optimizer4NeighborhoodReferenceFrameF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94291BA9E12100D38120 /* Optimizer4NeighborhoodReferenceFrameF1.h */; };
+		C041EB921DABD98100BF5D76 /* OptimizerI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942C1BA9E12100D38120 /* OptimizerI.h */; };
+		C041EB931DABD98100BF5D76 /* MappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D941D1BA9E12100D38120 /* MappingF1.h */; };
+		C041EB941DABD98100BF5D76 /* InitializerRandomized.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D940E1BA9E12100D38120 /* InitializerRandomized.h */; };
+		C041EB951DABD98100BF5D76 /* InitializerCopyMappingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94091BA9E12100D38120 /* InitializerCopyMappingI1.h */; };
+		C041EB961DABD98100BF5D76 /* SynthesisPyramidI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94301BA9E12100D38120 /* SynthesisPyramidI1.h */; };
+		C041EB981DABD98100BF5D76 /* InitializerCoarserMappingAdaptionI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94051BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h */; };
+		C041EB991DABD98100BF5D76 /* Optimizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94221BA9E12100D38120 /* Optimizer.h */; };
+		C041EB9B1DABD98100BF5D76 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94061BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h */; };
+		C041EB9C1DABD98100BF5D76 /* InitializerSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94141BA9E12100D38120 /* InitializerSubset.h */; };
+		C041EB9D1DABD98100BF5D76 /* Layer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94151BA9E12100D38120 /* Layer.h */; };
+		C041EB9E1DABD98100BF5D76 /* InitializerAreaConstrained.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94021BA9E12100D38120 /* InitializerAreaConstrained.h */; };
+		C041EB9F1DABD98100BF5D76 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94281BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h */; };
+		C041EBA01DABD98100BF5D76 /* MappingI2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94201BA9E12100D38120 /* MappingI2.h */; };
+		C041EBA11DABD98100BF5D76 /* OptimizerF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942B1BA9E12100D38120 /* OptimizerF.h */; };
+		C041EBA21DABD98100BF5D76 /* OptimizerSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D942D1BA9E12100D38120 /* OptimizerSubset.h */; };
+		C041EBA31DABD98100BF5D76 /* Creator1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E41BA9E10E00D38120 /* Creator1.h */; };
+		C041EBA41DABD98100BF5D76 /* CreatorI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93E71BA9E10E00D38120 /* CreatorI.h */; };
+		C041EBA51DABD98100BF5D76 /* InitializerConvertMappingF1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D94081BA9E12100D38120 /* InitializerConvertMappingF1.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D7D939B1BA9DF8000D38120 /* libOceanCVSynthesisD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVSynthesisD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D7D93AA1BA9E0F700D38120 /* Constraint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Constraint.cpp; path = ../../../../../../impl/ocean/cv/synthesis/Constraint.cpp; sourceTree = "<group>"; };
+		5D7D93AB1BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CreatorInpaintingContentF1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/CreatorInpaintingContentF1.cpp; sourceTree = "<group>"; };
+		5D7D93AC1BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CreatorInpaintingContentI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/CreatorInpaintingContentI1.cpp; sourceTree = "<group>"; };
+		5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CreatorSubset.cpp; path = ../../../../../../impl/ocean/cv/synthesis/CreatorSubset.cpp; sourceTree = "<group>"; };
+		5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerContourMappingI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerContourMappingI1.cpp; sourceTree = "<group>"; };
+		5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerConvertMappingF1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerConvertMappingF1.cpp; sourceTree = "<group>"; };
+		5D7D93B41BA9E0F700D38120 /* InitializerCopyMappingI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerCopyMappingI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerCopyMappingI1.cpp; sourceTree = "<group>"; };
+		5D7D93B51BA9E0F700D38120 /* InitializerHomographyMappingAdaptionF1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerHomographyMappingAdaptionF1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerHomographyMappingAdaptionF1.cpp; sourceTree = "<group>"; };
+		5D7D93B61BA9E0F700D38120 /* InitializerMoveMappingI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerMoveMappingI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerMoveMappingI1.cpp; sourceTree = "<group>"; };
+		5D7D93B71BA9E0F700D38120 /* InitializerRandomMappingAreaConstrainedI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerRandomMappingAreaConstrainedI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerRandomMappingAreaConstrainedI1.cpp; sourceTree = "<group>"; };
+		5D7D93B81BA9E0F700D38120 /* InitializerRandomMappingI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerRandomMappingI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerRandomMappingI1.cpp; sourceTree = "<group>"; };
+		5D7D93B91BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerShrinkingErosionI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerShrinkingErosionI1.cpp; sourceTree = "<group>"; };
+		5D7D93BA1BA9E0F700D38120 /* InitializerShrinkingErosionRandomizedI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerShrinkingErosionRandomizedI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerShrinkingErosionRandomizedI1.cpp; sourceTree = "<group>"; };
+		5D7D93BB1BA9E0F700D38120 /* InitializerShrinkingPatchMatchingI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerShrinkingPatchMatchingI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerShrinkingPatchMatchingI1.cpp; sourceTree = "<group>"; };
+		5D7D93BC1BA9E0F700D38120 /* InitializerSubset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InitializerSubset.cpp; path = ../../../../../../impl/ocean/cv/synthesis/InitializerSubset.cpp; sourceTree = "<group>"; };
+		5D7D93BD1BA9E0F700D38120 /* Layer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Layer.cpp; path = ../../../../../../impl/ocean/cv/synthesis/Layer.cpp; sourceTree = "<group>"; };
+		5D7D93BE1BA9E0F700D38120 /* LayerF1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LayerF1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/LayerF1.cpp; sourceTree = "<group>"; };
+		5D7D93BF1BA9E0F700D38120 /* LayerI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LayerI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/LayerI1.cpp; sourceTree = "<group>"; };
+		5D7D93C01BA9E0F700D38120 /* MappingF1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MappingF1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/MappingF1.cpp; sourceTree = "<group>"; };
+		5D7D93C11BA9E0F700D38120 /* MappingI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MappingI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/MappingI1.cpp; sourceTree = "<group>"; };
+		5D7D93C21BA9E0F700D38120 /* MappingI2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MappingI2.cpp; path = ../../../../../../impl/ocean/cv/synthesis/MappingI2.cpp; sourceTree = "<group>"; };
+		5D7D93C31BA9E0F700D38120 /* OptimizerSubset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OptimizerSubset.cpp; path = ../../../../../../impl/ocean/cv/synthesis/OptimizerSubset.cpp; sourceTree = "<group>"; };
+		5D7D93C41BA9E0F700D38120 /* SynthesisPyramidF1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SynthesisPyramidF1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/SynthesisPyramidF1.cpp; sourceTree = "<group>"; };
+		5D7D93C51BA9E0F700D38120 /* SynthesisPyramidI1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SynthesisPyramidI1.cpp; path = ../../../../../../impl/ocean/cv/synthesis/SynthesisPyramidI1.cpp; sourceTree = "<group>"; };
+		5D7D93E21BA9E10E00D38120 /* Constraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constraint.h; path = ../../../../../../impl/ocean/cv/synthesis/Constraint.h; sourceTree = "<group>"; };
+		5D7D93E31BA9E10E00D38120 /* Creator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Creator.h; path = ../../../../../../impl/ocean/cv/synthesis/Creator.h; sourceTree = "<group>"; };
+		5D7D93E41BA9E10E00D38120 /* Creator1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Creator1.h; path = ../../../../../../impl/ocean/cv/synthesis/Creator1.h; sourceTree = "<group>"; };
+		5D7D93E51BA9E10E00D38120 /* CreatorF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatorF.h; path = ../../../../../../impl/ocean/cv/synthesis/CreatorF.h; sourceTree = "<group>"; };
+		5D7D93E61BA9E10E00D38120 /* CreatorFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatorFrame.h; path = ../../../../../../impl/ocean/cv/synthesis/CreatorFrame.h; sourceTree = "<group>"; };
+		5D7D93E71BA9E10E00D38120 /* CreatorI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatorI.h; path = ../../../../../../impl/ocean/cv/synthesis/CreatorI.h; sourceTree = "<group>"; };
+		5D7D93E81BA9E10E00D38120 /* CreatorInformationCost4NeighborhoodI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatorInformationCost4NeighborhoodI1.h; path = ../../../../../../impl/ocean/cv/synthesis/CreatorInformationCost4NeighborhoodI1.h; sourceTree = "<group>"; };
+		5D7D93E91BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatorInformationSpatialCostI1.h; path = ../../../../../../impl/ocean/cv/synthesis/CreatorInformationSpatialCostI1.h; sourceTree = "<group>"; };
+		5D7D93EA1BA9E10E00D38120 /* CreatorInpaintingContentF1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatorInpaintingContentF1.h; path = ../../../../../../impl/ocean/cv/synthesis/CreatorInpaintingContentF1.h; sourceTree = "<group>"; };
+		5D7D93EB1BA9E10E00D38120 /* CreatorInpaintingContentI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatorInpaintingContentI1.h; path = ../../../../../../impl/ocean/cv/synthesis/CreatorInpaintingContentI1.h; sourceTree = "<group>"; };
+		5D7D93EC1BA9E10E00D38120 /* CreatorSubset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatorSubset.h; path = ../../../../../../impl/ocean/cv/synthesis/CreatorSubset.h; sourceTree = "<group>"; };
+		5D7D93FC1BA9E12100D38120 /* Initializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Initializer.h; path = ../../../../../../impl/ocean/cv/synthesis/Initializer.h; sourceTree = "<group>"; };
+		5D7D93FD1BA9E12100D38120 /* Initializer1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Initializer1.h; path = ../../../../../../impl/ocean/cv/synthesis/Initializer1.h; sourceTree = "<group>"; };
+		5D7D93FE1BA9E12100D38120 /* InitializerAppearanceMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerAppearanceMapping.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerAppearanceMapping.h; sourceTree = "<group>"; };
+		5D7D93FF1BA9E12100D38120 /* InitializerAppearanceMappingAreaConstrainedI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerAppearanceMappingAreaConstrainedI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerAppearanceMappingAreaConstrainedI1.h; sourceTree = "<group>"; };
+		5D7D94001BA9E12100D38120 /* InitializerAppearanceMappingF1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerAppearanceMappingF1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerAppearanceMappingF1.h; sourceTree = "<group>"; };
+		5D7D94011BA9E12100D38120 /* InitializerAppearanceMappingI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerAppearanceMappingI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerAppearanceMappingI1.h; sourceTree = "<group>"; };
+		5D7D94021BA9E12100D38120 /* InitializerAreaConstrained.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerAreaConstrained.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerAreaConstrained.h; sourceTree = "<group>"; };
+		5D7D94031BA9E12100D38120 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerCoarserMappingAdaptionAreaConstrainedI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerCoarserMappingAdaptionAreaConstrainedI1.h; sourceTree = "<group>"; };
+		5D7D94041BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerCoarserMappingAdaptionF1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerCoarserMappingAdaptionF1.h; sourceTree = "<group>"; };
+		5D7D94051BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerCoarserMappingAdaptionI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerCoarserMappingAdaptionI1.h; sourceTree = "<group>"; };
+		5D7D94061BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerCoarserMappingAdaptionSpatialCostMaskI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerCoarserMappingAdaptionSpatialCostMaskI1.h; sourceTree = "<group>"; };
+		5D7D94071BA9E12100D38120 /* InitializerContourMappingI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerContourMappingI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerContourMappingI1.h; sourceTree = "<group>"; };
+		5D7D94081BA9E12100D38120 /* InitializerConvertMappingF1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerConvertMappingF1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerConvertMappingF1.h; sourceTree = "<group>"; };
+		5D7D94091BA9E12100D38120 /* InitializerCopyMappingI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerCopyMappingI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerCopyMappingI1.h; sourceTree = "<group>"; };
+		5D7D940A1BA9E12100D38120 /* InitializerF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerF.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerF.h; sourceTree = "<group>"; };
+		5D7D940B1BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerHomographyMappingAdaptionF1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerHomographyMappingAdaptionF1.h; sourceTree = "<group>"; };
+		5D7D940C1BA9E12100D38120 /* InitializerI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerI.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerI.h; sourceTree = "<group>"; };
+		5D7D940D1BA9E12100D38120 /* InitializerMoveMappingI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerMoveMappingI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerMoveMappingI1.h; sourceTree = "<group>"; };
+		5D7D940E1BA9E12100D38120 /* InitializerRandomized.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerRandomized.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerRandomized.h; sourceTree = "<group>"; };
+		5D7D940F1BA9E12100D38120 /* InitializerRandomMappingAreaConstrainedI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerRandomMappingAreaConstrainedI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerRandomMappingAreaConstrainedI1.h; sourceTree = "<group>"; };
+		5D7D94101BA9E12100D38120 /* InitializerRandomMappingI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerRandomMappingI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerRandomMappingI1.h; sourceTree = "<group>"; };
+		5D7D94111BA9E12100D38120 /* InitializerShrinkingErosionI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerShrinkingErosionI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerShrinkingErosionI1.h; sourceTree = "<group>"; };
+		5D7D94121BA9E12100D38120 /* InitializerShrinkingErosionRandomizedI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerShrinkingErosionRandomizedI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerShrinkingErosionRandomizedI1.h; sourceTree = "<group>"; };
+		5D7D94131BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerShrinkingPatchMatchingI1.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerShrinkingPatchMatchingI1.h; sourceTree = "<group>"; };
+		5D7D94141BA9E12100D38120 /* InitializerSubset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InitializerSubset.h; path = ../../../../../../impl/ocean/cv/synthesis/InitializerSubset.h; sourceTree = "<group>"; };
+		5D7D94151BA9E12100D38120 /* Layer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Layer.h; path = ../../../../../../impl/ocean/cv/synthesis/Layer.h; sourceTree = "<group>"; };
+		5D7D94161BA9E12100D38120 /* LayerF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LayerF.h; path = ../../../../../../impl/ocean/cv/synthesis/LayerF.h; sourceTree = "<group>"; };
+		5D7D94171BA9E12100D38120 /* LayerF1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LayerF1.h; path = ../../../../../../impl/ocean/cv/synthesis/LayerF1.h; sourceTree = "<group>"; };
+		5D7D94181BA9E12100D38120 /* LayerI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LayerI.h; path = ../../../../../../impl/ocean/cv/synthesis/LayerI.h; sourceTree = "<group>"; };
+		5D7D94191BA9E12100D38120 /* LayerI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LayerI1.h; path = ../../../../../../impl/ocean/cv/synthesis/LayerI1.h; sourceTree = "<group>"; };
+		5D7D941B1BA9E12100D38120 /* Mapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Mapping.h; path = ../../../../../../impl/ocean/cv/synthesis/Mapping.h; sourceTree = "<group>"; };
+		5D7D941C1BA9E12100D38120 /* MappingF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MappingF.h; path = ../../../../../../impl/ocean/cv/synthesis/MappingF.h; sourceTree = "<group>"; };
+		5D7D941D1BA9E12100D38120 /* MappingF1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MappingF1.h; path = ../../../../../../impl/ocean/cv/synthesis/MappingF1.h; sourceTree = "<group>"; };
+		5D7D941E1BA9E12100D38120 /* MappingI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MappingI.h; path = ../../../../../../impl/ocean/cv/synthesis/MappingI.h; sourceTree = "<group>"; };
+		5D7D941F1BA9E12100D38120 /* MappingI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MappingI1.h; path = ../../../../../../impl/ocean/cv/synthesis/MappingI1.h; sourceTree = "<group>"; };
+		5D7D94201BA9E12100D38120 /* MappingI2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MappingI2.h; path = ../../../../../../impl/ocean/cv/synthesis/MappingI2.h; sourceTree = "<group>"; };
+		5D7D94211BA9E12100D38120 /* Operator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Operator.h; path = ../../../../../../impl/ocean/cv/synthesis/Operator.h; sourceTree = "<group>"; };
+		5D7D94221BA9E12100D38120 /* Optimizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Optimizer.h; path = ../../../../../../impl/ocean/cv/synthesis/Optimizer.h; sourceTree = "<group>"; };
+		5D7D94231BA9E12100D38120 /* Optimizer1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Optimizer1.h; path = ../../../../../../impl/ocean/cv/synthesis/Optimizer1.h; sourceTree = "<group>"; };
+		5D7D94241BA9E12100D38120 /* Optimizer4NeighborhoodAreaConstrainedI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Optimizer4NeighborhoodAreaConstrainedI1.h; path = ../../../../../../impl/ocean/cv/synthesis/Optimizer4NeighborhoodAreaConstrainedI1.h; sourceTree = "<group>"; };
+		5D7D94251BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceF1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Optimizer4NeighborhoodHighPerformanceF1.h; path = ../../../../../../impl/ocean/cv/synthesis/Optimizer4NeighborhoodHighPerformanceF1.h; sourceTree = "<group>"; };
+		5D7D94261BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Optimizer4NeighborhoodHighPerformanceI1.h; path = ../../../../../../impl/ocean/cv/synthesis/Optimizer4NeighborhoodHighPerformanceI1.h; sourceTree = "<group>"; };
+		5D7D94271BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h; path = ../../../../../../impl/ocean/cv/synthesis/Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h; sourceTree = "<group>"; };
+		5D7D94281BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Optimizer4NeighborhoodHighPerformanceSkippingI1.h; path = ../../../../../../impl/ocean/cv/synthesis/Optimizer4NeighborhoodHighPerformanceSkippingI1.h; sourceTree = "<group>"; };
+		5D7D94291BA9E12100D38120 /* Optimizer4NeighborhoodReferenceFrameF1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Optimizer4NeighborhoodReferenceFrameF1.h; path = ../../../../../../impl/ocean/cv/synthesis/Optimizer4NeighborhoodReferenceFrameF1.h; sourceTree = "<group>"; };
+		5D7D942A1BA9E12100D38120 /* Optimizer4NeighborhoodStructuralConstrainedI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Optimizer4NeighborhoodStructuralConstrainedI1.h; path = ../../../../../../impl/ocean/cv/synthesis/Optimizer4NeighborhoodStructuralConstrainedI1.h; sourceTree = "<group>"; };
+		5D7D942B1BA9E12100D38120 /* OptimizerF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OptimizerF.h; path = ../../../../../../impl/ocean/cv/synthesis/OptimizerF.h; sourceTree = "<group>"; };
+		5D7D942C1BA9E12100D38120 /* OptimizerI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OptimizerI.h; path = ../../../../../../impl/ocean/cv/synthesis/OptimizerI.h; sourceTree = "<group>"; };
+		5D7D942D1BA9E12100D38120 /* OptimizerSubset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OptimizerSubset.h; path = ../../../../../../impl/ocean/cv/synthesis/OptimizerSubset.h; sourceTree = "<group>"; };
+		5D7D942E1BA9E12100D38120 /* Synthesis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Synthesis.h; path = ../../../../../../impl/ocean/cv/synthesis/Synthesis.h; sourceTree = "<group>"; };
+		5D7D942F1BA9E12100D38120 /* SynthesisPyramidF1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SynthesisPyramidF1.h; path = ../../../../../../impl/ocean/cv/synthesis/SynthesisPyramidF1.h; sourceTree = "<group>"; };
+		5D7D94301BA9E12100D38120 /* SynthesisPyramidI1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SynthesisPyramidI1.h; path = ../../../../../../impl/ocean/cv/synthesis/SynthesisPyramidI1.h; sourceTree = "<group>"; };
+		5D936E651BC548CB0046ACD4 /* libOceanCVSynthesisD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVSynthesisD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9861A41D8B567A00DEDB00 /* libOceanCVSynthesisD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVSynthesisD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DB7745C1EE9977800C14BB2 /* SynthesisPyramid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SynthesisPyramid.cpp; path = ../../../../../../impl/ocean/cv/synthesis/SynthesisPyramid.cpp; sourceTree = "<group>"; };
+		5DB774611EE9979A00C14BB2 /* SynthesisPyramid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SynthesisPyramid.h; path = ../../../../../../impl/ocean/cv/synthesis/SynthesisPyramid.h; sourceTree = "<group>"; };
+		C041EBAA1DABD98100BF5D76 /* libOceanCVSynthesisD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVSynthesisD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D7D93981BA9DF8000D38120 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936E1C1BC548CB0046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98615B1D8B567A00DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB601DABD98100BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D7D93921BA9DF8000D38120 = {
+			isa = PBXGroup;
+			children = (
+				5D936DFD1BC548760046ACD4 /* Header Files */,
+				5D7D93A91BA9E0D700D38120 /* Source Files */,
+				5D7D939C1BA9DF8000D38120 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D7D939C1BA9DF8000D38120 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D7D939B1BA9DF8000D38120 /* libOceanCVSynthesisD.a */,
+				5D936E651BC548CB0046ACD4 /* libOceanCVSynthesisD.dylib */,
+				5D9861A41D8B567A00DEDB00 /* libOceanCVSynthesisD.a */,
+				C041EBAA1DABD98100BF5D76 /* libOceanCVSynthesisD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D7D93A91BA9E0D700D38120 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D7D93AA1BA9E0F700D38120 /* Constraint.cpp */,
+				5D7D93AB1BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp */,
+				5D7D93AC1BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp */,
+				5D7D93AD1BA9E0F700D38120 /* CreatorSubset.cpp */,
+				5D7D93B21BA9E0F700D38120 /* InitializerContourMappingI1.cpp */,
+				5D7D93B31BA9E0F700D38120 /* InitializerConvertMappingF1.cpp */,
+				5D7D93B41BA9E0F700D38120 /* InitializerCopyMappingI1.cpp */,
+				5D7D93B51BA9E0F700D38120 /* InitializerHomographyMappingAdaptionF1.cpp */,
+				5D7D93B61BA9E0F700D38120 /* InitializerMoveMappingI1.cpp */,
+				5D7D93B71BA9E0F700D38120 /* InitializerRandomMappingAreaConstrainedI1.cpp */,
+				5D7D93B81BA9E0F700D38120 /* InitializerRandomMappingI1.cpp */,
+				5D7D93B91BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp */,
+				5D7D93BA1BA9E0F700D38120 /* InitializerShrinkingErosionRandomizedI1.cpp */,
+				5D7D93BB1BA9E0F700D38120 /* InitializerShrinkingPatchMatchingI1.cpp */,
+				5D7D93BC1BA9E0F700D38120 /* InitializerSubset.cpp */,
+				5D7D93BD1BA9E0F700D38120 /* Layer.cpp */,
+				5D7D93BE1BA9E0F700D38120 /* LayerF1.cpp */,
+				5D7D93BF1BA9E0F700D38120 /* LayerI1.cpp */,
+				5D7D93C01BA9E0F700D38120 /* MappingF1.cpp */,
+				5D7D93C11BA9E0F700D38120 /* MappingI1.cpp */,
+				5D7D93C21BA9E0F700D38120 /* MappingI2.cpp */,
+				5D7D93C31BA9E0F700D38120 /* OptimizerSubset.cpp */,
+				5DB7745C1EE9977800C14BB2 /* SynthesisPyramid.cpp */,
+				5D7D93C41BA9E0F700D38120 /* SynthesisPyramidF1.cpp */,
+				5D7D93C51BA9E0F700D38120 /* SynthesisPyramidI1.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D936DFD1BC548760046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D7D93E21BA9E10E00D38120 /* Constraint.h */,
+				5D7D93E31BA9E10E00D38120 /* Creator.h */,
+				5D7D93E41BA9E10E00D38120 /* Creator1.h */,
+				5D7D93E51BA9E10E00D38120 /* CreatorF.h */,
+				5D7D93E61BA9E10E00D38120 /* CreatorFrame.h */,
+				5D7D93E71BA9E10E00D38120 /* CreatorI.h */,
+				5D7D93E81BA9E10E00D38120 /* CreatorInformationCost4NeighborhoodI1.h */,
+				5D7D93E91BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h */,
+				5D7D93EA1BA9E10E00D38120 /* CreatorInpaintingContentF1.h */,
+				5D7D93EB1BA9E10E00D38120 /* CreatorInpaintingContentI1.h */,
+				5D7D93EC1BA9E10E00D38120 /* CreatorSubset.h */,
+				5D7D93FC1BA9E12100D38120 /* Initializer.h */,
+				5D7D93FD1BA9E12100D38120 /* Initializer1.h */,
+				5D7D93FE1BA9E12100D38120 /* InitializerAppearanceMapping.h */,
+				5D7D93FF1BA9E12100D38120 /* InitializerAppearanceMappingAreaConstrainedI1.h */,
+				5D7D94001BA9E12100D38120 /* InitializerAppearanceMappingF1.h */,
+				5D7D94011BA9E12100D38120 /* InitializerAppearanceMappingI1.h */,
+				5D7D94021BA9E12100D38120 /* InitializerAreaConstrained.h */,
+				5D7D94031BA9E12100D38120 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h */,
+				5D7D94041BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h */,
+				5D7D94051BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h */,
+				5D7D94061BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h */,
+				5D7D94071BA9E12100D38120 /* InitializerContourMappingI1.h */,
+				5D7D94081BA9E12100D38120 /* InitializerConvertMappingF1.h */,
+				5D7D94091BA9E12100D38120 /* InitializerCopyMappingI1.h */,
+				5D7D940A1BA9E12100D38120 /* InitializerF.h */,
+				5D7D940B1BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h */,
+				5D7D940C1BA9E12100D38120 /* InitializerI.h */,
+				5D7D940D1BA9E12100D38120 /* InitializerMoveMappingI1.h */,
+				5D7D940E1BA9E12100D38120 /* InitializerRandomized.h */,
+				5D7D940F1BA9E12100D38120 /* InitializerRandomMappingAreaConstrainedI1.h */,
+				5D7D94101BA9E12100D38120 /* InitializerRandomMappingI1.h */,
+				5D7D94111BA9E12100D38120 /* InitializerShrinkingErosionI1.h */,
+				5D7D94121BA9E12100D38120 /* InitializerShrinkingErosionRandomizedI1.h */,
+				5D7D94131BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h */,
+				5D7D94141BA9E12100D38120 /* InitializerSubset.h */,
+				5D7D94151BA9E12100D38120 /* Layer.h */,
+				5D7D94161BA9E12100D38120 /* LayerF.h */,
+				5D7D94171BA9E12100D38120 /* LayerF1.h */,
+				5D7D94181BA9E12100D38120 /* LayerI.h */,
+				5D7D94191BA9E12100D38120 /* LayerI1.h */,
+				5D7D941B1BA9E12100D38120 /* Mapping.h */,
+				5D7D941C1BA9E12100D38120 /* MappingF.h */,
+				5D7D941D1BA9E12100D38120 /* MappingF1.h */,
+				5D7D941E1BA9E12100D38120 /* MappingI.h */,
+				5D7D941F1BA9E12100D38120 /* MappingI1.h */,
+				5D7D94201BA9E12100D38120 /* MappingI2.h */,
+				5D7D94211BA9E12100D38120 /* Operator.h */,
+				5D7D94221BA9E12100D38120 /* Optimizer.h */,
+				5D7D94231BA9E12100D38120 /* Optimizer1.h */,
+				5D7D94241BA9E12100D38120 /* Optimizer4NeighborhoodAreaConstrainedI1.h */,
+				5D7D94251BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceF1.h */,
+				5D7D94261BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceI1.h */,
+				5D7D94271BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h */,
+				5D7D94281BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h */,
+				5D7D94291BA9E12100D38120 /* Optimizer4NeighborhoodReferenceFrameF1.h */,
+				5D7D942A1BA9E12100D38120 /* Optimizer4NeighborhoodStructuralConstrainedI1.h */,
+				5D7D942B1BA9E12100D38120 /* OptimizerF.h */,
+				5D7D942C1BA9E12100D38120 /* OptimizerI.h */,
+				5D7D942D1BA9E12100D38120 /* OptimizerSubset.h */,
+				5D7D942E1BA9E12100D38120 /* Synthesis.h */,
+				5DB774611EE9979A00C14BB2 /* SynthesisPyramid.h */,
+				5D7D942F1BA9E12100D38120 /* SynthesisPyramidF1.h */,
+				5D7D94301BA9E12100D38120 /* SynthesisPyramidI1.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D7D93991BA9DF8000D38120 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D7D945F1BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceI1.h in Headers */,
+				5D7D94481BA9E12100D38120 /* InitializerRandomMappingAreaConstrainedI1.h in Headers */,
+				5D7D943C1BA9E12100D38120 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h in Headers */,
+				5D7D94631BA9E12100D38120 /* Optimizer4NeighborhoodStructuralConstrainedI1.h in Headers */,
+				5D7D94551BA9E12100D38120 /* MappingF.h in Headers */,
+				5D7D945D1BA9E12100D38120 /* Optimizer4NeighborhoodAreaConstrainedI1.h in Headers */,
+				5D7D94581BA9E12100D38120 /* MappingI1.h in Headers */,
+				5D7D93ED1BA9E10E00D38120 /* Constraint.h in Headers */,
+				5D7D944F1BA9E12100D38120 /* LayerF.h in Headers */,
+				5D7D93EE1BA9E10E00D38120 /* Creator.h in Headers */,
+				5D7D94381BA9E12100D38120 /* InitializerAppearanceMappingAreaConstrainedI1.h in Headers */,
+				5D7D93F71BA9E10E00D38120 /* CreatorSubset.h in Headers */,
+				5D7D93F51BA9E10E00D38120 /* CreatorInpaintingContentF1.h in Headers */,
+				5D7D94401BA9E12100D38120 /* InitializerContourMappingI1.h in Headers */,
+				5D7D945C1BA9E12100D38120 /* Optimizer1.h in Headers */,
+				5D7D94671BA9E12100D38120 /* Synthesis.h in Headers */,
+				5D7D943A1BA9E12100D38120 /* InitializerAppearanceMappingI1.h in Headers */,
+				5D7D944C1BA9E12100D38120 /* InitializerShrinkingPatchMatchingI1.h in Headers */,
+				5D7D94541BA9E12100D38120 /* Mapping.h in Headers */,
+				5D7D94391BA9E12100D38120 /* InitializerAppearanceMappingF1.h in Headers */,
+				5D7D943D1BA9E12100D38120 /* InitializerCoarserMappingAdaptionF1.h in Headers */,
+				5D7D94601BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */,
+				5D7D945A1BA9E12100D38120 /* Operator.h in Headers */,
+				5D7D93F41BA9E10E00D38120 /* CreatorInformationSpatialCostI1.h in Headers */,
+				5D7D94441BA9E12100D38120 /* InitializerHomographyMappingAdaptionF1.h in Headers */,
+				5D7D94501BA9E12100D38120 /* LayerF1.h in Headers */,
+				5D7D944A1BA9E12100D38120 /* InitializerShrinkingErosionI1.h in Headers */,
+				5D7D945E1BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceF1.h in Headers */,
+				5D7D94351BA9E12100D38120 /* Initializer.h in Headers */,
+				5D7D94431BA9E12100D38120 /* InitializerF.h in Headers */,
+				5DB774621EE9979A00C14BB2 /* SynthesisPyramid.h in Headers */,
+				5D7D93F01BA9E10E00D38120 /* CreatorF.h in Headers */,
+				5D7D94681BA9E12100D38120 /* SynthesisPyramidF1.h in Headers */,
+				5D7D94451BA9E12100D38120 /* InitializerI.h in Headers */,
+				5D7D93F31BA9E10E00D38120 /* CreatorInformationCost4NeighborhoodI1.h in Headers */,
+				5D7D94511BA9E12100D38120 /* LayerI.h in Headers */,
+				5D7D94371BA9E12100D38120 /* InitializerAppearanceMapping.h in Headers */,
+				5D7D94571BA9E12100D38120 /* MappingI.h in Headers */,
+				5D7D94491BA9E12100D38120 /* InitializerRandomMappingI1.h in Headers */,
+				5D7D94521BA9E12100D38120 /* LayerI1.h in Headers */,
+				5D7D94461BA9E12100D38120 /* InitializerMoveMappingI1.h in Headers */,
+				5D7D93F61BA9E10E00D38120 /* CreatorInpaintingContentI1.h in Headers */,
+				5D7D94361BA9E12100D38120 /* Initializer1.h in Headers */,
+				5D7D944B1BA9E12100D38120 /* InitializerShrinkingErosionRandomizedI1.h in Headers */,
+				5D7D93F11BA9E10E00D38120 /* CreatorFrame.h in Headers */,
+				5D7D94621BA9E12100D38120 /* Optimizer4NeighborhoodReferenceFrameF1.h in Headers */,
+				5D7D94651BA9E12100D38120 /* OptimizerI.h in Headers */,
+				5D7D94561BA9E12100D38120 /* MappingF1.h in Headers */,
+				5D7D94471BA9E12100D38120 /* InitializerRandomized.h in Headers */,
+				5D7D94421BA9E12100D38120 /* InitializerCopyMappingI1.h in Headers */,
+				5D7D94691BA9E12100D38120 /* SynthesisPyramidI1.h in Headers */,
+				5D7D943E1BA9E12100D38120 /* InitializerCoarserMappingAdaptionI1.h in Headers */,
+				5D7D945B1BA9E12100D38120 /* Optimizer.h in Headers */,
+				5D7D943F1BA9E12100D38120 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */,
+				5D7D944D1BA9E12100D38120 /* InitializerSubset.h in Headers */,
+				5D7D944E1BA9E12100D38120 /* Layer.h in Headers */,
+				5D7D943B1BA9E12100D38120 /* InitializerAreaConstrained.h in Headers */,
+				5D7D94611BA9E12100D38120 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h in Headers */,
+				5D7D94591BA9E12100D38120 /* MappingI2.h in Headers */,
+				5D7D94641BA9E12100D38120 /* OptimizerF.h in Headers */,
+				5D7D94661BA9E12100D38120 /* OptimizerSubset.h in Headers */,
+				5D7D93EF1BA9E10E00D38120 /* Creator1.h in Headers */,
+				5D7D93F21BA9E10E00D38120 /* CreatorI.h in Headers */,
+				5D7D94411BA9E12100D38120 /* InitializerConvertMappingF1.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936E1D1BC548CB0046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936E1E1BC548CB0046ACD4 /* Optimizer4NeighborhoodHighPerformanceI1.h in Headers */,
+				5D936E1F1BC548CB0046ACD4 /* InitializerRandomMappingAreaConstrainedI1.h in Headers */,
+				5D936E201BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h in Headers */,
+				5D936E211BC548CB0046ACD4 /* Optimizer4NeighborhoodStructuralConstrainedI1.h in Headers */,
+				5D936E221BC548CB0046ACD4 /* MappingF.h in Headers */,
+				5D936E231BC548CB0046ACD4 /* Optimizer4NeighborhoodAreaConstrainedI1.h in Headers */,
+				5D936E241BC548CB0046ACD4 /* MappingI1.h in Headers */,
+				5D936E251BC548CB0046ACD4 /* Constraint.h in Headers */,
+				5D936E261BC548CB0046ACD4 /* LayerF.h in Headers */,
+				5D936E271BC548CB0046ACD4 /* Creator.h in Headers */,
+				5D936E281BC548CB0046ACD4 /* InitializerAppearanceMappingAreaConstrainedI1.h in Headers */,
+				5D936E291BC548CB0046ACD4 /* CreatorSubset.h in Headers */,
+				5D936E2A1BC548CB0046ACD4 /* CreatorInpaintingContentF1.h in Headers */,
+				5D936E2B1BC548CB0046ACD4 /* InitializerContourMappingI1.h in Headers */,
+				5D936E2C1BC548CB0046ACD4 /* Optimizer1.h in Headers */,
+				5D936E2D1BC548CB0046ACD4 /* Synthesis.h in Headers */,
+				5D936E2F1BC548CB0046ACD4 /* InitializerAppearanceMappingI1.h in Headers */,
+				5D936E301BC548CB0046ACD4 /* InitializerShrinkingPatchMatchingI1.h in Headers */,
+				5D936E311BC548CB0046ACD4 /* Mapping.h in Headers */,
+				5D936E321BC548CB0046ACD4 /* InitializerAppearanceMappingF1.h in Headers */,
+				5D936E341BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionF1.h in Headers */,
+				5D936E351BC548CB0046ACD4 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */,
+				5D936E361BC548CB0046ACD4 /* Operator.h in Headers */,
+				5D936E381BC548CB0046ACD4 /* CreatorInformationSpatialCostI1.h in Headers */,
+				5D936E391BC548CB0046ACD4 /* InitializerHomographyMappingAdaptionF1.h in Headers */,
+				5D936E3A1BC548CB0046ACD4 /* LayerF1.h in Headers */,
+				5D936E3B1BC548CB0046ACD4 /* InitializerShrinkingErosionI1.h in Headers */,
+				5D936E3C1BC548CB0046ACD4 /* Optimizer4NeighborhoodHighPerformanceF1.h in Headers */,
+				5D936E3D1BC548CB0046ACD4 /* Initializer.h in Headers */,
+				5D936E3E1BC548CB0046ACD4 /* InitializerF.h in Headers */,
+				5DB774631EE9979A00C14BB2 /* SynthesisPyramid.h in Headers */,
+				5D936E3F1BC548CB0046ACD4 /* CreatorF.h in Headers */,
+				5D936E401BC548CB0046ACD4 /* SynthesisPyramidF1.h in Headers */,
+				5D936E411BC548CB0046ACD4 /* InitializerI.h in Headers */,
+				5D936E421BC548CB0046ACD4 /* CreatorInformationCost4NeighborhoodI1.h in Headers */,
+				5D936E431BC548CB0046ACD4 /* LayerI.h in Headers */,
+				5D936E441BC548CB0046ACD4 /* InitializerAppearanceMapping.h in Headers */,
+				5D936E451BC548CB0046ACD4 /* MappingI.h in Headers */,
+				5D936E461BC548CB0046ACD4 /* InitializerRandomMappingI1.h in Headers */,
+				5D936E471BC548CB0046ACD4 /* LayerI1.h in Headers */,
+				5D936E481BC548CB0046ACD4 /* InitializerMoveMappingI1.h in Headers */,
+				5D936E491BC548CB0046ACD4 /* CreatorInpaintingContentI1.h in Headers */,
+				5D936E4A1BC548CB0046ACD4 /* Initializer1.h in Headers */,
+				5D936E4B1BC548CB0046ACD4 /* InitializerShrinkingErosionRandomizedI1.h in Headers */,
+				5D936E4C1BC548CB0046ACD4 /* CreatorFrame.h in Headers */,
+				5D936E4D1BC548CB0046ACD4 /* Optimizer4NeighborhoodReferenceFrameF1.h in Headers */,
+				5D936E4E1BC548CB0046ACD4 /* OptimizerI.h in Headers */,
+				5D936E4F1BC548CB0046ACD4 /* MappingF1.h in Headers */,
+				5D936E501BC548CB0046ACD4 /* InitializerRandomized.h in Headers */,
+				5D936E511BC548CB0046ACD4 /* InitializerCopyMappingI1.h in Headers */,
+				5D936E521BC548CB0046ACD4 /* SynthesisPyramidI1.h in Headers */,
+				5D936E541BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionI1.h in Headers */,
+				5D936E551BC548CB0046ACD4 /* Optimizer.h in Headers */,
+				5D936E571BC548CB0046ACD4 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */,
+				5D936E581BC548CB0046ACD4 /* InitializerSubset.h in Headers */,
+				5D936E591BC548CB0046ACD4 /* Layer.h in Headers */,
+				5D936E5A1BC548CB0046ACD4 /* InitializerAreaConstrained.h in Headers */,
+				5D936E5B1BC548CB0046ACD4 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h in Headers */,
+				5D936E5C1BC548CB0046ACD4 /* MappingI2.h in Headers */,
+				5D936E5D1BC548CB0046ACD4 /* OptimizerF.h in Headers */,
+				5D936E5E1BC548CB0046ACD4 /* OptimizerSubset.h in Headers */,
+				5D936E5F1BC548CB0046ACD4 /* Creator1.h in Headers */,
+				5D936E601BC548CB0046ACD4 /* CreatorI.h in Headers */,
+				5D936E611BC548CB0046ACD4 /* InitializerConvertMappingF1.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98615C1D8B567A00DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D98615D1D8B567A00DEDB00 /* Optimizer4NeighborhoodHighPerformanceI1.h in Headers */,
+				5D98615E1D8B567A00DEDB00 /* InitializerRandomMappingAreaConstrainedI1.h in Headers */,
+				5D98615F1D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h in Headers */,
+				5D9861601D8B567A00DEDB00 /* Optimizer4NeighborhoodStructuralConstrainedI1.h in Headers */,
+				5D9861611D8B567A00DEDB00 /* MappingF.h in Headers */,
+				5D9861621D8B567A00DEDB00 /* Optimizer4NeighborhoodAreaConstrainedI1.h in Headers */,
+				5D9861631D8B567A00DEDB00 /* MappingI1.h in Headers */,
+				5D9861641D8B567A00DEDB00 /* Constraint.h in Headers */,
+				5D9861651D8B567A00DEDB00 /* LayerF.h in Headers */,
+				5D9861661D8B567A00DEDB00 /* Creator.h in Headers */,
+				5D9861671D8B567A00DEDB00 /* InitializerAppearanceMappingAreaConstrainedI1.h in Headers */,
+				5D9861681D8B567A00DEDB00 /* CreatorSubset.h in Headers */,
+				5D9861691D8B567A00DEDB00 /* CreatorInpaintingContentF1.h in Headers */,
+				5D98616A1D8B567A00DEDB00 /* InitializerContourMappingI1.h in Headers */,
+				5D98616B1D8B567A00DEDB00 /* Optimizer1.h in Headers */,
+				5D98616C1D8B567A00DEDB00 /* Synthesis.h in Headers */,
+				5D98616E1D8B567A00DEDB00 /* InitializerAppearanceMappingI1.h in Headers */,
+				5D98616F1D8B567A00DEDB00 /* InitializerShrinkingPatchMatchingI1.h in Headers */,
+				5D9861701D8B567A00DEDB00 /* Mapping.h in Headers */,
+				5D9861711D8B567A00DEDB00 /* InitializerAppearanceMappingF1.h in Headers */,
+				5D9861731D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionF1.h in Headers */,
+				5D9861741D8B567A00DEDB00 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */,
+				5D9861751D8B567A00DEDB00 /* Operator.h in Headers */,
+				5D9861771D8B567A00DEDB00 /* CreatorInformationSpatialCostI1.h in Headers */,
+				5D9861781D8B567A00DEDB00 /* InitializerHomographyMappingAdaptionF1.h in Headers */,
+				5D9861791D8B567A00DEDB00 /* LayerF1.h in Headers */,
+				5D98617A1D8B567A00DEDB00 /* InitializerShrinkingErosionI1.h in Headers */,
+				5D98617B1D8B567A00DEDB00 /* Optimizer4NeighborhoodHighPerformanceF1.h in Headers */,
+				5D98617C1D8B567A00DEDB00 /* Initializer.h in Headers */,
+				5D98617D1D8B567A00DEDB00 /* InitializerF.h in Headers */,
+				5DB774641EE9979A00C14BB2 /* SynthesisPyramid.h in Headers */,
+				5D98617E1D8B567A00DEDB00 /* CreatorF.h in Headers */,
+				5D98617F1D8B567A00DEDB00 /* SynthesisPyramidF1.h in Headers */,
+				5D9861801D8B567A00DEDB00 /* InitializerI.h in Headers */,
+				5D9861811D8B567A00DEDB00 /* CreatorInformationCost4NeighborhoodI1.h in Headers */,
+				5D9861821D8B567A00DEDB00 /* LayerI.h in Headers */,
+				5D9861831D8B567A00DEDB00 /* InitializerAppearanceMapping.h in Headers */,
+				5D9861841D8B567A00DEDB00 /* MappingI.h in Headers */,
+				5D9861851D8B567A00DEDB00 /* InitializerRandomMappingI1.h in Headers */,
+				5D9861861D8B567A00DEDB00 /* LayerI1.h in Headers */,
+				5D9861871D8B567A00DEDB00 /* InitializerMoveMappingI1.h in Headers */,
+				5D9861881D8B567A00DEDB00 /* CreatorInpaintingContentI1.h in Headers */,
+				5D9861891D8B567A00DEDB00 /* Initializer1.h in Headers */,
+				5D98618A1D8B567A00DEDB00 /* InitializerShrinkingErosionRandomizedI1.h in Headers */,
+				5D98618B1D8B567A00DEDB00 /* CreatorFrame.h in Headers */,
+				5D98618C1D8B567A00DEDB00 /* Optimizer4NeighborhoodReferenceFrameF1.h in Headers */,
+				5D98618D1D8B567A00DEDB00 /* OptimizerI.h in Headers */,
+				5D98618E1D8B567A00DEDB00 /* MappingF1.h in Headers */,
+				5D98618F1D8B567A00DEDB00 /* InitializerRandomized.h in Headers */,
+				5D9861901D8B567A00DEDB00 /* InitializerCopyMappingI1.h in Headers */,
+				5D9861911D8B567A00DEDB00 /* SynthesisPyramidI1.h in Headers */,
+				5D9861931D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionI1.h in Headers */,
+				5D9861941D8B567A00DEDB00 /* Optimizer.h in Headers */,
+				5D9861961D8B567A00DEDB00 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */,
+				5D9861971D8B567A00DEDB00 /* InitializerSubset.h in Headers */,
+				5D9861981D8B567A00DEDB00 /* Layer.h in Headers */,
+				5D9861991D8B567A00DEDB00 /* InitializerAreaConstrained.h in Headers */,
+				5D98619A1D8B567A00DEDB00 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h in Headers */,
+				5D98619B1D8B567A00DEDB00 /* MappingI2.h in Headers */,
+				5D98619C1D8B567A00DEDB00 /* OptimizerF.h in Headers */,
+				5D98619D1D8B567A00DEDB00 /* OptimizerSubset.h in Headers */,
+				5D98619E1D8B567A00DEDB00 /* Creator1.h in Headers */,
+				5D98619F1D8B567A00DEDB00 /* CreatorI.h in Headers */,
+				5D9861A01D8B567A00DEDB00 /* InitializerConvertMappingF1.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB611DABD98100BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EB621DABD98100BF5D76 /* Optimizer4NeighborhoodHighPerformanceI1.h in Headers */,
+				C041EB631DABD98100BF5D76 /* InitializerRandomMappingAreaConstrainedI1.h in Headers */,
+				C041EB641DABD98100BF5D76 /* InitializerCoarserMappingAdaptionAreaConstrainedI1.h in Headers */,
+				C041EB651DABD98100BF5D76 /* Optimizer4NeighborhoodStructuralConstrainedI1.h in Headers */,
+				C041EB661DABD98100BF5D76 /* MappingF.h in Headers */,
+				C041EB671DABD98100BF5D76 /* Optimizer4NeighborhoodAreaConstrainedI1.h in Headers */,
+				C041EB681DABD98100BF5D76 /* MappingI1.h in Headers */,
+				C041EB691DABD98100BF5D76 /* Constraint.h in Headers */,
+				C041EB6A1DABD98100BF5D76 /* LayerF.h in Headers */,
+				C041EB6B1DABD98100BF5D76 /* Creator.h in Headers */,
+				C041EB6C1DABD98100BF5D76 /* InitializerAppearanceMappingAreaConstrainedI1.h in Headers */,
+				C041EB6D1DABD98100BF5D76 /* CreatorSubset.h in Headers */,
+				C041EB6E1DABD98100BF5D76 /* CreatorInpaintingContentF1.h in Headers */,
+				C041EB6F1DABD98100BF5D76 /* InitializerContourMappingI1.h in Headers */,
+				C041EB701DABD98100BF5D76 /* Optimizer1.h in Headers */,
+				C041EB711DABD98100BF5D76 /* Synthesis.h in Headers */,
+				C041EB731DABD98100BF5D76 /* InitializerAppearanceMappingI1.h in Headers */,
+				C041EB741DABD98100BF5D76 /* InitializerShrinkingPatchMatchingI1.h in Headers */,
+				C041EB751DABD98100BF5D76 /* Mapping.h in Headers */,
+				C041EB761DABD98100BF5D76 /* InitializerAppearanceMappingF1.h in Headers */,
+				C041EB781DABD98100BF5D76 /* InitializerCoarserMappingAdaptionF1.h in Headers */,
+				C041EB791DABD98100BF5D76 /* Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1.h in Headers */,
+				C041EB7A1DABD98100BF5D76 /* Operator.h in Headers */,
+				C041EB7C1DABD98100BF5D76 /* CreatorInformationSpatialCostI1.h in Headers */,
+				C041EB7D1DABD98100BF5D76 /* InitializerHomographyMappingAdaptionF1.h in Headers */,
+				C041EB7E1DABD98100BF5D76 /* LayerF1.h in Headers */,
+				C041EB7F1DABD98100BF5D76 /* InitializerShrinkingErosionI1.h in Headers */,
+				C041EB801DABD98100BF5D76 /* Optimizer4NeighborhoodHighPerformanceF1.h in Headers */,
+				C041EB811DABD98100BF5D76 /* Initializer.h in Headers */,
+				C041EB821DABD98100BF5D76 /* InitializerF.h in Headers */,
+				5DB774651EE9979A00C14BB2 /* SynthesisPyramid.h in Headers */,
+				C041EB831DABD98100BF5D76 /* CreatorF.h in Headers */,
+				C041EB841DABD98100BF5D76 /* SynthesisPyramidF1.h in Headers */,
+				C041EB851DABD98100BF5D76 /* InitializerI.h in Headers */,
+				C041EB861DABD98100BF5D76 /* CreatorInformationCost4NeighborhoodI1.h in Headers */,
+				C041EB871DABD98100BF5D76 /* LayerI.h in Headers */,
+				C041EB881DABD98100BF5D76 /* InitializerAppearanceMapping.h in Headers */,
+				C041EB891DABD98100BF5D76 /* MappingI.h in Headers */,
+				C041EB8A1DABD98100BF5D76 /* InitializerRandomMappingI1.h in Headers */,
+				C041EB8B1DABD98100BF5D76 /* LayerI1.h in Headers */,
+				C041EB8C1DABD98100BF5D76 /* InitializerMoveMappingI1.h in Headers */,
+				C041EB8D1DABD98100BF5D76 /* CreatorInpaintingContentI1.h in Headers */,
+				C041EB8E1DABD98100BF5D76 /* Initializer1.h in Headers */,
+				C041EB8F1DABD98100BF5D76 /* InitializerShrinkingErosionRandomizedI1.h in Headers */,
+				C041EB901DABD98100BF5D76 /* CreatorFrame.h in Headers */,
+				C041EB911DABD98100BF5D76 /* Optimizer4NeighborhoodReferenceFrameF1.h in Headers */,
+				C041EB921DABD98100BF5D76 /* OptimizerI.h in Headers */,
+				C041EB931DABD98100BF5D76 /* MappingF1.h in Headers */,
+				C041EB941DABD98100BF5D76 /* InitializerRandomized.h in Headers */,
+				C041EB951DABD98100BF5D76 /* InitializerCopyMappingI1.h in Headers */,
+				C041EB961DABD98100BF5D76 /* SynthesisPyramidI1.h in Headers */,
+				C041EB981DABD98100BF5D76 /* InitializerCoarserMappingAdaptionI1.h in Headers */,
+				C041EB991DABD98100BF5D76 /* Optimizer.h in Headers */,
+				C041EB9B1DABD98100BF5D76 /* InitializerCoarserMappingAdaptionSpatialCostMaskI1.h in Headers */,
+				C041EB9C1DABD98100BF5D76 /* InitializerSubset.h in Headers */,
+				C041EB9D1DABD98100BF5D76 /* Layer.h in Headers */,
+				C041EB9E1DABD98100BF5D76 /* InitializerAreaConstrained.h in Headers */,
+				C041EB9F1DABD98100BF5D76 /* Optimizer4NeighborhoodHighPerformanceSkippingI1.h in Headers */,
+				C041EBA01DABD98100BF5D76 /* MappingI2.h in Headers */,
+				C041EBA11DABD98100BF5D76 /* OptimizerF.h in Headers */,
+				C041EBA21DABD98100BF5D76 /* OptimizerSubset.h in Headers */,
+				C041EBA31DABD98100BF5D76 /* Creator1.h in Headers */,
+				C041EBA41DABD98100BF5D76 /* CreatorI.h in Headers */,
+				C041EBA51DABD98100BF5D76 /* InitializerConvertMappingF1.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D7D939A1BA9DF8000D38120 /* cvsynthesis x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D7D93A61BA9DF8000D38120 /* Build configuration list for PBXNativeTarget "cvsynthesis x64 (Static)" */;
+			buildPhases = (
+				5D7D93971BA9DF8000D38120 /* Sources */,
+				5D7D93981BA9DF8000D38120 /* Frameworks */,
+				5D7D93991BA9DF8000D38120 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvsynthesis x64 (Static)";
+			productName = cvsynthesis;
+			productReference = 5D7D939B1BA9DF8000D38120 /* libOceanCVSynthesisD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D936DFE1BC548CB0046ACD4 /* cvsynthesis x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D936E621BC548CB0046ACD4 /* Build configuration list for PBXNativeTarget "cvsynthesis x64 (Shared)" */;
+			buildPhases = (
+				5D936DFF1BC548CB0046ACD4 /* Sources */,
+				5D936E1C1BC548CB0046ACD4 /* Frameworks */,
+				5D936E1D1BC548CB0046ACD4 /* Headers */,
+				C041EBAB1DABD9F600BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvsynthesis x64 (Shared)";
+			productName = cvsynthesis;
+			productReference = 5D936E651BC548CB0046ACD4 /* libOceanCVSynthesisD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D98613D1D8B567A00DEDB00 /* cvsynthesis arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9861A11D8B567A00DEDB00 /* Build configuration list for PBXNativeTarget "cvsynthesis arm64 (Static)" */;
+			buildPhases = (
+				5D98613E1D8B567A00DEDB00 /* Sources */,
+				5D98615B1D8B567A00DEDB00 /* Frameworks */,
+				5D98615C1D8B567A00DEDB00 /* Headers */,
+				5D837F4B1D8F0F8D00939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvsynthesis arm64 (Static)";
+			productName = cvsynthesis;
+			productReference = 5D9861A41D8B567A00DEDB00 /* libOceanCVSynthesisD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EB421DABD98100BF5D76 /* cvsynthesis arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EBA71DABD98100BF5D76 /* Build configuration list for PBXNativeTarget "cvsynthesis arm64 (Shared)" */;
+			buildPhases = (
+				C041EB431DABD98100BF5D76 /* Sources */,
+				C041EB601DABD98100BF5D76 /* Frameworks */,
+				C041EB611DABD98100BF5D76 /* Headers */,
+				C041EBA61DABD98100BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvsynthesis arm64 (Shared)";
+			productName = cvsynthesis;
+			productReference = C041EBAA1DABD98100BF5D76 /* libOceanCVSynthesisD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D7D93931BA9DF8000D38120 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D7D939A1BA9DF8000D38120 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D7D93961BA9DF8000D38120 /* Build configuration list for PBXProject "cvsynthesis" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D7D93921BA9DF8000D38120;
+			productRefGroup = 5D7D939C1BA9DF8000D38120 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D7D939A1BA9DF8000D38120 /* cvsynthesis x64 (Static) */,
+				5D936DFE1BC548CB0046ACD4 /* cvsynthesis x64 (Shared) */,
+				5D98613D1D8B567A00DEDB00 /* cvsynthesis arm64 (Static) */,
+				C041EB421DABD98100BF5D76 /* cvsynthesis arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F4B1D8F0F8D00939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EBA61DABD98100BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EBAB1DABD9F600BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D7D93971BA9DF8000D38120 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D7D93DC1BA9E0F700D38120 /* MappingF1.cpp in Sources */,
+				5D7D93C91BA9E0F700D38120 /* CreatorSubset.cpp in Sources */,
+				5D7D93DB1BA9E0F700D38120 /* LayerI1.cpp in Sources */,
+				5D7D93CE1BA9E0F700D38120 /* InitializerContourMappingI1.cpp in Sources */,
+				5D7D93E11BA9E0F700D38120 /* SynthesisPyramidI1.cpp in Sources */,
+				5D7D93DA1BA9E0F700D38120 /* LayerF1.cpp in Sources */,
+				5D7D93D51BA9E0F700D38120 /* InitializerShrinkingErosionI1.cpp in Sources */,
+				5D7D93D41BA9E0F700D38120 /* InitializerRandomMappingI1.cpp in Sources */,
+				5D7D93CF1BA9E0F700D38120 /* InitializerConvertMappingF1.cpp in Sources */,
+				5D7D93DD1BA9E0F700D38120 /* MappingI1.cpp in Sources */,
+				5D7D93D21BA9E0F700D38120 /* InitializerMoveMappingI1.cpp in Sources */,
+				5D7D93C71BA9E0F700D38120 /* CreatorInpaintingContentF1.cpp in Sources */,
+				5D7D93D11BA9E0F700D38120 /* InitializerHomographyMappingAdaptionF1.cpp in Sources */,
+				5D7D93D71BA9E0F700D38120 /* InitializerShrinkingPatchMatchingI1.cpp in Sources */,
+				5D7D93D31BA9E0F700D38120 /* InitializerRandomMappingAreaConstrainedI1.cpp in Sources */,
+				5D7D93DE1BA9E0F700D38120 /* MappingI2.cpp in Sources */,
+				5D7D93C61BA9E0F700D38120 /* Constraint.cpp in Sources */,
+				5D7D93C81BA9E0F700D38120 /* CreatorInpaintingContentI1.cpp in Sources */,
+				5D7D93DF1BA9E0F700D38120 /* OptimizerSubset.cpp in Sources */,
+				5D7D93D81BA9E0F700D38120 /* InitializerSubset.cpp in Sources */,
+				5D7D93D01BA9E0F700D38120 /* InitializerCopyMappingI1.cpp in Sources */,
+				5DB7745D1EE9977800C14BB2 /* SynthesisPyramid.cpp in Sources */,
+				5D7D93D61BA9E0F700D38120 /* InitializerShrinkingErosionRandomizedI1.cpp in Sources */,
+				5D7D93D91BA9E0F700D38120 /* Layer.cpp in Sources */,
+				5D7D93E01BA9E0F700D38120 /* SynthesisPyramidF1.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936DFF1BC548CB0046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936E001BC548CB0046ACD4 /* MappingF1.cpp in Sources */,
+				5D936E011BC548CB0046ACD4 /* CreatorSubset.cpp in Sources */,
+				5D936E021BC548CB0046ACD4 /* LayerI1.cpp in Sources */,
+				5D936E031BC548CB0046ACD4 /* InitializerContourMappingI1.cpp in Sources */,
+				5D936E051BC548CB0046ACD4 /* SynthesisPyramidI1.cpp in Sources */,
+				5D936E061BC548CB0046ACD4 /* LayerF1.cpp in Sources */,
+				5D936E081BC548CB0046ACD4 /* InitializerShrinkingErosionI1.cpp in Sources */,
+				5D936E0A1BC548CB0046ACD4 /* InitializerRandomMappingI1.cpp in Sources */,
+				5D936E0C1BC548CB0046ACD4 /* InitializerConvertMappingF1.cpp in Sources */,
+				5D936E0D1BC548CB0046ACD4 /* MappingI1.cpp in Sources */,
+				5D936E0E1BC548CB0046ACD4 /* InitializerMoveMappingI1.cpp in Sources */,
+				5D936E0F1BC548CB0046ACD4 /* CreatorInpaintingContentF1.cpp in Sources */,
+				5D936E101BC548CB0046ACD4 /* InitializerHomographyMappingAdaptionF1.cpp in Sources */,
+				5D936E111BC548CB0046ACD4 /* InitializerShrinkingPatchMatchingI1.cpp in Sources */,
+				5D936E121BC548CB0046ACD4 /* InitializerRandomMappingAreaConstrainedI1.cpp in Sources */,
+				5D936E131BC548CB0046ACD4 /* MappingI2.cpp in Sources */,
+				5D936E141BC548CB0046ACD4 /* Constraint.cpp in Sources */,
+				5D936E151BC548CB0046ACD4 /* CreatorInpaintingContentI1.cpp in Sources */,
+				5D936E161BC548CB0046ACD4 /* OptimizerSubset.cpp in Sources */,
+				5D936E171BC548CB0046ACD4 /* InitializerSubset.cpp in Sources */,
+				5D936E181BC548CB0046ACD4 /* InitializerCopyMappingI1.cpp in Sources */,
+				5DB7745E1EE9977800C14BB2 /* SynthesisPyramid.cpp in Sources */,
+				5D936E191BC548CB0046ACD4 /* InitializerShrinkingErosionRandomizedI1.cpp in Sources */,
+				5D936E1A1BC548CB0046ACD4 /* Layer.cpp in Sources */,
+				5D936E1B1BC548CB0046ACD4 /* SynthesisPyramidF1.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98613E1D8B567A00DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D98613F1D8B567A00DEDB00 /* MappingF1.cpp in Sources */,
+				5D9861401D8B567A00DEDB00 /* CreatorSubset.cpp in Sources */,
+				5D9861411D8B567A00DEDB00 /* LayerI1.cpp in Sources */,
+				5D9861421D8B567A00DEDB00 /* InitializerContourMappingI1.cpp in Sources */,
+				5D9861441D8B567A00DEDB00 /* SynthesisPyramidI1.cpp in Sources */,
+				5D9861451D8B567A00DEDB00 /* LayerF1.cpp in Sources */,
+				5D9861471D8B567A00DEDB00 /* InitializerShrinkingErosionI1.cpp in Sources */,
+				5D9861491D8B567A00DEDB00 /* InitializerRandomMappingI1.cpp in Sources */,
+				5D98614B1D8B567A00DEDB00 /* InitializerConvertMappingF1.cpp in Sources */,
+				5D98614C1D8B567A00DEDB00 /* MappingI1.cpp in Sources */,
+				5D98614D1D8B567A00DEDB00 /* InitializerMoveMappingI1.cpp in Sources */,
+				5D98614E1D8B567A00DEDB00 /* CreatorInpaintingContentF1.cpp in Sources */,
+				5D98614F1D8B567A00DEDB00 /* InitializerHomographyMappingAdaptionF1.cpp in Sources */,
+				5D9861501D8B567A00DEDB00 /* InitializerShrinkingPatchMatchingI1.cpp in Sources */,
+				5D9861511D8B567A00DEDB00 /* InitializerRandomMappingAreaConstrainedI1.cpp in Sources */,
+				5D9861521D8B567A00DEDB00 /* MappingI2.cpp in Sources */,
+				5D9861531D8B567A00DEDB00 /* Constraint.cpp in Sources */,
+				5D9861541D8B567A00DEDB00 /* CreatorInpaintingContentI1.cpp in Sources */,
+				5D9861551D8B567A00DEDB00 /* OptimizerSubset.cpp in Sources */,
+				5D9861561D8B567A00DEDB00 /* InitializerSubset.cpp in Sources */,
+				5D9861571D8B567A00DEDB00 /* InitializerCopyMappingI1.cpp in Sources */,
+				5DB7745F1EE9977800C14BB2 /* SynthesisPyramid.cpp in Sources */,
+				5D9861581D8B567A00DEDB00 /* InitializerShrinkingErosionRandomizedI1.cpp in Sources */,
+				5D9861591D8B567A00DEDB00 /* Layer.cpp in Sources */,
+				5D98615A1D8B567A00DEDB00 /* SynthesisPyramidF1.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB431DABD98100BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EB441DABD98100BF5D76 /* MappingF1.cpp in Sources */,
+				C041EB451DABD98100BF5D76 /* CreatorSubset.cpp in Sources */,
+				C041EB461DABD98100BF5D76 /* LayerI1.cpp in Sources */,
+				C041EB471DABD98100BF5D76 /* InitializerContourMappingI1.cpp in Sources */,
+				C041EB491DABD98100BF5D76 /* SynthesisPyramidI1.cpp in Sources */,
+				C041EB4A1DABD98100BF5D76 /* LayerF1.cpp in Sources */,
+				C041EB4C1DABD98100BF5D76 /* InitializerShrinkingErosionI1.cpp in Sources */,
+				C041EB4E1DABD98100BF5D76 /* InitializerRandomMappingI1.cpp in Sources */,
+				C041EB501DABD98100BF5D76 /* InitializerConvertMappingF1.cpp in Sources */,
+				C041EB511DABD98100BF5D76 /* MappingI1.cpp in Sources */,
+				C041EB521DABD98100BF5D76 /* InitializerMoveMappingI1.cpp in Sources */,
+				C041EB531DABD98100BF5D76 /* CreatorInpaintingContentF1.cpp in Sources */,
+				C041EB541DABD98100BF5D76 /* InitializerHomographyMappingAdaptionF1.cpp in Sources */,
+				C041EB551DABD98100BF5D76 /* InitializerShrinkingPatchMatchingI1.cpp in Sources */,
+				C041EB561DABD98100BF5D76 /* InitializerRandomMappingAreaConstrainedI1.cpp in Sources */,
+				C041EB571DABD98100BF5D76 /* MappingI2.cpp in Sources */,
+				C041EB581DABD98100BF5D76 /* Constraint.cpp in Sources */,
+				C041EB591DABD98100BF5D76 /* CreatorInpaintingContentI1.cpp in Sources */,
+				C041EB5A1DABD98100BF5D76 /* OptimizerSubset.cpp in Sources */,
+				C041EB5B1DABD98100BF5D76 /* InitializerSubset.cpp in Sources */,
+				C041EB5C1DABD98100BF5D76 /* InitializerCopyMappingI1.cpp in Sources */,
+				5DB774601EE9977800C14BB2 /* SynthesisPyramid.cpp in Sources */,
+				C041EB5D1DABD98100BF5D76 /* InitializerShrinkingErosionRandomizedI1.cpp in Sources */,
+				C041EB5E1DABD98100BF5D76 /* Layer.cpp in Sources */,
+				C041EB5F1DABD98100BF5D76 /* SynthesisPyramidF1.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D7D93A41BA9DF8000D38120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D7D93A51BA9DF8000D38120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D7D93A71BA9DF8000D38120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvsynthesis/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvsynthesis/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVSynthesisD;
+				PRODUCT_NAME = OceanCVSynthesisD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D7D93A81BA9DF8000D38120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvsynthesis/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvsynthesis/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVSynthesis;
+				PRODUCT_NAME = OceanCVSynthesis;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D936E631BC548CB0046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvsynthesis/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvsynthesis/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVSegmentationD",
+				);
+				PRODUCT_MODULE_NAME = OceanCVSynthesisD;
+				PRODUCT_NAME = OceanCVSynthesisD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D936E641BC548CB0046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvsynthesis/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvsynthesis/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVSegmentation",
+				);
+				PRODUCT_MODULE_NAME = OceanCVSynthesis;
+				PRODUCT_NAME = OceanCVSynthesis;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D9861A21D8B567A00DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVSynthesisD;
+				PRODUCT_NAME = OceanCVSynthesisD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D9861A31D8B567A00DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVSynthesis;
+				PRODUCT_NAME = OceanCVSynthesis;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EBA81DABD98100BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVSegmentationD",
+				);
+				PRODUCT_MODULE_NAME = OceanCVSynthesisD;
+				PRODUCT_NAME = OceanCVSynthesisD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EBA91DABD98100BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVSegmentation",
+				);
+				PRODUCT_MODULE_NAME = OceanCVSynthesis;
+				PRODUCT_NAME = OceanCVSynthesis;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvsynthesis/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D7D93961BA9DF8000D38120 /* Build configuration list for PBXProject "cvsynthesis" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D7D93A41BA9DF8000D38120 /* Debug */,
+				5D7D93A51BA9DF8000D38120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D7D93A61BA9DF8000D38120 /* Build configuration list for PBXNativeTarget "cvsynthesis x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D7D93A71BA9DF8000D38120 /* Debug */,
+				5D7D93A81BA9DF8000D38120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D936E621BC548CB0046ACD4 /* Build configuration list for PBXNativeTarget "cvsynthesis x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936E631BC548CB0046ACD4 /* Debug */,
+				5D936E641BC548CB0046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9861A11D8B567A00DEDB00 /* Build configuration list for PBXNativeTarget "cvsynthesis arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9861A21D8B567A00DEDB00 /* Debug */,
+				5D9861A31D8B567A00DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EBA71DABD98100BF5D76 /* Build configuration list for PBXNativeTarget "cvsynthesis arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EBA81DABD98100BF5D76 /* Debug */,
+				C041EBA91DABD98100BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D7D93931BA9DF8000D38120 /* Project object */;
+}

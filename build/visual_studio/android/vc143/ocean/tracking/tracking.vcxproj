@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{CFD7E5B3-DE7F-4139-AD56-FB2464C68280}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>tracking</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>tracking</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="tracking_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="tracking_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="tracking_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="tracking_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\Database.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\HomographyImageAlignmentDense.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\HomographyImageAlignmentSparse.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\HomographyPlaneFinder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\HomographyTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\MotionModel.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\MultiViewPlaneFinder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\PlaneFinder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\PointCorrespondences.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\PoseProjection.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\SmoothedTransformation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\Solver3.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\SphericalEnvironment.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\Tracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\UnidirectionalCorrespondences.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\Utilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\tracking\VisualTracker.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\CorrespondenceSet.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\Database.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\HomographyImageAlignmentDense.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\HomographyImageAlignmentSparse.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\HomographyPlaneFinder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\HomographyTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\MotionModel.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\MultiViewPlaneFinder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\PlaneFinder.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\PointCorrespondences.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\PoseProjection.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\SmoothedTransformation.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\Solver3.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\SphericalEnvironment.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\Tracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\Tracking.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\UnidirectionalCorrespondences.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\Utilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\VisualTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\VocabularyTree.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

@@ -1,0 +1,1337 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		93A55F4D254C92850021AB33 /* ImageGif.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A55F4C254C92850021AB33 /* ImageGif.h */; };
+		93A55F4E254C92850021AB33 /* ImageGif.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A55F4C254C92850021AB33 /* ImageGif.h */; };
+		93A55F4F254C92850021AB33 /* ImageGif.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A55F4C254C92850021AB33 /* ImageGif.h */; };
+		93A55F50254C92850021AB33 /* ImageGif.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A55F4C254C92850021AB33 /* ImageGif.h */; };
+		93A55F56254C92930021AB33 /* ImageGif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A55F55254C92930021AB33 /* ImageGif.cpp */; };
+		93A55F57254C92930021AB33 /* ImageGif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A55F55254C92930021AB33 /* ImageGif.cpp */; };
+		93A55F58254C92930021AB33 /* ImageGif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A55F55254C92930021AB33 /* ImageGif.cpp */; };
+		93A55F59254C92930021AB33 /* ImageGif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93A55F55254C92930021AB33 /* ImageGif.cpp */; };
+		93B32F732017E1E100D94149 /* ImagePng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F652017E1DE00D94149 /* ImagePng.cpp */; };
+		93B32F742017E1E100D94149 /* ImagePng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F652017E1DE00D94149 /* ImagePng.cpp */; };
+		93B32F752017E1E100D94149 /* ImagePng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F652017E1DE00D94149 /* ImagePng.cpp */; };
+		93B32F762017E1E100D94149 /* ImagePng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F652017E1DE00D94149 /* ImagePng.cpp */; };
+		93B32F772017E1E100D94149 /* OILImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F662017E1DF00D94149 /* OILImageRecorder.cpp */; };
+		93B32F782017E1E100D94149 /* OILImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F662017E1DF00D94149 /* OILImageRecorder.cpp */; };
+		93B32F792017E1E100D94149 /* OILImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F662017E1DF00D94149 /* OILImageRecorder.cpp */; };
+		93B32F7A2017E1E100D94149 /* OILImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F662017E1DF00D94149 /* OILImageRecorder.cpp */; };
+		93B32F7B2017E1E100D94149 /* OILImageSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F672017E1DF00D94149 /* OILImageSequence.cpp */; };
+		93B32F7C2017E1E100D94149 /* OILImageSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F672017E1DF00D94149 /* OILImageSequence.cpp */; };
+		93B32F7D2017E1E100D94149 /* OILImageSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F672017E1DF00D94149 /* OILImageSequence.cpp */; };
+		93B32F7E2017E1E100D94149 /* OILImageSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F672017E1DF00D94149 /* OILImageSequence.cpp */; };
+		93B32F7F2017E1E100D94149 /* OILBufferImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F682017E1DF00D94149 /* OILBufferImageRecorder.cpp */; };
+		93B32F802017E1E100D94149 /* OILBufferImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F682017E1DF00D94149 /* OILBufferImageRecorder.cpp */; };
+		93B32F812017E1E100D94149 /* OILBufferImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F682017E1DF00D94149 /* OILBufferImageRecorder.cpp */; };
+		93B32F822017E1E100D94149 /* OILBufferImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F682017E1DF00D94149 /* OILBufferImageRecorder.cpp */; };
+		93B32F872017E1E100D94149 /* ImageJpg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6A2017E1DF00D94149 /* ImageJpg.cpp */; };
+		93B32F882017E1E100D94149 /* ImageJpg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6A2017E1DF00D94149 /* ImageJpg.cpp */; };
+		93B32F892017E1E100D94149 /* ImageJpg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6A2017E1DF00D94149 /* ImageJpg.cpp */; };
+		93B32F8A2017E1E100D94149 /* ImageJpg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6A2017E1DF00D94149 /* ImageJpg.cpp */; };
+		93B32F8B2017E1E100D94149 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6B2017E1E000D94149 /* Image.cpp */; };
+		93B32F8C2017E1E100D94149 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6B2017E1E000D94149 /* Image.cpp */; };
+		93B32F8D2017E1E100D94149 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6B2017E1E000D94149 /* Image.cpp */; };
+		93B32F8E2017E1E100D94149 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6B2017E1E000D94149 /* Image.cpp */; };
+		93B32F8F2017E1E100D94149 /* OILImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6C2017E1E000D94149 /* OILImage.cpp */; };
+		93B32F902017E1E100D94149 /* OILImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6C2017E1E000D94149 /* OILImage.cpp */; };
+		93B32F912017E1E100D94149 /* OILImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6C2017E1E000D94149 /* OILImage.cpp */; };
+		93B32F922017E1E100D94149 /* OILImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6C2017E1E000D94149 /* OILImage.cpp */; };
+		93B32F932017E1E100D94149 /* OpenImageLibraries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6D2017E1E000D94149 /* OpenImageLibraries.cpp */; };
+		93B32F942017E1E100D94149 /* OpenImageLibraries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6D2017E1E000D94149 /* OpenImageLibraries.cpp */; };
+		93B32F952017E1E100D94149 /* OpenImageLibraries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6D2017E1E000D94149 /* OpenImageLibraries.cpp */; };
+		93B32F962017E1E100D94149 /* OpenImageLibraries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6D2017E1E000D94149 /* OpenImageLibraries.cpp */; };
+		93B32F972017E1E100D94149 /* OILBufferImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6E2017E1E000D94149 /* OILBufferImage.cpp */; };
+		93B32F982017E1E100D94149 /* OILBufferImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6E2017E1E000D94149 /* OILBufferImage.cpp */; };
+		93B32F992017E1E100D94149 /* OILBufferImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6E2017E1E000D94149 /* OILBufferImage.cpp */; };
+		93B32F9A2017E1E100D94149 /* OILBufferImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6E2017E1E000D94149 /* OILBufferImage.cpp */; };
+		93B32F9B2017E1E100D94149 /* OILLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6F2017E1E000D94149 /* OILLibrary.cpp */; };
+		93B32F9C2017E1E100D94149 /* OILLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6F2017E1E000D94149 /* OILLibrary.cpp */; };
+		93B32F9D2017E1E100D94149 /* OILLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6F2017E1E000D94149 /* OILLibrary.cpp */; };
+		93B32F9E2017E1E100D94149 /* OILLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F6F2017E1E000D94149 /* OILLibrary.cpp */; };
+		93B32F9F2017E1E100D94149 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F702017E1E000D94149 /* Plugin.cpp */; };
+		93B32FA02017E1E100D94149 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F702017E1E000D94149 /* Plugin.cpp */; };
+		93B32FA12017E1E100D94149 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F702017E1E000D94149 /* Plugin.cpp */; };
+		93B32FA22017E1E100D94149 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F702017E1E000D94149 /* Plugin.cpp */; };
+		93B32FA32017E1E100D94149 /* ImageTif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F712017E1E000D94149 /* ImageTif.cpp */; };
+		93B32FA42017E1E100D94149 /* ImageTif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F712017E1E000D94149 /* ImageTif.cpp */; };
+		93B32FA52017E1E100D94149 /* ImageTif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F712017E1E000D94149 /* ImageTif.cpp */; };
+		93B32FA62017E1E100D94149 /* ImageTif.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F712017E1E000D94149 /* ImageTif.cpp */; };
+		93B32FA72017E1E100D94149 /* OILImageSequenceRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F722017E1E000D94149 /* OILImageSequenceRecorder.cpp */; };
+		93B32FA82017E1E100D94149 /* OILImageSequenceRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F722017E1E000D94149 /* OILImageSequenceRecorder.cpp */; };
+		93B32FA92017E1E100D94149 /* OILImageSequenceRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F722017E1E000D94149 /* OILImageSequenceRecorder.cpp */; };
+		93B32FAA2017E1E100D94149 /* OILImageSequenceRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B32F722017E1E000D94149 /* OILImageSequenceRecorder.cpp */; };
+		93B32FB92017E20500D94149 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAB2017E20400D94149 /* Plugin.h */; };
+		93B32FBA2017E20500D94149 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAB2017E20400D94149 /* Plugin.h */; };
+		93B32FBB2017E20500D94149 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAB2017E20400D94149 /* Plugin.h */; };
+		93B32FBC2017E20500D94149 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAB2017E20400D94149 /* Plugin.h */; };
+		93B32FBD2017E20500D94149 /* ImagePng.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAC2017E20400D94149 /* ImagePng.h */; };
+		93B32FBE2017E20500D94149 /* ImagePng.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAC2017E20400D94149 /* ImagePng.h */; };
+		93B32FBF2017E20500D94149 /* ImagePng.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAC2017E20400D94149 /* ImagePng.h */; };
+		93B32FC02017E20500D94149 /* ImagePng.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAC2017E20400D94149 /* ImagePng.h */; };
+		93B32FC12017E20500D94149 /* OILImageSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAD2017E20400D94149 /* OILImageSequence.h */; };
+		93B32FC22017E20500D94149 /* OILImageSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAD2017E20400D94149 /* OILImageSequence.h */; };
+		93B32FC32017E20500D94149 /* OILImageSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAD2017E20400D94149 /* OILImageSequence.h */; };
+		93B32FC42017E20500D94149 /* OILImageSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAD2017E20400D94149 /* OILImageSequence.h */; };
+		93B32FC52017E20500D94149 /* OILImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAE2017E20400D94149 /* OILImageRecorder.h */; };
+		93B32FC62017E20500D94149 /* OILImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAE2017E20400D94149 /* OILImageRecorder.h */; };
+		93B32FC72017E20500D94149 /* OILImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAE2017E20400D94149 /* OILImageRecorder.h */; };
+		93B32FC82017E20500D94149 /* OILImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAE2017E20400D94149 /* OILImageRecorder.h */; };
+		93B32FC92017E20500D94149 /* OILImageSequenceRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAF2017E20400D94149 /* OILImageSequenceRecorder.h */; };
+		93B32FCA2017E20500D94149 /* OILImageSequenceRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAF2017E20400D94149 /* OILImageSequenceRecorder.h */; };
+		93B32FCB2017E20500D94149 /* OILImageSequenceRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAF2017E20400D94149 /* OILImageSequenceRecorder.h */; };
+		93B32FCC2017E20500D94149 /* OILImageSequenceRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FAF2017E20400D94149 /* OILImageSequenceRecorder.h */; };
+		93B32FCD2017E20500D94149 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB02017E20400D94149 /* Image.h */; };
+		93B32FCE2017E20500D94149 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB02017E20400D94149 /* Image.h */; };
+		93B32FCF2017E20500D94149 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB02017E20400D94149 /* Image.h */; };
+		93B32FD02017E20500D94149 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB02017E20400D94149 /* Image.h */; };
+		93B32FD12017E20500D94149 /* OILImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB12017E20400D94149 /* OILImage.h */; };
+		93B32FD22017E20500D94149 /* OILImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB12017E20400D94149 /* OILImage.h */; };
+		93B32FD32017E20500D94149 /* OILImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB12017E20400D94149 /* OILImage.h */; };
+		93B32FD42017E20500D94149 /* OILImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB12017E20400D94149 /* OILImage.h */; };
+		93B32FD52017E20500D94149 /* OpenImageLibraries.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB22017E20400D94149 /* OpenImageLibraries.h */; };
+		93B32FD62017E20500D94149 /* OpenImageLibraries.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB22017E20400D94149 /* OpenImageLibraries.h */; };
+		93B32FD72017E20500D94149 /* OpenImageLibraries.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB22017E20400D94149 /* OpenImageLibraries.h */; };
+		93B32FD82017E20500D94149 /* OpenImageLibraries.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB22017E20400D94149 /* OpenImageLibraries.h */; };
+		93B32FD92017E20500D94149 /* ImageTif.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB32017E20500D94149 /* ImageTif.h */; };
+		93B32FDA2017E20500D94149 /* ImageTif.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB32017E20500D94149 /* ImageTif.h */; };
+		93B32FDB2017E20500D94149 /* ImageTif.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB32017E20500D94149 /* ImageTif.h */; };
+		93B32FDC2017E20500D94149 /* ImageTif.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB32017E20500D94149 /* ImageTif.h */; };
+		93B32FDD2017E20500D94149 /* OILBufferImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB42017E20500D94149 /* OILBufferImage.h */; };
+		93B32FDE2017E20500D94149 /* OILBufferImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB42017E20500D94149 /* OILBufferImage.h */; };
+		93B32FDF2017E20500D94149 /* OILBufferImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB42017E20500D94149 /* OILBufferImage.h */; };
+		93B32FE02017E20500D94149 /* OILBufferImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB42017E20500D94149 /* OILBufferImage.h */; };
+		93B32FE12017E20500D94149 /* ImageJpg.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB52017E20500D94149 /* ImageJpg.h */; };
+		93B32FE22017E20500D94149 /* ImageJpg.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB52017E20500D94149 /* ImageJpg.h */; };
+		93B32FE32017E20500D94149 /* ImageJpg.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB52017E20500D94149 /* ImageJpg.h */; };
+		93B32FE42017E20500D94149 /* ImageJpg.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB52017E20500D94149 /* ImageJpg.h */; };
+		93B32FE52017E20500D94149 /* OILLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB62017E20500D94149 /* OILLibrary.h */; };
+		93B32FE62017E20500D94149 /* OILLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB62017E20500D94149 /* OILLibrary.h */; };
+		93B32FE72017E20500D94149 /* OILLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB62017E20500D94149 /* OILLibrary.h */; };
+		93B32FE82017E20500D94149 /* OILLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB62017E20500D94149 /* OILLibrary.h */; };
+		93B32FED2017E20500D94149 /* OILBufferImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB82017E20500D94149 /* OILBufferImageRecorder.h */; };
+		93B32FEE2017E20500D94149 /* OILBufferImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB82017E20500D94149 /* OILBufferImageRecorder.h */; };
+		93B32FEF2017E20500D94149 /* OILBufferImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB82017E20500D94149 /* OILBufferImageRecorder.h */; };
+		93B32FF02017E20500D94149 /* OILBufferImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B32FB82017E20500D94149 /* OILBufferImageRecorder.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D0A01B51BC2D2ED0008C798 /* OceanMediaOpenImageLibrariesD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanMediaOpenImageLibrariesD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D63F5A71B9760C100E2498E /* libOceanMediaOpenImageLibrariesD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMediaOpenImageLibrariesD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D8380AF1D8F35E800939AD7 /* OceanMediaOpenImageLibrariesD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanMediaOpenImageLibrariesD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9862EA1D8B5D9400DEDB00 /* libOceanMediaOpenImageLibrariesD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMediaOpenImageLibrariesD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD0C0A21BD5633100ABBC5B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../res/ocean/media/openimagelibraries/osx/Info.plist; sourceTree = "<group>"; };
+		93A55F4C254C92850021AB33 /* ImageGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageGif.h; path = ../../../../../../impl/ocean/media/openimagelibraries/ImageGif.h; sourceTree = "<group>"; };
+		93A55F55254C92930021AB33 /* ImageGif.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageGif.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/ImageGif.cpp; sourceTree = "<group>"; };
+		93B32F652017E1DE00D94149 /* ImagePng.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImagePng.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/ImagePng.cpp; sourceTree = "<group>"; };
+		93B32F662017E1DF00D94149 /* OILImageRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OILImageRecorder.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/OILImageRecorder.cpp; sourceTree = "<group>"; };
+		93B32F672017E1DF00D94149 /* OILImageSequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OILImageSequence.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/OILImageSequence.cpp; sourceTree = "<group>"; };
+		93B32F682017E1DF00D94149 /* OILBufferImageRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OILBufferImageRecorder.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/OILBufferImageRecorder.cpp; sourceTree = "<group>"; };
+		93B32F6A2017E1DF00D94149 /* ImageJpg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageJpg.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/ImageJpg.cpp; sourceTree = "<group>"; };
+		93B32F6B2017E1E000D94149 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Image.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/Image.cpp; sourceTree = "<group>"; };
+		93B32F6C2017E1E000D94149 /* OILImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OILImage.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/OILImage.cpp; sourceTree = "<group>"; };
+		93B32F6D2017E1E000D94149 /* OpenImageLibraries.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OpenImageLibraries.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/OpenImageLibraries.cpp; sourceTree = "<group>"; };
+		93B32F6E2017E1E000D94149 /* OILBufferImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OILBufferImage.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/OILBufferImage.cpp; sourceTree = "<group>"; };
+		93B32F6F2017E1E000D94149 /* OILLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OILLibrary.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/OILLibrary.cpp; sourceTree = "<group>"; };
+		93B32F702017E1E000D94149 /* Plugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plugin.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/Plugin.cpp; sourceTree = "<group>"; };
+		93B32F712017E1E000D94149 /* ImageTif.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageTif.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/ImageTif.cpp; sourceTree = "<group>"; };
+		93B32F722017E1E000D94149 /* OILImageSequenceRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OILImageSequenceRecorder.cpp; path = ../../../../../../impl/ocean/media/openimagelibraries/OILImageSequenceRecorder.cpp; sourceTree = "<group>"; };
+		93B32FAB2017E20400D94149 /* Plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plugin.h; path = ../../../../../../impl/ocean/media/openimagelibraries/Plugin.h; sourceTree = "<group>"; };
+		93B32FAC2017E20400D94149 /* ImagePng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImagePng.h; path = ../../../../../../impl/ocean/media/openimagelibraries/ImagePng.h; sourceTree = "<group>"; };
+		93B32FAD2017E20400D94149 /* OILImageSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OILImageSequence.h; path = ../../../../../../impl/ocean/media/openimagelibraries/OILImageSequence.h; sourceTree = "<group>"; };
+		93B32FAE2017E20400D94149 /* OILImageRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OILImageRecorder.h; path = ../../../../../../impl/ocean/media/openimagelibraries/OILImageRecorder.h; sourceTree = "<group>"; };
+		93B32FAF2017E20400D94149 /* OILImageSequenceRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OILImageSequenceRecorder.h; path = ../../../../../../impl/ocean/media/openimagelibraries/OILImageSequenceRecorder.h; sourceTree = "<group>"; };
+		93B32FB02017E20400D94149 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = ../../../../../../impl/ocean/media/openimagelibraries/Image.h; sourceTree = "<group>"; };
+		93B32FB12017E20400D94149 /* OILImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OILImage.h; path = ../../../../../../impl/ocean/media/openimagelibraries/OILImage.h; sourceTree = "<group>"; };
+		93B32FB22017E20400D94149 /* OpenImageLibraries.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenImageLibraries.h; path = ../../../../../../impl/ocean/media/openimagelibraries/OpenImageLibraries.h; sourceTree = "<group>"; };
+		93B32FB32017E20500D94149 /* ImageTif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageTif.h; path = ../../../../../../impl/ocean/media/openimagelibraries/ImageTif.h; sourceTree = "<group>"; };
+		93B32FB42017E20500D94149 /* OILBufferImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OILBufferImage.h; path = ../../../../../../impl/ocean/media/openimagelibraries/OILBufferImage.h; sourceTree = "<group>"; };
+		93B32FB52017E20500D94149 /* ImageJpg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageJpg.h; path = ../../../../../../impl/ocean/media/openimagelibraries/ImageJpg.h; sourceTree = "<group>"; };
+		93B32FB62017E20500D94149 /* OILLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OILLibrary.h; path = ../../../../../../impl/ocean/media/openimagelibraries/OILLibrary.h; sourceTree = "<group>"; };
+		93B32FB82017E20500D94149 /* OILBufferImageRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OILBufferImageRecorder.h; path = ../../../../../../impl/ocean/media/openimagelibraries/OILBufferImageRecorder.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D0A01A61BC2D2ED0008C798 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5A41B9760C100E2498E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D83809D1D8F35E800939AD7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862DB1D8B5D9400DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D0A01851BC2D2A00008C798 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				93B32FB02017E20400D94149 /* Image.h */,
+				93A55F4C254C92850021AB33 /* ImageGif.h */,
+				93B32FB52017E20500D94149 /* ImageJpg.h */,
+				93B32FAC2017E20400D94149 /* ImagePng.h */,
+				93B32FB32017E20500D94149 /* ImageTif.h */,
+				93B32FB42017E20500D94149 /* OILBufferImage.h */,
+				93B32FB82017E20500D94149 /* OILBufferImageRecorder.h */,
+				93B32FB12017E20400D94149 /* OILImage.h */,
+				93B32FAE2017E20400D94149 /* OILImageRecorder.h */,
+				93B32FAD2017E20400D94149 /* OILImageSequence.h */,
+				93B32FAF2017E20400D94149 /* OILImageSequenceRecorder.h */,
+				93B32FB62017E20500D94149 /* OILLibrary.h */,
+				93B32FB22017E20400D94149 /* OpenImageLibraries.h */,
+				93B32FAB2017E20400D94149 /* Plugin.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5D63F59E1B9760C100E2498E = {
+			isa = PBXGroup;
+			children = (
+				5D0A01851BC2D2A00008C798 /* Header Files */,
+				5D63F5B51B97611400E2498E /* Source Files */,
+				5DD0C0A11BD5631700ABBC5B /* Resource Files */,
+				5D63F5A81B9760C100E2498E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D63F5A81B9760C100E2498E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D63F5A71B9760C100E2498E /* libOceanMediaOpenImageLibrariesD.a */,
+				5D0A01B51BC2D2ED0008C798 /* OceanMediaOpenImageLibrariesD.plugin */,
+				5D9862EA1D8B5D9400DEDB00 /* libOceanMediaOpenImageLibrariesD.a */,
+				5D8380AF1D8F35E800939AD7 /* OceanMediaOpenImageLibrariesD.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D63F5B51B97611400E2498E /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				93B32F6B2017E1E000D94149 /* Image.cpp */,
+				93A55F55254C92930021AB33 /* ImageGif.cpp */,
+				93B32F6A2017E1DF00D94149 /* ImageJpg.cpp */,
+				93B32F652017E1DE00D94149 /* ImagePng.cpp */,
+				93B32F712017E1E000D94149 /* ImageTif.cpp */,
+				93B32F6E2017E1E000D94149 /* OILBufferImage.cpp */,
+				93B32F682017E1DF00D94149 /* OILBufferImageRecorder.cpp */,
+				93B32F6C2017E1E000D94149 /* OILImage.cpp */,
+				93B32F662017E1DF00D94149 /* OILImageRecorder.cpp */,
+				93B32F672017E1DF00D94149 /* OILImageSequence.cpp */,
+				93B32F722017E1E000D94149 /* OILImageSequenceRecorder.cpp */,
+				93B32F6F2017E1E000D94149 /* OILLibrary.cpp */,
+				93B32F6D2017E1E000D94149 /* OpenImageLibraries.cpp */,
+				93B32F702017E1E000D94149 /* Plugin.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DD0C0A11BD5631700ABBC5B /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DD0C0A21BD5633100ABBC5B /* Info.plist */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D0A01A71BC2D2ED0008C798 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93B32FCE2017E20500D94149 /* Image.h in Headers */,
+				93B32FE22017E20500D94149 /* ImageJpg.h in Headers */,
+				93B32FEE2017E20500D94149 /* OILBufferImageRecorder.h in Headers */,
+				93B32FC22017E20500D94149 /* OILImageSequence.h in Headers */,
+				93B32FC62017E20500D94149 /* OILImageRecorder.h in Headers */,
+				93B32FDA2017E20500D94149 /* ImageTif.h in Headers */,
+				93B32FBE2017E20500D94149 /* ImagePng.h in Headers */,
+				93B32FDE2017E20500D94149 /* OILBufferImage.h in Headers */,
+				93B32FD62017E20500D94149 /* OpenImageLibraries.h in Headers */,
+				93A55F4E254C92850021AB33 /* ImageGif.h in Headers */,
+				93B32FCA2017E20500D94149 /* OILImageSequenceRecorder.h in Headers */,
+				93B32FBA2017E20500D94149 /* Plugin.h in Headers */,
+				93B32FD22017E20500D94149 /* OILImage.h in Headers */,
+				93B32FE62017E20500D94149 /* OILLibrary.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5A51B9760C100E2498E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93B32FCD2017E20500D94149 /* Image.h in Headers */,
+				93B32FE12017E20500D94149 /* ImageJpg.h in Headers */,
+				93B32FED2017E20500D94149 /* OILBufferImageRecorder.h in Headers */,
+				93B32FC12017E20500D94149 /* OILImageSequence.h in Headers */,
+				93B32FC52017E20500D94149 /* OILImageRecorder.h in Headers */,
+				93B32FD92017E20500D94149 /* ImageTif.h in Headers */,
+				93B32FBD2017E20500D94149 /* ImagePng.h in Headers */,
+				93B32FDD2017E20500D94149 /* OILBufferImage.h in Headers */,
+				93B32FD52017E20500D94149 /* OpenImageLibraries.h in Headers */,
+				93A55F4D254C92850021AB33 /* ImageGif.h in Headers */,
+				93B32FC92017E20500D94149 /* OILImageSequenceRecorder.h in Headers */,
+				93B32FB92017E20500D94149 /* Plugin.h in Headers */,
+				93B32FD12017E20500D94149 /* OILImage.h in Headers */,
+				93B32FE52017E20500D94149 /* OILLibrary.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D83809E1D8F35E800939AD7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93B32FD02017E20500D94149 /* Image.h in Headers */,
+				93B32FE42017E20500D94149 /* ImageJpg.h in Headers */,
+				93B32FF02017E20500D94149 /* OILBufferImageRecorder.h in Headers */,
+				93B32FC42017E20500D94149 /* OILImageSequence.h in Headers */,
+				93B32FC82017E20500D94149 /* OILImageRecorder.h in Headers */,
+				93B32FDC2017E20500D94149 /* ImageTif.h in Headers */,
+				93B32FC02017E20500D94149 /* ImagePng.h in Headers */,
+				93B32FE02017E20500D94149 /* OILBufferImage.h in Headers */,
+				93B32FD82017E20500D94149 /* OpenImageLibraries.h in Headers */,
+				93A55F50254C92850021AB33 /* ImageGif.h in Headers */,
+				93B32FCC2017E20500D94149 /* OILImageSequenceRecorder.h in Headers */,
+				93B32FBC2017E20500D94149 /* Plugin.h in Headers */,
+				93B32FD42017E20500D94149 /* OILImage.h in Headers */,
+				93B32FE82017E20500D94149 /* OILLibrary.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862DC1D8B5D9400DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93B32FCF2017E20500D94149 /* Image.h in Headers */,
+				93B32FE32017E20500D94149 /* ImageJpg.h in Headers */,
+				93B32FEF2017E20500D94149 /* OILBufferImageRecorder.h in Headers */,
+				93B32FC32017E20500D94149 /* OILImageSequence.h in Headers */,
+				93B32FC72017E20500D94149 /* OILImageRecorder.h in Headers */,
+				93B32FDB2017E20500D94149 /* ImageTif.h in Headers */,
+				93B32FBF2017E20500D94149 /* ImagePng.h in Headers */,
+				93B32FDF2017E20500D94149 /* OILBufferImage.h in Headers */,
+				93B32FD72017E20500D94149 /* OpenImageLibraries.h in Headers */,
+				93A55F4F254C92850021AB33 /* ImageGif.h in Headers */,
+				93B32FCB2017E20500D94149 /* OILImageSequenceRecorder.h in Headers */,
+				93B32FBB2017E20500D94149 /* Plugin.h in Headers */,
+				93B32FD32017E20500D94149 /* OILImage.h in Headers */,
+				93B32FE72017E20500D94149 /* OILLibrary.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D0A019A1BC2D2ED0008C798 /* mediaopenimagelibraries x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D0A01B21BC2D2ED0008C798 /* Build configuration list for PBXNativeTarget "mediaopenimagelibraries x64 (Shared)" */;
+			buildPhases = (
+				5D0A019B1BC2D2ED0008C798 /* Sources */,
+				5D0A01A61BC2D2ED0008C798 /* Frameworks */,
+				5D0A01A71BC2D2ED0008C798 /* Headers */,
+				5DD0C0A51BD5665E00ABBC5B /* Resources */,
+				5DD0C0C11BD6A48D00ABBC5B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaopenimagelibraries x64 (Shared)";
+			productName = mediaopenimagelibraries;
+			productReference = 5D0A01B51BC2D2ED0008C798 /* OceanMediaOpenImageLibrariesD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+		5D63F5A61B9760C100E2498E /* mediaopenimagelibraries x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D63F5B21B9760C100E2498E /* Build configuration list for PBXNativeTarget "mediaopenimagelibraries x64 (Static)" */;
+			buildPhases = (
+				5D63F5A31B9760C100E2498E /* Sources */,
+				5D63F5A41B9760C100E2498E /* Frameworks */,
+				5D63F5A51B9760C100E2498E /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaopenimagelibraries x64 (Static)";
+			productName = mediaopenimagelibraries;
+			productReference = 5D63F5A71B9760C100E2498E /* libOceanMediaOpenImageLibrariesD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D8380911D8F35E800939AD7 /* mediaopenimagelibraries arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D8380AC1D8F35E800939AD7 /* Build configuration list for PBXNativeTarget "mediaopenimagelibraries arm64 (Shared)" */;
+			buildPhases = (
+				5D8380921D8F35E800939AD7 /* Sources */,
+				5D83809D1D8F35E800939AD7 /* Frameworks */,
+				5D83809E1D8F35E800939AD7 /* Headers */,
+				5D8380A91D8F35E800939AD7 /* Resources */,
+				5D8380AB1D8F35E800939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaopenimagelibraries arm64 (Shared)";
+			productName = mediaopenimagelibraries;
+			productReference = 5D8380AF1D8F35E800939AD7 /* OceanMediaOpenImageLibrariesD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+		5D9862CF1D8B5D9400DEDB00 /* mediaopenimagelibraries arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9862E71D8B5D9400DEDB00 /* Build configuration list for PBXNativeTarget "mediaopenimagelibraries arm64 (Static)" */;
+			buildPhases = (
+				5D9862D01D8B5D9400DEDB00 /* Sources */,
+				5D9862DB1D8B5D9400DEDB00 /* Frameworks */,
+				5D9862DC1D8B5D9400DEDB00 /* Headers */,
+				5D837F531D8F105100939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaopenimagelibraries arm64 (Static)";
+			productName = mediaopenimagelibraries;
+			productReference = 5D9862EA1D8B5D9400DEDB00 /* libOceanMediaOpenImageLibrariesD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D63F59F1B9760C100E2498E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D63F5A61B9760C100E2498E = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D63F5A21B9760C100E2498E /* Build configuration list for PBXProject "mediaopenimagelibraries" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D63F59E1B9760C100E2498E;
+			productRefGroup = 5D63F5A81B9760C100E2498E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D63F5A61B9760C100E2498E /* mediaopenimagelibraries x64 (Static) */,
+				5D0A019A1BC2D2ED0008C798 /* mediaopenimagelibraries x64 (Shared) */,
+				5D9862CF1D8B5D9400DEDB00 /* mediaopenimagelibraries arm64 (Static) */,
+				5D8380911D8F35E800939AD7 /* mediaopenimagelibraries arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5D8380A91D8F35E800939AD7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD0C0A51BD5665E00ABBC5B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F531D8F105100939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		5D8380AB1D8F35E800939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+		5DD0C0C11BD6A48D00ABBC5B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D0A019B1BC2D2ED0008C798 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93B32F7C2017E1E100D94149 /* OILImageSequence.cpp in Sources */,
+				93B32FA82017E1E100D94149 /* OILImageSequenceRecorder.cpp in Sources */,
+				93B32F782017E1E100D94149 /* OILImageRecorder.cpp in Sources */,
+				93B32F9C2017E1E100D94149 /* OILLibrary.cpp in Sources */,
+				93B32F982017E1E100D94149 /* OILBufferImage.cpp in Sources */,
+				93B32F802017E1E100D94149 /* OILBufferImageRecorder.cpp in Sources */,
+				93B32FA02017E1E100D94149 /* Plugin.cpp in Sources */,
+				93A55F57254C92930021AB33 /* ImageGif.cpp in Sources */,
+				93B32F902017E1E100D94149 /* OILImage.cpp in Sources */,
+				93B32F8C2017E1E100D94149 /* Image.cpp in Sources */,
+				93B32F742017E1E100D94149 /* ImagePng.cpp in Sources */,
+				93B32F942017E1E100D94149 /* OpenImageLibraries.cpp in Sources */,
+				93B32F882017E1E100D94149 /* ImageJpg.cpp in Sources */,
+				93B32FA42017E1E100D94149 /* ImageTif.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5A31B9760C100E2498E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93B32F7B2017E1E100D94149 /* OILImageSequence.cpp in Sources */,
+				93B32FA72017E1E100D94149 /* OILImageSequenceRecorder.cpp in Sources */,
+				93B32F772017E1E100D94149 /* OILImageRecorder.cpp in Sources */,
+				93B32F9B2017E1E100D94149 /* OILLibrary.cpp in Sources */,
+				93B32F972017E1E100D94149 /* OILBufferImage.cpp in Sources */,
+				93B32F7F2017E1E100D94149 /* OILBufferImageRecorder.cpp in Sources */,
+				93B32F9F2017E1E100D94149 /* Plugin.cpp in Sources */,
+				93A55F56254C92930021AB33 /* ImageGif.cpp in Sources */,
+				93B32F8F2017E1E100D94149 /* OILImage.cpp in Sources */,
+				93B32F8B2017E1E100D94149 /* Image.cpp in Sources */,
+				93B32F732017E1E100D94149 /* ImagePng.cpp in Sources */,
+				93B32F932017E1E100D94149 /* OpenImageLibraries.cpp in Sources */,
+				93B32F872017E1E100D94149 /* ImageJpg.cpp in Sources */,
+				93B32FA32017E1E100D94149 /* ImageTif.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D8380921D8F35E800939AD7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93B32F7E2017E1E100D94149 /* OILImageSequence.cpp in Sources */,
+				93B32FAA2017E1E100D94149 /* OILImageSequenceRecorder.cpp in Sources */,
+				93B32F7A2017E1E100D94149 /* OILImageRecorder.cpp in Sources */,
+				93B32F9E2017E1E100D94149 /* OILLibrary.cpp in Sources */,
+				93B32F9A2017E1E100D94149 /* OILBufferImage.cpp in Sources */,
+				93B32F822017E1E100D94149 /* OILBufferImageRecorder.cpp in Sources */,
+				93B32FA22017E1E100D94149 /* Plugin.cpp in Sources */,
+				93A55F59254C92930021AB33 /* ImageGif.cpp in Sources */,
+				93B32F922017E1E100D94149 /* OILImage.cpp in Sources */,
+				93B32F8E2017E1E100D94149 /* Image.cpp in Sources */,
+				93B32F762017E1E100D94149 /* ImagePng.cpp in Sources */,
+				93B32F962017E1E100D94149 /* OpenImageLibraries.cpp in Sources */,
+				93B32F8A2017E1E100D94149 /* ImageJpg.cpp in Sources */,
+				93B32FA62017E1E100D94149 /* ImageTif.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862D01D8B5D9400DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93B32F7D2017E1E100D94149 /* OILImageSequence.cpp in Sources */,
+				93B32FA92017E1E100D94149 /* OILImageSequenceRecorder.cpp in Sources */,
+				93B32F792017E1E100D94149 /* OILImageRecorder.cpp in Sources */,
+				93B32F9D2017E1E100D94149 /* OILLibrary.cpp in Sources */,
+				93B32F992017E1E100D94149 /* OILBufferImage.cpp in Sources */,
+				93B32F812017E1E100D94149 /* OILBufferImageRecorder.cpp in Sources */,
+				93B32FA12017E1E100D94149 /* Plugin.cpp in Sources */,
+				93A55F58254C92930021AB33 /* ImageGif.cpp in Sources */,
+				93B32F912017E1E100D94149 /* OILImage.cpp in Sources */,
+				93B32F8D2017E1E100D94149 /* Image.cpp in Sources */,
+				93B32F752017E1E100D94149 /* ImagePng.cpp in Sources */,
+				93B32F952017E1E100D94149 /* OpenImageLibraries.cpp in Sources */,
+				93B32F892017E1E100D94149 /* ImageJpg.cpp in Sources */,
+				93B32FA52017E1E100D94149 /* ImageTif.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D0A01B31BC2D2ED0008C798 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/jpeglib/h,
+					../../../../../../3rdparty/libpng/h,
+					../../../../../../3rdparty/libtiff/h,
+					../../../../../../3rdparty/libtiff/h/osx,
+					../../../../../../3rdparty/zlib/h,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/openimagelibraries/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = (
+					../../../../../../bin/lib/osx_x64_xc9_shared_debug,
+					../../../../../../3rdparty/jpeglib/lib/osx_x64_xc9_static_debug,
+					../../../../../../3rdparty/libpng/lib/osx_x64_xc9_static_debug,
+					../../../../../../3rdparty/libtiff/lib/osx_x64_xc9_static_debug,
+					../../../../../../3rdparty/zlib/lib/osx_x64_xc9_static_debug,
+				);
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanIOD",
+					"-lOceanMediaD",
+					"-lOceanMediaSpecialD",
+					"-lOceanSystemD",
+					"-ljpeglib",
+					"-lpng",
+					"-ltiff",
+					"-lzlib",
+				);
+				PRODUCT_MODULE_NAME = OceanMediaOpenImageLibrariesD;
+				PRODUCT_NAME = OceanMediaOpenImageLibrariesD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		5D0A01B41BC2D2ED0008C798 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/jpeglib/h,
+					../../../../../../3rdparty/libpng/h,
+					../../../../../../3rdparty/libtiff/h,
+					../../../../../../3rdparty/libtiff/h/osx,
+					../../../../../../3rdparty/zlib/h,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/openimagelibraries/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = (
+					../../../../../../bin/lib/osx_x64_xc9_shared,
+					../../../../../../3rdparty/openimagelibraries/lib/osx_x64_xc9_static,
+					../../../../../../3rdparty/jpeglib/lib/osx_x64_xc9_static,
+					../../../../../../3rdparty/libpng/lib/osx_x64_xc9_static,
+					../../../../../../3rdparty/libtiff/lib/osx_x64_xc9_static,
+					../../../../../../3rdparty/zlib/lib/osx_x64_xc9_static,
+				);
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanIO",
+					"-lOceanMedia",
+					"-lOceanMediaSpecial",
+					"-lOceanSystem",
+					"-ljpeglib",
+					"-lpng",
+					"-ltiff",
+					"-lzlib",
+				);
+				PRODUCT_MODULE_NAME = OceanMediaOpenImageLibraries;
+				PRODUCT_NAME = OceanMediaOpenImageLibraries;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		5D63F5B01B9760C100E2498E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D63F5B11B9760C100E2498E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D63F5B31B9760C100E2498E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/jpeglib/h,
+					../../../../../../3rdparty/libpng/h,
+					../../../../../../3rdparty/libtiff/h,
+					../../../../../../3rdparty/libtiff/h/osx,
+					../../../../../../3rdparty/zlib/h,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaOpenImageLibrariesD;
+				PRODUCT_NAME = OceanMediaOpenImageLibrariesD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D63F5B41B9760C100E2498E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/jpeglib/h,
+					../../../../../../3rdparty/libpng/h,
+					../../../../../../3rdparty/libtiff/h,
+					../../../../../../3rdparty/libtiff/h/osx,
+					../../../../../../3rdparty/zlib/h,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaOpenImageLibraries;
+				PRODUCT_NAME = OceanMediaOpenImageLibraries;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D8380AD1D8F35E800939AD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				ENABLE_TESTABILITY = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/jpeglib/h,
+					../../../../../../3rdparty/libpng/h,
+					../../../../../../3rdparty/libtiff/h,
+					../../../../../../3rdparty/libtiff/h/osx,
+					../../../../../../3rdparty/zlib/h,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/openimagelibraries/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../bin/lib/ios_arm64_xc9_shared_debug,
+					../../../../../../3rdparty/jpeglib/lib/ios_arm64_xc9_static_debug,
+					../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static_debug,
+					../../../../../../3rdparty/libtiff/lib/ios_arm64_xc9_static_debug,
+					../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static_debug,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../bin/lib/ios_i386_xc9_shared_debug,
+					../../../../../../3rdparty/jpeglib/lib/ios_i386_xc9_static_debug,
+					../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static_debug,
+					../../../../../../3rdparty/libtiff/lib/ios_i386_xc9_static_debug,
+					../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static_debug,
+				);
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanIOD",
+					"-lOceanMediaD",
+					"-lOceanSystemD",
+					"-ljpeglib",
+					"-lpng",
+					"-ltiff",
+					"-lzlib",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanMediaOpenImageLibrariesD;
+				PRODUCT_NAME = OceanMediaOpenImageLibrariesD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		5D8380AE1D8F35E800939AD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/jpeglib/h,
+					../../../../../../3rdparty/libpng/h,
+					../../../../../../3rdparty/libtiff/h,
+					../../../../../../3rdparty/libtiff/h/osx,
+					../../../../../../3rdparty/zlib/h,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/openimagelibraries/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../bin/lib/ios_arm64_xc9_shared,
+					../../../../../../3rdparty/jpeglib/lib/ios_arm64_xc9_static,
+					../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static,
+					../../../../../../3rdparty/libtiff/lib/ios_arm64_xc9_static,
+					../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../bin/lib/ios_i386_xc9_shared,
+					../../../../../../3rdparty/jpeglib/lib/ios_i386_xc9_static,
+					../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static,
+					../../../../../../3rdparty/libtiff/lib/ios_i386_xc9_static,
+					../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static,
+				);
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanIO",
+					"-lOceanMedia",
+					"-lOceanSystem",
+					"-ljpeglib",
+					"-lpng",
+					"-ltiff",
+					"-lzlib",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanMediaOpenImageLibraries;
+				PRODUCT_NAME = OceanMediaOpenImageLibraries;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		5D9862E81D8B5D9400DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/jpeglib/h,
+					../../../../../../3rdparty/libpng/h,
+					../../../../../../3rdparty/libtiff/h,
+					../../../../../../3rdparty/libtiff/h/osx,
+					../../../../../../3rdparty/zlib/h,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaOpenImageLibrariesD;
+				PRODUCT_NAME = OceanMediaOpenImageLibrariesD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D9862E91D8B5D9400DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_MEDIA_OIL_SUPPORT_JPG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_PNG=1",
+					"OCEAN_MEDIA_OIL_SUPPORT_TIF=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/jpeglib/h,
+					../../../../../../3rdparty/libpng/h,
+					../../../../../../3rdparty/libtiff/h,
+					../../../../../../3rdparty/libtiff/h/osx,
+					../../../../../../3rdparty/zlib/h,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaOpenImageLibraries;
+				PRODUCT_NAME = OceanMediaOpenImageLibraries;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaopenimagelibraries/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D0A01B21BC2D2ED0008C798 /* Build configuration list for PBXNativeTarget "mediaopenimagelibraries x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D0A01B31BC2D2ED0008C798 /* Debug */,
+				5D0A01B41BC2D2ED0008C798 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D63F5A21B9760C100E2498E /* Build configuration list for PBXProject "mediaopenimagelibraries" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D63F5B01B9760C100E2498E /* Debug */,
+				5D63F5B11B9760C100E2498E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D63F5B21B9760C100E2498E /* Build configuration list for PBXNativeTarget "mediaopenimagelibraries x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D63F5B31B9760C100E2498E /* Debug */,
+				5D63F5B41B9760C100E2498E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D8380AC1D8F35E800939AD7 /* Build configuration list for PBXNativeTarget "mediaopenimagelibraries arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D8380AD1D8F35E800939AD7 /* Debug */,
+				5D8380AE1D8F35E800939AD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9862E71D8B5D9400DEDB00 /* Build configuration list for PBXNativeTarget "mediaopenimagelibraries arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9862E81D8B5D9400DEDB00 /* Debug */,
+				5D9862E91D8B5D9400DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D63F59F1B9760C100E2498E /* Project object */;
+}

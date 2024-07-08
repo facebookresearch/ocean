@@ -1,0 +1,29 @@
+bin
+bin/*
+bin_cmake
+3rdparty
+3rdparty/*
+data
+data/*
+
+# Visual Studio project files
+*.user
+*.suo
+*.ipch
+*.VC.VC.opendb
+*.VC.opendb
+*.VC.db-shm
+*.VC.db-wal
+*.VC.db
+
+# Visual Studio Android environment
+*.gradle/
+*.dtbcache
+*.dtbcache.v2
+
+# Windows platform (compiled) resource files
+res/**/win/**/*.res
+
+# XCode temporary files
+ProjectSettings.plist
+ProjectSettings.plist.lock

@@ -1,0 +1,107 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+// @nolint
+
+ext
+{
+	/**
+	 * Setup before Gradle will start building the project.
+	 * We mainly copy source files into the Gradle project directory.
+	 */
+	ocean_setup =
+	{
+		->
+
+		println "\nCopying all source files..."
+
+		// all application java files
+		copy
+		{
+			from "${ocean_developmentPath()}/impl/application/ocean/demo/base/console/android"
+			into "${rootDir}/app/src"
+			include "*.java"
+
+			eachFile { println it.name }
+		}
+
+		// some individual files
+		individualSourceFiles =
+		[
+			"${ocean_developmentPath()}/impl/ocean/base/BaseJni.java",
+			"${ocean_developmentPath()}/impl/ocean/platform/android/application/TextActivity.java",
+			"${ocean_developmentPath()}/impl/ocean/platform/android/application/MessengerView.java"
+		]
+
+		copy
+		{
+			from individualSourceFiles
+			into "${rootDir}/app/src"
+
+			eachFile { println it.name }
+		}
+
+		println "\nCopying Manifest file"
+
+		// manifest file
+		copy
+		{
+			from file("${ocean_developmentPath()}/impl/application/ocean/demo/base/console/android/AndroidManifest.xml")
+			into "${rootDir}/app"
+
+			eachFile { println it.name }
+		}
+
+		println "\nCopying resources"
+
+		// resource directory
+		copy
+		{
+			from "${ocean_developmentPath()}/res/application/ocean/demo/base/console/android/res"
+			into "${rootDir}/app/res"
+
+			eachFile { println it.name }
+		}
+
+		println "\nCopying native libraries"
+
+		// native libraries
+		copy
+		{
+			String oceanBuildString = ocean_determineBuildStringFromProjectProperty()
+			String gradleArchitecture = ocean_determineGradleArchitectureFromProjectPropery()
+
+			from file("${ocean_developmentPath()}/bin/application/ocean/demo/base/android/${oceanBuildString}/libOceanDemoBaseConsole.so")
+			into "${rootDir}/app/src/main/jniLibs/${gradleArchitecture}"
+
+			eachFile { println it.name }
+		}
+
+		println ""
+	}
+
+	/**
+	 * Cleanup after Gradle finished building the project.
+	 */
+	ocean_cleanup =
+	{
+		->
+
+		println "Removing temporary files"
+
+		// removing all temporary files which have been copied or created to build the app like 'gdbserver' etc.
+		delete "${rootDir}/app/src"
+		delete "${rootDir}/app/res"
+
+		// removing the manifest file as it has been copied from outside
+		delete file("${rootDir}/app/AndroidManifest.xml")
+
+		// removing all .gradle/.properties files as Visual Studio's source of truth are the *.gradle.template/.properties.template files
+		// delete fileTree(dir:rootDir, include: '**/*.gradle') // currently, we check-in all files
+		// delete fileTree(dir:rootDir, include: '**/*.properties')
+	}
+}

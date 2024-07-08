@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Ocean Demo CV Synthesis ImageInpainting</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationdemocvsynthesisimageinpainting_build_imported>True</ocean_applicationdemocvsynthesisimageinpainting_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationdemocvsynthesis_build_imported)' != 'True'" Project="..\..\application_demo_cvsynthesis_build.props"/>
+    <Import Condition="'$(ocean_application_window_build_imported)' != 'True'" Project="..\..\..\..\..\application_window_build.props" />
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\base\base_use.props" />
+    <Import Condition="'$(ocean_cv_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\cv\cv_use.props" />
+    <Import Condition="'$(ocean_cvsynthesis_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\cv\synthesis\cvsynthesis_use.props" />
+    <Import Condition="'$(ocean_ioimage_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\io\image\ioimage_use.props" />
+    <Import Condition="'$(ocean_platformwxwidgets_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\platform\wxwidgets\platformwxwidgets_use.props" />
+  </ImportGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\res;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>

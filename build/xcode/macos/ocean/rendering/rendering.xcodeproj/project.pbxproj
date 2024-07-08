@@ -1,0 +1,2200 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D12BB4E1BF23C1700A56828 /* AbsoluteTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB101BF23C1600A56828 /* AbsoluteTransform.cpp */; };
+		5D12BB4F1BF23C1700A56828 /* Attribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB111BF23C1600A56828 /* Attribute.cpp */; };
+		5D12BB501BF23C1700A56828 /* AttributeSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB121BF23C1600A56828 /* AttributeSet.cpp */; };
+		5D12BB511BF23C1700A56828 /* Background.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB131BF23C1600A56828 /* Background.cpp */; };
+		5D12BB521BF23C1700A56828 /* Billboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB141BF23C1700A56828 /* Billboard.cpp */; };
+		5D12BB531BF23C1700A56828 /* BitmapFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB151BF23C1700A56828 /* BitmapFramebuffer.cpp */; };
+		5D12BB541BF23C1700A56828 /* BlendAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB161BF23C1700A56828 /* BlendAttribute.cpp */; };
+		5D12BB551BF23C1700A56828 /* Box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB171BF23C1700A56828 /* Box.cpp */; };
+		5D12BB561BF23C1700A56828 /* Cone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB181BF23C1700A56828 /* Cone.cpp */; };
+		5D12BB571BF23C1700A56828 /* Cylinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB191BF23C1700A56828 /* Cylinder.cpp */; };
+		5D12BB581BF23C1700A56828 /* DepthAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1A1BF23C1700A56828 /* DepthAttribute.cpp */; };
+		5D12BB591BF23C1700A56828 /* DirectionalLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1B1BF23C1700A56828 /* DirectionalLight.cpp */; };
+		5D12BB5A1BF23C1700A56828 /* DynamicObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1C1BF23C1700A56828 /* DynamicObject.cpp */; };
+		5D12BB5B1BF23C1700A56828 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1D1BF23C1700A56828 /* Engine.cpp */; };
+		5D12BB5C1BF23C1700A56828 /* Factory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1E1BF23C1700A56828 /* Factory.cpp */; };
+		5D12BB5D1BF23C1700A56828 /* Framebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1F1BF23C1700A56828 /* Framebuffer.cpp */; };
+		5D12BB5E1BF23C1700A56828 /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB201BF23C1700A56828 /* Geometry.cpp */; };
+		5D12BB5F1BF23C1700A56828 /* Group.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB211BF23C1700A56828 /* Group.cpp */; };
+		5D12BB611BF23C1700A56828 /* IndependentPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB231BF23C1700A56828 /* IndependentPrimitive.cpp */; };
+		5D12BB621BF23C1700A56828 /* LightSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB241BF23C1700A56828 /* LightSource.cpp */; };
+		5D12BB631BF23C1700A56828 /* LOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB251BF23C1700A56828 /* LOD.cpp */; };
+		5D12BB641BF23C1700A56828 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB261BF23C1700A56828 /* Manager.cpp */; };
+		5D12BB651BF23C1700A56828 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB271BF23C1700A56828 /* Material.cpp */; };
+		5D12BB661BF23C1700A56828 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB281BF23C1700A56828 /* Node.cpp */; };
+		5D12BB671BF23C1700A56828 /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB291BF23C1700A56828 /* Object.cpp */; };
+		5D12BB681BF23C1700A56828 /* ObjectRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2A1BF23C1700A56828 /* ObjectRef.cpp */; };
+		5D12BB691BF23C1700A56828 /* ParallelView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2B1BF23C1700A56828 /* ParallelView.cpp */; };
+		5D12BB6A1BF23C1700A56828 /* PerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2C1BF23C1700A56828 /* PerspectiveView.cpp */; };
+		5D12BB6B1BF23C1700A56828 /* PhantomAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2D1BF23C1700A56828 /* PhantomAttribute.cpp */; };
+		5D12BB6C1BF23C1700A56828 /* PointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2E1BF23C1700A56828 /* PointLight.cpp */; };
+		5D12BB6D1BF23C1700A56828 /* Points.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2F1BF23C1700A56828 /* Points.cpp */; };
+		5D12BB6E1BF23C1700A56828 /* Primitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB301BF23C1700A56828 /* Primitive.cpp */; };
+		5D12BB6F1BF23C1700A56828 /* PrimitiveAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB311BF23C1700A56828 /* PrimitiveAttribute.cpp */; };
+		5D12BB701BF23C1700A56828 /* Quads.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB321BF23C1700A56828 /* Quads.cpp */; };
+		5D12BB711BF23C1700A56828 /* QuadStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB331BF23C1700A56828 /* QuadStrips.cpp */; };
+		5D12BB721BF23C1700A56828 /* Renderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB341BF23C1700A56828 /* Renderable.cpp */; };
+		5D12BB751BF23C1700A56828 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB371BF23C1700A56828 /* Scene.cpp */; };
+		5D12BB761BF23C1700A56828 /* ShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB381BF23C1700A56828 /* ShaderProgram.cpp */; };
+		5D12BB781BF23C1700A56828 /* Shape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3A1BF23C1700A56828 /* Shape.cpp */; };
+		5D12BB791BF23C1700A56828 /* SkyBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3B1BF23C1700A56828 /* SkyBackground.cpp */; };
+		5D12BB7A1BF23C1700A56828 /* Sphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3C1BF23C1700A56828 /* Sphere.cpp */; };
+		5D12BB7B1BF23C1700A56828 /* SpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3D1BF23C1700A56828 /* SpotLight.cpp */; };
+		5D12BB7C1BF23C1700A56828 /* StereoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3E1BF23C1700A56828 /* StereoView.cpp */; };
+		5D12BB7D1BF23C1700A56828 /* StripPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3F1BF23C1700A56828 /* StripPrimitive.cpp */; };
+		5D12BB7E1BF23C1700A56828 /* Switch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB401BF23C1700A56828 /* Switch.cpp */; };
+		5D12BB7F1BF23C1700A56828 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB411BF23C1700A56828 /* Texture.cpp */; };
+		5D12BB801BF23C1700A56828 /* Texture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB421BF23C1700A56828 /* Texture2D.cpp */; };
+		5D12BB811BF23C1700A56828 /* Textures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB431BF23C1700A56828 /* Textures.cpp */; };
+		5D12BB821BF23C1700A56828 /* Transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB441BF23C1700A56828 /* Transform.cpp */; };
+		5D12BB831BF23C1700A56828 /* TriangleFace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB451BF23C1700A56828 /* TriangleFace.cpp */; };
+		5D12BB841BF23C1700A56828 /* TriangleFans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB461BF23C1700A56828 /* TriangleFans.cpp */; };
+		5D12BB851BF23C1700A56828 /* Triangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB471BF23C1700A56828 /* Triangles.cpp */; };
+		5D12BB861BF23C1700A56828 /* TriangleStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB481BF23C1700A56828 /* TriangleStrips.cpp */; };
+		5D12BB871BF23C1700A56828 /* UndistortedBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB491BF23C1700A56828 /* UndistortedBackground.cpp */; };
+		5D12BB881BF23C1700A56828 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4A1BF23C1700A56828 /* Utilities.cpp */; };
+		5D12BB891BF23C1700A56828 /* VertexSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4B1BF23C1700A56828 /* VertexSet.cpp */; };
+		5D12BB8A1BF23C1700A56828 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4C1BF23C1700A56828 /* View.cpp */; };
+		5D12BB8B1BF23C1700A56828 /* WindowFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4D1BF23C1700A56828 /* WindowFramebuffer.cpp */; };
+		5D12BBCD1BF23C3200A56828 /* AbsoluteTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8D1BF23C3200A56828 /* AbsoluteTransform.h */; };
+		5D12BBCE1BF23C3200A56828 /* Attribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8E1BF23C3200A56828 /* Attribute.h */; };
+		5D12BBCF1BF23C3200A56828 /* AttributeSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8F1BF23C3200A56828 /* AttributeSet.h */; };
+		5D12BBD01BF23C3200A56828 /* Background.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB901BF23C3200A56828 /* Background.h */; };
+		5D12BBD11BF23C3200A56828 /* Billboard.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB911BF23C3200A56828 /* Billboard.h */; };
+		5D12BBD21BF23C3200A56828 /* BitmapFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB921BF23C3200A56828 /* BitmapFramebuffer.h */; };
+		5D12BBD31BF23C3200A56828 /* BlendAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB931BF23C3200A56828 /* BlendAttribute.h */; };
+		5D12BBD41BF23C3200A56828 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB941BF23C3200A56828 /* Box.h */; };
+		5D12BBD51BF23C3200A56828 /* Cone.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB951BF23C3200A56828 /* Cone.h */; };
+		5D12BBD61BF23C3200A56828 /* Cylinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB961BF23C3200A56828 /* Cylinder.h */; };
+		5D12BBD71BF23C3200A56828 /* DepthAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB971BF23C3200A56828 /* DepthAttribute.h */; };
+		5D12BBD81BF23C3200A56828 /* DirectionalLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB981BF23C3200A56828 /* DirectionalLight.h */; };
+		5D12BBD91BF23C3200A56828 /* DynamicObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB991BF23C3200A56828 /* DynamicObject.h */; };
+		5D12BBDA1BF23C3200A56828 /* Engine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9A1BF23C3200A56828 /* Engine.h */; };
+		5D12BBDB1BF23C3200A56828 /* Factory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9B1BF23C3200A56828 /* Factory.h */; };
+		5D12BBDC1BF23C3200A56828 /* Framebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9C1BF23C3200A56828 /* Framebuffer.h */; };
+		5D12BBDD1BF23C3200A56828 /* Geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9D1BF23C3200A56828 /* Geometry.h */; };
+		5D12BBDE1BF23C3200A56828 /* Group.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9E1BF23C3200A56828 /* Group.h */; };
+		5D12BBE01BF23C3200A56828 /* IndependentPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA01BF23C3200A56828 /* IndependentPrimitive.h */; };
+		5D12BBE11BF23C3200A56828 /* LightSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA11BF23C3200A56828 /* LightSource.h */; };
+		5D12BBE21BF23C3200A56828 /* LOD.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA21BF23C3200A56828 /* LOD.h */; };
+		5D12BBE31BF23C3200A56828 /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA31BF23C3200A56828 /* Manager.h */; };
+		5D12BBE41BF23C3200A56828 /* Material.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA41BF23C3200A56828 /* Material.h */; };
+		5D12BBE51BF23C3200A56828 /* Node.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA51BF23C3200A56828 /* Node.h */; };
+		5D12BBE61BF23C3200A56828 /* Object.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA61BF23C3200A56828 /* Object.h */; };
+		5D12BBE71BF23C3200A56828 /* ObjectRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA71BF23C3200A56828 /* ObjectRef.h */; };
+		5D12BBE81BF23C3200A56828 /* Objects.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA81BF23C3200A56828 /* Objects.h */; };
+		5D12BBE91BF23C3200A56828 /* ParallelView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA91BF23C3200A56828 /* ParallelView.h */; };
+		5D12BBEA1BF23C3200A56828 /* PerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAA1BF23C3200A56828 /* PerspectiveView.h */; };
+		5D12BBEB1BF23C3200A56828 /* PhantomAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAB1BF23C3200A56828 /* PhantomAttribute.h */; };
+		5D12BBEC1BF23C3200A56828 /* PointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAC1BF23C3200A56828 /* PointLight.h */; };
+		5D12BBED1BF23C3200A56828 /* Points.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAD1BF23C3200A56828 /* Points.h */; };
+		5D12BBEE1BF23C3200A56828 /* Primitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAE1BF23C3200A56828 /* Primitive.h */; };
+		5D12BBEF1BF23C3200A56828 /* PrimitiveAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAF1BF23C3200A56828 /* PrimitiveAttribute.h */; };
+		5D12BBF01BF23C3200A56828 /* QuadFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB01BF23C3200A56828 /* QuadFace.h */; };
+		5D12BBF11BF23C3200A56828 /* Quads.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB11BF23C3200A56828 /* Quads.h */; };
+		5D12BBF21BF23C3200A56828 /* QuadStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB21BF23C3200A56828 /* QuadStrips.h */; };
+		5D12BBF31BF23C3200A56828 /* Renderable.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB31BF23C3200A56828 /* Renderable.h */; };
+		5D12BBF41BF23C3200A56828 /* Rendering.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB41BF23C3200A56828 /* Rendering.h */; };
+		5D12BBF61BF23C3200A56828 /* Scene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB61BF23C3200A56828 /* Scene.h */; };
+		5D12BBF71BF23C3200A56828 /* ShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB71BF23C3200A56828 /* ShaderProgram.h */; };
+		5D12BBF91BF23C3200A56828 /* Shape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB91BF23C3200A56828 /* Shape.h */; };
+		5D12BBFA1BF23C3200A56828 /* SkyBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBA1BF23C3200A56828 /* SkyBackground.h */; };
+		5D12BBFB1BF23C3200A56828 /* Sphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBB1BF23C3200A56828 /* Sphere.h */; };
+		5D12BBFC1BF23C3200A56828 /* SpotLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBC1BF23C3200A56828 /* SpotLight.h */; };
+		5D12BBFD1BF23C3200A56828 /* StereoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBD1BF23C3200A56828 /* StereoView.h */; };
+		5D12BBFE1BF23C3200A56828 /* StripPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBE1BF23C3200A56828 /* StripPrimitive.h */; };
+		5D12BBFF1BF23C3200A56828 /* Switch.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBF1BF23C3200A56828 /* Switch.h */; };
+		5D12BC001BF23C3200A56828 /* Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC01BF23C3200A56828 /* Texture.h */; };
+		5D12BC011BF23C3200A56828 /* Texture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC11BF23C3200A56828 /* Texture2D.h */; };
+		5D12BC021BF23C3200A56828 /* Textures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC21BF23C3200A56828 /* Textures.h */; };
+		5D12BC031BF23C3200A56828 /* Transform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC31BF23C3200A56828 /* Transform.h */; };
+		5D12BC041BF23C3200A56828 /* TriangleFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC41BF23C3200A56828 /* TriangleFace.h */; };
+		5D12BC051BF23C3200A56828 /* TriangleFans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC51BF23C3200A56828 /* TriangleFans.h */; };
+		5D12BC061BF23C3200A56828 /* Triangles.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC61BF23C3200A56828 /* Triangles.h */; };
+		5D12BC071BF23C3200A56828 /* TriangleStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC71BF23C3200A56828 /* TriangleStrips.h */; };
+		5D12BC081BF23C3200A56828 /* UndistortedBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC81BF23C3200A56828 /* UndistortedBackground.h */; };
+		5D12BC091BF23C3200A56828 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC91BF23C3200A56828 /* Utilities.h */; };
+		5D12BC0A1BF23C3200A56828 /* VertexSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCA1BF23C3200A56828 /* VertexSet.h */; };
+		5D12BC0B1BF23C3200A56828 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCB1BF23C3200A56828 /* View.h */; };
+		5D12BC0C1BF23C3200A56828 /* WindowFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCC1BF23C3200A56828 /* WindowFramebuffer.h */; };
+		5D12BC0F1BF23C9200A56828 /* Renderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB341BF23C1700A56828 /* Renderable.cpp */; };
+		5D12BC101BF23C9200A56828 /* UndistortedBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB491BF23C1700A56828 /* UndistortedBackground.cpp */; };
+		5D12BC111BF23C9200A56828 /* Cone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB181BF23C1700A56828 /* Cone.cpp */; };
+		5D12BC131BF23C9200A56828 /* Group.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB211BF23C1700A56828 /* Group.cpp */; };
+		5D12BC141BF23C9200A56828 /* Texture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB421BF23C1700A56828 /* Texture2D.cpp */; };
+		5D12BC151BF23C9200A56828 /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB201BF23C1700A56828 /* Geometry.cpp */; };
+		5D12BC161BF23C9200A56828 /* PointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2E1BF23C1700A56828 /* PointLight.cpp */; };
+		5D12BC181BF23C9200A56828 /* Quads.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB321BF23C1700A56828 /* Quads.cpp */; };
+		5D12BC191BF23C9200A56828 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB371BF23C1700A56828 /* Scene.cpp */; };
+		5D12BC1A1BF23C9200A56828 /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB291BF23C1700A56828 /* Object.cpp */; };
+		5D12BC1B1BF23C9200A56828 /* AttributeSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB121BF23C1600A56828 /* AttributeSet.cpp */; };
+		5D12BC1C1BF23C9200A56828 /* Shape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3A1BF23C1700A56828 /* Shape.cpp */; };
+		5D12BC1D1BF23C9200A56828 /* Primitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB301BF23C1700A56828 /* Primitive.cpp */; };
+		5D12BC1E1BF23C9200A56828 /* Transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB441BF23C1700A56828 /* Transform.cpp */; };
+		5D12BC1F1BF23C9200A56828 /* Triangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB471BF23C1700A56828 /* Triangles.cpp */; };
+		5D12BC201BF23C9200A56828 /* LOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB251BF23C1700A56828 /* LOD.cpp */; };
+		5D12BC211BF23C9200A56828 /* Box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB171BF23C1700A56828 /* Box.cpp */; };
+		5D12BC221BF23C9200A56828 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB411BF23C1700A56828 /* Texture.cpp */; };
+		5D12BC231BF23C9200A56828 /* PhantomAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2D1BF23C1700A56828 /* PhantomAttribute.cpp */; };
+		5D12BC241BF23C9200A56828 /* Attribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB111BF23C1600A56828 /* Attribute.cpp */; };
+		5D12BC251BF23C9200A56828 /* PerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2C1BF23C1700A56828 /* PerspectiveView.cpp */; };
+		5D12BC261BF23C9200A56828 /* BlendAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB161BF23C1700A56828 /* BlendAttribute.cpp */; };
+		5D12BC271BF23C9200A56828 /* Textures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB431BF23C1700A56828 /* Textures.cpp */; };
+		5D12BC281BF23C9200A56828 /* Framebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1F1BF23C1700A56828 /* Framebuffer.cpp */; };
+		5D12BC291BF23C9200A56828 /* SpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3D1BF23C1700A56828 /* SpotLight.cpp */; };
+		5D12BC2A1BF23C9200A56828 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB261BF23C1700A56828 /* Manager.cpp */; };
+		5D12BC2B1BF23C9200A56828 /* DepthAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1A1BF23C1700A56828 /* DepthAttribute.cpp */; };
+		5D12BC2C1BF23C9200A56828 /* ShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB381BF23C1700A56828 /* ShaderProgram.cpp */; };
+		5D12BC2D1BF23C9200A56828 /* TriangleFace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB451BF23C1700A56828 /* TriangleFace.cpp */; };
+		5D12BC2E1BF23C9200A56828 /* ParallelView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2B1BF23C1700A56828 /* ParallelView.cpp */; };
+		5D12BC301BF23C9200A56828 /* PrimitiveAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB311BF23C1700A56828 /* PrimitiveAttribute.cpp */; };
+		5D12BC311BF23C9200A56828 /* AbsoluteTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB101BF23C1600A56828 /* AbsoluteTransform.cpp */; };
+		5D12BC321BF23C9200A56828 /* TriangleFans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB461BF23C1700A56828 /* TriangleFans.cpp */; };
+		5D12BC331BF23C9200A56828 /* Factory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1E1BF23C1700A56828 /* Factory.cpp */; };
+		5D12BC341BF23C9200A56828 /* Sphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3C1BF23C1700A56828 /* Sphere.cpp */; };
+		5D12BC351BF23C9200A56828 /* Background.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB131BF23C1600A56828 /* Background.cpp */; };
+		5D12BC361BF23C9200A56828 /* Switch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB401BF23C1700A56828 /* Switch.cpp */; };
+		5D12BC371BF23C9200A56828 /* ObjectRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2A1BF23C1700A56828 /* ObjectRef.cpp */; };
+		5D12BC381BF23C9200A56828 /* DynamicObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1C1BF23C1700A56828 /* DynamicObject.cpp */; };
+		5D12BC391BF23C9200A56828 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4A1BF23C1700A56828 /* Utilities.cpp */; };
+		5D12BC3A1BF23C9200A56828 /* Cylinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB191BF23C1700A56828 /* Cylinder.cpp */; };
+		5D12BC3B1BF23C9200A56828 /* BitmapFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB151BF23C1700A56828 /* BitmapFramebuffer.cpp */; };
+		5D12BC3C1BF23C9200A56828 /* QuadStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB331BF23C1700A56828 /* QuadStrips.cpp */; };
+		5D12BC3E1BF23C9200A56828 /* Points.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2F1BF23C1700A56828 /* Points.cpp */; };
+		5D12BC3F1BF23C9200A56828 /* LightSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB241BF23C1700A56828 /* LightSource.cpp */; };
+		5D12BC401BF23C9200A56828 /* SkyBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3B1BF23C1700A56828 /* SkyBackground.cpp */; };
+		5D12BC411BF23C9200A56828 /* IndependentPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB231BF23C1700A56828 /* IndependentPrimitive.cpp */; };
+		5D12BC421BF23C9200A56828 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB271BF23C1700A56828 /* Material.cpp */; };
+		5D12BC431BF23C9200A56828 /* TriangleStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB481BF23C1700A56828 /* TriangleStrips.cpp */; };
+		5D12BC441BF23C9200A56828 /* WindowFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4D1BF23C1700A56828 /* WindowFramebuffer.cpp */; };
+		5D12BC451BF23C9200A56828 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1D1BF23C1700A56828 /* Engine.cpp */; };
+		5D12BC461BF23C9200A56828 /* Billboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB141BF23C1700A56828 /* Billboard.cpp */; };
+		5D12BC471BF23C9200A56828 /* DirectionalLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1B1BF23C1700A56828 /* DirectionalLight.cpp */; };
+		5D12BC481BF23C9200A56828 /* VertexSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4B1BF23C1700A56828 /* VertexSet.cpp */; };
+		5D12BC491BF23C9200A56828 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB281BF23C1700A56828 /* Node.cpp */; };
+		5D12BC4A1BF23C9200A56828 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4C1BF23C1700A56828 /* View.cpp */; };
+		5D12BC4B1BF23C9200A56828 /* StripPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3F1BF23C1700A56828 /* StripPrimitive.cpp */; };
+		5D12BC4C1BF23C9200A56828 /* StereoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3E1BF23C1700A56828 /* StereoView.cpp */; };
+		5D12BC501BF23C9200A56828 /* LOD.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA21BF23C3200A56828 /* LOD.h */; };
+		5D12BC511BF23C9200A56828 /* Objects.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA81BF23C3200A56828 /* Objects.h */; };
+		5D12BC521BF23C9200A56828 /* DynamicObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB991BF23C3200A56828 /* DynamicObject.h */; };
+		5D12BC531BF23C9200A56828 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCB1BF23C3200A56828 /* View.h */; };
+		5D12BC541BF23C9200A56828 /* Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC01BF23C3200A56828 /* Texture.h */; };
+		5D12BC551BF23C9200A56828 /* WindowFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCC1BF23C3200A56828 /* WindowFramebuffer.h */; };
+		5D12BC561BF23C9200A56828 /* DepthAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB971BF23C3200A56828 /* DepthAttribute.h */; };
+		5D12BC571BF23C9200A56828 /* UndistortedBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC81BF23C3200A56828 /* UndistortedBackground.h */; };
+		5D12BC581BF23C9200A56828 /* PointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAC1BF23C3200A56828 /* PointLight.h */; };
+		5D12BC591BF23C9200A56828 /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA31BF23C3200A56828 /* Manager.h */; };
+		5D12BC5A1BF23C9200A56828 /* QuadFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB01BF23C3200A56828 /* QuadFace.h */; };
+		5D12BC5B1BF23C9200A56828 /* TriangleStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC71BF23C3200A56828 /* TriangleStrips.h */; };
+		5D12BC5C1BF23C9200A56828 /* Texture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC11BF23C3200A56828 /* Texture2D.h */; };
+		5D12BC5D1BF23C9200A56828 /* BlendAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB931BF23C3200A56828 /* BlendAttribute.h */; };
+		5D12BC5E1BF23C9200A56828 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC91BF23C3200A56828 /* Utilities.h */; };
+		5D12BC5F1BF23C9200A56828 /* Renderable.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB31BF23C3200A56828 /* Renderable.h */; };
+		5D12BC601BF23C9200A56828 /* Node.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA51BF23C3200A56828 /* Node.h */; };
+		5D12BC611BF23C9200A56828 /* ParallelView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA91BF23C3200A56828 /* ParallelView.h */; };
+		5D12BC621BF23C9200A56828 /* VertexSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCA1BF23C3200A56828 /* VertexSet.h */; };
+		5D12BC631BF23C9200A56828 /* IndependentPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA01BF23C3200A56828 /* IndependentPrimitive.h */; };
+		5D12BC641BF23C9200A56828 /* TriangleFans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC51BF23C3200A56828 /* TriangleFans.h */; };
+		5D12BC651BF23C9200A56828 /* AttributeSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8F1BF23C3200A56828 /* AttributeSet.h */; };
+		5D12BC661BF23C9200A56828 /* Billboard.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB911BF23C3200A56828 /* Billboard.h */; };
+		5D12BC671BF23C9200A56828 /* ObjectRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA71BF23C3200A56828 /* ObjectRef.h */; };
+		5D12BC691BF23C9200A56828 /* Cone.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB951BF23C3200A56828 /* Cone.h */; };
+		5D12BC6A1BF23C9200A56828 /* QuadStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB21BF23C3200A56828 /* QuadStrips.h */; };
+		5D12BC6B1BF23C9200A56828 /* Sphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBB1BF23C3200A56828 /* Sphere.h */; };
+		5D12BC6C1BF23C9200A56828 /* Cylinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB961BF23C3200A56828 /* Cylinder.h */; };
+		5D12BC6E1BF23C9200A56828 /* DirectionalLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB981BF23C3200A56828 /* DirectionalLight.h */; };
+		5D12BC6F1BF23C9200A56828 /* StereoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBD1BF23C3200A56828 /* StereoView.h */; };
+		5D12BC701BF23C9200A56828 /* Points.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAD1BF23C3200A56828 /* Points.h */; };
+		5D12BC711BF23C9200A56828 /* Framebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9C1BF23C3200A56828 /* Framebuffer.h */; };
+		5D12BC721BF23C9200A56828 /* ShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB71BF23C3200A56828 /* ShaderProgram.h */; };
+		5D12BC731BF23C9200A56828 /* AbsoluteTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8D1BF23C3200A56828 /* AbsoluteTransform.h */; };
+		5D12BC741BF23C9200A56828 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB941BF23C3200A56828 /* Box.h */; };
+		5D12BC751BF23C9200A56828 /* StripPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBE1BF23C3200A56828 /* StripPrimitive.h */; };
+		5D12BC761BF23C9200A56828 /* Shape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB91BF23C3200A56828 /* Shape.h */; };
+		5D12BC771BF23C9200A56828 /* TriangleFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC41BF23C3200A56828 /* TriangleFace.h */; };
+		5D12BC781BF23C9200A56828 /* PrimitiveAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAF1BF23C3200A56828 /* PrimitiveAttribute.h */; };
+		5D12BC791BF23C9200A56828 /* PhantomAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAB1BF23C3200A56828 /* PhantomAttribute.h */; };
+		5D12BC7A1BF23C9200A56828 /* Factory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9B1BF23C3200A56828 /* Factory.h */; };
+		5D12BC7B1BF23C9200A56828 /* PerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAA1BF23C3200A56828 /* PerspectiveView.h */; };
+		5D12BC7C1BF23C9200A56828 /* Group.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9E1BF23C3200A56828 /* Group.h */; };
+		5D12BC7D1BF23C9200A56828 /* Triangles.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC61BF23C3200A56828 /* Triangles.h */; };
+		5D12BC7E1BF23C9200A56828 /* Engine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9A1BF23C3200A56828 /* Engine.h */; };
+		5D12BC7F1BF23C9200A56828 /* SkyBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBA1BF23C3200A56828 /* SkyBackground.h */; };
+		5D12BC801BF23C9200A56828 /* Object.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA61BF23C3200A56828 /* Object.h */; };
+		5D12BC811BF23C9200A56828 /* Rendering.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB41BF23C3200A56828 /* Rendering.h */; };
+		5D12BC821BF23C9200A56828 /* LightSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA11BF23C3200A56828 /* LightSource.h */; };
+		5D12BC831BF23C9200A56828 /* Quads.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB11BF23C3200A56828 /* Quads.h */; };
+		5D12BC841BF23C9200A56828 /* Background.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB901BF23C3200A56828 /* Background.h */; };
+		5D12BC851BF23C9200A56828 /* Attribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8E1BF23C3200A56828 /* Attribute.h */; };
+		5D12BC861BF23C9200A56828 /* BitmapFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB921BF23C3200A56828 /* BitmapFramebuffer.h */; };
+		5D12BC871BF23C9200A56828 /* Geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9D1BF23C3200A56828 /* Geometry.h */; };
+		5D12BC881BF23C9200A56828 /* Scene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB61BF23C3200A56828 /* Scene.h */; };
+		5D12BC891BF23C9200A56828 /* Primitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAE1BF23C3200A56828 /* Primitive.h */; };
+		5D12BC8A1BF23C9200A56828 /* Material.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA41BF23C3200A56828 /* Material.h */; };
+		5D12BC8B1BF23C9200A56828 /* SpotLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBC1BF23C3200A56828 /* SpotLight.h */; };
+		5D12BC8C1BF23C9200A56828 /* Transform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC31BF23C3200A56828 /* Transform.h */; };
+		5D12BC8D1BF23C9200A56828 /* Textures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC21BF23C3200A56828 /* Textures.h */; };
+		5D12BC8E1BF23C9200A56828 /* Switch.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBF1BF23C3200A56828 /* Switch.h */; };
+		5D9863461D8B5F8F00DEDB00 /* Renderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB341BF23C1700A56828 /* Renderable.cpp */; };
+		5D9863471D8B5F8F00DEDB00 /* UndistortedBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB491BF23C1700A56828 /* UndistortedBackground.cpp */; };
+		5D9863481D8B5F8F00DEDB00 /* Cone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB181BF23C1700A56828 /* Cone.cpp */; };
+		5D98634A1D8B5F8F00DEDB00 /* Group.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB211BF23C1700A56828 /* Group.cpp */; };
+		5D98634B1D8B5F8F00DEDB00 /* Texture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB421BF23C1700A56828 /* Texture2D.cpp */; };
+		5D98634C1D8B5F8F00DEDB00 /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB201BF23C1700A56828 /* Geometry.cpp */; };
+		5D98634D1D8B5F8F00DEDB00 /* PointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2E1BF23C1700A56828 /* PointLight.cpp */; };
+		5D98634F1D8B5F8F00DEDB00 /* Quads.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB321BF23C1700A56828 /* Quads.cpp */; };
+		5D9863501D8B5F8F00DEDB00 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB371BF23C1700A56828 /* Scene.cpp */; };
+		5D9863511D8B5F8F00DEDB00 /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB291BF23C1700A56828 /* Object.cpp */; };
+		5D9863521D8B5F8F00DEDB00 /* AttributeSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB121BF23C1600A56828 /* AttributeSet.cpp */; };
+		5D9863531D8B5F8F00DEDB00 /* Shape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3A1BF23C1700A56828 /* Shape.cpp */; };
+		5D9863541D8B5F8F00DEDB00 /* Primitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB301BF23C1700A56828 /* Primitive.cpp */; };
+		5D9863551D8B5F8F00DEDB00 /* Transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB441BF23C1700A56828 /* Transform.cpp */; };
+		5D9863561D8B5F8F00DEDB00 /* Triangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB471BF23C1700A56828 /* Triangles.cpp */; };
+		5D9863571D8B5F8F00DEDB00 /* LOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB251BF23C1700A56828 /* LOD.cpp */; };
+		5D9863581D8B5F8F00DEDB00 /* Box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB171BF23C1700A56828 /* Box.cpp */; };
+		5D9863591D8B5F8F00DEDB00 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB411BF23C1700A56828 /* Texture.cpp */; };
+		5D98635A1D8B5F8F00DEDB00 /* PhantomAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2D1BF23C1700A56828 /* PhantomAttribute.cpp */; };
+		5D98635B1D8B5F8F00DEDB00 /* Attribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB111BF23C1600A56828 /* Attribute.cpp */; };
+		5D98635C1D8B5F8F00DEDB00 /* PerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2C1BF23C1700A56828 /* PerspectiveView.cpp */; };
+		5D98635D1D8B5F8F00DEDB00 /* BlendAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB161BF23C1700A56828 /* BlendAttribute.cpp */; };
+		5D98635E1D8B5F8F00DEDB00 /* Textures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB431BF23C1700A56828 /* Textures.cpp */; };
+		5D98635F1D8B5F8F00DEDB00 /* Framebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1F1BF23C1700A56828 /* Framebuffer.cpp */; };
+		5D9863601D8B5F8F00DEDB00 /* SpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3D1BF23C1700A56828 /* SpotLight.cpp */; };
+		5D9863611D8B5F8F00DEDB00 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB261BF23C1700A56828 /* Manager.cpp */; };
+		5D9863621D8B5F8F00DEDB00 /* DepthAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1A1BF23C1700A56828 /* DepthAttribute.cpp */; };
+		5D9863631D8B5F8F00DEDB00 /* ShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB381BF23C1700A56828 /* ShaderProgram.cpp */; };
+		5D9863641D8B5F8F00DEDB00 /* TriangleFace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB451BF23C1700A56828 /* TriangleFace.cpp */; };
+		5D9863651D8B5F8F00DEDB00 /* ParallelView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2B1BF23C1700A56828 /* ParallelView.cpp */; };
+		5D9863671D8B5F8F00DEDB00 /* PrimitiveAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB311BF23C1700A56828 /* PrimitiveAttribute.cpp */; };
+		5D9863681D8B5F8F00DEDB00 /* AbsoluteTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB101BF23C1600A56828 /* AbsoluteTransform.cpp */; };
+		5D9863691D8B5F8F00DEDB00 /* TriangleFans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB461BF23C1700A56828 /* TriangleFans.cpp */; };
+		5D98636A1D8B5F8F00DEDB00 /* Factory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1E1BF23C1700A56828 /* Factory.cpp */; };
+		5D98636B1D8B5F8F00DEDB00 /* Sphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3C1BF23C1700A56828 /* Sphere.cpp */; };
+		5D98636C1D8B5F8F00DEDB00 /* Background.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB131BF23C1600A56828 /* Background.cpp */; };
+		5D98636D1D8B5F8F00DEDB00 /* Switch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB401BF23C1700A56828 /* Switch.cpp */; };
+		5D98636E1D8B5F8F00DEDB00 /* ObjectRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2A1BF23C1700A56828 /* ObjectRef.cpp */; };
+		5D98636F1D8B5F8F00DEDB00 /* DynamicObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1C1BF23C1700A56828 /* DynamicObject.cpp */; };
+		5D9863701D8B5F8F00DEDB00 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4A1BF23C1700A56828 /* Utilities.cpp */; };
+		5D9863711D8B5F8F00DEDB00 /* Cylinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB191BF23C1700A56828 /* Cylinder.cpp */; };
+		5D9863721D8B5F8F00DEDB00 /* BitmapFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB151BF23C1700A56828 /* BitmapFramebuffer.cpp */; };
+		5D9863731D8B5F8F00DEDB00 /* QuadStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB331BF23C1700A56828 /* QuadStrips.cpp */; };
+		5D9863751D8B5F8F00DEDB00 /* Points.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2F1BF23C1700A56828 /* Points.cpp */; };
+		5D9863761D8B5F8F00DEDB00 /* LightSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB241BF23C1700A56828 /* LightSource.cpp */; };
+		5D9863771D8B5F8F00DEDB00 /* SkyBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3B1BF23C1700A56828 /* SkyBackground.cpp */; };
+		5D9863781D8B5F8F00DEDB00 /* IndependentPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB231BF23C1700A56828 /* IndependentPrimitive.cpp */; };
+		5D9863791D8B5F8F00DEDB00 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB271BF23C1700A56828 /* Material.cpp */; };
+		5D98637A1D8B5F8F00DEDB00 /* TriangleStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB481BF23C1700A56828 /* TriangleStrips.cpp */; };
+		5D98637B1D8B5F8F00DEDB00 /* WindowFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4D1BF23C1700A56828 /* WindowFramebuffer.cpp */; };
+		5D98637C1D8B5F8F00DEDB00 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1D1BF23C1700A56828 /* Engine.cpp */; };
+		5D98637D1D8B5F8F00DEDB00 /* Billboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB141BF23C1700A56828 /* Billboard.cpp */; };
+		5D98637E1D8B5F8F00DEDB00 /* DirectionalLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1B1BF23C1700A56828 /* DirectionalLight.cpp */; };
+		5D98637F1D8B5F8F00DEDB00 /* VertexSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4B1BF23C1700A56828 /* VertexSet.cpp */; };
+		5D9863801D8B5F8F00DEDB00 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB281BF23C1700A56828 /* Node.cpp */; };
+		5D9863811D8B5F8F00DEDB00 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4C1BF23C1700A56828 /* View.cpp */; };
+		5D9863821D8B5F8F00DEDB00 /* StripPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3F1BF23C1700A56828 /* StripPrimitive.cpp */; };
+		5D9863831D8B5F8F00DEDB00 /* StereoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3E1BF23C1700A56828 /* StereoView.cpp */; };
+		5D9863871D8B5F8F00DEDB00 /* LOD.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA21BF23C3200A56828 /* LOD.h */; };
+		5D9863881D8B5F8F00DEDB00 /* Objects.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA81BF23C3200A56828 /* Objects.h */; };
+		5D9863891D8B5F8F00DEDB00 /* DynamicObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB991BF23C3200A56828 /* DynamicObject.h */; };
+		5D98638A1D8B5F8F00DEDB00 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCB1BF23C3200A56828 /* View.h */; };
+		5D98638B1D8B5F8F00DEDB00 /* Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC01BF23C3200A56828 /* Texture.h */; };
+		5D98638C1D8B5F8F00DEDB00 /* WindowFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCC1BF23C3200A56828 /* WindowFramebuffer.h */; };
+		5D98638D1D8B5F8F00DEDB00 /* DepthAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB971BF23C3200A56828 /* DepthAttribute.h */; };
+		5D98638E1D8B5F8F00DEDB00 /* UndistortedBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC81BF23C3200A56828 /* UndistortedBackground.h */; };
+		5D98638F1D8B5F8F00DEDB00 /* PointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAC1BF23C3200A56828 /* PointLight.h */; };
+		5D9863901D8B5F8F00DEDB00 /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA31BF23C3200A56828 /* Manager.h */; };
+		5D9863911D8B5F8F00DEDB00 /* QuadFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB01BF23C3200A56828 /* QuadFace.h */; };
+		5D9863921D8B5F8F00DEDB00 /* TriangleStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC71BF23C3200A56828 /* TriangleStrips.h */; };
+		5D9863931D8B5F8F00DEDB00 /* Texture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC11BF23C3200A56828 /* Texture2D.h */; };
+		5D9863941D8B5F8F00DEDB00 /* BlendAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB931BF23C3200A56828 /* BlendAttribute.h */; };
+		5D9863951D8B5F8F00DEDB00 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC91BF23C3200A56828 /* Utilities.h */; };
+		5D9863961D8B5F8F00DEDB00 /* Renderable.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB31BF23C3200A56828 /* Renderable.h */; };
+		5D9863971D8B5F8F00DEDB00 /* Node.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA51BF23C3200A56828 /* Node.h */; };
+		5D9863981D8B5F8F00DEDB00 /* ParallelView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA91BF23C3200A56828 /* ParallelView.h */; };
+		5D9863991D8B5F8F00DEDB00 /* VertexSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCA1BF23C3200A56828 /* VertexSet.h */; };
+		5D98639A1D8B5F8F00DEDB00 /* IndependentPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA01BF23C3200A56828 /* IndependentPrimitive.h */; };
+		5D98639B1D8B5F8F00DEDB00 /* TriangleFans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC51BF23C3200A56828 /* TriangleFans.h */; };
+		5D98639C1D8B5F8F00DEDB00 /* AttributeSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8F1BF23C3200A56828 /* AttributeSet.h */; };
+		5D98639D1D8B5F8F00DEDB00 /* Billboard.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB911BF23C3200A56828 /* Billboard.h */; };
+		5D98639E1D8B5F8F00DEDB00 /* ObjectRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA71BF23C3200A56828 /* ObjectRef.h */; };
+		5D9863A01D8B5F8F00DEDB00 /* Cone.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB951BF23C3200A56828 /* Cone.h */; };
+		5D9863A11D8B5F8F00DEDB00 /* QuadStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB21BF23C3200A56828 /* QuadStrips.h */; };
+		5D9863A21D8B5F8F00DEDB00 /* Sphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBB1BF23C3200A56828 /* Sphere.h */; };
+		5D9863A31D8B5F8F00DEDB00 /* Cylinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB961BF23C3200A56828 /* Cylinder.h */; };
+		5D9863A51D8B5F8F00DEDB00 /* DirectionalLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB981BF23C3200A56828 /* DirectionalLight.h */; };
+		5D9863A61D8B5F8F00DEDB00 /* StereoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBD1BF23C3200A56828 /* StereoView.h */; };
+		5D9863A71D8B5F8F00DEDB00 /* Points.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAD1BF23C3200A56828 /* Points.h */; };
+		5D9863A81D8B5F8F00DEDB00 /* Framebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9C1BF23C3200A56828 /* Framebuffer.h */; };
+		5D9863A91D8B5F8F00DEDB00 /* ShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB71BF23C3200A56828 /* ShaderProgram.h */; };
+		5D9863AA1D8B5F8F00DEDB00 /* AbsoluteTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8D1BF23C3200A56828 /* AbsoluteTransform.h */; };
+		5D9863AB1D8B5F8F00DEDB00 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB941BF23C3200A56828 /* Box.h */; };
+		5D9863AC1D8B5F8F00DEDB00 /* StripPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBE1BF23C3200A56828 /* StripPrimitive.h */; };
+		5D9863AD1D8B5F8F00DEDB00 /* Shape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB91BF23C3200A56828 /* Shape.h */; };
+		5D9863AE1D8B5F8F00DEDB00 /* TriangleFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC41BF23C3200A56828 /* TriangleFace.h */; };
+		5D9863AF1D8B5F8F00DEDB00 /* PrimitiveAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAF1BF23C3200A56828 /* PrimitiveAttribute.h */; };
+		5D9863B01D8B5F8F00DEDB00 /* PhantomAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAB1BF23C3200A56828 /* PhantomAttribute.h */; };
+		5D9863B11D8B5F8F00DEDB00 /* Factory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9B1BF23C3200A56828 /* Factory.h */; };
+		5D9863B21D8B5F8F00DEDB00 /* PerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAA1BF23C3200A56828 /* PerspectiveView.h */; };
+		5D9863B31D8B5F8F00DEDB00 /* Group.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9E1BF23C3200A56828 /* Group.h */; };
+		5D9863B41D8B5F8F00DEDB00 /* Triangles.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC61BF23C3200A56828 /* Triangles.h */; };
+		5D9863B51D8B5F8F00DEDB00 /* Engine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9A1BF23C3200A56828 /* Engine.h */; };
+		5D9863B61D8B5F8F00DEDB00 /* SkyBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBA1BF23C3200A56828 /* SkyBackground.h */; };
+		5D9863B71D8B5F8F00DEDB00 /* Object.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA61BF23C3200A56828 /* Object.h */; };
+		5D9863B81D8B5F8F00DEDB00 /* Rendering.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB41BF23C3200A56828 /* Rendering.h */; };
+		5D9863B91D8B5F8F00DEDB00 /* LightSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA11BF23C3200A56828 /* LightSource.h */; };
+		5D9863BA1D8B5F8F00DEDB00 /* Quads.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB11BF23C3200A56828 /* Quads.h */; };
+		5D9863BB1D8B5F8F00DEDB00 /* Background.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB901BF23C3200A56828 /* Background.h */; };
+		5D9863BC1D8B5F8F00DEDB00 /* Attribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8E1BF23C3200A56828 /* Attribute.h */; };
+		5D9863BD1D8B5F8F00DEDB00 /* BitmapFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB921BF23C3200A56828 /* BitmapFramebuffer.h */; };
+		5D9863BE1D8B5F8F00DEDB00 /* Geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9D1BF23C3200A56828 /* Geometry.h */; };
+		5D9863BF1D8B5F8F00DEDB00 /* Scene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB61BF23C3200A56828 /* Scene.h */; };
+		5D9863C01D8B5F8F00DEDB00 /* Primitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAE1BF23C3200A56828 /* Primitive.h */; };
+		5D9863C11D8B5F8F00DEDB00 /* Material.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA41BF23C3200A56828 /* Material.h */; };
+		5D9863C21D8B5F8F00DEDB00 /* SpotLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBC1BF23C3200A56828 /* SpotLight.h */; };
+		5D9863C31D8B5F8F00DEDB00 /* Transform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC31BF23C3200A56828 /* Transform.h */; };
+		5D9863C41D8B5F8F00DEDB00 /* Textures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC21BF23C3200A56828 /* Textures.h */; };
+		5D9863C51D8B5F8F00DEDB00 /* Switch.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBF1BF23C3200A56828 /* Switch.h */; };
+		9326C99E27554E65008DABF2 /* FrameTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326C99D27554E65008DABF2 /* FrameTexture2D.h */; };
+		9326C99F27554E65008DABF2 /* FrameTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326C99D27554E65008DABF2 /* FrameTexture2D.h */; };
+		9326C9A027554E65008DABF2 /* FrameTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326C99D27554E65008DABF2 /* FrameTexture2D.h */; };
+		9326C9A127554E65008DABF2 /* FrameTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 9326C99D27554E65008DABF2 /* FrameTexture2D.h */; };
+		9326C9A827554E9B008DABF2 /* FrameTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326C9A727554E9B008DABF2 /* FrameTexture2D.cpp */; };
+		9326C9A927554E9B008DABF2 /* FrameTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326C9A727554E9B008DABF2 /* FrameTexture2D.cpp */; };
+		9326C9AA27554E9B008DABF2 /* FrameTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326C9A727554E9B008DABF2 /* FrameTexture2D.cpp */; };
+		9326C9AB27554E9B008DABF2 /* FrameTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9326C9A727554E9B008DABF2 /* FrameTexture2D.cpp */; };
+		932CAF6426C110C8004C36E0 /* Text.h in Headers */ = {isa = PBXBuildFile; fileRef = 932CAF6326C110C8004C36E0 /* Text.h */; };
+		932CAF6526C110C8004C36E0 /* Text.h in Headers */ = {isa = PBXBuildFile; fileRef = 932CAF6326C110C8004C36E0 /* Text.h */; };
+		932CAF6626C110C8004C36E0 /* Text.h in Headers */ = {isa = PBXBuildFile; fileRef = 932CAF6326C110C8004C36E0 /* Text.h */; };
+		932CAF6726C110C8004C36E0 /* Text.h in Headers */ = {isa = PBXBuildFile; fileRef = 932CAF6326C110C8004C36E0 /* Text.h */; };
+		932CAF6926C110DE004C36E0 /* Text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932CAF6826C110DE004C36E0 /* Text.cpp */; };
+		932CAF6A26C110DE004C36E0 /* Text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932CAF6826C110DE004C36E0 /* Text.cpp */; };
+		932CAF6B26C110DE004C36E0 /* Text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932CAF6826C110DE004C36E0 /* Text.cpp */; };
+		932CAF6C26C110DE004C36E0 /* Text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 932CAF6826C110DE004C36E0 /* Text.cpp */; };
+		93320B8125F6ECCC00B10E4A /* TextureFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93320B8025F6ECCC00B10E4A /* TextureFramebuffer.h */; };
+		93320B8225F6ECCC00B10E4A /* TextureFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93320B8025F6ECCC00B10E4A /* TextureFramebuffer.h */; };
+		93320B8325F6ECCC00B10E4A /* TextureFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93320B8025F6ECCC00B10E4A /* TextureFramebuffer.h */; };
+		93320B8425F6ECCC00B10E4A /* TextureFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93320B8025F6ECCC00B10E4A /* TextureFramebuffer.h */; };
+		93320D1125FC258400B10E4A /* TextureFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93320D1025FC258400B10E4A /* TextureFramebuffer.cpp */; };
+		93320D1225FC258400B10E4A /* TextureFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93320D1025FC258400B10E4A /* TextureFramebuffer.cpp */; };
+		93320D1325FC258400B10E4A /* TextureFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93320D1025FC258400B10E4A /* TextureFramebuffer.cpp */; };
+		93320D1425FC258400B10E4A /* TextureFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93320D1025FC258400B10E4A /* TextureFramebuffer.cpp */; };
+		93429BCD2978732300FE7701 /* Lines.h in Headers */ = {isa = PBXBuildFile; fileRef = 93429BCC2978732300FE7701 /* Lines.h */; };
+		93429BCE2978732300FE7701 /* Lines.h in Headers */ = {isa = PBXBuildFile; fileRef = 93429BCC2978732300FE7701 /* Lines.h */; };
+		93429BCF2978732300FE7701 /* Lines.h in Headers */ = {isa = PBXBuildFile; fileRef = 93429BCC2978732300FE7701 /* Lines.h */; };
+		93429BD02978732300FE7701 /* Lines.h in Headers */ = {isa = PBXBuildFile; fileRef = 93429BCC2978732300FE7701 /* Lines.h */; };
+		93429BD22978733600FE7701 /* Lines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93429BD12978733600FE7701 /* Lines.cpp */; };
+		93429BD32978733600FE7701 /* Lines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93429BD12978733600FE7701 /* Lines.cpp */; };
+		93429BD42978733600FE7701 /* Lines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93429BD12978733600FE7701 /* Lines.cpp */; };
+		93429BD52978733600FE7701 /* Lines.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93429BD12978733600FE7701 /* Lines.cpp */; };
+		93ADFB74297A197F00651F48 /* LineStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB6F297A197F00651F48 /* LineStrips.h */; };
+		93ADFB75297A197F00651F48 /* LineStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB6F297A197F00651F48 /* LineStrips.h */; };
+		93ADFB76297A197F00651F48 /* LineStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB6F297A197F00651F48 /* LineStrips.h */; };
+		93ADFB77297A197F00651F48 /* LineStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 93ADFB6F297A197F00651F48 /* LineStrips.h */; };
+		93ADFB79297A19A100651F48 /* LineStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB78297A19A100651F48 /* LineStrips.cpp */; };
+		93ADFB7A297A19A100651F48 /* LineStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB78297A19A100651F48 /* LineStrips.cpp */; };
+		93ADFB7B297A19A100651F48 /* LineStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB78297A19A100651F48 /* LineStrips.cpp */; };
+		93ADFB7C297A19A100651F48 /* LineStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93ADFB78297A19A100651F48 /* LineStrips.cpp */; };
+		93DC6B0326BB0BB90021A07C /* MediaTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DC6B0226BB0BB90021A07C /* MediaTexture2D.h */; };
+		93DC6B0426BB0BB90021A07C /* MediaTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DC6B0226BB0BB90021A07C /* MediaTexture2D.h */; };
+		93DC6B0526BB0BB90021A07C /* MediaTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DC6B0226BB0BB90021A07C /* MediaTexture2D.h */; };
+		93DC6B0626BB0BB90021A07C /* MediaTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DC6B0226BB0BB90021A07C /* MediaTexture2D.h */; };
+		93DC6B0826BB0BC70021A07C /* MediaTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DC6B0726BB0BC70021A07C /* MediaTexture2D.cpp */; };
+		93DC6B0926BB0BC70021A07C /* MediaTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DC6B0726BB0BC70021A07C /* MediaTexture2D.cpp */; };
+		93DC6B0A26BB0BC70021A07C /* MediaTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DC6B0726BB0BC70021A07C /* MediaTexture2D.cpp */; };
+		93DC6B0B26BB0BC70021A07C /* MediaTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DC6B0726BB0BC70021A07C /* MediaTexture2D.cpp */; };
+		93F1C4BB243EFAEB00217EF1 /* StereoAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F1C4BA243EFAEB00217EF1 /* StereoAttribute.h */; };
+		93F1C4BC243EFAEB00217EF1 /* StereoAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F1C4BA243EFAEB00217EF1 /* StereoAttribute.h */; };
+		93F1C4BD243EFAEB00217EF1 /* StereoAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F1C4BA243EFAEB00217EF1 /* StereoAttribute.h */; };
+		93F1C4BE243EFAEB00217EF1 /* StereoAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F1C4BA243EFAEB00217EF1 /* StereoAttribute.h */; };
+		93F1C4C0243EFB0000217EF1 /* StereoAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F1C4BF243EFB0000217EF1 /* StereoAttribute.cpp */; };
+		93F1C4C1243EFB0000217EF1 /* StereoAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F1C4BF243EFB0000217EF1 /* StereoAttribute.cpp */; };
+		93F1C4C2243EFB0000217EF1 /* StereoAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F1C4BF243EFB0000217EF1 /* StereoAttribute.cpp */; };
+		93F1C4C3243EFB0000217EF1 /* StereoAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F1C4BF243EFB0000217EF1 /* StereoAttribute.cpp */; };
+		C041ECAA1DABF10200BF5D76 /* Renderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB341BF23C1700A56828 /* Renderable.cpp */; };
+		C041ECAB1DABF10200BF5D76 /* UndistortedBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB491BF23C1700A56828 /* UndistortedBackground.cpp */; };
+		C041ECAC1DABF10200BF5D76 /* Cone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB181BF23C1700A56828 /* Cone.cpp */; };
+		C041ECAE1DABF10200BF5D76 /* Group.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB211BF23C1700A56828 /* Group.cpp */; };
+		C041ECAF1DABF10200BF5D76 /* Texture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB421BF23C1700A56828 /* Texture2D.cpp */; };
+		C041ECB01DABF10200BF5D76 /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB201BF23C1700A56828 /* Geometry.cpp */; };
+		C041ECB11DABF10200BF5D76 /* PointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2E1BF23C1700A56828 /* PointLight.cpp */; };
+		C041ECB31DABF10200BF5D76 /* Quads.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB321BF23C1700A56828 /* Quads.cpp */; };
+		C041ECB41DABF10200BF5D76 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB371BF23C1700A56828 /* Scene.cpp */; };
+		C041ECB51DABF10200BF5D76 /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB291BF23C1700A56828 /* Object.cpp */; };
+		C041ECB61DABF10200BF5D76 /* AttributeSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB121BF23C1600A56828 /* AttributeSet.cpp */; };
+		C041ECB71DABF10200BF5D76 /* Shape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3A1BF23C1700A56828 /* Shape.cpp */; };
+		C041ECB81DABF10200BF5D76 /* Primitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB301BF23C1700A56828 /* Primitive.cpp */; };
+		C041ECB91DABF10200BF5D76 /* Transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB441BF23C1700A56828 /* Transform.cpp */; };
+		C041ECBA1DABF10200BF5D76 /* Triangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB471BF23C1700A56828 /* Triangles.cpp */; };
+		C041ECBB1DABF10200BF5D76 /* LOD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB251BF23C1700A56828 /* LOD.cpp */; };
+		C041ECBC1DABF10200BF5D76 /* Box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB171BF23C1700A56828 /* Box.cpp */; };
+		C041ECBD1DABF10200BF5D76 /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB411BF23C1700A56828 /* Texture.cpp */; };
+		C041ECBE1DABF10200BF5D76 /* PhantomAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2D1BF23C1700A56828 /* PhantomAttribute.cpp */; };
+		C041ECBF1DABF10200BF5D76 /* Attribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB111BF23C1600A56828 /* Attribute.cpp */; };
+		C041ECC01DABF10200BF5D76 /* PerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2C1BF23C1700A56828 /* PerspectiveView.cpp */; };
+		C041ECC11DABF10200BF5D76 /* BlendAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB161BF23C1700A56828 /* BlendAttribute.cpp */; };
+		C041ECC21DABF10200BF5D76 /* Textures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB431BF23C1700A56828 /* Textures.cpp */; };
+		C041ECC31DABF10200BF5D76 /* Framebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1F1BF23C1700A56828 /* Framebuffer.cpp */; };
+		C041ECC41DABF10200BF5D76 /* SpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3D1BF23C1700A56828 /* SpotLight.cpp */; };
+		C041ECC51DABF10200BF5D76 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB261BF23C1700A56828 /* Manager.cpp */; };
+		C041ECC61DABF10200BF5D76 /* DepthAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1A1BF23C1700A56828 /* DepthAttribute.cpp */; };
+		C041ECC71DABF10200BF5D76 /* ShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB381BF23C1700A56828 /* ShaderProgram.cpp */; };
+		C041ECC81DABF10200BF5D76 /* TriangleFace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB451BF23C1700A56828 /* TriangleFace.cpp */; };
+		C041ECC91DABF10200BF5D76 /* ParallelView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2B1BF23C1700A56828 /* ParallelView.cpp */; };
+		C041ECCB1DABF10200BF5D76 /* PrimitiveAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB311BF23C1700A56828 /* PrimitiveAttribute.cpp */; };
+		C041ECCC1DABF10200BF5D76 /* AbsoluteTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB101BF23C1600A56828 /* AbsoluteTransform.cpp */; };
+		C041ECCD1DABF10200BF5D76 /* TriangleFans.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB461BF23C1700A56828 /* TriangleFans.cpp */; };
+		C041ECCE1DABF10200BF5D76 /* Factory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1E1BF23C1700A56828 /* Factory.cpp */; };
+		C041ECCF1DABF10200BF5D76 /* Sphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3C1BF23C1700A56828 /* Sphere.cpp */; };
+		C041ECD01DABF10200BF5D76 /* Background.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB131BF23C1600A56828 /* Background.cpp */; };
+		C041ECD11DABF10200BF5D76 /* Switch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB401BF23C1700A56828 /* Switch.cpp */; };
+		C041ECD21DABF10200BF5D76 /* ObjectRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2A1BF23C1700A56828 /* ObjectRef.cpp */; };
+		C041ECD31DABF10200BF5D76 /* DynamicObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1C1BF23C1700A56828 /* DynamicObject.cpp */; };
+		C041ECD41DABF10200BF5D76 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4A1BF23C1700A56828 /* Utilities.cpp */; };
+		C041ECD51DABF10200BF5D76 /* Cylinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB191BF23C1700A56828 /* Cylinder.cpp */; };
+		C041ECD61DABF10200BF5D76 /* BitmapFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB151BF23C1700A56828 /* BitmapFramebuffer.cpp */; };
+		C041ECD71DABF10200BF5D76 /* QuadStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB331BF23C1700A56828 /* QuadStrips.cpp */; };
+		C041ECD91DABF10200BF5D76 /* Points.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB2F1BF23C1700A56828 /* Points.cpp */; };
+		C041ECDA1DABF10200BF5D76 /* LightSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB241BF23C1700A56828 /* LightSource.cpp */; };
+		C041ECDB1DABF10200BF5D76 /* SkyBackground.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3B1BF23C1700A56828 /* SkyBackground.cpp */; };
+		C041ECDC1DABF10200BF5D76 /* IndependentPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB231BF23C1700A56828 /* IndependentPrimitive.cpp */; };
+		C041ECDD1DABF10200BF5D76 /* Material.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB271BF23C1700A56828 /* Material.cpp */; };
+		C041ECDE1DABF10200BF5D76 /* TriangleStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB481BF23C1700A56828 /* TriangleStrips.cpp */; };
+		C041ECDF1DABF10200BF5D76 /* WindowFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4D1BF23C1700A56828 /* WindowFramebuffer.cpp */; };
+		C041ECE01DABF10200BF5D76 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1D1BF23C1700A56828 /* Engine.cpp */; };
+		C041ECE11DABF10200BF5D76 /* Billboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB141BF23C1700A56828 /* Billboard.cpp */; };
+		C041ECE21DABF10200BF5D76 /* DirectionalLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB1B1BF23C1700A56828 /* DirectionalLight.cpp */; };
+		C041ECE31DABF10200BF5D76 /* VertexSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4B1BF23C1700A56828 /* VertexSet.cpp */; };
+		C041ECE41DABF10200BF5D76 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB281BF23C1700A56828 /* Node.cpp */; };
+		C041ECE51DABF10200BF5D76 /* View.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB4C1BF23C1700A56828 /* View.cpp */; };
+		C041ECE61DABF10200BF5D76 /* StripPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3F1BF23C1700A56828 /* StripPrimitive.cpp */; };
+		C041ECE71DABF10200BF5D76 /* StereoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BB3E1BF23C1700A56828 /* StereoView.cpp */; };
+		C041ECEB1DABF10200BF5D76 /* LOD.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA21BF23C3200A56828 /* LOD.h */; };
+		C041ECEC1DABF10200BF5D76 /* Objects.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA81BF23C3200A56828 /* Objects.h */; };
+		C041ECED1DABF10200BF5D76 /* DynamicObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB991BF23C3200A56828 /* DynamicObject.h */; };
+		C041ECEE1DABF10200BF5D76 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCB1BF23C3200A56828 /* View.h */; };
+		C041ECEF1DABF10200BF5D76 /* Texture.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC01BF23C3200A56828 /* Texture.h */; };
+		C041ECF01DABF10200BF5D76 /* WindowFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCC1BF23C3200A56828 /* WindowFramebuffer.h */; };
+		C041ECF11DABF10200BF5D76 /* DepthAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB971BF23C3200A56828 /* DepthAttribute.h */; };
+		C041ECF21DABF10200BF5D76 /* UndistortedBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC81BF23C3200A56828 /* UndistortedBackground.h */; };
+		C041ECF31DABF10200BF5D76 /* PointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAC1BF23C3200A56828 /* PointLight.h */; };
+		C041ECF41DABF10200BF5D76 /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA31BF23C3200A56828 /* Manager.h */; };
+		C041ECF51DABF10200BF5D76 /* QuadFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB01BF23C3200A56828 /* QuadFace.h */; };
+		C041ECF61DABF10200BF5D76 /* TriangleStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC71BF23C3200A56828 /* TriangleStrips.h */; };
+		C041ECF71DABF10200BF5D76 /* Texture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC11BF23C3200A56828 /* Texture2D.h */; };
+		C041ECF81DABF10200BF5D76 /* BlendAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB931BF23C3200A56828 /* BlendAttribute.h */; };
+		C041ECF91DABF10200BF5D76 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC91BF23C3200A56828 /* Utilities.h */; };
+		C041ECFA1DABF10200BF5D76 /* Renderable.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB31BF23C3200A56828 /* Renderable.h */; };
+		C041ECFB1DABF10200BF5D76 /* Node.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA51BF23C3200A56828 /* Node.h */; };
+		C041ECFC1DABF10200BF5D76 /* ParallelView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA91BF23C3200A56828 /* ParallelView.h */; };
+		C041ECFD1DABF10200BF5D76 /* VertexSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBCA1BF23C3200A56828 /* VertexSet.h */; };
+		C041ECFE1DABF10200BF5D76 /* IndependentPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA01BF23C3200A56828 /* IndependentPrimitive.h */; };
+		C041ECFF1DABF10200BF5D76 /* TriangleFans.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC51BF23C3200A56828 /* TriangleFans.h */; };
+		C041ED001DABF10200BF5D76 /* AttributeSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8F1BF23C3200A56828 /* AttributeSet.h */; };
+		C041ED011DABF10200BF5D76 /* Billboard.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB911BF23C3200A56828 /* Billboard.h */; };
+		C041ED021DABF10200BF5D76 /* ObjectRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA71BF23C3200A56828 /* ObjectRef.h */; };
+		C041ED041DABF10200BF5D76 /* Cone.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB951BF23C3200A56828 /* Cone.h */; };
+		C041ED051DABF10200BF5D76 /* QuadStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB21BF23C3200A56828 /* QuadStrips.h */; };
+		C041ED061DABF10200BF5D76 /* Sphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBB1BF23C3200A56828 /* Sphere.h */; };
+		C041ED071DABF10200BF5D76 /* Cylinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB961BF23C3200A56828 /* Cylinder.h */; };
+		C041ED091DABF10200BF5D76 /* DirectionalLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB981BF23C3200A56828 /* DirectionalLight.h */; };
+		C041ED0A1DABF10200BF5D76 /* StereoView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBD1BF23C3200A56828 /* StereoView.h */; };
+		C041ED0B1DABF10200BF5D76 /* Points.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAD1BF23C3200A56828 /* Points.h */; };
+		C041ED0C1DABF10200BF5D76 /* Framebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9C1BF23C3200A56828 /* Framebuffer.h */; };
+		C041ED0D1DABF10200BF5D76 /* ShaderProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB71BF23C3200A56828 /* ShaderProgram.h */; };
+		C041ED0E1DABF10200BF5D76 /* AbsoluteTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8D1BF23C3200A56828 /* AbsoluteTransform.h */; };
+		C041ED0F1DABF10200BF5D76 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB941BF23C3200A56828 /* Box.h */; };
+		C041ED101DABF10200BF5D76 /* StripPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBE1BF23C3200A56828 /* StripPrimitive.h */; };
+		C041ED111DABF10200BF5D76 /* Shape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB91BF23C3200A56828 /* Shape.h */; };
+		C041ED121DABF10200BF5D76 /* TriangleFace.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC41BF23C3200A56828 /* TriangleFace.h */; };
+		C041ED131DABF10200BF5D76 /* PrimitiveAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAF1BF23C3200A56828 /* PrimitiveAttribute.h */; };
+		C041ED141DABF10200BF5D76 /* PhantomAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAB1BF23C3200A56828 /* PhantomAttribute.h */; };
+		C041ED151DABF10200BF5D76 /* Factory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9B1BF23C3200A56828 /* Factory.h */; };
+		C041ED161DABF10200BF5D76 /* PerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAA1BF23C3200A56828 /* PerspectiveView.h */; };
+		C041ED171DABF10200BF5D76 /* Group.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9E1BF23C3200A56828 /* Group.h */; };
+		C041ED181DABF10200BF5D76 /* Triangles.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC61BF23C3200A56828 /* Triangles.h */; };
+		C041ED191DABF10200BF5D76 /* Engine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9A1BF23C3200A56828 /* Engine.h */; };
+		C041ED1A1DABF10200BF5D76 /* SkyBackground.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBA1BF23C3200A56828 /* SkyBackground.h */; };
+		C041ED1B1DABF10200BF5D76 /* Object.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA61BF23C3200A56828 /* Object.h */; };
+		C041ED1C1DABF10200BF5D76 /* Rendering.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB41BF23C3200A56828 /* Rendering.h */; };
+		C041ED1D1DABF10200BF5D76 /* LightSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA11BF23C3200A56828 /* LightSource.h */; };
+		C041ED1E1DABF10200BF5D76 /* Quads.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB11BF23C3200A56828 /* Quads.h */; };
+		C041ED1F1DABF10200BF5D76 /* Background.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB901BF23C3200A56828 /* Background.h */; };
+		C041ED201DABF10200BF5D76 /* Attribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB8E1BF23C3200A56828 /* Attribute.h */; };
+		C041ED211DABF10200BF5D76 /* BitmapFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB921BF23C3200A56828 /* BitmapFramebuffer.h */; };
+		C041ED221DABF10200BF5D76 /* Geometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BB9D1BF23C3200A56828 /* Geometry.h */; };
+		C041ED231DABF10200BF5D76 /* Scene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBB61BF23C3200A56828 /* Scene.h */; };
+		C041ED241DABF10200BF5D76 /* Primitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBAE1BF23C3200A56828 /* Primitive.h */; };
+		C041ED251DABF10200BF5D76 /* Material.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBA41BF23C3200A56828 /* Material.h */; };
+		C041ED261DABF10200BF5D76 /* SpotLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBC1BF23C3200A56828 /* SpotLight.h */; };
+		C041ED271DABF10200BF5D76 /* Transform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC31BF23C3200A56828 /* Transform.h */; };
+		C041ED281DABF10200BF5D76 /* Textures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBC21BF23C3200A56828 /* Textures.h */; };
+		C041ED291DABF10200BF5D76 /* Switch.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BBBF1BF23C3200A56828 /* Switch.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D12BB011BF23B4100A56828 /* libOceanRenderingD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanRenderingD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D12BB101BF23C1600A56828 /* AbsoluteTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AbsoluteTransform.cpp; path = ../../../../../impl/ocean/rendering/AbsoluteTransform.cpp; sourceTree = "<group>"; };
+		5D12BB111BF23C1600A56828 /* Attribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Attribute.cpp; path = ../../../../../impl/ocean/rendering/Attribute.cpp; sourceTree = "<group>"; };
+		5D12BB121BF23C1600A56828 /* AttributeSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AttributeSet.cpp; path = ../../../../../impl/ocean/rendering/AttributeSet.cpp; sourceTree = "<group>"; };
+		5D12BB131BF23C1600A56828 /* Background.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Background.cpp; path = ../../../../../impl/ocean/rendering/Background.cpp; sourceTree = "<group>"; };
+		5D12BB141BF23C1700A56828 /* Billboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Billboard.cpp; path = ../../../../../impl/ocean/rendering/Billboard.cpp; sourceTree = "<group>"; };
+		5D12BB151BF23C1700A56828 /* BitmapFramebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BitmapFramebuffer.cpp; path = ../../../../../impl/ocean/rendering/BitmapFramebuffer.cpp; sourceTree = "<group>"; };
+		5D12BB161BF23C1700A56828 /* BlendAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BlendAttribute.cpp; path = ../../../../../impl/ocean/rendering/BlendAttribute.cpp; sourceTree = "<group>"; };
+		5D12BB171BF23C1700A56828 /* Box.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Box.cpp; path = ../../../../../impl/ocean/rendering/Box.cpp; sourceTree = "<group>"; };
+		5D12BB181BF23C1700A56828 /* Cone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cone.cpp; path = ../../../../../impl/ocean/rendering/Cone.cpp; sourceTree = "<group>"; };
+		5D12BB191BF23C1700A56828 /* Cylinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Cylinder.cpp; path = ../../../../../impl/ocean/rendering/Cylinder.cpp; sourceTree = "<group>"; };
+		5D12BB1A1BF23C1700A56828 /* DepthAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DepthAttribute.cpp; path = ../../../../../impl/ocean/rendering/DepthAttribute.cpp; sourceTree = "<group>"; };
+		5D12BB1B1BF23C1700A56828 /* DirectionalLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DirectionalLight.cpp; path = ../../../../../impl/ocean/rendering/DirectionalLight.cpp; sourceTree = "<group>"; };
+		5D12BB1C1BF23C1700A56828 /* DynamicObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DynamicObject.cpp; path = ../../../../../impl/ocean/rendering/DynamicObject.cpp; sourceTree = "<group>"; };
+		5D12BB1D1BF23C1700A56828 /* Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Engine.cpp; path = ../../../../../impl/ocean/rendering/Engine.cpp; sourceTree = "<group>"; };
+		5D12BB1E1BF23C1700A56828 /* Factory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Factory.cpp; path = ../../../../../impl/ocean/rendering/Factory.cpp; sourceTree = "<group>"; };
+		5D12BB1F1BF23C1700A56828 /* Framebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Framebuffer.cpp; path = ../../../../../impl/ocean/rendering/Framebuffer.cpp; sourceTree = "<group>"; };
+		5D12BB201BF23C1700A56828 /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Geometry.cpp; path = ../../../../../impl/ocean/rendering/Geometry.cpp; sourceTree = "<group>"; };
+		5D12BB211BF23C1700A56828 /* Group.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Group.cpp; path = ../../../../../impl/ocean/rendering/Group.cpp; sourceTree = "<group>"; };
+		5D12BB231BF23C1700A56828 /* IndependentPrimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IndependentPrimitive.cpp; path = ../../../../../impl/ocean/rendering/IndependentPrimitive.cpp; sourceTree = "<group>"; };
+		5D12BB241BF23C1700A56828 /* LightSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LightSource.cpp; path = ../../../../../impl/ocean/rendering/LightSource.cpp; sourceTree = "<group>"; };
+		5D12BB251BF23C1700A56828 /* LOD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LOD.cpp; path = ../../../../../impl/ocean/rendering/LOD.cpp; sourceTree = "<group>"; };
+		5D12BB261BF23C1700A56828 /* Manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Manager.cpp; path = ../../../../../impl/ocean/rendering/Manager.cpp; sourceTree = "<group>"; };
+		5D12BB271BF23C1700A56828 /* Material.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Material.cpp; path = ../../../../../impl/ocean/rendering/Material.cpp; sourceTree = "<group>"; };
+		5D12BB281BF23C1700A56828 /* Node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Node.cpp; path = ../../../../../impl/ocean/rendering/Node.cpp; sourceTree = "<group>"; };
+		5D12BB291BF23C1700A56828 /* Object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Object.cpp; path = ../../../../../impl/ocean/rendering/Object.cpp; sourceTree = "<group>"; };
+		5D12BB2A1BF23C1700A56828 /* ObjectRef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ObjectRef.cpp; path = ../../../../../impl/ocean/rendering/ObjectRef.cpp; sourceTree = "<group>"; };
+		5D12BB2B1BF23C1700A56828 /* ParallelView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ParallelView.cpp; path = ../../../../../impl/ocean/rendering/ParallelView.cpp; sourceTree = "<group>"; };
+		5D12BB2C1BF23C1700A56828 /* PerspectiveView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PerspectiveView.cpp; path = ../../../../../impl/ocean/rendering/PerspectiveView.cpp; sourceTree = "<group>"; };
+		5D12BB2D1BF23C1700A56828 /* PhantomAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PhantomAttribute.cpp; path = ../../../../../impl/ocean/rendering/PhantomAttribute.cpp; sourceTree = "<group>"; };
+		5D12BB2E1BF23C1700A56828 /* PointLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PointLight.cpp; path = ../../../../../impl/ocean/rendering/PointLight.cpp; sourceTree = "<group>"; };
+		5D12BB2F1BF23C1700A56828 /* Points.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Points.cpp; path = ../../../../../impl/ocean/rendering/Points.cpp; sourceTree = "<group>"; };
+		5D12BB301BF23C1700A56828 /* Primitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Primitive.cpp; path = ../../../../../impl/ocean/rendering/Primitive.cpp; sourceTree = "<group>"; };
+		5D12BB311BF23C1700A56828 /* PrimitiveAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PrimitiveAttribute.cpp; path = ../../../../../impl/ocean/rendering/PrimitiveAttribute.cpp; sourceTree = "<group>"; };
+		5D12BB321BF23C1700A56828 /* Quads.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Quads.cpp; path = ../../../../../impl/ocean/rendering/Quads.cpp; sourceTree = "<group>"; };
+		5D12BB331BF23C1700A56828 /* QuadStrips.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QuadStrips.cpp; path = ../../../../../impl/ocean/rendering/QuadStrips.cpp; sourceTree = "<group>"; };
+		5D12BB341BF23C1700A56828 /* Renderable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Renderable.cpp; path = ../../../../../impl/ocean/rendering/Renderable.cpp; sourceTree = "<group>"; };
+		5D12BB371BF23C1700A56828 /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Scene.cpp; path = ../../../../../impl/ocean/rendering/Scene.cpp; sourceTree = "<group>"; };
+		5D12BB381BF23C1700A56828 /* ShaderProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ShaderProgram.cpp; path = ../../../../../impl/ocean/rendering/ShaderProgram.cpp; sourceTree = "<group>"; };
+		5D12BB3A1BF23C1700A56828 /* Shape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Shape.cpp; path = ../../../../../impl/ocean/rendering/Shape.cpp; sourceTree = "<group>"; };
+		5D12BB3B1BF23C1700A56828 /* SkyBackground.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkyBackground.cpp; path = ../../../../../impl/ocean/rendering/SkyBackground.cpp; sourceTree = "<group>"; };
+		5D12BB3C1BF23C1700A56828 /* Sphere.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sphere.cpp; path = ../../../../../impl/ocean/rendering/Sphere.cpp; sourceTree = "<group>"; };
+		5D12BB3D1BF23C1700A56828 /* SpotLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SpotLight.cpp; path = ../../../../../impl/ocean/rendering/SpotLight.cpp; sourceTree = "<group>"; };
+		5D12BB3E1BF23C1700A56828 /* StereoView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StereoView.cpp; path = ../../../../../impl/ocean/rendering/StereoView.cpp; sourceTree = "<group>"; };
+		5D12BB3F1BF23C1700A56828 /* StripPrimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StripPrimitive.cpp; path = ../../../../../impl/ocean/rendering/StripPrimitive.cpp; sourceTree = "<group>"; };
+		5D12BB401BF23C1700A56828 /* Switch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Switch.cpp; path = ../../../../../impl/ocean/rendering/Switch.cpp; sourceTree = "<group>"; };
+		5D12BB411BF23C1700A56828 /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Texture.cpp; path = ../../../../../impl/ocean/rendering/Texture.cpp; sourceTree = "<group>"; };
+		5D12BB421BF23C1700A56828 /* Texture2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Texture2D.cpp; path = ../../../../../impl/ocean/rendering/Texture2D.cpp; sourceTree = "<group>"; };
+		5D12BB431BF23C1700A56828 /* Textures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Textures.cpp; path = ../../../../../impl/ocean/rendering/Textures.cpp; sourceTree = "<group>"; };
+		5D12BB441BF23C1700A56828 /* Transform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Transform.cpp; path = ../../../../../impl/ocean/rendering/Transform.cpp; sourceTree = "<group>"; };
+		5D12BB451BF23C1700A56828 /* TriangleFace.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TriangleFace.cpp; path = ../../../../../impl/ocean/rendering/TriangleFace.cpp; sourceTree = "<group>"; };
+		5D12BB461BF23C1700A56828 /* TriangleFans.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TriangleFans.cpp; path = ../../../../../impl/ocean/rendering/TriangleFans.cpp; sourceTree = "<group>"; };
+		5D12BB471BF23C1700A56828 /* Triangles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Triangles.cpp; path = ../../../../../impl/ocean/rendering/Triangles.cpp; sourceTree = "<group>"; };
+		5D12BB481BF23C1700A56828 /* TriangleStrips.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TriangleStrips.cpp; path = ../../../../../impl/ocean/rendering/TriangleStrips.cpp; sourceTree = "<group>"; };
+		5D12BB491BF23C1700A56828 /* UndistortedBackground.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UndistortedBackground.cpp; path = ../../../../../impl/ocean/rendering/UndistortedBackground.cpp; sourceTree = "<group>"; };
+		5D12BB4A1BF23C1700A56828 /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../impl/ocean/rendering/Utilities.cpp; sourceTree = "<group>"; };
+		5D12BB4B1BF23C1700A56828 /* VertexSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VertexSet.cpp; path = ../../../../../impl/ocean/rendering/VertexSet.cpp; sourceTree = "<group>"; };
+		5D12BB4C1BF23C1700A56828 /* View.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = View.cpp; path = ../../../../../impl/ocean/rendering/View.cpp; sourceTree = "<group>"; };
+		5D12BB4D1BF23C1700A56828 /* WindowFramebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WindowFramebuffer.cpp; path = ../../../../../impl/ocean/rendering/WindowFramebuffer.cpp; sourceTree = "<group>"; };
+		5D12BB8D1BF23C3200A56828 /* AbsoluteTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AbsoluteTransform.h; path = ../../../../../impl/ocean/rendering/AbsoluteTransform.h; sourceTree = "<group>"; };
+		5D12BB8E1BF23C3200A56828 /* Attribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Attribute.h; path = ../../../../../impl/ocean/rendering/Attribute.h; sourceTree = "<group>"; };
+		5D12BB8F1BF23C3200A56828 /* AttributeSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AttributeSet.h; path = ../../../../../impl/ocean/rendering/AttributeSet.h; sourceTree = "<group>"; };
+		5D12BB901BF23C3200A56828 /* Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Background.h; path = ../../../../../impl/ocean/rendering/Background.h; sourceTree = "<group>"; };
+		5D12BB911BF23C3200A56828 /* Billboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Billboard.h; path = ../../../../../impl/ocean/rendering/Billboard.h; sourceTree = "<group>"; };
+		5D12BB921BF23C3200A56828 /* BitmapFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BitmapFramebuffer.h; path = ../../../../../impl/ocean/rendering/BitmapFramebuffer.h; sourceTree = "<group>"; };
+		5D12BB931BF23C3200A56828 /* BlendAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlendAttribute.h; path = ../../../../../impl/ocean/rendering/BlendAttribute.h; sourceTree = "<group>"; };
+		5D12BB941BF23C3200A56828 /* Box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Box.h; path = ../../../../../impl/ocean/rendering/Box.h; sourceTree = "<group>"; };
+		5D12BB951BF23C3200A56828 /* Cone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cone.h; path = ../../../../../impl/ocean/rendering/Cone.h; sourceTree = "<group>"; };
+		5D12BB961BF23C3200A56828 /* Cylinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Cylinder.h; path = ../../../../../impl/ocean/rendering/Cylinder.h; sourceTree = "<group>"; };
+		5D12BB971BF23C3200A56828 /* DepthAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DepthAttribute.h; path = ../../../../../impl/ocean/rendering/DepthAttribute.h; sourceTree = "<group>"; };
+		5D12BB981BF23C3200A56828 /* DirectionalLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DirectionalLight.h; path = ../../../../../impl/ocean/rendering/DirectionalLight.h; sourceTree = "<group>"; };
+		5D12BB991BF23C3200A56828 /* DynamicObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DynamicObject.h; path = ../../../../../impl/ocean/rendering/DynamicObject.h; sourceTree = "<group>"; };
+		5D12BB9A1BF23C3200A56828 /* Engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Engine.h; path = ../../../../../impl/ocean/rendering/Engine.h; sourceTree = "<group>"; };
+		5D12BB9B1BF23C3200A56828 /* Factory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Factory.h; path = ../../../../../impl/ocean/rendering/Factory.h; sourceTree = "<group>"; };
+		5D12BB9C1BF23C3200A56828 /* Framebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Framebuffer.h; path = ../../../../../impl/ocean/rendering/Framebuffer.h; sourceTree = "<group>"; };
+		5D12BB9D1BF23C3200A56828 /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Geometry.h; path = ../../../../../impl/ocean/rendering/Geometry.h; sourceTree = "<group>"; };
+		5D12BB9E1BF23C3200A56828 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Group.h; path = ../../../../../impl/ocean/rendering/Group.h; sourceTree = "<group>"; };
+		5D12BBA01BF23C3200A56828 /* IndependentPrimitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IndependentPrimitive.h; path = ../../../../../impl/ocean/rendering/IndependentPrimitive.h; sourceTree = "<group>"; };
+		5D12BBA11BF23C3200A56828 /* LightSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LightSource.h; path = ../../../../../impl/ocean/rendering/LightSource.h; sourceTree = "<group>"; };
+		5D12BBA21BF23C3200A56828 /* LOD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LOD.h; path = ../../../../../impl/ocean/rendering/LOD.h; sourceTree = "<group>"; };
+		5D12BBA31BF23C3200A56828 /* Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Manager.h; path = ../../../../../impl/ocean/rendering/Manager.h; sourceTree = "<group>"; };
+		5D12BBA41BF23C3200A56828 /* Material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Material.h; path = ../../../../../impl/ocean/rendering/Material.h; sourceTree = "<group>"; };
+		5D12BBA51BF23C3200A56828 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Node.h; path = ../../../../../impl/ocean/rendering/Node.h; sourceTree = "<group>"; };
+		5D12BBA61BF23C3200A56828 /* Object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Object.h; path = ../../../../../impl/ocean/rendering/Object.h; sourceTree = "<group>"; };
+		5D12BBA71BF23C3200A56828 /* ObjectRef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjectRef.h; path = ../../../../../impl/ocean/rendering/ObjectRef.h; sourceTree = "<group>"; };
+		5D12BBA81BF23C3200A56828 /* Objects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Objects.h; path = ../../../../../impl/ocean/rendering/Objects.h; sourceTree = "<group>"; };
+		5D12BBA91BF23C3200A56828 /* ParallelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParallelView.h; path = ../../../../../impl/ocean/rendering/ParallelView.h; sourceTree = "<group>"; };
+		5D12BBAA1BF23C3200A56828 /* PerspectiveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PerspectiveView.h; path = ../../../../../impl/ocean/rendering/PerspectiveView.h; sourceTree = "<group>"; };
+		5D12BBAB1BF23C3200A56828 /* PhantomAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhantomAttribute.h; path = ../../../../../impl/ocean/rendering/PhantomAttribute.h; sourceTree = "<group>"; };
+		5D12BBAC1BF23C3200A56828 /* PointLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PointLight.h; path = ../../../../../impl/ocean/rendering/PointLight.h; sourceTree = "<group>"; };
+		5D12BBAD1BF23C3200A56828 /* Points.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Points.h; path = ../../../../../impl/ocean/rendering/Points.h; sourceTree = "<group>"; };
+		5D12BBAE1BF23C3200A56828 /* Primitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Primitive.h; path = ../../../../../impl/ocean/rendering/Primitive.h; sourceTree = "<group>"; };
+		5D12BBAF1BF23C3200A56828 /* PrimitiveAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrimitiveAttribute.h; path = ../../../../../impl/ocean/rendering/PrimitiveAttribute.h; sourceTree = "<group>"; };
+		5D12BBB01BF23C3200A56828 /* QuadFace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QuadFace.h; path = ../../../../../impl/ocean/rendering/QuadFace.h; sourceTree = "<group>"; };
+		5D12BBB11BF23C3200A56828 /* Quads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Quads.h; path = ../../../../../impl/ocean/rendering/Quads.h; sourceTree = "<group>"; };
+		5D12BBB21BF23C3200A56828 /* QuadStrips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QuadStrips.h; path = ../../../../../impl/ocean/rendering/QuadStrips.h; sourceTree = "<group>"; };
+		5D12BBB31BF23C3200A56828 /* Renderable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Renderable.h; path = ../../../../../impl/ocean/rendering/Renderable.h; sourceTree = "<group>"; };
+		5D12BBB41BF23C3200A56828 /* Rendering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Rendering.h; path = ../../../../../impl/ocean/rendering/Rendering.h; sourceTree = "<group>"; };
+		5D12BBB61BF23C3200A56828 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Scene.h; path = ../../../../../impl/ocean/rendering/Scene.h; sourceTree = "<group>"; };
+		5D12BBB71BF23C3200A56828 /* ShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShaderProgram.h; path = ../../../../../impl/ocean/rendering/ShaderProgram.h; sourceTree = "<group>"; };
+		5D12BBB91BF23C3200A56828 /* Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Shape.h; path = ../../../../../impl/ocean/rendering/Shape.h; sourceTree = "<group>"; };
+		5D12BBBA1BF23C3200A56828 /* SkyBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkyBackground.h; path = ../../../../../impl/ocean/rendering/SkyBackground.h; sourceTree = "<group>"; };
+		5D12BBBB1BF23C3200A56828 /* Sphere.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sphere.h; path = ../../../../../impl/ocean/rendering/Sphere.h; sourceTree = "<group>"; };
+		5D12BBBC1BF23C3200A56828 /* SpotLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SpotLight.h; path = ../../../../../impl/ocean/rendering/SpotLight.h; sourceTree = "<group>"; };
+		5D12BBBD1BF23C3200A56828 /* StereoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StereoView.h; path = ../../../../../impl/ocean/rendering/StereoView.h; sourceTree = "<group>"; };
+		5D12BBBE1BF23C3200A56828 /* StripPrimitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StripPrimitive.h; path = ../../../../../impl/ocean/rendering/StripPrimitive.h; sourceTree = "<group>"; };
+		5D12BBBF1BF23C3200A56828 /* Switch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Switch.h; path = ../../../../../impl/ocean/rendering/Switch.h; sourceTree = "<group>"; };
+		5D12BBC01BF23C3200A56828 /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Texture.h; path = ../../../../../impl/ocean/rendering/Texture.h; sourceTree = "<group>"; };
+		5D12BBC11BF23C3200A56828 /* Texture2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Texture2D.h; path = ../../../../../impl/ocean/rendering/Texture2D.h; sourceTree = "<group>"; };
+		5D12BBC21BF23C3200A56828 /* Textures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Textures.h; path = ../../../../../impl/ocean/rendering/Textures.h; sourceTree = "<group>"; };
+		5D12BBC31BF23C3200A56828 /* Transform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transform.h; path = ../../../../../impl/ocean/rendering/Transform.h; sourceTree = "<group>"; };
+		5D12BBC41BF23C3200A56828 /* TriangleFace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TriangleFace.h; path = ../../../../../impl/ocean/rendering/TriangleFace.h; sourceTree = "<group>"; };
+		5D12BBC51BF23C3200A56828 /* TriangleFans.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TriangleFans.h; path = ../../../../../impl/ocean/rendering/TriangleFans.h; sourceTree = "<group>"; };
+		5D12BBC61BF23C3200A56828 /* Triangles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Triangles.h; path = ../../../../../impl/ocean/rendering/Triangles.h; sourceTree = "<group>"; };
+		5D12BBC71BF23C3200A56828 /* TriangleStrips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TriangleStrips.h; path = ../../../../../impl/ocean/rendering/TriangleStrips.h; sourceTree = "<group>"; };
+		5D12BBC81BF23C3200A56828 /* UndistortedBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UndistortedBackground.h; path = ../../../../../impl/ocean/rendering/UndistortedBackground.h; sourceTree = "<group>"; };
+		5D12BBC91BF23C3200A56828 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../impl/ocean/rendering/Utilities.h; sourceTree = "<group>"; };
+		5D12BBCA1BF23C3200A56828 /* VertexSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VertexSet.h; path = ../../../../../impl/ocean/rendering/VertexSet.h; sourceTree = "<group>"; };
+		5D12BBCB1BF23C3200A56828 /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = View.h; path = ../../../../../impl/ocean/rendering/View.h; sourceTree = "<group>"; };
+		5D12BBCC1BF23C3200A56828 /* WindowFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WindowFramebuffer.h; path = ../../../../../impl/ocean/rendering/WindowFramebuffer.h; sourceTree = "<group>"; };
+		5D12BC921BF23C9200A56828 /* libOceanRenderingD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanRenderingD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9863C91D8B5F8F00DEDB00 /* libOceanRenderingD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanRenderingD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9326C99D27554E65008DABF2 /* FrameTexture2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameTexture2D.h; path = ../../../../../impl/ocean/rendering/FrameTexture2D.h; sourceTree = "<group>"; };
+		9326C9A727554E9B008DABF2 /* FrameTexture2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameTexture2D.cpp; path = ../../../../../impl/ocean/rendering/FrameTexture2D.cpp; sourceTree = "<group>"; };
+		932CAF6326C110C8004C36E0 /* Text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Text.h; path = ../../../../../impl/ocean/rendering/Text.h; sourceTree = "<group>"; };
+		932CAF6826C110DE004C36E0 /* Text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Text.cpp; path = ../../../../../impl/ocean/rendering/Text.cpp; sourceTree = "<group>"; };
+		93320B8025F6ECCC00B10E4A /* TextureFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextureFramebuffer.h; path = ../../../../../impl/ocean/rendering/TextureFramebuffer.h; sourceTree = "<group>"; };
+		93320D1025FC258400B10E4A /* TextureFramebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextureFramebuffer.cpp; path = ../../../../../impl/ocean/rendering/TextureFramebuffer.cpp; sourceTree = "<group>"; };
+		93429BCC2978732300FE7701 /* Lines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Lines.h; path = ../../../../../impl/ocean/rendering/Lines.h; sourceTree = "<group>"; };
+		93429BD12978733600FE7701 /* Lines.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Lines.cpp; path = ../../../../../impl/ocean/rendering/Lines.cpp; sourceTree = "<group>"; };
+		93ADFB6F297A197F00651F48 /* LineStrips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LineStrips.h; path = ../../../../../impl/ocean/rendering/LineStrips.h; sourceTree = "<group>"; };
+		93ADFB78297A19A100651F48 /* LineStrips.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LineStrips.cpp; path = ../../../../../impl/ocean/rendering/LineStrips.cpp; sourceTree = "<group>"; };
+		93DC6B0226BB0BB90021A07C /* MediaTexture2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MediaTexture2D.h; path = ../../../../../impl/ocean/rendering/MediaTexture2D.h; sourceTree = "<group>"; };
+		93DC6B0726BB0BC70021A07C /* MediaTexture2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MediaTexture2D.cpp; path = ../../../../../impl/ocean/rendering/MediaTexture2D.cpp; sourceTree = "<group>"; };
+		93F1C4BA243EFAEB00217EF1 /* StereoAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StereoAttribute.h; path = ../../../../../impl/ocean/rendering/StereoAttribute.h; sourceTree = "<group>"; };
+		93F1C4BF243EFB0000217EF1 /* StereoAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StereoAttribute.cpp; path = ../../../../../impl/ocean/rendering/StereoAttribute.cpp; sourceTree = "<group>"; };
+		C041ED2E1DABF10200BF5D76 /* libOceanRenderingD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanRenderingD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D12BAFE1BF23B4100A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BC4D1BF23C9200A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9863841D8B5F8F00DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041ECE81DABF10200BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D12BAF81BF23B4100A56828 = {
+			isa = PBXGroup;
+			children = (
+				5D12BB8C1BF23C1A00A56828 /* Header Files */,
+				5D12BB0F1BF23BFC00A56828 /* Source Files */,
+				5D12BB021BF23B4100A56828 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D12BB021BF23B4100A56828 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BB011BF23B4100A56828 /* libOceanRenderingD.a */,
+				5D12BC921BF23C9200A56828 /* libOceanRenderingD.dylib */,
+				5D9863C91D8B5F8F00DEDB00 /* libOceanRenderingD.a */,
+				C041ED2E1DABF10200BF5D76 /* libOceanRenderingD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D12BB0F1BF23BFC00A56828 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BB101BF23C1600A56828 /* AbsoluteTransform.cpp */,
+				5D12BB111BF23C1600A56828 /* Attribute.cpp */,
+				5D12BB121BF23C1600A56828 /* AttributeSet.cpp */,
+				5D12BB131BF23C1600A56828 /* Background.cpp */,
+				5D12BB141BF23C1700A56828 /* Billboard.cpp */,
+				5D12BB151BF23C1700A56828 /* BitmapFramebuffer.cpp */,
+				5D12BB161BF23C1700A56828 /* BlendAttribute.cpp */,
+				5D12BB171BF23C1700A56828 /* Box.cpp */,
+				5D12BB181BF23C1700A56828 /* Cone.cpp */,
+				5D12BB191BF23C1700A56828 /* Cylinder.cpp */,
+				5D12BB1A1BF23C1700A56828 /* DepthAttribute.cpp */,
+				5D12BB1B1BF23C1700A56828 /* DirectionalLight.cpp */,
+				5D12BB1C1BF23C1700A56828 /* DynamicObject.cpp */,
+				5D12BB1D1BF23C1700A56828 /* Engine.cpp */,
+				5D12BB1E1BF23C1700A56828 /* Factory.cpp */,
+				5D12BB1F1BF23C1700A56828 /* Framebuffer.cpp */,
+				9326C9A727554E9B008DABF2 /* FrameTexture2D.cpp */,
+				5D12BB201BF23C1700A56828 /* Geometry.cpp */,
+				5D12BB211BF23C1700A56828 /* Group.cpp */,
+				5D12BB231BF23C1700A56828 /* IndependentPrimitive.cpp */,
+				5D12BB241BF23C1700A56828 /* LightSource.cpp */,
+				93429BD12978733600FE7701 /* Lines.cpp */,
+				93ADFB78297A19A100651F48 /* LineStrips.cpp */,
+				5D12BB251BF23C1700A56828 /* LOD.cpp */,
+				5D12BB261BF23C1700A56828 /* Manager.cpp */,
+				5D12BB271BF23C1700A56828 /* Material.cpp */,
+				93DC6B0726BB0BC70021A07C /* MediaTexture2D.cpp */,
+				5D12BB281BF23C1700A56828 /* Node.cpp */,
+				5D12BB291BF23C1700A56828 /* Object.cpp */,
+				5D12BB2A1BF23C1700A56828 /* ObjectRef.cpp */,
+				5D12BB2B1BF23C1700A56828 /* ParallelView.cpp */,
+				5D12BB2C1BF23C1700A56828 /* PerspectiveView.cpp */,
+				5D12BB2D1BF23C1700A56828 /* PhantomAttribute.cpp */,
+				5D12BB2E1BF23C1700A56828 /* PointLight.cpp */,
+				5D12BB2F1BF23C1700A56828 /* Points.cpp */,
+				5D12BB301BF23C1700A56828 /* Primitive.cpp */,
+				5D12BB311BF23C1700A56828 /* PrimitiveAttribute.cpp */,
+				5D12BB321BF23C1700A56828 /* Quads.cpp */,
+				5D12BB331BF23C1700A56828 /* QuadStrips.cpp */,
+				5D12BB341BF23C1700A56828 /* Renderable.cpp */,
+				5D12BB371BF23C1700A56828 /* Scene.cpp */,
+				5D12BB381BF23C1700A56828 /* ShaderProgram.cpp */,
+				5D12BB3A1BF23C1700A56828 /* Shape.cpp */,
+				5D12BB3B1BF23C1700A56828 /* SkyBackground.cpp */,
+				5D12BB3C1BF23C1700A56828 /* Sphere.cpp */,
+				5D12BB3D1BF23C1700A56828 /* SpotLight.cpp */,
+				93F1C4BF243EFB0000217EF1 /* StereoAttribute.cpp */,
+				5D12BB3E1BF23C1700A56828 /* StereoView.cpp */,
+				5D12BB3F1BF23C1700A56828 /* StripPrimitive.cpp */,
+				5D12BB401BF23C1700A56828 /* Switch.cpp */,
+				932CAF6826C110DE004C36E0 /* Text.cpp */,
+				5D12BB411BF23C1700A56828 /* Texture.cpp */,
+				5D12BB421BF23C1700A56828 /* Texture2D.cpp */,
+				93320D1025FC258400B10E4A /* TextureFramebuffer.cpp */,
+				5D12BB431BF23C1700A56828 /* Textures.cpp */,
+				5D12BB441BF23C1700A56828 /* Transform.cpp */,
+				5D12BB451BF23C1700A56828 /* TriangleFace.cpp */,
+				5D12BB461BF23C1700A56828 /* TriangleFans.cpp */,
+				5D12BB471BF23C1700A56828 /* Triangles.cpp */,
+				5D12BB481BF23C1700A56828 /* TriangleStrips.cpp */,
+				5D12BB491BF23C1700A56828 /* UndistortedBackground.cpp */,
+				5D12BB4A1BF23C1700A56828 /* Utilities.cpp */,
+				5D12BB4B1BF23C1700A56828 /* VertexSet.cpp */,
+				5D12BB4C1BF23C1700A56828 /* View.cpp */,
+				5D12BB4D1BF23C1700A56828 /* WindowFramebuffer.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D12BB8C1BF23C1A00A56828 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BB8D1BF23C3200A56828 /* AbsoluteTransform.h */,
+				5D12BB8E1BF23C3200A56828 /* Attribute.h */,
+				5D12BB8F1BF23C3200A56828 /* AttributeSet.h */,
+				5D12BB901BF23C3200A56828 /* Background.h */,
+				5D12BB911BF23C3200A56828 /* Billboard.h */,
+				5D12BB921BF23C3200A56828 /* BitmapFramebuffer.h */,
+				5D12BB931BF23C3200A56828 /* BlendAttribute.h */,
+				5D12BB941BF23C3200A56828 /* Box.h */,
+				5D12BB951BF23C3200A56828 /* Cone.h */,
+				5D12BB961BF23C3200A56828 /* Cylinder.h */,
+				5D12BB971BF23C3200A56828 /* DepthAttribute.h */,
+				5D12BB981BF23C3200A56828 /* DirectionalLight.h */,
+				5D12BB991BF23C3200A56828 /* DynamicObject.h */,
+				5D12BB9A1BF23C3200A56828 /* Engine.h */,
+				5D12BB9B1BF23C3200A56828 /* Factory.h */,
+				5D12BB9C1BF23C3200A56828 /* Framebuffer.h */,
+				9326C99D27554E65008DABF2 /* FrameTexture2D.h */,
+				5D12BB9D1BF23C3200A56828 /* Geometry.h */,
+				5D12BB9E1BF23C3200A56828 /* Group.h */,
+				5D12BBA01BF23C3200A56828 /* IndependentPrimitive.h */,
+				5D12BBA11BF23C3200A56828 /* LightSource.h */,
+				93429BCC2978732300FE7701 /* Lines.h */,
+				93ADFB6F297A197F00651F48 /* LineStrips.h */,
+				5D12BBA21BF23C3200A56828 /* LOD.h */,
+				5D12BBA31BF23C3200A56828 /* Manager.h */,
+				5D12BBA41BF23C3200A56828 /* Material.h */,
+				93DC6B0226BB0BB90021A07C /* MediaTexture2D.h */,
+				5D12BBA51BF23C3200A56828 /* Node.h */,
+				5D12BBA61BF23C3200A56828 /* Object.h */,
+				5D12BBA71BF23C3200A56828 /* ObjectRef.h */,
+				5D12BBA81BF23C3200A56828 /* Objects.h */,
+				5D12BBA91BF23C3200A56828 /* ParallelView.h */,
+				5D12BBAA1BF23C3200A56828 /* PerspectiveView.h */,
+				5D12BBAB1BF23C3200A56828 /* PhantomAttribute.h */,
+				5D12BBAC1BF23C3200A56828 /* PointLight.h */,
+				5D12BBAD1BF23C3200A56828 /* Points.h */,
+				5D12BBAE1BF23C3200A56828 /* Primitive.h */,
+				5D12BBAF1BF23C3200A56828 /* PrimitiveAttribute.h */,
+				5D12BBB01BF23C3200A56828 /* QuadFace.h */,
+				5D12BBB11BF23C3200A56828 /* Quads.h */,
+				5D12BBB21BF23C3200A56828 /* QuadStrips.h */,
+				5D12BBB31BF23C3200A56828 /* Renderable.h */,
+				5D12BBB41BF23C3200A56828 /* Rendering.h */,
+				5D12BBB61BF23C3200A56828 /* Scene.h */,
+				5D12BBB71BF23C3200A56828 /* ShaderProgram.h */,
+				5D12BBB91BF23C3200A56828 /* Shape.h */,
+				5D12BBBA1BF23C3200A56828 /* SkyBackground.h */,
+				5D12BBBB1BF23C3200A56828 /* Sphere.h */,
+				5D12BBBC1BF23C3200A56828 /* SpotLight.h */,
+				93F1C4BA243EFAEB00217EF1 /* StereoAttribute.h */,
+				5D12BBBD1BF23C3200A56828 /* StereoView.h */,
+				5D12BBBE1BF23C3200A56828 /* StripPrimitive.h */,
+				5D12BBBF1BF23C3200A56828 /* Switch.h */,
+				932CAF6326C110C8004C36E0 /* Text.h */,
+				5D12BBC01BF23C3200A56828 /* Texture.h */,
+				5D12BBC11BF23C3200A56828 /* Texture2D.h */,
+				93320B8025F6ECCC00B10E4A /* TextureFramebuffer.h */,
+				5D12BBC21BF23C3200A56828 /* Textures.h */,
+				5D12BBC31BF23C3200A56828 /* Transform.h */,
+				5D12BBC41BF23C3200A56828 /* TriangleFace.h */,
+				5D12BBC51BF23C3200A56828 /* TriangleFans.h */,
+				5D12BBC61BF23C3200A56828 /* Triangles.h */,
+				5D12BBC71BF23C3200A56828 /* TriangleStrips.h */,
+				5D12BBC81BF23C3200A56828 /* UndistortedBackground.h */,
+				5D12BBC91BF23C3200A56828 /* Utilities.h */,
+				5D12BBCA1BF23C3200A56828 /* VertexSet.h */,
+				5D12BBCB1BF23C3200A56828 /* View.h */,
+				5D12BBCC1BF23C3200A56828 /* WindowFramebuffer.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D12BAFF1BF23B4100A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				932CAF6426C110C8004C36E0 /* Text.h in Headers */,
+				5D12BBE21BF23C3200A56828 /* LOD.h in Headers */,
+				9326C99E27554E65008DABF2 /* FrameTexture2D.h in Headers */,
+				5D12BBE81BF23C3200A56828 /* Objects.h in Headers */,
+				5D12BBD91BF23C3200A56828 /* DynamicObject.h in Headers */,
+				5D12BC0B1BF23C3200A56828 /* View.h in Headers */,
+				5D12BC001BF23C3200A56828 /* Texture.h in Headers */,
+				93ADFB74297A197F00651F48 /* LineStrips.h in Headers */,
+				5D12BC0C1BF23C3200A56828 /* WindowFramebuffer.h in Headers */,
+				5D12BBD71BF23C3200A56828 /* DepthAttribute.h in Headers */,
+				5D12BC081BF23C3200A56828 /* UndistortedBackground.h in Headers */,
+				5D12BBEC1BF23C3200A56828 /* PointLight.h in Headers */,
+				5D12BBE31BF23C3200A56828 /* Manager.h in Headers */,
+				5D12BBF01BF23C3200A56828 /* QuadFace.h in Headers */,
+				5D12BC071BF23C3200A56828 /* TriangleStrips.h in Headers */,
+				5D12BC011BF23C3200A56828 /* Texture2D.h in Headers */,
+				5D12BBD31BF23C3200A56828 /* BlendAttribute.h in Headers */,
+				5D12BC091BF23C3200A56828 /* Utilities.h in Headers */,
+				5D12BBF31BF23C3200A56828 /* Renderable.h in Headers */,
+				5D12BBE51BF23C3200A56828 /* Node.h in Headers */,
+				5D12BBE91BF23C3200A56828 /* ParallelView.h in Headers */,
+				5D12BC0A1BF23C3200A56828 /* VertexSet.h in Headers */,
+				5D12BBE01BF23C3200A56828 /* IndependentPrimitive.h in Headers */,
+				5D12BC051BF23C3200A56828 /* TriangleFans.h in Headers */,
+				5D12BBCF1BF23C3200A56828 /* AttributeSet.h in Headers */,
+				5D12BBD11BF23C3200A56828 /* Billboard.h in Headers */,
+				93320B8125F6ECCC00B10E4A /* TextureFramebuffer.h in Headers */,
+				5D12BBE71BF23C3200A56828 /* ObjectRef.h in Headers */,
+				93429BCD2978732300FE7701 /* Lines.h in Headers */,
+				5D12BBD51BF23C3200A56828 /* Cone.h in Headers */,
+				5D12BBF21BF23C3200A56828 /* QuadStrips.h in Headers */,
+				5D12BBFB1BF23C3200A56828 /* Sphere.h in Headers */,
+				5D12BBD61BF23C3200A56828 /* Cylinder.h in Headers */,
+				5D12BBD81BF23C3200A56828 /* DirectionalLight.h in Headers */,
+				5D12BBFD1BF23C3200A56828 /* StereoView.h in Headers */,
+				5D12BBED1BF23C3200A56828 /* Points.h in Headers */,
+				5D12BBDC1BF23C3200A56828 /* Framebuffer.h in Headers */,
+				5D12BBF71BF23C3200A56828 /* ShaderProgram.h in Headers */,
+				5D12BBCD1BF23C3200A56828 /* AbsoluteTransform.h in Headers */,
+				5D12BBD41BF23C3200A56828 /* Box.h in Headers */,
+				5D12BBFE1BF23C3200A56828 /* StripPrimitive.h in Headers */,
+				5D12BBF91BF23C3200A56828 /* Shape.h in Headers */,
+				5D12BC041BF23C3200A56828 /* TriangleFace.h in Headers */,
+				5D12BBEF1BF23C3200A56828 /* PrimitiveAttribute.h in Headers */,
+				5D12BBEB1BF23C3200A56828 /* PhantomAttribute.h in Headers */,
+				93F1C4BB243EFAEB00217EF1 /* StereoAttribute.h in Headers */,
+				5D12BBDB1BF23C3200A56828 /* Factory.h in Headers */,
+				5D12BBEA1BF23C3200A56828 /* PerspectiveView.h in Headers */,
+				5D12BBDE1BF23C3200A56828 /* Group.h in Headers */,
+				93DC6B0326BB0BB90021A07C /* MediaTexture2D.h in Headers */,
+				5D12BC061BF23C3200A56828 /* Triangles.h in Headers */,
+				5D12BBDA1BF23C3200A56828 /* Engine.h in Headers */,
+				5D12BBFA1BF23C3200A56828 /* SkyBackground.h in Headers */,
+				5D12BBE61BF23C3200A56828 /* Object.h in Headers */,
+				5D12BBF41BF23C3200A56828 /* Rendering.h in Headers */,
+				5D12BBE11BF23C3200A56828 /* LightSource.h in Headers */,
+				5D12BBF11BF23C3200A56828 /* Quads.h in Headers */,
+				5D12BBD01BF23C3200A56828 /* Background.h in Headers */,
+				5D12BBCE1BF23C3200A56828 /* Attribute.h in Headers */,
+				5D12BBD21BF23C3200A56828 /* BitmapFramebuffer.h in Headers */,
+				5D12BBDD1BF23C3200A56828 /* Geometry.h in Headers */,
+				5D12BBF61BF23C3200A56828 /* Scene.h in Headers */,
+				5D12BBEE1BF23C3200A56828 /* Primitive.h in Headers */,
+				5D12BBE41BF23C3200A56828 /* Material.h in Headers */,
+				5D12BBFC1BF23C3200A56828 /* SpotLight.h in Headers */,
+				5D12BC031BF23C3200A56828 /* Transform.h in Headers */,
+				5D12BC021BF23C3200A56828 /* Textures.h in Headers */,
+				5D12BBFF1BF23C3200A56828 /* Switch.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BC4E1BF23C9200A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				932CAF6526C110C8004C36E0 /* Text.h in Headers */,
+				5D12BC501BF23C9200A56828 /* LOD.h in Headers */,
+				9326C99F27554E65008DABF2 /* FrameTexture2D.h in Headers */,
+				5D12BC511BF23C9200A56828 /* Objects.h in Headers */,
+				5D12BC521BF23C9200A56828 /* DynamicObject.h in Headers */,
+				5D12BC531BF23C9200A56828 /* View.h in Headers */,
+				5D12BC541BF23C9200A56828 /* Texture.h in Headers */,
+				93ADFB75297A197F00651F48 /* LineStrips.h in Headers */,
+				5D12BC551BF23C9200A56828 /* WindowFramebuffer.h in Headers */,
+				5D12BC561BF23C9200A56828 /* DepthAttribute.h in Headers */,
+				5D12BC571BF23C9200A56828 /* UndistortedBackground.h in Headers */,
+				5D12BC581BF23C9200A56828 /* PointLight.h in Headers */,
+				5D12BC591BF23C9200A56828 /* Manager.h in Headers */,
+				5D12BC5A1BF23C9200A56828 /* QuadFace.h in Headers */,
+				5D12BC5B1BF23C9200A56828 /* TriangleStrips.h in Headers */,
+				5D12BC5C1BF23C9200A56828 /* Texture2D.h in Headers */,
+				5D12BC5D1BF23C9200A56828 /* BlendAttribute.h in Headers */,
+				5D12BC5E1BF23C9200A56828 /* Utilities.h in Headers */,
+				5D12BC5F1BF23C9200A56828 /* Renderable.h in Headers */,
+				5D12BC601BF23C9200A56828 /* Node.h in Headers */,
+				5D12BC611BF23C9200A56828 /* ParallelView.h in Headers */,
+				5D12BC621BF23C9200A56828 /* VertexSet.h in Headers */,
+				5D12BC631BF23C9200A56828 /* IndependentPrimitive.h in Headers */,
+				5D12BC641BF23C9200A56828 /* TriangleFans.h in Headers */,
+				5D12BC651BF23C9200A56828 /* AttributeSet.h in Headers */,
+				5D12BC661BF23C9200A56828 /* Billboard.h in Headers */,
+				93320B8225F6ECCC00B10E4A /* TextureFramebuffer.h in Headers */,
+				5D12BC671BF23C9200A56828 /* ObjectRef.h in Headers */,
+				93429BCE2978732300FE7701 /* Lines.h in Headers */,
+				5D12BC691BF23C9200A56828 /* Cone.h in Headers */,
+				5D12BC6A1BF23C9200A56828 /* QuadStrips.h in Headers */,
+				5D12BC6B1BF23C9200A56828 /* Sphere.h in Headers */,
+				5D12BC6C1BF23C9200A56828 /* Cylinder.h in Headers */,
+				5D12BC6E1BF23C9200A56828 /* DirectionalLight.h in Headers */,
+				5D12BC6F1BF23C9200A56828 /* StereoView.h in Headers */,
+				5D12BC701BF23C9200A56828 /* Points.h in Headers */,
+				5D12BC711BF23C9200A56828 /* Framebuffer.h in Headers */,
+				5D12BC721BF23C9200A56828 /* ShaderProgram.h in Headers */,
+				5D12BC731BF23C9200A56828 /* AbsoluteTransform.h in Headers */,
+				5D12BC741BF23C9200A56828 /* Box.h in Headers */,
+				5D12BC751BF23C9200A56828 /* StripPrimitive.h in Headers */,
+				5D12BC761BF23C9200A56828 /* Shape.h in Headers */,
+				5D12BC771BF23C9200A56828 /* TriangleFace.h in Headers */,
+				5D12BC781BF23C9200A56828 /* PrimitiveAttribute.h in Headers */,
+				5D12BC791BF23C9200A56828 /* PhantomAttribute.h in Headers */,
+				93F1C4BC243EFAEB00217EF1 /* StereoAttribute.h in Headers */,
+				5D12BC7A1BF23C9200A56828 /* Factory.h in Headers */,
+				5D12BC7B1BF23C9200A56828 /* PerspectiveView.h in Headers */,
+				5D12BC7C1BF23C9200A56828 /* Group.h in Headers */,
+				93DC6B0426BB0BB90021A07C /* MediaTexture2D.h in Headers */,
+				5D12BC7D1BF23C9200A56828 /* Triangles.h in Headers */,
+				5D12BC7E1BF23C9200A56828 /* Engine.h in Headers */,
+				5D12BC7F1BF23C9200A56828 /* SkyBackground.h in Headers */,
+				5D12BC801BF23C9200A56828 /* Object.h in Headers */,
+				5D12BC811BF23C9200A56828 /* Rendering.h in Headers */,
+				5D12BC821BF23C9200A56828 /* LightSource.h in Headers */,
+				5D12BC831BF23C9200A56828 /* Quads.h in Headers */,
+				5D12BC841BF23C9200A56828 /* Background.h in Headers */,
+				5D12BC851BF23C9200A56828 /* Attribute.h in Headers */,
+				5D12BC861BF23C9200A56828 /* BitmapFramebuffer.h in Headers */,
+				5D12BC871BF23C9200A56828 /* Geometry.h in Headers */,
+				5D12BC881BF23C9200A56828 /* Scene.h in Headers */,
+				5D12BC891BF23C9200A56828 /* Primitive.h in Headers */,
+				5D12BC8A1BF23C9200A56828 /* Material.h in Headers */,
+				5D12BC8B1BF23C9200A56828 /* SpotLight.h in Headers */,
+				5D12BC8C1BF23C9200A56828 /* Transform.h in Headers */,
+				5D12BC8D1BF23C9200A56828 /* Textures.h in Headers */,
+				5D12BC8E1BF23C9200A56828 /* Switch.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9863851D8B5F8F00DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				932CAF6626C110C8004C36E0 /* Text.h in Headers */,
+				5D9863871D8B5F8F00DEDB00 /* LOD.h in Headers */,
+				9326C9A027554E65008DABF2 /* FrameTexture2D.h in Headers */,
+				5D9863881D8B5F8F00DEDB00 /* Objects.h in Headers */,
+				5D9863891D8B5F8F00DEDB00 /* DynamicObject.h in Headers */,
+				5D98638A1D8B5F8F00DEDB00 /* View.h in Headers */,
+				5D98638B1D8B5F8F00DEDB00 /* Texture.h in Headers */,
+				93ADFB76297A197F00651F48 /* LineStrips.h in Headers */,
+				5D98638C1D8B5F8F00DEDB00 /* WindowFramebuffer.h in Headers */,
+				5D98638D1D8B5F8F00DEDB00 /* DepthAttribute.h in Headers */,
+				5D98638E1D8B5F8F00DEDB00 /* UndistortedBackground.h in Headers */,
+				5D98638F1D8B5F8F00DEDB00 /* PointLight.h in Headers */,
+				5D9863901D8B5F8F00DEDB00 /* Manager.h in Headers */,
+				5D9863911D8B5F8F00DEDB00 /* QuadFace.h in Headers */,
+				5D9863921D8B5F8F00DEDB00 /* TriangleStrips.h in Headers */,
+				5D9863931D8B5F8F00DEDB00 /* Texture2D.h in Headers */,
+				5D9863941D8B5F8F00DEDB00 /* BlendAttribute.h in Headers */,
+				5D9863951D8B5F8F00DEDB00 /* Utilities.h in Headers */,
+				5D9863961D8B5F8F00DEDB00 /* Renderable.h in Headers */,
+				5D9863971D8B5F8F00DEDB00 /* Node.h in Headers */,
+				5D9863981D8B5F8F00DEDB00 /* ParallelView.h in Headers */,
+				5D9863991D8B5F8F00DEDB00 /* VertexSet.h in Headers */,
+				5D98639A1D8B5F8F00DEDB00 /* IndependentPrimitive.h in Headers */,
+				5D98639B1D8B5F8F00DEDB00 /* TriangleFans.h in Headers */,
+				5D98639C1D8B5F8F00DEDB00 /* AttributeSet.h in Headers */,
+				5D98639D1D8B5F8F00DEDB00 /* Billboard.h in Headers */,
+				93320B8325F6ECCC00B10E4A /* TextureFramebuffer.h in Headers */,
+				5D98639E1D8B5F8F00DEDB00 /* ObjectRef.h in Headers */,
+				93429BCF2978732300FE7701 /* Lines.h in Headers */,
+				5D9863A01D8B5F8F00DEDB00 /* Cone.h in Headers */,
+				5D9863A11D8B5F8F00DEDB00 /* QuadStrips.h in Headers */,
+				5D9863A21D8B5F8F00DEDB00 /* Sphere.h in Headers */,
+				5D9863A31D8B5F8F00DEDB00 /* Cylinder.h in Headers */,
+				5D9863A51D8B5F8F00DEDB00 /* DirectionalLight.h in Headers */,
+				5D9863A61D8B5F8F00DEDB00 /* StereoView.h in Headers */,
+				5D9863A71D8B5F8F00DEDB00 /* Points.h in Headers */,
+				5D9863A81D8B5F8F00DEDB00 /* Framebuffer.h in Headers */,
+				5D9863A91D8B5F8F00DEDB00 /* ShaderProgram.h in Headers */,
+				5D9863AA1D8B5F8F00DEDB00 /* AbsoluteTransform.h in Headers */,
+				5D9863AB1D8B5F8F00DEDB00 /* Box.h in Headers */,
+				5D9863AC1D8B5F8F00DEDB00 /* StripPrimitive.h in Headers */,
+				5D9863AD1D8B5F8F00DEDB00 /* Shape.h in Headers */,
+				5D9863AE1D8B5F8F00DEDB00 /* TriangleFace.h in Headers */,
+				5D9863AF1D8B5F8F00DEDB00 /* PrimitiveAttribute.h in Headers */,
+				5D9863B01D8B5F8F00DEDB00 /* PhantomAttribute.h in Headers */,
+				93F1C4BD243EFAEB00217EF1 /* StereoAttribute.h in Headers */,
+				5D9863B11D8B5F8F00DEDB00 /* Factory.h in Headers */,
+				5D9863B21D8B5F8F00DEDB00 /* PerspectiveView.h in Headers */,
+				5D9863B31D8B5F8F00DEDB00 /* Group.h in Headers */,
+				93DC6B0526BB0BB90021A07C /* MediaTexture2D.h in Headers */,
+				5D9863B41D8B5F8F00DEDB00 /* Triangles.h in Headers */,
+				5D9863B51D8B5F8F00DEDB00 /* Engine.h in Headers */,
+				5D9863B61D8B5F8F00DEDB00 /* SkyBackground.h in Headers */,
+				5D9863B71D8B5F8F00DEDB00 /* Object.h in Headers */,
+				5D9863B81D8B5F8F00DEDB00 /* Rendering.h in Headers */,
+				5D9863B91D8B5F8F00DEDB00 /* LightSource.h in Headers */,
+				5D9863BA1D8B5F8F00DEDB00 /* Quads.h in Headers */,
+				5D9863BB1D8B5F8F00DEDB00 /* Background.h in Headers */,
+				5D9863BC1D8B5F8F00DEDB00 /* Attribute.h in Headers */,
+				5D9863BD1D8B5F8F00DEDB00 /* BitmapFramebuffer.h in Headers */,
+				5D9863BE1D8B5F8F00DEDB00 /* Geometry.h in Headers */,
+				5D9863BF1D8B5F8F00DEDB00 /* Scene.h in Headers */,
+				5D9863C01D8B5F8F00DEDB00 /* Primitive.h in Headers */,
+				5D9863C11D8B5F8F00DEDB00 /* Material.h in Headers */,
+				5D9863C21D8B5F8F00DEDB00 /* SpotLight.h in Headers */,
+				5D9863C31D8B5F8F00DEDB00 /* Transform.h in Headers */,
+				5D9863C41D8B5F8F00DEDB00 /* Textures.h in Headers */,
+				5D9863C51D8B5F8F00DEDB00 /* Switch.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041ECE91DABF10200BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				932CAF6726C110C8004C36E0 /* Text.h in Headers */,
+				C041ECEB1DABF10200BF5D76 /* LOD.h in Headers */,
+				9326C9A127554E65008DABF2 /* FrameTexture2D.h in Headers */,
+				C041ECEC1DABF10200BF5D76 /* Objects.h in Headers */,
+				C041ECED1DABF10200BF5D76 /* DynamicObject.h in Headers */,
+				C041ECEE1DABF10200BF5D76 /* View.h in Headers */,
+				C041ECEF1DABF10200BF5D76 /* Texture.h in Headers */,
+				93ADFB77297A197F00651F48 /* LineStrips.h in Headers */,
+				C041ECF01DABF10200BF5D76 /* WindowFramebuffer.h in Headers */,
+				C041ECF11DABF10200BF5D76 /* DepthAttribute.h in Headers */,
+				C041ECF21DABF10200BF5D76 /* UndistortedBackground.h in Headers */,
+				C041ECF31DABF10200BF5D76 /* PointLight.h in Headers */,
+				C041ECF41DABF10200BF5D76 /* Manager.h in Headers */,
+				C041ECF51DABF10200BF5D76 /* QuadFace.h in Headers */,
+				C041ECF61DABF10200BF5D76 /* TriangleStrips.h in Headers */,
+				C041ECF71DABF10200BF5D76 /* Texture2D.h in Headers */,
+				C041ECF81DABF10200BF5D76 /* BlendAttribute.h in Headers */,
+				C041ECF91DABF10200BF5D76 /* Utilities.h in Headers */,
+				C041ECFA1DABF10200BF5D76 /* Renderable.h in Headers */,
+				C041ECFB1DABF10200BF5D76 /* Node.h in Headers */,
+				C041ECFC1DABF10200BF5D76 /* ParallelView.h in Headers */,
+				C041ECFD1DABF10200BF5D76 /* VertexSet.h in Headers */,
+				C041ECFE1DABF10200BF5D76 /* IndependentPrimitive.h in Headers */,
+				C041ECFF1DABF10200BF5D76 /* TriangleFans.h in Headers */,
+				C041ED001DABF10200BF5D76 /* AttributeSet.h in Headers */,
+				C041ED011DABF10200BF5D76 /* Billboard.h in Headers */,
+				93320B8425F6ECCC00B10E4A /* TextureFramebuffer.h in Headers */,
+				C041ED021DABF10200BF5D76 /* ObjectRef.h in Headers */,
+				93429BD02978732300FE7701 /* Lines.h in Headers */,
+				C041ED041DABF10200BF5D76 /* Cone.h in Headers */,
+				C041ED051DABF10200BF5D76 /* QuadStrips.h in Headers */,
+				C041ED061DABF10200BF5D76 /* Sphere.h in Headers */,
+				C041ED071DABF10200BF5D76 /* Cylinder.h in Headers */,
+				C041ED091DABF10200BF5D76 /* DirectionalLight.h in Headers */,
+				C041ED0A1DABF10200BF5D76 /* StereoView.h in Headers */,
+				C041ED0B1DABF10200BF5D76 /* Points.h in Headers */,
+				C041ED0C1DABF10200BF5D76 /* Framebuffer.h in Headers */,
+				C041ED0D1DABF10200BF5D76 /* ShaderProgram.h in Headers */,
+				C041ED0E1DABF10200BF5D76 /* AbsoluteTransform.h in Headers */,
+				C041ED0F1DABF10200BF5D76 /* Box.h in Headers */,
+				C041ED101DABF10200BF5D76 /* StripPrimitive.h in Headers */,
+				C041ED111DABF10200BF5D76 /* Shape.h in Headers */,
+				C041ED121DABF10200BF5D76 /* TriangleFace.h in Headers */,
+				C041ED131DABF10200BF5D76 /* PrimitiveAttribute.h in Headers */,
+				C041ED141DABF10200BF5D76 /* PhantomAttribute.h in Headers */,
+				93F1C4BE243EFAEB00217EF1 /* StereoAttribute.h in Headers */,
+				C041ED151DABF10200BF5D76 /* Factory.h in Headers */,
+				C041ED161DABF10200BF5D76 /* PerspectiveView.h in Headers */,
+				C041ED171DABF10200BF5D76 /* Group.h in Headers */,
+				93DC6B0626BB0BB90021A07C /* MediaTexture2D.h in Headers */,
+				C041ED181DABF10200BF5D76 /* Triangles.h in Headers */,
+				C041ED191DABF10200BF5D76 /* Engine.h in Headers */,
+				C041ED1A1DABF10200BF5D76 /* SkyBackground.h in Headers */,
+				C041ED1B1DABF10200BF5D76 /* Object.h in Headers */,
+				C041ED1C1DABF10200BF5D76 /* Rendering.h in Headers */,
+				C041ED1D1DABF10200BF5D76 /* LightSource.h in Headers */,
+				C041ED1E1DABF10200BF5D76 /* Quads.h in Headers */,
+				C041ED1F1DABF10200BF5D76 /* Background.h in Headers */,
+				C041ED201DABF10200BF5D76 /* Attribute.h in Headers */,
+				C041ED211DABF10200BF5D76 /* BitmapFramebuffer.h in Headers */,
+				C041ED221DABF10200BF5D76 /* Geometry.h in Headers */,
+				C041ED231DABF10200BF5D76 /* Scene.h in Headers */,
+				C041ED241DABF10200BF5D76 /* Primitive.h in Headers */,
+				C041ED251DABF10200BF5D76 /* Material.h in Headers */,
+				C041ED261DABF10200BF5D76 /* SpotLight.h in Headers */,
+				C041ED271DABF10200BF5D76 /* Transform.h in Headers */,
+				C041ED281DABF10200BF5D76 /* Textures.h in Headers */,
+				C041ED291DABF10200BF5D76 /* Switch.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D12BB001BF23B4100A56828 /* rendering x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BB0C1BF23B4100A56828 /* Build configuration list for PBXNativeTarget "rendering x64 (Static)" */;
+			buildPhases = (
+				5D12BAFD1BF23B4100A56828 /* Sources */,
+				5D12BAFE1BF23B4100A56828 /* Frameworks */,
+				5D12BAFF1BF23B4100A56828 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "rendering x64 (Static)";
+			productName = rendering;
+			productReference = 5D12BB011BF23B4100A56828 /* libOceanRenderingD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D12BC0D1BF23C9200A56828 /* rendering x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BC8F1BF23C9200A56828 /* Build configuration list for PBXNativeTarget "rendering x64 (Shared)" */;
+			buildPhases = (
+				5D12BC0E1BF23C9200A56828 /* Sources */,
+				5D12BC4D1BF23C9200A56828 /* Frameworks */,
+				5D12BC4E1BF23C9200A56828 /* Headers */,
+				C041ED2F1DABF1C500BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "rendering x64 (Shared)";
+			productName = rendering;
+			productReference = 5D12BC921BF23C9200A56828 /* libOceanRenderingD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9863441D8B5F8F00DEDB00 /* rendering arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9863C61D8B5F8F00DEDB00 /* Build configuration list for PBXNativeTarget "rendering arm64 (Static)" */;
+			buildPhases = (
+				5D9863451D8B5F8F00DEDB00 /* Sources */,
+				5D9863841D8B5F8F00DEDB00 /* Frameworks */,
+				5D9863851D8B5F8F00DEDB00 /* Headers */,
+				5D837F561D8F10AA00939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "rendering arm64 (Static)";
+			productName = rendering;
+			productReference = 5D9863C91D8B5F8F00DEDB00 /* libOceanRenderingD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041ECA81DABF10200BF5D76 /* rendering arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041ED2B1DABF10200BF5D76 /* Build configuration list for PBXNativeTarget "rendering arm64 (Shared)" */;
+			buildPhases = (
+				C041ECA91DABF10200BF5D76 /* Sources */,
+				C041ECE81DABF10200BF5D76 /* Frameworks */,
+				C041ECE91DABF10200BF5D76 /* Headers */,
+				C041ED2A1DABF10200BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "rendering arm64 (Shared)";
+			productName = rendering;
+			productReference = C041ED2E1DABF10200BF5D76 /* libOceanRenderingD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D12BAF91BF23B4100A56828 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D12BB001BF23B4100A56828 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D12BAFC1BF23B4100A56828 /* Build configuration list for PBXProject "rendering" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D12BAF81BF23B4100A56828;
+			productRefGroup = 5D12BB021BF23B4100A56828 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D12BB001BF23B4100A56828 /* rendering x64 (Static) */,
+				5D12BC0D1BF23C9200A56828 /* rendering x64 (Shared) */,
+				5D9863441D8B5F8F00DEDB00 /* rendering arm64 (Static) */,
+				C041ECA81DABF10200BF5D76 /* rendering arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F561D8F10AA00939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../copy_arm_static.sh \"../../../../../bin/lib/\"";
+		};
+		C041ED2A1DABF10200BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../codesign.sh\n../../copy_arm_shared.sh \"../../../../../bin/lib/\"";
+		};
+		C041ED2F1DABF1C500BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D12BAFD1BF23B4100A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93ADFB79297A19A100651F48 /* LineStrips.cpp in Sources */,
+				5D12BB721BF23C1700A56828 /* Renderable.cpp in Sources */,
+				5D12BB871BF23C1700A56828 /* UndistortedBackground.cpp in Sources */,
+				5D12BB561BF23C1700A56828 /* Cone.cpp in Sources */,
+				5D12BB5F1BF23C1700A56828 /* Group.cpp in Sources */,
+				5D12BB801BF23C1700A56828 /* Texture2D.cpp in Sources */,
+				5D12BB5E1BF23C1700A56828 /* Geometry.cpp in Sources */,
+				5D12BB6C1BF23C1700A56828 /* PointLight.cpp in Sources */,
+				5D12BB701BF23C1700A56828 /* Quads.cpp in Sources */,
+				5D12BB751BF23C1700A56828 /* Scene.cpp in Sources */,
+				5D12BB671BF23C1700A56828 /* Object.cpp in Sources */,
+				5D12BB501BF23C1700A56828 /* AttributeSet.cpp in Sources */,
+				5D12BB781BF23C1700A56828 /* Shape.cpp in Sources */,
+				9326C9A827554E9B008DABF2 /* FrameTexture2D.cpp in Sources */,
+				5D12BB6E1BF23C1700A56828 /* Primitive.cpp in Sources */,
+				5D12BB821BF23C1700A56828 /* Transform.cpp in Sources */,
+				5D12BB851BF23C1700A56828 /* Triangles.cpp in Sources */,
+				5D12BB631BF23C1700A56828 /* LOD.cpp in Sources */,
+				5D12BB551BF23C1700A56828 /* Box.cpp in Sources */,
+				5D12BB7F1BF23C1700A56828 /* Texture.cpp in Sources */,
+				93F1C4C0243EFB0000217EF1 /* StereoAttribute.cpp in Sources */,
+				5D12BB6B1BF23C1700A56828 /* PhantomAttribute.cpp in Sources */,
+				5D12BB4F1BF23C1700A56828 /* Attribute.cpp in Sources */,
+				5D12BB6A1BF23C1700A56828 /* PerspectiveView.cpp in Sources */,
+				5D12BB541BF23C1700A56828 /* BlendAttribute.cpp in Sources */,
+				5D12BB811BF23C1700A56828 /* Textures.cpp in Sources */,
+				932CAF6926C110DE004C36E0 /* Text.cpp in Sources */,
+				5D12BB5D1BF23C1700A56828 /* Framebuffer.cpp in Sources */,
+				5D12BB7B1BF23C1700A56828 /* SpotLight.cpp in Sources */,
+				5D12BB641BF23C1700A56828 /* Manager.cpp in Sources */,
+				5D12BB581BF23C1700A56828 /* DepthAttribute.cpp in Sources */,
+				5D12BB761BF23C1700A56828 /* ShaderProgram.cpp in Sources */,
+				5D12BB831BF23C1700A56828 /* TriangleFace.cpp in Sources */,
+				5D12BB691BF23C1700A56828 /* ParallelView.cpp in Sources */,
+				5D12BB6F1BF23C1700A56828 /* PrimitiveAttribute.cpp in Sources */,
+				5D12BB4E1BF23C1700A56828 /* AbsoluteTransform.cpp in Sources */,
+				5D12BB841BF23C1700A56828 /* TriangleFans.cpp in Sources */,
+				5D12BB5C1BF23C1700A56828 /* Factory.cpp in Sources */,
+				5D12BB7A1BF23C1700A56828 /* Sphere.cpp in Sources */,
+				5D12BB511BF23C1700A56828 /* Background.cpp in Sources */,
+				5D12BB7E1BF23C1700A56828 /* Switch.cpp in Sources */,
+				5D12BB681BF23C1700A56828 /* ObjectRef.cpp in Sources */,
+				5D12BB5A1BF23C1700A56828 /* DynamicObject.cpp in Sources */,
+				5D12BB881BF23C1700A56828 /* Utilities.cpp in Sources */,
+				5D12BB571BF23C1700A56828 /* Cylinder.cpp in Sources */,
+				5D12BB531BF23C1700A56828 /* BitmapFramebuffer.cpp in Sources */,
+				5D12BB711BF23C1700A56828 /* QuadStrips.cpp in Sources */,
+				93DC6B0826BB0BC70021A07C /* MediaTexture2D.cpp in Sources */,
+				5D12BB6D1BF23C1700A56828 /* Points.cpp in Sources */,
+				93320D1125FC258400B10E4A /* TextureFramebuffer.cpp in Sources */,
+				5D12BB621BF23C1700A56828 /* LightSource.cpp in Sources */,
+				5D12BB791BF23C1700A56828 /* SkyBackground.cpp in Sources */,
+				5D12BB611BF23C1700A56828 /* IndependentPrimitive.cpp in Sources */,
+				5D12BB651BF23C1700A56828 /* Material.cpp in Sources */,
+				93429BD22978733600FE7701 /* Lines.cpp in Sources */,
+				5D12BB861BF23C1700A56828 /* TriangleStrips.cpp in Sources */,
+				5D12BB8B1BF23C1700A56828 /* WindowFramebuffer.cpp in Sources */,
+				5D12BB5B1BF23C1700A56828 /* Engine.cpp in Sources */,
+				5D12BB521BF23C1700A56828 /* Billboard.cpp in Sources */,
+				5D12BB591BF23C1700A56828 /* DirectionalLight.cpp in Sources */,
+				5D12BB891BF23C1700A56828 /* VertexSet.cpp in Sources */,
+				5D12BB661BF23C1700A56828 /* Node.cpp in Sources */,
+				5D12BB8A1BF23C1700A56828 /* View.cpp in Sources */,
+				5D12BB7D1BF23C1700A56828 /* StripPrimitive.cpp in Sources */,
+				5D12BB7C1BF23C1700A56828 /* StereoView.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BC0E1BF23C9200A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93ADFB7A297A19A100651F48 /* LineStrips.cpp in Sources */,
+				5D12BC0F1BF23C9200A56828 /* Renderable.cpp in Sources */,
+				5D12BC101BF23C9200A56828 /* UndistortedBackground.cpp in Sources */,
+				5D12BC111BF23C9200A56828 /* Cone.cpp in Sources */,
+				5D12BC131BF23C9200A56828 /* Group.cpp in Sources */,
+				5D12BC141BF23C9200A56828 /* Texture2D.cpp in Sources */,
+				5D12BC151BF23C9200A56828 /* Geometry.cpp in Sources */,
+				5D12BC161BF23C9200A56828 /* PointLight.cpp in Sources */,
+				5D12BC181BF23C9200A56828 /* Quads.cpp in Sources */,
+				5D12BC191BF23C9200A56828 /* Scene.cpp in Sources */,
+				5D12BC1A1BF23C9200A56828 /* Object.cpp in Sources */,
+				5D12BC1B1BF23C9200A56828 /* AttributeSet.cpp in Sources */,
+				5D12BC1C1BF23C9200A56828 /* Shape.cpp in Sources */,
+				9326C9A927554E9B008DABF2 /* FrameTexture2D.cpp in Sources */,
+				5D12BC1D1BF23C9200A56828 /* Primitive.cpp in Sources */,
+				5D12BC1E1BF23C9200A56828 /* Transform.cpp in Sources */,
+				5D12BC1F1BF23C9200A56828 /* Triangles.cpp in Sources */,
+				5D12BC201BF23C9200A56828 /* LOD.cpp in Sources */,
+				5D12BC211BF23C9200A56828 /* Box.cpp in Sources */,
+				5D12BC221BF23C9200A56828 /* Texture.cpp in Sources */,
+				93F1C4C1243EFB0000217EF1 /* StereoAttribute.cpp in Sources */,
+				5D12BC231BF23C9200A56828 /* PhantomAttribute.cpp in Sources */,
+				5D12BC241BF23C9200A56828 /* Attribute.cpp in Sources */,
+				5D12BC251BF23C9200A56828 /* PerspectiveView.cpp in Sources */,
+				5D12BC261BF23C9200A56828 /* BlendAttribute.cpp in Sources */,
+				5D12BC271BF23C9200A56828 /* Textures.cpp in Sources */,
+				932CAF6A26C110DE004C36E0 /* Text.cpp in Sources */,
+				5D12BC281BF23C9200A56828 /* Framebuffer.cpp in Sources */,
+				5D12BC291BF23C9200A56828 /* SpotLight.cpp in Sources */,
+				5D12BC2A1BF23C9200A56828 /* Manager.cpp in Sources */,
+				5D12BC2B1BF23C9200A56828 /* DepthAttribute.cpp in Sources */,
+				5D12BC2C1BF23C9200A56828 /* ShaderProgram.cpp in Sources */,
+				5D12BC2D1BF23C9200A56828 /* TriangleFace.cpp in Sources */,
+				5D12BC2E1BF23C9200A56828 /* ParallelView.cpp in Sources */,
+				5D12BC301BF23C9200A56828 /* PrimitiveAttribute.cpp in Sources */,
+				5D12BC311BF23C9200A56828 /* AbsoluteTransform.cpp in Sources */,
+				5D12BC321BF23C9200A56828 /* TriangleFans.cpp in Sources */,
+				5D12BC331BF23C9200A56828 /* Factory.cpp in Sources */,
+				5D12BC341BF23C9200A56828 /* Sphere.cpp in Sources */,
+				5D12BC351BF23C9200A56828 /* Background.cpp in Sources */,
+				5D12BC361BF23C9200A56828 /* Switch.cpp in Sources */,
+				5D12BC371BF23C9200A56828 /* ObjectRef.cpp in Sources */,
+				5D12BC381BF23C9200A56828 /* DynamicObject.cpp in Sources */,
+				5D12BC391BF23C9200A56828 /* Utilities.cpp in Sources */,
+				5D12BC3A1BF23C9200A56828 /* Cylinder.cpp in Sources */,
+				5D12BC3B1BF23C9200A56828 /* BitmapFramebuffer.cpp in Sources */,
+				5D12BC3C1BF23C9200A56828 /* QuadStrips.cpp in Sources */,
+				93DC6B0926BB0BC70021A07C /* MediaTexture2D.cpp in Sources */,
+				5D12BC3E1BF23C9200A56828 /* Points.cpp in Sources */,
+				93320D1225FC258400B10E4A /* TextureFramebuffer.cpp in Sources */,
+				5D12BC3F1BF23C9200A56828 /* LightSource.cpp in Sources */,
+				5D12BC401BF23C9200A56828 /* SkyBackground.cpp in Sources */,
+				5D12BC411BF23C9200A56828 /* IndependentPrimitive.cpp in Sources */,
+				5D12BC421BF23C9200A56828 /* Material.cpp in Sources */,
+				93429BD32978733600FE7701 /* Lines.cpp in Sources */,
+				5D12BC431BF23C9200A56828 /* TriangleStrips.cpp in Sources */,
+				5D12BC441BF23C9200A56828 /* WindowFramebuffer.cpp in Sources */,
+				5D12BC451BF23C9200A56828 /* Engine.cpp in Sources */,
+				5D12BC461BF23C9200A56828 /* Billboard.cpp in Sources */,
+				5D12BC471BF23C9200A56828 /* DirectionalLight.cpp in Sources */,
+				5D12BC481BF23C9200A56828 /* VertexSet.cpp in Sources */,
+				5D12BC491BF23C9200A56828 /* Node.cpp in Sources */,
+				5D12BC4A1BF23C9200A56828 /* View.cpp in Sources */,
+				5D12BC4B1BF23C9200A56828 /* StripPrimitive.cpp in Sources */,
+				5D12BC4C1BF23C9200A56828 /* StereoView.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9863451D8B5F8F00DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93ADFB7B297A19A100651F48 /* LineStrips.cpp in Sources */,
+				5D9863461D8B5F8F00DEDB00 /* Renderable.cpp in Sources */,
+				5D9863471D8B5F8F00DEDB00 /* UndistortedBackground.cpp in Sources */,
+				5D9863481D8B5F8F00DEDB00 /* Cone.cpp in Sources */,
+				5D98634A1D8B5F8F00DEDB00 /* Group.cpp in Sources */,
+				5D98634B1D8B5F8F00DEDB00 /* Texture2D.cpp in Sources */,
+				5D98634C1D8B5F8F00DEDB00 /* Geometry.cpp in Sources */,
+				5D98634D1D8B5F8F00DEDB00 /* PointLight.cpp in Sources */,
+				5D98634F1D8B5F8F00DEDB00 /* Quads.cpp in Sources */,
+				5D9863501D8B5F8F00DEDB00 /* Scene.cpp in Sources */,
+				5D9863511D8B5F8F00DEDB00 /* Object.cpp in Sources */,
+				5D9863521D8B5F8F00DEDB00 /* AttributeSet.cpp in Sources */,
+				5D9863531D8B5F8F00DEDB00 /* Shape.cpp in Sources */,
+				9326C9AA27554E9B008DABF2 /* FrameTexture2D.cpp in Sources */,
+				5D9863541D8B5F8F00DEDB00 /* Primitive.cpp in Sources */,
+				5D9863551D8B5F8F00DEDB00 /* Transform.cpp in Sources */,
+				5D9863561D8B5F8F00DEDB00 /* Triangles.cpp in Sources */,
+				5D9863571D8B5F8F00DEDB00 /* LOD.cpp in Sources */,
+				5D9863581D8B5F8F00DEDB00 /* Box.cpp in Sources */,
+				5D9863591D8B5F8F00DEDB00 /* Texture.cpp in Sources */,
+				93F1C4C2243EFB0000217EF1 /* StereoAttribute.cpp in Sources */,
+				5D98635A1D8B5F8F00DEDB00 /* PhantomAttribute.cpp in Sources */,
+				5D98635B1D8B5F8F00DEDB00 /* Attribute.cpp in Sources */,
+				5D98635C1D8B5F8F00DEDB00 /* PerspectiveView.cpp in Sources */,
+				5D98635D1D8B5F8F00DEDB00 /* BlendAttribute.cpp in Sources */,
+				5D98635E1D8B5F8F00DEDB00 /* Textures.cpp in Sources */,
+				932CAF6B26C110DE004C36E0 /* Text.cpp in Sources */,
+				5D98635F1D8B5F8F00DEDB00 /* Framebuffer.cpp in Sources */,
+				5D9863601D8B5F8F00DEDB00 /* SpotLight.cpp in Sources */,
+				5D9863611D8B5F8F00DEDB00 /* Manager.cpp in Sources */,
+				5D9863621D8B5F8F00DEDB00 /* DepthAttribute.cpp in Sources */,
+				5D9863631D8B5F8F00DEDB00 /* ShaderProgram.cpp in Sources */,
+				5D9863641D8B5F8F00DEDB00 /* TriangleFace.cpp in Sources */,
+				5D9863651D8B5F8F00DEDB00 /* ParallelView.cpp in Sources */,
+				5D9863671D8B5F8F00DEDB00 /* PrimitiveAttribute.cpp in Sources */,
+				5D9863681D8B5F8F00DEDB00 /* AbsoluteTransform.cpp in Sources */,
+				5D9863691D8B5F8F00DEDB00 /* TriangleFans.cpp in Sources */,
+				5D98636A1D8B5F8F00DEDB00 /* Factory.cpp in Sources */,
+				5D98636B1D8B5F8F00DEDB00 /* Sphere.cpp in Sources */,
+				5D98636C1D8B5F8F00DEDB00 /* Background.cpp in Sources */,
+				5D98636D1D8B5F8F00DEDB00 /* Switch.cpp in Sources */,
+				5D98636E1D8B5F8F00DEDB00 /* ObjectRef.cpp in Sources */,
+				5D98636F1D8B5F8F00DEDB00 /* DynamicObject.cpp in Sources */,
+				5D9863701D8B5F8F00DEDB00 /* Utilities.cpp in Sources */,
+				5D9863711D8B5F8F00DEDB00 /* Cylinder.cpp in Sources */,
+				5D9863721D8B5F8F00DEDB00 /* BitmapFramebuffer.cpp in Sources */,
+				5D9863731D8B5F8F00DEDB00 /* QuadStrips.cpp in Sources */,
+				93DC6B0A26BB0BC70021A07C /* MediaTexture2D.cpp in Sources */,
+				5D9863751D8B5F8F00DEDB00 /* Points.cpp in Sources */,
+				93320D1325FC258400B10E4A /* TextureFramebuffer.cpp in Sources */,
+				5D9863761D8B5F8F00DEDB00 /* LightSource.cpp in Sources */,
+				5D9863771D8B5F8F00DEDB00 /* SkyBackground.cpp in Sources */,
+				5D9863781D8B5F8F00DEDB00 /* IndependentPrimitive.cpp in Sources */,
+				5D9863791D8B5F8F00DEDB00 /* Material.cpp in Sources */,
+				93429BD42978733600FE7701 /* Lines.cpp in Sources */,
+				5D98637A1D8B5F8F00DEDB00 /* TriangleStrips.cpp in Sources */,
+				5D98637B1D8B5F8F00DEDB00 /* WindowFramebuffer.cpp in Sources */,
+				5D98637C1D8B5F8F00DEDB00 /* Engine.cpp in Sources */,
+				5D98637D1D8B5F8F00DEDB00 /* Billboard.cpp in Sources */,
+				5D98637E1D8B5F8F00DEDB00 /* DirectionalLight.cpp in Sources */,
+				5D98637F1D8B5F8F00DEDB00 /* VertexSet.cpp in Sources */,
+				5D9863801D8B5F8F00DEDB00 /* Node.cpp in Sources */,
+				5D9863811D8B5F8F00DEDB00 /* View.cpp in Sources */,
+				5D9863821D8B5F8F00DEDB00 /* StripPrimitive.cpp in Sources */,
+				5D9863831D8B5F8F00DEDB00 /* StereoView.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041ECA91DABF10200BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93ADFB7C297A19A100651F48 /* LineStrips.cpp in Sources */,
+				C041ECAA1DABF10200BF5D76 /* Renderable.cpp in Sources */,
+				C041ECAB1DABF10200BF5D76 /* UndistortedBackground.cpp in Sources */,
+				C041ECAC1DABF10200BF5D76 /* Cone.cpp in Sources */,
+				C041ECAE1DABF10200BF5D76 /* Group.cpp in Sources */,
+				C041ECAF1DABF10200BF5D76 /* Texture2D.cpp in Sources */,
+				C041ECB01DABF10200BF5D76 /* Geometry.cpp in Sources */,
+				C041ECB11DABF10200BF5D76 /* PointLight.cpp in Sources */,
+				C041ECB31DABF10200BF5D76 /* Quads.cpp in Sources */,
+				C041ECB41DABF10200BF5D76 /* Scene.cpp in Sources */,
+				C041ECB51DABF10200BF5D76 /* Object.cpp in Sources */,
+				C041ECB61DABF10200BF5D76 /* AttributeSet.cpp in Sources */,
+				C041ECB71DABF10200BF5D76 /* Shape.cpp in Sources */,
+				9326C9AB27554E9B008DABF2 /* FrameTexture2D.cpp in Sources */,
+				C041ECB81DABF10200BF5D76 /* Primitive.cpp in Sources */,
+				C041ECB91DABF10200BF5D76 /* Transform.cpp in Sources */,
+				C041ECBA1DABF10200BF5D76 /* Triangles.cpp in Sources */,
+				C041ECBB1DABF10200BF5D76 /* LOD.cpp in Sources */,
+				C041ECBC1DABF10200BF5D76 /* Box.cpp in Sources */,
+				C041ECBD1DABF10200BF5D76 /* Texture.cpp in Sources */,
+				93F1C4C3243EFB0000217EF1 /* StereoAttribute.cpp in Sources */,
+				C041ECBE1DABF10200BF5D76 /* PhantomAttribute.cpp in Sources */,
+				C041ECBF1DABF10200BF5D76 /* Attribute.cpp in Sources */,
+				C041ECC01DABF10200BF5D76 /* PerspectiveView.cpp in Sources */,
+				C041ECC11DABF10200BF5D76 /* BlendAttribute.cpp in Sources */,
+				C041ECC21DABF10200BF5D76 /* Textures.cpp in Sources */,
+				932CAF6C26C110DE004C36E0 /* Text.cpp in Sources */,
+				C041ECC31DABF10200BF5D76 /* Framebuffer.cpp in Sources */,
+				C041ECC41DABF10200BF5D76 /* SpotLight.cpp in Sources */,
+				C041ECC51DABF10200BF5D76 /* Manager.cpp in Sources */,
+				C041ECC61DABF10200BF5D76 /* DepthAttribute.cpp in Sources */,
+				C041ECC71DABF10200BF5D76 /* ShaderProgram.cpp in Sources */,
+				C041ECC81DABF10200BF5D76 /* TriangleFace.cpp in Sources */,
+				C041ECC91DABF10200BF5D76 /* ParallelView.cpp in Sources */,
+				C041ECCB1DABF10200BF5D76 /* PrimitiveAttribute.cpp in Sources */,
+				C041ECCC1DABF10200BF5D76 /* AbsoluteTransform.cpp in Sources */,
+				C041ECCD1DABF10200BF5D76 /* TriangleFans.cpp in Sources */,
+				C041ECCE1DABF10200BF5D76 /* Factory.cpp in Sources */,
+				C041ECCF1DABF10200BF5D76 /* Sphere.cpp in Sources */,
+				C041ECD01DABF10200BF5D76 /* Background.cpp in Sources */,
+				C041ECD11DABF10200BF5D76 /* Switch.cpp in Sources */,
+				C041ECD21DABF10200BF5D76 /* ObjectRef.cpp in Sources */,
+				C041ECD31DABF10200BF5D76 /* DynamicObject.cpp in Sources */,
+				C041ECD41DABF10200BF5D76 /* Utilities.cpp in Sources */,
+				C041ECD51DABF10200BF5D76 /* Cylinder.cpp in Sources */,
+				C041ECD61DABF10200BF5D76 /* BitmapFramebuffer.cpp in Sources */,
+				C041ECD71DABF10200BF5D76 /* QuadStrips.cpp in Sources */,
+				93DC6B0B26BB0BC70021A07C /* MediaTexture2D.cpp in Sources */,
+				C041ECD91DABF10200BF5D76 /* Points.cpp in Sources */,
+				93320D1425FC258400B10E4A /* TextureFramebuffer.cpp in Sources */,
+				C041ECDA1DABF10200BF5D76 /* LightSource.cpp in Sources */,
+				C041ECDB1DABF10200BF5D76 /* SkyBackground.cpp in Sources */,
+				C041ECDC1DABF10200BF5D76 /* IndependentPrimitive.cpp in Sources */,
+				C041ECDD1DABF10200BF5D76 /* Material.cpp in Sources */,
+				93429BD52978733600FE7701 /* Lines.cpp in Sources */,
+				C041ECDE1DABF10200BF5D76 /* TriangleStrips.cpp in Sources */,
+				C041ECDF1DABF10200BF5D76 /* WindowFramebuffer.cpp in Sources */,
+				C041ECE01DABF10200BF5D76 /* Engine.cpp in Sources */,
+				C041ECE11DABF10200BF5D76 /* Billboard.cpp in Sources */,
+				C041ECE21DABF10200BF5D76 /* DirectionalLight.cpp in Sources */,
+				C041ECE31DABF10200BF5D76 /* VertexSet.cpp in Sources */,
+				C041ECE41DABF10200BF5D76 /* Node.cpp in Sources */,
+				C041ECE51DABF10200BF5D76 /* View.cpp in Sources */,
+				C041ECE61DABF10200BF5D76 /* StripPrimitive.cpp in Sources */,
+				C041ECE71DABF10200BF5D76 /* StereoView.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D12BB0A1BF23B4100A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D12BB0B1BF23B4100A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D12BB0D1BF23B4100A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanRenderingD;
+				PRODUCT_NAME = OceanRenderingD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D12BB0E1BF23B4100A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanRendering;
+				PRODUCT_NAME = OceanRendering;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D12BC901BF23C9200A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanRenderingD;
+				PRODUCT_NAME = OceanRenderingD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D12BC911BF23C9200A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanIO",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanRendering;
+				PRODUCT_NAME = OceanRendering;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D9863C71D8B5F8F00DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanRenderingD;
+				PRODUCT_NAME = OceanRenderingD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D9863C81D8B5F8F00DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanRendering;
+				PRODUCT_NAME = OceanRendering;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041ED2C1DABF10200BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanRenderingD;
+				PRODUCT_NAME = OceanRenderingD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041ED2D1DABF10200BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanIO",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanRendering;
+				PRODUCT_NAME = OceanRendering;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/rendering/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D12BAFC1BF23B4100A56828 /* Build configuration list for PBXProject "rendering" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BB0A1BF23B4100A56828 /* Debug */,
+				5D12BB0B1BF23B4100A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BB0C1BF23B4100A56828 /* Build configuration list for PBXNativeTarget "rendering x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BB0D1BF23B4100A56828 /* Debug */,
+				5D12BB0E1BF23B4100A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BC8F1BF23C9200A56828 /* Build configuration list for PBXNativeTarget "rendering x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BC901BF23C9200A56828 /* Debug */,
+				5D12BC911BF23C9200A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9863C61D8B5F8F00DEDB00 /* Build configuration list for PBXNativeTarget "rendering arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9863C71D8B5F8F00DEDB00 /* Debug */,
+				5D9863C81D8B5F8F00DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041ED2B1DABF10200BF5D76 /* Build configuration list for PBXNativeTarget "rendering arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041ED2C1DABF10200BF5D76 /* Debug */,
+				C041ED2D1DABF10200BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D12BAF91BF23B4100A56828 /* Project object */;
+}

@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{31F947DC-44B2-47E7-A677-99278F0C1F2B}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>cv</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>cv</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="cv_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="cv_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="cv_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="cv_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\Bresenham.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\Canvas.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\CV.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\CVUtilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\EigenUtilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameBlender.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameChannels.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverter.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterABGR32.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterARGB32.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGR24.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGR32.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGR565.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGRA32.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGB24.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGB32.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGB565.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGBA32.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGBA64.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGGB10_Packed.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterThreshold.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterUYVY16.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY10_Packed.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY32.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY8.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterYA16.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterYUV24.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterYUVA32.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterYUYV16.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterYVU24.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY_UV12.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY_U_V12.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY_U_V24.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY_VU12.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY_V_U12.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameEnlarger.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilter.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterCanny.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterDilation.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterErosion.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGaussian.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradient.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGradientBase.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterLaplace.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMax.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMean.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMedian.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMin.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMorphology.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterPatch.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterPrewitt.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterScharr.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterScharrMagnitude.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterSeparable.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterSobel.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterSobelMagnitude.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterSorted.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterTemplate.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameInterpolator.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameInterpolatorBicubic.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameInterpolatorBilinear.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameInterpolatorBilinearAlpha.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameInterpolatorNearestPixel.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameInterpolatorTrilinear.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameInverter.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameMean.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameMinMax.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameNorm.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameNormalizer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameOperations.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameProviderInterface.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FramePyramid.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameShrinker.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameShrinkerAlpha.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameTransposer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameVariance.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrequencyAnalysis.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\Histogram.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\ImageQuality.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\IntegralImage.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\MaskAnalyzer.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\Motion.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\NEON.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\NonMaximumSuppression.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\OpenCVUtilities.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\PixelBoundingBox.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\PixelPosition.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SSE.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SubRegion.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SumAbsoluteDifferences.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SumAbsoluteDifferencesBase.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SumAbsoluteDifferencesNEON.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SumAbsoluteDifferencesSSE.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SumSquareDifferences.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SumSquareDifferencesBase.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SumSquareDifferencesNEON.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\SumSquareDifferencesSSE.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\ZeroMeanSumSquareDifferences.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\ZeroMeanSumSquareDifferencesBase.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\ZeroMeanSumSquareDifferencesNEON.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\ZeroMeanSumSquareDifferencesSSE.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\Bresenham.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\Canvas.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\CVUtilities.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameChannels.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGR565.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGB24.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGB565.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterThreshold.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY10_Packed.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY8.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY_U_V12.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterY_VU12.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameEnlarger.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterCanny.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterDilation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterErosion.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterGaussian.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterLaplace.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMax.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMean.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMedian.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterMin.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterPatch.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterScharr.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterScharrMagnitude.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterSeparable.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterSobel.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameFilterSobelMagnitude.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameInterpolator.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameInterpolatorBicubic.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameInterpolatorBilinear.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameInterpolatorNearestPixel.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameInterpolatorTrilinear.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameInverter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameMean.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameMinMax.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameNormalizer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameOperations.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameProviderInterface.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FramePyramid.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameShrinker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameShrinkerAlpha.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameTransposer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrameVariance.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\FrequencyAnalysis.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\Histogram.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\ImageQuality.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\IntegralImage.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\MaskAnalyzer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\SubRegion.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\SumAbsoluteDifferencesBase.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\cv\SumSquareDifferencesBase.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

@@ -1,0 +1,596 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		501EAB2A285A63C000EBB693 /* TestVocabularyTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 501EAB29285A63C000EBB693 /* TestVocabularyTree.h */; };
+		501EAB2B285A63C000EBB693 /* TestVocabularyTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 501EAB29285A63C000EBB693 /* TestVocabularyTree.h */; };
+		501EAB2D285A63D900EBB693 /* TestVocabularyTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 501EAB2C285A63D900EBB693 /* TestVocabularyTree.cpp */; };
+		501EAB2E285A63D900EBB693 /* TestVocabularyTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 501EAB2C285A63D900EBB693 /* TestVocabularyTree.cpp */; };
+		50363FBF2C17CE7D001581D0 /* TestPatternTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50363FBE2C17CE7D001581D0 /* TestPatternTracker.cpp */; };
+		50363FC02C17CE7D001581D0 /* TestPatternTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50363FBE2C17CE7D001581D0 /* TestPatternTracker.cpp */; };
+		50363FC22C17CE92001581D0 /* TestPatternTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 50363FC12C17CE92001581D0 /* TestPatternTracker.h */; };
+		50363FC32C17CE92001581D0 /* TestPatternTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 50363FC12C17CE92001581D0 /* TestPatternTracker.h */; };
+		938C399C22123249009287D8 /* TestSimilarityTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 938C399922123249009287D8 /* TestSimilarityTracker.cpp */; };
+		938C399D22123249009287D8 /* TestSimilarityTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 938C399922123249009287D8 /* TestSimilarityTracker.cpp */; };
+		938C399E22123249009287D8 /* TestTracking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 938C399A22123249009287D8 /* TestTracking.cpp */; };
+		938C399F22123249009287D8 /* TestTracking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 938C399A22123249009287D8 /* TestTracking.cpp */; };
+		938C39A022123249009287D8 /* TestDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 938C399B22123249009287D8 /* TestDatabase.cpp */; };
+		938C39A122123249009287D8 /* TestDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 938C399B22123249009287D8 /* TestDatabase.cpp */; };
+		938C39A52212325D009287D8 /* TestTracking.h in Headers */ = {isa = PBXBuildFile; fileRef = 938C39A22212325D009287D8 /* TestTracking.h */; };
+		938C39A62212325D009287D8 /* TestTracking.h in Headers */ = {isa = PBXBuildFile; fileRef = 938C39A22212325D009287D8 /* TestTracking.h */; };
+		938C39A72212325D009287D8 /* TestSimilarityTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 938C39A32212325D009287D8 /* TestSimilarityTracker.h */; };
+		938C39A82212325D009287D8 /* TestSimilarityTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 938C39A32212325D009287D8 /* TestSimilarityTracker.h */; };
+		938C39A92212325D009287D8 /* TestDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 938C39A42212325D009287D8 /* TestDatabase.h */; };
+		938C39AA2212325D009287D8 /* TestDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = 938C39A42212325D009287D8 /* TestDatabase.h */; };
+		93E488402B29401500BD0E62 /* TestHomographyImageAlignmentDense.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93E4883F2B29401500BD0E62 /* TestHomographyImageAlignmentDense.cpp */; };
+		93E488412B29401500BD0E62 /* TestHomographyImageAlignmentDense.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93E4883F2B29401500BD0E62 /* TestHomographyImageAlignmentDense.cpp */; };
+		93E488432B29402E00BD0E62 /* TestHomographyImageAlignmentDense.h in Headers */ = {isa = PBXBuildFile; fileRef = 93E488422B29402E00BD0E62 /* TestHomographyImageAlignmentDense.h */; };
+		93E488442B29402E00BD0E62 /* TestHomographyImageAlignmentDense.h in Headers */ = {isa = PBXBuildFile; fileRef = 93E488422B29402E00BD0E62 /* TestHomographyImageAlignmentDense.h */; };
+		93F9AF8A267C0592003BEAF4 /* TestSmoothedTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F9AF89267C0592003BEAF4 /* TestSmoothedTransformation.cpp */; };
+		93F9AF8B267C0592003BEAF4 /* TestSmoothedTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F9AF89267C0592003BEAF4 /* TestSmoothedTransformation.cpp */; };
+		93F9AF8D267C05B2003BEAF4 /* TestSmoothedTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F9AF8C267C05B2003BEAF4 /* TestSmoothedTransformation.h */; };
+		93F9AF8E267C05B2003BEAF4 /* TestSmoothedTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F9AF8C267C05B2003BEAF4 /* TestSmoothedTransformation.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		501EAB29285A63C000EBB693 /* TestVocabularyTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestVocabularyTree.h; path = ../../../../../../impl/ocean/test/testtracking/TestVocabularyTree.h; sourceTree = "<group>"; };
+		501EAB2C285A63D900EBB693 /* TestVocabularyTree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestVocabularyTree.cpp; path = ../../../../../../impl/ocean/test/testtracking/TestVocabularyTree.cpp; sourceTree = "<group>"; };
+		50363FBE2C17CE7D001581D0 /* TestPatternTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestPatternTracker.cpp; path = ../../../../../../impl/ocean/test/testtracking/TestPatternTracker.cpp; sourceTree = "<group>"; };
+		50363FC12C17CE92001581D0 /* TestPatternTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestPatternTracker.h; path = ../../../../../../impl/ocean/test/testtracking/TestPatternTracker.h; sourceTree = "<group>"; };
+		5DD0BFD61BD525E000ABBC5B /* libOceanTestTrackingD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestTrackingD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD14AA91D953F8B00CCA9F0 /* libOceanTestTrackingD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestTrackingD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		938C399922123249009287D8 /* TestSimilarityTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSimilarityTracker.cpp; path = ../../../../../../impl/ocean/test/testtracking/TestSimilarityTracker.cpp; sourceTree = "<group>"; };
+		938C399A22123249009287D8 /* TestTracking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestTracking.cpp; path = ../../../../../../impl/ocean/test/testtracking/TestTracking.cpp; sourceTree = "<group>"; };
+		938C399B22123249009287D8 /* TestDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestDatabase.cpp; path = ../../../../../../impl/ocean/test/testtracking/TestDatabase.cpp; sourceTree = "<group>"; };
+		938C39A22212325D009287D8 /* TestTracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestTracking.h; path = ../../../../../../impl/ocean/test/testtracking/TestTracking.h; sourceTree = "<group>"; };
+		938C39A32212325D009287D8 /* TestSimilarityTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSimilarityTracker.h; path = ../../../../../../impl/ocean/test/testtracking/TestSimilarityTracker.h; sourceTree = "<group>"; };
+		938C39A42212325D009287D8 /* TestDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDatabase.h; path = ../../../../../../impl/ocean/test/testtracking/TestDatabase.h; sourceTree = "<group>"; };
+		93E4883F2B29401500BD0E62 /* TestHomographyImageAlignmentDense.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestHomographyImageAlignmentDense.cpp; path = ../../../../../../impl/ocean/test/testtracking/TestHomographyImageAlignmentDense.cpp; sourceTree = "<group>"; };
+		93E488422B29402E00BD0E62 /* TestHomographyImageAlignmentDense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestHomographyImageAlignmentDense.h; path = ../../../../../../impl/ocean/test/testtracking/TestHomographyImageAlignmentDense.h; sourceTree = "<group>"; };
+		93F9AF89267C0592003BEAF4 /* TestSmoothedTransformation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSmoothedTransformation.cpp; path = ../../../../../../impl/ocean/test/testtracking/TestSmoothedTransformation.cpp; sourceTree = "<group>"; };
+		93F9AF8C267C05B2003BEAF4 /* TestSmoothedTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSmoothedTransformation.h; path = ../../../../../../impl/ocean/test/testtracking/TestSmoothedTransformation.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DD0BFD31BD525E000ABBC5B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14AA11D953F8B00CCA9F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DD0BFCD1BD525E000ABBC5B = {
+			isa = PBXGroup;
+			children = (
+				5DD0BFEB1BD526C700ABBC5B /* Header Files */,
+				5DD0BFE41BD526AC00ABBC5B /* Source Files */,
+				5DD0BFD71BD525E000ABBC5B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DD0BFD71BD525E000ABBC5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DD0BFD61BD525E000ABBC5B /* libOceanTestTrackingD.a */,
+				5DD14AA91D953F8B00CCA9F0 /* libOceanTestTrackingD.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DD0BFE41BD526AC00ABBC5B /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				938C399B22123249009287D8 /* TestDatabase.cpp */,
+				93E4883F2B29401500BD0E62 /* TestHomographyImageAlignmentDense.cpp */,
+				50363FBE2C17CE7D001581D0 /* TestPatternTracker.cpp */,
+				938C399922123249009287D8 /* TestSimilarityTracker.cpp */,
+				93F9AF89267C0592003BEAF4 /* TestSmoothedTransformation.cpp */,
+				938C399A22123249009287D8 /* TestTracking.cpp */,
+				501EAB2C285A63D900EBB693 /* TestVocabularyTree.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DD0BFEB1BD526C700ABBC5B /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				938C39A42212325D009287D8 /* TestDatabase.h */,
+				93E488422B29402E00BD0E62 /* TestHomographyImageAlignmentDense.h */,
+				50363FC12C17CE92001581D0 /* TestPatternTracker.h */,
+				938C39A32212325D009287D8 /* TestSimilarityTracker.h */,
+				93F9AF8C267C05B2003BEAF4 /* TestSmoothedTransformation.h */,
+				938C39A22212325D009287D8 /* TestTracking.h */,
+				501EAB29285A63C000EBB693 /* TestVocabularyTree.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5DD0BFD41BD525E000ABBC5B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				938C39A72212325D009287D8 /* TestSimilarityTracker.h in Headers */,
+				93E488432B29402E00BD0E62 /* TestHomographyImageAlignmentDense.h in Headers */,
+				938C39A52212325D009287D8 /* TestTracking.h in Headers */,
+				501EAB2A285A63C000EBB693 /* TestVocabularyTree.h in Headers */,
+				50363FC22C17CE92001581D0 /* TestPatternTracker.h in Headers */,
+				93F9AF8D267C05B2003BEAF4 /* TestSmoothedTransformation.h in Headers */,
+				938C39A92212325D009287D8 /* TestDatabase.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14AA21D953F8B00CCA9F0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				938C39A82212325D009287D8 /* TestSimilarityTracker.h in Headers */,
+				93E488442B29402E00BD0E62 /* TestHomographyImageAlignmentDense.h in Headers */,
+				938C39A62212325D009287D8 /* TestTracking.h in Headers */,
+				501EAB2B285A63C000EBB693 /* TestVocabularyTree.h in Headers */,
+				50363FC32C17CE92001581D0 /* TestPatternTracker.h in Headers */,
+				93F9AF8E267C05B2003BEAF4 /* TestSmoothedTransformation.h in Headers */,
+				938C39AA2212325D009287D8 /* TestDatabase.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5DD0BFD51BD525E000ABBC5B /* testtracking x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD0BFE11BD525E000ABBC5B /* Build configuration list for PBXNativeTarget "testtracking x64 (Static)" */;
+			buildPhases = (
+				5DD0BFD21BD525E000ABBC5B /* Sources */,
+				5DD0BFD31BD525E000ABBC5B /* Frameworks */,
+				5DD0BFD41BD525E000ABBC5B /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testtracking x64 (Static)";
+			productName = testtracking;
+			productReference = 5DD0BFD61BD525E000ABBC5B /* libOceanTestTrackingD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DD14A9C1D953F8B00CCA9F0 /* testtracking arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD14AA61D953F8B00CCA9F0 /* Build configuration list for PBXNativeTarget "testtracking arm64 (Static)" */;
+			buildPhases = (
+				5DD14A9D1D953F8B00CCA9F0 /* Sources */,
+				5DD14AA11D953F8B00CCA9F0 /* Frameworks */,
+				5DD14AA21D953F8B00CCA9F0 /* Headers */,
+				5DD14AF01D953FF400CCA9F0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testtracking arm64 (Static)";
+			productName = testtracking;
+			productReference = 5DD14AA91D953F8B00CCA9F0 /* libOceanTestTrackingD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DD0BFCE1BD525E000ABBC5B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DD0BFD51BD525E000ABBC5B = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DD0BFD11BD525E000ABBC5B /* Build configuration list for PBXProject "testtracking" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DD0BFCD1BD525E000ABBC5B;
+			productRefGroup = 5DD0BFD71BD525E000ABBC5B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DD0BFD51BD525E000ABBC5B /* testtracking x64 (Static) */,
+				5DD14A9C1D953F8B00CCA9F0 /* testtracking arm64 (Static) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DD14AF01D953FF400CCA9F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/test/lib/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DD0BFD21BD525E000ABBC5B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				938C399E22123249009287D8 /* TestTracking.cpp in Sources */,
+				50363FBF2C17CE7D001581D0 /* TestPatternTracker.cpp in Sources */,
+				938C399C22123249009287D8 /* TestSimilarityTracker.cpp in Sources */,
+				93F9AF8A267C0592003BEAF4 /* TestSmoothedTransformation.cpp in Sources */,
+				93E488402B29401500BD0E62 /* TestHomographyImageAlignmentDense.cpp in Sources */,
+				501EAB2D285A63D900EBB693 /* TestVocabularyTree.cpp in Sources */,
+				938C39A022123249009287D8 /* TestDatabase.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A9D1D953F8B00CCA9F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				938C399F22123249009287D8 /* TestTracking.cpp in Sources */,
+				50363FC02C17CE7D001581D0 /* TestPatternTracker.cpp in Sources */,
+				938C399D22123249009287D8 /* TestSimilarityTracker.cpp in Sources */,
+				93F9AF8B267C0592003BEAF4 /* TestSmoothedTransformation.cpp in Sources */,
+				93E488412B29401500BD0E62 /* TestHomographyImageAlignmentDense.cpp in Sources */,
+				501EAB2E285A63D900EBB693 /* TestVocabularyTree.cpp in Sources */,
+				938C39A122123249009287D8 /* TestDatabase.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DD0BFDF1BD525E000ABBC5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DD0BFE01BD525E000ABBC5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DD0BFE21BD525E000ABBC5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testtracking/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testtracking/osx_x64_xc9_static_debug;
+				PRODUCT_MODULE_NAME = OceanTestTrackingD;
+				PRODUCT_NAME = OceanTestTrackingD;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD0BFE31BD525E000ABBC5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testtracking/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testtracking/osx_x64_xc9_static;
+				PRODUCT_MODULE_NAME = OceanTestTracking;
+				PRODUCT_NAME = OceanTestTracking;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DD14AA71D953F8B00CCA9F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testtracking/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testtracking/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testtracking/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestTrackingD;
+				PRODUCT_NAME = OceanTestTrackingD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testtracking/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD14AA81D953F8B00CCA9F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testtracking/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testtracking/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testtracking/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestTracking;
+				PRODUCT_NAME = OceanTestTracking;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testtracking/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DD0BFD11BD525E000ABBC5B /* Build configuration list for PBXProject "testtracking" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD0BFDF1BD525E000ABBC5B /* Debug */,
+				5DD0BFE01BD525E000ABBC5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD0BFE11BD525E000ABBC5B /* Build configuration list for PBXNativeTarget "testtracking x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD0BFE21BD525E000ABBC5B /* Debug */,
+				5DD0BFE31BD525E000ABBC5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD14AA61D953F8B00CCA9F0 /* Build configuration list for PBXNativeTarget "testtracking arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD14AA71D953F8B00CCA9F0 /* Debug */,
+				5DD14AA81D953F8B00CCA9F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DD0BFCE1BD525E000ABBC5B /* Project object */;
+}

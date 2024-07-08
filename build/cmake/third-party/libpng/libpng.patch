@@ -1,0 +1,83 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ad3f2427d..acb78dc68 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -24,6 +24,7 @@ set(PNGLIB_SUBREVISION 0)
+ #set(PNGLIB_SUBREVISION "git")
+ set(PNGLIB_VERSION ${PNGLIB_MAJOR}.${PNGLIB_MINOR}.${PNGLIB_REVISION})
+ set(PNGLIB_ABI_VERSION ${PNGLIB_MAJOR}${PNGLIB_MINOR})
++set(PNGLIB_ABI_VERSION "")
+ set(PNGLIB_SHARED_VERSION ${PNGLIB_ABI_VERSION}.${PNGLIB_REVISION}.${PNGLIB_SUBREVISION})
+ 
+ project(libpng
+@@ -676,15 +677,15 @@ if(UNIX
+   # We are on a Unix or Unix-like toolchain like the GNU toolchain on Windows.
+   # Library file names are expected to have an implicit prefix such as "lib".
+   # Let CMake prepend and append its usual prefixes and suffixes by default.
+-  set(PNG_SHARED_OUTPUT_NAME "png${PNGLIB_ABI_VERSION}")
+-  set(PNG_STATIC_OUTPUT_NAME "png${PNGLIB_ABI_VERSION}")
++  set(PNG_SHARED_OUTPUT_NAME "png")
++  set(PNG_STATIC_OUTPUT_NAME "png")
+ else()
+   # We are, most likely, on a Windows toolchain like MSVC, Clang on Windows,
+   # Borland/Embarcadero, etc. We need to specify the "libpng" name explicitly.
+   # We also need to use a custom suffix, in order to distinguish between the
+   # shared import library name and the static library name.
+-  set(PNG_SHARED_OUTPUT_NAME "libpng${PNGLIB_ABI_VERSION}")
+-  set(PNG_STATIC_OUTPUT_NAME "libpng${PNGLIB_ABI_VERSION}_static")
++  set(PNG_SHARED_OUTPUT_NAME "libpng")
++  set(PNG_STATIC_OUTPUT_NAME "libpng")
+ endif()
+ 
+ if(PNG_SHARED)
+@@ -693,9 +694,7 @@ if(PNG_SHARED)
+   list(APPEND PNG_LIBRARY_TARGETS png_shared)
+   set_target_properties(png_shared PROPERTIES
+                         OUTPUT_NAME "${PNG_SHARED_OUTPUT_NAME}"
+-                        DEBUG_POSTFIX "${PNG_DEBUG_POSTFIX}"
+-                        VERSION "${PNGLIB_SHARED_VERSION}"
+-                        SOVERSION "${PNGLIB_ABI_VERSION}")
++                        DEBUG_POSTFIX "${PNG_DEBUG_POSTFIX}")
+   if(UNIX AND AWK)
+     if(HAVE_LD_VERSION_SCRIPT)
+       set_target_properties(png_shared PROPERTIES
+@@ -991,7 +990,7 @@ function(create_symlink DEST_FILE)
+                       WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+     else()
+       execute_process(COMMAND "${CMAKE_COMMAND}"
+-                              -E create_symlink
++                              -E copy_if_different
+                               ${_SYM_FILE} ${DEST_FILE}
+                       WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+     endif()
+@@ -1012,7 +1011,7 @@ function(create_symlink DEST_FILE)
+       add_custom_command(TARGET ${_SYM_TARGET}
+                          POST_BUILD
+                          COMMAND "${CMAKE_COMMAND}"
+-                                 -E create_symlink
++                                 -E copy_if_different
+                                  $<TARGET_LINKER_FILE_NAME:${_SYM_TARGET}>
+                                  $<TARGET_LINKER_FILE_DIR:${_SYM_TARGET}>/${DEST_FILE})
+     endif()
+@@ -1067,7 +1066,9 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+   if(PNG_SHARED)
+     # Create a symlink for libpng.dll.a => libpng16.dll.a on Cygwin
+     if(NOT WIN32 OR CYGWIN OR MINGW)
+-      create_symlink(libpng${CMAKE_SHARED_LIBRARY_SUFFIX} TARGET png_shared)
++      if(NOT IOS)
++        create_symlink(libpng${CMAKE_SHARED_LIBRARY_SUFFIX} TARGET png_shared)
++      endif()
+       install(FILES $<TARGET_LINKER_FILE_DIR:png_shared>/libpng${CMAKE_SHARED_LIBRARY_SUFFIX}
+               DESTINATION ${CMAKE_INSTALL_LIBDIR})
+     endif()
+@@ -1075,7 +1076,9 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+ 
+   if(PNG_STATIC)
+     if(NOT WIN32 OR CYGWIN OR MINGW)
+-      create_symlink(libpng${CMAKE_STATIC_LIBRARY_SUFFIX} TARGET png_static)
++      if(NOT IOS)
++        create_symlink(libpng${CMAKE_STATIC_LIBRARY_SUFFIX} TARGET png_static)
++      endif()
+       install(FILES $<TARGET_LINKER_FILE_DIR:png_static>/libpng${CMAKE_STATIC_LIBRARY_SUFFIX}
+               DESTINATION ${CMAKE_INSTALL_LIBDIR})
+     endif()

@@ -1,0 +1,1334 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		50A39EC82AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A39EC62AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp */; };
+		50A39EC92AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A39EC62AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp */; };
+		50A39ECA2AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A39EC62AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp */; };
+		50A39ECB2AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A39EC62AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp */; };
+		50A39ECC2AE09AAA004E5B7F /* AdvancedSumSquareDifferencesBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A39EC72AE09AA9004E5B7F /* AdvancedSumSquareDifferencesBase.cpp */; };
+		50A39ECD2AE09AAA004E5B7F /* AdvancedSumSquareDifferencesBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A39EC72AE09AA9004E5B7F /* AdvancedSumSquareDifferencesBase.cpp */; };
+		50A39ECE2AE09AAA004E5B7F /* AdvancedSumSquareDifferencesBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A39EC72AE09AA9004E5B7F /* AdvancedSumSquareDifferencesBase.cpp */; };
+		50A39ECF2AE09AAA004E5B7F /* AdvancedSumSquareDifferencesBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A39EC72AE09AA9004E5B7F /* AdvancedSumSquareDifferencesBase.cpp */; };
+		5D222BF21BB1894100298788 /* ColorChannelMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926E1BA9D2AB00D38120 /* ColorChannelMapper.cpp */; };
+		5D222BF31BB1894100298788 /* AdvancedFrameInterpolatorBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92691BA9D2AB00D38120 /* AdvancedFrameInterpolatorBilinear.cpp */; };
+		5D222BF41BB1894100298788 /* PanoramaFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92731BA9D2AB00D38120 /* PanoramaFrame.cpp */; };
+		5D222BF81BB1894100298788 /* AdvancedFrameShrinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926A1BA9D2AB00D38120 /* AdvancedFrameShrinker.cpp */; };
+		5D222BF91BB1894100298788 /* FrameColorAdjustment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926F1BA9D2AB00D38120 /* FrameColorAdjustment.cpp */; };
+		5D222BFA1BB1894100298788 /* FrameRectification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92711BA9D2AB00D38120 /* FrameRectification.cpp */; };
+		5D222BFB1BB1894100298788 /* ColorChannelCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926D1BA9D2AB00D38120 /* ColorChannelCurve.cpp */; };
+		5D222BFD1BB1894100298788 /* AdvancedFrameConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92661BA9D2AB00D38120 /* AdvancedFrameConverter.cpp */; };
+		5D222BFE1BB1894100298788 /* WhitePointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92751BA9D2AB00D38120 /* WhitePointDetector.cpp */; };
+		5D222C001BB1894100298788 /* BlackPointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926C1BA9D2AB00D38120 /* BlackPointDetector.cpp */; };
+		5D222C011BB1894100298788 /* AdvancedFrameFilterSobel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92681BA9D2AB00D38120 /* AdvancedFrameFilterSobel.cpp */; };
+		5D222C051BB1894100298788 /* PixelLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AC1BA9D2C300D38120 /* PixelLine.h */; };
+		5D222C071BB1894100298788 /* AdvancedZeroMeanSumSquareDifferencesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A01BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferencesBase.h */; };
+		5D222C0F1BB1894100298788 /* AdvancedMotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92901BA9D2C300D38120 /* AdvancedMotion.h */; };
+		5D222C101BB1894100298788 /* AdvancedSumSquareDifferencesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D929E1BA9D2C300D38120 /* AdvancedSumSquareDifferencesBase.h */; };
+		5D222C121BB1894100298788 /* SumSquareDifferencesNoCenterBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92BF1BA9D2C300D38120 /* SumSquareDifferencesNoCenterBase.h */; };
+		5D222C131BB1894100298788 /* ColorChannelMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A31BA9D2C300D38120 /* ColorChannelMapper.h */; };
+		5D222C151BB1894100298788 /* AdvancedSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92911BA9D2C300D38120 /* AdvancedSumSquareDifferences.h */; };
+		5D222C161BB1894100298788 /* WhitePointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92C01BA9D2C300D38120 /* WhitePointDetector.h */; };
+		5D222C171BB1894100298788 /* AdvancedFrameInterpolatorBilinearSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928D1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinearSSE.h */; };
+		5D222C191BB1894100298788 /* AdvancedZeroMeanSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D929F1BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferences.h */; };
+		5D222C1A1BB1894100298788 /* PixelTriangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AD1BA9D2C300D38120 /* PixelTriangle.h */; };
+		5D222C201BB1894100298788 /* PanoramaFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AB1BA9D2C300D38120 /* PanoramaFrame.h */; };
+		5D222C231BB1894100298788 /* AdvancedFrameFilterSobel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92891BA9D2C300D38120 /* AdvancedFrameFilterSobel.h */; };
+		5D222C251BB1894100298788 /* ColorChannelCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A21BA9D2C300D38120 /* ColorChannelCurve.h */; };
+		5D222C271BB1894100298788 /* SumSquareDifferencesNoCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AE1BA9D2C300D38120 /* SumSquareDifferencesNoCenter.h */; };
+		5D222C291BB1894100298788 /* AdvancedFrameInterpolatorBilinear.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928A1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinear.h */; };
+		5D222C2A1BB1894100298788 /* FrameColorAdjustment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A51BA9D2C300D38120 /* FrameColorAdjustment.h */; };
+		5D222C2D1BB1894100298788 /* BlackPointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A11BA9D2C300D38120 /* BlackPointDetector.h */; };
+		5D222C2E1BB1894100298788 /* Advanced.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92861BA9D2C300D38120 /* Advanced.h */; };
+		5D222C2F1BB1894100298788 /* AdvancedFrameShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928F1BA9D2C300D38120 /* AdvancedFrameShrinker.h */; };
+		5D222C351BB1894100298788 /* AdvancedFrameConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92871BA9D2C300D38120 /* AdvancedFrameConverter.h */; };
+		5D222C3B1BB1894100298788 /* FrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A71BA9D2C300D38120 /* FrameRectification.h */; };
+		5D7D92761BA9D2AB00D38120 /* AdvancedFrameConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92661BA9D2AB00D38120 /* AdvancedFrameConverter.cpp */; };
+		5D7D92781BA9D2AB00D38120 /* AdvancedFrameFilterSobel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92681BA9D2AB00D38120 /* AdvancedFrameFilterSobel.cpp */; };
+		5D7D92791BA9D2AB00D38120 /* AdvancedFrameInterpolatorBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92691BA9D2AB00D38120 /* AdvancedFrameInterpolatorBilinear.cpp */; };
+		5D7D927A1BA9D2AB00D38120 /* AdvancedFrameShrinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926A1BA9D2AB00D38120 /* AdvancedFrameShrinker.cpp */; };
+		5D7D927C1BA9D2AB00D38120 /* BlackPointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926C1BA9D2AB00D38120 /* BlackPointDetector.cpp */; };
+		5D7D927D1BA9D2AB00D38120 /* ColorChannelCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926D1BA9D2AB00D38120 /* ColorChannelCurve.cpp */; };
+		5D7D927E1BA9D2AB00D38120 /* ColorChannelMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926E1BA9D2AB00D38120 /* ColorChannelMapper.cpp */; };
+		5D7D927F1BA9D2AB00D38120 /* FrameColorAdjustment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926F1BA9D2AB00D38120 /* FrameColorAdjustment.cpp */; };
+		5D7D92811BA9D2AB00D38120 /* FrameRectification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92711BA9D2AB00D38120 /* FrameRectification.cpp */; };
+		5D7D92831BA9D2AB00D38120 /* PanoramaFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92731BA9D2AB00D38120 /* PanoramaFrame.cpp */; };
+		5D7D92851BA9D2AB00D38120 /* WhitePointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92751BA9D2AB00D38120 /* WhitePointDetector.cpp */; };
+		5D7D92C11BA9D2C300D38120 /* Advanced.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92861BA9D2C300D38120 /* Advanced.h */; };
+		5D7D92C21BA9D2C300D38120 /* AdvancedFrameConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92871BA9D2C300D38120 /* AdvancedFrameConverter.h */; };
+		5D7D92C41BA9D2C300D38120 /* AdvancedFrameFilterSobel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92891BA9D2C300D38120 /* AdvancedFrameFilterSobel.h */; };
+		5D7D92C51BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinear.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928A1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinear.h */; };
+		5D7D92C81BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinearSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928D1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinearSSE.h */; };
+		5D7D92CA1BA9D2C300D38120 /* AdvancedFrameShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928F1BA9D2C300D38120 /* AdvancedFrameShrinker.h */; };
+		5D7D92CB1BA9D2C300D38120 /* AdvancedMotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92901BA9D2C300D38120 /* AdvancedMotion.h */; };
+		5D7D92CC1BA9D2C300D38120 /* AdvancedSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92911BA9D2C300D38120 /* AdvancedSumSquareDifferences.h */; };
+		5D7D92D91BA9D2C300D38120 /* AdvancedSumSquareDifferencesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D929E1BA9D2C300D38120 /* AdvancedSumSquareDifferencesBase.h */; };
+		5D7D92DA1BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D929F1BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferences.h */; };
+		5D7D92DB1BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferencesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A01BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferencesBase.h */; };
+		5D7D92DC1BA9D2C300D38120 /* BlackPointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A11BA9D2C300D38120 /* BlackPointDetector.h */; };
+		5D7D92DD1BA9D2C300D38120 /* ColorChannelCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A21BA9D2C300D38120 /* ColorChannelCurve.h */; };
+		5D7D92DE1BA9D2C300D38120 /* ColorChannelMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A31BA9D2C300D38120 /* ColorChannelMapper.h */; };
+		5D7D92E01BA9D2C300D38120 /* FrameColorAdjustment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A51BA9D2C300D38120 /* FrameColorAdjustment.h */; };
+		5D7D92E21BA9D2C300D38120 /* FrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A71BA9D2C300D38120 /* FrameRectification.h */; };
+		5D7D92E61BA9D2C300D38120 /* PanoramaFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AB1BA9D2C300D38120 /* PanoramaFrame.h */; };
+		5D7D92E71BA9D2C300D38120 /* PixelLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AC1BA9D2C300D38120 /* PixelLine.h */; };
+		5D7D92E81BA9D2C300D38120 /* PixelTriangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AD1BA9D2C300D38120 /* PixelTriangle.h */; };
+		5D7D92E91BA9D2C300D38120 /* SumSquareDifferencesNoCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AE1BA9D2C300D38120 /* SumSquareDifferencesNoCenter.h */; };
+		5D7D92FA1BA9D2C300D38120 /* SumSquareDifferencesNoCenterBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92BF1BA9D2C300D38120 /* SumSquareDifferencesNoCenterBase.h */; };
+		5D7D92FB1BA9D2C300D38120 /* WhitePointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92C01BA9D2C300D38120 /* WhitePointDetector.h */; };
+		5D98609A1D8B523000DEDB00 /* ColorChannelMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926E1BA9D2AB00D38120 /* ColorChannelMapper.cpp */; };
+		5D98609B1D8B523000DEDB00 /* AdvancedFrameInterpolatorBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92691BA9D2AB00D38120 /* AdvancedFrameInterpolatorBilinear.cpp */; };
+		5D98609C1D8B523000DEDB00 /* PanoramaFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92731BA9D2AB00D38120 /* PanoramaFrame.cpp */; };
+		5D9860A01D8B523000DEDB00 /* AdvancedFrameShrinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926A1BA9D2AB00D38120 /* AdvancedFrameShrinker.cpp */; };
+		5D9860A11D8B523000DEDB00 /* FrameColorAdjustment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926F1BA9D2AB00D38120 /* FrameColorAdjustment.cpp */; };
+		5D9860A21D8B523000DEDB00 /* FrameRectification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92711BA9D2AB00D38120 /* FrameRectification.cpp */; };
+		5D9860A31D8B523000DEDB00 /* ColorChannelCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926D1BA9D2AB00D38120 /* ColorChannelCurve.cpp */; };
+		5D9860A51D8B523000DEDB00 /* AdvancedFrameConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92661BA9D2AB00D38120 /* AdvancedFrameConverter.cpp */; };
+		5D9860A61D8B523000DEDB00 /* WhitePointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92751BA9D2AB00D38120 /* WhitePointDetector.cpp */; };
+		5D9860A81D8B523000DEDB00 /* BlackPointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926C1BA9D2AB00D38120 /* BlackPointDetector.cpp */; };
+		5D9860A91D8B523000DEDB00 /* AdvancedFrameFilterSobel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92681BA9D2AB00D38120 /* AdvancedFrameFilterSobel.cpp */; };
+		5D9860AD1D8B523000DEDB00 /* PixelLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AC1BA9D2C300D38120 /* PixelLine.h */; };
+		5D9860AF1D8B523000DEDB00 /* AdvancedZeroMeanSumSquareDifferencesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A01BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferencesBase.h */; };
+		5D9860B71D8B523000DEDB00 /* AdvancedMotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92901BA9D2C300D38120 /* AdvancedMotion.h */; };
+		5D9860B81D8B523000DEDB00 /* AdvancedSumSquareDifferencesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D929E1BA9D2C300D38120 /* AdvancedSumSquareDifferencesBase.h */; };
+		5D9860BA1D8B523000DEDB00 /* SumSquareDifferencesNoCenterBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92BF1BA9D2C300D38120 /* SumSquareDifferencesNoCenterBase.h */; };
+		5D9860BB1D8B523000DEDB00 /* ColorChannelMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A31BA9D2C300D38120 /* ColorChannelMapper.h */; };
+		5D9860BD1D8B523000DEDB00 /* AdvancedSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92911BA9D2C300D38120 /* AdvancedSumSquareDifferences.h */; };
+		5D9860BE1D8B523000DEDB00 /* WhitePointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92C01BA9D2C300D38120 /* WhitePointDetector.h */; };
+		5D9860BF1D8B523000DEDB00 /* AdvancedFrameInterpolatorBilinearSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928D1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinearSSE.h */; };
+		5D9860C11D8B523000DEDB00 /* AdvancedZeroMeanSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D929F1BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferences.h */; };
+		5D9860C21D8B523000DEDB00 /* PixelTriangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AD1BA9D2C300D38120 /* PixelTriangle.h */; };
+		5D9860C81D8B523000DEDB00 /* PanoramaFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AB1BA9D2C300D38120 /* PanoramaFrame.h */; };
+		5D9860CB1D8B523000DEDB00 /* AdvancedFrameFilterSobel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92891BA9D2C300D38120 /* AdvancedFrameFilterSobel.h */; };
+		5D9860CD1D8B523000DEDB00 /* ColorChannelCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A21BA9D2C300D38120 /* ColorChannelCurve.h */; };
+		5D9860CF1D8B523000DEDB00 /* SumSquareDifferencesNoCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AE1BA9D2C300D38120 /* SumSquareDifferencesNoCenter.h */; };
+		5D9860D11D8B523000DEDB00 /* AdvancedFrameInterpolatorBilinear.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928A1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinear.h */; };
+		5D9860D21D8B523000DEDB00 /* FrameColorAdjustment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A51BA9D2C300D38120 /* FrameColorAdjustment.h */; };
+		5D9860D51D8B523000DEDB00 /* BlackPointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A11BA9D2C300D38120 /* BlackPointDetector.h */; };
+		5D9860D61D8B523000DEDB00 /* Advanced.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92861BA9D2C300D38120 /* Advanced.h */; };
+		5D9860D71D8B523000DEDB00 /* AdvancedFrameShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928F1BA9D2C300D38120 /* AdvancedFrameShrinker.h */; };
+		5D9860DD1D8B523000DEDB00 /* AdvancedFrameConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92871BA9D2C300D38120 /* AdvancedFrameConverter.h */; };
+		5D9860E31D8B523000DEDB00 /* FrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A71BA9D2C300D38120 /* FrameRectification.h */; };
+		5DD535371D9C27B600125D88 /* PoissonBlending.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD535361D9C27B600125D88 /* PoissonBlending.h */; };
+		5DD535381D9C27B600125D88 /* PoissonBlending.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD535361D9C27B600125D88 /* PoissonBlending.h */; };
+		5DD535391D9C27B600125D88 /* PoissonBlending.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD535361D9C27B600125D88 /* PoissonBlending.h */; };
+		5DD5353B1D9C27C400125D88 /* PoissonBlending.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD5353A1D9C27C400125D88 /* PoissonBlending.cpp */; };
+		5DD5353C1D9C27C400125D88 /* PoissonBlending.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD5353A1D9C27C400125D88 /* PoissonBlending.cpp */; };
+		5DD5353D1D9C27C400125D88 /* PoissonBlending.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD5353A1D9C27C400125D88 /* PoissonBlending.cpp */; };
+		931A7516255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 931A7515255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h */; };
+		931A7517255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 931A7515255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h */; };
+		931A7518255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 931A7515255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h */; };
+		931A7519255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 931A7515255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h */; };
+		933398942554E292008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 933398932554E291008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h */; };
+		933398952554E292008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 933398932554E291008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h */; };
+		933398962554E292008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 933398932554E291008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h */; };
+		933398972554E292008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 933398932554E291008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h */; };
+		933DD43A2A2AB25B00910639 /* AdvancedFrameChannels.h in Headers */ = {isa = PBXBuildFile; fileRef = 933DD4392A2AB25B00910639 /* AdvancedFrameChannels.h */; };
+		933DD43B2A2AB25B00910639 /* AdvancedFrameChannels.h in Headers */ = {isa = PBXBuildFile; fileRef = 933DD4392A2AB25B00910639 /* AdvancedFrameChannels.h */; };
+		933DD43C2A2AB25B00910639 /* AdvancedFrameChannels.h in Headers */ = {isa = PBXBuildFile; fileRef = 933DD4392A2AB25B00910639 /* AdvancedFrameChannels.h */; };
+		933DD43D2A2AB25B00910639 /* AdvancedFrameChannels.h in Headers */ = {isa = PBXBuildFile; fileRef = 933DD4392A2AB25B00910639 /* AdvancedFrameChannels.h */; };
+		935342F62A392908000140C5 /* AdvancedFrameFilterSeparable.h in Headers */ = {isa = PBXBuildFile; fileRef = 935342F52A392908000140C5 /* AdvancedFrameFilterSeparable.h */; };
+		935342F72A392908000140C5 /* AdvancedFrameFilterSeparable.h in Headers */ = {isa = PBXBuildFile; fileRef = 935342F52A392908000140C5 /* AdvancedFrameFilterSeparable.h */; };
+		935342F82A392908000140C5 /* AdvancedFrameFilterSeparable.h in Headers */ = {isa = PBXBuildFile; fileRef = 935342F52A392908000140C5 /* AdvancedFrameFilterSeparable.h */; };
+		935342F92A392908000140C5 /* AdvancedFrameFilterSeparable.h in Headers */ = {isa = PBXBuildFile; fileRef = 935342F52A392908000140C5 /* AdvancedFrameFilterSeparable.h */; };
+		9353430F2A392957000140C5 /* AdvancedFrameFilterGaussian.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353430E2A392957000140C5 /* AdvancedFrameFilterGaussian.h */; };
+		935343102A392957000140C5 /* AdvancedFrameFilterGaussian.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353430E2A392957000140C5 /* AdvancedFrameFilterGaussian.h */; };
+		935343112A392957000140C5 /* AdvancedFrameFilterGaussian.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353430E2A392957000140C5 /* AdvancedFrameFilterGaussian.h */; };
+		935343122A392957000140C5 /* AdvancedFrameFilterGaussian.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353430E2A392957000140C5 /* AdvancedFrameFilterGaussian.h */; };
+		9371EDD32A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 9371EDD12A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h */; };
+		9371EDD42A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 9371EDD12A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h */; };
+		9371EDD52A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 9371EDD12A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h */; };
+		9371EDD62A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h in Headers */ = {isa = PBXBuildFile; fileRef = 9371EDD12A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h */; };
+		9371EDD72A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 9371EDD22A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h */; };
+		9371EDD82A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 9371EDD22A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h */; };
+		9371EDD92A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 9371EDD22A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h */; };
+		9371EDDA2A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 9371EDD22A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h */; };
+		939B41872A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 939B41862A0AC1420071598D /* AdvancedSumSquareDifferencesSSE.h */; };
+		939B41882A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 939B41862A0AC1420071598D /* AdvancedSumSquareDifferencesSSE.h */; };
+		939B41892A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 939B41862A0AC1420071598D /* AdvancedSumSquareDifferencesSSE.h */; };
+		939B418A2A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 939B41862A0AC1420071598D /* AdvancedSumSquareDifferencesSSE.h */; };
+		C041EA951DABD45300BF5D76 /* ColorChannelMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926E1BA9D2AB00D38120 /* ColorChannelMapper.cpp */; };
+		C041EA961DABD45300BF5D76 /* AdvancedFrameInterpolatorBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92691BA9D2AB00D38120 /* AdvancedFrameInterpolatorBilinear.cpp */; };
+		C041EA971DABD45300BF5D76 /* PanoramaFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92731BA9D2AB00D38120 /* PanoramaFrame.cpp */; };
+		C041EA9B1DABD45300BF5D76 /* AdvancedFrameShrinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926A1BA9D2AB00D38120 /* AdvancedFrameShrinker.cpp */; };
+		C041EA9C1DABD45300BF5D76 /* FrameColorAdjustment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926F1BA9D2AB00D38120 /* FrameColorAdjustment.cpp */; };
+		C041EA9D1DABD45300BF5D76 /* FrameRectification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92711BA9D2AB00D38120 /* FrameRectification.cpp */; };
+		C041EA9E1DABD45300BF5D76 /* ColorChannelCurve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926D1BA9D2AB00D38120 /* ColorChannelCurve.cpp */; };
+		C041EAA01DABD45300BF5D76 /* AdvancedFrameConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92661BA9D2AB00D38120 /* AdvancedFrameConverter.cpp */; };
+		C041EAA11DABD45300BF5D76 /* WhitePointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92751BA9D2AB00D38120 /* WhitePointDetector.cpp */; };
+		C041EAA31DABD45300BF5D76 /* BlackPointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D926C1BA9D2AB00D38120 /* BlackPointDetector.cpp */; };
+		C041EAA41DABD45300BF5D76 /* AdvancedFrameFilterSobel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D92681BA9D2AB00D38120 /* AdvancedFrameFilterSobel.cpp */; };
+		C041EAA51DABD45300BF5D76 /* PoissonBlending.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD5353A1D9C27C400125D88 /* PoissonBlending.cpp */; };
+		C041EAA91DABD45300BF5D76 /* PixelLine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AC1BA9D2C300D38120 /* PixelLine.h */; };
+		C041EAAB1DABD45300BF5D76 /* AdvancedZeroMeanSumSquareDifferencesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A01BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferencesBase.h */; };
+		C041EAB31DABD45300BF5D76 /* AdvancedMotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92901BA9D2C300D38120 /* AdvancedMotion.h */; };
+		C041EAB41DABD45300BF5D76 /* AdvancedSumSquareDifferencesBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D929E1BA9D2C300D38120 /* AdvancedSumSquareDifferencesBase.h */; };
+		C041EAB61DABD45300BF5D76 /* SumSquareDifferencesNoCenterBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92BF1BA9D2C300D38120 /* SumSquareDifferencesNoCenterBase.h */; };
+		C041EAB71DABD45300BF5D76 /* ColorChannelMapper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A31BA9D2C300D38120 /* ColorChannelMapper.h */; };
+		C041EAB91DABD45300BF5D76 /* AdvancedSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92911BA9D2C300D38120 /* AdvancedSumSquareDifferences.h */; };
+		C041EABA1DABD45300BF5D76 /* WhitePointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92C01BA9D2C300D38120 /* WhitePointDetector.h */; };
+		C041EABB1DABD45300BF5D76 /* AdvancedFrameInterpolatorBilinearSSE.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928D1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinearSSE.h */; };
+		C041EABD1DABD45300BF5D76 /* AdvancedZeroMeanSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D929F1BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferences.h */; };
+		C041EABE1DABD45300BF5D76 /* PixelTriangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AD1BA9D2C300D38120 /* PixelTriangle.h */; };
+		C041EAC41DABD45300BF5D76 /* PanoramaFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AB1BA9D2C300D38120 /* PanoramaFrame.h */; };
+		C041EAC71DABD45300BF5D76 /* AdvancedFrameFilterSobel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92891BA9D2C300D38120 /* AdvancedFrameFilterSobel.h */; };
+		C041EAC91DABD45300BF5D76 /* PoissonBlending.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD535361D9C27B600125D88 /* PoissonBlending.h */; };
+		C041EACA1DABD45300BF5D76 /* ColorChannelCurve.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A21BA9D2C300D38120 /* ColorChannelCurve.h */; };
+		C041EACC1DABD45300BF5D76 /* SumSquareDifferencesNoCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92AE1BA9D2C300D38120 /* SumSquareDifferencesNoCenter.h */; };
+		C041EACE1DABD45300BF5D76 /* AdvancedFrameInterpolatorBilinear.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928A1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinear.h */; };
+		C041EACF1DABD45300BF5D76 /* FrameColorAdjustment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A51BA9D2C300D38120 /* FrameColorAdjustment.h */; };
+		C041EAD21DABD45300BF5D76 /* BlackPointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A11BA9D2C300D38120 /* BlackPointDetector.h */; };
+		C041EAD31DABD45300BF5D76 /* Advanced.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92861BA9D2C300D38120 /* Advanced.h */; };
+		C041EAD41DABD45300BF5D76 /* AdvancedFrameShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D928F1BA9D2C300D38120 /* AdvancedFrameShrinker.h */; };
+		C041EADA1DABD45300BF5D76 /* AdvancedFrameConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92871BA9D2C300D38120 /* AdvancedFrameConverter.h */; };
+		C041EAE01DABD45300BF5D76 /* FrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D92A71BA9D2C300D38120 /* FrameRectification.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		50A39EC62AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdvancedFrameFilterGaussian.cpp; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameFilterGaussian.cpp; sourceTree = "<group>"; };
+		50A39EC72AE09AA9004E5B7F /* AdvancedSumSquareDifferencesBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdvancedSumSquareDifferencesBase.cpp; path = ../../../../../../impl/ocean/cv/advanced/AdvancedSumSquareDifferencesBase.cpp; sourceTree = "<group>"; };
+		5D222C421BB1894100298788 /* libOceanCVAdvancedD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVAdvancedD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D7D92571BA9D0AF00D38120 /* libOceanCVAdvancedD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVAdvancedD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D7D92661BA9D2AB00D38120 /* AdvancedFrameConverter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdvancedFrameConverter.cpp; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameConverter.cpp; sourceTree = "<group>"; };
+		5D7D92681BA9D2AB00D38120 /* AdvancedFrameFilterSobel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdvancedFrameFilterSobel.cpp; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameFilterSobel.cpp; sourceTree = "<group>"; };
+		5D7D92691BA9D2AB00D38120 /* AdvancedFrameInterpolatorBilinear.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdvancedFrameInterpolatorBilinear.cpp; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameInterpolatorBilinear.cpp; sourceTree = "<group>"; };
+		5D7D926A1BA9D2AB00D38120 /* AdvancedFrameShrinker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AdvancedFrameShrinker.cpp; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameShrinker.cpp; sourceTree = "<group>"; };
+		5D7D926C1BA9D2AB00D38120 /* BlackPointDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BlackPointDetector.cpp; path = ../../../../../../impl/ocean/cv/advanced/BlackPointDetector.cpp; sourceTree = "<group>"; };
+		5D7D926D1BA9D2AB00D38120 /* ColorChannelCurve.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ColorChannelCurve.cpp; path = ../../../../../../impl/ocean/cv/advanced/ColorChannelCurve.cpp; sourceTree = "<group>"; };
+		5D7D926E1BA9D2AB00D38120 /* ColorChannelMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ColorChannelMapper.cpp; path = ../../../../../../impl/ocean/cv/advanced/ColorChannelMapper.cpp; sourceTree = "<group>"; };
+		5D7D926F1BA9D2AB00D38120 /* FrameColorAdjustment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameColorAdjustment.cpp; path = ../../../../../../impl/ocean/cv/advanced/FrameColorAdjustment.cpp; sourceTree = "<group>"; };
+		5D7D92711BA9D2AB00D38120 /* FrameRectification.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameRectification.cpp; path = ../../../../../../impl/ocean/cv/advanced/FrameRectification.cpp; sourceTree = "<group>"; };
+		5D7D92731BA9D2AB00D38120 /* PanoramaFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PanoramaFrame.cpp; path = ../../../../../../impl/ocean/cv/advanced/PanoramaFrame.cpp; sourceTree = "<group>"; };
+		5D7D92751BA9D2AB00D38120 /* WhitePointDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WhitePointDetector.cpp; path = ../../../../../../impl/ocean/cv/advanced/WhitePointDetector.cpp; sourceTree = "<group>"; };
+		5D7D92861BA9D2C300D38120 /* Advanced.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Advanced.h; path = ../../../../../../impl/ocean/cv/advanced/Advanced.h; sourceTree = "<group>"; };
+		5D7D92871BA9D2C300D38120 /* AdvancedFrameConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedFrameConverter.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameConverter.h; sourceTree = "<group>"; };
+		5D7D92891BA9D2C300D38120 /* AdvancedFrameFilterSobel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedFrameFilterSobel.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameFilterSobel.h; sourceTree = "<group>"; };
+		5D7D928A1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedFrameInterpolatorBilinear.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameInterpolatorBilinear.h; sourceTree = "<group>"; };
+		5D7D928D1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinearSSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedFrameInterpolatorBilinearSSE.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameInterpolatorBilinearSSE.h; sourceTree = "<group>"; };
+		5D7D928F1BA9D2C300D38120 /* AdvancedFrameShrinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedFrameShrinker.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameShrinker.h; sourceTree = "<group>"; };
+		5D7D92901BA9D2C300D38120 /* AdvancedMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedMotion.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedMotion.h; sourceTree = "<group>"; };
+		5D7D92911BA9D2C300D38120 /* AdvancedSumSquareDifferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedSumSquareDifferences.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedSumSquareDifferences.h; sourceTree = "<group>"; };
+		5D7D929E1BA9D2C300D38120 /* AdvancedSumSquareDifferencesBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedSumSquareDifferencesBase.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedSumSquareDifferencesBase.h; sourceTree = "<group>"; };
+		5D7D929F1BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedZeroMeanSumSquareDifferences.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedZeroMeanSumSquareDifferences.h; sourceTree = "<group>"; };
+		5D7D92A01BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferencesBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedZeroMeanSumSquareDifferencesBase.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedZeroMeanSumSquareDifferencesBase.h; sourceTree = "<group>"; };
+		5D7D92A11BA9D2C300D38120 /* BlackPointDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BlackPointDetector.h; path = ../../../../../../impl/ocean/cv/advanced/BlackPointDetector.h; sourceTree = "<group>"; };
+		5D7D92A21BA9D2C300D38120 /* ColorChannelCurve.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorChannelCurve.h; path = ../../../../../../impl/ocean/cv/advanced/ColorChannelCurve.h; sourceTree = "<group>"; };
+		5D7D92A31BA9D2C300D38120 /* ColorChannelMapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ColorChannelMapper.h; path = ../../../../../../impl/ocean/cv/advanced/ColorChannelMapper.h; sourceTree = "<group>"; };
+		5D7D92A51BA9D2C300D38120 /* FrameColorAdjustment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameColorAdjustment.h; path = ../../../../../../impl/ocean/cv/advanced/FrameColorAdjustment.h; sourceTree = "<group>"; };
+		5D7D92A71BA9D2C300D38120 /* FrameRectification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameRectification.h; path = ../../../../../../impl/ocean/cv/advanced/FrameRectification.h; sourceTree = "<group>"; };
+		5D7D92AB1BA9D2C300D38120 /* PanoramaFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PanoramaFrame.h; path = ../../../../../../impl/ocean/cv/advanced/PanoramaFrame.h; sourceTree = "<group>"; };
+		5D7D92AC1BA9D2C300D38120 /* PixelLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelLine.h; path = ../../../../../../impl/ocean/cv/advanced/PixelLine.h; sourceTree = "<group>"; };
+		5D7D92AD1BA9D2C300D38120 /* PixelTriangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelTriangle.h; path = ../../../../../../impl/ocean/cv/advanced/PixelTriangle.h; sourceTree = "<group>"; };
+		5D7D92AE1BA9D2C300D38120 /* SumSquareDifferencesNoCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SumSquareDifferencesNoCenter.h; path = ../../../../../../impl/ocean/cv/advanced/SumSquareDifferencesNoCenter.h; sourceTree = "<group>"; };
+		5D7D92BF1BA9D2C300D38120 /* SumSquareDifferencesNoCenterBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SumSquareDifferencesNoCenterBase.h; path = ../../../../../../impl/ocean/cv/advanced/SumSquareDifferencesNoCenterBase.h; sourceTree = "<group>"; };
+		5D7D92C01BA9D2C300D38120 /* WhitePointDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WhitePointDetector.h; path = ../../../../../../impl/ocean/cv/advanced/WhitePointDetector.h; sourceTree = "<group>"; };
+		5D9860EA1D8B523000DEDB00 /* libOceanCVAdvancedD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVAdvancedD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD535361D9C27B600125D88 /* PoissonBlending.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PoissonBlending.h; path = ../../../../../../impl/ocean/cv/advanced/PoissonBlending.h; sourceTree = "<group>"; };
+		5DD5353A1D9C27C400125D88 /* PoissonBlending.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PoissonBlending.cpp; path = ../../../../../../impl/ocean/cv/advanced/PoissonBlending.cpp; sourceTree = "<group>"; };
+		931A7515255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedFrameInterpolatorBilinearNEON.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameInterpolatorBilinearNEON.h; sourceTree = "<group>"; };
+		933398932554E291008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedFrameInterpolatorBilinearBase.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameInterpolatorBilinearBase.h; sourceTree = "<group>"; };
+		933DD4392A2AB25B00910639 /* AdvancedFrameChannels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedFrameChannels.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameChannels.h; sourceTree = "<group>"; };
+		935342F52A392908000140C5 /* AdvancedFrameFilterSeparable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedFrameFilterSeparable.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameFilterSeparable.h; sourceTree = "<group>"; };
+		9353430E2A392957000140C5 /* AdvancedFrameFilterGaussian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedFrameFilterGaussian.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedFrameFilterGaussian.h; sourceTree = "<group>"; };
+		9371EDD12A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SumSquareDifferencesNoCenterNEON.h; path = ../../../../../../impl/ocean/cv/advanced/SumSquareDifferencesNoCenterNEON.h; sourceTree = "<group>"; };
+		9371EDD22A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SumSquareDifferencesNoCenterSSE.h; path = ../../../../../../impl/ocean/cv/advanced/SumSquareDifferencesNoCenterSSE.h; sourceTree = "<group>"; };
+		939B41862A0AC1420071598D /* AdvancedSumSquareDifferencesSSE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedSumSquareDifferencesSSE.h; path = ../../../../../../impl/ocean/cv/advanced/AdvancedSumSquareDifferencesSSE.h; sourceTree = "<group>"; };
+		C041EAE81DABD45300BF5D76 /* libOceanCVAdvancedD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVAdvancedD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D222C021BB1894100298788 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D7D92541BA9D0AF00D38120 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9860AA1D8B523000DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EAA61DABD45300BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D35BFCD1C7212350065656B /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D7D92861BA9D2C300D38120 /* Advanced.h */,
+				933DD4392A2AB25B00910639 /* AdvancedFrameChannels.h */,
+				5D7D92871BA9D2C300D38120 /* AdvancedFrameConverter.h */,
+				9353430E2A392957000140C5 /* AdvancedFrameFilterGaussian.h */,
+				935342F52A392908000140C5 /* AdvancedFrameFilterSeparable.h */,
+				5D7D92891BA9D2C300D38120 /* AdvancedFrameFilterSobel.h */,
+				5D7D928A1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinear.h */,
+				933398932554E291008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h */,
+				931A7515255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h */,
+				5D7D928D1BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinearSSE.h */,
+				5D7D928F1BA9D2C300D38120 /* AdvancedFrameShrinker.h */,
+				5D7D92901BA9D2C300D38120 /* AdvancedMotion.h */,
+				5D7D92911BA9D2C300D38120 /* AdvancedSumSquareDifferences.h */,
+				5D7D929E1BA9D2C300D38120 /* AdvancedSumSquareDifferencesBase.h */,
+				939B41862A0AC1420071598D /* AdvancedSumSquareDifferencesSSE.h */,
+				5D7D929F1BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferences.h */,
+				5D7D92A01BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferencesBase.h */,
+				5D7D92A11BA9D2C300D38120 /* BlackPointDetector.h */,
+				5D7D92A21BA9D2C300D38120 /* ColorChannelCurve.h */,
+				5D7D92A31BA9D2C300D38120 /* ColorChannelMapper.h */,
+				5D7D92A51BA9D2C300D38120 /* FrameColorAdjustment.h */,
+				5D7D92A71BA9D2C300D38120 /* FrameRectification.h */,
+				5D7D92AB1BA9D2C300D38120 /* PanoramaFrame.h */,
+				5D7D92AC1BA9D2C300D38120 /* PixelLine.h */,
+				5D7D92AD1BA9D2C300D38120 /* PixelTriangle.h */,
+				5DD535361D9C27B600125D88 /* PoissonBlending.h */,
+				5D7D92AE1BA9D2C300D38120 /* SumSquareDifferencesNoCenter.h */,
+				5D7D92BF1BA9D2C300D38120 /* SumSquareDifferencesNoCenterBase.h */,
+				9371EDD12A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h */,
+				9371EDD22A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h */,
+				5D7D92C01BA9D2C300D38120 /* WhitePointDetector.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5D7D924E1BA9D0AF00D38120 = {
+			isa = PBXGroup;
+			children = (
+				5D35BFCD1C7212350065656B /* Header Files */,
+				5D7D92651BA9D0D400D38120 /* Source Files */,
+				5D7D92581BA9D0AF00D38120 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D7D92581BA9D0AF00D38120 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D7D92571BA9D0AF00D38120 /* libOceanCVAdvancedD.a */,
+				5D222C421BB1894100298788 /* libOceanCVAdvancedD.dylib */,
+				5D9860EA1D8B523000DEDB00 /* libOceanCVAdvancedD.a */,
+				C041EAE81DABD45300BF5D76 /* libOceanCVAdvancedD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D7D92651BA9D0D400D38120 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D7D92661BA9D2AB00D38120 /* AdvancedFrameConverter.cpp */,
+				50A39EC62AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp */,
+				5D7D92681BA9D2AB00D38120 /* AdvancedFrameFilterSobel.cpp */,
+				5D7D92691BA9D2AB00D38120 /* AdvancedFrameInterpolatorBilinear.cpp */,
+				5D7D926A1BA9D2AB00D38120 /* AdvancedFrameShrinker.cpp */,
+				50A39EC72AE09AA9004E5B7F /* AdvancedSumSquareDifferencesBase.cpp */,
+				5D7D926C1BA9D2AB00D38120 /* BlackPointDetector.cpp */,
+				5D7D926D1BA9D2AB00D38120 /* ColorChannelCurve.cpp */,
+				5D7D926E1BA9D2AB00D38120 /* ColorChannelMapper.cpp */,
+				5D7D926F1BA9D2AB00D38120 /* FrameColorAdjustment.cpp */,
+				5D7D92711BA9D2AB00D38120 /* FrameRectification.cpp */,
+				5D7D92731BA9D2AB00D38120 /* PanoramaFrame.cpp */,
+				5DD5353A1D9C27C400125D88 /* PoissonBlending.cpp */,
+				5D7D92751BA9D2AB00D38120 /* WhitePointDetector.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D222C031BB1894100298788 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D222C051BB1894100298788 /* PixelLine.h in Headers */,
+				5D222C071BB1894100298788 /* AdvancedZeroMeanSumSquareDifferencesBase.h in Headers */,
+				931A7517255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h in Headers */,
+				5D222C0F1BB1894100298788 /* AdvancedMotion.h in Headers */,
+				5D222C101BB1894100298788 /* AdvancedSumSquareDifferencesBase.h in Headers */,
+				933DD43B2A2AB25B00910639 /* AdvancedFrameChannels.h in Headers */,
+				5D222C121BB1894100298788 /* SumSquareDifferencesNoCenterBase.h in Headers */,
+				5D222C131BB1894100298788 /* ColorChannelMapper.h in Headers */,
+				5D222C151BB1894100298788 /* AdvancedSumSquareDifferences.h in Headers */,
+				5D222C161BB1894100298788 /* WhitePointDetector.h in Headers */,
+				5D222C171BB1894100298788 /* AdvancedFrameInterpolatorBilinearSSE.h in Headers */,
+				9371EDD42A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h in Headers */,
+				5D222C191BB1894100298788 /* AdvancedZeroMeanSumSquareDifferences.h in Headers */,
+				9371EDD82A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h in Headers */,
+				5D222C1A1BB1894100298788 /* PixelTriangle.h in Headers */,
+				5D222C201BB1894100298788 /* PanoramaFrame.h in Headers */,
+				935342F72A392908000140C5 /* AdvancedFrameFilterSeparable.h in Headers */,
+				5D222C231BB1894100298788 /* AdvancedFrameFilterSobel.h in Headers */,
+				935343102A392957000140C5 /* AdvancedFrameFilterGaussian.h in Headers */,
+				5DD535381D9C27B600125D88 /* PoissonBlending.h in Headers */,
+				5D222C251BB1894100298788 /* ColorChannelCurve.h in Headers */,
+				933398952554E292008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h in Headers */,
+				5D222C271BB1894100298788 /* SumSquareDifferencesNoCenter.h in Headers */,
+				5D222C291BB1894100298788 /* AdvancedFrameInterpolatorBilinear.h in Headers */,
+				5D222C2A1BB1894100298788 /* FrameColorAdjustment.h in Headers */,
+				5D222C2D1BB1894100298788 /* BlackPointDetector.h in Headers */,
+				5D222C2E1BB1894100298788 /* Advanced.h in Headers */,
+				939B41882A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */,
+				5D222C2F1BB1894100298788 /* AdvancedFrameShrinker.h in Headers */,
+				5D222C351BB1894100298788 /* AdvancedFrameConverter.h in Headers */,
+				5D222C3B1BB1894100298788 /* FrameRectification.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D7D92551BA9D0AF00D38120 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D7D92E71BA9D2C300D38120 /* PixelLine.h in Headers */,
+				5D7D92DB1BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferencesBase.h in Headers */,
+				931A7516255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h in Headers */,
+				5D7D92CB1BA9D2C300D38120 /* AdvancedMotion.h in Headers */,
+				5D7D92D91BA9D2C300D38120 /* AdvancedSumSquareDifferencesBase.h in Headers */,
+				933DD43A2A2AB25B00910639 /* AdvancedFrameChannels.h in Headers */,
+				5D7D92FA1BA9D2C300D38120 /* SumSquareDifferencesNoCenterBase.h in Headers */,
+				5D7D92DE1BA9D2C300D38120 /* ColorChannelMapper.h in Headers */,
+				5D7D92CC1BA9D2C300D38120 /* AdvancedSumSquareDifferences.h in Headers */,
+				5D7D92FB1BA9D2C300D38120 /* WhitePointDetector.h in Headers */,
+				5D7D92C81BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinearSSE.h in Headers */,
+				9371EDD32A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h in Headers */,
+				5D7D92DA1BA9D2C300D38120 /* AdvancedZeroMeanSumSquareDifferences.h in Headers */,
+				9371EDD72A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h in Headers */,
+				5D7D92E81BA9D2C300D38120 /* PixelTriangle.h in Headers */,
+				5D7D92E61BA9D2C300D38120 /* PanoramaFrame.h in Headers */,
+				935342F62A392908000140C5 /* AdvancedFrameFilterSeparable.h in Headers */,
+				5D7D92C41BA9D2C300D38120 /* AdvancedFrameFilterSobel.h in Headers */,
+				9353430F2A392957000140C5 /* AdvancedFrameFilterGaussian.h in Headers */,
+				5DD535371D9C27B600125D88 /* PoissonBlending.h in Headers */,
+				5D7D92DD1BA9D2C300D38120 /* ColorChannelCurve.h in Headers */,
+				933398942554E292008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h in Headers */,
+				5D7D92E91BA9D2C300D38120 /* SumSquareDifferencesNoCenter.h in Headers */,
+				5D7D92C51BA9D2C300D38120 /* AdvancedFrameInterpolatorBilinear.h in Headers */,
+				5D7D92E01BA9D2C300D38120 /* FrameColorAdjustment.h in Headers */,
+				5D7D92DC1BA9D2C300D38120 /* BlackPointDetector.h in Headers */,
+				5D7D92C11BA9D2C300D38120 /* Advanced.h in Headers */,
+				939B41872A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */,
+				5D7D92CA1BA9D2C300D38120 /* AdvancedFrameShrinker.h in Headers */,
+				5D7D92C21BA9D2C300D38120 /* AdvancedFrameConverter.h in Headers */,
+				5D7D92E21BA9D2C300D38120 /* FrameRectification.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9860AB1D8B523000DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9860AD1D8B523000DEDB00 /* PixelLine.h in Headers */,
+				5D9860AF1D8B523000DEDB00 /* AdvancedZeroMeanSumSquareDifferencesBase.h in Headers */,
+				931A7518255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h in Headers */,
+				5D9860B71D8B523000DEDB00 /* AdvancedMotion.h in Headers */,
+				5D9860B81D8B523000DEDB00 /* AdvancedSumSquareDifferencesBase.h in Headers */,
+				933DD43C2A2AB25B00910639 /* AdvancedFrameChannels.h in Headers */,
+				5D9860BA1D8B523000DEDB00 /* SumSquareDifferencesNoCenterBase.h in Headers */,
+				5D9860BB1D8B523000DEDB00 /* ColorChannelMapper.h in Headers */,
+				5D9860BD1D8B523000DEDB00 /* AdvancedSumSquareDifferences.h in Headers */,
+				5D9860BE1D8B523000DEDB00 /* WhitePointDetector.h in Headers */,
+				5D9860BF1D8B523000DEDB00 /* AdvancedFrameInterpolatorBilinearSSE.h in Headers */,
+				9371EDD52A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h in Headers */,
+				5D9860C11D8B523000DEDB00 /* AdvancedZeroMeanSumSquareDifferences.h in Headers */,
+				9371EDD92A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h in Headers */,
+				5D9860C21D8B523000DEDB00 /* PixelTriangle.h in Headers */,
+				5D9860C81D8B523000DEDB00 /* PanoramaFrame.h in Headers */,
+				935342F82A392908000140C5 /* AdvancedFrameFilterSeparable.h in Headers */,
+				5D9860CB1D8B523000DEDB00 /* AdvancedFrameFilterSobel.h in Headers */,
+				935343112A392957000140C5 /* AdvancedFrameFilterGaussian.h in Headers */,
+				5DD535391D9C27B600125D88 /* PoissonBlending.h in Headers */,
+				5D9860CD1D8B523000DEDB00 /* ColorChannelCurve.h in Headers */,
+				933398962554E292008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h in Headers */,
+				5D9860CF1D8B523000DEDB00 /* SumSquareDifferencesNoCenter.h in Headers */,
+				5D9860D11D8B523000DEDB00 /* AdvancedFrameInterpolatorBilinear.h in Headers */,
+				5D9860D21D8B523000DEDB00 /* FrameColorAdjustment.h in Headers */,
+				5D9860D51D8B523000DEDB00 /* BlackPointDetector.h in Headers */,
+				5D9860D61D8B523000DEDB00 /* Advanced.h in Headers */,
+				939B41892A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */,
+				5D9860D71D8B523000DEDB00 /* AdvancedFrameShrinker.h in Headers */,
+				5D9860DD1D8B523000DEDB00 /* AdvancedFrameConverter.h in Headers */,
+				5D9860E31D8B523000DEDB00 /* FrameRectification.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EAA71DABD45300BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EAA91DABD45300BF5D76 /* PixelLine.h in Headers */,
+				C041EAAB1DABD45300BF5D76 /* AdvancedZeroMeanSumSquareDifferencesBase.h in Headers */,
+				931A7519255508560050C677 /* AdvancedFrameInterpolatorBilinearNEON.h in Headers */,
+				C041EAB31DABD45300BF5D76 /* AdvancedMotion.h in Headers */,
+				C041EAB41DABD45300BF5D76 /* AdvancedSumSquareDifferencesBase.h in Headers */,
+				933DD43D2A2AB25B00910639 /* AdvancedFrameChannels.h in Headers */,
+				C041EAB61DABD45300BF5D76 /* SumSquareDifferencesNoCenterBase.h in Headers */,
+				C041EAB71DABD45300BF5D76 /* ColorChannelMapper.h in Headers */,
+				C041EAB91DABD45300BF5D76 /* AdvancedSumSquareDifferences.h in Headers */,
+				C041EABA1DABD45300BF5D76 /* WhitePointDetector.h in Headers */,
+				C041EABB1DABD45300BF5D76 /* AdvancedFrameInterpolatorBilinearSSE.h in Headers */,
+				9371EDD62A2962AC00ACBD66 /* SumSquareDifferencesNoCenterNEON.h in Headers */,
+				C041EABD1DABD45300BF5D76 /* AdvancedZeroMeanSumSquareDifferences.h in Headers */,
+				9371EDDA2A2962AC00ACBD66 /* SumSquareDifferencesNoCenterSSE.h in Headers */,
+				C041EABE1DABD45300BF5D76 /* PixelTriangle.h in Headers */,
+				C041EAC41DABD45300BF5D76 /* PanoramaFrame.h in Headers */,
+				935342F92A392908000140C5 /* AdvancedFrameFilterSeparable.h in Headers */,
+				C041EAC71DABD45300BF5D76 /* AdvancedFrameFilterSobel.h in Headers */,
+				935343122A392957000140C5 /* AdvancedFrameFilterGaussian.h in Headers */,
+				C041EAC91DABD45300BF5D76 /* PoissonBlending.h in Headers */,
+				C041EACA1DABD45300BF5D76 /* ColorChannelCurve.h in Headers */,
+				933398972554E292008F15E7 /* AdvancedFrameInterpolatorBilinearBase.h in Headers */,
+				C041EACC1DABD45300BF5D76 /* SumSquareDifferencesNoCenter.h in Headers */,
+				C041EACE1DABD45300BF5D76 /* AdvancedFrameInterpolatorBilinear.h in Headers */,
+				C041EACF1DABD45300BF5D76 /* FrameColorAdjustment.h in Headers */,
+				C041EAD21DABD45300BF5D76 /* BlackPointDetector.h in Headers */,
+				C041EAD31DABD45300BF5D76 /* Advanced.h in Headers */,
+				939B418A2A0AC1430071598D /* AdvancedSumSquareDifferencesSSE.h in Headers */,
+				C041EAD41DABD45300BF5D76 /* AdvancedFrameShrinker.h in Headers */,
+				C041EADA1DABD45300BF5D76 /* AdvancedFrameConverter.h in Headers */,
+				C041EAE01DABD45300BF5D76 /* FrameRectification.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D222BF01BB1894100298788 /* cvadvanced x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D222C3F1BB1894100298788 /* Build configuration list for PBXNativeTarget "cvadvanced x64 (Shared)" */;
+			buildPhases = (
+				5D222BF11BB1894100298788 /* Sources */,
+				5D222C021BB1894100298788 /* Frameworks */,
+				5D222C031BB1894100298788 /* Headers */,
+				C041EAE91DABD4EB00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvadvanced x64 (Shared)";
+			productName = cvadvanced;
+			productReference = 5D222C421BB1894100298788 /* libOceanCVAdvancedD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D7D92561BA9D0AF00D38120 /* cvadvanced x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D7D92621BA9D0AF00D38120 /* Build configuration list for PBXNativeTarget "cvadvanced x64 (Static)" */;
+			buildPhases = (
+				5D7D92531BA9D0AF00D38120 /* Sources */,
+				5D7D92541BA9D0AF00D38120 /* Frameworks */,
+				5D7D92551BA9D0AF00D38120 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvadvanced x64 (Static)";
+			productName = cvadvanced;
+			productReference = 5D7D92571BA9D0AF00D38120 /* libOceanCVAdvancedD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9860981D8B523000DEDB00 /* cvadvanced arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9860E71D8B523000DEDB00 /* Build configuration list for PBXNativeTarget "cvadvanced arm64 (Static)" */;
+			buildPhases = (
+				5D9860991D8B523000DEDB00 /* Sources */,
+				5D9860AA1D8B523000DEDB00 /* Frameworks */,
+				5D9860AB1D8B523000DEDB00 /* Headers */,
+				5D837F471D8F0F1E00939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvadvanced arm64 (Static)";
+			productName = cvadvanced;
+			productReference = 5D9860EA1D8B523000DEDB00 /* libOceanCVAdvancedD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EA931DABD45300BF5D76 /* cvadvanced arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EAE51DABD45300BF5D76 /* Build configuration list for PBXNativeTarget "cvadvanced arm64 (Shared)" */;
+			buildPhases = (
+				C041EA941DABD45300BF5D76 /* Sources */,
+				C041EAA61DABD45300BF5D76 /* Frameworks */,
+				C041EAA71DABD45300BF5D76 /* Headers */,
+				C041EAE41DABD45300BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvadvanced arm64 (Shared)";
+			productName = cvadvanced;
+			productReference = C041EAE81DABD45300BF5D76 /* libOceanCVAdvancedD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D7D924F1BA9D0AF00D38120 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D7D92561BA9D0AF00D38120 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D7D92521BA9D0AF00D38120 /* Build configuration list for PBXProject "cvadvanced" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D7D924E1BA9D0AF00D38120;
+			productRefGroup = 5D7D92581BA9D0AF00D38120 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D7D92561BA9D0AF00D38120 /* cvadvanced x64 (Static) */,
+				5D222BF01BB1894100298788 /* cvadvanced x64 (Shared) */,
+				5D9860981D8B523000DEDB00 /* cvadvanced arm64 (Static) */,
+				C041EA931DABD45300BF5D76 /* cvadvanced arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F471D8F0F1E00939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EAE41DABD45300BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EAE91DABD4EB00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D222BF11BB1894100298788 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D222BF21BB1894100298788 /* ColorChannelMapper.cpp in Sources */,
+				5D222BF31BB1894100298788 /* AdvancedFrameInterpolatorBilinear.cpp in Sources */,
+				5D222BF41BB1894100298788 /* PanoramaFrame.cpp in Sources */,
+				50A39EC92AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp in Sources */,
+				5D222BF81BB1894100298788 /* AdvancedFrameShrinker.cpp in Sources */,
+				5D222BF91BB1894100298788 /* FrameColorAdjustment.cpp in Sources */,
+				5D222BFA1BB1894100298788 /* FrameRectification.cpp in Sources */,
+				5D222BFB1BB1894100298788 /* ColorChannelCurve.cpp in Sources */,
+				5D222BFD1BB1894100298788 /* AdvancedFrameConverter.cpp in Sources */,
+				5D222BFE1BB1894100298788 /* WhitePointDetector.cpp in Sources */,
+				5D222C001BB1894100298788 /* BlackPointDetector.cpp in Sources */,
+				5D222C011BB1894100298788 /* AdvancedFrameFilterSobel.cpp in Sources */,
+				50A39ECD2AE09AAA004E5B7F /* AdvancedSumSquareDifferencesBase.cpp in Sources */,
+				5DD5353C1D9C27C400125D88 /* PoissonBlending.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D7D92531BA9D0AF00D38120 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D7D927E1BA9D2AB00D38120 /* ColorChannelMapper.cpp in Sources */,
+				5D7D92791BA9D2AB00D38120 /* AdvancedFrameInterpolatorBilinear.cpp in Sources */,
+				5D7D92831BA9D2AB00D38120 /* PanoramaFrame.cpp in Sources */,
+				50A39EC82AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp in Sources */,
+				5D7D927A1BA9D2AB00D38120 /* AdvancedFrameShrinker.cpp in Sources */,
+				5D7D927F1BA9D2AB00D38120 /* FrameColorAdjustment.cpp in Sources */,
+				5D7D92811BA9D2AB00D38120 /* FrameRectification.cpp in Sources */,
+				5D7D927D1BA9D2AB00D38120 /* ColorChannelCurve.cpp in Sources */,
+				5D7D92761BA9D2AB00D38120 /* AdvancedFrameConverter.cpp in Sources */,
+				5D7D92851BA9D2AB00D38120 /* WhitePointDetector.cpp in Sources */,
+				5D7D927C1BA9D2AB00D38120 /* BlackPointDetector.cpp in Sources */,
+				5D7D92781BA9D2AB00D38120 /* AdvancedFrameFilterSobel.cpp in Sources */,
+				50A39ECC2AE09AAA004E5B7F /* AdvancedSumSquareDifferencesBase.cpp in Sources */,
+				5DD5353B1D9C27C400125D88 /* PoissonBlending.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9860991D8B523000DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D98609A1D8B523000DEDB00 /* ColorChannelMapper.cpp in Sources */,
+				5D98609B1D8B523000DEDB00 /* AdvancedFrameInterpolatorBilinear.cpp in Sources */,
+				5D98609C1D8B523000DEDB00 /* PanoramaFrame.cpp in Sources */,
+				50A39ECA2AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp in Sources */,
+				5D9860A01D8B523000DEDB00 /* AdvancedFrameShrinker.cpp in Sources */,
+				5D9860A11D8B523000DEDB00 /* FrameColorAdjustment.cpp in Sources */,
+				5D9860A21D8B523000DEDB00 /* FrameRectification.cpp in Sources */,
+				5D9860A31D8B523000DEDB00 /* ColorChannelCurve.cpp in Sources */,
+				5D9860A51D8B523000DEDB00 /* AdvancedFrameConverter.cpp in Sources */,
+				5D9860A61D8B523000DEDB00 /* WhitePointDetector.cpp in Sources */,
+				5D9860A81D8B523000DEDB00 /* BlackPointDetector.cpp in Sources */,
+				5D9860A91D8B523000DEDB00 /* AdvancedFrameFilterSobel.cpp in Sources */,
+				50A39ECE2AE09AAA004E5B7F /* AdvancedSumSquareDifferencesBase.cpp in Sources */,
+				5DD5353D1D9C27C400125D88 /* PoissonBlending.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EA941DABD45300BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EA951DABD45300BF5D76 /* ColorChannelMapper.cpp in Sources */,
+				C041EA961DABD45300BF5D76 /* AdvancedFrameInterpolatorBilinear.cpp in Sources */,
+				C041EA971DABD45300BF5D76 /* PanoramaFrame.cpp in Sources */,
+				50A39ECB2AE09AA9004E5B7F /* AdvancedFrameFilterGaussian.cpp in Sources */,
+				C041EA9B1DABD45300BF5D76 /* AdvancedFrameShrinker.cpp in Sources */,
+				C041EA9C1DABD45300BF5D76 /* FrameColorAdjustment.cpp in Sources */,
+				C041EA9D1DABD45300BF5D76 /* FrameRectification.cpp in Sources */,
+				C041EA9E1DABD45300BF5D76 /* ColorChannelCurve.cpp in Sources */,
+				C041EAA01DABD45300BF5D76 /* AdvancedFrameConverter.cpp in Sources */,
+				C041EAA11DABD45300BF5D76 /* WhitePointDetector.cpp in Sources */,
+				C041EAA31DABD45300BF5D76 /* BlackPointDetector.cpp in Sources */,
+				C041EAA41DABD45300BF5D76 /* AdvancedFrameFilterSobel.cpp in Sources */,
+				50A39ECF2AE09AAA004E5B7F /* AdvancedSumSquareDifferencesBase.cpp in Sources */,
+				C041EAA51DABD45300BF5D76 /* PoissonBlending.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D222C401BB1894100298788 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvadvanced/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvadvanced/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVDetectorD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanCVAdvancedD;
+				PRODUCT_NAME = OceanCVAdvancedD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D222C411BB1894100298788 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvadvanced/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvadvanced/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVDetector",
+					"-lOceanGeometry",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanCVAdvanced;
+				PRODUCT_NAME = OceanCVAdvanced;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D7D92601BA9D0AF00D38120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D7D92611BA9D0AF00D38120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D7D92631BA9D0AF00D38120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvadvanced/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvadvanced/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVAdvancedD;
+				PRODUCT_NAME = OceanCVAdvancedD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D7D92641BA9D0AF00D38120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvadvanced/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvadvanced/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVAdvanced;
+				PRODUCT_NAME = OceanCVAdvanced;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D9860E81D8B523000DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVAdvancedD;
+				PRODUCT_NAME = OceanCVAdvancedD;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D9860E91D8B523000DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVAdvanced;
+				PRODUCT_NAME = OceanCVAdvanced;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EAE61DABD45300BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVDetectorD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanCVAdvancedD;
+				PRODUCT_NAME = OceanCVAdvancedD;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EAE71DABD45300BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVDetector",
+					"-lOceanGeometry",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanCVAdvanced;
+				PRODUCT_NAME = OceanCVAdvanced;
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvadvanced/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D222C3F1BB1894100298788 /* Build configuration list for PBXNativeTarget "cvadvanced x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D222C401BB1894100298788 /* Debug */,
+				5D222C411BB1894100298788 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D7D92521BA9D0AF00D38120 /* Build configuration list for PBXProject "cvadvanced" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D7D92601BA9D0AF00D38120 /* Debug */,
+				5D7D92611BA9D0AF00D38120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D7D92621BA9D0AF00D38120 /* Build configuration list for PBXNativeTarget "cvadvanced x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D7D92631BA9D0AF00D38120 /* Debug */,
+				5D7D92641BA9D0AF00D38120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9860E71D8B523000DEDB00 /* Build configuration list for PBXNativeTarget "cvadvanced arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9860E81D8B523000DEDB00 /* Debug */,
+				5D9860E91D8B523000DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EAE51DABD45300BF5D76 /* Build configuration list for PBXNativeTarget "cvadvanced arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EAE61DABD45300BF5D76 /* Debug */,
+				C041EAE71DABD45300BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D7D924F1BA9D0AF00D38120 /* Project object */;
+}

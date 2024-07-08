@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Ocean Test Math TestMath</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationtestmathtestmath_build_imported>True</ocean_applicationtestmathtestmath_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationtestmath_build_imported)' != 'True'" Project="..\..\application_test_math_build.props" />
+    <Import Condition="'$(ocean_application_console_build_imported)' != 'True'" Project="..\..\..\..\application_console_build.props" />
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\base\base_use.props" />
+    <Import Condition="'$(ocean_math_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\math\math_use.props" />
+    <Import Condition="'$(ocean_testmath_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\test\testmath\testmath_use.props" />
+  </ImportGroup>
+</Project>

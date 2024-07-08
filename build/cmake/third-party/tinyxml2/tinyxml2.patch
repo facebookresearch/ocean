@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7632022..2ddaf6b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -38,8 +38,8 @@ set_target_properties(
+     tinyxml2
+     PROPERTIES
+     DEFINE_SYMBOL "TINYXML2_EXPORT"
+-    VERSION "${tinyxml2_VERSION}"
+-    SOVERSION "${tinyxml2_VERSION_MAJOR}"
++#    VERSION "${tinyxml2_VERSION}"
++#    SOVERSION "${tinyxml2_VERSION_MAJOR}"
+ )
+ 
+ if (tinyxml2_BUILD_TESTING)

@@ -1,0 +1,718 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D50B1B71D92824F009DDDFF /* VideoInpaintingAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B41D92824F009DDDFF /* VideoInpaintingAppDelegate.m */; };
+		5D50B1B81D92824F009DDDFF /* OpenGLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B51D92824F009DDDFF /* OpenGLViewController.m */; };
+		5D50B1B91D92824F009DDDFF /* VideoInpaintingMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B61D92824F009DDDFF /* VideoInpaintingMain.m */; };
+		5D73B05F1D92C414000B5F33 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D4A717E1D8B10B000B8B729 /* Images.xcassets */; };
+		5D73B0661D92C5FA000B5F33 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */; };
+		5D73B0671D92C5FA000B5F33 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D73B0651D92C5FA000B5F33 /* Main.storyboard */; };
+		5D73B06A1D92C6D2000B5F33 /* VideoInpaintingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D73B0691D92C6D2000B5F33 /* VideoInpaintingViewController.m */; };
+		C0E9B1831DAD3B8600895C4B /* VideoInpaintingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D73B0691D92C6D2000B5F33 /* VideoInpaintingViewController.m */; };
+		C0E9B1841DAD3B8600895C4B /* OpenGLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B51D92824F009DDDFF /* OpenGLViewController.m */; };
+		C0E9B1851DAD3B8600895C4B /* VideoInpaintingMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B61D92824F009DDDFF /* VideoInpaintingMain.m */; };
+		C0E9B1861DAD3B8600895C4B /* VideoInpaintingAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B41D92824F009DDDFF /* VideoInpaintingAppDelegate.m */; };
+		C0E9B1891DAD3B8600895C4B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D4A717E1D8B10B000B8B729 /* Images.xcassets */; };
+		C0E9B18C1DAD3B8600895C4B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D73B0651D92C5FA000B5F33 /* Main.storyboard */; };
+		C0E9B18D1DAD3B8600895C4B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D4A716A1D8B10B000B8B729 /* democvsynthesisvideoinpainting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = democvsynthesisvideoinpainting.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D4A717E1D8B10B000B8B729 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = ../../../../../../../../../../res/application/ocean/demo/cv/synthesis/videoinpainting/ios/Images.xcassets; sourceTree = "<group>"; };
+		5D50B1B41D92824F009DDDFF /* VideoInpaintingAppDelegate.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = VideoInpaintingAppDelegate.m; path = ../../../../../../../../../../impl/application/ocean/demo/cv/synthesis/videoinpainting/ios/VideoInpaintingAppDelegate.m; sourceTree = "<group>"; };
+		5D50B1B51D92824F009DDDFF /* OpenGLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OpenGLViewController.m; path = ../../../../../../../../../../impl/application/ocean/demo/cv/synthesis/videoinpainting/ios/OpenGLViewController.m; sourceTree = "<group>"; };
+		5D50B1B61D92824F009DDDFF /* VideoInpaintingMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VideoInpaintingMain.m; path = ../../../../../../../../../../impl/application/ocean/demo/cv/synthesis/videoinpainting/ios/VideoInpaintingMain.m; sourceTree = "<group>"; };
+		5D50B1BA1D9282A9009DDDFF /* VideoInpaintingAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoInpaintingAppDelegate.h; path = ../../../../../../../../../../impl/application/ocean/demo/cv/synthesis/videoinpainting/ios/VideoInpaintingAppDelegate.h; sourceTree = "<group>"; };
+		5D50B1BB1D9282A9009DDDFF /* OpenGLViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLViewController.h; path = ../../../../../../../../../../impl/application/ocean/demo/cv/synthesis/videoinpainting/ios/OpenGLViewController.h; sourceTree = "<group>"; };
+		5D50B1BC1D9282EE009DDDFF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../../res/application/ocean/demo/cv/synthesis/videoinpainting/ios/Info.plist; sourceTree = "<group>"; };
+		5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = ../../../../../../../../../../res/application/ocean/demo/cv/synthesis/videoinpainting/ios/LaunchScreen.xib; sourceTree = "<group>"; };
+		5D73B0651D92C5FA000B5F33 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../../../../../../../res/application/ocean/demo/cv/synthesis/videoinpainting/ios/Main.storyboard; sourceTree = "<group>"; };
+		5D73B0681D92C6AC000B5F33 /* VideoInpaintingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoInpaintingViewController.h; path = ../../../../../../../../../../impl/application/ocean/demo/cv/synthesis/videoinpainting/ios/VideoInpaintingViewController.h; sourceTree = "<group>"; };
+		5D73B0691D92C6D2000B5F33 /* VideoInpaintingViewController.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = VideoInpaintingViewController.m; path = ../../../../../../../../../../impl/application/ocean/demo/cv/synthesis/videoinpainting/ios/VideoInpaintingViewController.m; sourceTree = "<group>"; };
+		5D9CC9091D9307B700B256A8 /* VideoInpaintingOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VideoInpaintingOSX.h; path = ../../../../../../../../../../impl/application/ocean/demo/cv/synthesis/videoinpainting/ios/VideoInpaintingOSX.h; sourceTree = "<group>"; };
+		C0E9B1951DAD3B8600895C4B /* democvsynthesisvideoinpainting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = democvsynthesisvideoinpainting.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D4A71671D8B10B000B8B729 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B1871DAD3B8600895C4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D4A71611D8B10B000B8B729 = {
+			isa = PBXGroup;
+			children = (
+				5DF0B9571D8FE33E00BE5D21 /* Header Files */,
+				5DF0B9561D8FE33000BE5D21 /* Source Files */,
+				5DF0B9581D8FE35D00BE5D21 /* Resource Files */,
+				5D4A716B1D8B10B000B8B729 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D4A716B1D8B10B000B8B729 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D4A716A1D8B10B000B8B729 /* democvsynthesisvideoinpainting.app */,
+				C0E9B1951DAD3B8600895C4B /* democvsynthesisvideoinpainting.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DF0B9561D8FE33000BE5D21 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D50B1B51D92824F009DDDFF /* OpenGLViewController.m */,
+				5D50B1B41D92824F009DDDFF /* VideoInpaintingAppDelegate.m */,
+				5D50B1B61D92824F009DDDFF /* VideoInpaintingMain.m */,
+				5D73B0691D92C6D2000B5F33 /* VideoInpaintingViewController.m */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DF0B9571D8FE33E00BE5D21 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D50B1BB1D9282A9009DDDFF /* OpenGLViewController.h */,
+				5D50B1BA1D9282A9009DDDFF /* VideoInpaintingAppDelegate.h */,
+				5D9CC9091D9307B700B256A8 /* VideoInpaintingOSX.h */,
+				5D73B0681D92C6AC000B5F33 /* VideoInpaintingViewController.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DF0B9581D8FE35D00BE5D21 /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D4A717E1D8B10B000B8B729 /* Images.xcassets */,
+				5D50B1BC1D9282EE009DDDFF /* Info.plist */,
+				5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */,
+				5D73B0651D92C5FA000B5F33 /* Main.storyboard */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5D4A71691D8B10B000B8B729 /* democvsynthesisvideoinpainting arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "democvsynthesisvideoinpainting arm64 (Static)" */;
+			buildPhases = (
+				5D4A71661D8B10B000B8B729 /* Sources */,
+				5D4A71671D8B10B000B8B729 /* Frameworks */,
+				5D4A71681D8B10B000B8B729 /* Resources */,
+				5D113DE11D93DEF000E6523B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "democvsynthesisvideoinpainting arm64 (Static)";
+			productName = democvsynthesisvideoinpainting;
+			productReference = 5D4A716A1D8B10B000B8B729 /* democvsynthesisvideoinpainting.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C0E9B1811DAD3B8600895C4B /* democvsynthesisvideoinpainting arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0E9B1921DAD3B8600895C4B /* Build configuration list for PBXNativeTarget "democvsynthesisvideoinpainting arm64 (Shared)" */;
+			buildPhases = (
+				C0E9B1821DAD3B8600895C4B /* Sources */,
+				C0E9B1871DAD3B8600895C4B /* Frameworks */,
+				C0E9B1881DAD3B8600895C4B /* Resources */,
+				C0E9B1911DAD3B8600895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "democvsynthesisvideoinpainting arm64 (Shared)";
+			productName = democvsynthesisvideoinpainting;
+			productReference = C0E9B1951DAD3B8600895C4B /* democvsynthesisvideoinpainting.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D4A71621D8B10B000B8B729 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D4A71691D8B10B000B8B729 = {
+						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = R38KV66DYE;
+						ProvisioningStyle = Automatic;
+					};
+					C0E9B1811DAD3B8600895C4B = {
+						DevelopmentTeam = R38KV66DYE;
+					};
+				};
+			};
+			buildConfigurationList = 5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "democvsynthesisvideoinpainting" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D4A71611D8B10B000B8B729;
+			productRefGroup = 5D4A716B1D8B10B000B8B729 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D4A71691D8B10B000B8B729 /* democvsynthesisvideoinpainting arm64 (Static) */,
+				C0E9B1811DAD3B8600895C4B /* democvsynthesisvideoinpainting arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5D4A71681D8B10B000B8B729 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D73B05F1D92C414000B5F33 /* Images.xcassets in Resources */,
+				5D73B0671D92C5FA000B5F33 /* Main.storyboard in Resources */,
+				5D73B0661D92C5FA000B5F33 /* LaunchScreen.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B1881DAD3B8600895C4B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0E9B1891DAD3B8600895C4B /* Images.xcassets in Resources */,
+				C0E9B18C1DAD3B8600895C4B /* Main.storyboard in Resources */,
+				C0E9B18D1DAD3B8600895C4B /* LaunchScreen.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D113DE11D93DEF000E6523B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../../../../copy_arm_static.sh \"../../../../../../../../../../bin/application/ocean/demo/cv/synthesis/videoinpainting/ios/\"";
+		};
+		C0E9B1911DAD3B8600895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../../../../copy_shared_libs_to_executable.sh \"../../../../../../../../../../bin/lib/\" \"OceanBase\" \"OceanCV\" \"OceanCVAdvanced\" \"OceanCVDetector\" \"OceanCVSegmentation\" \"OceanDevices\" \"OceanGeometry\" \"OceanIO\" \"OceanMath\" \"OceanNetwork\" \"OceanMedia\" \"OceanPlatformOSX\" \"OceanRendering\" \"OceanSceneDescription\" \"OceanSystem\" \"OceanTracking\" \"OceanTrackingARToolKitPlus\" \"OceanTrackingPattern\"\n\n../../../../../../../copy_plugins_to_executable.sh \"../../../../../../../../../../bin/plugins/\" \"OceanDevicesARToolKitPlus\" \"OceanDevicesPattern\" \"OceanMediaAVFoundation\" \"OceanRenderingGLESceneGraph\" \"OceanSceneDescriptionSDLOBJ\" \"OceanSceneDescriptionSDXX3D\"\n\n../../../../../../../copy_arm_shared.sh \"../../../../../../../../../../bin/application/ocean/demo/cv/synthesis/videoinpainting/ios/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D4A71661D8B10B000B8B729 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D73B06A1D92C6D2000B5F33 /* VideoInpaintingViewController.m in Sources */,
+				5D50B1B81D92824F009DDDFF /* OpenGLViewController.m in Sources */,
+				5D50B1B91D92824F009DDDFF /* VideoInpaintingMain.m in Sources */,
+				5D50B1B71D92824F009DDDFF /* VideoInpaintingAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B1821DAD3B8600895C4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0E9B1831DAD3B8600895C4B /* VideoInpaintingViewController.m in Sources */,
+				C0E9B1841DAD3B8600895C4B /* OpenGLViewController.m in Sources */,
+				C0E9B1851DAD3B8600895C4B /* VideoInpaintingMain.m in Sources */,
+				C0E9B1861DAD3B8600895C4B /* VideoInpaintingAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D4A718F1D8B10B000B8B729 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5D4A71901D8B10B000B8B729 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5D4A71921D8B10B000B8B729 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				DEVELOPMENT_TEAM = R38KV66DYE;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1", "_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../../res/application/ocean/demo/cv/synthesis/videoinpainting/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../../../../../bin/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../../3rdparty/artoolkitplus/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../../3rdparty/jpeglib/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../../3rdparty/libtiff/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../../3rdparty/tinyxml/2.0/lib/ios_arm64_xc9_static_debug,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../../../../../bin/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../../3rdparty/artoolkitplus/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../../3rdparty/jpeglib/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../../3rdparty/libtiff/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../../3rdparty/tinyxml/2.0/lib/ios_i386_xc9_static_debug,
+				);
+				OBJROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanCVSegmentationD",
+					"-lOceanCVSynthesisD",
+					"-lOceanDevicesD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanMediaAdapterD",
+					"-lOceanMediaAVFoundationD",
+					"-lOceanPlatformOSXD",
+					"-lOceanRenderingD",
+					"-lOceanRenderingGLESceneGraphD",
+					"-lOceanSystemD",
+					"-lOceanTrackingD",
+					"-ltinyxml",
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.demo.cv.synthesis.videoinpainting.ios";
+				PRODUCT_MODULE_NAME = democvsynthesisvideoinpainting;
+				PRODUCT_NAME = democvsynthesisvideoinpainting;
+				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D4A71931D8B10B000B8B729 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				DEVELOPMENT_TEAM = R38KV66DYE;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = ("ENABLE_LOGGING=1", "NDEBUG=1");
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../../res/application/ocean/demo/cv/synthesis/videoinpainting/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../../../../../bin/lib/ios_arm64_xc9_static,
+					../../../../../../../../../../3rdparty/artoolkitplus/lib/ios_arm64_xc9_static,
+					../../../../../../../../../../3rdparty/jpeglib/lib/ios_arm64_xc9_static,
+					../../../../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static,
+					../../../../../../../../../../3rdparty/libtiff/lib/ios_arm64_xc9_static,
+					../../../../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static,
+					../../../../../../../../../../3rdparty/tinyxml/2.0/lib/ios_arm64_xc9_static,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../../../../../bin/lib/ios_i386_xc9_static,
+					../../../../../../../../../../3rdparty/artoolkitplus/lib/ios_i386_xc9_static,
+					../../../../../../../../../../3rdparty/jpeglib/lib/ios_i386_xc9_static,
+					../../../../../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static,
+					../../../../../../../../../../3rdparty/libtiff/lib/ios_i386_xc9_static,
+					../../../../../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static,
+					../../../../../../../../../../3rdparty/tinyxml/2.0/lib/ios_i386_xc9_static,
+				);
+				OBJROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanCVSegmentation",
+					"-lOceanCVSynthesis",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanMediaAdapter",
+					"-lOceanMediaAVFoundation",
+					"-lOceanPlatformOSX",
+					"-lOceanRendering",
+					"-lOceanRenderingGLESceneGraph",
+					"-lOceanSystem",
+					"-lOceanTracking",
+					"-ltinyxml",
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.demo.cv.synthesis.videoinpainting.ios";
+				PRODUCT_MODULE_NAME = democvsynthesisvideoinpainting;
+				PRODUCT_NAME = democvsynthesisvideoinpainting;
+				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C0E9B1931DAD3B8600895C4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
+				DEVELOPMENT_TEAM = R38KV66DYE;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1", "_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../../res/application/ocean/demo/cv/synthesis/videoinpainting/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				OBJROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanCVSegmentationD",
+					"-lOceanCVSynthesisD",
+					"-lOceanDevicesD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanPlatformOSXD",
+					"-lOceanRenderingD",
+					"-lOceanSystemD",
+					"-lOceanTrackingD",
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.demo.cv.synthesis.videoinpainting.ios";
+				PRODUCT_MODULE_NAME = democvsynthesisvideoinpainting;
+				PRODUCT_NAME = democvsynthesisvideoinpainting;
+				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C0E9B1941DAD3B8600895C4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
+				DEVELOPMENT_TEAM = R38KV66DYE;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1", "NDEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../../res/application/ocean/demo/cv/synthesis/videoinpainting/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../../../../bin/lib/ios_i386_xc9_shared;
+				OBJROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanCVSegmentation",
+					"-lOceanCVSynthesis",
+					"-lOceanDevices",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanPlatformOSX",
+					"-lOceanRendering",
+					"-lOceanSceneDescription",
+					"-lOceanSystem",
+					"-lOceanTracking",
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.meta.ocean.app.demo.cv.synthesis.videoinpainting.ios";
+				PRODUCT_MODULE_NAME = democvsynthesisvideoinpainting;
+				PRODUCT_NAME = democvsynthesisvideoinpainting;
+				SYMROOT = "../../../../../../../../../../bin/tmp/impl/application/ocean/democvsynthesisvideoinpainting/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "democvsynthesisvideoinpainting" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D4A718F1D8B10B000B8B729 /* Debug */,
+				5D4A71901D8B10B000B8B729 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "democvsynthesisvideoinpainting arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D4A71921D8B10B000B8B729 /* Debug */,
+				5D4A71931D8B10B000B8B729 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0E9B1921DAD3B8600895C4B /* Build configuration list for PBXNativeTarget "democvsynthesisvideoinpainting arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0E9B1931DAD3B8600895C4B /* Debug */,
+				C0E9B1941DAD3B8600895C4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D4A71621D8B10B000B8B729 /* Project object */;
+}

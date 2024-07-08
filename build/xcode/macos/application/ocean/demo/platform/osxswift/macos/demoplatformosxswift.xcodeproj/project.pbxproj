@@ -1,0 +1,370 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D609EAD1D91BCAA0055D05A /* MainWindow_V3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D609EAC1D91BCAA0055D05A /* MainWindow_V3.swift */; };
+		5DCC56EE1BB3104000661170 /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5DCC56ED1BB3104000661170 /* Application.xib */; };
+		5DCC56F91BB31E1F00661170 /* Wrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC56F81BB31E1F00661170 /* Wrapper.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D609EAC1D91BCAA0055D05A /* MainWindow_V3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainWindow_V3.swift; path = ../../../../../../../../../impl/application/ocean/demo/platform/osxswift/osx/MainWindow_V3.swift; sourceTree = "<group>"; };
+		5DCC56C11BB2E02200661170 /* demoplatformosxswift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = demoplatformosxswift.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DCC56ED1BB3104000661170 /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Application.xib; path = ../../../../../../../../../res/application/ocean/demo/platform/osxswift/Application.xib; sourceTree = "<group>"; };
+		5DCC56F21BB3111300661170 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../res/application/ocean/demo/platform/osxswift/Info.plist; sourceTree = "<group>"; };
+		5DCC56F81BB31E1F00661170 /* Wrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wrapper.cpp; path = ../../../../../../../../../impl/application/ocean/demo/platform/osxswift/osx/Wrapper.cpp; sourceTree = "<group>"; };
+		5DCE53C11BB3FAD6009C258F /* Wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Wrapper.h; path = ../../../../../../../../../impl/application/ocean/demo/platform/osxswift/osx/Wrapper.h; sourceTree = "<group>"; };
+		5DCE53C21BB3FB21009C258F /* SwiftBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SwiftBridge.h; path = ../../../../../../../../../impl/application/ocean/demo/platform/osxswift/osx/SwiftBridge.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DCC56BE1BB2E02200661170 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DCC56B81BB2E02200661170 = {
+			isa = PBXGroup;
+			children = (
+				5DCE53C31BB3FB5C009C258F /* Header Files */,
+				5DCC56E41BB303FB00661170 /* Source Files */,
+				5DCC56F11BB310CD00661170 /* Resources */,
+				5DCC56C21BB2E02200661170 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DCC56C21BB2E02200661170 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DCC56C11BB2E02200661170 /* demoplatformosxswift.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DCC56E41BB303FB00661170 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D609EAC1D91BCAA0055D05A /* MainWindow_V3.swift */,
+				5DCC56F81BB31E1F00661170 /* Wrapper.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DCC56F11BB310CD00661170 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				5DCC56ED1BB3104000661170 /* Application.xib */,
+				5DCC56F21BB3111300661170 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		5DCE53C31BB3FB5C009C258F /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DCE53C21BB3FB21009C258F /* SwiftBridge.h */,
+				5DCE53C11BB3FAD6009C258F /* Wrapper.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5DCC56C01BB2E02200661170 /* demoplatformosxswift x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DCC56DB1BB2E02200661170 /* Build configuration list for PBXNativeTarget "demoplatformosxswift x64 (Static)" */;
+			buildPhases = (
+				5DCC56BD1BB2E02200661170 /* Sources */,
+				5DCC56BE1BB2E02200661170 /* Frameworks */,
+				5DCC56BF1BB2E02200661170 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "demoplatformosxswift x64 (Static)";
+			productName = demoplatformosxswift;
+			productReference = 5DCC56C11BB2E02200661170 /* demoplatformosxswift.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DCC56B91BB2E02200661170 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DCC56C01BB2E02200661170 = {
+						CreatedOnToolsVersion = 6.4;
+						LastSwiftMigration = 1020;
+					};
+				};
+			};
+			buildConfigurationList = 5DCC56BC1BB2E02200661170 /* Build configuration list for PBXProject "demoplatformosxswift" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				_Base,
+			);
+			mainGroup = 5DCC56B81BB2E02200661170;
+			productRefGroup = 5DCC56C21BB2E02200661170 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DCC56C01BB2E02200661170 /* demoplatformosxswift x64 (Static) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5DCC56BF1BB2E02200661170 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DCC56EE1BB3104000661170 /* Application.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DCC56BD1BB2E02200661170 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DCC56F91BB31E1F00661170 /* Wrapper.cpp in Sources */,
+				5D609EAD1D91BCAA0055D05A /* MainWindow_V3.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DCC56D91BB2E02200661170 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5DCC56DA1BB2E02200661170 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+			};
+			name = Release;
+		};
+		5DCC56DC1BB2E02200661170 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../../bin/application/ocean/demo/platform/osx/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../../bin/tmp/impl/application/ocean/demo/demoplatformosxswift/osx/osx_x64_xc9_static_debug;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/demo/platform/osxswift/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				OBJROOT = ../../../../../../../../../bin/tmp/impl/application/ocean/demo/demoplatformosxswift/osx/osx_x64_xc9_static_debug;
+				OTHER_LDFLAGS = "-lOceanBaseD";
+				PRODUCT_MODULE_NAME = demoplatformosxswift;
+				PRODUCT_NAME = demoplatformosxswift;
+				SWIFT_OBJC_BRIDGING_HEADER = ../../../../../../../../../impl/application/ocean/demo/platform/osxswift/osx/SwiftBridge.h;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = ../../../../../../../../../bin/application/ocean/demo/platform/osx/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		5DCC56DD1BB2E02200661170 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../../bin/application/ocean/demo/platform/osx/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../../bin/tmp/impl/application/ocean/demo/demoplatformosxswift/osx/osx_x64_xc9_static;
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/demo/platform/osxswift/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../../../bin/lib/osx_x64_xc9_static;
+				OBJROOT = ../../../../../../../../../bin/tmp/impl/application/ocean/demo/demoplatformosxswift/osx/osx_x64_xc9_static;
+				OTHER_LDFLAGS = "-lOceanBase";
+				PRODUCT_MODULE_NAME = demoplatformosxswift;
+				PRODUCT_NAME = demoplatformosxswift;
+				SWIFT_OBJC_BRIDGING_HEADER = ../../../../../../../../../impl/application/ocean/demo/platform/osxswift/osx/SwiftBridge.h;
+				SWIFT_VERSION = 5.0;
+				SYMROOT = ../../../../../../../../../bin/application/ocean/demo/platform/osx/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DCC56BC1BB2E02200661170 /* Build configuration list for PBXProject "demoplatformosxswift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCC56D91BB2E02200661170 /* Debug */,
+				5DCC56DA1BB2E02200661170 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DCC56DB1BB2E02200661170 /* Build configuration list for PBXNativeTarget "demoplatformosxswift x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCC56DC1BB2E02200661170 /* Debug */,
+				5DCC56DD1BB2E02200661170 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DCC56B91BB2E02200661170 /* Project object */;
+}

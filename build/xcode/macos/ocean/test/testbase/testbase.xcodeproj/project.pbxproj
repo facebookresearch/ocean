@@ -1,0 +1,1584 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D936EA01BC555270046ACD4 /* TestBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E891BC555270046ACD4 /* TestBase.h */; };
+		5D936EA11BC555270046ACD4 /* TestCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8A1BC555270046ACD4 /* TestCallback.h */; };
+		5D936EA21BC555270046ACD4 /* TestCaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8B1BC555270046ACD4 /* TestCaller.h */; };
+		5D936EA31BC555270046ACD4 /* TestDataType.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8C1BC555270046ACD4 /* TestDataType.h */; };
+		5D936EA41BC555270046ACD4 /* TestDateTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8D1BC555270046ACD4 /* TestDateTime.h */; };
+		5D936EA61BC555270046ACD4 /* TestHashMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8F1BC555270046ACD4 /* TestHashMap.h */; };
+		5D936EA71BC555270046ACD4 /* TestHashSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E901BC555270046ACD4 /* TestHashSet.h */; };
+		5D936EA81BC555270046ACD4 /* TestHighPerformanceTimer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E911BC555270046ACD4 /* TestHighPerformanceTimer.h */; };
+		5D936EA91BC555270046ACD4 /* TestInheritance.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E921BC555270046ACD4 /* TestInheritance.h */; };
+		5D936EAA1BC555270046ACD4 /* TestKdTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E931BC555270046ACD4 /* TestKdTree.h */; };
+		5D936EAB1BC555270046ACD4 /* TestLock.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E941BC555270046ACD4 /* TestLock.h */; };
+		5D936EAC1BC555270046ACD4 /* TestMedian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E951BC555270046ACD4 /* TestMedian.h */; };
+		5D936EAD1BC555270046ACD4 /* TestMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E961BC555270046ACD4 /* TestMemory.h */; };
+		5D936EAE1BC555270046ACD4 /* TestRandomI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E971BC555270046ACD4 /* TestRandomI.h */; };
+		5D936EAF1BC555270046ACD4 /* TestRingMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E981BC555270046ACD4 /* TestRingMap.h */; };
+		5D936EB01BC555270046ACD4 /* TestSignal.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E991BC555270046ACD4 /* TestSignal.h */; };
+		5D936EB11BC555270046ACD4 /* TestSingleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9A1BC555270046ACD4 /* TestSingleton.h */; };
+		5D936EB21BC555270046ACD4 /* TestSTL.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9B1BC555270046ACD4 /* TestSTL.h */; };
+		5D936EB31BC555270046ACD4 /* TestString.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9C1BC555270046ACD4 /* TestString.h */; };
+		5D936EB41BC555270046ACD4 /* TestTimestamp.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9D1BC555270046ACD4 /* TestTimestamp.h */; };
+		5D936EB51BC555270046ACD4 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9E1BC555270046ACD4 /* TestUtilities.h */; };
+		5D936EB61BC555270046ACD4 /* TestWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9F1BC555270046ACD4 /* TestWorker.h */; };
+		5D936FA91BC6C8620046ACD4 /* TestHashSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336D1B91D58500D6B89A /* TestHashSet.cpp */; };
+		5D936FAA1BC6C8620046ACD4 /* TestDateTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336A1B91D58500D6B89A /* TestDateTime.cpp */; };
+		5D936FAB1BC6C8620046ACD4 /* TestMedian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33721B91D58500D6B89A /* TestMedian.cpp */; };
+		5D936FAC1BC6C8620046ACD4 /* TestInheritance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336F1B91D58500D6B89A /* TestInheritance.cpp */; };
+		5D936FAE1BC6C8620046ACD4 /* TestKdTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33701B91D58500D6B89A /* TestKdTree.cpp */; };
+		5D936FAF1BC6C8620046ACD4 /* TestCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33671B91D58500D6B89A /* TestCallback.cpp */; };
+		5D936FB01BC6C8620046ACD4 /* TestSTL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33781B91D58500D6B89A /* TestSTL.cpp */; };
+		5D936FB11BC6C8620046ACD4 /* TestDataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33691B91D58500D6B89A /* TestDataType.cpp */; };
+		5D936FB21BC6C8620046ACD4 /* TestCaller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33681B91D58500D6B89A /* TestCaller.cpp */; };
+		5D936FB31BC6C8620046ACD4 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337B1B91D58500D6B89A /* TestUtilities.cpp */; };
+		5D936FB41BC6C8620046ACD4 /* TestSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33761B91D58500D6B89A /* TestSignal.cpp */; };
+		5D936FB51BC6C8620046ACD4 /* TestRandomI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33741B91D58500D6B89A /* TestRandomI.cpp */; };
+		5D936FB61BC6C8620046ACD4 /* TestWorker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337C1B91D58500D6B89A /* TestWorker.cpp */; };
+		5D936FB71BC6C8620046ACD4 /* TestBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33661B91D58500D6B89A /* TestBase.cpp */; };
+		5D936FB81BC6C8620046ACD4 /* TestMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33731B91D58500D6B89A /* TestMemory.cpp */; };
+		5D936FB91BC6C8620046ACD4 /* TestString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33791B91D58500D6B89A /* TestString.cpp */; };
+		5D936FBA1BC6C8620046ACD4 /* TestHashMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336C1B91D58500D6B89A /* TestHashMap.cpp */; };
+		5D936FBB1BC6C8620046ACD4 /* TestLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33711B91D58500D6B89A /* TestLock.cpp */; };
+		5D936FBC1BC6C8620046ACD4 /* TestSingleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33771B91D58500D6B89A /* TestSingleton.cpp */; };
+		5D936FBD1BC6C8620046ACD4 /* TestRingMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33751B91D58500D6B89A /* TestRingMap.cpp */; };
+		5D936FBE1BC6C8620046ACD4 /* TestHighPerformanceTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336E1B91D58500D6B89A /* TestHighPerformanceTimer.cpp */; };
+		5D936FBF1BC6C8620046ACD4 /* TestTimestamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337A1B91D58500D6B89A /* TestTimestamp.cpp */; };
+		5D936FC31BC6C8620046ACD4 /* TestRingMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E981BC555270046ACD4 /* TestRingMap.h */; };
+		5D936FC41BC6C8620046ACD4 /* TestTimestamp.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9D1BC555270046ACD4 /* TestTimestamp.h */; };
+		5D936FC51BC6C8620046ACD4 /* TestMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E961BC555270046ACD4 /* TestMemory.h */; };
+		5D936FC61BC6C8620046ACD4 /* TestDataType.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8C1BC555270046ACD4 /* TestDataType.h */; };
+		5D936FC71BC6C8620046ACD4 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9E1BC555270046ACD4 /* TestUtilities.h */; };
+		5D936FC81BC6C8620046ACD4 /* TestHighPerformanceTimer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E911BC555270046ACD4 /* TestHighPerformanceTimer.h */; };
+		5D936FC91BC6C8620046ACD4 /* TestInheritance.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E921BC555270046ACD4 /* TestInheritance.h */; };
+		5D936FCA1BC6C8620046ACD4 /* TestBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E891BC555270046ACD4 /* TestBase.h */; };
+		5D936FCB1BC6C8620046ACD4 /* TestMedian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E951BC555270046ACD4 /* TestMedian.h */; };
+		5D936FCC1BC6C8620046ACD4 /* TestHashSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E901BC555270046ACD4 /* TestHashSet.h */; };
+		5D936FCD1BC6C8620046ACD4 /* TestWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9F1BC555270046ACD4 /* TestWorker.h */; };
+		5D936FCE1BC6C8620046ACD4 /* TestKdTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E931BC555270046ACD4 /* TestKdTree.h */; };
+		5D936FCF1BC6C8620046ACD4 /* TestRandomI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E971BC555270046ACD4 /* TestRandomI.h */; };
+		5D936FD01BC6C8620046ACD4 /* TestSTL.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9B1BC555270046ACD4 /* TestSTL.h */; };
+		5D936FD11BC6C8620046ACD4 /* TestSignal.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E991BC555270046ACD4 /* TestSignal.h */; };
+		5D936FD21BC6C8620046ACD4 /* TestString.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9C1BC555270046ACD4 /* TestString.h */; };
+		5D936FD31BC6C8620046ACD4 /* TestCaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8B1BC555270046ACD4 /* TestCaller.h */; };
+		5D936FD41BC6C8620046ACD4 /* TestDateTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8D1BC555270046ACD4 /* TestDateTime.h */; };
+		5D936FD51BC6C8620046ACD4 /* TestSingleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9A1BC555270046ACD4 /* TestSingleton.h */; };
+		5D936FD61BC6C8620046ACD4 /* TestLock.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E941BC555270046ACD4 /* TestLock.h */; };
+		5D936FD71BC6C8620046ACD4 /* TestHashMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8F1BC555270046ACD4 /* TestHashMap.h */; };
+		5D936FD81BC6C8620046ACD4 /* TestCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8A1BC555270046ACD4 /* TestCallback.h */; };
+		5D9C337D1B91D58500D6B89A /* TestBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33661B91D58500D6B89A /* TestBase.cpp */; };
+		5D9C337E1B91D58500D6B89A /* TestCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33671B91D58500D6B89A /* TestCallback.cpp */; };
+		5D9C337F1B91D58500D6B89A /* TestCaller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33681B91D58500D6B89A /* TestCaller.cpp */; };
+		5D9C33801B91D58500D6B89A /* TestDataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33691B91D58500D6B89A /* TestDataType.cpp */; };
+		5D9C33811B91D58500D6B89A /* TestDateTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336A1B91D58500D6B89A /* TestDateTime.cpp */; };
+		5D9C33831B91D58500D6B89A /* TestHashMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336C1B91D58500D6B89A /* TestHashMap.cpp */; };
+		5D9C33841B91D58500D6B89A /* TestHashSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336D1B91D58500D6B89A /* TestHashSet.cpp */; };
+		5D9C33851B91D58500D6B89A /* TestHighPerformanceTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336E1B91D58500D6B89A /* TestHighPerformanceTimer.cpp */; };
+		5D9C33861B91D58500D6B89A /* TestInheritance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336F1B91D58500D6B89A /* TestInheritance.cpp */; };
+		5D9C33871B91D58500D6B89A /* TestKdTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33701B91D58500D6B89A /* TestKdTree.cpp */; };
+		5D9C33881B91D58500D6B89A /* TestLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33711B91D58500D6B89A /* TestLock.cpp */; };
+		5D9C33891B91D58500D6B89A /* TestMedian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33721B91D58500D6B89A /* TestMedian.cpp */; };
+		5D9C338A1B91D58500D6B89A /* TestMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33731B91D58500D6B89A /* TestMemory.cpp */; };
+		5D9C338B1B91D58500D6B89A /* TestRandomI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33741B91D58500D6B89A /* TestRandomI.cpp */; };
+		5D9C338C1B91D58500D6B89A /* TestRingMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33751B91D58500D6B89A /* TestRingMap.cpp */; };
+		5D9C338D1B91D58500D6B89A /* TestSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33761B91D58500D6B89A /* TestSignal.cpp */; };
+		5D9C338E1B91D58500D6B89A /* TestSingleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33771B91D58500D6B89A /* TestSingleton.cpp */; };
+		5D9C338F1B91D58500D6B89A /* TestSTL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33781B91D58500D6B89A /* TestSTL.cpp */; };
+		5D9C33901B91D58500D6B89A /* TestString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33791B91D58500D6B89A /* TestString.cpp */; };
+		5D9C33911B91D58500D6B89A /* TestTimestamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337A1B91D58500D6B89A /* TestTimestamp.cpp */; };
+		5D9C33921B91D58500D6B89A /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337B1B91D58500D6B89A /* TestUtilities.cpp */; };
+		5D9C33931B91D58500D6B89A /* TestWorker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337C1B91D58500D6B89A /* TestWorker.cpp */; };
+		5DD685A11D46099D001A262A /* TestWorkerPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD685A01D46099D001A262A /* TestWorkerPool.h */; };
+		5DD685A21D46099D001A262A /* TestWorkerPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD685A01D46099D001A262A /* TestWorkerPool.h */; };
+		5DD685A41D4609AD001A262A /* TestWorkerPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD685A31D4609AD001A262A /* TestWorkerPool.cpp */; };
+		5DD685A51D4609AD001A262A /* TestWorkerPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD685A31D4609AD001A262A /* TestWorkerPool.cpp */; };
+		5DD685A71D478AB1001A262A /* TestSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD685A61D478AB1001A262A /* TestSubset.h */; };
+		5DD685A81D478AB1001A262A /* TestSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD685A61D478AB1001A262A /* TestSubset.h */; };
+		5DD685AA1D478ABF001A262A /* TestSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD685A91D478ABF001A262A /* TestSubset.cpp */; };
+		5DD685AB1D478ABF001A262A /* TestSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD685A91D478ABF001A262A /* TestSubset.cpp */; };
+		5DF4B8721D941D5C00284665 /* TestHashSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336D1B91D58500D6B89A /* TestHashSet.cpp */; };
+		5DF4B8731D941D5C00284665 /* TestDateTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336A1B91D58500D6B89A /* TestDateTime.cpp */; };
+		5DF4B8741D941D5C00284665 /* TestMedian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33721B91D58500D6B89A /* TestMedian.cpp */; };
+		5DF4B8751D941D5C00284665 /* TestInheritance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336F1B91D58500D6B89A /* TestInheritance.cpp */; };
+		5DF4B8771D941D5C00284665 /* TestKdTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33701B91D58500D6B89A /* TestKdTree.cpp */; };
+		5DF4B8781D941D5C00284665 /* TestCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33671B91D58500D6B89A /* TestCallback.cpp */; };
+		5DF4B8791D941D5C00284665 /* TestSTL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33781B91D58500D6B89A /* TestSTL.cpp */; };
+		5DF4B87A1D941D5C00284665 /* TestDataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33691B91D58500D6B89A /* TestDataType.cpp */; };
+		5DF4B87B1D941D5C00284665 /* TestCaller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33681B91D58500D6B89A /* TestCaller.cpp */; };
+		5DF4B87C1D941D5C00284665 /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337B1B91D58500D6B89A /* TestUtilities.cpp */; };
+		5DF4B87D1D941D5C00284665 /* TestSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33761B91D58500D6B89A /* TestSignal.cpp */; };
+		5DF4B87E1D941D5C00284665 /* TestRandomI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33741B91D58500D6B89A /* TestRandomI.cpp */; };
+		5DF4B87F1D941D5C00284665 /* TestWorker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337C1B91D58500D6B89A /* TestWorker.cpp */; };
+		5DF4B8801D941D5C00284665 /* TestBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33661B91D58500D6B89A /* TestBase.cpp */; };
+		5DF4B8811D941D5C00284665 /* TestMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33731B91D58500D6B89A /* TestMemory.cpp */; };
+		5DF4B8821D941D5C00284665 /* TestString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33791B91D58500D6B89A /* TestString.cpp */; };
+		5DF4B8831D941D5C00284665 /* TestHashMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336C1B91D58500D6B89A /* TestHashMap.cpp */; };
+		5DF4B8841D941D5C00284665 /* TestLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33711B91D58500D6B89A /* TestLock.cpp */; };
+		5DF4B8851D941D5C00284665 /* TestSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD685A91D478ABF001A262A /* TestSubset.cpp */; };
+		5DF4B8861D941D5C00284665 /* TestSingleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33771B91D58500D6B89A /* TestSingleton.cpp */; };
+		5DF4B8871D941D5C00284665 /* TestRingMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33751B91D58500D6B89A /* TestRingMap.cpp */; };
+		5DF4B8881D941D5C00284665 /* TestHighPerformanceTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336E1B91D58500D6B89A /* TestHighPerformanceTimer.cpp */; };
+		5DF4B8891D941D5C00284665 /* TestTimestamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337A1B91D58500D6B89A /* TestTimestamp.cpp */; };
+		5DF4B88A1D941D5C00284665 /* TestWorkerPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD685A31D4609AD001A262A /* TestWorkerPool.cpp */; };
+		5DF4B88E1D941D5C00284665 /* TestRingMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E981BC555270046ACD4 /* TestRingMap.h */; };
+		5DF4B88F1D941D5C00284665 /* TestTimestamp.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9D1BC555270046ACD4 /* TestTimestamp.h */; };
+		5DF4B8901D941D5C00284665 /* TestMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E961BC555270046ACD4 /* TestMemory.h */; };
+		5DF4B8911D941D5C00284665 /* TestDataType.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8C1BC555270046ACD4 /* TestDataType.h */; };
+		5DF4B8921D941D5C00284665 /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9E1BC555270046ACD4 /* TestUtilities.h */; };
+		5DF4B8931D941D5C00284665 /* TestHighPerformanceTimer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E911BC555270046ACD4 /* TestHighPerformanceTimer.h */; };
+		5DF4B8941D941D5C00284665 /* TestInheritance.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E921BC555270046ACD4 /* TestInheritance.h */; };
+		5DF4B8951D941D5C00284665 /* TestBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E891BC555270046ACD4 /* TestBase.h */; };
+		5DF4B8961D941D5C00284665 /* TestMedian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E951BC555270046ACD4 /* TestMedian.h */; };
+		5DF4B8971D941D5C00284665 /* TestHashSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E901BC555270046ACD4 /* TestHashSet.h */; };
+		5DF4B8981D941D5C00284665 /* TestWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9F1BC555270046ACD4 /* TestWorker.h */; };
+		5DF4B8991D941D5C00284665 /* TestKdTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E931BC555270046ACD4 /* TestKdTree.h */; };
+		5DF4B89A1D941D5C00284665 /* TestSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD685A61D478AB1001A262A /* TestSubset.h */; };
+		5DF4B89B1D941D5C00284665 /* TestRandomI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E971BC555270046ACD4 /* TestRandomI.h */; };
+		5DF4B89C1D941D5C00284665 /* TestSTL.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9B1BC555270046ACD4 /* TestSTL.h */; };
+		5DF4B89D1D941D5C00284665 /* TestSignal.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E991BC555270046ACD4 /* TestSignal.h */; };
+		5DF4B89E1D941D5C00284665 /* TestString.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9C1BC555270046ACD4 /* TestString.h */; };
+		5DF4B89F1D941D5C00284665 /* TestCaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8B1BC555270046ACD4 /* TestCaller.h */; };
+		5DF4B8A01D941D5C00284665 /* TestWorkerPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD685A01D46099D001A262A /* TestWorkerPool.h */; };
+		5DF4B8A11D941D5C00284665 /* TestDateTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8D1BC555270046ACD4 /* TestDateTime.h */; };
+		5DF4B8A21D941D5C00284665 /* TestSingleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9A1BC555270046ACD4 /* TestSingleton.h */; };
+		5DF4B8A31D941D5C00284665 /* TestLock.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E941BC555270046ACD4 /* TestLock.h */; };
+		5DF4B8A41D941D5C00284665 /* TestHashMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8F1BC555270046ACD4 /* TestHashMap.h */; };
+		5DF4B8A51D941D5C00284665 /* TestCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8A1BC555270046ACD4 /* TestCallback.h */; };
+		930630BF225BC1CD007CA1F0 /* TestMoveBehavior.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930630BE225BC1CD007CA1F0 /* TestMoveBehavior.cpp */; };
+		930630C0225BC1CD007CA1F0 /* TestMoveBehavior.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930630BE225BC1CD007CA1F0 /* TestMoveBehavior.cpp */; };
+		930630C1225BC1CD007CA1F0 /* TestMoveBehavior.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930630BE225BC1CD007CA1F0 /* TestMoveBehavior.cpp */; };
+		930630C2225BC1CD007CA1F0 /* TestMoveBehavior.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 930630BE225BC1CD007CA1F0 /* TestMoveBehavior.cpp */; };
+		930630C4225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */ = {isa = PBXBuildFile; fileRef = 930630C3225BC1E0007CA1F0 /* TestMoveBehavior.h */; };
+		930630C5225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */ = {isa = PBXBuildFile; fileRef = 930630C3225BC1E0007CA1F0 /* TestMoveBehavior.h */; };
+		930630C6225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */ = {isa = PBXBuildFile; fileRef = 930630C3225BC1E0007CA1F0 /* TestMoveBehavior.h */; };
+		930630C7225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */ = {isa = PBXBuildFile; fileRef = 930630C3225BC1E0007CA1F0 /* TestMoveBehavior.h */; };
+		93152E0B2441AC96009F76E0 /* TestCommandArguments.h in Headers */ = {isa = PBXBuildFile; fileRef = 93152E0A2441AC96009F76E0 /* TestCommandArguments.h */; };
+		93152E0C2441AC96009F76E0 /* TestCommandArguments.h in Headers */ = {isa = PBXBuildFile; fileRef = 93152E0A2441AC96009F76E0 /* TestCommandArguments.h */; };
+		93152E0D2441AC96009F76E0 /* TestCommandArguments.h in Headers */ = {isa = PBXBuildFile; fileRef = 93152E0A2441AC96009F76E0 /* TestCommandArguments.h */; };
+		93152E0E2441AC96009F76E0 /* TestCommandArguments.h in Headers */ = {isa = PBXBuildFile; fileRef = 93152E0A2441AC96009F76E0 /* TestCommandArguments.h */; };
+		93152E152441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93152E142441ACC3009F76E0 /* TestCommandArguments.cpp */; };
+		93152E162441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93152E142441ACC3009F76E0 /* TestCommandArguments.cpp */; };
+		93152E172441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93152E142441ACC3009F76E0 /* TestCommandArguments.cpp */; };
+		93152E182441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93152E142441ACC3009F76E0 /* TestCommandArguments.cpp */; };
+		9329B9E52B51E83D000F4068 /* TestThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 9329B9E42B51E83D000F4068 /* TestThreadPool.h */; };
+		9329B9E62B51E83D000F4068 /* TestThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 9329B9E42B51E83D000F4068 /* TestThreadPool.h */; };
+		9329B9E72B51E83D000F4068 /* TestThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 9329B9E42B51E83D000F4068 /* TestThreadPool.h */; };
+		9329B9E82B51E83D000F4068 /* TestThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 9329B9E42B51E83D000F4068 /* TestThreadPool.h */; };
+		9329B9EA2B51E85B000F4068 /* TestThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9329B9E92B51E85B000F4068 /* TestThreadPool.cpp */; };
+		9329B9EB2B51E85B000F4068 /* TestThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9329B9E92B51E85B000F4068 /* TestThreadPool.cpp */; };
+		9329B9EC2B51E85B000F4068 /* TestThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9329B9E92B51E85B000F4068 /* TestThreadPool.cpp */; };
+		9329B9ED2B51E85B000F4068 /* TestThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9329B9E92B51E85B000F4068 /* TestThreadPool.cpp */; };
+		9333879A2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */ = {isa = PBXBuildFile; fileRef = 933387992152F28B0002B6D6 /* TestSegmentUnion.h */; };
+		9333879B2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */ = {isa = PBXBuildFile; fileRef = 933387992152F28B0002B6D6 /* TestSegmentUnion.h */; };
+		9333879C2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */ = {isa = PBXBuildFile; fileRef = 933387992152F28B0002B6D6 /* TestSegmentUnion.h */; };
+		9333879D2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */ = {isa = PBXBuildFile; fileRef = 933387992152F28B0002B6D6 /* TestSegmentUnion.h */; };
+		9333879F2152F29C0002B6D6 /* TestSegmentUnion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9333879E2152F29B0002B6D6 /* TestSegmentUnion.cpp */; };
+		933387A02152F29C0002B6D6 /* TestSegmentUnion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9333879E2152F29B0002B6D6 /* TestSegmentUnion.cpp */; };
+		933387A12152F29C0002B6D6 /* TestSegmentUnion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9333879E2152F29B0002B6D6 /* TestSegmentUnion.cpp */; };
+		933387A22152F29C0002B6D6 /* TestSegmentUnion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9333879E2152F29B0002B6D6 /* TestSegmentUnion.cpp */; };
+		9353AF8C2C29E672000146CC /* TestStackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF8B2C29E672000146CC /* TestStackHeapVector.h */; };
+		9353AF8D2C29E672000146CC /* TestStackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF8B2C29E672000146CC /* TestStackHeapVector.h */; };
+		9353AF8E2C29E672000146CC /* TestStackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF8B2C29E672000146CC /* TestStackHeapVector.h */; };
+		9353AF8F2C29E672000146CC /* TestStackHeapVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9353AF8B2C29E672000146CC /* TestStackHeapVector.h */; };
+		9353AF912C29E67B000146CC /* TestStackHeapVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */; };
+		9353AF922C29E67B000146CC /* TestStackHeapVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */; };
+		9353AF932C29E67B000146CC /* TestStackHeapVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */; };
+		9353AF942C29E67B000146CC /* TestStackHeapVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */; };
+		936481DE27FCEBDF00483217 /* TestValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 936481DD27FCEBDF00483217 /* TestValue.h */; };
+		936481DF27FCEBDF00483217 /* TestValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 936481DD27FCEBDF00483217 /* TestValue.h */; };
+		936481E027FCEBDF00483217 /* TestValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 936481DD27FCEBDF00483217 /* TestValue.h */; };
+		936481E127FCEBDF00483217 /* TestValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 936481DD27FCEBDF00483217 /* TestValue.h */; };
+		936481E327FCEBF700483217 /* TestValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 936481E227FCEBF700483217 /* TestValue.cpp */; };
+		936481E427FCEBF700483217 /* TestValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 936481E227FCEBF700483217 /* TestValue.cpp */; };
+		936481E527FCEBF700483217 /* TestValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 936481E227FCEBF700483217 /* TestValue.cpp */; };
+		936481E627FCEBF700483217 /* TestValue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 936481E227FCEBF700483217 /* TestValue.cpp */; };
+		9365F0062BACF15F00C10866 /* TestStaticVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9365F0052BACF15E00C10866 /* TestStaticVector.h */; };
+		9365F0072BACF15F00C10866 /* TestStaticVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9365F0052BACF15E00C10866 /* TestStaticVector.h */; };
+		9365F0082BACF15F00C10866 /* TestStaticVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9365F0052BACF15E00C10866 /* TestStaticVector.h */; };
+		9365F0092BACF15F00C10866 /* TestStaticVector.h in Headers */ = {isa = PBXBuildFile; fileRef = 9365F0052BACF15E00C10866 /* TestStaticVector.h */; };
+		9365F00B2BACF16600C10866 /* TestStaticVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9365F00A2BACF16500C10866 /* TestStaticVector.cpp */; };
+		9365F00C2BACF16600C10866 /* TestStaticVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9365F00A2BACF16500C10866 /* TestStaticVector.cpp */; };
+		9365F00D2BACF16600C10866 /* TestStaticVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9365F00A2BACF16500C10866 /* TestStaticVector.cpp */; };
+		9365F00E2BACF16600C10866 /* TestStaticVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9365F00A2BACF16500C10866 /* TestStaticVector.cpp */; };
+		9386478E2AB3A64F003F89EC /* TestScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9386478D2AB3A64F003F89EC /* TestScopedFunction.h */; };
+		9386478F2AB3A64F003F89EC /* TestScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9386478D2AB3A64F003F89EC /* TestScopedFunction.h */; };
+		938647902AB3A64F003F89EC /* TestScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9386478D2AB3A64F003F89EC /* TestScopedFunction.h */; };
+		938647912AB3A64F003F89EC /* TestScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9386478D2AB3A64F003F89EC /* TestScopedFunction.h */; };
+		938647932AB3A669003F89EC /* TestScopedFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 938647922AB3A668003F89EC /* TestScopedFunction.cpp */; };
+		938647942AB3A669003F89EC /* TestScopedFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 938647922AB3A668003F89EC /* TestScopedFunction.cpp */; };
+		938647952AB3A669003F89EC /* TestScopedFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 938647922AB3A668003F89EC /* TestScopedFunction.cpp */; };
+		938647962AB3A669003F89EC /* TestScopedFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 938647922AB3A668003F89EC /* TestScopedFunction.cpp */; };
+		9387B33F24F46E31005088D3 /* TestFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9387B33E24F46E31005088D3 /* TestFrame.cpp */; };
+		9387B34024F46E31005088D3 /* TestFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9387B33E24F46E31005088D3 /* TestFrame.cpp */; };
+		9387B34124F46E31005088D3 /* TestFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9387B33E24F46E31005088D3 /* TestFrame.cpp */; };
+		9387B34224F46E31005088D3 /* TestFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9387B33E24F46E31005088D3 /* TestFrame.cpp */; };
+		9387B34424F46E3D005088D3 /* TestFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 9387B34324F46E3D005088D3 /* TestFrame.h */; };
+		9387B34524F46E3D005088D3 /* TestFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 9387B34324F46E3D005088D3 /* TestFrame.h */; };
+		9387B34624F46E3D005088D3 /* TestFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 9387B34324F46E3D005088D3 /* TestFrame.h */; };
+		9387B34724F46E3D005088D3 /* TestFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 9387B34324F46E3D005088D3 /* TestFrame.h */; };
+		93BB07D02B9BD667007CD359 /* TestStaticBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93BB07CF2B9BD667007CD359 /* TestStaticBuffer.cpp */; };
+		93BB07D12B9BD667007CD359 /* TestStaticBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93BB07CF2B9BD667007CD359 /* TestStaticBuffer.cpp */; };
+		93BB07D22B9BD667007CD359 /* TestStaticBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93BB07CF2B9BD667007CD359 /* TestStaticBuffer.cpp */; };
+		93BB07D32B9BD667007CD359 /* TestStaticBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93BB07CF2B9BD667007CD359 /* TestStaticBuffer.cpp */; };
+		93BB07D52B9BD670007CD359 /* TestStaticBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93BB07D42B9BD670007CD359 /* TestStaticBuffer.h */; };
+		93BB07D62B9BD670007CD359 /* TestStaticBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93BB07D42B9BD670007CD359 /* TestStaticBuffer.h */; };
+		93BB07D72B9BD670007CD359 /* TestStaticBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93BB07D42B9BD670007CD359 /* TestStaticBuffer.h */; };
+		93BB07D82B9BD670007CD359 /* TestStaticBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93BB07D42B9BD670007CD359 /* TestStaticBuffer.h */; };
+		93DA32922967665F001B3ADC /* TestScopedObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA32912967665F001B3ADC /* TestScopedObject.h */; };
+		93DA32932967665F001B3ADC /* TestScopedObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA32912967665F001B3ADC /* TestScopedObject.h */; };
+		93DA32942967665F001B3ADC /* TestScopedObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA32912967665F001B3ADC /* TestScopedObject.h */; };
+		93DA32952967665F001B3ADC /* TestScopedObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA32912967665F001B3ADC /* TestScopedObject.h */; };
+		93DA329729676673001B3ADC /* TestScopedObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA329629676673001B3ADC /* TestScopedObject.cpp */; };
+		93DA329829676673001B3ADC /* TestScopedObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA329629676673001B3ADC /* TestScopedObject.cpp */; };
+		93DA329929676673001B3ADC /* TestScopedObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA329629676673001B3ADC /* TestScopedObject.cpp */; };
+		93DA329A29676673001B3ADC /* TestScopedObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA329629676673001B3ADC /* TestScopedObject.cpp */; };
+		93F3E66024FF06F00028F313 /* TestBinary.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F3E65F24FF06F00028F313 /* TestBinary.h */; };
+		93F3E66124FF06F00028F313 /* TestBinary.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F3E65F24FF06F00028F313 /* TestBinary.h */; };
+		93F3E66224FF06F00028F313 /* TestBinary.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F3E65F24FF06F00028F313 /* TestBinary.h */; };
+		93F3E66324FF06F00028F313 /* TestBinary.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F3E65F24FF06F00028F313 /* TestBinary.h */; };
+		93F3E66524FF06FF0028F313 /* TestBinary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F3E66424FF06FF0028F313 /* TestBinary.cpp */; };
+		93F3E66624FF06FF0028F313 /* TestBinary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F3E66424FF06FF0028F313 /* TestBinary.cpp */; };
+		93F3E66724FF06FF0028F313 /* TestBinary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F3E66424FF06FF0028F313 /* TestBinary.cpp */; };
+		93F3E66824FF06FF0028F313 /* TestBinary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F3E66424FF06FF0028F313 /* TestBinary.cpp */; };
+		C0E9B0091DACE98C00895C4B /* TestHashSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336D1B91D58500D6B89A /* TestHashSet.cpp */; };
+		C0E9B00A1DACE98C00895C4B /* TestDateTime.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336A1B91D58500D6B89A /* TestDateTime.cpp */; };
+		C0E9B00B1DACE98C00895C4B /* TestMedian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33721B91D58500D6B89A /* TestMedian.cpp */; };
+		C0E9B00C1DACE98C00895C4B /* TestInheritance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336F1B91D58500D6B89A /* TestInheritance.cpp */; };
+		C0E9B00E1DACE98C00895C4B /* TestKdTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33701B91D58500D6B89A /* TestKdTree.cpp */; };
+		C0E9B00F1DACE98C00895C4B /* TestCallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33671B91D58500D6B89A /* TestCallback.cpp */; };
+		C0E9B0101DACE98C00895C4B /* TestSTL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33781B91D58500D6B89A /* TestSTL.cpp */; };
+		C0E9B0111DACE98C00895C4B /* TestDataType.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33691B91D58500D6B89A /* TestDataType.cpp */; };
+		C0E9B0121DACE98C00895C4B /* TestCaller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33681B91D58500D6B89A /* TestCaller.cpp */; };
+		C0E9B0131DACE98C00895C4B /* TestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337B1B91D58500D6B89A /* TestUtilities.cpp */; };
+		C0E9B0141DACE98C00895C4B /* TestSignal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33761B91D58500D6B89A /* TestSignal.cpp */; };
+		C0E9B0151DACE98C00895C4B /* TestRandomI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33741B91D58500D6B89A /* TestRandomI.cpp */; };
+		C0E9B0161DACE98C00895C4B /* TestWorker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337C1B91D58500D6B89A /* TestWorker.cpp */; };
+		C0E9B0171DACE98C00895C4B /* TestBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33661B91D58500D6B89A /* TestBase.cpp */; };
+		C0E9B0181DACE98D00895C4B /* TestMemory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33731B91D58500D6B89A /* TestMemory.cpp */; };
+		C0E9B0191DACE98D00895C4B /* TestString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33791B91D58500D6B89A /* TestString.cpp */; };
+		C0E9B01A1DACE98D00895C4B /* TestHashMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336C1B91D58500D6B89A /* TestHashMap.cpp */; };
+		C0E9B01B1DACE98D00895C4B /* TestLock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33711B91D58500D6B89A /* TestLock.cpp */; };
+		C0E9B01C1DACE98D00895C4B /* TestSubset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD685A91D478ABF001A262A /* TestSubset.cpp */; };
+		C0E9B01D1DACE98D00895C4B /* TestSingleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33771B91D58500D6B89A /* TestSingleton.cpp */; };
+		C0E9B01E1DACE98D00895C4B /* TestRingMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C33751B91D58500D6B89A /* TestRingMap.cpp */; };
+		C0E9B01F1DACE98D00895C4B /* TestHighPerformanceTimer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C336E1B91D58500D6B89A /* TestHighPerformanceTimer.cpp */; };
+		C0E9B0201DACE98D00895C4B /* TestTimestamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C337A1B91D58500D6B89A /* TestTimestamp.cpp */; };
+		C0E9B0211DACE98D00895C4B /* TestWorkerPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD685A31D4609AD001A262A /* TestWorkerPool.cpp */; };
+		C0E9B0251DACE98D00895C4B /* TestRingMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E981BC555270046ACD4 /* TestRingMap.h */; };
+		C0E9B0261DACE98D00895C4B /* TestTimestamp.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9D1BC555270046ACD4 /* TestTimestamp.h */; };
+		C0E9B0271DACE98D00895C4B /* TestMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E961BC555270046ACD4 /* TestMemory.h */; };
+		C0E9B0281DACE98D00895C4B /* TestDataType.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8C1BC555270046ACD4 /* TestDataType.h */; };
+		C0E9B0291DACE98D00895C4B /* TestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9E1BC555270046ACD4 /* TestUtilities.h */; };
+		C0E9B02A1DACE98D00895C4B /* TestHighPerformanceTimer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E911BC555270046ACD4 /* TestHighPerformanceTimer.h */; };
+		C0E9B02B1DACE98D00895C4B /* TestInheritance.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E921BC555270046ACD4 /* TestInheritance.h */; };
+		C0E9B02C1DACE98D00895C4B /* TestBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E891BC555270046ACD4 /* TestBase.h */; };
+		C0E9B02D1DACE98D00895C4B /* TestMedian.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E951BC555270046ACD4 /* TestMedian.h */; };
+		C0E9B02E1DACE98D00895C4B /* TestHashSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E901BC555270046ACD4 /* TestHashSet.h */; };
+		C0E9B02F1DACE98D00895C4B /* TestWorker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9F1BC555270046ACD4 /* TestWorker.h */; };
+		C0E9B0301DACE98D00895C4B /* TestKdTree.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E931BC555270046ACD4 /* TestKdTree.h */; };
+		C0E9B0311DACE98D00895C4B /* TestSubset.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD685A61D478AB1001A262A /* TestSubset.h */; };
+		C0E9B0321DACE98D00895C4B /* TestRandomI.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E971BC555270046ACD4 /* TestRandomI.h */; };
+		C0E9B0331DACE98D00895C4B /* TestSTL.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9B1BC555270046ACD4 /* TestSTL.h */; };
+		C0E9B0341DACE98D00895C4B /* TestSignal.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E991BC555270046ACD4 /* TestSignal.h */; };
+		C0E9B0351DACE98D00895C4B /* TestString.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9C1BC555270046ACD4 /* TestString.h */; };
+		C0E9B0361DACE98D00895C4B /* TestCaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8B1BC555270046ACD4 /* TestCaller.h */; };
+		C0E9B0371DACE98D00895C4B /* TestWorkerPool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD685A01D46099D001A262A /* TestWorkerPool.h */; };
+		C0E9B0381DACE98D00895C4B /* TestDateTime.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8D1BC555270046ACD4 /* TestDateTime.h */; };
+		C0E9B0391DACE98D00895C4B /* TestSingleton.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E9A1BC555270046ACD4 /* TestSingleton.h */; };
+		C0E9B03A1DACE98D00895C4B /* TestLock.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E941BC555270046ACD4 /* TestLock.h */; };
+		C0E9B03B1DACE98D00895C4B /* TestHashMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8F1BC555270046ACD4 /* TestHashMap.h */; };
+		C0E9B03C1DACE98D00895C4B /* TestCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D936E8A1BC555270046ACD4 /* TestCallback.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D188D0F1B90C39A00FA7DD7 /* libOceanTestBaseD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestBaseD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D936E891BC555270046ACD4 /* TestBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestBase.h; path = ../../../../../../impl/ocean/test/testbase/TestBase.h; sourceTree = "<group>"; };
+		5D936E8A1BC555270046ACD4 /* TestCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestCallback.h; path = ../../../../../../impl/ocean/test/testbase/TestCallback.h; sourceTree = "<group>"; };
+		5D936E8B1BC555270046ACD4 /* TestCaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestCaller.h; path = ../../../../../../impl/ocean/test/testbase/TestCaller.h; sourceTree = "<group>"; };
+		5D936E8C1BC555270046ACD4 /* TestDataType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDataType.h; path = ../../../../../../impl/ocean/test/testbase/TestDataType.h; sourceTree = "<group>"; };
+		5D936E8D1BC555270046ACD4 /* TestDateTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDateTime.h; path = ../../../../../../impl/ocean/test/testbase/TestDateTime.h; sourceTree = "<group>"; };
+		5D936E8F1BC555270046ACD4 /* TestHashMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestHashMap.h; path = ../../../../../../impl/ocean/test/testbase/TestHashMap.h; sourceTree = "<group>"; };
+		5D936E901BC555270046ACD4 /* TestHashSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestHashSet.h; path = ../../../../../../impl/ocean/test/testbase/TestHashSet.h; sourceTree = "<group>"; };
+		5D936E911BC555270046ACD4 /* TestHighPerformanceTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestHighPerformanceTimer.h; path = ../../../../../../impl/ocean/test/testbase/TestHighPerformanceTimer.h; sourceTree = "<group>"; };
+		5D936E921BC555270046ACD4 /* TestInheritance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestInheritance.h; path = ../../../../../../impl/ocean/test/testbase/TestInheritance.h; sourceTree = "<group>"; };
+		5D936E931BC555270046ACD4 /* TestKdTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestKdTree.h; path = ../../../../../../impl/ocean/test/testbase/TestKdTree.h; sourceTree = "<group>"; };
+		5D936E941BC555270046ACD4 /* TestLock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestLock.h; path = ../../../../../../impl/ocean/test/testbase/TestLock.h; sourceTree = "<group>"; };
+		5D936E951BC555270046ACD4 /* TestMedian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestMedian.h; path = ../../../../../../impl/ocean/test/testbase/TestMedian.h; sourceTree = "<group>"; };
+		5D936E961BC555270046ACD4 /* TestMemory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestMemory.h; path = ../../../../../../impl/ocean/test/testbase/TestMemory.h; sourceTree = "<group>"; };
+		5D936E971BC555270046ACD4 /* TestRandomI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestRandomI.h; path = ../../../../../../impl/ocean/test/testbase/TestRandomI.h; sourceTree = "<group>"; };
+		5D936E981BC555270046ACD4 /* TestRingMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestRingMap.h; path = ../../../../../../impl/ocean/test/testbase/TestRingMap.h; sourceTree = "<group>"; };
+		5D936E991BC555270046ACD4 /* TestSignal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSignal.h; path = ../../../../../../impl/ocean/test/testbase/TestSignal.h; sourceTree = "<group>"; };
+		5D936E9A1BC555270046ACD4 /* TestSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSingleton.h; path = ../../../../../../impl/ocean/test/testbase/TestSingleton.h; sourceTree = "<group>"; };
+		5D936E9B1BC555270046ACD4 /* TestSTL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSTL.h; path = ../../../../../../impl/ocean/test/testbase/TestSTL.h; sourceTree = "<group>"; };
+		5D936E9C1BC555270046ACD4 /* TestString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestString.h; path = ../../../../../../impl/ocean/test/testbase/TestString.h; sourceTree = "<group>"; };
+		5D936E9D1BC555270046ACD4 /* TestTimestamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestTimestamp.h; path = ../../../../../../impl/ocean/test/testbase/TestTimestamp.h; sourceTree = "<group>"; };
+		5D936E9E1BC555270046ACD4 /* TestUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestUtilities.h; path = ../../../../../../impl/ocean/test/testbase/TestUtilities.h; sourceTree = "<group>"; };
+		5D936E9F1BC555270046ACD4 /* TestWorker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestWorker.h; path = ../../../../../../impl/ocean/test/testbase/TestWorker.h; sourceTree = "<group>"; };
+		5D936FDC1BC6C8620046ACD4 /* libOceanTestBaseD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestBaseD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9C33661B91D58500D6B89A /* TestBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestBase.cpp; path = ../../../../../../impl/ocean/test/testbase/TestBase.cpp; sourceTree = "<group>"; };
+		5D9C33671B91D58500D6B89A /* TestCallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCallback.cpp; path = ../../../../../../impl/ocean/test/testbase/TestCallback.cpp; sourceTree = "<group>"; };
+		5D9C33681B91D58500D6B89A /* TestCaller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCaller.cpp; path = ../../../../../../impl/ocean/test/testbase/TestCaller.cpp; sourceTree = "<group>"; };
+		5D9C33691B91D58500D6B89A /* TestDataType.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestDataType.cpp; path = ../../../../../../impl/ocean/test/testbase/TestDataType.cpp; sourceTree = "<group>"; };
+		5D9C336A1B91D58500D6B89A /* TestDateTime.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestDateTime.cpp; path = ../../../../../../impl/ocean/test/testbase/TestDateTime.cpp; sourceTree = "<group>"; };
+		5D9C336C1B91D58500D6B89A /* TestHashMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestHashMap.cpp; path = ../../../../../../impl/ocean/test/testbase/TestHashMap.cpp; sourceTree = "<group>"; };
+		5D9C336D1B91D58500D6B89A /* TestHashSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestHashSet.cpp; path = ../../../../../../impl/ocean/test/testbase/TestHashSet.cpp; sourceTree = "<group>"; };
+		5D9C336E1B91D58500D6B89A /* TestHighPerformanceTimer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestHighPerformanceTimer.cpp; path = ../../../../../../impl/ocean/test/testbase/TestHighPerformanceTimer.cpp; sourceTree = "<group>"; };
+		5D9C336F1B91D58500D6B89A /* TestInheritance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestInheritance.cpp; path = ../../../../../../impl/ocean/test/testbase/TestInheritance.cpp; sourceTree = "<group>"; };
+		5D9C33701B91D58500D6B89A /* TestKdTree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestKdTree.cpp; path = ../../../../../../impl/ocean/test/testbase/TestKdTree.cpp; sourceTree = "<group>"; };
+		5D9C33711B91D58500D6B89A /* TestLock.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestLock.cpp; path = ../../../../../../impl/ocean/test/testbase/TestLock.cpp; sourceTree = "<group>"; };
+		5D9C33721B91D58500D6B89A /* TestMedian.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestMedian.cpp; path = ../../../../../../impl/ocean/test/testbase/TestMedian.cpp; sourceTree = "<group>"; };
+		5D9C33731B91D58500D6B89A /* TestMemory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestMemory.cpp; path = ../../../../../../impl/ocean/test/testbase/TestMemory.cpp; sourceTree = "<group>"; };
+		5D9C33741B91D58500D6B89A /* TestRandomI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestRandomI.cpp; path = ../../../../../../impl/ocean/test/testbase/TestRandomI.cpp; sourceTree = "<group>"; wrapsLines = 0; };
+		5D9C33751B91D58500D6B89A /* TestRingMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestRingMap.cpp; path = ../../../../../../impl/ocean/test/testbase/TestRingMap.cpp; sourceTree = "<group>"; };
+		5D9C33761B91D58500D6B89A /* TestSignal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSignal.cpp; path = ../../../../../../impl/ocean/test/testbase/TestSignal.cpp; sourceTree = "<group>"; };
+		5D9C33771B91D58500D6B89A /* TestSingleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSingleton.cpp; path = ../../../../../../impl/ocean/test/testbase/TestSingleton.cpp; sourceTree = "<group>"; };
+		5D9C33781B91D58500D6B89A /* TestSTL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSTL.cpp; path = ../../../../../../impl/ocean/test/testbase/TestSTL.cpp; sourceTree = "<group>"; };
+		5D9C33791B91D58500D6B89A /* TestString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestString.cpp; path = ../../../../../../impl/ocean/test/testbase/TestString.cpp; sourceTree = "<group>"; };
+		5D9C337A1B91D58500D6B89A /* TestTimestamp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestTimestamp.cpp; path = ../../../../../../impl/ocean/test/testbase/TestTimestamp.cpp; sourceTree = "<group>"; };
+		5D9C337B1B91D58500D6B89A /* TestUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestUtilities.cpp; path = ../../../../../../impl/ocean/test/testbase/TestUtilities.cpp; sourceTree = "<group>"; };
+		5D9C337C1B91D58500D6B89A /* TestWorker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestWorker.cpp; path = ../../../../../../impl/ocean/test/testbase/TestWorker.cpp; sourceTree = "<group>"; };
+		5DD685A01D46099D001A262A /* TestWorkerPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestWorkerPool.h; path = ../../../../../../impl/ocean/test/testbase/TestWorkerPool.h; sourceTree = "<group>"; };
+		5DD685A31D4609AD001A262A /* TestWorkerPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestWorkerPool.cpp; path = ../../../../../../impl/ocean/test/testbase/TestWorkerPool.cpp; sourceTree = "<group>"; };
+		5DD685A61D478AB1001A262A /* TestSubset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSubset.h; path = ../../../../../../impl/ocean/test/testbase/TestSubset.h; sourceTree = "<group>"; };
+		5DD685A91D478ABF001A262A /* TestSubset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSubset.cpp; path = ../../../../../../impl/ocean/test/testbase/TestSubset.cpp; sourceTree = "<group>"; };
+		5DF4B8A91D941D5C00284665 /* libOceanTestBaseD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestBaseD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		930630BE225BC1CD007CA1F0 /* TestMoveBehavior.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestMoveBehavior.cpp; path = ../../../../../../impl/ocean/test/testbase/TestMoveBehavior.cpp; sourceTree = "<group>"; };
+		930630C3225BC1E0007CA1F0 /* TestMoveBehavior.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestMoveBehavior.h; path = ../../../../../../impl/ocean/test/testbase/TestMoveBehavior.h; sourceTree = "<group>"; };
+		93152E0A2441AC96009F76E0 /* TestCommandArguments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestCommandArguments.h; path = ../../../../../../impl/ocean/test/testbase/TestCommandArguments.h; sourceTree = "<group>"; };
+		93152E142441ACC3009F76E0 /* TestCommandArguments.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCommandArguments.cpp; path = ../../../../../../impl/ocean/test/testbase/TestCommandArguments.cpp; sourceTree = "<group>"; };
+		9329B9E42B51E83D000F4068 /* TestThreadPool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestThreadPool.h; path = ../../../../../../impl/ocean/test/testbase/TestThreadPool.h; sourceTree = "<group>"; };
+		9329B9E92B51E85B000F4068 /* TestThreadPool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestThreadPool.cpp; path = ../../../../../../impl/ocean/test/testbase/TestThreadPool.cpp; sourceTree = "<group>"; };
+		933387992152F28B0002B6D6 /* TestSegmentUnion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSegmentUnion.h; path = ../../../../../../impl/ocean/test/testbase/TestSegmentUnion.h; sourceTree = "<group>"; };
+		9333879E2152F29B0002B6D6 /* TestSegmentUnion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSegmentUnion.cpp; path = ../../../../../../impl/ocean/test/testbase/TestSegmentUnion.cpp; sourceTree = "<group>"; };
+		9353AF8B2C29E672000146CC /* TestStackHeapVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestStackHeapVector.h; path = ../../../../../../impl/ocean/test/testbase/TestStackHeapVector.h; sourceTree = "<group>"; };
+		9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestStackHeapVector.cpp; path = ../../../../../../impl/ocean/test/testbase/TestStackHeapVector.cpp; sourceTree = "<group>"; };
+		936481DD27FCEBDF00483217 /* TestValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestValue.h; path = ../../../../../../impl/ocean/test/testbase/TestValue.h; sourceTree = "<group>"; };
+		936481E227FCEBF700483217 /* TestValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestValue.cpp; path = ../../../../../../impl/ocean/test/testbase/TestValue.cpp; sourceTree = "<group>"; };
+		9365F0052BACF15E00C10866 /* TestStaticVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestStaticVector.h; path = ../../../../../../impl/ocean/test/testbase/TestStaticVector.h; sourceTree = "<group>"; };
+		9365F00A2BACF16500C10866 /* TestStaticVector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestStaticVector.cpp; path = ../../../../../../impl/ocean/test/testbase/TestStaticVector.cpp; sourceTree = "<group>"; };
+		9386478D2AB3A64F003F89EC /* TestScopedFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestScopedFunction.h; path = ../../../../../../impl/ocean/test/testbase/TestScopedFunction.h; sourceTree = "<group>"; };
+		938647922AB3A668003F89EC /* TestScopedFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestScopedFunction.cpp; path = ../../../../../../impl/ocean/test/testbase/TestScopedFunction.cpp; sourceTree = "<group>"; };
+		9387B33E24F46E31005088D3 /* TestFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrame.cpp; path = ../../../../../../impl/ocean/test/testbase/TestFrame.cpp; sourceTree = "<group>"; };
+		9387B34324F46E3D005088D3 /* TestFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrame.h; path = ../../../../../../impl/ocean/test/testbase/TestFrame.h; sourceTree = "<group>"; };
+		93BB07CF2B9BD667007CD359 /* TestStaticBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestStaticBuffer.cpp; path = ../../../../../../impl/ocean/test/testbase/TestStaticBuffer.cpp; sourceTree = "<group>"; };
+		93BB07D42B9BD670007CD359 /* TestStaticBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestStaticBuffer.h; path = ../../../../../../impl/ocean/test/testbase/TestStaticBuffer.h; sourceTree = "<group>"; };
+		93DA32912967665F001B3ADC /* TestScopedObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestScopedObject.h; path = ../../../../../../impl/ocean/test/testbase/TestScopedObject.h; sourceTree = "<group>"; };
+		93DA329629676673001B3ADC /* TestScopedObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestScopedObject.cpp; path = ../../../../../../impl/ocean/test/testbase/TestScopedObject.cpp; sourceTree = "<group>"; };
+		93F3E65F24FF06F00028F313 /* TestBinary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestBinary.h; path = ../../../../../../impl/ocean/test/testbase/TestBinary.h; sourceTree = "<group>"; };
+		93F3E66424FF06FF0028F313 /* TestBinary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestBinary.cpp; path = ../../../../../../impl/ocean/test/testbase/TestBinary.cpp; sourceTree = "<group>"; };
+		C0E9B0411DACE98D00895C4B /* libOceanTestBaseD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestBaseD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D188D0C1B90C39A00FA7DD7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936FC01BC6C8620046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF4B88B1D941D5C00284665 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0221DACE98D00895C4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D188D061B90C39A00FA7DD7 = {
+			isa = PBXGroup;
+			children = (
+				5D936E881BC555160046ACD4 /* Header Files */,
+				5D188D111B90C39A00FA7DD7 /* Source Files */,
+				5D188D101B90C39A00FA7DD7 /* Products */,
+			);
+			sourceTree = "<group>";
+			usesTabs = 1;
+		};
+		5D188D101B90C39A00FA7DD7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D188D0F1B90C39A00FA7DD7 /* libOceanTestBaseD.a */,
+				5D936FDC1BC6C8620046ACD4 /* libOceanTestBaseD.dylib */,
+				5DF4B8A91D941D5C00284665 /* libOceanTestBaseD.a */,
+				C0E9B0411DACE98D00895C4B /* libOceanTestBaseD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D188D111B90C39A00FA7DD7 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D9C33661B91D58500D6B89A /* TestBase.cpp */,
+				93F3E66424FF06FF0028F313 /* TestBinary.cpp */,
+				5D9C33671B91D58500D6B89A /* TestCallback.cpp */,
+				5D9C33681B91D58500D6B89A /* TestCaller.cpp */,
+				93152E142441ACC3009F76E0 /* TestCommandArguments.cpp */,
+				5D9C33691B91D58500D6B89A /* TestDataType.cpp */,
+				5D9C336A1B91D58500D6B89A /* TestDateTime.cpp */,
+				9387B33E24F46E31005088D3 /* TestFrame.cpp */,
+				5D9C336C1B91D58500D6B89A /* TestHashMap.cpp */,
+				5D9C336D1B91D58500D6B89A /* TestHashSet.cpp */,
+				5D9C336E1B91D58500D6B89A /* TestHighPerformanceTimer.cpp */,
+				5D9C336F1B91D58500D6B89A /* TestInheritance.cpp */,
+				5D9C33701B91D58500D6B89A /* TestKdTree.cpp */,
+				5D9C33711B91D58500D6B89A /* TestLock.cpp */,
+				5D9C33721B91D58500D6B89A /* TestMedian.cpp */,
+				5D9C33731B91D58500D6B89A /* TestMemory.cpp */,
+				930630BE225BC1CD007CA1F0 /* TestMoveBehavior.cpp */,
+				5D9C33741B91D58500D6B89A /* TestRandomI.cpp */,
+				5D9C33751B91D58500D6B89A /* TestRingMap.cpp */,
+				938647922AB3A668003F89EC /* TestScopedFunction.cpp */,
+				93DA329629676673001B3ADC /* TestScopedObject.cpp */,
+				9333879E2152F29B0002B6D6 /* TestSegmentUnion.cpp */,
+				5D9C33761B91D58500D6B89A /* TestSignal.cpp */,
+				5D9C33771B91D58500D6B89A /* TestSingleton.cpp */,
+				9353AF902C29E67B000146CC /* TestStackHeapVector.cpp */,
+				93BB07CF2B9BD667007CD359 /* TestStaticBuffer.cpp */,
+				9365F00A2BACF16500C10866 /* TestStaticVector.cpp */,
+				5D9C33781B91D58500D6B89A /* TestSTL.cpp */,
+				5D9C33791B91D58500D6B89A /* TestString.cpp */,
+				5DD685A91D478ABF001A262A /* TestSubset.cpp */,
+				9329B9E92B51E85B000F4068 /* TestThreadPool.cpp */,
+				5D9C337A1B91D58500D6B89A /* TestTimestamp.cpp */,
+				5D9C337B1B91D58500D6B89A /* TestUtilities.cpp */,
+				936481E227FCEBF700483217 /* TestValue.cpp */,
+				5D9C337C1B91D58500D6B89A /* TestWorker.cpp */,
+				5DD685A31D4609AD001A262A /* TestWorkerPool.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = SOURCE_ROOT;
+		};
+		5D936E881BC555160046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D936E891BC555270046ACD4 /* TestBase.h */,
+				93F3E65F24FF06F00028F313 /* TestBinary.h */,
+				5D936E8A1BC555270046ACD4 /* TestCallback.h */,
+				5D936E8B1BC555270046ACD4 /* TestCaller.h */,
+				93152E0A2441AC96009F76E0 /* TestCommandArguments.h */,
+				5D936E8C1BC555270046ACD4 /* TestDataType.h */,
+				5D936E8D1BC555270046ACD4 /* TestDateTime.h */,
+				9387B34324F46E3D005088D3 /* TestFrame.h */,
+				5D936E8F1BC555270046ACD4 /* TestHashMap.h */,
+				5D936E901BC555270046ACD4 /* TestHashSet.h */,
+				5D936E911BC555270046ACD4 /* TestHighPerformanceTimer.h */,
+				5D936E921BC555270046ACD4 /* TestInheritance.h */,
+				5D936E931BC555270046ACD4 /* TestKdTree.h */,
+				5D936E941BC555270046ACD4 /* TestLock.h */,
+				5D936E951BC555270046ACD4 /* TestMedian.h */,
+				5D936E961BC555270046ACD4 /* TestMemory.h */,
+				930630C3225BC1E0007CA1F0 /* TestMoveBehavior.h */,
+				5D936E971BC555270046ACD4 /* TestRandomI.h */,
+				5D936E981BC555270046ACD4 /* TestRingMap.h */,
+				9386478D2AB3A64F003F89EC /* TestScopedFunction.h */,
+				93DA32912967665F001B3ADC /* TestScopedObject.h */,
+				933387992152F28B0002B6D6 /* TestSegmentUnion.h */,
+				5D936E991BC555270046ACD4 /* TestSignal.h */,
+				5D936E9A1BC555270046ACD4 /* TestSingleton.h */,
+				9353AF8B2C29E672000146CC /* TestStackHeapVector.h */,
+				93BB07D42B9BD670007CD359 /* TestStaticBuffer.h */,
+				9365F0052BACF15E00C10866 /* TestStaticVector.h */,
+				5D936E9B1BC555270046ACD4 /* TestSTL.h */,
+				5D936E9C1BC555270046ACD4 /* TestString.h */,
+				5DD685A61D478AB1001A262A /* TestSubset.h */,
+				9329B9E42B51E83D000F4068 /* TestThreadPool.h */,
+				5D936E9D1BC555270046ACD4 /* TestTimestamp.h */,
+				5D936E9E1BC555270046ACD4 /* TestUtilities.h */,
+				936481DD27FCEBDF00483217 /* TestValue.h */,
+				5D936E9F1BC555270046ACD4 /* TestWorker.h */,
+				5DD685A01D46099D001A262A /* TestWorkerPool.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D188D0D1B90C39A00FA7DD7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9329B9E52B51E83D000F4068 /* TestThreadPool.h in Headers */,
+				5D936EAF1BC555270046ACD4 /* TestRingMap.h in Headers */,
+				9387B34424F46E3D005088D3 /* TestFrame.h in Headers */,
+				936481DE27FCEBDF00483217 /* TestValue.h in Headers */,
+				5D936EB41BC555270046ACD4 /* TestTimestamp.h in Headers */,
+				5D936EAD1BC555270046ACD4 /* TestMemory.h in Headers */,
+				5D936EA31BC555270046ACD4 /* TestDataType.h in Headers */,
+				93BB07D52B9BD670007CD359 /* TestStaticBuffer.h in Headers */,
+				5D936EB51BC555270046ACD4 /* TestUtilities.h in Headers */,
+				5D936EA81BC555270046ACD4 /* TestHighPerformanceTimer.h in Headers */,
+				5D936EA91BC555270046ACD4 /* TestInheritance.h in Headers */,
+				9333879A2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */,
+				5D936EA01BC555270046ACD4 /* TestBase.h in Headers */,
+				930630C4225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */,
+				9353AF8C2C29E672000146CC /* TestStackHeapVector.h in Headers */,
+				5D936EAC1BC555270046ACD4 /* TestMedian.h in Headers */,
+				5D936EA71BC555270046ACD4 /* TestHashSet.h in Headers */,
+				5D936EB61BC555270046ACD4 /* TestWorker.h in Headers */,
+				5D936EAA1BC555270046ACD4 /* TestKdTree.h in Headers */,
+				5DD685A71D478AB1001A262A /* TestSubset.h in Headers */,
+				5D936EAE1BC555270046ACD4 /* TestRandomI.h in Headers */,
+				5D936EB21BC555270046ACD4 /* TestSTL.h in Headers */,
+				9386478E2AB3A64F003F89EC /* TestScopedFunction.h in Headers */,
+				9365F0062BACF15F00C10866 /* TestStaticVector.h in Headers */,
+				5D936EB01BC555270046ACD4 /* TestSignal.h in Headers */,
+				5D936EB31BC555270046ACD4 /* TestString.h in Headers */,
+				5D936EA21BC555270046ACD4 /* TestCaller.h in Headers */,
+				93152E0B2441AC96009F76E0 /* TestCommandArguments.h in Headers */,
+				5DD685A11D46099D001A262A /* TestWorkerPool.h in Headers */,
+				5D936EA41BC555270046ACD4 /* TestDateTime.h in Headers */,
+				93F3E66024FF06F00028F313 /* TestBinary.h in Headers */,
+				5D936EB11BC555270046ACD4 /* TestSingleton.h in Headers */,
+				5D936EAB1BC555270046ACD4 /* TestLock.h in Headers */,
+				93DA32922967665F001B3ADC /* TestScopedObject.h in Headers */,
+				5D936EA61BC555270046ACD4 /* TestHashMap.h in Headers */,
+				5D936EA11BC555270046ACD4 /* TestCallback.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936FC11BC6C8620046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9329B9E62B51E83D000F4068 /* TestThreadPool.h in Headers */,
+				5D936FC31BC6C8620046ACD4 /* TestRingMap.h in Headers */,
+				9387B34524F46E3D005088D3 /* TestFrame.h in Headers */,
+				936481DF27FCEBDF00483217 /* TestValue.h in Headers */,
+				5D936FC41BC6C8620046ACD4 /* TestTimestamp.h in Headers */,
+				5D936FC51BC6C8620046ACD4 /* TestMemory.h in Headers */,
+				5D936FC61BC6C8620046ACD4 /* TestDataType.h in Headers */,
+				93BB07D62B9BD670007CD359 /* TestStaticBuffer.h in Headers */,
+				5D936FC71BC6C8620046ACD4 /* TestUtilities.h in Headers */,
+				5D936FC81BC6C8620046ACD4 /* TestHighPerformanceTimer.h in Headers */,
+				5D936FC91BC6C8620046ACD4 /* TestInheritance.h in Headers */,
+				9333879B2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */,
+				5D936FCA1BC6C8620046ACD4 /* TestBase.h in Headers */,
+				930630C5225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */,
+				9353AF8D2C29E672000146CC /* TestStackHeapVector.h in Headers */,
+				5D936FCB1BC6C8620046ACD4 /* TestMedian.h in Headers */,
+				5D936FCC1BC6C8620046ACD4 /* TestHashSet.h in Headers */,
+				5D936FCD1BC6C8620046ACD4 /* TestWorker.h in Headers */,
+				5D936FCE1BC6C8620046ACD4 /* TestKdTree.h in Headers */,
+				5DD685A81D478AB1001A262A /* TestSubset.h in Headers */,
+				5D936FCF1BC6C8620046ACD4 /* TestRandomI.h in Headers */,
+				5D936FD01BC6C8620046ACD4 /* TestSTL.h in Headers */,
+				9386478F2AB3A64F003F89EC /* TestScopedFunction.h in Headers */,
+				9365F0072BACF15F00C10866 /* TestStaticVector.h in Headers */,
+				5D936FD11BC6C8620046ACD4 /* TestSignal.h in Headers */,
+				5D936FD21BC6C8620046ACD4 /* TestString.h in Headers */,
+				5D936FD31BC6C8620046ACD4 /* TestCaller.h in Headers */,
+				93152E0C2441AC96009F76E0 /* TestCommandArguments.h in Headers */,
+				5DD685A21D46099D001A262A /* TestWorkerPool.h in Headers */,
+				5D936FD41BC6C8620046ACD4 /* TestDateTime.h in Headers */,
+				93F3E66124FF06F00028F313 /* TestBinary.h in Headers */,
+				5D936FD51BC6C8620046ACD4 /* TestSingleton.h in Headers */,
+				5D936FD61BC6C8620046ACD4 /* TestLock.h in Headers */,
+				93DA32932967665F001B3ADC /* TestScopedObject.h in Headers */,
+				5D936FD71BC6C8620046ACD4 /* TestHashMap.h in Headers */,
+				5D936FD81BC6C8620046ACD4 /* TestCallback.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF4B88C1D941D5C00284665 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9329B9E72B51E83D000F4068 /* TestThreadPool.h in Headers */,
+				5DF4B88E1D941D5C00284665 /* TestRingMap.h in Headers */,
+				9387B34624F46E3D005088D3 /* TestFrame.h in Headers */,
+				936481E027FCEBDF00483217 /* TestValue.h in Headers */,
+				5DF4B88F1D941D5C00284665 /* TestTimestamp.h in Headers */,
+				5DF4B8901D941D5C00284665 /* TestMemory.h in Headers */,
+				5DF4B8911D941D5C00284665 /* TestDataType.h in Headers */,
+				93BB07D72B9BD670007CD359 /* TestStaticBuffer.h in Headers */,
+				5DF4B8921D941D5C00284665 /* TestUtilities.h in Headers */,
+				5DF4B8931D941D5C00284665 /* TestHighPerformanceTimer.h in Headers */,
+				5DF4B8941D941D5C00284665 /* TestInheritance.h in Headers */,
+				9333879C2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */,
+				5DF4B8951D941D5C00284665 /* TestBase.h in Headers */,
+				930630C6225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */,
+				9353AF8E2C29E672000146CC /* TestStackHeapVector.h in Headers */,
+				5DF4B8961D941D5C00284665 /* TestMedian.h in Headers */,
+				5DF4B8971D941D5C00284665 /* TestHashSet.h in Headers */,
+				5DF4B8981D941D5C00284665 /* TestWorker.h in Headers */,
+				5DF4B8991D941D5C00284665 /* TestKdTree.h in Headers */,
+				5DF4B89A1D941D5C00284665 /* TestSubset.h in Headers */,
+				5DF4B89B1D941D5C00284665 /* TestRandomI.h in Headers */,
+				5DF4B89C1D941D5C00284665 /* TestSTL.h in Headers */,
+				938647902AB3A64F003F89EC /* TestScopedFunction.h in Headers */,
+				9365F0082BACF15F00C10866 /* TestStaticVector.h in Headers */,
+				5DF4B89D1D941D5C00284665 /* TestSignal.h in Headers */,
+				5DF4B89E1D941D5C00284665 /* TestString.h in Headers */,
+				5DF4B89F1D941D5C00284665 /* TestCaller.h in Headers */,
+				93152E0D2441AC96009F76E0 /* TestCommandArguments.h in Headers */,
+				5DF4B8A01D941D5C00284665 /* TestWorkerPool.h in Headers */,
+				5DF4B8A11D941D5C00284665 /* TestDateTime.h in Headers */,
+				93F3E66224FF06F00028F313 /* TestBinary.h in Headers */,
+				5DF4B8A21D941D5C00284665 /* TestSingleton.h in Headers */,
+				5DF4B8A31D941D5C00284665 /* TestLock.h in Headers */,
+				93DA32942967665F001B3ADC /* TestScopedObject.h in Headers */,
+				5DF4B8A41D941D5C00284665 /* TestHashMap.h in Headers */,
+				5DF4B8A51D941D5C00284665 /* TestCallback.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0231DACE98D00895C4B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9329B9E82B51E83D000F4068 /* TestThreadPool.h in Headers */,
+				C0E9B0251DACE98D00895C4B /* TestRingMap.h in Headers */,
+				9387B34724F46E3D005088D3 /* TestFrame.h in Headers */,
+				936481E127FCEBDF00483217 /* TestValue.h in Headers */,
+				C0E9B0261DACE98D00895C4B /* TestTimestamp.h in Headers */,
+				C0E9B0271DACE98D00895C4B /* TestMemory.h in Headers */,
+				C0E9B0281DACE98D00895C4B /* TestDataType.h in Headers */,
+				93BB07D82B9BD670007CD359 /* TestStaticBuffer.h in Headers */,
+				C0E9B0291DACE98D00895C4B /* TestUtilities.h in Headers */,
+				C0E9B02A1DACE98D00895C4B /* TestHighPerformanceTimer.h in Headers */,
+				C0E9B02B1DACE98D00895C4B /* TestInheritance.h in Headers */,
+				9333879D2152F28B0002B6D6 /* TestSegmentUnion.h in Headers */,
+				C0E9B02C1DACE98D00895C4B /* TestBase.h in Headers */,
+				930630C7225BC1E0007CA1F0 /* TestMoveBehavior.h in Headers */,
+				9353AF8F2C29E672000146CC /* TestStackHeapVector.h in Headers */,
+				C0E9B02D1DACE98D00895C4B /* TestMedian.h in Headers */,
+				C0E9B02E1DACE98D00895C4B /* TestHashSet.h in Headers */,
+				C0E9B02F1DACE98D00895C4B /* TestWorker.h in Headers */,
+				C0E9B0301DACE98D00895C4B /* TestKdTree.h in Headers */,
+				C0E9B0311DACE98D00895C4B /* TestSubset.h in Headers */,
+				C0E9B0321DACE98D00895C4B /* TestRandomI.h in Headers */,
+				C0E9B0331DACE98D00895C4B /* TestSTL.h in Headers */,
+				938647912AB3A64F003F89EC /* TestScopedFunction.h in Headers */,
+				9365F0092BACF15F00C10866 /* TestStaticVector.h in Headers */,
+				C0E9B0341DACE98D00895C4B /* TestSignal.h in Headers */,
+				C0E9B0351DACE98D00895C4B /* TestString.h in Headers */,
+				C0E9B0361DACE98D00895C4B /* TestCaller.h in Headers */,
+				93152E0E2441AC96009F76E0 /* TestCommandArguments.h in Headers */,
+				C0E9B0371DACE98D00895C4B /* TestWorkerPool.h in Headers */,
+				C0E9B0381DACE98D00895C4B /* TestDateTime.h in Headers */,
+				93F3E66324FF06F00028F313 /* TestBinary.h in Headers */,
+				C0E9B0391DACE98D00895C4B /* TestSingleton.h in Headers */,
+				C0E9B03A1DACE98D00895C4B /* TestLock.h in Headers */,
+				93DA32952967665F001B3ADC /* TestScopedObject.h in Headers */,
+				C0E9B03B1DACE98D00895C4B /* TestHashMap.h in Headers */,
+				C0E9B03C1DACE98D00895C4B /* TestCallback.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D188D0E1B90C39A00FA7DD7 /* testbase x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D188D1A1B90C39B00FA7DD7 /* Build configuration list for PBXNativeTarget "testbase x64 (Static)" */;
+			buildPhases = (
+				5D188D0B1B90C39A00FA7DD7 /* Sources */,
+				5D188D0C1B90C39A00FA7DD7 /* Frameworks */,
+				5D188D0D1B90C39A00FA7DD7 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testbase x64 (Static)";
+			productName = testbase;
+			productReference = 5D188D0F1B90C39A00FA7DD7 /* libOceanTestBaseD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D936FA71BC6C8620046ACD4 /* testbase x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D936FD91BC6C8620046ACD4 /* Build configuration list for PBXNativeTarget "testbase x64 (Shared)" */;
+			buildPhases = (
+				5D936FA81BC6C8620046ACD4 /* Sources */,
+				5D936FC01BC6C8620046ACD4 /* Frameworks */,
+				5D936FC11BC6C8620046ACD4 /* Headers */,
+				C0E9B0421DACEA4A00895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testbase x64 (Shared)";
+			productName = testbase;
+			productReference = 5D936FDC1BC6C8620046ACD4 /* libOceanTestBaseD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DF4B8701D941D5C00284665 /* testbase arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DF4B8A61D941D5C00284665 /* Build configuration list for PBXNativeTarget "testbase arm64 (Static)" */;
+			buildPhases = (
+				5DF4B8711D941D5C00284665 /* Sources */,
+				5DF4B88B1D941D5C00284665 /* Frameworks */,
+				5DF4B88C1D941D5C00284665 /* Headers */,
+				5DF4B8AA1D941DD600284665 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testbase arm64 (Static)";
+			productName = testbase;
+			productReference = 5DF4B8A91D941D5C00284665 /* libOceanTestBaseD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C0E9B0071DACE98C00895C4B /* testbase arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0E9B03E1DACE98D00895C4B /* Build configuration list for PBXNativeTarget "testbase arm64 (Shared)" */;
+			buildPhases = (
+				C0E9B0081DACE98C00895C4B /* Sources */,
+				C0E9B0221DACE98D00895C4B /* Frameworks */,
+				C0E9B0231DACE98D00895C4B /* Headers */,
+				C0E9B03D1DACE98D00895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testbase arm64 (Shared)";
+			productName = testbase;
+			productReference = C0E9B0411DACE98D00895C4B /* libOceanTestBaseD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D188D071B90C39A00FA7DD7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D188D0E1B90C39A00FA7DD7 = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+				};
+			};
+			buildConfigurationList = 5D188D0A1B90C39A00FA7DD7 /* Build configuration list for PBXProject "testbase" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D188D061B90C39A00FA7DD7;
+			productRefGroup = 5D188D101B90C39A00FA7DD7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D188D0E1B90C39A00FA7DD7 /* testbase x64 (Static) */,
+				5D936FA71BC6C8620046ACD4 /* testbase x64 (Shared) */,
+				5DF4B8701D941D5C00284665 /* testbase arm64 (Static) */,
+				C0E9B0071DACE98C00895C4B /* testbase arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DF4B8AA1D941DD600284665 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/test/lib/\"";
+		};
+		C0E9B03D1DACE98D00895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/test/lib/\"";
+		};
+		C0E9B0421DACEA4A00895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D188D0B1B90C39A00FA7DD7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9C33841B91D58500D6B89A /* TestHashSet.cpp in Sources */,
+				5D9C33811B91D58500D6B89A /* TestDateTime.cpp in Sources */,
+				93F3E66524FF06FF0028F313 /* TestBinary.cpp in Sources */,
+				5D9C33891B91D58500D6B89A /* TestMedian.cpp in Sources */,
+				9387B33F24F46E31005088D3 /* TestFrame.cpp in Sources */,
+				9333879F2152F29C0002B6D6 /* TestSegmentUnion.cpp in Sources */,
+				5D9C33861B91D58500D6B89A /* TestInheritance.cpp in Sources */,
+				930630BF225BC1CD007CA1F0 /* TestMoveBehavior.cpp in Sources */,
+				9365F00B2BACF16600C10866 /* TestStaticVector.cpp in Sources */,
+				5D9C33871B91D58500D6B89A /* TestKdTree.cpp in Sources */,
+				5D9C337E1B91D58500D6B89A /* TestCallback.cpp in Sources */,
+				5D9C338F1B91D58500D6B89A /* TestSTL.cpp in Sources */,
+				5D9C33801B91D58500D6B89A /* TestDataType.cpp in Sources */,
+				93BB07D02B9BD667007CD359 /* TestStaticBuffer.cpp in Sources */,
+				5D9C337F1B91D58500D6B89A /* TestCaller.cpp in Sources */,
+				5D9C33921B91D58500D6B89A /* TestUtilities.cpp in Sources */,
+				9329B9EA2B51E85B000F4068 /* TestThreadPool.cpp in Sources */,
+				5D9C338D1B91D58500D6B89A /* TestSignal.cpp in Sources */,
+				5D9C338B1B91D58500D6B89A /* TestRandomI.cpp in Sources */,
+				5D9C33931B91D58500D6B89A /* TestWorker.cpp in Sources */,
+				5D9C337D1B91D58500D6B89A /* TestBase.cpp in Sources */,
+				938647932AB3A669003F89EC /* TestScopedFunction.cpp in Sources */,
+				5D9C338A1B91D58500D6B89A /* TestMemory.cpp in Sources */,
+				5D9C33901B91D58500D6B89A /* TestString.cpp in Sources */,
+				936481E327FCEBF700483217 /* TestValue.cpp in Sources */,
+				5D9C33831B91D58500D6B89A /* TestHashMap.cpp in Sources */,
+				5D9C33881B91D58500D6B89A /* TestLock.cpp in Sources */,
+				5DD685AA1D478ABF001A262A /* TestSubset.cpp in Sources */,
+				5D9C338E1B91D58500D6B89A /* TestSingleton.cpp in Sources */,
+				93DA329729676673001B3ADC /* TestScopedObject.cpp in Sources */,
+				5D9C338C1B91D58500D6B89A /* TestRingMap.cpp in Sources */,
+				9353AF912C29E67B000146CC /* TestStackHeapVector.cpp in Sources */,
+				5D9C33851B91D58500D6B89A /* TestHighPerformanceTimer.cpp in Sources */,
+				5D9C33911B91D58500D6B89A /* TestTimestamp.cpp in Sources */,
+				93152E152441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */,
+				5DD685A41D4609AD001A262A /* TestWorkerPool.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936FA81BC6C8620046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936FA91BC6C8620046ACD4 /* TestHashSet.cpp in Sources */,
+				5D936FAA1BC6C8620046ACD4 /* TestDateTime.cpp in Sources */,
+				93F3E66624FF06FF0028F313 /* TestBinary.cpp in Sources */,
+				5D936FAB1BC6C8620046ACD4 /* TestMedian.cpp in Sources */,
+				9387B34024F46E31005088D3 /* TestFrame.cpp in Sources */,
+				933387A02152F29C0002B6D6 /* TestSegmentUnion.cpp in Sources */,
+				5D936FAC1BC6C8620046ACD4 /* TestInheritance.cpp in Sources */,
+				930630C0225BC1CD007CA1F0 /* TestMoveBehavior.cpp in Sources */,
+				9365F00C2BACF16600C10866 /* TestStaticVector.cpp in Sources */,
+				5D936FAE1BC6C8620046ACD4 /* TestKdTree.cpp in Sources */,
+				5D936FAF1BC6C8620046ACD4 /* TestCallback.cpp in Sources */,
+				5D936FB01BC6C8620046ACD4 /* TestSTL.cpp in Sources */,
+				5D936FB11BC6C8620046ACD4 /* TestDataType.cpp in Sources */,
+				93BB07D12B9BD667007CD359 /* TestStaticBuffer.cpp in Sources */,
+				5D936FB21BC6C8620046ACD4 /* TestCaller.cpp in Sources */,
+				5D936FB31BC6C8620046ACD4 /* TestUtilities.cpp in Sources */,
+				9329B9EB2B51E85B000F4068 /* TestThreadPool.cpp in Sources */,
+				5D936FB41BC6C8620046ACD4 /* TestSignal.cpp in Sources */,
+				5D936FB51BC6C8620046ACD4 /* TestRandomI.cpp in Sources */,
+				5D936FB61BC6C8620046ACD4 /* TestWorker.cpp in Sources */,
+				5D936FB71BC6C8620046ACD4 /* TestBase.cpp in Sources */,
+				938647942AB3A669003F89EC /* TestScopedFunction.cpp in Sources */,
+				5D936FB81BC6C8620046ACD4 /* TestMemory.cpp in Sources */,
+				5D936FB91BC6C8620046ACD4 /* TestString.cpp in Sources */,
+				936481E427FCEBF700483217 /* TestValue.cpp in Sources */,
+				5D936FBA1BC6C8620046ACD4 /* TestHashMap.cpp in Sources */,
+				5D936FBB1BC6C8620046ACD4 /* TestLock.cpp in Sources */,
+				5DD685AB1D478ABF001A262A /* TestSubset.cpp in Sources */,
+				5D936FBC1BC6C8620046ACD4 /* TestSingleton.cpp in Sources */,
+				93DA329829676673001B3ADC /* TestScopedObject.cpp in Sources */,
+				5D936FBD1BC6C8620046ACD4 /* TestRingMap.cpp in Sources */,
+				9353AF922C29E67B000146CC /* TestStackHeapVector.cpp in Sources */,
+				5D936FBE1BC6C8620046ACD4 /* TestHighPerformanceTimer.cpp in Sources */,
+				5D936FBF1BC6C8620046ACD4 /* TestTimestamp.cpp in Sources */,
+				93152E162441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */,
+				5DD685A51D4609AD001A262A /* TestWorkerPool.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF4B8711D941D5C00284665 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF4B8721D941D5C00284665 /* TestHashSet.cpp in Sources */,
+				5DF4B8731D941D5C00284665 /* TestDateTime.cpp in Sources */,
+				93F3E66724FF06FF0028F313 /* TestBinary.cpp in Sources */,
+				5DF4B8741D941D5C00284665 /* TestMedian.cpp in Sources */,
+				9387B34124F46E31005088D3 /* TestFrame.cpp in Sources */,
+				933387A12152F29C0002B6D6 /* TestSegmentUnion.cpp in Sources */,
+				5DF4B8751D941D5C00284665 /* TestInheritance.cpp in Sources */,
+				930630C1225BC1CD007CA1F0 /* TestMoveBehavior.cpp in Sources */,
+				9365F00D2BACF16600C10866 /* TestStaticVector.cpp in Sources */,
+				5DF4B8771D941D5C00284665 /* TestKdTree.cpp in Sources */,
+				5DF4B8781D941D5C00284665 /* TestCallback.cpp in Sources */,
+				5DF4B8791D941D5C00284665 /* TestSTL.cpp in Sources */,
+				5DF4B87A1D941D5C00284665 /* TestDataType.cpp in Sources */,
+				93BB07D22B9BD667007CD359 /* TestStaticBuffer.cpp in Sources */,
+				5DF4B87B1D941D5C00284665 /* TestCaller.cpp in Sources */,
+				5DF4B87C1D941D5C00284665 /* TestUtilities.cpp in Sources */,
+				9329B9EC2B51E85B000F4068 /* TestThreadPool.cpp in Sources */,
+				5DF4B87D1D941D5C00284665 /* TestSignal.cpp in Sources */,
+				5DF4B87E1D941D5C00284665 /* TestRandomI.cpp in Sources */,
+				5DF4B87F1D941D5C00284665 /* TestWorker.cpp in Sources */,
+				5DF4B8801D941D5C00284665 /* TestBase.cpp in Sources */,
+				938647952AB3A669003F89EC /* TestScopedFunction.cpp in Sources */,
+				5DF4B8811D941D5C00284665 /* TestMemory.cpp in Sources */,
+				5DF4B8821D941D5C00284665 /* TestString.cpp in Sources */,
+				936481E527FCEBF700483217 /* TestValue.cpp in Sources */,
+				5DF4B8831D941D5C00284665 /* TestHashMap.cpp in Sources */,
+				5DF4B8841D941D5C00284665 /* TestLock.cpp in Sources */,
+				5DF4B8851D941D5C00284665 /* TestSubset.cpp in Sources */,
+				5DF4B8861D941D5C00284665 /* TestSingleton.cpp in Sources */,
+				93DA329929676673001B3ADC /* TestScopedObject.cpp in Sources */,
+				5DF4B8871D941D5C00284665 /* TestRingMap.cpp in Sources */,
+				9353AF932C29E67B000146CC /* TestStackHeapVector.cpp in Sources */,
+				5DF4B8881D941D5C00284665 /* TestHighPerformanceTimer.cpp in Sources */,
+				5DF4B8891D941D5C00284665 /* TestTimestamp.cpp in Sources */,
+				93152E172441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */,
+				5DF4B88A1D941D5C00284665 /* TestWorkerPool.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0081DACE98C00895C4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0E9B0091DACE98C00895C4B /* TestHashSet.cpp in Sources */,
+				C0E9B00A1DACE98C00895C4B /* TestDateTime.cpp in Sources */,
+				93F3E66824FF06FF0028F313 /* TestBinary.cpp in Sources */,
+				C0E9B00B1DACE98C00895C4B /* TestMedian.cpp in Sources */,
+				9387B34224F46E31005088D3 /* TestFrame.cpp in Sources */,
+				933387A22152F29C0002B6D6 /* TestSegmentUnion.cpp in Sources */,
+				C0E9B00C1DACE98C00895C4B /* TestInheritance.cpp in Sources */,
+				930630C2225BC1CD007CA1F0 /* TestMoveBehavior.cpp in Sources */,
+				9365F00E2BACF16600C10866 /* TestStaticVector.cpp in Sources */,
+				C0E9B00E1DACE98C00895C4B /* TestKdTree.cpp in Sources */,
+				C0E9B00F1DACE98C00895C4B /* TestCallback.cpp in Sources */,
+				C0E9B0101DACE98C00895C4B /* TestSTL.cpp in Sources */,
+				C0E9B0111DACE98C00895C4B /* TestDataType.cpp in Sources */,
+				93BB07D32B9BD667007CD359 /* TestStaticBuffer.cpp in Sources */,
+				C0E9B0121DACE98C00895C4B /* TestCaller.cpp in Sources */,
+				C0E9B0131DACE98C00895C4B /* TestUtilities.cpp in Sources */,
+				9329B9ED2B51E85B000F4068 /* TestThreadPool.cpp in Sources */,
+				C0E9B0141DACE98C00895C4B /* TestSignal.cpp in Sources */,
+				C0E9B0151DACE98C00895C4B /* TestRandomI.cpp in Sources */,
+				C0E9B0161DACE98C00895C4B /* TestWorker.cpp in Sources */,
+				C0E9B0171DACE98C00895C4B /* TestBase.cpp in Sources */,
+				938647962AB3A669003F89EC /* TestScopedFunction.cpp in Sources */,
+				C0E9B0181DACE98D00895C4B /* TestMemory.cpp in Sources */,
+				C0E9B0191DACE98D00895C4B /* TestString.cpp in Sources */,
+				936481E627FCEBF700483217 /* TestValue.cpp in Sources */,
+				C0E9B01A1DACE98D00895C4B /* TestHashMap.cpp in Sources */,
+				C0E9B01B1DACE98D00895C4B /* TestLock.cpp in Sources */,
+				C0E9B01C1DACE98D00895C4B /* TestSubset.cpp in Sources */,
+				C0E9B01D1DACE98D00895C4B /* TestSingleton.cpp in Sources */,
+				93DA329A29676673001B3ADC /* TestScopedObject.cpp in Sources */,
+				C0E9B01E1DACE98D00895C4B /* TestRingMap.cpp in Sources */,
+				9353AF942C29E67B000146CC /* TestStackHeapVector.cpp in Sources */,
+				C0E9B01F1DACE98D00895C4B /* TestHighPerformanceTimer.cpp in Sources */,
+				C0E9B0201DACE98D00895C4B /* TestTimestamp.cpp in Sources */,
+				93152E182441ACC3009F76E0 /* TestCommandArguments.cpp in Sources */,
+				C0E9B0211DACE98D00895C4B /* TestWorkerPool.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D188D181B90C39B00FA7DD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_static_debug;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				USER_HEADER_SEARCH_PATHS = ../../../../../../impl;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		5D188D191B90C39B00FA7DD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_static;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_static;
+				SDKROOT = macosx;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				USER_HEADER_SEARCH_PATHS = ../../../../../../impl;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+		5D188D1B1B90C39B00FA7DD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_static_debug;
+				PRODUCT_MODULE_NAME = OceanTestBaseD;
+				PRODUCT_NAME = OceanTestBaseD;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D188D1C1B90C39B00FA7DD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_static;
+				PRODUCT_MODULE_NAME = OceanTestBase;
+				PRODUCT_NAME = OceanTestBase;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_static;
+				USER_HEADER_SEARCH_PATHS = "";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D936FDA1BC6C8620046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_shared_debug;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanSystemD",
+				);
+				PRODUCT_MODULE_NAME = OceanTestBaseD;
+				PRODUCT_NAME = OceanTestBaseD;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D936FDB1BC6C8620046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/testbase/osx_x64_xc9_shared;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanSystem",
+				);
+				PRODUCT_MODULE_NAME = OceanTestBase;
+				PRODUCT_NAME = OceanTestBase;
+				SYMROOT = ../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				USER_HEADER_SEARCH_PATHS = "";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DF4B8A71D941D5C00284665 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				PRODUCT_MODULE_NAME = OceanTestBaseD;
+				PRODUCT_NAME = OceanTestBaseD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DF4B8A81D941D5C00284665 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestBase;
+				PRODUCT_NAME = OceanTestBase;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C0E9B03F1DACE98D00895C4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanSystemD",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestBaseD;
+				PRODUCT_NAME = OceanTestBaseD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C0E9B0401DACE98D00895C4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanSystem",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestBase;
+				PRODUCT_NAME = OceanTestBase;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/testbase/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D188D0A1B90C39A00FA7DD7 /* Build configuration list for PBXProject "testbase" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D188D181B90C39B00FA7DD7 /* Debug */,
+				5D188D191B90C39B00FA7DD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D188D1A1B90C39B00FA7DD7 /* Build configuration list for PBXNativeTarget "testbase x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D188D1B1B90C39B00FA7DD7 /* Debug */,
+				5D188D1C1B90C39B00FA7DD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D936FD91BC6C8620046ACD4 /* Build configuration list for PBXNativeTarget "testbase x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936FDA1BC6C8620046ACD4 /* Debug */,
+				5D936FDB1BC6C8620046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DF4B8A61D941D5C00284665 /* Build configuration list for PBXNativeTarget "testbase arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DF4B8A71D941D5C00284665 /* Debug */,
+				5DF4B8A81D941D5C00284665 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0E9B03E1DACE98D00895C4B /* Build configuration list for PBXNativeTarget "testbase arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0E9B03F1DACE98D00895C4B /* Debug */,
+				C0E9B0401DACE98D00895C4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D188D071B90C39A00FA7DD7 /* Project object */;
+}

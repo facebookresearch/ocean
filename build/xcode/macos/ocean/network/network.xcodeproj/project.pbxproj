@@ -1,0 +1,1536 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		505A28181FA339DC00B4EB1C /* HTTPSClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 505A28171FA339DC00B4EB1C /* HTTPSClient.mm */; };
+		505A28191FA339E500B4EB1C /* HTTPSClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 505A28171FA339DC00B4EB1C /* HTTPSClient.mm */; };
+		505A281A1FA339E600B4EB1C /* HTTPSClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 505A28171FA339DC00B4EB1C /* HTTPSClient.mm */; };
+		505A281B1FA339E600B4EB1C /* HTTPSClient.mm in Sources */ = {isa = PBXBuildFile; fileRef = 505A28171FA339DC00B4EB1C /* HTTPSClient.mm */; };
+		5D0A008E1BC29A860008C798 /* UDPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3D1BAB0907009C920C /* UDPServer.cpp */; };
+		5D0A008F1BC29A860008C798 /* MessageQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2B1BAB0907009C920C /* MessageQueue.cpp */; };
+		5D0A00901BC29A860008C798 /* StreamingServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E391BAB0907009C920C /* StreamingServer.cpp */; };
+		5D0A00911BC29A860008C798 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E351BAB0907009C920C /* Socket.cpp */; };
+		5D0A00921BC29A860008C798 /* MaintenanceTCPConnector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E291BAB0907009C920C /* MaintenanceTCPConnector.cpp */; };
+		5D0A00931BC29A860008C798 /* Server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E341BAB0907009C920C /* Server.cpp */; };
+		5D0A00941BC29A860008C798 /* Streaming.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E371BAB0907009C920C /* Streaming.cpp */; };
+		5D0A00951BC29A860008C798 /* PackagedUDPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E321BAB0907009C920C /* PackagedUDPServer.cpp */; };
+		5D0A00961BC29A860008C798 /* PackagedConnectionlessClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2E1BAB0907009C920C /* PackagedConnectionlessClient.cpp */; };
+		5D0A00971BC29A860008C798 /* PackagedConnectionlessServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2F1BAB0907009C920C /* PackagedConnectionlessServer.cpp */; };
+		5D0A00981BC29A860008C798 /* MaintenanceUDPConnector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2A1BAB0907009C920C /* MaintenanceUDPConnector.cpp */; };
+		5D0A00991BC29A860008C798 /* ConnectionOrientedServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E261BAB0907009C920C /* ConnectionOrientedServer.cpp */; };
+		5D0A009A1BC29A860008C798 /* PackagedUDPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E311BAB0907009C920C /* PackagedUDPClient.cpp */; };
+		5D0A009B1BC29A860008C798 /* ConnectionlessClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E231BAB0907009C920C /* ConnectionlessClient.cpp */; };
+		5D0A009C1BC29A860008C798 /* HTTPSClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E281BAB0907009C920C /* HTTPSClient.cpp */; };
+		5D0A009D1BC29A860008C798 /* StreamingClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E381BAB0907009C920C /* StreamingClient.cpp */; };
+		5D0A009E1BC29A860008C798 /* HTTPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E271BAB0907009C920C /* HTTPClient.cpp */; };
+		5D0A009F1BC29A860008C798 /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3A1BAB0907009C920C /* TCPClient.cpp */; };
+		5D0A00A01BC29A860008C798 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3B1BAB0907009C920C /* TCPServer.cpp */; };
+		5D0A00A11BC29A860008C798 /* ConnectionOrientedClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E251BAB0907009C920C /* ConnectionOrientedClient.cpp */; };
+		5D0A00A21BC29A860008C798 /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E221BAB0907009C920C /* Client.cpp */; };
+		5D0A00A31BC29A860008C798 /* Address4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E211BAB0907009C920C /* Address4.cpp */; };
+		5D0A00A41BC29A860008C798 /* PackagedSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E301BAB0907009C920C /* PackagedSocket.cpp */; };
+		5D0A00A51BC29A860008C798 /* UDPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3C1BAB0907009C920C /* UDPClient.cpp */; };
+		5D0A00A71BC29A860008C798 /* SocketScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E361BAB0907009C920C /* SocketScheduler.cpp */; };
+		5D0A00A81BC29A860008C798 /* NetworkResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2D1BAB0907009C920C /* NetworkResource.cpp */; };
+		5D0A00A91BC29A860008C798 /* Resolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E331BAB0907009C920C /* Resolver.cpp */; };
+		5D0A00AA1BC29A860008C798 /* ConnectionlessServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E241BAB0907009C920C /* ConnectionlessServer.cpp */; };
+		5D0A00AD1BC29A860008C798 /* BufferQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5C1BAB0916009C920C /* BufferQueue.h */; };
+		5D0A00AE1BC29A860008C798 /* UDPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E7A1BAB0916009C920C /* UDPServer.h */; };
+		5D0A00AF1BC29A860008C798 /* HTTPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E631BAB0916009C920C /* HTTPClient.h */; };
+		5D0A00B01BC29A860008C798 /* MaintenanceUDPConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E661BAB0916009C920C /* MaintenanceUDPConnector.h */; };
+		5D0A00B11BC29A860008C798 /* ConnectionOrientedClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E601BAB0916009C920C /* ConnectionOrientedClient.h */; };
+		5D0A00B21BC29A860008C798 /* Client.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5D1BAB0916009C920C /* Client.h */; };
+		5D0A00B31BC29A860008C798 /* Port.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6F1BAB0916009C920C /* Port.h */; };
+		5D0A00B41BC29A860008C798 /* NetworkResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E691BAB0916009C920C /* NetworkResource.h */; };
+		5D0A00B51BC29A860008C798 /* StreamingClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E751BAB0916009C920C /* StreamingClient.h */; };
+		5D0A00B61BC29A860008C798 /* Socket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E721BAB0916009C920C /* Socket.h */; };
+		5D0A00B71BC29A860008C798 /* PackagedConnectionlessServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6B1BAB0916009C920C /* PackagedConnectionlessServer.h */; };
+		5D0A00B81BC29A860008C798 /* ConnectionlessClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5E1BAB0916009C920C /* ConnectionlessClient.h */; };
+		5D0A00B91BC29A860008C798 /* PackagedUDPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6D1BAB0916009C920C /* PackagedUDPClient.h */; };
+		5D0A00BA1BC29A860008C798 /* TCPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E771BAB0916009C920C /* TCPClient.h */; };
+		5D0A00BB1BC29A860008C798 /* TCPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E781BAB0916009C920C /* TCPServer.h */; };
+		5D0A00BC1BC29A860008C798 /* HTTPSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E641BAB0916009C920C /* HTTPSClient.h */; };
+		5D0A00BD1BC29A860008C798 /* SocketScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E731BAB0916009C920C /* SocketScheduler.h */; };
+		5D0A00BE1BC29A860008C798 /* Address4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5B1BAB0916009C920C /* Address4.h */; };
+		5D0A00BF1BC29A860008C798 /* MessageQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E671BAB0916009C920C /* MessageQueue.h */; };
+		5D0A00C01BC29A860008C798 /* PackagedConnectionlessClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6A1BAB0916009C920C /* PackagedConnectionlessClient.h */; };
+		5D0A00C11BC29A860008C798 /* Network.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E681BAB0916009C920C /* Network.h */; };
+		5D0A00C21BC29A860008C798 /* Server.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E711BAB0916009C920C /* Server.h */; };
+		5D0A00C31BC29A860008C798 /* ConnectionlessServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5F1BAB0916009C920C /* ConnectionlessServer.h */; };
+		5D0A00C41BC29A860008C798 /* Data.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E621BAB0916009C920C /* Data.h */; };
+		5D0A00C51BC29A860008C798 /* UDPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E791BAB0916009C920C /* UDPClient.h */; };
+		5D0A00C61BC29A860008C798 /* ConnectionOrientedServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E611BAB0916009C920C /* ConnectionOrientedServer.h */; };
+		5D0A00C71BC29A860008C798 /* PackagedUDPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6E1BAB0916009C920C /* PackagedUDPServer.h */; };
+		5D0A00C81BC29A860008C798 /* MaintenanceTCPConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E651BAB0916009C920C /* MaintenanceTCPConnector.h */; };
+		5D0A00C91BC29A860008C798 /* StreamingServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E761BAB0916009C920C /* StreamingServer.h */; };
+		5D0A00CA1BC29A860008C798 /* Streaming.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E741BAB0916009C920C /* Streaming.h */; };
+		5D0A00CB1BC29A860008C798 /* Resolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E701BAB0916009C920C /* Resolver.h */; };
+		5D0A00CC1BC29A860008C798 /* PackagedSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6C1BAB0916009C920C /* PackagedSocket.h */; };
+		5D491D2F1D8F58F600C4099B /* UDPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3D1BAB0907009C920C /* UDPServer.cpp */; };
+		5D491D301D8F58F600C4099B /* MessageQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2B1BAB0907009C920C /* MessageQueue.cpp */; };
+		5D491D311D8F58F600C4099B /* StreamingServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E391BAB0907009C920C /* StreamingServer.cpp */; };
+		5D491D321D8F58F600C4099B /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E351BAB0907009C920C /* Socket.cpp */; };
+		5D491D331D8F58F600C4099B /* MaintenanceTCPConnector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E291BAB0907009C920C /* MaintenanceTCPConnector.cpp */; };
+		5D491D341D8F58F600C4099B /* Server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E341BAB0907009C920C /* Server.cpp */; };
+		5D491D351D8F58F600C4099B /* Streaming.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E371BAB0907009C920C /* Streaming.cpp */; };
+		5D491D361D8F58F600C4099B /* PackagedUDPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E321BAB0907009C920C /* PackagedUDPServer.cpp */; };
+		5D491D371D8F58F600C4099B /* PackagedConnectionlessClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2E1BAB0907009C920C /* PackagedConnectionlessClient.cpp */; };
+		5D491D381D8F58F600C4099B /* PackagedConnectionlessServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2F1BAB0907009C920C /* PackagedConnectionlessServer.cpp */; };
+		5D491D391D8F58F600C4099B /* MaintenanceUDPConnector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2A1BAB0907009C920C /* MaintenanceUDPConnector.cpp */; };
+		5D491D3A1D8F58F600C4099B /* ConnectionOrientedServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E261BAB0907009C920C /* ConnectionOrientedServer.cpp */; };
+		5D491D3B1D8F58F600C4099B /* PackagedUDPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E311BAB0907009C920C /* PackagedUDPClient.cpp */; };
+		5D491D3C1D8F58F600C4099B /* ConnectionlessClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E231BAB0907009C920C /* ConnectionlessClient.cpp */; };
+		5D491D3D1D8F58F600C4099B /* HTTPSClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E281BAB0907009C920C /* HTTPSClient.cpp */; };
+		5D491D3E1D8F58F600C4099B /* StreamingClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E381BAB0907009C920C /* StreamingClient.cpp */; };
+		5D491D3F1D8F58F600C4099B /* HTTPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E271BAB0907009C920C /* HTTPClient.cpp */; };
+		5D491D401D8F58F600C4099B /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3A1BAB0907009C920C /* TCPClient.cpp */; };
+		5D491D411D8F58F600C4099B /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3B1BAB0907009C920C /* TCPServer.cpp */; };
+		5D491D421D8F58F600C4099B /* ConnectionOrientedClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E251BAB0907009C920C /* ConnectionOrientedClient.cpp */; };
+		5D491D431D8F58F600C4099B /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E221BAB0907009C920C /* Client.cpp */; };
+		5D491D441D8F58F600C4099B /* Address4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E211BAB0907009C920C /* Address4.cpp */; };
+		5D491D451D8F58F600C4099B /* PackagedSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E301BAB0907009C920C /* PackagedSocket.cpp */; };
+		5D491D461D8F58F600C4099B /* UDPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3C1BAB0907009C920C /* UDPClient.cpp */; };
+		5D491D481D8F58F600C4099B /* SocketScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E361BAB0907009C920C /* SocketScheduler.cpp */; };
+		5D491D491D8F58F600C4099B /* NetworkResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2D1BAB0907009C920C /* NetworkResource.cpp */; };
+		5D491D4A1D8F58F600C4099B /* Resolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E331BAB0907009C920C /* Resolver.cpp */; };
+		5D491D4B1D8F58F600C4099B /* ConnectionlessServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E241BAB0907009C920C /* ConnectionlessServer.cpp */; };
+		5D491D4E1D8F58F600C4099B /* BufferQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5C1BAB0916009C920C /* BufferQueue.h */; };
+		5D491D4F1D8F58F600C4099B /* UDPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E7A1BAB0916009C920C /* UDPServer.h */; };
+		5D491D501D8F58F600C4099B /* HTTPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E631BAB0916009C920C /* HTTPClient.h */; };
+		5D491D511D8F58F600C4099B /* MaintenanceUDPConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E661BAB0916009C920C /* MaintenanceUDPConnector.h */; };
+		5D491D521D8F58F600C4099B /* ConnectionOrientedClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E601BAB0916009C920C /* ConnectionOrientedClient.h */; };
+		5D491D531D8F58F600C4099B /* Client.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5D1BAB0916009C920C /* Client.h */; };
+		5D491D541D8F58F600C4099B /* Port.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6F1BAB0916009C920C /* Port.h */; };
+		5D491D551D8F58F600C4099B /* NetworkResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E691BAB0916009C920C /* NetworkResource.h */; };
+		5D491D561D8F58F600C4099B /* StreamingClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E751BAB0916009C920C /* StreamingClient.h */; };
+		5D491D571D8F58F600C4099B /* Socket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E721BAB0916009C920C /* Socket.h */; };
+		5D491D581D8F58F600C4099B /* PackagedConnectionlessServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6B1BAB0916009C920C /* PackagedConnectionlessServer.h */; };
+		5D491D591D8F58F600C4099B /* ConnectionlessClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5E1BAB0916009C920C /* ConnectionlessClient.h */; };
+		5D491D5A1D8F58F600C4099B /* PackagedUDPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6D1BAB0916009C920C /* PackagedUDPClient.h */; };
+		5D491D5B1D8F58F600C4099B /* TCPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E771BAB0916009C920C /* TCPClient.h */; };
+		5D491D5C1D8F58F600C4099B /* TCPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E781BAB0916009C920C /* TCPServer.h */; };
+		5D491D5D1D8F58F600C4099B /* HTTPSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E641BAB0916009C920C /* HTTPSClient.h */; };
+		5D491D5E1D8F58F600C4099B /* SocketScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E731BAB0916009C920C /* SocketScheduler.h */; };
+		5D491D5F1D8F58F600C4099B /* Address4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5B1BAB0916009C920C /* Address4.h */; };
+		5D491D601D8F58F600C4099B /* MessageQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E671BAB0916009C920C /* MessageQueue.h */; };
+		5D491D611D8F58F600C4099B /* PackagedConnectionlessClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6A1BAB0916009C920C /* PackagedConnectionlessClient.h */; };
+		5D491D621D8F58F600C4099B /* Network.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E681BAB0916009C920C /* Network.h */; };
+		5D491D631D8F58F600C4099B /* Server.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E711BAB0916009C920C /* Server.h */; };
+		5D491D641D8F58F600C4099B /* ConnectionlessServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5F1BAB0916009C920C /* ConnectionlessServer.h */; };
+		5D491D651D8F58F600C4099B /* Data.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E621BAB0916009C920C /* Data.h */; };
+		5D491D661D8F58F600C4099B /* UDPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E791BAB0916009C920C /* UDPClient.h */; };
+		5D491D671D8F58F600C4099B /* ConnectionOrientedServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E611BAB0916009C920C /* ConnectionOrientedServer.h */; };
+		5D491D681D8F58F600C4099B /* PackagedUDPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6E1BAB0916009C920C /* PackagedUDPServer.h */; };
+		5D491D691D8F58F600C4099B /* MaintenanceTCPConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E651BAB0916009C920C /* MaintenanceTCPConnector.h */; };
+		5D491D6A1D8F58F600C4099B /* StreamingServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E761BAB0916009C920C /* StreamingServer.h */; };
+		5D491D6B1D8F58F600C4099B /* Streaming.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E741BAB0916009C920C /* Streaming.h */; };
+		5D491D6C1D8F58F600C4099B /* Resolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E701BAB0916009C920C /* Resolver.h */; };
+		5D491D6D1D8F58F600C4099B /* PackagedSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6C1BAB0916009C920C /* PackagedSocket.h */; };
+		5D9862ED1D8B5E5200DEDB00 /* UDPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3D1BAB0907009C920C /* UDPServer.cpp */; };
+		5D9862EE1D8B5E5200DEDB00 /* MessageQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2B1BAB0907009C920C /* MessageQueue.cpp */; };
+		5D9862EF1D8B5E5200DEDB00 /* StreamingServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E391BAB0907009C920C /* StreamingServer.cpp */; };
+		5D9862F01D8B5E5200DEDB00 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E351BAB0907009C920C /* Socket.cpp */; };
+		5D9862F11D8B5E5200DEDB00 /* MaintenanceTCPConnector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E291BAB0907009C920C /* MaintenanceTCPConnector.cpp */; };
+		5D9862F21D8B5E5200DEDB00 /* Server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E341BAB0907009C920C /* Server.cpp */; };
+		5D9862F31D8B5E5200DEDB00 /* Streaming.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E371BAB0907009C920C /* Streaming.cpp */; };
+		5D9862F41D8B5E5200DEDB00 /* PackagedUDPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E321BAB0907009C920C /* PackagedUDPServer.cpp */; };
+		5D9862F51D8B5E5200DEDB00 /* PackagedConnectionlessClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2E1BAB0907009C920C /* PackagedConnectionlessClient.cpp */; };
+		5D9862F61D8B5E5200DEDB00 /* PackagedConnectionlessServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2F1BAB0907009C920C /* PackagedConnectionlessServer.cpp */; };
+		5D9862F71D8B5E5200DEDB00 /* MaintenanceUDPConnector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2A1BAB0907009C920C /* MaintenanceUDPConnector.cpp */; };
+		5D9862F81D8B5E5200DEDB00 /* ConnectionOrientedServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E261BAB0907009C920C /* ConnectionOrientedServer.cpp */; };
+		5D9862F91D8B5E5200DEDB00 /* PackagedUDPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E311BAB0907009C920C /* PackagedUDPClient.cpp */; };
+		5D9862FA1D8B5E5200DEDB00 /* ConnectionlessClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E231BAB0907009C920C /* ConnectionlessClient.cpp */; };
+		5D9862FB1D8B5E5200DEDB00 /* HTTPSClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E281BAB0907009C920C /* HTTPSClient.cpp */; };
+		5D9862FC1D8B5E5200DEDB00 /* StreamingClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E381BAB0907009C920C /* StreamingClient.cpp */; };
+		5D9862FD1D8B5E5200DEDB00 /* HTTPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E271BAB0907009C920C /* HTTPClient.cpp */; };
+		5D9862FE1D8B5E5200DEDB00 /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3A1BAB0907009C920C /* TCPClient.cpp */; };
+		5D9862FF1D8B5E5200DEDB00 /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3B1BAB0907009C920C /* TCPServer.cpp */; };
+		5D9863001D8B5E5200DEDB00 /* ConnectionOrientedClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E251BAB0907009C920C /* ConnectionOrientedClient.cpp */; };
+		5D9863011D8B5E5200DEDB00 /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E221BAB0907009C920C /* Client.cpp */; };
+		5D9863021D8B5E5200DEDB00 /* Address4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E211BAB0907009C920C /* Address4.cpp */; };
+		5D9863031D8B5E5200DEDB00 /* PackagedSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E301BAB0907009C920C /* PackagedSocket.cpp */; };
+		5D9863041D8B5E5200DEDB00 /* UDPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3C1BAB0907009C920C /* UDPClient.cpp */; };
+		5D9863061D8B5E5200DEDB00 /* SocketScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E361BAB0907009C920C /* SocketScheduler.cpp */; };
+		5D9863071D8B5E5200DEDB00 /* NetworkResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2D1BAB0907009C920C /* NetworkResource.cpp */; };
+		5D9863081D8B5E5200DEDB00 /* Resolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E331BAB0907009C920C /* Resolver.cpp */; };
+		5D9863091D8B5E5200DEDB00 /* ConnectionlessServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E241BAB0907009C920C /* ConnectionlessServer.cpp */; };
+		5D98630C1D8B5E5200DEDB00 /* BufferQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5C1BAB0916009C920C /* BufferQueue.h */; };
+		5D98630D1D8B5E5200DEDB00 /* UDPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E7A1BAB0916009C920C /* UDPServer.h */; };
+		5D98630E1D8B5E5200DEDB00 /* HTTPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E631BAB0916009C920C /* HTTPClient.h */; };
+		5D98630F1D8B5E5200DEDB00 /* MaintenanceUDPConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E661BAB0916009C920C /* MaintenanceUDPConnector.h */; };
+		5D9863101D8B5E5200DEDB00 /* ConnectionOrientedClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E601BAB0916009C920C /* ConnectionOrientedClient.h */; };
+		5D9863111D8B5E5200DEDB00 /* Client.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5D1BAB0916009C920C /* Client.h */; };
+		5D9863121D8B5E5200DEDB00 /* Port.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6F1BAB0916009C920C /* Port.h */; };
+		5D9863131D8B5E5200DEDB00 /* NetworkResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E691BAB0916009C920C /* NetworkResource.h */; };
+		5D9863141D8B5E5200DEDB00 /* StreamingClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E751BAB0916009C920C /* StreamingClient.h */; };
+		5D9863151D8B5E5200DEDB00 /* Socket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E721BAB0916009C920C /* Socket.h */; };
+		5D9863161D8B5E5200DEDB00 /* PackagedConnectionlessServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6B1BAB0916009C920C /* PackagedConnectionlessServer.h */; };
+		5D9863171D8B5E5200DEDB00 /* ConnectionlessClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5E1BAB0916009C920C /* ConnectionlessClient.h */; };
+		5D9863181D8B5E5200DEDB00 /* PackagedUDPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6D1BAB0916009C920C /* PackagedUDPClient.h */; };
+		5D9863191D8B5E5200DEDB00 /* TCPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E771BAB0916009C920C /* TCPClient.h */; };
+		5D98631A1D8B5E5200DEDB00 /* TCPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E781BAB0916009C920C /* TCPServer.h */; };
+		5D98631B1D8B5E5200DEDB00 /* HTTPSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E641BAB0916009C920C /* HTTPSClient.h */; };
+		5D98631C1D8B5E5200DEDB00 /* SocketScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E731BAB0916009C920C /* SocketScheduler.h */; };
+		5D98631D1D8B5E5200DEDB00 /* Address4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5B1BAB0916009C920C /* Address4.h */; };
+		5D98631E1D8B5E5200DEDB00 /* MessageQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E671BAB0916009C920C /* MessageQueue.h */; };
+		5D98631F1D8B5E5200DEDB00 /* PackagedConnectionlessClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6A1BAB0916009C920C /* PackagedConnectionlessClient.h */; };
+		5D9863201D8B5E5200DEDB00 /* Network.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E681BAB0916009C920C /* Network.h */; };
+		5D9863211D8B5E5200DEDB00 /* Server.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E711BAB0916009C920C /* Server.h */; };
+		5D9863221D8B5E5200DEDB00 /* ConnectionlessServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5F1BAB0916009C920C /* ConnectionlessServer.h */; };
+		5D9863231D8B5E5200DEDB00 /* Data.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E621BAB0916009C920C /* Data.h */; };
+		5D9863241D8B5E5200DEDB00 /* UDPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E791BAB0916009C920C /* UDPClient.h */; };
+		5D9863251D8B5E5200DEDB00 /* ConnectionOrientedServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E611BAB0916009C920C /* ConnectionOrientedServer.h */; };
+		5D9863261D8B5E5200DEDB00 /* PackagedUDPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6E1BAB0916009C920C /* PackagedUDPServer.h */; };
+		5D9863271D8B5E5200DEDB00 /* MaintenanceTCPConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E651BAB0916009C920C /* MaintenanceTCPConnector.h */; };
+		5D9863281D8B5E5200DEDB00 /* StreamingServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E761BAB0916009C920C /* StreamingServer.h */; };
+		5D9863291D8B5E5200DEDB00 /* Streaming.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E741BAB0916009C920C /* Streaming.h */; };
+		5D98632A1D8B5E5200DEDB00 /* Resolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E701BAB0916009C920C /* Resolver.h */; };
+		5D98632B1D8B5E5200DEDB00 /* PackagedSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6C1BAB0916009C920C /* PackagedSocket.h */; };
+		5DE84E3E1BAB0907009C920C /* Address4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E211BAB0907009C920C /* Address4.cpp */; };
+		5DE84E3F1BAB0907009C920C /* Client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E221BAB0907009C920C /* Client.cpp */; };
+		5DE84E401BAB0907009C920C /* ConnectionlessClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E231BAB0907009C920C /* ConnectionlessClient.cpp */; };
+		5DE84E411BAB0907009C920C /* ConnectionlessServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E241BAB0907009C920C /* ConnectionlessServer.cpp */; };
+		5DE84E421BAB0907009C920C /* ConnectionOrientedClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E251BAB0907009C920C /* ConnectionOrientedClient.cpp */; };
+		5DE84E431BAB0907009C920C /* ConnectionOrientedServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E261BAB0907009C920C /* ConnectionOrientedServer.cpp */; };
+		5DE84E441BAB0907009C920C /* HTTPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E271BAB0907009C920C /* HTTPClient.cpp */; };
+		5DE84E451BAB0907009C920C /* HTTPSClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E281BAB0907009C920C /* HTTPSClient.cpp */; };
+		5DE84E461BAB0907009C920C /* MaintenanceTCPConnector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E291BAB0907009C920C /* MaintenanceTCPConnector.cpp */; };
+		5DE84E471BAB0907009C920C /* MaintenanceUDPConnector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2A1BAB0907009C920C /* MaintenanceUDPConnector.cpp */; };
+		5DE84E481BAB0907009C920C /* MessageQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2B1BAB0907009C920C /* MessageQueue.cpp */; };
+		5DE84E4A1BAB0907009C920C /* NetworkResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2D1BAB0907009C920C /* NetworkResource.cpp */; };
+		5DE84E4B1BAB0907009C920C /* PackagedConnectionlessClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2E1BAB0907009C920C /* PackagedConnectionlessClient.cpp */; };
+		5DE84E4C1BAB0907009C920C /* PackagedConnectionlessServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E2F1BAB0907009C920C /* PackagedConnectionlessServer.cpp */; };
+		5DE84E4D1BAB0907009C920C /* PackagedSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E301BAB0907009C920C /* PackagedSocket.cpp */; };
+		5DE84E4E1BAB0907009C920C /* PackagedUDPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E311BAB0907009C920C /* PackagedUDPClient.cpp */; };
+		5DE84E4F1BAB0907009C920C /* PackagedUDPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E321BAB0907009C920C /* PackagedUDPServer.cpp */; };
+		5DE84E501BAB0907009C920C /* Resolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E331BAB0907009C920C /* Resolver.cpp */; };
+		5DE84E511BAB0907009C920C /* Server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E341BAB0907009C920C /* Server.cpp */; };
+		5DE84E521BAB0907009C920C /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E351BAB0907009C920C /* Socket.cpp */; };
+		5DE84E531BAB0907009C920C /* SocketScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E361BAB0907009C920C /* SocketScheduler.cpp */; };
+		5DE84E541BAB0907009C920C /* Streaming.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E371BAB0907009C920C /* Streaming.cpp */; };
+		5DE84E551BAB0907009C920C /* StreamingClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E381BAB0907009C920C /* StreamingClient.cpp */; };
+		5DE84E561BAB0907009C920C /* StreamingServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E391BAB0907009C920C /* StreamingServer.cpp */; };
+		5DE84E571BAB0907009C920C /* TCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3A1BAB0907009C920C /* TCPClient.cpp */; };
+		5DE84E581BAB0907009C920C /* TCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3B1BAB0907009C920C /* TCPServer.cpp */; };
+		5DE84E591BAB0907009C920C /* UDPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3C1BAB0907009C920C /* UDPClient.cpp */; };
+		5DE84E5A1BAB0907009C920C /* UDPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84E3D1BAB0907009C920C /* UDPServer.cpp */; };
+		5DE84E7B1BAB0916009C920C /* Address4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5B1BAB0916009C920C /* Address4.h */; };
+		5DE84E7C1BAB0916009C920C /* BufferQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5C1BAB0916009C920C /* BufferQueue.h */; };
+		5DE84E7D1BAB0916009C920C /* Client.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5D1BAB0916009C920C /* Client.h */; };
+		5DE84E7E1BAB0916009C920C /* ConnectionlessClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5E1BAB0916009C920C /* ConnectionlessClient.h */; };
+		5DE84E7F1BAB0916009C920C /* ConnectionlessServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E5F1BAB0916009C920C /* ConnectionlessServer.h */; };
+		5DE84E801BAB0916009C920C /* ConnectionOrientedClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E601BAB0916009C920C /* ConnectionOrientedClient.h */; };
+		5DE84E811BAB0916009C920C /* ConnectionOrientedServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E611BAB0916009C920C /* ConnectionOrientedServer.h */; };
+		5DE84E821BAB0916009C920C /* Data.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E621BAB0916009C920C /* Data.h */; };
+		5DE84E831BAB0916009C920C /* HTTPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E631BAB0916009C920C /* HTTPClient.h */; };
+		5DE84E841BAB0916009C920C /* HTTPSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E641BAB0916009C920C /* HTTPSClient.h */; };
+		5DE84E851BAB0916009C920C /* MaintenanceTCPConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E651BAB0916009C920C /* MaintenanceTCPConnector.h */; };
+		5DE84E861BAB0916009C920C /* MaintenanceUDPConnector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E661BAB0916009C920C /* MaintenanceUDPConnector.h */; };
+		5DE84E871BAB0916009C920C /* MessageQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E671BAB0916009C920C /* MessageQueue.h */; };
+		5DE84E881BAB0916009C920C /* Network.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E681BAB0916009C920C /* Network.h */; };
+		5DE84E891BAB0916009C920C /* NetworkResource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E691BAB0916009C920C /* NetworkResource.h */; };
+		5DE84E8A1BAB0916009C920C /* PackagedConnectionlessClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6A1BAB0916009C920C /* PackagedConnectionlessClient.h */; };
+		5DE84E8B1BAB0916009C920C /* PackagedConnectionlessServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6B1BAB0916009C920C /* PackagedConnectionlessServer.h */; };
+		5DE84E8C1BAB0916009C920C /* PackagedSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6C1BAB0916009C920C /* PackagedSocket.h */; };
+		5DE84E8D1BAB0916009C920C /* PackagedUDPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6D1BAB0916009C920C /* PackagedUDPClient.h */; };
+		5DE84E8E1BAB0916009C920C /* PackagedUDPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6E1BAB0916009C920C /* PackagedUDPServer.h */; };
+		5DE84E8F1BAB0916009C920C /* Port.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E6F1BAB0916009C920C /* Port.h */; };
+		5DE84E901BAB0916009C920C /* Resolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E701BAB0916009C920C /* Resolver.h */; };
+		5DE84E911BAB0916009C920C /* Server.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E711BAB0916009C920C /* Server.h */; };
+		5DE84E921BAB0916009C920C /* Socket.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E721BAB0916009C920C /* Socket.h */; };
+		5DE84E931BAB0916009C920C /* SocketScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E731BAB0916009C920C /* SocketScheduler.h */; };
+		5DE84E941BAB0916009C920C /* Streaming.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E741BAB0916009C920C /* Streaming.h */; };
+		5DE84E951BAB0916009C920C /* StreamingClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E751BAB0916009C920C /* StreamingClient.h */; };
+		5DE84E961BAB0916009C920C /* StreamingServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E761BAB0916009C920C /* StreamingServer.h */; };
+		5DE84E971BAB0916009C920C /* TCPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E771BAB0916009C920C /* TCPClient.h */; };
+		5DE84E981BAB0916009C920C /* TCPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E781BAB0916009C920C /* TCPServer.h */; };
+		5DE84E991BAB0916009C920C /* UDPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E791BAB0916009C920C /* UDPClient.h */; };
+		5DE84E9A1BAB0916009C920C /* UDPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84E7A1BAB0916009C920C /* UDPServer.h */; };
+		937D52D62737617B002894B4 /* PackagedTCPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 937D52D42737617A002894B4 /* PackagedTCPClient.h */; };
+		937D52D72737617B002894B4 /* PackagedTCPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 937D52D42737617A002894B4 /* PackagedTCPClient.h */; };
+		937D52D82737617B002894B4 /* PackagedTCPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 937D52D42737617A002894B4 /* PackagedTCPClient.h */; };
+		937D52D92737617B002894B4 /* PackagedTCPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 937D52D42737617A002894B4 /* PackagedTCPClient.h */; };
+		937D52DA2737617B002894B4 /* PackagedTCPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 937D52D52737617B002894B4 /* PackagedTCPServer.h */; };
+		937D52DB2737617B002894B4 /* PackagedTCPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 937D52D52737617B002894B4 /* PackagedTCPServer.h */; };
+		937D52DC2737617B002894B4 /* PackagedTCPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 937D52D52737617B002894B4 /* PackagedTCPServer.h */; };
+		937D52DD2737617B002894B4 /* PackagedTCPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 937D52D52737617B002894B4 /* PackagedTCPServer.h */; };
+		937D52E02737618E002894B4 /* PackagedTCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937D52DE2737618D002894B4 /* PackagedTCPClient.cpp */; };
+		937D52E12737618E002894B4 /* PackagedTCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937D52DE2737618D002894B4 /* PackagedTCPClient.cpp */; };
+		937D52E22737618E002894B4 /* PackagedTCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937D52DE2737618D002894B4 /* PackagedTCPClient.cpp */; };
+		937D52E32737618E002894B4 /* PackagedTCPClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937D52DE2737618D002894B4 /* PackagedTCPClient.cpp */; };
+		937D52E42737618E002894B4 /* PackagedTCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937D52DF2737618D002894B4 /* PackagedTCPServer.cpp */; };
+		937D52E52737618E002894B4 /* PackagedTCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937D52DF2737618D002894B4 /* PackagedTCPServer.cpp */; };
+		937D52E62737618E002894B4 /* PackagedTCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937D52DF2737618D002894B4 /* PackagedTCPServer.cpp */; };
+		937D52E72737618E002894B4 /* PackagedTCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937D52DF2737618D002894B4 /* PackagedTCPServer.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		505A28171FA339DC00B4EB1C /* HTTPSClient.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = HTTPSClient.mm; path = ../../../../../impl/ocean/network/HTTPSClient.mm; sourceTree = "<group>"; };
+		5D0A00D01BC29A860008C798 /* libOceanNetworkD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanNetworkD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D491D711D8F58F600C4099B /* libOceanNetworkD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanNetworkD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D98632F1D8B5E5200DEDB00 /* libOceanNetworkD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanNetworkD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DE84E121BAB07F5009C920C /* libOceanNetworkD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanNetworkD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DE84E211BAB0907009C920C /* Address4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Address4.cpp; path = ../../../../../impl/ocean/network/Address4.cpp; sourceTree = "<group>"; };
+		5DE84E221BAB0907009C920C /* Client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Client.cpp; path = ../../../../../impl/ocean/network/Client.cpp; sourceTree = "<group>"; };
+		5DE84E231BAB0907009C920C /* ConnectionlessClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectionlessClient.cpp; path = ../../../../../impl/ocean/network/ConnectionlessClient.cpp; sourceTree = "<group>"; };
+		5DE84E241BAB0907009C920C /* ConnectionlessServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectionlessServer.cpp; path = ../../../../../impl/ocean/network/ConnectionlessServer.cpp; sourceTree = "<group>"; };
+		5DE84E251BAB0907009C920C /* ConnectionOrientedClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectionOrientedClient.cpp; path = ../../../../../impl/ocean/network/ConnectionOrientedClient.cpp; sourceTree = "<group>"; };
+		5DE84E261BAB0907009C920C /* ConnectionOrientedServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConnectionOrientedServer.cpp; path = ../../../../../impl/ocean/network/ConnectionOrientedServer.cpp; sourceTree = "<group>"; };
+		5DE84E271BAB0907009C920C /* HTTPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HTTPClient.cpp; path = ../../../../../impl/ocean/network/HTTPClient.cpp; sourceTree = "<group>"; };
+		5DE84E281BAB0907009C920C /* HTTPSClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HTTPSClient.cpp; path = ../../../../../impl/ocean/network/HTTPSClient.cpp; sourceTree = "<group>"; };
+		5DE84E291BAB0907009C920C /* MaintenanceTCPConnector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MaintenanceTCPConnector.cpp; path = ../../../../../impl/ocean/network/MaintenanceTCPConnector.cpp; sourceTree = "<group>"; };
+		5DE84E2A1BAB0907009C920C /* MaintenanceUDPConnector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MaintenanceUDPConnector.cpp; path = ../../../../../impl/ocean/network/MaintenanceUDPConnector.cpp; sourceTree = "<group>"; };
+		5DE84E2B1BAB0907009C920C /* MessageQueue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MessageQueue.cpp; path = ../../../../../impl/ocean/network/MessageQueue.cpp; sourceTree = "<group>"; };
+		5DE84E2D1BAB0907009C920C /* NetworkResource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NetworkResource.cpp; path = ../../../../../impl/ocean/network/NetworkResource.cpp; sourceTree = "<group>"; };
+		5DE84E2E1BAB0907009C920C /* PackagedConnectionlessClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PackagedConnectionlessClient.cpp; path = ../../../../../impl/ocean/network/PackagedConnectionlessClient.cpp; sourceTree = "<group>"; };
+		5DE84E2F1BAB0907009C920C /* PackagedConnectionlessServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PackagedConnectionlessServer.cpp; path = ../../../../../impl/ocean/network/PackagedConnectionlessServer.cpp; sourceTree = "<group>"; };
+		5DE84E301BAB0907009C920C /* PackagedSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PackagedSocket.cpp; path = ../../../../../impl/ocean/network/PackagedSocket.cpp; sourceTree = "<group>"; };
+		5DE84E311BAB0907009C920C /* PackagedUDPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PackagedUDPClient.cpp; path = ../../../../../impl/ocean/network/PackagedUDPClient.cpp; sourceTree = "<group>"; };
+		5DE84E321BAB0907009C920C /* PackagedUDPServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PackagedUDPServer.cpp; path = ../../../../../impl/ocean/network/PackagedUDPServer.cpp; sourceTree = "<group>"; };
+		5DE84E331BAB0907009C920C /* Resolver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Resolver.cpp; path = ../../../../../impl/ocean/network/Resolver.cpp; sourceTree = "<group>"; };
+		5DE84E341BAB0907009C920C /* Server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Server.cpp; path = ../../../../../impl/ocean/network/Server.cpp; sourceTree = "<group>"; };
+		5DE84E351BAB0907009C920C /* Socket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Socket.cpp; path = ../../../../../impl/ocean/network/Socket.cpp; sourceTree = "<group>"; };
+		5DE84E361BAB0907009C920C /* SocketScheduler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SocketScheduler.cpp; path = ../../../../../impl/ocean/network/SocketScheduler.cpp; sourceTree = "<group>"; };
+		5DE84E371BAB0907009C920C /* Streaming.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Streaming.cpp; path = ../../../../../impl/ocean/network/Streaming.cpp; sourceTree = "<group>"; };
+		5DE84E381BAB0907009C920C /* StreamingClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StreamingClient.cpp; path = ../../../../../impl/ocean/network/StreamingClient.cpp; sourceTree = "<group>"; };
+		5DE84E391BAB0907009C920C /* StreamingServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StreamingServer.cpp; path = ../../../../../impl/ocean/network/StreamingServer.cpp; sourceTree = "<group>"; };
+		5DE84E3A1BAB0907009C920C /* TCPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TCPClient.cpp; path = ../../../../../impl/ocean/network/TCPClient.cpp; sourceTree = "<group>"; };
+		5DE84E3B1BAB0907009C920C /* TCPServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TCPServer.cpp; path = ../../../../../impl/ocean/network/TCPServer.cpp; sourceTree = "<group>"; };
+		5DE84E3C1BAB0907009C920C /* UDPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UDPClient.cpp; path = ../../../../../impl/ocean/network/UDPClient.cpp; sourceTree = "<group>"; };
+		5DE84E3D1BAB0907009C920C /* UDPServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UDPServer.cpp; path = ../../../../../impl/ocean/network/UDPServer.cpp; sourceTree = "<group>"; };
+		5DE84E5B1BAB0916009C920C /* Address4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Address4.h; path = ../../../../../impl/ocean/network/Address4.h; sourceTree = "<group>"; };
+		5DE84E5C1BAB0916009C920C /* BufferQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BufferQueue.h; path = ../../../../../impl/ocean/network/BufferQueue.h; sourceTree = "<group>"; };
+		5DE84E5D1BAB0916009C920C /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Client.h; path = ../../../../../impl/ocean/network/Client.h; sourceTree = "<group>"; };
+		5DE84E5E1BAB0916009C920C /* ConnectionlessClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectionlessClient.h; path = ../../../../../impl/ocean/network/ConnectionlessClient.h; sourceTree = "<group>"; };
+		5DE84E5F1BAB0916009C920C /* ConnectionlessServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectionlessServer.h; path = ../../../../../impl/ocean/network/ConnectionlessServer.h; sourceTree = "<group>"; };
+		5DE84E601BAB0916009C920C /* ConnectionOrientedClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectionOrientedClient.h; path = ../../../../../impl/ocean/network/ConnectionOrientedClient.h; sourceTree = "<group>"; };
+		5DE84E611BAB0916009C920C /* ConnectionOrientedServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectionOrientedServer.h; path = ../../../../../impl/ocean/network/ConnectionOrientedServer.h; sourceTree = "<group>"; };
+		5DE84E621BAB0916009C920C /* Data.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Data.h; path = ../../../../../impl/ocean/network/Data.h; sourceTree = "<group>"; };
+		5DE84E631BAB0916009C920C /* HTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HTTPClient.h; path = ../../../../../impl/ocean/network/HTTPClient.h; sourceTree = "<group>"; };
+		5DE84E641BAB0916009C920C /* HTTPSClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HTTPSClient.h; path = ../../../../../impl/ocean/network/HTTPSClient.h; sourceTree = "<group>"; };
+		5DE84E651BAB0916009C920C /* MaintenanceTCPConnector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaintenanceTCPConnector.h; path = ../../../../../impl/ocean/network/MaintenanceTCPConnector.h; sourceTree = "<group>"; };
+		5DE84E661BAB0916009C920C /* MaintenanceUDPConnector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaintenanceUDPConnector.h; path = ../../../../../impl/ocean/network/MaintenanceUDPConnector.h; sourceTree = "<group>"; };
+		5DE84E671BAB0916009C920C /* MessageQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessageQueue.h; path = ../../../../../impl/ocean/network/MessageQueue.h; sourceTree = "<group>"; };
+		5DE84E681BAB0916009C920C /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Network.h; path = ../../../../../impl/ocean/network/Network.h; sourceTree = "<group>"; };
+		5DE84E691BAB0916009C920C /* NetworkResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkResource.h; path = ../../../../../impl/ocean/network/NetworkResource.h; sourceTree = "<group>"; };
+		5DE84E6A1BAB0916009C920C /* PackagedConnectionlessClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PackagedConnectionlessClient.h; path = ../../../../../impl/ocean/network/PackagedConnectionlessClient.h; sourceTree = "<group>"; };
+		5DE84E6B1BAB0916009C920C /* PackagedConnectionlessServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PackagedConnectionlessServer.h; path = ../../../../../impl/ocean/network/PackagedConnectionlessServer.h; sourceTree = "<group>"; };
+		5DE84E6C1BAB0916009C920C /* PackagedSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PackagedSocket.h; path = ../../../../../impl/ocean/network/PackagedSocket.h; sourceTree = "<group>"; };
+		5DE84E6D1BAB0916009C920C /* PackagedUDPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PackagedUDPClient.h; path = ../../../../../impl/ocean/network/PackagedUDPClient.h; sourceTree = "<group>"; };
+		5DE84E6E1BAB0916009C920C /* PackagedUDPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PackagedUDPServer.h; path = ../../../../../impl/ocean/network/PackagedUDPServer.h; sourceTree = "<group>"; };
+		5DE84E6F1BAB0916009C920C /* Port.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Port.h; path = ../../../../../impl/ocean/network/Port.h; sourceTree = "<group>"; };
+		5DE84E701BAB0916009C920C /* Resolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Resolver.h; path = ../../../../../impl/ocean/network/Resolver.h; sourceTree = "<group>"; };
+		5DE84E711BAB0916009C920C /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Server.h; path = ../../../../../impl/ocean/network/Server.h; sourceTree = "<group>"; };
+		5DE84E721BAB0916009C920C /* Socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Socket.h; path = ../../../../../impl/ocean/network/Socket.h; sourceTree = "<group>"; };
+		5DE84E731BAB0916009C920C /* SocketScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SocketScheduler.h; path = ../../../../../impl/ocean/network/SocketScheduler.h; sourceTree = "<group>"; };
+		5DE84E741BAB0916009C920C /* Streaming.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Streaming.h; path = ../../../../../impl/ocean/network/Streaming.h; sourceTree = "<group>"; };
+		5DE84E751BAB0916009C920C /* StreamingClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StreamingClient.h; path = ../../../../../impl/ocean/network/StreamingClient.h; sourceTree = "<group>"; };
+		5DE84E761BAB0916009C920C /* StreamingServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StreamingServer.h; path = ../../../../../impl/ocean/network/StreamingServer.h; sourceTree = "<group>"; };
+		5DE84E771BAB0916009C920C /* TCPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCPClient.h; path = ../../../../../impl/ocean/network/TCPClient.h; sourceTree = "<group>"; };
+		5DE84E781BAB0916009C920C /* TCPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TCPServer.h; path = ../../../../../impl/ocean/network/TCPServer.h; sourceTree = "<group>"; };
+		5DE84E791BAB0916009C920C /* UDPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UDPClient.h; path = ../../../../../impl/ocean/network/UDPClient.h; sourceTree = "<group>"; };
+		5DE84E7A1BAB0916009C920C /* UDPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UDPServer.h; path = ../../../../../impl/ocean/network/UDPServer.h; sourceTree = "<group>"; };
+		937D52D42737617A002894B4 /* PackagedTCPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PackagedTCPClient.h; path = ../../../../../impl/ocean/network/PackagedTCPClient.h; sourceTree = "<group>"; };
+		937D52D52737617B002894B4 /* PackagedTCPServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PackagedTCPServer.h; path = ../../../../../impl/ocean/network/PackagedTCPServer.h; sourceTree = "<group>"; };
+		937D52DE2737618D002894B4 /* PackagedTCPClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PackagedTCPClient.cpp; path = ../../../../../impl/ocean/network/PackagedTCPClient.cpp; sourceTree = "<group>"; };
+		937D52DF2737618D002894B4 /* PackagedTCPServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PackagedTCPServer.cpp; path = ../../../../../impl/ocean/network/PackagedTCPServer.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D0A00AB1BC29A860008C798 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D491D4C1D8F58F600C4099B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98630A1D8B5E5200DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DE84E0F1BAB07F5009C920C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D0A00D11BC29AF40008C798 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DE84E5B1BAB0916009C920C /* Address4.h */,
+				5DE84E5C1BAB0916009C920C /* BufferQueue.h */,
+				5DE84E5D1BAB0916009C920C /* Client.h */,
+				5DE84E5E1BAB0916009C920C /* ConnectionlessClient.h */,
+				5DE84E5F1BAB0916009C920C /* ConnectionlessServer.h */,
+				5DE84E601BAB0916009C920C /* ConnectionOrientedClient.h */,
+				5DE84E611BAB0916009C920C /* ConnectionOrientedServer.h */,
+				5DE84E621BAB0916009C920C /* Data.h */,
+				5DE84E631BAB0916009C920C /* HTTPClient.h */,
+				5DE84E641BAB0916009C920C /* HTTPSClient.h */,
+				5DE84E651BAB0916009C920C /* MaintenanceTCPConnector.h */,
+				5DE84E661BAB0916009C920C /* MaintenanceUDPConnector.h */,
+				5DE84E671BAB0916009C920C /* MessageQueue.h */,
+				5DE84E681BAB0916009C920C /* Network.h */,
+				5DE84E691BAB0916009C920C /* NetworkResource.h */,
+				5DE84E6A1BAB0916009C920C /* PackagedConnectionlessClient.h */,
+				5DE84E6B1BAB0916009C920C /* PackagedConnectionlessServer.h */,
+				5DE84E6C1BAB0916009C920C /* PackagedSocket.h */,
+				937D52D42737617A002894B4 /* PackagedTCPClient.h */,
+				937D52D52737617B002894B4 /* PackagedTCPServer.h */,
+				5DE84E6D1BAB0916009C920C /* PackagedUDPClient.h */,
+				5DE84E6E1BAB0916009C920C /* PackagedUDPServer.h */,
+				5DE84E6F1BAB0916009C920C /* Port.h */,
+				5DE84E701BAB0916009C920C /* Resolver.h */,
+				5DE84E711BAB0916009C920C /* Server.h */,
+				5DE84E721BAB0916009C920C /* Socket.h */,
+				5DE84E731BAB0916009C920C /* SocketScheduler.h */,
+				5DE84E741BAB0916009C920C /* Streaming.h */,
+				5DE84E751BAB0916009C920C /* StreamingClient.h */,
+				5DE84E761BAB0916009C920C /* StreamingServer.h */,
+				5DE84E771BAB0916009C920C /* TCPClient.h */,
+				5DE84E781BAB0916009C920C /* TCPServer.h */,
+				5DE84E791BAB0916009C920C /* UDPClient.h */,
+				5DE84E7A1BAB0916009C920C /* UDPServer.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DE84E091BAB07F5009C920C = {
+			isa = PBXGroup;
+			children = (
+				5D0A00D11BC29AF40008C798 /* Header Files */,
+				5DE84E201BAB08F6009C920C /* Source Files */,
+				5DE84E131BAB07F5009C920C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DE84E131BAB07F5009C920C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DE84E121BAB07F5009C920C /* libOceanNetworkD.a */,
+				5D0A00D01BC29A860008C798 /* libOceanNetworkD.dylib */,
+				5D98632F1D8B5E5200DEDB00 /* libOceanNetworkD.a */,
+				5D491D711D8F58F600C4099B /* libOceanNetworkD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DE84E201BAB08F6009C920C /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DE84E211BAB0907009C920C /* Address4.cpp */,
+				5DE84E221BAB0907009C920C /* Client.cpp */,
+				5DE84E231BAB0907009C920C /* ConnectionlessClient.cpp */,
+				5DE84E241BAB0907009C920C /* ConnectionlessServer.cpp */,
+				5DE84E251BAB0907009C920C /* ConnectionOrientedClient.cpp */,
+				5DE84E261BAB0907009C920C /* ConnectionOrientedServer.cpp */,
+				5DE84E271BAB0907009C920C /* HTTPClient.cpp */,
+				5DE84E281BAB0907009C920C /* HTTPSClient.cpp */,
+				505A28171FA339DC00B4EB1C /* HTTPSClient.mm */,
+				5DE84E291BAB0907009C920C /* MaintenanceTCPConnector.cpp */,
+				5DE84E2A1BAB0907009C920C /* MaintenanceUDPConnector.cpp */,
+				5DE84E2B1BAB0907009C920C /* MessageQueue.cpp */,
+				5DE84E2D1BAB0907009C920C /* NetworkResource.cpp */,
+				5DE84E2E1BAB0907009C920C /* PackagedConnectionlessClient.cpp */,
+				5DE84E2F1BAB0907009C920C /* PackagedConnectionlessServer.cpp */,
+				5DE84E301BAB0907009C920C /* PackagedSocket.cpp */,
+				937D52DE2737618D002894B4 /* PackagedTCPClient.cpp */,
+				937D52DF2737618D002894B4 /* PackagedTCPServer.cpp */,
+				5DE84E311BAB0907009C920C /* PackagedUDPClient.cpp */,
+				5DE84E321BAB0907009C920C /* PackagedUDPServer.cpp */,
+				5DE84E331BAB0907009C920C /* Resolver.cpp */,
+				5DE84E341BAB0907009C920C /* Server.cpp */,
+				5DE84E351BAB0907009C920C /* Socket.cpp */,
+				5DE84E361BAB0907009C920C /* SocketScheduler.cpp */,
+				5DE84E371BAB0907009C920C /* Streaming.cpp */,
+				5DE84E381BAB0907009C920C /* StreamingClient.cpp */,
+				5DE84E391BAB0907009C920C /* StreamingServer.cpp */,
+				5DE84E3A1BAB0907009C920C /* TCPClient.cpp */,
+				5DE84E3B1BAB0907009C920C /* TCPServer.cpp */,
+				5DE84E3C1BAB0907009C920C /* UDPClient.cpp */,
+				5DE84E3D1BAB0907009C920C /* UDPServer.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D0A00AC1BC29A860008C798 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D0A00AD1BC29A860008C798 /* BufferQueue.h in Headers */,
+				5D0A00AE1BC29A860008C798 /* UDPServer.h in Headers */,
+				5D0A00AF1BC29A860008C798 /* HTTPClient.h in Headers */,
+				5D0A00B01BC29A860008C798 /* MaintenanceUDPConnector.h in Headers */,
+				937D52D72737617B002894B4 /* PackagedTCPClient.h in Headers */,
+				5D0A00B11BC29A860008C798 /* ConnectionOrientedClient.h in Headers */,
+				5D0A00B21BC29A860008C798 /* Client.h in Headers */,
+				937D52DB2737617B002894B4 /* PackagedTCPServer.h in Headers */,
+				5D0A00B31BC29A860008C798 /* Port.h in Headers */,
+				5D0A00B41BC29A860008C798 /* NetworkResource.h in Headers */,
+				5D0A00B51BC29A860008C798 /* StreamingClient.h in Headers */,
+				5D0A00B61BC29A860008C798 /* Socket.h in Headers */,
+				5D0A00B71BC29A860008C798 /* PackagedConnectionlessServer.h in Headers */,
+				5D0A00B81BC29A860008C798 /* ConnectionlessClient.h in Headers */,
+				5D0A00B91BC29A860008C798 /* PackagedUDPClient.h in Headers */,
+				5D0A00BA1BC29A860008C798 /* TCPClient.h in Headers */,
+				5D0A00BB1BC29A860008C798 /* TCPServer.h in Headers */,
+				5D0A00BC1BC29A860008C798 /* HTTPSClient.h in Headers */,
+				5D0A00BD1BC29A860008C798 /* SocketScheduler.h in Headers */,
+				5D0A00BE1BC29A860008C798 /* Address4.h in Headers */,
+				5D0A00BF1BC29A860008C798 /* MessageQueue.h in Headers */,
+				5D0A00C01BC29A860008C798 /* PackagedConnectionlessClient.h in Headers */,
+				5D0A00C11BC29A860008C798 /* Network.h in Headers */,
+				5D0A00C21BC29A860008C798 /* Server.h in Headers */,
+				5D0A00C31BC29A860008C798 /* ConnectionlessServer.h in Headers */,
+				5D0A00C41BC29A860008C798 /* Data.h in Headers */,
+				5D0A00C51BC29A860008C798 /* UDPClient.h in Headers */,
+				5D0A00C61BC29A860008C798 /* ConnectionOrientedServer.h in Headers */,
+				5D0A00C71BC29A860008C798 /* PackagedUDPServer.h in Headers */,
+				5D0A00C81BC29A860008C798 /* MaintenanceTCPConnector.h in Headers */,
+				5D0A00C91BC29A860008C798 /* StreamingServer.h in Headers */,
+				5D0A00CA1BC29A860008C798 /* Streaming.h in Headers */,
+				5D0A00CB1BC29A860008C798 /* Resolver.h in Headers */,
+				5D0A00CC1BC29A860008C798 /* PackagedSocket.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D491D4D1D8F58F600C4099B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D491D4E1D8F58F600C4099B /* BufferQueue.h in Headers */,
+				5D491D4F1D8F58F600C4099B /* UDPServer.h in Headers */,
+				5D491D501D8F58F600C4099B /* HTTPClient.h in Headers */,
+				5D491D511D8F58F600C4099B /* MaintenanceUDPConnector.h in Headers */,
+				937D52D92737617B002894B4 /* PackagedTCPClient.h in Headers */,
+				5D491D521D8F58F600C4099B /* ConnectionOrientedClient.h in Headers */,
+				5D491D531D8F58F600C4099B /* Client.h in Headers */,
+				937D52DD2737617B002894B4 /* PackagedTCPServer.h in Headers */,
+				5D491D541D8F58F600C4099B /* Port.h in Headers */,
+				5D491D551D8F58F600C4099B /* NetworkResource.h in Headers */,
+				5D491D561D8F58F600C4099B /* StreamingClient.h in Headers */,
+				5D491D571D8F58F600C4099B /* Socket.h in Headers */,
+				5D491D581D8F58F600C4099B /* PackagedConnectionlessServer.h in Headers */,
+				5D491D591D8F58F600C4099B /* ConnectionlessClient.h in Headers */,
+				5D491D5A1D8F58F600C4099B /* PackagedUDPClient.h in Headers */,
+				5D491D5B1D8F58F600C4099B /* TCPClient.h in Headers */,
+				5D491D5C1D8F58F600C4099B /* TCPServer.h in Headers */,
+				5D491D5D1D8F58F600C4099B /* HTTPSClient.h in Headers */,
+				5D491D5E1D8F58F600C4099B /* SocketScheduler.h in Headers */,
+				5D491D5F1D8F58F600C4099B /* Address4.h in Headers */,
+				5D491D601D8F58F600C4099B /* MessageQueue.h in Headers */,
+				5D491D611D8F58F600C4099B /* PackagedConnectionlessClient.h in Headers */,
+				5D491D621D8F58F600C4099B /* Network.h in Headers */,
+				5D491D631D8F58F600C4099B /* Server.h in Headers */,
+				5D491D641D8F58F600C4099B /* ConnectionlessServer.h in Headers */,
+				5D491D651D8F58F600C4099B /* Data.h in Headers */,
+				5D491D661D8F58F600C4099B /* UDPClient.h in Headers */,
+				5D491D671D8F58F600C4099B /* ConnectionOrientedServer.h in Headers */,
+				5D491D681D8F58F600C4099B /* PackagedUDPServer.h in Headers */,
+				5D491D691D8F58F600C4099B /* MaintenanceTCPConnector.h in Headers */,
+				5D491D6A1D8F58F600C4099B /* StreamingServer.h in Headers */,
+				5D491D6B1D8F58F600C4099B /* Streaming.h in Headers */,
+				5D491D6C1D8F58F600C4099B /* Resolver.h in Headers */,
+				5D491D6D1D8F58F600C4099B /* PackagedSocket.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98630B1D8B5E5200DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D98630C1D8B5E5200DEDB00 /* BufferQueue.h in Headers */,
+				5D98630D1D8B5E5200DEDB00 /* UDPServer.h in Headers */,
+				5D98630E1D8B5E5200DEDB00 /* HTTPClient.h in Headers */,
+				5D98630F1D8B5E5200DEDB00 /* MaintenanceUDPConnector.h in Headers */,
+				937D52D82737617B002894B4 /* PackagedTCPClient.h in Headers */,
+				5D9863101D8B5E5200DEDB00 /* ConnectionOrientedClient.h in Headers */,
+				5D9863111D8B5E5200DEDB00 /* Client.h in Headers */,
+				937D52DC2737617B002894B4 /* PackagedTCPServer.h in Headers */,
+				5D9863121D8B5E5200DEDB00 /* Port.h in Headers */,
+				5D9863131D8B5E5200DEDB00 /* NetworkResource.h in Headers */,
+				5D9863141D8B5E5200DEDB00 /* StreamingClient.h in Headers */,
+				5D9863151D8B5E5200DEDB00 /* Socket.h in Headers */,
+				5D9863161D8B5E5200DEDB00 /* PackagedConnectionlessServer.h in Headers */,
+				5D9863171D8B5E5200DEDB00 /* ConnectionlessClient.h in Headers */,
+				5D9863181D8B5E5200DEDB00 /* PackagedUDPClient.h in Headers */,
+				5D9863191D8B5E5200DEDB00 /* TCPClient.h in Headers */,
+				5D98631A1D8B5E5200DEDB00 /* TCPServer.h in Headers */,
+				5D98631B1D8B5E5200DEDB00 /* HTTPSClient.h in Headers */,
+				5D98631C1D8B5E5200DEDB00 /* SocketScheduler.h in Headers */,
+				5D98631D1D8B5E5200DEDB00 /* Address4.h in Headers */,
+				5D98631E1D8B5E5200DEDB00 /* MessageQueue.h in Headers */,
+				5D98631F1D8B5E5200DEDB00 /* PackagedConnectionlessClient.h in Headers */,
+				5D9863201D8B5E5200DEDB00 /* Network.h in Headers */,
+				5D9863211D8B5E5200DEDB00 /* Server.h in Headers */,
+				5D9863221D8B5E5200DEDB00 /* ConnectionlessServer.h in Headers */,
+				5D9863231D8B5E5200DEDB00 /* Data.h in Headers */,
+				5D9863241D8B5E5200DEDB00 /* UDPClient.h in Headers */,
+				5D9863251D8B5E5200DEDB00 /* ConnectionOrientedServer.h in Headers */,
+				5D9863261D8B5E5200DEDB00 /* PackagedUDPServer.h in Headers */,
+				5D9863271D8B5E5200DEDB00 /* MaintenanceTCPConnector.h in Headers */,
+				5D9863281D8B5E5200DEDB00 /* StreamingServer.h in Headers */,
+				5D9863291D8B5E5200DEDB00 /* Streaming.h in Headers */,
+				5D98632A1D8B5E5200DEDB00 /* Resolver.h in Headers */,
+				5D98632B1D8B5E5200DEDB00 /* PackagedSocket.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DE84E101BAB07F5009C920C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DE84E7C1BAB0916009C920C /* BufferQueue.h in Headers */,
+				5DE84E9A1BAB0916009C920C /* UDPServer.h in Headers */,
+				5DE84E831BAB0916009C920C /* HTTPClient.h in Headers */,
+				5DE84E861BAB0916009C920C /* MaintenanceUDPConnector.h in Headers */,
+				937D52D62737617B002894B4 /* PackagedTCPClient.h in Headers */,
+				5DE84E801BAB0916009C920C /* ConnectionOrientedClient.h in Headers */,
+				5DE84E7D1BAB0916009C920C /* Client.h in Headers */,
+				937D52DA2737617B002894B4 /* PackagedTCPServer.h in Headers */,
+				5DE84E8F1BAB0916009C920C /* Port.h in Headers */,
+				5DE84E891BAB0916009C920C /* NetworkResource.h in Headers */,
+				5DE84E951BAB0916009C920C /* StreamingClient.h in Headers */,
+				5DE84E921BAB0916009C920C /* Socket.h in Headers */,
+				5DE84E8B1BAB0916009C920C /* PackagedConnectionlessServer.h in Headers */,
+				5DE84E7E1BAB0916009C920C /* ConnectionlessClient.h in Headers */,
+				5DE84E8D1BAB0916009C920C /* PackagedUDPClient.h in Headers */,
+				5DE84E971BAB0916009C920C /* TCPClient.h in Headers */,
+				5DE84E981BAB0916009C920C /* TCPServer.h in Headers */,
+				5DE84E841BAB0916009C920C /* HTTPSClient.h in Headers */,
+				5DE84E931BAB0916009C920C /* SocketScheduler.h in Headers */,
+				5DE84E7B1BAB0916009C920C /* Address4.h in Headers */,
+				5DE84E871BAB0916009C920C /* MessageQueue.h in Headers */,
+				5DE84E8A1BAB0916009C920C /* PackagedConnectionlessClient.h in Headers */,
+				5DE84E881BAB0916009C920C /* Network.h in Headers */,
+				5DE84E911BAB0916009C920C /* Server.h in Headers */,
+				5DE84E7F1BAB0916009C920C /* ConnectionlessServer.h in Headers */,
+				5DE84E821BAB0916009C920C /* Data.h in Headers */,
+				5DE84E991BAB0916009C920C /* UDPClient.h in Headers */,
+				5DE84E811BAB0916009C920C /* ConnectionOrientedServer.h in Headers */,
+				5DE84E8E1BAB0916009C920C /* PackagedUDPServer.h in Headers */,
+				5DE84E851BAB0916009C920C /* MaintenanceTCPConnector.h in Headers */,
+				5DE84E961BAB0916009C920C /* StreamingServer.h in Headers */,
+				5DE84E941BAB0916009C920C /* Streaming.h in Headers */,
+				5DE84E901BAB0916009C920C /* Resolver.h in Headers */,
+				5DE84E8C1BAB0916009C920C /* PackagedSocket.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D0A008C1BC29A860008C798 /* network x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D0A00CD1BC29A860008C798 /* Build configuration list for PBXNativeTarget "network x64 (Shared)" */;
+			buildPhases = (
+				5D0A008D1BC29A860008C798 /* Sources */,
+				5D0A00AB1BC29A860008C798 /* Frameworks */,
+				5D0A00AC1BC29A860008C798 /* Headers */,
+				C041EC7C1DABEE1000BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "network x64 (Shared)";
+			productName = network;
+			productReference = 5D0A00D01BC29A860008C798 /* libOceanNetworkD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D491D2D1D8F58F600C4099B /* network arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D491D6E1D8F58F600C4099B /* Build configuration list for PBXNativeTarget "network arm64 (Shared)" */;
+			buildPhases = (
+				5D491D2E1D8F58F600C4099B /* Sources */,
+				5D491D4C1D8F58F600C4099B /* Frameworks */,
+				5D491D4D1D8F58F600C4099B /* Headers */,
+				5D491D721D8F594100C4099B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "network arm64 (Shared)";
+			productName = network;
+			productReference = 5D491D711D8F58F600C4099B /* libOceanNetworkD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9862EB1D8B5E5200DEDB00 /* network arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D98632C1D8B5E5200DEDB00 /* Build configuration list for PBXNativeTarget "network arm64 (Static)" */;
+			buildPhases = (
+				5D9862EC1D8B5E5200DEDB00 /* Sources */,
+				5D98630A1D8B5E5200DEDB00 /* Frameworks */,
+				5D98630B1D8B5E5200DEDB00 /* Headers */,
+				5D837F541D8F106600939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "network arm64 (Static)";
+			productName = network;
+			productReference = 5D98632F1D8B5E5200DEDB00 /* libOceanNetworkD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DE84E111BAB07F5009C920C /* network x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DE84E1D1BAB07F5009C920C /* Build configuration list for PBXNativeTarget "network x64 (Static)" */;
+			buildPhases = (
+				5DE84E0E1BAB07F5009C920C /* Sources */,
+				5DE84E0F1BAB07F5009C920C /* Frameworks */,
+				5DE84E101BAB07F5009C920C /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "network x64 (Static)";
+			productName = network;
+			productReference = 5DE84E121BAB07F5009C920C /* libOceanNetworkD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DE84E0A1BAB07F5009C920C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DE84E111BAB07F5009C920C = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DE84E0D1BAB07F5009C920C /* Build configuration list for PBXProject "network" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DE84E091BAB07F5009C920C;
+			productRefGroup = 5DE84E131BAB07F5009C920C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DE84E111BAB07F5009C920C /* network x64 (Static) */,
+				5D0A008C1BC29A860008C798 /* network x64 (Shared) */,
+				5D9862EB1D8B5E5200DEDB00 /* network arm64 (Static) */,
+				5D491D2D1D8F58F600C4099B /* network arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D491D721D8F594100C4099B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../codesign.sh\n../../copy_arm_shared.sh \"../../../../../bin/lib/\"";
+		};
+		5D837F541D8F106600939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../copy_arm_static.sh \"../../../../../bin/lib/\"";
+		};
+		C041EC7C1DABEE1000BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D0A008D1BC29A860008C798 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D0A008E1BC29A860008C798 /* UDPServer.cpp in Sources */,
+				5D0A008F1BC29A860008C798 /* MessageQueue.cpp in Sources */,
+				5D0A00901BC29A860008C798 /* StreamingServer.cpp in Sources */,
+				5D0A00911BC29A860008C798 /* Socket.cpp in Sources */,
+				5D0A00921BC29A860008C798 /* MaintenanceTCPConnector.cpp in Sources */,
+				5D0A00931BC29A860008C798 /* Server.cpp in Sources */,
+				5D0A00941BC29A860008C798 /* Streaming.cpp in Sources */,
+				5D0A00951BC29A860008C798 /* PackagedUDPServer.cpp in Sources */,
+				5D0A00961BC29A860008C798 /* PackagedConnectionlessClient.cpp in Sources */,
+				5D0A00971BC29A860008C798 /* PackagedConnectionlessServer.cpp in Sources */,
+				5D0A00981BC29A860008C798 /* MaintenanceUDPConnector.cpp in Sources */,
+				5D0A00991BC29A860008C798 /* ConnectionOrientedServer.cpp in Sources */,
+				5D0A009A1BC29A860008C798 /* PackagedUDPClient.cpp in Sources */,
+				5D0A009B1BC29A860008C798 /* ConnectionlessClient.cpp in Sources */,
+				5D0A009C1BC29A860008C798 /* HTTPSClient.cpp in Sources */,
+				5D0A009D1BC29A860008C798 /* StreamingClient.cpp in Sources */,
+				5D0A009E1BC29A860008C798 /* HTTPClient.cpp in Sources */,
+				5D0A009F1BC29A860008C798 /* TCPClient.cpp in Sources */,
+				937D52E12737618E002894B4 /* PackagedTCPClient.cpp in Sources */,
+				505A28191FA339E500B4EB1C /* HTTPSClient.mm in Sources */,
+				5D0A00A01BC29A860008C798 /* TCPServer.cpp in Sources */,
+				5D0A00A11BC29A860008C798 /* ConnectionOrientedClient.cpp in Sources */,
+				5D0A00A21BC29A860008C798 /* Client.cpp in Sources */,
+				5D0A00A31BC29A860008C798 /* Address4.cpp in Sources */,
+				5D0A00A41BC29A860008C798 /* PackagedSocket.cpp in Sources */,
+				5D0A00A51BC29A860008C798 /* UDPClient.cpp in Sources */,
+				5D0A00A71BC29A860008C798 /* SocketScheduler.cpp in Sources */,
+				937D52E52737618E002894B4 /* PackagedTCPServer.cpp in Sources */,
+				5D0A00A81BC29A860008C798 /* NetworkResource.cpp in Sources */,
+				5D0A00A91BC29A860008C798 /* Resolver.cpp in Sources */,
+				5D0A00AA1BC29A860008C798 /* ConnectionlessServer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D491D2E1D8F58F600C4099B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D491D2F1D8F58F600C4099B /* UDPServer.cpp in Sources */,
+				5D491D301D8F58F600C4099B /* MessageQueue.cpp in Sources */,
+				5D491D311D8F58F600C4099B /* StreamingServer.cpp in Sources */,
+				5D491D321D8F58F600C4099B /* Socket.cpp in Sources */,
+				5D491D331D8F58F600C4099B /* MaintenanceTCPConnector.cpp in Sources */,
+				5D491D341D8F58F600C4099B /* Server.cpp in Sources */,
+				5D491D351D8F58F600C4099B /* Streaming.cpp in Sources */,
+				5D491D361D8F58F600C4099B /* PackagedUDPServer.cpp in Sources */,
+				5D491D371D8F58F600C4099B /* PackagedConnectionlessClient.cpp in Sources */,
+				5D491D381D8F58F600C4099B /* PackagedConnectionlessServer.cpp in Sources */,
+				5D491D391D8F58F600C4099B /* MaintenanceUDPConnector.cpp in Sources */,
+				5D491D3A1D8F58F600C4099B /* ConnectionOrientedServer.cpp in Sources */,
+				5D491D3B1D8F58F600C4099B /* PackagedUDPClient.cpp in Sources */,
+				5D491D3C1D8F58F600C4099B /* ConnectionlessClient.cpp in Sources */,
+				5D491D3D1D8F58F600C4099B /* HTTPSClient.cpp in Sources */,
+				5D491D3E1D8F58F600C4099B /* StreamingClient.cpp in Sources */,
+				5D491D3F1D8F58F600C4099B /* HTTPClient.cpp in Sources */,
+				5D491D401D8F58F600C4099B /* TCPClient.cpp in Sources */,
+				937D52E32737618E002894B4 /* PackagedTCPClient.cpp in Sources */,
+				505A281B1FA339E600B4EB1C /* HTTPSClient.mm in Sources */,
+				5D491D411D8F58F600C4099B /* TCPServer.cpp in Sources */,
+				5D491D421D8F58F600C4099B /* ConnectionOrientedClient.cpp in Sources */,
+				5D491D431D8F58F600C4099B /* Client.cpp in Sources */,
+				5D491D441D8F58F600C4099B /* Address4.cpp in Sources */,
+				5D491D451D8F58F600C4099B /* PackagedSocket.cpp in Sources */,
+				5D491D461D8F58F600C4099B /* UDPClient.cpp in Sources */,
+				5D491D481D8F58F600C4099B /* SocketScheduler.cpp in Sources */,
+				937D52E72737618E002894B4 /* PackagedTCPServer.cpp in Sources */,
+				5D491D491D8F58F600C4099B /* NetworkResource.cpp in Sources */,
+				5D491D4A1D8F58F600C4099B /* Resolver.cpp in Sources */,
+				5D491D4B1D8F58F600C4099B /* ConnectionlessServer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862EC1D8B5E5200DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9862ED1D8B5E5200DEDB00 /* UDPServer.cpp in Sources */,
+				5D9862EE1D8B5E5200DEDB00 /* MessageQueue.cpp in Sources */,
+				5D9862EF1D8B5E5200DEDB00 /* StreamingServer.cpp in Sources */,
+				5D9862F01D8B5E5200DEDB00 /* Socket.cpp in Sources */,
+				5D9862F11D8B5E5200DEDB00 /* MaintenanceTCPConnector.cpp in Sources */,
+				5D9862F21D8B5E5200DEDB00 /* Server.cpp in Sources */,
+				5D9862F31D8B5E5200DEDB00 /* Streaming.cpp in Sources */,
+				5D9862F41D8B5E5200DEDB00 /* PackagedUDPServer.cpp in Sources */,
+				5D9862F51D8B5E5200DEDB00 /* PackagedConnectionlessClient.cpp in Sources */,
+				5D9862F61D8B5E5200DEDB00 /* PackagedConnectionlessServer.cpp in Sources */,
+				5D9862F71D8B5E5200DEDB00 /* MaintenanceUDPConnector.cpp in Sources */,
+				5D9862F81D8B5E5200DEDB00 /* ConnectionOrientedServer.cpp in Sources */,
+				5D9862F91D8B5E5200DEDB00 /* PackagedUDPClient.cpp in Sources */,
+				5D9862FA1D8B5E5200DEDB00 /* ConnectionlessClient.cpp in Sources */,
+				5D9862FB1D8B5E5200DEDB00 /* HTTPSClient.cpp in Sources */,
+				5D9862FC1D8B5E5200DEDB00 /* StreamingClient.cpp in Sources */,
+				5D9862FD1D8B5E5200DEDB00 /* HTTPClient.cpp in Sources */,
+				5D9862FE1D8B5E5200DEDB00 /* TCPClient.cpp in Sources */,
+				937D52E22737618E002894B4 /* PackagedTCPClient.cpp in Sources */,
+				505A281A1FA339E600B4EB1C /* HTTPSClient.mm in Sources */,
+				5D9862FF1D8B5E5200DEDB00 /* TCPServer.cpp in Sources */,
+				5D9863001D8B5E5200DEDB00 /* ConnectionOrientedClient.cpp in Sources */,
+				5D9863011D8B5E5200DEDB00 /* Client.cpp in Sources */,
+				5D9863021D8B5E5200DEDB00 /* Address4.cpp in Sources */,
+				5D9863031D8B5E5200DEDB00 /* PackagedSocket.cpp in Sources */,
+				5D9863041D8B5E5200DEDB00 /* UDPClient.cpp in Sources */,
+				5D9863061D8B5E5200DEDB00 /* SocketScheduler.cpp in Sources */,
+				937D52E62737618E002894B4 /* PackagedTCPServer.cpp in Sources */,
+				5D9863071D8B5E5200DEDB00 /* NetworkResource.cpp in Sources */,
+				5D9863081D8B5E5200DEDB00 /* Resolver.cpp in Sources */,
+				5D9863091D8B5E5200DEDB00 /* ConnectionlessServer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DE84E0E1BAB07F5009C920C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DE84E5A1BAB0907009C920C /* UDPServer.cpp in Sources */,
+				5DE84E481BAB0907009C920C /* MessageQueue.cpp in Sources */,
+				5DE84E561BAB0907009C920C /* StreamingServer.cpp in Sources */,
+				5DE84E521BAB0907009C920C /* Socket.cpp in Sources */,
+				5DE84E461BAB0907009C920C /* MaintenanceTCPConnector.cpp in Sources */,
+				5DE84E511BAB0907009C920C /* Server.cpp in Sources */,
+				5DE84E541BAB0907009C920C /* Streaming.cpp in Sources */,
+				5DE84E4F1BAB0907009C920C /* PackagedUDPServer.cpp in Sources */,
+				5DE84E4B1BAB0907009C920C /* PackagedConnectionlessClient.cpp in Sources */,
+				5DE84E4C1BAB0907009C920C /* PackagedConnectionlessServer.cpp in Sources */,
+				5DE84E471BAB0907009C920C /* MaintenanceUDPConnector.cpp in Sources */,
+				5DE84E431BAB0907009C920C /* ConnectionOrientedServer.cpp in Sources */,
+				5DE84E4E1BAB0907009C920C /* PackagedUDPClient.cpp in Sources */,
+				5DE84E401BAB0907009C920C /* ConnectionlessClient.cpp in Sources */,
+				5DE84E451BAB0907009C920C /* HTTPSClient.cpp in Sources */,
+				5DE84E551BAB0907009C920C /* StreamingClient.cpp in Sources */,
+				5DE84E441BAB0907009C920C /* HTTPClient.cpp in Sources */,
+				5DE84E571BAB0907009C920C /* TCPClient.cpp in Sources */,
+				937D52E02737618E002894B4 /* PackagedTCPClient.cpp in Sources */,
+				505A28181FA339DC00B4EB1C /* HTTPSClient.mm in Sources */,
+				5DE84E581BAB0907009C920C /* TCPServer.cpp in Sources */,
+				5DE84E421BAB0907009C920C /* ConnectionOrientedClient.cpp in Sources */,
+				5DE84E3F1BAB0907009C920C /* Client.cpp in Sources */,
+				5DE84E3E1BAB0907009C920C /* Address4.cpp in Sources */,
+				5DE84E4D1BAB0907009C920C /* PackagedSocket.cpp in Sources */,
+				5DE84E591BAB0907009C920C /* UDPClient.cpp in Sources */,
+				5DE84E531BAB0907009C920C /* SocketScheduler.cpp in Sources */,
+				937D52E42737618E002894B4 /* PackagedTCPServer.cpp in Sources */,
+				5DE84E4A1BAB0907009C920C /* NetworkResource.cpp in Sources */,
+				5DE84E501BAB0907009C920C /* Resolver.cpp in Sources */,
+				5DE84E411BAB0907009C920C /* ConnectionlessServer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D0A00CE1BC29A860008C798 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/network/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/network/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanIOD",
+					"-framework",
+					CoreFoundation,
+					"-framework",
+					CFNetwork,
+				);
+				PRODUCT_MODULE_NAME = OceanNetworkD;
+				PRODUCT_NAME = OceanNetworkD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D0A00CF1BC29A860008C798 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/network/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/network/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanIO",
+					"-framework",
+					CoreFoundation,
+					"-framework",
+					CFNetwork,
+				);
+				PRODUCT_MODULE_NAME = OceanNetwork;
+				PRODUCT_NAME = OceanNetwork;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D491D6F1D8F58F600C4099B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanIOD",
+					"-framework",
+					CoreFoundation,
+					"-framework",
+					CFNetwork,
+				);
+				PRODUCT_MODULE_NAME = OceanNetworkD;
+				PRODUCT_NAME = OceanNetworkD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D491D701D8F58F600C4099B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanIO",
+					"-framework",
+					CoreFoundation,
+					"-framework",
+					CFNetwork,
+				);
+				PRODUCT_MODULE_NAME = OceanNetwork;
+				PRODUCT_NAME = OceanNetwork;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D98632D1D8B5E5200DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanNetworkD;
+				PRODUCT_NAME = OceanNetworkD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D98632E1D8B5E5200DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanNetwork;
+				PRODUCT_NAME = OceanNetwork;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/network/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DE84E1B1BAB07F5009C920C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DE84E1C1BAB07F5009C920C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DE84E1E1BAB07F5009C920C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/network/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/network/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanNetworkD;
+				PRODUCT_NAME = OceanNetworkD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DE84E1F1BAB07F5009C920C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/network/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/network/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanNetwork;
+				PRODUCT_NAME = OceanNetwork;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D0A00CD1BC29A860008C798 /* Build configuration list for PBXNativeTarget "network x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D0A00CE1BC29A860008C798 /* Debug */,
+				5D0A00CF1BC29A860008C798 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D491D6E1D8F58F600C4099B /* Build configuration list for PBXNativeTarget "network arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D491D6F1D8F58F600C4099B /* Debug */,
+				5D491D701D8F58F600C4099B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D98632C1D8B5E5200DEDB00 /* Build configuration list for PBXNativeTarget "network arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D98632D1D8B5E5200DEDB00 /* Debug */,
+				5D98632E1D8B5E5200DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DE84E0D1BAB07F5009C920C /* Build configuration list for PBXProject "network" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DE84E1B1BAB07F5009C920C /* Debug */,
+				5DE84E1C1BAB07F5009C920C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DE84E1D1BAB07F5009C920C /* Build configuration list for PBXNativeTarget "network x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DE84E1E1BAB07F5009C920C /* Debug */,
+				5DE84E1F1BAB07F5009C920C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DE84E0A1BAB07F5009C920C /* Project object */;
+}

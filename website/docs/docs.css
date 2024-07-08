@@ -1,0 +1,39 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+ .center-image {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 20px;
+  }
+
+  .center-images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+  }
+
+  .center-images img {
+    margin: 20px 20px; /* Reduces space between images */
+  }
+
+ .icon-container {
+    text-align: center; /* Centers the icons horizontally */
+  }
+
+ .center-icon {
+    display: inline-block; /* Makes the icons sit next to each other */
+    margin-right: 10px; /* Adds some space between the icons */
+    vertical-align: middle; /* Aligns the icons vertically if they are different sizes */
+    height: 32px; /* Adjust based on the size of your icons */
+  }
+
+ .right-aligned-icon {
+    float: right; /* Aligns the icon to the right */
+    margin-left: 10px; /* Adds space between the text and the icon */
+  }

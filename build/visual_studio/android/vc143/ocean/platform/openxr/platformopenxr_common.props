@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean Platform OpenXR (Common)</_PropertySheetDisplayName>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <ocean_platformopenxr_common_imported>True</ocean_platformopenxr_common_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\base\base_use.props"/>
+    <Import Condition="'$(ocean_platform_use_imported)' != 'True'" Project="..\..\platform\platform_use.props"/>
+  </ImportGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(META_FBSOURCE_PATH)\arvr\third-party\openxr\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <LibraryDependencies>openxr_loader;%(LibraryDependencies)</LibraryDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\openxr_loader\lib\android_arm64_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

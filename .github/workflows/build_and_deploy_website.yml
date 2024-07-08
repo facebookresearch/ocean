@@ -1,0 +1,77 @@
+name: Build and deploy website
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    # Execute this workflow:
+    # Mon-Sun, every 24 hours at 6 am (UTC)
+    - cron: '0 6 * * *'
+  # Have the ability to trigger this job manually through the API
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Docusaurus
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: ${{ github.workspace }}/website/yarn.lock
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+          sudo apt-get install -y -o Acquire::Retries=5 \
+                doxygen graphviz nodejs
+
+      # Install a newer version of yarn; required when testing locally with `act`
+      # - name: Install a newer version of yarn
+      #   run: |
+      #     sudo apt-get remove -y cmdtest yarn
+      #     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+      #     echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      #     sudo apt-get update
+      #     sudo apt-get install -y yarn
+
+      - name: Install yarn dependencies
+        run: |
+          cd ${{ github.workspace }}/website
+          yarn install
+
+      - name: Build website
+        run: |
+          cd ${{ github.workspace }}/website
+          yarn run build
+
+      - name: Upload Build Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ github.workspace }}/website/build
+
+  # Disabled until the repo is published.
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write  # to deploy to Pages
+      id-token: write  # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

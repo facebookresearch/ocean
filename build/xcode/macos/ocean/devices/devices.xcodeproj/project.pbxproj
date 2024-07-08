@@ -1,0 +1,1242 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		50005E1424351AC800493C2E /* GyroSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 50005E1324351AC800493C2E /* GyroSensor3DOF.h */; };
+		50005E1524351AC800493C2E /* GyroSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 50005E1324351AC800493C2E /* GyroSensor3DOF.h */; };
+		50005E1624351AC800493C2E /* GyroSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 50005E1324351AC800493C2E /* GyroSensor3DOF.h */; };
+		50005E1724351AC800493C2E /* GyroSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 50005E1324351AC800493C2E /* GyroSensor3DOF.h */; };
+		50005E1924351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50005E1824351ADE00493C2E /* GyroSensor3DOF.cpp */; };
+		50005E1A24351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50005E1824351ADE00493C2E /* GyroSensor3DOF.cpp */; };
+		50005E1B24351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50005E1824351ADE00493C2E /* GyroSensor3DOF.cpp */; };
+		50005E1C24351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50005E1824351ADE00493C2E /* GyroSensor3DOF.cpp */; };
+		5DF0BCB91D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCA41D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h */; };
+		5DF0BCBA1D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCA41D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h */; };
+		5DF0BCBB1D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCA41D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h */; };
+		5DF0BCCB1D8FFF4C00BE5D21 /* Device.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAA1D8FFF4C00BE5D21 /* Device.h */; };
+		5DF0BCCC1D8FFF4C00BE5D21 /* Device.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAA1D8FFF4C00BE5D21 /* Device.h */; };
+		5DF0BCCD1D8FFF4C00BE5D21 /* Device.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAA1D8FFF4C00BE5D21 /* Device.h */; };
+		5DF0BCCE1D8FFF4C00BE5D21 /* DeviceRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAB1D8FFF4C00BE5D21 /* DeviceRef.h */; };
+		5DF0BCCF1D8FFF4C00BE5D21 /* DeviceRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAB1D8FFF4C00BE5D21 /* DeviceRef.h */; };
+		5DF0BCD01D8FFF4C00BE5D21 /* DeviceRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAB1D8FFF4C00BE5D21 /* DeviceRef.h */; };
+		5DF0BCD11D8FFF4C00BE5D21 /* Devices.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAC1D8FFF4C00BE5D21 /* Devices.h */; };
+		5DF0BCD21D8FFF4C00BE5D21 /* Devices.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAC1D8FFF4C00BE5D21 /* Devices.h */; };
+		5DF0BCD31D8FFF4C00BE5D21 /* Devices.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAC1D8FFF4C00BE5D21 /* Devices.h */; };
+		5DF0BCD41D8FFF4C00BE5D21 /* Factory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAD1D8FFF4C00BE5D21 /* Factory.h */; };
+		5DF0BCD51D8FFF4C00BE5D21 /* Factory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAD1D8FFF4C00BE5D21 /* Factory.h */; };
+		5DF0BCD61D8FFF4C00BE5D21 /* Factory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAD1D8FFF4C00BE5D21 /* Factory.h */; };
+		5DF0BCD71D8FFF4C00BE5D21 /* GPSTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAE1D8FFF4C00BE5D21 /* GPSTracker.h */; };
+		5DF0BCD81D8FFF4C00BE5D21 /* GPSTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAE1D8FFF4C00BE5D21 /* GPSTracker.h */; };
+		5DF0BCD91D8FFF4C00BE5D21 /* GPSTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAE1D8FFF4C00BE5D21 /* GPSTracker.h */; };
+		5DF0BCDA1D8FFF4C00BE5D21 /* MagneticTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAF1D8FFF4C00BE5D21 /* MagneticTracker.h */; };
+		5DF0BCDB1D8FFF4C00BE5D21 /* MagneticTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAF1D8FFF4C00BE5D21 /* MagneticTracker.h */; };
+		5DF0BCDC1D8FFF4C00BE5D21 /* MagneticTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAF1D8FFF4C00BE5D21 /* MagneticTracker.h */; };
+		5DF0BCDD1D8FFF4C00BE5D21 /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB01D8FFF4C00BE5D21 /* Manager.h */; };
+		5DF0BCDE1D8FFF4C00BE5D21 /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB01D8FFF4C00BE5D21 /* Manager.h */; };
+		5DF0BCDF1D8FFF4C00BE5D21 /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB01D8FFF4C00BE5D21 /* Manager.h */; };
+		5DF0BCE01D8FFF4C00BE5D21 /* Measurement.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB11D8FFF4C00BE5D21 /* Measurement.h */; };
+		5DF0BCE11D8FFF4C00BE5D21 /* Measurement.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB11D8FFF4C00BE5D21 /* Measurement.h */; };
+		5DF0BCE21D8FFF4C00BE5D21 /* Measurement.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB11D8FFF4C00BE5D21 /* Measurement.h */; };
+		5DF0BCE31D8FFF4C00BE5D21 /* OrientationTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB21D8FFF4C00BE5D21 /* OrientationTracker3DOF.h */; };
+		5DF0BCE41D8FFF4C00BE5D21 /* OrientationTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB21D8FFF4C00BE5D21 /* OrientationTracker3DOF.h */; };
+		5DF0BCE51D8FFF4C00BE5D21 /* OrientationTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB21D8FFF4C00BE5D21 /* OrientationTracker3DOF.h */; };
+		5DF0BCE61D8FFF4C00BE5D21 /* PositionTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB31D8FFF4C00BE5D21 /* PositionTracker3DOF.h */; };
+		5DF0BCE71D8FFF4C00BE5D21 /* PositionTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB31D8FFF4C00BE5D21 /* PositionTracker3DOF.h */; };
+		5DF0BCE81D8FFF4C00BE5D21 /* PositionTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB31D8FFF4C00BE5D21 /* PositionTracker3DOF.h */; };
+		5DF0BCE91D8FFF4C00BE5D21 /* Sensor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB41D8FFF4C00BE5D21 /* Sensor.h */; };
+		5DF0BCEA1D8FFF4C00BE5D21 /* Sensor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB41D8FFF4C00BE5D21 /* Sensor.h */; };
+		5DF0BCEB1D8FFF4C00BE5D21 /* Sensor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB41D8FFF4C00BE5D21 /* Sensor.h */; };
+		5DF0BCEC1D8FFF4C00BE5D21 /* Tracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB51D8FFF4C00BE5D21 /* Tracker.h */; };
+		5DF0BCED1D8FFF4C00BE5D21 /* Tracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB51D8FFF4C00BE5D21 /* Tracker.h */; };
+		5DF0BCEE1D8FFF4C00BE5D21 /* Tracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB51D8FFF4C00BE5D21 /* Tracker.h */; };
+		5DF0BCEF1D8FFF4C00BE5D21 /* Tracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB61D8FFF4C00BE5D21 /* Tracker6DOF.h */; };
+		5DF0BCF01D8FFF4C00BE5D21 /* Tracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB61D8FFF4C00BE5D21 /* Tracker6DOF.h */; };
+		5DF0BCF11D8FFF4C00BE5D21 /* Tracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB61D8FFF4C00BE5D21 /* Tracker6DOF.h */; };
+		5DF0BCF51D8FFF4C00BE5D21 /* VisualTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB81D8FFF4C00BE5D21 /* VisualTracker.h */; };
+		5DF0BCF61D8FFF4C00BE5D21 /* VisualTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB81D8FFF4C00BE5D21 /* VisualTracker.h */; };
+		5DF0BCF71D8FFF4C00BE5D21 /* VisualTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB81D8FFF4C00BE5D21 /* VisualTracker.h */; };
+		5DF0BD0D1D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCF81D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp */; };
+		5DF0BD0E1D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCF81D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp */; };
+		5DF0BD0F1D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCF81D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp */; };
+		5DF0BD1F1D8FFF5D00BE5D21 /* Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCFE1D8FFF5D00BE5D21 /* Device.cpp */; };
+		5DF0BD201D8FFF5D00BE5D21 /* Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCFE1D8FFF5D00BE5D21 /* Device.cpp */; };
+		5DF0BD211D8FFF5D00BE5D21 /* Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCFE1D8FFF5D00BE5D21 /* Device.cpp */; };
+		5DF0BD221D8FFF5D00BE5D21 /* DeviceRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCFF1D8FFF5D00BE5D21 /* DeviceRef.cpp */; };
+		5DF0BD231D8FFF5D00BE5D21 /* DeviceRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCFF1D8FFF5D00BE5D21 /* DeviceRef.cpp */; };
+		5DF0BD241D8FFF5D00BE5D21 /* DeviceRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCFF1D8FFF5D00BE5D21 /* DeviceRef.cpp */; };
+		5DF0BD281D8FFF5D00BE5D21 /* Factory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD011D8FFF5D00BE5D21 /* Factory.cpp */; };
+		5DF0BD291D8FFF5D00BE5D21 /* Factory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD011D8FFF5D00BE5D21 /* Factory.cpp */; };
+		5DF0BD2A1D8FFF5D00BE5D21 /* Factory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD011D8FFF5D00BE5D21 /* Factory.cpp */; };
+		5DF0BD2B1D8FFF5D00BE5D21 /* GPSTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD021D8FFF5D00BE5D21 /* GPSTracker.cpp */; };
+		5DF0BD2C1D8FFF5D00BE5D21 /* GPSTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD021D8FFF5D00BE5D21 /* GPSTracker.cpp */; };
+		5DF0BD2D1D8FFF5D00BE5D21 /* GPSTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD021D8FFF5D00BE5D21 /* GPSTracker.cpp */; };
+		5DF0BD2E1D8FFF5D00BE5D21 /* MagneticTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD031D8FFF5D00BE5D21 /* MagneticTracker.cpp */; };
+		5DF0BD2F1D8FFF5D00BE5D21 /* MagneticTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD031D8FFF5D00BE5D21 /* MagneticTracker.cpp */; };
+		5DF0BD301D8FFF5D00BE5D21 /* MagneticTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD031D8FFF5D00BE5D21 /* MagneticTracker.cpp */; };
+		5DF0BD311D8FFF5D00BE5D21 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD041D8FFF5D00BE5D21 /* Manager.cpp */; };
+		5DF0BD321D8FFF5D00BE5D21 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD041D8FFF5D00BE5D21 /* Manager.cpp */; };
+		5DF0BD331D8FFF5D00BE5D21 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD041D8FFF5D00BE5D21 /* Manager.cpp */; };
+		5DF0BD341D8FFF5D00BE5D21 /* Measurement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD051D8FFF5D00BE5D21 /* Measurement.cpp */; };
+		5DF0BD351D8FFF5D00BE5D21 /* Measurement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD051D8FFF5D00BE5D21 /* Measurement.cpp */; };
+		5DF0BD361D8FFF5D00BE5D21 /* Measurement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD051D8FFF5D00BE5D21 /* Measurement.cpp */; };
+		5DF0BD371D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD061D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp */; };
+		5DF0BD381D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD061D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp */; };
+		5DF0BD391D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD061D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp */; };
+		5DF0BD3A1D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD071D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp */; };
+		5DF0BD3B1D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD071D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp */; };
+		5DF0BD3C1D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD071D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp */; };
+		5DF0BD3D1D8FFF5D00BE5D21 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD081D8FFF5D00BE5D21 /* Sensor.cpp */; };
+		5DF0BD3E1D8FFF5D00BE5D21 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD081D8FFF5D00BE5D21 /* Sensor.cpp */; };
+		5DF0BD3F1D8FFF5D00BE5D21 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD081D8FFF5D00BE5D21 /* Sensor.cpp */; };
+		5DF0BD401D8FFF5D00BE5D21 /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD091D8FFF5D00BE5D21 /* Tracker.cpp */; };
+		5DF0BD411D8FFF5D00BE5D21 /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD091D8FFF5D00BE5D21 /* Tracker.cpp */; };
+		5DF0BD421D8FFF5D00BE5D21 /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD091D8FFF5D00BE5D21 /* Tracker.cpp */; };
+		5DF0BD431D8FFF5D00BE5D21 /* Tracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD0A1D8FFF5D00BE5D21 /* Tracker6DOF.cpp */; };
+		5DF0BD441D8FFF5D00BE5D21 /* Tracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD0A1D8FFF5D00BE5D21 /* Tracker6DOF.cpp */; };
+		5DF0BD451D8FFF5D00BE5D21 /* Tracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD0A1D8FFF5D00BE5D21 /* Tracker6DOF.cpp */; };
+		5DF0BD491D8FFF5D00BE5D21 /* VisualTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD0C1D8FFF5D00BE5D21 /* VisualTracker.cpp */; };
+		5DF0BD4A1D8FFF5D00BE5D21 /* VisualTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD0C1D8FFF5D00BE5D21 /* VisualTracker.cpp */; };
+		5DF0BD4B1D8FFF5D00BE5D21 /* VisualTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD0C1D8FFF5D00BE5D21 /* VisualTracker.cpp */; };
+		934974BD26125AA800AF7082 /* ObjectTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 934974BC26125AA800AF7082 /* ObjectTracker.h */; };
+		934974BE26125AA800AF7082 /* ObjectTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 934974BC26125AA800AF7082 /* ObjectTracker.h */; };
+		934974BF26125AA800AF7082 /* ObjectTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 934974BC26125AA800AF7082 /* ObjectTracker.h */; };
+		934974C026125AA800AF7082 /* ObjectTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 934974BC26125AA800AF7082 /* ObjectTracker.h */; };
+		934974C626125AB900AF7082 /* ObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 934974C526125AB900AF7082 /* ObjectTracker.cpp */; };
+		934974C726125AB900AF7082 /* ObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 934974C526125AB900AF7082 /* ObjectTracker.cpp */; };
+		934974C826125AB900AF7082 /* ObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 934974C526125AB900AF7082 /* ObjectTracker.cpp */; };
+		934974C926125AB900AF7082 /* ObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 934974C526125AB900AF7082 /* ObjectTracker.cpp */; };
+		937AEECB271A5ED000098944 /* SceneTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 937AEECA271A5ECF00098944 /* SceneTracker6DOF.h */; };
+		937AEECC271A5ED000098944 /* SceneTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 937AEECA271A5ECF00098944 /* SceneTracker6DOF.h */; };
+		937AEECD271A5ED000098944 /* SceneTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 937AEECA271A5ECF00098944 /* SceneTracker6DOF.h */; };
+		937AEECE271A5ED000098944 /* SceneTracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 937AEECA271A5ECF00098944 /* SceneTracker6DOF.h */; };
+		937AEED0271A5EFC00098944 /* SceneTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937AEECF271A5EFB00098944 /* SceneTracker6DOF.cpp */; };
+		937AEED1271A5EFC00098944 /* SceneTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937AEECF271A5EFB00098944 /* SceneTracker6DOF.cpp */; };
+		937AEED2271A5EFC00098944 /* SceneTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937AEECF271A5EFB00098944 /* SceneTracker6DOF.cpp */; };
+		937AEED3271A5EFC00098944 /* SceneTracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937AEECF271A5EFB00098944 /* SceneTracker6DOF.cpp */; };
+		93DA55EB2BDACF62002865AB /* DevicePlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA55EA2BDACF62002865AB /* DevicePlayer.h */; };
+		93DA55EC2BDACF62002865AB /* DevicePlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA55EA2BDACF62002865AB /* DevicePlayer.h */; };
+		93DA55ED2BDACF62002865AB /* DevicePlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA55EA2BDACF62002865AB /* DevicePlayer.h */; };
+		93DA55EE2BDACF62002865AB /* DevicePlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DA55EA2BDACF62002865AB /* DevicePlayer.h */; };
+		93DA55F02BDACF6B002865AB /* DevicePlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */; };
+		93DA55F12BDACF6B002865AB /* DevicePlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */; };
+		93DA55F22BDACF6B002865AB /* DevicePlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */; };
+		93DA55F32BDACF6B002865AB /* DevicePlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */; };
+		C041EBAE1DABDA8200BF5D76 /* MagneticTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD031D8FFF5D00BE5D21 /* MagneticTracker.cpp */; };
+		C041EBB01DABDA8200BF5D76 /* Tracker6DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD0A1D8FFF5D00BE5D21 /* Tracker6DOF.cpp */; };
+		C041EBB11DABDA8200BF5D76 /* Measurement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD051D8FFF5D00BE5D21 /* Measurement.cpp */; };
+		C041EBB31DABDA8200BF5D76 /* Sensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD081D8FFF5D00BE5D21 /* Sensor.cpp */; };
+		C041EBB41DABDA8200BF5D76 /* Factory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD011D8FFF5D00BE5D21 /* Factory.cpp */; };
+		C041EBB51DABDA8200BF5D76 /* PositionTracker3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD071D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp */; };
+		C041EBB71DABDA8200BF5D76 /* DeviceRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCFF1D8FFF5D00BE5D21 /* DeviceRef.cpp */; };
+		C041EBB81DABDA8200BF5D76 /* VisualTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD0C1D8FFF5D00BE5D21 /* VisualTracker.cpp */; };
+		C041EBBD1DABDA8200BF5D76 /* OrientationTracker3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD061D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp */; };
+		C041EBBE1DABDA8200BF5D76 /* GPSTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD021D8FFF5D00BE5D21 /* GPSTracker.cpp */; };
+		C041EBBF1DABDA8200BF5D76 /* Tracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD091D8FFF5D00BE5D21 /* Tracker.cpp */; };
+		C041EBC01DABDA8200BF5D76 /* Device.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCFE1D8FFF5D00BE5D21 /* Device.cpp */; };
+		C041EBC11DABDA8200BF5D76 /* AccelerationSensor3DOF.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BCF81D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp */; };
+		C041EBC21DABDA8200BF5D76 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DF0BD041D8FFF5D00BE5D21 /* Manager.cpp */; };
+		C041EBC61DABDA8200BF5D76 /* Device.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAA1D8FFF4C00BE5D21 /* Device.h */; };
+		C041EBC81DABDA8200BF5D76 /* AccelerationSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCA41D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h */; };
+		C041EBCA1DABDA8200BF5D76 /* OrientationTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB21D8FFF4C00BE5D21 /* OrientationTracker3DOF.h */; };
+		C041EBCB1DABDA8200BF5D76 /* Factory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAD1D8FFF4C00BE5D21 /* Factory.h */; };
+		C041EBCC1DABDA8200BF5D76 /* Devices.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAC1D8FFF4C00BE5D21 /* Devices.h */; };
+		C041EBCD1DABDA8200BF5D76 /* Tracker6DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB61D8FFF4C00BE5D21 /* Tracker6DOF.h */; };
+		C041EBCE1DABDA8200BF5D76 /* PositionTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB31D8FFF4C00BE5D21 /* PositionTracker3DOF.h */; };
+		C041EBCF1DABDA8200BF5D76 /* MagneticTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAF1D8FFF4C00BE5D21 /* MagneticTracker.h */; };
+		C041EBD01DABDA8200BF5D76 /* VisualTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB81D8FFF4C00BE5D21 /* VisualTracker.h */; };
+		C041EBD21DABDA8200BF5D76 /* GPSTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAE1D8FFF4C00BE5D21 /* GPSTracker.h */; };
+		C041EBD31DABDA8200BF5D76 /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB01D8FFF4C00BE5D21 /* Manager.h */; };
+		C041EBD41DABDA8200BF5D76 /* Sensor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB41D8FFF4C00BE5D21 /* Sensor.h */; };
+		C041EBD51DABDA8200BF5D76 /* Measurement.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB11D8FFF4C00BE5D21 /* Measurement.h */; };
+		C041EBD61DABDA8200BF5D76 /* Tracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCB51D8FFF4C00BE5D21 /* Tracker.h */; };
+		C041EBD81DABDA8200BF5D76 /* DeviceRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DF0BCAB1D8FFF4C00BE5D21 /* DeviceRef.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		50005E1324351AC800493C2E /* GyroSensor3DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GyroSensor3DOF.h; path = ../../../../../impl/ocean/devices/GyroSensor3DOF.h; sourceTree = "<group>"; };
+		50005E1824351ADE00493C2E /* GyroSensor3DOF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GyroSensor3DOF.cpp; path = ../../../../../impl/ocean/devices/GyroSensor3DOF.cpp; sourceTree = "<group>"; };
+		5D12BB011BF23B4100A56828 /* libOceanDevicesD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanDevicesD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D12BC921BF23C9200A56828 /* libOceanDevicesD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanDevicesD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D9863C91D8B5F8F00DEDB00 /* libOceanDevicesD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanDevicesD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DF0BCA41D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AccelerationSensor3DOF.h; path = ../../../../../impl/ocean/devices/AccelerationSensor3DOF.h; sourceTree = "<group>"; };
+		5DF0BCAA1D8FFF4C00BE5D21 /* Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Device.h; path = ../../../../../impl/ocean/devices/Device.h; sourceTree = "<group>"; };
+		5DF0BCAB1D8FFF4C00BE5D21 /* DeviceRef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DeviceRef.h; path = ../../../../../impl/ocean/devices/DeviceRef.h; sourceTree = "<group>"; };
+		5DF0BCAC1D8FFF4C00BE5D21 /* Devices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Devices.h; path = ../../../../../impl/ocean/devices/Devices.h; sourceTree = "<group>"; };
+		5DF0BCAD1D8FFF4C00BE5D21 /* Factory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Factory.h; path = ../../../../../impl/ocean/devices/Factory.h; sourceTree = "<group>"; };
+		5DF0BCAE1D8FFF4C00BE5D21 /* GPSTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GPSTracker.h; path = ../../../../../impl/ocean/devices/GPSTracker.h; sourceTree = "<group>"; };
+		5DF0BCAF1D8FFF4C00BE5D21 /* MagneticTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MagneticTracker.h; path = ../../../../../impl/ocean/devices/MagneticTracker.h; sourceTree = "<group>"; };
+		5DF0BCB01D8FFF4C00BE5D21 /* Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Manager.h; path = ../../../../../impl/ocean/devices/Manager.h; sourceTree = "<group>"; };
+		5DF0BCB11D8FFF4C00BE5D21 /* Measurement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Measurement.h; path = ../../../../../impl/ocean/devices/Measurement.h; sourceTree = "<group>"; };
+		5DF0BCB21D8FFF4C00BE5D21 /* OrientationTracker3DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OrientationTracker3DOF.h; path = ../../../../../impl/ocean/devices/OrientationTracker3DOF.h; sourceTree = "<group>"; };
+		5DF0BCB31D8FFF4C00BE5D21 /* PositionTracker3DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PositionTracker3DOF.h; path = ../../../../../impl/ocean/devices/PositionTracker3DOF.h; sourceTree = "<group>"; };
+		5DF0BCB41D8FFF4C00BE5D21 /* Sensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sensor.h; path = ../../../../../impl/ocean/devices/Sensor.h; sourceTree = "<group>"; };
+		5DF0BCB51D8FFF4C00BE5D21 /* Tracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tracker.h; path = ../../../../../impl/ocean/devices/Tracker.h; sourceTree = "<group>"; };
+		5DF0BCB61D8FFF4C00BE5D21 /* Tracker6DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tracker6DOF.h; path = ../../../../../impl/ocean/devices/Tracker6DOF.h; sourceTree = "<group>"; };
+		5DF0BCB81D8FFF4C00BE5D21 /* VisualTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VisualTracker.h; path = ../../../../../impl/ocean/devices/VisualTracker.h; sourceTree = "<group>"; };
+		5DF0BCF81D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AccelerationSensor3DOF.cpp; path = ../../../../../impl/ocean/devices/AccelerationSensor3DOF.cpp; sourceTree = "<group>"; };
+		5DF0BCFE1D8FFF5D00BE5D21 /* Device.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Device.cpp; path = ../../../../../impl/ocean/devices/Device.cpp; sourceTree = "<group>"; };
+		5DF0BCFF1D8FFF5D00BE5D21 /* DeviceRef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DeviceRef.cpp; path = ../../../../../impl/ocean/devices/DeviceRef.cpp; sourceTree = "<group>"; };
+		5DF0BD011D8FFF5D00BE5D21 /* Factory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Factory.cpp; path = ../../../../../impl/ocean/devices/Factory.cpp; sourceTree = "<group>"; };
+		5DF0BD021D8FFF5D00BE5D21 /* GPSTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GPSTracker.cpp; path = ../../../../../impl/ocean/devices/GPSTracker.cpp; sourceTree = "<group>"; };
+		5DF0BD031D8FFF5D00BE5D21 /* MagneticTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MagneticTracker.cpp; path = ../../../../../impl/ocean/devices/MagneticTracker.cpp; sourceTree = "<group>"; };
+		5DF0BD041D8FFF5D00BE5D21 /* Manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Manager.cpp; path = ../../../../../impl/ocean/devices/Manager.cpp; sourceTree = "<group>"; };
+		5DF0BD051D8FFF5D00BE5D21 /* Measurement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Measurement.cpp; path = ../../../../../impl/ocean/devices/Measurement.cpp; sourceTree = "<group>"; };
+		5DF0BD061D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OrientationTracker3DOF.cpp; path = ../../../../../impl/ocean/devices/OrientationTracker3DOF.cpp; sourceTree = "<group>"; };
+		5DF0BD071D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PositionTracker3DOF.cpp; path = ../../../../../impl/ocean/devices/PositionTracker3DOF.cpp; sourceTree = "<group>"; };
+		5DF0BD081D8FFF5D00BE5D21 /* Sensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sensor.cpp; path = ../../../../../impl/ocean/devices/Sensor.cpp; sourceTree = "<group>"; };
+		5DF0BD091D8FFF5D00BE5D21 /* Tracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Tracker.cpp; path = ../../../../../impl/ocean/devices/Tracker.cpp; sourceTree = "<group>"; };
+		5DF0BD0A1D8FFF5D00BE5D21 /* Tracker6DOF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Tracker6DOF.cpp; path = ../../../../../impl/ocean/devices/Tracker6DOF.cpp; sourceTree = "<group>"; };
+		5DF0BD0C1D8FFF5D00BE5D21 /* VisualTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VisualTracker.cpp; path = ../../../../../impl/ocean/devices/VisualTracker.cpp; sourceTree = "<group>"; };
+		934974BC26125AA800AF7082 /* ObjectTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ObjectTracker.h; path = ../../../../../impl/ocean/devices/ObjectTracker.h; sourceTree = "<group>"; };
+		934974C526125AB900AF7082 /* ObjectTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ObjectTracker.cpp; path = ../../../../../impl/ocean/devices/ObjectTracker.cpp; sourceTree = "<group>"; };
+		937AEECA271A5ECF00098944 /* SceneTracker6DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SceneTracker6DOF.h; path = ../../../../../impl/ocean/devices/SceneTracker6DOF.h; sourceTree = "<group>"; };
+		937AEECF271A5EFB00098944 /* SceneTracker6DOF.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SceneTracker6DOF.cpp; path = ../../../../../impl/ocean/devices/SceneTracker6DOF.cpp; sourceTree = "<group>"; };
+		93DA55EA2BDACF62002865AB /* DevicePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DevicePlayer.h; path = ../../../../../impl/ocean/devices/DevicePlayer.h; sourceTree = "<group>"; };
+		93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DevicePlayer.cpp; path = ../../../../../impl/ocean/devices/DevicePlayer.cpp; sourceTree = "<group>"; };
+		C041EBDE1DABDA8200BF5D76 /* libOceanDevicesD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanDevicesD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D12BAFE1BF23B4100A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BC4D1BF23C9200A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9863841D8B5F8F00DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EBC31DABDA8200BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D12BAF81BF23B4100A56828 = {
+			isa = PBXGroup;
+			children = (
+				5D12BB8C1BF23C1A00A56828 /* Header Files */,
+				5D12BB0F1BF23BFC00A56828 /* Source Files */,
+				5D12BB021BF23B4100A56828 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D12BB021BF23B4100A56828 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BB011BF23B4100A56828 /* libOceanDevicesD.a */,
+				5D12BC921BF23C9200A56828 /* libOceanDevicesD.dylib */,
+				5D9863C91D8B5F8F00DEDB00 /* libOceanDevicesD.a */,
+				C041EBDE1DABDA8200BF5D76 /* libOceanDevicesD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D12BB0F1BF23BFC00A56828 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DF0BCF81D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp */,
+				5DF0BCFE1D8FFF5D00BE5D21 /* Device.cpp */,
+				93DA55EF2BDACF6B002865AB /* DevicePlayer.cpp */,
+				5DF0BCFF1D8FFF5D00BE5D21 /* DeviceRef.cpp */,
+				5DF0BD011D8FFF5D00BE5D21 /* Factory.cpp */,
+				5DF0BD021D8FFF5D00BE5D21 /* GPSTracker.cpp */,
+				50005E1824351ADE00493C2E /* GyroSensor3DOF.cpp */,
+				5DF0BD031D8FFF5D00BE5D21 /* MagneticTracker.cpp */,
+				5DF0BD041D8FFF5D00BE5D21 /* Manager.cpp */,
+				5DF0BD051D8FFF5D00BE5D21 /* Measurement.cpp */,
+				934974C526125AB900AF7082 /* ObjectTracker.cpp */,
+				5DF0BD061D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp */,
+				5DF0BD071D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp */,
+				937AEECF271A5EFB00098944 /* SceneTracker6DOF.cpp */,
+				5DF0BD081D8FFF5D00BE5D21 /* Sensor.cpp */,
+				5DF0BD091D8FFF5D00BE5D21 /* Tracker.cpp */,
+				5DF0BD0A1D8FFF5D00BE5D21 /* Tracker6DOF.cpp */,
+				5DF0BD0C1D8FFF5D00BE5D21 /* VisualTracker.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D12BB8C1BF23C1A00A56828 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DF0BCA41D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h */,
+				5DF0BCAA1D8FFF4C00BE5D21 /* Device.h */,
+				93DA55EA2BDACF62002865AB /* DevicePlayer.h */,
+				5DF0BCAB1D8FFF4C00BE5D21 /* DeviceRef.h */,
+				5DF0BCAC1D8FFF4C00BE5D21 /* Devices.h */,
+				5DF0BCAD1D8FFF4C00BE5D21 /* Factory.h */,
+				5DF0BCAE1D8FFF4C00BE5D21 /* GPSTracker.h */,
+				50005E1324351AC800493C2E /* GyroSensor3DOF.h */,
+				5DF0BCAF1D8FFF4C00BE5D21 /* MagneticTracker.h */,
+				5DF0BCB01D8FFF4C00BE5D21 /* Manager.h */,
+				5DF0BCB11D8FFF4C00BE5D21 /* Measurement.h */,
+				934974BC26125AA800AF7082 /* ObjectTracker.h */,
+				5DF0BCB21D8FFF4C00BE5D21 /* OrientationTracker3DOF.h */,
+				5DF0BCB31D8FFF4C00BE5D21 /* PositionTracker3DOF.h */,
+				937AEECA271A5ECF00098944 /* SceneTracker6DOF.h */,
+				5DF0BCB41D8FFF4C00BE5D21 /* Sensor.h */,
+				5DF0BCB51D8FFF4C00BE5D21 /* Tracker.h */,
+				5DF0BCB61D8FFF4C00BE5D21 /* Tracker6DOF.h */,
+				5DF0BCB81D8FFF4C00BE5D21 /* VisualTracker.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D12BAFF1BF23B4100A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0BCCB1D8FFF4C00BE5D21 /* Device.h in Headers */,
+				5DF0BCB91D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h in Headers */,
+				5DF0BCE31D8FFF4C00BE5D21 /* OrientationTracker3DOF.h in Headers */,
+				5DF0BCD41D8FFF4C00BE5D21 /* Factory.h in Headers */,
+				5DF0BCD11D8FFF4C00BE5D21 /* Devices.h in Headers */,
+				5DF0BCEF1D8FFF4C00BE5D21 /* Tracker6DOF.h in Headers */,
+				5DF0BCE61D8FFF4C00BE5D21 /* PositionTracker3DOF.h in Headers */,
+				5DF0BCDA1D8FFF4C00BE5D21 /* MagneticTracker.h in Headers */,
+				5DF0BCF51D8FFF4C00BE5D21 /* VisualTracker.h in Headers */,
+				5DF0BCD71D8FFF4C00BE5D21 /* GPSTracker.h in Headers */,
+				5DF0BCDD1D8FFF4C00BE5D21 /* Manager.h in Headers */,
+				5DF0BCE91D8FFF4C00BE5D21 /* Sensor.h in Headers */,
+				5DF0BCE01D8FFF4C00BE5D21 /* Measurement.h in Headers */,
+				937AEECB271A5ED000098944 /* SceneTracker6DOF.h in Headers */,
+				5DF0BCEC1D8FFF4C00BE5D21 /* Tracker.h in Headers */,
+				5DF0BCCE1D8FFF4C00BE5D21 /* DeviceRef.h in Headers */,
+				93DA55EB2BDACF62002865AB /* DevicePlayer.h in Headers */,
+				50005E1424351AC800493C2E /* GyroSensor3DOF.h in Headers */,
+				934974BD26125AA800AF7082 /* ObjectTracker.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BC4E1BF23C9200A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0BCCC1D8FFF4C00BE5D21 /* Device.h in Headers */,
+				5DF0BCBA1D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h in Headers */,
+				5DF0BCE41D8FFF4C00BE5D21 /* OrientationTracker3DOF.h in Headers */,
+				5DF0BCD51D8FFF4C00BE5D21 /* Factory.h in Headers */,
+				5DF0BCD21D8FFF4C00BE5D21 /* Devices.h in Headers */,
+				5DF0BCF01D8FFF4C00BE5D21 /* Tracker6DOF.h in Headers */,
+				5DF0BCE71D8FFF4C00BE5D21 /* PositionTracker3DOF.h in Headers */,
+				5DF0BCDB1D8FFF4C00BE5D21 /* MagneticTracker.h in Headers */,
+				5DF0BCF61D8FFF4C00BE5D21 /* VisualTracker.h in Headers */,
+				5DF0BCD81D8FFF4C00BE5D21 /* GPSTracker.h in Headers */,
+				5DF0BCDE1D8FFF4C00BE5D21 /* Manager.h in Headers */,
+				5DF0BCEA1D8FFF4C00BE5D21 /* Sensor.h in Headers */,
+				5DF0BCE11D8FFF4C00BE5D21 /* Measurement.h in Headers */,
+				937AEECC271A5ED000098944 /* SceneTracker6DOF.h in Headers */,
+				5DF0BCED1D8FFF4C00BE5D21 /* Tracker.h in Headers */,
+				5DF0BCCF1D8FFF4C00BE5D21 /* DeviceRef.h in Headers */,
+				93DA55EC2BDACF62002865AB /* DevicePlayer.h in Headers */,
+				50005E1524351AC800493C2E /* GyroSensor3DOF.h in Headers */,
+				934974BE26125AA800AF7082 /* ObjectTracker.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9863851D8B5F8F00DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0BCCD1D8FFF4C00BE5D21 /* Device.h in Headers */,
+				5DF0BCBB1D8FFF4C00BE5D21 /* AccelerationSensor3DOF.h in Headers */,
+				5DF0BCE51D8FFF4C00BE5D21 /* OrientationTracker3DOF.h in Headers */,
+				5DF0BCD61D8FFF4C00BE5D21 /* Factory.h in Headers */,
+				5DF0BCD31D8FFF4C00BE5D21 /* Devices.h in Headers */,
+				5DF0BCF11D8FFF4C00BE5D21 /* Tracker6DOF.h in Headers */,
+				5DF0BCE81D8FFF4C00BE5D21 /* PositionTracker3DOF.h in Headers */,
+				5DF0BCDC1D8FFF4C00BE5D21 /* MagneticTracker.h in Headers */,
+				5DF0BCF71D8FFF4C00BE5D21 /* VisualTracker.h in Headers */,
+				5DF0BCD91D8FFF4C00BE5D21 /* GPSTracker.h in Headers */,
+				5DF0BCDF1D8FFF4C00BE5D21 /* Manager.h in Headers */,
+				5DF0BCEB1D8FFF4C00BE5D21 /* Sensor.h in Headers */,
+				5DF0BCE21D8FFF4C00BE5D21 /* Measurement.h in Headers */,
+				937AEECD271A5ED000098944 /* SceneTracker6DOF.h in Headers */,
+				5DF0BCEE1D8FFF4C00BE5D21 /* Tracker.h in Headers */,
+				5DF0BCD01D8FFF4C00BE5D21 /* DeviceRef.h in Headers */,
+				93DA55ED2BDACF62002865AB /* DevicePlayer.h in Headers */,
+				50005E1624351AC800493C2E /* GyroSensor3DOF.h in Headers */,
+				934974BF26125AA800AF7082 /* ObjectTracker.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EBC41DABDA8200BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EBC61DABDA8200BF5D76 /* Device.h in Headers */,
+				C041EBC81DABDA8200BF5D76 /* AccelerationSensor3DOF.h in Headers */,
+				C041EBCA1DABDA8200BF5D76 /* OrientationTracker3DOF.h in Headers */,
+				C041EBCB1DABDA8200BF5D76 /* Factory.h in Headers */,
+				C041EBCC1DABDA8200BF5D76 /* Devices.h in Headers */,
+				C041EBCD1DABDA8200BF5D76 /* Tracker6DOF.h in Headers */,
+				C041EBCE1DABDA8200BF5D76 /* PositionTracker3DOF.h in Headers */,
+				C041EBCF1DABDA8200BF5D76 /* MagneticTracker.h in Headers */,
+				C041EBD01DABDA8200BF5D76 /* VisualTracker.h in Headers */,
+				C041EBD21DABDA8200BF5D76 /* GPSTracker.h in Headers */,
+				C041EBD31DABDA8200BF5D76 /* Manager.h in Headers */,
+				C041EBD41DABDA8200BF5D76 /* Sensor.h in Headers */,
+				C041EBD51DABDA8200BF5D76 /* Measurement.h in Headers */,
+				937AEECE271A5ED000098944 /* SceneTracker6DOF.h in Headers */,
+				C041EBD61DABDA8200BF5D76 /* Tracker.h in Headers */,
+				C041EBD81DABDA8200BF5D76 /* DeviceRef.h in Headers */,
+				93DA55EE2BDACF62002865AB /* DevicePlayer.h in Headers */,
+				50005E1724351AC800493C2E /* GyroSensor3DOF.h in Headers */,
+				934974C026125AA800AF7082 /* ObjectTracker.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D12BB001BF23B4100A56828 /* devices x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BB0C1BF23B4100A56828 /* Build configuration list for PBXNativeTarget "devices x64 (Static)" */;
+			buildPhases = (
+				5D12BAFD1BF23B4100A56828 /* Sources */,
+				5D12BAFE1BF23B4100A56828 /* Frameworks */,
+				5D12BAFF1BF23B4100A56828 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "devices x64 (Static)";
+			productName = devices;
+			productReference = 5D12BB011BF23B4100A56828 /* libOceanDevicesD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D12BC0D1BF23C9200A56828 /* devices x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BC8F1BF23C9200A56828 /* Build configuration list for PBXNativeTarget "devices x64 (Shared)" */;
+			buildPhases = (
+				5D12BC0E1BF23C9200A56828 /* Sources */,
+				5D12BC4D1BF23C9200A56828 /* Frameworks */,
+				5D12BC4E1BF23C9200A56828 /* Headers */,
+				C041EBDF1DABDAF700BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "devices x64 (Shared)";
+			productName = devices;
+			productReference = 5D12BC921BF23C9200A56828 /* libOceanDevicesD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9863441D8B5F8F00DEDB00 /* devices arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9863C61D8B5F8F00DEDB00 /* Build configuration list for PBXNativeTarget "devices arm64 (Static)" */;
+			buildPhases = (
+				5D9863451D8B5F8F00DEDB00 /* Sources */,
+				5D9863841D8B5F8F00DEDB00 /* Frameworks */,
+				5D9863851D8B5F8F00DEDB00 /* Headers */,
+				5D837F561D8F10AA00939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "devices arm64 (Static)";
+			productName = devices;
+			productReference = 5D9863C91D8B5F8F00DEDB00 /* libOceanDevicesD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EBAC1DABDA8200BF5D76 /* devices arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EBDB1DABDA8200BF5D76 /* Build configuration list for PBXNativeTarget "devices arm64 (Shared)" */;
+			buildPhases = (
+				C041EBAD1DABDA8200BF5D76 /* Sources */,
+				C041EBC31DABDA8200BF5D76 /* Frameworks */,
+				C041EBC41DABDA8200BF5D76 /* Headers */,
+				C041EBDA1DABDA8200BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "devices arm64 (Shared)";
+			productName = devices;
+			productReference = C041EBDE1DABDA8200BF5D76 /* libOceanDevicesD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D12BAF91BF23B4100A56828 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D12BB001BF23B4100A56828 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D12BAFC1BF23B4100A56828 /* Build configuration list for PBXProject "devices" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D12BAF81BF23B4100A56828;
+			productRefGroup = 5D12BB021BF23B4100A56828 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D12BB001BF23B4100A56828 /* devices x64 (Static) */,
+				5D12BC0D1BF23C9200A56828 /* devices x64 (Shared) */,
+				5D9863441D8B5F8F00DEDB00 /* devices arm64 (Static) */,
+				C041EBAC1DABDA8200BF5D76 /* devices arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F561D8F10AA00939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../copy_arm_static.sh \"../../../../../bin/lib/\"";
+		};
+		C041EBDA1DABDA8200BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../codesign.sh\n../../copy_arm_shared.sh \"../../../../../bin/lib/\"";
+		};
+		C041EBDF1DABDAF700BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D12BAFD1BF23B4100A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0BD2E1D8FFF5D00BE5D21 /* MagneticTracker.cpp in Sources */,
+				5DF0BD431D8FFF5D00BE5D21 /* Tracker6DOF.cpp in Sources */,
+				5DF0BD341D8FFF5D00BE5D21 /* Measurement.cpp in Sources */,
+				5DF0BD3D1D8FFF5D00BE5D21 /* Sensor.cpp in Sources */,
+				93DA55F02BDACF6B002865AB /* DevicePlayer.cpp in Sources */,
+				5DF0BD281D8FFF5D00BE5D21 /* Factory.cpp in Sources */,
+				50005E1924351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */,
+				5DF0BD3A1D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp in Sources */,
+				934974C626125AB900AF7082 /* ObjectTracker.cpp in Sources */,
+				5DF0BD221D8FFF5D00BE5D21 /* DeviceRef.cpp in Sources */,
+				5DF0BD491D8FFF5D00BE5D21 /* VisualTracker.cpp in Sources */,
+				5DF0BD371D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp in Sources */,
+				937AEED0271A5EFC00098944 /* SceneTracker6DOF.cpp in Sources */,
+				5DF0BD2B1D8FFF5D00BE5D21 /* GPSTracker.cpp in Sources */,
+				5DF0BD401D8FFF5D00BE5D21 /* Tracker.cpp in Sources */,
+				5DF0BD1F1D8FFF5D00BE5D21 /* Device.cpp in Sources */,
+				5DF0BD0D1D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp in Sources */,
+				5DF0BD311D8FFF5D00BE5D21 /* Manager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BC0E1BF23C9200A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0BD2F1D8FFF5D00BE5D21 /* MagneticTracker.cpp in Sources */,
+				5DF0BD441D8FFF5D00BE5D21 /* Tracker6DOF.cpp in Sources */,
+				5DF0BD351D8FFF5D00BE5D21 /* Measurement.cpp in Sources */,
+				5DF0BD3E1D8FFF5D00BE5D21 /* Sensor.cpp in Sources */,
+				93DA55F12BDACF6B002865AB /* DevicePlayer.cpp in Sources */,
+				5DF0BD291D8FFF5D00BE5D21 /* Factory.cpp in Sources */,
+				50005E1A24351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */,
+				5DF0BD3B1D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp in Sources */,
+				934974C726125AB900AF7082 /* ObjectTracker.cpp in Sources */,
+				5DF0BD231D8FFF5D00BE5D21 /* DeviceRef.cpp in Sources */,
+				5DF0BD4A1D8FFF5D00BE5D21 /* VisualTracker.cpp in Sources */,
+				5DF0BD381D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp in Sources */,
+				937AEED1271A5EFC00098944 /* SceneTracker6DOF.cpp in Sources */,
+				5DF0BD2C1D8FFF5D00BE5D21 /* GPSTracker.cpp in Sources */,
+				5DF0BD411D8FFF5D00BE5D21 /* Tracker.cpp in Sources */,
+				5DF0BD201D8FFF5D00BE5D21 /* Device.cpp in Sources */,
+				5DF0BD0E1D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp in Sources */,
+				5DF0BD321D8FFF5D00BE5D21 /* Manager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9863451D8B5F8F00DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0BD301D8FFF5D00BE5D21 /* MagneticTracker.cpp in Sources */,
+				5DF0BD451D8FFF5D00BE5D21 /* Tracker6DOF.cpp in Sources */,
+				5DF0BD361D8FFF5D00BE5D21 /* Measurement.cpp in Sources */,
+				5DF0BD3F1D8FFF5D00BE5D21 /* Sensor.cpp in Sources */,
+				93DA55F22BDACF6B002865AB /* DevicePlayer.cpp in Sources */,
+				5DF0BD2A1D8FFF5D00BE5D21 /* Factory.cpp in Sources */,
+				50005E1B24351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */,
+				5DF0BD3C1D8FFF5D00BE5D21 /* PositionTracker3DOF.cpp in Sources */,
+				934974C826125AB900AF7082 /* ObjectTracker.cpp in Sources */,
+				5DF0BD241D8FFF5D00BE5D21 /* DeviceRef.cpp in Sources */,
+				5DF0BD4B1D8FFF5D00BE5D21 /* VisualTracker.cpp in Sources */,
+				5DF0BD391D8FFF5D00BE5D21 /* OrientationTracker3DOF.cpp in Sources */,
+				937AEED2271A5EFC00098944 /* SceneTracker6DOF.cpp in Sources */,
+				5DF0BD2D1D8FFF5D00BE5D21 /* GPSTracker.cpp in Sources */,
+				5DF0BD421D8FFF5D00BE5D21 /* Tracker.cpp in Sources */,
+				5DF0BD211D8FFF5D00BE5D21 /* Device.cpp in Sources */,
+				5DF0BD0F1D8FFF5D00BE5D21 /* AccelerationSensor3DOF.cpp in Sources */,
+				5DF0BD331D8FFF5D00BE5D21 /* Manager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EBAD1DABDA8200BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EBAE1DABDA8200BF5D76 /* MagneticTracker.cpp in Sources */,
+				C041EBB01DABDA8200BF5D76 /* Tracker6DOF.cpp in Sources */,
+				C041EBB11DABDA8200BF5D76 /* Measurement.cpp in Sources */,
+				C041EBB31DABDA8200BF5D76 /* Sensor.cpp in Sources */,
+				93DA55F32BDACF6B002865AB /* DevicePlayer.cpp in Sources */,
+				C041EBB41DABDA8200BF5D76 /* Factory.cpp in Sources */,
+				50005E1C24351ADE00493C2E /* GyroSensor3DOF.cpp in Sources */,
+				C041EBB51DABDA8200BF5D76 /* PositionTracker3DOF.cpp in Sources */,
+				934974C926125AB900AF7082 /* ObjectTracker.cpp in Sources */,
+				C041EBB71DABDA8200BF5D76 /* DeviceRef.cpp in Sources */,
+				C041EBB81DABDA8200BF5D76 /* VisualTracker.cpp in Sources */,
+				C041EBBD1DABDA8200BF5D76 /* OrientationTracker3DOF.cpp in Sources */,
+				937AEED3271A5EFC00098944 /* SceneTracker6DOF.cpp in Sources */,
+				C041EBBE1DABDA8200BF5D76 /* GPSTracker.cpp in Sources */,
+				C041EBBF1DABDA8200BF5D76 /* Tracker.cpp in Sources */,
+				C041EBC01DABDA8200BF5D76 /* Device.cpp in Sources */,
+				C041EBC11DABDA8200BF5D76 /* AccelerationSensor3DOF.cpp in Sources */,
+				C041EBC21DABDA8200BF5D76 /* Manager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D12BB0A1BF23B4100A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D12BB0B1BF23B4100A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D12BB0D1BF23B4100A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/devices/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/devices/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanDevicesD;
+				PRODUCT_NAME = OceanDevicesD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D12BB0E1BF23B4100A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/devices/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/devices/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanDevices;
+				PRODUCT_NAME = OceanDevices;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D12BC901BF23C9200A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/devices/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/devices/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanDevicesD;
+				PRODUCT_NAME = OceanDevicesD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D12BC911BF23C9200A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/devices/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/devices/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanIO",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanDevices;
+				PRODUCT_NAME = OceanDevices;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D9863C71D8B5F8F00DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanDevicesD;
+				PRODUCT_NAME = OceanDevicesD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D9863C81D8B5F8F00DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanDevices;
+				PRODUCT_NAME = OceanDevices;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EBDC1DABDA8200BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanDevicesD;
+				PRODUCT_NAME = OceanDevicesD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EBDD1DABDA8200BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanIO",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanDevices;
+				PRODUCT_NAME = OceanDevices;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/devices/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D12BAFC1BF23B4100A56828 /* Build configuration list for PBXProject "devices" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BB0A1BF23B4100A56828 /* Debug */,
+				5D12BB0B1BF23B4100A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BB0C1BF23B4100A56828 /* Build configuration list for PBXNativeTarget "devices x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BB0D1BF23B4100A56828 /* Debug */,
+				5D12BB0E1BF23B4100A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BC8F1BF23C9200A56828 /* Build configuration list for PBXNativeTarget "devices x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BC901BF23C9200A56828 /* Debug */,
+				5D12BC911BF23C9200A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9863C61D8B5F8F00DEDB00 /* Build configuration list for PBXNativeTarget "devices arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9863C71D8B5F8F00DEDB00 /* Debug */,
+				5D9863C81D8B5F8F00DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EBDB1DABDA8200BF5D76 /* Build configuration list for PBXNativeTarget "devices arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EBDC1DABDA8200BF5D76 /* Debug */,
+				C041EBDD1DABDA8200BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D12BAF91BF23B4100A56828 /* Project object */;
+}

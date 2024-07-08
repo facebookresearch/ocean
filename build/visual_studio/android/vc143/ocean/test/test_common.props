@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Dependency Test</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_test_common_imported>True</ocean_test_common_imported>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm64_cl50_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm_cl50_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|ARM64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm64_cl50_static_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|ARM'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm_cl50_static_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm64_cl50_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm_cl50_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|ARM64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm64_cl50_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Debug|ARM'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm_cl50_shared_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|ARM64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm64_cl50_shared_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Profile|ARM'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm_cl50_shared_profile;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|ARM64'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm64_cl50_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shared Release|ARM'">
+    <Link>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\bin\test\lib\android_arm_cl50_shared;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\base\base_use.props"/>
+  </ImportGroup>
+</Project>

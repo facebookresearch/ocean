@@ -1,0 +1,1094 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D7D936C1BA9DDCC00D38120 /* ContourAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93611BA9DDCC00D38120 /* ContourAnalyzer.cpp */; };
+		5D7D936D1BA9DDCC00D38120 /* ContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93621BA9DDCC00D38120 /* ContourFinder.cpp */; };
+		5D7D936E1BA9DDCC00D38120 /* ContourMapping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93631BA9DDCC00D38120 /* ContourMapping.cpp */; };
+		5D7D936F1BA9DDCC00D38120 /* ContourTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93641BA9DDCC00D38120 /* ContourTracker.cpp */; };
+		5D7D93711BA9DDCC00D38120 /* MaskAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93661BA9DDCC00D38120 /* MaskAnalyzer.cpp */; };
+		5D7D93721BA9DDCC00D38120 /* MaskCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93671BA9DDCC00D38120 /* MaskCreator.cpp */; };
+		5D7D93731BA9DDCC00D38120 /* SeedSegmentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93681BA9DDCC00D38120 /* SeedSegmentation.cpp */; };
+		5D7D93751BA9DDCC00D38120 /* Triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D936A1BA9DDCC00D38120 /* Triangulation.cpp */; };
+		5D7D93841BA9DDE300D38120 /* Clustering.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93761BA9DDE300D38120 /* Clustering.h */; };
+		5D7D93861BA9DDE300D38120 /* ContourAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93781BA9DDE300D38120 /* ContourAnalyzer.h */; };
+		5D7D93871BA9DDE300D38120 /* ContourFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93791BA9DDE300D38120 /* ContourFinder.h */; };
+		5D7D93881BA9DDE300D38120 /* ContourMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937A1BA9DDE300D38120 /* ContourMapping.h */; };
+		5D7D93891BA9DDE300D38120 /* ContourTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937B1BA9DDE300D38120 /* ContourTracker.h */; };
+		5D7D938B1BA9DDE300D38120 /* MaskAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937D1BA9DDE300D38120 /* MaskAnalyzer.h */; };
+		5D7D938C1BA9DDE300D38120 /* MaskCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937E1BA9DDE300D38120 /* MaskCreator.h */; };
+		5D7D938D1BA9DDE300D38120 /* PixelContour.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937F1BA9DDE300D38120 /* PixelContour.h */; };
+		5D7D938E1BA9DDE300D38120 /* SeedSegmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93801BA9DDE300D38120 /* SeedSegmentation.h */; };
+		5D7D938F1BA9DDE300D38120 /* Segmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93811BA9DDE300D38120 /* Segmentation.h */; };
+		5D7D93911BA9DDE300D38120 /* Triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93831BA9DDE300D38120 /* Triangulation.h */; };
+		5D936E6B1BC54A990046ACD4 /* Triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D936A1BA9DDCC00D38120 /* Triangulation.cpp */; };
+		5D936E6C1BC54A990046ACD4 /* ContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93621BA9DDCC00D38120 /* ContourFinder.cpp */; };
+		5D936E6D1BC54A990046ACD4 /* SeedSegmentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93681BA9DDCC00D38120 /* SeedSegmentation.cpp */; };
+		5D936E6E1BC54A990046ACD4 /* ContourMapping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93631BA9DDCC00D38120 /* ContourMapping.cpp */; };
+		5D936E6F1BC54A990046ACD4 /* ContourTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93641BA9DDCC00D38120 /* ContourTracker.cpp */; };
+		5D936E701BC54A990046ACD4 /* MaskCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93671BA9DDCC00D38120 /* MaskCreator.cpp */; };
+		5D936E711BC54A990046ACD4 /* ContourAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93611BA9DDCC00D38120 /* ContourAnalyzer.cpp */; };
+		5D936E731BC54A990046ACD4 /* MaskAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93661BA9DDCC00D38120 /* MaskAnalyzer.cpp */; };
+		5D936E771BC54A990046ACD4 /* ContourAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93781BA9DDE300D38120 /* ContourAnalyzer.h */; };
+		5D936E781BC54A990046ACD4 /* Triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93831BA9DDE300D38120 /* Triangulation.h */; };
+		5D936E791BC54A990046ACD4 /* Segmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93811BA9DDE300D38120 /* Segmentation.h */; };
+		5D936E7A1BC54A990046ACD4 /* Clustering.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93761BA9DDE300D38120 /* Clustering.h */; };
+		5D936E7B1BC54A990046ACD4 /* ContourTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937B1BA9DDE300D38120 /* ContourTracker.h */; };
+		5D936E7E1BC54A990046ACD4 /* ContourMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937A1BA9DDE300D38120 /* ContourMapping.h */; };
+		5D936E7F1BC54A990046ACD4 /* PixelContour.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937F1BA9DDE300D38120 /* PixelContour.h */; };
+		5D936E801BC54A990046ACD4 /* SeedSegmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93801BA9DDE300D38120 /* SeedSegmentation.h */; };
+		5D936E811BC54A990046ACD4 /* MaskCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937E1BA9DDE300D38120 /* MaskCreator.h */; };
+		5D936E821BC54A990046ACD4 /* MaskAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937D1BA9DDE300D38120 /* MaskAnalyzer.h */; };
+		5D936E831BC54A990046ACD4 /* ContourFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93791BA9DDE300D38120 /* ContourFinder.h */; };
+		5D9861201D8B55AC00DEDB00 /* Triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D936A1BA9DDCC00D38120 /* Triangulation.cpp */; };
+		5D9861211D8B55AC00DEDB00 /* ContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93621BA9DDCC00D38120 /* ContourFinder.cpp */; };
+		5D9861221D8B55AC00DEDB00 /* SeedSegmentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93681BA9DDCC00D38120 /* SeedSegmentation.cpp */; };
+		5D9861231D8B55AC00DEDB00 /* ContourMapping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93631BA9DDCC00D38120 /* ContourMapping.cpp */; };
+		5D9861241D8B55AC00DEDB00 /* ContourTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93641BA9DDCC00D38120 /* ContourTracker.cpp */; };
+		5D9861251D8B55AC00DEDB00 /* MaskCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93671BA9DDCC00D38120 /* MaskCreator.cpp */; };
+		5D9861261D8B55AC00DEDB00 /* ContourAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93611BA9DDCC00D38120 /* ContourAnalyzer.cpp */; };
+		5D9861281D8B55AC00DEDB00 /* MaskAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93661BA9DDCC00D38120 /* MaskAnalyzer.cpp */; };
+		5D98612C1D8B55AC00DEDB00 /* ContourAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93781BA9DDE300D38120 /* ContourAnalyzer.h */; };
+		5D98612D1D8B55AC00DEDB00 /* Triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93831BA9DDE300D38120 /* Triangulation.h */; };
+		5D98612E1D8B55AC00DEDB00 /* Segmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93811BA9DDE300D38120 /* Segmentation.h */; };
+		5D98612F1D8B55AC00DEDB00 /* Clustering.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93761BA9DDE300D38120 /* Clustering.h */; };
+		5D9861301D8B55AC00DEDB00 /* ContourTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937B1BA9DDE300D38120 /* ContourTracker.h */; };
+		5D9861331D8B55AC00DEDB00 /* ContourMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937A1BA9DDE300D38120 /* ContourMapping.h */; };
+		5D9861341D8B55AC00DEDB00 /* PixelContour.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937F1BA9DDE300D38120 /* PixelContour.h */; };
+		5D9861351D8B55AC00DEDB00 /* SeedSegmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93801BA9DDE300D38120 /* SeedSegmentation.h */; };
+		5D9861361D8B55AC00DEDB00 /* MaskCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937E1BA9DDE300D38120 /* MaskCreator.h */; };
+		5D9861371D8B55AC00DEDB00 /* MaskAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937D1BA9DDE300D38120 /* MaskAnalyzer.h */; };
+		5D9861381D8B55AC00DEDB00 /* ContourFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93791BA9DDE300D38120 /* ContourFinder.h */; };
+		9300C95527CE16D700806E93 /* BinPacking.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C95427CE16D700806E93 /* BinPacking.h */; };
+		9300C95627CE16D700806E93 /* BinPacking.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C95427CE16D700806E93 /* BinPacking.h */; };
+		9300C95727CE16D700806E93 /* BinPacking.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C95427CE16D700806E93 /* BinPacking.h */; };
+		9300C95827CE16D700806E93 /* BinPacking.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C95427CE16D700806E93 /* BinPacking.h */; };
+		9300C95A27CE16E400806E93 /* BinPacking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9300C95927CE16E400806E93 /* BinPacking.cpp */; };
+		9300C95B27CE16E400806E93 /* BinPacking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9300C95927CE16E400806E93 /* BinPacking.cpp */; };
+		9300C95C27CE16E400806E93 /* BinPacking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9300C95927CE16E400806E93 /* BinPacking.cpp */; };
+		9300C95D27CE16E400806E93 /* BinPacking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9300C95927CE16E400806E93 /* BinPacking.cpp */; };
+		C041EB231DABD8D300BF5D76 /* Triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D936A1BA9DDCC00D38120 /* Triangulation.cpp */; };
+		C041EB241DABD8D300BF5D76 /* ContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93621BA9DDCC00D38120 /* ContourFinder.cpp */; };
+		C041EB251DABD8D300BF5D76 /* SeedSegmentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93681BA9DDCC00D38120 /* SeedSegmentation.cpp */; };
+		C041EB261DABD8D300BF5D76 /* ContourMapping.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93631BA9DDCC00D38120 /* ContourMapping.cpp */; };
+		C041EB271DABD8D300BF5D76 /* ContourTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93641BA9DDCC00D38120 /* ContourTracker.cpp */; };
+		C041EB281DABD8D300BF5D76 /* MaskCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93671BA9DDCC00D38120 /* MaskCreator.cpp */; };
+		C041EB291DABD8D300BF5D76 /* ContourAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93611BA9DDCC00D38120 /* ContourAnalyzer.cpp */; };
+		C041EB2B1DABD8D300BF5D76 /* MaskAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93661BA9DDCC00D38120 /* MaskAnalyzer.cpp */; };
+		C041EB2F1DABD8D300BF5D76 /* ContourAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93781BA9DDE300D38120 /* ContourAnalyzer.h */; };
+		C041EB301DABD8D300BF5D76 /* Triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93831BA9DDE300D38120 /* Triangulation.h */; };
+		C041EB311DABD8D300BF5D76 /* Segmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93811BA9DDE300D38120 /* Segmentation.h */; };
+		C041EB321DABD8D300BF5D76 /* Clustering.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93761BA9DDE300D38120 /* Clustering.h */; };
+		C041EB331DABD8D300BF5D76 /* ContourTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937B1BA9DDE300D38120 /* ContourTracker.h */; };
+		C041EB361DABD8D300BF5D76 /* ContourMapping.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937A1BA9DDE300D38120 /* ContourMapping.h */; };
+		C041EB371DABD8D300BF5D76 /* PixelContour.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937F1BA9DDE300D38120 /* PixelContour.h */; };
+		C041EB381DABD8D300BF5D76 /* SeedSegmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93801BA9DDE300D38120 /* SeedSegmentation.h */; };
+		C041EB391DABD8D300BF5D76 /* MaskCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937E1BA9DDE300D38120 /* MaskCreator.h */; };
+		C041EB3A1DABD8D300BF5D76 /* MaskAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D937D1BA9DDE300D38120 /* MaskAnalyzer.h */; };
+		C041EB3B1DABD8D300BF5D76 /* ContourFinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D7D93791BA9DDE300D38120 /* ContourFinder.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D7D93511BA9DC5700D38120 /* libOceanCVSegmentationD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVSegmentationD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D7D93611BA9DDCC00D38120 /* ContourAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ContourAnalyzer.cpp; path = ../../../../../../impl/ocean/cv/segmentation/ContourAnalyzer.cpp; sourceTree = "<group>"; };
+		5D7D93621BA9DDCC00D38120 /* ContourFinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ContourFinder.cpp; path = ../../../../../../impl/ocean/cv/segmentation/ContourFinder.cpp; sourceTree = "<group>"; };
+		5D7D93631BA9DDCC00D38120 /* ContourMapping.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ContourMapping.cpp; path = ../../../../../../impl/ocean/cv/segmentation/ContourMapping.cpp; sourceTree = "<group>"; };
+		5D7D93641BA9DDCC00D38120 /* ContourTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ContourTracker.cpp; path = ../../../../../../impl/ocean/cv/segmentation/ContourTracker.cpp; sourceTree = "<group>"; };
+		5D7D93661BA9DDCC00D38120 /* MaskAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MaskAnalyzer.cpp; path = ../../../../../../impl/ocean/cv/segmentation/MaskAnalyzer.cpp; sourceTree = "<group>"; };
+		5D7D93671BA9DDCC00D38120 /* MaskCreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MaskCreator.cpp; path = ../../../../../../impl/ocean/cv/segmentation/MaskCreator.cpp; sourceTree = "<group>"; };
+		5D7D93681BA9DDCC00D38120 /* SeedSegmentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SeedSegmentation.cpp; path = ../../../../../../impl/ocean/cv/segmentation/SeedSegmentation.cpp; sourceTree = "<group>"; };
+		5D7D936A1BA9DDCC00D38120 /* Triangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Triangulation.cpp; path = ../../../../../../impl/ocean/cv/segmentation/Triangulation.cpp; sourceTree = "<group>"; };
+		5D7D93761BA9DDE300D38120 /* Clustering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Clustering.h; path = ../../../../../../impl/ocean/cv/segmentation/Clustering.h; sourceTree = "<group>"; };
+		5D7D93781BA9DDE300D38120 /* ContourAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContourAnalyzer.h; path = ../../../../../../impl/ocean/cv/segmentation/ContourAnalyzer.h; sourceTree = "<group>"; };
+		5D7D93791BA9DDE300D38120 /* ContourFinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContourFinder.h; path = ../../../../../../impl/ocean/cv/segmentation/ContourFinder.h; sourceTree = "<group>"; };
+		5D7D937A1BA9DDE300D38120 /* ContourMapping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContourMapping.h; path = ../../../../../../impl/ocean/cv/segmentation/ContourMapping.h; sourceTree = "<group>"; };
+		5D7D937B1BA9DDE300D38120 /* ContourTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContourTracker.h; path = ../../../../../../impl/ocean/cv/segmentation/ContourTracker.h; sourceTree = "<group>"; };
+		5D7D937D1BA9DDE300D38120 /* MaskAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaskAnalyzer.h; path = ../../../../../../impl/ocean/cv/segmentation/MaskAnalyzer.h; sourceTree = "<group>"; };
+		5D7D937E1BA9DDE300D38120 /* MaskCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MaskCreator.h; path = ../../../../../../impl/ocean/cv/segmentation/MaskCreator.h; sourceTree = "<group>"; };
+		5D7D937F1BA9DDE300D38120 /* PixelContour.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelContour.h; path = ../../../../../../impl/ocean/cv/segmentation/PixelContour.h; sourceTree = "<group>"; };
+		5D7D93801BA9DDE300D38120 /* SeedSegmentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SeedSegmentation.h; path = ../../../../../../impl/ocean/cv/segmentation/SeedSegmentation.h; sourceTree = "<group>"; };
+		5D7D93811BA9DDE300D38120 /* Segmentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Segmentation.h; path = ../../../../../../impl/ocean/cv/segmentation/Segmentation.h; sourceTree = "<group>"; };
+		5D7D93831BA9DDE300D38120 /* Triangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Triangulation.h; path = ../../../../../../impl/ocean/cv/segmentation/Triangulation.h; sourceTree = "<group>"; };
+		5D936E871BC54A990046ACD4 /* libOceanCVSegmentationD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVSegmentationD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D98613C1D8B55AC00DEDB00 /* libOceanCVSegmentationD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVSegmentationD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		9300C95427CE16D700806E93 /* BinPacking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BinPacking.h; path = ../../../../../../impl/ocean/cv/segmentation/BinPacking.h; sourceTree = "<group>"; };
+		9300C95927CE16E400806E93 /* BinPacking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BinPacking.cpp; path = ../../../../../../impl/ocean/cv/segmentation/BinPacking.cpp; sourceTree = "<group>"; };
+		C041EB401DABD8D300BF5D76 /* libOceanCVSegmentationD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVSegmentationD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D7D934E1BA9DC5700D38120 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936E741BC54A990046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9861291D8B55AC00DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB2C1DABD8D300BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D7D93481BA9DC5700D38120 = {
+			isa = PBXGroup;
+			children = (
+				5D936E661BC54A650046ACD4 /* Header Files */,
+				5D7D935F1BA9DDAE00D38120 /* Source Files */,
+				5D7D93521BA9DC5700D38120 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D7D93521BA9DC5700D38120 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D7D93511BA9DC5700D38120 /* libOceanCVSegmentationD.a */,
+				5D936E871BC54A990046ACD4 /* libOceanCVSegmentationD.dylib */,
+				5D98613C1D8B55AC00DEDB00 /* libOceanCVSegmentationD.a */,
+				C041EB401DABD8D300BF5D76 /* libOceanCVSegmentationD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D7D935F1BA9DDAE00D38120 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				9300C95927CE16E400806E93 /* BinPacking.cpp */,
+				5D7D93611BA9DDCC00D38120 /* ContourAnalyzer.cpp */,
+				5D7D93621BA9DDCC00D38120 /* ContourFinder.cpp */,
+				5D7D93631BA9DDCC00D38120 /* ContourMapping.cpp */,
+				5D7D93641BA9DDCC00D38120 /* ContourTracker.cpp */,
+				5D7D93661BA9DDCC00D38120 /* MaskAnalyzer.cpp */,
+				5D7D93671BA9DDCC00D38120 /* MaskCreator.cpp */,
+				5D7D93681BA9DDCC00D38120 /* SeedSegmentation.cpp */,
+				5D7D936A1BA9DDCC00D38120 /* Triangulation.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D936E661BC54A650046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				9300C95427CE16D700806E93 /* BinPacking.h */,
+				5D7D93761BA9DDE300D38120 /* Clustering.h */,
+				5D7D93781BA9DDE300D38120 /* ContourAnalyzer.h */,
+				5D7D93791BA9DDE300D38120 /* ContourFinder.h */,
+				5D7D937A1BA9DDE300D38120 /* ContourMapping.h */,
+				5D7D937B1BA9DDE300D38120 /* ContourTracker.h */,
+				5D7D937D1BA9DDE300D38120 /* MaskAnalyzer.h */,
+				5D7D937E1BA9DDE300D38120 /* MaskCreator.h */,
+				5D7D937F1BA9DDE300D38120 /* PixelContour.h */,
+				5D7D93801BA9DDE300D38120 /* SeedSegmentation.h */,
+				5D7D93811BA9DDE300D38120 /* Segmentation.h */,
+				5D7D93831BA9DDE300D38120 /* Triangulation.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D7D934F1BA9DC5700D38120 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D7D93861BA9DDE300D38120 /* ContourAnalyzer.h in Headers */,
+				5D7D93911BA9DDE300D38120 /* Triangulation.h in Headers */,
+				5D7D938F1BA9DDE300D38120 /* Segmentation.h in Headers */,
+				5D7D93841BA9DDE300D38120 /* Clustering.h in Headers */,
+				9300C95527CE16D700806E93 /* BinPacking.h in Headers */,
+				5D7D93891BA9DDE300D38120 /* ContourTracker.h in Headers */,
+				5D7D93881BA9DDE300D38120 /* ContourMapping.h in Headers */,
+				5D7D938D1BA9DDE300D38120 /* PixelContour.h in Headers */,
+				5D7D938E1BA9DDE300D38120 /* SeedSegmentation.h in Headers */,
+				5D7D938C1BA9DDE300D38120 /* MaskCreator.h in Headers */,
+				5D7D938B1BA9DDE300D38120 /* MaskAnalyzer.h in Headers */,
+				5D7D93871BA9DDE300D38120 /* ContourFinder.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936E751BC54A990046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936E771BC54A990046ACD4 /* ContourAnalyzer.h in Headers */,
+				5D936E781BC54A990046ACD4 /* Triangulation.h in Headers */,
+				5D936E791BC54A990046ACD4 /* Segmentation.h in Headers */,
+				5D936E7A1BC54A990046ACD4 /* Clustering.h in Headers */,
+				9300C95627CE16D700806E93 /* BinPacking.h in Headers */,
+				5D936E7B1BC54A990046ACD4 /* ContourTracker.h in Headers */,
+				5D936E7E1BC54A990046ACD4 /* ContourMapping.h in Headers */,
+				5D936E7F1BC54A990046ACD4 /* PixelContour.h in Headers */,
+				5D936E801BC54A990046ACD4 /* SeedSegmentation.h in Headers */,
+				5D936E811BC54A990046ACD4 /* MaskCreator.h in Headers */,
+				5D936E821BC54A990046ACD4 /* MaskAnalyzer.h in Headers */,
+				5D936E831BC54A990046ACD4 /* ContourFinder.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98612A1D8B55AC00DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D98612C1D8B55AC00DEDB00 /* ContourAnalyzer.h in Headers */,
+				5D98612D1D8B55AC00DEDB00 /* Triangulation.h in Headers */,
+				5D98612E1D8B55AC00DEDB00 /* Segmentation.h in Headers */,
+				5D98612F1D8B55AC00DEDB00 /* Clustering.h in Headers */,
+				9300C95727CE16D700806E93 /* BinPacking.h in Headers */,
+				5D9861301D8B55AC00DEDB00 /* ContourTracker.h in Headers */,
+				5D9861331D8B55AC00DEDB00 /* ContourMapping.h in Headers */,
+				5D9861341D8B55AC00DEDB00 /* PixelContour.h in Headers */,
+				5D9861351D8B55AC00DEDB00 /* SeedSegmentation.h in Headers */,
+				5D9861361D8B55AC00DEDB00 /* MaskCreator.h in Headers */,
+				5D9861371D8B55AC00DEDB00 /* MaskAnalyzer.h in Headers */,
+				5D9861381D8B55AC00DEDB00 /* ContourFinder.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB2D1DABD8D300BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EB2F1DABD8D300BF5D76 /* ContourAnalyzer.h in Headers */,
+				C041EB301DABD8D300BF5D76 /* Triangulation.h in Headers */,
+				C041EB311DABD8D300BF5D76 /* Segmentation.h in Headers */,
+				C041EB321DABD8D300BF5D76 /* Clustering.h in Headers */,
+				9300C95827CE16D700806E93 /* BinPacking.h in Headers */,
+				C041EB331DABD8D300BF5D76 /* ContourTracker.h in Headers */,
+				C041EB361DABD8D300BF5D76 /* ContourMapping.h in Headers */,
+				C041EB371DABD8D300BF5D76 /* PixelContour.h in Headers */,
+				C041EB381DABD8D300BF5D76 /* SeedSegmentation.h in Headers */,
+				C041EB391DABD8D300BF5D76 /* MaskCreator.h in Headers */,
+				C041EB3A1DABD8D300BF5D76 /* MaskAnalyzer.h in Headers */,
+				C041EB3B1DABD8D300BF5D76 /* ContourFinder.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D7D93501BA9DC5700D38120 /* cvsegmentation x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D7D935C1BA9DC5700D38120 /* Build configuration list for PBXNativeTarget "cvsegmentation x64 (Static)" */;
+			buildPhases = (
+				5D7D934D1BA9DC5700D38120 /* Sources */,
+				5D7D934E1BA9DC5700D38120 /* Frameworks */,
+				5D7D934F1BA9DC5700D38120 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvsegmentation x64 (Static)";
+			productName = cvsegmentation;
+			productReference = 5D7D93511BA9DC5700D38120 /* libOceanCVSegmentationD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D936E671BC54A990046ACD4 /* cvsegmentation x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D936E841BC54A990046ACD4 /* Build configuration list for PBXNativeTarget "cvsegmentation x64 (Shared)" */;
+			buildPhases = (
+				5D936E681BC54A990046ACD4 /* Sources */,
+				5D936E741BC54A990046ACD4 /* Frameworks */,
+				5D936E751BC54A990046ACD4 /* Headers */,
+				C041EB411DABD94A00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvsegmentation x64 (Shared)";
+			productName = cvsegmentation;
+			productReference = 5D936E871BC54A990046ACD4 /* libOceanCVSegmentationD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D98611C1D8B55AC00DEDB00 /* cvsegmentation arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9861391D8B55AC00DEDB00 /* Build configuration list for PBXNativeTarget "cvsegmentation arm64 (Static)" */;
+			buildPhases = (
+				5D98611D1D8B55AC00DEDB00 /* Sources */,
+				5D9861291D8B55AC00DEDB00 /* Frameworks */,
+				5D98612A1D8B55AC00DEDB00 /* Headers */,
+				5D837F4A1D8F0F5D00939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvsegmentation arm64 (Static)";
+			productName = cvsegmentation;
+			productReference = 5D98613C1D8B55AC00DEDB00 /* libOceanCVSegmentationD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EB1F1DABD8D300BF5D76 /* cvsegmentation arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EB3D1DABD8D300BF5D76 /* Build configuration list for PBXNativeTarget "cvsegmentation arm64 (Shared)" */;
+			buildPhases = (
+				C041EB201DABD8D300BF5D76 /* Sources */,
+				C041EB2C1DABD8D300BF5D76 /* Frameworks */,
+				C041EB2D1DABD8D300BF5D76 /* Headers */,
+				C041EB3C1DABD8D300BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvsegmentation arm64 (Shared)";
+			productName = cvsegmentation;
+			productReference = C041EB401DABD8D300BF5D76 /* libOceanCVSegmentationD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D7D93491BA9DC5700D38120 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D7D93501BA9DC5700D38120 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D7D934C1BA9DC5700D38120 /* Build configuration list for PBXProject "cvsegmentation" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D7D93481BA9DC5700D38120;
+			productRefGroup = 5D7D93521BA9DC5700D38120 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D7D93501BA9DC5700D38120 /* cvsegmentation x64 (Static) */,
+				5D936E671BC54A990046ACD4 /* cvsegmentation x64 (Shared) */,
+				5D98611C1D8B55AC00DEDB00 /* cvsegmentation arm64 (Static) */,
+				C041EB1F1DABD8D300BF5D76 /* cvsegmentation arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F4A1D8F0F5D00939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"\n";
+		};
+		C041EB3C1DABD8D300BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EB411DABD94A00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D7D934D1BA9DC5700D38120 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D7D93751BA9DDCC00D38120 /* Triangulation.cpp in Sources */,
+				5D7D936D1BA9DDCC00D38120 /* ContourFinder.cpp in Sources */,
+				5D7D93731BA9DDCC00D38120 /* SeedSegmentation.cpp in Sources */,
+				9300C95A27CE16E400806E93 /* BinPacking.cpp in Sources */,
+				5D7D936E1BA9DDCC00D38120 /* ContourMapping.cpp in Sources */,
+				5D7D936F1BA9DDCC00D38120 /* ContourTracker.cpp in Sources */,
+				5D7D93721BA9DDCC00D38120 /* MaskCreator.cpp in Sources */,
+				5D7D936C1BA9DDCC00D38120 /* ContourAnalyzer.cpp in Sources */,
+				5D7D93711BA9DDCC00D38120 /* MaskAnalyzer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936E681BC54A990046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936E6B1BC54A990046ACD4 /* Triangulation.cpp in Sources */,
+				5D936E6C1BC54A990046ACD4 /* ContourFinder.cpp in Sources */,
+				5D936E6D1BC54A990046ACD4 /* SeedSegmentation.cpp in Sources */,
+				9300C95B27CE16E400806E93 /* BinPacking.cpp in Sources */,
+				5D936E6E1BC54A990046ACD4 /* ContourMapping.cpp in Sources */,
+				5D936E6F1BC54A990046ACD4 /* ContourTracker.cpp in Sources */,
+				5D936E701BC54A990046ACD4 /* MaskCreator.cpp in Sources */,
+				5D936E711BC54A990046ACD4 /* ContourAnalyzer.cpp in Sources */,
+				5D936E731BC54A990046ACD4 /* MaskAnalyzer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98611D1D8B55AC00DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9861201D8B55AC00DEDB00 /* Triangulation.cpp in Sources */,
+				5D9861211D8B55AC00DEDB00 /* ContourFinder.cpp in Sources */,
+				5D9861221D8B55AC00DEDB00 /* SeedSegmentation.cpp in Sources */,
+				9300C95C27CE16E400806E93 /* BinPacking.cpp in Sources */,
+				5D9861231D8B55AC00DEDB00 /* ContourMapping.cpp in Sources */,
+				5D9861241D8B55AC00DEDB00 /* ContourTracker.cpp in Sources */,
+				5D9861251D8B55AC00DEDB00 /* MaskCreator.cpp in Sources */,
+				5D9861261D8B55AC00DEDB00 /* ContourAnalyzer.cpp in Sources */,
+				5D9861281D8B55AC00DEDB00 /* MaskAnalyzer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB201DABD8D300BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EB231DABD8D300BF5D76 /* Triangulation.cpp in Sources */,
+				C041EB241DABD8D300BF5D76 /* ContourFinder.cpp in Sources */,
+				C041EB251DABD8D300BF5D76 /* SeedSegmentation.cpp in Sources */,
+				9300C95D27CE16E400806E93 /* BinPacking.cpp in Sources */,
+				C041EB261DABD8D300BF5D76 /* ContourMapping.cpp in Sources */,
+				C041EB271DABD8D300BF5D76 /* ContourTracker.cpp in Sources */,
+				C041EB281DABD8D300BF5D76 /* MaskCreator.cpp in Sources */,
+				C041EB291DABD8D300BF5D76 /* ContourAnalyzer.cpp in Sources */,
+				C041EB2B1DABD8D300BF5D76 /* MaskAnalyzer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D7D935A1BA9DC5700D38120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D7D935B1BA9DC5700D38120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D7D935D1BA9DC5700D38120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvsegmentation/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvsegmentation/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVSegmentationD;
+				PRODUCT_NAME = OceanCVSegmentationD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D7D935E1BA9DC5700D38120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvsegmentation/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvsegmentation/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVSegmentation;
+				PRODUCT_NAME = OceanCVSegmentation;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D936E851BC54A990046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvsegmentation/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvsegmentation/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanCVSegmentationD;
+				PRODUCT_NAME = OceanCVSegmentationD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D936E861BC54A990046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvsegmentation/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvsegmentation/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanGeometry",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanCVSegmentation;
+				PRODUCT_NAME = OceanCVSegmentation;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D98613A1D8B55AC00DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVSegmentationD;
+				PRODUCT_NAME = OceanCVSegmentationD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D98613B1D8B55AC00DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVSegmentation;
+				PRODUCT_NAME = OceanCVSegmentation;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EB3E1DABD8D300BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanCVSegmentationD;
+				PRODUCT_NAME = OceanCVSegmentationD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EB3F1DABD8D300BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanGeometry",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanCVSegmentation;
+				PRODUCT_NAME = OceanCVSegmentation;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvsegmentation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D7D934C1BA9DC5700D38120 /* Build configuration list for PBXProject "cvsegmentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D7D935A1BA9DC5700D38120 /* Debug */,
+				5D7D935B1BA9DC5700D38120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D7D935C1BA9DC5700D38120 /* Build configuration list for PBXNativeTarget "cvsegmentation x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D7D935D1BA9DC5700D38120 /* Debug */,
+				5D7D935E1BA9DC5700D38120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D936E841BC54A990046ACD4 /* Build configuration list for PBXNativeTarget "cvsegmentation x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936E851BC54A990046ACD4 /* Debug */,
+				5D936E861BC54A990046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9861391D8B55AC00DEDB00 /* Build configuration list for PBXNativeTarget "cvsegmentation arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D98613A1D8B55AC00DEDB00 /* Debug */,
+				5D98613B1D8B55AC00DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EB3D1DABD8D300BF5D76 /* Build configuration list for PBXNativeTarget "cvsegmentation arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EB3E1DABD8D300BF5D76 /* Debug */,
+				C041EB3F1DABD8D300BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D7D93491BA9DC5700D38120 /* Project object */;
+}

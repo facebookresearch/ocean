@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean Interaction JavaScript (Common)</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ocean_interactionjavascript_common_imported>True</ocean_interactionjavascript_common_imported>
+  </PropertyGroup>
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\base\base_use.props"/>
+    <Import Condition="'$(ocean_devices_use_imported)' != 'True'" Project="..\..\devices\devices_use.props"/>
+    <Import Condition="'$(ocean_interaction_use_imported)' != 'True'" Project="..\..\interaction\interaction_use.props"/>
+    <Import Condition="'$(ocean_rendering_use_imported)' != 'True'" Project="..\..\rendering\rendering_use.props"/>
+    <Import Condition="'$(ocean_scenedescription_use_imported)' != 'True'" Project="..\..\scenedescription\scenedescription_use.props"/>
+  </ImportGroup>
+  <ItemDefinitionGroup>
+	  <ClCompile>
+      <AdditionalIncludeDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\v8\8.4\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|x64' Or '$(Configuration)|$(Platform)'=='Shared Debug|x64'">
+    <Link>
+      <AdditionalDependencies>v8.dll.lib;v8_libbase.dll.lib;v8_libplatform.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\v8\8.4\lib\win_x64_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|Win32' Or '$(Configuration)|$(Platform)'=='Shared Debug|Win32'">
+    <Link>
+      <AdditionalDependencies>v8.dll.lib;v8_libbase.dll.lib;v8_libplatform.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\v8\8.4\lib\win_x86_vc143_static_debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|x64' Or '$(Configuration)|$(Platform)'=='Static Release|x64' Or '$(Configuration)|$(Platform)'=='Shared Profile|x64' Or '$(Configuration)|$(Platform)'=='Shared Release|x64'">
+    <Link>
+	    <AdditionalDependencies>v8.dll.lib;v8_libbase.dll.lib;v8_libplatform.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\v8\8.4\lib\win_x64_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Static Profile|Win32' Or '$(Configuration)|$(Platform)'=='Static Release|Win32' Or '$(Configuration)|$(Platform)'=='Shared Profile|Win32' Or '$(Configuration)|$(Platform)'=='Shared Release|Win32'">
+    <Link>
+	    <AdditionalDependencies>v8.dll.lib;v8_libbase.dll.lib;v8_libplatform.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OCEAN_DEVELOPMENT_PATH)\3rdparty\v8\8.4\lib\win_x86_vc143_static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

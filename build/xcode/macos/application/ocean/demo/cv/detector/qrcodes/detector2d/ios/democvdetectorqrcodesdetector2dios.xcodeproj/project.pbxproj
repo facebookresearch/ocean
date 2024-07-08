@@ -1,0 +1,517 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		50A994F82C1774DC00808CBE /* development_team.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 50A994F72C1774DC00808CBE /* development_team.xcconfig */; };
+		50CAE3CC2B9684A20035ECED /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50CAE3CA2B9684990035ECED /* AppDelegate.mm */; };
+		50CAE3CD2B9684A20035ECED /* Application.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50CAE3CB2B9684990035ECED /* Application.mm */; };
+		50CAE3D02B9684C40035ECED /* Detector2DWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50CAE3CF2B9684C30035ECED /* Detector2DWrapper.cpp */; };
+		50CAE3D22B9684F00035ECED /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50CAE3D12B9684EF0035ECED /* LaunchScreen.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		50A994F72C1774DC00808CBE /* development_team.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development_team.xcconfig; sourceTree = "<group>"; };
+		50CAE3C92B9684990035ECED /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/AppDelegate.h; sourceTree = "<group>"; };
+		50CAE3CA2B9684990035ECED /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/AppDelegate.mm; sourceTree = "<group>"; };
+		50CAE3CB2B9684990035ECED /* Application.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/Application.mm; sourceTree = "<group>"; };
+		50CAE3CE2B9684C30035ECED /* Detector2DWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Detector2DWrapper.h; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/Detector2DWrapper.h; sourceTree = "<group>"; };
+		50CAE3CF2B9684C30035ECED /* Detector2DWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Detector2DWrapper.cpp; path = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/Detector2DWrapper.cpp; sourceTree = "<group>"; };
+		50CAE3D12B9684EF0035ECED /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = ../../../../../../../../../../../res/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/LaunchScreen.xib; sourceTree = "<group>"; };
+		5D4A716A1D8B10B000B8B729 /* democvdetectorqrcodesdetector2dios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = democvdetectorqrcodesdetector2dios.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D4A71671D8B10B000B8B729 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		50A994F62C17749A00808CBE /* Config Files */ = {
+			isa = PBXGroup;
+			children = (
+				50A994F72C1774DC00808CBE /* development_team.xcconfig */,
+			);
+			name = "Config Files";
+			sourceTree = "<group>";
+		};
+		5D4A71611D8B10B000B8B729 = {
+			isa = PBXGroup;
+			children = (
+				5DF0B9571D8FE33E00BE5D21 /* Header Files */,
+				5DF0B9561D8FE33000BE5D21 /* Source Files */,
+				5DF0B9581D8FE35D00BE5D21 /* Resource Files */,
+				50A994F62C17749A00808CBE /* Config Files */,
+				5D4A716B1D8B10B000B8B729 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D4A716B1D8B10B000B8B729 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D4A716A1D8B10B000B8B729 /* democvdetectorqrcodesdetector2dios.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DF0B9561D8FE33000BE5D21 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				50CAE3CF2B9684C30035ECED /* Detector2DWrapper.cpp */,
+				50CAE3CA2B9684990035ECED /* AppDelegate.mm */,
+				50CAE3CB2B9684990035ECED /* Application.mm */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DF0B9571D8FE33E00BE5D21 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				50CAE3CE2B9684C30035ECED /* Detector2DWrapper.h */,
+				50CAE3C92B9684990035ECED /* AppDelegate.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DF0B9581D8FE35D00BE5D21 /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				50CAE3D12B9684EF0035ECED /* LaunchScreen.xib */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5D4A71691D8B10B000B8B729 /* democvdetectorqrcodesdetector2dios arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "democvdetectorqrcodesdetector2dios arm64 (Static)" */;
+			buildPhases = (
+				5D4A71661D8B10B000B8B729 /* Sources */,
+				5D4A71671D8B10B000B8B729 /* Frameworks */,
+				5D4A71681D8B10B000B8B729 /* Resources */,
+				5D113DE11D93DEF000E6523B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "democvdetectorqrcodesdetector2dios arm64 (Static)";
+			productName = democvdetectorlinedetectorios;
+			productReference = 5D4A716A1D8B10B000B8B729 /* democvdetectorqrcodesdetector2dios.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D4A71621D8B10B000B8B729 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D4A71691D8B10B000B8B729 = {
+						CreatedOnToolsVersion = 6.4;
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "democvdetectorqrcodesdetector2dios" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D4A71611D8B10B000B8B729;
+			productRefGroup = 5D4A716B1D8B10B000B8B729 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D4A71691D8B10B000B8B729 /* democvdetectorqrcodesdetector2dios arm64 (Static) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5D4A71681D8B10B000B8B729 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50CAE3D22B9684F00035ECED /* LaunchScreen.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D113DE11D93DEF000E6523B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../../../../../copy_arm_static.sh \"../../../../../../../../../../../bin/application/ocean/demo/cv/ios/\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D4A71661D8B10B000B8B729 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50CAE3CC2B9684A20035ECED /* AppDelegate.mm in Sources */,
+				50CAE3CD2B9684A20035ECED /* Application.mm in Sources */,
+				50CAE3D02B9684C40035ECED /* Detector2DWrapper.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D4A718F1D8B10B000B8B729 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5D4A71901D8B10B000B8B729 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5D4A71921D8B10B000B8B729 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					../../../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../../../../../../bin/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../../../3rdparty/freetype/2.10/lib/ios_arm64_xc_static_debug,
+					../../../../../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static_debug,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../../../../../../bin/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../../../3rdparty/freetype/2.10/lib/ios_i386_xc_static_debug,
+					../../../../../../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static_debug,
+				);
+				OBJROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVDetectorD",
+					"-lOceanCVDetectorQRCodesD",
+					"-lOceanCVFontsD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanMediaAVFoundationD",
+					"-lOceanMediaImageIOD",
+					"-lOceanPlatformD",
+					"-lOceanPlatformAppleD",
+					"-lOceanPlatformAppleIOSD",
+					"-lOceanRenderingD",
+					"-lOceanRenderingGLESceneGraphD",
+					"-lOceanSystemD",
+					"-lfreetype",
+					"-lpng",
+					"-lzlib",
+					"-framework",
+					UIKit,
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					ImageIO,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					CoreGraphics,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.qrcodes.detector.ios;
+				PRODUCT_MODULE_NAME = democvdetectorqrcodesdetector2dios;
+				PRODUCT_NAME = democvdetectorqrcodesdetector2dios;
+
+				SYMROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D4A71931D8B10B000B8B729 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					../../../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../../../impl/application/ocean/demo/cv/detector/qrcodes/detector2d/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../../../../../../bin/lib/ios_arm64_xc9_static,
+					../../../../../../../../../../../3rdparty/freetype/2.10/lib/ios_arm64_xc_static,
+					../../../../../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static,
+					../../../../../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../../../../../../bin/lib/ios_i386_xc9_static,
+					../../../../../../../../../../../3rdparty/freetype/2.10/lib/ios_i386_xc_static,
+					../../../../../../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static,
+					../../../../../../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static,
+				);
+				OBJROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVDetector",
+					"-lOceanCVDetectorQRCodes",
+					"-lOceanCVFonts",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanMediaAVFoundation",
+					"-lOceanMediaImageIO",
+					"-lOceanPlatform",
+					"-lOceanPlatformApple",
+					"-lOceanPlatformAppleIOS",
+					"-lOceanRendering",
+					"-lOceanRenderingGLESceneGraph",
+					"-lOceanSystem",
+					"-lfreetype",
+					"-lpng",
+					"-lzlib",
+					"-framework",
+					UIKit,
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					ImageIO,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					CoreGraphics,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.cv.detector.qrcodes.detector.ios;
+				PRODUCT_MODULE_NAME = democvdetectorqrcodesdetector2dios;
+				PRODUCT_NAME = democvdetectorqrcodesdetector2dios;
+				SYMROOT = "../../../../../../../../../../../bin/tmp/impl/application/ocean/democvdetectorqrcodesdetector2dios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "democvdetectorqrcodesdetector2dios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D4A718F1D8B10B000B8B729 /* Debug */,
+				5D4A71901D8B10B000B8B729 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "democvdetectorqrcodesdetector2dios arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D4A71921D8B10B000B8B729 /* Debug */,
+				5D4A71931D8B10B000B8B729 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D4A71621D8B10B000B8B729 /* Project object */;
+}

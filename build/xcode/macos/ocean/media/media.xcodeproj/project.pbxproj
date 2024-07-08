@@ -1,0 +1,1632 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D0A000F1BC299040008C798 /* Audio.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE71BC299040008C798 /* Audio.h */; };
+		5D0A00101BC299040008C798 /* BufferImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE81BC299040008C798 /* BufferImage.h */; };
+		5D0A00111BC299040008C798 /* BufferImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE91BC299040008C798 /* BufferImageRecorder.h */; };
+		5D0A00121BC299040008C798 /* BufferRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEA1BC299040008C798 /* BufferRecorder.h */; };
+		5D0A00131BC299040008C798 /* ConfigMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEB1BC299040008C798 /* ConfigMedium.h */; };
+		5D0A00141BC299040008C798 /* ExplicitRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEC1BC299040008C798 /* ExplicitRecorder.h */; };
+		5D0A00151BC299040008C798 /* FileRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFED1BC299040008C798 /* FileRecorder.h */; };
+		5D0A00161BC299040008C798 /* FiniteMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEE1BC299040008C798 /* FiniteMedium.h */; };
+		5D0A00171BC299040008C798 /* FrameCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEF1BC299040008C798 /* FrameCollection.h */; };
+		5D0A00181BC299040008C798 /* FrameMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF01BC299040008C798 /* FrameMedium.h */; };
+		5D0A00191BC299040008C798 /* FrameMemoryRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF11BC299040008C798 /* FrameMemoryRecorder.h */; };
+		5D0A001B1BC299040008C798 /* FrameRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF31BC299040008C798 /* FrameRecorder.h */; };
+		5D0A001E1BC299040008C798 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF61BC299040008C798 /* Image.h */; };
+		5D0A001F1BC299040008C798 /* ImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF71BC299040008C798 /* ImageRecorder.h */; };
+		5D0A00201BC299040008C798 /* ImageSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF81BC299040008C798 /* ImageSequence.h */; };
+		5D0A00211BC299040008C798 /* ImageSequenceRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF91BC299040008C798 /* ImageSequenceRecorder.h */; };
+		5D0A00221BC299040008C798 /* ImplicitRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFA1BC299040008C798 /* ImplicitRecorder.h */; };
+		5D0A00231BC299040008C798 /* Library.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFB1BC299040008C798 /* Library.h */; };
+		5D0A00241BC299040008C798 /* LiveAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFC1BC299040008C798 /* LiveAudio.h */; };
+		5D0A00251BC299040008C798 /* LiveMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFD1BC299040008C798 /* LiveMedium.h */; };
+		5D0A00261BC299040008C798 /* LiveVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFE1BC299040008C798 /* LiveVideo.h */; };
+		5D0A00271BC299040008C798 /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFF1BC299040008C798 /* Manager.h */; };
+		5D0A00281BC299040008C798 /* Media.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00001BC299040008C798 /* Media.h */; };
+		5D0A002A1BC299040008C798 /* Medium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00021BC299040008C798 /* Medium.h */; };
+		5D0A002B1BC299040008C798 /* MediumRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00031BC299040008C798 /* MediumRef.h */; };
+		5D0A002C1BC299040008C798 /* Movie.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00041BC299040008C798 /* Movie.h */; };
+		5D0A002D1BC299040008C798 /* MovieRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00051BC299040008C798 /* MovieRecorder.h */; };
+		5D0A002E1BC299040008C798 /* PixelImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00061BC299040008C798 /* PixelImage.h */; };
+		5D0A002F1BC299040008C798 /* Recorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00071BC299040008C798 /* Recorder.h */; };
+		5D0A00301BC299040008C798 /* SoundMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00081BC299040008C798 /* SoundMedium.h */; };
+		5D0A00331BC299040008C798 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A000B1BC299040008C798 /* Utilities.h */; };
+		5D0A00361BC299430008C798 /* FrameMemoryRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5441B973B2B00E2498E /* FrameMemoryRecorder.cpp */; };
+		5D0A00371BC299430008C798 /* Library.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54E1B973B2B00E2498E /* Library.cpp */; };
+		5D0A00381BC299430008C798 /* ConfigMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53E1B973B2B00E2498E /* ConfigMedium.cpp */; };
+		5D0A00391BC299430008C798 /* Recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55A1B973B2B00E2498E /* Recorder.cpp */; };
+		5D0A003A1BC299430008C798 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5491B973B2B00E2498E /* Image.cpp */; };
+		5D0A003B1BC299430008C798 /* PixelImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5591B973B2B00E2498E /* PixelImage.cpp */; };
+		5D0A003C1BC299430008C798 /* ExplicitRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53F1B973B2B00E2498E /* ExplicitRecorder.cpp */; };
+		5D0A003D1BC299430008C798 /* FrameRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5461B973B2B00E2498E /* FrameRecorder.cpp */; };
+		5D0A003E1BC299430008C798 /* LiveMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5501B973B2B00E2498E /* LiveMedium.cpp */; };
+		5D0A003F1BC299430008C798 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5521B973B2B00E2498E /* Manager.cpp */; };
+		5D0A00401BC299430008C798 /* ImplicitRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54D1B973B2B00E2498E /* ImplicitRecorder.cpp */; };
+		5D0A00421BC299430008C798 /* ImageSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54B1B973B2B00E2498E /* ImageSequence.cpp */; };
+		5D0A00431BC299430008C798 /* LiveVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5511B973B2B00E2498E /* LiveVideo.cpp */; };
+		5D0A00451BC299430008C798 /* Audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53A1B973B2B00E2498E /* Audio.cpp */; };
+		5D0A00461BC299430008C798 /* ImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54A1B973B2B00E2498E /* ImageRecorder.cpp */; };
+		5D0A00491BC299430008C798 /* Medium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5551B973B2B00E2498E /* Medium.cpp */; };
+		5D0A004B1BC299430008C798 /* FiniteMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5411B973B2B00E2498E /* FiniteMedium.cpp */; };
+		5D0A004C1BC299430008C798 /* FileRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5401B973B2B00E2498E /* FileRecorder.cpp */; };
+		5D0A004D1BC299430008C798 /* LiveAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54F1B973B2B00E2498E /* LiveAudio.cpp */; };
+		5D0A004E1BC299430008C798 /* FrameCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5421B973B2B00E2498E /* FrameCollection.cpp */; };
+		5D0A004F1BC299430008C798 /* FrameMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5431B973B2B00E2498E /* FrameMedium.cpp */; };
+		5D0A00501BC299430008C798 /* SoundMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55B1B973B2B00E2498E /* SoundMedium.cpp */; };
+		5D0A00511BC299430008C798 /* BufferRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53D1B973B2B00E2498E /* BufferRecorder.cpp */; };
+		5D0A00541BC299430008C798 /* BufferImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53B1B973B2B00E2498E /* BufferImage.cpp */; };
+		5D0A00561BC299430008C798 /* MovieRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5581B973B2B00E2498E /* MovieRecorder.cpp */; };
+		5D0A00571BC299430008C798 /* MediumRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5561B973B2B00E2498E /* MediumRef.cpp */; };
+		5D0A00581BC299430008C798 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55E1B973B2B00E2498E /* Utilities.cpp */; };
+		5D0A00591BC299430008C798 /* ImageSequenceRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54C1B973B2B00E2498E /* ImageSequenceRecorder.cpp */; };
+		5D0A005B1BC299430008C798 /* Movie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5571B973B2B00E2498E /* Movie.cpp */; };
+		5D0A005C1BC299430008C798 /* BufferImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53C1B973B2B00E2498E /* BufferImageRecorder.cpp */; };
+		5D0A00601BC299430008C798 /* FrameMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF01BC299040008C798 /* FrameMedium.h */; };
+		5D0A00611BC299430008C798 /* LiveAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFC1BC299040008C798 /* LiveAudio.h */; };
+		5D0A00621BC299430008C798 /* ImageSequenceRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF91BC299040008C798 /* ImageSequenceRecorder.h */; };
+		5D0A00641BC299430008C798 /* PixelImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00061BC299040008C798 /* PixelImage.h */; };
+		5D0A00651BC299430008C798 /* FrameMemoryRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF11BC299040008C798 /* FrameMemoryRecorder.h */; };
+		5D0A00661BC299430008C798 /* FiniteMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEE1BC299040008C798 /* FiniteMedium.h */; };
+		5D0A00681BC299430008C798 /* ExplicitRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEC1BC299040008C798 /* ExplicitRecorder.h */; };
+		5D0A00691BC299430008C798 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF61BC299040008C798 /* Image.h */; };
+		5D0A006A1BC299430008C798 /* Recorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00071BC299040008C798 /* Recorder.h */; };
+		5D0A006B1BC299430008C798 /* FileRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFED1BC299040008C798 /* FileRecorder.h */; };
+		5D0A006C1BC299430008C798 /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFF1BC299040008C798 /* Manager.h */; };
+		5D0A006D1BC299430008C798 /* MovieRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00051BC299040008C798 /* MovieRecorder.h */; };
+		5D0A006E1BC299430008C798 /* FrameRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF31BC299040008C798 /* FrameRecorder.h */; };
+		5D0A006F1BC299430008C798 /* ImageSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF81BC299040008C798 /* ImageSequence.h */; };
+		5D0A00721BC299430008C798 /* Library.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFB1BC299040008C798 /* Library.h */; };
+		5D0A00731BC299430008C798 /* Movie.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00041BC299040008C798 /* Movie.h */; };
+		5D0A00741BC299430008C798 /* Medium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00021BC299040008C798 /* Medium.h */; };
+		5D0A00751BC299430008C798 /* BufferImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE81BC299040008C798 /* BufferImage.h */; };
+		5D0A00761BC299430008C798 /* LiveMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFD1BC299040008C798 /* LiveMedium.h */; };
+		5D0A00771BC299430008C798 /* ConfigMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEB1BC299040008C798 /* ConfigMedium.h */; };
+		5D0A00791BC299430008C798 /* LiveVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFE1BC299040008C798 /* LiveVideo.h */; };
+		5D0A007B1BC299430008C798 /* SoundMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00081BC299040008C798 /* SoundMedium.h */; };
+		5D0A007D1BC299430008C798 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A000B1BC299040008C798 /* Utilities.h */; };
+		5D0A007E1BC299430008C798 /* ImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF71BC299040008C798 /* ImageRecorder.h */; };
+		5D0A007F1BC299430008C798 /* BufferImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE91BC299040008C798 /* BufferImageRecorder.h */; };
+		5D0A00811BC299430008C798 /* Media.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00001BC299040008C798 /* Media.h */; };
+		5D0A00821BC299430008C798 /* ImplicitRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFA1BC299040008C798 /* ImplicitRecorder.h */; };
+		5D0A00841BC299430008C798 /* Audio.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE71BC299040008C798 /* Audio.h */; };
+		5D0A00851BC299430008C798 /* FrameCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEF1BC299040008C798 /* FrameCollection.h */; };
+		5D0A00861BC299430008C798 /* BufferRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEA1BC299040008C798 /* BufferRecorder.h */; };
+		5D0A00871BC299430008C798 /* MediumRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00031BC299040008C798 /* MediumRef.h */; };
+		5D4919C41D8F39B900C4099B /* FrameMemoryRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5441B973B2B00E2498E /* FrameMemoryRecorder.cpp */; };
+		5D4919C51D8F39B900C4099B /* Library.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54E1B973B2B00E2498E /* Library.cpp */; };
+		5D4919C61D8F39B900C4099B /* ConfigMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53E1B973B2B00E2498E /* ConfigMedium.cpp */; };
+		5D4919C71D8F39B900C4099B /* Recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55A1B973B2B00E2498E /* Recorder.cpp */; };
+		5D4919C81D8F39B900C4099B /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5491B973B2B00E2498E /* Image.cpp */; };
+		5D4919C91D8F39B900C4099B /* PixelImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5591B973B2B00E2498E /* PixelImage.cpp */; };
+		5D4919CA1D8F39B900C4099B /* ExplicitRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53F1B973B2B00E2498E /* ExplicitRecorder.cpp */; };
+		5D4919CB1D8F39B900C4099B /* FrameRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5461B973B2B00E2498E /* FrameRecorder.cpp */; };
+		5D4919CC1D8F39B900C4099B /* LiveMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5501B973B2B00E2498E /* LiveMedium.cpp */; };
+		5D4919CD1D8F39B900C4099B /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5521B973B2B00E2498E /* Manager.cpp */; };
+		5D4919CE1D8F39B900C4099B /* ImplicitRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54D1B973B2B00E2498E /* ImplicitRecorder.cpp */; };
+		5D4919D01D8F39B900C4099B /* ImageSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54B1B973B2B00E2498E /* ImageSequence.cpp */; };
+		5D4919D11D8F39B900C4099B /* LiveVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5511B973B2B00E2498E /* LiveVideo.cpp */; };
+		5D4919D31D8F39B900C4099B /* Audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53A1B973B2B00E2498E /* Audio.cpp */; };
+		5D4919D41D8F39B900C4099B /* ImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54A1B973B2B00E2498E /* ImageRecorder.cpp */; };
+		5D4919D71D8F39B900C4099B /* Medium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5551B973B2B00E2498E /* Medium.cpp */; };
+		5D4919D91D8F39B900C4099B /* FiniteMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5411B973B2B00E2498E /* FiniteMedium.cpp */; };
+		5D4919DA1D8F39B900C4099B /* FileRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5401B973B2B00E2498E /* FileRecorder.cpp */; };
+		5D4919DB1D8F39B900C4099B /* LiveAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54F1B973B2B00E2498E /* LiveAudio.cpp */; };
+		5D4919DC1D8F39B900C4099B /* FrameCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5421B973B2B00E2498E /* FrameCollection.cpp */; };
+		5D4919DD1D8F39B900C4099B /* FrameMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5431B973B2B00E2498E /* FrameMedium.cpp */; };
+		5D4919DE1D8F39B900C4099B /* SoundMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55B1B973B2B00E2498E /* SoundMedium.cpp */; };
+		5D4919DF1D8F39B900C4099B /* BufferRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53D1B973B2B00E2498E /* BufferRecorder.cpp */; };
+		5D4919E21D8F39B900C4099B /* BufferImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53B1B973B2B00E2498E /* BufferImage.cpp */; };
+		5D4919E41D8F39B900C4099B /* MovieRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5581B973B2B00E2498E /* MovieRecorder.cpp */; };
+		5D4919E51D8F39B900C4099B /* MediumRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5561B973B2B00E2498E /* MediumRef.cpp */; };
+		5D4919E61D8F39B900C4099B /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55E1B973B2B00E2498E /* Utilities.cpp */; };
+		5D4919E71D8F39B900C4099B /* ImageSequenceRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54C1B973B2B00E2498E /* ImageSequenceRecorder.cpp */; };
+		5D4919E91D8F39B900C4099B /* Movie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5571B973B2B00E2498E /* Movie.cpp */; };
+		5D4919EA1D8F39B900C4099B /* BufferImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53C1B973B2B00E2498E /* BufferImageRecorder.cpp */; };
+		5D4919EE1D8F39B900C4099B /* FrameMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF01BC299040008C798 /* FrameMedium.h */; };
+		5D4919EF1D8F39B900C4099B /* LiveAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFC1BC299040008C798 /* LiveAudio.h */; };
+		5D4919F01D8F39B900C4099B /* ImageSequenceRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF91BC299040008C798 /* ImageSequenceRecorder.h */; };
+		5D4919F21D8F39B900C4099B /* PixelImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00061BC299040008C798 /* PixelImage.h */; };
+		5D4919F31D8F39B900C4099B /* FrameMemoryRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF11BC299040008C798 /* FrameMemoryRecorder.h */; };
+		5D4919F41D8F39B900C4099B /* FiniteMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEE1BC299040008C798 /* FiniteMedium.h */; };
+		5D4919F61D8F39B900C4099B /* ExplicitRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEC1BC299040008C798 /* ExplicitRecorder.h */; };
+		5D4919F71D8F39B900C4099B /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF61BC299040008C798 /* Image.h */; };
+		5D4919F81D8F39B900C4099B /* Recorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00071BC299040008C798 /* Recorder.h */; };
+		5D4919F91D8F39B900C4099B /* FileRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFED1BC299040008C798 /* FileRecorder.h */; };
+		5D4919FA1D8F39B900C4099B /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFF1BC299040008C798 /* Manager.h */; };
+		5D4919FB1D8F39B900C4099B /* MovieRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00051BC299040008C798 /* MovieRecorder.h */; };
+		5D4919FC1D8F39B900C4099B /* FrameRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF31BC299040008C798 /* FrameRecorder.h */; };
+		5D4919FD1D8F39B900C4099B /* ImageSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF81BC299040008C798 /* ImageSequence.h */; };
+		5D491A001D8F39B900C4099B /* Library.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFB1BC299040008C798 /* Library.h */; };
+		5D491A011D8F39B900C4099B /* Movie.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00041BC299040008C798 /* Movie.h */; };
+		5D491A021D8F39B900C4099B /* Medium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00021BC299040008C798 /* Medium.h */; };
+		5D491A031D8F39B900C4099B /* BufferImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE81BC299040008C798 /* BufferImage.h */; };
+		5D491A041D8F39B900C4099B /* LiveMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFD1BC299040008C798 /* LiveMedium.h */; };
+		5D491A051D8F39B900C4099B /* ConfigMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEB1BC299040008C798 /* ConfigMedium.h */; };
+		5D491A071D8F39B900C4099B /* LiveVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFE1BC299040008C798 /* LiveVideo.h */; };
+		5D491A091D8F39B900C4099B /* SoundMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00081BC299040008C798 /* SoundMedium.h */; };
+		5D491A0B1D8F39B900C4099B /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A000B1BC299040008C798 /* Utilities.h */; };
+		5D491A0C1D8F39B900C4099B /* ImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF71BC299040008C798 /* ImageRecorder.h */; };
+		5D491A0D1D8F39B900C4099B /* BufferImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE91BC299040008C798 /* BufferImageRecorder.h */; };
+		5D491A0F1D8F39B900C4099B /* Media.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00001BC299040008C798 /* Media.h */; };
+		5D491A101D8F39B900C4099B /* ImplicitRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFA1BC299040008C798 /* ImplicitRecorder.h */; };
+		5D491A121D8F39B900C4099B /* Audio.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE71BC299040008C798 /* Audio.h */; };
+		5D491A131D8F39B900C4099B /* FrameCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEF1BC299040008C798 /* FrameCollection.h */; };
+		5D491A141D8F39B900C4099B /* BufferRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEA1BC299040008C798 /* BufferRecorder.h */; };
+		5D491A151D8F39B900C4099B /* MediumRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00031BC299040008C798 /* MediumRef.h */; };
+		5D63F5621B973B2B00E2498E /* Audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53A1B973B2B00E2498E /* Audio.cpp */; };
+		5D63F5631B973B2B00E2498E /* BufferImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53B1B973B2B00E2498E /* BufferImage.cpp */; };
+		5D63F5641B973B2B00E2498E /* BufferImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53C1B973B2B00E2498E /* BufferImageRecorder.cpp */; };
+		5D63F5651B973B2B00E2498E /* BufferRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53D1B973B2B00E2498E /* BufferRecorder.cpp */; };
+		5D63F5661B973B2B00E2498E /* ConfigMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53E1B973B2B00E2498E /* ConfigMedium.cpp */; };
+		5D63F5671B973B2B00E2498E /* ExplicitRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53F1B973B2B00E2498E /* ExplicitRecorder.cpp */; };
+		5D63F5681B973B2B00E2498E /* FileRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5401B973B2B00E2498E /* FileRecorder.cpp */; };
+		5D63F5691B973B2B00E2498E /* FiniteMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5411B973B2B00E2498E /* FiniteMedium.cpp */; };
+		5D63F56A1B973B2B00E2498E /* FrameCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5421B973B2B00E2498E /* FrameCollection.cpp */; };
+		5D63F56B1B973B2B00E2498E /* FrameMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5431B973B2B00E2498E /* FrameMedium.cpp */; };
+		5D63F56C1B973B2B00E2498E /* FrameMemoryRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5441B973B2B00E2498E /* FrameMemoryRecorder.cpp */; };
+		5D63F56E1B973B2B00E2498E /* FrameRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5461B973B2B00E2498E /* FrameRecorder.cpp */; };
+		5D63F5711B973B2B00E2498E /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5491B973B2B00E2498E /* Image.cpp */; };
+		5D63F5721B973B2B00E2498E /* ImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54A1B973B2B00E2498E /* ImageRecorder.cpp */; };
+		5D63F5731B973B2B00E2498E /* ImageSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54B1B973B2B00E2498E /* ImageSequence.cpp */; };
+		5D63F5741B973B2B00E2498E /* ImageSequenceRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54C1B973B2B00E2498E /* ImageSequenceRecorder.cpp */; };
+		5D63F5751B973B2B00E2498E /* ImplicitRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54D1B973B2B00E2498E /* ImplicitRecorder.cpp */; };
+		5D63F5761B973B2B00E2498E /* Library.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54E1B973B2B00E2498E /* Library.cpp */; };
+		5D63F5771B973B2B00E2498E /* LiveAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54F1B973B2B00E2498E /* LiveAudio.cpp */; };
+		5D63F5781B973B2B00E2498E /* LiveMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5501B973B2B00E2498E /* LiveMedium.cpp */; };
+		5D63F5791B973B2B00E2498E /* LiveVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5511B973B2B00E2498E /* LiveVideo.cpp */; };
+		5D63F57A1B973B2B00E2498E /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5521B973B2B00E2498E /* Manager.cpp */; };
+		5D63F57D1B973B2B00E2498E /* Medium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5551B973B2B00E2498E /* Medium.cpp */; };
+		5D63F57E1B973B2B00E2498E /* MediumRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5561B973B2B00E2498E /* MediumRef.cpp */; };
+		5D63F57F1B973B2B00E2498E /* Movie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5571B973B2B00E2498E /* Movie.cpp */; };
+		5D63F5801B973B2B00E2498E /* MovieRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5581B973B2B00E2498E /* MovieRecorder.cpp */; };
+		5D63F5811B973B2B00E2498E /* PixelImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5591B973B2B00E2498E /* PixelImage.cpp */; };
+		5D63F5821B973B2B00E2498E /* Recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55A1B973B2B00E2498E /* Recorder.cpp */; };
+		5D63F5831B973B2B00E2498E /* SoundMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55B1B973B2B00E2498E /* SoundMedium.cpp */; };
+		5D63F5861B973B2B00E2498E /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55E1B973B2B00E2498E /* Utilities.cpp */; };
+		5D9862631D8B5B3A00DEDB00 /* FrameMemoryRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5441B973B2B00E2498E /* FrameMemoryRecorder.cpp */; };
+		5D9862641D8B5B3A00DEDB00 /* Library.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54E1B973B2B00E2498E /* Library.cpp */; };
+		5D9862651D8B5B3A00DEDB00 /* ConfigMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53E1B973B2B00E2498E /* ConfigMedium.cpp */; };
+		5D9862661D8B5B3A00DEDB00 /* Recorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55A1B973B2B00E2498E /* Recorder.cpp */; };
+		5D9862671D8B5B3A00DEDB00 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5491B973B2B00E2498E /* Image.cpp */; };
+		5D9862681D8B5B3A00DEDB00 /* PixelImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5591B973B2B00E2498E /* PixelImage.cpp */; };
+		5D9862691D8B5B3A00DEDB00 /* ExplicitRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53F1B973B2B00E2498E /* ExplicitRecorder.cpp */; };
+		5D98626A1D8B5B3A00DEDB00 /* FrameRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5461B973B2B00E2498E /* FrameRecorder.cpp */; };
+		5D98626B1D8B5B3A00DEDB00 /* LiveMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5501B973B2B00E2498E /* LiveMedium.cpp */; };
+		5D98626C1D8B5B3A00DEDB00 /* Manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5521B973B2B00E2498E /* Manager.cpp */; };
+		5D98626D1D8B5B3A00DEDB00 /* ImplicitRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54D1B973B2B00E2498E /* ImplicitRecorder.cpp */; };
+		5D98626F1D8B5B3A00DEDB00 /* ImageSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54B1B973B2B00E2498E /* ImageSequence.cpp */; };
+		5D9862701D8B5B3A00DEDB00 /* LiveVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5511B973B2B00E2498E /* LiveVideo.cpp */; };
+		5D9862721D8B5B3A00DEDB00 /* Audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53A1B973B2B00E2498E /* Audio.cpp */; };
+		5D9862731D8B5B3A00DEDB00 /* ImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54A1B973B2B00E2498E /* ImageRecorder.cpp */; };
+		5D9862761D8B5B3A00DEDB00 /* Medium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5551B973B2B00E2498E /* Medium.cpp */; };
+		5D9862781D8B5B3A00DEDB00 /* FiniteMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5411B973B2B00E2498E /* FiniteMedium.cpp */; };
+		5D9862791D8B5B3A00DEDB00 /* FileRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5401B973B2B00E2498E /* FileRecorder.cpp */; };
+		5D98627A1D8B5B3A00DEDB00 /* LiveAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54F1B973B2B00E2498E /* LiveAudio.cpp */; };
+		5D98627B1D8B5B3A00DEDB00 /* FrameCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5421B973B2B00E2498E /* FrameCollection.cpp */; };
+		5D98627C1D8B5B3A00DEDB00 /* FrameMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5431B973B2B00E2498E /* FrameMedium.cpp */; };
+		5D98627D1D8B5B3A00DEDB00 /* SoundMedium.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55B1B973B2B00E2498E /* SoundMedium.cpp */; };
+		5D98627E1D8B5B3A00DEDB00 /* BufferRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53D1B973B2B00E2498E /* BufferRecorder.cpp */; };
+		5D9862811D8B5B3A00DEDB00 /* BufferImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53B1B973B2B00E2498E /* BufferImage.cpp */; };
+		5D9862831D8B5B3A00DEDB00 /* MovieRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5581B973B2B00E2498E /* MovieRecorder.cpp */; };
+		5D9862841D8B5B3A00DEDB00 /* MediumRef.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5561B973B2B00E2498E /* MediumRef.cpp */; };
+		5D9862851D8B5B3A00DEDB00 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F55E1B973B2B00E2498E /* Utilities.cpp */; };
+		5D9862861D8B5B3A00DEDB00 /* ImageSequenceRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F54C1B973B2B00E2498E /* ImageSequenceRecorder.cpp */; };
+		5D9862881D8B5B3A00DEDB00 /* Movie.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5571B973B2B00E2498E /* Movie.cpp */; };
+		5D9862891D8B5B3A00DEDB00 /* BufferImageRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F53C1B973B2B00E2498E /* BufferImageRecorder.cpp */; };
+		5D98628D1D8B5B3A00DEDB00 /* FrameMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF01BC299040008C798 /* FrameMedium.h */; };
+		5D98628E1D8B5B3A00DEDB00 /* LiveAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFC1BC299040008C798 /* LiveAudio.h */; };
+		5D98628F1D8B5B3A00DEDB00 /* ImageSequenceRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF91BC299040008C798 /* ImageSequenceRecorder.h */; };
+		5D9862911D8B5B3A00DEDB00 /* PixelImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00061BC299040008C798 /* PixelImage.h */; };
+		5D9862921D8B5B3A00DEDB00 /* FrameMemoryRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF11BC299040008C798 /* FrameMemoryRecorder.h */; };
+		5D9862931D8B5B3A00DEDB00 /* FiniteMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEE1BC299040008C798 /* FiniteMedium.h */; };
+		5D9862951D8B5B3A00DEDB00 /* ExplicitRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEC1BC299040008C798 /* ExplicitRecorder.h */; };
+		5D9862961D8B5B3A00DEDB00 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF61BC299040008C798 /* Image.h */; };
+		5D9862971D8B5B3A00DEDB00 /* Recorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00071BC299040008C798 /* Recorder.h */; };
+		5D9862981D8B5B3A00DEDB00 /* FileRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFED1BC299040008C798 /* FileRecorder.h */; };
+		5D9862991D8B5B3A00DEDB00 /* Manager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFF1BC299040008C798 /* Manager.h */; };
+		5D98629A1D8B5B3A00DEDB00 /* MovieRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00051BC299040008C798 /* MovieRecorder.h */; };
+		5D98629B1D8B5B3A00DEDB00 /* FrameRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF31BC299040008C798 /* FrameRecorder.h */; };
+		5D98629C1D8B5B3A00DEDB00 /* ImageSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF81BC299040008C798 /* ImageSequence.h */; };
+		5D98629F1D8B5B3A00DEDB00 /* Library.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFB1BC299040008C798 /* Library.h */; };
+		5D9862A01D8B5B3A00DEDB00 /* Movie.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00041BC299040008C798 /* Movie.h */; };
+		5D9862A11D8B5B3A00DEDB00 /* Medium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00021BC299040008C798 /* Medium.h */; };
+		5D9862A21D8B5B3A00DEDB00 /* BufferImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE81BC299040008C798 /* BufferImage.h */; };
+		5D9862A31D8B5B3A00DEDB00 /* LiveMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFD1BC299040008C798 /* LiveMedium.h */; };
+		5D9862A41D8B5B3A00DEDB00 /* ConfigMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEB1BC299040008C798 /* ConfigMedium.h */; };
+		5D9862A61D8B5B3A00DEDB00 /* LiveVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFE1BC299040008C798 /* LiveVideo.h */; };
+		5D9862A81D8B5B3A00DEDB00 /* SoundMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00081BC299040008C798 /* SoundMedium.h */; };
+		5D9862AA1D8B5B3A00DEDB00 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A000B1BC299040008C798 /* Utilities.h */; };
+		5D9862AB1D8B5B3A00DEDB00 /* ImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFF71BC299040008C798 /* ImageRecorder.h */; };
+		5D9862AC1D8B5B3A00DEDB00 /* BufferImageRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE91BC299040008C798 /* BufferImageRecorder.h */; };
+		5D9862AE1D8B5B3A00DEDB00 /* Media.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00001BC299040008C798 /* Media.h */; };
+		5D9862AF1D8B5B3A00DEDB00 /* ImplicitRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFFA1BC299040008C798 /* ImplicitRecorder.h */; };
+		5D9862B11D8B5B3A00DEDB00 /* Audio.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE71BC299040008C798 /* Audio.h */; };
+		5D9862B21D8B5B3A00DEDB00 /* FrameCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEF1BC299040008C798 /* FrameCollection.h */; };
+		5D9862B31D8B5B3A00DEDB00 /* BufferRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFEA1BC299040008C798 /* BufferRecorder.h */; };
+		5D9862B41D8B5B3A00DEDB00 /* MediumRef.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0A00031BC299040008C798 /* MediumRef.h */; };
+		933E9B3A241D96A300489BE5 /* StereoImageProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B39241D96A300489BE5 /* StereoImageProviderInterface.h */; };
+		933E9B3B241D96A300489BE5 /* StereoImageProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B39241D96A300489BE5 /* StereoImageProviderInterface.h */; };
+		933E9B3C241D96A300489BE5 /* StereoImageProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B39241D96A300489BE5 /* StereoImageProviderInterface.h */; };
+		933E9B3D241D96A300489BE5 /* StereoImageProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B39241D96A300489BE5 /* StereoImageProviderInterface.h */; };
+		933E9B53241DBED900489BE5 /* ImageSequenceStereoImageProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B52241DBED900489BE5 /* ImageSequenceStereoImageProvider.h */; };
+		933E9B54241DBED900489BE5 /* ImageSequenceStereoImageProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B52241DBED900489BE5 /* ImageSequenceStereoImageProvider.h */; };
+		933E9B55241DBED900489BE5 /* ImageSequenceStereoImageProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B52241DBED900489BE5 /* ImageSequenceStereoImageProvider.h */; };
+		933E9B56241DBED900489BE5 /* ImageSequenceStereoImageProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 933E9B52241DBED900489BE5 /* ImageSequenceStereoImageProvider.h */; };
+		933E9B58241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933E9B57241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp */; };
+		933E9B59241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933E9B57241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp */; };
+		933E9B5A241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933E9B57241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp */; };
+		933E9B5B241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933E9B57241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp */; };
+		93C621301FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C6212F1FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp */; };
+		93C621311FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C6212F1FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp */; };
+		93C621321FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C6212F1FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp */; };
+		93C621331FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93C6212F1FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp */; };
+		93C621351FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C621341FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h */; };
+		93C621361FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C621341FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h */; };
+		93C621371FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C621341FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h */; };
+		93C621381FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C621341FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h */; };
+		93DB53D428F8E7A3000CD3E5 /* Microphone.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DB53D328F8E7A3000CD3E5 /* Microphone.h */; };
+		93DB53D528F8E7A3000CD3E5 /* Microphone.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DB53D328F8E7A3000CD3E5 /* Microphone.h */; };
+		93DB53D628F8E7A3000CD3E5 /* Microphone.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DB53D328F8E7A3000CD3E5 /* Microphone.h */; };
+		93DB53D728F8E7A3000CD3E5 /* Microphone.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DB53D328F8E7A3000CD3E5 /* Microphone.h */; };
+		93DB53D928F8E7B8000CD3E5 /* Microphone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DB53D828F8E7B8000CD3E5 /* Microphone.cpp */; };
+		93DB53DA28F8E7B8000CD3E5 /* Microphone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DB53D828F8E7B8000CD3E5 /* Microphone.cpp */; };
+		93DB53DB28F8E7B8000CD3E5 /* Microphone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DB53D828F8E7B8000CD3E5 /* Microphone.cpp */; };
+		93DB53DC28F8E7B8000CD3E5 /* Microphone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DB53D828F8E7B8000CD3E5 /* Microphone.cpp */; };
+		93F6F820233034CA00A7F197 /* ImageFileSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F6F81F233034CA00A7F197 /* ImageFileSequence.cpp */; };
+		93F6F821233034CA00A7F197 /* ImageFileSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F6F81F233034CA00A7F197 /* ImageFileSequence.cpp */; };
+		93F6F822233034CA00A7F197 /* ImageFileSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F6F81F233034CA00A7F197 /* ImageFileSequence.cpp */; };
+		93F6F823233034CA00A7F197 /* ImageFileSequence.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93F6F81F233034CA00A7F197 /* ImageFileSequence.cpp */; };
+		93F6F8252330352200A7F197 /* ImageFileSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F6F8242330352200A7F197 /* ImageFileSequence.h */; };
+		93F6F8262330352300A7F197 /* ImageFileSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F6F8242330352200A7F197 /* ImageFileSequence.h */; };
+		93F6F8272330352300A7F197 /* ImageFileSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F6F8242330352200A7F197 /* ImageFileSequence.h */; };
+		93F6F8282330352300A7F197 /* ImageFileSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F6F8242330352200A7F197 /* ImageFileSequence.h */; };
+		93FBF9F71FDF56E00010CDB7 /* MovieFrameProviderInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FBF9F51FDF56DF0010CDB7 /* MovieFrameProviderInterface.cpp */; };
+		93FBF9F81FDF56E00010CDB7 /* MovieFrameProviderInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FBF9F51FDF56DF0010CDB7 /* MovieFrameProviderInterface.cpp */; };
+		93FBF9F91FDF56E00010CDB7 /* MovieFrameProviderInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FBF9F51FDF56DF0010CDB7 /* MovieFrameProviderInterface.cpp */; };
+		93FBF9FA1FDF56E00010CDB7 /* MovieFrameProviderInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FBF9F51FDF56DF0010CDB7 /* MovieFrameProviderInterface.cpp */; };
+		93FBF9FB1FDF56E00010CDB7 /* MovieFrameProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FBF9F61FDF56E00010CDB7 /* MovieFrameProvider.cpp */; };
+		93FBF9FC1FDF56E00010CDB7 /* MovieFrameProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FBF9F61FDF56E00010CDB7 /* MovieFrameProvider.cpp */; };
+		93FBF9FD1FDF56E00010CDB7 /* MovieFrameProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FBF9F61FDF56E00010CDB7 /* MovieFrameProvider.cpp */; };
+		93FBF9FE1FDF56E00010CDB7 /* MovieFrameProvider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93FBF9F61FDF56E00010CDB7 /* MovieFrameProvider.cpp */; };
+		93FBFA011FDF56F50010CDB7 /* MovieFrameProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FBF9FF1FDF56F50010CDB7 /* MovieFrameProvider.h */; };
+		93FBFA021FDF56F50010CDB7 /* MovieFrameProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FBF9FF1FDF56F50010CDB7 /* MovieFrameProvider.h */; };
+		93FBFA031FDF56F50010CDB7 /* MovieFrameProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FBF9FF1FDF56F50010CDB7 /* MovieFrameProvider.h */; };
+		93FBFA041FDF56F50010CDB7 /* MovieFrameProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FBF9FF1FDF56F50010CDB7 /* MovieFrameProvider.h */; };
+		93FBFA051FDF56F50010CDB7 /* MovieFrameProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FBFA001FDF56F50010CDB7 /* MovieFrameProviderInterface.h */; };
+		93FBFA061FDF56F50010CDB7 /* MovieFrameProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FBFA001FDF56F50010CDB7 /* MovieFrameProviderInterface.h */; };
+		93FBFA071FDF56F50010CDB7 /* MovieFrameProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FBFA001FDF56F50010CDB7 /* MovieFrameProviderInterface.h */; };
+		93FBFA081FDF56F50010CDB7 /* MovieFrameProviderInterface.h in Headers */ = {isa = PBXBuildFile; fileRef = 93FBFA001FDF56F50010CDB7 /* MovieFrameProviderInterface.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D0A00001BC299040008C798 /* Media.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Media.h; path = ../../../../../impl/ocean/media/Media.h; sourceTree = "<group>"; };
+		5D0A00021BC299040008C798 /* Medium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Medium.h; path = ../../../../../impl/ocean/media/Medium.h; sourceTree = "<group>"; };
+		5D0A00031BC299040008C798 /* MediumRef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MediumRef.h; path = ../../../../../impl/ocean/media/MediumRef.h; sourceTree = "<group>"; };
+		5D0A00041BC299040008C798 /* Movie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Movie.h; path = ../../../../../impl/ocean/media/Movie.h; sourceTree = "<group>"; };
+		5D0A00051BC299040008C798 /* MovieRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieRecorder.h; path = ../../../../../impl/ocean/media/MovieRecorder.h; sourceTree = "<group>"; };
+		5D0A00061BC299040008C798 /* PixelImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelImage.h; path = ../../../../../impl/ocean/media/PixelImage.h; sourceTree = "<group>"; };
+		5D0A00071BC299040008C798 /* Recorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Recorder.h; path = ../../../../../impl/ocean/media/Recorder.h; sourceTree = "<group>"; };
+		5D0A00081BC299040008C798 /* SoundMedium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SoundMedium.h; path = ../../../../../impl/ocean/media/SoundMedium.h; sourceTree = "<group>"; };
+		5D0A000B1BC299040008C798 /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../impl/ocean/media/Utilities.h; sourceTree = "<group>"; };
+		5D0A008B1BC299430008C798 /* libOceanMediaD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMediaD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D0AFFE71BC299040008C798 /* Audio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Audio.h; path = ../../../../../impl/ocean/media/Audio.h; sourceTree = "<group>"; };
+		5D0AFFE81BC299040008C798 /* BufferImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BufferImage.h; path = ../../../../../impl/ocean/media/BufferImage.h; sourceTree = "<group>"; };
+		5D0AFFE91BC299040008C798 /* BufferImageRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BufferImageRecorder.h; path = ../../../../../impl/ocean/media/BufferImageRecorder.h; sourceTree = "<group>"; };
+		5D0AFFEA1BC299040008C798 /* BufferRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BufferRecorder.h; path = ../../../../../impl/ocean/media/BufferRecorder.h; sourceTree = "<group>"; };
+		5D0AFFEB1BC299040008C798 /* ConfigMedium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigMedium.h; path = ../../../../../impl/ocean/media/ConfigMedium.h; sourceTree = "<group>"; };
+		5D0AFFEC1BC299040008C798 /* ExplicitRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExplicitRecorder.h; path = ../../../../../impl/ocean/media/ExplicitRecorder.h; sourceTree = "<group>"; };
+		5D0AFFED1BC299040008C798 /* FileRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileRecorder.h; path = ../../../../../impl/ocean/media/FileRecorder.h; sourceTree = "<group>"; };
+		5D0AFFEE1BC299040008C798 /* FiniteMedium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FiniteMedium.h; path = ../../../../../impl/ocean/media/FiniteMedium.h; sourceTree = "<group>"; };
+		5D0AFFEF1BC299040008C798 /* FrameCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameCollection.h; path = ../../../../../impl/ocean/media/FrameCollection.h; sourceTree = "<group>"; };
+		5D0AFFF01BC299040008C798 /* FrameMedium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameMedium.h; path = ../../../../../impl/ocean/media/FrameMedium.h; sourceTree = "<group>"; };
+		5D0AFFF11BC299040008C798 /* FrameMemoryRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameMemoryRecorder.h; path = ../../../../../impl/ocean/media/FrameMemoryRecorder.h; sourceTree = "<group>"; };
+		5D0AFFF31BC299040008C798 /* FrameRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameRecorder.h; path = ../../../../../impl/ocean/media/FrameRecorder.h; sourceTree = "<group>"; };
+		5D0AFFF61BC299040008C798 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Image.h; path = ../../../../../impl/ocean/media/Image.h; sourceTree = "<group>"; };
+		5D0AFFF71BC299040008C798 /* ImageRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageRecorder.h; path = ../../../../../impl/ocean/media/ImageRecorder.h; sourceTree = "<group>"; };
+		5D0AFFF81BC299040008C798 /* ImageSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageSequence.h; path = ../../../../../impl/ocean/media/ImageSequence.h; sourceTree = "<group>"; };
+		5D0AFFF91BC299040008C798 /* ImageSequenceRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageSequenceRecorder.h; path = ../../../../../impl/ocean/media/ImageSequenceRecorder.h; sourceTree = "<group>"; };
+		5D0AFFFA1BC299040008C798 /* ImplicitRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImplicitRecorder.h; path = ../../../../../impl/ocean/media/ImplicitRecorder.h; sourceTree = "<group>"; };
+		5D0AFFFB1BC299040008C798 /* Library.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Library.h; path = ../../../../../impl/ocean/media/Library.h; sourceTree = "<group>"; };
+		5D0AFFFC1BC299040008C798 /* LiveAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveAudio.h; path = ../../../../../impl/ocean/media/LiveAudio.h; sourceTree = "<group>"; };
+		5D0AFFFD1BC299040008C798 /* LiveMedium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveMedium.h; path = ../../../../../impl/ocean/media/LiveMedium.h; sourceTree = "<group>"; };
+		5D0AFFFE1BC299040008C798 /* LiveVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveVideo.h; path = ../../../../../impl/ocean/media/LiveVideo.h; sourceTree = "<group>"; };
+		5D0AFFFF1BC299040008C798 /* Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Manager.h; path = ../../../../../impl/ocean/media/Manager.h; sourceTree = "<group>"; };
+		5D491A191D8F39B900C4099B /* libOceanMediaD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMediaD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D63F5281B973AC700E2498E /* libOceanMediaD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMediaD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D63F53A1B973B2B00E2498E /* Audio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Audio.cpp; path = ../../../../../impl/ocean/media/Audio.cpp; sourceTree = "<group>"; };
+		5D63F53B1B973B2B00E2498E /* BufferImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BufferImage.cpp; path = ../../../../../impl/ocean/media/BufferImage.cpp; sourceTree = "<group>"; };
+		5D63F53C1B973B2B00E2498E /* BufferImageRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BufferImageRecorder.cpp; path = ../../../../../impl/ocean/media/BufferImageRecorder.cpp; sourceTree = "<group>"; };
+		5D63F53D1B973B2B00E2498E /* BufferRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BufferRecorder.cpp; path = ../../../../../impl/ocean/media/BufferRecorder.cpp; sourceTree = "<group>"; };
+		5D63F53E1B973B2B00E2498E /* ConfigMedium.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ConfigMedium.cpp; path = ../../../../../impl/ocean/media/ConfigMedium.cpp; sourceTree = "<group>"; };
+		5D63F53F1B973B2B00E2498E /* ExplicitRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ExplicitRecorder.cpp; path = ../../../../../impl/ocean/media/ExplicitRecorder.cpp; sourceTree = "<group>"; };
+		5D63F5401B973B2B00E2498E /* FileRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileRecorder.cpp; path = ../../../../../impl/ocean/media/FileRecorder.cpp; sourceTree = "<group>"; };
+		5D63F5411B973B2B00E2498E /* FiniteMedium.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FiniteMedium.cpp; path = ../../../../../impl/ocean/media/FiniteMedium.cpp; sourceTree = "<group>"; };
+		5D63F5421B973B2B00E2498E /* FrameCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameCollection.cpp; path = ../../../../../impl/ocean/media/FrameCollection.cpp; sourceTree = "<group>"; };
+		5D63F5431B973B2B00E2498E /* FrameMedium.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameMedium.cpp; path = ../../../../../impl/ocean/media/FrameMedium.cpp; sourceTree = "<group>"; };
+		5D63F5441B973B2B00E2498E /* FrameMemoryRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameMemoryRecorder.cpp; path = ../../../../../impl/ocean/media/FrameMemoryRecorder.cpp; sourceTree = "<group>"; };
+		5D63F5461B973B2B00E2498E /* FrameRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameRecorder.cpp; path = ../../../../../impl/ocean/media/FrameRecorder.cpp; sourceTree = "<group>"; };
+		5D63F5491B973B2B00E2498E /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Image.cpp; path = ../../../../../impl/ocean/media/Image.cpp; sourceTree = "<group>"; };
+		5D63F54A1B973B2B00E2498E /* ImageRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageRecorder.cpp; path = ../../../../../impl/ocean/media/ImageRecorder.cpp; sourceTree = "<group>"; };
+		5D63F54B1B973B2B00E2498E /* ImageSequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSequence.cpp; path = ../../../../../impl/ocean/media/ImageSequence.cpp; sourceTree = "<group>"; };
+		5D63F54C1B973B2B00E2498E /* ImageSequenceRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSequenceRecorder.cpp; path = ../../../../../impl/ocean/media/ImageSequenceRecorder.cpp; sourceTree = "<group>"; };
+		5D63F54D1B973B2B00E2498E /* ImplicitRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImplicitRecorder.cpp; path = ../../../../../impl/ocean/media/ImplicitRecorder.cpp; sourceTree = "<group>"; };
+		5D63F54E1B973B2B00E2498E /* Library.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Library.cpp; path = ../../../../../impl/ocean/media/Library.cpp; sourceTree = "<group>"; };
+		5D63F54F1B973B2B00E2498E /* LiveAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LiveAudio.cpp; path = ../../../../../impl/ocean/media/LiveAudio.cpp; sourceTree = "<group>"; };
+		5D63F5501B973B2B00E2498E /* LiveMedium.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LiveMedium.cpp; path = ../../../../../impl/ocean/media/LiveMedium.cpp; sourceTree = "<group>"; };
+		5D63F5511B973B2B00E2498E /* LiveVideo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LiveVideo.cpp; path = ../../../../../impl/ocean/media/LiveVideo.cpp; sourceTree = "<group>"; };
+		5D63F5521B973B2B00E2498E /* Manager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Manager.cpp; path = ../../../../../impl/ocean/media/Manager.cpp; sourceTree = "<group>"; };
+		5D63F5551B973B2B00E2498E /* Medium.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Medium.cpp; path = ../../../../../impl/ocean/media/Medium.cpp; sourceTree = "<group>"; };
+		5D63F5561B973B2B00E2498E /* MediumRef.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MediumRef.cpp; path = ../../../../../impl/ocean/media/MediumRef.cpp; sourceTree = "<group>"; };
+		5D63F5571B973B2B00E2498E /* Movie.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Movie.cpp; path = ../../../../../impl/ocean/media/Movie.cpp; sourceTree = "<group>"; };
+		5D63F5581B973B2B00E2498E /* MovieRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MovieRecorder.cpp; path = ../../../../../impl/ocean/media/MovieRecorder.cpp; sourceTree = "<group>"; };
+		5D63F5591B973B2B00E2498E /* PixelImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PixelImage.cpp; path = ../../../../../impl/ocean/media/PixelImage.cpp; sourceTree = "<group>"; };
+		5D63F55A1B973B2B00E2498E /* Recorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Recorder.cpp; path = ../../../../../impl/ocean/media/Recorder.cpp; sourceTree = "<group>"; };
+		5D63F55B1B973B2B00E2498E /* SoundMedium.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SoundMedium.cpp; path = ../../../../../impl/ocean/media/SoundMedium.cpp; sourceTree = "<group>"; };
+		5D63F55E1B973B2B00E2498E /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../impl/ocean/media/Utilities.cpp; sourceTree = "<group>"; };
+		5D9862B81D8B5B3A00DEDB00 /* libOceanMediaD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMediaD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		933E9B39241D96A300489BE5 /* StereoImageProviderInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StereoImageProviderInterface.h; path = ../../../../../impl/ocean/media/StereoImageProviderInterface.h; sourceTree = "<group>"; };
+		933E9B52241DBED900489BE5 /* ImageSequenceStereoImageProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageSequenceStereoImageProvider.h; path = ../../../../../impl/ocean/media/ImageSequenceStereoImageProvider.h; sourceTree = "<group>"; };
+		933E9B57241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSequenceStereoImageProvider.cpp; path = ../../../../../impl/ocean/media/ImageSequenceStereoImageProvider.cpp; sourceTree = "<group>"; };
+		93C6212F1FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageSequenceFrameProviderInterface.cpp; path = ../../../../../impl/ocean/media/ImageSequenceFrameProviderInterface.cpp; sourceTree = "<group>"; };
+		93C621341FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageSequenceFrameProviderInterface.h; path = ../../../../../impl/ocean/media/ImageSequenceFrameProviderInterface.h; sourceTree = "<group>"; };
+		93DB53D328F8E7A3000CD3E5 /* Microphone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Microphone.h; path = ../../../../../impl/ocean/media/Microphone.h; sourceTree = "<group>"; };
+		93DB53D828F8E7B8000CD3E5 /* Microphone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Microphone.cpp; path = ../../../../../impl/ocean/media/Microphone.cpp; sourceTree = "<group>"; };
+		93F6F81F233034CA00A7F197 /* ImageFileSequence.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageFileSequence.cpp; path = ../../../../../impl/ocean/media/ImageFileSequence.cpp; sourceTree = "<group>"; };
+		93F6F8242330352200A7F197 /* ImageFileSequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageFileSequence.h; path = ../../../../../impl/ocean/media/ImageFileSequence.h; sourceTree = "<group>"; };
+		93FBF9F51FDF56DF0010CDB7 /* MovieFrameProviderInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MovieFrameProviderInterface.cpp; path = ../../../../../impl/ocean/media/MovieFrameProviderInterface.cpp; sourceTree = "<group>"; };
+		93FBF9F61FDF56E00010CDB7 /* MovieFrameProvider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MovieFrameProvider.cpp; path = ../../../../../impl/ocean/media/MovieFrameProvider.cpp; sourceTree = "<group>"; };
+		93FBF9FF1FDF56F50010CDB7 /* MovieFrameProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieFrameProvider.h; path = ../../../../../impl/ocean/media/MovieFrameProvider.h; sourceTree = "<group>"; };
+		93FBFA001FDF56F50010CDB7 /* MovieFrameProviderInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieFrameProviderInterface.h; path = ../../../../../impl/ocean/media/MovieFrameProviderInterface.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D0A005E1BC299430008C798 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D4919EC1D8F39B900C4099B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5251B973AC700E2498E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98628B1D8B5B3A00DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D0AFFE31BC298DF0008C798 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D0AFFE71BC299040008C798 /* Audio.h */,
+				5D0AFFE81BC299040008C798 /* BufferImage.h */,
+				5D0AFFE91BC299040008C798 /* BufferImageRecorder.h */,
+				5D0AFFEA1BC299040008C798 /* BufferRecorder.h */,
+				5D0AFFEB1BC299040008C798 /* ConfigMedium.h */,
+				5D0AFFEC1BC299040008C798 /* ExplicitRecorder.h */,
+				5D0AFFED1BC299040008C798 /* FileRecorder.h */,
+				5D0AFFEE1BC299040008C798 /* FiniteMedium.h */,
+				5D0AFFEF1BC299040008C798 /* FrameCollection.h */,
+				5D0AFFF01BC299040008C798 /* FrameMedium.h */,
+				5D0AFFF11BC299040008C798 /* FrameMemoryRecorder.h */,
+				5D0AFFF31BC299040008C798 /* FrameRecorder.h */,
+				5D0AFFF61BC299040008C798 /* Image.h */,
+				93F6F8242330352200A7F197 /* ImageFileSequence.h */,
+				5D0AFFF71BC299040008C798 /* ImageRecorder.h */,
+				5D0AFFF81BC299040008C798 /* ImageSequence.h */,
+				93C621341FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h */,
+				5D0AFFF91BC299040008C798 /* ImageSequenceRecorder.h */,
+				933E9B52241DBED900489BE5 /* ImageSequenceStereoImageProvider.h */,
+				5D0AFFFA1BC299040008C798 /* ImplicitRecorder.h */,
+				5D0AFFFB1BC299040008C798 /* Library.h */,
+				5D0AFFFC1BC299040008C798 /* LiveAudio.h */,
+				5D0AFFFD1BC299040008C798 /* LiveMedium.h */,
+				5D0AFFFE1BC299040008C798 /* LiveVideo.h */,
+				5D0AFFFF1BC299040008C798 /* Manager.h */,
+				5D0A00001BC299040008C798 /* Media.h */,
+				5D0A00021BC299040008C798 /* Medium.h */,
+				5D0A00031BC299040008C798 /* MediumRef.h */,
+				93DB53D328F8E7A3000CD3E5 /* Microphone.h */,
+				5D0A00041BC299040008C798 /* Movie.h */,
+				93FBF9FF1FDF56F50010CDB7 /* MovieFrameProvider.h */,
+				93FBFA001FDF56F50010CDB7 /* MovieFrameProviderInterface.h */,
+				5D0A00051BC299040008C798 /* MovieRecorder.h */,
+				5D0A00061BC299040008C798 /* PixelImage.h */,
+				5D0A00071BC299040008C798 /* Recorder.h */,
+				5D0A00081BC299040008C798 /* SoundMedium.h */,
+				933E9B39241D96A300489BE5 /* StereoImageProviderInterface.h */,
+				5D0A000B1BC299040008C798 /* Utilities.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5D63F51F1B973AC700E2498E = {
+			isa = PBXGroup;
+			children = (
+				5D0AFFE31BC298DF0008C798 /* Header Files */,
+				5D63F5361B973AF600E2498E /* Source Files */,
+				5D63F5291B973AC700E2498E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D63F5291B973AC700E2498E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D63F5281B973AC700E2498E /* libOceanMediaD.a */,
+				5D0A008B1BC299430008C798 /* libOceanMediaD.dylib */,
+				5D9862B81D8B5B3A00DEDB00 /* libOceanMediaD.a */,
+				5D491A191D8F39B900C4099B /* libOceanMediaD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D63F5361B973AF600E2498E /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D63F53A1B973B2B00E2498E /* Audio.cpp */,
+				5D63F53B1B973B2B00E2498E /* BufferImage.cpp */,
+				5D63F53C1B973B2B00E2498E /* BufferImageRecorder.cpp */,
+				5D63F53D1B973B2B00E2498E /* BufferRecorder.cpp */,
+				5D63F53E1B973B2B00E2498E /* ConfigMedium.cpp */,
+				5D63F53F1B973B2B00E2498E /* ExplicitRecorder.cpp */,
+				5D63F5401B973B2B00E2498E /* FileRecorder.cpp */,
+				5D63F5411B973B2B00E2498E /* FiniteMedium.cpp */,
+				5D63F5421B973B2B00E2498E /* FrameCollection.cpp */,
+				5D63F5431B973B2B00E2498E /* FrameMedium.cpp */,
+				5D63F5441B973B2B00E2498E /* FrameMemoryRecorder.cpp */,
+				5D63F5461B973B2B00E2498E /* FrameRecorder.cpp */,
+				5D63F5491B973B2B00E2498E /* Image.cpp */,
+				93F6F81F233034CA00A7F197 /* ImageFileSequence.cpp */,
+				5D63F54A1B973B2B00E2498E /* ImageRecorder.cpp */,
+				5D63F54B1B973B2B00E2498E /* ImageSequence.cpp */,
+				93C6212F1FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp */,
+				5D63F54C1B973B2B00E2498E /* ImageSequenceRecorder.cpp */,
+				933E9B57241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp */,
+				5D63F54D1B973B2B00E2498E /* ImplicitRecorder.cpp */,
+				5D63F54E1B973B2B00E2498E /* Library.cpp */,
+				5D63F54F1B973B2B00E2498E /* LiveAudio.cpp */,
+				5D63F5501B973B2B00E2498E /* LiveMedium.cpp */,
+				5D63F5511B973B2B00E2498E /* LiveVideo.cpp */,
+				5D63F5521B973B2B00E2498E /* Manager.cpp */,
+				5D63F5551B973B2B00E2498E /* Medium.cpp */,
+				5D63F5561B973B2B00E2498E /* MediumRef.cpp */,
+				93DB53D828F8E7B8000CD3E5 /* Microphone.cpp */,
+				5D63F5571B973B2B00E2498E /* Movie.cpp */,
+				93FBF9F61FDF56E00010CDB7 /* MovieFrameProvider.cpp */,
+				93FBF9F51FDF56DF0010CDB7 /* MovieFrameProviderInterface.cpp */,
+				5D63F5581B973B2B00E2498E /* MovieRecorder.cpp */,
+				5D63F5591B973B2B00E2498E /* PixelImage.cpp */,
+				5D63F55A1B973B2B00E2498E /* Recorder.cpp */,
+				5D63F55B1B973B2B00E2498E /* SoundMedium.cpp */,
+				5D63F55E1B973B2B00E2498E /* Utilities.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D0A005F1BC299430008C798 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93FBFA021FDF56F50010CDB7 /* MovieFrameProvider.h in Headers */,
+				5D0A00601BC299430008C798 /* FrameMedium.h in Headers */,
+				5D0A00611BC299430008C798 /* LiveAudio.h in Headers */,
+				5D0A00621BC299430008C798 /* ImageSequenceRecorder.h in Headers */,
+				5D0A00641BC299430008C798 /* PixelImage.h in Headers */,
+				5D0A00651BC299430008C798 /* FrameMemoryRecorder.h in Headers */,
+				5D0A00661BC299430008C798 /* FiniteMedium.h in Headers */,
+				93DB53D528F8E7A3000CD3E5 /* Microphone.h in Headers */,
+				5D0A00681BC299430008C798 /* ExplicitRecorder.h in Headers */,
+				93FBFA061FDF56F50010CDB7 /* MovieFrameProviderInterface.h in Headers */,
+				5D0A00691BC299430008C798 /* Image.h in Headers */,
+				5D0A006A1BC299430008C798 /* Recorder.h in Headers */,
+				5D0A006B1BC299430008C798 /* FileRecorder.h in Headers */,
+				5D0A006C1BC299430008C798 /* Manager.h in Headers */,
+				5D0A006D1BC299430008C798 /* MovieRecorder.h in Headers */,
+				933E9B54241DBED900489BE5 /* ImageSequenceStereoImageProvider.h in Headers */,
+				5D0A006E1BC299430008C798 /* FrameRecorder.h in Headers */,
+				933E9B3B241D96A300489BE5 /* StereoImageProviderInterface.h in Headers */,
+				5D0A006F1BC299430008C798 /* ImageSequence.h in Headers */,
+				5D0A00721BC299430008C798 /* Library.h in Headers */,
+				5D0A00731BC299430008C798 /* Movie.h in Headers */,
+				5D0A00741BC299430008C798 /* Medium.h in Headers */,
+				5D0A00751BC299430008C798 /* BufferImage.h in Headers */,
+				5D0A00761BC299430008C798 /* LiveMedium.h in Headers */,
+				5D0A00771BC299430008C798 /* ConfigMedium.h in Headers */,
+				5D0A00791BC299430008C798 /* LiveVideo.h in Headers */,
+				5D0A007B1BC299430008C798 /* SoundMedium.h in Headers */,
+				5D0A007D1BC299430008C798 /* Utilities.h in Headers */,
+				5D0A007E1BC299430008C798 /* ImageRecorder.h in Headers */,
+				5D0A007F1BC299430008C798 /* BufferImageRecorder.h in Headers */,
+				93F6F8262330352300A7F197 /* ImageFileSequence.h in Headers */,
+				5D0A00811BC299430008C798 /* Media.h in Headers */,
+				5D0A00821BC299430008C798 /* ImplicitRecorder.h in Headers */,
+				5D0A00841BC299430008C798 /* Audio.h in Headers */,
+				5D0A00851BC299430008C798 /* FrameCollection.h in Headers */,
+				5D0A00861BC299430008C798 /* BufferRecorder.h in Headers */,
+				5D0A00871BC299430008C798 /* MediumRef.h in Headers */,
+				93C621361FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D4919ED1D8F39B900C4099B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93FBFA041FDF56F50010CDB7 /* MovieFrameProvider.h in Headers */,
+				5D4919EE1D8F39B900C4099B /* FrameMedium.h in Headers */,
+				5D4919EF1D8F39B900C4099B /* LiveAudio.h in Headers */,
+				5D4919F01D8F39B900C4099B /* ImageSequenceRecorder.h in Headers */,
+				5D4919F21D8F39B900C4099B /* PixelImage.h in Headers */,
+				5D4919F31D8F39B900C4099B /* FrameMemoryRecorder.h in Headers */,
+				5D4919F41D8F39B900C4099B /* FiniteMedium.h in Headers */,
+				93DB53D728F8E7A3000CD3E5 /* Microphone.h in Headers */,
+				5D4919F61D8F39B900C4099B /* ExplicitRecorder.h in Headers */,
+				93FBFA081FDF56F50010CDB7 /* MovieFrameProviderInterface.h in Headers */,
+				5D4919F71D8F39B900C4099B /* Image.h in Headers */,
+				5D4919F81D8F39B900C4099B /* Recorder.h in Headers */,
+				5D4919F91D8F39B900C4099B /* FileRecorder.h in Headers */,
+				5D4919FA1D8F39B900C4099B /* Manager.h in Headers */,
+				5D4919FB1D8F39B900C4099B /* MovieRecorder.h in Headers */,
+				933E9B56241DBED900489BE5 /* ImageSequenceStereoImageProvider.h in Headers */,
+				5D4919FC1D8F39B900C4099B /* FrameRecorder.h in Headers */,
+				933E9B3D241D96A300489BE5 /* StereoImageProviderInterface.h in Headers */,
+				5D4919FD1D8F39B900C4099B /* ImageSequence.h in Headers */,
+				5D491A001D8F39B900C4099B /* Library.h in Headers */,
+				5D491A011D8F39B900C4099B /* Movie.h in Headers */,
+				5D491A021D8F39B900C4099B /* Medium.h in Headers */,
+				5D491A031D8F39B900C4099B /* BufferImage.h in Headers */,
+				5D491A041D8F39B900C4099B /* LiveMedium.h in Headers */,
+				5D491A051D8F39B900C4099B /* ConfigMedium.h in Headers */,
+				5D491A071D8F39B900C4099B /* LiveVideo.h in Headers */,
+				5D491A091D8F39B900C4099B /* SoundMedium.h in Headers */,
+				5D491A0B1D8F39B900C4099B /* Utilities.h in Headers */,
+				5D491A0C1D8F39B900C4099B /* ImageRecorder.h in Headers */,
+				5D491A0D1D8F39B900C4099B /* BufferImageRecorder.h in Headers */,
+				93F6F8282330352300A7F197 /* ImageFileSequence.h in Headers */,
+				5D491A0F1D8F39B900C4099B /* Media.h in Headers */,
+				5D491A101D8F39B900C4099B /* ImplicitRecorder.h in Headers */,
+				5D491A121D8F39B900C4099B /* Audio.h in Headers */,
+				5D491A131D8F39B900C4099B /* FrameCollection.h in Headers */,
+				5D491A141D8F39B900C4099B /* BufferRecorder.h in Headers */,
+				5D491A151D8F39B900C4099B /* MediumRef.h in Headers */,
+				93C621381FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5261B973AC700E2498E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93FBFA011FDF56F50010CDB7 /* MovieFrameProvider.h in Headers */,
+				5D0A00181BC299040008C798 /* FrameMedium.h in Headers */,
+				5D0A00241BC299040008C798 /* LiveAudio.h in Headers */,
+				5D0A00211BC299040008C798 /* ImageSequenceRecorder.h in Headers */,
+				5D0A002E1BC299040008C798 /* PixelImage.h in Headers */,
+				5D0A00191BC299040008C798 /* FrameMemoryRecorder.h in Headers */,
+				5D0A00161BC299040008C798 /* FiniteMedium.h in Headers */,
+				93DB53D428F8E7A3000CD3E5 /* Microphone.h in Headers */,
+				5D0A00141BC299040008C798 /* ExplicitRecorder.h in Headers */,
+				93FBFA051FDF56F50010CDB7 /* MovieFrameProviderInterface.h in Headers */,
+				5D0A001E1BC299040008C798 /* Image.h in Headers */,
+				5D0A002F1BC299040008C798 /* Recorder.h in Headers */,
+				5D0A00151BC299040008C798 /* FileRecorder.h in Headers */,
+				5D0A00271BC299040008C798 /* Manager.h in Headers */,
+				5D0A002D1BC299040008C798 /* MovieRecorder.h in Headers */,
+				933E9B53241DBED900489BE5 /* ImageSequenceStereoImageProvider.h in Headers */,
+				5D0A001B1BC299040008C798 /* FrameRecorder.h in Headers */,
+				933E9B3A241D96A300489BE5 /* StereoImageProviderInterface.h in Headers */,
+				5D0A00201BC299040008C798 /* ImageSequence.h in Headers */,
+				5D0A00231BC299040008C798 /* Library.h in Headers */,
+				5D0A002C1BC299040008C798 /* Movie.h in Headers */,
+				5D0A002A1BC299040008C798 /* Medium.h in Headers */,
+				5D0A00101BC299040008C798 /* BufferImage.h in Headers */,
+				5D0A00251BC299040008C798 /* LiveMedium.h in Headers */,
+				5D0A00131BC299040008C798 /* ConfigMedium.h in Headers */,
+				5D0A00261BC299040008C798 /* LiveVideo.h in Headers */,
+				5D0A00301BC299040008C798 /* SoundMedium.h in Headers */,
+				5D0A00331BC299040008C798 /* Utilities.h in Headers */,
+				5D0A001F1BC299040008C798 /* ImageRecorder.h in Headers */,
+				5D0A00111BC299040008C798 /* BufferImageRecorder.h in Headers */,
+				93F6F8252330352200A7F197 /* ImageFileSequence.h in Headers */,
+				5D0A00281BC299040008C798 /* Media.h in Headers */,
+				5D0A00221BC299040008C798 /* ImplicitRecorder.h in Headers */,
+				5D0A000F1BC299040008C798 /* Audio.h in Headers */,
+				5D0A00171BC299040008C798 /* FrameCollection.h in Headers */,
+				5D0A00121BC299040008C798 /* BufferRecorder.h in Headers */,
+				5D0A002B1BC299040008C798 /* MediumRef.h in Headers */,
+				93C621351FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98628C1D8B5B3A00DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93FBFA031FDF56F50010CDB7 /* MovieFrameProvider.h in Headers */,
+				5D98628D1D8B5B3A00DEDB00 /* FrameMedium.h in Headers */,
+				5D98628E1D8B5B3A00DEDB00 /* LiveAudio.h in Headers */,
+				5D98628F1D8B5B3A00DEDB00 /* ImageSequenceRecorder.h in Headers */,
+				5D9862911D8B5B3A00DEDB00 /* PixelImage.h in Headers */,
+				5D9862921D8B5B3A00DEDB00 /* FrameMemoryRecorder.h in Headers */,
+				5D9862931D8B5B3A00DEDB00 /* FiniteMedium.h in Headers */,
+				93DB53D628F8E7A3000CD3E5 /* Microphone.h in Headers */,
+				5D9862951D8B5B3A00DEDB00 /* ExplicitRecorder.h in Headers */,
+				93FBFA071FDF56F50010CDB7 /* MovieFrameProviderInterface.h in Headers */,
+				5D9862961D8B5B3A00DEDB00 /* Image.h in Headers */,
+				5D9862971D8B5B3A00DEDB00 /* Recorder.h in Headers */,
+				5D9862981D8B5B3A00DEDB00 /* FileRecorder.h in Headers */,
+				5D9862991D8B5B3A00DEDB00 /* Manager.h in Headers */,
+				5D98629A1D8B5B3A00DEDB00 /* MovieRecorder.h in Headers */,
+				933E9B55241DBED900489BE5 /* ImageSequenceStereoImageProvider.h in Headers */,
+				5D98629B1D8B5B3A00DEDB00 /* FrameRecorder.h in Headers */,
+				933E9B3C241D96A300489BE5 /* StereoImageProviderInterface.h in Headers */,
+				5D98629C1D8B5B3A00DEDB00 /* ImageSequence.h in Headers */,
+				5D98629F1D8B5B3A00DEDB00 /* Library.h in Headers */,
+				5D9862A01D8B5B3A00DEDB00 /* Movie.h in Headers */,
+				5D9862A11D8B5B3A00DEDB00 /* Medium.h in Headers */,
+				5D9862A21D8B5B3A00DEDB00 /* BufferImage.h in Headers */,
+				5D9862A31D8B5B3A00DEDB00 /* LiveMedium.h in Headers */,
+				5D9862A41D8B5B3A00DEDB00 /* ConfigMedium.h in Headers */,
+				5D9862A61D8B5B3A00DEDB00 /* LiveVideo.h in Headers */,
+				5D9862A81D8B5B3A00DEDB00 /* SoundMedium.h in Headers */,
+				5D9862AA1D8B5B3A00DEDB00 /* Utilities.h in Headers */,
+				5D9862AB1D8B5B3A00DEDB00 /* ImageRecorder.h in Headers */,
+				5D9862AC1D8B5B3A00DEDB00 /* BufferImageRecorder.h in Headers */,
+				93F6F8272330352300A7F197 /* ImageFileSequence.h in Headers */,
+				5D9862AE1D8B5B3A00DEDB00 /* Media.h in Headers */,
+				5D9862AF1D8B5B3A00DEDB00 /* ImplicitRecorder.h in Headers */,
+				5D9862B11D8B5B3A00DEDB00 /* Audio.h in Headers */,
+				5D9862B21D8B5B3A00DEDB00 /* FrameCollection.h in Headers */,
+				5D9862B31D8B5B3A00DEDB00 /* BufferRecorder.h in Headers */,
+				5D9862B41D8B5B3A00DEDB00 /* MediumRef.h in Headers */,
+				93C621371FDF9BE000700075 /* ImageSequenceFrameProviderInterface.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D0A00341BC299430008C798 /* media x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D0A00881BC299430008C798 /* Build configuration list for PBXNativeTarget "media x64 (Shared)" */;
+			buildPhases = (
+				5D0A00351BC299430008C798 /* Sources */,
+				5D0A005E1BC299430008C798 /* Frameworks */,
+				5D0A005F1BC299430008C798 /* Headers */,
+				C041EC601DABEC1500BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "media x64 (Shared)";
+			productName = media;
+			productReference = 5D0A008B1BC299430008C798 /* libOceanMediaD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D4919C21D8F39B900C4099B /* media arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D491A161D8F39B900C4099B /* Build configuration list for PBXNativeTarget "media arm64 (Shared)" */;
+			buildPhases = (
+				5D4919C31D8F39B900C4099B /* Sources */,
+				5D4919EC1D8F39B900C4099B /* Frameworks */,
+				5D4919ED1D8F39B900C4099B /* Headers */,
+				5D491A1A1D8F46B100C4099B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "media arm64 (Shared)";
+			productName = media;
+			productReference = 5D491A191D8F39B900C4099B /* libOceanMediaD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D63F5271B973AC700E2498E /* media x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D63F5331B973AC700E2498E /* Build configuration list for PBXNativeTarget "media x64 (Static)" */;
+			buildPhases = (
+				5D63F5241B973AC700E2498E /* Sources */,
+				5D63F5251B973AC700E2498E /* Frameworks */,
+				5D63F5261B973AC700E2498E /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "media x64 (Static)";
+			productName = media;
+			productReference = 5D63F5281B973AC700E2498E /* libOceanMediaD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9862611D8B5B3A00DEDB00 /* media arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9862B51D8B5B3A00DEDB00 /* Build configuration list for PBXNativeTarget "media arm64 (Static)" */;
+			buildPhases = (
+				5D9862621D8B5B3A00DEDB00 /* Sources */,
+				5D98628B1D8B5B3A00DEDB00 /* Frameworks */,
+				5D98628C1D8B5B3A00DEDB00 /* Headers */,
+				5D837F511D8F101800939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "media arm64 (Static)";
+			productName = media;
+			productReference = 5D9862B81D8B5B3A00DEDB00 /* libOceanMediaD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D63F5201B973AC700E2498E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D63F5271B973AC700E2498E = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D63F5231B973AC700E2498E /* Build configuration list for PBXProject "media" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D63F51F1B973AC700E2498E;
+			productRefGroup = 5D63F5291B973AC700E2498E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D63F5271B973AC700E2498E /* media x64 (Static) */,
+				5D0A00341BC299430008C798 /* media x64 (Shared) */,
+				5D9862611D8B5B3A00DEDB00 /* media arm64 (Static) */,
+				5D4919C21D8F39B900C4099B /* media arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D491A1A1D8F46B100C4099B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../codesign.sh\n../../copy_arm_shared.sh \"../../../../../bin/lib/\"";
+		};
+		5D837F511D8F101800939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../copy_arm_static.sh \"../../../../../bin/lib/\"";
+		};
+		C041EC601DABEC1500BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D0A00351BC299430008C798 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D0A00361BC299430008C798 /* FrameMemoryRecorder.cpp in Sources */,
+				5D0A00371BC299430008C798 /* Library.cpp in Sources */,
+				5D0A00381BC299430008C798 /* ConfigMedium.cpp in Sources */,
+				5D0A00391BC299430008C798 /* Recorder.cpp in Sources */,
+				5D0A003A1BC299430008C798 /* Image.cpp in Sources */,
+				933E9B59241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp in Sources */,
+				5D0A003B1BC299430008C798 /* PixelImage.cpp in Sources */,
+				5D0A003C1BC299430008C798 /* ExplicitRecorder.cpp in Sources */,
+				5D0A003D1BC299430008C798 /* FrameRecorder.cpp in Sources */,
+				5D0A003E1BC299430008C798 /* LiveMedium.cpp in Sources */,
+				5D0A003F1BC299430008C798 /* Manager.cpp in Sources */,
+				5D0A00401BC299430008C798 /* ImplicitRecorder.cpp in Sources */,
+				5D0A00421BC299430008C798 /* ImageSequence.cpp in Sources */,
+				93FBF9FC1FDF56E00010CDB7 /* MovieFrameProvider.cpp in Sources */,
+				5D0A00431BC299430008C798 /* LiveVideo.cpp in Sources */,
+				5D0A00451BC299430008C798 /* Audio.cpp in Sources */,
+				5D0A00461BC299430008C798 /* ImageRecorder.cpp in Sources */,
+				93FBF9F81FDF56E00010CDB7 /* MovieFrameProviderInterface.cpp in Sources */,
+				5D0A00491BC299430008C798 /* Medium.cpp in Sources */,
+				5D0A004B1BC299430008C798 /* FiniteMedium.cpp in Sources */,
+				5D0A004C1BC299430008C798 /* FileRecorder.cpp in Sources */,
+				5D0A004D1BC299430008C798 /* LiveAudio.cpp in Sources */,
+				5D0A004E1BC299430008C798 /* FrameCollection.cpp in Sources */,
+				5D0A004F1BC299430008C798 /* FrameMedium.cpp in Sources */,
+				5D0A00501BC299430008C798 /* SoundMedium.cpp in Sources */,
+				5D0A00511BC299430008C798 /* BufferRecorder.cpp in Sources */,
+				93DB53DA28F8E7B8000CD3E5 /* Microphone.cpp in Sources */,
+				5D0A00541BC299430008C798 /* BufferImage.cpp in Sources */,
+				5D0A00561BC299430008C798 /* MovieRecorder.cpp in Sources */,
+				5D0A00571BC299430008C798 /* MediumRef.cpp in Sources */,
+				93C621311FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp in Sources */,
+				93F6F821233034CA00A7F197 /* ImageFileSequence.cpp in Sources */,
+				5D0A00581BC299430008C798 /* Utilities.cpp in Sources */,
+				5D0A00591BC299430008C798 /* ImageSequenceRecorder.cpp in Sources */,
+				5D0A005B1BC299430008C798 /* Movie.cpp in Sources */,
+				5D0A005C1BC299430008C798 /* BufferImageRecorder.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D4919C31D8F39B900C4099B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D4919C41D8F39B900C4099B /* FrameMemoryRecorder.cpp in Sources */,
+				5D4919C51D8F39B900C4099B /* Library.cpp in Sources */,
+				5D4919C61D8F39B900C4099B /* ConfigMedium.cpp in Sources */,
+				5D4919C71D8F39B900C4099B /* Recorder.cpp in Sources */,
+				5D4919C81D8F39B900C4099B /* Image.cpp in Sources */,
+				933E9B5B241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp in Sources */,
+				5D4919C91D8F39B900C4099B /* PixelImage.cpp in Sources */,
+				5D4919CA1D8F39B900C4099B /* ExplicitRecorder.cpp in Sources */,
+				5D4919CB1D8F39B900C4099B /* FrameRecorder.cpp in Sources */,
+				5D4919CC1D8F39B900C4099B /* LiveMedium.cpp in Sources */,
+				5D4919CD1D8F39B900C4099B /* Manager.cpp in Sources */,
+				5D4919CE1D8F39B900C4099B /* ImplicitRecorder.cpp in Sources */,
+				5D4919D01D8F39B900C4099B /* ImageSequence.cpp in Sources */,
+				93FBF9FE1FDF56E00010CDB7 /* MovieFrameProvider.cpp in Sources */,
+				5D4919D11D8F39B900C4099B /* LiveVideo.cpp in Sources */,
+				5D4919D31D8F39B900C4099B /* Audio.cpp in Sources */,
+				5D4919D41D8F39B900C4099B /* ImageRecorder.cpp in Sources */,
+				93FBF9FA1FDF56E00010CDB7 /* MovieFrameProviderInterface.cpp in Sources */,
+				5D4919D71D8F39B900C4099B /* Medium.cpp in Sources */,
+				5D4919D91D8F39B900C4099B /* FiniteMedium.cpp in Sources */,
+				5D4919DA1D8F39B900C4099B /* FileRecorder.cpp in Sources */,
+				5D4919DB1D8F39B900C4099B /* LiveAudio.cpp in Sources */,
+				5D4919DC1D8F39B900C4099B /* FrameCollection.cpp in Sources */,
+				5D4919DD1D8F39B900C4099B /* FrameMedium.cpp in Sources */,
+				5D4919DE1D8F39B900C4099B /* SoundMedium.cpp in Sources */,
+				5D4919DF1D8F39B900C4099B /* BufferRecorder.cpp in Sources */,
+				93DB53DC28F8E7B8000CD3E5 /* Microphone.cpp in Sources */,
+				5D4919E21D8F39B900C4099B /* BufferImage.cpp in Sources */,
+				5D4919E41D8F39B900C4099B /* MovieRecorder.cpp in Sources */,
+				5D4919E51D8F39B900C4099B /* MediumRef.cpp in Sources */,
+				93C621331FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp in Sources */,
+				93F6F823233034CA00A7F197 /* ImageFileSequence.cpp in Sources */,
+				5D4919E61D8F39B900C4099B /* Utilities.cpp in Sources */,
+				5D4919E71D8F39B900C4099B /* ImageSequenceRecorder.cpp in Sources */,
+				5D4919E91D8F39B900C4099B /* Movie.cpp in Sources */,
+				5D4919EA1D8F39B900C4099B /* BufferImageRecorder.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5241B973AC700E2498E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D63F56C1B973B2B00E2498E /* FrameMemoryRecorder.cpp in Sources */,
+				5D63F5761B973B2B00E2498E /* Library.cpp in Sources */,
+				5D63F5661B973B2B00E2498E /* ConfigMedium.cpp in Sources */,
+				5D63F5821B973B2B00E2498E /* Recorder.cpp in Sources */,
+				5D63F5711B973B2B00E2498E /* Image.cpp in Sources */,
+				933E9B58241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp in Sources */,
+				5D63F5811B973B2B00E2498E /* PixelImage.cpp in Sources */,
+				5D63F5671B973B2B00E2498E /* ExplicitRecorder.cpp in Sources */,
+				5D63F56E1B973B2B00E2498E /* FrameRecorder.cpp in Sources */,
+				5D63F5781B973B2B00E2498E /* LiveMedium.cpp in Sources */,
+				5D63F57A1B973B2B00E2498E /* Manager.cpp in Sources */,
+				5D63F5751B973B2B00E2498E /* ImplicitRecorder.cpp in Sources */,
+				5D63F5731B973B2B00E2498E /* ImageSequence.cpp in Sources */,
+				93FBF9FB1FDF56E00010CDB7 /* MovieFrameProvider.cpp in Sources */,
+				5D63F5791B973B2B00E2498E /* LiveVideo.cpp in Sources */,
+				5D63F5621B973B2B00E2498E /* Audio.cpp in Sources */,
+				5D63F5721B973B2B00E2498E /* ImageRecorder.cpp in Sources */,
+				93FBF9F71FDF56E00010CDB7 /* MovieFrameProviderInterface.cpp in Sources */,
+				5D63F57D1B973B2B00E2498E /* Medium.cpp in Sources */,
+				5D63F5691B973B2B00E2498E /* FiniteMedium.cpp in Sources */,
+				5D63F5681B973B2B00E2498E /* FileRecorder.cpp in Sources */,
+				5D63F5771B973B2B00E2498E /* LiveAudio.cpp in Sources */,
+				5D63F56A1B973B2B00E2498E /* FrameCollection.cpp in Sources */,
+				5D63F56B1B973B2B00E2498E /* FrameMedium.cpp in Sources */,
+				5D63F5831B973B2B00E2498E /* SoundMedium.cpp in Sources */,
+				5D63F5651B973B2B00E2498E /* BufferRecorder.cpp in Sources */,
+				93DB53D928F8E7B8000CD3E5 /* Microphone.cpp in Sources */,
+				5D63F5631B973B2B00E2498E /* BufferImage.cpp in Sources */,
+				5D63F5801B973B2B00E2498E /* MovieRecorder.cpp in Sources */,
+				5D63F57E1B973B2B00E2498E /* MediumRef.cpp in Sources */,
+				93C621301FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp in Sources */,
+				93F6F820233034CA00A7F197 /* ImageFileSequence.cpp in Sources */,
+				5D63F5861B973B2B00E2498E /* Utilities.cpp in Sources */,
+				5D63F5741B973B2B00E2498E /* ImageSequenceRecorder.cpp in Sources */,
+				5D63F57F1B973B2B00E2498E /* Movie.cpp in Sources */,
+				5D63F5641B973B2B00E2498E /* BufferImageRecorder.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862621D8B5B3A00DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D9862631D8B5B3A00DEDB00 /* FrameMemoryRecorder.cpp in Sources */,
+				5D9862641D8B5B3A00DEDB00 /* Library.cpp in Sources */,
+				5D9862651D8B5B3A00DEDB00 /* ConfigMedium.cpp in Sources */,
+				5D9862661D8B5B3A00DEDB00 /* Recorder.cpp in Sources */,
+				5D9862671D8B5B3A00DEDB00 /* Image.cpp in Sources */,
+				933E9B5A241DBEE500489BE5 /* ImageSequenceStereoImageProvider.cpp in Sources */,
+				5D9862681D8B5B3A00DEDB00 /* PixelImage.cpp in Sources */,
+				5D9862691D8B5B3A00DEDB00 /* ExplicitRecorder.cpp in Sources */,
+				5D98626A1D8B5B3A00DEDB00 /* FrameRecorder.cpp in Sources */,
+				5D98626B1D8B5B3A00DEDB00 /* LiveMedium.cpp in Sources */,
+				5D98626C1D8B5B3A00DEDB00 /* Manager.cpp in Sources */,
+				5D98626D1D8B5B3A00DEDB00 /* ImplicitRecorder.cpp in Sources */,
+				5D98626F1D8B5B3A00DEDB00 /* ImageSequence.cpp in Sources */,
+				93FBF9FD1FDF56E00010CDB7 /* MovieFrameProvider.cpp in Sources */,
+				5D9862701D8B5B3A00DEDB00 /* LiveVideo.cpp in Sources */,
+				5D9862721D8B5B3A00DEDB00 /* Audio.cpp in Sources */,
+				5D9862731D8B5B3A00DEDB00 /* ImageRecorder.cpp in Sources */,
+				93FBF9F91FDF56E00010CDB7 /* MovieFrameProviderInterface.cpp in Sources */,
+				5D9862761D8B5B3A00DEDB00 /* Medium.cpp in Sources */,
+				5D9862781D8B5B3A00DEDB00 /* FiniteMedium.cpp in Sources */,
+				5D9862791D8B5B3A00DEDB00 /* FileRecorder.cpp in Sources */,
+				5D98627A1D8B5B3A00DEDB00 /* LiveAudio.cpp in Sources */,
+				5D98627B1D8B5B3A00DEDB00 /* FrameCollection.cpp in Sources */,
+				5D98627C1D8B5B3A00DEDB00 /* FrameMedium.cpp in Sources */,
+				5D98627D1D8B5B3A00DEDB00 /* SoundMedium.cpp in Sources */,
+				5D98627E1D8B5B3A00DEDB00 /* BufferRecorder.cpp in Sources */,
+				93DB53DB28F8E7B8000CD3E5 /* Microphone.cpp in Sources */,
+				5D9862811D8B5B3A00DEDB00 /* BufferImage.cpp in Sources */,
+				5D9862831D8B5B3A00DEDB00 /* MovieRecorder.cpp in Sources */,
+				5D9862841D8B5B3A00DEDB00 /* MediumRef.cpp in Sources */,
+				93C621321FDF9BD100700075 /* ImageSequenceFrameProviderInterface.cpp in Sources */,
+				93F6F822233034CA00A7F197 /* ImageFileSequence.cpp in Sources */,
+				5D9862851D8B5B3A00DEDB00 /* Utilities.cpp in Sources */,
+				5D9862861D8B5B3A00DEDB00 /* ImageSequenceRecorder.cpp in Sources */,
+				5D9862881D8B5B3A00DEDB00 /* Movie.cpp in Sources */,
+				5D9862891D8B5B3A00DEDB00 /* BufferImageRecorder.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D0A00891BC299430008C798 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/media/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/media/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanNetworkD",
+					"-lOceanSystemD",
+				);
+				PRODUCT_MODULE_NAME = OceanMediaD;
+				PRODUCT_NAME = OceanMediaD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D0A008A1BC299430008C798 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/media/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/media/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanNetwork",
+					"-lOceanSystem",
+				);
+				PRODUCT_MODULE_NAME = OceanMedia;
+				PRODUCT_NAME = OceanMedia;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_shared;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D491A171D8F39B900C4099B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanNetworkD",
+					"-lOceanSystemD",
+				);
+				PRODUCT_MODULE_NAME = OceanMediaD;
+				PRODUCT_NAME = OceanMediaD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D491A181D8F39B900C4099B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanNetwork",
+					"-lOceanSystem",
+				);
+				PRODUCT_MODULE_NAME = OceanMedia;
+				PRODUCT_NAME = OceanMedia;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D63F5311B973AC700E2498E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D63F5321B973AC700E2498E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D63F5341B973AC700E2498E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/media/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/media/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaD;
+				PRODUCT_NAME = OceanMediaD;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D63F5351B973AC700E2498E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/media/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/media/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMedia;
+				PRODUCT_NAME = OceanMedia;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D9862B61D8B5B3A00DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaD;
+				PRODUCT_NAME = OceanMediaD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D9862B71D8B5B3A00DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMedia;
+				PRODUCT_NAME = OceanMedia;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/media/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D0A00881BC299430008C798 /* Build configuration list for PBXNativeTarget "media x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D0A00891BC299430008C798 /* Debug */,
+				5D0A008A1BC299430008C798 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D491A161D8F39B900C4099B /* Build configuration list for PBXNativeTarget "media arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D491A171D8F39B900C4099B /* Debug */,
+				5D491A181D8F39B900C4099B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D63F5231B973AC700E2498E /* Build configuration list for PBXProject "media" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D63F5311B973AC700E2498E /* Debug */,
+				5D63F5321B973AC700E2498E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D63F5331B973AC700E2498E /* Build configuration list for PBXNativeTarget "media x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D63F5341B973AC700E2498E /* Debug */,
+				5D63F5351B973AC700E2498E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9862B51D8B5B3A00DEDB00 /* Build configuration list for PBXNativeTarget "media arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9862B61D8B5B3A00DEDB00 /* Debug */,
+				5D9862B71D8B5B3A00DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D63F5201B973AC700E2498E /* Project object */;
+}

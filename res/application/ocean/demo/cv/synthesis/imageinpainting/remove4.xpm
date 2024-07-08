@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/* XPM */
+static const char* xpm_remove4[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 3 1",
+"  c black",
+". c #3365B7",
+"X c None",
+/* pixels */
+"XXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXX",
+"XX..XXXXXXXX..XX",
+"XXX..XXXXXX..XXX",
+"XXXX..XXXX..XXXX",
+"XXXXX..XX..XXXXX",
+"XXXXXX....XXXXXX",
+"XXXXXXX..XXXXXXX",
+"XXXXXX....XXXXXX",
+"XXXXX..XX..X X X",
+"XXXX..XXXX.X X X",
+"XXX..XXXXXXX   X",
+"XX..XXXXXXXXXX X",
+"XXXXXXXXXXXXXX X",
+"XXXXXXXXXXXXXXXX"
+};

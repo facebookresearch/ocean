@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleExecutable</key>
+	<string>OceanSpecial</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>OceanSpecial</string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>(c) Meta Platforms, Inc. and affiliates. Confidential and proprietary.</string>
+	<key>OceanPluginDependences</key>
+	<string></string>
+	<key>OceanPluginDescription</key>
+	<string>This plugin provides image media support for special image formats</string>
+	<key>OceanPluginName</key>
+	<string>Ocean Media Special</string>
+	<key>OceanPluginPriority</key>
+	<integer>0</integer>
+	<key>OceanPluginType</key>
+	<string>MEDIA</string>
+</dict>
+</plist>

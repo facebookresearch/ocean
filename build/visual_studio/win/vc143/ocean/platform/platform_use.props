@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Platform</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ocean_platform_use_imported>True</ocean_platform_use_imported>
+  </PropertyGroup>
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_platform_common_imported)' != 'True'" Project="platform_common.props"/>
+  </ImportGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <Link>
+      <AdditionalDependencies>OceanPlatformD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <Link>
+	    <AdditionalDependencies>OceanPlatform.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

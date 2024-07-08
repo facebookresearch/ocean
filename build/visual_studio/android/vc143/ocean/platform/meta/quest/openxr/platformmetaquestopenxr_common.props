@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean Platform Meta Quest OpenXR (Common)</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ocean_platformmetaquestopenxr_common_imported>True</ocean_platformmetaquestopenxr_common_imported>
+  </PropertyGroup>
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\..\base\base_use.props"/>
+    <Import Condition="'$(ocean_platform_use_imported)' != 'True'" Project="..\..\..\..\platform\platform_use.props"/>
+    <Import Condition="'$(ocean_platformgles_use_imported)' != 'True'" Project="..\..\..\..\platform\gles\platformgles_use.props"/>
+    <Import Condition="'$(ocean_platformmeta_use_imported)' != 'True'" Project="..\..\..\..\platform\meta\platformmeta_use.props"/>
+    <Import Condition="'$(ocean_platformmetaquest_use_imported)' != 'True'" Project="..\..\..\..\platform\meta\quest\platformmetaquest_use.props"/>
+    <Import Condition="'$(ocean_platformopenxr_use_imported)' != 'True'" Project="..\..\..\..\platform\openxr\platformopenxr_use.props"/>
+  </ImportGroup>
+</Project>

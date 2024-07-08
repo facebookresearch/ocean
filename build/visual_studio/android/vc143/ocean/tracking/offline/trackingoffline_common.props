@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean Tracking Offline (Common)</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_trackingoffline_common_imported>True</ocean_trackingoffline_common_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\base\base_use.props"/>
+    <Import Condition="'$(ocean_cv_use_imported)' != 'True'" Project="..\..\cv\cv_use.props"/>
+    <Import Condition="'$(ocean_math_use_imported)' != 'True'" Project="..\..\math\math_use.props"/>
+    <Import Condition="'$(ocean_tracking_use_imported)' != 'True'" Project="..\..\tracking\tracking_use.props"/>
+    <Import Condition="'$(ocean_trackingpattern_use_imported)' != 'True'" Project="..\..\tracking\pattern\trackingpattern_use.props"/>
+  </ImportGroup>
+</Project>

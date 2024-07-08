@@ -1,0 +1,142 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0fb6b07..f8f3f97 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -108,17 +108,17 @@ set(LIBUSB_GEN_INCLUDES "${CMAKE_CURRENT_BINARY_DIR}/gen_include")
+ generate_config_file()
+ 
+ if(LIBUSB_BUILD_SHARED_LIBS)
+-    add_library(usb-1.0 SHARED)
++    add_library(usb SHARED)
+ else()
+-    add_library(usb-1.0 STATIC)
++    add_library(usb STATIC)
+ endif()
+ 
+-set_target_properties(usb-1.0 PROPERTIES
++set_target_properties(usb PROPERTIES
+     PREFIX lib # to be consistent with mainline libusb build system(s)
+ )
+ 
+ # common sources
+-target_sources(usb-1.0 PRIVATE
++target_sources(usb PRIVATE
+     "${LIBUSB_GEN_INCLUDES}/config.h"
+     "${LIBUSB_ROOT}/core.c"
+     "${LIBUSB_ROOT}/descriptor.c"
+@@ -131,20 +131,20 @@ target_sources(usb-1.0 PRIVATE
+     "${LIBUSB_ROOT}/version.h"
+     "${LIBUSB_ROOT}/version_nano.h"
+ )
+-target_include_directories(usb-1.0
++target_include_directories(usb
+     PRIVATE
+         "${LIBUSB_GEN_INCLUDES}"
+         "${LIBUSB_ROOT}/os"
+ )
+ 
+ if (LIBUSB_TARGETS_INCLUDE_USING_SYSTEM)
+-    target_include_directories(usb-1.0 SYSTEM PUBLIC "${LIBUSB_ROOT}")
++    target_include_directories(usb SYSTEM PUBLIC "${LIBUSB_ROOT}")
+ else()
+-    target_include_directories(usb-1.0 PUBLIC "${LIBUSB_ROOT}")
++    target_include_directories(usb PUBLIC "${LIBUSB_ROOT}")
+ endif()
+ 
+ if(WIN32)
+-    target_sources(usb-1.0 PRIVATE
++    target_sources(usb PRIVATE
+         "${LIBUSB_ROOT}/libusb-1.0.def"
+         "${LIBUSB_ROOT}/os/events_windows.c"
+         "${LIBUSB_ROOT}/os/events_windows.h"
+@@ -158,64 +158,64 @@ if(WIN32)
+         "${LIBUSB_ROOT}/os/windows_winusb.h"
+         $<$<C_COMPILER_ID:MSVC>:${LIBUSB_ROOT}/libusb-1.0.rc>
+     )
+-    target_compile_definitions(usb-1.0 PRIVATE $<$<C_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS=1>)
+-    target_link_libraries(usb-1.0 PRIVATE windowsapp)
++    target_compile_definitions(usb PRIVATE $<$<C_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS=1>)
++    target_link_libraries(usb PRIVATE windowsapp)
+ else()
+     # common POSIX/non-Windows sources
+-    target_sources(usb-1.0 PRIVATE
++    target_sources(usb PRIVATE
+         "${LIBUSB_ROOT}/os/events_posix.c"
+         "${LIBUSB_ROOT}/os/events_posix.h"
+         "${LIBUSB_ROOT}/os/threads_posix.c"
+         "${LIBUSB_ROOT}/os/threads_posix.h"
+     )
+     if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+-        target_sources(usb-1.0 PRIVATE
++        target_sources(usb PRIVATE
+             "${LIBUSB_ROOT}/os/linux_usbfs.c"
+             "${LIBUSB_ROOT}/os/linux_usbfs.h"
+         )
+         if(LIBUSB_ENABLE_UDEV)
+-            target_sources(usb-1.0 PRIVATE
++            target_sources(usb PRIVATE
+                 "${LIBUSB_ROOT}/os/linux_udev.c"
+             )
+-            target_link_libraries(usb-1.0 PRIVATE udev)
+-            target_compile_definitions(usb-1.0 PRIVATE HAVE_LIBUDEV=1)
++            target_link_libraries(usb PRIVATE udev)
++            target_compile_definitions(usb PRIVATE HAVE_LIBUDEV=1)
+         else()
+-            target_sources(usb-1.0 PRIVATE
++            target_sources(usb PRIVATE
+                 "${LIBUSB_ROOT}/os/linux_netlink.c"
+             )
+         endif()
+         find_package(Threads REQUIRED)
+-        target_link_libraries(usb-1.0 PRIVATE Threads::Threads)
++        target_link_libraries(usb PRIVATE Threads::Threads)
+     elseif(ANDROID)
+-        target_sources(usb-1.0 PRIVATE
++        target_sources(usb PRIVATE
+             "${LIBUSB_ROOT}/os/linux_netlink.c"
+             "${LIBUSB_ROOT}/os/linux_usbfs.c"
+             "${LIBUSB_ROOT}/os/linux_usbfs.h"
+         )
+-        target_link_libraries(usb-1.0 PRIVATE android log)
++        target_link_libraries(usb PRIVATE android log)
+     elseif(APPLE)
+-        target_sources(usb-1.0 PRIVATE
++        target_sources(usb PRIVATE
+             "${LIBUSB_ROOT}/os/darwin_usb.c"
+             "${LIBUSB_ROOT}/os/darwin_usb.h"
+         )
+-        target_link_libraries(usb-1.0 PRIVATE
++        target_link_libraries(usb PRIVATE
+             "-framework Foundation"
+             "-framework IOKit"
+             "-framework Security"
+         )
+     elseif(CMAKE_SYSTEM_NAME STREQUAL "NetBSD")
+-        target_sources(usb-1.0 PRIVATE
++        target_sources(usb PRIVATE
+             "${LIBUSB_ROOT}/os/netbsd_usb.c"
+         )
+     elseif(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+-        target_sources(usb-1.0 PRIVATE
++        target_sources(usb PRIVATE
+             "${LIBUSB_ROOT}/os/openbsd_usb.c"
+         )
+     elseif(EMSCRIPTEN)
+-        target_sources(usb-1.0 PRIVATE
++        target_sources(usb PRIVATE
+             "${LIBUSB_ROOT}/os/emscripten_webusb.cpp"
+         )
+-        target_compile_options(usb-1.0 PRIVATE -pthread)
++        target_compile_options(usb PRIVATE -pthread)
+     else()
+         message(FATAL_ERROR "Unsupported target platform: ${CMAKE_SYSTEM_NAME}")
+     endif()
+@@ -230,6 +230,6 @@ if(LIBUSB_BUILD_EXAMPLES)
+ endif()
+ 
+ if(LIBUSB_INSTALL_TARGETS)
+-    install(TARGETS usb-1.0)
+-    install(FILES "${LIBUSB_ROOT}/libusb.h" DESTINATION "include/libusb-1.0")
++    install(TARGETS usb)
++    install(FILES "${LIBUSB_ROOT}/libusb.h" DESTINATION "include")
+ endif()

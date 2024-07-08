@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Use Ocean Interaction</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ocean_interaction_use_imported>True</ocean_interaction_use_imported>
+  </PropertyGroup>
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_interaction_common_imported)' != 'True'" Project="interaction_common.props"/>
+  </ImportGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <Link>
+      <AdditionalDependencies>OceanInteractionD.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <Link>
+	    <AdditionalDependencies>OceanInteraction.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

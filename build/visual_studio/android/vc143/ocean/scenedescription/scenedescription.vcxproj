@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C4EFF654-DBE6-4B43-8886-C93179EDA393}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>scenedescription</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>scenedescription</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="scenedescription_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="scenedescription_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="scenedescription_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="scenedescription_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\DynamicNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\Field.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\Field0D.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\Field1D.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\FieldTyper.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\Library.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\Manager.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\Node.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\NodeRefManager.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\Scene.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\SceneDescription.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDLNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDLScene.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDXDynamicNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDXEventNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDXNode.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDXScene.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDXUpdateNode.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\DynamicNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\Library.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\Manager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\Node.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\NodeRefManager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\Scene.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDLNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDLScene.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDXDynamicNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDXEventNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDXNode.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDXScene.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\scenedescription\SDXUpdateNode.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

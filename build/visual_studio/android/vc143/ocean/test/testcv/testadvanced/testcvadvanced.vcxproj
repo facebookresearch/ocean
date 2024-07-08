@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6398E16F-2C7A-4342-A91C-C6153B587667}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>testcvadvanced</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>testcvadvanced</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="testcvadvanced_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="testcvadvanced_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="testcvadvanced_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="testcvadvanced_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameChannels.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameFilterGaussian.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameFilterSeparable.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameFilterSobel.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameInterpolatorBilinear.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameShrinker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedMotion.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedSumSquareDifferences.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedZeroMeanSumSquareDifferences.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestCVAdvanced.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestFrameColorAdjustment.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestFrameRectification.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestPanoramaFrame.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestSumSquareDifferencesNoCenter.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestWhitePointDetector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameChannels.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameFilterGaussian.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameFilterSeparable.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameFilterSobel.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameInterpolatorBilinear.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameShrinker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedMotion.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedSumSquareDifferences.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedZeroMeanSumSquareDifferences.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestCVAdvanced.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestFrameColorAdjustment.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestFrameRectification.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestPanoramaFrame.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestSumSquareDifferencesNoCenter.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestWhitePointDetector.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

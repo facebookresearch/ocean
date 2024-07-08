@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Ocean Demo CV Segmentation Clustering</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationdemocvsegmentationclustering_build_imported>True</ocean_applicationdemocvsegmentationclustering_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationdemocvsegmentation_build_imported)' != 'True'" Project="..\..\application_demo_cvsegmentation_build.props"/>
+    <Import Condition="'$(ocean_application_window_build_imported)' != 'True'" Project="..\..\..\..\..\application_window_build.props" />
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\base\base_use.props" />
+    <Import Condition="'$(ocean_cv_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\cv\cv_use.props" />
+    <Import Condition="'$(ocean_cvsegmentation_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\cv\segmentation\cvsegmentation_use.props" />
+    <Import Condition="'$(ocean_mediadirectshow_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\directshow\mediadirectshow_use.props" />
+    <Import Condition="'$(ocean_mediamediafoundation_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\mediafoundation\mediamediafoundation_use.props" />
+    <Import Condition="'$(ocean_mediawic_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\media\wic\mediawic_use.props" />
+    <Import Condition="'$(ocean_platformwin_use_imported)' != 'True'" Project="..\..\..\..\..\..\..\ocean\platform\win\platformwin_use.props" />
+  </ImportGroup>
+</Project>

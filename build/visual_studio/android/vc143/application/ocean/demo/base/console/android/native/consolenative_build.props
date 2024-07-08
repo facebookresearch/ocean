@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Ocean Demo Base Console Native</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationdemobaseconsolenative_build_imported>True</ocean_applicationdemobaseconsolenative_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationdemobase_build_imported)' != 'True'" Project="..\..\..\application_demo_base_build.props" />
+    <Import Condition="'$(ocean_applicationdemobaseconsolenative_common_imported)' != 'True'" Project="consolenative_common.props"/>
+  </ImportGroup>
+
+  <PropertyGroup>
+    <TargetName>libOceanDemoBaseConsole</TargetName>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4F5DFBF4-1DA1-46AB-B882-9FDC5A86803B}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>cvdetector</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>cvdetector</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="cvdetector_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="cvdetector_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="cvdetector_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="cvdetector_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\CalibrationPatternDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Descriptor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Detector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeature.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeatureDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Feature.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FeatureDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FrameChangeDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FREAKDescriptor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HarrisCorner.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HarrisCornerDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HemiCube.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\LineDetectorHough.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\LineDetectorULF.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\LineEvaluator.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\MessengerCodeDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBDescriptor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBFeature.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBFeatureDescriptor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBFeatureOrientation.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBSamplingPattern.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\OrientedPointFeature.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\PointFeature.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ShapeDetector.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Utilities.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\CalibrationPatternDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeatureDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FeatureDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FrameChangeDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HarrisCornerDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HemiCube.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\LineDetectorHough.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\LineDetectorULF.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\MessengerCodeDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBFeatureDescriptor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBFeatureOrientation.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ORBSamplingPattern.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\ShapeDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Utilities.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

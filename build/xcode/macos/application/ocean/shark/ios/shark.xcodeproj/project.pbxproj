@@ -1,0 +1,822 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		50E960802C18E545007CFE1C /* development_team.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 50E9607F2C18E545007CFE1C /* development_team.xcconfig */; };
+		50E960812C18E545007CFE1C /* development_team.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 50E9607F2C18E545007CFE1C /* development_team.xcconfig */; };
+		5D50B1B71D92824F009DDDFF /* SharkAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B41D92824F009DDDFF /* SharkAppDelegate.mm */; };
+		5D50B1B91D92824F009DDDFF /* SharkMain.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B61D92824F009DDDFF /* SharkMain.mm */; };
+		5D50B1C21D92840E009DDDFF /* dinosaur.ox3dv in Resources */ = {isa = PBXBuildFile; fileRef = 5D50B1BE1D92840E009DDDFF /* dinosaur.ox3dv */; };
+		5D50B1C31D92840E009DDDFF /* sift640.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 5D50B1BF1D92840E009DDDFF /* sift640.bmp */; };
+		5D50B1C41D92840E009DDDFF /* trex.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 5D50B1C01D92840E009DDDFF /* trex.mtl */; };
+		5D50B1C51D92840E009DDDFF /* trex.obj in Resources */ = {isa = PBXBuildFile; fileRef = 5D50B1C11D92840E009DDDFF /* trex.obj */; };
+		5D73B0661D92C5FA000B5F33 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */; };
+		5D73B0671D92C5FA000B5F33 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D73B0651D92C5FA000B5F33 /* Main.storyboard */; };
+		5D73B06A1D92C6D2000B5F33 /* SharkViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D73B0691D92C6D2000B5F33 /* SharkViewController.mm */; };
+		C0E9B1831DAD3B8600895C4B /* SharkViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D73B0691D92C6D2000B5F33 /* SharkViewController.mm */; };
+		C0E9B1851DAD3B8600895C4B /* SharkMain.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B61D92824F009DDDFF /* SharkMain.mm */; };
+		C0E9B1861DAD3B8600895C4B /* SharkAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B41D92824F009DDDFF /* SharkAppDelegate.mm */; };
+		C0E9B18B1DAD3B8600895C4B /* dinosaur.ox3dv in Resources */ = {isa = PBXBuildFile; fileRef = 5D50B1BE1D92840E009DDDFF /* dinosaur.ox3dv */; };
+		C0E9B18C1DAD3B8600895C4B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D73B0651D92C5FA000B5F33 /* Main.storyboard */; };
+		C0E9B18D1DAD3B8600895C4B /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */; };
+		C0E9B18E1DAD3B8600895C4B /* trex.obj in Resources */ = {isa = PBXBuildFile; fileRef = 5D50B1C11D92840E009DDDFF /* trex.obj */; };
+		C0E9B18F1DAD3B8600895C4B /* sift640.bmp in Resources */ = {isa = PBXBuildFile; fileRef = 5D50B1BF1D92840E009DDDFF /* sift640.bmp */; };
+		C0E9B1901DAD3B8600895C4B /* trex.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 5D50B1C01D92840E009DDDFF /* trex.mtl */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		50E9607F2C18E545007CFE1C /* development_team.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development_team.xcconfig; sourceTree = "<group>"; };
+		5D4A716A1D8B10B000B8B729 /* shark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = shark.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D50B1B41D92824F009DDDFF /* SharkAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SharkAppDelegate.mm; path = ../../../../../../../impl/application/ocean/shark/ios/SharkAppDelegate.mm; sourceTree = "<group>"; };
+		5D50B1B61D92824F009DDDFF /* SharkMain.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SharkMain.mm; path = ../../../../../../../impl/application/ocean/shark/ios/SharkMain.mm; sourceTree = "<group>"; };
+		5D50B1BA1D9282A9009DDDFF /* SharkAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SharkAppDelegate.h; path = ../../../../../../../impl/application/ocean/shark/ios/SharkAppDelegate.h; sourceTree = "<group>"; };
+		5D50B1BC1D9282EE009DDDFF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../impl/application/ocean/shark/ios/Info.plist; sourceTree = "<group>"; };
+		5D50B1BE1D92840E009DDDFF /* dinosaur.ox3dv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = dinosaur.ox3dv; path = ../../../../../../../res/application/ocean/shark/ios/scene/dinosaur.ox3dv; sourceTree = "<group>"; };
+		5D50B1BF1D92840E009DDDFF /* sift640.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; name = sift640.bmp; path = ../../../../../../../res/application/ocean/shark/ios/scene/sift640.bmp; sourceTree = "<group>"; };
+		5D50B1C01D92840E009DDDFF /* trex.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = trex.mtl; path = ../../../../../../../res/application/ocean/shark/ios/scene/trex.mtl; sourceTree = "<group>"; };
+		5D50B1C11D92840E009DDDFF /* trex.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = trex.obj; path = ../../../../../../../res/application/ocean/shark/ios/scene/trex.obj; sourceTree = "<group>"; };
+		5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = ../../../../../../../res/application/ocean/shark/ios/LaunchScreen.xib; sourceTree = "<group>"; };
+		5D73B0651D92C5FA000B5F33 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../../../../../../../res/application/ocean/shark/ios/Main.storyboard; sourceTree = "<group>"; };
+		5D73B0681D92C6AC000B5F33 /* SharkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SharkViewController.h; path = ../../../../../../../impl/application/ocean/shark/ios/SharkViewController.h; sourceTree = "<group>"; };
+		5D73B0691D92C6D2000B5F33 /* SharkViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SharkViewController.mm; path = ../../../../../../../impl/application/ocean/shark/ios/SharkViewController.mm; sourceTree = "<group>"; };
+		5D9CC9091D9307B700B256A8 /* SharkOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SharkOSX.h; path = ../../../../../../../impl/application/ocean/shark/ios/SharkOSX.h; sourceTree = "<group>"; };
+		C0E9B1951DAD3B8600895C4B /* shark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = shark.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D4A71671D8B10B000B8B729 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B1871DAD3B8600895C4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		50E9607E2C18E529007CFE1C /* Config Files */ = {
+			isa = PBXGroup;
+			children = (
+				50E9607F2C18E545007CFE1C /* development_team.xcconfig */,
+			);
+			name = "Config Files";
+			sourceTree = "<group>";
+		};
+		5D4A71611D8B10B000B8B729 = {
+			isa = PBXGroup;
+			children = (
+				5DF0B9571D8FE33E00BE5D21 /* Header Files */,
+				5DF0B9561D8FE33000BE5D21 /* Source Files */,
+				50E9607E2C18E529007CFE1C /* Config Files */,
+				5DF0B9581D8FE35D00BE5D21 /* Resource Files */,
+				5D4A716B1D8B10B000B8B729 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D4A716B1D8B10B000B8B729 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D4A716A1D8B10B000B8B729 /* shark.app */,
+				C0E9B1951DAD3B8600895C4B /* shark.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DD019561D913AA80016F6C3 /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+				5D50B1BE1D92840E009DDDFF /* dinosaur.ox3dv */,
+				5D50B1BF1D92840E009DDDFF /* sift640.bmp */,
+				5D50B1C01D92840E009DDDFF /* trex.mtl */,
+				5D50B1C11D92840E009DDDFF /* trex.obj */,
+			);
+			name = Scene;
+			sourceTree = "<group>";
+		};
+		5DF0B9561D8FE33000BE5D21 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D50B1B41D92824F009DDDFF /* SharkAppDelegate.mm */,
+				5D50B1B61D92824F009DDDFF /* SharkMain.mm */,
+				5D73B0691D92C6D2000B5F33 /* SharkViewController.mm */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DF0B9571D8FE33E00BE5D21 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D50B1BA1D9282A9009DDDFF /* SharkAppDelegate.h */,
+				5D9CC9091D9307B700B256A8 /* SharkOSX.h */,
+				5D73B0681D92C6AC000B5F33 /* SharkViewController.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DF0B9581D8FE35D00BE5D21 /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D50B1BC1D9282EE009DDDFF /* Info.plist */,
+				5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */,
+				5D73B0651D92C5FA000B5F33 /* Main.storyboard */,
+				5DD019561D913AA80016F6C3 /* Scene */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5D4A71691D8B10B000B8B729 /* shark arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "shark arm64 (Static)" */;
+			buildPhases = (
+				5D4A71661D8B10B000B8B729 /* Sources */,
+				5D4A71671D8B10B000B8B729 /* Frameworks */,
+				5D4A71681D8B10B000B8B729 /* Resources */,
+				5D113DE11D93DEF000E6523B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "shark arm64 (Static)";
+			productName = shark;
+			productReference = 5D4A716A1D8B10B000B8B729 /* shark.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C0E9B1811DAD3B8600895C4B /* shark arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0E9B1921DAD3B8600895C4B /* Build configuration list for PBXNativeTarget "shark arm64 (Shared)" */;
+			buildPhases = (
+				C0E9B1821DAD3B8600895C4B /* Sources */,
+				C0E9B1871DAD3B8600895C4B /* Frameworks */,
+				C0E9B1881DAD3B8600895C4B /* Resources */,
+				C0E9B1911DAD3B8600895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "shark arm64 (Shared)";
+			productName = shark;
+			productReference = C0E9B1951DAD3B8600895C4B /* shark.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D4A71621D8B10B000B8B729 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D4A71691D8B10B000B8B729 = {
+						CreatedOnToolsVersion = 6.4;
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "shark" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D4A71611D8B10B000B8B729;
+			productRefGroup = 5D4A716B1D8B10B000B8B729 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D4A71691D8B10B000B8B729 /* shark arm64 (Static) */,
+				C0E9B1811DAD3B8600895C4B /* shark arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5D4A71681D8B10B000B8B729 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D50B1C21D92840E009DDDFF /* dinosaur.ox3dv in Resources */,
+				5D73B0671D92C5FA000B5F33 /* Main.storyboard in Resources */,
+				5D73B0661D92C5FA000B5F33 /* LaunchScreen.xib in Resources */,
+				50E960802C18E545007CFE1C /* development_team.xcconfig in Resources */,
+				5D50B1C51D92840E009DDDFF /* trex.obj in Resources */,
+				5D50B1C31D92840E009DDDFF /* sift640.bmp in Resources */,
+				5D50B1C41D92840E009DDDFF /* trex.mtl in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B1881DAD3B8600895C4B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0E9B18B1DAD3B8600895C4B /* dinosaur.ox3dv in Resources */,
+				C0E9B18C1DAD3B8600895C4B /* Main.storyboard in Resources */,
+				C0E9B18D1DAD3B8600895C4B /* LaunchScreen.xib in Resources */,
+				50E960812C18E545007CFE1C /* development_team.xcconfig in Resources */,
+				C0E9B18E1DAD3B8600895C4B /* trex.obj in Resources */,
+				C0E9B18F1DAD3B8600895C4B /* sift640.bmp in Resources */,
+				C0E9B1901DAD3B8600895C4B /* trex.mtl in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D113DE11D93DEF000E6523B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../copy_arm_static.sh \"../../../../../../../bin/application/ocean/shark/ios/\"\n";
+		};
+		C0E9B1911DAD3B8600895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../copy_shared_libs_to_executable.sh \"../../../../../../../bin/lib/\" \"OceanBase\" \"OceanCV\" \"OceanCVAdvanced\" \"OceanCVDetector\" \"OceanCVSegmentation\" \"OceanDevices\" \"OceanGeometry\" \"OceanIO\" \"OceanMath\" \"OceanNetwork\" \"OceanMedia\" \"OceanPlatformOSX\" \"OceanRendering\" \"OceanSceneDescription\" \"OceanSystem\" \"OceanTracking\" \"OceanTrackingPattern\"\n\n../../../../copy_plugins_to_executable.sh \"../../../../../../../bin/plugins/\" \"OceanDevicesPattern\" \"OceanMediaAVFoundation\" \"OceanRenderingGLESceneGraph\" \"OceanSceneDescriptionSDLOBJ\" \"OceanSceneDescriptionSDXX3D\"\n\n../../../../copy_arm_shared.sh \"../../../../../../../bin/application/ocean/shark/ios/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D4A71661D8B10B000B8B729 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D73B06A1D92C6D2000B5F33 /* SharkViewController.mm in Sources */,
+				5D50B1B91D92824F009DDDFF /* SharkMain.mm in Sources */,
+				5D50B1B71D92824F009DDDFF /* SharkAppDelegate.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B1821DAD3B8600895C4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0E9B1831DAD3B8600895C4B /* SharkViewController.mm in Sources */,
+				C0E9B1851DAD3B8600895C4B /* SharkMain.mm in Sources */,
+				C0E9B1861DAD3B8600895C4B /* SharkAppDelegate.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D4A718F1D8B10B000B8B729 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50E9607F2C18E545007CFE1C /* development_team.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5D4A71901D8B10B000B8B729 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50E9607F2C18E545007CFE1C /* development_team.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5D4A71921D8B10B000B8B729 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../impl/application/ocean/shark/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../../bin/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../3rdparty/tinyxml/2.0/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../3rdparty/freetype/2.10/lib/ios_arm64_xc_static_debug,
+					../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static_debug,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../../bin/lib/ios_i386_xc9_static_debug,
+					../../../../../../../3rdparty/tinyxml/2.0/lib/ios_i386_xc9_static_debug,
+					../../../../../../../3rdparty/freetype/2.10/lib/ios_i386_xc_static_debug,
+					../../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static_debug,
+					../../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static_debug,
+				);
+				OBJROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanCVFontsD",
+					"-lOceanDevicesD",
+					"-lOceanDevicesARKitD",
+					"-lOceanDevicesIOSD",
+					"-lOceanDevicesPatternD",
+					"-lOceanDevicesSLAMD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanMediaAVFoundationD",
+					"-lOceanMediaImageIOD",
+					"-lOceanPlatformAppleD",
+					"-lOceanPlatformAppleIOSD",
+					"-lOceanRenderingD",
+					"-lOceanRenderingGLESceneGraphD",
+					"-lOceanSceneDescriptionD",
+					"-lOceanSceneDescriptionSDLOBJD",
+					"-lOceanSceneDescriptionSDXX3DD",
+					"-lOceanSystemD",
+					"-lOceanTrackingD",
+					"-lOceanTrackingPatternD",
+					"-ltinyxml",
+					"-lfreetype",
+					"-lpng",
+					"-lzlib",
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					ImageIO,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					CoreMotion,
+					"-framework",
+					ARKit,
+					"-framework",
+					CoreLocation,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.shark.ios;
+				PRODUCT_MODULE_NAME = shark;
+				PRODUCT_NAME = shark;
+				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D4A71931D8B10B000B8B729 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../impl/application/ocean/shark/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../../bin/lib/ios_arm64_xc9_static,
+					../../../../../../../3rdparty/tinyxml/2.0/lib/ios_arm64_xc9_static,
+					../../../../../../../3rdparty/freetype/2.10/lib/ios_arm64_xc_static,
+					../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static,
+					../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../../bin/lib/ios_i386_xc9_static,
+					../../../../../../../3rdparty/tinyxml/2.0/lib/ios_i386_xc9_static,
+					../../../../../../../3rdparty/freetype/2.10/lib/ios_i386_xc_static,
+					../../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static,
+					../../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static,
+				);
+				OBJROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanCVFonts",
+					"-lOceanDevices",
+					"-lOceanDevicesARKit",
+					"-lOceanDevicesIOS",
+					"-lOceanDevicesPattern",
+					"-lOceanDevicesSLAM",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanMediaAVFoundation",
+					"-lOceanMediaImageIO",
+					"-lOceanPlatformApple",
+					"-lOceanPlatformAppleIOS",
+					"-lOceanRendering",
+					"-lOceanRenderingGLESceneGraph",
+					"-lOceanSceneDescription",
+					"-lOceanSceneDescriptionSDLOBJ",
+					"-lOceanSceneDescriptionSDXX3D",
+					"-lOceanSystem",
+					"-lOceanTracking",
+					"-lOceanTrackingPattern",
+					"-ltinyxml",
+					"-lfreetype",
+					"-lpng",
+					"-lzlib",
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					ImageIO,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					CoreGraphics,
+					"-framework",
+					UIKit,
+					"-framework",
+					CoreMotion,
+					"-framework",
+					ARKit,
+					"-framework",
+					CoreLocation,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.shark.ios;
+				PRODUCT_MODULE_NAME = shark;
+				PRODUCT_NAME = shark;
+				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C0E9B1931DAD3B8600895C4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../impl/application/ocean/shark/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				OBJROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanDevicesD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanPlatformOSXD",
+					"-lOceanRenderingD",
+					"-lOceanSceneDescriptionD",
+					"-lOceanSystemD",
+					"-lOceanTrackingD",
+					"-lOceanTrackingPatternD",
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					UIKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.shark.ios;
+				PRODUCT_MODULE_NAME = shark;
+				PRODUCT_NAME = shark;
+				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared_debug$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C0E9B1941DAD3B8600895C4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../impl/application/ocean/shark/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared;
+				OBJROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanDevices",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanPlatformOSX",
+					"-lOceanRendering",
+					"-lOceanSceneDescription",
+					"-lOceanSystem",
+					"-lOceanTracking",
+					"-lOceanTrackingPattern",
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					UIKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.shark.ios;
+				PRODUCT_MODULE_NAME = shark;
+				PRODUCT_NAME = shark;
+				SYMROOT = "../../../../../../../bin/tmp/impl/application/ocean/shark/osx_x64_xc9_shared$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "shark" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D4A718F1D8B10B000B8B729 /* Debug */,
+				5D4A71901D8B10B000B8B729 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "shark arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D4A71921D8B10B000B8B729 /* Debug */,
+				5D4A71931D8B10B000B8B729 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0E9B1921DAD3B8600895C4B /* Build configuration list for PBXNativeTarget "shark arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0E9B1931DAD3B8600895C4B /* Debug */,
+				C0E9B1941DAD3B8600895C4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D4A71621D8B10B000B8B729 /* Project object */;
+}

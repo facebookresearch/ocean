@@ -1,0 +1,1116 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D3FC5191D8BE5C000AF4130 /* PlanarRectangleTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D641BAAFDD7009C920C /* PlanarRectangleTracker.cpp */; };
+		5D3FC51A1D8BE5C000AF4130 /* SLAMTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D691BAAFDD7009C920C /* SLAMTracker.cpp */; };
+		5D3FC51B1D8BE5C000AF4130 /* PointPaths.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D661BAAFDD7009C920C /* PointPaths.cpp */; };
+		5D3FC51C1D8BE5C000AF4130 /* SLAMPlaneTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D681BAAFDD7009C920C /* SLAMPlaneTracker.cpp */; };
+		5D3FC51D1D8BE5C000AF4130 /* PatternTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D631BAAFDD7009C920C /* PatternTracker.cpp */; };
+		5D3FC51E1D8BE5C000AF4130 /* FrameTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D601BAAFDD7009C920C /* FrameTracker.cpp */; };
+		5D3FC51F1D8BE5C000AF4130 /* TrackerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D6A1BAAFDD7009C920C /* TrackerEvent.cpp */; };
+		5D3FC5201D8BE5C000AF4130 /* Frame2FrameTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D5F1BAAFDD7009C920C /* Frame2FrameTracker.cpp */; };
+		5D3FC5211D8BE5C000AF4130 /* OfflineTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D621BAAFDD7009C920C /* OfflineTracker.cpp */; };
+		5D3FC5231D8BE5C000AF4130 /* PlaneTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D651BAAFDD7009C920C /* PlaneTracker.cpp */; };
+		5D3FC5261D8BE5C000AF4130 /* SLAMTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D501BAAFDC7009C920C /* SLAMTracker.h */; };
+		5D3FC5271D8BE5C000AF4130 /* PlaneTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4C1BAAFDC7009C920C /* PlaneTracker.h */; };
+		5D3FC5281D8BE5C000AF4130 /* PointPaths.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4D1BAAFDC7009C920C /* PointPaths.h */; };
+		5D3FC5291D8BE5C000AF4130 /* Frame2FrameTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D451BAAFDC7009C920C /* Frame2FrameTracker.h */; };
+		5D3FC52A1D8BE5C000AF4130 /* TrackerEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D511BAAFDC7009C920C /* TrackerEvent.h */; };
+		5D3FC52B1D8BE5C000AF4130 /* OfflinePose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D481BAAFDC7009C920C /* OfflinePose.h */; };
+		5D3FC52C1D8BE5C000AF4130 /* FrameTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D461BAAFDC7009C920C /* FrameTracker.h */; };
+		5D3FC52D1D8BE5C000AF4130 /* OfflineTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D491BAAFDC7009C920C /* OfflineTracker.h */; };
+		5D3FC52E1D8BE5C000AF4130 /* SLAMPlaneTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4F1BAAFDC7009C920C /* SLAMPlaneTracker.h */; };
+		5D3FC52F1D8BE5C000AF4130 /* PatternTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4A1BAAFDC7009C920C /* PatternTracker.h */; };
+		5D3FC5301D8BE5C000AF4130 /* Offline.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D471BAAFDC7009C920C /* Offline.h */; };
+		5D3FC5311D8BE5C000AF4130 /* PlanarRectangleTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4B1BAAFDC7009C920C /* PlanarRectangleTracker.h */; };
+		5D936F071BC6A6990046ACD4 /* PlanarRectangleTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D641BAAFDD7009C920C /* PlanarRectangleTracker.cpp */; };
+		5D936F081BC6A6990046ACD4 /* SLAMTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D691BAAFDD7009C920C /* SLAMTracker.cpp */; };
+		5D936F091BC6A6990046ACD4 /* PointPaths.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D661BAAFDD7009C920C /* PointPaths.cpp */; };
+		5D936F0A1BC6A6990046ACD4 /* SLAMPlaneTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D681BAAFDD7009C920C /* SLAMPlaneTracker.cpp */; };
+		5D936F0B1BC6A6990046ACD4 /* PatternTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D631BAAFDD7009C920C /* PatternTracker.cpp */; };
+		5D936F0C1BC6A6990046ACD4 /* FrameTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D601BAAFDD7009C920C /* FrameTracker.cpp */; };
+		5D936F0E1BC6A6990046ACD4 /* TrackerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D6A1BAAFDD7009C920C /* TrackerEvent.cpp */; };
+		5D936F0F1BC6A6990046ACD4 /* Frame2FrameTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D5F1BAAFDD7009C920C /* Frame2FrameTracker.cpp */; };
+		5D936F101BC6A6990046ACD4 /* OfflineTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D621BAAFDD7009C920C /* OfflineTracker.cpp */; };
+		5D936F121BC6A6990046ACD4 /* PlaneTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D651BAAFDD7009C920C /* PlaneTracker.cpp */; };
+		5D936F151BC6A6990046ACD4 /* SLAMTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D501BAAFDC7009C920C /* SLAMTracker.h */; };
+		5D936F161BC6A6990046ACD4 /* PlaneTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4C1BAAFDC7009C920C /* PlaneTracker.h */; };
+		5D936F171BC6A6990046ACD4 /* PointPaths.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4D1BAAFDC7009C920C /* PointPaths.h */; };
+		5D936F181BC6A6990046ACD4 /* Frame2FrameTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D451BAAFDC7009C920C /* Frame2FrameTracker.h */; };
+		5D936F191BC6A6990046ACD4 /* TrackerEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D511BAAFDC7009C920C /* TrackerEvent.h */; };
+		5D936F1B1BC6A6990046ACD4 /* OfflinePose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D481BAAFDC7009C920C /* OfflinePose.h */; };
+		5D936F1C1BC6A6990046ACD4 /* FrameTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D461BAAFDC7009C920C /* FrameTracker.h */; };
+		5D936F1D1BC6A6990046ACD4 /* OfflineTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D491BAAFDC7009C920C /* OfflineTracker.h */; };
+		5D936F1E1BC6A6990046ACD4 /* SLAMPlaneTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4F1BAAFDC7009C920C /* SLAMPlaneTracker.h */; };
+		5D936F1F1BC6A6990046ACD4 /* PatternTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4A1BAAFDC7009C920C /* PatternTracker.h */; };
+		5D936F201BC6A6990046ACD4 /* Offline.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D471BAAFDC7009C920C /* Offline.h */; };
+		5D936F211BC6A6990046ACD4 /* PlanarRectangleTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4B1BAAFDC7009C920C /* PlanarRectangleTracker.h */; };
+		5DE84D521BAAFDC7009C920C /* Frame2FrameTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D451BAAFDC7009C920C /* Frame2FrameTracker.h */; };
+		5DE84D531BAAFDC7009C920C /* FrameTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D461BAAFDC7009C920C /* FrameTracker.h */; };
+		5DE84D541BAAFDC7009C920C /* Offline.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D471BAAFDC7009C920C /* Offline.h */; };
+		5DE84D551BAAFDC7009C920C /* OfflinePose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D481BAAFDC7009C920C /* OfflinePose.h */; };
+		5DE84D561BAAFDC7009C920C /* OfflineTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D491BAAFDC7009C920C /* OfflineTracker.h */; };
+		5DE84D571BAAFDC7009C920C /* PatternTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4A1BAAFDC7009C920C /* PatternTracker.h */; };
+		5DE84D581BAAFDC7009C920C /* PlanarRectangleTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4B1BAAFDC7009C920C /* PlanarRectangleTracker.h */; };
+		5DE84D591BAAFDC7009C920C /* PlaneTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4C1BAAFDC7009C920C /* PlaneTracker.h */; };
+		5DE84D5A1BAAFDC7009C920C /* PointPaths.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4D1BAAFDC7009C920C /* PointPaths.h */; };
+		5DE84D5C1BAAFDC7009C920C /* SLAMPlaneTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4F1BAAFDC7009C920C /* SLAMPlaneTracker.h */; };
+		5DE84D5D1BAAFDC7009C920C /* SLAMTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D501BAAFDC7009C920C /* SLAMTracker.h */; };
+		5DE84D5E1BAAFDC7009C920C /* TrackerEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D511BAAFDC7009C920C /* TrackerEvent.h */; };
+		5DE84D6B1BAAFDD7009C920C /* Frame2FrameTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D5F1BAAFDD7009C920C /* Frame2FrameTracker.cpp */; };
+		5DE84D6C1BAAFDD7009C920C /* FrameTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D601BAAFDD7009C920C /* FrameTracker.cpp */; };
+		5DE84D6E1BAAFDD7009C920C /* OfflineTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D621BAAFDD7009C920C /* OfflineTracker.cpp */; };
+		5DE84D6F1BAAFDD7009C920C /* PatternTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D631BAAFDD7009C920C /* PatternTracker.cpp */; };
+		5DE84D701BAAFDD7009C920C /* PlanarRectangleTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D641BAAFDD7009C920C /* PlanarRectangleTracker.cpp */; };
+		5DE84D711BAAFDD7009C920C /* PlaneTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D651BAAFDD7009C920C /* PlaneTracker.cpp */; };
+		5DE84D721BAAFDD7009C920C /* PointPaths.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D661BAAFDD7009C920C /* PointPaths.cpp */; };
+		5DE84D741BAAFDD7009C920C /* SLAMPlaneTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D681BAAFDD7009C920C /* SLAMPlaneTracker.cpp */; };
+		5DE84D751BAAFDD7009C920C /* SLAMTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D691BAAFDD7009C920C /* SLAMTracker.cpp */; };
+		5DE84D761BAAFDD7009C920C /* TrackerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D6A1BAAFDD7009C920C /* TrackerEvent.cpp */; };
+		C041EEF91DABFC9000BF5D76 /* PlanarRectangleTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D641BAAFDD7009C920C /* PlanarRectangleTracker.cpp */; };
+		C041EEFA1DABFC9000BF5D76 /* SLAMTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D691BAAFDD7009C920C /* SLAMTracker.cpp */; };
+		C041EEFB1DABFC9000BF5D76 /* PointPaths.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D661BAAFDD7009C920C /* PointPaths.cpp */; };
+		C041EEFC1DABFC9000BF5D76 /* SLAMPlaneTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D681BAAFDD7009C920C /* SLAMPlaneTracker.cpp */; };
+		C041EEFD1DABFC9000BF5D76 /* PatternTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D631BAAFDD7009C920C /* PatternTracker.cpp */; };
+		C041EEFE1DABFC9000BF5D76 /* FrameTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D601BAAFDD7009C920C /* FrameTracker.cpp */; };
+		C041EEFF1DABFC9000BF5D76 /* TrackerEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D6A1BAAFDD7009C920C /* TrackerEvent.cpp */; };
+		C041EF001DABFC9000BF5D76 /* Frame2FrameTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D5F1BAAFDD7009C920C /* Frame2FrameTracker.cpp */; };
+		C041EF011DABFC9000BF5D76 /* OfflineTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D621BAAFDD7009C920C /* OfflineTracker.cpp */; };
+		C041EF031DABFC9000BF5D76 /* PlaneTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DE84D651BAAFDD7009C920C /* PlaneTracker.cpp */; };
+		C041EF061DABFC9000BF5D76 /* SLAMTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D501BAAFDC7009C920C /* SLAMTracker.h */; };
+		C041EF071DABFC9000BF5D76 /* PlaneTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4C1BAAFDC7009C920C /* PlaneTracker.h */; };
+		C041EF081DABFC9000BF5D76 /* PointPaths.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4D1BAAFDC7009C920C /* PointPaths.h */; };
+		C041EF091DABFC9000BF5D76 /* Frame2FrameTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D451BAAFDC7009C920C /* Frame2FrameTracker.h */; };
+		C041EF0A1DABFC9000BF5D76 /* TrackerEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D511BAAFDC7009C920C /* TrackerEvent.h */; };
+		C041EF0B1DABFC9000BF5D76 /* OfflinePose.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D481BAAFDC7009C920C /* OfflinePose.h */; };
+		C041EF0C1DABFC9000BF5D76 /* FrameTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D461BAAFDC7009C920C /* FrameTracker.h */; };
+		C041EF0D1DABFC9000BF5D76 /* OfflineTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D491BAAFDC7009C920C /* OfflineTracker.h */; };
+		C041EF0E1DABFC9000BF5D76 /* SLAMPlaneTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4F1BAAFDC7009C920C /* SLAMPlaneTracker.h */; };
+		C041EF0F1DABFC9000BF5D76 /* PatternTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4A1BAAFDC7009C920C /* PatternTracker.h */; };
+		C041EF101DABFC9000BF5D76 /* Offline.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D471BAAFDC7009C920C /* Offline.h */; };
+		C041EF111DABFC9000BF5D76 /* PlanarRectangleTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DE84D4B1BAAFDC7009C920C /* PlanarRectangleTracker.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D3FC5351D8BE5C000AF4130 /* libOceanTrackingOfflineD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingOfflineD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D936F251BC6A6990046ACD4 /* libOceanTrackingOfflineD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingOfflineD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DE84D361BAAFC32009C920C /* libOceanTrackingOfflineD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingOfflineD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DE84D451BAAFDC7009C920C /* Frame2FrameTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Frame2FrameTracker.h; path = ../../../../../../impl/ocean/tracking/offline/Frame2FrameTracker.h; sourceTree = "<group>"; };
+		5DE84D461BAAFDC7009C920C /* FrameTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameTracker.h; path = ../../../../../../impl/ocean/tracking/offline/FrameTracker.h; sourceTree = "<group>"; };
+		5DE84D471BAAFDC7009C920C /* Offline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Offline.h; path = ../../../../../../impl/ocean/tracking/offline/Offline.h; sourceTree = "<group>"; };
+		5DE84D481BAAFDC7009C920C /* OfflinePose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OfflinePose.h; path = ../../../../../../impl/ocean/tracking/offline/OfflinePose.h; sourceTree = "<group>"; };
+		5DE84D491BAAFDC7009C920C /* OfflineTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OfflineTracker.h; path = ../../../../../../impl/ocean/tracking/offline/OfflineTracker.h; sourceTree = "<group>"; };
+		5DE84D4A1BAAFDC7009C920C /* PatternTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PatternTracker.h; path = ../../../../../../impl/ocean/tracking/offline/PatternTracker.h; sourceTree = "<group>"; };
+		5DE84D4B1BAAFDC7009C920C /* PlanarRectangleTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlanarRectangleTracker.h; path = ../../../../../../impl/ocean/tracking/offline/PlanarRectangleTracker.h; sourceTree = "<group>"; };
+		5DE84D4C1BAAFDC7009C920C /* PlaneTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlaneTracker.h; path = ../../../../../../impl/ocean/tracking/offline/PlaneTracker.h; sourceTree = "<group>"; };
+		5DE84D4D1BAAFDC7009C920C /* PointPaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PointPaths.h; path = ../../../../../../impl/ocean/tracking/offline/PointPaths.h; sourceTree = "<group>"; };
+		5DE84D4F1BAAFDC7009C920C /* SLAMPlaneTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLAMPlaneTracker.h; path = ../../../../../../impl/ocean/tracking/offline/SLAMPlaneTracker.h; sourceTree = "<group>"; };
+		5DE84D501BAAFDC7009C920C /* SLAMTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SLAMTracker.h; path = ../../../../../../impl/ocean/tracking/offline/SLAMTracker.h; sourceTree = "<group>"; };
+		5DE84D511BAAFDC7009C920C /* TrackerEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrackerEvent.h; path = ../../../../../../impl/ocean/tracking/offline/TrackerEvent.h; sourceTree = "<group>"; };
+		5DE84D5F1BAAFDD7009C920C /* Frame2FrameTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Frame2FrameTracker.cpp; path = ../../../../../../impl/ocean/tracking/offline/Frame2FrameTracker.cpp; sourceTree = "<group>"; };
+		5DE84D601BAAFDD7009C920C /* FrameTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameTracker.cpp; path = ../../../../../../impl/ocean/tracking/offline/FrameTracker.cpp; sourceTree = "<group>"; };
+		5DE84D621BAAFDD7009C920C /* OfflineTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OfflineTracker.cpp; path = ../../../../../../impl/ocean/tracking/offline/OfflineTracker.cpp; sourceTree = "<group>"; };
+		5DE84D631BAAFDD7009C920C /* PatternTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PatternTracker.cpp; path = ../../../../../../impl/ocean/tracking/offline/PatternTracker.cpp; sourceTree = "<group>"; };
+		5DE84D641BAAFDD7009C920C /* PlanarRectangleTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlanarRectangleTracker.cpp; path = ../../../../../../impl/ocean/tracking/offline/PlanarRectangleTracker.cpp; sourceTree = "<group>"; };
+		5DE84D651BAAFDD7009C920C /* PlaneTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlaneTracker.cpp; path = ../../../../../../impl/ocean/tracking/offline/PlaneTracker.cpp; sourceTree = "<group>"; };
+		5DE84D661BAAFDD7009C920C /* PointPaths.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PointPaths.cpp; path = ../../../../../../impl/ocean/tracking/offline/PointPaths.cpp; sourceTree = "<group>"; };
+		5DE84D681BAAFDD7009C920C /* SLAMPlaneTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SLAMPlaneTracker.cpp; path = ../../../../../../impl/ocean/tracking/offline/SLAMPlaneTracker.cpp; sourceTree = "<group>"; };
+		5DE84D691BAAFDD7009C920C /* SLAMTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SLAMTracker.cpp; path = ../../../../../../impl/ocean/tracking/offline/SLAMTracker.cpp; sourceTree = "<group>"; };
+		5DE84D6A1BAAFDD7009C920C /* TrackerEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TrackerEvent.cpp; path = ../../../../../../impl/ocean/tracking/offline/TrackerEvent.cpp; sourceTree = "<group>"; };
+		C041EF161DABFC9000BF5D76 /* libOceanTrackingOfflineD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTrackingOfflineD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D3FC5241D8BE5C000AF4130 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936F131BC6A6990046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DE84D331BAAFC32009C920C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EF041DABFC9000BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D936F041BC6A6720046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DE84D451BAAFDC7009C920C /* Frame2FrameTracker.h */,
+				5DE84D461BAAFDC7009C920C /* FrameTracker.h */,
+				5DE84D471BAAFDC7009C920C /* Offline.h */,
+				5DE84D481BAAFDC7009C920C /* OfflinePose.h */,
+				5DE84D491BAAFDC7009C920C /* OfflineTracker.h */,
+				5DE84D4A1BAAFDC7009C920C /* PatternTracker.h */,
+				5DE84D4B1BAAFDC7009C920C /* PlanarRectangleTracker.h */,
+				5DE84D4C1BAAFDC7009C920C /* PlaneTracker.h */,
+				5DE84D4D1BAAFDC7009C920C /* PointPaths.h */,
+				5DE84D4F1BAAFDC7009C920C /* SLAMPlaneTracker.h */,
+				5DE84D501BAAFDC7009C920C /* SLAMTracker.h */,
+				5DE84D511BAAFDC7009C920C /* TrackerEvent.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DE84D2D1BAAFC32009C920C = {
+			isa = PBXGroup;
+			children = (
+				5D936F041BC6A6720046ACD4 /* Header Files */,
+				5DE84D441BAAFDB3009C920C /* Source Files */,
+				5DE84D371BAAFC32009C920C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DE84D371BAAFC32009C920C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DE84D361BAAFC32009C920C /* libOceanTrackingOfflineD.a */,
+				5D936F251BC6A6990046ACD4 /* libOceanTrackingOfflineD.dylib */,
+				5D3FC5351D8BE5C000AF4130 /* libOceanTrackingOfflineD.a */,
+				C041EF161DABFC9000BF5D76 /* libOceanTrackingOfflineD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DE84D441BAAFDB3009C920C /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DE84D5F1BAAFDD7009C920C /* Frame2FrameTracker.cpp */,
+				5DE84D601BAAFDD7009C920C /* FrameTracker.cpp */,
+				5DE84D621BAAFDD7009C920C /* OfflineTracker.cpp */,
+				5DE84D631BAAFDD7009C920C /* PatternTracker.cpp */,
+				5DE84D641BAAFDD7009C920C /* PlanarRectangleTracker.cpp */,
+				5DE84D651BAAFDD7009C920C /* PlaneTracker.cpp */,
+				5DE84D661BAAFDD7009C920C /* PointPaths.cpp */,
+				5DE84D681BAAFDD7009C920C /* SLAMPlaneTracker.cpp */,
+				5DE84D691BAAFDD7009C920C /* SLAMTracker.cpp */,
+				5DE84D6A1BAAFDD7009C920C /* TrackerEvent.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D3FC5251D8BE5C000AF4130 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D3FC5261D8BE5C000AF4130 /* SLAMTracker.h in Headers */,
+				5D3FC5271D8BE5C000AF4130 /* PlaneTracker.h in Headers */,
+				5D3FC5281D8BE5C000AF4130 /* PointPaths.h in Headers */,
+				5D3FC5291D8BE5C000AF4130 /* Frame2FrameTracker.h in Headers */,
+				5D3FC52A1D8BE5C000AF4130 /* TrackerEvent.h in Headers */,
+				5D3FC52B1D8BE5C000AF4130 /* OfflinePose.h in Headers */,
+				5D3FC52C1D8BE5C000AF4130 /* FrameTracker.h in Headers */,
+				5D3FC52D1D8BE5C000AF4130 /* OfflineTracker.h in Headers */,
+				5D3FC52E1D8BE5C000AF4130 /* SLAMPlaneTracker.h in Headers */,
+				5D3FC52F1D8BE5C000AF4130 /* PatternTracker.h in Headers */,
+				5D3FC5301D8BE5C000AF4130 /* Offline.h in Headers */,
+				5D3FC5311D8BE5C000AF4130 /* PlanarRectangleTracker.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936F141BC6A6990046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936F151BC6A6990046ACD4 /* SLAMTracker.h in Headers */,
+				5D936F161BC6A6990046ACD4 /* PlaneTracker.h in Headers */,
+				5D936F171BC6A6990046ACD4 /* PointPaths.h in Headers */,
+				5D936F181BC6A6990046ACD4 /* Frame2FrameTracker.h in Headers */,
+				5D936F191BC6A6990046ACD4 /* TrackerEvent.h in Headers */,
+				5D936F1B1BC6A6990046ACD4 /* OfflinePose.h in Headers */,
+				5D936F1C1BC6A6990046ACD4 /* FrameTracker.h in Headers */,
+				5D936F1D1BC6A6990046ACD4 /* OfflineTracker.h in Headers */,
+				5D936F1E1BC6A6990046ACD4 /* SLAMPlaneTracker.h in Headers */,
+				5D936F1F1BC6A6990046ACD4 /* PatternTracker.h in Headers */,
+				5D936F201BC6A6990046ACD4 /* Offline.h in Headers */,
+				5D936F211BC6A6990046ACD4 /* PlanarRectangleTracker.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DE84D341BAAFC32009C920C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DE84D5D1BAAFDC7009C920C /* SLAMTracker.h in Headers */,
+				5DE84D591BAAFDC7009C920C /* PlaneTracker.h in Headers */,
+				5DE84D5A1BAAFDC7009C920C /* PointPaths.h in Headers */,
+				5DE84D521BAAFDC7009C920C /* Frame2FrameTracker.h in Headers */,
+				5DE84D5E1BAAFDC7009C920C /* TrackerEvent.h in Headers */,
+				5DE84D551BAAFDC7009C920C /* OfflinePose.h in Headers */,
+				5DE84D531BAAFDC7009C920C /* FrameTracker.h in Headers */,
+				5DE84D561BAAFDC7009C920C /* OfflineTracker.h in Headers */,
+				5DE84D5C1BAAFDC7009C920C /* SLAMPlaneTracker.h in Headers */,
+				5DE84D571BAAFDC7009C920C /* PatternTracker.h in Headers */,
+				5DE84D541BAAFDC7009C920C /* Offline.h in Headers */,
+				5DE84D581BAAFDC7009C920C /* PlanarRectangleTracker.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EF051DABFC9000BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EF061DABFC9000BF5D76 /* SLAMTracker.h in Headers */,
+				C041EF071DABFC9000BF5D76 /* PlaneTracker.h in Headers */,
+				C041EF081DABFC9000BF5D76 /* PointPaths.h in Headers */,
+				C041EF091DABFC9000BF5D76 /* Frame2FrameTracker.h in Headers */,
+				C041EF0A1DABFC9000BF5D76 /* TrackerEvent.h in Headers */,
+				C041EF0B1DABFC9000BF5D76 /* OfflinePose.h in Headers */,
+				C041EF0C1DABFC9000BF5D76 /* FrameTracker.h in Headers */,
+				C041EF0D1DABFC9000BF5D76 /* OfflineTracker.h in Headers */,
+				C041EF0E1DABFC9000BF5D76 /* SLAMPlaneTracker.h in Headers */,
+				C041EF0F1DABFC9000BF5D76 /* PatternTracker.h in Headers */,
+				C041EF101DABFC9000BF5D76 /* Offline.h in Headers */,
+				C041EF111DABFC9000BF5D76 /* PlanarRectangleTracker.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D3FC5171D8BE5C000AF4130 /* trackingoffline arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D3FC5321D8BE5C000AF4130 /* Build configuration list for PBXNativeTarget "trackingoffline arm64 (Static)" */;
+			buildPhases = (
+				5D3FC5181D8BE5C000AF4130 /* Sources */,
+				5D3FC5241D8BE5C000AF4130 /* Frameworks */,
+				5D3FC5251D8BE5C000AF4130 /* Headers */,
+				5D837F5B1D8F111600939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingoffline arm64 (Static)";
+			productName = trackingoffline;
+			productReference = 5D3FC5351D8BE5C000AF4130 /* libOceanTrackingOfflineD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D936F051BC6A6990046ACD4 /* trackingoffline x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D936F221BC6A6990046ACD4 /* Build configuration list for PBXNativeTarget "trackingoffline x64 (Shared)" */;
+			buildPhases = (
+				5D936F061BC6A6990046ACD4 /* Sources */,
+				5D936F131BC6A6990046ACD4 /* Frameworks */,
+				5D936F141BC6A6990046ACD4 /* Headers */,
+				C041EF171DABFD5800BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingoffline x64 (Shared)";
+			productName = trackingoffline;
+			productReference = 5D936F251BC6A6990046ACD4 /* libOceanTrackingOfflineD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DE84D351BAAFC32009C920C /* trackingoffline x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DE84D411BAAFC32009C920C /* Build configuration list for PBXNativeTarget "trackingoffline x64 (Static)" */;
+			buildPhases = (
+				5DE84D321BAAFC32009C920C /* Sources */,
+				5DE84D331BAAFC32009C920C /* Frameworks */,
+				5DE84D341BAAFC32009C920C /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingoffline x64 (Static)";
+			productName = trackingoffline;
+			productReference = 5DE84D361BAAFC32009C920C /* libOceanTrackingOfflineD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EEF71DABFC9000BF5D76 /* trackingoffline arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EF131DABFC9000BF5D76 /* Build configuration list for PBXNativeTarget "trackingoffline arm64 (Shared)" */;
+			buildPhases = (
+				C041EEF81DABFC9000BF5D76 /* Sources */,
+				C041EF041DABFC9000BF5D76 /* Frameworks */,
+				C041EF051DABFC9000BF5D76 /* Headers */,
+				C041EF121DABFC9000BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "trackingoffline arm64 (Shared)";
+			productName = trackingoffline;
+			productReference = C041EF161DABFC9000BF5D76 /* libOceanTrackingOfflineD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DE84D2E1BAAFC32009C920C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DE84D351BAAFC32009C920C = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DE84D311BAAFC32009C920C /* Build configuration list for PBXProject "trackingoffline" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DE84D2D1BAAFC32009C920C;
+			productRefGroup = 5DE84D371BAAFC32009C920C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DE84D351BAAFC32009C920C /* trackingoffline x64 (Static) */,
+				5D936F051BC6A6990046ACD4 /* trackingoffline x64 (Shared) */,
+				5D3FC5171D8BE5C000AF4130 /* trackingoffline arm64 (Static) */,
+				C041EEF71DABFC9000BF5D76 /* trackingoffline arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F5B1D8F111600939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EF121DABFC9000BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EF171DABFD5800BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D3FC5181D8BE5C000AF4130 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D3FC5191D8BE5C000AF4130 /* PlanarRectangleTracker.cpp in Sources */,
+				5D3FC51A1D8BE5C000AF4130 /* SLAMTracker.cpp in Sources */,
+				5D3FC51B1D8BE5C000AF4130 /* PointPaths.cpp in Sources */,
+				5D3FC51C1D8BE5C000AF4130 /* SLAMPlaneTracker.cpp in Sources */,
+				5D3FC51D1D8BE5C000AF4130 /* PatternTracker.cpp in Sources */,
+				5D3FC51E1D8BE5C000AF4130 /* FrameTracker.cpp in Sources */,
+				5D3FC51F1D8BE5C000AF4130 /* TrackerEvent.cpp in Sources */,
+				5D3FC5201D8BE5C000AF4130 /* Frame2FrameTracker.cpp in Sources */,
+				5D3FC5211D8BE5C000AF4130 /* OfflineTracker.cpp in Sources */,
+				5D3FC5231D8BE5C000AF4130 /* PlaneTracker.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936F061BC6A6990046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D936F071BC6A6990046ACD4 /* PlanarRectangleTracker.cpp in Sources */,
+				5D936F081BC6A6990046ACD4 /* SLAMTracker.cpp in Sources */,
+				5D936F091BC6A6990046ACD4 /* PointPaths.cpp in Sources */,
+				5D936F0A1BC6A6990046ACD4 /* SLAMPlaneTracker.cpp in Sources */,
+				5D936F0B1BC6A6990046ACD4 /* PatternTracker.cpp in Sources */,
+				5D936F0C1BC6A6990046ACD4 /* FrameTracker.cpp in Sources */,
+				5D936F0E1BC6A6990046ACD4 /* TrackerEvent.cpp in Sources */,
+				5D936F0F1BC6A6990046ACD4 /* Frame2FrameTracker.cpp in Sources */,
+				5D936F101BC6A6990046ACD4 /* OfflineTracker.cpp in Sources */,
+				5D936F121BC6A6990046ACD4 /* PlaneTracker.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DE84D321BAAFC32009C920C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DE84D701BAAFDD7009C920C /* PlanarRectangleTracker.cpp in Sources */,
+				5DE84D751BAAFDD7009C920C /* SLAMTracker.cpp in Sources */,
+				5DE84D721BAAFDD7009C920C /* PointPaths.cpp in Sources */,
+				5DE84D741BAAFDD7009C920C /* SLAMPlaneTracker.cpp in Sources */,
+				5DE84D6F1BAAFDD7009C920C /* PatternTracker.cpp in Sources */,
+				5DE84D6C1BAAFDD7009C920C /* FrameTracker.cpp in Sources */,
+				5DE84D761BAAFDD7009C920C /* TrackerEvent.cpp in Sources */,
+				5DE84D6B1BAAFDD7009C920C /* Frame2FrameTracker.cpp in Sources */,
+				5DE84D6E1BAAFDD7009C920C /* OfflineTracker.cpp in Sources */,
+				5DE84D711BAAFDD7009C920C /* PlaneTracker.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EEF81DABFC9000BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EEF91DABFC9000BF5D76 /* PlanarRectangleTracker.cpp in Sources */,
+				C041EEFA1DABFC9000BF5D76 /* SLAMTracker.cpp in Sources */,
+				C041EEFB1DABFC9000BF5D76 /* PointPaths.cpp in Sources */,
+				C041EEFC1DABFC9000BF5D76 /* SLAMPlaneTracker.cpp in Sources */,
+				C041EEFD1DABFC9000BF5D76 /* PatternTracker.cpp in Sources */,
+				C041EEFE1DABFC9000BF5D76 /* FrameTracker.cpp in Sources */,
+				C041EEFF1DABFC9000BF5D76 /* TrackerEvent.cpp in Sources */,
+				C041EF001DABFC9000BF5D76 /* Frame2FrameTracker.cpp in Sources */,
+				C041EF011DABFC9000BF5D76 /* OfflineTracker.cpp in Sources */,
+				C041EF031DABFC9000BF5D76 /* PlaneTracker.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D3FC5331D8BE5C000AF4130 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingOfflineD;
+				PRODUCT_NAME = OceanTrackingOfflineD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D3FC5341D8BE5C000AF4130 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingOffline;
+				PRODUCT_NAME = OceanTrackingOffline;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D936F231BC6A6990046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingoffline/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingoffline/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanTrackingD",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingOfflineD;
+				PRODUCT_NAME = OceanTrackingOfflineD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D936F241BC6A6990046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingoffline/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingoffline/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanTracking",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingOffline;
+				PRODUCT_NAME = OceanTrackingOffline;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DE84D3F1BAAFC32009C920C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DE84D401BAAFC32009C920C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DE84D421BAAFC32009C920C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingoffline/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingoffline/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingOfflineD;
+				PRODUCT_NAME = OceanTrackingOfflineD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DE84D431BAAFC32009C920C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/trackingoffline/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/trackingoffline/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTrackingOffline;
+				PRODUCT_NAME = OceanTrackingOffline;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EF141DABFC9000BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanTrackingD",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingOfflineD;
+				PRODUCT_NAME = OceanTrackingOfflineD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EF151DABFC9000BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanTracking",
+				);
+				PRODUCT_MODULE_NAME = OceanTrackingOffline;
+				PRODUCT_NAME = OceanTrackingOffline;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/trackingoffline/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D3FC5321D8BE5C000AF4130 /* Build configuration list for PBXNativeTarget "trackingoffline arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D3FC5331D8BE5C000AF4130 /* Debug */,
+				5D3FC5341D8BE5C000AF4130 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D936F221BC6A6990046ACD4 /* Build configuration list for PBXNativeTarget "trackingoffline x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936F231BC6A6990046ACD4 /* Debug */,
+				5D936F241BC6A6990046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DE84D311BAAFC32009C920C /* Build configuration list for PBXProject "trackingoffline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DE84D3F1BAAFC32009C920C /* Debug */,
+				5DE84D401BAAFC32009C920C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DE84D411BAAFC32009C920C /* Build configuration list for PBXNativeTarget "trackingoffline x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DE84D421BAAFC32009C920C /* Debug */,
+				5DE84D431BAAFC32009C920C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EF131DABFC9000BF5D76 /* Build configuration list for PBXNativeTarget "trackingoffline arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EF141DABFC9000BF5D76 /* Debug */,
+				C041EF151DABFC9000BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DE84D2E1BAAFC32009C920C /* Project object */;
+}

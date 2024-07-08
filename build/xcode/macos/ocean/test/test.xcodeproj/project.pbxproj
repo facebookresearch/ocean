@@ -1,0 +1,940 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		505F06D52C17B9D80057F3F3 /* Validation.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06CF2C17B9D80057F3F3 /* Validation.h */; };
+		505F06D62C17B9D80057F3F3 /* Validation.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06CF2C17B9D80057F3F3 /* Validation.h */; };
+		505F06D72C17B9D80057F3F3 /* Validation.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06CF2C17B9D80057F3F3 /* Validation.h */; };
+		505F06D82C17B9D80057F3F3 /* Validation.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06CF2C17B9D80057F3F3 /* Validation.h */; };
+		505F06D92C17B9D80057F3F3 /* ValidationPrecision.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D02C17B9D80057F3F3 /* ValidationPrecision.h */; };
+		505F06DA2C17B9D80057F3F3 /* ValidationPrecision.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D02C17B9D80057F3F3 /* ValidationPrecision.h */; };
+		505F06DB2C17B9D80057F3F3 /* ValidationPrecision.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D02C17B9D80057F3F3 /* ValidationPrecision.h */; };
+		505F06DC2C17B9D80057F3F3 /* ValidationPrecision.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D02C17B9D80057F3F3 /* ValidationPrecision.h */; };
+		505F06DD2C17B9D80057F3F3 /* TestDataCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D12C17B9D80057F3F3 /* TestDataCollection.h */; };
+		505F06DE2C17B9D80057F3F3 /* TestDataCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D12C17B9D80057F3F3 /* TestDataCollection.h */; };
+		505F06DF2C17B9D80057F3F3 /* TestDataCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D12C17B9D80057F3F3 /* TestDataCollection.h */; };
+		505F06E02C17B9D80057F3F3 /* TestDataCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D12C17B9D80057F3F3 /* TestDataCollection.h */; };
+		505F06E12C17B9D80057F3F3 /* Test.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D22C17B9D80057F3F3 /* Test.h */; };
+		505F06E22C17B9D80057F3F3 /* Test.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D22C17B9D80057F3F3 /* Test.h */; };
+		505F06E32C17B9D80057F3F3 /* Test.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D22C17B9D80057F3F3 /* Test.h */; };
+		505F06E42C17B9D80057F3F3 /* Test.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D22C17B9D80057F3F3 /* Test.h */; };
+		505F06E52C17B9D80057F3F3 /* TestDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D32C17B9D80057F3F3 /* TestDataManager.h */; };
+		505F06E62C17B9D80057F3F3 /* TestDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D32C17B9D80057F3F3 /* TestDataManager.h */; };
+		505F06E72C17B9D80057F3F3 /* TestDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D32C17B9D80057F3F3 /* TestDataManager.h */; };
+		505F06E82C17B9D80057F3F3 /* TestDataManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D32C17B9D80057F3F3 /* TestDataManager.h */; };
+		505F06E92C17B9D80057F3F3 /* TestData.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D42C17B9D80057F3F3 /* TestData.h */; };
+		505F06EA2C17B9D80057F3F3 /* TestData.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D42C17B9D80057F3F3 /* TestData.h */; };
+		505F06EB2C17B9D80057F3F3 /* TestData.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D42C17B9D80057F3F3 /* TestData.h */; };
+		505F06EC2C17B9D80057F3F3 /* TestData.h in Headers */ = {isa = PBXBuildFile; fileRef = 505F06D42C17B9D80057F3F3 /* TestData.h */; };
+		505F06EF2C17B9F00057F3F3 /* TestData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 505F06ED2C17B9F00057F3F3 /* TestData.cpp */; };
+		505F06F02C17B9F00057F3F3 /* TestData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 505F06ED2C17B9F00057F3F3 /* TestData.cpp */; };
+		505F06F12C17B9F00057F3F3 /* TestData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 505F06ED2C17B9F00057F3F3 /* TestData.cpp */; };
+		505F06F22C17B9F00057F3F3 /* TestData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 505F06ED2C17B9F00057F3F3 /* TestData.cpp */; };
+		505F06F32C17B9F00057F3F3 /* TestDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 505F06EE2C17B9F00057F3F3 /* TestDataManager.cpp */; };
+		505F06F42C17B9F00057F3F3 /* TestDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 505F06EE2C17B9F00057F3F3 /* TestDataManager.cpp */; };
+		505F06F52C17B9F00057F3F3 /* TestDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 505F06EE2C17B9F00057F3F3 /* TestDataManager.cpp */; };
+		505F06F62C17B9F00057F3F3 /* TestDataManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 505F06EE2C17B9F00057F3F3 /* TestDataManager.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		505F06CF2C17B9D80057F3F3 /* Validation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Validation.h; path = ../../../../../impl/ocean/test/Validation.h; sourceTree = "<group>"; };
+		505F06D02C17B9D80057F3F3 /* ValidationPrecision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ValidationPrecision.h; path = ../../../../../impl/ocean/test/ValidationPrecision.h; sourceTree = "<group>"; };
+		505F06D12C17B9D80057F3F3 /* TestDataCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDataCollection.h; path = ../../../../../impl/ocean/test/TestDataCollection.h; sourceTree = "<group>"; };
+		505F06D22C17B9D80057F3F3 /* Test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Test.h; path = ../../../../../impl/ocean/test/Test.h; sourceTree = "<group>"; };
+		505F06D32C17B9D80057F3F3 /* TestDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDataManager.h; path = ../../../../../impl/ocean/test/TestDataManager.h; sourceTree = "<group>"; };
+		505F06D42C17B9D80057F3F3 /* TestData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestData.h; path = ../../../../../impl/ocean/test/TestData.h; sourceTree = "<group>"; };
+		505F06ED2C17B9F00057F3F3 /* TestData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestData.cpp; path = ../../../../../impl/ocean/test/TestData.cpp; sourceTree = "<group>"; };
+		505F06EE2C17B9F00057F3F3 /* TestDataManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestDataManager.cpp; path = ../../../../../impl/ocean/test/TestDataManager.cpp; sourceTree = "<group>"; };
+		5D188D0F1B90C39A00FA7DD7 /* libOceanTestD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D936FDC1BC6C8620046ACD4 /* libOceanTestD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DF4B8A91D941D5C00284665 /* libOceanTestD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0E9B0411DACE98D00895C4B /* libOceanTestD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D188D0C1B90C39A00FA7DD7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936FC01BC6C8620046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF4B88B1D941D5C00284665 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0221DACE98D00895C4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D188D061B90C39A00FA7DD7 = {
+			isa = PBXGroup;
+			children = (
+				5D936E881BC555160046ACD4 /* Header Files */,
+				5D188D111B90C39A00FA7DD7 /* Source Files */,
+				5D188D101B90C39A00FA7DD7 /* Products */,
+			);
+			sourceTree = "<group>";
+			usesTabs = 1;
+		};
+		5D188D101B90C39A00FA7DD7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D188D0F1B90C39A00FA7DD7 /* libOceanTestD.a */,
+				5D936FDC1BC6C8620046ACD4 /* libOceanTestD.dylib */,
+				5DF4B8A91D941D5C00284665 /* libOceanTestD.a */,
+				C0E9B0411DACE98D00895C4B /* libOceanTestD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D188D111B90C39A00FA7DD7 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				505F06ED2C17B9F00057F3F3 /* TestData.cpp */,
+				505F06EE2C17B9F00057F3F3 /* TestDataManager.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = SOURCE_ROOT;
+		};
+		5D936E881BC555160046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				505F06D22C17B9D80057F3F3 /* Test.h */,
+				505F06D42C17B9D80057F3F3 /* TestData.h */,
+				505F06D12C17B9D80057F3F3 /* TestDataCollection.h */,
+				505F06D32C17B9D80057F3F3 /* TestDataManager.h */,
+				505F06CF2C17B9D80057F3F3 /* Validation.h */,
+				505F06D02C17B9D80057F3F3 /* ValidationPrecision.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D188D0D1B90C39A00FA7DD7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				505F06E92C17B9D80057F3F3 /* TestData.h in Headers */,
+				505F06E12C17B9D80057F3F3 /* Test.h in Headers */,
+				505F06DD2C17B9D80057F3F3 /* TestDataCollection.h in Headers */,
+				505F06D92C17B9D80057F3F3 /* ValidationPrecision.h in Headers */,
+				505F06E52C17B9D80057F3F3 /* TestDataManager.h in Headers */,
+				505F06D52C17B9D80057F3F3 /* Validation.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936FC11BC6C8620046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				505F06EA2C17B9D80057F3F3 /* TestData.h in Headers */,
+				505F06E22C17B9D80057F3F3 /* Test.h in Headers */,
+				505F06DE2C17B9D80057F3F3 /* TestDataCollection.h in Headers */,
+				505F06DA2C17B9D80057F3F3 /* ValidationPrecision.h in Headers */,
+				505F06E62C17B9D80057F3F3 /* TestDataManager.h in Headers */,
+				505F06D62C17B9D80057F3F3 /* Validation.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF4B88C1D941D5C00284665 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				505F06EB2C17B9D80057F3F3 /* TestData.h in Headers */,
+				505F06E32C17B9D80057F3F3 /* Test.h in Headers */,
+				505F06DF2C17B9D80057F3F3 /* TestDataCollection.h in Headers */,
+				505F06DB2C17B9D80057F3F3 /* ValidationPrecision.h in Headers */,
+				505F06E72C17B9D80057F3F3 /* TestDataManager.h in Headers */,
+				505F06D72C17B9D80057F3F3 /* Validation.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0231DACE98D00895C4B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				505F06EC2C17B9D80057F3F3 /* TestData.h in Headers */,
+				505F06E42C17B9D80057F3F3 /* Test.h in Headers */,
+				505F06E02C17B9D80057F3F3 /* TestDataCollection.h in Headers */,
+				505F06DC2C17B9D80057F3F3 /* ValidationPrecision.h in Headers */,
+				505F06E82C17B9D80057F3F3 /* TestDataManager.h in Headers */,
+				505F06D82C17B9D80057F3F3 /* Validation.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D188D0E1B90C39A00FA7DD7 /* test x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D188D1A1B90C39B00FA7DD7 /* Build configuration list for PBXNativeTarget "test x64 (Static)" */;
+			buildPhases = (
+				5D188D0B1B90C39A00FA7DD7 /* Sources */,
+				5D188D0C1B90C39A00FA7DD7 /* Frameworks */,
+				5D188D0D1B90C39A00FA7DD7 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "test x64 (Static)";
+			productName = test;
+			productReference = 5D188D0F1B90C39A00FA7DD7 /* libOceanTestD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D936FA71BC6C8620046ACD4 /* test x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D936FD91BC6C8620046ACD4 /* Build configuration list for PBXNativeTarget "test x64 (Shared)" */;
+			buildPhases = (
+				5D936FA81BC6C8620046ACD4 /* Sources */,
+				5D936FC01BC6C8620046ACD4 /* Frameworks */,
+				5D936FC11BC6C8620046ACD4 /* Headers */,
+				C0E9B0421DACEA4A00895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "test x64 (Shared)";
+			productName = test;
+			productReference = 5D936FDC1BC6C8620046ACD4 /* libOceanTestD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DF4B8701D941D5C00284665 /* test arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DF4B8A61D941D5C00284665 /* Build configuration list for PBXNativeTarget "test arm64 (Static)" */;
+			buildPhases = (
+				5DF4B8711D941D5C00284665 /* Sources */,
+				5DF4B88B1D941D5C00284665 /* Frameworks */,
+				5DF4B88C1D941D5C00284665 /* Headers */,
+				5DF4B8AA1D941DD600284665 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "test arm64 (Static)";
+			productName = test;
+			productReference = 5DF4B8A91D941D5C00284665 /* libOceanTestD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C0E9B0071DACE98C00895C4B /* test arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0E9B03E1DACE98D00895C4B /* Build configuration list for PBXNativeTarget "test arm64 (Shared)" */;
+			buildPhases = (
+				C0E9B0081DACE98C00895C4B /* Sources */,
+				C0E9B0221DACE98D00895C4B /* Frameworks */,
+				C0E9B0231DACE98D00895C4B /* Headers */,
+				C0E9B03D1DACE98D00895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "test arm64 (Shared)";
+			productName = test;
+			productReference = C0E9B0411DACE98D00895C4B /* libOceanTestD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D188D071B90C39A00FA7DD7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D188D0E1B90C39A00FA7DD7 = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+				};
+			};
+			buildConfigurationList = 5D188D0A1B90C39A00FA7DD7 /* Build configuration list for PBXProject "test" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D188D061B90C39A00FA7DD7;
+			productRefGroup = 5D188D101B90C39A00FA7DD7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D188D0E1B90C39A00FA7DD7 /* test x64 (Static) */,
+				5D936FA71BC6C8620046ACD4 /* test x64 (Shared) */,
+				5DF4B8701D941D5C00284665 /* test arm64 (Static) */,
+				C0E9B0071DACE98C00895C4B /* test arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DF4B8AA1D941DD600284665 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../copy_arm_static.sh \"../../../../../bin/test/lib/\"";
+		};
+		C0E9B03D1DACE98D00895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../copy_arm_shared.sh \"../../../../../bin/test/lib/\"";
+		};
+		C0E9B0421DACEA4A00895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D188D0B1B90C39A00FA7DD7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				505F06EF2C17B9F00057F3F3 /* TestData.cpp in Sources */,
+				505F06F32C17B9F00057F3F3 /* TestDataManager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936FA81BC6C8620046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				505F06F02C17B9F00057F3F3 /* TestData.cpp in Sources */,
+				505F06F42C17B9F00057F3F3 /* TestDataManager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF4B8711D941D5C00284665 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				505F06F12C17B9F00057F3F3 /* TestData.cpp in Sources */,
+				505F06F52C17B9F00057F3F3 /* TestDataManager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0081DACE98C00895C4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				505F06F22C17B9F00057F3F3 /* TestData.cpp in Sources */,
+				505F06F62C17B9F00057F3F3 /* TestDataManager.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D188D181B90C39B00FA7DD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_static_debug;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static_debug;
+				USER_HEADER_SEARCH_PATHS = ../../../../../impl;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		5D188D191B90C39B00FA7DD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_static;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_static;
+				SDKROOT = macosx;
+				SYMROOT = ../../../../../bin/lib/osx_x64_xc9_static;
+				USER_HEADER_SEARCH_PATHS = ../../../../../impl;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+		5D188D1B1B90C39B00FA7DD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_static_debug;
+				PRODUCT_MODULE_NAME = OceanTestD;
+				PRODUCT_NAME = OceanTestD;
+				SYMROOT = ../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D188D1C1B90C39B00FA7DD7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/test/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_static;
+				PRODUCT_MODULE_NAME = OceanTest;
+				PRODUCT_NAME = OceanTest;
+				SYMROOT = ../../../../../bin/test/lib/osx_x64_xc9_static;
+				USER_HEADER_SEARCH_PATHS = "";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D936FDA1BC6C8620046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_shared_debug;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+				);
+				PRODUCT_MODULE_NAME = OceanTestD;
+				PRODUCT_NAME = OceanTestD;
+				SYMROOT = ../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D936FDB1BC6C8620046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../bin/test/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../bin/tmp/impl/ocean/test/osx_x64_xc9_shared;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+				);
+				PRODUCT_MODULE_NAME = OceanTest;
+				PRODUCT_NAME = OceanTest;
+				SYMROOT = ../../../../../bin/test/lib/osx_x64_xc9_shared;
+				USER_HEADER_SEARCH_PATHS = "";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DF4B8A71D941D5C00284665 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				PRODUCT_MODULE_NAME = OceanTestD;
+				PRODUCT_NAME = OceanTestD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DF4B8A81D941D5C00284665 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				MACH_O_TYPE = staticlib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTest;
+				PRODUCT_NAME = OceanTest;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C0E9B03F1DACE98D00895C4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestD;
+				PRODUCT_NAME = OceanTestD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C0E9B0401DACE98D00895C4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTest;
+				PRODUCT_NAME = OceanTest;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../bin/tmp/impl/ocean/test/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D188D0A1B90C39A00FA7DD7 /* Build configuration list for PBXProject "test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D188D181B90C39B00FA7DD7 /* Debug */,
+				5D188D191B90C39B00FA7DD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D188D1A1B90C39B00FA7DD7 /* Build configuration list for PBXNativeTarget "test x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D188D1B1B90C39B00FA7DD7 /* Debug */,
+				5D188D1C1B90C39B00FA7DD7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D936FD91BC6C8620046ACD4 /* Build configuration list for PBXNativeTarget "test x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936FDA1BC6C8620046ACD4 /* Debug */,
+				5D936FDB1BC6C8620046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DF4B8A61D941D5C00284665 /* Build configuration list for PBXNativeTarget "test arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DF4B8A71D941D5C00284665 /* Debug */,
+				5DF4B8A81D941D5C00284665 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0E9B03E1DACE98D00895C4B /* Build configuration list for PBXNativeTarget "test arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0E9B03F1DACE98D00895C4B /* Debug */,
+				C0E9B0401DACE98D00895C4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D188D071B90C39A00FA7DD7 /* Project object */;
+}

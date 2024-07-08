@@ -1,0 +1,27 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+:root {
+  --ifm-color-primary: #1170a4;
+  --ifm-color-primary-dark: #0f6594;
+  --ifm-color-primary-darker: #0e5f8b;
+  --ifm-color-primary-darkest: #0c4e73;
+  --ifm-color-primary-light: #137bb4;
+  --ifm-color-primary-lighter: #1481bd;
+  --ifm-color-primary-lightest: #1692d5;
+  --ifm-code-font-size: 100%;
+}
+
+html[data-theme='dark'] {
+  --ifm-color-primary: #66bce7;
+  --ifm-color-primary-dark: #49afe2;
+  --ifm-color-primary-darker: #3ba9e0;
+  --ifm-color-primary-darkest: #2091c9;
+  --ifm-color-primary-light: #83c9ec;
+  --ifm-color-primary-lighter: #91cfee;
+  --ifm-color-primary-lightest: #bce2f5;
+}

@@ -1,0 +1,970 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D0AFFE11BC2929C0008C798 /* Resource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE01BC2929C0008C798 /* Resource.h */; };
+		5D0AFFE21BC2929C0008C798 /* Resource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE01BC2929C0008C798 /* Resource.h */; };
+		5DCAD45E1BDA371B00577574 /* System.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCAD45D1BDA371B00577574 /* System.h */; };
+		5DCAD45F1BDA372300577574 /* System.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCAD45D1BDA371B00577574 /* System.h */; };
+		5DCD18B61BB54E2700656104 /* Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCD18B41BB54E2700656104 /* Apple.h */; };
+		5DCD18C31BB56ABF00656104 /* Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCD18B41BB54E2700656104 /* Apple.h */; };
+		5DD0BFC81BD1547700ABBC5B /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0BFC71BD1547700ABBC5B /* Utilities.h */; };
+		5DD0BFC91BD1547700ABBC5B /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0BFC71BD1547700ABBC5B /* Utilities.h */; };
+		5DF0BD5C1D901DA400BE5D21 /* Resource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE01BC2929C0008C798 /* Resource.h */; };
+		5DF0BD5F1D901DA400BE5D21 /* Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCD18B41BB54E2700656104 /* Apple.h */; };
+		5DF0BD601D901DA400BE5D21 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0BFC71BD1547700ABBC5B /* Utilities.h */; };
+		5DF0BD621D901DA400BE5D21 /* System.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCAD45D1BDA371B00577574 /* System.h */; };
+		9360F7951FA15BC000BD37D1 /* Utilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233261F9566AA00F8BCAD /* Utilities.mm */; };
+		9360F7961FA15BC000BD37D1 /* Utilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233261F9566AA00F8BCAD /* Utilities.mm */; };
+		9360F7971FA15BC500BD37D1 /* System.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233271F9566AB00F8BCAD /* System.mm */; };
+		9360F7981FA15BC500BD37D1 /* System.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233271F9566AB00F8BCAD /* System.mm */; };
+		9360F7991FA15BD100BD37D1 /* Resource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D2332B1F9566AB00F8BCAD /* Resource.mm */; };
+		9360F79A1FA15BD100BD37D1 /* Resource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D2332B1F9566AB00F8BCAD /* Resource.mm */; };
+		93D2332E1F9566AB00F8BCAD /* Utilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233261F9566AA00F8BCAD /* Utilities.mm */; };
+		93D2332F1F9566AB00F8BCAD /* Utilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233261F9566AA00F8BCAD /* Utilities.mm */; };
+		93D233301F9566AB00F8BCAD /* System.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233271F9566AB00F8BCAD /* System.mm */; };
+		93D233311F9566AB00F8BCAD /* System.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D233271F9566AB00F8BCAD /* System.mm */; };
+		93D233381F9566AB00F8BCAD /* Resource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D2332B1F9566AB00F8BCAD /* Resource.mm */; };
+		93D233391F9566AB00F8BCAD /* Resource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D2332B1F9566AB00F8BCAD /* Resource.mm */; };
+		C041EC9B1DABEF6E00BF5D76 /* Resource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D0AFFE01BC2929C0008C798 /* Resource.h */; };
+		C041EC9E1DABEF6E00BF5D76 /* Apple.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCD18B41BB54E2700656104 /* Apple.h */; };
+		C041EC9F1DABEF6E00BF5D76 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0BFC71BD1547700ABBC5B /* Utilities.h */; };
+		C041ECA11DABEF6E00BF5D76 /* System.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DCAD45D1BDA371B00577574 /* System.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D0AFFE01BC2929C0008C798 /* Resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Resource.h; path = ../../../../../../impl/ocean/platform/apple/Resource.h; sourceTree = "<group>"; };
+		5DCAD45D1BDA371B00577574 /* System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = System.h; path = ../../../../../../impl/ocean/platform/apple/System.h; sourceTree = "<group>"; };
+		5DCD18A11BB54C3B00656104 /* libOceanPlatformAppleD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanPlatformAppleD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DCD18B41BB54E2700656104 /* Apple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Apple.h; path = ../../../../../../impl/ocean/platform/apple/Apple.h; sourceTree = "<group>"; };
+		5DCD18C71BB56ABF00656104 /* libOceanPlatformAppleD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanPlatformAppleD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD0BFC71BD1547700ABBC5B /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../impl/ocean/platform/apple/Utilities.h; sourceTree = "<group>"; };
+		5DF0BD661D901DA400BE5D21 /* libOceanPlatformAppleD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanPlatformAppleD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		93D233261F9566AA00F8BCAD /* Utilities.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Utilities.mm; path = ../../../../../../impl/ocean/platform/apple/Utilities.mm; sourceTree = "<group>"; };
+		93D233271F9566AB00F8BCAD /* System.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = System.mm; path = ../../../../../../impl/ocean/platform/apple/System.mm; sourceTree = "<group>"; };
+		93D2332B1F9566AB00F8BCAD /* Resource.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Resource.mm; path = ../../../../../../impl/ocean/platform/apple/Resource.mm; sourceTree = "<group>"; };
+		C041ECA61DABEF6E00BF5D76 /* libOceanPlatformAppleD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanPlatformAppleD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DCD189E1BB54C3B00656104 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCD18BF1BB56ABF00656104 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF0BD571D901DA400BE5D21 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC961DABEF6E00BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DCD18981BB54C3B00656104 = {
+			isa = PBXGroup;
+			children = (
+				5DCD18B21BB54E1100656104 /* Header Files */,
+				5DCD18AF1BB54D7F00656104 /* Source Files */,
+				5DCD18A21BB54C3B00656104 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DCD18A21BB54C3B00656104 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DCD18A11BB54C3B00656104 /* libOceanPlatformAppleD.a */,
+				5DCD18C71BB56ABF00656104 /* libOceanPlatformAppleD.dylib */,
+				5DF0BD661D901DA400BE5D21 /* libOceanPlatformAppleD.a */,
+				C041ECA61DABEF6E00BF5D76 /* libOceanPlatformAppleD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DCD18AF1BB54D7F00656104 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				93D2332B1F9566AB00F8BCAD /* Resource.mm */,
+				93D233271F9566AB00F8BCAD /* System.mm */,
+				93D233261F9566AA00F8BCAD /* Utilities.mm */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DCD18B21BB54E1100656104 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DCD18B41BB54E2700656104 /* Apple.h */,
+				5D0AFFE01BC2929C0008C798 /* Resource.h */,
+				5DCAD45D1BDA371B00577574 /* System.h */,
+				5DD0BFC71BD1547700ABBC5B /* Utilities.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5DCD189F1BB54C3B00656104 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D0AFFE11BC2929C0008C798 /* Resource.h in Headers */,
+				5DCD18B61BB54E2700656104 /* Apple.h in Headers */,
+				5DD0BFC81BD1547700ABBC5B /* Utilities.h in Headers */,
+				5DCAD45E1BDA371B00577574 /* System.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCD18C01BB56ABF00656104 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D0AFFE21BC2929C0008C798 /* Resource.h in Headers */,
+				5DCD18C31BB56ABF00656104 /* Apple.h in Headers */,
+				5DD0BFC91BD1547700ABBC5B /* Utilities.h in Headers */,
+				5DCAD45F1BDA372300577574 /* System.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF0BD581D901DA400BE5D21 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DF0BD5C1D901DA400BE5D21 /* Resource.h in Headers */,
+				5DF0BD5F1D901DA400BE5D21 /* Apple.h in Headers */,
+				5DF0BD601D901DA400BE5D21 /* Utilities.h in Headers */,
+				5DF0BD621D901DA400BE5D21 /* System.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC971DABEF6E00BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C041EC9B1DABEF6E00BF5D76 /* Resource.h in Headers */,
+				C041EC9E1DABEF6E00BF5D76 /* Apple.h in Headers */,
+				C041EC9F1DABEF6E00BF5D76 /* Utilities.h in Headers */,
+				C041ECA11DABEF6E00BF5D76 /* System.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5DCD18A01BB54C3B00656104 /* platformapple x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DCD18AC1BB54C3B00656104 /* Build configuration list for PBXNativeTarget "platformapple x64 (Static)" */;
+			buildPhases = (
+				5DCD189D1BB54C3B00656104 /* Sources */,
+				5DCD189E1BB54C3B00656104 /* Frameworks */,
+				5DCD189F1BB54C3B00656104 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "platformapple x64 (Static)";
+			productName = platformapple;
+			productReference = 5DCD18A11BB54C3B00656104 /* libOceanPlatformAppleD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DCD18BB1BB56ABF00656104 /* platformapple x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DCD18C41BB56ABF00656104 /* Build configuration list for PBXNativeTarget "platformapple x64 (Shared)" */;
+			buildPhases = (
+				5DCD18BC1BB56ABF00656104 /* Sources */,
+				5DCD18BF1BB56ABF00656104 /* Frameworks */,
+				5DCD18C01BB56ABF00656104 /* Headers */,
+				C041ECA71DABF06B00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "platformapple x64 (Shared)";
+			productName = platformapple;
+			productReference = 5DCD18C71BB56ABF00656104 /* libOceanPlatformAppleD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DF0BD4C1D901DA400BE5D21 /* platformapple arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DF0BD631D901DA400BE5D21 /* Build configuration list for PBXNativeTarget "platformapple arm64 (Static)" */;
+			buildPhases = (
+				5DF0BD4D1D901DA400BE5D21 /* Sources */,
+				5DF0BD571D901DA400BE5D21 /* Frameworks */,
+				5DF0BD581D901DA400BE5D21 /* Headers */,
+				5DF0BD671D901DE500BE5D21 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "platformapple arm64 (Static)";
+			productName = platformapple;
+			productReference = 5DF0BD661D901DA400BE5D21 /* libOceanPlatformAppleD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EC911DABEF6E00BF5D76 /* platformapple arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041ECA31DABEF6E00BF5D76 /* Build configuration list for PBXNativeTarget "platformapple arm64 (Shared)" */;
+			buildPhases = (
+				C041EC921DABEF6E00BF5D76 /* Sources */,
+				C041EC961DABEF6E00BF5D76 /* Frameworks */,
+				C041EC971DABEF6E00BF5D76 /* Headers */,
+				C041ECA21DABEF6E00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "platformapple arm64 (Shared)";
+			productName = platformapple;
+			productReference = C041ECA61DABEF6E00BF5D76 /* libOceanPlatformAppleD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DCD18991BB54C3B00656104 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DCD18A01BB54C3B00656104 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DCD189C1BB54C3B00656104 /* Build configuration list for PBXProject "platformapple" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DCD18981BB54C3B00656104;
+			productRefGroup = 5DCD18A21BB54C3B00656104 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DCD18A01BB54C3B00656104 /* platformapple x64 (Static) */,
+				5DCD18BB1BB56ABF00656104 /* platformapple x64 (Shared) */,
+				5DF0BD4C1D901DA400BE5D21 /* platformapple arm64 (Static) */,
+				C041EC911DABEF6E00BF5D76 /* platformapple arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DF0BD671D901DE500BE5D21 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		C041ECA21DABEF6E00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"";
+		};
+		C041ECA71DABF06B00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DCD189D1BB54C3B00656104 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93D2332E1F9566AB00F8BCAD /* Utilities.mm in Sources */,
+				93D233301F9566AB00F8BCAD /* System.mm in Sources */,
+				93D233381F9566AB00F8BCAD /* Resource.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DCD18BC1BB56ABF00656104 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93D2332F1F9566AB00F8BCAD /* Utilities.mm in Sources */,
+				93D233311F9566AB00F8BCAD /* System.mm in Sources */,
+				93D233391F9566AB00F8BCAD /* Resource.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DF0BD4D1D901DA400BE5D21 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9360F7971FA15BC500BD37D1 /* System.mm in Sources */,
+				9360F7991FA15BD100BD37D1 /* Resource.mm in Sources */,
+				9360F7951FA15BC000BD37D1 /* Utilities.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC921DABEF6E00BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9360F7981FA15BC500BD37D1 /* System.mm in Sources */,
+				9360F79A1FA15BD100BD37D1 /* Resource.mm in Sources */,
+				9360F7961FA15BC000BD37D1 /* Utilities.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DCD18AA1BB54C3B00656104 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DCD18AB1BB54C3B00656104 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DCD18AD1BB54C3B00656104 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/platformapple/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/platformapple/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanPlatformAppleD;
+				PRODUCT_NAME = OceanPlatformAppleD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DCD18AE1BB54C3B00656104 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/platformapple/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/platformapple/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanPlatformApple;
+				PRODUCT_NAME = OceanPlatformApple;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DCD18C51BB56ABF00656104 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/platformapple/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/platformapple/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanMediaD",
+					"-framework",
+					AppKit,
+					"-framework",
+					Carbon,
+				);
+				PRODUCT_MODULE_NAME = OceanPlatformAppleD;
+				PRODUCT_NAME = OceanPlatformAppleD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DCD18C61BB56ABF00656104 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/platformapple/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/platformapple/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanMedia",
+					"-framework",
+					AppKit,
+					"-framework",
+					Carbon,
+				);
+				PRODUCT_MODULE_NAME = OceanPlatformApple;
+				PRODUCT_NAME = OceanPlatformApple;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DF0BD641D901DA400BE5D21 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanPlatformAppleD;
+				PRODUCT_NAME = OceanPlatformAppleD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DF0BD651D901DA400BE5D21 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanPlatformApple;
+				PRODUCT_NAME = OceanPlatformApple;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041ECA41DABEF6E00BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanMediaD",
+					"-framework",
+					CoreGraphics,
+				);
+				PRODUCT_MODULE_NAME = OceanPlatformAppleD;
+				PRODUCT_NAME = OceanPlatformAppleD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041ECA51DABEF6E00BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanMedia",
+					"-framework",
+					CoreGraphics,
+				);
+				PRODUCT_MODULE_NAME = OceanPlatformApple;
+				PRODUCT_NAME = OceanPlatformApple;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/platformapple/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DCD189C1BB54C3B00656104 /* Build configuration list for PBXProject "platformapple" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCD18AA1BB54C3B00656104 /* Debug */,
+				5DCD18AB1BB54C3B00656104 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DCD18AC1BB54C3B00656104 /* Build configuration list for PBXNativeTarget "platformapple x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCD18AD1BB54C3B00656104 /* Debug */,
+				5DCD18AE1BB54C3B00656104 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DCD18C41BB56ABF00656104 /* Build configuration list for PBXNativeTarget "platformapple x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DCD18C51BB56ABF00656104 /* Debug */,
+				5DCD18C61BB56ABF00656104 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DF0BD631D901DA400BE5D21 /* Build configuration list for PBXNativeTarget "platformapple arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DF0BD641D901DA400BE5D21 /* Debug */,
+				5DF0BD651D901DA400BE5D21 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041ECA31DABEF6E00BF5D76 /* Build configuration list for PBXNativeTarget "platformapple arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041ECA41DABEF6E00BF5D76 /* Debug */,
+				C041ECA51DABEF6E00BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DCD18991BB54C3B00656104 /* Project object */;
+}

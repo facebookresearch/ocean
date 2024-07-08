@@ -1,0 +1,727 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		501C7E2F20C9AE9C001FF11E /* TestFrameInterpolatorNearestPixel.h in Headers */ = {isa = PBXBuildFile; fileRef = 501C7E2E20C9AE9C001FF11E /* TestFrameInterpolatorNearestPixel.h */; };
+		501C7E3020C9AE9C001FF11E /* TestFrameInterpolatorNearestPixel.h in Headers */ = {isa = PBXBuildFile; fileRef = 501C7E2E20C9AE9C001FF11E /* TestFrameInterpolatorNearestPixel.h */; };
+		501C7E3220C9AEB8001FF11E /* TestFrameInterpolatorNearestPixel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 501C7E3120C9AEB7001FF11E /* TestFrameInterpolatorNearestPixel.cpp */; };
+		501C7E3320C9AEB8001FF11E /* TestFrameInterpolatorNearestPixel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 501C7E3120C9AEB7001FF11E /* TestFrameInterpolatorNearestPixel.cpp */; };
+		50ACA5F820503A26001436C0 /* TestPerformance.h in Headers */ = {isa = PBXBuildFile; fileRef = 50ACA5F720503A26001436C0 /* TestPerformance.h */; };
+		50ACA5FA20503A47001436C0 /* TestPerformance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ACA5F920503A47001436C0 /* TestPerformance.cpp */; };
+		50C5063625C37427005338FB /* TestFrameFilterCanny.h in Headers */ = {isa = PBXBuildFile; fileRef = 50C5063525C37427005338FB /* TestFrameFilterCanny.h */; };
+		50C5063725C37427005338FB /* TestFrameFilterCanny.h in Headers */ = {isa = PBXBuildFile; fileRef = 50C5063525C37427005338FB /* TestFrameFilterCanny.h */; };
+		50C5063B25C3744E005338FB /* TestFrameFilterCanny.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50C5063A25C3744E005338FB /* TestFrameFilterCanny.cpp */; };
+		50C5063C25C3744E005338FB /* TestFrameFilterCanny.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50C5063A25C3744E005338FB /* TestFrameFilterCanny.cpp */; };
+		50CEEDF621B0955A00A35C61 /* TestHistogram.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CEEDF521B0955A00A35C61 /* TestHistogram.h */; };
+		50CEEDF721B0955A00A35C61 /* TestHistogram.h in Headers */ = {isa = PBXBuildFile; fileRef = 50CEEDF521B0955A00A35C61 /* TestHistogram.h */; };
+		50CEEDF921B0956D00A35C61 /* TestHistogram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50CEEDF821B0956D00A35C61 /* TestHistogram.cpp */; };
+		50CEEDFA21B0956D00A35C61 /* TestHistogram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50CEEDF821B0956D00A35C61 /* TestHistogram.cpp */; };
+		5F44FE061E8A89D200B78E77 /* TestGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F44FE041E8A89D200B78E77 /* TestGeometry.h */; };
+		5F44FE071E8A89D200B78E77 /* TestPointTracking.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F44FE051E8A89D200B78E77 /* TestPointTracking.h */; };
+		5FC8C6451E8A8D0200483BEF /* TestGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F44FE001E8A89AF00B78E77 /* TestGeometry.cpp */; };
+		5FC8C6461E8A8D0200483BEF /* TestPointTracking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F44FE011E8A89AF00B78E77 /* TestPointTracking.cpp */; };
+		5FC8C6471E8A8D7700483BEF /* TestGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F44FE001E8A89AF00B78E77 /* TestGeometry.cpp */; };
+		5FC8C6481E8A8D7700483BEF /* TestPointTracking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F44FE011E8A89AF00B78E77 /* TestPointTracking.cpp */; };
+		5FC8C6491E8A90BB00483BEF /* TestGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F44FE041E8A89D200B78E77 /* TestGeometry.h */; };
+		5FC8C64A1E8A90BB00483BEF /* TestPointTracking.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F44FE051E8A89D200B78E77 /* TestPointTracking.h */; };
+		931E423E20E9EC750094363C /* TestFrameConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 931E423D20E9EC750094363C /* TestFrameConverter.cpp */; };
+		931E423F20E9EC750094363C /* TestFrameConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 931E423D20E9EC750094363C /* TestFrameConverter.cpp */; };
+		931E424220E9EC860094363C /* TestFrameInterpolatorBilinear_aml_affine_warp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 931E424020E9EC860094363C /* TestFrameInterpolatorBilinear_aml_affine_warp.cpp */; };
+		931E424320E9EC860094363C /* TestFrameInterpolatorBilinear_aml_affine_warp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 931E424020E9EC860094363C /* TestFrameInterpolatorBilinear_aml_affine_warp.cpp */; };
+		931E424420E9EC860094363C /* TestFrameInterpolatorBilinear_aml_resize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 931E424120E9EC860094363C /* TestFrameInterpolatorBilinear_aml_resize.cpp */; };
+		931E424520E9EC860094363C /* TestFrameInterpolatorBilinear_aml_resize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 931E424120E9EC860094363C /* TestFrameInterpolatorBilinear_aml_resize.cpp */; };
+		931E424720E9ECA10094363C /* TestFrameConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 931E424620E9ECA10094363C /* TestFrameConverter.h */; };
+		931E424820E9ECA10094363C /* TestFrameConverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 931E424620E9ECA10094363C /* TestFrameConverter.h */; };
+		9320CF2E20A500B300CC05C1 /* TestFourierTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9320CF2D20A500B300CC05C1 /* TestFourierTransform.cpp */; };
+		9320CF2F20A500B300CC05C1 /* TestFourierTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9320CF2D20A500B300CC05C1 /* TestFourierTransform.cpp */; };
+		9320CF3120A500C500CC05C1 /* TestFourierTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 9320CF3020A500C400CC05C1 /* TestFourierTransform.h */; };
+		9320CF3220A500C500CC05C1 /* TestFourierTransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 9320CF3020A500C400CC05C1 /* TestFourierTransform.h */; };
+		9324A18B21092F190078620C /* TestFrameFilterLaplace.h in Headers */ = {isa = PBXBuildFile; fileRef = 9324A18A21092F180078620C /* TestFrameFilterLaplace.h */; };
+		9324A18C21092F190078620C /* TestFrameFilterLaplace.h in Headers */ = {isa = PBXBuildFile; fileRef = 9324A18A21092F180078620C /* TestFrameFilterLaplace.h */; };
+		9324A18E21092F2F0078620C /* TestFrameFilterLaplace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9324A18D21092F2F0078620C /* TestFrameFilterLaplace.cpp */; };
+		9324A18F21092F2F0078620C /* TestFrameFilterLaplace.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9324A18D21092F2F0078620C /* TestFrameFilterLaplace.cpp */; };
+		9344E52121F0FAF100C6257E /* TestMorphology.h in Headers */ = {isa = PBXBuildFile; fileRef = 9344E52021F0FAF000C6257E /* TestMorphology.h */; };
+		9344E52221F0FAF100C6257E /* TestMorphology.h in Headers */ = {isa = PBXBuildFile; fileRef = 9344E52021F0FAF000C6257E /* TestMorphology.h */; };
+		9344E52421F0FB1200C6257E /* TestMorphology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9344E52321F0FB1200C6257E /* TestMorphology.cpp */; };
+		9344E52521F0FB1200C6257E /* TestMorphology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9344E52321F0FB1200C6257E /* TestMorphology.cpp */; };
+		936BA6932057295D00521F34 /* TestPerformance.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50ACA5F920503A47001436C0 /* TestPerformance.cpp */; };
+		93B7E5FC216D3F7B00C7D850 /* TestFrameMinMax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B7E5FB216D3F7B00C7D850 /* TestFrameMinMax.cpp */; };
+		93B7E5FD216D3F7B00C7D850 /* TestFrameMinMax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93B7E5FB216D3F7B00C7D850 /* TestFrameMinMax.cpp */; };
+		93B7E602216D3F9200C7D850 /* TestFrameMinMax.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B7E601216D3F9200C7D850 /* TestFrameMinMax.h */; };
+		93B7E603216D3F9200C7D850 /* TestFrameMinMax.h in Headers */ = {isa = PBXBuildFile; fileRef = 93B7E601216D3F9200C7D850 /* TestFrameMinMax.h */; };
+		C0EE95E31E76A19D004C1D6C /* TestFeatureDetectors.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95DD1E76A19D004C1D6C /* TestFeatureDetectors.h */; };
+		C0EE95E41E76A19D004C1D6C /* TestFrameInterpolatorBilinear.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95DE1E76A19D004C1D6C /* TestFrameInterpolatorBilinear.h */; };
+		C0EE95E51E76A19D004C1D6C /* TestFramePyramid.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95DF1E76A19D004C1D6C /* TestFramePyramid.h */; };
+		C0EE95E61E76A19D004C1D6C /* TestGaussianBlur.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95E01E76A19D004C1D6C /* TestGaussianBlur.h */; };
+		C0EE95E71E76A19D004C1D6C /* TestOpenCV.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95E11E76A19D004C1D6C /* TestOpenCV.h */; };
+		C0EE95E81E76A19D004C1D6C /* TestTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95E21E76A19D004C1D6C /* TestTransformation.h */; };
+		C0EE95E91E76A1A3004C1D6C /* TestFeatureDetectors.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95DD1E76A19D004C1D6C /* TestFeatureDetectors.h */; };
+		C0EE95EA1E76A1A3004C1D6C /* TestFrameInterpolatorBilinear.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95DE1E76A19D004C1D6C /* TestFrameInterpolatorBilinear.h */; };
+		C0EE95EB1E76A1A3004C1D6C /* TestFramePyramid.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95DF1E76A19D004C1D6C /* TestFramePyramid.h */; };
+		C0EE95EC1E76A1A3004C1D6C /* TestGaussianBlur.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95E01E76A19D004C1D6C /* TestGaussianBlur.h */; };
+		C0EE95ED1E76A1A3004C1D6C /* TestOpenCV.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95E11E76A19D004C1D6C /* TestOpenCV.h */; };
+		C0EE95EE1E76A1A3004C1D6C /* TestTransformation.h in Headers */ = {isa = PBXBuildFile; fileRef = C0EE95E21E76A19D004C1D6C /* TestTransformation.h */; };
+		C0EE95F51E76A1B9004C1D6C /* TestFeatureDetectors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95EF1E76A1B9004C1D6C /* TestFeatureDetectors.cpp */; };
+		C0EE95F61E76A1B9004C1D6C /* TestFrameInterpolatorBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95F01E76A1B9004C1D6C /* TestFrameInterpolatorBilinear.cpp */; };
+		C0EE95F71E76A1B9004C1D6C /* TestFramePyramid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95F11E76A1B9004C1D6C /* TestFramePyramid.cpp */; };
+		C0EE95F81E76A1B9004C1D6C /* TestGaussianBlur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95F21E76A1B9004C1D6C /* TestGaussianBlur.cpp */; };
+		C0EE95F91E76A1B9004C1D6C /* TestOpenCV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95F31E76A1B9004C1D6C /* TestOpenCV.cpp */; };
+		C0EE95FA1E76A1B9004C1D6C /* TestTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95F41E76A1B9004C1D6C /* TestTransformation.cpp */; };
+		C0EE95FB1E76A1BE004C1D6C /* TestFeatureDetectors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95EF1E76A1B9004C1D6C /* TestFeatureDetectors.cpp */; };
+		C0EE95FC1E76A1BE004C1D6C /* TestFrameInterpolatorBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95F01E76A1B9004C1D6C /* TestFrameInterpolatorBilinear.cpp */; };
+		C0EE95FD1E76A1BE004C1D6C /* TestFramePyramid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95F11E76A1B9004C1D6C /* TestFramePyramid.cpp */; };
+		C0EE95FE1E76A1BE004C1D6C /* TestGaussianBlur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95F21E76A1B9004C1D6C /* TestGaussianBlur.cpp */; };
+		C0EE95FF1E76A1BE004C1D6C /* TestOpenCV.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95F31E76A1B9004C1D6C /* TestOpenCV.cpp */; };
+		C0EE96001E76A1BE004C1D6C /* TestTransformation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0EE95F41E76A1B9004C1D6C /* TestTransformation.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		501C7E2E20C9AE9C001FF11E /* TestFrameInterpolatorNearestPixel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameInterpolatorNearestPixel.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameInterpolatorNearestPixel.h; sourceTree = "<group>"; };
+		501C7E3120C9AEB7001FF11E /* TestFrameInterpolatorNearestPixel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameInterpolatorNearestPixel.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameInterpolatorNearestPixel.cpp; sourceTree = "<group>"; };
+		50ACA5F720503A26001436C0 /* TestPerformance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestPerformance.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestPerformance.h; sourceTree = "<group>"; };
+		50ACA5F920503A47001436C0 /* TestPerformance.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestPerformance.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestPerformance.cpp; sourceTree = "<group>"; };
+		50C5063525C37427005338FB /* TestFrameFilterCanny.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameFilterCanny.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameFilterCanny.h; sourceTree = "<group>"; };
+		50C5063A25C3744E005338FB /* TestFrameFilterCanny.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameFilterCanny.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameFilterCanny.cpp; sourceTree = "<group>"; };
+		50CEEDF521B0955A00A35C61 /* TestHistogram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestHistogram.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestHistogram.h; sourceTree = "<group>"; };
+		50CEEDF821B0956D00A35C61 /* TestHistogram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestHistogram.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestHistogram.cpp; sourceTree = "<group>"; };
+		5DACDC5D1C69F75700D5D6B0 /* libOceanTestCVOpenCVD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVOpenCVD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD14A601D953CBB00CCA9F0 /* libOceanTestCVOpenCVD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVOpenCVD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DDE17A41C69F91400325BD2 /* libOceanTestCVOpenCVD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVOpenCVD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F44FE001E8A89AF00B78E77 /* TestGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestGeometry.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestGeometry.cpp; sourceTree = "<group>"; };
+		5F44FE011E8A89AF00B78E77 /* TestPointTracking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestPointTracking.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestPointTracking.cpp; sourceTree = "<group>"; };
+		5F44FE041E8A89D200B78E77 /* TestGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestGeometry.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestGeometry.h; sourceTree = "<group>"; };
+		5F44FE051E8A89D200B78E77 /* TestPointTracking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestPointTracking.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestPointTracking.h; sourceTree = "<group>"; };
+		931E423D20E9EC750094363C /* TestFrameConverter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameConverter.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameConverter.cpp; sourceTree = "<group>"; };
+		931E424020E9EC860094363C /* TestFrameInterpolatorBilinear_aml_affine_warp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameInterpolatorBilinear_aml_affine_warp.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameInterpolatorBilinear_aml_affine_warp.cpp; sourceTree = "<group>"; };
+		931E424120E9EC860094363C /* TestFrameInterpolatorBilinear_aml_resize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameInterpolatorBilinear_aml_resize.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameInterpolatorBilinear_aml_resize.cpp; sourceTree = "<group>"; };
+		931E424620E9ECA10094363C /* TestFrameConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameConverter.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameConverter.h; sourceTree = "<group>"; };
+		9320CF2D20A500B300CC05C1 /* TestFourierTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFourierTransform.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFourierTransform.cpp; sourceTree = "<group>"; };
+		9320CF3020A500C400CC05C1 /* TestFourierTransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFourierTransform.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFourierTransform.h; sourceTree = "<group>"; };
+		9324A18A21092F180078620C /* TestFrameFilterLaplace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameFilterLaplace.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameFilterLaplace.h; sourceTree = "<group>"; };
+		9324A18D21092F2F0078620C /* TestFrameFilterLaplace.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameFilterLaplace.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameFilterLaplace.cpp; sourceTree = "<group>"; };
+		9344E52021F0FAF000C6257E /* TestMorphology.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestMorphology.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestMorphology.h; sourceTree = "<group>"; };
+		9344E52321F0FB1200C6257E /* TestMorphology.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestMorphology.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestMorphology.cpp; sourceTree = "<group>"; };
+		93B7E5FB216D3F7B00C7D850 /* TestFrameMinMax.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameMinMax.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameMinMax.cpp; sourceTree = "<group>"; };
+		93B7E601216D3F9200C7D850 /* TestFrameMinMax.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameMinMax.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameMinMax.h; sourceTree = "<group>"; };
+		C0E9B0EB1DACEC0700895C4B /* libOceanTestCVOpenCVD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVOpenCVD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0EE95DD1E76A19D004C1D6C /* TestFeatureDetectors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFeatureDetectors.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFeatureDetectors.h; sourceTree = "<group>"; };
+		C0EE95DE1E76A19D004C1D6C /* TestFrameInterpolatorBilinear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameInterpolatorBilinear.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameInterpolatorBilinear.h; sourceTree = "<group>"; };
+		C0EE95DF1E76A19D004C1D6C /* TestFramePyramid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFramePyramid.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFramePyramid.h; sourceTree = "<group>"; };
+		C0EE95E01E76A19D004C1D6C /* TestGaussianBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestGaussianBlur.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestGaussianBlur.h; sourceTree = "<group>"; };
+		C0EE95E11E76A19D004C1D6C /* TestOpenCV.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestOpenCV.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestOpenCV.h; sourceTree = "<group>"; };
+		C0EE95E21E76A19D004C1D6C /* TestTransformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestTransformation.h; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestTransformation.h; sourceTree = "<group>"; };
+		C0EE95EF1E76A1B9004C1D6C /* TestFeatureDetectors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFeatureDetectors.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFeatureDetectors.cpp; sourceTree = "<group>"; };
+		C0EE95F01E76A1B9004C1D6C /* TestFrameInterpolatorBilinear.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameInterpolatorBilinear.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFrameInterpolatorBilinear.cpp; sourceTree = "<group>"; };
+		C0EE95F11E76A1B9004C1D6C /* TestFramePyramid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFramePyramid.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestFramePyramid.cpp; sourceTree = "<group>"; };
+		C0EE95F21E76A1B9004C1D6C /* TestGaussianBlur.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestGaussianBlur.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestGaussianBlur.cpp; sourceTree = "<group>"; };
+		C0EE95F31E76A1B9004C1D6C /* TestOpenCV.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestOpenCV.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestOpenCV.cpp; sourceTree = "<group>"; };
+		C0EE95F41E76A1B9004C1D6C /* TestTransformation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestTransformation.cpp; path = ../../../../../../../impl/ocean/test/testcv/testopencv/TestTransformation.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DACDC5A1C69F75700D5D6B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A551D953CBB00CCA9F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DACDC541C69F75700D5D6B0 = {
+			isa = PBXGroup;
+			children = (
+				5DDE17781C69F89D00325BD2 /* Header Files */,
+				5DDE17771C69F88F00325BD2 /* Source Files */,
+				5DACDC5E1C69F75700D5D6B0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DACDC5E1C69F75700D5D6B0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DACDC5D1C69F75700D5D6B0 /* libOceanTestCVOpenCVD.a */,
+				5DDE17A41C69F91400325BD2 /* libOceanTestCVOpenCVD.dylib */,
+				5DD14A601D953CBB00CCA9F0 /* libOceanTestCVOpenCVD.a */,
+				C0E9B0EB1DACEC0700895C4B /* libOceanTestCVOpenCVD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DDE17771C69F88F00325BD2 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				C0EE95EF1E76A1B9004C1D6C /* TestFeatureDetectors.cpp */,
+				9320CF2D20A500B300CC05C1 /* TestFourierTransform.cpp */,
+				931E423D20E9EC750094363C /* TestFrameConverter.cpp */,
+				50C5063A25C3744E005338FB /* TestFrameFilterCanny.cpp */,
+				9324A18D21092F2F0078620C /* TestFrameFilterLaplace.cpp */,
+				931E424020E9EC860094363C /* TestFrameInterpolatorBilinear_aml_affine_warp.cpp */,
+				931E424120E9EC860094363C /* TestFrameInterpolatorBilinear_aml_resize.cpp */,
+				C0EE95F01E76A1B9004C1D6C /* TestFrameInterpolatorBilinear.cpp */,
+				501C7E3120C9AEB7001FF11E /* TestFrameInterpolatorNearestPixel.cpp */,
+				93B7E5FB216D3F7B00C7D850 /* TestFrameMinMax.cpp */,
+				C0EE95F11E76A1B9004C1D6C /* TestFramePyramid.cpp */,
+				C0EE95F21E76A1B9004C1D6C /* TestGaussianBlur.cpp */,
+				5F44FE001E8A89AF00B78E77 /* TestGeometry.cpp */,
+				50CEEDF821B0956D00A35C61 /* TestHistogram.cpp */,
+				9344E52321F0FB1200C6257E /* TestMorphology.cpp */,
+				C0EE95F31E76A1B9004C1D6C /* TestOpenCV.cpp */,
+				50ACA5F920503A47001436C0 /* TestPerformance.cpp */,
+				5F44FE011E8A89AF00B78E77 /* TestPointTracking.cpp */,
+				C0EE95F41E76A1B9004C1D6C /* TestTransformation.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DDE17781C69F89D00325BD2 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				C0EE95DD1E76A19D004C1D6C /* TestFeatureDetectors.h */,
+				9320CF3020A500C400CC05C1 /* TestFourierTransform.h */,
+				931E424620E9ECA10094363C /* TestFrameConverter.h */,
+				50C5063525C37427005338FB /* TestFrameFilterCanny.h */,
+				9324A18A21092F180078620C /* TestFrameFilterLaplace.h */,
+				C0EE95DE1E76A19D004C1D6C /* TestFrameInterpolatorBilinear.h */,
+				501C7E2E20C9AE9C001FF11E /* TestFrameInterpolatorNearestPixel.h */,
+				93B7E601216D3F9200C7D850 /* TestFrameMinMax.h */,
+				C0EE95DF1E76A19D004C1D6C /* TestFramePyramid.h */,
+				C0EE95E01E76A19D004C1D6C /* TestGaussianBlur.h */,
+				5F44FE041E8A89D200B78E77 /* TestGeometry.h */,
+				50CEEDF521B0955A00A35C61 /* TestHistogram.h */,
+				9344E52021F0FAF000C6257E /* TestMorphology.h */,
+				C0EE95E11E76A19D004C1D6C /* TestOpenCV.h */,
+				50ACA5F720503A26001436C0 /* TestPerformance.h */,
+				5F44FE051E8A89D200B78E77 /* TestPointTracking.h */,
+				C0EE95E21E76A19D004C1D6C /* TestTransformation.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5DACDC5B1C69F75700D5D6B0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				931E424720E9ECA10094363C /* TestFrameConverter.h in Headers */,
+				9320CF3120A500C500CC05C1 /* TestFourierTransform.h in Headers */,
+				C0EE95E71E76A19D004C1D6C /* TestOpenCV.h in Headers */,
+				50CEEDF621B0955A00A35C61 /* TestHistogram.h in Headers */,
+				50C5063625C37427005338FB /* TestFrameFilterCanny.h in Headers */,
+				5F44FE061E8A89D200B78E77 /* TestGeometry.h in Headers */,
+				501C7E2F20C9AE9C001FF11E /* TestFrameInterpolatorNearestPixel.h in Headers */,
+				50ACA5F820503A26001436C0 /* TestPerformance.h in Headers */,
+				C0EE95E81E76A19D004C1D6C /* TestTransformation.h in Headers */,
+				9344E52121F0FAF100C6257E /* TestMorphology.h in Headers */,
+				C0EE95E61E76A19D004C1D6C /* TestGaussianBlur.h in Headers */,
+				C0EE95E31E76A19D004C1D6C /* TestFeatureDetectors.h in Headers */,
+				C0EE95E41E76A19D004C1D6C /* TestFrameInterpolatorBilinear.h in Headers */,
+				93B7E602216D3F9200C7D850 /* TestFrameMinMax.h in Headers */,
+				5F44FE071E8A89D200B78E77 /* TestPointTracking.h in Headers */,
+				C0EE95E51E76A19D004C1D6C /* TestFramePyramid.h in Headers */,
+				9324A18B21092F190078620C /* TestFrameFilterLaplace.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A561D953CBB00CCA9F0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9320CF3220A500C500CC05C1 /* TestFourierTransform.h in Headers */,
+				5FC8C6491E8A90BB00483BEF /* TestGeometry.h in Headers */,
+				9324A18C21092F190078620C /* TestFrameFilterLaplace.h in Headers */,
+				50CEEDF721B0955A00A35C61 /* TestHistogram.h in Headers */,
+				5FC8C64A1E8A90BB00483BEF /* TestPointTracking.h in Headers */,
+				9344E52221F0FAF100C6257E /* TestMorphology.h in Headers */,
+				93B7E603216D3F9200C7D850 /* TestFrameMinMax.h in Headers */,
+				501C7E3020C9AE9C001FF11E /* TestFrameInterpolatorNearestPixel.h in Headers */,
+				C0EE95ED1E76A1A3004C1D6C /* TestOpenCV.h in Headers */,
+				50C5063725C37427005338FB /* TestFrameFilterCanny.h in Headers */,
+				C0EE95EE1E76A1A3004C1D6C /* TestTransformation.h in Headers */,
+				C0EE95EC1E76A1A3004C1D6C /* TestGaussianBlur.h in Headers */,
+				C0EE95E91E76A1A3004C1D6C /* TestFeatureDetectors.h in Headers */,
+				931E424820E9ECA10094363C /* TestFrameConverter.h in Headers */,
+				C0EE95EA1E76A1A3004C1D6C /* TestFrameInterpolatorBilinear.h in Headers */,
+				C0EE95EB1E76A1A3004C1D6C /* TestFramePyramid.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5DACDC5C1C69F75700D5D6B0 /* testopencv x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DACDC681C69F75700D5D6B0 /* Build configuration list for PBXNativeTarget "testopencv x64 (Static)" */;
+			buildPhases = (
+				5DACDC591C69F75700D5D6B0 /* Sources */,
+				5DACDC5A1C69F75700D5D6B0 /* Frameworks */,
+				5DACDC5B1C69F75700D5D6B0 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testopencv x64 (Static)";
+			productName = testopencv;
+			productReference = 5DACDC5D1C69F75700D5D6B0 /* libOceanTestCVOpenCVD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DD14A4D1D953CBB00CCA9F0 /* testopencv arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD14A5D1D953CBB00CCA9F0 /* Build configuration list for PBXNativeTarget "testopencv arm64 (Static)" */;
+			buildPhases = (
+				5DD14A4E1D953CBB00CCA9F0 /* Sources */,
+				5DD14A551D953CBB00CCA9F0 /* Frameworks */,
+				5DD14A561D953CBB00CCA9F0 /* Headers */,
+				5DD14A611D953DE800CCA9F0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testopencv arm64 (Static)";
+			productName = testopencv;
+			productReference = 5DD14A601D953CBB00CCA9F0 /* libOceanTestCVOpenCVD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DACDC551C69F75700D5D6B0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DACDC5C1C69F75700D5D6B0 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DACDC581C69F75700D5D6B0 /* Build configuration list for PBXProject "testopencv" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				en,
+			);
+			mainGroup = 5DACDC541C69F75700D5D6B0;
+			productRefGroup = 5DACDC5E1C69F75700D5D6B0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DACDC5C1C69F75700D5D6B0 /* testopencv x64 (Static) */,
+				5DD14A4D1D953CBB00CCA9F0 /* testopencv arm64 (Static) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DD14A611D953DE800CCA9F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../copy_arm_static.sh \"../../../../../../../bin/test/lib/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DACDC591C69F75700D5D6B0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FC8C6451E8A8D0200483BEF /* TestGeometry.cpp in Sources */,
+				9344E52421F0FB1200C6257E /* TestMorphology.cpp in Sources */,
+				50ACA5FA20503A47001436C0 /* TestPerformance.cpp in Sources */,
+				931E424420E9EC860094363C /* TestFrameInterpolatorBilinear_aml_resize.cpp in Sources */,
+				9320CF2E20A500B300CC05C1 /* TestFourierTransform.cpp in Sources */,
+				5FC8C6461E8A8D0200483BEF /* TestPointTracking.cpp in Sources */,
+				50CEEDF921B0956D00A35C61 /* TestHistogram.cpp in Sources */,
+				501C7E3220C9AEB8001FF11E /* TestFrameInterpolatorNearestPixel.cpp in Sources */,
+				931E423E20E9EC750094363C /* TestFrameConverter.cpp in Sources */,
+				C0EE95F91E76A1B9004C1D6C /* TestOpenCV.cpp in Sources */,
+				C0EE95F61E76A1B9004C1D6C /* TestFrameInterpolatorBilinear.cpp in Sources */,
+				931E424220E9EC860094363C /* TestFrameInterpolatorBilinear_aml_affine_warp.cpp in Sources */,
+				93B7E5FC216D3F7B00C7D850 /* TestFrameMinMax.cpp in Sources */,
+				C0EE95FA1E76A1B9004C1D6C /* TestTransformation.cpp in Sources */,
+				50C5063B25C3744E005338FB /* TestFrameFilterCanny.cpp in Sources */,
+				C0EE95F81E76A1B9004C1D6C /* TestGaussianBlur.cpp in Sources */,
+				C0EE95F51E76A1B9004C1D6C /* TestFeatureDetectors.cpp in Sources */,
+				C0EE95F71E76A1B9004C1D6C /* TestFramePyramid.cpp in Sources */,
+				9324A18E21092F2F0078620C /* TestFrameFilterLaplace.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A4E1D953CBB00CCA9F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FC8C6471E8A8D7700483BEF /* TestGeometry.cpp in Sources */,
+				9344E52521F0FB1200C6257E /* TestMorphology.cpp in Sources */,
+				936BA6932057295D00521F34 /* TestPerformance.cpp in Sources */,
+				931E424520E9EC860094363C /* TestFrameInterpolatorBilinear_aml_resize.cpp in Sources */,
+				9320CF2F20A500B300CC05C1 /* TestFourierTransform.cpp in Sources */,
+				5FC8C6481E8A8D7700483BEF /* TestPointTracking.cpp in Sources */,
+				50CEEDFA21B0956D00A35C61 /* TestHistogram.cpp in Sources */,
+				501C7E3320C9AEB8001FF11E /* TestFrameInterpolatorNearestPixel.cpp in Sources */,
+				931E423F20E9EC750094363C /* TestFrameConverter.cpp in Sources */,
+				C0EE95FF1E76A1BE004C1D6C /* TestOpenCV.cpp in Sources */,
+				C0EE95FC1E76A1BE004C1D6C /* TestFrameInterpolatorBilinear.cpp in Sources */,
+				931E424320E9EC860094363C /* TestFrameInterpolatorBilinear_aml_affine_warp.cpp in Sources */,
+				93B7E5FD216D3F7B00C7D850 /* TestFrameMinMax.cpp in Sources */,
+				C0EE96001E76A1BE004C1D6C /* TestTransformation.cpp in Sources */,
+				50C5063C25C3744E005338FB /* TestFrameFilterCanny.cpp in Sources */,
+				C0EE95FE1E76A1BE004C1D6C /* TestGaussianBlur.cpp in Sources */,
+				C0EE95FB1E76A1BE004C1D6C /* TestFeatureDetectors.cpp in Sources */,
+				C0EE95FD1E76A1BE004C1D6C /* TestFramePyramid.cpp in Sources */,
+				9324A18F21092F2F0078620C /* TestFrameFilterLaplace.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DACDC661C69F75700D5D6B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DACDC671C69F75700D5D6B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DACDC691C69F75700D5D6B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testopencv/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/opencv/3.2/h,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testopencv/osx_x64_xc9_static_debug;
+				PRODUCT_MODULE_NAME = OceanTestCVOpenCVD;
+				PRODUCT_NAME = OceanTestCVOpenCVD;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DACDC6A1C69F75700D5D6B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testopencv/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/opencv/3.2/h,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testopencv/osx_x64_xc9_static;
+				PRODUCT_MODULE_NAME = OceanTestCVOpenCV;
+				PRODUCT_NAME = OceanTestCVOpenCV;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DD14A5E1D953CBB00CCA9F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testopencv/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testopencv/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/opencv/3.2/h,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testopencv/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestCVOpenCVD;
+				PRODUCT_NAME = OceanTestCVOpenCVD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testopencv/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD14A5F1D953CBB00CCA9F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testopencv/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testopencv/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+					../../../../../../../3rdparty/opencv/3.2/h,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testopencv/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestCVOpenCV;
+				PRODUCT_NAME = OceanTestCVOpenCV;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testopencv/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DACDC581C69F75700D5D6B0 /* Build configuration list for PBXProject "testopencv" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DACDC661C69F75700D5D6B0 /* Debug */,
+				5DACDC671C69F75700D5D6B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DACDC681C69F75700D5D6B0 /* Build configuration list for PBXNativeTarget "testopencv x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DACDC691C69F75700D5D6B0 /* Debug */,
+				5DACDC6A1C69F75700D5D6B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD14A5D1D953CBB00CCA9F0 /* Build configuration list for PBXNativeTarget "testopencv arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD14A5E1D953CBB00CCA9F0 /* Debug */,
+				5DD14A5F1D953CBB00CCA9F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DACDC551C69F75700D5D6B0 /* Project object */;
+}

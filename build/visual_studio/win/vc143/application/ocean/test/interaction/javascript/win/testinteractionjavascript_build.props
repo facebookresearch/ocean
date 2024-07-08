@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Application Ocean Test Interaction JavaScript</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_applicationtestgeometrytestinteractionjavascript_build_imported>True</ocean_applicationtestgeometrytestinteractionjavascript_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_applicationtestinteraction_build_imported)' != 'True'" Project="..\..\application_test_interaction_build.props" />
+    <Import Condition="'$(ocean_application_console_build_imported)' != 'True'" Project="..\..\..\..\application_console_build.props" />
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\base\base_use.props" />
+    <Import Condition="'$(ocean_interaction_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\interaction\interaction_use.props" />
+    <Import Condition="'$(ocean_interactionjavascript_use_imported)' != 'True'" Project="..\..\..\..\..\..\ocean\interaction\javascript\interactionjavascript_use.props" />
+  </ImportGroup>
+</Project>

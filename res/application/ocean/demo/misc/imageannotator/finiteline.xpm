@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/* XPM */
+static const char* xpm_finiteline[] = {
+/* columns rows colors chars-per-pixel */
+"16 15 3 1",
+"  c black",
+". c #3365B7",
+"X c None",
+/* pixels */
+"XXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXX XX",
+"XXXXXXXXXXXXX XX",
+"XXXXXXXXXXX ..  ",
+"XXXXXXXXXX... XX",
+"XXXXXXXX...XX XX",
+"XX XXX...XXXXXXX",
+"XX X...XXXXXXXXX",
+"  ...XXXXXXXXXXX",
+"XX XXXXXXXXXXXXX",
+"XX XXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXX",
+"XXXXXXXXXXXXXXXX"
+};

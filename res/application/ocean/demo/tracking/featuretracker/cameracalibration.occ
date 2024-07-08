@@ -1,0 +1,487 @@
+// Copyright (c) Meta Platforms, Inc. and affiliates.
+//
+// This source code is licensed under the MIT license found in the
+// LICENSE file in the root directory of this source tree.
+
+// Ocean camera calibration file
+
+// Camera
+// {
+//     Name -> Holds the name of the camera
+//     Priority -> Holds the priority of this calibration data, possible values: LOW, MEDIUM, HIGH
+//     -> Priority and Date are used for selection of calibration data if more then one is available
+//     -> A higher priority is more important than a newer date
+//
+//     Calibration (First alternative)
+//     {
+//         ResolutionX -> Width of the image frame in pixel
+//         ResolutionY -> Height of the image frame in pixel
+//
+//         PrincipalPointX -> X position of the principal point in pixel
+//         PrincipalPointY -> Y position of the prinicpal point in pixel
+//
+//         FocalLengthX -> Horizontal focal length value in pixel
+//         FocalLengthY -> Vertical focal length value in pixel
+//
+//         RadialDistortionR2 -> Radial distortion parameter for r^2
+//         RadialDistortionR4 -> Radial distortion parameter for r^4
+//
+//         TangentialDistortion0 -> First tangential parameter
+//         TangentialDistortion1 -> Second tangential parameter
+//     }
+//
+//     Calibration (Second alternative)
+//     {
+//         ResolutionX -> Width of the image frame in pixel
+//         ResolutionY -> Height of the image frame in pixel
+//
+//         FovX -> Horizontal field of View in rad
+//     }
+//
+//     Calibration (Third alternative)
+//     {
+//         ResolutionX -> Width of the image frame in pixel
+//         ResolutionY -> Height of the image frame in pixel
+//
+//         FovY -> Vertical field of View in rad
+//     }
+// }
+
+Camera
+{
+	Name "C922 Pro Stream Webcam"
+	Priority LOW
+
+	Calibration
+	{
+		ResolutionX 640
+		ResolutionY 480
+
+		PrincipalPointX 309.09736914
+		PrincipalPointY 232.74396707
+
+		FocalLengthX 685.12643676
+		FocalLengthY 695.00901883
+
+		RadialDistortionR2 0.07524783
+		RadialDistortionR4 -0.19310302
+
+		TangentialDistortion0 -0.00263855
+		TangentialDistortion1 -0.00188676
+
+		// FovX 0.986534618786255
+	}
+
+	Calibration
+	{
+		ResolutionX 1920
+		ResolutionY 1080
+
+		PrincipalPointX 943.35628029
+		PrincipalPointY 573.48833202
+
+		FocalLengthX 1265.43456618
+		FocalLengthY 1286.62742462
+
+		RadialDistortionR2 0.07532071
+		RadialDistortionR4 -0.12394417
+
+		TangentialDistortion0 -0.00167372
+		TangentialDistortion1 -0.00105942
+
+		// FovX 1.297900659210342
+	}
+}
+
+Camera
+{
+	Name "Logitech HD Pro Webcam C920"
+	Priority LOW
+
+	Calibration
+	{
+		ResolutionX 640
+		ResolutionY 480
+
+		// Horizontal field of view of 54 degrees
+		FovX 0.942477796076938
+	}
+
+	Calibration
+	{
+		ResolutionX 800
+		ResolutionY 600
+
+		PrincipalPointX 418.02555434
+		PrincipalPointY 300.66693714
+
+		FocalLengthX 761.83603688
+		FocalLengthY 765.03960695
+
+		RadialDistortionR2 0.07570739
+		RadialDistortionR4 -0.17132481
+
+		TangentialDistortion0 0.00384170
+		TangentialDistortion1 0.00253430
+
+		// FovX 0.96661
+	}
+
+	Calibration
+	{
+		ResolutionX 1920
+		ResolutionY 1080
+
+		// Horizontal field of view of 68 degrees
+		FovX 1.1918360110326
+	}
+}
+
+Camera
+{
+	Name "Logitech QuickCam for Notebooks Pro"
+	Priority LOW
+
+	Calibration
+	{
+		ResolutionX 320
+		ResolutionY 240
+
+		PrincipalPointX 168.191223
+		PrincipalPointY 131.952301
+
+		FocalLengthX 439.635162
+		FocalLengthY 441.505371
+
+		RadialDistortionR2 -0.064084
+		RadialDistortionR4 0.028782
+
+		TangentialDistortion0 -0.001756
+		TangentialDistortion1 -0.000587
+
+		// CalibrationTool: 320 240 168.191223 131.952301 439.635162 441.505371 -0.064084 0.028782 -0.001756 -0.000587 0.0 0.0 0
+	}
+
+	Calibration
+	{
+		ResolutionX 640
+		ResolutionY 480
+
+		PrincipalPointX 341.905426
+		PrincipalPointY 262.526459
+
+		FocalLengthX 881.602661
+		FocalLengthY 885.158386
+
+		RadialDistortionR2 -0.045344
+		RadialDistortionR4 -0.014904
+
+		TangentialDistortion0 -0.002763
+		TangentialDistortion1 -0.001886
+
+		// CalibrationTool: 640 480 341.905426 262.526459 881.602661 885.158386 -0.045344 -0.014904 -0.002763 -0.001886 0.0 0.0 0
+	}
+}
+
+Camera
+{
+	Name "QuickCam for Notebooks Deluxe"
+	Priority LOW
+
+	Calibration
+	{
+		ResolutionX 320
+		ResolutionY 240
+
+		PrincipalPointX 152.503448
+		PrincipalPointY 116.901245
+
+		FocalLengthX 334.435638
+		FocalLengthY 330.655212
+
+		RadialDistortionR2 0.058074
+		RadialDistortionR4 -0.050437
+
+		TangentialDistortion0 -0.001756
+		TangentialDistortion1 -0.000587
+
+		// CalibrationTool: 320 240 152.503448 116.901245 334.435638 330.655212 0.058074 -0.050437 -0.001756 -0.000587 0.0 0.0 0
+	}
+
+	Calibration
+	{
+		ResolutionX 640
+		ResolutionY 480
+
+		PrincipalPointX 304.144989
+		PrincipalPointY 232.649841
+
+		FocalLengthX 679.352051
+		FocalLengthY 682.373657
+
+		RadialDistortionR2 0.065011
+		RadialDistortionR4 -0.040803
+
+		TangentialDistortion0 -0.002763
+		TangentialDistortion1 -0.001886
+
+		// CalibrationTool: 640 480 304.144989 232.649841 679.352051 682.373657 0.065011 -0.040803 -0.002763 -0.001886 0.0 0.0 0
+	}
+}
+
+Camera
+{
+	Name "QuickCam for Notebooks Pro"
+	Priority LOW
+
+	Calibration
+	{
+		ResolutionX 320
+		ResolutionY 240
+
+		PrincipalPointX 162.653473
+		PrincipalPointY 109.313797
+
+		FocalLengthX 279.225098
+		FocalLengthY 275.161163
+
+		RadialDistortionR2 -0.163119
+		RadialDistortionR4 0.098550
+
+		TangentialDistortion0 -0.001756
+		TangentialDistortion1 -0.000587
+
+		// CalibrationTool: 320 240 162.653473 109.313797 279.225098 275.161163 -0.163119 0.098550 -0.001756 -0.000587 0.0 0.0 0
+	}
+
+	Calibration
+	{
+		ResolutionX 640
+		ResolutionY 480
+
+		PrincipalPointX 322.764465
+		PrincipalPointY 247.446976
+
+		FocalLengthX 557.784058
+		FocalLengthY 551.862244
+
+		RadialDistortionR2 0.065027
+		RadialDistortionR4 -0.262047
+
+		TangentialDistortion0 -0.002763
+		TangentialDistortion1 -0.001886
+
+		// CalibrationTool: 640 480 322.764465 247.446976 557.784058 551.862244 0.065027 -0.262047 -0.002763 -0.001886 0.0 0.0 0
+	}
+}
+
+Camera
+{
+	Name "Logitech Webcam 905"
+	Priority LOW
+
+	Calibration
+	{
+		ResolutionX 640
+		ResolutionY 480
+
+		PrincipalPointX 317.3
+		PrincipalPointY 243.55
+
+		FocalLengthX 492.03
+		FocalLengthY 486.28
+
+		RadialDistortionR2 0.014915
+		RadialDistortionR4 -0.067893
+	}
+}
+
+Camera
+{
+	Name "QuickCam Pro for Notebooks"
+	Priority LOW
+
+	Calibration
+	{
+		ResolutionX 640
+		ResolutionY 480
+
+		PrincipalPointX 310.576294
+		PrincipalPointY 227.537384
+
+		FocalLengthX 539.756958
+		FocalLengthY 537.944336
+
+		RadialDistortionR2 0.060974
+		RadialDistortionR4 -0.171731
+
+		TangentialDistortion0 0.000094
+		TangentialDistortion1 0.001075
+
+		// CalibrationTool: 640 480 310.576294 227.537384 539.756958 537.944336 0.060974 -0.171731 0.000094 0.001075 0.0 0.0 0
+	}
+}
+
+Camera
+{
+	Name "Trust Webcam 14881"
+	Priority LOW
+
+	Calibration
+	{
+		ResolutionX 320
+		ResolutionY 240
+
+		PrincipalPointX 166.739471
+		PrincipalPointY 127.700317
+
+		FocalLengthX 301.201752
+		FocalLengthY 300.632813
+
+		RadialDistortionR2 -0.126598
+		RadialDistortionR4 0.286058
+
+		TangentialDistortion0 -0.001756
+		TangentialDistortion1 -0.000587
+
+		// CalibrationTool: 320 240 166.739471 127.700317 301.201752 300.632813 -0.126598 0.286058 -0.001756 -0.000587 0.0 0.0 0
+	}
+
+	Calibration
+	{
+		ResolutionX 640
+		ResolutionY 480
+
+		PrincipalPointX 332.891663
+		PrincipalPointY 233.952637
+
+		FocalLengthX 547.694458
+		FocalLengthY 542.601563
+
+		RadialDistortionR2 -0.191716
+		RadialDistortionR4 0.228353
+
+		TangentialDistortion0 -0.002763
+		TangentialDistortion1 -0.001886
+
+		// CalibrationTool: 640 480 332.891663 233.952637 547.694458 542.601563 -0.191716 0.228353 -0.002763 -0.001886 0.0 0.0 0
+	}
+}
+
+Camera
+{
+	Name "Logitech QuickCam for Notebooks Pro"
+	Priority LOW
+
+	Calibration
+	{
+		ResolutionX 320
+		ResolutionY 240
+
+		PrincipalPointX 168.191223
+		PrincipalPointY 131.952301
+
+		FocalLengthX 439.635162
+		FocalLengthY 441.505371
+
+		RadialDistortionR2 -0.064084
+		RadialDistortionR4 0.028782
+
+		TangentialDistortion0 -0.001756
+		TangentialDistortion1 -0.000587
+
+		// CalibrationTool: 320 240 168.191223 131.952301 439.635162 441.505371 -0.064084 0.028782 -0.001756 -0.000587 0.0 0.0 0
+	}
+
+	Calibration
+	{
+		ResolutionX 640
+		ResolutionY 480
+
+		PrincipalPointX 341.905426
+		PrincipalPointY 262.526459
+
+		FocalLengthX 881.602661
+		FocalLengthY 885.158386
+
+		RadialDistortionR2 -0.045344
+		RadialDistortionR4 -0.014904
+
+		TangentialDistortion0 -0.002763
+		TangentialDistortion1 -0.001886
+
+		// CalibrationTool: 640 480 341.905426 262.526459 881.602661 885.158386 -0.045344 -0.014904 -0.002763 -0.001886 0.0 0.0 0
+	}
+}
+
+Camera
+{
+	Name "Sony Visual Communication Camera VGP-VCC3"
+	Priority LOW
+
+	Calibration
+	{
+		ResolutionX 320
+		ResolutionY 240
+
+		PrincipalPointX 162.977905
+		PrincipalPointY 127.900696
+
+		FocalLengthX 350.982178
+		FocalLengthY 351.771942
+
+		RadialDistortionR2 -0.107626
+		RadialDistortionR4 0.147086
+
+		TangentialDistortion0 -0.001756
+		TangentialDistortion1 -0.000587
+
+		// CalibrationTool: 320 240 162.977905 127.900696 350.982178 351.771942 -0.107626 0.147086 -0.001756 -0.000587 0.0 0.0 0
+	}
+
+	Calibration
+	{
+		ResolutionX 640
+		ResolutionY 480
+
+		PrincipalPointX 326.911438
+		PrincipalPointY 236.848480
+
+		FocalLengthX 731.554993
+		FocalLengthY 732.107239
+
+		RadialDistortionR2 -0.070629
+		RadialDistortionR4 -0.052553
+
+		TangentialDistortion0 -0.002763
+		TangentialDistortion1 -0.001886
+
+		// CalibrationTool: 640 480 326.911438 236.848480 731.554993 732.107239 -0.070629 -0.052553 -0.002763 -0.001886 0.0 0.0 0
+	}
+}
+
+Camera
+{
+	Name "Integrated Webcam"
+	Priority LOW
+
+	Calibration
+	{
+		ResolutionX 640
+		ResolutionY 480
+
+		PrincipalPointX 307.225922
+		PrincipalPointY 241.129379
+
+		FocalLengthX 606.870361
+		FocalLengthY 604.710510
+
+		RadialDistortionR2 0.017664
+		RadialDistortionR4 -0.110842
+
+		TangentialDistortion0 -0.004105
+		TangentialDistortion1 -0.003818
+
+		// CalibrationTool: 640 480 307.225922 241.129379 606.870361 604.710510 0.017664 -0.110842 -0.004105 -0.003818 0.0 0.0 0
+	}
+}

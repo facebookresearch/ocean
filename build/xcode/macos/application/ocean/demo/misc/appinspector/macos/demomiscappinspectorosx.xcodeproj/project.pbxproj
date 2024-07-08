@@ -1,0 +1,441 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		933C74752107CF5F001E8C7A /* BinaryAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933C74712107CF5E001E8C7A /* BinaryAnalyzer.cpp */; };
+		933C74762107CF5F001E8C7A /* DisassemblerAndroid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933C74722107CF5E001E8C7A /* DisassemblerAndroid.cpp */; };
+		933C74772107CF5F001E8C7A /* DisassemblerIOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933C74732107CF5E001E8C7A /* DisassemblerIOS.cpp */; };
+		933C74782107CF5F001E8C7A /* Disassembler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933C74742107CF5E001E8C7A /* Disassembler.cpp */; };
+		935734042026D66B007ECB18 /* ItemView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 935734032026D66B007ECB18 /* ItemView.mm */; };
+		938F75532037643C00B0A6BE /* SymbolView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 938F75522037643B00B0A6BE /* SymbolView.mm */; };
+		939EAC9C20830320007AEC0D /* CallGraphWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 939EAC9B2083031F007AEC0D /* CallGraphWindow.mm */; };
+		93BB417E203CD9A600CDC96C /* CallGraphView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93BB417D203CD9A600CDC96C /* CallGraphView.mm */; };
+		93C38B7A1FA5C44400848963 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93C38B781FA5C44400848963 /* AppDelegate.mm */; };
+		93C38B7B1FA5C44400848963 /* Application.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93C38B791FA5C44400848963 /* Application.mm */; };
+		93C38B7E1FA5C78600848963 /* Application.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93C38B7D1FA5C78600848963 /* Application.xib */; };
+		93D773972085D29E008E37A7 /* ApplicationView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D773962085D29D008E37A7 /* ApplicationView.mm */; };
+		93D8950B208B27470006C730 /* ConsoleWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93D8950A208B27470006C730 /* ConsoleWindow.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5DD7935F1BBBDF7300E76616 /* demomiscappinspectorosx.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = demomiscappinspectorosx.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		933C746D2107CF23001E8C7A /* Disassembler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Disassembler.h; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/Disassembler.h; sourceTree = "<group>"; };
+		933C746E2107CF23001E8C7A /* DisassemblerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisassemblerIOS.h; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/DisassemblerIOS.h; sourceTree = "<group>"; };
+		933C746F2107CF23001E8C7A /* DisassemblerAndroid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisassemblerAndroid.h; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/DisassemblerAndroid.h; sourceTree = "<group>"; };
+		933C74702107CF23001E8C7A /* BinaryAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BinaryAnalyzer.h; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/BinaryAnalyzer.h; sourceTree = "<group>"; };
+		933C74712107CF5E001E8C7A /* BinaryAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BinaryAnalyzer.cpp; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/BinaryAnalyzer.cpp; sourceTree = "<group>"; };
+		933C74722107CF5E001E8C7A /* DisassemblerAndroid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DisassemblerAndroid.cpp; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/DisassemblerAndroid.cpp; sourceTree = "<group>"; };
+		933C74732107CF5E001E8C7A /* DisassemblerIOS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DisassemblerIOS.cpp; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/DisassemblerIOS.cpp; sourceTree = "<group>"; };
+		933C74742107CF5E001E8C7A /* Disassembler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Disassembler.cpp; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/Disassembler.cpp; sourceTree = "<group>"; };
+		935734032026D66B007ECB18 /* ItemView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ItemView.mm; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/ItemView.mm; sourceTree = "<group>"; };
+		935734052026D690007ECB18 /* ItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ItemView.h; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/ItemView.h; sourceTree = "<group>"; };
+		938F75512037641700B0A6BE /* SymbolView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SymbolView.h; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/SymbolView.h; sourceTree = "<group>"; };
+		938F75522037643B00B0A6BE /* SymbolView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = SymbolView.mm; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/SymbolView.mm; sourceTree = "<group>"; };
+		939EAC9A208302F1007AEC0D /* CallGraphWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CallGraphWindow.h; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/CallGraphWindow.h; sourceTree = "<group>"; };
+		939EAC9B2083031F007AEC0D /* CallGraphWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CallGraphWindow.mm; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/CallGraphWindow.mm; sourceTree = "<group>"; };
+		93BB417C203CD98D00CDC96C /* CallGraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CallGraphView.h; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/CallGraphView.h; sourceTree = "<group>"; };
+		93BB417D203CD9A600CDC96C /* CallGraphView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CallGraphView.mm; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/CallGraphView.mm; sourceTree = "<group>"; };
+		93C38B751FA5C42700848963 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../res/application/ocean/demo/misc/appinspector/osx/Info.plist; sourceTree = "<group>"; };
+		93C38B781FA5C44400848963 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/AppDelegate.mm; sourceTree = "<group>"; };
+		93C38B791FA5C44400848963 /* Application.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/Application.mm; sourceTree = "<group>"; };
+		93C38B7C1FA5C46000848963 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/AppDelegate.h; sourceTree = "<group>"; };
+		93C38B7D1FA5C78600848963 /* Application.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = Application.xib; path = ../../../../../../../../../res/application/ocean/demo/misc/appinspector/osx/Application.xib; sourceTree = "<group>"; };
+		93D773962085D29D008E37A7 /* ApplicationView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ApplicationView.mm; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/ApplicationView.mm; sourceTree = "<group>"; };
+		93D773982085D2B5008E37A7 /* ApplicationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ApplicationView.h; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/ApplicationView.h; sourceTree = "<group>"; };
+		93D8950A208B27470006C730 /* ConsoleWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ConsoleWindow.mm; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/ConsoleWindow.mm; sourceTree = "<group>"; };
+		93D8950C208B27660006C730 /* ConsoleWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConsoleWindow.h; path = ../../../../../../../../../impl/application/ocean/demo/misc/appinspector/osx/ConsoleWindow.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DD7935C1BBBDF7300E76616 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DD793561BBBDF7300E76616 = {
+			isa = PBXGroup;
+			children = (
+				5DD793831BBBE7AC00E76616 /* Header Files */,
+				5DD793821BBBE7A500E76616 /* Source Files */,
+				5DD793841BBBE7FA00E76616 /* Resources */,
+				5DD793601BBBDF7300E76616 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DD793601BBBDF7300E76616 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DD7935F1BBBDF7300E76616 /* demomiscappinspectorosx.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DD793821BBBE7A500E76616 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				93C38B781FA5C44400848963 /* AppDelegate.mm */,
+				93C38B791FA5C44400848963 /* Application.mm */,
+				93D773962085D29D008E37A7 /* ApplicationView.mm */,
+				933C74712107CF5E001E8C7A /* BinaryAnalyzer.cpp */,
+				93BB417D203CD9A600CDC96C /* CallGraphView.mm */,
+				939EAC9B2083031F007AEC0D /* CallGraphWindow.mm */,
+				93D8950A208B27470006C730 /* ConsoleWindow.mm */,
+				933C74742107CF5E001E8C7A /* Disassembler.cpp */,
+				933C74722107CF5E001E8C7A /* DisassemblerAndroid.cpp */,
+				933C74732107CF5E001E8C7A /* DisassemblerIOS.cpp */,
+				935734032026D66B007ECB18 /* ItemView.mm */,
+				938F75522037643B00B0A6BE /* SymbolView.mm */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DD793831BBBE7AC00E76616 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				93C38B7C1FA5C46000848963 /* AppDelegate.h */,
+				93D773982085D2B5008E37A7 /* ApplicationView.h */,
+				933C74702107CF23001E8C7A /* BinaryAnalyzer.h */,
+				93BB417C203CD98D00CDC96C /* CallGraphView.h */,
+				939EAC9A208302F1007AEC0D /* CallGraphWindow.h */,
+				93D8950C208B27660006C730 /* ConsoleWindow.h */,
+				933C746D2107CF23001E8C7A /* Disassembler.h */,
+				933C746F2107CF23001E8C7A /* DisassemblerAndroid.h */,
+				933C746E2107CF23001E8C7A /* DisassemblerIOS.h */,
+				935734052026D690007ECB18 /* ItemView.h */,
+				938F75512037641700B0A6BE /* SymbolView.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DD793841BBBE7FA00E76616 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				93C38B7D1FA5C78600848963 /* Application.xib */,
+				93C38B751FA5C42700848963 /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5DD7935E1BBBDF7300E76616 /* demomiscappinspectorosx x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD7937C1BBBDF7300E76616 /* Build configuration list for PBXNativeTarget "demomiscappinspectorosx x64 (Static)" */;
+			buildPhases = (
+				5DD7935B1BBBDF7300E76616 /* Sources */,
+				5DD7935C1BBBDF7300E76616 /* Frameworks */,
+				5DD7935D1BBBDF7300E76616 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "demomiscappinspectorosx x64 (Static)";
+			productName = demomiscappinspectorosx;
+			productReference = 5DD7935F1BBBDF7300E76616 /* demomiscappinspectorosx.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DD793571BBBDF7300E76616 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DD7935E1BBBDF7300E76616 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DD7935A1BBBDF7300E76616 /* Build configuration list for PBXProject "demomiscappinspectorosx" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DD793561BBBDF7300E76616;
+			productRefGroup = 5DD793601BBBDF7300E76616 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DD7935E1BBBDF7300E76616 /* demomiscappinspectorosx x64 (Static) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5DD7935D1BBBDF7300E76616 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93C38B7E1FA5C78600848963 /* Application.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DD7935B1BBBDF7300E76616 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93C38B7B1FA5C44400848963 /* Application.mm in Sources */,
+				933C74762107CF5F001E8C7A /* DisassemblerAndroid.cpp in Sources */,
+				933C74752107CF5F001E8C7A /* BinaryAnalyzer.cpp in Sources */,
+				93BB417E203CD9A600CDC96C /* CallGraphView.mm in Sources */,
+				933C74772107CF5F001E8C7A /* DisassemblerIOS.cpp in Sources */,
+				93D8950B208B27470006C730 /* ConsoleWindow.mm in Sources */,
+				938F75532037643C00B0A6BE /* SymbolView.mm in Sources */,
+				93D773972085D29E008E37A7 /* ApplicationView.mm in Sources */,
+				939EAC9C20830320007AEC0D /* CallGraphWindow.mm in Sources */,
+				935734042026D66B007ECB18 /* ItemView.mm in Sources */,
+				93C38B7A1FA5C44400848963 /* AppDelegate.mm in Sources */,
+				933C74782107CF5F001E8C7A /* Disassembler.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DD7937A1BBBDF7300E76616 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DD7937B1BBBDF7300E76616 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DD7937D1BBBDF7300E76616 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../../bin/application/ocean/demo/misc/osx/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../../bin/tmp/impl/application/ocean/demo/demomiscappinspectorosx/osx/osx_x64_xc9_static_debug;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/demo/misc/appinspector/osx/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				OBJROOT = ../../../../../../../../../bin/tmp/impl/application/ocean/demo/demomiscappinspectorosx/osx/osx_x64_xc9_static_debug;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanPlatformD",
+					"-lOceanPlatformAppleD",
+					"-lOceanPlatformAppleMacOSD",
+					"-lOceanSystemD",
+					"-framework",
+					AppKit,
+				);
+				PRODUCT_MODULE_NAME = demomiscappinspectorosx;
+				PRODUCT_NAME = demomiscappinspectorosx;
+				SYMROOT = ../../../../../../../../../bin/application/ocean/demo/misc/osx/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+			};
+			name = Debug;
+		};
+		5DD7937E1BBBDF7300E76616 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../../../bin/application/ocean/demo/misc/osx/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../../../bin/tmp/impl/application/ocean/demo/demomiscappinspectorosx/osx/osx_x64_xc9_static;
+				COPY_PHASE_STRIP = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../res/application/ocean/demo/misc/appinspector/osx/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../../../bin/lib/osx_x64_xc9_static;
+				OBJROOT = ../../../../../../../../../bin/tmp/impl/application/ocean/demo/demomiscappinspectorosx/osx/osx_x64_xc9_static;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanPlatform",
+					"-lOceanPlatformApple",
+					"-lOceanPlatformAppleMacOS",
+					"-lOceanSystem",
+					"-framework",
+					AppKit,
+				);
+				PRODUCT_MODULE_NAME = demomiscappinspectorosx;
+				PRODUCT_NAME = demomiscappinspectorosx;
+				SYMROOT = ../../../../../../../../../bin/application/ocean/demo/misc/osx/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DD7935A1BBBDF7300E76616 /* Build configuration list for PBXProject "demomiscappinspectorosx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD7937A1BBBDF7300E76616 /* Debug */,
+				5DD7937B1BBBDF7300E76616 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD7937C1BBBDF7300E76616 /* Build configuration list for PBXNativeTarget "demomiscappinspectorosx x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD7937D1BBBDF7300E76616 /* Debug */,
+				5DD7937E1BBBDF7300E76616 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DD793571BBBDF7300E76616 /* Project object */;
+}

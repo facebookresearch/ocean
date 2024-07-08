@@ -1,0 +1,524 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		507D226A2C178AE500C01F40 /* development_team.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 507D22692C178AE500C01F40 /* development_team.xcconfig */; };
+		5D50B1B71D92824F009DDDFF /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B41D92824F009DDDFF /* AppDelegate.mm */; };
+		5D50B1B91D92824F009DDDFF /* Application.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5D50B1B61D92824F009DDDFF /* Application.mm */; };
+		5D73B0661D92C5FA000B5F33 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */; };
+		93E8E52523C91F89009272F5 /* PointTrackerWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93E8E52423C91F89009272F5 /* PointTrackerWrapper.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		507D22692C178AE500C01F40 /* development_team.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = development_team.xcconfig; sourceTree = "<group>"; };
+		5D4A716A1D8B10B000B8B729 /* demotrackingpointtrackerios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = demotrackingpointtrackerios.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D50B1B41D92824F009DDDFF /* AppDelegate.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = AppDelegate.mm; path = ../../../../../../../../../impl/application/ocean/demo/tracking/pointtracker/ios/AppDelegate.mm; sourceTree = "<group>"; };
+		5D50B1B61D92824F009DDDFF /* Application.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Application.mm; path = ../../../../../../../../../impl/application/ocean/demo/tracking/pointtracker/ios/Application.mm; sourceTree = "<group>"; };
+		5D50B1BA1D9282A9009DDDFF /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ../../../../../../../../../impl/application/ocean/demo/tracking/pointtracker/ios/AppDelegate.h; sourceTree = "<group>"; };
+		5D50B1BC1D9282EE009DDDFF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../../../../res/application/ocean/demo/tracking/pointtracker/ios/Info.plist; sourceTree = "<group>"; };
+		5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = ../../../../../../../../../res/application/ocean/demo/tracking/pointtracker/ios/LaunchScreen.xib; sourceTree = "<group>"; };
+		93E8E52323C91F85009272F5 /* PointTrackerWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PointTrackerWrapper.h; path = ../../../../../../../../../impl/application/ocean/demo/tracking/pointtracker/PointTrackerWrapper.h; sourceTree = "<group>"; };
+		93E8E52423C91F89009272F5 /* PointTrackerWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PointTrackerWrapper.cpp; path = ../../../../../../../../../impl/application/ocean/demo/tracking/pointtracker/PointTrackerWrapper.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D4A71671D8B10B000B8B729 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		507D22682C178ACE00C01F40 /* Config Files */ = {
+			isa = PBXGroup;
+			children = (
+				507D22692C178AE500C01F40 /* development_team.xcconfig */,
+			);
+			name = "Config Files";
+			sourceTree = "<group>";
+		};
+		5D4A71611D8B10B000B8B729 = {
+			isa = PBXGroup;
+			children = (
+				5DF0B9571D8FE33E00BE5D21 /* Header Files */,
+				5DF0B9561D8FE33000BE5D21 /* Source Files */,
+				5DF0B9581D8FE35D00BE5D21 /* Resource Files */,
+				507D22682C178ACE00C01F40 /* Config Files */,
+				5D4A716B1D8B10B000B8B729 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D4A716B1D8B10B000B8B729 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D4A716A1D8B10B000B8B729 /* demotrackingpointtrackerios.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DF0B9561D8FE33000BE5D21 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				93E8E52423C91F89009272F5 /* PointTrackerWrapper.cpp */,
+				5D50B1B41D92824F009DDDFF /* AppDelegate.mm */,
+				5D50B1B61D92824F009DDDFF /* Application.mm */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DF0B9571D8FE33E00BE5D21 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D50B1BA1D9282A9009DDDFF /* AppDelegate.h */,
+				93E8E52323C91F85009272F5 /* PointTrackerWrapper.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DF0B9581D8FE35D00BE5D21 /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D50B1BC1D9282EE009DDDFF /* Info.plist */,
+				5D73B0641D92C5FA000B5F33 /* LaunchScreen.xib */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5D4A71691D8B10B000B8B729 /* demotrackingpointtrackerios arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "demotrackingpointtrackerios arm64 (Static)" */;
+			buildPhases = (
+				5D4A71661D8B10B000B8B729 /* Sources */,
+				5D4A71671D8B10B000B8B729 /* Frameworks */,
+				5D4A71681D8B10B000B8B729 /* Resources */,
+				5D113DE11D93DEF000E6523B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "demotrackingpointtrackerios arm64 (Static)";
+			productName = demotrackingpointtrackerios;
+			productReference = 5D4A716A1D8B10B000B8B729 /* demotrackingpointtrackerios.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D4A71621D8B10B000B8B729 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D4A71691D8B10B000B8B729 = {
+						CreatedOnToolsVersion = 6.4;
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "demotrackingpointtrackerios" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D4A71611D8B10B000B8B729;
+			productRefGroup = 5D4A716B1D8B10B000B8B729 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D4A71691D8B10B000B8B729 /* demotrackingpointtrackerios arm64 (Static) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5D4A71681D8B10B000B8B729 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D73B0661D92C5FA000B5F33 /* LaunchScreen.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D113DE11D93DEF000E6523B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../../../copy_arm_static.sh \"../../../../../../../../../bin/application/ocean/demo/tracking/ios/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D4A71661D8B10B000B8B729 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93E8E52523C91F89009272F5 /* PointTrackerWrapper.cpp in Sources */,
+				5D50B1B91D92824F009DDDFF /* Application.mm in Sources */,
+				5D50B1B71D92824F009DDDFF /* AppDelegate.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D4A718F1D8B10B000B8B729 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 507D22692C178AE500C01F40 /* development_team.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5D4A71901D8B10B000B8B729 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 507D22692C178AE500C01F40 /* development_team.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				STRIP_PNG_TEXT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5D4A71921D8B10B000B8B729 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackingpointtrackerios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackingpointtrackerios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../impl/application/ocean/demo/tracking/pointtracker/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../../../../bin/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../3rdparty/freetype/2.10/lib/ios_arm64_xc_static_debug,
+					../../../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static_debug,
+					../../../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static_debug,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../../../../bin/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../3rdparty/freetype/2.10/lib/ios_i386_xc_static_debug,
+					../../../../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static_debug,
+					../../../../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static_debug,
+				);
+				OBJROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackingpointtrackerios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanCVFontsD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanMediaAVFoundationD",
+					"-lOceanMediaImageIOD",
+					"-lOceanPlatformD",
+					"-lOceanPlatformAppleD",
+					"-lOceanPlatformAppleIOSD",
+					"-lOceanRenderingD",
+					"-lOceanRenderingGLESceneGraphD",
+					"-lOceanSystemD",
+					"-lOceanTrackingD",
+					"-lOceanTrackingPointD",
+					"-lfreetype",
+					"-lpng",
+					"-lzlib",
+					"-framework",
+					UIKit,
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					ImageIO,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					CoreGraphics,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.pointtracker.ios;
+				PRODUCT_MODULE_NAME = demotrackingpointtrackerios;
+				PRODUCT_NAME = demotrackingpointtrackerios;
+				SYMROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackingpointtrackerios/osx_x64_xc9_static_debug$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D4A71931D8B10B000B8B729 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackingpointtrackerios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackingpointtrackerios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					../../../../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../../../../impl/application/ocean/demo/tracking/pointtracker/ios/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					../../../../../../../../../bin/lib/ios_arm64_xc9_static,
+					../../../../../../../../../3rdparty/freetype/2.10/lib/ios_arm64_xc_static,
+					../../../../../../../../../3rdparty/libpng/lib/ios_arm64_xc9_static,
+					../../../../../../../../../3rdparty/zlib/lib/ios_arm64_xc9_static,
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					../../../../../../../../../bin/lib/ios_i386_xc9_static,
+					../../../../../../../../../3rdparty/freetype/2.10/lib/ios_i386_xc_static,
+					../../../../../../../../../3rdparty/libpng/lib/ios_i386_xc9_static,
+					../../../../../../../../../3rdparty/zlib/lib/ios_i386_xc9_static,
+				);
+				OBJROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackingpointtrackerios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanCVFonts",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lOceanMedia",
+					"-lOceanMediaAVFoundation",
+					"-lOceanMediaImageIO",
+					"-lOceanPlatform",
+					"-lOceanPlatformApple",
+					"-lOceanPlatformAppleIOS",
+					"-lOceanRendering",
+					"-lOceanRenderingGLESceneGraph",
+					"-lOceanSystem",
+					"-lOceanTracking",
+					"-lOceanTrackingPoint",
+					"-lfreetype",
+					"-lpng",
+					"-lzlib",
+					"-framework",
+					UIKit,
+					"-framework",
+					GLKit,
+					"-framework",
+					AVFoundation,
+					"-framework",
+					ImageIO,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					OpenGLES,
+					"-framework",
+					CoreGraphics,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meta.ocean.app.demo.tracking.pointtracker.ios;
+				PRODUCT_MODULE_NAME = demotrackingpointtrackerios;
+				PRODUCT_NAME = demotrackingpointtrackerios;
+				SYMROOT = "../../../../../../../../../bin/tmp/impl/application/ocean/demotrackingpointtrackerios/osx_x64_xc9_static$(EFFECTIVE_PLATFORM_NAME)";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D4A71651D8B10B000B8B729 /* Build configuration list for PBXProject "demotrackingpointtrackerios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D4A718F1D8B10B000B8B729 /* Debug */,
+				5D4A71901D8B10B000B8B729 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D4A71911D8B10B000B8B729 /* Build configuration list for PBXNativeTarget "demotrackingpointtrackerios arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D4A71921D8B10B000B8B729 /* Debug */,
+				5D4A71931D8B10B000B8B729 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D4A71621D8B10B000B8B729 /* Project object */;
+}

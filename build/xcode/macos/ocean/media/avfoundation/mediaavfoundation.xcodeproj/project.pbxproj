@@ -1,0 +1,1243 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D73B0701D92D6B8000B5F33 /* AVFDevices.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D73B06F1D92D6B8000B5F33 /* AVFDevices.h */; };
+		5D73B0711D92D6B8000B5F33 /* AVFDevices.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D73B06F1D92D6B8000B5F33 /* AVFDevices.h */; };
+		5D73B0721D92D6B8000B5F33 /* AVFDevices.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D73B06F1D92D6B8000B5F33 /* AVFDevices.h */; };
+		5D9862C41D8B5C2400DEDB00 /* AVFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F541BF105D9002F55E3 /* AVFoundation.h */; };
+		5D9862C51D8B5C2400DEDB00 /* AVFMovie.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F531BF105D9002F55E3 /* AVFMovie.h */; };
+		5D9862C61D8B5C2400DEDB00 /* AVFLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F501BF105D9002F55E3 /* AVFLibrary.h */; };
+		5D9862C71D8B5C2400DEDB00 /* AVFFrameMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F4F1BF105D9002F55E3 /* AVFFrameMedium.h */; };
+		5D9862C81D8B5C2400DEDB00 /* AVFLiveVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F511BF105D9002F55E3 /* AVFLiveVideo.h */; };
+		5D9862C91D8B5C2400DEDB00 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F551BF105D9002F55E3 /* Plugin.h */; };
+		5D9862CA1D8B5C2400DEDB00 /* AVFMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F521BF105D9002F55E3 /* AVFMedium.h */; };
+		9324685F1F993F2E00C87E50 /* AVFDevices.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808461F955B9A00206EA8 /* AVFDevices.mm */; };
+		932468601F993F2E00C87E50 /* AVFFrameMedium.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808421F955B9A00206EA8 /* AVFFrameMedium.mm */; };
+		932468611F993F2E00C87E50 /* AVFLibrary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808451F955B9A00206EA8 /* AVFLibrary.mm */; };
+		932468621F993F2E00C87E50 /* AVFLiveVideo.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808431F955B9A00206EA8 /* AVFLiveVideo.mm */; };
+		932468631F993F2E00C87E50 /* AVFMedium.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808471F955B9A00206EA8 /* AVFMedium.mm */; };
+		932468641F993F2E00C87E50 /* AVFMovie.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808441F955B9A00206EA8 /* AVFMovie.mm */; };
+		932468651F993F2E00C87E50 /* AVFoundation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808411F955B9900206EA8 /* AVFoundation.mm */; };
+		932468661F993F2E00C87E50 /* Plugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808481F955B9A00206EA8 /* Plugin.mm */; };
+		932468671F993F2E00C87E50 /* AVFDevices.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808461F955B9A00206EA8 /* AVFDevices.mm */; };
+		932468681F993F2E00C87E50 /* AVFFrameMedium.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808421F955B9A00206EA8 /* AVFFrameMedium.mm */; };
+		932468691F993F2E00C87E50 /* AVFLibrary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808451F955B9A00206EA8 /* AVFLibrary.mm */; };
+		9324686A1F993F2E00C87E50 /* AVFLiveVideo.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808431F955B9A00206EA8 /* AVFLiveVideo.mm */; };
+		9324686B1F993F2E00C87E50 /* AVFMedium.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808471F955B9A00206EA8 /* AVFMedium.mm */; };
+		9324686C1F993F2E00C87E50 /* AVFMovie.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808441F955B9A00206EA8 /* AVFMovie.mm */; };
+		9324686D1F993F2E00C87E50 /* AVFoundation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808411F955B9900206EA8 /* AVFoundation.mm */; };
+		9324686E1F993F2E00C87E50 /* Plugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808481F955B9A00206EA8 /* Plugin.mm */; };
+		9324686F1F993F2F00C87E50 /* AVFDevices.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808461F955B9A00206EA8 /* AVFDevices.mm */; };
+		932468701F993F2F00C87E50 /* AVFFrameMedium.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808421F955B9A00206EA8 /* AVFFrameMedium.mm */; };
+		932468711F993F2F00C87E50 /* AVFLibrary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808451F955B9A00206EA8 /* AVFLibrary.mm */; };
+		932468721F993F2F00C87E50 /* AVFLiveVideo.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808431F955B9A00206EA8 /* AVFLiveVideo.mm */; };
+		932468731F993F2F00C87E50 /* AVFMedium.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808471F955B9A00206EA8 /* AVFMedium.mm */; };
+		932468741F993F2F00C87E50 /* AVFMovie.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808441F955B9A00206EA8 /* AVFMovie.mm */; };
+		932468751F993F2F00C87E50 /* AVFoundation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808411F955B9900206EA8 /* AVFoundation.mm */; };
+		932468761F993F2F00C87E50 /* Plugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808481F955B9A00206EA8 /* Plugin.mm */; };
+		932468771F993F2F00C87E50 /* AVFDevices.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808461F955B9A00206EA8 /* AVFDevices.mm */; };
+		932468781F993F2F00C87E50 /* AVFFrameMedium.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808421F955B9A00206EA8 /* AVFFrameMedium.mm */; };
+		932468791F993F2F00C87E50 /* AVFLibrary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808451F955B9A00206EA8 /* AVFLibrary.mm */; };
+		9324687A1F993F2F00C87E50 /* AVFLiveVideo.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808431F955B9A00206EA8 /* AVFLiveVideo.mm */; };
+		9324687B1F993F2F00C87E50 /* AVFMedium.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808471F955B9A00206EA8 /* AVFMedium.mm */; };
+		9324687C1F993F2F00C87E50 /* AVFMovie.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808441F955B9A00206EA8 /* AVFMovie.mm */; };
+		9324687D1F993F2F00C87E50 /* AVFoundation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808411F955B9900206EA8 /* AVFoundation.mm */; };
+		9324687E1F993F2F00C87E50 /* Plugin.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932808481F955B9A00206EA8 /* Plugin.mm */; };
+		932DA4282918BDF10035B939 /* AVFLiveAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 932DA4272918BDF00035B939 /* AVFLiveAudio.h */; };
+		932DA4292918BDF10035B939 /* AVFLiveAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 932DA4272918BDF00035B939 /* AVFLiveAudio.h */; };
+		932DA42A2918BDF10035B939 /* AVFLiveAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 932DA4272918BDF00035B939 /* AVFLiveAudio.h */; };
+		932DA42B2918BDF10035B939 /* AVFLiveAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 932DA4272918BDF00035B939 /* AVFLiveAudio.h */; };
+		932DA42D2918BE2F0035B939 /* AVFLiveAudio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932DA42C2918BE2F0035B939 /* AVFLiveAudio.mm */; };
+		932DA42E2918BE2F0035B939 /* AVFLiveAudio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932DA42C2918BE2F0035B939 /* AVFLiveAudio.mm */; };
+		932DA42F2918BE2F0035B939 /* AVFLiveAudio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932DA42C2918BE2F0035B939 /* AVFLiveAudio.mm */; };
+		932DA4302918BE2F0035B939 /* AVFLiveAudio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 932DA42C2918BE2F0035B939 /* AVFLiveAudio.mm */; };
+		935CA4A324381EC500879BB8 /* AVFMovieRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 935CA4A224381EC500879BB8 /* AVFMovieRecorder.h */; };
+		935CA4A424381EC500879BB8 /* AVFMovieRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 935CA4A224381EC500879BB8 /* AVFMovieRecorder.h */; };
+		935CA4A524381EC500879BB8 /* AVFMovieRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 935CA4A224381EC500879BB8 /* AVFMovieRecorder.h */; };
+		935CA4A624381EC500879BB8 /* AVFMovieRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 935CA4A224381EC500879BB8 /* AVFMovieRecorder.h */; };
+		935CA4A824381EDA00879BB8 /* AVFMovieRecorder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 935CA4A724381EDA00879BB8 /* AVFMovieRecorder.mm */; };
+		935CA4A924381EDA00879BB8 /* AVFMovieRecorder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 935CA4A724381EDA00879BB8 /* AVFMovieRecorder.mm */; };
+		935CA4AA24381EDA00879BB8 /* AVFMovieRecorder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 935CA4A724381EDA00879BB8 /* AVFMovieRecorder.mm */; };
+		935CA4AB24381EDA00879BB8 /* AVFMovieRecorder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 935CA4A724381EDA00879BB8 /* AVFMovieRecorder.mm */; };
+		93A0D48626D87A5000E4F263 /* AVFAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A0D48526D87A5000E4F263 /* AVFAudio.h */; };
+		93A0D48726D87A5000E4F263 /* AVFAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A0D48526D87A5000E4F263 /* AVFAudio.h */; };
+		93A0D48826D87A5000E4F263 /* AVFAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A0D48526D87A5000E4F263 /* AVFAudio.h */; };
+		93A0D48926D87A5000E4F263 /* AVFAudio.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A0D48526D87A5000E4F263 /* AVFAudio.h */; };
+		93A0D48B26D87AF300E4F263 /* AVFAudio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93A0D48A26D87AF300E4F263 /* AVFAudio.mm */; };
+		93A0D48C26D87AF300E4F263 /* AVFAudio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93A0D48A26D87AF300E4F263 /* AVFAudio.mm */; };
+		93A0D48D26D87AF300E4F263 /* AVFAudio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93A0D48A26D87AF300E4F263 /* AVFAudio.mm */; };
+		93A0D48E26D87AF300E4F263 /* AVFAudio.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93A0D48A26D87AF300E4F263 /* AVFAudio.mm */; };
+		93A8608121F590950006B425 /* PixelBufferAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A8608021F590940006B425 /* PixelBufferAccessor.h */; };
+		93A8608221F590950006B425 /* PixelBufferAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A8608021F590940006B425 /* PixelBufferAccessor.h */; };
+		93A8608321F590950006B425 /* PixelBufferAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A8608021F590940006B425 /* PixelBufferAccessor.h */; };
+		93A8608421F590950006B425 /* PixelBufferAccessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 93A8608021F590940006B425 /* PixelBufferAccessor.h */; };
+		93A8608621F590A70006B425 /* PixelBufferAccessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93A8608521F590A70006B425 /* PixelBufferAccessor.mm */; };
+		93A8608721F590A70006B425 /* PixelBufferAccessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93A8608521F590A70006B425 /* PixelBufferAccessor.mm */; };
+		93A8608821F590A70006B425 /* PixelBufferAccessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93A8608521F590A70006B425 /* PixelBufferAccessor.mm */; };
+		93A8608921F590A70006B425 /* PixelBufferAccessor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93A8608521F590A70006B425 /* PixelBufferAccessor.mm */; };
+		93C62CEF2915988B002DBFD6 /* AVFMicrophone.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93C62CEE2915988B002DBFD6 /* AVFMicrophone.mm */; };
+		93C62CF02915988B002DBFD6 /* AVFMicrophone.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93C62CEE2915988B002DBFD6 /* AVFMicrophone.mm */; };
+		93C62CF12915988B002DBFD6 /* AVFMicrophone.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93C62CEE2915988B002DBFD6 /* AVFMicrophone.mm */; };
+		93C62CF22915988B002DBFD6 /* AVFMicrophone.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93C62CEE2915988B002DBFD6 /* AVFMicrophone.mm */; };
+		93C62CF4291598D1002DBFD6 /* AVFMicrophone.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C62CF3291598D1002DBFD6 /* AVFMicrophone.h */; };
+		93C62CF5291598D1002DBFD6 /* AVFMicrophone.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C62CF3291598D1002DBFD6 /* AVFMicrophone.h */; };
+		93C62CF6291598D1002DBFD6 /* AVFMicrophone.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C62CF3291598D1002DBFD6 /* AVFMicrophone.h */; };
+		93C62CF7291598D1002DBFD6 /* AVFMicrophone.h in Headers */ = {isa = PBXBuildFile; fileRef = 93C62CF3291598D1002DBFD6 /* AVFMicrophone.h */; };
+		C0023F561BF105D9002F55E3 /* AVFFrameMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F4F1BF105D9002F55E3 /* AVFFrameMedium.h */; };
+		C0023F571BF105D9002F55E3 /* AVFLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F501BF105D9002F55E3 /* AVFLibrary.h */; };
+		C0023F581BF105D9002F55E3 /* AVFLiveVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F511BF105D9002F55E3 /* AVFLiveVideo.h */; };
+		C0023F591BF105D9002F55E3 /* AVFMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F521BF105D9002F55E3 /* AVFMedium.h */; };
+		C0023F5A1BF105D9002F55E3 /* AVFMovie.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F531BF105D9002F55E3 /* AVFMovie.h */; };
+		C0023F5B1BF105D9002F55E3 /* AVFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F541BF105D9002F55E3 /* AVFoundation.h */; };
+		C0023F5C1BF105D9002F55E3 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F551BF105D9002F55E3 /* Plugin.h */; };
+		C0023F721BF10784002F55E3 /* AVFFrameMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F4F1BF105D9002F55E3 /* AVFFrameMedium.h */; };
+		C0023F731BF10784002F55E3 /* AVFLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F501BF105D9002F55E3 /* AVFLibrary.h */; };
+		C0023F741BF10784002F55E3 /* AVFLiveVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F511BF105D9002F55E3 /* AVFLiveVideo.h */; };
+		C0023F751BF10784002F55E3 /* AVFMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F521BF105D9002F55E3 /* AVFMedium.h */; };
+		C0023F761BF10784002F55E3 /* AVFMovie.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F531BF105D9002F55E3 /* AVFMovie.h */; };
+		C0023F771BF10784002F55E3 /* AVFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F541BF105D9002F55E3 /* AVFoundation.h */; };
+		C0023F781BF10784002F55E3 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F551BF105D9002F55E3 /* Plugin.h */; };
+		C041EC6D1DABEC6C00BF5D76 /* AVFFrameMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F4F1BF105D9002F55E3 /* AVFFrameMedium.h */; };
+		C041EC6E1DABEC6C00BF5D76 /* AVFLibrary.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F501BF105D9002F55E3 /* AVFLibrary.h */; };
+		C041EC6F1DABEC6C00BF5D76 /* AVFDevices.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D73B06F1D92D6B8000B5F33 /* AVFDevices.h */; };
+		C041EC701DABEC6C00BF5D76 /* AVFLiveVideo.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F511BF105D9002F55E3 /* AVFLiveVideo.h */; };
+		C041EC711DABEC6C00BF5D76 /* AVFMedium.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F521BF105D9002F55E3 /* AVFMedium.h */; };
+		C041EC721DABEC6C00BF5D76 /* AVFMovie.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F531BF105D9002F55E3 /* AVFMovie.h */; };
+		C041EC731DABEC6C00BF5D76 /* AVFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F541BF105D9002F55E3 /* AVFoundation.h */; };
+		C041EC741DABEC6C00BF5D76 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = C0023F551BF105D9002F55E3 /* Plugin.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D0A01B51BC2D2ED0008C798 /* OceanMediaAVFoundationD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanMediaAVFoundationD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D63F5A71B9760C100E2498E /* libOceanMediaAVFoundationD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMediaAVFoundationD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D73B06F1D92D6B8000B5F33 /* AVFDevices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVFDevices.h; path = ../../../../../../impl/ocean/media/avfoundation/AVFDevices.h; sourceTree = "<group>"; };
+		5D9862CE1D8B5C2400DEDB00 /* libOceanMediaAVFoundationD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanMediaAVFoundationD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD0C0A21BD5633100ABBC5B /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../res/ocean/media/avfoundation/osx/Info.plist; sourceTree = "<group>"; };
+		932808411F955B9900206EA8 /* AVFoundation.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVFoundation.mm; path = ../../../../../../impl/ocean/media/avfoundation/AVFoundation.mm; sourceTree = "<group>"; };
+		932808421F955B9A00206EA8 /* AVFFrameMedium.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVFFrameMedium.mm; path = ../../../../../../impl/ocean/media/avfoundation/AVFFrameMedium.mm; sourceTree = "<group>"; };
+		932808431F955B9A00206EA8 /* AVFLiveVideo.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVFLiveVideo.mm; path = ../../../../../../impl/ocean/media/avfoundation/AVFLiveVideo.mm; sourceTree = "<group>"; };
+		932808441F955B9A00206EA8 /* AVFMovie.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVFMovie.mm; path = ../../../../../../impl/ocean/media/avfoundation/AVFMovie.mm; sourceTree = "<group>"; };
+		932808451F955B9A00206EA8 /* AVFLibrary.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVFLibrary.mm; path = ../../../../../../impl/ocean/media/avfoundation/AVFLibrary.mm; sourceTree = "<group>"; };
+		932808461F955B9A00206EA8 /* AVFDevices.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVFDevices.mm; path = ../../../../../../impl/ocean/media/avfoundation/AVFDevices.mm; sourceTree = "<group>"; };
+		932808471F955B9A00206EA8 /* AVFMedium.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = AVFMedium.mm; path = ../../../../../../impl/ocean/media/avfoundation/AVFMedium.mm; sourceTree = "<group>"; };
+		932808481F955B9A00206EA8 /* Plugin.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = Plugin.mm; path = ../../../../../../impl/ocean/media/avfoundation/Plugin.mm; sourceTree = "<group>"; };
+		932DA4272918BDF00035B939 /* AVFLiveAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVFLiveAudio.h; path = ../../../../../../impl/ocean/media/avfoundation/AVFLiveAudio.h; sourceTree = "<group>"; };
+		932DA42C2918BE2F0035B939 /* AVFLiveAudio.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AVFLiveAudio.mm; path = ../../../../../../impl/ocean/media/avfoundation/AVFLiveAudio.mm; sourceTree = "<group>"; };
+		935CA4A224381EC500879BB8 /* AVFMovieRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVFMovieRecorder.h; path = ../../../../../../impl/ocean/media/avfoundation/AVFMovieRecorder.h; sourceTree = "<group>"; };
+		935CA4A724381EDA00879BB8 /* AVFMovieRecorder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AVFMovieRecorder.mm; path = ../../../../../../impl/ocean/media/avfoundation/AVFMovieRecorder.mm; sourceTree = "<group>"; };
+		93A0D48526D87A5000E4F263 /* AVFAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVFAudio.h; path = ../../../../../../impl/ocean/media/avfoundation/AVFAudio.h; sourceTree = "<group>"; };
+		93A0D48A26D87AF300E4F263 /* AVFAudio.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AVFAudio.mm; path = ../../../../../../impl/ocean/media/avfoundation/AVFAudio.mm; sourceTree = "<group>"; };
+		93A8608021F590940006B425 /* PixelBufferAccessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelBufferAccessor.h; path = ../../../../../../impl/ocean/media/avfoundation/PixelBufferAccessor.h; sourceTree = "<group>"; };
+		93A8608521F590A70006B425 /* PixelBufferAccessor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PixelBufferAccessor.mm; path = ../../../../../../impl/ocean/media/avfoundation/PixelBufferAccessor.mm; sourceTree = "<group>"; };
+		93C62CEE2915988B002DBFD6 /* AVFMicrophone.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AVFMicrophone.mm; path = ../../../../../../impl/ocean/media/avfoundation/AVFMicrophone.mm; sourceTree = "<group>"; };
+		93C62CF3291598D1002DBFD6 /* AVFMicrophone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVFMicrophone.h; path = ../../../../../../impl/ocean/media/avfoundation/AVFMicrophone.h; sourceTree = "<group>"; };
+		C0023F4F1BF105D9002F55E3 /* AVFFrameMedium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVFFrameMedium.h; path = ../../../../../../impl/ocean/media/avfoundation/AVFFrameMedium.h; sourceTree = "<group>"; };
+		C0023F501BF105D9002F55E3 /* AVFLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVFLibrary.h; path = ../../../../../../impl/ocean/media/avfoundation/AVFLibrary.h; sourceTree = "<group>"; };
+		C0023F511BF105D9002F55E3 /* AVFLiveVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVFLiveVideo.h; path = ../../../../../../impl/ocean/media/avfoundation/AVFLiveVideo.h; sourceTree = "<group>"; };
+		C0023F521BF105D9002F55E3 /* AVFMedium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVFMedium.h; path = ../../../../../../impl/ocean/media/avfoundation/AVFMedium.h; sourceTree = "<group>"; };
+		C0023F531BF105D9002F55E3 /* AVFMovie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVFMovie.h; path = ../../../../../../impl/ocean/media/avfoundation/AVFMovie.h; sourceTree = "<group>"; };
+		C0023F541BF105D9002F55E3 /* AVFoundation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AVFoundation.h; path = ../../../../../../impl/ocean/media/avfoundation/AVFoundation.h; sourceTree = "<group>"; };
+		C0023F551BF105D9002F55E3 /* Plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plugin.h; path = ../../../../../../impl/ocean/media/avfoundation/Plugin.h; sourceTree = "<group>"; };
+		C041EC7A1DABEC6C00BF5D76 /* OceanMediaAVFoundationD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanMediaAVFoundationD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D0A01A61BC2D2ED0008C798 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5A41B9760C100E2498E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862C21D8B5C2400DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC6B1DABEC6C00BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D0A01851BC2D2A00008C798 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				93A0D48526D87A5000E4F263 /* AVFAudio.h */,
+				5D73B06F1D92D6B8000B5F33 /* AVFDevices.h */,
+				C0023F4F1BF105D9002F55E3 /* AVFFrameMedium.h */,
+				C0023F501BF105D9002F55E3 /* AVFLibrary.h */,
+				932DA4272918BDF00035B939 /* AVFLiveAudio.h */,
+				C0023F511BF105D9002F55E3 /* AVFLiveVideo.h */,
+				C0023F521BF105D9002F55E3 /* AVFMedium.h */,
+				C0023F531BF105D9002F55E3 /* AVFMovie.h */,
+				93C62CF3291598D1002DBFD6 /* AVFMicrophone.h */,
+				935CA4A224381EC500879BB8 /* AVFMovieRecorder.h */,
+				C0023F541BF105D9002F55E3 /* AVFoundation.h */,
+				93A8608021F590940006B425 /* PixelBufferAccessor.h */,
+				C0023F551BF105D9002F55E3 /* Plugin.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5D63F59E1B9760C100E2498E = {
+			isa = PBXGroup;
+			children = (
+				5D0A01851BC2D2A00008C798 /* Header Files */,
+				5D63F5A81B9760C100E2498E /* Products */,
+				5DD0C0A11BD5631700ABBC5B /* Resource Files */,
+				5D63F5B51B97611400E2498E /* Source Files */,
+			);
+			sourceTree = "<group>";
+		};
+		5D63F5A81B9760C100E2498E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D63F5A71B9760C100E2498E /* libOceanMediaAVFoundationD.a */,
+				5D0A01B51BC2D2ED0008C798 /* OceanMediaAVFoundationD.plugin */,
+				5D9862CE1D8B5C2400DEDB00 /* libOceanMediaAVFoundationD.a */,
+				C041EC7A1DABEC6C00BF5D76 /* OceanMediaAVFoundationD.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D63F5B51B97611400E2498E /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				93A0D48A26D87AF300E4F263 /* AVFAudio.mm */,
+				932808461F955B9A00206EA8 /* AVFDevices.mm */,
+				932808421F955B9A00206EA8 /* AVFFrameMedium.mm */,
+				932808451F955B9A00206EA8 /* AVFLibrary.mm */,
+				932DA42C2918BE2F0035B939 /* AVFLiveAudio.mm */,
+				932808431F955B9A00206EA8 /* AVFLiveVideo.mm */,
+				932808471F955B9A00206EA8 /* AVFMedium.mm */,
+				93C62CEE2915988B002DBFD6 /* AVFMicrophone.mm */,
+				932808441F955B9A00206EA8 /* AVFMovie.mm */,
+				935CA4A724381EDA00879BB8 /* AVFMovieRecorder.mm */,
+				932808411F955B9900206EA8 /* AVFoundation.mm */,
+				93A8608521F590A70006B425 /* PixelBufferAccessor.mm */,
+				932808481F955B9A00206EA8 /* Plugin.mm */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DD0C0A11BD5631700ABBC5B /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DD0C0A21BD5633100ABBC5B /* Info.plist */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D0A01A71BC2D2ED0008C798 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A8608221F590950006B425 /* PixelBufferAccessor.h in Headers */,
+				C0023F721BF10784002F55E3 /* AVFFrameMedium.h in Headers */,
+				C0023F731BF10784002F55E3 /* AVFLibrary.h in Headers */,
+				5D73B0711D92D6B8000B5F33 /* AVFDevices.h in Headers */,
+				93A0D48726D87A5000E4F263 /* AVFAudio.h in Headers */,
+				932DA4292918BDF10035B939 /* AVFLiveAudio.h in Headers */,
+				C0023F741BF10784002F55E3 /* AVFLiveVideo.h in Headers */,
+				C0023F751BF10784002F55E3 /* AVFMedium.h in Headers */,
+				C0023F761BF10784002F55E3 /* AVFMovie.h in Headers */,
+				935CA4A424381EC500879BB8 /* AVFMovieRecorder.h in Headers */,
+				C0023F771BF10784002F55E3 /* AVFoundation.h in Headers */,
+				93C62CF5291598D1002DBFD6 /* AVFMicrophone.h in Headers */,
+				C0023F781BF10784002F55E3 /* Plugin.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5A51B9760C100E2498E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A8608121F590950006B425 /* PixelBufferAccessor.h in Headers */,
+				C0023F5B1BF105D9002F55E3 /* AVFoundation.h in Headers */,
+				C0023F5A1BF105D9002F55E3 /* AVFMovie.h in Headers */,
+				5D73B0701D92D6B8000B5F33 /* AVFDevices.h in Headers */,
+				93A0D48626D87A5000E4F263 /* AVFAudio.h in Headers */,
+				932DA4282918BDF10035B939 /* AVFLiveAudio.h in Headers */,
+				C0023F571BF105D9002F55E3 /* AVFLibrary.h in Headers */,
+				C0023F561BF105D9002F55E3 /* AVFFrameMedium.h in Headers */,
+				C0023F581BF105D9002F55E3 /* AVFLiveVideo.h in Headers */,
+				935CA4A324381EC500879BB8 /* AVFMovieRecorder.h in Headers */,
+				C0023F5C1BF105D9002F55E3 /* Plugin.h in Headers */,
+				93C62CF4291598D1002DBFD6 /* AVFMicrophone.h in Headers */,
+				C0023F591BF105D9002F55E3 /* AVFMedium.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862C31D8B5C2400DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A8608321F590950006B425 /* PixelBufferAccessor.h in Headers */,
+				5D9862C41D8B5C2400DEDB00 /* AVFoundation.h in Headers */,
+				5D9862C51D8B5C2400DEDB00 /* AVFMovie.h in Headers */,
+				5D73B0721D92D6B8000B5F33 /* AVFDevices.h in Headers */,
+				93A0D48826D87A5000E4F263 /* AVFAudio.h in Headers */,
+				932DA42A2918BDF10035B939 /* AVFLiveAudio.h in Headers */,
+				5D9862C61D8B5C2400DEDB00 /* AVFLibrary.h in Headers */,
+				5D9862C71D8B5C2400DEDB00 /* AVFFrameMedium.h in Headers */,
+				5D9862C81D8B5C2400DEDB00 /* AVFLiveVideo.h in Headers */,
+				935CA4A524381EC500879BB8 /* AVFMovieRecorder.h in Headers */,
+				5D9862C91D8B5C2400DEDB00 /* Plugin.h in Headers */,
+				93C62CF6291598D1002DBFD6 /* AVFMicrophone.h in Headers */,
+				5D9862CA1D8B5C2400DEDB00 /* AVFMedium.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC6C1DABEC6C00BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A8608421F590950006B425 /* PixelBufferAccessor.h in Headers */,
+				C041EC6D1DABEC6C00BF5D76 /* AVFFrameMedium.h in Headers */,
+				C041EC6E1DABEC6C00BF5D76 /* AVFLibrary.h in Headers */,
+				C041EC6F1DABEC6C00BF5D76 /* AVFDevices.h in Headers */,
+				93A0D48926D87A5000E4F263 /* AVFAudio.h in Headers */,
+				932DA42B2918BDF10035B939 /* AVFLiveAudio.h in Headers */,
+				C041EC701DABEC6C00BF5D76 /* AVFLiveVideo.h in Headers */,
+				C041EC711DABEC6C00BF5D76 /* AVFMedium.h in Headers */,
+				C041EC721DABEC6C00BF5D76 /* AVFMovie.h in Headers */,
+				935CA4A624381EC500879BB8 /* AVFMovieRecorder.h in Headers */,
+				C041EC731DABEC6C00BF5D76 /* AVFoundation.h in Headers */,
+				93C62CF7291598D1002DBFD6 /* AVFMicrophone.h in Headers */,
+				C041EC741DABEC6C00BF5D76 /* Plugin.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D0A019A1BC2D2ED0008C798 /* mediaavfoundation x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D0A01B21BC2D2ED0008C798 /* Build configuration list for PBXNativeTarget "mediaavfoundation x64 (Shared)" */;
+			buildPhases = (
+				5D0A019B1BC2D2ED0008C798 /* Sources */,
+				5D0A01A61BC2D2ED0008C798 /* Frameworks */,
+				5D0A01A71BC2D2ED0008C798 /* Headers */,
+				5DD0C0A51BD5665E00ABBC5B /* Resources */,
+				5DD0C0C11BD6A48D00ABBC5B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaavfoundation x64 (Shared)";
+			productName = mediaavfoundation;
+			productReference = 5D0A01B51BC2D2ED0008C798 /* OceanMediaAVFoundationD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+		5D63F5A61B9760C100E2498E /* mediaavfoundation x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D63F5B21B9760C100E2498E /* Build configuration list for PBXNativeTarget "mediaavfoundation x64 (Static)" */;
+			buildPhases = (
+				5D63F5A31B9760C100E2498E /* Sources */,
+				5D63F5A41B9760C100E2498E /* Frameworks */,
+				5D63F5A51B9760C100E2498E /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaavfoundation x64 (Static)";
+			productName = mediaavfoundation;
+			productReference = 5D63F5A71B9760C100E2498E /* libOceanMediaAVFoundationD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D9862B91D8B5C2400DEDB00 /* mediaavfoundation arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9862CB1D8B5C2400DEDB00 /* Build configuration list for PBXNativeTarget "mediaavfoundation arm64 (Static)" */;
+			buildPhases = (
+				5D9862BA1D8B5C2400DEDB00 /* Sources */,
+				5D9862C21D8B5C2400DEDB00 /* Frameworks */,
+				5D9862C31D8B5C2400DEDB00 /* Headers */,
+				5D837F521D8F102D00939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaavfoundation arm64 (Static)";
+			productName = mediaavfoundation;
+			productReference = 5D9862CE1D8B5C2400DEDB00 /* libOceanMediaAVFoundationD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EC611DABEC6C00BF5D76 /* mediaavfoundation arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EC771DABEC6C00BF5D76 /* Build configuration list for PBXNativeTarget "mediaavfoundation arm64 (Shared)" */;
+			buildPhases = (
+				C041EC621DABEC6C00BF5D76 /* Sources */,
+				C041EC6B1DABEC6C00BF5D76 /* Frameworks */,
+				C041EC6C1DABEC6C00BF5D76 /* Headers */,
+				C041EC751DABEC6C00BF5D76 /* Resources */,
+				C041EC761DABEC6C00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mediaavfoundation arm64 (Shared)";
+			productName = mediaavfoundation;
+			productReference = C041EC7A1DABEC6C00BF5D76 /* OceanMediaAVFoundationD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D63F59F1B9760C100E2498E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D63F5A61B9760C100E2498E = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D63F5A21B9760C100E2498E /* Build configuration list for PBXProject "mediaavfoundation" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D63F59E1B9760C100E2498E;
+			productRefGroup = 5D63F5A81B9760C100E2498E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D63F5A61B9760C100E2498E /* mediaavfoundation x64 (Static) */,
+				5D0A019A1BC2D2ED0008C798 /* mediaavfoundation x64 (Shared) */,
+				5D9862B91D8B5C2400DEDB00 /* mediaavfoundation arm64 (Static) */,
+				C041EC611DABEC6C00BF5D76 /* mediaavfoundation arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5DD0C0A51BD5665E00ABBC5B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC751DABEC6C00BF5D76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F521D8F102D00939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		5DD0C0C11BD6A48D00ABBC5B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+		C041EC761DABEC6C00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D0A019B1BC2D2ED0008C798 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A8608721F590A70006B425 /* PixelBufferAccessor.mm in Sources */,
+				932DA42E2918BE2F0035B939 /* AVFLiveAudio.mm in Sources */,
+				93C62CF02915988B002DBFD6 /* AVFMicrophone.mm in Sources */,
+				9324686E1F993F2E00C87E50 /* Plugin.mm in Sources */,
+				935CA4A924381EDA00879BB8 /* AVFMovieRecorder.mm in Sources */,
+				9324686C1F993F2E00C87E50 /* AVFMovie.mm in Sources */,
+				932468681F993F2E00C87E50 /* AVFFrameMedium.mm in Sources */,
+				932468671F993F2E00C87E50 /* AVFDevices.mm in Sources */,
+				9324686B1F993F2E00C87E50 /* AVFMedium.mm in Sources */,
+				9324686D1F993F2E00C87E50 /* AVFoundation.mm in Sources */,
+				932468691F993F2E00C87E50 /* AVFLibrary.mm in Sources */,
+				93A0D48C26D87AF300E4F263 /* AVFAudio.mm in Sources */,
+				9324686A1F993F2E00C87E50 /* AVFLiveVideo.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D63F5A31B9760C100E2498E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A8608621F590A70006B425 /* PixelBufferAccessor.mm in Sources */,
+				932DA42D2918BE2F0035B939 /* AVFLiveAudio.mm in Sources */,
+				93C62CEF2915988B002DBFD6 /* AVFMicrophone.mm in Sources */,
+				932468661F993F2E00C87E50 /* Plugin.mm in Sources */,
+				935CA4A824381EDA00879BB8 /* AVFMovieRecorder.mm in Sources */,
+				932468641F993F2E00C87E50 /* AVFMovie.mm in Sources */,
+				932468601F993F2E00C87E50 /* AVFFrameMedium.mm in Sources */,
+				9324685F1F993F2E00C87E50 /* AVFDevices.mm in Sources */,
+				932468631F993F2E00C87E50 /* AVFMedium.mm in Sources */,
+				932468651F993F2E00C87E50 /* AVFoundation.mm in Sources */,
+				932468611F993F2E00C87E50 /* AVFLibrary.mm in Sources */,
+				93A0D48B26D87AF300E4F263 /* AVFAudio.mm in Sources */,
+				932468621F993F2E00C87E50 /* AVFLiveVideo.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9862BA1D8B5C2400DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A8608821F590A70006B425 /* PixelBufferAccessor.mm in Sources */,
+				932DA42F2918BE2F0035B939 /* AVFLiveAudio.mm in Sources */,
+				93C62CF12915988B002DBFD6 /* AVFMicrophone.mm in Sources */,
+				932468761F993F2F00C87E50 /* Plugin.mm in Sources */,
+				935CA4AA24381EDA00879BB8 /* AVFMovieRecorder.mm in Sources */,
+				932468741F993F2F00C87E50 /* AVFMovie.mm in Sources */,
+				932468701F993F2F00C87E50 /* AVFFrameMedium.mm in Sources */,
+				9324686F1F993F2F00C87E50 /* AVFDevices.mm in Sources */,
+				932468731F993F2F00C87E50 /* AVFMedium.mm in Sources */,
+				932468751F993F2F00C87E50 /* AVFoundation.mm in Sources */,
+				932468711F993F2F00C87E50 /* AVFLibrary.mm in Sources */,
+				93A0D48D26D87AF300E4F263 /* AVFAudio.mm in Sources */,
+				932468721F993F2F00C87E50 /* AVFLiveVideo.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EC621DABEC6C00BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93A8608921F590A70006B425 /* PixelBufferAccessor.mm in Sources */,
+				932DA4302918BE2F0035B939 /* AVFLiveAudio.mm in Sources */,
+				93C62CF22915988B002DBFD6 /* AVFMicrophone.mm in Sources */,
+				9324687E1F993F2F00C87E50 /* Plugin.mm in Sources */,
+				935CA4AB24381EDA00879BB8 /* AVFMovieRecorder.mm in Sources */,
+				9324687C1F993F2F00C87E50 /* AVFMovie.mm in Sources */,
+				932468781F993F2F00C87E50 /* AVFFrameMedium.mm in Sources */,
+				932468771F993F2F00C87E50 /* AVFDevices.mm in Sources */,
+				9324687B1F993F2F00C87E50 /* AVFMedium.mm in Sources */,
+				9324687D1F993F2F00C87E50 /* AVFoundation.mm in Sources */,
+				932468791F993F2F00C87E50 /* AVFLibrary.mm in Sources */,
+				93A0D48E26D87AF300E4F263 /* AVFAudio.mm in Sources */,
+				9324687A1F993F2F00C87E50 /* AVFLiveVideo.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D0A01B31BC2D2ED0008C798 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaavfoundation/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/avfoundation/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaavfoundation/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lOceanMediaD",
+					"-lOceanPlatformAppleD",
+					"-lOceanSystemD",
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					Foundation,
+				);
+				PRODUCT_MODULE_NAME = OceanMediaAVFoundationD;
+				PRODUCT_NAME = OceanMediaAVFoundationD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		5D0A01B41BC2D2ED0008C798 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaavfoundation/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/avfoundation/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaavfoundation/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanIO",
+					"-lOceanMedia",
+					"-lOceanSystem",
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					Foundation,
+				);
+				PRODUCT_MODULE_NAME = OceanMediaAVFoundation;
+				PRODUCT_NAME = OceanMediaAVFoundation;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+		5D63F5B01B9760C100E2498E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D63F5B11B9760C100E2498E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D63F5B31B9760C100E2498E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaavfoundation/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaavfoundation/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaAVFoundationD;
+				PRODUCT_NAME = OceanMediaAVFoundationD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D63F5B41B9760C100E2498E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/mediaavfoundation/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/mediaavfoundation/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaAVFoundation;
+				PRODUCT_NAME = OceanMediaAVFoundation;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D9862CC1D8B5C2400DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaAVFoundationD;
+				PRODUCT_NAME = OceanMediaAVFoundationD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D9862CD1D8B5C2400DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanMediaAVFoundation;
+				PRODUCT_NAME = OceanMediaAVFoundation;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EC781DABEC6C00BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/avfoundation/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanIOD",
+					"-lOceanMediaD",
+					"-lOceanSystemD",
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					Foundation,
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanMediaAVFoundationD;
+				PRODUCT_NAME = OceanMediaAVFoundationD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		C041EC791DABEC6C00BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				GENERATE_PKGINFO_FILE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/media/avfoundation/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanIO",
+					"-lOceanMedia",
+					"-lOceanSystem",
+					"-framework",
+					AVFoundation,
+					"-framework",
+					CoreMedia,
+					"-framework",
+					CoreVideo,
+					"-framework",
+					Foundation,
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanMediaAVFoundation;
+				PRODUCT_NAME = OceanMediaAVFoundation;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/mediaavfoundation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D0A01B21BC2D2ED0008C798 /* Build configuration list for PBXNativeTarget "mediaavfoundation x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D0A01B31BC2D2ED0008C798 /* Debug */,
+				5D0A01B41BC2D2ED0008C798 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D63F5A21B9760C100E2498E /* Build configuration list for PBXProject "mediaavfoundation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D63F5B01B9760C100E2498E /* Debug */,
+				5D63F5B11B9760C100E2498E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D63F5B21B9760C100E2498E /* Build configuration list for PBXNativeTarget "mediaavfoundation x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D63F5B31B9760C100E2498E /* Debug */,
+				5D63F5B41B9760C100E2498E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9862CB1D8B5C2400DEDB00 /* Build configuration list for PBXNativeTarget "mediaavfoundation arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D9862CC1D8B5C2400DEDB00 /* Debug */,
+				5D9862CD1D8B5C2400DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EC771DABEC6C00BF5D76 /* Build configuration list for PBXNativeTarget "mediaavfoundation arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EC781DABEC6C00BF5D76 /* Debug */,
+				C041EC791DABEC6C00BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D63F59F1B9760C100E2498E /* Project object */;
+}

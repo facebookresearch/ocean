@@ -1,0 +1,970 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5DD14A641D953DF200CCA9F0 /* TestCVSegmentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9B11C8761C40035D95A /* TestCVSegmentation.cpp */; };
+		5DD14A651D953DF200CCA9F0 /* TestMaskAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9B21C8761C40035D95A /* TestMaskAnalyzer.cpp */; };
+		5DD14A681D953DF200CCA9F0 /* TestMaskAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9AD1C8761A00035D95A /* TestMaskAnalyzer.h */; };
+		5DD14A691D953DF200CCA9F0 /* TestCVSegmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9AC1C8761A00035D95A /* TestCVSegmentation.h */; };
+		5DEAE9AE1C8761A00035D95A /* TestCVSegmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9AC1C8761A00035D95A /* TestCVSegmentation.h */; };
+		5DEAE9AF1C8761A00035D95A /* TestMaskAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9AD1C8761A00035D95A /* TestMaskAnalyzer.h */; };
+		5DEAE9B31C8761C40035D95A /* TestCVSegmentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9B11C8761C40035D95A /* TestCVSegmentation.cpp */; };
+		5DEAE9B41C8761C40035D95A /* TestMaskAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9B21C8761C40035D95A /* TestMaskAnalyzer.cpp */; };
+		5DEAE9B71C8762120035D95A /* TestCVSegmentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9B11C8761C40035D95A /* TestCVSegmentation.cpp */; };
+		5DEAE9B81C8762120035D95A /* TestMaskAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9B21C8761C40035D95A /* TestMaskAnalyzer.cpp */; };
+		5DEAE9BB1C8762120035D95A /* TestMaskAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9AD1C8761A00035D95A /* TestMaskAnalyzer.h */; };
+		5DEAE9BC1C8762120035D95A /* TestCVSegmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9AC1C8761A00035D95A /* TestCVSegmentation.h */; };
+		9300C94B27CE16AB00806E93 /* TestBinPacking.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C94A27CE16AA00806E93 /* TestBinPacking.h */; };
+		9300C94C27CE16AB00806E93 /* TestBinPacking.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C94A27CE16AA00806E93 /* TestBinPacking.h */; };
+		9300C94D27CE16AB00806E93 /* TestBinPacking.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C94A27CE16AA00806E93 /* TestBinPacking.h */; };
+		9300C94E27CE16AB00806E93 /* TestBinPacking.h in Headers */ = {isa = PBXBuildFile; fileRef = 9300C94A27CE16AA00806E93 /* TestBinPacking.h */; };
+		9300C95027CE16BC00806E93 /* TestBinPacking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9300C94F27CE16BB00806E93 /* TestBinPacking.cpp */; };
+		9300C95127CE16BC00806E93 /* TestBinPacking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9300C94F27CE16BB00806E93 /* TestBinPacking.cpp */; };
+		9300C95227CE16BC00806E93 /* TestBinPacking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9300C94F27CE16BB00806E93 /* TestBinPacking.cpp */; };
+		9300C95327CE16BC00806E93 /* TestBinPacking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9300C94F27CE16BB00806E93 /* TestBinPacking.cpp */; };
+		9360235E29F6F3590037FC3C /* TestMaskCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9360235D29F6F3590037FC3C /* TestMaskCreator.cpp */; };
+		9360235F29F6F3590037FC3C /* TestMaskCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9360235D29F6F3590037FC3C /* TestMaskCreator.cpp */; };
+		9360236029F6F3590037FC3C /* TestMaskCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9360235D29F6F3590037FC3C /* TestMaskCreator.cpp */; };
+		9360236129F6F3590037FC3C /* TestMaskCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9360235D29F6F3590037FC3C /* TestMaskCreator.cpp */; };
+		9360236329F6F35F0037FC3C /* TestMaskCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9360236229F6F35F0037FC3C /* TestMaskCreator.h */; };
+		9360236429F6F35F0037FC3C /* TestMaskCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9360236229F6F35F0037FC3C /* TestMaskCreator.h */; };
+		9360236529F6F35F0037FC3C /* TestMaskCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9360236229F6F35F0037FC3C /* TestMaskCreator.h */; };
+		9360236629F6F35F0037FC3C /* TestMaskCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9360236229F6F35F0037FC3C /* TestMaskCreator.h */; };
+		C0E9B0EF1DACECEA00895C4B /* TestCVSegmentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9B11C8761C40035D95A /* TestCVSegmentation.cpp */; };
+		C0E9B0F01DACECEA00895C4B /* TestMaskAnalyzer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DEAE9B21C8761C40035D95A /* TestMaskAnalyzer.cpp */; };
+		C0E9B0F31DACECEA00895C4B /* TestMaskAnalyzer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9AD1C8761A00035D95A /* TestMaskAnalyzer.h */; };
+		C0E9B0F41DACECEA00895C4B /* TestCVSegmentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DEAE9AC1C8761A00035D95A /* TestCVSegmentation.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5DD14A6D1D953DF200CCA9F0 /* libOceanTestCVSegmentationD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVSegmentationD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DEAE99D1C87609D0035D95A /* libOceanTestCVSegmentationD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVSegmentationD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DEAE9AC1C8761A00035D95A /* TestCVSegmentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestCVSegmentation.h; path = ../../../../../../../impl/ocean/test/testcv/testsegmentation/TestCVSegmentation.h; sourceTree = "<group>"; };
+		5DEAE9AD1C8761A00035D95A /* TestMaskAnalyzer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestMaskAnalyzer.h; path = ../../../../../../../impl/ocean/test/testcv/testsegmentation/TestMaskAnalyzer.h; sourceTree = "<group>"; };
+		5DEAE9B11C8761C40035D95A /* TestCVSegmentation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCVSegmentation.cpp; path = ../../../../../../../impl/ocean/test/testcv/testsegmentation/TestCVSegmentation.cpp; sourceTree = "<group>"; };
+		5DEAE9B21C8761C40035D95A /* TestMaskAnalyzer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestMaskAnalyzer.cpp; path = ../../../../../../../impl/ocean/test/testcv/testsegmentation/TestMaskAnalyzer.cpp; sourceTree = "<group>"; };
+		5DEAE9C01C8762120035D95A /* libOceanTestCVSegmentationD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVSegmentationD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9300C94A27CE16AA00806E93 /* TestBinPacking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestBinPacking.h; path = ../../../../../../../impl/ocean/test/testcv/testsegmentation/TestBinPacking.h; sourceTree = "<group>"; };
+		9300C94F27CE16BB00806E93 /* TestBinPacking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestBinPacking.cpp; path = ../../../../../../../impl/ocean/test/testcv/testsegmentation/TestBinPacking.cpp; sourceTree = "<group>"; };
+		9360235D29F6F3590037FC3C /* TestMaskCreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestMaskCreator.cpp; path = ../../../../../../../impl/ocean/test/testcv/testsegmentation/TestMaskCreator.cpp; sourceTree = "<group>"; };
+		9360236229F6F35F0037FC3C /* TestMaskCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestMaskCreator.h; path = ../../../../../../../impl/ocean/test/testcv/testsegmentation/TestMaskCreator.h; sourceTree = "<group>"; };
+		C0E9B0F91DACECEA00895C4B /* libOceanTestCVSegmentationD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVSegmentationD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DD14A661D953DF200CCA9F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DEAE99A1C87609D0035D95A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DEAE9B91C8762120035D95A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0F11DACECEA00895C4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DEAE9941C87609D0035D95A = {
+			isa = PBXGroup;
+			children = (
+				5DEAE9AB1C87617C0035D95A /* Header Files */,
+				5DEAE9B01C8761A40035D95A /* Source Files */,
+				5DEAE99E1C87609D0035D95A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DEAE99E1C87609D0035D95A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DEAE99D1C87609D0035D95A /* libOceanTestCVSegmentationD.a */,
+				5DEAE9C01C8762120035D95A /* libOceanTestCVSegmentationD.dylib */,
+				5DD14A6D1D953DF200CCA9F0 /* libOceanTestCVSegmentationD.a */,
+				C0E9B0F91DACECEA00895C4B /* libOceanTestCVSegmentationD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DEAE9AB1C87617C0035D95A /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				9300C94A27CE16AA00806E93 /* TestBinPacking.h */,
+				5DEAE9AC1C8761A00035D95A /* TestCVSegmentation.h */,
+				5DEAE9AD1C8761A00035D95A /* TestMaskAnalyzer.h */,
+				9360236229F6F35F0037FC3C /* TestMaskCreator.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5DEAE9B01C8761A40035D95A /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				9300C94F27CE16BB00806E93 /* TestBinPacking.cpp */,
+				5DEAE9B11C8761C40035D95A /* TestCVSegmentation.cpp */,
+				5DEAE9B21C8761C40035D95A /* TestMaskAnalyzer.cpp */,
+				9360235D29F6F3590037FC3C /* TestMaskCreator.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5DD14A671D953DF200CCA9F0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9300C94D27CE16AB00806E93 /* TestBinPacking.h in Headers */,
+				5DD14A681D953DF200CCA9F0 /* TestMaskAnalyzer.h in Headers */,
+				5DD14A691D953DF200CCA9F0 /* TestCVSegmentation.h in Headers */,
+				9360236529F6F35F0037FC3C /* TestMaskCreator.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DEAE99B1C87609D0035D95A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9300C94B27CE16AB00806E93 /* TestBinPacking.h in Headers */,
+				5DEAE9AF1C8761A00035D95A /* TestMaskAnalyzer.h in Headers */,
+				5DEAE9AE1C8761A00035D95A /* TestCVSegmentation.h in Headers */,
+				9360236329F6F35F0037FC3C /* TestMaskCreator.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DEAE9BA1C8762120035D95A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9300C94C27CE16AB00806E93 /* TestBinPacking.h in Headers */,
+				5DEAE9BB1C8762120035D95A /* TestMaskAnalyzer.h in Headers */,
+				5DEAE9BC1C8762120035D95A /* TestCVSegmentation.h in Headers */,
+				9360236429F6F35F0037FC3C /* TestMaskCreator.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0F21DACECEA00895C4B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9300C94E27CE16AB00806E93 /* TestBinPacking.h in Headers */,
+				C0E9B0F31DACECEA00895C4B /* TestMaskAnalyzer.h in Headers */,
+				C0E9B0F41DACECEA00895C4B /* TestCVSegmentation.h in Headers */,
+				9360236629F6F35F0037FC3C /* TestMaskCreator.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5DD14A621D953DF200CCA9F0 /* testcvsegmentation arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD14A6A1D953DF200CCA9F0 /* Build configuration list for PBXNativeTarget "testcvsegmentation arm64 (Static)" */;
+			buildPhases = (
+				5DD14A631D953DF200CCA9F0 /* Sources */,
+				5DD14A661D953DF200CCA9F0 /* Frameworks */,
+				5DD14A671D953DF200CCA9F0 /* Headers */,
+				5DD14A6E1D953DFF00CCA9F0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvsegmentation arm64 (Static)";
+			productName = testcvsegmentation;
+			productReference = 5DD14A6D1D953DF200CCA9F0 /* libOceanTestCVSegmentationD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DEAE99C1C87609D0035D95A /* testcvsegmentation x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DEAE9A81C87609D0035D95A /* Build configuration list for PBXNativeTarget "testcvsegmentation x64 (Static)" */;
+			buildPhases = (
+				5DEAE9991C87609D0035D95A /* Sources */,
+				5DEAE99A1C87609D0035D95A /* Frameworks */,
+				5DEAE99B1C87609D0035D95A /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvsegmentation x64 (Static)";
+			productName = testcvsegmentation;
+			productReference = 5DEAE99D1C87609D0035D95A /* libOceanTestCVSegmentationD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DEAE9B51C8762120035D95A /* testcvsegmentation x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DEAE9BD1C8762120035D95A /* Build configuration list for PBXNativeTarget "testcvsegmentation x64 (Shared)" */;
+			buildPhases = (
+				5DEAE9B61C8762120035D95A /* Sources */,
+				5DEAE9B91C8762120035D95A /* Frameworks */,
+				5DEAE9BA1C8762120035D95A /* Headers */,
+				C0E9B0FA1DACED8A00895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvsegmentation x64 (Shared)";
+			productName = testcvsegmentation;
+			productReference = 5DEAE9C01C8762120035D95A /* libOceanTestCVSegmentationD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C0E9B0ED1DACECEA00895C4B /* testcvsegmentation arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0E9B0F61DACECEA00895C4B /* Build configuration list for PBXNativeTarget "testcvsegmentation arm64 (Shared)" */;
+			buildPhases = (
+				C0E9B0EE1DACECEA00895C4B /* Sources */,
+				C0E9B0F11DACECEA00895C4B /* Frameworks */,
+				C0E9B0F21DACECEA00895C4B /* Headers */,
+				C0E9B0F51DACECEA00895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvsegmentation arm64 (Shared)";
+			productName = testcvsegmentation;
+			productReference = C0E9B0F91DACECEA00895C4B /* libOceanTestCVSegmentationD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DEAE9951C87609D0035D95A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DEAE99C1C87609D0035D95A = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DEAE9981C87609D0035D95A /* Build configuration list for PBXProject "testcvsegmentation" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DEAE9941C87609D0035D95A;
+			productRefGroup = 5DEAE99E1C87609D0035D95A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DEAE99C1C87609D0035D95A /* testcvsegmentation x64 (Static) */,
+				5DEAE9B51C8762120035D95A /* testcvsegmentation x64 (Shared) */,
+				5DD14A621D953DF200CCA9F0 /* testcvsegmentation arm64 (Static) */,
+				C0E9B0ED1DACECEA00895C4B /* testcvsegmentation arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DD14A6E1D953DFF00CCA9F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../copy_arm_static.sh \"../../../../../../../bin/test/lib/\"";
+		};
+		C0E9B0F51DACECEA00895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../codesign.sh\n../../../../copy_arm_shared.sh \"../../../../../../../bin/test/lib/\"";
+		};
+		C0E9B0FA1DACED8A00895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DD14A631D953DF200CCA9F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9360236029F6F3590037FC3C /* TestMaskCreator.cpp in Sources */,
+				5DD14A641D953DF200CCA9F0 /* TestCVSegmentation.cpp in Sources */,
+				9300C95227CE16BC00806E93 /* TestBinPacking.cpp in Sources */,
+				5DD14A651D953DF200CCA9F0 /* TestMaskAnalyzer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DEAE9991C87609D0035D95A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9360235E29F6F3590037FC3C /* TestMaskCreator.cpp in Sources */,
+				5DEAE9B31C8761C40035D95A /* TestCVSegmentation.cpp in Sources */,
+				9300C95027CE16BC00806E93 /* TestBinPacking.cpp in Sources */,
+				5DEAE9B41C8761C40035D95A /* TestMaskAnalyzer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DEAE9B61C8762120035D95A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9360235F29F6F3590037FC3C /* TestMaskCreator.cpp in Sources */,
+				5DEAE9B71C8762120035D95A /* TestCVSegmentation.cpp in Sources */,
+				9300C95127CE16BC00806E93 /* TestBinPacking.cpp in Sources */,
+				5DEAE9B81C8762120035D95A /* TestMaskAnalyzer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0EE1DACECEA00895C4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9360236129F6F3590037FC3C /* TestMaskCreator.cpp in Sources */,
+				C0E9B0EF1DACECEA00895C4B /* TestCVSegmentation.cpp in Sources */,
+				9300C95327CE16BC00806E93 /* TestBinPacking.cpp in Sources */,
+				C0E9B0F01DACECEA00895C4B /* TestMaskAnalyzer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DD14A6B1D953DF200CCA9F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestCVSegmentationD;
+				PRODUCT_NAME = OceanTestCVSegmentationD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD14A6C1D953DF200CCA9F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestCVSegmentation;
+				PRODUCT_NAME = OceanTestCVSegmentation;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DEAE9A61C87609D0035D95A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DEAE9A71C87609D0035D95A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DEAE9A91C87609D0035D95A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/osx_x64_xc9_static_debug;
+				PRODUCT_MODULE_NAME = OceanTestCVSegmentationD;
+				PRODUCT_NAME = OceanTestCVSegmentationD;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DEAE9AA1C87609D0035D95A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/osx_x64_xc9_static;
+				PRODUCT_MODULE_NAME = OceanTestCVSegmentation;
+				PRODUCT_NAME = OceanTestCVSegmentation;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DEAE9BE1C8762120035D95A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/osx_x64_xc9_shared_debug;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVSegmentationD",
+					"-lOceanMathD",
+					"-lOceanSystemD",
+				);
+				PRODUCT_MODULE_NAME = OceanTestCVSegmentationD;
+				PRODUCT_NAME = OceanTestCVSegmentationD;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DEAE9BF1C8762120035D95A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/osx_x64_xc9_shared;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVSegmentation",
+					"-lOceanMath",
+					"-lOceanSystem",
+				);
+				PRODUCT_MODULE_NAME = OceanTestCVSegmentation;
+				PRODUCT_NAME = OceanTestCVSegmentation;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C0E9B0F71DACECEA00895C4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVSegmentationD",
+					"-lOceanMathD",
+					"-lOceanSystemD",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestCVSegmentationD;
+				PRODUCT_NAME = OceanTestCVSegmentationD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C0E9B0F81DACECEA00895C4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode_6.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVSegmentation",
+					"-lOceanMath",
+					"-lOceanSystem",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestCVSegmentation;
+				PRODUCT_NAME = OceanTestCVSegmentation;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvsegmentation/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DD14A6A1D953DF200CCA9F0 /* Build configuration list for PBXNativeTarget "testcvsegmentation arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD14A6B1D953DF200CCA9F0 /* Debug */,
+				5DD14A6C1D953DF200CCA9F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DEAE9981C87609D0035D95A /* Build configuration list for PBXProject "testcvsegmentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DEAE9A61C87609D0035D95A /* Debug */,
+				5DEAE9A71C87609D0035D95A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DEAE9A81C87609D0035D95A /* Build configuration list for PBXNativeTarget "testcvsegmentation x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DEAE9A91C87609D0035D95A /* Debug */,
+				5DEAE9AA1C87609D0035D95A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DEAE9BD1C8762120035D95A /* Build configuration list for PBXNativeTarget "testcvsegmentation x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DEAE9BE1C8762120035D95A /* Debug */,
+				5DEAE9BF1C8762120035D95A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0E9B0F61DACECEA00895C4B /* Build configuration list for PBXNativeTarget "testcvsegmentation arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0E9B0F71DACECEA00895C4B /* Debug */,
+				C0E9B0F81DACECEA00895C4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DEAE9951C87609D0035D95A /* Project object */;
+}

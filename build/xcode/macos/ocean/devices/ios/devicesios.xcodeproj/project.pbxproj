@@ -1,0 +1,739 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		50005E0E243519F000493C2E /* IOSGyroSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 50005E0D243519EF00493C2E /* IOSGyroSensor3DOF.h */; };
+		50005E0F243519F000493C2E /* IOSGyroSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 50005E0D243519EF00493C2E /* IOSGyroSensor3DOF.h */; };
+		50005E1124351A0500493C2E /* IOSGyroSensor3DOF.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50005E1024351A0500493C2E /* IOSGyroSensor3DOF.mm */; };
+		50005E1224351A0500493C2E /* IOSGyroSensor3DOF.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50005E1024351A0500493C2E /* IOSGyroSensor3DOF.mm */; };
+		5DC1E33F1F177C1900993893 /* IOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E3371F177C1900993893 /* IOS.h */; };
+		5DC1E3401F177C1900993893 /* IOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E3371F177C1900993893 /* IOS.h */; };
+		5DC1E3431F177C1900993893 /* IOSAccelerationSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E3381F177C1900993893 /* IOSAccelerationSensor3DOF.h */; };
+		5DC1E3441F177C1900993893 /* IOSAccelerationSensor3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E3381F177C1900993893 /* IOSAccelerationSensor3DOF.h */; };
+		5DC1E3471F177C1900993893 /* IOSDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E3391F177C1900993893 /* IOSDevice.h */; };
+		5DC1E3481F177C1900993893 /* IOSDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E3391F177C1900993893 /* IOSDevice.h */; };
+		5DC1E34B1F177C1900993893 /* IOSFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E33A1F177C1900993893 /* IOSFactory.h */; };
+		5DC1E34C1F177C1900993893 /* IOSFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E33A1F177C1900993893 /* IOSFactory.h */; };
+		5DC1E34F1F177C1900993893 /* IOSSensor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E33B1F177C1900993893 /* IOSSensor.h */; };
+		5DC1E3501F177C1900993893 /* IOSSensor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E33B1F177C1900993893 /* IOSSensor.h */; };
+		5DC1E3531F177C1900993893 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E33C1F177C1900993893 /* Plugin.h */; };
+		5DC1E3541F177C1900993893 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E33C1F177C1900993893 /* Plugin.h */; };
+		5DC1E35D1F177C2400993893 /* IOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3551F177C2400993893 /* IOS.cpp */; };
+		5DC1E35E1F177C2400993893 /* IOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3551F177C2400993893 /* IOS.cpp */; };
+		5DC1E3611F177C2400993893 /* IOSAccelerationSensor3DOF.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3561F177C2400993893 /* IOSAccelerationSensor3DOF.mm */; };
+		5DC1E3621F177C2400993893 /* IOSAccelerationSensor3DOF.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3561F177C2400993893 /* IOSAccelerationSensor3DOF.mm */; };
+		5DC1E3651F177C2400993893 /* IOSDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3571F177C2400993893 /* IOSDevice.cpp */; };
+		5DC1E3661F177C2400993893 /* IOSDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3571F177C2400993893 /* IOSDevice.cpp */; };
+		5DC1E3691F177C2400993893 /* IOSFactory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3581F177C2400993893 /* IOSFactory.mm */; };
+		5DC1E36A1F177C2400993893 /* IOSFactory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3581F177C2400993893 /* IOSFactory.mm */; };
+		5DC1E36D1F177C2400993893 /* IOSSensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3591F177C2400993893 /* IOSSensor.cpp */; };
+		5DC1E36E1F177C2400993893 /* IOSSensor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3591F177C2400993893 /* IOSSensor.cpp */; };
+		5DC1E3711F177C2400993893 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E35A1F177C2400993893 /* Plugin.cpp */; };
+		5DC1E3721F177C2400993893 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E35A1F177C2400993893 /* Plugin.cpp */; };
+		5DC1E3761F17802E00993893 /* MotionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E3731F17802E00993893 /* MotionManager.h */; };
+		5DC1E3771F17802E00993893 /* MotionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DC1E3731F17802E00993893 /* MotionManager.h */; };
+		5DC1E37B1F17805800993893 /* MotionManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3781F17805800993893 /* MotionManager.mm */; };
+		5DC1E37C1F17805800993893 /* MotionManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1E3781F17805800993893 /* MotionManager.mm */; };
+		93126DD526AA14E200825437 /* IOSGravityTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 93126DD426AA14E100825437 /* IOSGravityTracker3DOF.h */; };
+		93126DD626AA14E200825437 /* IOSGravityTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 93126DD426AA14E100825437 /* IOSGravityTracker3DOF.h */; };
+		93126DD826AA15CD00825437 /* IOSGravityTracker3DOF.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93126DD726AA15CD00825437 /* IOSGravityTracker3DOF.mm */; };
+		93126DD926AA15CD00825437 /* IOSGravityTracker3DOF.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93126DD726AA15CD00825437 /* IOSGravityTracker3DOF.mm */; };
+		93556FFE2119526D00ABC319 /* IOSOrientationTracker3DOF.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93556FFD2119526D00ABC319 /* IOSOrientationTracker3DOF.mm */; };
+		93556FFF2119526D00ABC319 /* IOSOrientationTracker3DOF.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93556FFD2119526D00ABC319 /* IOSOrientationTracker3DOF.mm */; };
+		935570012119528900ABC319 /* IOSOrientationTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 935570002119528900ABC319 /* IOSOrientationTracker3DOF.h */; };
+		935570022119528900ABC319 /* IOSOrientationTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 935570002119528900ABC319 /* IOSOrientationTracker3DOF.h */; };
+		9397580C2630EF87000A3887 /* IOSGPSTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 9397580B2630EF87000A3887 /* IOSGPSTracker.h */; };
+		9397580D2630EF87000A3887 /* IOSGPSTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 9397580B2630EF87000A3887 /* IOSGPSTracker.h */; };
+		939758112630EFAB000A3887 /* IOSGPSTracker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 939758102630EFAB000A3887 /* IOSGPSTracker.mm */; };
+		939758122630EFAB000A3887 /* IOSGPSTracker.mm in Sources */ = {isa = PBXBuildFile; fileRef = 939758102630EFAB000A3887 /* IOSGPSTracker.mm */; };
+		93F5B2C126D5667700E153EC /* IOSHeadingTracker3DOF.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93F5B2C026D5667700E153EC /* IOSHeadingTracker3DOF.mm */; };
+		93F5B2C226D5667700E153EC /* IOSHeadingTracker3DOF.mm in Sources */ = {isa = PBXBuildFile; fileRef = 93F5B2C026D5667700E153EC /* IOSHeadingTracker3DOF.mm */; };
+		93F5B2C426D5667F00E153EC /* IOSHeadingTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F5B2C326D5667F00E153EC /* IOSHeadingTracker3DOF.h */; };
+		93F5B2C526D5667F00E153EC /* IOSHeadingTracker3DOF.h in Headers */ = {isa = PBXBuildFile; fileRef = 93F5B2C326D5667F00E153EC /* IOSHeadingTracker3DOF.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		50005E0D243519EF00493C2E /* IOSGyroSensor3DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSGyroSensor3DOF.h; path = ../../../../../../impl/ocean/devices/ios/IOSGyroSensor3DOF.h; sourceTree = "<group>"; };
+		50005E1024351A0500493C2E /* IOSGyroSensor3DOF.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IOSGyroSensor3DOF.mm; path = ../../../../../../impl/ocean/devices/ios/IOSGyroSensor3DOF.mm; sourceTree = "<group>"; };
+		5D12BDB51BF26EA000A56828 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../res/ocean/devices/ios/osx/Info.plist; sourceTree = "<group>"; };
+		5D427E811D91495E00135BA7 /* libOceanDevicesIOSD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanDevicesIOSD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DC1E3371F177C1900993893 /* IOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOS.h; path = ../../../../../../impl/ocean/devices/ios/IOS.h; sourceTree = "<group>"; };
+		5DC1E3381F177C1900993893 /* IOSAccelerationSensor3DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSAccelerationSensor3DOF.h; path = ../../../../../../impl/ocean/devices/ios/IOSAccelerationSensor3DOF.h; sourceTree = "<group>"; };
+		5DC1E3391F177C1900993893 /* IOSDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSDevice.h; path = ../../../../../../impl/ocean/devices/ios/IOSDevice.h; sourceTree = "<group>"; };
+		5DC1E33A1F177C1900993893 /* IOSFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSFactory.h; path = ../../../../../../impl/ocean/devices/ios/IOSFactory.h; sourceTree = "<group>"; };
+		5DC1E33B1F177C1900993893 /* IOSSensor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSSensor.h; path = ../../../../../../impl/ocean/devices/ios/IOSSensor.h; sourceTree = "<group>"; };
+		5DC1E33C1F177C1900993893 /* Plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plugin.h; path = ../../../../../../impl/ocean/devices/ios/Plugin.h; sourceTree = "<group>"; };
+		5DC1E3551F177C2400993893 /* IOS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IOS.cpp; path = ../../../../../../impl/ocean/devices/ios/IOS.cpp; sourceTree = "<group>"; };
+		5DC1E3561F177C2400993893 /* IOSAccelerationSensor3DOF.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = IOSAccelerationSensor3DOF.mm; path = ../../../../../../impl/ocean/devices/ios/IOSAccelerationSensor3DOF.mm; sourceTree = "<group>"; };
+		5DC1E3571F177C2400993893 /* IOSDevice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IOSDevice.cpp; path = ../../../../../../impl/ocean/devices/ios/IOSDevice.cpp; sourceTree = "<group>"; };
+		5DC1E3581F177C2400993893 /* IOSFactory.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = IOSFactory.mm; path = ../../../../../../impl/ocean/devices/ios/IOSFactory.mm; sourceTree = "<group>"; };
+		5DC1E3591F177C2400993893 /* IOSSensor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = IOSSensor.cpp; path = ../../../../../../impl/ocean/devices/ios/IOSSensor.cpp; sourceTree = "<group>"; };
+		5DC1E35A1F177C2400993893 /* Plugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plugin.cpp; path = ../../../../../../impl/ocean/devices/ios/Plugin.cpp; sourceTree = "<group>"; };
+		5DC1E3731F17802E00993893 /* MotionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MotionManager.h; path = ../../../../../../impl/ocean/devices/ios/MotionManager.h; sourceTree = "<group>"; };
+		5DC1E3781F17805800993893 /* MotionManager.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = MotionManager.mm; path = ../../../../../../impl/ocean/devices/ios/MotionManager.mm; sourceTree = "<group>"; };
+		93126DD426AA14E100825437 /* IOSGravityTracker3DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSGravityTracker3DOF.h; path = ../../../../../../impl/ocean/devices/ios/IOSGravityTracker3DOF.h; sourceTree = "<group>"; };
+		93126DD726AA15CD00825437 /* IOSGravityTracker3DOF.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IOSGravityTracker3DOF.mm; path = ../../../../../../impl/ocean/devices/ios/IOSGravityTracker3DOF.mm; sourceTree = "<group>"; };
+		93556FFD2119526D00ABC319 /* IOSOrientationTracker3DOF.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IOSOrientationTracker3DOF.mm; path = ../../../../../../impl/ocean/devices/ios/IOSOrientationTracker3DOF.mm; sourceTree = "<group>"; };
+		935570002119528900ABC319 /* IOSOrientationTracker3DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSOrientationTracker3DOF.h; path = ../../../../../../impl/ocean/devices/ios/IOSOrientationTracker3DOF.h; sourceTree = "<group>"; };
+		9397580B2630EF87000A3887 /* IOSGPSTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSGPSTracker.h; path = ../../../../../../impl/ocean/devices/ios/IOSGPSTracker.h; sourceTree = "<group>"; };
+		939758102630EFAB000A3887 /* IOSGPSTracker.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IOSGPSTracker.mm; path = ../../../../../../impl/ocean/devices/ios/IOSGPSTracker.mm; sourceTree = "<group>"; };
+		93F5B2C026D5667700E153EC /* IOSHeadingTracker3DOF.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IOSHeadingTracker3DOF.mm; path = ../../../../../../impl/ocean/devices/ios/IOSHeadingTracker3DOF.mm; sourceTree = "<group>"; };
+		93F5B2C326D5667F00E153EC /* IOSHeadingTracker3DOF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IOSHeadingTracker3DOF.h; path = ../../../../../../impl/ocean/devices/ios/IOSHeadingTracker3DOF.h; sourceTree = "<group>"; };
+		C041EC061DABDB8600BF5D76 /* OceanDevicesIOSD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanDevicesIOSD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D427E771D91495E00135BA7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EBFA1DABDB8600BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D12BC931BF264E300A56828 = {
+			isa = PBXGroup;
+			children = (
+				5D12BCFF1BF2662D00A56828 /* Header Files */,
+				5D12BCAA1BF265D300A56828 /* Source Files */,
+				5D12BDB31BF26E6000A56828 /* Resource Files */,
+				5D12BC9D1BF264E300A56828 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D12BC9D1BF264E300A56828 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D427E811D91495E00135BA7 /* libOceanDevicesIOSD.a */,
+				C041EC061DABDB8600BF5D76 /* OceanDevicesIOSD.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D12BCAA1BF265D300A56828 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DC1E3551F177C2400993893 /* IOS.cpp */,
+				5DC1E3561F177C2400993893 /* IOSAccelerationSensor3DOF.mm */,
+				5DC1E3571F177C2400993893 /* IOSDevice.cpp */,
+				5DC1E3581F177C2400993893 /* IOSFactory.mm */,
+				939758102630EFAB000A3887 /* IOSGPSTracker.mm */,
+				93126DD726AA15CD00825437 /* IOSGravityTracker3DOF.mm */,
+				50005E1024351A0500493C2E /* IOSGyroSensor3DOF.mm */,
+				93F5B2C026D5667700E153EC /* IOSHeadingTracker3DOF.mm */,
+				93556FFD2119526D00ABC319 /* IOSOrientationTracker3DOF.mm */,
+				5DC1E3591F177C2400993893 /* IOSSensor.cpp */,
+				5DC1E3781F17805800993893 /* MotionManager.mm */,
+				5DC1E35A1F177C2400993893 /* Plugin.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D12BCFF1BF2662D00A56828 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5DC1E3371F177C1900993893 /* IOS.h */,
+				5DC1E3381F177C1900993893 /* IOSAccelerationSensor3DOF.h */,
+				5DC1E3391F177C1900993893 /* IOSDevice.h */,
+				5DC1E33A1F177C1900993893 /* IOSFactory.h */,
+				9397580B2630EF87000A3887 /* IOSGPSTracker.h */,
+				93126DD426AA14E100825437 /* IOSGravityTracker3DOF.h */,
+				50005E0D243519EF00493C2E /* IOSGyroSensor3DOF.h */,
+				93F5B2C326D5667F00E153EC /* IOSHeadingTracker3DOF.h */,
+				935570002119528900ABC319 /* IOSOrientationTracker3DOF.h */,
+				5DC1E33B1F177C1900993893 /* IOSSensor.h */,
+				5DC1E3731F17802E00993893 /* MotionManager.h */,
+				5DC1E33C1F177C1900993893 /* Plugin.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5D12BDB31BF26E6000A56828 /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BDB51BF26EA000A56828 /* Info.plist */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D427E781D91495E00135BA7 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				935570012119528900ABC319 /* IOSOrientationTracker3DOF.h in Headers */,
+				5DC1E3471F177C1900993893 /* IOSDevice.h in Headers */,
+				5DC1E3761F17802E00993893 /* MotionManager.h in Headers */,
+				5DC1E34B1F177C1900993893 /* IOSFactory.h in Headers */,
+				93F5B2C426D5667F00E153EC /* IOSHeadingTracker3DOF.h in Headers */,
+				9397580C2630EF87000A3887 /* IOSGPSTracker.h in Headers */,
+				5DC1E34F1F177C1900993893 /* IOSSensor.h in Headers */,
+				93126DD526AA14E200825437 /* IOSGravityTracker3DOF.h in Headers */,
+				5DC1E3431F177C1900993893 /* IOSAccelerationSensor3DOF.h in Headers */,
+				50005E0E243519F000493C2E /* IOSGyroSensor3DOF.h in Headers */,
+				5DC1E33F1F177C1900993893 /* IOS.h in Headers */,
+				5DC1E3531F177C1900993893 /* Plugin.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EBFB1DABDB8600BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9397580D2630EF87000A3887 /* IOSGPSTracker.h in Headers */,
+				935570022119528900ABC319 /* IOSOrientationTracker3DOF.h in Headers */,
+				5DC1E3481F177C1900993893 /* IOSDevice.h in Headers */,
+				5DC1E3771F17802E00993893 /* MotionManager.h in Headers */,
+				93F5B2C526D5667F00E153EC /* IOSHeadingTracker3DOF.h in Headers */,
+				5DC1E34C1F177C1900993893 /* IOSFactory.h in Headers */,
+				93126DD626AA14E200825437 /* IOSGravityTracker3DOF.h in Headers */,
+				5DC1E3501F177C1900993893 /* IOSSensor.h in Headers */,
+				5DC1E3441F177C1900993893 /* IOSAccelerationSensor3DOF.h in Headers */,
+				50005E0F243519F000493C2E /* IOSGyroSensor3DOF.h in Headers */,
+				5DC1E3401F177C1900993893 /* IOS.h in Headers */,
+				5DC1E3541F177C1900993893 /* Plugin.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D427E701D91495E00135BA7 /* devicesios arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D427E7E1D91495E00135BA7 /* Build configuration list for PBXNativeTarget "devicesios arm64 (Static)" */;
+			buildPhases = (
+				5D427E711D91495E00135BA7 /* Sources */,
+				5D427E771D91495E00135BA7 /* Frameworks */,
+				5D427E781D91495E00135BA7 /* Headers */,
+				5D427E821D9149A100135BA7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "devicesios arm64 (Static)";
+			productName = devicesios;
+			productReference = 5D427E811D91495E00135BA7 /* libOceanDevicesIOSD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EBF31DABDB8600BF5D76 /* devicesios arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EC031DABDB8600BF5D76 /* Build configuration list for PBXNativeTarget "devicesios arm64 (Shared)" */;
+			buildPhases = (
+				C041EBF41DABDB8600BF5D76 /* Sources */,
+				C041EBFA1DABDB8600BF5D76 /* Frameworks */,
+				C041EBFB1DABDB8600BF5D76 /* Headers */,
+				C041EC011DABDB8600BF5D76 /* Resources */,
+				C041EC021DABDB8600BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "devicesios arm64 (Shared)";
+			productName = devicesios;
+			productReference = C041EC061DABDB8600BF5D76 /* OceanDevicesIOSD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D12BC941BF264E300A56828 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+			};
+			buildConfigurationList = 5D12BC971BF264E300A56828 /* Build configuration list for PBXProject "devicesios" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D12BC931BF264E300A56828;
+			productRefGroup = 5D12BC9D1BF264E300A56828 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D427E701D91495E00135BA7 /* devicesios arm64 (Static) */,
+				C041EBF31DABDB8600BF5D76 /* devicesios arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C041EC011DABDB8600BF5D76 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D427E821D9149A100135BA7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EC021DABDB8600BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D427E711D91495E00135BA7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DC1E3711F177C2400993893 /* Plugin.cpp in Sources */,
+				5DC1E35D1F177C2400993893 /* IOS.cpp in Sources */,
+				939758112630EFAB000A3887 /* IOSGPSTracker.mm in Sources */,
+				5DC1E3651F177C2400993893 /* IOSDevice.cpp in Sources */,
+				93126DD826AA15CD00825437 /* IOSGravityTracker3DOF.mm in Sources */,
+				93556FFE2119526D00ABC319 /* IOSOrientationTracker3DOF.mm in Sources */,
+				50005E1124351A0500493C2E /* IOSGyroSensor3DOF.mm in Sources */,
+				5DC1E37B1F17805800993893 /* MotionManager.mm in Sources */,
+				5DC1E3691F177C2400993893 /* IOSFactory.mm in Sources */,
+				5DC1E3611F177C2400993893 /* IOSAccelerationSensor3DOF.mm in Sources */,
+				5DC1E36D1F177C2400993893 /* IOSSensor.cpp in Sources */,
+				93F5B2C126D5667700E153EC /* IOSHeadingTracker3DOF.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EBF41DABDB8600BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DC1E3721F177C2400993893 /* Plugin.cpp in Sources */,
+				5DC1E35E1F177C2400993893 /* IOS.cpp in Sources */,
+				93126DD926AA15CD00825437 /* IOSGravityTracker3DOF.mm in Sources */,
+				5DC1E3661F177C2400993893 /* IOSDevice.cpp in Sources */,
+				93556FFF2119526D00ABC319 /* IOSOrientationTracker3DOF.mm in Sources */,
+				50005E1224351A0500493C2E /* IOSGyroSensor3DOF.mm in Sources */,
+				939758122630EFAB000A3887 /* IOSGPSTracker.mm in Sources */,
+				5DC1E37C1F17805800993893 /* MotionManager.mm in Sources */,
+				5DC1E36A1F177C2400993893 /* IOSFactory.mm in Sources */,
+				5DC1E3621F177C2400993893 /* IOSAccelerationSensor3DOF.mm in Sources */,
+				5DC1E36E1F177C2400993893 /* IOSSensor.cpp in Sources */,
+				93F5B2C226D5667700E153EC /* IOSHeadingTracker3DOF.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D12BCA51BF264E300A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D12BCA61BF264E300A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D427E7F1D91495E00135BA7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanDevicesIOSD;
+				PRODUCT_NAME = OceanDevicesIOSD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D427E801D91495E00135BA7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanDevicesIOS;
+				PRODUCT_NAME = OceanDevicesIOS;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EC041DABDB8600BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/devices/ios/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanDevicesD",
+					"-lOceanMathD",
+					"-framework",
+					CoreMotion,
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanDevicesIOSD;
+				PRODUCT_NAME = OceanDevicesIOSD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				STRIP_STYLE = "non-global";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		C041EC051DABDB8600BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ENABLE_BITCODE = NO;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/devices/ios/osx/Info.plist;
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = "";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanDevices",
+					"-lOceanMath",
+					"-framework",
+					CoreMotion,
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanDevicesIOS;
+				PRODUCT_NAME = OceanDevicesIOS;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				STRIP_STYLE = "non-global";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/devicesios/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D12BC971BF264E300A56828 /* Build configuration list for PBXProject "devicesios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BCA51BF264E300A56828 /* Debug */,
+				5D12BCA61BF264E300A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D427E7E1D91495E00135BA7 /* Build configuration list for PBXNativeTarget "devicesios arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D427E7F1D91495E00135BA7 /* Debug */,
+				5D427E801D91495E00135BA7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EC031DABDB8600BF5D76 /* Build configuration list for PBXNativeTarget "devicesios arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EC041DABDB8600BF5D76 /* Debug */,
+				C041EC051DABDB8600BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D12BC941BF264E300A56828 /* Project object */;
+}

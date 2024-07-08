@@ -1,0 +1,1186 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5DB104221F6038A000C745E4 /* TestPanoramaFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB104211F6038A000C745E4 /* TestPanoramaFrame.cpp */; };
+		5DB104231F6038A000C745E4 /* TestPanoramaFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB104211F6038A000C745E4 /* TestPanoramaFrame.cpp */; };
+		5DB104241F6038A000C745E4 /* TestPanoramaFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB104211F6038A000C745E4 /* TestPanoramaFrame.cpp */; };
+		5DB104251F6038A000C745E4 /* TestPanoramaFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DB104211F6038A000C745E4 /* TestPanoramaFrame.cpp */; };
+		5DB104271F6038C000C745E4 /* TestPanoramaFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB104261F6038C000C745E4 /* TestPanoramaFrame.h */; };
+		5DB104281F6038C000C745E4 /* TestPanoramaFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB104261F6038C000C745E4 /* TestPanoramaFrame.h */; };
+		5DB104291F6038C000C745E4 /* TestPanoramaFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB104261F6038C000C745E4 /* TestPanoramaFrame.h */; };
+		5DB1042A1F6038C000C745E4 /* TestPanoramaFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DB104261F6038C000C745E4 /* TestPanoramaFrame.h */; };
+		5DD0C0511BD54AE000ABBC5B /* TestAdvancedFrameFilterSobel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0441BD54AE000ABBC5B /* TestAdvancedFrameFilterSobel.cpp */; };
+		5DD0C0521BD54AE000ABBC5B /* TestAdvancedFrameInterpolatorBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0451BD54AE000ABBC5B /* TestAdvancedFrameInterpolatorBilinear.cpp */; };
+		5DD0C0531BD54AE000ABBC5B /* TestAdvancedFrameShrinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0461BD54AE000ABBC5B /* TestAdvancedFrameShrinker.cpp */; };
+		5DD0C0551BD54AE000ABBC5B /* TestAdvancedSumSquareDifferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0481BD54AE000ABBC5B /* TestAdvancedSumSquareDifferences.cpp */; };
+		5DD0C0561BD54AE000ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0491BD54AE000ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.cpp */; };
+		5DD0C0571BD54AE000ABBC5B /* TestCVAdvanced.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04A1BD54AE000ABBC5B /* TestCVAdvanced.cpp */; };
+		5DD0C0581BD54AE000ABBC5B /* TestFrameColorAdjustment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04B1BD54AE000ABBC5B /* TestFrameColorAdjustment.cpp */; };
+		5DD0C05A1BD54AE000ABBC5B /* TestFrameRectification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04D1BD54AE000ABBC5B /* TestFrameRectification.cpp */; };
+		5DD0C05B1BD54AE000ABBC5B /* TestSumSquareDifferencesNoCenter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04E1BD54AE000ABBC5B /* TestSumSquareDifferencesNoCenter.cpp */; };
+		5DD0C05C1BD54AE000ABBC5B /* TestWhitePointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04F1BD54AE000ABBC5B /* TestWhitePointDetector.cpp */; };
+		5DD0C06C1BD54AF500ABBC5B /* TestAdvancedFrameFilterSobel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C05F1BD54AF400ABBC5B /* TestAdvancedFrameFilterSobel.h */; };
+		5DD0C06D1BD54AF500ABBC5B /* TestAdvancedFrameInterpolatorBilinear.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0601BD54AF400ABBC5B /* TestAdvancedFrameInterpolatorBilinear.h */; };
+		5DD0C06E1BD54AF500ABBC5B /* TestAdvancedFrameShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0611BD54AF400ABBC5B /* TestAdvancedFrameShrinker.h */; };
+		5DD0C0701BD54AF500ABBC5B /* TestAdvancedSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0631BD54AF400ABBC5B /* TestAdvancedSumSquareDifferences.h */; };
+		5DD0C0711BD54AF500ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0641BD54AF400ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.h */; };
+		5DD0C0721BD54AF500ABBC5B /* TestCVAdvanced.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0651BD54AF500ABBC5B /* TestCVAdvanced.h */; };
+		5DD0C0731BD54AF500ABBC5B /* TestFrameColorAdjustment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0661BD54AF500ABBC5B /* TestFrameColorAdjustment.h */; };
+		5DD0C0751BD54AF500ABBC5B /* TestFrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0681BD54AF500ABBC5B /* TestFrameRectification.h */; };
+		5DD0C0761BD54AF500ABBC5B /* TestSumSquareDifferencesNoCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0691BD54AF500ABBC5B /* TestSumSquareDifferencesNoCenter.h */; };
+		5DD0C0771BD54AF500ABBC5B /* TestWhitePointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C06A1BD54AF500ABBC5B /* TestWhitePointDetector.h */; };
+		5DD0C07A1BD54C7F00ABBC5B /* TestAdvancedFrameFilterSobel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0441BD54AE000ABBC5B /* TestAdvancedFrameFilterSobel.cpp */; };
+		5DD0C07B1BD54C7F00ABBC5B /* TestWhitePointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04F1BD54AE000ABBC5B /* TestWhitePointDetector.cpp */; };
+		5DD0C07C1BD54C7F00ABBC5B /* TestCVAdvanced.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04A1BD54AE000ABBC5B /* TestCVAdvanced.cpp */; };
+		5DD0C07D1BD54C7F00ABBC5B /* TestSumSquareDifferencesNoCenter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04E1BD54AE000ABBC5B /* TestSumSquareDifferencesNoCenter.cpp */; };
+		5DD0C07E1BD54C7F00ABBC5B /* TestFrameColorAdjustment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04B1BD54AE000ABBC5B /* TestFrameColorAdjustment.cpp */; };
+		5DD0C07F1BD54C7F00ABBC5B /* TestFrameRectification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04D1BD54AE000ABBC5B /* TestFrameRectification.cpp */; };
+		5DD0C0801BD54C7F00ABBC5B /* TestAdvancedFrameShrinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0461BD54AE000ABBC5B /* TestAdvancedFrameShrinker.cpp */; };
+		5DD0C0821BD54C7F00ABBC5B /* TestAdvancedFrameInterpolatorBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0451BD54AE000ABBC5B /* TestAdvancedFrameInterpolatorBilinear.cpp */; };
+		5DD0C0841BD54C7F00ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0491BD54AE000ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.cpp */; };
+		5DD0C0851BD54C7F00ABBC5B /* TestAdvancedSumSquareDifferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0481BD54AE000ABBC5B /* TestAdvancedSumSquareDifferences.cpp */; };
+		5DD0C0881BD54C7F00ABBC5B /* TestFrameColorAdjustment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0661BD54AF500ABBC5B /* TestFrameColorAdjustment.h */; };
+		5DD0C0891BD54C7F00ABBC5B /* TestAdvancedFrameShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0611BD54AF400ABBC5B /* TestAdvancedFrameShrinker.h */; };
+		5DD0C08A1BD54C7F00ABBC5B /* TestSumSquareDifferencesNoCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0691BD54AF500ABBC5B /* TestSumSquareDifferencesNoCenter.h */; };
+		5DD0C08C1BD54C7F00ABBC5B /* TestAdvancedFrameInterpolatorBilinear.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0601BD54AF400ABBC5B /* TestAdvancedFrameInterpolatorBilinear.h */; };
+		5DD0C08D1BD54C7F00ABBC5B /* TestAdvancedSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0631BD54AF400ABBC5B /* TestAdvancedSumSquareDifferences.h */; };
+		5DD0C08E1BD54C7F00ABBC5B /* TestAdvancedFrameFilterSobel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C05F1BD54AF400ABBC5B /* TestAdvancedFrameFilterSobel.h */; };
+		5DD0C08F1BD54C7F00ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0641BD54AF400ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.h */; };
+		5DD0C0901BD54C7F00ABBC5B /* TestCVAdvanced.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0651BD54AF500ABBC5B /* TestCVAdvanced.h */; };
+		5DD0C0921BD54C7F00ABBC5B /* TestWhitePointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C06A1BD54AF500ABBC5B /* TestWhitePointDetector.h */; };
+		5DD0C0931BD54C7F00ABBC5B /* TestFrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0681BD54AF500ABBC5B /* TestFrameRectification.h */; };
+		5DD14A2E1D953BC000CCA9F0 /* TestAdvancedFrameFilterSobel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0441BD54AE000ABBC5B /* TestAdvancedFrameFilterSobel.cpp */; };
+		5DD14A2F1D953BC000CCA9F0 /* TestWhitePointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04F1BD54AE000ABBC5B /* TestWhitePointDetector.cpp */; };
+		5DD14A301D953BC000CCA9F0 /* TestCVAdvanced.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04A1BD54AE000ABBC5B /* TestCVAdvanced.cpp */; };
+		5DD14A311D953BC000CCA9F0 /* TestSumSquareDifferencesNoCenter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04E1BD54AE000ABBC5B /* TestSumSquareDifferencesNoCenter.cpp */; };
+		5DD14A321D953BC000CCA9F0 /* TestFrameColorAdjustment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04B1BD54AE000ABBC5B /* TestFrameColorAdjustment.cpp */; };
+		5DD14A331D953BC000CCA9F0 /* TestFrameRectification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04D1BD54AE000ABBC5B /* TestFrameRectification.cpp */; };
+		5DD14A341D953BC000CCA9F0 /* TestAdvancedFrameShrinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0461BD54AE000ABBC5B /* TestAdvancedFrameShrinker.cpp */; };
+		5DD14A361D953BC000CCA9F0 /* TestAdvancedFrameInterpolatorBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0451BD54AE000ABBC5B /* TestAdvancedFrameInterpolatorBilinear.cpp */; };
+		5DD14A381D953BC000CCA9F0 /* TestAdvancedZeroMeanSumSquareDifferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0491BD54AE000ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.cpp */; };
+		5DD14A391D953BC000CCA9F0 /* TestAdvancedSumSquareDifferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0481BD54AE000ABBC5B /* TestAdvancedSumSquareDifferences.cpp */; };
+		5DD14A3C1D953BC000CCA9F0 /* TestFrameColorAdjustment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0661BD54AF500ABBC5B /* TestFrameColorAdjustment.h */; };
+		5DD14A3D1D953BC000CCA9F0 /* TestAdvancedFrameShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0611BD54AF400ABBC5B /* TestAdvancedFrameShrinker.h */; };
+		5DD14A3E1D953BC000CCA9F0 /* TestSumSquareDifferencesNoCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0691BD54AF500ABBC5B /* TestSumSquareDifferencesNoCenter.h */; };
+		5DD14A401D953BC000CCA9F0 /* TestAdvancedFrameInterpolatorBilinear.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0601BD54AF400ABBC5B /* TestAdvancedFrameInterpolatorBilinear.h */; };
+		5DD14A411D953BC000CCA9F0 /* TestAdvancedSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0631BD54AF400ABBC5B /* TestAdvancedSumSquareDifferences.h */; };
+		5DD14A421D953BC000CCA9F0 /* TestAdvancedFrameFilterSobel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C05F1BD54AF400ABBC5B /* TestAdvancedFrameFilterSobel.h */; };
+		5DD14A431D953BC000CCA9F0 /* TestAdvancedZeroMeanSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0641BD54AF400ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.h */; };
+		5DD14A441D953BC000CCA9F0 /* TestCVAdvanced.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0651BD54AF500ABBC5B /* TestCVAdvanced.h */; };
+		5DD14A461D953BC000CCA9F0 /* TestWhitePointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C06A1BD54AF500ABBC5B /* TestWhitePointDetector.h */; };
+		5DD14A471D953BC000CCA9F0 /* TestFrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0681BD54AF500ABBC5B /* TestFrameRectification.h */; };
+		931145AB2B1F8E9D00249F74 /* TestAdvancedMotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 931145AA2B1F8E9C00249F74 /* TestAdvancedMotion.h */; };
+		931145AC2B1F8E9D00249F74 /* TestAdvancedMotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 931145AA2B1F8E9C00249F74 /* TestAdvancedMotion.h */; };
+		931145AD2B1F8E9D00249F74 /* TestAdvancedMotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 931145AA2B1F8E9C00249F74 /* TestAdvancedMotion.h */; };
+		931145AE2B1F8E9D00249F74 /* TestAdvancedMotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 931145AA2B1F8E9C00249F74 /* TestAdvancedMotion.h */; };
+		931145B02B1F8EA800249F74 /* TestAdvancedMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 931145AF2B1F8EA800249F74 /* TestAdvancedMotion.cpp */; };
+		931145B12B1F8EA800249F74 /* TestAdvancedMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 931145AF2B1F8EA800249F74 /* TestAdvancedMotion.cpp */; };
+		931145B22B1F8EA800249F74 /* TestAdvancedMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 931145AF2B1F8EA800249F74 /* TestAdvancedMotion.cpp */; };
+		931145B32B1F8EA800249F74 /* TestAdvancedMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 931145AF2B1F8EA800249F74 /* TestAdvancedMotion.cpp */; };
+		933DD4352A2AB24800910639 /* TestAdvancedFrameChannels.h in Headers */ = {isa = PBXBuildFile; fileRef = 933DD4342A2AB24800910639 /* TestAdvancedFrameChannels.h */; };
+		933DD4362A2AB24800910639 /* TestAdvancedFrameChannels.h in Headers */ = {isa = PBXBuildFile; fileRef = 933DD4342A2AB24800910639 /* TestAdvancedFrameChannels.h */; };
+		933DD4372A2AB24800910639 /* TestAdvancedFrameChannels.h in Headers */ = {isa = PBXBuildFile; fileRef = 933DD4342A2AB24800910639 /* TestAdvancedFrameChannels.h */; };
+		933DD4382A2AB24800910639 /* TestAdvancedFrameChannels.h in Headers */ = {isa = PBXBuildFile; fileRef = 933DD4342A2AB24800910639 /* TestAdvancedFrameChannels.h */; };
+		933DD43F2A2AB27700910639 /* TestAdvancedFrameChannels.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933DD43E2A2AB27700910639 /* TestAdvancedFrameChannels.cpp */; };
+		933DD4402A2AB27700910639 /* TestAdvancedFrameChannels.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933DD43E2A2AB27700910639 /* TestAdvancedFrameChannels.cpp */; };
+		933DD4412A2AB27700910639 /* TestAdvancedFrameChannels.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933DD43E2A2AB27700910639 /* TestAdvancedFrameChannels.cpp */; };
+		933DD4422A2AB27700910639 /* TestAdvancedFrameChannels.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 933DD43E2A2AB27700910639 /* TestAdvancedFrameChannels.cpp */; };
+		935342FB2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h in Headers */ = {isa = PBXBuildFile; fileRef = 935342FA2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h */; };
+		935342FC2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h in Headers */ = {isa = PBXBuildFile; fileRef = 935342FA2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h */; };
+		935342FD2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h in Headers */ = {isa = PBXBuildFile; fileRef = 935342FA2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h */; };
+		935342FE2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h in Headers */ = {isa = PBXBuildFile; fileRef = 935342FA2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h */; };
+		935343002A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 935342FF2A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp */; };
+		935343012A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 935342FF2A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp */; };
+		935343022A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 935342FF2A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp */; };
+		935343032A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 935342FF2A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp */; };
+		935343052A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 935343042A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp */; };
+		935343062A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 935343042A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp */; };
+		935343072A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 935343042A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp */; };
+		935343082A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 935343042A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp */; };
+		9353430A2A392945000140C5 /* TestAdvancedFrameFilterGaussian.h in Headers */ = {isa = PBXBuildFile; fileRef = 935343092A392945000140C5 /* TestAdvancedFrameFilterGaussian.h */; };
+		9353430B2A392945000140C5 /* TestAdvancedFrameFilterGaussian.h in Headers */ = {isa = PBXBuildFile; fileRef = 935343092A392945000140C5 /* TestAdvancedFrameFilterGaussian.h */; };
+		9353430C2A392945000140C5 /* TestAdvancedFrameFilterGaussian.h in Headers */ = {isa = PBXBuildFile; fileRef = 935343092A392945000140C5 /* TestAdvancedFrameFilterGaussian.h */; };
+		9353430D2A392945000140C5 /* TestAdvancedFrameFilterGaussian.h in Headers */ = {isa = PBXBuildFile; fileRef = 935343092A392945000140C5 /* TestAdvancedFrameFilterGaussian.h */; };
+		C0E9B0B71DACEB4300895C4B /* TestAdvancedFrameFilterSobel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0441BD54AE000ABBC5B /* TestAdvancedFrameFilterSobel.cpp */; };
+		C0E9B0B81DACEB4300895C4B /* TestWhitePointDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04F1BD54AE000ABBC5B /* TestWhitePointDetector.cpp */; };
+		C0E9B0B91DACEB4300895C4B /* TestCVAdvanced.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04A1BD54AE000ABBC5B /* TestCVAdvanced.cpp */; };
+		C0E9B0BA1DACEB4300895C4B /* TestSumSquareDifferencesNoCenter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04E1BD54AE000ABBC5B /* TestSumSquareDifferencesNoCenter.cpp */; };
+		C0E9B0BB1DACEB4300895C4B /* TestFrameColorAdjustment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04B1BD54AE000ABBC5B /* TestFrameColorAdjustment.cpp */; };
+		C0E9B0BC1DACEB4300895C4B /* TestFrameRectification.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C04D1BD54AE000ABBC5B /* TestFrameRectification.cpp */; };
+		C0E9B0BD1DACEB4300895C4B /* TestAdvancedFrameShrinker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0461BD54AE000ABBC5B /* TestAdvancedFrameShrinker.cpp */; };
+		C0E9B0BF1DACEB4300895C4B /* TestAdvancedFrameInterpolatorBilinear.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0451BD54AE000ABBC5B /* TestAdvancedFrameInterpolatorBilinear.cpp */; };
+		C0E9B0C11DACEB4300895C4B /* TestAdvancedZeroMeanSumSquareDifferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0491BD54AE000ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.cpp */; };
+		C0E9B0C21DACEB4300895C4B /* TestAdvancedSumSquareDifferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DD0C0481BD54AE000ABBC5B /* TestAdvancedSumSquareDifferences.cpp */; };
+		C0E9B0C51DACEB4300895C4B /* TestFrameColorAdjustment.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0661BD54AF500ABBC5B /* TestFrameColorAdjustment.h */; };
+		C0E9B0C61DACEB4300895C4B /* TestAdvancedFrameShrinker.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0611BD54AF400ABBC5B /* TestAdvancedFrameShrinker.h */; };
+		C0E9B0C71DACEB4300895C4B /* TestSumSquareDifferencesNoCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0691BD54AF500ABBC5B /* TestSumSquareDifferencesNoCenter.h */; };
+		C0E9B0C91DACEB4300895C4B /* TestAdvancedFrameInterpolatorBilinear.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0601BD54AF400ABBC5B /* TestAdvancedFrameInterpolatorBilinear.h */; };
+		C0E9B0CA1DACEB4300895C4B /* TestAdvancedSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0631BD54AF400ABBC5B /* TestAdvancedSumSquareDifferences.h */; };
+		C0E9B0CB1DACEB4300895C4B /* TestAdvancedFrameFilterSobel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C05F1BD54AF400ABBC5B /* TestAdvancedFrameFilterSobel.h */; };
+		C0E9B0CC1DACEB4300895C4B /* TestAdvancedZeroMeanSumSquareDifferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0641BD54AF400ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.h */; };
+		C0E9B0CD1DACEB4300895C4B /* TestCVAdvanced.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0651BD54AF500ABBC5B /* TestCVAdvanced.h */; };
+		C0E9B0CF1DACEB4300895C4B /* TestWhitePointDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C06A1BD54AF500ABBC5B /* TestWhitePointDetector.h */; };
+		C0E9B0D01DACEB4300895C4B /* TestFrameRectification.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0C0681BD54AF500ABBC5B /* TestFrameRectification.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5DB104211F6038A000C745E4 /* TestPanoramaFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestPanoramaFrame.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestPanoramaFrame.cpp; sourceTree = "<group>"; };
+		5DB104261F6038C000C745E4 /* TestPanoramaFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestPanoramaFrame.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestPanoramaFrame.h; sourceTree = "<group>"; };
+		5DD0C0341BD549E800ABBC5B /* libOceanTestCVAdvancedD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVAdvancedD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD0C0441BD54AE000ABBC5B /* TestAdvancedFrameFilterSobel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAdvancedFrameFilterSobel.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameFilterSobel.cpp; sourceTree = "<group>"; };
+		5DD0C0451BD54AE000ABBC5B /* TestAdvancedFrameInterpolatorBilinear.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAdvancedFrameInterpolatorBilinear.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameInterpolatorBilinear.cpp; sourceTree = "<group>"; };
+		5DD0C0461BD54AE000ABBC5B /* TestAdvancedFrameShrinker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAdvancedFrameShrinker.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameShrinker.cpp; sourceTree = "<group>"; };
+		5DD0C0481BD54AE000ABBC5B /* TestAdvancedSumSquareDifferences.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAdvancedSumSquareDifferences.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedSumSquareDifferences.cpp; sourceTree = "<group>"; };
+		5DD0C0491BD54AE000ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAdvancedZeroMeanSumSquareDifferences.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedZeroMeanSumSquareDifferences.cpp; sourceTree = "<group>"; };
+		5DD0C04A1BD54AE000ABBC5B /* TestCVAdvanced.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestCVAdvanced.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestCVAdvanced.cpp; sourceTree = "<group>"; };
+		5DD0C04B1BD54AE000ABBC5B /* TestFrameColorAdjustment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameColorAdjustment.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestFrameColorAdjustment.cpp; sourceTree = "<group>"; };
+		5DD0C04D1BD54AE000ABBC5B /* TestFrameRectification.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameRectification.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestFrameRectification.cpp; sourceTree = "<group>"; };
+		5DD0C04E1BD54AE000ABBC5B /* TestSumSquareDifferencesNoCenter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestSumSquareDifferencesNoCenter.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestSumSquareDifferencesNoCenter.cpp; sourceTree = "<group>"; };
+		5DD0C04F1BD54AE000ABBC5B /* TestWhitePointDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestWhitePointDetector.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestWhitePointDetector.cpp; sourceTree = "<group>"; };
+		5DD0C05F1BD54AF400ABBC5B /* TestAdvancedFrameFilterSobel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdvancedFrameFilterSobel.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameFilterSobel.h; sourceTree = "<group>"; };
+		5DD0C0601BD54AF400ABBC5B /* TestAdvancedFrameInterpolatorBilinear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdvancedFrameInterpolatorBilinear.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameInterpolatorBilinear.h; sourceTree = "<group>"; };
+		5DD0C0611BD54AF400ABBC5B /* TestAdvancedFrameShrinker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdvancedFrameShrinker.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameShrinker.h; sourceTree = "<group>"; };
+		5DD0C0631BD54AF400ABBC5B /* TestAdvancedSumSquareDifferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdvancedSumSquareDifferences.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedSumSquareDifferences.h; sourceTree = "<group>"; };
+		5DD0C0641BD54AF400ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdvancedZeroMeanSumSquareDifferences.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedZeroMeanSumSquareDifferences.h; sourceTree = "<group>"; };
+		5DD0C0651BD54AF500ABBC5B /* TestCVAdvanced.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestCVAdvanced.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestCVAdvanced.h; sourceTree = "<group>"; };
+		5DD0C0661BD54AF500ABBC5B /* TestFrameColorAdjustment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameColorAdjustment.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestFrameColorAdjustment.h; sourceTree = "<group>"; };
+		5DD0C0681BD54AF500ABBC5B /* TestFrameRectification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameRectification.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestFrameRectification.h; sourceTree = "<group>"; };
+		5DD0C0691BD54AF500ABBC5B /* TestSumSquareDifferencesNoCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestSumSquareDifferencesNoCenter.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestSumSquareDifferencesNoCenter.h; sourceTree = "<group>"; };
+		5DD0C06A1BD54AF500ABBC5B /* TestWhitePointDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestWhitePointDetector.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestWhitePointDetector.h; sourceTree = "<group>"; };
+		5DD0C0971BD54C7F00ABBC5B /* libOceanTestCVAdvancedD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVAdvancedD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DD14A4B1D953BC000CCA9F0 /* libOceanTestCVAdvancedD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVAdvancedD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		931145AA2B1F8E9C00249F74 /* TestAdvancedMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdvancedMotion.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedMotion.h; sourceTree = "<group>"; };
+		931145AF2B1F8EA800249F74 /* TestAdvancedMotion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAdvancedMotion.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedMotion.cpp; sourceTree = "<group>"; };
+		933DD4342A2AB24800910639 /* TestAdvancedFrameChannels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdvancedFrameChannels.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameChannels.h; sourceTree = "<group>"; };
+		933DD43E2A2AB27700910639 /* TestAdvancedFrameChannels.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAdvancedFrameChannels.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameChannels.cpp; sourceTree = "<group>"; };
+		935342FA2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdvancedFrameFilterSeparable.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameFilterSeparable.h; sourceTree = "<group>"; };
+		935342FF2A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAdvancedFrameFilterSeparable.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameFilterSeparable.cpp; sourceTree = "<group>"; };
+		935343042A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestAdvancedFrameFilterGaussian.cpp; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameFilterGaussian.cpp; sourceTree = "<group>"; };
+		935343092A392945000140C5 /* TestAdvancedFrameFilterGaussian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdvancedFrameFilterGaussian.h; path = ../../../../../../../impl/ocean/test/testcv/testadvanced/TestAdvancedFrameFilterGaussian.h; sourceTree = "<group>"; };
+		C0E9B0D51DACEB4300895C4B /* libOceanTestCVAdvancedD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanTestCVAdvancedD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5DD0C0311BD549E800ABBC5B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD0C0861BD54C7F00ABBC5B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A3A1D953BC000CCA9F0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0C31DACEB4300895C4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5DD0C02B1BD549E800ABBC5B = {
+			isa = PBXGroup;
+			children = (
+				5DD0C05D1BD54AE300ABBC5B /* Header Files */,
+				5DD0C0421BD54ACC00ABBC5B /* Source Files */,
+				5DD0C0351BD549E800ABBC5B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5DD0C0351BD549E800ABBC5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5DD0C0341BD549E800ABBC5B /* libOceanTestCVAdvancedD.a */,
+				5DD0C0971BD54C7F00ABBC5B /* libOceanTestCVAdvancedD.dylib */,
+				5DD14A4B1D953BC000CCA9F0 /* libOceanTestCVAdvancedD.a */,
+				C0E9B0D51DACEB4300895C4B /* libOceanTestCVAdvancedD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5DD0C0421BD54ACC00ABBC5B /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				933DD43E2A2AB27700910639 /* TestAdvancedFrameChannels.cpp */,
+				935343042A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp */,
+				935342FF2A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp */,
+				5DD0C0441BD54AE000ABBC5B /* TestAdvancedFrameFilterSobel.cpp */,
+				5DD0C0451BD54AE000ABBC5B /* TestAdvancedFrameInterpolatorBilinear.cpp */,
+				5DD0C0461BD54AE000ABBC5B /* TestAdvancedFrameShrinker.cpp */,
+				931145AF2B1F8EA800249F74 /* TestAdvancedMotion.cpp */,
+				5DD0C0481BD54AE000ABBC5B /* TestAdvancedSumSquareDifferences.cpp */,
+				5DD0C0491BD54AE000ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.cpp */,
+				5DD0C04A1BD54AE000ABBC5B /* TestCVAdvanced.cpp */,
+				5DD0C04B1BD54AE000ABBC5B /* TestFrameColorAdjustment.cpp */,
+				5DD0C04D1BD54AE000ABBC5B /* TestFrameRectification.cpp */,
+				5DB104211F6038A000C745E4 /* TestPanoramaFrame.cpp */,
+				5DD0C04E1BD54AE000ABBC5B /* TestSumSquareDifferencesNoCenter.cpp */,
+				5DD0C04F1BD54AE000ABBC5B /* TestWhitePointDetector.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5DD0C05D1BD54AE300ABBC5B /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				933DD4342A2AB24800910639 /* TestAdvancedFrameChannels.h */,
+				935343092A392945000140C5 /* TestAdvancedFrameFilterGaussian.h */,
+				935342FA2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h */,
+				5DD0C05F1BD54AF400ABBC5B /* TestAdvancedFrameFilterSobel.h */,
+				5DD0C0601BD54AF400ABBC5B /* TestAdvancedFrameInterpolatorBilinear.h */,
+				5DD0C0611BD54AF400ABBC5B /* TestAdvancedFrameShrinker.h */,
+				931145AA2B1F8E9C00249F74 /* TestAdvancedMotion.h */,
+				5DD0C0631BD54AF400ABBC5B /* TestAdvancedSumSquareDifferences.h */,
+				5DD0C0641BD54AF400ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.h */,
+				5DD0C0651BD54AF500ABBC5B /* TestCVAdvanced.h */,
+				5DD0C0661BD54AF500ABBC5B /* TestFrameColorAdjustment.h */,
+				5DD0C0681BD54AF500ABBC5B /* TestFrameRectification.h */,
+				5DB104261F6038C000C745E4 /* TestPanoramaFrame.h */,
+				5DD0C0691BD54AF500ABBC5B /* TestSumSquareDifferencesNoCenter.h */,
+				5DD0C06A1BD54AF500ABBC5B /* TestWhitePointDetector.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5DD0C0321BD549E800ABBC5B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DD0C0731BD54AF500ABBC5B /* TestFrameColorAdjustment.h in Headers */,
+				5DD0C06E1BD54AF500ABBC5B /* TestAdvancedFrameShrinker.h in Headers */,
+				5DD0C0761BD54AF500ABBC5B /* TestSumSquareDifferencesNoCenter.h in Headers */,
+				5DD0C06D1BD54AF500ABBC5B /* TestAdvancedFrameInterpolatorBilinear.h in Headers */,
+				935342FB2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h in Headers */,
+				5DD0C0701BD54AF500ABBC5B /* TestAdvancedSumSquareDifferences.h in Headers */,
+				931145AB2B1F8E9D00249F74 /* TestAdvancedMotion.h in Headers */,
+				5DD0C06C1BD54AF500ABBC5B /* TestAdvancedFrameFilterSobel.h in Headers */,
+				5DD0C0711BD54AF500ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.h in Headers */,
+				5DD0C0721BD54AF500ABBC5B /* TestCVAdvanced.h in Headers */,
+				933DD4352A2AB24800910639 /* TestAdvancedFrameChannels.h in Headers */,
+				5DB104271F6038C000C745E4 /* TestPanoramaFrame.h in Headers */,
+				9353430A2A392945000140C5 /* TestAdvancedFrameFilterGaussian.h in Headers */,
+				5DD0C0771BD54AF500ABBC5B /* TestWhitePointDetector.h in Headers */,
+				5DD0C0751BD54AF500ABBC5B /* TestFrameRectification.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD0C0871BD54C7F00ABBC5B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DD0C0881BD54C7F00ABBC5B /* TestFrameColorAdjustment.h in Headers */,
+				5DD0C0891BD54C7F00ABBC5B /* TestAdvancedFrameShrinker.h in Headers */,
+				5DD0C08A1BD54C7F00ABBC5B /* TestSumSquareDifferencesNoCenter.h in Headers */,
+				5DD0C08C1BD54C7F00ABBC5B /* TestAdvancedFrameInterpolatorBilinear.h in Headers */,
+				935342FC2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h in Headers */,
+				5DD0C08D1BD54C7F00ABBC5B /* TestAdvancedSumSquareDifferences.h in Headers */,
+				931145AC2B1F8E9D00249F74 /* TestAdvancedMotion.h in Headers */,
+				5DD0C08E1BD54C7F00ABBC5B /* TestAdvancedFrameFilterSobel.h in Headers */,
+				5DD0C08F1BD54C7F00ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.h in Headers */,
+				5DD0C0901BD54C7F00ABBC5B /* TestCVAdvanced.h in Headers */,
+				933DD4362A2AB24800910639 /* TestAdvancedFrameChannels.h in Headers */,
+				5DB104281F6038C000C745E4 /* TestPanoramaFrame.h in Headers */,
+				9353430B2A392945000140C5 /* TestAdvancedFrameFilterGaussian.h in Headers */,
+				5DD0C0921BD54C7F00ABBC5B /* TestWhitePointDetector.h in Headers */,
+				5DD0C0931BD54C7F00ABBC5B /* TestFrameRectification.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A3B1D953BC000CCA9F0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DD14A3C1D953BC000CCA9F0 /* TestFrameColorAdjustment.h in Headers */,
+				5DD14A3D1D953BC000CCA9F0 /* TestAdvancedFrameShrinker.h in Headers */,
+				5DD14A3E1D953BC000CCA9F0 /* TestSumSquareDifferencesNoCenter.h in Headers */,
+				5DD14A401D953BC000CCA9F0 /* TestAdvancedFrameInterpolatorBilinear.h in Headers */,
+				935342FD2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h in Headers */,
+				5DD14A411D953BC000CCA9F0 /* TestAdvancedSumSquareDifferences.h in Headers */,
+				931145AD2B1F8E9D00249F74 /* TestAdvancedMotion.h in Headers */,
+				5DD14A421D953BC000CCA9F0 /* TestAdvancedFrameFilterSobel.h in Headers */,
+				5DD14A431D953BC000CCA9F0 /* TestAdvancedZeroMeanSumSquareDifferences.h in Headers */,
+				5DD14A441D953BC000CCA9F0 /* TestCVAdvanced.h in Headers */,
+				933DD4372A2AB24800910639 /* TestAdvancedFrameChannels.h in Headers */,
+				5DB104291F6038C000C745E4 /* TestPanoramaFrame.h in Headers */,
+				9353430C2A392945000140C5 /* TestAdvancedFrameFilterGaussian.h in Headers */,
+				5DD14A461D953BC000CCA9F0 /* TestWhitePointDetector.h in Headers */,
+				5DD14A471D953BC000CCA9F0 /* TestFrameRectification.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0C41DACEB4300895C4B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0E9B0C51DACEB4300895C4B /* TestFrameColorAdjustment.h in Headers */,
+				C0E9B0C61DACEB4300895C4B /* TestAdvancedFrameShrinker.h in Headers */,
+				C0E9B0C71DACEB4300895C4B /* TestSumSquareDifferencesNoCenter.h in Headers */,
+				C0E9B0C91DACEB4300895C4B /* TestAdvancedFrameInterpolatorBilinear.h in Headers */,
+				935342FE2A392918000140C5 /* TestAdvancedFrameFilterSeparable.h in Headers */,
+				C0E9B0CA1DACEB4300895C4B /* TestAdvancedSumSquareDifferences.h in Headers */,
+				931145AE2B1F8E9D00249F74 /* TestAdvancedMotion.h in Headers */,
+				C0E9B0CB1DACEB4300895C4B /* TestAdvancedFrameFilterSobel.h in Headers */,
+				C0E9B0CC1DACEB4300895C4B /* TestAdvancedZeroMeanSumSquareDifferences.h in Headers */,
+				C0E9B0CD1DACEB4300895C4B /* TestCVAdvanced.h in Headers */,
+				933DD4382A2AB24800910639 /* TestAdvancedFrameChannels.h in Headers */,
+				5DB1042A1F6038C000C745E4 /* TestPanoramaFrame.h in Headers */,
+				9353430D2A392945000140C5 /* TestAdvancedFrameFilterGaussian.h in Headers */,
+				C0E9B0CF1DACEB4300895C4B /* TestWhitePointDetector.h in Headers */,
+				C0E9B0D01DACEB4300895C4B /* TestFrameRectification.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5DD0C0331BD549E800ABBC5B /* testcvadvanced x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD0C03F1BD549E800ABBC5B /* Build configuration list for PBXNativeTarget "testcvadvanced x64 (Static)" */;
+			buildPhases = (
+				5DD0C0301BD549E800ABBC5B /* Sources */,
+				5DD0C0311BD549E800ABBC5B /* Frameworks */,
+				5DD0C0321BD549E800ABBC5B /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvadvanced x64 (Static)";
+			productName = testcvadvanced;
+			productReference = 5DD0C0341BD549E800ABBC5B /* libOceanTestCVAdvancedD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DD0C0781BD54C7F00ABBC5B /* testcvadvanced x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD0C0941BD54C7F00ABBC5B /* Build configuration list for PBXNativeTarget "testcvadvanced x64 (Shared)" */;
+			buildPhases = (
+				5DD0C0791BD54C7F00ABBC5B /* Sources */,
+				5DD0C0861BD54C7F00ABBC5B /* Frameworks */,
+				5DD0C0871BD54C7F00ABBC5B /* Headers */,
+				C0E9B0D61DACEBDE00895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvadvanced x64 (Shared)";
+			productName = testcvadvanced;
+			productReference = 5DD0C0971BD54C7F00ABBC5B /* libOceanTestCVAdvancedD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5DD14A2C1D953BC000CCA9F0 /* testcvadvanced arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DD14A481D953BC000CCA9F0 /* Build configuration list for PBXNativeTarget "testcvadvanced arm64 (Static)" */;
+			buildPhases = (
+				5DD14A2D1D953BC000CCA9F0 /* Sources */,
+				5DD14A3A1D953BC000CCA9F0 /* Frameworks */,
+				5DD14A3B1D953BC000CCA9F0 /* Headers */,
+				5DD14A4C1D953C1800CCA9F0 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvadvanced arm64 (Static)";
+			productName = testcvadvanced;
+			productReference = 5DD14A4B1D953BC000CCA9F0 /* libOceanTestCVAdvancedD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C0E9B0B51DACEB4300895C4B /* testcvadvanced arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0E9B0D21DACEB4300895C4B /* Build configuration list for PBXNativeTarget "testcvadvanced arm64 (Shared)" */;
+			buildPhases = (
+				C0E9B0B61DACEB4300895C4B /* Sources */,
+				C0E9B0C31DACEB4300895C4B /* Frameworks */,
+				C0E9B0C41DACEB4300895C4B /* Headers */,
+				C0E9B0D11DACEB4300895C4B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "testcvadvanced arm64 (Shared)";
+			productName = testcvadvanced;
+			productReference = C0E9B0D51DACEB4300895C4B /* libOceanTestCVAdvancedD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5DD0C02C1BD549E800ABBC5B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5DD0C0331BD549E800ABBC5B = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5DD0C02F1BD549E800ABBC5B /* Build configuration list for PBXProject "testcvadvanced" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5DD0C02B1BD549E800ABBC5B;
+			productRefGroup = 5DD0C0351BD549E800ABBC5B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5DD0C0331BD549E800ABBC5B /* testcvadvanced x64 (Static) */,
+				5DD0C0781BD54C7F00ABBC5B /* testcvadvanced x64 (Shared) */,
+				5DD14A2C1D953BC000CCA9F0 /* testcvadvanced arm64 (Static) */,
+				C0E9B0B51DACEB4300895C4B /* testcvadvanced arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5DD14A4C1D953C1800CCA9F0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../copy_arm_static.sh \"../../../../../../../bin/test/lib/\"";
+		};
+		C0E9B0D11DACEB4300895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../../codesign.sh\n../../../../copy_arm_shared.sh \"../../../../../../../bin/test/lib/\"";
+		};
+		C0E9B0D61DACEBDE00895C4B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5DD0C0301BD549E800ABBC5B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DD0C0511BD54AE000ABBC5B /* TestAdvancedFrameFilterSobel.cpp in Sources */,
+				935343002A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp in Sources */,
+				5DD0C05C1BD54AE000ABBC5B /* TestWhitePointDetector.cpp in Sources */,
+				933DD43F2A2AB27700910639 /* TestAdvancedFrameChannels.cpp in Sources */,
+				5DD0C0571BD54AE000ABBC5B /* TestCVAdvanced.cpp in Sources */,
+				5DD0C05B1BD54AE000ABBC5B /* TestSumSquareDifferencesNoCenter.cpp in Sources */,
+				5DD0C0581BD54AE000ABBC5B /* TestFrameColorAdjustment.cpp in Sources */,
+				5DD0C05A1BD54AE000ABBC5B /* TestFrameRectification.cpp in Sources */,
+				5DD0C0531BD54AE000ABBC5B /* TestAdvancedFrameShrinker.cpp in Sources */,
+				5DB104221F6038A000C745E4 /* TestPanoramaFrame.cpp in Sources */,
+				5DD0C0521BD54AE000ABBC5B /* TestAdvancedFrameInterpolatorBilinear.cpp in Sources */,
+				931145B02B1F8EA800249F74 /* TestAdvancedMotion.cpp in Sources */,
+				935343052A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp in Sources */,
+				5DD0C0561BD54AE000ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.cpp in Sources */,
+				5DD0C0551BD54AE000ABBC5B /* TestAdvancedSumSquareDifferences.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD0C0791BD54C7F00ABBC5B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DD0C07A1BD54C7F00ABBC5B /* TestAdvancedFrameFilterSobel.cpp in Sources */,
+				935343012A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp in Sources */,
+				5DD0C07B1BD54C7F00ABBC5B /* TestWhitePointDetector.cpp in Sources */,
+				933DD4402A2AB27700910639 /* TestAdvancedFrameChannels.cpp in Sources */,
+				5DD0C07C1BD54C7F00ABBC5B /* TestCVAdvanced.cpp in Sources */,
+				5DD0C07D1BD54C7F00ABBC5B /* TestSumSquareDifferencesNoCenter.cpp in Sources */,
+				5DD0C07E1BD54C7F00ABBC5B /* TestFrameColorAdjustment.cpp in Sources */,
+				5DD0C07F1BD54C7F00ABBC5B /* TestFrameRectification.cpp in Sources */,
+				5DD0C0801BD54C7F00ABBC5B /* TestAdvancedFrameShrinker.cpp in Sources */,
+				5DB104231F6038A000C745E4 /* TestPanoramaFrame.cpp in Sources */,
+				5DD0C0821BD54C7F00ABBC5B /* TestAdvancedFrameInterpolatorBilinear.cpp in Sources */,
+				931145B12B1F8EA800249F74 /* TestAdvancedMotion.cpp in Sources */,
+				935343062A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp in Sources */,
+				5DD0C0841BD54C7F00ABBC5B /* TestAdvancedZeroMeanSumSquareDifferences.cpp in Sources */,
+				5DD0C0851BD54C7F00ABBC5B /* TestAdvancedSumSquareDifferences.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DD14A2D1D953BC000CCA9F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DD14A2E1D953BC000CCA9F0 /* TestAdvancedFrameFilterSobel.cpp in Sources */,
+				935343022A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp in Sources */,
+				5DD14A2F1D953BC000CCA9F0 /* TestWhitePointDetector.cpp in Sources */,
+				933DD4412A2AB27700910639 /* TestAdvancedFrameChannels.cpp in Sources */,
+				5DD14A301D953BC000CCA9F0 /* TestCVAdvanced.cpp in Sources */,
+				5DD14A311D953BC000CCA9F0 /* TestSumSquareDifferencesNoCenter.cpp in Sources */,
+				5DD14A321D953BC000CCA9F0 /* TestFrameColorAdjustment.cpp in Sources */,
+				5DD14A331D953BC000CCA9F0 /* TestFrameRectification.cpp in Sources */,
+				5DD14A341D953BC000CCA9F0 /* TestAdvancedFrameShrinker.cpp in Sources */,
+				5DB104241F6038A000C745E4 /* TestPanoramaFrame.cpp in Sources */,
+				5DD14A361D953BC000CCA9F0 /* TestAdvancedFrameInterpolatorBilinear.cpp in Sources */,
+				931145B22B1F8EA800249F74 /* TestAdvancedMotion.cpp in Sources */,
+				935343072A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp in Sources */,
+				5DD14A381D953BC000CCA9F0 /* TestAdvancedZeroMeanSumSquareDifferences.cpp in Sources */,
+				5DD14A391D953BC000CCA9F0 /* TestAdvancedSumSquareDifferences.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0E9B0B61DACEB4300895C4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0E9B0B71DACEB4300895C4B /* TestAdvancedFrameFilterSobel.cpp in Sources */,
+				935343032A392923000140C5 /* TestAdvancedFrameFilterSeparable.cpp in Sources */,
+				C0E9B0B81DACEB4300895C4B /* TestWhitePointDetector.cpp in Sources */,
+				933DD4422A2AB27700910639 /* TestAdvancedFrameChannels.cpp in Sources */,
+				C0E9B0B91DACEB4300895C4B /* TestCVAdvanced.cpp in Sources */,
+				C0E9B0BA1DACEB4300895C4B /* TestSumSquareDifferencesNoCenter.cpp in Sources */,
+				C0E9B0BB1DACEB4300895C4B /* TestFrameColorAdjustment.cpp in Sources */,
+				C0E9B0BC1DACEB4300895C4B /* TestFrameRectification.cpp in Sources */,
+				C0E9B0BD1DACEB4300895C4B /* TestAdvancedFrameShrinker.cpp in Sources */,
+				5DB104251F6038A000C745E4 /* TestPanoramaFrame.cpp in Sources */,
+				C0E9B0BF1DACEB4300895C4B /* TestAdvancedFrameInterpolatorBilinear.cpp in Sources */,
+				931145B32B1F8EA800249F74 /* TestAdvancedMotion.cpp in Sources */,
+				935343082A39293E000140C5 /* TestAdvancedFrameFilterGaussian.cpp in Sources */,
+				C0E9B0C11DACEB4300895C4B /* TestAdvancedZeroMeanSumSquareDifferences.cpp in Sources */,
+				C0E9B0C21DACEB4300895C4B /* TestAdvancedSumSquareDifferences.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5DD0C03D1BD549E800ABBC5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5DD0C03E1BD549E800ABBC5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5DD0C0401BD549E800ABBC5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvadvanced/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvadvanced/osx_x64_xc9_static_debug;
+				PRODUCT_MODULE_NAME = OceanTestCVAdvancedD;
+				PRODUCT_NAME = OceanTestCVAdvancedD;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD0C0411BD549E800ABBC5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvadvanced/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvadvanced/osx_x64_xc9_static;
+				PRODUCT_MODULE_NAME = OceanTestCVAdvanced;
+				PRODUCT_NAME = OceanTestCVAdvanced;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DD0C0951BD54C7F00ABBC5B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvadvanced/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvadvanced/osx_x64_xc9_shared_debug;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+					"-lOceanSystemD",
+				);
+				PRODUCT_MODULE_NAME = OceanTestCVAdvancedD;
+				PRODUCT_NAME = OceanTestCVAdvancedD;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD0C0961BD54C7F00ABBC5B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../../bin/tmp/impl/ocean/testcvadvanced/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../../bin/tmp/impl/ocean/testcvadvanced/osx_x64_xc9_shared;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanGeometry",
+					"-lOceanMath",
+					"-lOceanSystem",
+				);
+				PRODUCT_MODULE_NAME = OceanTestCVAdvanced;
+				PRODUCT_NAME = OceanTestCVAdvanced;
+				SYMROOT = ../../../../../../../bin/test/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5DD14A491D953BC000CCA9F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestCVAdvancedD;
+				PRODUCT_NAME = OceanTestCVAdvancedD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5DD14A4A1D953BC000CCA9F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanTestCVAdvanced;
+				PRODUCT_NAME = OceanTestCVAdvanced;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C0E9B0D31DACEB4300895C4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanGeometry",
+					"-lOceanMathD",
+					"-lOceanSystemD",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestCVAdvancedD;
+				PRODUCT_NAME = OceanTestCVAdvancedD;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C0E9B0D41DACEB4300895C4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../../impl,
+				);
+				INFOPLIST_OUTPUT_FORMAT = "same-as-input";
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanGeometry",
+					"-lOceanMath",
+					"-lOceanSystem",
+				);
+				PLIST_FILE_OUTPUT_FORMAT = "same-as-input";
+				PRODUCT_MODULE_NAME = OceanTestCVAdvanced;
+				PRODUCT_NAME = OceanTestCVAdvanced;
+				SDKROOT = iphoneos;
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SYMROOT = "../../../../../../../bin/tmp/impl/ocean/testcvadvanced/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5DD0C02F1BD549E800ABBC5B /* Build configuration list for PBXProject "testcvadvanced" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD0C03D1BD549E800ABBC5B /* Debug */,
+				5DD0C03E1BD549E800ABBC5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD0C03F1BD549E800ABBC5B /* Build configuration list for PBXNativeTarget "testcvadvanced x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD0C0401BD549E800ABBC5B /* Debug */,
+				5DD0C0411BD549E800ABBC5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD0C0941BD54C7F00ABBC5B /* Build configuration list for PBXNativeTarget "testcvadvanced x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD0C0951BD54C7F00ABBC5B /* Debug */,
+				5DD0C0961BD54C7F00ABBC5B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DD14A481D953BC000CCA9F0 /* Build configuration list for PBXNativeTarget "testcvadvanced arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DD14A491D953BC000CCA9F0 /* Debug */,
+				5DD14A4A1D953BC000CCA9F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0E9B0D21DACEB4300895C4B /* Build configuration list for PBXNativeTarget "testcvadvanced arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0E9B0D31DACEB4300895C4B /* Debug */,
+				C0E9B0D41DACEB4300895C4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5DD0C02C1BD549E800ABBC5B /* Project object */;
+}

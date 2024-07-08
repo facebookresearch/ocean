@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{52dabbad-0158-420d-acfe-9d03dd69b496}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{5f6a1729-f919-496c-a272-760370d2248a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Java Files">
+      <UniqueIdentifier>{644a3dc3-639a-455a-b9eb-b01a35dab343}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\GLFrameView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\GLView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\GLView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\GLFrameView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\GLFrameView.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\GLFrameViewActivity.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\GLView.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\GLViewActivity.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\GLViewAppCompatActivity.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\MessengerView.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\OceanActivity.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\OceanAppCompatActivity.java">
+      <Filter>Java Files</Filter>
+    </None>
+    <None Include="..\..\..\..\..\..\..\..\impl\ocean\platform\android\application\TextActivity.java">
+      <Filter>Java Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>

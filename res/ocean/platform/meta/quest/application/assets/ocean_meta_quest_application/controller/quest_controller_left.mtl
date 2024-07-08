@@ -1,0 +1,16 @@
+# Copyright (c) Meta Platforms, Inc. and affiliates. All rights reserved.
+#
+# This file is licensed under the Art Attribution License 1.0 found in the
+# LICENSE file in this directory.
+
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v5.0.0)
+
+newmtl material_quest_controller_left
+Ka 1 1 1
+Kd 1 1 1
+Ke 0.25 0.25 0.25
+Ks 0.2 0.2 0.2
+Ns 10
+illum 1
+map_Kd quest_controller_left.png

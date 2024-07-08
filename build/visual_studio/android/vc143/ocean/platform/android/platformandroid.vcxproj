@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Static Debug|ARM">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Debug|ARM64">
+      <Configuration>Static Debug</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Static Release|ARM64">
+      <Configuration>Static Release</Configuration>
+      <Platform>ARM64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{FCB2399E-13F7-4ED4-95E5-1E784D3B5398}</ProjectGuid>
+    <Keyword>Android</Keyword>
+    <RootNamespace>platformandroid</RootNamespace>
+    <MinimumVisualStudioVersion>16.0</MinimumVisualStudioVersion>
+    <ApplicationType>Android</ApplicationType>
+    <ApplicationTypeRevision>3.0</ApplicationTypeRevision>
+    <ProjectName>platformandroid</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>Clang_5_0</PlatformToolset>
+    <UseOfStl>c++_static</UseOfStl>
+    <AndroidAPILevel>android-31</AndroidAPILevel>
+    <ThumbMode>Disabled</ThumbMode>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">
+    <Import Project="platformandroid_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">
+    <Import Project="platformandroid_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">
+    <Import Project="platformandroid_build.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">
+    <Import Project="platformandroid_build.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Android.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Battery.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Bitmap.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\base\jni\BaseJni.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\android\jni\DevicesAndroidJni.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\arcore\jni\DevicesARCoreJni.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\devices\pattern\jni\DevicesPatternJni.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\NativeInterfaceManager.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\android\jni\MediaAndroidJni.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\jni\MediaOpenImageLibrariesJni.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\jni\RenderingGLESceneGraphJni.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdl\obj\jni\SceneDescriptionSDLOBJJni.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\jni\SceneDescriptionSDXX3DJni.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Permission.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\PowerMonitor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Processor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ProcessorMonitor.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ResourceManager.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIEnvironment.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIObject.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Utilities.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Battery.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Bitmap.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\base\jni\BaseJni.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\android\jni\DevicesAndroidJni.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\arcore\jni\DevicesARCoreJni.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\devices\pattern\jni\DevicesPatternJni.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\NativeInterfaceManager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\android\jni\MediaAndroidJni.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\jni\MediaOpenImageLibrariesJni.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\jni\RenderingGLESceneGraphJni.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdl\obj\jni\SceneDescriptionSDLOBJJni.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\jni\SceneDescriptionSDXX3DJni.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Permission.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\PowerMonitor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Processor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ProcessorMonitor.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ResourceManager.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\ScopedJNIEnvironment.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Utilities.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\platform\android\Assets.java">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\base\BaseJni.java">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\devices\android\DevicesAndroidJni.java">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\devices\android\DevicesARCoreJni.java">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\devices\android\DevicesPatternJni.java">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\media\android\MediaAndroidJni.java">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\media\openimagelibraries\MediaOpenImageLibrariesJni.java">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\rendering\glescenegraph\RenderingGLESceneGraphJni.java">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdl\obj\SceneDescriptionSDLOBJJni.java">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\scenedescription\sdx\x3d\SceneDescriptionSDXX3DJni.java">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+    </None>
+    <None Include="..\..\..\..\..\..\..\impl\ocean\platform\android\OceanLocationManager.java">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Release|ARM'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Static Debug|ARM'">true</ExcludedFromBuild>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

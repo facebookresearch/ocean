@@ -1,0 +1,1084 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5D12BCD51BF2661300A56828 /* GIAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCAB1BF2661300A56828 /* GIAttribute.cpp */; };
+		5D12BCD61BF2661300A56828 /* GIAttributeSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCAC1BF2661300A56828 /* GIAttributeSet.cpp */; };
+		5D12BCD71BF2661300A56828 /* GIBitmapFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCAD1BF2661300A56828 /* GIBitmapFramebuffer.cpp */; };
+		5D12BCD81BF2661300A56828 /* GIBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCAE1BF2661300A56828 /* GIBox.cpp */; };
+		5D12BCD91BF2661300A56828 /* GICone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCAF1BF2661300A56828 /* GICone.cpp */; };
+		5D12BCDA1BF2661300A56828 /* GICylinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB01BF2661300A56828 /* GICylinder.cpp */; };
+		5D12BCDB1BF2661300A56828 /* GIEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB11BF2661300A56828 /* GIEngine.cpp */; };
+		5D12BCDC1BF2661300A56828 /* GIFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB21BF2661300A56828 /* GIFactory.cpp */; };
+		5D12BCDD1BF2661300A56828 /* GIFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB31BF2661300A56828 /* GIFramebuffer.cpp */; };
+		5D12BCDE1BF2661300A56828 /* GIGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB41BF2661300A56828 /* GIGeometry.cpp */; };
+		5D12BCDF1BF2661300A56828 /* GIGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB51BF2661300A56828 /* GIGroup.cpp */; };
+		5D12BCE01BF2661300A56828 /* GIIndependentPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB61BF2661300A56828 /* GIIndependentPrimitive.cpp */; };
+		5D12BCE11BF2661300A56828 /* GILightSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB71BF2661300A56828 /* GILightSource.cpp */; };
+		5D12BCE21BF2661300A56828 /* GIMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB81BF2661300A56828 /* GIMaterial.cpp */; };
+		5D12BCE31BF2661300A56828 /* GINode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB91BF2661300A56828 /* GINode.cpp */; };
+		5D12BCE41BF2661300A56828 /* GIObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBA1BF2661300A56828 /* GIObject.cpp */; };
+		5D12BCE51BF2661300A56828 /* GIPerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBB1BF2661300A56828 /* GIPerspectiveView.cpp */; };
+		5D12BCE61BF2661300A56828 /* GIPointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBC1BF2661300A56828 /* GIPointLight.cpp */; };
+		5D12BCE71BF2661300A56828 /* GIPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBD1BF2661300A56828 /* GIPrimitive.cpp */; };
+		5D12BCE81BF2661300A56828 /* GIRenderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBE1BF2661300A56828 /* GIRenderable.cpp */; };
+		5D12BCE91BF2661300A56828 /* GIScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBF1BF2661300A56828 /* GIScene.cpp */; };
+		5D12BCEA1BF2661300A56828 /* GIShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC01BF2661300A56828 /* GIShape.cpp */; };
+		5D12BCEB1BF2661300A56828 /* GISphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC11BF2661300A56828 /* GISphere.cpp */; };
+		5D12BCEC1BF2661300A56828 /* GISpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC21BF2661300A56828 /* GISpotLight.cpp */; };
+		5D12BCED1BF2661300A56828 /* GIStripPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC31BF2661300A56828 /* GIStripPrimitive.cpp */; };
+		5D12BCEE1BF2661300A56828 /* GITexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC41BF2661300A56828 /* GITexture.cpp */; };
+		5D12BCEF1BF2661300A56828 /* GITexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC51BF2661300A56828 /* GITexture2D.cpp */; };
+		5D12BCF01BF2661300A56828 /* GITextures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC61BF2661300A56828 /* GITextures.cpp */; };
+		5D12BCF11BF2661300A56828 /* GITransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC71BF2661300A56828 /* GITransform.cpp */; };
+		5D12BCF21BF2661300A56828 /* GITriangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC81BF2661300A56828 /* GITriangles.cpp */; };
+		5D12BCF31BF2661300A56828 /* GITriangleStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC91BF2661300A56828 /* GITriangleStrips.cpp */; };
+		5D12BCF41BF2661300A56828 /* GIVertexSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCA1BF2661300A56828 /* GIVertexSet.cpp */; };
+		5D12BCF51BF2661300A56828 /* GIView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCB1BF2661300A56828 /* GIView.cpp */; };
+		5D12BCF61BF2661300A56828 /* GIWindowFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCC1BF2661300A56828 /* GIWindowFramebuffer.cpp */; };
+		5D12BCF71BF2661300A56828 /* GlobalIllumination.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCD1BF2661300A56828 /* GlobalIllumination.cpp */; };
+		5D12BCF81BF2661300A56828 /* Lighting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCE1BF2661300A56828 /* Lighting.cpp */; };
+		5D12BCF91BF2661300A56828 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCF1BF2661300A56828 /* Plugin.cpp */; };
+		5D12BCFA1BF2661300A56828 /* TracingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCD01BF2661300A56828 /* TracingBox.cpp */; };
+		5D12BCFB1BF2661300A56828 /* TracingGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCD11BF2661300A56828 /* TracingGroup.cpp */; };
+		5D12BCFC1BF2661300A56828 /* TracingMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCD21BF2661300A56828 /* TracingMesh.cpp */; };
+		5D12BCFD1BF2661300A56828 /* TracingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCD31BF2661300A56828 /* TracingObject.cpp */; };
+		5D12BCFE1BF2661300A56828 /* TracingSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCD41BF2661300A56828 /* TracingSphere.cpp */; };
+		5D12BD2B1BF2664B00A56828 /* GIAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD001BF2664B00A56828 /* GIAttribute.h */; };
+		5D12BD2C1BF2664B00A56828 /* GIAttributeSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD011BF2664B00A56828 /* GIAttributeSet.h */; };
+		5D12BD2D1BF2664B00A56828 /* GIBitmapFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD021BF2664B00A56828 /* GIBitmapFramebuffer.h */; };
+		5D12BD2E1BF2664B00A56828 /* GIBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD031BF2664B00A56828 /* GIBox.h */; };
+		5D12BD2F1BF2664B00A56828 /* GICone.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD041BF2664B00A56828 /* GICone.h */; };
+		5D12BD301BF2664B00A56828 /* GICylinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD051BF2664B00A56828 /* GICylinder.h */; };
+		5D12BD311BF2664B00A56828 /* GIEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD061BF2664B00A56828 /* GIEngine.h */; };
+		5D12BD321BF2664B00A56828 /* GIFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD071BF2664B00A56828 /* GIFactory.h */; };
+		5D12BD331BF2664B00A56828 /* GIFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD081BF2664B00A56828 /* GIFramebuffer.h */; };
+		5D12BD341BF2664B00A56828 /* GIGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD091BF2664B00A56828 /* GIGeometry.h */; };
+		5D12BD351BF2664B00A56828 /* GIGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0A1BF2664B00A56828 /* GIGroup.h */; };
+		5D12BD361BF2664B00A56828 /* GIIndependentPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0B1BF2664B00A56828 /* GIIndependentPrimitive.h */; };
+		5D12BD371BF2664B00A56828 /* GILightSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0C1BF2664B00A56828 /* GILightSource.h */; };
+		5D12BD381BF2664B00A56828 /* GIMaterial.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0D1BF2664B00A56828 /* GIMaterial.h */; };
+		5D12BD391BF2664B00A56828 /* GINode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0E1BF2664B00A56828 /* GINode.h */; };
+		5D12BD3A1BF2664B00A56828 /* GIObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0F1BF2664B00A56828 /* GIObject.h */; };
+		5D12BD3B1BF2664B00A56828 /* GIPerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD101BF2664B00A56828 /* GIPerspectiveView.h */; };
+		5D12BD3C1BF2664B00A56828 /* GIPointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD111BF2664B00A56828 /* GIPointLight.h */; };
+		5D12BD3D1BF2664B00A56828 /* GIPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD121BF2664B00A56828 /* GIPrimitive.h */; };
+		5D12BD3E1BF2664B00A56828 /* GIRenderable.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD131BF2664B00A56828 /* GIRenderable.h */; };
+		5D12BD3F1BF2664B00A56828 /* GIScene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD141BF2664B00A56828 /* GIScene.h */; };
+		5D12BD401BF2664B00A56828 /* GIShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD151BF2664B00A56828 /* GIShape.h */; };
+		5D12BD411BF2664B00A56828 /* GISphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD161BF2664B00A56828 /* GISphere.h */; };
+		5D12BD421BF2664B00A56828 /* GISpotLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD171BF2664B00A56828 /* GISpotLight.h */; };
+		5D12BD431BF2664B00A56828 /* GIStripPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD181BF2664B00A56828 /* GIStripPrimitive.h */; };
+		5D12BD441BF2664B00A56828 /* GITexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD191BF2664B00A56828 /* GITexture.h */; };
+		5D12BD451BF2664B00A56828 /* GITexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1A1BF2664B00A56828 /* GITexture2D.h */; };
+		5D12BD461BF2664B00A56828 /* GITextures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1B1BF2664B00A56828 /* GITextures.h */; };
+		5D12BD471BF2664B00A56828 /* GITransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1C1BF2664B00A56828 /* GITransform.h */; };
+		5D12BD481BF2664B00A56828 /* GITriangles.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1D1BF2664B00A56828 /* GITriangles.h */; };
+		5D12BD491BF2664B00A56828 /* GITriangleStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1E1BF2664B00A56828 /* GITriangleStrips.h */; };
+		5D12BD4A1BF2664B00A56828 /* GIVertexSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1F1BF2664B00A56828 /* GIVertexSet.h */; };
+		5D12BD4B1BF2664B00A56828 /* GIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD201BF2664B00A56828 /* GIView.h */; };
+		5D12BD4C1BF2664B00A56828 /* GIWindowFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD211BF2664B00A56828 /* GIWindowFramebuffer.h */; };
+		5D12BD4D1BF2664B00A56828 /* GlobalIllumination.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD221BF2664B00A56828 /* GlobalIllumination.h */; };
+		5D12BD4E1BF2664B00A56828 /* Lighting.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD231BF2664B00A56828 /* Lighting.h */; };
+		5D12BD4F1BF2664B00A56828 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD241BF2664B00A56828 /* Plugin.h */; };
+		5D12BD501BF2664B00A56828 /* RayIntersection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD251BF2664B00A56828 /* RayIntersection.h */; };
+		5D12BD511BF2664B00A56828 /* TracingBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD261BF2664B00A56828 /* TracingBox.h */; };
+		5D12BD521BF2664B00A56828 /* TracingGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD271BF2664B00A56828 /* TracingGroup.h */; };
+		5D12BD531BF2664B00A56828 /* TracingMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD281BF2664B00A56828 /* TracingMesh.h */; };
+		5D12BD541BF2664B00A56828 /* TracingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD291BF2664B00A56828 /* TracingObject.h */; };
+		5D12BD551BF2664B00A56828 /* TracingSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD2A1BF2664B00A56828 /* TracingSphere.h */; };
+		5D12BD581BF267A400A56828 /* GISphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC11BF2661300A56828 /* GISphere.cpp */; };
+		5D12BD591BF267A400A56828 /* GITriangles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC81BF2661300A56828 /* GITriangles.cpp */; };
+		5D12BD5A1BF267A400A56828 /* GIGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB51BF2661300A56828 /* GIGroup.cpp */; };
+		5D12BD5B1BF267A400A56828 /* GIBitmapFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCAD1BF2661300A56828 /* GIBitmapFramebuffer.cpp */; };
+		5D12BD5C1BF267A400A56828 /* GIIndependentPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB61BF2661300A56828 /* GIIndependentPrimitive.cpp */; };
+		5D12BD5D1BF267A400A56828 /* TracingMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCD21BF2661300A56828 /* TracingMesh.cpp */; };
+		5D12BD5E1BF267A400A56828 /* GIGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB41BF2661300A56828 /* GIGeometry.cpp */; };
+		5D12BD5F1BF267A400A56828 /* GIView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCB1BF2661300A56828 /* GIView.cpp */; };
+		5D12BD601BF267A400A56828 /* Lighting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCE1BF2661300A56828 /* Lighting.cpp */; };
+		5D12BD611BF267A400A56828 /* GIObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBA1BF2661300A56828 /* GIObject.cpp */; };
+		5D12BD621BF267A400A56828 /* GIPointLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBC1BF2661300A56828 /* GIPointLight.cpp */; };
+		5D12BD631BF267A400A56828 /* TracingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCD01BF2661300A56828 /* TracingBox.cpp */; };
+		5D12BD641BF267A400A56828 /* GIScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBF1BF2661300A56828 /* GIScene.cpp */; };
+		5D12BD651BF267A400A56828 /* GICylinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB01BF2661300A56828 /* GICylinder.cpp */; };
+		5D12BD661BF267A400A56828 /* GITexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC41BF2661300A56828 /* GITexture.cpp */; };
+		5D12BD671BF267A400A56828 /* Plugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCF1BF2661300A56828 /* Plugin.cpp */; };
+		5D12BD681BF267A400A56828 /* GIPerspectiveView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBB1BF2661300A56828 /* GIPerspectiveView.cpp */; };
+		5D12BD691BF267A400A56828 /* GILightSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB71BF2661300A56828 /* GILightSource.cpp */; };
+		5D12BD6A1BF267A400A56828 /* GINode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB91BF2661300A56828 /* GINode.cpp */; };
+		5D12BD6B1BF267A400A56828 /* GITriangleStrips.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC91BF2661300A56828 /* GITriangleStrips.cpp */; };
+		5D12BD6C1BF267A400A56828 /* GITexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC51BF2661300A56828 /* GITexture2D.cpp */; };
+		5D12BD6D1BF267A400A56828 /* GICone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCAF1BF2661300A56828 /* GICone.cpp */; };
+		5D12BD6E1BF267A400A56828 /* GITransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC71BF2661300A56828 /* GITransform.cpp */; };
+		5D12BD6F1BF267A400A56828 /* GIStripPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC31BF2661300A56828 /* GIStripPrimitive.cpp */; };
+		5D12BD701BF267A400A56828 /* GIAttribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCAB1BF2661300A56828 /* GIAttribute.cpp */; };
+		5D12BD711BF267A400A56828 /* GIEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB11BF2661300A56828 /* GIEngine.cpp */; };
+		5D12BD721BF267A400A56828 /* GIRenderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBE1BF2661300A56828 /* GIRenderable.cpp */; };
+		5D12BD731BF267A400A56828 /* GlobalIllumination.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCD1BF2661300A56828 /* GlobalIllumination.cpp */; };
+		5D12BD741BF267A400A56828 /* GIShape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC01BF2661300A56828 /* GIShape.cpp */; };
+		5D12BD751BF267A400A56828 /* GIPrimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCBD1BF2661300A56828 /* GIPrimitive.cpp */; };
+		5D12BD761BF267A400A56828 /* TracingGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCD11BF2661300A56828 /* TracingGroup.cpp */; };
+		5D12BD771BF267A400A56828 /* TracingSphere.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCD41BF2661300A56828 /* TracingSphere.cpp */; };
+		5D12BD781BF267A400A56828 /* GIAttributeSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCAC1BF2661300A56828 /* GIAttributeSet.cpp */; };
+		5D12BD791BF267A400A56828 /* GIMaterial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB81BF2661300A56828 /* GIMaterial.cpp */; };
+		5D12BD7A1BF267A400A56828 /* GIWindowFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCC1BF2661300A56828 /* GIWindowFramebuffer.cpp */; };
+		5D12BD7B1BF267A400A56828 /* GIVertexSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCCA1BF2661300A56828 /* GIVertexSet.cpp */; };
+		5D12BD7C1BF267A400A56828 /* GIFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB21BF2661300A56828 /* GIFactory.cpp */; };
+		5D12BD7D1BF267A400A56828 /* GIFramebuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCB31BF2661300A56828 /* GIFramebuffer.cpp */; };
+		5D12BD7E1BF267A400A56828 /* TracingObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCD31BF2661300A56828 /* TracingObject.cpp */; };
+		5D12BD7F1BF267A400A56828 /* GISpotLight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC21BF2661300A56828 /* GISpotLight.cpp */; };
+		5D12BD801BF267A400A56828 /* GIBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCAE1BF2661300A56828 /* GIBox.cpp */; };
+		5D12BD811BF267A400A56828 /* GITextures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D12BCC61BF2661300A56828 /* GITextures.cpp */; };
+		5D12BD841BF267A400A56828 /* GIStripPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD181BF2664B00A56828 /* GIStripPrimitive.h */; };
+		5D12BD851BF267A400A56828 /* GIPointLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD111BF2664B00A56828 /* GIPointLight.h */; };
+		5D12BD861BF267A400A56828 /* GIAttributeSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD011BF2664B00A56828 /* GIAttributeSet.h */; };
+		5D12BD871BF267A400A56828 /* GIFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD081BF2664B00A56828 /* GIFramebuffer.h */; };
+		5D12BD881BF267A400A56828 /* GIGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD091BF2664B00A56828 /* GIGeometry.h */; };
+		5D12BD891BF267A400A56828 /* GIFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD071BF2664B00A56828 /* GIFactory.h */; };
+		5D12BD8A1BF267A400A56828 /* GIAttribute.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD001BF2664B00A56828 /* GIAttribute.h */; };
+		5D12BD8B1BF267A400A56828 /* GIShape.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD151BF2664B00A56828 /* GIShape.h */; };
+		5D12BD8C1BF267A400A56828 /* GIMaterial.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0D1BF2664B00A56828 /* GIMaterial.h */; };
+		5D12BD8D1BF267A400A56828 /* GIPerspectiveView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD101BF2664B00A56828 /* GIPerspectiveView.h */; };
+		5D12BD8E1BF267A400A56828 /* TracingSphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD2A1BF2664B00A56828 /* TracingSphere.h */; };
+		5D12BD8F1BF267A400A56828 /* GITriangleStrips.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1E1BF2664B00A56828 /* GITriangleStrips.h */; };
+		5D12BD901BF267A400A56828 /* GISpotLight.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD171BF2664B00A56828 /* GISpotLight.h */; };
+		5D12BD911BF267A400A56828 /* GIIndependentPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0B1BF2664B00A56828 /* GIIndependentPrimitive.h */; };
+		5D12BD921BF267A400A56828 /* GITriangles.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1D1BF2664B00A56828 /* GITriangles.h */; };
+		5D12BD931BF267A400A56828 /* Lighting.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD231BF2664B00A56828 /* Lighting.h */; };
+		5D12BD941BF267A400A56828 /* GITexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD191BF2664B00A56828 /* GITexture.h */; };
+		5D12BD951BF267A400A56828 /* GIScene.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD141BF2664B00A56828 /* GIScene.h */; };
+		5D12BD961BF267A400A56828 /* GITextures.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1B1BF2664B00A56828 /* GITextures.h */; };
+		5D12BD971BF267A400A56828 /* GITexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1A1BF2664B00A56828 /* GITexture2D.h */; };
+		5D12BD981BF267A400A56828 /* GIObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0F1BF2664B00A56828 /* GIObject.h */; };
+		5D12BD991BF267A400A56828 /* RayIntersection.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD251BF2664B00A56828 /* RayIntersection.h */; };
+		5D12BD9A1BF267A400A56828 /* Plugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD241BF2664B00A56828 /* Plugin.h */; };
+		5D12BD9B1BF267A400A56828 /* GIView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD201BF2664B00A56828 /* GIView.h */; };
+		5D12BD9C1BF267A400A56828 /* GlobalIllumination.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD221BF2664B00A56828 /* GlobalIllumination.h */; };
+		5D12BD9D1BF267A400A56828 /* GIBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD031BF2664B00A56828 /* GIBox.h */; };
+		5D12BD9E1BF267A400A56828 /* TracingGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD271BF2664B00A56828 /* TracingGroup.h */; };
+		5D12BD9F1BF267A400A56828 /* GITransform.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1C1BF2664B00A56828 /* GITransform.h */; };
+		5D12BDA01BF267A400A56828 /* GIBitmapFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD021BF2664B00A56828 /* GIBitmapFramebuffer.h */; };
+		5D12BDA11BF267A400A56828 /* GISphere.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD161BF2664B00A56828 /* GISphere.h */; };
+		5D12BDA21BF267A400A56828 /* GINode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0E1BF2664B00A56828 /* GINode.h */; };
+		5D12BDA31BF267A400A56828 /* GILightSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0C1BF2664B00A56828 /* GILightSource.h */; };
+		5D12BDA41BF267A400A56828 /* TracingBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD261BF2664B00A56828 /* TracingBox.h */; };
+		5D12BDA51BF267A400A56828 /* TracingObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD291BF2664B00A56828 /* TracingObject.h */; };
+		5D12BDA61BF267A400A56828 /* TracingMesh.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD281BF2664B00A56828 /* TracingMesh.h */; };
+		5D12BDA71BF267A400A56828 /* GIWindowFramebuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD211BF2664B00A56828 /* GIWindowFramebuffer.h */; };
+		5D12BDA81BF267A400A56828 /* GIGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD0A1BF2664B00A56828 /* GIGroup.h */; };
+		5D12BDA91BF267A400A56828 /* GIPrimitive.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD121BF2664B00A56828 /* GIPrimitive.h */; };
+		5D12BDAA1BF267A400A56828 /* GIRenderable.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD131BF2664B00A56828 /* GIRenderable.h */; };
+		5D12BDAB1BF267A400A56828 /* GICylinder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD051BF2664B00A56828 /* GICylinder.h */; };
+		5D12BDAC1BF267A400A56828 /* GIVertexSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD1F1BF2664B00A56828 /* GIVertexSet.h */; };
+		5D12BDAD1BF267A400A56828 /* GIEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD061BF2664B00A56828 /* GIEngine.h */; };
+		5D12BDAE1BF267A400A56828 /* GICone.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D12BD041BF2664B00A56828 /* GICone.h */; };
+		93AE83C626C1CE3A00C81370 /* GIMediaTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 93AE83C526C1CE3A00C81370 /* GIMediaTexture2D.h */; };
+		93AE83C726C1CE3A00C81370 /* GIMediaTexture2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 93AE83C526C1CE3A00C81370 /* GIMediaTexture2D.h */; };
+		93AE83C926C1CE4C00C81370 /* GIMediaTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93AE83C826C1CE4C00C81370 /* GIMediaTexture2D.cpp */; };
+		93AE83CA26C1CE4C00C81370 /* GIMediaTexture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93AE83C826C1CE4C00C81370 /* GIMediaTexture2D.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D12BC9C1BF264E300A56828 /* libOceanRenderingGlobalIlluminationD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanRenderingGlobalIlluminationD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D12BCAB1BF2661300A56828 /* GIAttribute.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIAttribute.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIAttribute.cpp; sourceTree = "<group>"; };
+		5D12BCAC1BF2661300A56828 /* GIAttributeSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIAttributeSet.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIAttributeSet.cpp; sourceTree = "<group>"; };
+		5D12BCAD1BF2661300A56828 /* GIBitmapFramebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIBitmapFramebuffer.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIBitmapFramebuffer.cpp; sourceTree = "<group>"; };
+		5D12BCAE1BF2661300A56828 /* GIBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIBox.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIBox.cpp; sourceTree = "<group>"; };
+		5D12BCAF1BF2661300A56828 /* GICone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GICone.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GICone.cpp; sourceTree = "<group>"; };
+		5D12BCB01BF2661300A56828 /* GICylinder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GICylinder.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GICylinder.cpp; sourceTree = "<group>"; };
+		5D12BCB11BF2661300A56828 /* GIEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIEngine.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIEngine.cpp; sourceTree = "<group>"; };
+		5D12BCB21BF2661300A56828 /* GIFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIFactory.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIFactory.cpp; sourceTree = "<group>"; };
+		5D12BCB31BF2661300A56828 /* GIFramebuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIFramebuffer.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIFramebuffer.cpp; sourceTree = "<group>"; };
+		5D12BCB41BF2661300A56828 /* GIGeometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIGeometry.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIGeometry.cpp; sourceTree = "<group>"; };
+		5D12BCB51BF2661300A56828 /* GIGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIGroup.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIGroup.cpp; sourceTree = "<group>"; };
+		5D12BCB61BF2661300A56828 /* GIIndependentPrimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIIndependentPrimitive.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIIndependentPrimitive.cpp; sourceTree = "<group>"; };
+		5D12BCB71BF2661300A56828 /* GILightSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GILightSource.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GILightSource.cpp; sourceTree = "<group>"; };
+		5D12BCB81BF2661300A56828 /* GIMaterial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIMaterial.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIMaterial.cpp; sourceTree = "<group>"; };
+		5D12BCB91BF2661300A56828 /* GINode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GINode.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GINode.cpp; sourceTree = "<group>"; };
+		5D12BCBA1BF2661300A56828 /* GIObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIObject.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIObject.cpp; sourceTree = "<group>"; };
+		5D12BCBB1BF2661300A56828 /* GIPerspectiveView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIPerspectiveView.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIPerspectiveView.cpp; sourceTree = "<group>"; };
+		5D12BCBC1BF2661300A56828 /* GIPointLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIPointLight.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIPointLight.cpp; sourceTree = "<group>"; };
+		5D12BCBD1BF2661300A56828 /* GIPrimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIPrimitive.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIPrimitive.cpp; sourceTree = "<group>"; };
+		5D12BCBE1BF2661300A56828 /* GIRenderable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIRenderable.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIRenderable.cpp; sourceTree = "<group>"; };
+		5D12BCBF1BF2661300A56828 /* GIScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIScene.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIScene.cpp; sourceTree = "<group>"; };
+		5D12BCC01BF2661300A56828 /* GIShape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIShape.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIShape.cpp; sourceTree = "<group>"; };
+		5D12BCC11BF2661300A56828 /* GISphere.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GISphere.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GISphere.cpp; sourceTree = "<group>"; };
+		5D12BCC21BF2661300A56828 /* GISpotLight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GISpotLight.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GISpotLight.cpp; sourceTree = "<group>"; };
+		5D12BCC31BF2661300A56828 /* GIStripPrimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIStripPrimitive.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIStripPrimitive.cpp; sourceTree = "<group>"; };
+		5D12BCC41BF2661300A56828 /* GITexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GITexture.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GITexture.cpp; sourceTree = "<group>"; };
+		5D12BCC51BF2661300A56828 /* GITexture2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GITexture2D.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GITexture2D.cpp; sourceTree = "<group>"; };
+		5D12BCC61BF2661300A56828 /* GITextures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GITextures.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GITextures.cpp; sourceTree = "<group>"; };
+		5D12BCC71BF2661300A56828 /* GITransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GITransform.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GITransform.cpp; sourceTree = "<group>"; };
+		5D12BCC81BF2661300A56828 /* GITriangles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GITriangles.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GITriangles.cpp; sourceTree = "<group>"; };
+		5D12BCC91BF2661300A56828 /* GITriangleStrips.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GITriangleStrips.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GITriangleStrips.cpp; sourceTree = "<group>"; };
+		5D12BCCA1BF2661300A56828 /* GIVertexSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIVertexSet.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIVertexSet.cpp; sourceTree = "<group>"; };
+		5D12BCCB1BF2661300A56828 /* GIView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIView.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIView.cpp; sourceTree = "<group>"; };
+		5D12BCCC1BF2661300A56828 /* GIWindowFramebuffer.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = GIWindowFramebuffer.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIWindowFramebuffer.cpp; sourceTree = "<group>"; };
+		5D12BCCD1BF2661300A56828 /* GlobalIllumination.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GlobalIllumination.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GlobalIllumination.cpp; sourceTree = "<group>"; };
+		5D12BCCE1BF2661300A56828 /* Lighting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Lighting.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/Lighting.cpp; sourceTree = "<group>"; };
+		5D12BCCF1BF2661300A56828 /* Plugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plugin.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/Plugin.cpp; sourceTree = "<group>"; };
+		5D12BCD01BF2661300A56828 /* TracingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TracingBox.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/TracingBox.cpp; sourceTree = "<group>"; };
+		5D12BCD11BF2661300A56828 /* TracingGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TracingGroup.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/TracingGroup.cpp; sourceTree = "<group>"; };
+		5D12BCD21BF2661300A56828 /* TracingMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TracingMesh.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/TracingMesh.cpp; sourceTree = "<group>"; };
+		5D12BCD31BF2661300A56828 /* TracingObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TracingObject.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/TracingObject.cpp; sourceTree = "<group>"; };
+		5D12BCD41BF2661300A56828 /* TracingSphere.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TracingSphere.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/TracingSphere.cpp; sourceTree = "<group>"; };
+		5D12BD001BF2664B00A56828 /* GIAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIAttribute.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIAttribute.h; sourceTree = "<group>"; };
+		5D12BD011BF2664B00A56828 /* GIAttributeSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIAttributeSet.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIAttributeSet.h; sourceTree = "<group>"; };
+		5D12BD021BF2664B00A56828 /* GIBitmapFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIBitmapFramebuffer.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIBitmapFramebuffer.h; sourceTree = "<group>"; };
+		5D12BD031BF2664B00A56828 /* GIBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIBox.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIBox.h; sourceTree = "<group>"; };
+		5D12BD041BF2664B00A56828 /* GICone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GICone.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GICone.h; sourceTree = "<group>"; };
+		5D12BD051BF2664B00A56828 /* GICylinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GICylinder.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GICylinder.h; sourceTree = "<group>"; };
+		5D12BD061BF2664B00A56828 /* GIEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIEngine.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIEngine.h; sourceTree = "<group>"; };
+		5D12BD071BF2664B00A56828 /* GIFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIFactory.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIFactory.h; sourceTree = "<group>"; };
+		5D12BD081BF2664B00A56828 /* GIFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIFramebuffer.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIFramebuffer.h; sourceTree = "<group>"; };
+		5D12BD091BF2664B00A56828 /* GIGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIGeometry.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIGeometry.h; sourceTree = "<group>"; };
+		5D12BD0A1BF2664B00A56828 /* GIGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIGroup.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIGroup.h; sourceTree = "<group>"; };
+		5D12BD0B1BF2664B00A56828 /* GIIndependentPrimitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIIndependentPrimitive.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIIndependentPrimitive.h; sourceTree = "<group>"; };
+		5D12BD0C1BF2664B00A56828 /* GILightSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GILightSource.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GILightSource.h; sourceTree = "<group>"; };
+		5D12BD0D1BF2664B00A56828 /* GIMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIMaterial.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIMaterial.h; sourceTree = "<group>"; };
+		5D12BD0E1BF2664B00A56828 /* GINode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GINode.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GINode.h; sourceTree = "<group>"; };
+		5D12BD0F1BF2664B00A56828 /* GIObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIObject.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIObject.h; sourceTree = "<group>"; };
+		5D12BD101BF2664B00A56828 /* GIPerspectiveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIPerspectiveView.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIPerspectiveView.h; sourceTree = "<group>"; };
+		5D12BD111BF2664B00A56828 /* GIPointLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIPointLight.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIPointLight.h; sourceTree = "<group>"; };
+		5D12BD121BF2664B00A56828 /* GIPrimitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIPrimitive.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIPrimitive.h; sourceTree = "<group>"; };
+		5D12BD131BF2664B00A56828 /* GIRenderable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIRenderable.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIRenderable.h; sourceTree = "<group>"; };
+		5D12BD141BF2664B00A56828 /* GIScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIScene.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIScene.h; sourceTree = "<group>"; };
+		5D12BD151BF2664B00A56828 /* GIShape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIShape.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIShape.h; sourceTree = "<group>"; };
+		5D12BD161BF2664B00A56828 /* GISphere.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GISphere.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GISphere.h; sourceTree = "<group>"; };
+		5D12BD171BF2664B00A56828 /* GISpotLight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GISpotLight.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GISpotLight.h; sourceTree = "<group>"; };
+		5D12BD181BF2664B00A56828 /* GIStripPrimitive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIStripPrimitive.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIStripPrimitive.h; sourceTree = "<group>"; };
+		5D12BD191BF2664B00A56828 /* GITexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GITexture.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GITexture.h; sourceTree = "<group>"; };
+		5D12BD1A1BF2664B00A56828 /* GITexture2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GITexture2D.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GITexture2D.h; sourceTree = "<group>"; };
+		5D12BD1B1BF2664B00A56828 /* GITextures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GITextures.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GITextures.h; sourceTree = "<group>"; };
+		5D12BD1C1BF2664B00A56828 /* GITransform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GITransform.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GITransform.h; sourceTree = "<group>"; };
+		5D12BD1D1BF2664B00A56828 /* GITriangles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GITriangles.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GITriangles.h; sourceTree = "<group>"; };
+		5D12BD1E1BF2664B00A56828 /* GITriangleStrips.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GITriangleStrips.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GITriangleStrips.h; sourceTree = "<group>"; };
+		5D12BD1F1BF2664B00A56828 /* GIVertexSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIVertexSet.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIVertexSet.h; sourceTree = "<group>"; };
+		5D12BD201BF2664B00A56828 /* GIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIView.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIView.h; sourceTree = "<group>"; };
+		5D12BD211BF2664B00A56828 /* GIWindowFramebuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIWindowFramebuffer.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIWindowFramebuffer.h; sourceTree = "<group>"; };
+		5D12BD221BF2664B00A56828 /* GlobalIllumination.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GlobalIllumination.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GlobalIllumination.h; sourceTree = "<group>"; };
+		5D12BD231BF2664B00A56828 /* Lighting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Lighting.h; path = ../../../../../../impl/ocean/rendering/globalillumination/Lighting.h; sourceTree = "<group>"; };
+		5D12BD241BF2664B00A56828 /* Plugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Plugin.h; path = ../../../../../../impl/ocean/rendering/globalillumination/Plugin.h; sourceTree = "<group>"; };
+		5D12BD251BF2664B00A56828 /* RayIntersection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RayIntersection.h; path = ../../../../../../impl/ocean/rendering/globalillumination/RayIntersection.h; sourceTree = "<group>"; };
+		5D12BD261BF2664B00A56828 /* TracingBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracingBox.h; path = ../../../../../../impl/ocean/rendering/globalillumination/TracingBox.h; sourceTree = "<group>"; };
+		5D12BD271BF2664B00A56828 /* TracingGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracingGroup.h; path = ../../../../../../impl/ocean/rendering/globalillumination/TracingGroup.h; sourceTree = "<group>"; };
+		5D12BD281BF2664B00A56828 /* TracingMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracingMesh.h; path = ../../../../../../impl/ocean/rendering/globalillumination/TracingMesh.h; sourceTree = "<group>"; };
+		5D12BD291BF2664B00A56828 /* TracingObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracingObject.h; path = ../../../../../../impl/ocean/rendering/globalillumination/TracingObject.h; sourceTree = "<group>"; };
+		5D12BD2A1BF2664B00A56828 /* TracingSphere.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TracingSphere.h; path = ../../../../../../impl/ocean/rendering/globalillumination/TracingSphere.h; sourceTree = "<group>"; };
+		5D12BDB21BF267A400A56828 /* OceanRenderingGlobalIlluminationD.plugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OceanRenderingGlobalIlluminationD.plugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D12BDB51BF26EA000A56828 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../../../../../../res/ocean/rendering/globalillumination/osx/Info.plist; sourceTree = "<group>"; };
+		93AE83C526C1CE3A00C81370 /* GIMediaTexture2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GIMediaTexture2D.h; path = ../../../../../../impl/ocean/rendering/globalillumination/GIMediaTexture2D.h; sourceTree = "<group>"; };
+		93AE83C826C1CE4C00C81370 /* GIMediaTexture2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GIMediaTexture2D.cpp; path = ../../../../../../impl/ocean/rendering/globalillumination/GIMediaTexture2D.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D12BC991BF264E300A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD821BF267A400A56828 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D12BC931BF264E300A56828 = {
+			isa = PBXGroup;
+			children = (
+				5D12BCFF1BF2662D00A56828 /* Header Files */,
+				5D12BCAA1BF265D300A56828 /* Source Files */,
+				5D12BDB31BF26E6000A56828 /* Resource Files */,
+				5D12BC9D1BF264E300A56828 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D12BC9D1BF264E300A56828 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BC9C1BF264E300A56828 /* libOceanRenderingGlobalIlluminationD.a */,
+				5D12BDB21BF267A400A56828 /* OceanRenderingGlobalIlluminationD.plugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D12BCAA1BF265D300A56828 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BCAB1BF2661300A56828 /* GIAttribute.cpp */,
+				5D12BCAC1BF2661300A56828 /* GIAttributeSet.cpp */,
+				5D12BCAD1BF2661300A56828 /* GIBitmapFramebuffer.cpp */,
+				5D12BCAE1BF2661300A56828 /* GIBox.cpp */,
+				5D12BCAF1BF2661300A56828 /* GICone.cpp */,
+				5D12BCB01BF2661300A56828 /* GICylinder.cpp */,
+				5D12BCB11BF2661300A56828 /* GIEngine.cpp */,
+				5D12BCB21BF2661300A56828 /* GIFactory.cpp */,
+				5D12BCB31BF2661300A56828 /* GIFramebuffer.cpp */,
+				5D12BCB41BF2661300A56828 /* GIGeometry.cpp */,
+				5D12BCB51BF2661300A56828 /* GIGroup.cpp */,
+				5D12BCB61BF2661300A56828 /* GIIndependentPrimitive.cpp */,
+				5D12BCB71BF2661300A56828 /* GILightSource.cpp */,
+				5D12BCB81BF2661300A56828 /* GIMaterial.cpp */,
+				93AE83C826C1CE4C00C81370 /* GIMediaTexture2D.cpp */,
+				5D12BCB91BF2661300A56828 /* GINode.cpp */,
+				5D12BCBA1BF2661300A56828 /* GIObject.cpp */,
+				5D12BCBB1BF2661300A56828 /* GIPerspectiveView.cpp */,
+				5D12BCBC1BF2661300A56828 /* GIPointLight.cpp */,
+				5D12BCBD1BF2661300A56828 /* GIPrimitive.cpp */,
+				5D12BCBE1BF2661300A56828 /* GIRenderable.cpp */,
+				5D12BCBF1BF2661300A56828 /* GIScene.cpp */,
+				5D12BCC01BF2661300A56828 /* GIShape.cpp */,
+				5D12BCC11BF2661300A56828 /* GISphere.cpp */,
+				5D12BCC21BF2661300A56828 /* GISpotLight.cpp */,
+				5D12BCC31BF2661300A56828 /* GIStripPrimitive.cpp */,
+				5D12BCC41BF2661300A56828 /* GITexture.cpp */,
+				5D12BCC51BF2661300A56828 /* GITexture2D.cpp */,
+				5D12BCC61BF2661300A56828 /* GITextures.cpp */,
+				5D12BCC71BF2661300A56828 /* GITransform.cpp */,
+				5D12BCC81BF2661300A56828 /* GITriangles.cpp */,
+				5D12BCC91BF2661300A56828 /* GITriangleStrips.cpp */,
+				5D12BCCA1BF2661300A56828 /* GIVertexSet.cpp */,
+				5D12BCCB1BF2661300A56828 /* GIView.cpp */,
+				5D12BCCC1BF2661300A56828 /* GIWindowFramebuffer.cpp */,
+				5D12BCCD1BF2661300A56828 /* GlobalIllumination.cpp */,
+				5D12BCCE1BF2661300A56828 /* Lighting.cpp */,
+				5D12BCCF1BF2661300A56828 /* Plugin.cpp */,
+				5D12BCD01BF2661300A56828 /* TracingBox.cpp */,
+				5D12BCD11BF2661300A56828 /* TracingGroup.cpp */,
+				5D12BCD21BF2661300A56828 /* TracingMesh.cpp */,
+				5D12BCD31BF2661300A56828 /* TracingObject.cpp */,
+				5D12BCD41BF2661300A56828 /* TracingSphere.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D12BCFF1BF2662D00A56828 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BD001BF2664B00A56828 /* GIAttribute.h */,
+				5D12BD011BF2664B00A56828 /* GIAttributeSet.h */,
+				5D12BD021BF2664B00A56828 /* GIBitmapFramebuffer.h */,
+				5D12BD031BF2664B00A56828 /* GIBox.h */,
+				5D12BD041BF2664B00A56828 /* GICone.h */,
+				5D12BD051BF2664B00A56828 /* GICylinder.h */,
+				5D12BD061BF2664B00A56828 /* GIEngine.h */,
+				5D12BD071BF2664B00A56828 /* GIFactory.h */,
+				5D12BD081BF2664B00A56828 /* GIFramebuffer.h */,
+				5D12BD091BF2664B00A56828 /* GIGeometry.h */,
+				5D12BD0A1BF2664B00A56828 /* GIGroup.h */,
+				5D12BD0B1BF2664B00A56828 /* GIIndependentPrimitive.h */,
+				5D12BD0C1BF2664B00A56828 /* GILightSource.h */,
+				5D12BD0D1BF2664B00A56828 /* GIMaterial.h */,
+				93AE83C526C1CE3A00C81370 /* GIMediaTexture2D.h */,
+				5D12BD0E1BF2664B00A56828 /* GINode.h */,
+				5D12BD0F1BF2664B00A56828 /* GIObject.h */,
+				5D12BD101BF2664B00A56828 /* GIPerspectiveView.h */,
+				5D12BD111BF2664B00A56828 /* GIPointLight.h */,
+				5D12BD121BF2664B00A56828 /* GIPrimitive.h */,
+				5D12BD131BF2664B00A56828 /* GIRenderable.h */,
+				5D12BD141BF2664B00A56828 /* GIScene.h */,
+				5D12BD151BF2664B00A56828 /* GIShape.h */,
+				5D12BD161BF2664B00A56828 /* GISphere.h */,
+				5D12BD171BF2664B00A56828 /* GISpotLight.h */,
+				5D12BD181BF2664B00A56828 /* GIStripPrimitive.h */,
+				5D12BD191BF2664B00A56828 /* GITexture.h */,
+				5D12BD1A1BF2664B00A56828 /* GITexture2D.h */,
+				5D12BD1B1BF2664B00A56828 /* GITextures.h */,
+				5D12BD1C1BF2664B00A56828 /* GITransform.h */,
+				5D12BD1D1BF2664B00A56828 /* GITriangles.h */,
+				5D12BD1E1BF2664B00A56828 /* GITriangleStrips.h */,
+				5D12BD1F1BF2664B00A56828 /* GIVertexSet.h */,
+				5D12BD201BF2664B00A56828 /* GIView.h */,
+				5D12BD211BF2664B00A56828 /* GIWindowFramebuffer.h */,
+				5D12BD221BF2664B00A56828 /* GlobalIllumination.h */,
+				5D12BD231BF2664B00A56828 /* Lighting.h */,
+				5D12BD241BF2664B00A56828 /* Plugin.h */,
+				5D12BD251BF2664B00A56828 /* RayIntersection.h */,
+				5D12BD261BF2664B00A56828 /* TracingBox.h */,
+				5D12BD271BF2664B00A56828 /* TracingGroup.h */,
+				5D12BD281BF2664B00A56828 /* TracingMesh.h */,
+				5D12BD291BF2664B00A56828 /* TracingObject.h */,
+				5D12BD2A1BF2664B00A56828 /* TracingSphere.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		5D12BDB31BF26E6000A56828 /* Resource Files */ = {
+			isa = PBXGroup;
+			children = (
+				5D12BDB51BF26EA000A56828 /* Info.plist */,
+			);
+			name = "Resource Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D12BC9A1BF264E300A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D12BD431BF2664B00A56828 /* GIStripPrimitive.h in Headers */,
+				5D12BD3C1BF2664B00A56828 /* GIPointLight.h in Headers */,
+				5D12BD2C1BF2664B00A56828 /* GIAttributeSet.h in Headers */,
+				5D12BD331BF2664B00A56828 /* GIFramebuffer.h in Headers */,
+				5D12BD341BF2664B00A56828 /* GIGeometry.h in Headers */,
+				5D12BD321BF2664B00A56828 /* GIFactory.h in Headers */,
+				5D12BD2B1BF2664B00A56828 /* GIAttribute.h in Headers */,
+				5D12BD401BF2664B00A56828 /* GIShape.h in Headers */,
+				5D12BD381BF2664B00A56828 /* GIMaterial.h in Headers */,
+				5D12BD3B1BF2664B00A56828 /* GIPerspectiveView.h in Headers */,
+				5D12BD551BF2664B00A56828 /* TracingSphere.h in Headers */,
+				5D12BD491BF2664B00A56828 /* GITriangleStrips.h in Headers */,
+				5D12BD421BF2664B00A56828 /* GISpotLight.h in Headers */,
+				5D12BD361BF2664B00A56828 /* GIIndependentPrimitive.h in Headers */,
+				5D12BD481BF2664B00A56828 /* GITriangles.h in Headers */,
+				5D12BD4E1BF2664B00A56828 /* Lighting.h in Headers */,
+				5D12BD441BF2664B00A56828 /* GITexture.h in Headers */,
+				5D12BD3F1BF2664B00A56828 /* GIScene.h in Headers */,
+				5D12BD461BF2664B00A56828 /* GITextures.h in Headers */,
+				5D12BD451BF2664B00A56828 /* GITexture2D.h in Headers */,
+				5D12BD3A1BF2664B00A56828 /* GIObject.h in Headers */,
+				5D12BD501BF2664B00A56828 /* RayIntersection.h in Headers */,
+				5D12BD4F1BF2664B00A56828 /* Plugin.h in Headers */,
+				5D12BD4B1BF2664B00A56828 /* GIView.h in Headers */,
+				5D12BD4D1BF2664B00A56828 /* GlobalIllumination.h in Headers */,
+				5D12BD2E1BF2664B00A56828 /* GIBox.h in Headers */,
+				5D12BD521BF2664B00A56828 /* TracingGroup.h in Headers */,
+				5D12BD471BF2664B00A56828 /* GITransform.h in Headers */,
+				5D12BD2D1BF2664B00A56828 /* GIBitmapFramebuffer.h in Headers */,
+				5D12BD411BF2664B00A56828 /* GISphere.h in Headers */,
+				5D12BD391BF2664B00A56828 /* GINode.h in Headers */,
+				93AE83C626C1CE3A00C81370 /* GIMediaTexture2D.h in Headers */,
+				5D12BD371BF2664B00A56828 /* GILightSource.h in Headers */,
+				5D12BD511BF2664B00A56828 /* TracingBox.h in Headers */,
+				5D12BD541BF2664B00A56828 /* TracingObject.h in Headers */,
+				5D12BD531BF2664B00A56828 /* TracingMesh.h in Headers */,
+				5D12BD4C1BF2664B00A56828 /* GIWindowFramebuffer.h in Headers */,
+				5D12BD351BF2664B00A56828 /* GIGroup.h in Headers */,
+				5D12BD3D1BF2664B00A56828 /* GIPrimitive.h in Headers */,
+				5D12BD3E1BF2664B00A56828 /* GIRenderable.h in Headers */,
+				5D12BD301BF2664B00A56828 /* GICylinder.h in Headers */,
+				5D12BD4A1BF2664B00A56828 /* GIVertexSet.h in Headers */,
+				5D12BD311BF2664B00A56828 /* GIEngine.h in Headers */,
+				5D12BD2F1BF2664B00A56828 /* GICone.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD831BF267A400A56828 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D12BD841BF267A400A56828 /* GIStripPrimitive.h in Headers */,
+				5D12BD851BF267A400A56828 /* GIPointLight.h in Headers */,
+				5D12BD861BF267A400A56828 /* GIAttributeSet.h in Headers */,
+				5D12BD871BF267A400A56828 /* GIFramebuffer.h in Headers */,
+				5D12BD881BF267A400A56828 /* GIGeometry.h in Headers */,
+				5D12BD891BF267A400A56828 /* GIFactory.h in Headers */,
+				5D12BD8A1BF267A400A56828 /* GIAttribute.h in Headers */,
+				5D12BD8B1BF267A400A56828 /* GIShape.h in Headers */,
+				5D12BD8C1BF267A400A56828 /* GIMaterial.h in Headers */,
+				5D12BD8D1BF267A400A56828 /* GIPerspectiveView.h in Headers */,
+				5D12BD8E1BF267A400A56828 /* TracingSphere.h in Headers */,
+				5D12BD8F1BF267A400A56828 /* GITriangleStrips.h in Headers */,
+				5D12BD901BF267A400A56828 /* GISpotLight.h in Headers */,
+				5D12BD911BF267A400A56828 /* GIIndependentPrimitive.h in Headers */,
+				5D12BD921BF267A400A56828 /* GITriangles.h in Headers */,
+				5D12BD931BF267A400A56828 /* Lighting.h in Headers */,
+				5D12BD941BF267A400A56828 /* GITexture.h in Headers */,
+				5D12BD951BF267A400A56828 /* GIScene.h in Headers */,
+				5D12BD961BF267A400A56828 /* GITextures.h in Headers */,
+				5D12BD971BF267A400A56828 /* GITexture2D.h in Headers */,
+				5D12BD981BF267A400A56828 /* GIObject.h in Headers */,
+				5D12BD991BF267A400A56828 /* RayIntersection.h in Headers */,
+				5D12BD9A1BF267A400A56828 /* Plugin.h in Headers */,
+				5D12BD9B1BF267A400A56828 /* GIView.h in Headers */,
+				5D12BD9C1BF267A400A56828 /* GlobalIllumination.h in Headers */,
+				5D12BD9D1BF267A400A56828 /* GIBox.h in Headers */,
+				5D12BD9E1BF267A400A56828 /* TracingGroup.h in Headers */,
+				5D12BD9F1BF267A400A56828 /* GITransform.h in Headers */,
+				5D12BDA01BF267A400A56828 /* GIBitmapFramebuffer.h in Headers */,
+				5D12BDA11BF267A400A56828 /* GISphere.h in Headers */,
+				5D12BDA21BF267A400A56828 /* GINode.h in Headers */,
+				93AE83C726C1CE3A00C81370 /* GIMediaTexture2D.h in Headers */,
+				5D12BDA31BF267A400A56828 /* GILightSource.h in Headers */,
+				5D12BDA41BF267A400A56828 /* TracingBox.h in Headers */,
+				5D12BDA51BF267A400A56828 /* TracingObject.h in Headers */,
+				5D12BDA61BF267A400A56828 /* TracingMesh.h in Headers */,
+				5D12BDA71BF267A400A56828 /* GIWindowFramebuffer.h in Headers */,
+				5D12BDA81BF267A400A56828 /* GIGroup.h in Headers */,
+				5D12BDA91BF267A400A56828 /* GIPrimitive.h in Headers */,
+				5D12BDAA1BF267A400A56828 /* GIRenderable.h in Headers */,
+				5D12BDAB1BF267A400A56828 /* GICylinder.h in Headers */,
+				5D12BDAC1BF267A400A56828 /* GIVertexSet.h in Headers */,
+				5D12BDAD1BF267A400A56828 /* GIEngine.h in Headers */,
+				5D12BDAE1BF267A400A56828 /* GICone.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D12BC9B1BF264E300A56828 /* renderingglobalillumination x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BCA71BF264E300A56828 /* Build configuration list for PBXNativeTarget "renderingglobalillumination x64 (Static)" */;
+			buildPhases = (
+				5D12BC981BF264E300A56828 /* Sources */,
+				5D12BC991BF264E300A56828 /* Frameworks */,
+				5D12BC9A1BF264E300A56828 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "renderingglobalillumination x64 (Static)";
+			productName = renderingglobalillumination;
+			productReference = 5D12BC9C1BF264E300A56828 /* libOceanRenderingGlobalIlluminationD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D12BD561BF267A400A56828 /* renderingglobalillumination x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D12BDAF1BF267A400A56828 /* Build configuration list for PBXNativeTarget "renderingglobalillumination x64 (Shared)" */;
+			buildPhases = (
+				5D12BD571BF267A400A56828 /* Sources */,
+				5D12BD821BF267A400A56828 /* Frameworks */,
+				5D12BD831BF267A400A56828 /* Headers */,
+				5D12BDB61BF26EAB00A56828 /* Resources */,
+				5D12BDB81BF26EBE00A56828 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "renderingglobalillumination x64 (Shared)";
+			productName = renderingglobalillumination;
+			productReference = 5D12BDB21BF267A400A56828 /* OceanRenderingGlobalIlluminationD.plugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D12BC941BF264E300A56828 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D12BC9B1BF264E300A56828 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D12BC971BF264E300A56828 /* Build configuration list for PBXProject "renderingglobalillumination" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D12BC931BF264E300A56828;
+			productRefGroup = 5D12BC9D1BF264E300A56828 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D12BC9B1BF264E300A56828 /* renderingglobalillumination x64 (Static) */,
+				5D12BD561BF267A400A56828 /* renderingglobalillumination x64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5D12BDB61BF26EAB00A56828 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D12BDB81BF26EBE00A56828 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_plugin.sh \"../../../../../../bin/plugins/\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D12BC981BF264E300A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D12BCEB1BF2661300A56828 /* GISphere.cpp in Sources */,
+				5D12BCF21BF2661300A56828 /* GITriangles.cpp in Sources */,
+				5D12BCDF1BF2661300A56828 /* GIGroup.cpp in Sources */,
+				5D12BCD71BF2661300A56828 /* GIBitmapFramebuffer.cpp in Sources */,
+				5D12BCE01BF2661300A56828 /* GIIndependentPrimitive.cpp in Sources */,
+				5D12BCFC1BF2661300A56828 /* TracingMesh.cpp in Sources */,
+				5D12BCDE1BF2661300A56828 /* GIGeometry.cpp in Sources */,
+				5D12BCF51BF2661300A56828 /* GIView.cpp in Sources */,
+				5D12BCF81BF2661300A56828 /* Lighting.cpp in Sources */,
+				5D12BCE41BF2661300A56828 /* GIObject.cpp in Sources */,
+				5D12BCE61BF2661300A56828 /* GIPointLight.cpp in Sources */,
+				5D12BCFA1BF2661300A56828 /* TracingBox.cpp in Sources */,
+				5D12BCE91BF2661300A56828 /* GIScene.cpp in Sources */,
+				5D12BCDA1BF2661300A56828 /* GICylinder.cpp in Sources */,
+				5D12BCEE1BF2661300A56828 /* GITexture.cpp in Sources */,
+				5D12BCF91BF2661300A56828 /* Plugin.cpp in Sources */,
+				5D12BCE51BF2661300A56828 /* GIPerspectiveView.cpp in Sources */,
+				5D12BCE11BF2661300A56828 /* GILightSource.cpp in Sources */,
+				5D12BCE31BF2661300A56828 /* GINode.cpp in Sources */,
+				5D12BCF31BF2661300A56828 /* GITriangleStrips.cpp in Sources */,
+				5D12BCEF1BF2661300A56828 /* GITexture2D.cpp in Sources */,
+				5D12BCD91BF2661300A56828 /* GICone.cpp in Sources */,
+				5D12BCF11BF2661300A56828 /* GITransform.cpp in Sources */,
+				5D12BCED1BF2661300A56828 /* GIStripPrimitive.cpp in Sources */,
+				5D12BCD51BF2661300A56828 /* GIAttribute.cpp in Sources */,
+				5D12BCDB1BF2661300A56828 /* GIEngine.cpp in Sources */,
+				5D12BCE81BF2661300A56828 /* GIRenderable.cpp in Sources */,
+				93AE83C926C1CE4C00C81370 /* GIMediaTexture2D.cpp in Sources */,
+				5D12BCF71BF2661300A56828 /* GlobalIllumination.cpp in Sources */,
+				5D12BCEA1BF2661300A56828 /* GIShape.cpp in Sources */,
+				5D12BCE71BF2661300A56828 /* GIPrimitive.cpp in Sources */,
+				5D12BCFB1BF2661300A56828 /* TracingGroup.cpp in Sources */,
+				5D12BCFE1BF2661300A56828 /* TracingSphere.cpp in Sources */,
+				5D12BCD61BF2661300A56828 /* GIAttributeSet.cpp in Sources */,
+				5D12BCE21BF2661300A56828 /* GIMaterial.cpp in Sources */,
+				5D12BCF61BF2661300A56828 /* GIWindowFramebuffer.cpp in Sources */,
+				5D12BCF41BF2661300A56828 /* GIVertexSet.cpp in Sources */,
+				5D12BCDC1BF2661300A56828 /* GIFactory.cpp in Sources */,
+				5D12BCDD1BF2661300A56828 /* GIFramebuffer.cpp in Sources */,
+				5D12BCFD1BF2661300A56828 /* TracingObject.cpp in Sources */,
+				5D12BCEC1BF2661300A56828 /* GISpotLight.cpp in Sources */,
+				5D12BCD81BF2661300A56828 /* GIBox.cpp in Sources */,
+				5D12BCF01BF2661300A56828 /* GITextures.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D12BD571BF267A400A56828 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D12BD581BF267A400A56828 /* GISphere.cpp in Sources */,
+				5D12BD591BF267A400A56828 /* GITriangles.cpp in Sources */,
+				5D12BD5A1BF267A400A56828 /* GIGroup.cpp in Sources */,
+				5D12BD5B1BF267A400A56828 /* GIBitmapFramebuffer.cpp in Sources */,
+				5D12BD5C1BF267A400A56828 /* GIIndependentPrimitive.cpp in Sources */,
+				5D12BD5D1BF267A400A56828 /* TracingMesh.cpp in Sources */,
+				5D12BD5E1BF267A400A56828 /* GIGeometry.cpp in Sources */,
+				5D12BD5F1BF267A400A56828 /* GIView.cpp in Sources */,
+				5D12BD601BF267A400A56828 /* Lighting.cpp in Sources */,
+				5D12BD611BF267A400A56828 /* GIObject.cpp in Sources */,
+				5D12BD621BF267A400A56828 /* GIPointLight.cpp in Sources */,
+				5D12BD631BF267A400A56828 /* TracingBox.cpp in Sources */,
+				5D12BD641BF267A400A56828 /* GIScene.cpp in Sources */,
+				5D12BD651BF267A400A56828 /* GICylinder.cpp in Sources */,
+				5D12BD661BF267A400A56828 /* GITexture.cpp in Sources */,
+				5D12BD671BF267A400A56828 /* Plugin.cpp in Sources */,
+				5D12BD681BF267A400A56828 /* GIPerspectiveView.cpp in Sources */,
+				5D12BD691BF267A400A56828 /* GILightSource.cpp in Sources */,
+				5D12BD6A1BF267A400A56828 /* GINode.cpp in Sources */,
+				5D12BD6B1BF267A400A56828 /* GITriangleStrips.cpp in Sources */,
+				5D12BD6C1BF267A400A56828 /* GITexture2D.cpp in Sources */,
+				5D12BD6D1BF267A400A56828 /* GICone.cpp in Sources */,
+				5D12BD6E1BF267A400A56828 /* GITransform.cpp in Sources */,
+				5D12BD6F1BF267A400A56828 /* GIStripPrimitive.cpp in Sources */,
+				5D12BD701BF267A400A56828 /* GIAttribute.cpp in Sources */,
+				5D12BD711BF267A400A56828 /* GIEngine.cpp in Sources */,
+				5D12BD721BF267A400A56828 /* GIRenderable.cpp in Sources */,
+				93AE83CA26C1CE4C00C81370 /* GIMediaTexture2D.cpp in Sources */,
+				5D12BD731BF267A400A56828 /* GlobalIllumination.cpp in Sources */,
+				5D12BD741BF267A400A56828 /* GIShape.cpp in Sources */,
+				5D12BD751BF267A400A56828 /* GIPrimitive.cpp in Sources */,
+				5D12BD761BF267A400A56828 /* TracingGroup.cpp in Sources */,
+				5D12BD771BF267A400A56828 /* TracingSphere.cpp in Sources */,
+				5D12BD781BF267A400A56828 /* GIAttributeSet.cpp in Sources */,
+				5D12BD791BF267A400A56828 /* GIMaterial.cpp in Sources */,
+				5D12BD7A1BF267A400A56828 /* GIWindowFramebuffer.cpp in Sources */,
+				5D12BD7B1BF267A400A56828 /* GIVertexSet.cpp in Sources */,
+				5D12BD7C1BF267A400A56828 /* GIFactory.cpp in Sources */,
+				5D12BD7D1BF267A400A56828 /* GIFramebuffer.cpp in Sources */,
+				5D12BD7E1BF267A400A56828 /* TracingObject.cpp in Sources */,
+				5D12BD7F1BF267A400A56828 /* GISpotLight.cpp in Sources */,
+				5D12BD801BF267A400A56828 /* GIBox.cpp in Sources */,
+				5D12BD811BF267A400A56828 /* GITextures.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D12BCA51BF264E300A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D12BCA61BF264E300A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D12BCA81BF264E300A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LIBRARY_SEARCH_PATHS = "";
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanRenderingGlobalIlluminationD;
+				PRODUCT_NAME = OceanRenderingGlobalIlluminationD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D12BCA91BF264E300A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
+				PRODUCT_MODULE_NAME = OceanRenderingGlobalIllumination;
+				PRODUCT_NAME = OceanRenderingGlobalIllumination;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D12BDB01BF267A400A56828 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/rendering/globalillumination/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanMathD",
+					"-lOceanPlatformAppleMacOSD",
+					"-lOceanRenderingD",
+					"-lOceanSystemD",
+				);
+				PRODUCT_MODULE_NAME = OceanRenderingGlobalIlluminationD;
+				PRODUCT_NAME = OceanRenderingGlobalIlluminationD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Debug;
+		};
+		5D12BDB11BF267A400A56828 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = "";
+				EXECUTABLE_PREFIX = "";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				INFOPLIST_FILE = ../../../../../../res/ocean/rendering/globalillumination/osx/Info.plist;
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_bundle;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/rendering/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanMath",
+					"-lOceanPlatformAppleMacOS",
+					"-lOceanRendering",
+					"-lOceanSystem",
+				);
+				PRODUCT_MODULE_NAME = OceanRenderingGlobalIllumination;
+				PRODUCT_NAME = OceanRenderingGlobalIllumination;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+				WRAPPER_EXTENSION = plugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D12BC971BF264E300A56828 /* Build configuration list for PBXProject "renderingglobalillumination" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BCA51BF264E300A56828 /* Debug */,
+				5D12BCA61BF264E300A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BCA71BF264E300A56828 /* Build configuration list for PBXNativeTarget "renderingglobalillumination x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BCA81BF264E300A56828 /* Debug */,
+				5D12BCA91BF264E300A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D12BDAF1BF267A400A56828 /* Build configuration list for PBXNativeTarget "renderingglobalillumination x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D12BDB01BF267A400A56828 /* Debug */,
+				5D12BDB11BF267A400A56828 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D12BC941BF264E300A56828 /* Project object */;
+}

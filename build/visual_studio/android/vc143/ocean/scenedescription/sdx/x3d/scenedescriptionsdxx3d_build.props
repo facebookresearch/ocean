@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Build Ocean SceneDescription SDX X3D</_PropertySheetDisplayName>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ocean_scenedescriptionsdxx3d_build_imported>True</ocean_scenedescriptionsdxx3d_build_imported>
+  </PropertyGroup>
+
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_scenedescriptionsdxx3d_common_imported)' != 'True'" Project="scenedescriptionsdxx3d_common.props"/>
+    <Import Condition="'$(ocean_plugin_build_imported)' != 'True'" Project="..\..\..\ocean_library_build.props"/>
+  </ImportGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Debug' Or '$(Configuration)'=='Shared Debug'">
+    <TargetName>libOceanSceneDescriptionSDXX3DD</TargetName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Static Profile' Or '$(Configuration)'=='Static Release' Or '$(Configuration)'=='Shared Profile' Or '$(Configuration)'=='Shared Release'">
+    <TargetName>libOceanSceneDescriptionSDXX3D</TargetName>
+  </PropertyGroup>
+</Project>

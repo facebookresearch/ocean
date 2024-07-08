@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean Test Media (Common)</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ocean_testmedia_common_imported>True</ocean_testmedia_common_imported>
+  </PropertyGroup>
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_test_use_imported)' != 'True'" Project="..\test_use.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\base\base_use.props"/>
+    <Import Condition="'$(ocean_math_use_imported)' != 'True'" Project="..\..\math\math_use.props"/>
+    <Import Condition="'$(ocean_media_use_imported)' != 'True'" Project="..\..\media\media_use.props"/>
+    <Import Condition="'$(ocean_mediamediafoundation_use_imported)' != 'True'" Project="..\..\media\mediafoundation\mediamediafoundation_use.props"/>
+    <Import Condition="'$(ocean_mediaopenimagelibraries_use_imported)' != 'True'" Project="..\..\media\openimagelibraries\mediaopenimagelibraries_use.props"/>
+    <Import Condition="'$(ocean_mediaspecial_use_imported)' != 'True'" Project="..\..\media\special\mediaspecial_use.props"/>
+    <Import Condition="'$(ocean_mediawic_use_imported)' != 'True'" Project="..\..\media\wic\mediawic_use.props"/>
+  </ImportGroup>
+</Project>

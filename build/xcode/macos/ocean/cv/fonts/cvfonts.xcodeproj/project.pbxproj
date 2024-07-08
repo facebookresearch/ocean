@@ -1,0 +1,1036 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		50704F9F2A703DF600D8DFFF /* FontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50704F9E2A703DF500D8DFFF /* FontManager.cpp */; };
+		50704FA02A703DF600D8DFFF /* FontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50704F9E2A703DF500D8DFFF /* FontManager.cpp */; };
+		50704FA12A703DF600D8DFFF /* FontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50704F9E2A703DF500D8DFFF /* FontManager.cpp */; };
+		50704FA22A703DF600D8DFFF /* FontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50704F9E2A703DF500D8DFFF /* FontManager.cpp */; };
+		93DE561524CA2DE500D4BFDF /* Fonts.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE561424CA2DE500D4BFDF /* Fonts.h */; };
+		93DE561624CA2DE500D4BFDF /* Fonts.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE561424CA2DE500D4BFDF /* Fonts.h */; };
+		93DE561724CA2DE500D4BFDF /* Fonts.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE561424CA2DE500D4BFDF /* Fonts.h */; };
+		93DE561824CA2DE500D4BFDF /* Fonts.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE561424CA2DE500D4BFDF /* Fonts.h */; };
+		93DE562224CA2FBF00D4BFDF /* FTFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE561F24CA2FBF00D4BFDF /* FTFont.cpp */; };
+		93DE562324CA2FBF00D4BFDF /* FTFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE561F24CA2FBF00D4BFDF /* FTFont.cpp */; };
+		93DE562424CA2FBF00D4BFDF /* FTFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE561F24CA2FBF00D4BFDF /* FTFont.cpp */; };
+		93DE562524CA2FBF00D4BFDF /* FTFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE561F24CA2FBF00D4BFDF /* FTFont.cpp */; };
+		93DE562624CA2FBF00D4BFDF /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE562024CA2FBF00D4BFDF /* Utilities.cpp */; };
+		93DE562724CA2FBF00D4BFDF /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE562024CA2FBF00D4BFDF /* Utilities.cpp */; };
+		93DE562824CA2FBF00D4BFDF /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE562024CA2FBF00D4BFDF /* Utilities.cpp */; };
+		93DE562924CA2FBF00D4BFDF /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE562024CA2FBF00D4BFDF /* Utilities.cpp */; };
+		93DE562A24CA2FBF00D4BFDF /* FTFontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE562124CA2FBF00D4BFDF /* FTFontManager.cpp */; };
+		93DE562B24CA2FBF00D4BFDF /* FTFontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE562124CA2FBF00D4BFDF /* FTFontManager.cpp */; };
+		93DE562C24CA2FBF00D4BFDF /* FTFontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE562124CA2FBF00D4BFDF /* FTFontManager.cpp */; };
+		93DE562D24CA2FBF00D4BFDF /* FTFontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 93DE562124CA2FBF00D4BFDF /* FTFontManager.cpp */; };
+		93DE563124CA2FDA00D4BFDF /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE562F24CA2FDA00D4BFDF /* Font.h */; };
+		93DE563224CA2FDA00D4BFDF /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE562F24CA2FDA00D4BFDF /* Font.h */; };
+		93DE563324CA2FDA00D4BFDF /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE562F24CA2FDA00D4BFDF /* Font.h */; };
+		93DE563424CA2FDA00D4BFDF /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE562F24CA2FDA00D4BFDF /* Font.h */; };
+		93DE563524CA2FDA00D4BFDF /* FontManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563024CA2FDA00D4BFDF /* FontManager.h */; };
+		93DE563624CA2FDA00D4BFDF /* FontManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563024CA2FDA00D4BFDF /* FontManager.h */; };
+		93DE563724CA2FDA00D4BFDF /* FontManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563024CA2FDA00D4BFDF /* FontManager.h */; };
+		93DE563824CA2FDA00D4BFDF /* FontManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563024CA2FDA00D4BFDF /* FontManager.h */; };
+		93DE563D24CA2FEB00D4BFDF /* FreeType.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563924CA2FEB00D4BFDF /* FreeType.h */; };
+		93DE563E24CA2FEB00D4BFDF /* FreeType.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563924CA2FEB00D4BFDF /* FreeType.h */; };
+		93DE563F24CA2FEB00D4BFDF /* FreeType.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563924CA2FEB00D4BFDF /* FreeType.h */; };
+		93DE564024CA2FEB00D4BFDF /* FreeType.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563924CA2FEB00D4BFDF /* FreeType.h */; };
+		93DE564124CA2FEB00D4BFDF /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563A24CA2FEB00D4BFDF /* Utilities.h */; };
+		93DE564224CA2FEB00D4BFDF /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563A24CA2FEB00D4BFDF /* Utilities.h */; };
+		93DE564324CA2FEB00D4BFDF /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563A24CA2FEB00D4BFDF /* Utilities.h */; };
+		93DE564424CA2FEB00D4BFDF /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563A24CA2FEB00D4BFDF /* Utilities.h */; };
+		93DE564524CA2FEB00D4BFDF /* FTFontManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563B24CA2FEB00D4BFDF /* FTFontManager.h */; };
+		93DE564624CA2FEB00D4BFDF /* FTFontManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563B24CA2FEB00D4BFDF /* FTFontManager.h */; };
+		93DE564724CA2FEB00D4BFDF /* FTFontManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563B24CA2FEB00D4BFDF /* FTFontManager.h */; };
+		93DE564824CA2FEB00D4BFDF /* FTFontManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563B24CA2FEB00D4BFDF /* FTFontManager.h */; };
+		93DE564924CA2FEB00D4BFDF /* FTFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563C24CA2FEB00D4BFDF /* FTFont.h */; };
+		93DE564A24CA2FEB00D4BFDF /* FTFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563C24CA2FEB00D4BFDF /* FTFont.h */; };
+		93DE564B24CA2FEB00D4BFDF /* FTFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563C24CA2FEB00D4BFDF /* FTFont.h */; };
+		93DE564C24CA2FEB00D4BFDF /* FTFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 93DE563C24CA2FEB00D4BFDF /* FTFont.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		50704F9E2A703DF500D8DFFF /* FontManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FontManager.cpp; path = ../../../../../../impl/ocean/cv/fonts/FontManager.cpp; sourceTree = "<group>"; };
+		5D7D93511BA9DC5700D38120 /* libOceanCVFontsD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVFontsD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D936E871BC54A990046ACD4 /* libOceanCVFontsD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVFontsD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D98613C1D8B55AC00DEDB00 /* libOceanCVFontsD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVFontsD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		93DE561424CA2DE500D4BFDF /* Fonts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Fonts.h; path = ../../../../../../impl/ocean/cv/fonts/Fonts.h; sourceTree = "<group>"; };
+		93DE561F24CA2FBF00D4BFDF /* FTFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FTFont.cpp; path = ../../../../../../impl/ocean/cv/fonts/freetype/FTFont.cpp; sourceTree = "<group>"; };
+		93DE562024CA2FBF00D4BFDF /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../../impl/ocean/cv/fonts/freetype/Utilities.cpp; sourceTree = "<group>"; };
+		93DE562124CA2FBF00D4BFDF /* FTFontManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FTFontManager.cpp; path = ../../../../../../impl/ocean/cv/fonts/freetype/FTFontManager.cpp; sourceTree = "<group>"; };
+		93DE562F24CA2FDA00D4BFDF /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Font.h; path = ../../../../../../impl/ocean/cv/fonts/Font.h; sourceTree = "<group>"; };
+		93DE563024CA2FDA00D4BFDF /* FontManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FontManager.h; path = ../../../../../../impl/ocean/cv/fonts/FontManager.h; sourceTree = "<group>"; };
+		93DE563924CA2FEB00D4BFDF /* FreeType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FreeType.h; path = ../../../../../../impl/ocean/cv/fonts/freetype/FreeType.h; sourceTree = "<group>"; };
+		93DE563A24CA2FEB00D4BFDF /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../impl/ocean/cv/fonts/freetype/Utilities.h; sourceTree = "<group>"; };
+		93DE563B24CA2FEB00D4BFDF /* FTFontManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FTFontManager.h; path = ../../../../../../impl/ocean/cv/fonts/freetype/FTFontManager.h; sourceTree = "<group>"; };
+		93DE563C24CA2FEB00D4BFDF /* FTFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FTFont.h; path = ../../../../../../impl/ocean/cv/fonts/freetype/FTFont.h; sourceTree = "<group>"; };
+		C041EB401DABD8D300BF5D76 /* libOceanCVFontsD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVFontsD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D7D934E1BA9DC5700D38120 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936E741BC54A990046ACD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D9861291D8B55AC00DEDB00 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB2C1DABD8D300BF5D76 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D7D93481BA9DC5700D38120 = {
+			isa = PBXGroup;
+			children = (
+				5D936E661BC54A650046ACD4 /* Header Files */,
+				5D7D935F1BA9DDAE00D38120 /* Source Files */,
+				5D7D93521BA9DC5700D38120 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D7D93521BA9DC5700D38120 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D7D93511BA9DC5700D38120 /* libOceanCVFontsD.a */,
+				5D936E871BC54A990046ACD4 /* libOceanCVFontsD.dylib */,
+				5D98613C1D8B55AC00DEDB00 /* libOceanCVFontsD.a */,
+				C041EB401DABD8D300BF5D76 /* libOceanCVFontsD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D7D935F1BA9DDAE00D38120 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				93DE561E24CA2FB300D4BFDF /* freetype */,
+				50704F9E2A703DF500D8DFFF /* FontManager.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D936E661BC54A650046ACD4 /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				93DE562E24CA2FC400D4BFDF /* freetype */,
+				93DE562F24CA2FDA00D4BFDF /* Font.h */,
+				93DE563024CA2FDA00D4BFDF /* FontManager.h */,
+				93DE561424CA2DE500D4BFDF /* Fonts.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		93DE561E24CA2FB300D4BFDF /* freetype */ = {
+			isa = PBXGroup;
+			children = (
+				93DE561F24CA2FBF00D4BFDF /* FTFont.cpp */,
+				93DE562124CA2FBF00D4BFDF /* FTFontManager.cpp */,
+				93DE562024CA2FBF00D4BFDF /* Utilities.cpp */,
+			);
+			name = freetype;
+			sourceTree = "<group>";
+		};
+		93DE562E24CA2FC400D4BFDF /* freetype */ = {
+			isa = PBXGroup;
+			children = (
+				93DE563924CA2FEB00D4BFDF /* FreeType.h */,
+				93DE563C24CA2FEB00D4BFDF /* FTFont.h */,
+				93DE563B24CA2FEB00D4BFDF /* FTFontManager.h */,
+				93DE563A24CA2FEB00D4BFDF /* Utilities.h */,
+			);
+			name = freetype;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D7D934F1BA9DC5700D38120 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93DE563D24CA2FEB00D4BFDF /* FreeType.h in Headers */,
+				93DE564524CA2FEB00D4BFDF /* FTFontManager.h in Headers */,
+				93DE561524CA2DE500D4BFDF /* Fonts.h in Headers */,
+				93DE564924CA2FEB00D4BFDF /* FTFont.h in Headers */,
+				93DE563124CA2FDA00D4BFDF /* Font.h in Headers */,
+				93DE563524CA2FDA00D4BFDF /* FontManager.h in Headers */,
+				93DE564124CA2FEB00D4BFDF /* Utilities.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936E751BC54A990046ACD4 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93DE563E24CA2FEB00D4BFDF /* FreeType.h in Headers */,
+				93DE564624CA2FEB00D4BFDF /* FTFontManager.h in Headers */,
+				93DE561624CA2DE500D4BFDF /* Fonts.h in Headers */,
+				93DE564A24CA2FEB00D4BFDF /* FTFont.h in Headers */,
+				93DE563224CA2FDA00D4BFDF /* Font.h in Headers */,
+				93DE563624CA2FDA00D4BFDF /* FontManager.h in Headers */,
+				93DE564224CA2FEB00D4BFDF /* Utilities.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98612A1D8B55AC00DEDB00 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93DE563F24CA2FEB00D4BFDF /* FreeType.h in Headers */,
+				93DE564724CA2FEB00D4BFDF /* FTFontManager.h in Headers */,
+				93DE561724CA2DE500D4BFDF /* Fonts.h in Headers */,
+				93DE564B24CA2FEB00D4BFDF /* FTFont.h in Headers */,
+				93DE563324CA2FDA00D4BFDF /* Font.h in Headers */,
+				93DE563724CA2FDA00D4BFDF /* FontManager.h in Headers */,
+				93DE564324CA2FEB00D4BFDF /* Utilities.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB2D1DABD8D300BF5D76 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93DE564024CA2FEB00D4BFDF /* FreeType.h in Headers */,
+				93DE564824CA2FEB00D4BFDF /* FTFontManager.h in Headers */,
+				93DE561824CA2DE500D4BFDF /* Fonts.h in Headers */,
+				93DE564C24CA2FEB00D4BFDF /* FTFont.h in Headers */,
+				93DE563424CA2FDA00D4BFDF /* Font.h in Headers */,
+				93DE563824CA2FDA00D4BFDF /* FontManager.h in Headers */,
+				93DE564424CA2FEB00D4BFDF /* Utilities.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D7D93501BA9DC5700D38120 /* cvfonts x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D7D935C1BA9DC5700D38120 /* Build configuration list for PBXNativeTarget "cvfonts x64 (Static)" */;
+			buildPhases = (
+				5D7D934D1BA9DC5700D38120 /* Sources */,
+				5D7D934E1BA9DC5700D38120 /* Frameworks */,
+				5D7D934F1BA9DC5700D38120 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvfonts x64 (Static)";
+			productName = cvfonts;
+			productReference = 5D7D93511BA9DC5700D38120 /* libOceanCVFontsD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D936E671BC54A990046ACD4 /* cvfonts x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D936E841BC54A990046ACD4 /* Build configuration list for PBXNativeTarget "cvfonts x64 (Shared)" */;
+			buildPhases = (
+				5D936E681BC54A990046ACD4 /* Sources */,
+				5D936E741BC54A990046ACD4 /* Frameworks */,
+				5D936E751BC54A990046ACD4 /* Headers */,
+				C041EB411DABD94A00BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvfonts x64 (Shared)";
+			productName = cvfonts;
+			productReference = 5D936E871BC54A990046ACD4 /* libOceanCVFontsD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D98611C1D8B55AC00DEDB00 /* cvfonts arm64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D9861391D8B55AC00DEDB00 /* Build configuration list for PBXNativeTarget "cvfonts arm64 (Static)" */;
+			buildPhases = (
+				5D98611D1D8B55AC00DEDB00 /* Sources */,
+				5D9861291D8B55AC00DEDB00 /* Frameworks */,
+				5D98612A1D8B55AC00DEDB00 /* Headers */,
+				5D837F4A1D8F0F5D00939AD7 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvfonts arm64 (Static)";
+			productName = cvfonts;
+			productReference = 5D98613C1D8B55AC00DEDB00 /* libOceanCVFontsD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C041EB1F1DABD8D300BF5D76 /* cvfonts arm64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C041EB3D1DABD8D300BF5D76 /* Build configuration list for PBXNativeTarget "cvfonts arm64 (Shared)" */;
+			buildPhases = (
+				C041EB201DABD8D300BF5D76 /* Sources */,
+				C041EB2C1DABD8D300BF5D76 /* Frameworks */,
+				C041EB2D1DABD8D300BF5D76 /* Headers */,
+				C041EB3C1DABD8D300BF5D76 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "cvfonts arm64 (Shared)";
+			productName = cvfonts;
+			productReference = C041EB401DABD8D300BF5D76 /* libOceanCVFontsD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D7D93491BA9DC5700D38120 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D7D93501BA9DC5700D38120 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D7D934C1BA9DC5700D38120 /* Build configuration list for PBXProject "cvfonts" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D7D93481BA9DC5700D38120;
+			productRefGroup = 5D7D93521BA9DC5700D38120 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D7D93501BA9DC5700D38120 /* cvfonts x64 (Static) */,
+				5D936E671BC54A990046ACD4 /* cvfonts x64 (Shared) */,
+				5D98611C1D8B55AC00DEDB00 /* cvfonts arm64 (Static) */,
+				C041EB1F1DABD8D300BF5D76 /* cvfonts arm64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		5D837F4A1D8F0F5D00939AD7 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../copy_arm_static.sh \"../../../../../../bin/lib/\"\n";
+		};
+		C041EB3C1DABD8D300BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../../../codesign.sh\n../../../copy_arm_shared.sh \"../../../../../../bin/lib/\"";
+		};
+		C041EB411DABD94A00BF5D76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = ../../../codesign.sh;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D7D934D1BA9DC5700D38120 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93DE562224CA2FBF00D4BFDF /* FTFont.cpp in Sources */,
+				93DE562A24CA2FBF00D4BFDF /* FTFontManager.cpp in Sources */,
+				50704F9F2A703DF600D8DFFF /* FontManager.cpp in Sources */,
+				93DE562624CA2FBF00D4BFDF /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D936E681BC54A990046ACD4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93DE562324CA2FBF00D4BFDF /* FTFont.cpp in Sources */,
+				93DE562B24CA2FBF00D4BFDF /* FTFontManager.cpp in Sources */,
+				50704FA02A703DF600D8DFFF /* FontManager.cpp in Sources */,
+				93DE562724CA2FBF00D4BFDF /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D98611D1D8B55AC00DEDB00 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93DE562424CA2FBF00D4BFDF /* FTFont.cpp in Sources */,
+				93DE562C24CA2FBF00D4BFDF /* FTFontManager.cpp in Sources */,
+				50704FA12A703DF600D8DFFF /* FontManager.cpp in Sources */,
+				93DE562824CA2FBF00D4BFDF /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C041EB201DABD8D300BF5D76 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93DE562524CA2FBF00D4BFDF /* FTFont.cpp in Sources */,
+				93DE562D24CA2FBF00D4BFDF /* FTFontManager.cpp in Sources */,
+				50704FA22A703DF600D8DFFF /* FontManager.cpp in Sources */,
+				93DE562924CA2FBF00D4BFDF /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D7D935A1BA9DC5700D38120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D7D935B1BA9DC5700D38120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D7D935D1BA9DC5700D38120 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvfonts/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/freetype/2.10/h,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvfonts/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVFontsD;
+				PRODUCT_NAME = OceanCVFontsD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D7D935E1BA9DC5700D38120 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvfonts/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/freetype/2.10/h,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvfonts/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVFonts;
+				PRODUCT_NAME = OceanCVFonts;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D936E851BC54A990046ACD4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvfonts/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/freetype/2.10/h,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = (
+					../../../../../../bin/lib/osx_x64_xc9_shared_debug,
+					../../../../../../3rdparty/freetype/2.10/lib/osx_x64_xc_static_debug,
+					../../../../../../3rdparty/libpng/lib/osx_x64_xc9_static_debug,
+					../../../../../../3rdparty/zlib/lib/osx_x64_xc9_static_debug,
+				);
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvfonts/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanGeometryD",
+					"-lOceanIOD",
+					"-lOceanMathD",
+					"-lfreetype",
+					"-lpng",
+					"-lzlib",
+				);
+				PRODUCT_MODULE_NAME = OceanCVFontsD;
+				PRODUCT_NAME = OceanCVFontsD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D936E861BC54A990046ACD4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/cvfonts/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/freetype/2.10/h,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = (
+					../../../../../../bin/lib/osx_x64_xc9_shared,
+					../../../../../../3rdparty/freetype/2.10/lib/osx_x64_xc_static,
+					../../../../../../3rdparty/libpng/lib/osx_x64_xc9_static,
+					../../../../../../3rdparty/zlib/lib/osx_x64_xc9_static,
+				);
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/cvfonts/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanGeometry",
+					"-lOceanIO",
+					"-lOceanMath",
+					"-lfreetype",
+					"-lpng",
+					"-lzlib",
+				);
+				PRODUCT_MODULE_NAME = OceanCVFonts;
+				PRODUCT_NAME = OceanCVFonts;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D98613A1D8B55AC00DEDB00 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/freetype/2.10/h,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVFontsD;
+				PRODUCT_NAME = OceanCVFontsD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_static_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D98613B1D8B55AC00DEDB00 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/freetype/2.10/h,
+				);
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_MODULE_NAME = OceanCVFonts;
+				PRODUCT_NAME = OceanCVFonts;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_static/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		C041EB3E1DABD8D300BF5D76 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/freetype/2.10/h,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared_debug;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-lOceanCVD",
+					"-lOceanCVAdvancedD",
+					"-lOceanCVDetectorD",
+					"-lOceanGeometryD",
+					"-lOceanMathD",
+				);
+				PRODUCT_MODULE_NAME = OceanCVFontsD;
+				PRODUCT_NAME = OceanCVFontsD;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_shared_debug/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		C041EB3F1DABD8D300BF5D76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = default;
+				CONFIGURATION_BUILD_DIR = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				CONFIGURATION_TEMP_DIR = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"OCEAN_RUNTIME_SHARED=1",
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/freetype/2.10/h,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = ../../../../../../bin/lib/ios_arm64_xc9_shared;
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = ../../../../../../bin/lib/ios_i386_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-lOceanCV",
+					"-lOceanCVAdvanced",
+					"-lOceanCVDetector",
+					"-lOceanGeometry",
+					"-lOceanMath",
+				);
+				PRODUCT_MODULE_NAME = OceanCVFonts;
+				PRODUCT_NAME = OceanCVFonts;
+				SDKROOT = iphoneos;
+				SYMROOT = "../../../../../../bin/tmp/impl/ocean/cvfonts/ios_arm64_xc9_shared/$(EFFECTIVE_PLATFORM_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64 armv7 armv7s";
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D7D934C1BA9DC5700D38120 /* Build configuration list for PBXProject "cvfonts" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D7D935A1BA9DC5700D38120 /* Debug */,
+				5D7D935B1BA9DC5700D38120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D7D935C1BA9DC5700D38120 /* Build configuration list for PBXNativeTarget "cvfonts x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D7D935D1BA9DC5700D38120 /* Debug */,
+				5D7D935E1BA9DC5700D38120 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D936E841BC54A990046ACD4 /* Build configuration list for PBXNativeTarget "cvfonts x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D936E851BC54A990046ACD4 /* Debug */,
+				5D936E861BC54A990046ACD4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D9861391D8B55AC00DEDB00 /* Build configuration list for PBXNativeTarget "cvfonts arm64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D98613A1D8B55AC00DEDB00 /* Debug */,
+				5D98613B1D8B55AC00DEDB00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C041EB3D1DABD8D300BF5D76 /* Build configuration list for PBXNativeTarget "cvfonts arm64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C041EB3E1DABD8D300BF5D76 /* Debug */,
+				C041EB3F1DABD8D300BF5D76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D7D93491BA9DC5700D38120 /* Project object */;
+}

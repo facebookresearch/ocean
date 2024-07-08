@@ -1,0 +1,661 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9EC7DC732AFDDAB200F1775B /* WxScopedParentWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC632AFDDAB100F1775B /* WxScopedParentWindow.h */; };
+		9EC7DC742AFDDAB200F1775B /* System.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC642AFDDAB100F1775B /* System.h */; };
+		9EC7DC752AFDDAB200F1775B /* FrameWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC652AFDDAB100F1775B /* FrameWindow.h */; };
+		9EC7DC762AFDDAB200F1775B /* Bitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC662AFDDAB100F1775B /* Bitmap.h */; };
+		9EC7DC772AFDDAB200F1775B /* FramePreviewWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC672AFDDAB100F1775B /* FramePreviewWindow.h */; };
+		9EC7DC782AFDDAB200F1775B /* WxWidgetsApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC682AFDDAB100F1775B /* WxWidgetsApplication.h */; };
+		9EC7DC792AFDDAB200F1775B /* WxPopupMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC692AFDDAB100F1775B /* WxPopupMenu.h */; };
+		9EC7DC7A2AFDDAB200F1775B /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC6A2AFDDAB100F1775B /* Utilities.h */; };
+		9EC7DC7B2AFDDAB200F1775B /* Screen.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC6B2AFDDAB100F1775B /* Screen.h */; };
+		9EC7DC7C2AFDDAB200F1775B /* DnD.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC6C2AFDDAB100F1775B /* DnD.h */; };
+		9EC7DC7D2AFDDAB200F1775B /* FrameMediumWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC6D2AFDDAB100F1775B /* FrameMediumWindow.h */; };
+		9EC7DC7E2AFDDAB200F1775B /* WxStaticBitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC6E2AFDDAB100F1775B /* WxStaticBitmap.h */; };
+		9EC7DC7F2AFDDAB200F1775B /* WxDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC6F2AFDDAB100F1775B /* WxDialog.h */; };
+		9EC7DC802AFDDAB200F1775B /* BitmapWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC702AFDDAB200F1775B /* BitmapWindow.h */; };
+		9EC7DC812AFDDAB200F1775B /* WxWidgets.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC712AFDDAB200F1775B /* WxWidgets.h */; };
+		9EC7DC822AFDDAB200F1775B /* ImageList.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EC7DC722AFDDAB200F1775B /* ImageList.h */; };
+		9EC7DC932AFDDAD800F1775B /* FrameWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC832AFDDAD700F1775B /* FrameWindow.cpp */; };
+		9EC7DC942AFDDAD800F1775B /* WxWidgetsApplication.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC842AFDDAD700F1775B /* WxWidgetsApplication.cpp */; };
+		9EC7DC952AFDDAD800F1775B /* System.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC852AFDDAD700F1775B /* System.cpp */; };
+		9EC7DC962AFDDAD800F1775B /* WxDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC862AFDDAD700F1775B /* WxDialog.cpp */; };
+		9EC7DC972AFDDAD800F1775B /* ImageList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC872AFDDAD700F1775B /* ImageList.cpp */; };
+		9EC7DC982AFDDAD800F1775B /* DnD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC882AFDDAD700F1775B /* DnD.cpp */; };
+		9EC7DC992AFDDAD800F1775B /* Screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC892AFDDAD700F1775B /* Screen.cpp */; };
+		9EC7DC9A2AFDDAD800F1775B /* FrameMediumWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC8A2AFDDAD700F1775B /* FrameMediumWindow.cpp */; };
+		9EC7DC9B2AFDDAD800F1775B /* FramePreviewWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC8B2AFDDAD700F1775B /* FramePreviewWindow.cpp */; };
+		9EC7DC9C2AFDDAD800F1775B /* WxScopedParentWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC8C2AFDDAD700F1775B /* WxScopedParentWindow.cpp */; };
+		9EC7DC9D2AFDDAD800F1775B /* Bitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC8D2AFDDAD700F1775B /* Bitmap.cpp */; };
+		9EC7DC9E2AFDDAD800F1775B /* WxStaticBitmap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC8E2AFDDAD700F1775B /* WxStaticBitmap.cpp */; };
+		9EC7DC9F2AFDDAD800F1775B /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC8F2AFDDAD800F1775B /* Utilities.cpp */; };
+		9EC7DCA02AFDDAD800F1775B /* WxPopupMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC902AFDDAD800F1775B /* WxPopupMenu.cpp */; };
+		9EC7DCA12AFDDAD800F1775B /* Screen.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC912AFDDAD800F1775B /* Screen.mm */; };
+		9EC7DCA22AFDDAD800F1775B /* BitmapWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9EC7DC922AFDDAD800F1775B /* BitmapWindow.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5D823D241BCD048000F9FE4A /* libOceanPlatformWxWidgetsD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanPlatformWxWidgetsD.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D823D7A1BCE5A6900F9FE4A /* libOceanPlatformWxWidgetsD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanPlatformWxWidgetsD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EC7DC632AFDDAB100F1775B /* WxScopedParentWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WxScopedParentWindow.h; path = ../../../../../../impl/ocean/platform/wxwidgets/WxScopedParentWindow.h; sourceTree = "<group>"; };
+		9EC7DC642AFDDAB100F1775B /* System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = System.h; path = ../../../../../../impl/ocean/platform/wxwidgets/System.h; sourceTree = "<group>"; };
+		9EC7DC652AFDDAB100F1775B /* FrameWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameWindow.h; path = ../../../../../../impl/ocean/platform/wxwidgets/FrameWindow.h; sourceTree = "<group>"; };
+		9EC7DC662AFDDAB100F1775B /* Bitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bitmap.h; path = ../../../../../../impl/ocean/platform/wxwidgets/Bitmap.h; sourceTree = "<group>"; };
+		9EC7DC672AFDDAB100F1775B /* FramePreviewWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FramePreviewWindow.h; path = ../../../../../../impl/ocean/platform/wxwidgets/FramePreviewWindow.h; sourceTree = "<group>"; };
+		9EC7DC682AFDDAB100F1775B /* WxWidgetsApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WxWidgetsApplication.h; path = ../../../../../../impl/ocean/platform/wxwidgets/WxWidgetsApplication.h; sourceTree = "<group>"; };
+		9EC7DC692AFDDAB100F1775B /* WxPopupMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WxPopupMenu.h; path = ../../../../../../impl/ocean/platform/wxwidgets/WxPopupMenu.h; sourceTree = "<group>"; };
+		9EC7DC6A2AFDDAB100F1775B /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../impl/ocean/platform/wxwidgets/Utilities.h; sourceTree = "<group>"; };
+		9EC7DC6B2AFDDAB100F1775B /* Screen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Screen.h; path = ../../../../../../impl/ocean/platform/wxwidgets/Screen.h; sourceTree = "<group>"; };
+		9EC7DC6C2AFDDAB100F1775B /* DnD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DnD.h; path = ../../../../../../impl/ocean/platform/wxwidgets/DnD.h; sourceTree = "<group>"; };
+		9EC7DC6D2AFDDAB100F1775B /* FrameMediumWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameMediumWindow.h; path = ../../../../../../impl/ocean/platform/wxwidgets/FrameMediumWindow.h; sourceTree = "<group>"; };
+		9EC7DC6E2AFDDAB100F1775B /* WxStaticBitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WxStaticBitmap.h; path = ../../../../../../impl/ocean/platform/wxwidgets/WxStaticBitmap.h; sourceTree = "<group>"; };
+		9EC7DC6F2AFDDAB100F1775B /* WxDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WxDialog.h; path = ../../../../../../impl/ocean/platform/wxwidgets/WxDialog.h; sourceTree = "<group>"; };
+		9EC7DC702AFDDAB200F1775B /* BitmapWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BitmapWindow.h; path = ../../../../../../impl/ocean/platform/wxwidgets/BitmapWindow.h; sourceTree = "<group>"; };
+		9EC7DC712AFDDAB200F1775B /* WxWidgets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WxWidgets.h; path = ../../../../../../impl/ocean/platform/wxwidgets/WxWidgets.h; sourceTree = "<group>"; };
+		9EC7DC722AFDDAB200F1775B /* ImageList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageList.h; path = ../../../../../../impl/ocean/platform/wxwidgets/ImageList.h; sourceTree = "<group>"; };
+		9EC7DC832AFDDAD700F1775B /* FrameWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameWindow.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/FrameWindow.cpp; sourceTree = "<group>"; };
+		9EC7DC842AFDDAD700F1775B /* WxWidgetsApplication.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WxWidgetsApplication.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/WxWidgetsApplication.cpp; sourceTree = "<group>"; };
+		9EC7DC852AFDDAD700F1775B /* System.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = System.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/System.cpp; sourceTree = "<group>"; };
+		9EC7DC862AFDDAD700F1775B /* WxDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WxDialog.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/WxDialog.cpp; sourceTree = "<group>"; };
+		9EC7DC872AFDDAD700F1775B /* ImageList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageList.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/ImageList.cpp; sourceTree = "<group>"; };
+		9EC7DC882AFDDAD700F1775B /* DnD.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DnD.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/DnD.cpp; sourceTree = "<group>"; };
+		9EC7DC892AFDDAD700F1775B /* Screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Screen.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/Screen.cpp; sourceTree = "<group>"; };
+		9EC7DC8A2AFDDAD700F1775B /* FrameMediumWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameMediumWindow.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/FrameMediumWindow.cpp; sourceTree = "<group>"; };
+		9EC7DC8B2AFDDAD700F1775B /* FramePreviewWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FramePreviewWindow.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/FramePreviewWindow.cpp; sourceTree = "<group>"; };
+		9EC7DC8C2AFDDAD700F1775B /* WxScopedParentWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WxScopedParentWindow.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/WxScopedParentWindow.cpp; sourceTree = "<group>"; };
+		9EC7DC8D2AFDDAD700F1775B /* Bitmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bitmap.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/Bitmap.cpp; sourceTree = "<group>"; };
+		9EC7DC8E2AFDDAD700F1775B /* WxStaticBitmap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WxStaticBitmap.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/WxStaticBitmap.cpp; sourceTree = "<group>"; };
+		9EC7DC8F2AFDDAD800F1775B /* Utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/Utilities.cpp; sourceTree = "<group>"; };
+		9EC7DC902AFDDAD800F1775B /* WxPopupMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WxPopupMenu.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/WxPopupMenu.cpp; sourceTree = "<group>"; };
+		9EC7DC912AFDDAD800F1775B /* Screen.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Screen.mm; path = ../../../../../../impl/ocean/platform/wxwidgets/Screen.mm; sourceTree = "<group>"; };
+		9EC7DC922AFDDAD800F1775B /* BitmapWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BitmapWindow.cpp; path = ../../../../../../impl/ocean/platform/wxwidgets/BitmapWindow.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5D823D211BCD048000F9FE4A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D823D6A1BCE5A6900F9FE4A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D823D1B1BCD048000F9FE4A = {
+			isa = PBXGroup;
+			children = (
+				5D823D471BCD066600F9FE4A /* Header Files */,
+				5D823D321BCD065100F9FE4A /* Source Files */,
+				5D823D251BCD048000F9FE4A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5D823D251BCD048000F9FE4A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5D823D241BCD048000F9FE4A /* libOceanPlatformWxWidgetsD.a */,
+				5D823D7A1BCE5A6900F9FE4A /* libOceanPlatformWxWidgetsD.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5D823D321BCD065100F9FE4A /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				9EC7DC8D2AFDDAD700F1775B /* Bitmap.cpp */,
+				9EC7DC922AFDDAD800F1775B /* BitmapWindow.cpp */,
+				9EC7DC882AFDDAD700F1775B /* DnD.cpp */,
+				9EC7DC8A2AFDDAD700F1775B /* FrameMediumWindow.cpp */,
+				9EC7DC8B2AFDDAD700F1775B /* FramePreviewWindow.cpp */,
+				9EC7DC832AFDDAD700F1775B /* FrameWindow.cpp */,
+				9EC7DC872AFDDAD700F1775B /* ImageList.cpp */,
+				9EC7DC892AFDDAD700F1775B /* Screen.cpp */,
+				9EC7DC912AFDDAD800F1775B /* Screen.mm */,
+				9EC7DC852AFDDAD700F1775B /* System.cpp */,
+				9EC7DC8F2AFDDAD800F1775B /* Utilities.cpp */,
+				9EC7DC862AFDDAD700F1775B /* WxDialog.cpp */,
+				9EC7DC902AFDDAD800F1775B /* WxPopupMenu.cpp */,
+				9EC7DC8C2AFDDAD700F1775B /* WxScopedParentWindow.cpp */,
+				9EC7DC8E2AFDDAD700F1775B /* WxStaticBitmap.cpp */,
+				9EC7DC842AFDDAD700F1775B /* WxWidgetsApplication.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		5D823D471BCD066600F9FE4A /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				9EC7DC662AFDDAB100F1775B /* Bitmap.h */,
+				9EC7DC702AFDDAB200F1775B /* BitmapWindow.h */,
+				9EC7DC6C2AFDDAB100F1775B /* DnD.h */,
+				9EC7DC6D2AFDDAB100F1775B /* FrameMediumWindow.h */,
+				9EC7DC672AFDDAB100F1775B /* FramePreviewWindow.h */,
+				9EC7DC652AFDDAB100F1775B /* FrameWindow.h */,
+				9EC7DC722AFDDAB200F1775B /* ImageList.h */,
+				9EC7DC6B2AFDDAB100F1775B /* Screen.h */,
+				9EC7DC642AFDDAB100F1775B /* System.h */,
+				9EC7DC6A2AFDDAB100F1775B /* Utilities.h */,
+				9EC7DC6F2AFDDAB100F1775B /* WxDialog.h */,
+				9EC7DC692AFDDAB100F1775B /* WxPopupMenu.h */,
+				9EC7DC632AFDDAB100F1775B /* WxScopedParentWindow.h */,
+				9EC7DC6E2AFDDAB100F1775B /* WxStaticBitmap.h */,
+				9EC7DC712AFDDAB200F1775B /* WxWidgets.h */,
+				9EC7DC682AFDDAB100F1775B /* WxWidgetsApplication.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5D823D221BCD048000F9FE4A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EC7DC822AFDDAB200F1775B /* ImageList.h in Headers */,
+				9EC7DC732AFDDAB200F1775B /* WxScopedParentWindow.h in Headers */,
+				9EC7DC7F2AFDDAB200F1775B /* WxDialog.h in Headers */,
+				9EC7DC772AFDDAB200F1775B /* FramePreviewWindow.h in Headers */,
+				9EC7DC7D2AFDDAB200F1775B /* FrameMediumWindow.h in Headers */,
+				9EC7DC742AFDDAB200F1775B /* System.h in Headers */,
+				9EC7DC7C2AFDDAB200F1775B /* DnD.h in Headers */,
+				9EC7DC752AFDDAB200F1775B /* FrameWindow.h in Headers */,
+				9EC7DC7E2AFDDAB200F1775B /* WxStaticBitmap.h in Headers */,
+				9EC7DC7B2AFDDAB200F1775B /* Screen.h in Headers */,
+				9EC7DC792AFDDAB200F1775B /* WxPopupMenu.h in Headers */,
+				9EC7DC7A2AFDDAB200F1775B /* Utilities.h in Headers */,
+				9EC7DC802AFDDAB200F1775B /* BitmapWindow.h in Headers */,
+				9EC7DC812AFDDAB200F1775B /* WxWidgets.h in Headers */,
+				9EC7DC782AFDDAB200F1775B /* WxWidgetsApplication.h in Headers */,
+				9EC7DC762AFDDAB200F1775B /* Bitmap.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D823D6B1BCE5A6900F9FE4A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5D823D231BCD048000F9FE4A /* platformwxwidgets x64 (Static) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D823D2F1BCD048100F9FE4A /* Build configuration list for PBXNativeTarget "platformwxwidgets x64 (Static)" */;
+			buildPhases = (
+				5D823D201BCD048000F9FE4A /* Sources */,
+				5D823D211BCD048000F9FE4A /* Frameworks */,
+				5D823D221BCD048000F9FE4A /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "platformwxwidgets x64 (Static)";
+			productName = platformwxwidgets;
+			productReference = 5D823D241BCD048000F9FE4A /* libOceanPlatformWxWidgetsD.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		5D823D5E1BCE5A6900F9FE4A /* platformwxwidgets x64 (Shared) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5D823D771BCE5A6900F9FE4A /* Build configuration list for PBXNativeTarget "platformwxwidgets x64 (Shared)" */;
+			buildPhases = (
+				5D823D5F1BCE5A6900F9FE4A /* Sources */,
+				5D823D6A1BCE5A6900F9FE4A /* Frameworks */,
+				5D823D6B1BCE5A6900F9FE4A /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "platformwxwidgets x64 (Shared)";
+			productName = platformwxwidgets;
+			productReference = 5D823D7A1BCE5A6900F9FE4A /* libOceanPlatformWxWidgetsD.dylib */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5D823D1C1BCD048000F9FE4A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1200;
+				ORGANIZATIONNAME = "Meta Platforms, Inc.";
+				TargetAttributes = {
+					5D823D231BCD048000F9FE4A = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 5D823D1F1BCD048000F9FE4A /* Build configuration list for PBXProject "platformwxwidgets" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5D823D1B1BCD048000F9FE4A;
+			productRefGroup = 5D823D251BCD048000F9FE4A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5D823D231BCD048000F9FE4A /* platformwxwidgets x64 (Static) */,
+				5D823D5E1BCE5A6900F9FE4A /* platformwxwidgets x64 (Shared) */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5D823D201BCD048000F9FE4A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EC7DC992AFDDAD800F1775B /* Screen.cpp in Sources */,
+				9EC7DC982AFDDAD800F1775B /* DnD.cpp in Sources */,
+				9EC7DC9C2AFDDAD800F1775B /* WxScopedParentWindow.cpp in Sources */,
+				9EC7DC9E2AFDDAD800F1775B /* WxStaticBitmap.cpp in Sources */,
+				9EC7DC9B2AFDDAD800F1775B /* FramePreviewWindow.cpp in Sources */,
+				9EC7DC9D2AFDDAD800F1775B /* Bitmap.cpp in Sources */,
+				9EC7DCA22AFDDAD800F1775B /* BitmapWindow.cpp in Sources */,
+				9EC7DCA12AFDDAD800F1775B /* Screen.mm in Sources */,
+				9EC7DC9A2AFDDAD800F1775B /* FrameMediumWindow.cpp in Sources */,
+				9EC7DC962AFDDAD800F1775B /* WxDialog.cpp in Sources */,
+				9EC7DC952AFDDAD800F1775B /* System.cpp in Sources */,
+				9EC7DC932AFDDAD800F1775B /* FrameWindow.cpp in Sources */,
+				9EC7DC942AFDDAD800F1775B /* WxWidgetsApplication.cpp in Sources */,
+				9EC7DC972AFDDAD800F1775B /* ImageList.cpp in Sources */,
+				9EC7DCA02AFDDAD800F1775B /* WxPopupMenu.cpp in Sources */,
+				9EC7DC9F2AFDDAD800F1775B /* Utilities.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5D823D5F1BCE5A6900F9FE4A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5D823D2D1BCD048100F9FE4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5D823D2E1BCD048100F9FE4A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5D823D301BCD048100F9FE4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/platformwxwidgets/osx_x64_xc9_static_debug;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/gl/h,
+					../../../../../../3rdparty/wxwidgets/3.1/include,
+					../../../../../../3rdparty/wxwidgets/3.1/include/osx,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/platformwxwidgets/osx_x64_xc9_static_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-D__WXOSX_COCOA__",
+				);
+				PRODUCT_MODULE_NAME = OceanPlatformWxWidgetsD;
+				PRODUCT_NAME = OceanPlatformWxWidgetsD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D823D311BCD048100F9FE4A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_static;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/platformwxwidgets/osx_x64_xc9_static;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+					../../../../../../3rdparty/gl/h,
+					../../../../../../3rdparty/wxwidgets/3.1/include,
+					../../../../../../3rdparty/wxwidgets/3.1/include/osx,
+				);
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/platformwxwidgets/osx_x64_xc9_static;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-D__WXOSX_COCOA__",
+				);
+				PRODUCT_MODULE_NAME = OceanPlatformWxWidgets;
+				PRODUCT_NAME = OceanPlatformWxWidgets;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_static;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+		5D823D781BCE5A6900F9FE4A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/platformwxwidgets/osx_x64_xc9_shared_debug;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"_DEBUG=1",
+					"DEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					../../../../../../3rdparty/gl/h,
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/platformwxwidgets/osx_x64_xc9_shared_debug;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-D__WXOSX_COCOA__",
+				);
+				OTHER_LDFLAGS = (
+					"-lOceanBaseD",
+					"-framework",
+					OpenGL,
+				);
+				PRODUCT_MODULE_NAME = OceanPlatformWxWidgetsD;
+				PRODUCT_NAME = OceanPlatformWxWidgetsD;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared_debug;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Debug;
+		};
+		5D823D791BCE5A6900F9FE4A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = NO;
+				CLANG_X86_VECTOR_INSTRUCTIONS = sse4.1;
+				CONFIGURATION_BUILD_DIR = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				CONFIGURATION_TEMP_DIR = ../../../../../../bin/tmp/impl/ocean/platformwxwidgets/osx_x64_xc9_shared;
+				EXECUTABLE_EXTENSION = dylib;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"ENABLE_LOGGING=1",
+					"NDEBUG=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_CHECK_SWITCH_STATEMENTS = NO;
+				GCC_WARN_UNUSED_FUNCTION = NO;
+				GCC_WARN_UNUSED_VALUE = NO;
+				GCC_WARN_UNUSED_VARIABLE = NO;
+				HEADER_SEARCH_PATHS = (
+					../../../../../../3rdparty/gl/h,
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					../../../../../../impl,
+				);
+				LD_DYLIB_INSTALL_NAME = "@rpath/$(EXECUTABLE_NAME)";
+				LIBRARY_SEARCH_PATHS = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				MACH_O_TYPE = mh_dylib;
+				OBJROOT = ../../../../../../bin/tmp/impl/ocean/platformwxwidgets/osx_x64_xc9_shared;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CPLUSPLUSFLAGS = (
+					"$(OTHER_CFLAGS)",
+					"-D__WXOSX_COCOA__",
+				);
+				OTHER_LDFLAGS = (
+					"-lOceanBase",
+					"-framework",
+					OpenGL,
+				);
+				PRODUCT_MODULE_NAME = OceanPlatformWxWidgets;
+				PRODUCT_NAME = OceanPlatformWxWidgets;
+				SYMROOT = ../../../../../../bin/lib/osx_x64_xc9_shared;
+				VALID_ARCHS = x86_64;
+				WARNING_CFLAGS = (
+					"-Wdeprecated-copy-dtor",
+					"-Wdeprecated-declarations",
+					"-Wfloat-conversion",
+					"-Wimplicit-float-conversion",
+					"-Wimplicit-int-conversion",
+					"-Wimplicit-int-float-conversion",
+					"-Wnullable-to-nonnull-conversion",
+					"-Wshorten-64-to-32",
+					"-Wstring-conversion",
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5D823D1F1BCD048000F9FE4A /* Build configuration list for PBXProject "platformwxwidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D823D2D1BCD048100F9FE4A /* Debug */,
+				5D823D2E1BCD048100F9FE4A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D823D2F1BCD048100F9FE4A /* Build configuration list for PBXNativeTarget "platformwxwidgets x64 (Static)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D823D301BCD048100F9FE4A /* Debug */,
+				5D823D311BCD048100F9FE4A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5D823D771BCE5A6900F9FE4A /* Build configuration list for PBXNativeTarget "platformwxwidgets x64 (Shared)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5D823D781BCE5A6900F9FE4A /* Debug */,
+				5D823D791BCE5A6900F9FE4A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5D823D1C1BCD048000F9FE4A /* Project object */;
+}

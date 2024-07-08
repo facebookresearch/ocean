@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31025.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "devicesarcore", "devicesarcore.vcxproj", "{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Static Debug|ARM = Static Debug|ARM
+		Static Debug|ARM64 = Static Debug|ARM64
+		Static Debug|x64 = Static Debug|x64
+		Static Debug|x86 = Static Debug|x86
+		Static Release|ARM = Static Release|ARM
+		Static Release|ARM64 = Static Release|ARM64
+		Static Release|x64 = Static Release|x64
+		Static Release|x86 = Static Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Debug|ARM.ActiveCfg = Static Debug|ARM
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Debug|ARM.Build.0 = Static Debug|ARM
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Debug|ARM64.ActiveCfg = Static Debug|ARM64
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Debug|ARM64.Build.0 = Static Debug|ARM64
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Debug|x64.Build.0 = Static Debug|x64
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Debug|x86.ActiveCfg = Static Debug|x86
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Debug|x86.Build.0 = Static Debug|x86
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Release|ARM.ActiveCfg = Static Release|ARM
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Release|ARM.Build.0 = Static Release|ARM
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Release|ARM64.ActiveCfg = Static Release|ARM64
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Release|ARM64.Build.0 = Static Release|ARM64
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Release|x64.ActiveCfg = Static Release|x64
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Release|x64.Build.0 = Static Release|x64
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Release|x86.ActiveCfg = Static Release|x86
+		{4DA72FFC-F932-42B3-99F0-D80DD60E6EC1}.Static Release|x86.Build.0 = Static Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E636BAAD-2A2C-45BA-B26A-0912AB9E069D}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PropertySheetDisplayName>Ocean Test Tracking OculusTags (Common)</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ocean_testtrackingoculustags_common_imported>True</ocean_testtrackingoculustags_common_imported>
+  </PropertyGroup>
+  <ImportGroup Label="Dependencies">
+    <Import Condition="'$(ocean_common_imported)' != 'True'" Project="..\..\..\..\ocean_common.props"/>
+    <Import Condition="'$(ocean_test_use_imported)' != 'True'" Project="..\..\test_use.props"/>
+    <Import Condition="'$(ocean_base_use_imported)' != 'True'" Project="..\..\..\base\base_use.props"/>
+    <Import Condition="'$(ocean_testgeometry_use_imported)' != 'True'" Project="..\..\..\test\testgeometry\testgeometry_use.props"/>
+    <Import Condition="'$(ocean_trackingoculustags_use_imported)' != 'True'" Project="..\..\..\tracking\oculustags\trackingoculustags_use.props"/>
+    <Import Condition="'$(ocean_system_use_imported)' != 'True'" Project="..\..\..\system\system_use.props"/>
+    <Import Condition="'$(ocean_platform_use_imported)' != 'True'" Project="..\..\..\platform\platform_use.props"/>
+  </ImportGroup>
+</Project>
