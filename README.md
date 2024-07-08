@@ -11,6 +11,8 @@ Please read the [contribution guidelines](CONTRIBUTING.md) before submitting any
 
 # Getting Started
 
+For a general overview, the [project website](https://facebookresearch.github.io/ocean/) is a good starting point. For instructions to build Ocean, continue to read below.
+
 ## General Prerequisites
 
 - Install [CMake](https://cmake.org/download/) 3.26 or higher.
