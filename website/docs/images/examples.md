@@ -82,7 +82,7 @@ Frame newFrame(frameType,
 
 ### Custom pixel formats
 
-At the time of writing, Ocean support 45+ [pre-defined pixel formats](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L151-L179) which commonly define the precise layout of the color channel (e.g., `FORMAT_RGB24` vs. `FORMAT_BGR24`). Adding a new pre-defined pixel format is straight forward. However, often a generic pixel format can be used on-the-fly in case the user does not need to keep track of e.g., the layout of the color channels.
+At the time of writing, Ocean support 45+ [pre-defined pixel formats](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L180) which commonly define the precise layout of the color channel (e.g., `FORMAT_RGB24` vs. `FORMAT_BGR24`). Adding a new pre-defined pixel format is straight forward. However, often a generic pixel format can be used on-the-fly in case the user does not need to keep track of e.g., the layout of the color channels.
 
 This is an example of a generic pixel format for an image with two channels of `float` numbers on one plane (the properties of the pixel format are known at compile time):
 ```cpp
@@ -156,7 +156,7 @@ depthFrame.setValue({99.0});
 ## Creating an image pyramid
 
 Ocean's Computer Vision framework includes a robust image pyramid implementation, ideal for enhancing performance in various computer vision algorithms.
-Below is an example demonstrating how to create an image pyramid [`CV::FramePyramid`](https://github.com/facebookresearch/ocean/blob/e1da9ca1125a7f422b802861181b57cdb6652cc6/impl/ocean/cv/FramePyramid.h#L36) and access its individual layers:
+Below is an example demonstrating how to create an image pyramid [`CV::FramePyramid`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/cv/FramePyramid.h#L36) and access its individual layers:
 
 ```cpp
 #include "ocean/base/Frame.h"

@@ -7,7 +7,7 @@ The `Frame` class provides several accessors for the actual image information.
 
 ## Plane access
 
-The memory of individual image planes with `planeIndex`, can be accessed with [`constdata()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L2706-L2707) and [`data()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L2696-L2697):
+The memory of individual image planes with `planeIndex`, can be accessed with [`constdata()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L1945) and [`data()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L1953):
 
 ```cpp
 template <typename T>
@@ -21,7 +21,7 @@ Here, the type `T` denotes the underlying type of the pixel elements. For exampl
 
 ## Row access
 
-An individual row of an image plane, `planeIndex`, can be accessed with [`constrow()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L2742-L2743) and [`row()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L2724-L2725):
+An individual row of an image plane, `planeIndex`, can be accessed with [`constrow()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L2787) and [`row()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L2769):
 
 ```cpp
 template <typename T>
@@ -59,7 +59,7 @@ bool isFrameBlack(const Frame& rgbFrame)
 
 ## Pixel access
 
-In case one pixel values need to be accessed, use [`constpixel()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L2822-L2823) and [`pixel()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L2797-L2798):
+In case one pixel values need to be accessed, use [`constpixel()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L2867) and [`pixel()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L2842):
 
 ```cpp
 template <typename T>

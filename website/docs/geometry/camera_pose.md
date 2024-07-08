@@ -16,7 +16,7 @@ Ocean offers several functions for estimating camera poses ranging from 3-DOF to
 These functions utilize perspective point problems based on correspondences between 2D image points and 3D object points.
 
 ### P3P (Perspective-Three-Point)
-* [`P3P::poses()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/geometry/P3P.h#L98): This function requires three correspondences between 2D image points and their corresponding 3D object points. It utilizes a camera model, which defines how 3D object points are projected onto the 2D image plane. The camera model is necessary here as it defines the projection of 3D points based on the camera's intrinsic parameters.
+* [`P3P::poses()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/geometry/P3P.h#L75): This function requires three correspondences between 2D image points and their corresponding 3D object points. It utilizes a camera model, which defines how 3D object points are projected onto the 2D image plane. The camera model is necessary here as it defines the projection of 3D points based on the camera's intrinsic parameters.
 
 ```cpp
 #include "ocean/math/AnyCamera.h"
@@ -44,7 +44,7 @@ unsigned int numberPoses = Geometry::P3P::poses(camera, objectPoints, imagePoint
 Log::info() << "We have " << numberPoses << " 6-DOF camera poses fitting to the provided 2D/3D correspondences";
 ```
 
-* [`P3P::poses()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/geometry/P3P.h#L114): This variant of the function works with three image rays that originate from the camera's center of projection and extend towards the 3D object points. Since this approach directly uses image rays, it does not require a camera model to project 3D points onto the 2D image plane. This method is beneficial when the camera model is not at hand or when working directly in normalized image coordinates.
+* [`P3P::poses()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/geometry/P3P.h#L91): This variant of the function works with three image rays that originate from the camera's center of projection and extend towards the 3D object points. Since this approach directly uses image rays, it does not require a camera model to project 3D points onto the 2D image plane. This method is beneficial when the camera model is not at hand or when working directly in normalized image coordinates.
 
 ```cpp
 #include "ocean/geometry/P3P.h"

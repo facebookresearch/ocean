@@ -28,7 +28,7 @@ if (medium.isNull())
 
 Here, the identifier `LiveVideoId:1` (and `LiveVideoId:0`) will be passed to the registered, platform-specific media libraries. If a library can discover cameras on the system, it will provide them (in the order chosen by the operating system) using the identifiers `LiveVideoId:X`. On a laptop, the camera with the ID `:0` usually (but not always, for example on Macs) refers to the built-in camera, while the camera with the ID `:1` typically refers to the first external camera, and so forth.
 
-The demo app is available for both desktop and mobile devices. The code is located [here](https://github.com/facebookresearch/ocean/tree/d89fdd273c4461c09083b07111746ffd0602fd8a/impl/application/ocean/demo/media/videopreview). Please note the various platform-specific subfolders which contain the generally required boilerplate code. Build instructions can be found below.
+The demo app is available for both desktop and mobile devices. The code is located [here](https://github.com/facebookresearch/ocean/tree/v1.0.0/impl/application/ocean/demo/media/videopreview). Please note the various platform-specific subfolders which contain the generally required boilerplate code. Build instructions can be found below.
 
 ## Building
 

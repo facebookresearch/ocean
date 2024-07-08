@@ -10,13 +10,13 @@ This section will discuss some examples of important pixel formats and explain t
 
 ## Format: *RGB24*
 
-An image with pixel format [`RGB24`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L312) is composed of one plane and the plane has three channels (for red, green, and blue color values). The image memory is based on elements with data type `uint8_t`, with three elements representing a pixel so that each pixel needs 24 bits in memory. The image width in pixels is identical to the plane width in pixels. The plane width in elements is three times the width in pixels. The plane may contain padding elements at the end of each row which then increases the plane’s stride accordingly.
+An image with pixel format [`RGB24`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L313) is composed of one plane and the plane has three channels (for red, green, and blue color values). The image memory is based on elements with data type `uint8_t`, with three elements representing a pixel so that each pixel needs 24 bits in memory. The image width in pixels is identical to the plane width in pixels. The plane width in elements is three times the width in pixels. The plane may contain padding elements at the end of each row which then increases the plane’s stride accordingly.
 
 <img src={require('@site/static/img/docs/images/Frame_RGB24.png').default} alt="Image: The pixel format FORMAT_RGB24" width="700" className="center-image"/>
 
 ## Format: *Y8*
 
-An image with format [`Y8`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L591) is very similar to `RGB24` but the plane has only one channel. Therefore, the width of the image in pixels is identical to the plane's width in elements.
+An image with format [`Y8`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L592) is very similar to `RGB24` but the plane has only one channel. Therefore, the width of the image in pixels is identical to the plane's width in elements.
 
 <img src={require('@site/static/img/docs/images/Frame_Y8.png').default} alt="Image: The pixel format FORMAT_Y8" width="700" className="center-image"/>
 

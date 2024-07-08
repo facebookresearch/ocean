@@ -8,7 +8,7 @@ import TabItem from '@theme/TabItem';
 
 ## Description
 
-The [External Camera](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/application/ocean/demo/media/externalcamera/quest/ExternalCameraApplication.cpp) app expands the functionality of Meta's Quest headsets by allowing users to connect and access external USB cameras. When the app is launched, it displays a straightforward menu [listing all connected USB cameras](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/application/ocean/demo/media/externalcamera/quest/ExternalCameraApplication.cpp#L293), enabling easy identification and selection of the desired device.
+The [External Camera](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/application/ocean/demo/media/externalcamera/quest/ExternalCameraApplication.cpp#L18) app expands the functionality of Meta's Quest headsets by allowing users to connect and access external USB cameras. When the app is launched, it displays a straightforward menu [listing all connected USB cameras](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/application/ocean/demo/media/externalcamera/quest/ExternalCameraApplication.cpp#L304), enabling easy identification and selection of the desired device.
 
 <img src={require('@site/static/img/docs/demoapps/questapps/externalcamera.jpg').default} alt="Image: Screenshot of the External Camera app" width="600" className="center-image"/>
 

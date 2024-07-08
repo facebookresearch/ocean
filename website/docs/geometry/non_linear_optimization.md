@@ -25,7 +25,7 @@ Additionally, all optimizers support various [robust estimators](https://github.
 
 ### Optimize Camera Pose
 
-* [`NonLinearOptimizationPose::optimizePose()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/geometry/NonLinearOptimizationPose.h#L102): Optimizes a 6-DOF mono camera pose with respect to the projection error between 3D object points and their corresponding 2D image points in the camera.
+* [`NonLinearOptimizationPose::optimizePose()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/geometry/NonLinearOptimizationPose.h#L96): Optimizes a 6-DOF mono camera pose with respect to the projection error between 3D object points and their corresponding 2D image points in the camera.
 
 ```cpp
 #include "ocean/geometry/NonLinearOptimizationPose.h"
@@ -55,9 +55,9 @@ For cases where covariances of point correspondences are known, a [variation](ht
 
 ### Optimize Object Points
 
-* [`NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedPoses()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/geometry/NonLinearOptimizationObjectPoint.h#L152): Determines the precise location of a 3D object point observed in several precisely calibrated cameras.
+* [`NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedPoses()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/geometry/NonLinearOptimizationObjectPoint.h#L151): Determines the precise location of a 3D object point observed in several precisely calibrated cameras.
 
-* [`NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/geometry/NonLinearOptimizationObjectPoint.h#L507): Conducts a full bundle adjustment to simultaneously refine the locations of 3D object points and the poses of multiple observing cameras.
+* [`NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/geometry/NonLinearOptimizationObjectPoint.h#L506): Conducts a full bundle adjustment to simultaneously refine the locations of 3D object points and the poses of multiple observing cameras.
 
 ### Optimize Camera Parameters
 

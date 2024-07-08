@@ -9,7 +9,7 @@ This powerful feature allows developers to write code once and deploy it across 
 
 ## Location and Structure
 
-The media libraries are located within the [ocean/media/...](https://github.com/facebookresearch/ocean/tree/c6994ae2add1b2fb295ffe7bffa5abdb7bd5e486/impl/ocean/media) directory.
+The media libraries are located within the [ocean/media/...](https://github.com/facebookresearch/ocean/tree/v1.0.0/impl/ocean/media) directory.
 This directory contains sub-folders with platform-specific implementations, which are generally abstracted away from the developers.
 Instead, developers interact with Ocean's main media library, which offers platform-independent interfaces that encapsulate any platform-specific code.
 
