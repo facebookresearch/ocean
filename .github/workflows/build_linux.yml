@@ -77,7 +77,7 @@ jobs:
 
       - name: Upload build archive (debug)
         if: success() && matrix.build_config == 'debug'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ocean-build-Debug
           path: ./ocean-build-Debug.tar.gz
@@ -85,7 +85,7 @@ jobs:
 
       - name: Upload build archive (release)
         if: success() && matrix.build_config == 'release'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ocean-build-Release
           path: ./ocean-build-Release.tar.gz

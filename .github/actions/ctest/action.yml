@@ -45,7 +45,7 @@ runs:
 
     - name: Download build artifacts
       id: download-build-artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.build-archive }}
 
