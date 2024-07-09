@@ -37,7 +37,7 @@ In contrast to the CG coordinate system, Computer Vision applications often use 
 - The **z-axis** points away from the observer (the camera points towards the positive z-space)
 
 To accommodate this variation, Ocean introduces the "flipped camera" coordinate system.
-Converting from the standard camera to the flipped camera involves a 180-degree rotation around the z-axis. Below is an illustration for clarity:
+Converting from the standard camera to the flipped camera involves a 180-degree rotation around the x-axis. Below is an illustration for clarity:
 
 <img src={require('@site/static/img/docs/geometry/ocean_coordinatesystem_flippedcamera.jpg').default} alt="Image: Ocean's flipped camera coordinate system" height="600" className="center-image"/>
 
