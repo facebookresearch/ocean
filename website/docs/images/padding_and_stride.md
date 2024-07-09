@@ -8,7 +8,7 @@ import styles from './images.css';
 
 This page outlines how the image class in Ocean is structured, provides a list of best practices, and illustrates some common operations on images using examples.
 
-Each plane can have optional padding memory at the end of each plane row. Planes may use different amounts of padding. The actual memory covered by a plane can be detemined with the following equation
+Each plane can have optional padding memory at the end of each plane row. Planes may use different amounts of padding. The actual memory covered by a plane can be determined with the following equation
 
 ```cpp
 plane_width_in_elements  = plane_width_in_pixels * plane_channels
@@ -25,7 +25,7 @@ Imagine an image with pixel format [`Y32`](https://github.com/facebookresearch/o
 
 <img src={require('@site/static/img/docs/images/Frame_Y32_InvalidPadding.png').default} alt="Image: A plane with 4 bytes per element and padding in bytes which is not a multiple of 4. This can cause apps to crash." width="700" className="center-image"/>
 
-This kind of bug is actually very hard to find as it may not be reproducable. However, this can be easily prevented by defining padding **in elements**, i.e., the padding size in bytes is always and automatically a multiple of the element size (a multiple of 4 in case of `uint32_t` as in the example above).
+This kind of bug is actually very hard to find as it may not be reproducible. However, this can be easily prevented by defining padding **in elements**, i.e., the padding size in bytes is always and automatically a multiple of the element size (a multiple of 4 in case of `uint32_t` as in the example above).
 
 <img src={require('@site/static/img/docs/images/Frame_Y32_ValidPadding.png').default} alt="Image: A plane which defines the padding in elements" width="700" className="center-image"/>
 

@@ -22,7 +22,7 @@ Below, we introduce some of the commonly used functionalities available in our [
         - A Frame-based function is also available [here](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/cv/FrameInterpolatorBilinear.h#L278).
 
 
-## Advanced Trannsformations
+## Advanced Transformations
 
     1. Affine Transformation:
         - [`CV::FrameInterpolatorBilinear::affine8BitPerChannel()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/cv/FrameInterpolatorBilinear.h#L455)

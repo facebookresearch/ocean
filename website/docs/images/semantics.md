@@ -23,19 +23,19 @@ However, when using the copy constructor of `Frame` with explicit copy mode, the
 Frame sourceFrame = ...;
 
 // Using memory, not making a copy, the padding layout is preserved.
-Frame newFrame(sourcFrame, Frame::ACM_USE_KEEP_LAYOUT);
+Frame newFrame(sourceFrame, Frame::ACM_USE_KEEP_LAYOUT);
 
 // Make a copy of the memory,
 // but the new memory will be continuous and the source padding data is not touched
-Frame newFrame(sourcFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+Frame newFrame(sourceFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
 
 // Make a copy of the memory,
 // the new memory will have the same padding layout as the source image,
 // but the actual padding data is not copied
-Frame newFrame(sourcFrame, Frame::ACM_COPY_KEEP_LAYOUT_DO_NOT_COPY_PADDING_DATA);
+Frame newFrame(sourceFrame, Frame::ACM_COPY_KEEP_LAYOUT_DO_NOT_COPY_PADDING_DATA);
 
 // Make a copy of the memory,
 // the new memory will have the same padding layout as the source image,
 // the padding data is copied as well
-Frame newFrame(sourcFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+Frame newFrame(sourceFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 ```

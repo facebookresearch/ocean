@@ -40,6 +40,6 @@ The entire framework consists of thousands of source files which are distributed
   - `application_ocean_demo_...`
 
 - **Test applications:** All test applications begin with `application_ocean_test_`, for example:
-- `application_ocean_test_base` (Test app for the Base library - mainly a wrapper for the corrsponding test library `ocean_test_base`)
+- `application_ocean_test_base` (Test app for the Base library - mainly a wrapper for the corresponding test library `ocean_test_base`)
 - `application_ocean_test_cv` (Test app for the Computer Vision library)
 - `application_ocean_test_...`
