@@ -168,7 +168,6 @@ bool TestHistogram::testCLAHE(const double testDuration)
 
 	// Validation
 	bool validationSuccessful = true;
-	unsigned int totalIterationValidation = 0u;
 
 	for (unsigned int iter = 0u; iter < 2u; ++iter)
 	{
@@ -232,9 +231,8 @@ bool TestHistogram::testCLAHE(const double testDuration)
 					iterValidationSuccessful = false;
 				}
 			}
-
-			totalIterationValidation++;
-		} while (startTimeValidation + testDuration > Timestamp(true));
+		} 
+		while (startTimeValidation + testDuration > Timestamp(true));
 
 		Log::info() << "Validation (" << (imageSizeMultipleOfTiles ? "image size multiple of tiles count" : "image size random") << "): " << (iterValidationSuccessful ? "passed" : "FAILED");
 		Log::info() << "Max. validation error: " << String::toAString(maxMeasuredError, 3u);
