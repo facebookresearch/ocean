@@ -40,9 +40,9 @@ of a line of code (also using single-line comments).
 ```cpp
 void function()
 {
-	// first we determine the number of ...
-	const double value = complexFunction(5, 10, 0.318309886); // 0.3183 = 1 / PI
-	// ...
+    // first we determine the number of ...
+    const double value = complexFunction(5, 10, 0.318309886); // 0.3183 = 1 / PI
+    // ...
 }
 ```
 
@@ -76,28 +76,28 @@ indented in order to improve the readability of the code.
 ```cpp
 void function()
 {
-	int value = 3;
+    int value = 3;
 
 #ifdef _WINDOWS
-	callWindowsFunction(value);
+    callWindowsFunction(value);
 #else
-	callNonWindowsFunction(value);
+    callNonWindowsFunction(value);
 #endif
 }
 
 void function()
 {
-	int value = 3;
+    int value = 3;
 
 #ifdef _WINDOWS
 
-	#ifdef PLATFORM64BIT
-		callWindowsFunction64(value);
-	#else
-		callWindowsFunction32(value);
-	#endif
+    #ifdef PLATFORM64BIT
+        callWindowsFunction64(value);
+    #else
+        callWindowsFunction32(value);
+    #endif
 
-	callWindowsFunction();
+    callWindowsFunction();
 
 #endif
 }
@@ -117,8 +117,8 @@ bool v = result == 9;
 
 if (value[x] == 3)
 {
-	int array[5] = {0, 1, 2, 3, 4};
-	// ...
+    int array[5] = {0, 1, 2, 3, 4};
+    // ...
 }
 
 int b = -5; // Unary operators, no space
@@ -153,9 +153,9 @@ the preference of other developers.
 ```cpp
 if (true)
 {
-	int value = value0 + value1 + value2 + value3 + value4 + value5
-		+ value6 + value7 + value8 + value9 + value10;
-	// ...
+    int value = value0 + value1 + value2 + value3 + value4 + value5
+        + value6 + value7 + value8 + value9 + value10;
+    // ...
 }
 ```
 
@@ -170,19 +170,19 @@ creation of the inequality operator by the compiler using a cast operator.
 ```cpp
 class Classname
 {
-	public:
+    public:
 
-		// ...
-		bool operator==(const Classname& other) const;
-		bool operator!=(const Classname& other) const;
-		// ...
+        // ...
+        bool operator==(const Classname& other) const;
+        bool operator!=(const Classname& other) const;
+        // ...
 };
 
 // ...
 
 bool Classname::operator!=(const Classname& other) const
 {
-	return !(*this == other);
+    return !(*this == other);
 }
 ```
 
@@ -221,12 +221,12 @@ support syntax highlighting for C/C++ keywords.
 ```cpp
 if (true)
 {
-	// the code block
+    // the code block
 }
 
 for (unsigned int n = 0u; n < 10u; n++)
 {
-	// the code block
+    // the code block
 }
 ```
 
@@ -318,7 +318,7 @@ order to avoid accidental confusion with other operators.
 
 ```cpp
 std::string* stringPointer = &stringObject;
-std::string stringObject2 = *stringPoitner;
+std::string stringObject2 = *stringPointer;
 ```
 
 ### Suffices
@@ -376,15 +376,15 @@ responsible developer intentionally didn't add an implementation.
 
 ```cpp
 ExampleClass::ExampleClass(const unsigned int value0, const bool value1) :
-	classMemberValue0(value0),
-	classMemberValue1(value1)
+    classMemberValue0(value0),
+    classMemberValue1(value1)
 {
-	// nothing to do here
+    // nothing to do here
 }
 
 void ExampleClass::virtualFunctionWithoutImplementation()
 {
-	// nothing to do here
+    // nothing to do here
 }
 ```
 
@@ -483,12 +483,12 @@ underscores (`_`).
 ```cpp
 enum ConfigurationParameter
 {
-	/// Undefined configuration.
-	CP_UNDEFINED,
-	/// Fast configuration, with special properties ...
-	CP_FAST,
-	/// Slow configuration, with special properties ...
-	CP_SLOW
+    /// Undefined configuration.
+    CP_UNDEFINED,
+    /// Fast configuration, with special properties ...
+    CP_FAST,
+    /// Slow configuration, with special properties ...
+    CP_SLOW
 };
 ```
 
@@ -540,18 +540,18 @@ ranges of values of its parameters as well as common sources of errors.
 ```cpp
 void mouseMove(const unsigned int x, const unsigned int y)
 {
-	if (x == 0u || y == 0u)
-		return;
+    if (x == 0u || y == 0u)
+        return;
 
-	// ...
+    // ...
 }
 
 void timeCriticalFunction(const unsigned int value)
 {
-	assert(value != 0u);
-	unsigned int intermediate = 128u / value;
+    assert(value != 0u);
+    unsigned int intermediate = 128u / value;
 
-	// ...
+    // ...
 }
 ```
 
@@ -604,47 +604,47 @@ structure of the declaration.
 ```cpp
 class Classname
 {
-	friend class FriendClassname;
+    friend class FriendClassname;
 
-	/// First, the block of defitions (with order: public, protected, private):
+    /// First, the block of definitions (with order: public, protected, private):
 
-	public:
+    public:
 
-		typedef int PublicIntDefinition;
+        typedef int PublicIntDefinition;
 
-	protected:
+    protected:
 
-		typedef int ProtectedIntDefinition;
-
-
-	/// Second, the block of functions (with order: public, protected, private):
-
-	public:
-
-		Classname();
-
-		inline double value() const;
-
-		bool setValue(const double value);
-
-		bool operator==(const Classname& object) const;
-
-		static void staticFunction();
-
-	private:
-
-		void privateFunction();
+        typedef int ProtectedIntDefinition;
 
 
-	/// Third, the block of variables (with order: protected, private):
+    /// Second, the block of functions (with order: public, protected, private):
 
-	protected:
+    public:
 
-		unsigned int protectedMember;
+        Classname();
 
-	private:
+        inline double value() const;
 
-		void* privatePointer;
+        bool setValue(const double value);
+
+        bool operator==(const Classname& object) const;
+
+        static void staticFunction();
+
+    private:
+
+        void privateFunction();
+
+
+    /// Third, the block of variables (with order: protected, private):
+
+    protected:
+
+        unsigned int protectedMember;
+
+    private:
+
+        void* privatePointer;
 };
 ```
 
@@ -672,20 +672,20 @@ In these cases alternative terms should be preferred, e.g. `determine`, `calcula
 ```cpp
 class NotCorrect
 {
-	public:
+    public:
 
-		inline int& getValueA();
-		inline double getValueB() const;
-		float getAverageValue() const;
+        inline int& getValueA();
+        inline double getValueB() const;
+        float getAverageValue() const;
 };
 
 class Correct
 {
-	public:
+    public:
 
-		inline int& valueA();
-		inline double valueB() const;
-		float determineAverageValue() const;
+        inline int& valueA();
+        inline double valueB() const;
+        float determineAverageValue() const;
 };
 ```
 
@@ -700,9 +700,9 @@ explicitly.
 ```cpp
 class Classname : public BaseClassName
 {
-	public:
+    public:
 
-		// ...
+        // ...
 };
 ```
 
@@ -714,11 +714,11 @@ specifier of each base class must be stated explicitly.
 
 ```cpp
 class Classname :
-	public BaseClassName0,
-	protected BaseClassName1,
-	public BaseClassName2
+    public BaseClassName0,
+    protected BaseClassName1,
+    public BaseClassName2
 {
-	// ...
+    // ...
 };
 ```
 
