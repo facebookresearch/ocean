@@ -63,6 +63,9 @@ Frame ImageJpg::decodeImage(const void* buffer, const size_t size)
 	struct ImageJpgErrorManagerStruct errorManager;
 	struct jpeg_decompress_struct decompressStruct = {};
 
+	// we need to create the Frame instance before the setjump() function, otherwise the frame will not be released in case of an error
+	Frame result;
+
 	const ScopedFunctionVoid scopedDestroyDecompressStructFunction(std::bind(&jpeg_destroy_decompress, &decompressStruct));
 
 	// first, we set our own error manager
@@ -126,7 +129,8 @@ Frame ImageJpg::decodeImage(const void* buffer, const size_t size)
 		return Frame();
 	}
 
-	Frame result(frameType);
+	ocean_assert(!result.isValid());
+	result.set(frameType, true /*forceOwner*/, true /*forceWritable*/);
 
 	unsigned int yRow = 0u;
 
