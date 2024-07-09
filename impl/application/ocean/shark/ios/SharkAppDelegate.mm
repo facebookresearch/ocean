@@ -13,7 +13,11 @@
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#include "ocean/devices/ios/IOS.h"
-	#include "ocean/devices/arkit/ARKit.h"
+
+	#ifndef OCEAN_CMAKE_DISABLE_ARKIT
+		#include "ocean/devices/arkit/ARKit.h"
+	#endif
+
 	#include "ocean/devices/pattern/Pattern.h"
 	#include "ocean/devices/slam/SLAM.h"
 
@@ -48,7 +52,9 @@ using namespace Ocean;
 
 	// we load the Pattern, and SLAM tracking plugins
 	Devices::IOS::registerIOSLibrary();
+#ifndef OCEAN_CMAKE_DISABLE_ARKIT
 	Devices::ARKit::registerARKitLibrary();
+#endif
 	Devices::Pattern::registerPatternLibrary();
 	Devices::SLAM::registerSLAMLibrary();
 

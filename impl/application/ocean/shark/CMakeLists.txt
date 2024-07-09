@@ -95,10 +95,12 @@ if (IOS)
         "${CMAKE_SOURCE_DIR}/res/application/ocean/shark/ios/*.xib"
     )
     file(GLOB OCEAN_TARGET_RESOURCES
-        "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.bmp"
-        "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.mtl"
-        "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.obj"
-        "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.ox3dv"
+        "${CMAKE_SOURCE_DIR}/res/application/ocean/shark/ios/scene/*.bmp"
+        "${CMAKE_SOURCE_DIR}/res/application/ocean/shark/ios/scene/*.jpeg"
+        "${CMAKE_SOURCE_DIR}/res/application/ocean/shark/ios/scene/*.mtl"
+        "${CMAKE_SOURCE_DIR}/res/application/ocean/shark/ios/scene/*.obj"
+        "${CMAKE_SOURCE_DIR}/res/application/ocean/shark/ios/scene/*.ox3dv"
+        "${CMAKE_SOURCE_DIR}/res/application/ocean/shark/ios/scene/*.png"
     )
 
     add_executable(${OCEAN_TARGET_NAME}
@@ -124,11 +126,15 @@ if (IOS)
 
     set_xcode_property(${OCEAN_TARGET_NAME} PRODUCT_BUNDLE_IDENTIFIER "com.meta.ocean.app.shark" All)
 
+    target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE ${OCEAN_PREPROCESSOR_FLAGS} "-DOCEAN_CMAKE_DISABLE_ARKIT")
+
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
             ocean_devices
-            ocean_devices_arkit
+            # Disabled because of problems with ocean_devices_arkit_roomplan_swift;
+            # remove OCEAN_CMAKE_DISABLE_ARKIT when enabling this again
+            # ocean_devices_arkit
             ocean_devices_ios
             ocean_devices_pattern
             ocean_devices_slam
