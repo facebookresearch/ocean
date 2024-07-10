@@ -6,7 +6,7 @@
 echo off
 
 @REM Determine the location of the source directory from the location of this script
-set OCEAN_THIRD_PARTY_SOURCE_DIR=%~dp0..\..\build\cmake\third-party
+set OCEAN_THIRD_PARTY_SOURCE_DIR="%~dp0..\..\build\cmake\third-party"
 set DEFAULT_BUILD_PATH=%cd%\ocean_build_thirdparty
 set DEFAULT_INSTALL_PATH=%cd%\ocean_install_thirdparty
 set OCEAN_PLATFORM=windows
@@ -14,7 +14,7 @@ set OCEAN_PLATFORM=windows
 @echo off
 setlocal enableDelayedExpansion
 
-set "options=-install:%DEFAULT_INSTALL_PATH% -build:%DEFAULT_BUILD_PATH% -config:"debug release" -link:"static shared" -archive:NULL -h:"
+set "options=-install:"%DEFAULT_INSTALL_PATH%" -build:"%DEFAULT_BUILD_PATH%" -config:"debug release" -link:"static shared" -archive:NULL -h:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -100,7 +100,7 @@ for %%c in (!-config!) do (
       exit /b
     )
 
-    set BUILD_DIRECTORY=!-build!\!bibase!
+    set BUILD_DIRECTORY="!-build!\!bibase!"
     set INSTALL_DIRECTORY=!-install!\!bibase!
 
     echo BUILD_TYPE           !BUILD_TYPE!

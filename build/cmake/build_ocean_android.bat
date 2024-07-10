@@ -32,7 +32,7 @@ set ANDROID_SDK_VERSION=android-34
 
 setlocal enableDelayedExpansion
 
-set "options=-android_abi:"arm64-v8a" -install:%cd%\ocean_install -build:%cd%\ocean_build -config:"debug release" -link:"static" -third-party:NULL -archive:NULL -h: -sdk:%ANDROID_SDK_VERSION% -quest:"
+set "options=-android_abi:"arm64-v8a" -install:"%cd%\ocean_install" -build:"%cd%\ocean_build" -config:"debug release" -link:"static" -third-party:"%cd%\ocean_install_thirdparty" -archive:NULL -h: -sdk:%ANDROID_SDK_VERSION% -quest:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -140,12 +140,9 @@ for %%a in (!-android_abi!) do (
       set BUILD_DIRECTORY=!-build!\!bibase!
       set INSTALL_DIRECTORY=!-install!\!bibase!
 
-      set TPSPEC=
-      if NOT !-third-party! == NULL (
-          set TPFWD=!-third-party:\=/!
-          set TPDIR=!TPFWD!/!bibase!
-          set TPSPEC=-DCMAKE_PREFIX_PATH="!TPDIR!" -DCMAKE_MODULE_PATH="!TPDIR!" -DCMAKE_FIND_ROOT_PATH="!TPDIR!"
-      )
+      set TPFWD=!-third-party:\=/!
+      set TPDIR=!TPFWD!/!bibase!
+      set TPSPEC=-DCMAKE_PREFIX_PATH="!TPDIR!" -DCMAKE_MODULE_PATH="!TPDIR!" -DCMAKE_FIND_ROOT_PATH="!TPDIR!"
 
       echo BUILD_TYPE           !BUILD_TYPE!
       echo BUILD_SHARED_LIBS    !BUILD_SHARED_LIBS!
@@ -177,9 +174,9 @@ if "%BUILD_FAILURES%" == "" (
 
 :run_build
 cmake -G"Ninja" ^
-      -S %OCEAN_SOURCE_DIR% ^
-      -B !BUILD_DIRECTORY! ^
-      -DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY! ^
+      -S "%OCEAN_SOURCE_DIR%" ^
+      -B "!BUILD_DIRECTORY!" ^
+      "-DCMAKE_INSTALL_PREFIX=!INSTALL_DIRECTORY!" ^
       -DCMAKE_BUILD_TYPE=!BUILD_TYPE! ^
       -DBUILD_SHARED_LIBS=!BUILD_SHARED_LIBS! ^
       -DANDROID_ABI=!ANDROID_ABI! ^
@@ -192,7 +189,7 @@ cmake -G"Ninja" ^
       !TPSPEC! ^
       !ENABLE_QUEST!
 
-cmake --build !BUILD_DIRECTORY! --config !BUILD_TYPE! --target install
+cmake --build "!BUILD_DIRECTORY!" --config !BUILD_TYPE! --target install
 
 @echo off
 if %errorlevel% neq 0 (

@@ -13,7 +13,7 @@ set OCEAN_SOURCE_DIR=%~dp0..\..
 set DEFAULT_BUILD_PATH=%cd%\ocean_build
 set DEFAULT_INSTALL_PATH=%cd%\ocean_install
 
-set "options=-install:%DEFAULT_INSTALL_PATH% -build:%DEFAULT_BUILD_PATH% -config:"debug release" -link:"static shared" -third-party:%cd%\ocean_install_thirdparty -archive:NULL -h:"
+set "options=-install:"%DEFAULT_INSTALL_PATH%" -build:"%DEFAULT_BUILD_PATH%" -config:"debug release" -link:"static shared" -third-party:"%cd%\ocean_install_thirdparty" -archive:NULL -h:"
 
 for %%O in (%options%) do for /f "tokens=1,* delims=:" %%A in ("%%O") do set "%%A=%%~B"
 :loop
@@ -140,8 +140,8 @@ if "%BUILD_FAILURES%" == "" (
 )
 
 :run_build
-cmake -S %OCEAN_SOURCE_DIR% -B %BUILD_DIRECTORY% -DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY% -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% !TPSPEC!
-cmake --build %BUILD_DIRECTORY% --config %BUILD_TYPE% --target install -- /m:16
+cmake -S "%OCEAN_SOURCE_DIR%" -B "%BUILD_DIRECTORY%" "-DCMAKE_INSTALL_PREFIX=%INSTALL_DIRECTORY%" -DCMAKE_CONFIGURATION_TYPES=%BUILD_TYPE% -DBUILD_SHARED_LIBS=%BUILD_SHARED_LIBS% !TPSPEC!
+cmake --build "%BUILD_DIRECTORY%" --config %BUILD_TYPE% --target install -- /m:16
 
 if %errorlevel% neq 0 (
     set BUILD_FAILURES=%BUILD_FAILURES% !bibase!
