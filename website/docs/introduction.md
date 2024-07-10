@@ -6,40 +6,39 @@ description: Introduction to Ocean
 image: ../static/img/ocean-social-card.jpg
 ---
 
-The Ocean framework is a software package composed of several individual (mainly platform independent) libraries with focus on Computer Vision and Computer Graphics, e.g. to develop Augmented Reality applications.
-Ocean comes with a wide variety of functions for optimization problems like 6-DOF camera pose optimization, 3D object point optimization, camera profile optimization or Bundle Adjustment.
+Ocean is a platform-independent framework that supports all major operating systems including iOS,
+Android, Quest, macOS, Windows, and Linux. It is designed to revolutionize the development of
+Computer Vision and Mixed Reality applications.
 
-## Overview
+## Open Source and Accessible
 
-The entire framework consists of thousands of source files which are distributed over hundreds of targets.
+Ocean is licensed under the [MIT license](https://github.com/facebookresearch/ocean/blob/main/LICENSE),
+ensuring that it is completely open-source and accessible to developers. By choosing one of the most
+permissive licenses available, we aim to empower developers to build, innovate, and transform their
+ideas into reality without the constraints of complicated licensing.
 
-- **Libraries:** The targets for all Ocean libraries begin with `ocean_` followed by the name of the library: `ocean_NAME`, for example:
-  - `ocean_base`
-  - `ocean_cv`
-  - `ocean_geometry`
-  - `ocean_media`
-  - `ocean_...`
+## High Performance and Cross-Platform Compatibility
 
-- **Sub-libraries:** Several main libraries come with sub-libraries covering specialized functionalities or platform specific implementations. Sub-libraries have an additional suffix: `ocean_NAME_SUBNAME`, for example:
-  - `ocean_cv_advanced` (Computer Vision library for advanced problems)
-  - `ocean_cv_detector` (Computer Vision library with feature detectors)
-  - `ocean_cv_...`
-  - `ocean_media_avfoundation` (Media library using AVFoundation)
-  - `ocean_media_...`
+At the heart of Ocean lies a core written in C/C++, optimized for performance and efficiency. This
+allows the development of lightweight native applications that can operate smoothly across various
+platforms. Whether you're targeting mobile devices or headsets like Meta's Quest, Ocean provides
+the tools necessary to create compelling and immersive experiences.
 
-- **Test-libraries:** The libraries implementing the tests start with `ocean_test_`, for example:
-  - `ocean_test_base` (Containing all tests for the Base library)
-  - `ocean_test_cv` (The tests for the main Computer Vision library)
-  - `ocean_test_cv_detector` (Tests for the detectors)
-  - `ocean_test_...`
+## Rich Set of Features and Demonstrations
 
-- **Demo applications:** Ocean comes with a large number of demo applications showing how to use Ocean and giving good start points to investigate the code. All demo applications have the same prefix `application_ocean_demo_`. Additionally, applications may have a suffix identifying the platform `_ios`, `_osx`, `_...`, for example:
-  - `application_ocean_demo_media_videopreview_ios` (Simple app for iOS)
-  - `application_ocean_demo_media_videopreview_osx` (Simple app for OSX)
-  - `application_ocean_demo_tracking_featuretracker_ios`
-  - `application_ocean_demo_...`
+Ocean is not just a framework; it's a comprehensive toolkit equipped with numerous demo applications
+that showcase its potential. These demos serve as both a learning tool and a source of inspiration
+for developers. For instance, one of the standout demos illustrates how to integrate an external
+camera, such as a simple webcam, with a Quest device. This enables developers to access live camera
+feeds directly on Meta's headsets, opening up a plethora of possibilities for innovative
+applications. For details, check out our project website:
+https://facebookresearch.github.io/ocean/
 
-- **Test applications:** All test applications begin with `application_ocean_test_`, for example:
-- `application_ocean_test_base` (Test app for the Base library - mainly a wrapper for the corresponding test library `ocean_test_base`)
-- `application_ocean_test_cv` (Test app for the Computer Vision library)
-- `application_ocean_test_...`
+## Get Involved
+
+With the Ocean codebase being readily available on GitHub, we're inviting developers from around the
+world to explore, contribute, and extend its capabilities. Whether you're looking to prototype new
+technologies or develop robust applications, Ocean provides the foundation you need. We believe
+that Ocean will open up new horizons in the fields of Computer Vision and Mixed Reality. By
+providing a powerful, flexible, and accessible tool, we are excited to see what developers will
+create. Dive into Ocean and start building the future today!
