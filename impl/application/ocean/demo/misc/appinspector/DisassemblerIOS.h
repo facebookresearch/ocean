@@ -32,6 +32,7 @@ class DisassemblerIOS : public Disassembler
 		static std::string demangleSymbol(const std::string& mangledSymbol);
 
 	protected:
+
 		/**
 		 * Parses the __cstring section within the TEXT segment of the binary.
 		 * This secton contains read-only data.<br>
@@ -142,7 +143,9 @@ inline bool DisassemblerIOS::isBranchInstruction(const char* token, const size_t
 	ocean_assert(token != nullptr && tokenLength != 0);
 
 	if (token[0] != 'b')
+	{
 		return false;
+	}
 
 	switch (tokenLength)
 	{
@@ -156,11 +159,15 @@ inline bool DisassemblerIOS::isBranchInstruction(const char* token, const size_t
 		{
 			// bl Branch with link.
 			if (token[1] == 'l')
+			{
 				return true;
+			}
 
 			// br Branch to register.
 			if (token[1] == 'r') // **TODO** parse register?
+			{
 				return false;
+			}
 
 			break;
 		}
@@ -169,7 +176,11 @@ inline bool DisassemblerIOS::isBranchInstruction(const char* token, const size_t
 		{
 			// blr Branch with link to register
 			if (token[1] == 'l' && token[2] == 'r') // **TODO** parse register?
+			{
 				return false;
+			}
+
+			break;
 		}
 
 		case 4:
@@ -178,67 +189,99 @@ inline bool DisassemblerIOS::isBranchInstruction(const char* token, const size_t
 			{
 				// b.eq Branch equal
 				if (token[2] == 'e' && token[3] == 'q')
+				{
 					return true;
+				}
 
 				// b.ne Branch not equal
 				if (token[2] == 'n' && token[3] == 'e')
+				{
 					return true;
+				}
 
 				// b.cs Branch carry set
 				if (token[2] == 'c' && token[3] == 's')
+				{
 					return true;
+				}
 
 				// b.cc Branch carry clear
 				if (token[2] == 'c' && token[3] == 'c')
+				{
 					return true;
+				}
 
 				// b.hs Branch higher or same (unsigned comparision)
 				if (token[2] == 'h' && token[3] == 's')
+				{
 					return true;
+				}
 
 				// b.lo Branch lower (unsigned comparision)
 				if (token[2] == 'l' && token[3] == 'o')
+				{
 					return true;
+				}
 
 				// b.mi Branch minus (minus or negative)
 				if (token[2] == 'm' && token[3] == 'i')
+				{
 					return true;
+				}
 
 				// b.pl Branch plus (plus or zero)
 				if (token[2] == 'p' && token[3] == 'l')
+				{
 					return true;
+				}
 
 				// b.vs Branch overflow set
 				if (token[2] == 'v' && token[3] == 's')
+				{
 					return true;
+				}
 
 				// b.vc Branch overflow clear
 				if (token[2] == 'v' && token[3] == 'c')
+				{
 					return true;
+				}
 
 				// b.hi Branch higher (unsigned)
 				if (token[2] == 'h' && token[3] == 'i')
+				{
 					return true;
+				}
 
 				// b.ls Branch lower or same (unsigned comparision)
 				if (token[2] == 'l' && token[3] == 's')
+				{
 					return true;
+				}
 
 				// b.ge Branch greater or equal (signed comparision)
 				if (token[2] == 'g' && token[3] == 'e')
+				{
 					return true;
+				}
 
 				// b.lt Branch lesser than
 				if (token[2] == 'l' && token[3] == 't')
+				{
 					return true;
+				}
 
 				// b.gt Branch greater than
 				if (token[2] == 'g' && token[3] == 't')
+				{
 					return true;
+				}
 
 				// b.le Branch lesser or equal
 				if (token[2] == 'l' && token[3] == 'e')
+				{
 					return true;
+				}
 			}
 
 			break;
@@ -246,25 +289,39 @@ inline bool DisassemblerIOS::isBranchInstruction(const char* token, const size_t
 	}
 
 	if (std::string(token, tokenLength) == "bit.16b") // **TODO**
+	{
 		return false;
+	}
 
 	if (std::string(token, tokenLength) == "bfi") // **TODO**
+	{
 		return false;
+	}
 
 	if (std::string(token, tokenLength).find("bic") == 0) // **TODO**
+	{
 		return false;
+	}
 
 	if (std::string(token, tokenLength) == "bfxil") // **TODO**
+	{
 		return false;
+	}
 
 	if (std::string(token, tokenLength) == "bsl.8b") // **TODO**
+	{
 		return false;
+	}
 
 	if (std::string(token, tokenLength) == "bsl.16b") // **TODO**
+	{
 		return false;
+	}
 
 	if (std::string(token, tokenLength) == "brk") // **TODO**
+	{
 		return false;
+	}
 
 	ocean_assert(false && "**TODO** Missing check?");
 	return false;
@@ -277,12 +334,16 @@ inline bool DisassemblerIOS::isAddressInstruction(const char* token, const size_
 	switch (tokenLength)
 	{
 		case 3:
+		{
 			// adr: Load a program-relative or register-relative address into a register
 			return token[0] == 'a' && token[1] == 'd' && token[2] == 'r';
+		}
 
 		case 4:
+		{
 			// adrl: Load a program-relative or register-relative address into a register with wide range (long edition)
 			return token[0] == 'a' && token[1] == 'd' && token[2] == 'r' && token[3] == 'l';
+		}
 
 		default:
 			return false;
