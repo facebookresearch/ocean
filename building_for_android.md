@@ -131,7 +131,7 @@ lines and change them as required.
 ndk { abiFilters.addAll(listOf("arm64-v8a")) }
 ```
 
-To build the APK, run "gradlew" from the directory in the manner examplified below.
+To build the APK, run "gradlew" from the directory in the manner examplified below. Gradle will build the components of Ocean needed by the application being built in a temporary build directory. When building on Windows, for path length reasons, it should be placed close to the root of a filesystem. The default location on Windows is C:\tmp\ocean\gradle, on other build platforms the default build location is /tmp/ocean/gradle. This default can be overridden by either setting the environment variable OCEAN_GRADLE_BUILD_PATH or giving gradle the command line option -PoceanGradleBuildPath=${GRADLE_BUILD_PATH}.
 
 ```
 # Adjust this to your location of the third-party libraries

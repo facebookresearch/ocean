@@ -110,6 +110,7 @@ android {
         arguments += "-DBUILD_SHARED_LIBS=OFF"
         arguments +=
             "-DOCEAN_THIRD_PARTY_ROOT_FROM_GRADLE=${project.properties["oceanThirdPartyPath"]}"
+        arguments += "-B${project.properties["oceanGradleBuildPath"]}"
         targets += "application_ocean_demo_cv_detector_messengercode_android_native"
       }
     }

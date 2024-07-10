@@ -120,6 +120,7 @@ android {
         arguments += "-DBUILD_SHARED_LIBS=OFF"
         arguments +=
             "-DOCEAN_THIRD_PARTY_ROOT_FROM_GRADLE=${project.properties["oceanThirdPartyPath"]}"
+        arguments += "-B${project.properties["oceanGradleBuildPath"]}"
         targets += "application_ocean_demo_tracking_featuretracker_android_native"
       }
     }

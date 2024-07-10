@@ -114,6 +114,7 @@ android {
         arguments += "-DOCEAN_ENABLE_QUEST=TRUE"
         arguments +=
             "-DOCEAN_THIRD_PARTY_ROOT_FROM_GRADLE=${project.properties["oceanThirdPartyPath"]}"
+        arguments += "-B${project.properties["oceanGradleBuildPath"]}"
         targets += "application_ocean_demo_media_externalcamera_quest_native"
       }
     }

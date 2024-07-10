@@ -30,3 +30,21 @@ if (!file(project.properties["oceanThirdPartyPath"]).exists()) {
   throw GradleException(
       "Path specified for parameter 'oceanThirdPartyPath' does not exist:  '${project.properties["oceanThirdPartyPath"]}'")
 }
+
+if (!project.hasProperty("oceanGradleBuildPath")) {
+  println(
+      "oceanGradleBuildPath not specified, checking for environment variable OCEAN_GRADLE_BUILD_PATH...")
+  var defaultPath = System.getenv("OCEAN_GRADLE_BUILD_PATH")
+  if (defaultPath != null && !defaultPath.isEmpty()) {
+    println("Using OCEAN_GRADLE_BUILD_PATH environment variable: ${defaultPath}")
+  } else {
+    var osName = System.getProperty("os.name").toLowerCase()
+    if (osName.contains("win")) {
+      defaultPath = "C:\\tmp\\ocean\\gradle"
+    } else {
+      defaultPath = "/tmp/ocean/gradle"
+    }
+    println("Environment variable not found. Using fallback path: ${defaultPath}")
+  }
+  project.ext["oceanGradleBuildPath"] = defaultPath
+}
