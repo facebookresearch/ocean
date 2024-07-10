@@ -1,6 +1,6 @@
 ---
 title: Media
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 Ocean's media system is a cornerstone feature, providing developers with a unified and platform-independent interface to access a wide range of media types.

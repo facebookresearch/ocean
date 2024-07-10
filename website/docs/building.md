@@ -1,6 +1,6 @@
 ---
 title: Building
-sidebar_position: 2
+sidebar_position: 3
 
 description: Building Ocean
 image: ../static/img/ocean-social-card.jpg
