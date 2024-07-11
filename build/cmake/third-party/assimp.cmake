@@ -32,7 +32,7 @@ endif()
 CPMAddPackage(
   NAME           assimp
   GIT_REPOSITORY https://github.com/assimp/assimp.git
-  GIT_TAG        v5.4.0
+  GIT_TAG        v5.4.2
   PATCH_COMMAND  ${GIT_EXECUTABLE} apply --ignore-whitespace "${CMAKE_CURRENT_SOURCE_DIR}/assimp/assimp.patch"
 )
 
