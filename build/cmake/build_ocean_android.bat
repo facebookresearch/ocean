@@ -45,6 +45,10 @@ if not "%~1"=="" (
       set "%~1=1"
   ) else (
       setlocal disableDelayedExpansion
+      if "%~2"=="" (
+        echo [91mRequired argument for %~1 missing[0m 1>&2
+        exit /b 99
+      )
       set "val=%~2"
       call :escapeVal
       setlocal enableDelayedExpansion
