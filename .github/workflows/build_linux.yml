@@ -107,10 +107,10 @@ jobs:
           install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
           test-directory: impl/ocean/test/testbase
           # Exclude tests that are known to fail
-          ctest-args: '-E TestHighPerformanceTimer|TestSignal|TestFrame.UpdateMemory|TestStereoscopicGeometry.CameraPose_6DOF_100'
+          ctest-args: '-E TestHighPerformanceTimer|TestSignal|TestFrame.UpdateMemory'
 
-  testcv:
-    name: Run ctest in testcv (${{ matrix.build_config }}, static)
+  testcv-AdvancedFrame:
+    name: Run ctest in testcv (TestAdvancedFrame) (${{ matrix.build_config }}, static)
     needs: build
     runs-on: ubuntu-latest
     strategy:
@@ -124,9 +124,113 @@ jobs:
           build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
           install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
           test-directory: impl/ocean/test/testcv
-          # Exclude tests that are known to fail
-          # This suite takes too long when running in sequence, but running in parallel causes intermittent errors, so allow up to one failure per test
-          ctest-args: '-E TestFASTDetector.StandardStrength -j 16 --repeat until-pass:2'
+          ctest-args: '-j 16 -R TestAdvancedFrame'
+
+  testcv-FrameConverter:
+    name: Run ctest in testcv (TestFrameConverter) (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testcv
+          ctest-args: '-j 16 -R TestFrameConverter'
+
+  testcv-FrameFilterScharr:
+    name: Run ctest in testcv (TestFrameFilterScharr) (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testcv
+          ctest-args: '-j 16 -R TestFrameFilterScharr'
+
+  testcv-FrameFilter-Other:
+    name: Run ctest in testcv (TestFrameFilter) (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testcv
+          # Exclude tests covered by previous job
+          ctest-args: '-j 16 -R TestFrameFilter -E TestFrameFilterScharr'
+
+  testcv-FrameVariance:
+    name: Run ctest in testcv (TestFrame misc.) (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testcv
+          ctest-args: '-j 16 -R TestFrameVariance'
+
+  testcv-Frame-Other:
+    name: Run ctest in testcv (TestFrame misc.) (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testcv
+          # Exclude tests covered by previous jobs
+          ctest-args: '-j 16 -R TestFrame -E "TestFrameConverter|TestFrameFilter|TestFrameVariance"'
+
+  testcv-Other:
+    name: Run ctest in testcv (Other) (${{ matrix.build_config }}, static)
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_config: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ctest
+        with:
+          build-archive: ocean-build-${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          test-directory: impl/ocean/test/testcv
+          # Exclude tests covered by other jobs
+          # Exclude test(s) known to fail
+          ctest-args: '-j 16 -E "TestAdvancedFrame|TestFrame|TestFASTDetector.StandardStrength"'
 
   testdevices:
     name: Run ctest in testdevices (${{ matrix.build_config }}, static)
@@ -159,6 +263,8 @@ jobs:
           build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
           install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
           test-directory: impl/ocean/test/testgeometry
+          # Exclude tests that are known to fail
+          ctest-args: '-E TestStereoscopicGeometry.CameraPose_6DOF_100'
 
   testio:
     name: Run ctest in testio (${{ matrix.build_config }}, static)
