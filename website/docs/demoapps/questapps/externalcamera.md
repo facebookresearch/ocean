@@ -97,6 +97,7 @@ This list represents a random sample of webcams available on the market and is *
 The webcams support at least one of the required stream types: Uncompressed ([FORMAT_YUYV16](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/base/Frame.h#L560C4-L560C17) aka YUV2), Motion JPEG, or Frame-based (H.264).
 
   - Ailipu, HD USB Camera
+  - Ailipu/ELP, 3D USB Camera (ELP-USB960P2CAM-V90)
   - Anker, PowerConf C200
   - DSA, Groov-e USB Camera
   - Logitech, BRIO 301

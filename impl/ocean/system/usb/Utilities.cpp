@@ -106,7 +106,8 @@ const Utilities::VendorMap& Utilities::vendorMap()
 			{
 				"Ailipu Technology Co., Ltd.",
 				{
-					{0x9230, {"HD USB Camera", DC_CAMERA}}
+					{0x9230, {"HD USB Camera", DC_CAMERA}},
+					{0x9750, {"3D USB Camera", DC_CAMERA}} // ELP-USB960P2CAM-V90
 				}
 			}
 		},
