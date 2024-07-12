@@ -107,7 +107,7 @@ jobs:
           install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
           test-directory: impl/ocean/test/testbase
           # Exclude tests that are known to fail
-          ctest-args: '-E TestHighPerformanceTimer|TestSignal|TestFrame.UpdateMemory'
+          ctest-args: '-E TestHighPerformanceTimer|TestSignal'
 
   testcv-AdvancedFrame:
     name: Run ctest in testcv (TestAdvancedFrame) (${{ matrix.build_config }}, static)
