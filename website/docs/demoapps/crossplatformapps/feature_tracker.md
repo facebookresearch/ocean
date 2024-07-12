@@ -16,7 +16,7 @@ The Feature Tracker demo application showcases Ocean's capabilities in tracking 
 
 The renowned SIFT image features are used to extract salient points on the tracking pattern (the image). The tracker detects and tracks these points reliably. The area of the tracking pattern is marked by a virtual bounding box that is aligned with the printout. Note the small coordinate system in one corner of the visualization. The red, green, and blue axes represent the `x`, `y`, and `z` axes, respectively. The performance of the tracker is displayed in the upper left corner, measured in milliseconds.
 
-To try this you'll need to print or display the pattern image used above. A copy of it can be found [here](https://github.com/facebookresearch/ocean/blob/v1.0.0/res/application/ocean/demo/tracking/featuretracker/tropical-island-with-toucans_800x800.jpg).
+To try this demo you'll need to print or display the pattern image used above. A copy of it can be found [here](https://github.com/facebookresearch/ocean/blob/v1.0.0/res/application/ocean/demo/tracking/featuretracker/tropical-island-with-toucans_800x800.jpg).
 
 ## Building
 
