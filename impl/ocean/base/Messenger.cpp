@@ -82,8 +82,8 @@ void Messenger::push(const MessageType type, std::string&& location, std::string
 			break;
 	}
 
-	// we can stop here if the output type is none of the remaining output types
-	if ((outputType_ | (~OUTPUT_QUEUED)) != 0)
+	// we can skip the following case in case the output type is only set to queued (or discarded)
+	if ((outputType_ & (~OUTPUT_QUEUED)) != 0)
 	{
 		std::string augmentedMessage;
 
