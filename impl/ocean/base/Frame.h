@@ -2459,8 +2459,9 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		bool updateMemory(const T* data, const unsigned int planeIndex = 0u);
 
 		/**
-		 * Updates the memory pointer for a specific plane of the frame to a new writable memory location.
-		 * This function should only be used if the specified plane does not own its memory to ensure that the frame's ownership behavior remains consistent.
+		 * Updates the memory pointer for a specific plane of the frame to a new read-only or writable memory location.
+		 * This function should only be used if the specified plane currently does not own its memory to ensure that the frame's ownership behavior remains consistent.
+		 * For read-only memory, provide a const memory pointer; For writable memory, provide a non-const pointer.
 		 * @param data The new writable memory pointer to be set, must be valid
 		 * @param planeIndex The index of the frame's plane for which the memory will be updated, with range [0, numberPlanes())
 		 * @return True, if succeeded; False, if e.g., the plane to update owned the memory
@@ -2468,16 +2469,6 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		 */
 		template <typename T>
 		bool updateMemory(T* data, const unsigned int planeIndex = 0u);
-
-		/**
-		 * Updates the memory pointers for all or some of the planes of the frame to new read-only memory locations.
- 		 * This function should be used only when the planes do not own their memory, to maintain consistent ownership behavior across the frame.
-		 * @param planeDatas The new read-only memory pointers to be set, the number of pointers provided should be at least one and at most equal to numberPlanes().
-		 * @return True, if succeeded; False, if e.g., a plane to update owned the memory
-		 * @see isPlaneOwner().
-		 */
-		template <typename T>
-		bool updateMemory(const std::initializer_list<const T*>& planeDatas);
 
 		/**
 		 * Updates the memory pointers for all or some of the planes of the frame to new writable memory locations.
@@ -3830,28 +3821,6 @@ bool Frame::updateMemory(T* data, const unsigned int planeIndex)
 	}
 
 	return false;
-}
-
-template <typename T>
-bool Frame::updateMemory(const std::initializer_list<const T*>& planeDatas)
-{
-	ocean_assert(planeDatas.size() != 0);
-	ocean_assert(planeDatas.size() <= planes_.size());
-
-	if (planeDatas.size() == 0 || planeDatas.size() > planes_.size())
-	{
-		return false;
-	}
-
-	for (unsigned int planeIndex = 0u; planeIndex < planeDatas.size(); ++planeIndex)
-	{
-		if (!updateMemory(planeDatas.begin()[planeIndex], planeIndex))
-		{
-			return false;
-		}
-	}
-
-	return true;
 }
 
 template <typename T>
