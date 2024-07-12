@@ -1,6 +1,6 @@
 diff --git a/cmake-modules/FindZLIB.cmake b/cmake-modules/FindZLIB.cmake
 deleted file mode 100644
-index 95eb515..0000000
+index 95eb5154..00000000
 --- a/cmake-modules/FindZLIB.cmake
 +++ /dev/null
 @@ -1,48 +0,0 @@
@@ -53,10 +53,28 @@ index 95eb515..0000000
 -findpkg_finish(ZLIB)
 -
 diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
-index 0a7be62..e64c241 100644
+index f4c29367..5c279c6d 100644
 --- a/code/CMakeLists.txt
 +++ b/code/CMakeLists.txt
-@@ -1355,8 +1355,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "WindowsStore")
+@@ -1218,7 +1218,7 @@ IF (ASSIMP_WARNINGS_AS_ERRORS)
+   IF (MSVC)
+ 
+     IF(CMAKE_CXX_COMPILER_ID MATCHES "Clang" ) # clang-cl
+-      TARGET_COMPILE_OPTIONS(assimp PRIVATE -Wall -Werror
++      TARGET_COMPILE_OPTIONS(assimp PRIVATE -Wall
+         -Wno-microsoft-enum-value
+         -Wno-switch-enum
+         -Wno-covered-switch-default
+@@ -1271,7 +1271,7 @@ IF (ASSIMP_WARNINGS_AS_ERRORS)
+       TARGET_COMPILE_OPTIONS(assimp PRIVATE /W4 /WX)
+     ENDIF()
+   ELSE()
+-    TARGET_COMPILE_OPTIONS(assimp PRIVATE -Wall -Werror)
++    TARGET_COMPILE_OPTIONS(assimp PRIVATE -Wall)
+   ENDIF()
+ ENDIF()
+ 
+@@ -1371,8 +1371,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "WindowsStore")
  endif()
  
  SET_TARGET_PROPERTIES( assimp PROPERTIES
@@ -66,4 +84,56 @@ index 0a7be62..e64c241 100644
 +#  SOVERSION ${ASSIMP_SOVERSION} # use full version
    OUTPUT_NAME assimp${LIBRARY_SUFFIX}
  )
+ 
+diff --git a/contrib/zip/CMakeLists.txt b/contrib/zip/CMakeLists.txt
+index 8f10e0c1..a69bf545 100644
+--- a/contrib/zip/CMakeLists.txt
++++ b/contrib/zip/CMakeLists.txt
+@@ -69,7 +69,7 @@ if (MSVC)
+ elseif ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU" OR
+         "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang" OR
+         "${CMAKE_C_COMPILER_ID}" STREQUAL "AppleClang")
+-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Werror -pedantic")
++  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -pedantic")
+ endif (MSVC)
+ 
+ ####
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index a59cafbb..e2bfdb88 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -274,7 +274,7 @@ IF (ASSIMP_WARNINGS_AS_ERRORS)
+   IF (MSVC)
+     TARGET_COMPILE_OPTIONS(unit PRIVATE /W4 /WX)
+   ELSE()
+-    TARGET_COMPILE_OPTIONS(unit PRIVATE -Wall -Werror)
++    TARGET_COMPILE_OPTIONS(unit PRIVATE -Wall)
+   ENDIF()
+ ENDIF()
+ 
+diff --git a/tools/assimp_cmd/CMakeLists.txt b/tools/assimp_cmd/CMakeLists.txt
+index 2f448672..27d92907 100644
+--- a/tools/assimp_cmd/CMakeLists.txt
++++ b/tools/assimp_cmd/CMakeLists.txt
+@@ -64,7 +64,7 @@ IF (ASSIMP_WARNINGS_AS_ERRORS)
+   IF (MSVC)
+     TARGET_COMPILE_OPTIONS(assimp_cmd PRIVATE /W4 /WX)
+   ELSE()
+-    TARGET_COMPILE_OPTIONS(assimp_cmd PRIVATE -Wall -Werror)
++    TARGET_COMPILE_OPTIONS(assimp_cmd PRIVATE -Wall)
+   ENDIF()
+ ENDIF()
+ 
+diff --git a/tools/assimp_view/CMakeLists.txt b/tools/assimp_view/CMakeLists.txt
+index e8c354fc..220eaec9 100644
+--- a/tools/assimp_view/CMakeLists.txt
++++ b/tools/assimp_view/CMakeLists.txt
+@@ -99,7 +99,7 @@ IF (ASSIMP_WARNINGS_AS_ERRORS)
+   IF (MSVC)
+     TARGET_COMPILE_OPTIONS(assimp_viewer PRIVATE /W4 /WX)
+   ELSE()
+-    TARGET_COMPILE_OPTIONS(assimp_viewer PRIVATE -Wall -Werror)
++    TARGET_COMPILE_OPTIONS(assimp_viewer PRIVATE -Wall)
+   ENDIF()
+ ENDIF()
  
