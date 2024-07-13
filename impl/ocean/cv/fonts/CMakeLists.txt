@@ -10,7 +10,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
     set(OCEAN_TARGET_NAME "ocean_cv_fonts")
 
     find_package(Freetype REQUIRED)
-    find_package(HarfBuzz REQUIRED)
+#    find_package(HarfBuzz REQUIRED)
     find_package(PNG REQUIRED)
 
     # Source files
@@ -38,11 +38,11 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_io
             ocean_math
             Freetype::Freetype
-            ${HarfBuzz_LIBRARY}
+#            ${HarfBuzz_LIBRARY}
             PNG::PNG
     )
 
-    target_include_directories(${OCEAN_TARGET_NAME} PRIVATE ${HarfBuzz_INCLUDE_DIRS})
+#    target_include_directories(${OCEAN_TARGET_NAME} PRIVATE ${HarfBuzz_INCLUDE_DIRS})
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}

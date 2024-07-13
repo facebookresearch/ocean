@@ -7,7 +7,7 @@ giflib
 openxr
 tinyxml2
 protozero
-harfbuzz
+#harfbuzz
 mbedtls
 libpng
 libtiff
