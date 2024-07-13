@@ -20,7 +20,7 @@ const features = [
     description: (
       <>
         Image Processing<div/>
-        Photogrametry & Computer Vision algorithms<div/>
+        Photogrammetry & Computer Vision algorithms<div/>
 		    Visualization & Rendering<div/>
       </>
     ),
