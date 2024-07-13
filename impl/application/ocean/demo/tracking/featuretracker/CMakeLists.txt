@@ -243,6 +243,7 @@ if (IOS)
     file(GLOB OCEAN_TARGET_STORYBOARDS "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/ios/*.xib")
     file(GLOB OCEAN_TARGET_IMAGE_RESOURCES
         "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.bmp"
+        "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.jpg"
         "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.obj"
         "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.png"
         "${CMAKE_SOURCE_DIR}/res/application/ocean/demo/tracking/featuretracker/*.txt"
