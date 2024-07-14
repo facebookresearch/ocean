@@ -99,6 +99,7 @@ The webcams support at least one of the required stream types: Uncompressed ([FO
   - Ailipu, HD USB Camera
   - Ailipu/ELP, 3D USB Camera (ELP-USB960P2CAM-V90)
   - Anker, PowerConf C200
+  - Anker, PowerConf C302
   - DSA, Groov-e USB Camera
   - Logitech, BRIO 301
   - Logitech, C270 HD WEBCAM

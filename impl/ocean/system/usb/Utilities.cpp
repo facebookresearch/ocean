@@ -87,6 +87,7 @@ const Utilities::VendorMap& Utilities::vendorMap()
 				"Anker Innovations Limited",
 				{
 					{0x3369, {"Anker PowerConf C200", DC_CAMERA}},
+					{0x3362, {"Anker PowerConf C302", DC_CAMERA}}
 				}
 			}
 		},
