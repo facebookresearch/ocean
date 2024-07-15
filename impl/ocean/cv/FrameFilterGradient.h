@@ -266,8 +266,8 @@ template <typename T, typename TIntegral, bool tAbsoluteGradient>
 void FrameFilterGradient::filterVertical2x1LinedIntegralImage(const T* source, const unsigned int width, const unsigned int height, TIntegral* integral, const unsigned int sourcePaddingElements, const unsigned int integralPaddingElements)
 {
 	ocean_assert(source != nullptr);
-	ocean_assert(width >= 2u);
-	ocean_assert(height >= 1u);
+	ocean_assert(width >= 1u);
+	ocean_assert(height >= 2u);
 	ocean_assert(integral != nullptr);
 
 	const unsigned int sourceStrideElements = width + sourcePaddingElements;

@@ -733,8 +733,8 @@ bool TestFrameFilterGradient::testFilterVertical2x1LinedIntegralImage(const doub
 
 	do
 	{
-		const unsigned int sourceWidth = RandomI::random(randomGenerator, 2u, 1920u);
-		const unsigned int sourceHeight = RandomI::random(randomGenerator, 1u, 1080u);
+		const unsigned int sourceWidth = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int sourceHeight = RandomI::random(randomGenerator, 2u, 1080u);
 		const unsigned int sourcePaddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 0u, 1u);
 
 		Frame sourceFrame(FrameType(sourceWidth, sourceHeight, FrameType::genericPixelFormat<T, 1u>(), FrameType::ORIGIN_UPPER_LEFT), sourcePaddingElements);
