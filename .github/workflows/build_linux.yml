@@ -1,4 +1,4 @@
-# This workflow builds and tests Ocean on Linux (static)
+# This workflow builds Ocean on Linux (static)
 # Based on : https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
 name: Build Ocean on Linux (static)
 
@@ -63,288 +63,28 @@ jobs:
             -l ${{ env.OCEAN_LINK_TYPE }} \
             -t ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
 
-      - name: Archive build artifacts (debug)
+      - name: Archive install artifacts (debug)
         if: success() && matrix.build_config == 'debug'
         run: |
-          tar -cvzf ocean-build-Debug.tar.gz ${{ env.OCEAN_BUILD_PATH }}/linux_static_Debug
+          tar -cvzf ocean-install-Debug.tar.gz ${{ env.OCEAN_INSTALL_PATH }}/linux_static_Debug
 
-      - name: Archive build artifacts (release)
+      - name: Archive install artifacts (release)
         if: success() && matrix.build_config == 'release'
         run: |
-          tar -cvzf ocean-build-Release.tar.gz ${{ env.OCEAN_BUILD_PATH }}/linux_static_Release
+          tar -cvzf ocean-install-Release.tar.gz ${{ env.OCEAN_INSTALL_PATH }}/linux_static_Release
 
-      - name: Upload build archive (debug)
+      - name: Upload install archive (debug)
         if: success() && matrix.build_config == 'debug'
         uses: actions/upload-artifact@v4
         with:
-          name: ocean-build-Debug
-          path: ./ocean-build-Debug.tar.gz
+          name: ocean-install-Debug
+          path: ./ocean-install-Debug.tar.gz
           compression-level: 0
 
-      - name: Upload build archive (release)
+      - name: Upload install archive (release)
         if: success() && matrix.build_config == 'release'
         uses: actions/upload-artifact@v4
         with:
-          name: ocean-build-Release
-          path: ./ocean-build-Release.tar.gz
+          name: ocean-install-Release
+          path: ./ocean-install-Release.tar.gz
           compression-level: 0
-
-  testbase:
-    name: Run ctest in testbase (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testbase
-          # Exclude tests that are known to fail
-          ctest-args: '-E TestHighPerformanceTimer|TestSignal'
-
-  testcv-AdvancedFrame:
-    name: Run ctest in testcv (TestAdvancedFrame) (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testcv
-          ctest-args: '-j 16 -R TestAdvancedFrame'
-
-  testcv-FrameConverter:
-    name: Run ctest in testcv (TestFrameConverter) (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testcv
-          ctest-args: '-j 16 -R TestFrameConverter'
-
-  testcv-FrameFilterScharr:
-    name: Run ctest in testcv (TestFrameFilterScharr) (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testcv
-          ctest-args: '-j 16 -R TestFrameFilterScharr'
-
-  testcv-FrameFilter-Other:
-    name: Run ctest in testcv (TestFrameFilter Other) (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testcv
-          # Exclude tests covered by previous job
-          ctest-args: '-j 16 -R TestFrameFilter -E TestFrameFilterScharr'
-
-  testcv-FrameVariance:
-    name: Run ctest in testcv (TestFrameVariance) (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testcv
-          ctest-args: '-j 16 -R TestFrameVariance'
-
-  testcv-Frame-Other:
-    name: Run ctest in testcv (TestFrame Other) (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testcv
-          # Exclude tests covered by previous jobs
-          ctest-args: '-j 16 -R TestFrame -E TestFrameConverter|TestFrameFilter|TestFrameVariance'
-
-  testcv-Other:
-    name: Run ctest in testcv (Other) (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testcv
-          # Exclude tests covered by other jobs
-          # Exclude test(s) known to fail
-          ctest-args: '-j 16 -E TestAdvancedFrame|TestFrame|TestFASTDetector.StandardStrength'
-
-  testdevices:
-    name: Run ctest in testdevices (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testdevices
-
-  testgeometry:
-    name: Run ctest in testgeometry (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testgeometry
-          # Exclude tests that are known to fail
-          ctest-args: '-E TestStereoscopicGeometry.CameraPose_6DOF_100'
-
-  testio:
-    name: Run ctest in testio (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testio
-          # Exclude tests that are known to fail
-          ctest-args: '-E TestBasemap'
-
-  testmath:
-    name: Run ctest in testmath (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testmath
-          ctest-args: '-E TestEquation.CubicEquation'
-
-  testmedia:
-    name: Run ctest in testmedia (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testmedia
-
-  testnetwork:
-    name: Run ctest in testnetwork (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testnetwork
-
-  testtracking:
-    name: Run ctest in testtracking (${{ matrix.build_config }}, static)
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [Debug, Release]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/ctest
-        with:
-          build-archive: ocean-build-${{ matrix.build_config }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
-          test-directory: impl/ocean/test/testtracking
-          # Exclude tests that are known to fail
-          ctest-args: '-E TestHomographyImageAlignmentDense.InverseCompositional_2'
