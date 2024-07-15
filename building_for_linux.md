@@ -15,7 +15,7 @@ This document describes the process to build Ocean on Linux.
       xz-devel
 
   # Ubuntu
-  sudo apt-get install libx11-dev libudev-dev liblzma-dev libgl1-mesa-dev
+  sudo apt-get install libx11-dev libudev-dev liblzma-dev libgl1-mesa-dev libxcb-glx0-dev
   ```
 
 ## 2 Building the third-party libraries
