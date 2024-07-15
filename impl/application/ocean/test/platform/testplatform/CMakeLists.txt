@@ -57,6 +57,9 @@ if (IOS)
         "${CMAKE_CURRENT_LIST_DIR}/ios/*.mm"
     )
 
+    # Exclude files that are intended for the Desktop version of this application.
+    list(REMOVE_ITEM OCEAN_TARGET_SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestPlatform.cpp")
+
     file(GLOB OCEAN_TARGET_STORYBOARDS "${CMAKE_SOURCE_DIR}/res/application/ocean/test/platform/testplatform/ios/*.storyboard")
 
     add_executable(${OCEAN_TARGET_NAME}
