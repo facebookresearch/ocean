@@ -18,6 +18,7 @@ set(lzma OFF)
 set(jbig OFF)
 set(webp OFF)
 set(zstd OFF)
+set(lerc OFF)
 
 find_package(Git REQUIRED)
 

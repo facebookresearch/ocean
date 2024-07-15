@@ -172,7 +172,8 @@ call %OCEAN_THIRD_PARTY_SOURCE_DIR%\build_deps.bat android %OCEAN_THIRD_PARTY_SO
         "-DCMAKE_ANDROID_NDK=%ANDROID_NDK%" ^
         "-DCMAKE_SYSTEM_NAME=Android" ^
         "-DCMAKE_TOOLCHAIN_FILE=%ANDROID_NDK%\build\cmake\android.toolchain.cmake" ^
-        "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=%~dp0\FindNinjaAndroidSDK.cmake"
+        "-DCMAKE_PROJECT_TOP_LEVEL_INCLUDES=%~dp0\FindNinjaAndroidSDK.cmake" ^
+        "-DCMAKE_FIND_ROOT_PATH=!INSTALL_DIRECTORY!"
 
 @echo off
 if %errorlevel% neq 0 (

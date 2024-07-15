@@ -114,7 +114,7 @@ function run_build {
     eval "${OTP_SOURCE_DIR}/build_deps.sh" ${OCEAN_PLATFORM} "${OTP_SOURCE_DIR}" "${BUILD_DIR}" -j16 \
           "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}" \
           "-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}" \
-          "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}"
+          "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}" "-DCMAKE_FIND_ROOT_PATH=${INSTALL_DIR}"
     if [ "$?" != 0 ]; then
         OTP_FAILED_BUILDS+=("${LINKING_TYPE} + ${BUILD_CONFIG}")
     fi

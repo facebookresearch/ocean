@@ -157,7 +157,8 @@ function run_build {
         \"-DDEPLOYMENT_TARGET=15\" \
         \"-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}\" \
         \"-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}\" \
-        \"-DCMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER:STRING=org.ocean.thirdparty\""
+        \"-DCMAKE_XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER:STRING=org.ocean.thirdparty\" \
+        \"-DCMAKE_FIND_ROOT_PATH=${INSTALL_DIR}\""
 
     eval "${BUILD_COMMAND}"
     if [ "$?" != 0 ]; then

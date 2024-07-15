@@ -125,7 +125,8 @@ function run_build {
         echo " "
 
         CMAKE_CONFIGURE_COMMAND+="  \\
-    -DCMAKE_PREFIX_PATH=\"${THIRD_PARTY_DIR}\""
+    -DCMAKE_PREFIX_PATH=\"${THIRD_PARTY_DIR}\" \\
+    -DCMAKE_FIND_ROOT_PATH=\"${THIRD_PARTY_DIR}\" "
     fi
 
     echo "CMAKE_CONFIGURE_COMMAND = ${CMAKE_CONFIGURE_COMMAND}"
