@@ -123,7 +123,7 @@ static void testCVSegmentationAsynchronInternal(const double testDuration, const
 
 	const Timestamp startTimestamp(true);
 
-	Log::info() << "Ocean Framework test for the Computer Vision Advanced library:";
+	Log::info() << "Ocean Framework test for the Computer Vision Segmentation library:";
 	Log::info() << " ";
 	Log::info() << "Platform: " << Build::buildString();
 	Log::info() << " ";
