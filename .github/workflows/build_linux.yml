@@ -3,8 +3,6 @@
 name: Build Ocean on Linux (static)
 
 on:
-  pull_request:
-    branches: [main]
   schedule:
     # Execute this workflow:
     # Mon-Sun, every 24 hours at 6 am (UTC)
