@@ -52,6 +52,10 @@ import {themes as prismThemes} from 'prism-react-renderer';
         },
         internSearch: true,
         enableEditor: false,
+        gtag: {
+          trackingID: 'G-2MN2KM383Z',
+          anonymizeIP: true,
+        },
       }),
     ],
   ],
