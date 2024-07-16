@@ -7166,7 +7166,7 @@ void FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Ch
 	targetRow0 += 3;
 	targetRow1 += 3;
 
-	for (unsigned int x = 1u; x < width - 5u; x += 4u)
+	for (unsigned int lastSourceElement = 5u; lastSourceElement < width; lastSourceElement += 4u)
 	{
 		// Unpack the next block and then subtract blacklevel and apply white balance
 		unpack5ElementsBayerMosaicPacked10Bit(sourceRowA + 5, sourceBlockA + 4);
