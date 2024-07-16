@@ -51,6 +51,7 @@ jobs:
           name: thirdparty-install-${{ matrix.build_config }}
           path: thirdparty-install-${{ matrix.build_config }}.tar.gz
           run_id: ${{ github.event.workflow_run.id }}
+          skip_unpack: true
 
       - name: Unzip third-party artifacts
         run: |
