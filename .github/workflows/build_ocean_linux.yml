@@ -65,6 +65,17 @@ jobs:
             -l ${{ env.OCEAN_LINK_TYPE }} \
             -t ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
 
+      - name: Archive ocean build artifacts
+        run: |
+          tar -cvzf ocean-build-${{ matrix.build_config }}.tar.gz ${{ env.OCEAN_BUILD_PATH }}
+
+      - name: Upload build archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: ocean-build-${{ matrix.build_config }}
+          path: ./ocean-build-${{ matrix.build_config }}.tar.gz
+          compression-level: 0
+
       - name: Archive ocean install artifacts
         run: |
           tar -cvzf ocean-install-${{ matrix.build_config }}.tar.gz ${{ env.OCEAN_INSTALL_PATH }}

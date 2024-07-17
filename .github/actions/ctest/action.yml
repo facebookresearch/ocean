@@ -2,6 +2,9 @@ name: 'Ocean CTest'
 description: 'Downloads ocean build output and runs ctest in given subdirectory'
 
 inputs:
+  run-id:
+    description: 'The run id of the ocean build'
+    required: true
   build-archive:
     description: 'The name of the build archive'
     required: true
@@ -45,9 +48,10 @@ runs:
 
     - name: Download build artifacts
       id: download-build-artifacts
-      uses: actions/download-artifact@v4
+      uses: dawidd6/action-download-artifact@v6
       with:
         name: ${{ inputs.build-archive }}
+        run_id: ${{ inputs.run-id }}
 
     - name: Unzip build artifacts
       run: |
