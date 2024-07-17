@@ -4,7 +4,7 @@ name: Test Ocean on Linux (static)
 
 on:
   workflow_run:
-    workflows: ["Build Ocean on Linux (static))"]
+    workflows: ["Build Ocean on Linux (static)"]
     branches: [main]
     types:
       - completed
