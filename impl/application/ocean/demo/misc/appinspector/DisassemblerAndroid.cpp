@@ -94,7 +94,6 @@ bool DisassemblerAndroid::parseExecutableSections(std::istream& stream, BinaryAn
 
 	/// values needed for parsing adrp/add combinations
 	std::string addressPointerRegister;
-	unsigned long long addressPointerIntermediate = 0ull;
 
 	unsigned long long lineIndex = 0ull;
 
@@ -288,8 +287,6 @@ bool DisassemblerAndroid::parseExecutableSections(std::istream& stream, BinaryAn
 				// **TODO** store additional lines to check whether we have to parse them
 			}
 		}
-
-		addressPointerIntermediate = localAddressPointerIntermediate;
 		previousAddressValue = addressValue;
 
 		// let's calculate how much bytes we have processed already
