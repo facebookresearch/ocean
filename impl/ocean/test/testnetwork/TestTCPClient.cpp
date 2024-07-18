@@ -14,6 +14,8 @@
 
 #include "ocean/network/TCPClient.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -83,8 +85,9 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 
 	Log::info() << "TCPClient & TCPServer test:";
 
-	bool allSucceeded = true;
 	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -99,7 +102,7 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 
 		if (!tcpServer.start())
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		const Network::Port serverPort = tcpServer.port();
@@ -108,7 +111,7 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 
 		if (!tcpClient.connect(Network::Address4::localHost(), serverPort))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		const unsigned int numberSendRequests = RandomI::random(randomGenerator, 1u, 10u);
@@ -125,10 +128,7 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 				element = uint8_t(RandomI::random(randomGenerator, 255u));
 			}
 
-			if (tcpClient.send(buffer.data(), buffer.size()) != Network::TCPClient::SR_SUCCEEDED)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, tcpClient.send(buffer.data(), buffer.size()), Network::TCPClient::SR_SUCCEEDED);
 
 			Thread::sleep(10u);
 
@@ -143,14 +143,14 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 		{
 			if (!tcpClient.disconnect())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		else
 		{
 			if (!tcpServer.stop())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -158,12 +158,12 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 
 		if (receiver.numberConnectionRequests_ != 1u)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		if (disconnectClient && receiver.numberDisconnections_ != 1u)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		size_t sourceBufferSize = 0;
@@ -178,11 +178,9 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 			targetBufferSize += buffer.size();
 		}
 
-		if (sourceBufferSize != targetBufferSize)
-		{
-			allSucceeded = false;
-		}
-		else
+		OCEAN_EXPECT_EQUAL(validation, sourceBufferSize, targetBufferSize);
+
+		if (sourceBufferSize == targetBufferSize)
 		{
 			Buffer sourceBuffer(sourceBufferSize);
 			uint8_t* sourceData = sourceBuffer.data();
@@ -208,7 +206,7 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 
 			if (memcmp(sourceBuffer.data(), targetBuffer.data(), sourceBuffer.size()) != 0)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -217,18 +215,11 @@ bool TestTCPClient::testSendReceive(const double testDuration)
 		break;
 #endif
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
