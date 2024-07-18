@@ -234,7 +234,7 @@ bool DisassemblerIOS::parseTextText(std::istream& stream, BinaryAnalyzer& binary
 
 	/// values needed for parsing adrp/add combinations
 	std::string addressPointerRegister;
-	unsigned long long addressPointerIntermediate = 0ull;
+	// unsigned long long addressPointerIntermediate = 0ull;
 
 	unsigned long long lineIndex = 0ull;
 
@@ -492,7 +492,7 @@ bool DisassemblerIOS::parseTextText(std::istream& stream, BinaryAnalyzer& binary
 			// **TODO** store additional lines to check whether we have to parse them
 		}
 
-		addressPointerIntermediate = localAddressPointerIntermediate;
+		// addressPointerIntermediate = localAddressPointerIntermediate;
 
 		// let's calculate how much bytes we have processed already
 
