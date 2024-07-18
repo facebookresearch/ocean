@@ -399,28 +399,28 @@ RotationT<T>::RotationT(const QuaternionT<T>& quaternion)
 {
 	ocean_assert(quaternion.isValid());
 
-	if (NumericT<T>::isEqual(NumericT<T>::abs(quaternion.w()), T(1.0)))
+	const T invFactor = NumericT<T>::sqrt(T(1.0) - quaternion.w() * quaternion.w());
+
+	if (NumericT<T>::isEqualEps(invFactor))
 	{
 		values[0] = T(0.0);
 		values[1] = T(1.0);
 		values[2] = T(0.0);
 		values[3] = T(0.0);
+
+		return;
 	}
-	else
-	{
-		ocean_assert(quaternion.w() < T(1.0));
 
-		values[3] = T(2.0) * NumericT<T>::acos(quaternion.w());
+	const T factor = T(1.0) / invFactor;
 
-		const T factor = T(1.0) / NumericT<T>::sqrt(T(1.0) - quaternion.w() * quaternion.w());
+	VectorT3<T> axis(quaternion.x() * factor, quaternion.y() * factor, quaternion.z() * factor);
+	axis.normalize();
 
-		VectorT3<T> axis(quaternion.x() * factor, quaternion.y() * factor, quaternion.z() * factor);
-		axis.normalize();
+	values[0] = axis[0];
+	values[1] = axis[1];
+	values[2] = axis[2];
 
-		values[0] = axis[0];
-		values[1] = axis[1];
-		values[2] = axis[2];
-	}
+	values[3] = T(2.0) * NumericT<T>::acos(quaternion.w());
 
 	ocean_assert(isValid());
 }
