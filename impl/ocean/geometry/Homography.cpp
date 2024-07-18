@@ -1326,7 +1326,6 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, co
 	const SquareMatrix3 hTh(normalizedHomography.transposed() * normalizedHomography);
 	const Matrix matrix(3, 3u, hTh.transposed().data());
 
-	//Matrix u, w, v;
 	if (!matrix.singularValueDecomposition(u, w, v))
 	{
 		return false;
@@ -1354,8 +1353,13 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, co
 		return false;
 	}
 
-	const Vector3 u1((v1 * Numeric::sqrt(1 - s3) + v3 * Numeric::sqrt(s1 - 1)) / denominator);
-	const Vector3 u2((v1 * Numeric::sqrt(1 - s3) - v3 * Numeric::sqrt(s1 - 1)) / denominator);
+	if (s3 > Scalar(1))
+	{
+		return false;
+	}
+
+	const Vector3 u1((v1 * Numeric::sqrt(Scalar(1) - s3) + v3 * Numeric::sqrt(s1 - Scalar(1))) / denominator);
+	const Vector3 u2((v1 * Numeric::sqrt(Scalar(1) - s3) - v3 * Numeric::sqrt(s1 - Scalar(1))) / denominator);
 
 	const SquareMatrix3 U1(v2, u1, SquareMatrix3::skewSymmetricMatrix(v2) * u1);
 	const SquareMatrix3 U2(v2, u2, SquareMatrix3::skewSymmetricMatrix(v2) * u2);
