@@ -109,7 +109,6 @@ bool DisassemblerAndroid::parseExecutableSections(std::istream& stream, BinaryAn
 
 	while (true)
 	{
-		unsigned long long localAddressPointerIntermediate = 0ull;
 		lastLine.assign(lineBuffer, lineBufferSize);
 		lineBuffer = lineReader.readNextLine(lineBufferSize);
 
