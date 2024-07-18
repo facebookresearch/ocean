@@ -25,21 +25,21 @@ if (MACOS OR WIN32)
     target_link_libraries(${OCEAN_TARGET_NAME}
         PUBLIC
             ocean_base
-            ocean_cv
-            ocean_cv_detector
+            ocean_devices
             ocean_io
             ocean_math
             ocean_media
-            ocean_platform
             ocean_tracking_oculustags
+        PRIVATE
+            ocean_cv
+            ocean_platform
     )
 
     if (MACOS)
         target_link_libraries(${OCEAN_TARGET_NAME}
-            PUBLIC
+            PRIVATE
                 ocean_media_avfoundation
                 ocean_media_imageio
-                ocean_platform_apple_macos
         )
     endif()
 
@@ -60,10 +60,10 @@ if (MACOS)
 
     set(OCEAN_TARGET_NAME "application_ocean_demo_tracking_oculustags_oculustagtracker_osx")
 
+    # Libaries whose headers "Cocoa/Cocoa.h" imports
     find_library(APPKIT_LIB AppKit)
-    find_library(AVFOUNDATION_LIB AVFoundation)
-    find_library(COREMEDIA_LIB CoreMedia)
-    find_library(COREVIDEO_LIB CoreVideo)
+    find_library(COREDATA_LIB CoreData)
+    find_library(FOUNDATION_LIB Foundation)
 
     # Source files
     file(GLOB OCEAN_TARGET_HEADER_FILES "${CMAKE_CURRENT_LIST_DIR}/osx/*.h")
@@ -89,13 +89,12 @@ if (MACOS)
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
-        PUBLIC
+        PRIVATE
             application_ocean_demo_tracking_oculustags_oculustagtracker
             ocean_platform_apple_macos
             ${APPKIT_LIB}
-            ${AVFOUNDATION_LIB}
-            ${COREMEDIA_LIB}
-            ${COREVIDEO_LIB}
+            ${COREDATA_LIB}
+            ${FOUNDATION_LIB}
     )
 
     # Custom command to compile Application.xib to Application.nib
