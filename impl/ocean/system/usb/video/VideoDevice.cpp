@@ -1778,8 +1778,13 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 	ocean_assert(activeSample_ == nullptr);
 	activeSample_ = std::make_shared<Sample>(maximalSampleSize_, activeDescriptorFormatIndex_, activeDescriptorFrameIndex_, activeClockFrequency_);
 
-	// let's a second sample for double buffering (addtional samples will be added on demand)
-	reusableSamples_.emplace_back(std::make_shared<Sample>(maximalSampleSize_, activeDescriptorFormatIndex_, activeDescriptorFrameIndex_, activeClockFrequency_));
+	{
+		const ScopedLock scopedSamplesLock(samplesLock_);
+
+		// let's a second sample for double buffering (addtional samples will be added on demand)
+		ocean_assert(reusableSamples_.empty());
+		reusableSamples_.emplace_back(std::make_shared<Sample>(maximalSampleSize_, activeDescriptorFormatIndex_, activeDescriptorFrameIndex_, activeClockFrequency_));
+	}
 
 	ocean_assert(streamingTransfers_.empty());
 	ocean_assert(streamingTransferMemories_.empty());
@@ -2081,7 +2086,7 @@ void VideoDevice::giveSampleBack(SharedSample&& sample)
 	{
 		sample->reset();
 
-		const ScopedLock scopedLock(lock_);
+		const ScopedLock scopedLock(samplesLock_);
 
 		reusableSamples_.emplace_back(std::move(sample));
 	}
@@ -2130,7 +2135,7 @@ void VideoDevice::processPayload(const BufferPointers& bufferPointers)
 				sampleQueue_.pop();
 
 				sample->reset();
-				reusableSamples_.push_back(std::move(sample));
+				reusableSamples_.emplace_back(std::move(sample));
 			}
 
 			if (!reusableSamples_.empty())
