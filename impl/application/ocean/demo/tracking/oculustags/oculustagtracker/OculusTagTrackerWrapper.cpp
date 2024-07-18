@@ -228,7 +228,7 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 
 	FrameRefs frameRefs;
 	SharedAnyCameras anyCameras;
-	HomogenousMatrices4 device_T_cameras;
+	HomogenousMatricesD4 device_T_cameras;
 
 	bool timedOut = false;
 	if (!Media::FrameMedium::syncedFrames(frameMediumRefs_, frameTimestamp_, frameRefs, anyCameras, 2u /*waitTime*/, &timedOut, &device_T_cameras))
