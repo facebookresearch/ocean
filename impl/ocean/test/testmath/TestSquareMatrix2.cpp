@@ -515,7 +515,7 @@ bool TestSquareMatrix2::testEigenConstructor(double testDuration)
 		const Vector2 eigenVector0 = randomVector / vectorLength;
 		const Vector2 eigenVector1(eigenVector0.perpendicular());
 		const Scalar eigenValue0 = Numeric::sqr(vectorLength);
-		const Scalar eigenValue1 = Numeric::sqr(vectorLength * Random::scalar(0.0001, 0.9999));
+		const Scalar eigenValue1 = Numeric::sqr(vectorLength * Random::scalar(Scalar(0.0001), Scalar(0.9999)));
 
 		const SquareMatrix2 mat(eigenValue0, eigenValue1, eigenVector0, eigenVector1);
 
