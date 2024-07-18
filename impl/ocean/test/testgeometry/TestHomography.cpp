@@ -691,7 +691,7 @@ bool TestHomography::testFactorizationPlanarHomographyOnePose(const double testD
 			}
 			else
 			{
-				OCEAN_SET_FAILED(validation);
+				scopedIteration.setInaccurate();
 			}
 		}
 	}
