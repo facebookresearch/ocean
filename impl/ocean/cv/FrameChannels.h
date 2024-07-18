@@ -3027,147 +3027,150 @@ void FrameChannels::reverseRowPixelOrderInPlace(T* data, const size_t size)
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
-	if (std::is_same<typename TypeMapper<T>::Type, uint8_t>::value)
+	if constexpr (std::is_same<typename TypeMapper<T>::Type, uint8_t>::value)
 	{
-		const size_t blocks32 = size / size_t(32);
-
-		uint8_t* left = (uint8_t*)(data);
-		uint8_t* right = (uint8_t*)(data) + (size - 16u) * tChannels;
-
-		switch (tChannels)
+		if (size >= 32)
 		{
-			case 1u:
+			const size_t blocks32 = size / size_t(32);
+
+			uint8_t* left = (uint8_t*)(data);
+			uint8_t* right = (uint8_t*)(data) + (size - 16u) * tChannels;
+
+			switch (tChannels)
 			{
-				for (size_t nBlock = 0; nBlock < blocks32; ++nBlock)
+				case 1u:
 				{
-					const uint8x16_t left_u_8x16 = vld1q_u8(left);
-					const uint8x16_t right_u_8x16 = vld1q_u8(right);
+					for (size_t nBlock = 0; nBlock < blocks32; ++nBlock)
+					{
+						const uint8x16_t left_u_8x16 = vld1q_u8(left);
+						const uint8x16_t right_u_8x16 = vld1q_u8(right);
 
-					uint8x16_t revLeft_u_8x16 = vrev64q_u8(left_u_8x16);
-					revLeft_u_8x16 = vcombine_u8(vget_high_u8(revLeft_u_8x16), vget_low_u8(revLeft_u_8x16));
+						uint8x16_t revLeft_u_8x16 = vrev64q_u8(left_u_8x16);
+						revLeft_u_8x16 = vcombine_u8(vget_high_u8(revLeft_u_8x16), vget_low_u8(revLeft_u_8x16));
 
-					uint8x16_t revRight_u_8x16 = vrev64q_u8(right_u_8x16);
-					revRight_u_8x16 = vcombine_u8(vget_high_u8(revRight_u_8x16), vget_low_u8(revRight_u_8x16));
+						uint8x16_t revRight_u_8x16 = vrev64q_u8(right_u_8x16);
+						revRight_u_8x16 = vcombine_u8(vget_high_u8(revRight_u_8x16), vget_low_u8(revRight_u_8x16));
 
-					vst1q_u8(left, revRight_u_8x16);
-					vst1q_u8(right, revLeft_u_8x16);
+						vst1q_u8(left, revRight_u_8x16);
+						vst1q_u8(right, revLeft_u_8x16);
 
-					left += 16u * tChannels;
-					right -= 16u * tChannels;
+						left += 16u * tChannels;
+						right -= 16u * tChannels;
+					}
+
+					n += blocks32 * 16u;
+
+					break;
 				}
 
-				n += blocks32 * 16u;
-
-				break;
-			}
-
-			case 2u:
-			{
-				for (size_t nBlock = 0; nBlock < blocks32; ++nBlock)
+				case 2u:
 				{
-					const uint8x16x2_t left_u_8x16x2 = vld2q_u8(left);
-					const uint8x16x2_t right_u_8x16x2 = vld2q_u8(right);
+					for (size_t nBlock = 0; nBlock < blocks32; ++nBlock)
+					{
+						const uint8x16x2_t left_u_8x16x2 = vld2q_u8(left);
+						const uint8x16x2_t right_u_8x16x2 = vld2q_u8(right);
 
-					uint8x16x2_t revLeft_u_8x16x2;
-					revLeft_u_8x16x2.val[0] = vrev64q_u8(left_u_8x16x2.val[0]);
-					revLeft_u_8x16x2.val[1] = vrev64q_u8(left_u_8x16x2.val[1]);
-					revLeft_u_8x16x2.val[0] = vcombine_u8(vget_high_u8(revLeft_u_8x16x2.val[0]), vget_low_u8(revLeft_u_8x16x2.val[0]));
-					revLeft_u_8x16x2.val[1] = vcombine_u8(vget_high_u8(revLeft_u_8x16x2.val[1]), vget_low_u8(revLeft_u_8x16x2.val[1]));
+						uint8x16x2_t revLeft_u_8x16x2;
+						revLeft_u_8x16x2.val[0] = vrev64q_u8(left_u_8x16x2.val[0]);
+						revLeft_u_8x16x2.val[1] = vrev64q_u8(left_u_8x16x2.val[1]);
+						revLeft_u_8x16x2.val[0] = vcombine_u8(vget_high_u8(revLeft_u_8x16x2.val[0]), vget_low_u8(revLeft_u_8x16x2.val[0]));
+						revLeft_u_8x16x2.val[1] = vcombine_u8(vget_high_u8(revLeft_u_8x16x2.val[1]), vget_low_u8(revLeft_u_8x16x2.val[1]));
 
-					uint8x16x2_t revRight_u_8x16x2;
-					revRight_u_8x16x2.val[0] = vrev64q_u8(right_u_8x16x2.val[0]);
-					revRight_u_8x16x2.val[1] = vrev64q_u8(right_u_8x16x2.val[1]);
-					revRight_u_8x16x2.val[0] = vcombine_u8(vget_high_u8(revRight_u_8x16x2.val[0]), vget_low_u8(revRight_u_8x16x2.val[0]));
-					revRight_u_8x16x2.val[1] = vcombine_u8(vget_high_u8(revRight_u_8x16x2.val[1]), vget_low_u8(revRight_u_8x16x2.val[1]));
+						uint8x16x2_t revRight_u_8x16x2;
+						revRight_u_8x16x2.val[0] = vrev64q_u8(right_u_8x16x2.val[0]);
+						revRight_u_8x16x2.val[1] = vrev64q_u8(right_u_8x16x2.val[1]);
+						revRight_u_8x16x2.val[0] = vcombine_u8(vget_high_u8(revRight_u_8x16x2.val[0]), vget_low_u8(revRight_u_8x16x2.val[0]));
+						revRight_u_8x16x2.val[1] = vcombine_u8(vget_high_u8(revRight_u_8x16x2.val[1]), vget_low_u8(revRight_u_8x16x2.val[1]));
 
-					vst2q_u8(left, revRight_u_8x16x2);
-					vst2q_u8(right, revLeft_u_8x16x2);
+						vst2q_u8(left, revRight_u_8x16x2);
+						vst2q_u8(right, revLeft_u_8x16x2);
 
-					left += 16u * tChannels;
-					right -= 16u * tChannels;
+						left += 16u * tChannels;
+						right -= 16u * tChannels;
+					}
+
+					n += blocks32 * 16u;
+
+					break;
 				}
 
-				n += blocks32 * 16u;
-
-				break;
-			}
-
-			case 3u:
-			{
-				for (size_t nBlock = 0; nBlock < blocks32; ++nBlock)
+				case 3u:
 				{
-					const uint8x16x3_t left_u_8x16x3 = vld3q_u8(left);
-					const uint8x16x3_t right_u_8x16x3 = vld3q_u8(right);
+					for (size_t nBlock = 0; nBlock < blocks32; ++nBlock)
+					{
+						const uint8x16x3_t left_u_8x16x3 = vld3q_u8(left);
+						const uint8x16x3_t right_u_8x16x3 = vld3q_u8(right);
 
-					uint8x16x3_t revLeft_u_8x16x3;
-					revLeft_u_8x16x3.val[0] = vrev64q_u8(left_u_8x16x3.val[0]);
-					revLeft_u_8x16x3.val[1] = vrev64q_u8(left_u_8x16x3.val[1]);
-					revLeft_u_8x16x3.val[2] = vrev64q_u8(left_u_8x16x3.val[2]);
-					revLeft_u_8x16x3.val[0] = vcombine_u8(vget_high_u8(revLeft_u_8x16x3.val[0]), vget_low_u8(revLeft_u_8x16x3.val[0]));
-					revLeft_u_8x16x3.val[1] = vcombine_u8(vget_high_u8(revLeft_u_8x16x3.val[1]), vget_low_u8(revLeft_u_8x16x3.val[1]));
-					revLeft_u_8x16x3.val[2] = vcombine_u8(vget_high_u8(revLeft_u_8x16x3.val[2]), vget_low_u8(revLeft_u_8x16x3.val[2]));
+						uint8x16x3_t revLeft_u_8x16x3;
+						revLeft_u_8x16x3.val[0] = vrev64q_u8(left_u_8x16x3.val[0]);
+						revLeft_u_8x16x3.val[1] = vrev64q_u8(left_u_8x16x3.val[1]);
+						revLeft_u_8x16x3.val[2] = vrev64q_u8(left_u_8x16x3.val[2]);
+						revLeft_u_8x16x3.val[0] = vcombine_u8(vget_high_u8(revLeft_u_8x16x3.val[0]), vget_low_u8(revLeft_u_8x16x3.val[0]));
+						revLeft_u_8x16x3.val[1] = vcombine_u8(vget_high_u8(revLeft_u_8x16x3.val[1]), vget_low_u8(revLeft_u_8x16x3.val[1]));
+						revLeft_u_8x16x3.val[2] = vcombine_u8(vget_high_u8(revLeft_u_8x16x3.val[2]), vget_low_u8(revLeft_u_8x16x3.val[2]));
 
-					uint8x16x3_t revRight_u_8x16x3;
-					revRight_u_8x16x3.val[0] = vrev64q_u8(right_u_8x16x3.val[0]);
-					revRight_u_8x16x3.val[1] = vrev64q_u8(right_u_8x16x3.val[1]);
-					revRight_u_8x16x3.val[2] = vrev64q_u8(right_u_8x16x3.val[2]);
-					revRight_u_8x16x3.val[0] = vcombine_u8(vget_high_u8(revRight_u_8x16x3.val[0]), vget_low_u8(revRight_u_8x16x3.val[0]));
-					revRight_u_8x16x3.val[1] = vcombine_u8(vget_high_u8(revRight_u_8x16x3.val[1]), vget_low_u8(revRight_u_8x16x3.val[1]));
-					revRight_u_8x16x3.val[2] = vcombine_u8(vget_high_u8(revRight_u_8x16x3.val[2]), vget_low_u8(revRight_u_8x16x3.val[2]));
+						uint8x16x3_t revRight_u_8x16x3;
+						revRight_u_8x16x3.val[0] = vrev64q_u8(right_u_8x16x3.val[0]);
+						revRight_u_8x16x3.val[1] = vrev64q_u8(right_u_8x16x3.val[1]);
+						revRight_u_8x16x3.val[2] = vrev64q_u8(right_u_8x16x3.val[2]);
+						revRight_u_8x16x3.val[0] = vcombine_u8(vget_high_u8(revRight_u_8x16x3.val[0]), vget_low_u8(revRight_u_8x16x3.val[0]));
+						revRight_u_8x16x3.val[1] = vcombine_u8(vget_high_u8(revRight_u_8x16x3.val[1]), vget_low_u8(revRight_u_8x16x3.val[1]));
+						revRight_u_8x16x3.val[2] = vcombine_u8(vget_high_u8(revRight_u_8x16x3.val[2]), vget_low_u8(revRight_u_8x16x3.val[2]));
 
-					vst3q_u8(left, revRight_u_8x16x3);
-					vst3q_u8(right, revLeft_u_8x16x3);
+						vst3q_u8(left, revRight_u_8x16x3);
+						vst3q_u8(right, revLeft_u_8x16x3);
 
-					left += 16u * tChannels;
-					right -= 16u * tChannels;
+						left += 16u * tChannels;
+						right -= 16u * tChannels;
+					}
+
+					n += blocks32 * 16u;
+
+					break;
 				}
 
-				n += blocks32 * 16u;
-
-				break;
-			}
-
-			case 4u:
-			{
-				for (size_t nBlock = 0; nBlock < blocks32; ++nBlock)
+				case 4u:
 				{
-					const uint8x16x4_t left_u_8x16x4 = vld4q_u8(left);
-					const uint8x16x4_t right_u_8x16x4 = vld4q_u8(right);
+					for (size_t nBlock = 0; nBlock < blocks32; ++nBlock)
+					{
+						const uint8x16x4_t left_u_8x16x4 = vld4q_u8(left);
+						const uint8x16x4_t right_u_8x16x4 = vld4q_u8(right);
 
-					uint8x16x4_t revLeft_u_8x16x4;
-					revLeft_u_8x16x4.val[0] = vrev64q_u8(left_u_8x16x4.val[0]);
-					revLeft_u_8x16x4.val[1] = vrev64q_u8(left_u_8x16x4.val[1]);
-					revLeft_u_8x16x4.val[2] = vrev64q_u8(left_u_8x16x4.val[2]);
-					revLeft_u_8x16x4.val[3] = vrev64q_u8(left_u_8x16x4.val[3]);
-					revLeft_u_8x16x4.val[0] = vcombine_u8(vget_high_u8(revLeft_u_8x16x4.val[0]), vget_low_u8(revLeft_u_8x16x4.val[0]));
-					revLeft_u_8x16x4.val[1] = vcombine_u8(vget_high_u8(revLeft_u_8x16x4.val[1]), vget_low_u8(revLeft_u_8x16x4.val[1]));
-					revLeft_u_8x16x4.val[2] = vcombine_u8(vget_high_u8(revLeft_u_8x16x4.val[2]), vget_low_u8(revLeft_u_8x16x4.val[2]));
-					revLeft_u_8x16x4.val[3] = vcombine_u8(vget_high_u8(revLeft_u_8x16x4.val[3]), vget_low_u8(revLeft_u_8x16x4.val[3]));
+						uint8x16x4_t revLeft_u_8x16x4;
+						revLeft_u_8x16x4.val[0] = vrev64q_u8(left_u_8x16x4.val[0]);
+						revLeft_u_8x16x4.val[1] = vrev64q_u8(left_u_8x16x4.val[1]);
+						revLeft_u_8x16x4.val[2] = vrev64q_u8(left_u_8x16x4.val[2]);
+						revLeft_u_8x16x4.val[3] = vrev64q_u8(left_u_8x16x4.val[3]);
+						revLeft_u_8x16x4.val[0] = vcombine_u8(vget_high_u8(revLeft_u_8x16x4.val[0]), vget_low_u8(revLeft_u_8x16x4.val[0]));
+						revLeft_u_8x16x4.val[1] = vcombine_u8(vget_high_u8(revLeft_u_8x16x4.val[1]), vget_low_u8(revLeft_u_8x16x4.val[1]));
+						revLeft_u_8x16x4.val[2] = vcombine_u8(vget_high_u8(revLeft_u_8x16x4.val[2]), vget_low_u8(revLeft_u_8x16x4.val[2]));
+						revLeft_u_8x16x4.val[3] = vcombine_u8(vget_high_u8(revLeft_u_8x16x4.val[3]), vget_low_u8(revLeft_u_8x16x4.val[3]));
 
-					uint8x16x4_t revRight_u_8x16x4;
-					revRight_u_8x16x4.val[0] = vrev64q_u8(right_u_8x16x4.val[0]);
-					revRight_u_8x16x4.val[1] = vrev64q_u8(right_u_8x16x4.val[1]);
-					revRight_u_8x16x4.val[2] = vrev64q_u8(right_u_8x16x4.val[2]);
-					revRight_u_8x16x4.val[3] = vrev64q_u8(right_u_8x16x4.val[3]);
-					revRight_u_8x16x4.val[0] = vcombine_u8(vget_high_u8(revRight_u_8x16x4.val[0]), vget_low_u8(revRight_u_8x16x4.val[0]));
-					revRight_u_8x16x4.val[1] = vcombine_u8(vget_high_u8(revRight_u_8x16x4.val[1]), vget_low_u8(revRight_u_8x16x4.val[1]));
-					revRight_u_8x16x4.val[2] = vcombine_u8(vget_high_u8(revRight_u_8x16x4.val[2]), vget_low_u8(revRight_u_8x16x4.val[2]));
-					revRight_u_8x16x4.val[3] = vcombine_u8(vget_high_u8(revRight_u_8x16x4.val[3]), vget_low_u8(revRight_u_8x16x4.val[3]));
+						uint8x16x4_t revRight_u_8x16x4;
+						revRight_u_8x16x4.val[0] = vrev64q_u8(right_u_8x16x4.val[0]);
+						revRight_u_8x16x4.val[1] = vrev64q_u8(right_u_8x16x4.val[1]);
+						revRight_u_8x16x4.val[2] = vrev64q_u8(right_u_8x16x4.val[2]);
+						revRight_u_8x16x4.val[3] = vrev64q_u8(right_u_8x16x4.val[3]);
+						revRight_u_8x16x4.val[0] = vcombine_u8(vget_high_u8(revRight_u_8x16x4.val[0]), vget_low_u8(revRight_u_8x16x4.val[0]));
+						revRight_u_8x16x4.val[1] = vcombine_u8(vget_high_u8(revRight_u_8x16x4.val[1]), vget_low_u8(revRight_u_8x16x4.val[1]));
+						revRight_u_8x16x4.val[2] = vcombine_u8(vget_high_u8(revRight_u_8x16x4.val[2]), vget_low_u8(revRight_u_8x16x4.val[2]));
+						revRight_u_8x16x4.val[3] = vcombine_u8(vget_high_u8(revRight_u_8x16x4.val[3]), vget_low_u8(revRight_u_8x16x4.val[3]));
 
-					vst4q_u8(left, revRight_u_8x16x4);
-					vst4q_u8(right, revLeft_u_8x16x4);
+						vst4q_u8(left, revRight_u_8x16x4);
+						vst4q_u8(right, revLeft_u_8x16x4);
 
-					left += 16u * tChannels;
-					right -= 16u * tChannels;
+						left += 16u * tChannels;
+						right -= 16u * tChannels;
+					}
+
+					n += blocks32 * 16u;
+
+					break;
 				}
 
-				n += blocks32 * 16u;
-
-				break;
+				default:
+					break;
 			}
-
-			default:
-				break;
 		}
 	}
 
