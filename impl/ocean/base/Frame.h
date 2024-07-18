@@ -3835,6 +3835,8 @@ bool Frame::updateMemory(const std::initializer_list<T*>& planeDatas)
 template <typename T, const unsigned int tPlaneChannels>
 bool Frame::setValue(const PixelType<T, tPlaneChannels>& planePixelValue, const unsigned int planeIndex)
 {
+	static_assert(!std::is_void_v<T>, "Value access/assignment cannot be performed with void types.");
+
 	ocean_assert(planes_.size() >= 1);
 	ocean_assert(planeIndex < planes_.size());
 
@@ -3889,6 +3891,8 @@ bool Frame::setValue(const PixelType<T, tPlaneChannels>& planePixelValue, const 
 template <typename T, const unsigned int tPlaneChannels>
 bool Frame::containsValue(const PixelType<T, tPlaneChannels>& planePixelValue, const unsigned int planeIndex) const
 {
+	static_assert(!std::is_void_v<T>, "Value access/comparison cannot be performed with void types.");
+
 	ocean_assert(planes_.size() >= 1);
 	ocean_assert(planeIndex < planes_.size());
 
@@ -3929,6 +3933,8 @@ bool Frame::containsValue(const PixelType<T, tPlaneChannels>& planePixelValue, c
 template <typename T>
 bool Frame::setValue(const T* planePixelValue, const size_t planePixelValueSize, const unsigned int planeIndex)
 {
+	static_assert(!std::is_void_v<T>, "Value access/assignment cannot be performed with void types.");
+
 	ocean_assert(planePixelValue != nullptr);
 
 	ocean_assert(planes_[planeIndex].elementTypeSize() == sizeof(T));
