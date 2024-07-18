@@ -47,7 +47,7 @@ for dep in $alldeps; do
     cmake -S "${OCEAN_THIRD_PARTY_SOURCE_DIR}" -B "${BUILD_DIRECTORY_BASE}"/$dep -DINCLUDED_DEP_NAME=$dep "$@" \
     || exit 1
 
-    cmake --build "${BUILD_DIRECTORY_BASE}"/$dep --target install -- $EXTRA_BUILD_FLAGS \
+    eval cmake --build "${BUILD_DIRECTORY_BASE}"/$dep --target install $EXTRA_BUILD_FLAGS \
     || exit 2
 
     current_dependency_index=$((current_dependency_index + 1))

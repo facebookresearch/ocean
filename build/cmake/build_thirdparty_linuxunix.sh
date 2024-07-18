@@ -8,6 +8,8 @@ if [[ $(uname -s) == "Darwin" ]]; then
   OCEAN_PLATFORM="macos"
 elif [[ $(uname -s) == "Linux" ]]; then
   OCEAN_PLATFORM="linux"
+elif [[ $(uname -s) == *"MINGW"* ]]; then
+  OCEAN_PLATFORM="windows"
 else
   echo "ERROR: Unsupported operating system: $(uname -s)" >&2
   exit 1
@@ -99,6 +101,13 @@ function run_build {
     BUILD_DIR="${OTP_BUILD_DIR}/${OCEAN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
     INSTALL_DIR="${OTP_INSTALL_DIR}/${OCEAN_PLATFORM}_${LINKING_TYPE}_${BUILD_CONFIG}"
 
+    PAR_SWITCH="-- -j16"
+    CONF_SWITCH="CMAKE_BUILD_TYPE"
+    if [[ ${OCEAN_PLATFORM} == "windows" ]] ; then
+      PAR_SWITCH="--config ${BUILD_CONFIG} -- //m:16"
+      CONF_SWITCH="CMAKE_CONFIGURATION_TYPES"
+    fi
+
     echo ""
     echo ""
     echo ""
@@ -111,9 +120,9 @@ function run_build {
     echo ""
     echo ""
 
-    eval "${OTP_SOURCE_DIR}/build_deps.sh" ${OCEAN_PLATFORM} "${OTP_SOURCE_DIR}" "${BUILD_DIR}" -j16 \
+    eval "${OTP_SOURCE_DIR}/build_deps.sh" "${OCEAN_PLATFORM}" "${OTP_SOURCE_DIR}" "${BUILD_DIR}" \"${PAR_SWITCH}\" \
           "-DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}" \
-          "-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}" \
+          "-D${CONF_SWITCH}=${BUILD_CONFIG}" \
           "-DBUILD_SHARED_LIBS=${ENABLE_BUILD_SHARED_LIBS}" "-DCMAKE_FIND_ROOT_PATH=${INSTALL_DIR}"
     if [ "$?" != 0 ]; then
         OTP_FAILED_BUILDS+=("${LINKING_TYPE} + ${BUILD_CONFIG}")
