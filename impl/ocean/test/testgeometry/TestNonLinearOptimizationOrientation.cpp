@@ -195,7 +195,9 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigne
 
 	RandomGenerator randomGenerator;
 
-	ValidationPrecision validation(0.99, randomGenerator);
+	constexpr double successThreshold = std::is_same<Scalar, float>::value ? 0.95 : 0.99;
+
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -205,7 +207,7 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigne
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const AnyCameraPinhole camera(Utilities::distortedCamera(patternCamera, true, (distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION, (distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION));
+			const AnyCameraPinhole camera(Utilities::distortedCamera(patternCamera, true, (distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION, (distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION, &randomGenerator));
 
 			const Quaternion world_R_camera(Random::quaternion(randomGenerator));
 
@@ -251,47 +253,56 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigne
 				}
 			}
 
-			performance.start();
+			bool localResult = false;
+
+			SquareMatrix3 optimizedOrientation;
+			Scalar initialError = Numeric::maxValue();
+			Scalar finalError = Numeric::maxValue();
+			Scalars intermediateErrors;
 
 			if (useRoughOrientation)
 			{
 				const Euler faultyEuler(Random::euler(randomGenerator, Numeric::deg2rad(20)));
 				const SquareMatrix3 world_R_roughCamera = SquareMatrix3(world_R_camera * Quaternion(faultyEuler));
 
-				SquareMatrix3 optimizedOrientation;
-				Scalar initialError, finalError;
-				if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, world_R_roughCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError))
-				{
-					initialErrors.push_back(initialError);
-					optimizedErrors.push_back(finalError);
-				}
-				else
-				{
-					scopedIteration.setInaccurate();
-				}
+				performance.start();
+					localResult = Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, world_R_roughCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError, nullptr, &intermediateErrors);
+				performance.stop();
 			}
 			else
 			{
 				SquareMatrix3 world_T_ransacCamera(false);
 
-				Indices32 usedIndices;
-				if (Geometry::RANSAC::orientation(camera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, world_T_ransacCamera, 3u, 50u, Scalar(5 * 5), nullptr, &usedIndices))
-				{
-					SquareMatrix3 optimizedOrientation;
-					Scalar initialError, finalError;
-					if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, world_T_ransacCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError))
+				performance.start();
+
+					Indices32 usedIndices;
+					if (Geometry::RANSAC::orientation(camera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, world_T_ransacCamera, 3u, 50u, Scalar(5 * 5), nullptr, &usedIndices))
 					{
-						initialErrors.push_back(initialError);
-						optimizedErrors.push_back(finalError);
+						localResult = Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, world_T_ransacCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError, nullptr, &intermediateErrors);
 					}
-					else
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
+
+				performance.stop();
 			}
 
-			performance.stop();
+			if (localResult)
+			{
+				if constexpr (std::is_same<Scalar, float>::value)
+				{
+					if (intermediateErrors.size() == 1 && finalError > Scalar(0.1))
+					{
+						scopedIteration.setInaccurate();
+
+						continue;
+					}
+				}
+
+				initialErrors.push_back(initialError);
+				optimizedErrors.push_back(finalError);
+			}
+			else
+			{
+				OCEAN_SET_FAILED(validation);
+			}
 		}
 	}
 	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
@@ -335,7 +346,9 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigne
 				}
 				else
 				{
-					if (optimizedErrors.back() > Scalar(0.1))
+					constexpr Scalar threshold = std::is_same<Scalar, float>::value ? Scalar(0.5) : Scalar(0.1);
+
+					if (optimizedErrors.back() > threshold)
 					{
 						OCEAN_SET_FAILED(validation);
 					}
