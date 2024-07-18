@@ -14,6 +14,8 @@
 #include "ocean/base/StackHeapVector.h"
 #include "ocean/base/Timestamp.h"
 
+#include <type_traits>
+
 namespace Ocean
 {
 
@@ -1682,15 +1684,6 @@ class OCEAN_BASE_EXPORT FrameType
 		 */
 		template <typename T>
 		static inline bool dataIsAligned(const void* data);
-
-		/**
-		 * Returns the size of a given data type in bytes.
-		 * This function is a simple wrapper around sizeof until `if constexpr` can be used.
-		 * @return The size of the specified data type in bytes, with range [0, infinity)
-		 * @tparam T The data type for which the type will be returned, can be void
-		 */
-		template <typename T>
-		static constexpr size_t sizeOfType();
 
 		/**
 		 * Returns all defined data types.
@@ -3448,18 +3441,6 @@ inline bool FrameType::dataIsAligned(const void* data)
 	return size_t(data) % sizeof(T) == size_t(0);
 }
 
-template <>
-constexpr size_t FrameType::sizeOfType<void>()
-{
-	return size_t(0);
-}
-
-template <typename T>
-constexpr size_t FrameType::sizeOfType()
-{
-	return sizeof(T);
-}
-
 inline Frame::Plane::Plane(Plane&& plane) noexcept
 {
 	*this = std::move(plane);
@@ -3780,7 +3761,10 @@ bool Frame::updateMemory(const T* data, const unsigned int planeIndex)
 		{
 			Plane& plane = planes_[planeIndex];
 
-			ocean_assert((std::is_same<T, void>::value) || sizeOfType<T>() == plane.elementTypeSize());
+			if constexpr (!std::is_void_v<T>)
+			{
+				ocean_assert(sizeof(T) == plane.elementTypeSize());
+			}
 
 			ocean_assert(plane.allocatedData_ == nullptr);
 			if (plane.allocatedData_ == nullptr)
@@ -3807,7 +3791,10 @@ bool Frame::updateMemory(T* data, const unsigned int planeIndex)
 		{
 			Plane& plane = planes_[planeIndex];
 
-			ocean_assert((std::is_same<T, void>::value) || sizeOfType<T>() == plane.elementTypeSize());
+			if constexpr (!std::is_void_v<T>)
+			{
+				ocean_assert(sizeof(T) == plane.elementTypeSize());
+			}
 
 			ocean_assert(plane.allocatedData_ == nullptr);
 			if (plane.allocatedData_ == nullptr)
@@ -3855,7 +3842,7 @@ bool Frame::setValue(const PixelType<T, tPlaneChannels>& planePixelValue, const 
 
 	ocean_assert(plane.isValid());
 
-	if (sizeOfType<T>() != plane.elementTypeSize())
+	if (sizeof(T) != plane.elementTypeSize())
 	{
 		ocean_assert(false && "The specified data type must fit to the frame's data type!");
 		return false;
@@ -3909,7 +3896,7 @@ bool Frame::containsValue(const PixelType<T, tPlaneChannels>& planePixelValue, c
 
 	ocean_assert(plane.isValid());
 
-	if (sizeOfType<T>() != plane.elementTypeSize())
+	if (sizeof(T) != plane.elementTypeSize())
 	{
 		ocean_assert(false && "The specified data type must fit to the frame's data type!");
 		return false;
@@ -3944,7 +3931,7 @@ bool Frame::setValue(const T* planePixelValue, const size_t planePixelValueSize,
 {
 	ocean_assert(planePixelValue != nullptr);
 
-	ocean_assert(planes_[planeIndex].elementTypeSize() == sizeOfType<T>());
+	ocean_assert(planes_[planeIndex].elementTypeSize() == sizeof(T));
 	ocean_assert(planes_[planeIndex].channels() == planePixelValueSize);
 
 	switch (planePixelValueSize)
@@ -4193,7 +4180,10 @@ inline T* Frame::pixel(const unsigned int x, const unsigned int y, const unsigne
 
 	ocean_assert(plane.isValid());
 
-	ocean_assert((std::is_same<T, void>::value) || sizeOfType<T>() == plane.elementTypeSize());
+	if constexpr (!std::is_void_v<T>)
+	{
+		ocean_assert(sizeof(T) == plane.elementTypeSize());
+	}
 
 	/*
 	 * how to determine pixel offsets within row:
@@ -4231,7 +4221,10 @@ inline const T* Frame::constpixel(const unsigned int x, const unsigned int y, co
 
 	ocean_assert(plane.isValid());
 
-	ocean_assert((std::is_same<T, void>::value) || sizeOfType<T>() == plane.elementTypeSize());
+	if constexpr (!std::is_void_v<T>)
+	{
+		ocean_assert(sizeof(T) == plane.elementTypeSize());
+	}
 
 	ocean_assert(x == 0u || !formatIsPacked(pixelFormat()));
 
