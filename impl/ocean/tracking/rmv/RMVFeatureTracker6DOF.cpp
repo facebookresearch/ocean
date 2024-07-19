@@ -184,12 +184,6 @@ bool RMVFeatureTracker6DOF::internDeterminePose(const Frame& frame, const Pinhol
 		}
 	}
 
-	const HomogenousMatrix4* initialRoughPose = nullptr;
-	if (motionModel_)
-	{
-		initialRoughPose = &motionModel_.predictedPose();
-	}
-
 	if (RMVFeatureDetector::needPyramidInitialization(trackerFeatureMap.initializationDetectorType()))
 	{
 		if (!determinePoseWithoutKnowledgePyramid(yFrame, trackerFeatureMap.initializationCamera(), pose, worker))
