@@ -136,7 +136,7 @@ function run_build {
     echo ""
     echo ""
 
-    eval "${OTP_SOURCE_DIR}/build_deps.sh" ${OCEAN_PLATFORM} "${OTP_SOURCE_DIR}" "${BUILD_DIR}" -j16 \
+    eval "${OTP_SOURCE_DIR}/build_deps.sh" ${OCEAN_PLATFORM} "${OTP_SOURCE_DIR}" "${BUILD_DIR}" \"-- -j16\" \
         "-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}" \
         "-DANDROID_ABI=${ANDROID_ABI}" \
         "-DANDROID_PLATFORM=${ANDROID_SDK_VERSION}" \

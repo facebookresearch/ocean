@@ -149,7 +149,7 @@ function run_build {
     echo ""
     echo ""
 
-    BUILD_COMMAND="\"${OTP_SOURCE_DIR}/build_deps.sh\" ios \"${OTP_SOURCE_DIR}\" \"${BUILD_DIR}\" \"-parallelizeTargets -jobs $(sysctl -n hw.ncpu) CODE_SIGNING_ALLOWED=NO\" \
+    BUILD_COMMAND="\"${OTP_SOURCE_DIR}/build_deps.sh\" ios \"${OTP_SOURCE_DIR}\" \"${BUILD_DIR}\" \"-- -parallelizeTargets -jobs $(sysctl -n hw.ncpu) CODE_SIGNING_ALLOWED=NO\" \
         \"-DCMAKE_BUILD_TYPE=${BUILD_CONFIG}\" \
         -GXcode \
         \"-DCMAKE_TOOLCHAIN_FILE=${IOS_CMAKE_TOOLCHAIN_FILE}\" \
