@@ -50,7 +50,9 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
         target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DUSE_OCEAN_RENDERING_GLES_EXPORT")
     endif()
 
-    if (IOS OR MACOS)
+    if (IOS)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DGLES_SILENCE_DEPRECATION")
+    elseif (MACOS)
         target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DGL_SILENCE_DEPRECATION")
     endif()
 

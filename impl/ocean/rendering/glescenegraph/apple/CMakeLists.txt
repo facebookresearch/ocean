@@ -23,7 +23,13 @@ if (MACOS OR IOS)
         PUBLIC
             ${OCEAN_COMPILER_FLAGS}
             "-fexceptions"
-        )
+    )
+
+    if (IOS)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DGLES_SILENCE_DEPRECATION")
+    elseif (MACOS)
+        target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DGL_SILENCE_DEPRECATION")
+    endif()
 
     # Dependencies
     target_link_libraries(${OCEAN_TARGET_NAME}
