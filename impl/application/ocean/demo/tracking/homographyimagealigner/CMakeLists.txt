@@ -220,6 +220,8 @@ if (IOS)
         ${OCEAN_TARGET_STORYBOARDS}
     )
 
+    target_compile_definitions(${OCEAN_TARGET_NAME} PRIVATE "-DGLES_SILENCE_DEPRECATION")
+
     set_source_files_properties(${OCEAN_TARGET_STORYBOARDS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
     set(ALL_APP_RESOURCES
