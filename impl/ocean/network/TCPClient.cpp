@@ -101,7 +101,6 @@ bool TCPClient::connect(const Address4& address, const Port& port, const unsigne
 			Log::debug() << "TCPClient::connect() failed with error value " << errorValue;
 		}
 
-		ocean_assert(errorValue == EINPROGRESS || errorValue == EALREADY);
 #endif // _WINDOWS
 
 		fd_set writeSockets;
