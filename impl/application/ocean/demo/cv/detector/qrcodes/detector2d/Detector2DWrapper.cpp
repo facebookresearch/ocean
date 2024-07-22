@@ -7,28 +7,25 @@
 
 #include "application/ocean/demo/cv/detector/qrcodes/detector2d/Detector2DWrapper.h"
 
-#include "ocean/base/Build.h"
-#include "ocean/base/PluginManager.h"
-#include "ocean/base/Processor.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/WorkerPool.h"
 
-#include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameConverter.h"
 
 #include "ocean/cv/detector/qrcodes/QRCode.h"
 #include "ocean/cv/detector/qrcodes/LegacyQRCodeDetector2D.h"
 #include "ocean/cv/detector/qrcodes/Utilities.h"
 
-#include "ocean/io/File.h"
-
 #include "ocean/media/FiniteMedium.h"
 #include "ocean/media/ImageSequence.h"
 #include "ocean/media/Manager.h"
-#include "ocean/media/Utilities.h"
 
 #include "ocean/platform/System.h"
 #include "ocean/platform/Utilities.h"
+
+#if OCEAN_DEMO_QRCODES_DETECTOR2D_DISABLE_MULTICORE_COMPUTATION
+	#include "ocean/base/Processor.h"
+#endif
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)
@@ -41,6 +38,9 @@
 	#elif defined(_ANDROID)
 		#include "ocean/media/openimagelibraries/OpenImageLibraries.h"
 	#endif
+#else
+	#include "ocean/base/Build.h"
+	#include "ocean/base/PluginManager.h"
 #endif
 
 Detector2DWrapper::Detector2DWrapper(Detector2DWrapper&& detector2dWrapper)
@@ -54,7 +54,7 @@ Detector2DWrapper::Detector2DWrapper(const std::vector<std::wstring>& separatedC
 	Messenger::get().setOutputType(Messenger::OUTPUT_DEBUG_WINDOW);
 #endif
 
-#if 0
+#if OCEAN_DEMO_QRCODES_DETECTOR2D_DISABLE_MULTICORE_COMPUTATION
 	// Disable multi-core computation by forcing one CPU core
 	Processor::get().forceCores(1);
 #endif
