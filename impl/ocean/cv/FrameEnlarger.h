@@ -271,6 +271,9 @@ inline bool FrameEnlarger::Comfort::addBorder(Frame& frame, const unsigned int b
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 	return true;
 }
@@ -285,6 +288,9 @@ bool FrameEnlarger::Comfort::addBorderNearestPixel(Frame& frame, const unsigned 
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 	return true;
 }
@@ -298,6 +304,9 @@ bool FrameEnlarger::Comfort::addBorderMirrored(Frame& frame, const unsigned int 
 	{
 		return false;
 	}
+
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
 
 	frame = std::move(tmpFrame);
 	return true;
@@ -748,12 +757,16 @@ bool FrameEnlarger::Comfort::addTransparentBorder(const Frame& source, Frame& ta
 template <bool tTransparentIs0xFF>
 bool FrameEnlarger::Comfort::addTransparentBorder(Frame& frame, const unsigned int leftBorder, const unsigned int topBorder, const unsigned int rightBorder, const unsigned int bottomBorder)
 {
-	Frame tmpFrame;
+	ocean_assert(frame.isValid());
 
+	Frame tmpFrame;
 	if (!addTransparentBorder<tTransparentIs0xFF>(frame, tmpFrame, leftBorder, topBorder, rightBorder, bottomBorder))
 	{
 		return false;
 	}
+
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
 
 	frame = std::move(tmpFrame);
 	return true;

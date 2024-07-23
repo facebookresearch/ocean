@@ -269,6 +269,9 @@ bool AdvancedFrameConverter::changeToYUT24ScharrMagnitude(Frame& frame, const un
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 
 	return true;
@@ -282,6 +285,9 @@ bool AdvancedFrameConverter::changeToYUVT32ScharrMagnitude(Frame& frame, const u
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 
 	return true;
@@ -294,6 +300,9 @@ bool AdvancedFrameConverter::changeToRGBT32ScharrMagnitude(Frame& frame, const u
 	{
 		return false;
 	}
+
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
 
 	frame = std::move(tmpFrame);
 

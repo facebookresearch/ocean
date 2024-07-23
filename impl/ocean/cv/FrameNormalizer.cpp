@@ -436,6 +436,9 @@ bool FrameNormalizer::normalizeToUint8(Frame& frame, Worker* worker)
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 	return true;
 }
@@ -447,6 +450,9 @@ bool FrameNormalizer::normalizeToFloat32(Frame& frame, Worker* worker)
 	{
 		return false;
 	}
+
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
 
 	frame = std::move(tmpFrame);
 	return true;
@@ -460,6 +466,9 @@ bool FrameNormalizer::normalizeLogarithmToUint8(Frame& frame, const Scalar octav
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 	return true;
 }
@@ -471,6 +480,9 @@ bool FrameNormalizer::normalizeLogarithmToFloat32(Frame& frame, const Scalar oct
 	{
 		return false;
 	}
+
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
 
 	frame = std::move(tmpFrame);
 	return true;

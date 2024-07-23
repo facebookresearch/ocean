@@ -117,6 +117,9 @@ bool FrameFilterMin::Comfort::filter(Frame& frame, const unsigned int filterSize
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 
 	return true;

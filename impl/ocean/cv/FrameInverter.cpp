@@ -47,6 +47,9 @@ bool FrameInverter::invert(Frame& frame, Worker* worker)
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 
 	return true;

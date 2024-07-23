@@ -298,6 +298,9 @@ inline bool FrameTransposer::Comfort::rotate90(Frame& frame, const bool clockwis
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 
 	return true;
@@ -312,6 +315,9 @@ inline bool FrameTransposer::Comfort::rotate180(Frame& frame, Worker* worker)
 	{
 		return false;
 	}
+
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
 
 	frame = std::move(tmpFrame);
 
@@ -333,6 +339,9 @@ inline bool FrameTransposer::Comfort::rotate(Frame& frame, const int angle, Work
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 
 	return true;
@@ -348,6 +357,9 @@ inline bool FrameTransposer::transpose(Frame& frame, Worker* worker)
 	{
 		return false;
 	}
+
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
 
 	frame = std::move(tmpFrame);
 	return true;

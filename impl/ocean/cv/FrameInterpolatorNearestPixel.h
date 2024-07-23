@@ -579,6 +579,9 @@ inline bool FrameInterpolatorNearestPixel::Comfort::resize(Frame& frame, const u
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 	return true;
 }

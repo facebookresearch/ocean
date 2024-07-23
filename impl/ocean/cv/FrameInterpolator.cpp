@@ -42,6 +42,9 @@ bool FrameInterpolator::resize(Frame& frame, const unsigned int width, const uns
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 
 	return true;

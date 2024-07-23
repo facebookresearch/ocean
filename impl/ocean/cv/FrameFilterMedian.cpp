@@ -117,6 +117,9 @@ bool FrameFilterMedian::Comfort::filter(Frame& frame, const unsigned int filterS
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 
 	return true;

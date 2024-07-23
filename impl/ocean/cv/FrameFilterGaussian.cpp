@@ -76,6 +76,9 @@ bool FrameFilterGaussian::filter(Frame& frame, const unsigned int filterSize, Wo
 			return false;
 		}
 
+		tmpFrame.setTimestamp(frame.timestamp());
+		tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 		frame = std::move(tmpFrame);
 
 		return true;

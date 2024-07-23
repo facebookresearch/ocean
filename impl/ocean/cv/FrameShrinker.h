@@ -449,6 +449,9 @@ inline bool FrameShrinker::downsampleByTwo11(Frame& frame, Worker* worker)
 		return false;
 	}
 
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(tmpFrame);
 	return true;
 }
@@ -461,6 +464,9 @@ inline bool FrameShrinker::downsampleBinayMaskByTwo11(Frame& mask, const unsigne
 		return false;
 	}
 
+	tmpMask.setTimestamp(mask.timestamp());
+	tmpMask.setRelativeTimestamp(mask.relativeTimestamp());
+
 	mask = std::move(tmpMask);
 	return true;
 }
@@ -472,6 +478,9 @@ inline bool FrameShrinker::downsampleByTwo14641(Frame& frame, Worker* worker)
 	{
 		return false;
 	}
+
+	tmpFrame.setTimestamp(frame.timestamp());
+	tmpFrame.setRelativeTimestamp(frame.relativeTimestamp());
 
 	frame = std::move(tmpFrame);
 	return true;
