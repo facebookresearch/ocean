@@ -165,10 +165,39 @@ bool ARSessionManager::Session::start(ACDevice* tracker)
 			int32_t arConfigListSize = 0;
 			ArCameraConfigList_getSize(arSession, arCameraConfigList, &arConfigListSize);
 
+#ifdef OCEAN_DEBUG
+			Log::debug() << "ArCore: Found " << arConfigListSize << " camera configurations in configuration iteration " << configIteration + 1u << " (of " << configIterations << " iterations)";
+
+			for (int32_t n = 0; n < arConfigListSize; ++n)
+			{
+				ScopedARCameraConfig arCameraConfig(arSession, ArCameraConfig_create);
+
+				ArCameraConfigList_getItem(arSession, arCameraConfigList, n, arCameraConfig);
+
+				ArCameraConfigFacingDirection arFacingDirection = AR_CAMERA_CONFIG_FACING_DIRECTION_BACK;
+				ArCameraConfig_getFacingDirection(arSession, arCameraConfig, &arFacingDirection);
+
+				if (arFacingDirection != arNecessaryFacingDirection)
+				{
+					continue;
+				}
+
+				int32_t width = 0;
+				int32_t height = 0;
+				ArCameraConfig_getImageDimensions(arSession, arCameraConfig, &width, &height);
+
+				int32_t minFps = 0;
+				int32_t maxFps = 0;
+				ArCameraConfig_getFpsRange(arSession, arCameraConfig, &minFps, &maxFps);
+
+				Log::debug() << width << "x" << height << ", [" << minFps << ", " << maxFps << "] fps";
+			}
+
 			if (arConfigListSize == 0)
 			{
 				Log::debug() << "ArCore: Did not find any camera configuration in configuration iteration " << configIteration + 1u << " (of " << configIterations << " iterations)";
 			}
+#endif // OCEAN_DEBUG
 
 			for (int32_t n = 0; n < arConfigListSize; ++n)
 			{
