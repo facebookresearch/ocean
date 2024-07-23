@@ -170,7 +170,7 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		 * @return The duration in seconds, with range [minDuration, maxDuration], -1 if unknown
 		 * @see setExposureDuration().
 		 */
-		virtual double exposureDuration(double* minDuration, double* maxDuration, ControlMode* exposureMode) const;
+		virtual double exposureDuration(double* minDuration = nullptr, double* maxDuration = nullptr, ControlMode* exposureMode = nullptr) const;
 
 		/**
 		 * Returns the current ISO of this device.
@@ -179,14 +179,14 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		 * @param isoMode Optional resulting ISO mode, nullptr if not of interest
 		 * @return The current ISO, with range [minISO, maxISO], -1 if unknown
 		 */
-		virtual float iso(float* minISO, float* maxISO, ControlMode* isoMode) const;
+		virtual float iso(float* minISO = nullptr, float* maxISO = nullptr, ControlMode* isoMode = nullptr) const;
 
 		/**
 		 * Returns the current focus of this device.
 		 * @return The device's focus, with range [0, 1] with 0 shortest distance and 1 furthest distance
 		 * @param focusMode Optional resulting focus mode, nullptr if not of interest
 		 */
-		virtual float focus(ControlMode* focusMode) const;
+		virtual float focus(ControlMode* focusMode = nullptr) const;
 
 		/**
 		 * Sets the preferred stream type.

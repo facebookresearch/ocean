@@ -57,19 +57,19 @@ class AVFLiveVideo :
 		 * Returns the current exposure duration of this device.
 		 * @see exposureDuration().
 		 */
-		double exposureDuration(double* minDuration, double* maxDuration, ControlMode* exposureMode) const override;
+		double exposureDuration(double* minDuration = nullptr, double* maxDuration = nullptr, ControlMode* exposureMode = nullptr) const override;
 
 		/**
 		 * Returns the current ISO of this device.
 		 * @see iso().
 		 */
-		float iso(float* minISO, float* maxISO, ControlMode* isoMode) const override;
+		float iso(float* minISO = nullptr, float* maxISO = nullptr, ControlMode* isoMode = nullptr) const override;
 
 		/**
 		 * Returns the current focus of this device.
 		 * @see focus().
 		 */
-		float focus(ControlMode* focusMode) const override;
+		float focus(ControlMode* focusMode = nullptr) const override;
 
 		/**
 		 * Sets the exposure duriation of this device.
