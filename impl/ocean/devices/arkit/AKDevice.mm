@@ -140,6 +140,32 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 		arConfiguration_ = nullptr;
 
+		unsigned int preferredWidth = 1280u;
+		unsigned int preferredHeight = 720u;
+
+		float preferredFps = -1.0f;
+		constexpr bool preferredHDR = false;
+
+		if (inputLiveVideo->preferredFrameWidth() != 0u || inputLiveVideo->preferredFrameHeight() != 0u)
+		{
+			preferredWidth = inputLiveVideo->preferredFrameWidth();
+			preferredHeight = inputLiveVideo->preferredFrameHeight();
+		}
+		else
+		{
+			const FrameRef frame = inputLiveVideo->frame();
+			if (frame && frame->isValid())
+			{
+				preferredWidth = frame->width();
+				preferredHeight = frame->height();
+			}
+		}
+
+		if (inputLiveVideo->preferredFrameFrequency() > 0.0)
+		{
+			preferredFps = float(inputLiveVideo->preferredFrameFrequency());
+		}
+
 		if (useBackCamera)
 		{
 			if (necessaryTrackerCapabilities & AKDevice::TC_GEO_ANCHORS)
@@ -153,35 +179,11 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 					{
 						ARGeoTrackingConfiguration* arGeoTrackingConfiguration = [ARGeoTrackingConfiguration new];
 
-#ifdef OCEAN_DEBUG
-						Log::debug() << "Supported video formats for geo tracking:";
+						ARVideoFormat* videoFormat = [AKTracker6DOFDelegate determinePreferredVideoFormat:ARGeoTrackingConfiguration.supportedVideoFormats withWidth:preferredWidth withHeight:preferredHeight withFps:preferredFps withHDR:preferredHDR];
 
-						for (size_t n = 0; n < ARGeoTrackingConfiguration.supportedVideoFormats.count; ++n)
+						if (videoFormat != nullptr)
 						{
-							ARVideoFormat* videoFormat = ARGeoTrackingConfiguration.supportedVideoFormats[n];
-
-							if (@available(iOS 14.5, *))
-							{
-								Log::debug() << "" << StringApple::toUTF8(videoFormat.captureDeviceType) << ", " << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height);
-							}
-							else
-							{
-								Log::debug() << "" << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height);
-							}
-						}
-#endif
-
-						// let's try to select a video format with 720p - otherwise we use the default video format
-
-						for (size_t n = 0; n < ARGeoTrackingConfiguration.supportedVideoFormats.count; ++n)
-						{
-							ARVideoFormat* videoFormat = ARGeoTrackingConfiguration.supportedVideoFormats[n];
-
-							if (videoFormat.imageResolution.width == 1280.0f && videoFormat.imageResolution.height == 720.0f)
-							{
-								arGeoTrackingConfiguration.videoFormat = videoFormat;
-								break;
-							}
+							arGeoTrackingConfiguration.videoFormat = videoFormat;
 						}
 
 						trackerCapabilities_ = Devices::ARKit::AKDevice::TrackerCapabilities(trackerCapabilities_ | Devices::ARKit::AKDevice::TC_GEO_ANCHORS);
@@ -223,37 +225,11 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 			{
 				ARWorldTrackingConfiguration* arWorldTrackingConfiguration = [ARWorldTrackingConfiguration new];
 
-				if (@available(iOS 11.3, *))
+				ARVideoFormat* videoFormat = [AKTracker6DOFDelegate determinePreferredVideoFormat:ARWorldTrackingConfiguration.supportedVideoFormats withWidth:preferredWidth withHeight:preferredHeight withFps:preferredFps withHDR:preferredHDR];
+
+				if (videoFormat != nullptr)
 				{
-#ifdef OCEAN_DEBUG
-					Log::debug() << "Supported video formats for world tracking:";
-
-					for (size_t n = 0; n < ARWorldTrackingConfiguration.supportedVideoFormats.count; ++n)
-					{
-						ARVideoFormat* videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[n];
-
-						if (@available(iOS 14.5, *))
-						{
-							Log::debug() << "" << StringApple::toUTF8(videoFormat.captureDeviceType) << ", " << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height);
-						}
-						else
-						{
-							Log::debug() << "" << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height);
-						}
-					}
-#endif
-					// let's try to select a video format with 720p - otherwise we use the default video format
-
-					for (size_t n = 0; n < ARWorldTrackingConfiguration.supportedVideoFormats.count; ++n)
-					{
-						ARVideoFormat* videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[n];
-
-						if (videoFormat.imageResolution.width == 1280.0f && videoFormat.imageResolution.height == 720.0f)
-						{
-							arWorldTrackingConfiguration.videoFormat = videoFormat;
-							break;
-						}
-					}
+					arWorldTrackingConfiguration.videoFormat = videoFormat;
 				}
 
 				if (necessaryTrackerCapabilities & Devices::ARKit::AKDevice::TC_PLANE_DETECTION)
@@ -318,6 +294,8 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 					}
 				}
 
+				Log::debug() << "ARKit auto focus enabled: " << (arWorldTrackingConfiguration.autoFocusEnabled ? "true" : "false");
+
 				arConfiguration_ = arWorldTrackingConfiguration;
 			}
 		}
@@ -327,35 +305,11 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 			if (@available(iOS 11.3, *))
 			{
-#ifdef OCEAN_DEBUG
-				Log::debug() << "Supported video formats for face tracking:";
+				ARVideoFormat* videoFormat = [AKTracker6DOFDelegate determinePreferredVideoFormat:ARFaceTrackingConfiguration.supportedVideoFormats withWidth:preferredWidth withHeight:preferredHeight withFps:preferredFps withHDR:preferredHDR];
 
-				for (size_t n = 0; n < ARFaceTrackingConfiguration.supportedVideoFormats.count; ++n)
+				if (videoFormat != nullptr)
 				{
-					ARVideoFormat* videoFormat = ARFaceTrackingConfiguration.supportedVideoFormats[n];
-
-					if (@available(iOS 14.5, *))
-					{
-						Log::debug() << "" << StringApple::toUTF8(videoFormat.captureDeviceType) << ", " << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height);
-					}
-					else
-					{
-						Log::debug() << "" << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height);
-					}
-				}
-#endif
-
-				// let's try to select a video format with 720p - otherwise we use the default video format
-
-				for (size_t n = 0; n < ARFaceTrackingConfiguration.supportedVideoFormats.count; ++n)
-				{
-					ARVideoFormat* videoFormat = ARFaceTrackingConfiguration.supportedVideoFormats[n];
-
-					if (videoFormat.imageResolution.width == 1280.0f && videoFormat.imageResolution.height == 720.0f)
-					{
-						arFaceTrackingConfiguration.videoFormat = videoFormat;
-						break;
-					}
+					arFaceTrackingConfiguration.videoFormat = videoFormat;
 				}
 				
 				if (necessaryTrackerCapabilities & AKDevice::TC_SLAM)
@@ -731,6 +685,129 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 		}
 #endif
 	}
+}
+
++ (ARVideoFormat*)determinePreferredVideoFormat:(NSArray<ARVideoFormat *> *)supportedVideoFormats withWidth:(unsigned int)preferredWidth withHeight:(unsigned int)preferredHeight withFps:(float)preferredFps withHDR:(int)preferredHDR
+{
+#ifdef OCEAN_DEBUG
+	Log::debug() << "Supported video formats for tracker:";
+
+	for (size_t n = 0; n < ARWorldTrackingConfiguration.supportedVideoFormats.count; ++n)
+	{
+		ARVideoFormat* videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[n];
+
+		if (@available(iOS 16.0, *))
+		{
+			Log::debug() << "" << StringApple::toUTF8(videoFormat.captureDeviceType) << ", " << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height) << ", " << int(videoFormat.framesPerSecond) << "fps, " << (videoFormat.isVideoHDRSupported ? "HDR" : "no HDR");
+		}
+		else if (@available(iOS 14.5, *))
+		{
+			Log::debug() << "" << StringApple::toUTF8(videoFormat.captureDeviceType) << ", " << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height) << ", " << int(videoFormat.framesPerSecond) << "fps";
+		}
+		else
+		{
+			Log::debug() << "" << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height);
+		}
+	}
+#endif // OCEAN_DEBUG
+
+	// let's try to select a video format matching with the input video - otherwise we use the default video format
+
+	ARVideoFormat* result = nullptr;
+
+	if (@available(iOS 16.0, *))
+	{
+		for (size_t n = 0; n < ARWorldTrackingConfiguration.supportedVideoFormats.count; ++n)
+		{
+			ARVideoFormat* videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[n];
+
+			if (preferredWidth != 0u && videoFormat.imageResolution.width != float(preferredWidth))
+			{
+				continue;
+			}
+
+			if (preferredHeight != 0u && videoFormat.imageResolution.height != float(preferredHeight))
+			{
+				continue;
+			}
+
+			if (preferredFps > 0.0f && videoFormat.framesPerSecond  != preferredFps)
+			{
+				continue;
+			}
+
+			if (preferredHDR >= 0 && videoFormat.isVideoHDRSupported != preferredHDR != 0)
+			{
+				continue;
+			}
+
+			result = videoFormat;
+			break;
+		}
+	}
+
+	if (result == nullptr)
+	{
+		for (size_t n = 0; n < ARWorldTrackingConfiguration.supportedVideoFormats.count; ++n)
+		{
+			ARVideoFormat* videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[n];
+
+			if (preferredWidth != 0u && videoFormat.imageResolution.width != float(preferredWidth))
+			{
+				continue;
+			}
+
+			if (preferredHeight != 0u && videoFormat.imageResolution.height != float(preferredHeight))
+			{
+				continue;
+			}
+
+			if (preferredFps > 0.0f && videoFormat.framesPerSecond  != preferredFps)
+			{
+				continue;
+			}
+
+			result = videoFormat;
+		}
+	}
+
+	if (result == nullptr)
+	{
+		for (size_t n = 0; n < ARWorldTrackingConfiguration.supportedVideoFormats.count; ++n)
+		{
+			ARVideoFormat* videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[n];
+
+			if (preferredWidth != 0u && videoFormat.imageResolution.width != float(preferredWidth))
+			{
+				continue;
+			}
+
+			if (preferredHeight != 0u && videoFormat.imageResolution.height != float(preferredHeight))
+			{
+				continue;
+			}
+
+			result = videoFormat;
+			break;
+		}
+	}
+
+#ifdef OCEAN_DEBUG
+	if (result != nullptr)
+	{
+		Log::debug() << "Selected video format:";
+		if (@available(iOS 16.0, *))
+		{
+			Log::debug() << "" << StringApple::toUTF8(result.captureDeviceType) << ", " << int(result.imageResolution.width) << "x" << int(result.imageResolution.height) << ", " << int(result.framesPerSecond) << "fps, " << (result.isVideoHDRSupported ? "HDR" : "no HDR");
+		}
+	}
+	else
+	{
+		Log::debug() << "No matching video format found";
+	}
+#endif
+
+	return result;
 }
 
 @end
