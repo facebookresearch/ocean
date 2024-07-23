@@ -135,28 +135,36 @@ HomogenousMatrixD4 AVFLiveVideo::device_T_camera() const
 	return device_T_camera_;
 }
 
-double AVFLiveVideo::exposureDuration(double* minDuration, double* maxDuration) const
+double AVFLiveVideo::exposureDuration(double* minDuration, double* maxDuration, ControlMode* exposureMode) const
 {
 	const ScopedLock scopedLock(lock_);
 
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
 	if (captureDevice_ != nullptr)
 	{
-		if (minDuration)
+		if (minDuration != nullptr)
 		{
 			*minDuration = CMTimeGetSeconds([[captureDevice_ activeFormat] minExposureDuration]);
 		}
 
-		if (maxDuration)
+		if (maxDuration != nullptr)
 		{
 			*maxDuration = CMTimeGetSeconds([[captureDevice_ activeFormat] maxExposureDuration]);
 		}
 
-		const AVCaptureExposureMode captureExposureMode = [captureDevice_ exposureMode];
-
-		if (captureExposureMode == AVCaptureExposureModeContinuousAutoExposure)
+		if (exposureMode != nullptr)
 		{
-			return 0.0;
+			const AVCaptureExposureMode captureExposureMode = [captureDevice_ exposureMode];
+
+			if (captureExposureMode == AVCaptureExposureModeContinuousAutoExposure)
+			{
+				*exposureMode = CM_DYNAMIC;
+			}
+			else
+			{
+				// even AVCaptureExposureModeAutoExpose is interpreted as a fixed exposure mode as it is fixed after the first exposure adjustment
+				*exposureMode = CM_FIXED;
+			}
 		}
 
 		const CMTime value = [captureDevice_ exposureDuration];
@@ -174,35 +182,54 @@ double AVFLiveVideo::exposureDuration(double* minDuration, double* maxDuration) 
 	else
 #endif // TARGET_OS_IPHONE
 	{
-		if (minDuration)
+		if (minDuration != nullptr)
 		{
 			*minDuration = -1.0;
 		}
 
-		if (maxDuration)
+		if (maxDuration != nullptr)
 		{
 			*maxDuration = -1.0;
+		}
+
+		if (exposureMode != nullptr)
+		{
+			*exposureMode = CM_INVALID;
 		}
 
 		return -1.0;
 	}
 }
 
-float AVFLiveVideo::iso(float* minISO, float* maxISO) const
+float AVFLiveVideo::iso(float* minISO, float* maxISO, ControlMode* isoMode) const
 {
 	const ScopedLock scopedLock(lock_);
 
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
 	if (captureDevice_ != nullptr)
 	{
-		if (minISO)
+		if (minISO != nullptr)
 		{
 			*minISO = [[captureDevice_ activeFormat] minISO];
 		}
 
-		if (maxISO)
+		if (maxISO != nullptr)
 		{
 			*maxISO = [[captureDevice_ activeFormat] maxISO];
+		}
+
+		if (isoMode != nullptr)
+		{
+			const AVCaptureExposureMode captureExposureMode = [captureDevice_ exposureMode];
+
+			if (captureExposureMode == AVCaptureExposureModeContinuousAutoExposure)
+			{
+				*isoMode = CM_DYNAMIC;
+			}
+			else
+			{
+				*isoMode = CM_FIXED;
+			}
 		}
 
 		return [captureDevice_ ISO];
@@ -210,23 +237,29 @@ float AVFLiveVideo::iso(float* minISO, float* maxISO) const
 	else
 #endif // TARGET_OS_IPHONE
 	{
-		if (minISO)
+		if (minISO != nullptr)
 		{
 			*minISO = -1.0f;
 		}
 
-		if (maxISO)
+		if (maxISO != nullptr)
 		{
 			*maxISO = -1.0f;
+		}
+
+		if (isoMode != nullptr)
+		{
+			*isoMode = CM_INVALID;
 		}
 
 		return -1.0f;
 	}
 }
 
-float AVFLiveVideo::focus() const
+float AVFLiveVideo::focus(ControlMode* focusMode) const
 {
 	float result = -1.0f;
+	ControlMode resultFocusMode = CM_INVALID;
 
 	const ScopedLock scopedLock(lock_);
 
@@ -234,13 +267,24 @@ float AVFLiveVideo::focus() const
 
 	if (captureDevice_ != nullptr)
 	{
-		if ([captureDevice_ focusMode] != AVCaptureFocusModeContinuousAutoFocus)
+		result = captureDevice_.lensPosition;
+
+		if ([captureDevice_ focusMode] == AVCaptureFocusModeContinuousAutoFocus)
 		{
-			result = captureDevice_.lensPosition;
+			resultFocusMode = CM_DYNAMIC;
+		}
+		else
+		{
+			resultFocusMode = CM_FIXED;
 		}
 	}
 
 #endif // TARGET_OS_IPHONE
+
+	if (focusMode != nullptr)
+	{
+		*focusMode = resultFocusMode;
+	}
 
 	return result;
 }

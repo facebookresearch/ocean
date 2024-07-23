@@ -90,38 +90,53 @@ LiveVideo::StreamConfigurations LiveVideo::supportedStreamConfigurations(const S
 	return StreamConfigurations();
 }
 
-double LiveVideo::exposureDuration(double* minDuration, double* maxDuration) const
+double LiveVideo::exposureDuration(double* minDuration, double* maxDuration, ControlMode* exposureMode) const
 {
-	if (minDuration)
+	if (minDuration != nullptr)
 	{
 		*minDuration = -1.0;
 	}
 
-	if (maxDuration)
+	if (maxDuration != nullptr)
 	{
 		*maxDuration = -1.0;
+	}
+
+	if (exposureMode != nullptr)
+	{
+		*exposureMode = CM_INVALID;
 	}
 
 	return -1.0;
 }
 
-float LiveVideo::iso(float* minISO, float* maxISO) const
+float LiveVideo::iso(float* minISO, float* maxISO, ControlMode* isoMode) const
 {
-	if (minISO)
+	if (minISO != nullptr)
 	{
 		*minISO = -1.0f;
 	}
 
-	if (maxISO)
+	if (maxISO != nullptr)
 	{
 		*maxISO = -1.0f;
+	}
+
+	if (isoMode != nullptr)
+	{
+		*isoMode = CM_INVALID;
 	}
 
 	return -1.0f;
 }
 
-float LiveVideo::focus() const
+float LiveVideo::focus(ControlMode* focusMode) const
 {
+	if (focusMode != nullptr)
+	{
+		*focusMode = CM_INVALID;
+	}
+
 	return -1.0f;
 }
 
@@ -148,6 +163,24 @@ bool LiveVideo::setISO(const float /*iso*/)
 bool LiveVideo::setFocus(const float /*position*/)
 {
 	return false;
+}
+
+std::string LiveVideo::translateControlMode(const ControlMode controlMode)
+{
+	switch (controlMode)
+	{
+		case CM_INVALID:
+			return std::string("Invalid");
+
+		case CM_FIXED:
+			return std::string("Fixed");
+
+		case CM_DYNAMIC:
+			return std::string("Dynamic");
+	}
+
+	ocean_assert(false && "Invalid control mode!");
+	return std::string("Invalid");
 }
 
 std::string LiveVideo::translateStreamType(const StreamType streamType)

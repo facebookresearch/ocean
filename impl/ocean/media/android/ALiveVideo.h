@@ -90,19 +90,19 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		 * Returns the current exposure duration of this device.
 		 * @see exposureDuration().
 		 */
-		double exposureDuration(double* minDuration = nullptr, double* maxDuration = nullptr) const override;
+		double exposureDuration(double* minDuration, double* maxDuration, ControlMode* exposureMode) const override;
 
 		/**
 		 * Returns the current ISO of this device.
 		 * @see iso().
 		 */
-		float iso(float* minISO = nullptr, float* maxISO = nullptr) const override;
+		float iso(float* minISO, float* maxISO, ControlMode* isoMode) const override;
 
 		/**
 		 * Returns the current focus of this device.
 		 * @see focus().
 		 */
-		float focus() const override;
+		float focus(ControlMode* focusMode) const override;
 
 		/**
 		 * Sets the exposure duration of this device.
@@ -307,14 +307,13 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		static bool cameraISORange(ACameraManager* cameraManager, const std::string& cameraId, float& minISO, float& maxISO);
 
 		/**
-		 * Determines the range of the focus distance of the camera sensor.
+		 * Determines the minimal focus distance of the camera sensor.
 		 * @param cameraManager The camera manager, must be valid
 		 * @param cameraId The id of the camera, must be valid
-		 * @param minFocusPosition The minimal focus distance
-		 * @param maxFocusPosition The maximal focus distance
+		 * @param minFocusPosition The minimal focus distance, which is the reciprocal of the focus distance in meters
 		 * @return True, if succeeded
 		 */
-		static bool cameraFocusRange(ACameraManager* cameraManager, const std::string& cameraId, float& minFocusPosition, float& maxFocusPosition);
+		static bool cameraMinFocus(ACameraManager* cameraManager, const std::string& cameraId, float& minFocusPosition);
 
 		/**
 		 * Determines the physical size of the camera sensor.
@@ -495,6 +494,9 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		/// Recent frame type.
 		FrameType imageRecentFrameType;
 
+		/// The current exposure mode of this device.
+		ControlMode exposureMode_ = CM_INVALID;
+
 		/// The current exposure duration of this device.
 		double exposureDuration_ = -1.0;
 
@@ -503,6 +505,9 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 
 		/// Maximal duration to set, in seconds, with range [exposureDurationMin_, infinity), -1 if unknown
 		double exposureDurationMax_ = -1.0;
+
+		/// The current ISO mode of this device.
+		ControlMode isoMode_ = CM_INVALID;
 
 		/// The current ISO, with range [isoMin_, isoMax_], 0 for auto IOS, -1 if unknown.
 		float iso_ = -1.0f;
@@ -513,14 +518,14 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		/// Maximal ISO to set, with range (isoMin_, infinity), -1 if unknown.
 		float isoMax_ = -1.0f;
 
-		/// The focus position to be set, with range [0, 1] with 0 shortest distance and 1 furthest distance, -1 for auto focus.
+		/// The current focus mode of this device.
+		ControlMode focusMode_ = CM_INVALID;
+
+		/// The focus position to be set, with range [0, 1] with 0 shortest distance and 1 furthest distance, -1 if unknown.
 		float focusPosition_ = -1.0f;
 
-		/// The minimal focus distance.
+		/// The minimal focus distance (reciprocal of the focus distance in meters), -1 if unknown.
 		float focusPositionMin_ = -1.0f;
-
-		/// The maximal focus distance.
-		float focusPositionMax_ = -1.0f;
 
 		/// Start timestamp.
 		Timestamp startTimestamp_;
@@ -547,7 +552,7 @@ inline void ALiveVideo::feedNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera)
  * @param imageBuffer New camera image buffer
  * @param width The width of the new camera image buffer in pixel
  * @param height The height of the new camera image buffer in pixel
- * @param format Format of the camera image buffer
+ * @param format The format of the camera image buffer
  * @param fovX Horizontal field of view in radian
  * @param bufferSize The size of the given image buffer in bytes
  * @param timestamp Unix timestamp of the frame in seconds (time since 1970)

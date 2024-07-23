@@ -39,6 +39,20 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 	public:
 
 		/**
+		 * Definition of individual control modes.
+		 * The modes are used for exposure, ISO, and focus.
+		 */
+		enum ControlMode : uint32_t
+		{
+			/// An invalid control mode.
+			CM_INVALID = 0u,
+			/// The control is fixed (e.g., because the exposure, ISO, or focus was set manually).
+			CM_FIXED,
+			/// The control is dynamic (e.g., because auto exposure, ISO, or focus is enabled).
+			CM_DYNAMIC
+		};
+
+		/**
 		 * Definition of individual stream types.
 		 */
 		enum StreamType : uint32_t
@@ -152,24 +166,27 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		 * Returns the current exposure duration of this device.
 		 * @param minDuration Optional resulting minimal duration to set, in seconds, with range (0, infinity), -1 if unknown
 		 * @param maxDuration Optional resulting maximal duration to set, in seconds, with range [minDuration, infinity), -1 if unknown
-		 * @return The duration in seconds, with range [minDuration, maxDuration], 0 for auto exposure duration, -1 if unknown
+		 * @param exposureMode Optional resulting exposure mode, nullptr if not of interest
+		 * @return The duration in seconds, with range [minDuration, maxDuration], -1 if unknown
 		 * @see setExposureDuration().
 		 */
-		virtual double exposureDuration(double* minDuration = nullptr, double* maxDuration = nullptr) const;
+		virtual double exposureDuration(double* minDuration, double* maxDuration, ControlMode* exposureMode) const;
 
 		/**
 		 * Returns the current ISO of this device.
 		 * @param minISO Optional resulting minimal ISO to set, with range (0, infinity), -1 if unknown
 		 * @param maxISO Optional resulting maximal ISO to set, with range (0, infinity), -1 if unknown
-		 * @return The current ISO, with range [minISO, maxISO], 0 for auto IOS, -1 if unknown
+		 * @param isoMode Optional resulting ISO mode, nullptr if not of interest
+		 * @return The current ISO, with range [minISO, maxISO], -1 if unknown
 		 */
-		virtual float iso(float* minISO = nullptr, float* maxISO = nullptr) const;
+		virtual float iso(float* minISO, float* maxISO, ControlMode* isoMode) const;
 
 		/**
 		 * Returns the current focus of this device.
-		 * @return The device's focus, with range [0, 1] with 0 shortest distance and 1 furthest distance, -1 for auto focus
+		 * @return The device's focus, with range [0, 1] with 0 shortest distance and 1 furthest distance
+		 * @param focusMode Optional resulting focus mode, nullptr if not of interest
 		 */
-		virtual float focus() const;
+		virtual float focus(ControlMode* focusMode) const;
 
 		/**
 		 * Sets the preferred stream type.
@@ -213,6 +230,13 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		 * @see focus().
 		 */
 		virtual bool setFocus(const float position);
+
+		/**
+		 * Translates a control mode to a string.
+		 * @param controlMode The control mode to translate
+		 * @return The translated string, 'Invalid' if the control mode is invalid or unknown
+		 */
+		static std::string translateControlMode(const ControlMode controlMode);
 
 		/**
 		 * Translates a stream type to a string.

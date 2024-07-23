@@ -119,43 +119,58 @@ HomogenousMatrixD4 ALiveVideo::device_T_camera() const
 	}
 }
 
-double ALiveVideo::exposureDuration(double* minDuration, double* maxDuration) const
+double ALiveVideo::exposureDuration(double* minDuration, double* maxDuration, ControlMode* exposureMode) const
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (minDuration)
+	if (minDuration != nullptr)
 	{
 		*minDuration = exposureDurationMin_;
 	}
 
-	if (maxDuration)
+	if (maxDuration != nullptr)
 	{
 		*maxDuration = exposureDurationMax_;
+	}
+
+	if (exposureMode != nullptr)
+	{
+		*exposureMode = exposureMode_;
 	}
 
 	return exposureDuration_;
 }
 
-float ALiveVideo::iso(float* minISO, float* maxISO) const
+float ALiveVideo::iso(float* minISO, float* maxISO, ControlMode* isoMode) const
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (minISO)
+	if (minISO != nullptr)
 	{
 		*minISO = isoMin_;
 	}
 
-	if (maxISO)
+	if (maxISO != nullptr)
 	{
 		*maxISO = isoMax_;
+	}
+
+	if (isoMode != nullptr)
+	{
+		*isoMode = isoMode_;
 	}
 
 	return iso_;
 }
 
-float ALiveVideo::focus() const
+float ALiveVideo::focus(ControlMode* focusMode) const
 {
 	const ScopedLock scopedLock(lock_);
+
+	if (focusMode != nullptr)
+	{
+		*focusMode = focusMode_;
+	}
 
 	return focusPosition_;
 }
@@ -317,7 +332,7 @@ bool ALiveVideo::setFocus(const float position)
 
 	if (position >= 0.0f && position <= 1.0f)
 	{
-		if (focusPositionMin_ == -1.0f || focusPositionMax_ == -1.0f || focusPositionMax_ <= focusPositionMin_)
+		if (focusPositionMin_ == -1.0f)
 		{
 			return false;
 		}
@@ -328,7 +343,9 @@ bool ALiveVideo::setFocus(const float position)
 			return false;
 		}
 
-		const float focusValue = focusPositionMin_ + (focusPositionMax_ - focusPositionMin_) * position;
+		// lens focus distance = [0, focusPositionMin_] ~ [infinity, closest]
+
+		const float focusValue = (1.0f - position) * focusPositionMin_;
 		if (NativeCameraLibrary::get().ACaptureRequest_setEntry_float(captureRequest_, ACAMERA_LENS_FOCUS_DISTANCE, 1, &focusValue) != ACAMERA_OK)
 		{
 			return false;
@@ -521,9 +538,9 @@ bool ALiveVideo::createCamera(FrameType& frameType)
 		Log::debug() << "camera " << cameraId << ", ISO range [" << isoMin_ << ", " << isoMax_ << "]";
 	}
 
-	if (cameraFocusRange(*cameraManager, cameraId, focusPositionMin_, focusPositionMax_))
+	if (cameraMinFocus(*cameraManager, cameraId, focusPositionMin_))
 	{
-		Log::debug() << "camera " << cameraId << ", Focus range [" << focusPositionMin_ << ", " << focusPositionMax_ << "]";
+		Log::debug() << "camera " << cameraId << ", Min focus distance value " << focusPositionMin_ << ", which corresponds to a supported closest object in " << NumericF::ratio(1.0f, focusPositionMin_, -1.0f) << "m";
 	}
 
 	float cameraSensorPhysicalSizeX = -1.0f;
@@ -804,6 +821,12 @@ void ALiveVideo::onCaptureCompleted(ACameraCaptureSession* session, ACaptureRequ
 	ocean_assert(request != nullptr);
 	ocean_assert(result != nullptr);
 
+	ControlMode exposureMode = CM_INVALID;
+	double exposureDuration = -1.0;
+
+	ControlMode isoMode = CM_INVALID;
+	float iso = -1.0f;
+
 	ACameraMetadata_const_entry constEntry = {0};
 	if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(result, ACAMERA_CONTROL_MODE, &constEntry) == ACAMERA_OK)
 	{
@@ -811,43 +834,47 @@ void ALiveVideo::onCaptureCompleted(ACameraCaptureSession* session, ACaptureRequ
 
 		if (controlMode == ACAMERA_CONTROL_MODE_OFF)
 		{
-			if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(result, ACAMERA_SENSOR_EXPOSURE_TIME, &constEntry) == ACAMERA_OK)
-			{
-				const int64_t sensorExposure = constEntry.data.i64[0];
-				exposureDuration_ = Timestamp::nanoseconds2seconds(sensorExposure);
-			}
-
-			if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(result, ACAMERA_SENSOR_SENSITIVITY, &constEntry) == ACAMERA_OK)
-			{
-				const int32_t sensorSensitivity = constEntry.data.i32[0];
-				iso_ = float(sensorSensitivity);
-			}
+			exposureMode = CM_FIXED;
+			iso = CM_FIXED;
 		}
 		else
 		{
-			exposureDuration_ = 0.0;
-			iso_ = -1.0;
+			exposureMode = CM_DYNAMIC;
+			isoMode = CM_DYNAMIC;
+		}
+
+		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(result, ACAMERA_SENSOR_EXPOSURE_TIME, &constEntry) == ACAMERA_OK)
+		{
+			const int64_t sensorExposure = constEntry.data.i64[0];
+			exposureDuration = Timestamp::nanoseconds2seconds(sensorExposure);
+		}
+
+		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(result, ACAMERA_SENSOR_SENSITIVITY, &constEntry) == ACAMERA_OK)
+		{
+			const int32_t sensorSensitivity = constEntry.data.i32[0];
+			iso = float(sensorSensitivity);
 		}
 	}
+
+	ControlMode focusMode = CM_INVALID;
+
+	float focusValue = -1.0f;
 
 	if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(result, ACAMERA_CONTROL_AF_MODE, &constEntry) == ACAMERA_OK)
 	{
 		if (constEntry.data.u8[0] == ACAMERA_CONTROL_AF_MODE_OFF)
 		{
-			focusPosition_ = -1.0f;
+			focusMode = CM_FIXED;
 		}
 		else
 		{
-			if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(result, ACAMERA_LENS_FOCUS_DISTANCE, &constEntry) == ACAMERA_OK)
-			{
-				const float focusValue = constEntry.data.f[0];
-
-				if (focusPositionMin_ != -1.0f && focusPositionMax_ != -1.0f && focusPositionMin_ < focusPositionMax_)
-				{
-					focusPosition_ = (focusValue - focusPositionMin_) / (focusPositionMax_ - focusPositionMin_);
-				}
-			}
+			focusMode = CM_DYNAMIC;
 		}
+	}
+
+	if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(result, ACAMERA_LENS_FOCUS_DISTANCE, &constEntry) == ACAMERA_OK)
+	{
+		focusValue = constEntry.data.f[0];
 	}
 
 #if 0
@@ -890,6 +917,29 @@ void ALiveVideo::onCaptureCompleted(ACameraCaptureSession* session, ACaptureRequ
 	}
 
 #endif
+
+	TemporaryScopedLock scopedLock(lock_);
+
+		exposureMode_ = exposureMode;
+		exposureDuration_ = exposureDuration;
+
+		isoMode_ = isoMode;
+		iso_ = iso;
+
+		focusMode_ = focusMode;
+
+		if (focusValue != -1.0f)
+		{
+			ocean_assert(focusValue >= 0.0f && focusValue <= focusPositionMin_);
+
+			focusPosition_ = 1.0f - focusValue / focusPositionMin_;
+		}
+		else
+		{
+			focusPosition_ = -1.0f;
+		}
+
+	scopedLock.release();
 
 	AImage* image = nullptr;
 	if (NativeMediaLibrary::get().AImageReader_acquireNextImage(imageReader_, &image) != AMEDIA_OK)
@@ -1439,7 +1489,7 @@ bool ALiveVideo::cameraISORange(ACameraManager* cameraManager, const std::string
 	return result;
 }
 
-bool ALiveVideo::cameraFocusRange(ACameraManager* cameraManager, const std::string& cameraId, float& minFocusPosition, float& maxFocusPosition)
+bool ALiveVideo::cameraMinFocus(ACameraManager* cameraManager, const std::string& cameraId, float& minFocusPosition)
 {
 	ocean_assert(cameraManager != nullptr && !cameraId.empty());
 
@@ -1448,11 +1498,13 @@ bool ALiveVideo::cameraFocusRange(ACameraManager* cameraManager, const std::stri
 	ACameraMetadata* cameraMetadata;
 	if (NativeCameraLibrary::get().ACameraManager_getCameraCharacteristics(cameraManager, cameraId.c_str(), &cameraMetadata) == ACAMERA_OK)
 	{
+		// from Android documentation:
+		// ... the focus distance value will still be in the range of [0, ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE], where 0 represents the farthest focus
+
 		ACameraMetadata_const_entry constEntry = {0};
-		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_LENS_FOCUS_RANGE, &constEntry) == ACAMERA_OK)
+		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE, &constEntry) == ACAMERA_OK)
 		{
 			minFocusPosition = constEntry.data.f[0];
-			maxFocusPosition = constEntry.data.f[1];
 
 			result = true;
 		}
