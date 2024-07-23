@@ -539,6 +539,12 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 
 inline void ALiveVideo::feedNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera)
 {
+	// several parameters are unknown in case the camera is fed from an external source
+
+	exposureDuration_ = -1.0;
+	focusPosition_ = -1.0f;
+	iso_ = -1.0f;
+
 	onNewFrame(std::move(frame), std::move(anyCamera));
 }
 
