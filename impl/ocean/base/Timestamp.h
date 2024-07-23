@@ -205,6 +205,13 @@ class OCEAN_BASE_EXPORT Timestamp
 		explicit inline operator double() const;
 
 		/**
+		 * Hash function.
+		 * @param timestamp The timestamp for which the hash value will be determined
+		 * @return The resulting hash value
+		 */
+		inline size_t operator()(const Timestamp& timestamp) const;
+
+		/**
 		 * Converts seconds to milliseconds.
 		 * @param seconds The seconds to convert, with range (-infinity, infinity)
 		 * @return The resulting milliseconds
@@ -391,6 +398,11 @@ inline bool Timestamp::operator!=(const Timestamp& right) const
 inline Timestamp::operator double() const
 {
 	return value_;
+}
+
+inline size_t Timestamp::operator()(const Timestamp& timestamp) const
+{
+	return std::hash<double>{}(double(timestamp));
 }
 
 inline int64_t Timestamp::seconds2milliseconds(const double seconds)
