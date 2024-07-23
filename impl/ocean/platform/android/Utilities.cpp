@@ -121,7 +121,7 @@ bool Utilities::toVector(JNIEnv* env, jobject javaStringList, std::vector<std::s
 
 		strings.emplace_back(toAString(env, javaString));
 	}
-	
+
 	return true;
 }
 
@@ -190,7 +190,7 @@ bool Utilities::toVector(JNIEnv* env, jobject javaIntegerList, std::vector<int>&
 
 		values.emplace_back(env->CallIntMethod(javaObject, jFunctionIdIntValue));
 	}
-	
+
 	return true;
 }
 
@@ -1199,13 +1199,6 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 		return false;
 	}
 
-	const ScopedJClass jActivityClass(*env, env->GetObjectClass(activity));
-
-	if (!jActivityClass)
-	{
-		return false;
-	}
-
 	// ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 	// NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 	// if (networkInfo == null) {
@@ -1353,6 +1346,120 @@ bool Utilities::currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid
 	}
 
 	ocean_assert(!ssid.empty());
+
+	return true;
+}
+
+bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int intensity, const unsigned int duration)
+{
+	ocean_assert(env != nullptr && activity != nullptr);
+	ocean_assert(intensity <= 2u);
+	ocean_assert(duration >= 1u);
+
+	const ScopedJClass jContextClass(*env, env->FindClass("android/content/Context"));
+
+	if (!jContextClass.isValid())
+	{
+		return false;
+	}
+
+	const jfieldID jVibratorServiceFieldId = env->GetStaticFieldID(jContextClass, "VIBRATOR_SERVICE", "Ljava/lang/String;");
+
+	if (jVibratorServiceFieldId == nullptr)
+	{
+		return false;
+	}
+
+    const ScopedJString jVibratorServiceString(*env, (jstring)(env->GetStaticObjectField(jContextClass, jVibratorServiceFieldId)));
+
+	const ScopedJClass jActivityClass(*env, env->GetObjectClass(activity));
+
+	if (!jActivityClass)
+	{
+		return false;
+	}
+
+    jmethodID jGetSystemServiceMethodId = env->GetMethodID(jActivityClass, "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+
+	if (jGetSystemServiceMethodId == nullptr)
+	{
+		return false;
+	}
+
+	const ScopedJObject jVibratorServiceObject(*env, env->CallObjectMethod(activity, jGetSystemServiceMethodId, *jVibratorServiceString));
+
+	if (!jVibratorServiceObject)
+	{
+		return false;
+	}
+
+	const ScopedJClass jVibratorClass(*env, env->FindClass("android/os/Vibrator"));
+
+	if (!jVibratorClass)
+	{
+		return false;
+	}
+
+	unsigned int version = 0u;
+	if (!androidSdkVersion(env, version))
+	{
+		return false;
+	}
+
+    if (version >= 26u)
+	{
+		const ScopedJClass jVibrationEffectClass(*env, env->FindClass("android/os/VibrationEffect"));
+
+		if (!jVibrationEffectClass)
+		{
+			return false;
+		}
+
+        const jmethodID jCreateOneShotMethodId = env->GetStaticMethodID(jVibrationEffectClass, "createOneShot", "(JI)Landroid/os/VibrationEffect;");
+
+		if (jCreateOneShotMethodId == nullptr)
+		{
+			return false;
+		}
+
+		jint amplitude = 50;
+
+		if (intensity == 0u)
+		{
+			amplitude = 10;
+		}
+		else if (intensity == 2u)
+		{
+			amplitude = 100;
+		}
+
+		const ScopedJObject jVibrationEffectObject(*env, env->CallStaticObjectMethod(jVibrationEffectClass, jCreateOneShotMethodId, jlong(duration), amplitude));
+
+		if (!jVibrationEffectObject)
+		{
+			return false;
+		}
+
+		const jmethodID jVibrateMethodId = env->GetMethodID(jVibratorClass, "vibrate", "(Landroid/os/VibrationEffect;)V");
+
+		if (jVibrateMethodId == nullptr)
+		{
+			return false;
+		}
+
+		env->CallVoidMethod(jVibratorServiceObject, jVibrateMethodId, *jVibrationEffectObject);
+    }
+	else
+	{
+    	const jmethodID jVibrateMethodId = env->GetMethodID(jVibratorClass, "vibrate", "(J)V");
+
+		if (jVibrateMethodId == nullptr)
+		{
+			return false;
+		}
+
+        env->CallVoidMethod(jVibratorServiceObject, jVibrateMethodId, jlong(duration));
+    }
 
 	return true;
 }

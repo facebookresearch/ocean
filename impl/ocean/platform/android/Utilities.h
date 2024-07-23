@@ -205,6 +205,17 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 		 * @return True, if succeeded
 		 */
 		static bool currentWifiSsid(JNIEnv* env, jobject activity, std::string& ssid);
+
+		/**
+		 * Triggers a vibration.
+		 * This function needs permission 'android.permission.VIBRATE'.
+		 * @param env The Java environment, must be valid
+		 * @param activity The root activity from which the new activity will be started, must be valid
+		 * @param intensity The intensity of the vibration, the higher the stronger, with range [0, 2]
+		 * @param duration The duration of the vibration in milliseconds, with range [1, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool triggerVibration(JNIEnv* env, jobject activity, unsigned int intensity = 1u, const unsigned int duration = 50u);
 };
 
 }
