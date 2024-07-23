@@ -124,6 +124,12 @@ class Utilities
 		 */
 		static bool shareFiles(const Strings& filenames);
 
+		/**
+		 * Triggers a vibration.
+		 * @param intensity The intensity of the vibration, the higher the stronger, with range [0, 2]
+		 */
+		static void triggerVibration(unsigned int intensity = 1u);
+
 	protected:
 
 		/**

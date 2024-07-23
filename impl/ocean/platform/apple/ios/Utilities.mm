@@ -464,7 +464,26 @@ bool Utilities::shareFiles(const Strings& filenames)
 	shareObjects(objects);
 
 	return true;
+}
 
+void Utilities::triggerVibration(unsigned int intensity)
+{
+	ocean_assert(intensity <= 2u);
+
+	UIImpactFeedbackStyle impactFeedbackStyle = UIImpactFeedbackStyleMedium;
+
+	if (intensity == 0u)
+	{
+		impactFeedbackStyle = UIImpactFeedbackStyleLight;
+	}
+	else if (intensity == 2u)
+	{
+		impactFeedbackStyle = UIImpactFeedbackStyleHeavy;
+	}
+
+	UIImpactFeedbackGenerator* impactFeedback = [[UIImpactFeedbackGenerator alloc] initWithStyle:impactFeedbackStyle];
+	[impactFeedback prepare];
+	[impactFeedback impactOccurred];
 }
 
 Frame Utilities::castToSupportedPixelFormat(const Frame& frame)
