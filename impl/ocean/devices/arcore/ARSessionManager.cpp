@@ -16,6 +16,7 @@
 #include "ocean/cv/segmentation/Triangulation.h"
 
 #include "ocean/media/android/ALiveVideo.h"
+#include "ocean/media/android/NativeCameraLibrary.h"
 
 #include "ocean/platform/android/NativeInterfaceManager.h"
 
@@ -466,13 +467,22 @@ void ARSessionManager::Session::update(unsigned int textureId)
 	}
 
 	{
-		Frame frame = extractImage(arSession_, arFrame);
+		Media::LiveVideo::ControlMode exposureMode = Media::LiveVideo::CM_INVALID;
+		double exposureDurtation = -1.0f;
+
+		Media::LiveVideo::ControlMode isoMode = Media::LiveVideo::CM_INVALID;
+		float iso = 1.0f;
+
+		Media::LiveVideo::ControlMode focusMode = Media::LiveVideo::CM_INVALID;
+		float focusValue = -1.0f;
+
+		Frame frame = extractImage(arSession_, arFrame, exposureMode, exposureDurtation, isoMode, iso, focusMode, focusValue);
 
 		if (frame.isValid())
 		{
 			frame.setTimestamp(frameUnixTimestamp);
 
-			frameMedium_.force<Ocean::Media::Android::ALiveVideo>().feedNewFrame(std::move(frame), std::move(anyCamera));
+			frameMedium_.force<Ocean::Media::Android::ALiveVideo>().feedNewFrame(std::move(frame), std::move(anyCamera), exposureMode, exposureDurtation, isoMode, iso, focusMode, focusValue);
 		}
 	}
 
@@ -831,7 +841,7 @@ void ARSessionManager::update(unsigned int textureId)
 	}
 }
 
-Frame ARSessionManager::extractImage(ArSession* arSession, ArFrame* arFrame)
+Frame ARSessionManager::extractImage(ArSession* arSession, ArFrame* arFrame, Media::LiveVideo::ControlMode& exposureMode, double& exposureDuration, Media::LiveVideo::ControlMode& isoMode, float& iso, Media::LiveVideo::ControlMode& focusMode, float& focusValue)
 {
 	ocean_assert(arSession != nullptr);
 	ocean_assert(arFrame != nullptr);
@@ -926,6 +936,62 @@ Frame ARSessionManager::extractImage(ArSession* arSession, ArFrame* arFrame)
 	{
 		Log::error() << "Not supported ArImageFormat: " << int(arImageFormat);
 	}
+
+#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
+
+	ArImageMetadata* arImageMetadata;
+	if (ArFrame_acquireImageMetadata(arSession, arFrame, &arImageMetadata) == AR_SUCCESS)
+	{
+		ArImageMetadata_const_entry constEntry = {};
+
+		if (ArImageMetadata_getConstEntry(arSession, arImageMetadata, ACAMERA_CONTROL_MODE, &constEntry) == AR_SUCCESS)
+		{
+			const uint8_t controlMode = constEntry.data.u8[0];
+
+			if (controlMode == ACAMERA_CONTROL_MODE_OFF)
+			{
+				exposureMode = Media::LiveVideo::CM_FIXED;
+				isoMode = Media::LiveVideo::CM_FIXED;
+			}
+			else
+			{
+				exposureMode = Media::LiveVideo::CM_DYNAMIC;
+				isoMode = Media::LiveVideo::CM_DYNAMIC;
+			}
+		}
+		if (ArImageMetadata_getConstEntry(arSession, arImageMetadata, ACAMERA_SENSOR_EXPOSURE_TIME, &constEntry) == AR_SUCCESS)
+		{
+			const int64_t sensorExposure = constEntry.data.i64[0];
+			exposureDuration = Timestamp::nanoseconds2seconds(sensorExposure);
+		}
+
+		if (ArImageMetadata_getConstEntry(arSession, arImageMetadata, ACAMERA_SENSOR_SENSITIVITY, &constEntry) == AR_SUCCESS)
+		{
+			const int32_t sensorSensitivity = constEntry.data.i32[0];
+			iso = float(sensorSensitivity);
+		}
+
+		if (ArImageMetadata_getConstEntry(arSession, arImageMetadata, ACAMERA_CONTROL_AF_MODE, &constEntry) == AR_SUCCESS)
+		{
+			if (constEntry.data.u8[0] == ACAMERA_CONTROL_AF_MODE_OFF)
+			{
+				focusMode = Media::LiveVideo::CM_FIXED;
+			}
+			else
+			{
+				focusMode = Media::LiveVideo::CM_DYNAMIC;
+			}
+		}
+
+		if (ArImageMetadata_getConstEntry(arSession, arImageMetadata, ACAMERA_LENS_FOCUS_DISTANCE, &constEntry) == AR_SUCCESS)
+		{
+			focusValue = constEntry.data.f[0];
+		}
+
+		ArImageMetadata_release(arImageMetadata);
+	}
+
+#endif // OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 
 	return frame;
 }

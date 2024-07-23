@@ -20,6 +20,7 @@
 #include "ocean/math/AnyCamera.h"
 
 #include "ocean/media/FrameMedium.h"
+#include "ocean/media/LiveVideo.h"
 
 #include <arcore_c_api.h>
 
@@ -60,12 +61,12 @@ class OCEAN_DEVICES_ARCORE_EXPORT ARSessionManager : public Singleton<ARSessionM
 				/**
 				 * Definition of an unordered map mapping trackers to running states.
 				 */
-				typedef std::unordered_map<ACDevice*, unsigned int> TrackerMap;
+				using TrackerMap = std::unordered_map<ACDevice*, unsigned int>;
 
 				/**
 				 * Definition of an unordered map mapping ArPlane objects to ids.
 				 */
-				typedef std::unordered_map<ArPlane*, Index32> PlaneIdMap;
+				using PlaneIdMap = std::unordered_map<ArPlane*, Index32>;
 
 			public:
 
@@ -155,17 +156,20 @@ class OCEAN_DEVICES_ARCORE_EXPORT ARSessionManager : public Singleton<ARSessionM
 				PlaneIdMap planeIdMap_;
 		};
 
-		typedef std::shared_ptr<Session> SharedSession;
+		/**
+		 * Definition of a shared pointer holding a session.
+		 */
+		using SharedSession = std::shared_ptr<Session>;
 
 		/**
 		 * Definition of an unordered map mapping medium urls to sessions.
 		 */
-		typedef std::unordered_map<std::string, SharedSession> SessionMap;
+		using SessionMap = std::unordered_map<std::string, SharedSession>;
 
 		/**
 		 * Definition of an unordered map mapping trackers to medium urls.
 		 */
-		typedef std::unordered_map<ACDevice*, std::string> TrackerMap;
+		using TrackerMap = std::unordered_map<ACDevice*, std::string>;
 
 	public:
 
@@ -232,9 +236,15 @@ class OCEAN_DEVICES_ARCORE_EXPORT ARSessionManager : public Singleton<ARSessionM
 		 * Extracts the image from an ArFrame.
 		 * @param arSession The AR session to which the AR frame belongs, must be valid
 		 * @param arFrame The AR frame from which the image will be extracted, must be valid
+		 * @param exposureMode The resulting exposure mode, CM_INVALID if unknown
+		 * @param exposureDuration The resulting exposure duration, in seconds, -1 if unknown
+		 * @param isoMode The resulting ISO mode, CM_INVALID if unknown
+		 * @param iso The resulting ISO, -1 if unknown
+		 * @param focusMode The resulting focus mode, CM_INVALID if unknown
+		 * @param focusValue The resulting focus value, in the same domain as ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE, -1 if unknown
 		 * @return The extracted image, invalid in case of a failure
 		 */
-		static Frame extractImage(ArSession* arSession, ArFrame* arFrame);
+		static Frame extractImage(ArSession* arSession, ArFrame* arFrame, Media::LiveVideo::ControlMode& exposureMode, double& exposureDuration, Media::LiveVideo::ControlMode& isoMode, float& iso, Media::LiveVideo::ControlMode& focusMode, float& focusValue);
 
 		/**
 		 * Extracts the depth from an ArFrame.

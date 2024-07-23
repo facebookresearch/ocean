@@ -128,8 +128,14 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		 * Do not call this function in case the live video is still receiving pixel buffers from the Android media system.
 		 * @param frame The frame to be fed, must be valid
 		 * @param anyCamera The camera profile defining the projection, must be valid
+		 * @param exposureMode The exposure mode of the camera, CM_INVALID if unknown
+		 * @param exposureDuration The exposure duration of the camera, in seconds, -1 if unknown
+		 * @param isoMode The ISO mode of the camera, CM_INVALID if unknown
+		 * @param iso The ISO of the camera, -1 if unknown
+		 * @param focusMode The focus mode of the camera, CM_INVALID if unknown
+		 * @param focusValue The focus value of the camera, in the same domain as ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE, -1 if unknown
 		 */
-		inline void feedNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera);
+		void feedNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera, const ControlMode exposureMode, const double exposureDuration, const ControlMode isoMode, const float iso, const ControlMode focusMode, const float focusValue);
 
 		/**
 		 * Forces a restart of the live video for situations in which the camera was used by an external resource.
@@ -537,17 +543,6 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		Timestamp stopTimestamp_;
 };
 
-inline void ALiveVideo::feedNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera)
-{
-	// several parameters are unknown in case the camera is fed from an external source
-
-	exposureDuration_ = -1.0;
-	focusPosition_ = -1.0f;
-	iso_ = -1.0f;
-
-	onNewFrame(std::move(frame), std::move(anyCamera));
-}
-
 #else // #if __ANDROID_API__ >= 24
 
 /**
@@ -701,8 +696,15 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		 * Do not call this function in case the live video is still receiving pixel buffers from the Android media system.
 		 * @param frame The frame to be fed, must be valid
 		 * @param anyCamera The camera profile defining the projection, must be valid
+		 * @param exposureMode The exposure mode of the camera, CM_INVALID if unknown
+		 * @param exposureDuration The exposure duration of the camera, in seconds, -1 if unknown
+		 * @param isoMode The ISO mode of the camera, CM_INVALID if unknown
+		 * @param iso The ISO of the camera, -1 if unknown
+		 * @param focusMode The focus mode of the camera, CM_INVALID if unknown
+		 * @param focusValue The focus value of the camera, in the same domain as ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE, -1 if unknown
 		 */
-		inline void feedNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera);
+		void feedNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera, const ControlMode exposureMode, const double exposureDuration, const ControlMode isoMode, const float iso, const ControlMode focusMode, const float focusValue);
+
 
 		/**
 		 * Forces a restart of the live video for situations in which the camera was used by an external resource.
@@ -771,11 +773,6 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		/// Stop timestamp.
 		Timestamp mediumStopTimestamp;
 };
-
-inline void ALiveVideo::feedNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera)
-{
-	onNewFrame(std::move(frame), std::move(anyCamera));
-}
 
 #endif // __ANDROID_API__ >= 24
 
