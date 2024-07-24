@@ -6,8 +6,6 @@
 message(CHECK_START "vtzero")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
-set(PROTOZERO_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/include")
-
 find_package(Git REQUIRED)
 
 CPMAddPackage(
