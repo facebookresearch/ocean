@@ -804,11 +804,12 @@ function(CPMAddPackage)
       file(LOCK ${download_directory}/../cmake.lock RELEASE)
     endif()
     if(${populated})
+      set(unique_binary_dir "${${CPM_ARGS_NAME}_BINARY_DIR}_${CPM_ARGS_VERSION}")
       cpm_add_subdirectory(
         "${CPM_ARGS_NAME}"
         "${DOWNLOAD_ONLY}"
         "${${CPM_ARGS_NAME}_SOURCE_DIR}/${CPM_ARGS_SOURCE_SUBDIR}"
-        "${${CPM_ARGS_NAME}_BINARY_DIR}"
+        "${unique_binary_dir}"
         "${CPM_ARGS_EXCLUDE_FROM_ALL}"
         "${CPM_ARGS_SYSTEM}"
         "${CPM_ARGS_OPTIONS}"
