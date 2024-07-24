@@ -1009,7 +1009,7 @@ function(cpm_fetch_package PACKAGE populated)
     set(${populated}
         TRUE
         PARENT_SCOPE
-  )
+    )
   endif()
 
   cpm_store_fetch_properties(
