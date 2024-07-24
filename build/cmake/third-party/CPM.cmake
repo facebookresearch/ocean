@@ -1006,8 +1006,8 @@ function(cpm_fetch_package PACKAGE populated)
 
   if(NOT ${lower_case_name}_POPULATED)
   FetchContent_MakeAvailable(${PACKAGE})
-  set(${lower_case_name}_POPULATED
-      TRUE
+  set(${populated}
+        TRUE
       PARENT_SCOPE
   )
   endif()
