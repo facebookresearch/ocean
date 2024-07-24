@@ -1005,11 +1005,11 @@ function(cpm_fetch_package PACKAGE populated)
   string(TOLOWER "${PACKAGE}" lower_case_name)
 
   if(NOT ${lower_case_name}_POPULATED)
-    FetchContent_Populate(${PACKAGE})
-    set(${populated}
-        TRUE
-        PARENT_SCOPE
-    )
+  FetchContent_MakeAvailable(${PACKAGE})
+  set(${lower_case_name}_POPULATED
+      TRUE
+      PARENT_SCOPE
+  )
   endif()
 
   cpm_store_fetch_properties(
