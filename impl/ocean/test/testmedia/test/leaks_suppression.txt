@@ -1,0 +1,2 @@
+# Open bug in giflib https://sourceforge.net/p/giflib/bugs/165/
+leak:GifMakeMapObject
