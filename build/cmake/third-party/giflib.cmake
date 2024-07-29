@@ -6,6 +6,8 @@
 message(CHECK_START "giflib")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
 
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
 CPMAddPackage(
     NAME           giflib
     GIT_REPOSITORY https://git.code.sf.net/p/giflib/code

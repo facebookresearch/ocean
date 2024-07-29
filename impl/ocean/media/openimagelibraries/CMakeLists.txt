@@ -11,7 +11,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     set(OCEAN_TARGET_NAME "ocean_media_openimagelibraries")
 
-    # find_package(GIF REQUIRED)  # Blocking windows build
+    find_package(GIF REQUIRED)
     find_package(PNG REQUIRED)
     find_package(JPEG REQUIRED)
     find_package(TIFF REQUIRED)
@@ -47,7 +47,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         PUBLIC
             "-DOCEAN_MEDIA_OIL_SUPPORT_PNG"
             "-DOCEAN_MEDIA_OIL_SUPPORT_JPG"
-            # "-DOCEAN_MEDIA_OIL_SUPPORT_GIF"  # Blocking windows build
+            "-DOCEAN_MEDIA_OIL_SUPPORT_GIF"
             "-DOCEAN_MEDIA_OIL_SUPPORT_TIF"
             # "-DOCEAN_MEDIA_OIL_SUPPORT_WEBP"  # Not yet available
     )
@@ -63,7 +63,7 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
             ocean_math
             ocean_media
             ocean_media_special
-            # GIF::GIF  # Blocking windows build
+            GIF::GIF
             PNG::PNG
             JPEG::JPEG
             TIFF::TIFF
