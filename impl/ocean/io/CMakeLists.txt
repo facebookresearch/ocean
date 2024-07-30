@@ -70,6 +70,9 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
     if (OpenSSL_FOUND)
         target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC OpenSSL::SSL OpenSSL::Crypto)
+        if (WIN32)
+            target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC crypt32 Wintrust)
+        endif()
     endif()
 
     if (tinyxml2_FOUND)
