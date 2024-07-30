@@ -43,21 +43,18 @@ jobs:
       #     sudo apt update
       #     sudo apt install -y cmake
 
+      - name: Cache install artifacts
+        id: cache-thirdparty-install
+        uses: actions/cache@v4
+        with:
+          key: thirdparty-install-${{ matrix.build_config }}-${{ hashFiles('build/cmake/') }}
+          path: ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
+
       - name: Build and install third-party libraries for Ocean
+        if: ${{ steps.cache-thirdparty-install.outputs.cahe-hit != 'true' }}
         run: |
           ${{ github.workspace }}/build/cmake/build_thirdparty_linuxunix.sh \
             -i ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }} \
             -b ${{ env.OCEAN_THIRDPARTY_BUILD_PATH }} \
             -c ${{ matrix.build_config }} \
             -l ${{ env.OCEAN_LINK_TYPE }}
-
-      - name: Archive install artifacts
-        run: |
-          tar -cvzf thirdparty-install-${{ matrix.build_config }}.tar.gz ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
-
-      - name: Upload install archive (${{ matrix.build_config }})
-        uses: actions/upload-artifact@v4
-        with:
-          name: thirdparty-install-${{ matrix.build_config }}
-          path: ./thirdparty-install-${{ matrix.build_config }}.tar.gz
-          compression-level: 0

@@ -24,16 +24,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testbase
           # Exclude tests that are known to fail
           ctest-args: '-E TestHighPerformanceTimer|TestSignal'
@@ -46,16 +41,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testcv
           ctest-args: '-j 16 -R TestAdvancedFrame'
 
@@ -67,16 +57,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testcv
           ctest-args: '-j 16 -R TestFrameConverter'
 
@@ -88,16 +73,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testcv
           ctest-args: '-j 16 -R TestFrameFilterScharr'
 
@@ -109,16 +89,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testcv
           # Exclude tests covered by previous job
           ctest-args: '-j 16 -R TestFrameFilter -E TestFrameFilterScharr'
@@ -131,16 +106,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testcv
           ctest-args: '-j 16 -R TestFrameVariance'
 
@@ -152,16 +122,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testcv
           # Exclude tests covered by previous jobs
           # Exclude tests that are known to fail
@@ -175,16 +140,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testcv
           # Exclude tests covered by other jobs
           # Exclude test(s) known to fail
@@ -198,16 +158,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testdevices
 
   testgeometry:
@@ -218,16 +173,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testgeometry
           # Exclude tests that are known to fail
           ctest-args: '-E TestStereoscopicGeometry.CameraPose_6DOF_100'
@@ -240,16 +190,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testio
           # Exclude tests that are known to fail
           ctest-args: '-E TestBasemap'
@@ -262,16 +207,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testmath
           ctest-args: '-E TestEquation.CubicEquation'
 
@@ -283,16 +223,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testmedia
 
   testnetwork:
@@ -303,16 +238,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testnetwork
 
   testtracking:
@@ -323,16 +253,11 @@ jobs:
         build_config: [Debug, Release]
     steps:
       - uses: actions/checkout@v4
-      - id: config_case
-        uses: ASzc/change-string-case-action@v6
-        with:
-            string: ${{ matrix.build_config }}
       - uses: ./.github/actions/ctest
         with:
-          run-id: ${{ github.event.workflow_run.id }}
-          build-archive: ocean-build-${{ steps.config_case.outputs.lowercase }}
-          build-path: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config }}
-          install-path: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config }}
+          build-config: ${{ matrix.build_config }}
+          build-path: ${{ env.OCEAN_BUILD_PATH }}
+          install-path: ${{ env.OCEAN_INSTALL_PATH }}
           test-directory: impl/ocean/test/testtracking
           # Exclude tests that are known to fail
           ctest-args: '-E TestHomographyImageAlignmentDense.InverseCompositional_2'

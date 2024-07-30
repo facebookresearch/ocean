@@ -44,19 +44,22 @@ jobs:
       #     sudo apt update
       #     sudo apt install -y cmake
 
-      - name: Download third-party artifacts
-        id: download-thirdparty-install
-        uses: dawidd6/action-download-artifact@v6
+      - name: Restore third-party artifacts
+        id: restore-thirdparty-install
+        uses: actions/cache/restore@v4
         with:
-          name: thirdparty-install-${{ matrix.build_config }}
-          run_id: ${{ github.event.workflow_run.id }}
+          key: thirdparty-install-${{ matrix.build_config }}-${{ hashFiles('build/cmake/') }}
+          path: ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
 
-      - name: Unzip third-party artifacts
-        run: |
-          tar -xvzf thirdparty-install-${{ matrix.build_config }}.tar.gz -C /
-        shell: bash
+      - name: Cache build artifacts
+        id: cache-ocean-build
+        uses: actions/cache@v4
+        with:
+          key: ocean-build-${{ matrix.build_config }}-${{ github.sha }}
+          path: ${{ env.OCEAN_BUILD_PATH }}
 
       - name: Build and install Ocean
+        if: ${{ steps.cache-ocean-build.outputs.cahe-hit != 'true' }}
         run: |
           ${{ github.workspace }}/build/cmake/build_ocean_linuxunix.sh \
             -i ${{ env.OCEAN_INSTALL_PATH }} \
@@ -64,25 +67,3 @@ jobs:
             -c ${{ matrix.build_config }} \
             -l ${{ env.OCEAN_LINK_TYPE }} \
             -t ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
-
-      - name: Archive ocean build artifacts
-        run: |
-          tar -cvzf ocean-build-${{ matrix.build_config }}.tar.gz ${{ env.OCEAN_BUILD_PATH }}
-
-      - name: Upload build archive
-        uses: actions/upload-artifact@v4
-        with:
-          name: ocean-build-${{ matrix.build_config }}
-          path: ./ocean-build-${{ matrix.build_config }}.tar.gz
-          compression-level: 0
-
-      - name: Archive ocean install artifacts
-        run: |
-          tar -cvzf ocean-install-${{ matrix.build_config }}.tar.gz ${{ env.OCEAN_INSTALL_PATH }}
-
-      - name: Upload install archive
-        uses: actions/upload-artifact@v4
-        with:
-          name: ocean-install-${{ matrix.build_config }}
-          path: ./ocean-install-${{ matrix.build_config }}.tar.gz
-          compression-level: 0

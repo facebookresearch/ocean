@@ -2,13 +2,9 @@ name: 'Ocean CTest'
 description: 'Downloads ocean build output and runs ctest in given subdirectory'
 
 inputs:
-  run-id:
-    description: 'The run id of the ocean build'
+  build-config:
+    description: 'The build config (Debug or Release)'
     required: true
-  build-archive:
-    description: 'The name of the build archive'
-    required: true
-    default: 'ocean-build-Release'
   build-path:
     description: 'The build path used during the build step'
     required: true
@@ -46,17 +42,17 @@ runs:
         sudo apt install -y cmake
       shell: bash
 
-    - name: Download build artifacts
-      id: download-build-artifacts
-      uses: dawidd6/action-download-artifact@v6
+    - id: config-case
+      uses: ASzc/change-string-case-action@v6
       with:
-        name: ${{ inputs.build-archive }}
-        run_id: ${{ inputs.run-id }}
+        string: ${{ inputs.build-config }}
 
-    - name: Unzip build artifacts
-      run: |
-        tar -xvzf ${{ inputs.build-archive }}.tar.gz -C /
-      shell: bash
+    - name: Restore build artifacts
+      id: restore-build
+      uses: actions/cache/restore@v4
+      with:
+        key: ocean-build-${{ steps.config-case.outputs.lowercase }}-${{ github.sha }}
+        path: ${{ inputs.build-path }}
 
     - name: Run tests
       run: |
@@ -64,7 +60,7 @@ runs:
         cd $TEST_PATH
         ctest $CTEST_ARGS
       env:
-        INSTALL_PATH: ${{ inputs.install-path }}
-        TEST_PATH: ${{ inputs.build-path }}/${{ inputs.test-directory }}
+        INSTALL_PATH: ${{ inputs.install-path }}/linux_static_${{ inputs.build-config }}
+        TEST_PATH: ${{ inputs.build-path }}/linux_static_${{ inputs.build-config }}/${{ inputs.test-directory }}
         CTEST_ARGS: ${{ inputs.ctest-args }}
       shell: bash
