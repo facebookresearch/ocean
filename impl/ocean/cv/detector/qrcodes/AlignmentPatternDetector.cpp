@@ -84,6 +84,16 @@ void AlignmentPatternDetector::detectAlignmentPatternsInRow(const uint8_t* yFram
 
 	unsigned int x = 0u;
 
+	while (x < width && isBackgroundPixel(yRow + x, grayThreshold))
+	{
+		++x;
+	}
+
+	if (x >= width)
+	{
+		return;
+	}
+
 	while (x < width && isForegroundPixel(yRow + x, grayThreshold))
 	{
 		++x;
@@ -188,7 +198,7 @@ bool AlignmentPatternDetector::checkInCircle(const uint8_t* yFrame, const unsign
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(xCenter < width && yCenter < height);
 
-	constexpr Scalar anglesToCheckInRad[10] =
+	constexpr Scalar anglesToCheckInRad[11] =
 	{
 		// Skipping 0 because that's the angle at which this candidate has been found initially.
 		Numeric::deg2rad(Scalar(15)),
@@ -201,6 +211,7 @@ bool AlignmentPatternDetector::checkInCircle(const uint8_t* yFrame, const unsign
 		Numeric::deg2rad(Scalar(120)),
 		Numeric::deg2rad(Scalar(135)),
 		Numeric::deg2rad(Scalar(150)),
+		Numeric::deg2rad(Scalar(165)),
 	};
 
 	for (size_t i = 0; i < 10; ++i)
