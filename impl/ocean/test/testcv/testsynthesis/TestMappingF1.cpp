@@ -626,7 +626,6 @@ bool TestMappingF1::testAppearanceCost5x5(const unsigned int width, const unsign
 	}
 	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
-	Log::info() << validation.iterations();
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
