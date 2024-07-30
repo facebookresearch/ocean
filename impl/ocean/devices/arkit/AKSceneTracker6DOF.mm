@@ -197,6 +197,10 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 	{
 		SceneElementMeshes::SharedMeshes meshes;
 
+		// first, we check whether any mesh as changed, unfortuately ARKit does not provide some kind of mesh version, so that we use the number of triangles to decided whether the mesh has been updated
+
+		bool meshHasChanged = false;
+
 		for (ARAnchor* anchor in arFrame.anchors)
 		{
 			if (![anchor isKindOfClass:[ARMeshAnchor class]])
@@ -208,42 +212,76 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 
 			const std::string meshIdentifier = StringApple::toUTF8(meshAnchor.identifier.UUIDString);
 
-			TemporaryScopedLock scopedLock(deviceLock);
+			const IdentifierMap::const_iterator iMesh = identifierMap_.find(meshIdentifier);
+			if (iMesh == identifierMap_.cend())
+			{
+				meshHasChanged = true;
+				break;
+			}
+			else
+			{
+				ARMeshGeometry* meshGeometry = meshAnchor.geometry;
+
+				ocean_assert(iMesh->second < numberTriangles_.size());
+				if (meshGeometry.faces.count != numberTriangles_[iMesh->second])
+				{
+					meshHasChanged = true;
+					break;
+				}
+			}
+		}
+
+		if (meshHasChanged)
+		{
+			for (ARAnchor* anchor in arFrame.anchors)
+			{
+				if (![anchor isKindOfClass:[ARMeshAnchor class]])
+				{
+					continue;
+				}
+
+				ARMeshAnchor* meshAnchor = (ARMeshAnchor*)(anchor);
+
+				const std::string meshIdentifier = StringApple::toUTF8(meshAnchor.identifier.UUIDString);
 
 				IdentifierMap::iterator iMesh = identifierMap_.find(meshIdentifier);
 				if (iMesh == identifierMap_.cend())
 				{
 					iMesh = identifierMap_.insert(std::make_pair(meshIdentifier, ++meshIdCounter_)).first;
+
+					numberTriangles_.resize(meshIdCounter_ + 1, 0);
 				}
 				const Index32 meshId = iMesh->second;
 
-			scopedLock.release();
+				const simd_float4x4 simdTransform = meshAnchor.transform;
+				HomogenousMatrixF4 world_T_mesh;
 
-			const simd_float4x4 simdTransform = meshAnchor.transform;
-			HomogenousMatrixF4 world_T_mesh;
+				memcpy(world_T_mesh.data() +  0, &simdTransform.columns[0], sizeof(float) * 4);
+				memcpy(world_T_mesh.data() +  4, &simdTransform.columns[1], sizeof(float) * 4);
+				memcpy(world_T_mesh.data() +  8, &simdTransform.columns[2], sizeof(float) * 4);
+				memcpy(world_T_mesh.data() + 12, &simdTransform.columns[3], sizeof(float) * 4);
 
-			memcpy(world_T_mesh.data() +  0, &simdTransform.columns[0], sizeof(float) * 4);
-			memcpy(world_T_mesh.data() +  4, &simdTransform.columns[1], sizeof(float) * 4);
-			memcpy(world_T_mesh.data() +  8, &simdTransform.columns[2], sizeof(float) * 4);
-			memcpy(world_T_mesh.data() + 12, &simdTransform.columns[3], sizeof(float) * 4);
+				ARMeshGeometry* meshGeometry = meshAnchor.geometry;
 
-			ARMeshGeometry* meshGeometry = meshAnchor.geometry;
+				Vectors3 vertices;
+				Vectors3 perVertexNormals;
+				Indices32 triangleIndices;
 
-			Vectors3 vertices;
-			Vectors3 perVertexNormals;
-			Indices32 triangleIndices;
-
-			if (extractVectors3(meshGeometry.vertices, vertices) && extractVectors3(meshGeometry.normals, perVertexNormals) && extractIndices(meshGeometry.faces, triangleIndices))
-			{
-#ifdef OCEAN_DEBUG
-				ocean_assert(vertices.size() == perVertexNormals.size());
-				for (const Index32& index : triangleIndices)
+				if (extractVectors3(meshGeometry.vertices, vertices) && extractVectors3(meshGeometry.normals, perVertexNormals) && extractIndices(meshGeometry.faces, triangleIndices))
 				{
-					ocean_assert(index < vertices.size());
-				}
+#ifdef OCEAN_DEBUG
+					ocean_assert(vertices.size() == perVertexNormals.size());
+					for (const Index32& index : triangleIndices)
+					{
+						ocean_assert(index < vertices.size());
+					}
 #endif
 
-				meshes.emplace_back(std::make_shared<SceneElementMeshes::Mesh>(meshId, HomogenousMatrix4(world_T_mesh), std::move(vertices), std::move(perVertexNormals), std::move(triangleIndices)));
+					ocean_assert(meshId < numberTriangles_.size());
+					numberTriangles_[meshId] = triangleIndices.size() / 3;
+
+					meshes.emplace_back(std::make_shared<SceneElementMeshes::Mesh>(meshId, HomogenousMatrix4(world_T_mesh), std::move(vertices), std::move(perVertexNormals), std::move(triangleIndices)));
+				}
 			}
 		}
 

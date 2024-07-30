@@ -39,7 +39,7 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKSceneTracker6DOF :
 		/**
 		 * Definition of an unordered map mapping anchor identifier strings to unique ids.
 		 */
-		typedef std::unordered_map<std::string, Index32> IdentifierMap;
+		using IdentifierMap = std::unordered_map<std::string, Index32>;
 
 	public:
 
@@ -150,6 +150,9 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKSceneTracker6DOF :
 
 		/// The counter for unique mesh ids.
 		unsigned int meshIdCounter_ = 0u;
+
+		/// The number of triangles each mesh currently has.
+		std::vector<size_t> numberTriangles_;
 };
 
 inline std::string AKSceneTracker6DOF::deviceNameAKSceneTracker6DOF()
