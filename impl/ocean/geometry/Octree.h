@@ -319,6 +319,31 @@ OctreeT<T>::OctreeT(const Parameters& parameters, const VectorT3<T>* treePoints,
 
 	ocean_assert(reusablePointIndicesInput != nullptr && reusablePointIndicesOutput != nullptr);
 
+	bool isLeafNode = numberPointIndices <= parameters.maximalPointsPerLeaf_;
+
+	if (!isLeafNode)
+	{
+		// let's ensure that not all points are identical, in this case we have a leaf node as well
+
+		const Vector3& firstPoint = treePoints[reusablePointIndicesInput[0]];
+
+		bool allPointsIdentical = true;
+
+		for (size_t n = 1; n < numberPointIndices; ++n)
+		{
+			const Index32& index = reusablePointIndicesInput[n];
+			const VectorT3<T>& point = treePoints[index];
+
+			if (firstPoint != point)
+			{
+				allPointsIdentical = false;
+				break;
+			}
+		}
+
+		isLeafNode = allPointsIdentical;
+	}
+
 	if (parameters.useTightBoundingBoxes_ == false)
 	{
 		ocean_assert(boundingBox.isValid());
@@ -332,7 +357,7 @@ OctreeT<T>::OctreeT(const Parameters& parameters, const VectorT3<T>* treePoints,
 		}
 #endif
 
-		if (numberPointIndices <= parameters.maximalPointsPerLeaf_)
+		if (isLeafNode)
 		{
 			// we have a leaf node
 
@@ -349,7 +374,7 @@ OctreeT<T>::OctreeT(const Parameters& parameters, const VectorT3<T>* treePoints,
 	}
 	else
 	{
-		if (numberPointIndices <= parameters.maximalPointsPerLeaf_)
+		if (isLeafNode)
 		{
 			// we have a leaf node
 
