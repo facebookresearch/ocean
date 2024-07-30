@@ -277,10 +277,35 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 					}
 #endif
 
-					ocean_assert(meshId < numberTriangles_.size());
-					numberTriangles_[meshId] = triangleIndices.size() / 3;
+					ocean_assert(triangleIndices.size() % 3 == 0);
+					if (triangleIndices.empty() || triangleIndices.size() % 3 != 0)
+					{
+						continue;
+					}
 
-					meshes.emplace_back(std::make_shared<SceneElementMeshes::Mesh>(meshId, HomogenousMatrix4(world_T_mesh), std::move(vertices), std::move(perVertexNormals), std::move(triangleIndices)));
+					// ARKit sometimes provides invalid per-vertex normals, we remove these triangles
+
+					for (size_t n = 0; n < triangleIndices.size(); n += 3)
+					{
+						if (Numeric::isNan(perVertexNormals[triangleIndices[n + 0]].x())
+								|| Numeric::isNan(perVertexNormals[triangleIndices[n + 1]].x())
+								|| Numeric::isNan(perVertexNormals[triangleIndices[n + 2]].x()))
+						{
+							triangleIndices[n + 0] = triangleIndices[triangleIndices.size() - 3];
+							triangleIndices[n + 1] = triangleIndices[triangleIndices.size() - 2];
+							triangleIndices[n + 2] = triangleIndices[triangleIndices.size() - 1];
+
+							triangleIndices.resize(triangleIndices.size() - 3);
+						}
+					}
+
+					if (!triangleIndices.empty())
+					{
+						ocean_assert(meshId < numberTriangles_.size());
+						numberTriangles_[meshId] = triangleIndices.size() / 3;
+
+						meshes.emplace_back(std::make_shared<SceneElementMeshes::Mesh>(meshId, HomogenousMatrix4(world_T_mesh), std::move(vertices), std::move(perVertexNormals), std::move(triangleIndices)));
+					}
 				}
 			}
 		}
