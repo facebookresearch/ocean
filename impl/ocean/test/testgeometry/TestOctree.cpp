@@ -14,6 +14,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -47,6 +49,12 @@ bool TestOctree::test(const double testDuration)
 	allSucceeded = testIntersectingLeafsForRays(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testEdgeCases(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -77,6 +85,11 @@ TEST(TestOctree, IntersectingLeafsForRays)
 	EXPECT_TRUE(TestOctree::testIntersectingLeafsForRays(GTEST_TEST_DURATION));
 }
 
+TEST(TestOctree, EdgeCases)
+{
+	EXPECT_TRUE(TestOctree::testEdgeCases(GTEST_TEST_DURATION));
+}
+
 #endif // OCEAN_USE_GTEST
 
 bool TestOctree::testConstructor(const double testDuration)
@@ -92,7 +105,7 @@ bool TestOctree::testConstructor(const double testDuration)
 	Log::info() << "Test Constructor with " << benchmarkPointNumber << " points:";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceBisectedBoundingBoxes;
 	HighPerformanceStatistic performanceTightBoundingBoxes;
@@ -153,7 +166,7 @@ bool TestOctree::testConstructor(const double testDuration)
 						{
 							if (pointIndexSet.find(index) != pointIndexSet.cend())
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 
 							pointIndexSet.emplace(index);
@@ -165,7 +178,7 @@ bool TestOctree::testConstructor(const double testDuration)
 
 						if (!node->pointIndices().empty())
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -173,7 +186,7 @@ bool TestOctree::testConstructor(const double testDuration)
 				if (pointIndexSet.size() != numberPoints)
 				{
 					// not all descriptors are represented in the tree
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
@@ -183,19 +196,12 @@ bool TestOctree::testConstructor(const double testDuration)
 	ocean_assert(performanceBisectedBoundingBoxes.measurements() >= 1u);
 	ocean_assert(performanceTightBoundingBoxes.measurements() >= 1u);
 
-	Log::info() << "Performance bisected bounding boxes: " << String::toAString(performanceBisectedBoundingBoxes.averageMseconds(), 2u) << "ms";
-	Log::info() << "Performance tight bounding boxes: " << String::toAString(performanceTightBoundingBoxes.averageMseconds(), 2u) << "ms";
+	Log::info() << "Performance bisected bounding boxes: " << performanceBisectedBoundingBoxes;
+	Log::info() << "Performance tight bounding boxes: " << performanceTightBoundingBoxes;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestOctree::testClosestPoints(const double testDuration)
@@ -213,7 +219,7 @@ bool TestOctree::testClosestPoints(const double testDuration)
 	Log::info() << "Test closestPoints() with " << benchmarkTreePointNumber << " tree points, and " << benchmarkQueryPointNumber << " query points:";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceBruteForce;
 	HighPerformanceStatistic performanceTightBoundingBoxes;
@@ -326,7 +332,7 @@ bool TestOctree::testClosestPoints(const double testDuration)
 					{
 						if (bruteForceResult[nQuery].first != octreeResult[nQuery])
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -339,20 +345,13 @@ bool TestOctree::testClosestPoints(const double testDuration)
 	ocean_assert(performanceBisectedBoundingBoxes.measurements() >= 1u);
 	ocean_assert(performanceTightBoundingBoxes.measurements() >= 1u);
 
-	Log::info() << "Performance brute-force: " << String::toAString(performanceBruteForce.averageMseconds(), 2u) << "ms";
-	Log::info() << "Performance bisected bounding boxes: " << String::toAString(performanceBisectedBoundingBoxes.averageMseconds(), 2u) << "ms";
-	Log::info() << "Performance tight bounding boxes: " << String::toAString(performanceTightBoundingBoxes.averageMseconds(), 2u) << "ms";
+	Log::info() << "Performance brute-force: " << performanceBruteForce;
+	Log::info() << "Performance bisected bounding boxes: " << performanceBisectedBoundingBoxes;
+	Log::info() << "Performance tight bounding boxes: " << performanceTightBoundingBoxes;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestOctree::testIntersectingLeafsForRays(const double testDuration)
@@ -370,7 +369,7 @@ bool TestOctree::testIntersectingLeafsForRays(const double testDuration)
 	Log::info() << "Test intersectingLeafs() for rays with " << benchmarkTreePointNumber << " tree points, and " << benchamrkQueryRaysNumber << " query rays:";
 
 	RandomGenerator randomGenerator;
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performanceBruteForce;
 	HighPerformanceStatistic performanceBisectedBoundingBoxes;
@@ -490,7 +489,7 @@ bool TestOctree::testIntersectingLeafsForRays(const double testDuration)
 					{
 						if (bruteForceResult[nQuery].first != octreeResult[nQuery])
 						{
-							allSucceeded = false;
+							OCEAN_SET_FAILED(validation);
 						}
 					}
 				}
@@ -503,20 +502,82 @@ bool TestOctree::testIntersectingLeafsForRays(const double testDuration)
 	ocean_assert(performanceBisectedBoundingBoxes.measurements() >= 1u);
 	ocean_assert(performanceTightBoundingBoxes.measurements() >= 1u);
 
-	Log::info() << "Performance brute-force: " << String::toAString(performanceBruteForce.averageMseconds(), 2u) << "ms";
-	Log::info() << "Performance bisected bounding boxes: " << String::toAString(performanceBisectedBoundingBoxes.averageMseconds(), 2u) << "ms";
-	Log::info() << "Performance tight bounding boxes: " << String::toAString(performanceTightBoundingBoxes.averageMseconds(), 2u) << "ms";
+	Log::info() << "Performance brute-force: " << performanceBruteForce;
+	Log::info() << "Performance bisected bounding boxes: " << performanceBisectedBoundingBoxes;
+	Log::info() << "Performance tight bounding boxes: " << performanceTightBoundingBoxes;
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
+}
+
+bool TestOctree::testEdgeCases(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Test edge cases:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int maximalPointsPerLeaf = RandomI::random(randomGenerator, 1u, 100u);
+		const unsigned int numberGroupsOfPoints = RandomI::random(randomGenerator, 1u, 10u);
+		const unsigned int numberPointsPerGroup = RandomI::random(randomGenerator, maximalPointsPerLeaf, 1000u);
+
+		Vectors3 groupPoints;
+
+		for (unsigned int n = 0u; n < numberGroupsOfPoints; ++n)
+		{
+			groupPoints.emplace_back(Random::vector3(randomGenerator, Scalar(-1000), Scalar(1000)));
+		}
+
+		Vectors3 points;
+
+		for (const Vector3& groupPoint : groupPoints)
+		{
+			points.insert(points.end(), numberPointsPerGroup, groupPoint);
+		}
+
+		OCEAN_EXPECT_EQUAL(validation, points.size(), size_t(numberGroupsOfPoints * numberPointsPerGroup));
+
+		const bool useTightBoundingBoxes = RandomI::boolean(randomGenerator);
+
+		const Geometry::Octree octree(points.data(), points.size(), Geometry::Octree::Parameters(maximalPointsPerLeaf, useTightBoundingBoxes));
+
+		for (const Vector3& groupPoint : groupPoints)
+		{
+			Indices32 pointIndices;
+
+			octree.closestPoints(points.data(), groupPoint, 1.0, pointIndices);
+
+			OCEAN_EXPECT_GREATER_EQUAL(validation, pointIndices.size(), size_t(numberPointsPerGroup));
+
+			for (const Index32& pointIndex : pointIndices)
+			{
+				if (pointIndex < points.size())
+				{
+					const Vector3& point = points[pointIndex];
+
+					const Scalar distance = groupPoint.distance(point);
+
+					OCEAN_EXPECT_LESS_EQUAL(validation, distance, Scalar(1.01));
+				}
+				else
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 }

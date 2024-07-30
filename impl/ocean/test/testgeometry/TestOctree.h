@@ -56,6 +56,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestOctree
 		 * @return True, if succeeded
 		 */
 		static bool testIntersectingLeafsForRays(const double testDuration);
+
+		/**
+		 * Tests edge cases.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testEdgeCases(const double testDuration);
 };
 
 }
