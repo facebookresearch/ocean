@@ -286,7 +286,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		 * @param finderPatterns The list finder patterns in which 3-tuples forming potential QR code symbols are sought, must be valid, minimum size: 3
 		 * @param distanceScaleTolerance Scale factor that define how much corners of one finder pattern may deviate from the parallel lines of another finder pattern, range: [0, infinity), default: 0.05
 		 * @param moduleSizeScaleTolerance Defines the maximum difference scale of the module size between pairs of finder patterns in order to be considered a match, range: [0, 1], default: 0.35
-		 * @param angleTolerance Defines the maximum difference of the dominant orientation of pairs of finder patterns in order to be considered a match, measured in radian, range: [0, PI/2), default: deg2rad(9)
+		 * @param angleTolerance Defines the maximum difference of the dominant orientation of pairs of finder patterns in order to be considered a match, measured in radian, range: [0, PI/4), default: deg2rad(9)
 		 * @return A list of 3-tuples of finder patterns, will be empty on failure (or if nothing was found)
 		 */
 		static IndexTriplets extractIndexTriplets(const FinderPatterns& finderPatterns, const Scalar distanceScaleTolerance = Scalar(0.175), const Scalar moduleSizeScaleTolerance = Scalar(0.35), const Scalar angleTolerance = Numeric::deg2rad(Scalar(9)));

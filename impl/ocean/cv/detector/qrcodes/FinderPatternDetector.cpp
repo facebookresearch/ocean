@@ -379,13 +379,12 @@ IndexTriplets FinderPatternDetector::extractIndexTriplets(const FinderPatterns& 
 	ocean_assert(finderPatterns.size() >= 3);
 	ocean_assert(Numeric::isInsideRange(Scalar(0), distanceScaleTolerance, Scalar(1)));
 	ocean_assert_and_suppress_unused(Numeric::isInsideRange(Scalar(0), moduleSizeScaleTolerance, Scalar(1)), moduleSizeScaleTolerance);
-	ocean_assert(angleTolerance >= Numeric::deg2rad(Scalar(0)) && angleTolerance < Numeric::deg2rad(Scalar(90)));
+	ocean_assert(angleTolerance >= Scalar(0) && angleTolerance < Numeric::pi_4());
 
 	IndexTriplets finderPatternTriplets;
 
-	const Scalar angleThreshold = Numeric::abs(Numeric::cos(angleTolerance));
-	const Scalar parallelOrientationTreshold = Numeric::cos(Scalar(0)) - angleThreshold;
-	const Scalar perpendicularOrientationThreshold = Numeric::cos(Scalar(90)) + angleThreshold;
+	const Scalar parallelOrientationTreshold = Numeric::cos(angleTolerance);
+	const Scalar perpendicularOrientationThreshold = Numeric::cos(Numeric::pi_2() - angleTolerance);
 
 	for (size_t a = 0; a < finderPatterns.size() - 2; ++a)
 	{
@@ -408,7 +407,7 @@ IndexTriplets FinderPatternDetector::extractIndexTriplets(const FinderPatterns& 
 			const Scalar absCosOrientationAB = std::abs(finderPatternA.orientation() * finderPatternB.orientation());
 			if (absCosOrientationAB <= parallelOrientationTreshold && absCosOrientationAB >= perpendicularOrientationThreshold)
 			{
-				ocean_assert(Numeric::rad2deg(Numeric::acos(absCosOrientationAB)) >= Numeric::rad2deg(angleTolerance) && Numeric::rad2deg(Numeric::acos(absCosOrientationAB)) <= (Scalar(90) - Numeric::rad2deg(angleTolerance)));
+				ocean_assert(Numeric::acos(absCosOrientationAB) >= angleTolerance && Numeric::acos(absCosOrientationAB) <= Numeric::pi_2() - angleTolerance);
 				continue;
 			}
 
@@ -436,8 +435,8 @@ IndexTriplets FinderPatternDetector::extractIndexTriplets(const FinderPatterns& 
 				if ((absCosOrientationAC <= parallelOrientationTreshold && absCosOrientationAC >= perpendicularOrientationThreshold)
 					|| (absCosOrientationBC <= parallelOrientationTreshold && absCosOrientationBC >= perpendicularOrientationThreshold))
 				{
-					ocean_assert((Numeric::rad2deg(Numeric::acos(absCosOrientationAB)) >= Numeric::rad2deg(angleTolerance) && Numeric::rad2deg(Numeric::acos(absCosOrientationAB)) <= (Scalar(90) - Numeric::rad2deg(angleTolerance)))
-						|| (Numeric::rad2deg(Numeric::acos(absCosOrientationAB)) >= Numeric::rad2deg(angleTolerance) && Numeric::rad2deg(Numeric::acos(absCosOrientationAB)) <= (Scalar(90) - Numeric::rad2deg(angleTolerance))));
+					ocean_assert((Numeric::acos(absCosOrientationAC) >= angleTolerance && Numeric::acos(absCosOrientationAC) <= Numeric::pi_2() - angleTolerance)
+						|| (Numeric::acos(absCosOrientationBC) >= angleTolerance && Numeric::acos(absCosOrientationBC) <= Numeric::pi_2() - angleTolerance));
 					continue;
 				}
 
