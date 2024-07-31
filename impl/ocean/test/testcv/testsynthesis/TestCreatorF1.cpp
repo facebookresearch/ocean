@@ -146,116 +146,136 @@ bool TestCreatorF1::testInpaintingContent(const unsigned int width, const unsign
 		{
 			for (const bool performanceIteration : {true, false})
 			{
-				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
-				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
-
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
-
-				const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-				CV::PixelBoundingBox boundingBox;
-				if (RandomI::random(randomGenerator, 1u) == 0u)
+				while (true)
 				{
-					boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
-					ocean_assert(boundingBox.isValid());
-				}
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 3u, height);
 
-				CV::Synthesis::LayerF1 layer(frame, mask, boundingBox);
+					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-				// we create a random mapping
+					const Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
 
-				CV::Synthesis::MappingF1& mapping = layer.mappingF1();
+					const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
 
-				for (unsigned int y = 0u; y < frame.height(); ++y)
-				{
-					const uint8_t* rowMask = mask.constrow<uint8_t>(y);
-					Vector2* rowMapping = mapping() + y * frame.width();
-
-					for (unsigned int x = 0u; x < frame.width(); ++x)
+					CV::PixelBoundingBox boundingBox;
+					if (RandomI::random(randomGenerator, 1u) == 0u)
 					{
-						if (rowMask[x] == 0x00u)
+						boundingBox = CV::MaskAnalyzer::detectBoundingBox(mask.constdata<uint8_t>(), mask.width(), mask.height(), 0xFFu, mask.paddingElements());
+						ocean_assert(boundingBox.isValid());
+					}
+
+					CV::Synthesis::LayerF1 layer(frame, mask, boundingBox);
+
+					// we create a random mapping
+
+					CV::Synthesis::MappingF1& mapping = layer.mappingF1();
+
+					bool validTestData = true;
+
+					for (unsigned int y = 0u; validTestData && y < frame.height(); ++y)
+					{
+						const uint8_t* rowMask = mask.constrow<uint8_t>(y);
+						Vector2* rowMapping = mapping() + y * frame.width();
+
+						for (unsigned int x = 0u; validTestData && x < frame.width(); ++x)
 						{
-							// now, we seek a random source location with valid pixels
-
-							while (true)
+							if (rowMask[x] == 0x00u)
 							{
-								const Vector2 sourceLocation = Random::vector2(randomGenerator, Scalar(0), Scalar(frame.width() - 1u) - Numeric::eps(), Scalar(0), Scalar(frame.height() - 1u) - Numeric::eps());
+								// now, we seek a random source location with valid pixels
 
-								const int xSourcePixel = Numeric::round32(sourceLocation.x());
-								const int ySourcePixel = Numeric::round32(sourceLocation.y());
+								constexpr unsigned int maxIterations = 1000u;
 
-								bool validSourceLocation = true;
-
-								for (int yy = -1; validSourceLocation && yy <= 1; ++yy)
+								for (unsigned int n = 0u; n < maxIterations; ++n)
 								{
-									for (int xx = -1; validSourceLocation && xx <= 1; ++xx)
-									{
-										const unsigned int xPosition = (unsigned int)(xSourcePixel + xx);
-										const unsigned int yPosition = (unsigned int)(ySourcePixel + yy);
+									const Vector2 sourceLocation = Random::vector2(randomGenerator, Scalar(0), Scalar(frame.width() - 1u) - Numeric::eps(), Scalar(0), Scalar(frame.height() - 1u) - Numeric::eps());
 
-										if (xPosition < mask.width() && yPosition < mask.height())
+									const int xSourcePixel = Numeric::round32(sourceLocation.x());
+									const int ySourcePixel = Numeric::round32(sourceLocation.y());
+
+									bool validSourceLocation = true;
+
+									for (int yy = -1; validSourceLocation && yy <= 1; ++yy)
+									{
+										for (int xx = -1; validSourceLocation && xx <= 1; ++xx)
 										{
-											if (mask.constpixel<uint8_t>(xPosition, yPosition)[0] != 0xFFu)
+											const unsigned int xPosition = (unsigned int)(xSourcePixel + xx);
+											const unsigned int yPosition = (unsigned int)(ySourcePixel + yy);
+
+											if (xPosition < mask.width() && yPosition < mask.height())
 											{
-												validSourceLocation = false;
+												if (mask.constpixel<uint8_t>(xPosition, yPosition)[0] != 0xFFu)
+												{
+													validSourceLocation = false;
+												}
 											}
 										}
 									}
-								}
 
-								if (validSourceLocation)
-								{
-									rowMapping[x] = sourceLocation;
-									break;
+									if (validSourceLocation)
+									{
+										rowMapping[x] = sourceLocation;
+										break;
+									}
+
+									if (n == maxIterations - 1u)
+									{
+										validTestData = false;
+									}
 								}
 							}
 						}
 					}
-				}
 
-				CV::Synthesis::CreatorInpaintingContentF1 creator(layer, frame);
-
-				performance.startIf(performanceIteration);
-					creator.invoke(useWorker);
-				performance.stopIf(performanceIteration);
-
-				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
-				{
-					ocean_assert(false && "Invalid padding memory!");
-					return false;
-				}
-
-				uint8_t result[tChannels];
-
-				for (unsigned int y = 0u; y < frame.height(); ++y)
-				{
-					const Vector2* rowMapping = mapping() + y * frame.width();
-
-					for (unsigned int x = 0u; x < frame.width(); ++x)
+					if (!validTestData)
 					{
-						if (mask.constpixel<uint8_t>(x, y)[0] != 0xFFu)
+						// we were not able to generate valid test data, so we need try over again
+						continue;
+					}
+
+					CV::Synthesis::CreatorInpaintingContentF1 creator(layer, frame);
+
+					performance.startIf(performanceIteration);
+						creator.invoke(useWorker);
+					performance.stopIf(performanceIteration);
+
+					if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
+					{
+						ocean_assert(false && "Invalid padding memory!");
+						return false;
+					}
+
+					uint8_t result[tChannels];
+
+					for (unsigned int y = 0u; y < frame.height(); ++y)
+					{
+						const Vector2* rowMapping = mapping() + y * frame.width();
+
+						for (unsigned int x = 0u; x < frame.width(); ++x)
 						{
-							const Vector2& sourcePixel = rowMapping[x];
-
-							CV::FrameInterpolatorBilinear::interpolatePixel8BitPerChannel<tChannels, CV::PC_TOP_LEFT>(copyFrame.constdata<uint8_t>(), copyFrame.width(), copyFrame.height(), copyFrame.paddingElements(), sourcePixel, result);
-
-							if (memcmp(frame.constpixel<uint8_t>(x, y), result, sizeof(uint8_t) * tChannels) != 0)
+							if (mask.constpixel<uint8_t>(x, y)[0] != 0xFFu)
 							{
-								allSucceeded = false;
+								const Vector2& sourcePixel = rowMapping[x];
+
+								CV::FrameInterpolatorBilinear::interpolatePixel8BitPerChannel<tChannels, CV::PC_TOP_LEFT>(copyFrame.constdata<uint8_t>(), copyFrame.width(), copyFrame.height(), copyFrame.paddingElements(), sourcePixel, result);
+
+								if (memcmp(frame.constpixel<uint8_t>(x, y), result, sizeof(uint8_t) * tChannels) != 0)
+								{
+									allSucceeded = false;
+								}
 							}
-						}
-						else
-						{
-							// we do not expect any change
-
-							if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * tChannels) != 0)
+							else
 							{
-								allSucceeded = false;
+								// we do not expect any change
+
+								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * tChannels) != 0)
+								{
+									allSucceeded = false;
+								}
 							}
 						}
 					}
+
+					break;
 				}
 			}
 		}
