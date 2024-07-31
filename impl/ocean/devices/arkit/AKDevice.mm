@@ -144,7 +144,7 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 		unsigned int preferredHeight = 720u;
 
 		float preferredFps = -1.0f;
-		constexpr bool preferredHDR = false;
+		constexpr int preferredHDR = -1;
 
 		if (inputLiveVideo->preferredFrameWidth() != 0u || inputLiveVideo->preferredFrameHeight() != 0u)
 		{
@@ -311,7 +311,7 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 				{
 					arFaceTrackingConfiguration.videoFormat = videoFormat;
 				}
-				
+
 				if (necessaryTrackerCapabilities & AKDevice::TC_SLAM)
 				{
 					if (@available(iOS 13.0, *))
@@ -698,11 +698,11 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 		if (@available(iOS 16.0, *))
 		{
-			Log::debug() << "" << StringApple::toUTF8(videoFormat.captureDeviceType) << ", " << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height) << ", " << int(videoFormat.framesPerSecond) << "fps, " << (videoFormat.isVideoHDRSupported ? "HDR" : "no HDR");
+			Log::debug() << "" << StringApple::toUTF8(videoFormat.captureDeviceType) << ", " << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height) << ", " << videoFormat.framesPerSecond << "fps, " << (videoFormat.isVideoHDRSupported ? "HDR" : "no HDR");
 		}
 		else if (@available(iOS 14.5, *))
 		{
-			Log::debug() << "" << StringApple::toUTF8(videoFormat.captureDeviceType) << ", " << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height) << ", " << int(videoFormat.framesPerSecond) << "fps";
+			Log::debug() << "" << StringApple::toUTF8(videoFormat.captureDeviceType) << ", " << int(videoFormat.imageResolution.width) << "x" << int(videoFormat.imageResolution.height) << ", " << videoFormat.framesPerSecond << "fps";
 		}
 		else
 		{
@@ -715,79 +715,108 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 	ARVideoFormat* result = nullptr;
 
-	if (@available(iOS 16.0, *))
+	double bestResolutionError = -1.0;
+
+	float targetFps = preferredFps;
+	int targetHDR = preferredHDR;
+
+	/**
+	 * The strategy is as follows:
+	 * 1. We try to find a video format with exact resolution, fps, and HDR requirements
+	 *    - if no match, we drop the HDR requirement
+	 *    - if no match, we drop the fps requirement
+	 *
+	 * 2. We try to find a best matching resolution (number of pixels as close as possible to the requested target resolution)
+	 *    - if no match, we drop the HDR requirement
+	 *    - if no match, we drop the fps requirement
+	 */
+
+	while (result == nullptr)
 	{
 		for (size_t n = 0; n < ARWorldTrackingConfiguration.supportedVideoFormats.count; ++n)
 		{
 			ARVideoFormat* videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[n];
 
-			if (preferredWidth != 0u && videoFormat.imageResolution.width != float(preferredWidth))
+			if (bestResolutionError < 0.0)
+			{
+				if (preferredWidth > 0.0 && videoFormat.imageResolution.width != preferredWidth)
+				{
+					continue;
+				}
+
+				if (preferredHeight > 0.0 && videoFormat.imageResolution.height != preferredHeight)
+				{
+					continue;
+				}
+			}
+			else
+			{
+				ocean_assert(preferredWidth >= 0.0 && preferredHeight >= 0.0);
+				const double targetDimension = preferredWidth * preferredHeight;
+
+				const double dimension = videoFormat.imageResolution.width * videoFormat.imageResolution.height;
+
+				const double error = NumericD::abs(targetDimension - dimension);
+
+				if (error >= bestResolutionError)
+				{
+					continue;
+				}
+
+				bestResolutionError = error;
+			}
+
+			if (targetFps > 0.0f && NumericF::isNotEqual(float(videoFormat.framesPerSecond), targetFps, 0.5f))
 			{
 				continue;
 			}
 
-			if (preferredHeight != 0u && videoFormat.imageResolution.height != float(preferredHeight))
+			if (targetHDR >= 0)
 			{
-				continue;
-			}
+				if (@available(iOS 16.0, *))
+				{
+					const bool targetValue = targetHDR != 0;
 
-			if (preferredFps > 0.0f && videoFormat.framesPerSecond  != preferredFps)
-			{
-				continue;
-			}
-
-			if (preferredHDR >= 0 && videoFormat.isVideoHDRSupported != preferredHDR != 0)
-			{
-				continue;
+					if (videoFormat.isVideoHDRSupported != targetValue)
+					{
+						continue;
+					}
+				}
 			}
 
 			result = videoFormat;
-			break;
+
+			if (bestResolutionError < 0.0)
+			{
+				// we are not searching for the closest image resolution, so we can stop
+				break;
+			}
 		}
-	}
 
-	if (result == nullptr)
-	{
-		for (size_t n = 0; n < ARWorldTrackingConfiguration.supportedVideoFormats.count; ++n)
+		if (targetHDR >= 0)
 		{
-			ARVideoFormat* videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[n];
+			// first, let's try to avoid HDR constraints
 
-			if (preferredWidth != 0u && videoFormat.imageResolution.width != float(preferredWidth))
-			{
-				continue;
-			}
-
-			if (preferredHeight != 0u && videoFormat.imageResolution.height != float(preferredHeight))
-			{
-				continue;
-			}
-
-			if (preferredFps > 0.0f && videoFormat.framesPerSecond  != preferredFps)
-			{
-				continue;
-			}
-
-			result = videoFormat;
+			targetHDR = -1;
 		}
-	}
-
-	if (result == nullptr)
-	{
-		for (size_t n = 0; n < ARWorldTrackingConfiguration.supportedVideoFormats.count; ++n)
+		else if (targetFps > 0.0f)
 		{
-			ARVideoFormat* videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[n];
+			// second, let's try to avoid FPS constraints
+			targetFps = -1.0f;
+		}
+		else if (bestResolutionError < 0.0 && preferredWidth > 0.0 && preferredHeight >= 0.0)
+		{
+			// last, let's try to avoid constraints for an exact resolution, let's try to find the closest resolution instead
 
-			if (preferredWidth != 0u && videoFormat.imageResolution.width != float(preferredWidth))
-			{
-				continue;
-			}
+			bestResolutionError = NumericD::maxValue();
 
-			if (preferredHeight != 0u && videoFormat.imageResolution.height != float(preferredHeight))
-			{
-				continue;
-			}
-
-			result = videoFormat;
+			// but, we start over again with the preferred HDR and fps
+			targetFps = preferredFps;
+			targetHDR = preferredHDR;
+		}
+		else
+		{
+			// we did not find any matching format, so we need to stop
 			break;
 		}
 	}
@@ -798,7 +827,7 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 		Log::debug() << "Selected video format:";
 		if (@available(iOS 16.0, *))
 		{
-			Log::debug() << "" << StringApple::toUTF8(result.captureDeviceType) << ", " << int(result.imageResolution.width) << "x" << int(result.imageResolution.height) << ", " << int(result.framesPerSecond) << "fps, " << (result.isVideoHDRSupported ? "HDR" : "no HDR");
+			Log::debug() << "" << StringApple::toUTF8(result.captureDeviceType) << ", " << int(result.imageResolution.width) << "x" << int(result.imageResolution.height) << ", " << result.framesPerSecond << "fps, " << (result.isVideoHDRSupported ? "HDR" : "no HDR");
 		}
 	}
 	else
