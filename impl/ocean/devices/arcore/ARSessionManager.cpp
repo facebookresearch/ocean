@@ -127,12 +127,29 @@ bool ARSessionManager::Session::start(ACDevice* tracker)
 			}
 		}
 
-		int32_t preferredCameraWidth = 1280;
-		int32_t preferredCameraHeight = 720;
-		if (frameMedium_->preferredFrameWidth() != 0u && frameMedium_->preferredFrameHeight() != 0u)
+		int32_t bestResolutionError = -1;
+
+		int32_t preferredWidth = 1280;
+		int32_t preferredHeight = 720;
+		if (frameMedium_->preferredFrameWidth() != 0u || frameMedium_->preferredFrameHeight() != 0u)
 		{
-			preferredCameraWidth = int32_t(frameMedium_->preferredFrameWidth());
-			preferredCameraHeight = int32_t(frameMedium_->preferredFrameHeight());
+			preferredWidth = int32_t(frameMedium_->preferredFrameWidth());
+			preferredHeight = int32_t(frameMedium_->preferredFrameHeight());
+		}
+		else
+		{
+			const FrameRef frame = frameMedium_->frame();
+			if (frame && frame->isValid())
+			{
+				preferredWidth = frame->width();
+				preferredHeight = frame->height();
+			}
+		}
+
+		float preferredFps = -1.0f;
+		if (frameMedium_->preferredFrameFrequency() > 0.0)
+		{
+			preferredFps = float(frameMedium_->preferredFrameFrequency());
 		}
 
 		ArCameraConfigFacingDirection arNecessaryFacingDirection = AR_CAMERA_CONFIG_FACING_DIRECTION_BACK;
@@ -143,22 +160,36 @@ bool ARSessionManager::Session::start(ACDevice* tracker)
 			ocean_assert(frameMedium_->url() == "LiveVideoId:1");
 		}
 
+		float targetFps = preferredFps;
+		TrackerCapabilities targetSessionCapabilities = newSessionCapabilities;
+
 		ScopedARCameraConfig arCameraConfigToUse;
 
-		const unsigned int configIterations = (newSessionCapabilities & ACDevice::TC_DEPTH) ? 2u : 1u;
+		/**
+		 * The strategy is as follows:
+		 * 1. We try to find a video format with exact resolution, fps, and HDR requirements
+		 *    - if no match, we drop the fps requirement
+		 *    - if no match, we drop the depth requirement
+		 *
+		 * 2. We try to find a best matching resolution (number of pixels as close as possible to the requested target resolution)
+		 *    - if no match, we drop the fps requirement
+		 *    - if no match, we drop the depth requirement
+		 */
 
-		for (unsigned int configIteration = 0u; !arCameraConfigToUse && configIteration < configIterations; ++configIteration)
+		while (!arCameraConfigToUse)
 		{
 			const ScopedARCameraConfigFilter arCameraConfigFilter(arSession, ArCameraConfigFilter_create);
 			const ScopedARCameraConfigList arCameraConfigList(arSession, ArCameraConfigList_create);
 
-			if (newSessionCapabilities & ACDevice::TC_DEPTH)
+			if (targetSessionCapabilities & ACDevice::TC_DEPTH)
 			{
-				if (configIteration == 0u)
-				{
-					// in the first iteration, we try to request depth sensor; we drop this requirement in the second iteration
-					ArCameraConfigFilter_setDepthSensorUsage(arSession, arCameraConfigFilter, AR_CAMERA_CONFIG_DEPTH_SENSOR_USAGE_REQUIRE_AND_USE);
-				}
+				// in the first iteration, we try to request depth sensor; we drop this requirement in the second iteration
+				ArCameraConfigFilter_setDepthSensorUsage(arSession, arCameraConfigFilter, AR_CAMERA_CONFIG_DEPTH_SENSOR_USAGE_REQUIRE_AND_USE);
+			}
+
+			if (targetFps > 0.0f)
+			{
+				ArCameraConfigFilter_setTargetFps(arSession, arCameraConfigFilter, uint32_t(targetFps));
 			}
 
 			ArSession_getSupportedCameraConfigsWithFilter(arSession, arCameraConfigFilter, arCameraConfigList);
@@ -167,7 +198,7 @@ bool ARSessionManager::Session::start(ACDevice* tracker)
 			ArCameraConfigList_getSize(arSession, arCameraConfigList, &arConfigListSize);
 
 #ifdef OCEAN_DEBUG
-			Log::debug() << "ArCore: Found " << arConfigListSize << " camera configurations in configuration iteration " << configIteration + 1u << " (of " << configIterations << " iterations)";
+			Log::debug() << "ArCore: Found " << arConfigListSize << " camera configurations:";
 
 			for (int32_t n = 0; n < arConfigListSize; ++n)
 			{
@@ -196,7 +227,7 @@ bool ARSessionManager::Session::start(ACDevice* tracker)
 
 			if (arConfigListSize == 0)
 			{
-				Log::debug() << "ArCore: Did not find any camera configuration in configuration iteration " << configIteration + 1u << " (of " << configIterations << " iterations)";
+				Log::debug() << "ArCore: Did not find any camera configuration";
 			}
 #endif // OCEAN_DEBUG
 
@@ -218,30 +249,71 @@ bool ARSessionManager::Session::start(ACDevice* tracker)
 				int32_t height = 0;
 				ArCameraConfig_getImageDimensions(arSession, arCameraConfig, &width, &height);
 
-				if (width == preferredCameraWidth && height == preferredCameraHeight)
+				if (bestResolutionError < 0)
 				{
-					arCameraConfigToUse = std::move(arCameraConfig);
-					break;
+					if (preferredWidth != 0u && width != int32_t(preferredWidth))
+					{
+						continue;
+					}
+
+					if (preferredHeight != 0u && height != int32_t(preferredHeight))
+					{
+						continue;
+					}
+				}
+				else
+				{
+					ocean_assert(preferredWidth != 0u && preferredHeight != 0u);
+
+					const int32_t targetDimension = int32_t(preferredWidth * preferredHeight);
+
+					const int32_t dimension = width * height;
+
+					const int32_t error = std::abs(targetDimension - dimension);
+
+					if (error >= bestResolutionError)
+					{
+						continue;
+					}
+
+					bestResolutionError = error;
 				}
 
-				if (configIteration == configIterations - 1u && n == arConfigListSize - 1)
+				arCameraConfigToUse = std::move(arCameraConfig);
+
+				if (bestResolutionError < 0)
 				{
-					// we did not find a configuration with perfect match, so we take the first configuration
-
-					ocean_assert(!arCameraConfigToUse);
-
-					arCameraConfigToUse = ScopedARCameraConfig(arSession, ArCameraConfig_create);
-
-					ArCameraConfigList_getItem(arSession, arCameraConfigList, 0, arCameraConfigToUse);
-
-					Log::warning() << "ArCore: Used default camera configuration";
+					// we are not searching for the closest image resolution, so we can stop
 					break;
 				}
 			}
 
 			if (!arCameraConfigToUse)
 			{
-				Log::debug() << "ArCore: Was not able to determine perfect camera configuration for tracker '" << tracker->name() << "' in configuration iteration " << configIteration + 1u << " (of " << configIterations << " iterations)";
+				if (targetFps > 0.0f)
+				{
+					// let's drop the requirement for the target fps
+					targetFps = -1.0f;
+				}
+				else if (targetSessionCapabilities & ACDevice::TC_DEPTH)
+				{
+					// let's drop the requirement for the depth sensor
+					targetSessionCapabilities = TrackerCapabilities(targetSessionCapabilities & ~ACDevice::TC_DEPTH);
+				}
+				else if (bestResolutionError < 0 && preferredWidth != 0u && preferredHeight != 0u)
+				{
+					// last, let's try to avoid constraints for an exact resolution, let's try to find the closest resolution instead
+
+					bestResolutionError = NumericT<int32_t>::maxValue();
+
+					targetFps = preferredFps;
+					targetSessionCapabilities = newSessionCapabilities;
+				}
+				else
+				{
+					// we did not find any matching format, so we need to stop
+					break;
+				}
 			}
 		}
 
@@ -253,11 +325,15 @@ bool ARSessionManager::Session::start(ACDevice* tracker)
 
 		if (ArSession_setCameraConfig(arSession, arCameraConfigToUse) == AR_SUCCESS)
 		{
-			Log::info() << "ArSession configuration with resolution " << preferredCameraWidth << "x" << preferredCameraHeight;
+			int32_t width = 0;
+			int32_t height = 0;
+			ArCameraConfig_getImageDimensions(arSession, arCameraConfigToUse, &width, &height);
+
+			Log::info() << "ArSession configuration with resolution " << width << "x" << height;
 		}
 		else
 		{
-			Log::error() << "Failed to configure ArSession with resolution " << preferredCameraWidth << "x" << preferredCameraHeight;
+			Log::error() << "Failed to configure ArSession with preferred resolution " << preferredWidth << "x" << preferredHeight;
 		}
 
 		const ScopedARConfig arConfig(arSession, ArConfig_create);
