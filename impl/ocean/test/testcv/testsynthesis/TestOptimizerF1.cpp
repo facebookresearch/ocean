@@ -180,128 +180,149 @@ bool TestOptimizerF1::testHighPerformance4Neighborhood(const unsigned int width,
 		{
 			for (const bool performanceIteration : {true, false})
 			{
-				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
-				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
-
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
-
-				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-				// adding a 2-pixel border not including any mask pixel
-				mask.subFrame(0u, 0u, mask.width(), 2u).setValue(0xFFu);
-				mask.subFrame(0u, 0u, 2u, mask.height()).setValue(0xFFu);
-				mask.subFrame(mask.width() - 2u, 0u, 2u, mask.height()).setValue(0xFFu);
-				mask.subFrame(0u, mask.height() - 2u, mask.width(), 2u).setValue(0xFFu);
-
-				constexpr unsigned int patchSize = 5u;
-				constexpr unsigned int patchSize_2 = patchSize / 2u;
-
-				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
-
-				CV::Synthesis::LayerF1 layer(frame, mask);
-				CV::Synthesis::MappingF1& mapping = layer.mappingF1();
-
-				for (unsigned int y = 0u; y < mask.height(); ++y)
+				while (true)
 				{
-					for (unsigned int x = 0u; x < mask.width(); ++x)
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
+
+					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+
+					Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+					Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+					// adding a 2-pixel border not including any mask pixel
+					mask.subFrame(0u, 0u, mask.width(), 2u).setValue(0xFFu);
+					mask.subFrame(0u, 0u, 2u, mask.height()).setValue(0xFFu);
+					mask.subFrame(mask.width() - 2u, 0u, 2u, mask.height()).setValue(0xFFu);
+					mask.subFrame(0u, mask.height() - 2u, mask.width(), 2u).setValue(0xFFu);
+
+					constexpr unsigned int patchSize = 5u;
+					constexpr unsigned int patchSize_2 = patchSize / 2u;
+
+					CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
+
+					CV::Synthesis::LayerF1 layer(frame, mask);
+					CV::Synthesis::MappingF1& mapping = layer.mappingF1();
+
+					bool validTestData = true;
+
+					for (unsigned int y = 0u; validTestData && y < mask.height(); ++y)
 					{
-						if (mask.constpixel<uint8_t>(x, y)[0] != 0xFFu)
+						for (unsigned int x = 0u; validTestData && x < mask.width(); ++x)
 						{
-							Scalar sourceX, sourceY;
-
-							while (true)
+							if (mask.constpixel<uint8_t>(x, y)[0] != 0xFFu)
 							{
-								sourceX = Random::scalar(randomGenerator, Scalar(patchSize_2), Scalar(mask.width() - patchSize_2 - 1u) - Numeric::weakEps());
-								sourceY = Random::scalar(randomGenerator, Scalar(patchSize_2), Scalar(mask.height() - patchSize_2 - 1u) - Numeric::weakEps());
-
-								const int xInt = Numeric::round32(sourceX);
-								const int yInt = Numeric::round32(sourceY);
+								Scalar sourceX, sourceY;
 
 								bool positionAccepted = true;
 
-								for (int yy = -1; positionAccepted && yy <= 1; ++yy)
+								for (unsigned int n = 0u; n < 1000u; ++n)
 								{
-									for (int xx = -1; positionAccepted && xx <= 1; ++xx)
-									{
-										const unsigned int xLocation = (unsigned int)(xInt + xx);
-										const unsigned int yLocation = (unsigned int)(yInt + yy);
+									positionAccepted = true;
 
-										if (xLocation < mask.width() && yLocation < mask.height())
+									sourceX = Random::scalar(randomGenerator, Scalar(patchSize_2), Scalar(mask.width() - patchSize_2 - 1u) - Numeric::weakEps());
+									sourceY = Random::scalar(randomGenerator, Scalar(patchSize_2), Scalar(mask.height() - patchSize_2 - 1u) - Numeric::weakEps());
+
+									const int xInt = Numeric::round32(sourceX);
+									const int yInt = Numeric::round32(sourceY);
+
+									for (int yy = -1; positionAccepted && yy <= 1; ++yy)
+									{
+										for (int xx = -1; positionAccepted && xx <= 1; ++xx)
 										{
-											if (mask.constpixel<uint8_t>(xLocation, yLocation)[0] != 0xFF)
+											const unsigned int xLocation = (unsigned int)(xInt + xx);
+											const unsigned int yLocation = (unsigned int)(yInt + yy);
+
+											if (xLocation < mask.width() && yLocation < mask.height())
 											{
-												positionAccepted = false;
+												if (mask.constpixel<uint8_t>(xLocation, yLocation)[0] != 0xFF)
+												{
+													positionAccepted = false;
+												}
 											}
 										}
 									}
+
+									if (positionAccepted)
+									{
+										break;
+									}
 								}
 
-								if (positionAccepted)
+								if (!positionAccepted)
 								{
+									validTestData = false;
 									break;
 								}
-							}
 
-							mapping.setPosition(x, y, Vector2(sourceX, sourceY));
+								mapping.setPosition(x, y, Vector2(sourceX, sourceY));
+							}
 						}
 					}
-				}
 
-				CV::Synthesis::MappingF1 copyMapping(mapping);
-
-				const unsigned int randomSeed = randomGenerator.seed();
-
-				constexpr unsigned int weightFactor = 5u;
-				constexpr unsigned int borderFactor = 25u;
-				constexpr bool updateFrame = true;
-
-				constexpr unsigned int radii = 5u;
-				constexpr unsigned int iterations = 4u;
-				constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
-				constexpr bool applyInitialMapping = true;
-
-				performance.startIf(performanceIteration);
-					CV::Synthesis::Optimizer4NeighborhoodHighPerformanceF1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
-				performance.stopIf(performanceIteration);
-
-				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
-				{
-					ocean_assert(false && "Invalid padding memory!");
-					return false;
-				}
-
-				if (useWorker == nullptr)
-				{
-					RandomGenerator helperGenerator(randomSeed);
-
-					if (optimize4Neighborhood<borderFactor>(copyFrame, mask, copyMapping, helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost))
+					if (!validTestData)
 					{
-						for (unsigned int y = 0u; y < frame.height(); ++y)
+						// we were not able to generate valid test data, so we need try over again
+						continue;
+					}
+
+					CV::Synthesis::MappingF1 copyMapping(mapping);
+
+					const unsigned int randomSeed = randomGenerator.seed();
+
+					constexpr unsigned int weightFactor = 5u;
+					constexpr unsigned int borderFactor = 25u;
+					constexpr bool updateFrame = true;
+
+					constexpr unsigned int radii = 5u;
+					constexpr unsigned int iterations = 4u;
+					constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
+					constexpr bool applyInitialMapping = true;
+
+					performance.startIf(performanceIteration);
+						CV::Synthesis::Optimizer4NeighborhoodHighPerformanceF1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
+					performance.stopIf(performanceIteration);
+
+					if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
+					{
+						ocean_assert(false && "Invalid padding memory!");
+						return false;
+					}
+
+					if (useWorker == nullptr)
+					{
+						RandomGenerator helperGenerator(randomSeed);
+
+						if (optimize4Neighborhood<borderFactor>(copyFrame, mask, copyMapping, helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost))
 						{
-							for (unsigned int x = 0u; x < frame.width(); ++x)
+							for (unsigned int y = 0u; y < frame.height(); ++y)
 							{
-								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+								for (unsigned int x = 0u; x < frame.width(); ++x)
 								{
-									allSucceeded = false;
-								}
+									if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+									{
+										allSucceeded = false;
+									}
 
-								if (mapping.position(x, y) != copyMapping.position(x, y))
-								{
-									allSucceeded = false;
+									if (mapping.position(x, y) != copyMapping.position(x, y))
+									{
+										allSucceeded = false;
+									}
 								}
 							}
 						}
+						else
+						{
+							allSucceeded = false;
+						}
 					}
-					else
-					{
-						allSucceeded = false;
-					}
+
+					break;
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -416,23 +437,27 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 				CV::Synthesis::LayerF1 layer(frame, mask);
 				CV::Synthesis::MappingF1& mapping = layer.mappingF1();
 
-				for (unsigned int y = 0u; y < mask.height(); ++y)
+				bool validTestData = true;
+
+				for (unsigned int y = 0u; validTestData && y < mask.height(); ++y)
 				{
-					for (unsigned int x = 0u; x < mask.width(); ++x)
+					for (unsigned int x = 0u; validTestData && x < mask.width(); ++x)
 					{
 						if (mask.constpixel<uint8_t>(x, y)[0] != 0xFFu)
 						{
 							Scalar sourceX, sourceY;
 
-							while (true)
+							bool positionAccepted = true;
+
+							for (unsigned int n = 0u; n < 1000u; ++n)
 							{
+								positionAccepted = true;
+
 								sourceX = Random::scalar(randomGenerator, Scalar(patchSize_2), Scalar(mask.width() - patchSize_2 - 1u) - Numeric::weakEps());
 								sourceY = Random::scalar(randomGenerator, Scalar(patchSize_2), Scalar(mask.height() - patchSize_2 - 1u) - Numeric::weakEps());
 
 								const int xInt = Numeric::round32(sourceX);
 								const int yInt = Numeric::round32(sourceY);
-
-								bool positionAccepted = true;
 
 								for (int yy = -1; positionAccepted && yy <= 1; ++yy)
 								{
@@ -457,9 +482,21 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 								}
 							}
 
+							if (!positionAccepted)
+							{
+								validTestData = false;
+								break;
+							}
+
 							mapping.setPosition(x, y, Vector2(sourceX, sourceY));
 						}
 					}
+				}
+
+				if (!validTestData)
+				{
+					// we were not able to generate valid test data, so we need try over again
+					continue;
 				}
 
 				CV::Synthesis::MappingF1 copyMapping(mapping);
@@ -514,7 +551,7 @@ bool TestOptimizerF1::testReferenceFrame4Neighborhood(const unsigned int width, 
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
