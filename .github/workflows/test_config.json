@@ -1,0 +1,134 @@
+[
+  {
+    "id": "testbase",
+    "test-directory": "impl/ocean/test/testbase",
+    "ctest-args": "-E TestHighPerformanceTimer|TestSignal",
+    "paths": [
+      "impl/ocean/test/testbase/**",
+      "impl/ocean/base/**"
+    ]
+  },
+  {
+    "id": "testcv-AdvancedFrame",
+    "test-directory": "impl/ocean/test/testcv",
+    "ctest-args": "-j 16 -R TestAdvancedFrame",
+    "paths": [
+      "impl/ocean/test/testcv/**",
+      "impl/ocean/cv/**"
+    ]
+  },
+  {
+    "id": "testcv-FrameConverter",
+    "test-directory": "impl/ocean/test/testcv",
+    "ctest-args": "-j 16 -R TestFrameConverter",
+    "paths": [
+      "impl/ocean/test/testcv/**",
+      "impl/ocean/cv/**"
+    ]
+  },
+  {
+    "id": "testcv-FrameFilterScharr",
+    "test-directory": "impl/ocean/test/testcv",
+    "ctest-args": "-j 16 -R TestFrameFilterScharr",
+    "paths": [
+      "impl/ocean/test/testcv/**",
+      "impl/ocean/cv/**"
+    ]
+  },
+  {
+    "id": "testcv-FrameFilter-Other",
+    "test-directory": "impl/ocean/test/testcv",
+    "ctest-args": "-j 16 -R TestFrameFilter -E TestFrameFilterScharr",
+    "paths": [
+      "impl/ocean/test/testcv/**",
+      "impl/ocean/cv/**"
+    ]
+  },
+  {
+    "id": "testcv-FrameVariance",
+    "test-directory": "impl/ocean/test/testcv",
+    "ctest-args": "-j 16 -R TestFrameVariance",
+    "paths": [
+      "impl/ocean/test/testcv/**",
+      "impl/ocean/cv/**"
+    ]
+  },
+  {
+    "id": "testcv-Frame-Other",
+    "test-directory": "impl/ocean/test/testcv",
+    "ctest-args": "-j 16 -R TestFrame -E TestFrameConverter|TestFrameFilter|TestFrameVariance|TestFrameInterpolator.ResizeUseCase_",
+    "paths": [
+      "impl/ocean/test/testcv/**",
+      "impl/ocean/cv/**"
+    ]
+  },
+  {
+    "id": "testcv-Other",
+    "test-directory": "impl/ocean/test/testcv",
+    "ctest-args": "-j 16 -E TestAdvancedFrame|TestFrame|TestFASTDetector.StandardStrength",
+    "paths": [
+      "impl/ocean/test/testcv/**",
+      "impl/ocean/cv/**"
+    ]
+  },
+  {
+    "id": "testdevices",
+    "test-directory": "impl/ocean/test/testdevices",
+    "paths": [
+      "impl/ocean/test/testdevices/**",
+      "impl/ocean/devices/**"
+    ]
+  },
+  {
+    "id": "testgeometry",
+    "test-directory": "impl/ocean/test/testgeometry",
+    "ctest-args": "-E TestStereoscopicGeometry.CameraPose_6DOF_100",
+    "paths": [
+      "impl/ocean/test/testgeometry/**",
+      "impl/ocean/geometry/**"
+    ]
+  },
+  {
+    "id": "testio",
+    "test-directory": "impl/ocean/test/testio",
+    "ctest-args": "-E TestBasemap",
+    "paths": [
+      "impl/ocean/test/testio/**",
+      "impl/ocean/io/**"
+    ]
+  },
+  {
+    "id": "testmath",
+    "test-directory": "impl/ocean/test/testmath",
+    "ctest-args": "-E TestEquation.CubicEquation",
+    "paths": [
+      "impl/ocean/test/testmath/**",
+      "impl/ocean/math/**"
+    ]
+  },
+  {
+    "id": "testmedia",
+    "test-directory": "impl/ocean/test/testmedia",
+    "paths": [
+      "impl/ocean/test/testmedia/**",
+      "impl/ocean/media/**"
+    ]
+  },
+  {
+    "id": "testnetwork",
+    "test-directory": "impl/ocean/test/testnetwork",
+    "paths": [
+      "impl/ocean/test/testnetwork/**",
+      "impl/ocean/network/**"
+    ]
+  },
+  {
+    "id": "testtracking",
+    "test-directory": "impl/ocean/test/testtracking",
+    "ctest-args": "-E TestHomographyImageAlignmentDense.InverseCompositional_2",
+    "paths": [
+      "impl/ocean/test/testtracking/**",
+      "impl/ocean/tracking/**"
+    ]
+  }
+]

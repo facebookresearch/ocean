@@ -1,0 +1,29 @@
+name: Filter matrix by paths
+
+inputs:
+  input_path:
+    description: "Path to the input JSON file,"
+  output_path:
+    description: "Path to the output JSON file"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Extract path filters from full config
+      run: |
+        jq '[.[] | {(.id): .paths}] | add' $config_path > path_filters.yml
+      shell: bash
+    - name: Apply path filters to get list of changes
+      id: path-filter
+      uses: dorny/paths-filter@v3
+      with:
+        filters: path_filters.yml
+    - name: Filter config by changes
+      env:
+        IDS: "${{ join(fromJSON(steps.path-filter.outputs.changes)) }}"
+        CONFIG_PATH: ${{ inputs.input_path }}
+        MATRIX_PATH: ${{ inputs.output_path }}
+      run: |
+        echo "$IDS"
+        jq --arg ids "$IDS" '[.[] | select(.id == ($ids | split(",")[]))]' $CONFIG_PATH > $MATRIX_PATH
+      shell: bash

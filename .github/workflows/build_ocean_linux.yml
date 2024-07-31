@@ -9,61 +9,7 @@ on:
     types:
       - completed
 
-env:
-  OCEAN_LINK_TYPE: static
-
-  OCEAN_THIRDPARTY_INSTALL_PATH: ${{ github.workspace }}/ocean_thirdparty_install
-
-  OCEAN_BUILD_PATH: ${{ github.workspace }}/ocean_build
-  OCEAN_INSTALL_PATH: ${{ github.workspace }}/ocean_install
-
 jobs:
   build:
-    name: Linux (${{ matrix.build_config }}, static)
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        build_config: [debug, release]
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get upgrade -y
-          sudo apt-get install -y -o Acquire::Retries=5 \
-            git ninja-build zip libx11-dev libgtk-3-dev \
-            liblzma-dev libgl1-mesa-dev libxcb-glx0-dev \
-            libdeflate-dev libudev-dev zlib1g-dev
-
-      # - name: Install a newer CMake
-      #   run: |
-      #     sudo apt purge --auto-remove cmake
-      #     wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
-      #     sudo apt-add-repository -y 'deb https://apt.kitware.com/ubuntu/ jammy main'
-      #     sudo apt update
-      #     sudo apt install -y cmake
-
-      - name: Restore third-party artifacts
-        id: restore-thirdparty-install
-        uses: actions/cache/restore@v4
-        with:
-          key: thirdparty-install-${{ matrix.build_config }}-${{ hashFiles('build/cmake/') }}
-          path: ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
-
-      - name: Cache build artifacts
-        id: cache-ocean-build
-        uses: actions/cache@v4
-        with:
-          key: ocean-build-${{ matrix.build_config }}-${{ github.sha }}
-          path: ${{ env.OCEAN_BUILD_PATH }}
-
-      - name: Build and install Ocean
-        if: ${{ steps.cache-ocean-build.outputs.cahe-hit != 'true' }}
-        run: |
-          ${{ github.workspace }}/build/cmake/build_ocean_linuxunix.sh \
-            -i ${{ env.OCEAN_INSTALL_PATH }} \
-            -b ${{ env.OCEAN_BUILD_PATH }} \
-            -c ${{ matrix.build_config }} \
-            -l ${{ env.OCEAN_LINK_TYPE }} \
-            -t ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
+    uses: ./.github/workflows/build_ocean_linux_helper.yml
+    secrets: inherit

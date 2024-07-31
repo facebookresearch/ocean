@@ -1,0 +1,76 @@
+name: Test Ocean on Linux (static) [Helper]
+
+on:
+  workflow_call:
+
+env:
+  OCEAN_LINK_TYPE: static
+
+  OCEAN_BUILD_PATH: ${{ github.workspace }}/ocean_build
+  OCEAN_INSTALL_PATH: ${{ github.workspace }}/ocean_install
+
+jobs:
+  build-test-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.post.outputs.matrix }}
+    env:
+      config_path: ./.github/workflows/test_config.json
+      matrix_path: ./matrix.json
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use full matrix
+        if: ${{ !github.event.pull_request }}
+        id: full
+        run: cp $config_path $matrix_path
+      - name: Filter tests by path
+        if: ${{ !!github.event.pull_request }}
+        id: filter
+        uses: ./.github/actions/filter
+        with:
+          input_path: ${{ env.config_path }}
+          output_path: ${{ env.matrix_path }}
+      - name: Output matrix
+        id: post
+        run: |
+          {
+            echo 'matrix<<EOF'
+            jq '[.[] | del(.paths)]' $matrix_path
+            echo EOF
+          } >> $GITHUB_OUTPUT
+
+  run-tests:
+    name: "${{ matrix.suite.id }} (${{ matrix.build_config.capitalcase }})"
+    runs-on: ubuntu-latest
+    needs: build-test-matrix
+    if: ${{ needs.build-test-matrix.outputs.matrix != '[]'}}
+    strategy:
+      fail-fast: ${{ !!github.event.pull_request }}
+      matrix:
+        suite: ${{ fromJSON(needs.build-test-matrix.outputs.matrix) }}
+        build_config:
+          - capitalcase: Debug
+            lowercase: debug
+          - capitalcase: Release
+            lowercase: release
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore cached build artifacts
+        id: restore-build
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.OCEAN_BUILD_PATH }}
+          key: ocean-build-${{ matrix.build_config.lowercase }}-${{ github.sha }}
+          fail-on-cache-miss: true
+      - name: Run tests
+        run: |
+          mkdir -p $INSTALL_PATH/bin
+          cd $TEST_PATH
+          if !(ctest $CTEST_ARGS); then
+            echo "::warning::Re-running failed tests"
+            ctest --rerun-failed
+          fi
+        env:
+          INSTALL_PATH: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config.capitalcase }}
+          TEST_PATH: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config.capitalcase }}/${{ matrix.suite.test-directory }}
+          CTEST_ARGS: ${{ matrix.suite.ctest-args }}
