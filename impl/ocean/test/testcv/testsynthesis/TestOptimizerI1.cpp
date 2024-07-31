@@ -278,103 +278,126 @@ bool TestOptimizerI1::testAreaConstrained4Neighborhood(const unsigned int width,
 		{
 			for (const bool performanceIteration : {true, false})
 			{
-				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
-				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
-
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
-
-				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-				constexpr unsigned int patchSize = 5u;
-
-				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
-
-				CV::Synthesis::LayerI1 layer(frame, mask);
-				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
-
-				for (unsigned int y = 0u; y < mask.height(); ++y)
+				while (true)
 				{
-					const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-					for (unsigned int x = 0u; x < mask.width(); ++x)
+					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+
+					Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+					Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+					constexpr unsigned int patchSize = 5u;
+
+					CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
+
+					CV::Synthesis::LayerI1 layer(frame, mask);
+					CV::Synthesis::MappingI1& mapping = layer.mappingI1();
+
+					bool validTestData = true;
+
+					for (unsigned int y = 0u; validTestData && y < mask.height(); ++y)
 					{
-						if (maskRow[x] != 0xFFu)
+						const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
+						for (unsigned int x = 0u; validTestData && x < mask.width(); ++x)
 						{
-							unsigned int sourceX, sourceY;
-
-							do
+							if (maskRow[x] != 0xFFu)
 							{
-								sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
-								sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
-							}
-							while (mask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF);
+								unsigned int sourceX, sourceY;
 
-							mapping.setPosition(x, y, CV::PixelPosition(sourceX, sourceY));
-						}
-					}
-				}
-
-				CV::Synthesis::MappingI1 copyMapping(mapping);
-
-				const Frame filterMask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-				const unsigned int randomSeed = randomGenerator.seed();
-
-				constexpr unsigned int weightFactor = 5u;
-				constexpr unsigned int borderFactor = 25u;
-				constexpr bool updateFrame = true;
-
-				constexpr unsigned int radii = 5u;
-				constexpr unsigned int iterations = 4u;
-				constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
-				constexpr bool applyInitialMapping = true;
-
-				performance.startIf(performanceIteration);
-					CV::Synthesis::Optimizer4NeighborhoodAreaConstrainedI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, filterMask).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
-				performance.stopIf(performanceIteration);
-
-				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
-				{
-					ocean_assert(false && "Invalid padding memory!");
-					return false;
-				}
-
-				if (useWorker == nullptr)
-				{
-					RandomGenerator helperGenerator(randomSeed);
-
-					constexpr bool spatialSkipping = false;
-
-					if (optimize4Neighborhood<borderFactor>(copyFrame, mask, filterMask, Frame(), nullptr, copyMapping, helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost, spatialSkipping))
-					{
-						for (unsigned int y = 0u; y < frame.height(); ++y)
-						{
-							const uint8_t* maskRow = mask.constrow<uint8_t>(y);
-
-							for (unsigned int x = 0u; x < frame.width(); ++x)
-							{
-								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+								for (unsigned int n = 0u; n < 1000u; ++n)
 								{
-									OCEAN_SET_FAILED(validation);
+									sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
+									sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
+
+									if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] == 0xFF)
+									{
+										break;
+									}
 								}
 
-								if (maskRow[x] != 0xFFu)
+								if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF)
 								{
-									OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+									validTestData = false;
+									break;
 								}
+
+								mapping.setPosition(x, y, CV::PixelPosition(sourceX, sourceY));
 							}
 						}
 					}
-					else
+
+					if (!validTestData)
 					{
-						OCEAN_SET_FAILED(validation);
+						// we were not able to generate valid test data, so we need try over again
+						continue;
 					}
+
+					CV::Synthesis::MappingI1 copyMapping(mapping);
+
+					const Frame filterMask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+					const unsigned int randomSeed = randomGenerator.seed();
+
+					constexpr unsigned int weightFactor = 5u;
+					constexpr unsigned int borderFactor = 25u;
+					constexpr bool updateFrame = true;
+
+					constexpr unsigned int radii = 5u;
+					constexpr unsigned int iterations = 4u;
+					constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
+					constexpr bool applyInitialMapping = true;
+
+					performance.startIf(performanceIteration);
+						CV::Synthesis::Optimizer4NeighborhoodAreaConstrainedI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, filterMask).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
+					performance.stopIf(performanceIteration);
+
+					if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
+					{
+						ocean_assert(false && "Invalid padding memory!");
+						return false;
+					}
+
+					if (useWorker == nullptr)
+					{
+						RandomGenerator helperGenerator(randomSeed);
+
+						constexpr bool spatialSkipping = false;
+
+						if (optimize4Neighborhood<borderFactor>(copyFrame, mask, filterMask, Frame(), nullptr, copyMapping, helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost, spatialSkipping))
+						{
+							for (unsigned int y = 0u; y < frame.height(); ++y)
+							{
+								const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
+								for (unsigned int x = 0u; x < frame.width(); ++x)
+								{
+									if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+									{
+										OCEAN_SET_FAILED(validation);
+									}
+
+									if (maskRow[x] != 0xFFu)
+									{
+										OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+									}
+								}
+							}
+						}
+						else
+						{
+							OCEAN_SET_FAILED(validation);
+						}
+					}
+
+					break;
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -457,101 +480,124 @@ bool TestOptimizerI1::testHighPerformance4Neighborhood(const unsigned int width,
 		{
 			for (const bool performanceIteration : {true, false})
 			{
-				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
-				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
-
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
-
-				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-				constexpr unsigned int patchSize = 5u;
-
-				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
-
-				CV::Synthesis::LayerI1 layer(frame, mask);
-				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
-
-				for (unsigned int y = 0u; y < mask.height(); ++y)
+				while (true)
 				{
-					const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-					for (unsigned int x = 0u; x < mask.width(); ++x)
+					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+
+					Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+					Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+					constexpr unsigned int patchSize = 5u;
+
+					CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
+
+					CV::Synthesis::LayerI1 layer(frame, mask);
+					CV::Synthesis::MappingI1& mapping = layer.mappingI1();
+
+					bool validTestData = true;
+
+					for (unsigned int y = 0u; validTestData && y < mask.height(); ++y)
 					{
-						if (maskRow[x] != 0xFFu)
+						const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
+						for (unsigned int x = 0u; validTestData && x < mask.width(); ++x)
 						{
-							unsigned int sourceX, sourceY;
-
-							do
+							if (maskRow[x] != 0xFFu)
 							{
-								sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
-								sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
-							}
-							while (mask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF);
+								unsigned int sourceX, sourceY;
 
-							mapping.setPosition(x, y, CV::PixelPosition(sourceX, sourceY));
-						}
-					}
-				}
-
-				CV::Synthesis::MappingI1 copyMapping(mapping);
-
-				const unsigned int randomSeed = randomGenerator.seed();
-
-				constexpr unsigned int weightFactor = 5u;
-				constexpr unsigned int borderFactor = 25u;
-				constexpr bool updateFrame = true;
-
-				constexpr unsigned int radii = 5u;
-				constexpr unsigned int iterations = 4u;
-				constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
-				constexpr bool applyInitialMapping = true;
-
-				performance.startIf(performanceIteration);
-					CV::Synthesis::Optimizer4NeighborhoodHighPerformanceI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
-				performance.stopIf(performanceIteration);
-
-				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
-				{
-					ocean_assert(false && "Invalid padding memory!");
-					return false;
-				}
-
-				if (useWorker == nullptr)
-				{
-					RandomGenerator helperGenerator(randomSeed);
-
-					constexpr bool spatialSkipping = false;
-
-					if (optimize4Neighborhood<borderFactor>(copyFrame, mask, Frame(), Frame(), nullptr, copyMapping, helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost, spatialSkipping))
-					{
-						for (unsigned int y = 0u; y < frame.height(); ++y)
-						{
-							const uint8_t* maskRow = mask.constrow<uint8_t>(y);
-
-							for (unsigned int x = 0u; x < frame.width(); ++x)
-							{
-								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+								for (unsigned int n = 0u; n < 1000u; ++n)
 								{
-									OCEAN_SET_FAILED(validation);
+									sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
+									sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
+
+									if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] == 0xFF)
+									{
+										break;
+									}
 								}
 
-								if (maskRow[x] != 0xFFu)
+								if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF)
 								{
-									OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+									validTestData = false;
+									break;
 								}
+
+								mapping.setPosition(x, y, CV::PixelPosition(sourceX, sourceY));
 							}
 						}
 					}
-					else
+
+					if (!validTestData)
 					{
-						OCEAN_SET_FAILED(validation);
+						// we were not able to generate valid test data, so we need try over again
+						continue;
 					}
+
+					CV::Synthesis::MappingI1 copyMapping(mapping);
+
+					const unsigned int randomSeed = randomGenerator.seed();
+
+					constexpr unsigned int weightFactor = 5u;
+					constexpr unsigned int borderFactor = 25u;
+					constexpr bool updateFrame = true;
+
+					constexpr unsigned int radii = 5u;
+					constexpr unsigned int iterations = 4u;
+					constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
+					constexpr bool applyInitialMapping = true;
+
+					performance.startIf(performanceIteration);
+						CV::Synthesis::Optimizer4NeighborhoodHighPerformanceI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
+					performance.stopIf(performanceIteration);
+
+					if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
+					{
+						ocean_assert(false && "Invalid padding memory!");
+						return false;
+					}
+
+					if (useWorker == nullptr)
+					{
+						RandomGenerator helperGenerator(randomSeed);
+
+						constexpr bool spatialSkipping = false;
+
+						if (optimize4Neighborhood<borderFactor>(copyFrame, mask, Frame(), Frame(), nullptr, copyMapping, helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost, spatialSkipping))
+						{
+							for (unsigned int y = 0u; y < frame.height(); ++y)
+							{
+								const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
+								for (unsigned int x = 0u; x < frame.width(); ++x)
+								{
+									if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+									{
+										OCEAN_SET_FAILED(validation);
+									}
+
+									if (maskRow[x] != 0xFFu)
+									{
+										OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+									}
+								}
+							}
+						}
+						else
+						{
+							OCEAN_SET_FAILED(validation);
+						}
+					}
+
+					break;
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -634,101 +680,124 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkipping(const unsigned in
 		{
 			for (const bool performanceIteration : {true, false})
 			{
-				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
-				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
-
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
-
-				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-				constexpr unsigned int patchSize = 5u;
-
-				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
-
-				CV::Synthesis::LayerI1 layer(frame, mask);
-				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
-
-				for (unsigned int y = 0u; y < mask.height(); ++y)
+				while (true)
 				{
-					const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-					for (unsigned int x = 0u; x < mask.width(); ++x)
+					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+
+					Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+					Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+					constexpr unsigned int patchSize = 5u;
+
+					CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
+
+					CV::Synthesis::LayerI1 layer(frame, mask);
+					CV::Synthesis::MappingI1& mapping = layer.mappingI1();
+
+					bool validTestData = true;
+
+					for (unsigned int y = 0u; validTestData && y < mask.height(); ++y)
 					{
-						if (maskRow[x] != 0xFFu)
+						const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
+						for (unsigned int x = 0u; validTestData && x < mask.width(); ++x)
 						{
-							unsigned int sourceX, sourceY;
-
-							do
+							if (maskRow[x] != 0xFFu)
 							{
-								sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
-								sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
-							}
-							while (mask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF);
+								unsigned int sourceX, sourceY;
 
-							mapping.setPosition(x, y, CV::PixelPosition(sourceX, sourceY));
-						}
-					}
-				}
-
-				CV::Synthesis::MappingI1 copyMapping(mapping);
-
-				const unsigned int randomSeed = randomGenerator.seed();
-
-				constexpr unsigned int weightFactor = 5u;
-				constexpr unsigned int borderFactor = 25u;
-				constexpr bool updateFrame = true;
-
-				constexpr unsigned int radii = 5u;
-				constexpr unsigned int iterations = 4u;
-				constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
-				constexpr bool applyInitialMapping = true;
-
-				performance.startIf(performanceIteration);
-					CV::Synthesis::Optimizer4NeighborhoodHighPerformanceSkippingI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
-				performance.stopIf(performanceIteration);
-
-				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
-				{
-					ocean_assert(false && "Invalid padding memory!");
-					return false;
-				}
-
-				if (useWorker == nullptr)
-				{
-					RandomGenerator helperGenerator(randomSeed);
-
-					constexpr bool spatialSkipping = true;
-
-					if (optimize4Neighborhood<borderFactor>(copyFrame, mask, Frame(), Frame(), nullptr, copyMapping, helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost, spatialSkipping))
-					{
-						for (unsigned int y = 0u; y < frame.height(); ++y)
-						{
-							const uint8_t* maskRow = mask.constrow<uint8_t>(y);
-
-							for (unsigned int x = 0u; x < frame.width(); ++x)
-							{
-								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+								for (unsigned int n = 0u; n < 1000u; ++n)
 								{
-									OCEAN_SET_FAILED(validation);
+									sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
+									sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
+
+									if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] == 0xFF)
+									{
+										break;
+									}
 								}
 
-								if (maskRow[x] != 0xFFu)
+								if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF)
 								{
-									OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+									validTestData = false;
+									break;
 								}
+
+								mapping.setPosition(x, y, CV::PixelPosition(sourceX, sourceY));
 							}
 						}
 					}
-					else
+
+					if (!validTestData)
 					{
-						OCEAN_SET_FAILED(validation);
+						// we were not able to generate valid test data, so we need try over again
+						continue;
 					}
+
+					CV::Synthesis::MappingI1 copyMapping(mapping);
+
+					const unsigned int randomSeed = randomGenerator.seed();
+
+					constexpr unsigned int weightFactor = 5u;
+					constexpr unsigned int borderFactor = 25u;
+					constexpr bool updateFrame = true;
+
+					constexpr unsigned int radii = 5u;
+					constexpr unsigned int iterations = 4u;
+					constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
+					constexpr bool applyInitialMapping = true;
+
+					performance.startIf(performanceIteration);
+						CV::Synthesis::Optimizer4NeighborhoodHighPerformanceSkippingI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
+					performance.stopIf(performanceIteration);
+
+					if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
+					{
+						ocean_assert(false && "Invalid padding memory!");
+						return false;
+					}
+
+					if (useWorker == nullptr)
+					{
+						RandomGenerator helperGenerator(randomSeed);
+
+						constexpr bool spatialSkipping = true;
+
+						if (optimize4Neighborhood<borderFactor>(copyFrame, mask, Frame(), Frame(), nullptr, copyMapping, helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost, spatialSkipping))
+						{
+							for (unsigned int y = 0u; y < frame.height(); ++y)
+							{
+								const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
+								for (unsigned int x = 0u; x < frame.width(); ++x)
+								{
+									if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+									{
+										OCEAN_SET_FAILED(validation);
+									}
+
+									if (maskRow[x] != 0xFFu)
+									{
+										OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+									}
+								}
+							}
+						}
+						else
+						{
+							OCEAN_SET_FAILED(validation);
+						}
+					}
+
+					break;
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -811,103 +880,126 @@ bool TestOptimizerI1::testHighPerformance4NeighborhoodSkippingByCostMask(const u
 		{
 			for (const bool performanceIteration : {true, false})
 			{
-				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
-				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
-
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
-
-				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-				constexpr unsigned int patchSize = 5u;
-
-				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
-
-				CV::Synthesis::LayerI1 layer(frame, mask);
-				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
-
-				for (unsigned int y = 0u; y < mask.height(); ++y)
+				while (true)
 				{
-					const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-					for (unsigned int x = 0u; x < mask.width(); ++x)
+					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+
+					Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+					Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+					constexpr unsigned int patchSize = 5u;
+
+					CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
+
+					CV::Synthesis::LayerI1 layer(frame, mask);
+					CV::Synthesis::MappingI1& mapping = layer.mappingI1();
+
+					bool validTestData = true;
+
+					for (unsigned int y = 0u; validTestData && y < mask.height(); ++y)
 					{
-						if (maskRow[x] != 0xFFu)
+						const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
+						for (unsigned int x = 0u; validTestData && x < mask.width(); ++x)
 						{
-							unsigned int sourceX, sourceY;
-
-							do
+							if (maskRow[x] != 0xFFu)
 							{
-								sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
-								sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
-							}
-							while (mask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF);
+								unsigned int sourceX, sourceY;
 
-							mapping.setPosition(x, y, CV::PixelPosition(sourceX, sourceY));
-						}
-					}
-				}
-
-				CV::Synthesis::MappingI1 copyMapping(mapping);
-
-				const Frame skippingMask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-				const unsigned int randomSeed = randomGenerator.seed();
-
-				constexpr unsigned int weightFactor = 5u;
-				constexpr unsigned int borderFactor = 25u;
-				constexpr bool updateFrame = true;
-
-				constexpr unsigned int radii = 5u;
-				constexpr unsigned int iterations = 4u;
-				constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
-				constexpr bool applyInitialMapping = true;
-
-				performance.startIf(performanceIteration);
-					CV::Synthesis::Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, skippingMask).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
-				performance.stopIf(performanceIteration);
-
-				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
-				{
-					ocean_assert(false && "Invalid padding memory!");
-					return false;
-				}
-
-				if (useWorker == nullptr)
-				{
-					RandomGenerator helperGenerator(randomSeed);
-
-					constexpr bool spatialSkipping = false;
-
-					if (optimize4Neighborhood<borderFactor>(copyFrame, mask, Frame(), skippingMask, nullptr, copyMapping, helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost, spatialSkipping))
-					{
-						for (unsigned int y = 0u; y < frame.height(); ++y)
-						{
-							const uint8_t* maskRow = mask.constrow<uint8_t>(y);
-
-							for (unsigned int x = 0u; x < frame.width(); ++x)
-							{
-								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+								for (unsigned int n = 0u; n < 1000u; ++n)
 								{
-									OCEAN_SET_FAILED(validation);
+									sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
+									sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
+
+									if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] == 0xFF)
+									{
+										break;
+									}
 								}
 
-								if (maskRow[x] != 0xFFu)
+								if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF)
 								{
-									OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+									validTestData = false;
+									break;
 								}
+
+								mapping.setPosition(x, y, CV::PixelPosition(sourceX, sourceY));
 							}
 						}
 					}
-					else
+
+					if (!validTestData)
 					{
-						OCEAN_SET_FAILED(validation);
+						// we were not able to generate valid test data, so we need try over again
+						continue;
 					}
+
+					CV::Synthesis::MappingI1 copyMapping(mapping);
+
+					const Frame skippingMask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+					const unsigned int randomSeed = randomGenerator.seed();
+
+					constexpr unsigned int weightFactor = 5u;
+					constexpr unsigned int borderFactor = 25u;
+					constexpr bool updateFrame = true;
+
+					constexpr unsigned int radii = 5u;
+					constexpr unsigned int iterations = 4u;
+					constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
+					constexpr bool applyInitialMapping = true;
+
+					performance.startIf(performanceIteration);
+						CV::Synthesis::Optimizer4NeighborhoodHighPerformanceSkippingByCostMaskI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, skippingMask).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
+					performance.stopIf(performanceIteration);
+
+					if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
+					{
+						ocean_assert(false && "Invalid padding memory!");
+						return false;
+					}
+
+					if (useWorker == nullptr)
+					{
+						RandomGenerator helperGenerator(randomSeed);
+
+						constexpr bool spatialSkipping = false;
+
+						if (optimize4Neighborhood<borderFactor>(copyFrame, mask, Frame(), skippingMask, nullptr, copyMapping, helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost, spatialSkipping))
+						{
+							for (unsigned int y = 0u; y < frame.height(); ++y)
+							{
+								const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
+								for (unsigned int x = 0u; x < frame.width(); ++x)
+								{
+									if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+									{
+										OCEAN_SET_FAILED(validation);
+									}
+
+									if (maskRow[x] != 0xFFu)
+									{
+										OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+									}
+								}
+							}
+						}
+						else
+						{
+							OCEAN_SET_FAILED(validation);
+						}
+					}
+
+					break;
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
@@ -990,117 +1082,140 @@ bool TestOptimizerI1::testStructuralConstrained4Neighborhood(const unsigned int 
 		{
 			for (const bool performanceIteration : {true, false})
 			{
-				const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
-				const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
-
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
-
-				Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-				Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-				constexpr unsigned int patchSize = 5u;
-
-				CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
-
-				CV::Synthesis::LayerI1 layer(frame, mask);
-				CV::Synthesis::MappingI1& mapping = layer.mappingI1();
-
-				for (unsigned int y = 0u; y < mask.height(); ++y)
+				while (true)
 				{
-					const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(randomGenerator, 50u, width / 2u) * 2u;
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(randomGenerator, 50u, height / 2u) * 2u;
 
-					for (unsigned int x = 0u; x < mask.width(); ++x)
+					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+
+					Frame copyFrame(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+					Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+					constexpr unsigned int patchSize = 5u;
+
+					CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false, CV::PixelBoundingBox(), useWorker);
+
+					CV::Synthesis::LayerI1 layer(frame, mask);
+					CV::Synthesis::MappingI1& mapping = layer.mappingI1();
+
+					bool validTestData = true;
+
+					for (unsigned int y = 0u; validTestData && y < mask.height(); ++y)
 					{
-						if (maskRow[x] != 0xFFu)
+						const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
+						for (unsigned int x = 0u; validTestData && x < mask.width(); ++x)
 						{
-							unsigned int sourceX, sourceY;
-
-							do
+							if (maskRow[x] != 0xFFu)
 							{
-								sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
-								sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
-							}
-							while (mask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF);
+								unsigned int sourceX, sourceY;
 
-							mapping.setPosition(x, y, CV::PixelPosition(sourceX, sourceY));
-						}
-					}
-				}
-
-				CV::Synthesis::MappingI1 copyMapping(mapping);
-
-				CV::Synthesis::Constraints constraints;
-
-				const unsigned int numberContraints = RandomI::random(randomGenerator, 1u, 5u);
-
-				for (unsigned int n = 0u; n < numberContraints; ++n)
-				{
-					const Vector2 point0 = Random::vector2(randomGenerator, Scalar(5), Scalar(frame.width() - 6u), Scalar(5), Scalar(frame.height() - 6u));
-					const Vector2 point1 = Random::vector2(randomGenerator, Scalar(5), Scalar(frame.width() - 6u), Scalar(5), Scalar(frame.height() - 6u));
-
-					constexpr Scalar impact = 200;
-					constexpr Scalar radius = 40;
-					constexpr Scalar penality = 500;
-
-					constraints.addConstraint(std::make_unique<CV::Synthesis::FiniteLineConstraint>(point0, point1, impact, radius, penality, true, true));
-				}
-
-				const unsigned int randomSeed = randomGenerator.seed();
-
-				constexpr unsigned int weightFactor = 5u;
-				constexpr unsigned int borderFactor = 25u;
-				constexpr bool updateFrame = true;
-
-				constexpr unsigned int radii = 5u;
-				constexpr unsigned int iterations = 4u;
-				constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
-				constexpr bool applyInitialMapping = true;
-
-				performance.startIf(performanceIteration);
-					CV::Synthesis::Optimizer4NeighborhoodStructuralConstrainedI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, constraints).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
-				performance.stopIf(performanceIteration);
-
-				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
-				{
-					ocean_assert(false && "Invalid padding memory!");
-					return false;
-				}
-
-				if (useWorker == nullptr)
-				{
-					RandomGenerator helperGenerator(randomSeed);
-
-					constexpr bool spatialSkipping = false;
-
-					if (optimize4Neighborhood<borderFactor>(copyFrame, mask, Frame(), Frame(), &constraints, copyMapping,helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost, spatialSkipping))
-					{
-						for (unsigned int y = 0u; y < frame.height(); ++y)
-						{
-							for (unsigned int x = 0u; x < frame.width(); ++x)
-							{
-								const uint8_t* maskRow = mask.constrow<uint8_t>(y);
-
-								if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+								for (unsigned int n = 0u; n < 1000u; ++n)
 								{
-									OCEAN_SET_FAILED(validation);
+									sourceX = RandomI::random(randomGenerator, mask.width() - 1u);
+									sourceY = RandomI::random(randomGenerator, mask.height() - 1u);
+
+									if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] == 0xFF)
+									{
+										break;
+									}
 								}
 
-								if (maskRow[x] != 0xFFu)
+								if (mask.constpixel<uint8_t>(sourceX, sourceY)[0] != 0xFF)
 								{
-									OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+									validTestData = false;
+									break;
 								}
+
+								mapping.setPosition(x, y, CV::PixelPosition(sourceX, sourceY));
 							}
 						}
 					}
-					else
+
+					if (!validTestData)
 					{
-						OCEAN_SET_FAILED(validation);
+						// we were not able to generate valid test data, so we need try over again
+						continue;
 					}
+
+					CV::Synthesis::MappingI1 copyMapping(mapping);
+
+					CV::Synthesis::Constraints constraints;
+
+					const unsigned int numberContraints = RandomI::random(randomGenerator, 1u, 5u);
+
+					for (unsigned int n = 0u; n < numberContraints; ++n)
+					{
+						const Vector2 point0 = Random::vector2(randomGenerator, Scalar(5), Scalar(frame.width() - 6u), Scalar(5), Scalar(frame.height() - 6u));
+						const Vector2 point1 = Random::vector2(randomGenerator, Scalar(5), Scalar(frame.width() - 6u), Scalar(5), Scalar(frame.height() - 6u));
+
+						constexpr Scalar impact = 200;
+						constexpr Scalar radius = 40;
+						constexpr Scalar penality = 500;
+
+						constraints.addConstraint(std::make_unique<CV::Synthesis::FiniteLineConstraint>(point0, point1, impact, radius, penality, true, true));
+					}
+
+					const unsigned int randomSeed = randomGenerator.seed();
+
+					constexpr unsigned int weightFactor = 5u;
+					constexpr unsigned int borderFactor = 25u;
+					constexpr bool updateFrame = true;
+
+					constexpr unsigned int radii = 5u;
+					constexpr unsigned int iterations = 4u;
+					constexpr unsigned int maxSpatialCost = (unsigned int)(-1);
+					constexpr bool applyInitialMapping = true;
+
+					performance.startIf(performanceIteration);
+						CV::Synthesis::Optimizer4NeighborhoodStructuralConstrainedI1<weightFactor, borderFactor, updateFrame>(layer, randomGenerator, constraints).invoke(radii, iterations, maxSpatialCost, useWorker, applyInitialMapping);
+					performance.stopIf(performanceIteration);
+
+					if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, copyFrame))
+					{
+						ocean_assert(false && "Invalid padding memory!");
+						return false;
+					}
+
+					if (useWorker == nullptr)
+					{
+						RandomGenerator helperGenerator(randomSeed);
+
+						constexpr bool spatialSkipping = false;
+
+						if (optimize4Neighborhood<borderFactor>(copyFrame, mask, Frame(), Frame(), &constraints, copyMapping,helperGenerator, applyInitialMapping, radii, iterations, weightFactor, maxSpatialCost, spatialSkipping))
+						{
+							for (unsigned int y = 0u; y < frame.height(); ++y)
+							{
+								for (unsigned int x = 0u; x < frame.width(); ++x)
+								{
+									const uint8_t* maskRow = mask.constrow<uint8_t>(y);
+
+									if (memcmp(frame.constpixel<uint8_t>(x, y), copyFrame.constpixel<uint8_t>(x, y), sizeof(uint8_t) * frame.channels()) != 0)
+									{
+										OCEAN_SET_FAILED(validation);
+									}
+
+									if (maskRow[x] != 0xFFu)
+									{
+										OCEAN_EXPECT_EQUAL(validation, mapping.position(x, y), copyMapping.position(x, y));
+									}
+								}
+							}
+						}
+						else
+						{
+							OCEAN_SET_FAILED(validation);
+						}
+					}
+
+					break;
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 3u) << "ms";
