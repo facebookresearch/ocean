@@ -486,10 +486,12 @@ TEST_F(TestOpenImageLibrariesGTestInstance, AnyImageEncodeDecode)
 }
 
 
-TEST_F(TestOpenImageLibrariesGTestInstance, DecodeStressTest)
-{
-	EXPECT_TRUE(TestOpenImageLibraries::testDecodeStressTest());
-}
+#ifndef OCEAN_DEBUG
+	TEST_F(TestOpenImageLibrariesGTestInstance, DecodeStressTest)
+	{
+		EXPECT_TRUE(TestOpenImageLibraries::testDecodeStressTest());
+	}
+#endif
 
 #endif // OCEAN_USE_GTEST
 
