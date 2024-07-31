@@ -271,89 +271,110 @@ bool TestMappingF1::testApplyMapping(const unsigned int width, const unsigned in
 		{
 			for (const bool performanceIteration : {true, false})
 			{
-				const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
-				const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
-
-				Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
-
-				const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-				CV::Synthesis::MappingF1 mapping(frame.width(), frame.height());
-
-				const Frame frameCopy(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
-
-				for (unsigned int y = 0u; y < mask.height(); ++y)
+				while (true)
 				{
-					for (unsigned int x = 0u; x < mask.width(); ++x)
+					const unsigned int testWidth = performanceIteration ? width : RandomI::random(3u, width);
+					const unsigned int testHeight = performanceIteration ? height : RandomI::random(3u, height);
+
+					Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t>(channels), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+
+					const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+					CV::Synthesis::MappingF1 mapping(frame.width(), frame.height());
+
+					const Frame frameCopy(frame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+					bool validTestData = true;
+
+					for (unsigned int y = 0u; validTestData && y < mask.height(); ++y)
 					{
-						if (mask.constpixel<uint8_t>(x, y)[0] == 0x00)
+						for (unsigned int x = 0u; validTestData && x < mask.width(); ++x)
 						{
-							Scalar sourceX, sourceY;
-
-							while (true)
+							if (mask.constpixel<uint8_t>(x, y)[0] == 0x00)
 							{
-								sourceX = Random::scalar(Scalar(0), Scalar(mask.width() - 1u));
-								sourceY = Random::scalar(Scalar(0), Scalar(mask.height() - 1u));
-
-								const int xInt = Numeric::round32(sourceX);
-								const int yInt = Numeric::round32(sourceY);
+								Scalar sourceX, sourceY;
 
 								bool positionAccepted = true;
 
-								for (int yy = -1; positionAccepted && yy <= 1; ++yy)
+								for (unsigned int n = 0u; n < 1000u; ++n)
 								{
-									for (int xx = -1; positionAccepted && xx <= 1; ++xx)
-									{
-										const unsigned int xLocation = (unsigned int)(xInt + xx);
-										const unsigned int yLocation = (unsigned int)(yInt + yy);
+									positionAccepted = true;
 
-										if (xLocation < mask.width() && yLocation < mask.height())
+									sourceX = Random::scalar(Scalar(0), Scalar(mask.width() - 1u));
+									sourceY = Random::scalar(Scalar(0), Scalar(mask.height() - 1u));
+
+									const int xInt = Numeric::round32(sourceX);
+									const int yInt = Numeric::round32(sourceY);
+
+									for (int yy = -1; positionAccepted && yy <= 1; ++yy)
+									{
+										for (int xx = -1; positionAccepted && xx <= 1; ++xx)
 										{
-											if (mask.constpixel<uint8_t>(xLocation, yLocation)[0] != 0xFF)
+											const unsigned int xLocation = (unsigned int)(xInt + xx);
+											const unsigned int yLocation = (unsigned int)(yInt + yy);
+
+											if (xLocation < mask.width() && yLocation < mask.height())
 											{
-												positionAccepted = false;
+												if (mask.constpixel<uint8_t>(xLocation, yLocation)[0] != 0xFF)
+												{
+													positionAccepted = false;
+												}
 											}
 										}
 									}
+
+									if (positionAccepted)
+									{
+										break;
+									}
 								}
 
-								if (positionAccepted)
+								if (!positionAccepted)
 								{
+									validTestData = false;
 									break;
 								}
-							}
 
-							mapping.setPosition(x, y, Vector2(sourceX, sourceY));
+								mapping.setPosition(x, y, Vector2(sourceX, sourceY));
+							}
 						}
 					}
-				}
 
-				CV::PixelBoundingBox boundingBox(CV::PixelPosition(0u, 0u), frame.width(), frame.height());
+					if (!validTestData)
+					{
+						// we were not able to generate valid test data, so we need try over again
+						continue;
+					}
 
-				if (!performanceIteration)
-				{
-					const unsigned int left = RandomI::random(randomGenerator, frame.width() - 1u);
-					const unsigned int right = RandomI::random(randomGenerator, left, frame.width() - 1u);
+					CV::PixelBoundingBox boundingBox(CV::PixelPosition(0u, 0u), frame.width(), frame.height());
 
-					const unsigned int top = RandomI::random(randomGenerator, frame.height() - 1u);
-					const unsigned int bottom = RandomI::random(randomGenerator, top, frame.height() - 1u);
+					if (!performanceIteration)
+					{
+						const unsigned int left = RandomI::random(randomGenerator, frame.width() - 1u);
+						const unsigned int right = RandomI::random(randomGenerator, left, frame.width() - 1u);
 
-					boundingBox = CV::PixelBoundingBox(left, top, right, bottom);
-				}
+						const unsigned int top = RandomI::random(randomGenerator, frame.height() - 1u);
+						const unsigned int bottom = RandomI::random(randomGenerator, top, frame.height() - 1u);
 
-				performance.startIf(performanceIteration);
-					mapping.applyMapping(frame, mask, boundingBox.left(), boundingBox.width(), boundingBox.top(), boundingBox.height(), useWorker);
-				performance.stopIf(performanceIteration);
+						boundingBox = CV::PixelBoundingBox(left, top, right, bottom);
+					}
 
-				if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, frameCopy))
-				{
-					ocean_assert(false && "Invalid padding memory!");
-					return false;
-				}
+					performance.startIf(performanceIteration);
+						mapping.applyMapping(frame, mask, boundingBox.left(), boundingBox.width(), boundingBox.top(), boundingBox.height(), useWorker);
+					performance.stopIf(performanceIteration);
 
-				if (!validateMapping(frame, mask, mapping, boundingBox))
-				{
-					OCEAN_SET_FAILED(validation);
+					if (!CV::CVUtilities::isPaddingMemoryIdentical(frame, frameCopy))
+					{
+						ocean_assert(false && "Invalid padding memory!");
+						return false;
+					}
+
+					if (!validateMapping(frame, mask, mapping, boundingBox))
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+
+					break;
 				}
 			}
 		}
@@ -569,59 +590,84 @@ bool TestMappingF1::testAppearanceCost5x5(const unsigned int width, const unsign
 
 	do
 	{
-		const unsigned int testWidth = RandomI::random(randomGenerator, 6u, width);
-		const unsigned int testHeight = RandomI::random(randomGenerator, 6u, height);
-
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
-
-		Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-		CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false /*assignFinal*/, CV::PixelBoundingBox());
-
-		const CV::Synthesis::MappingF1 mapping(testWidth, testHeight);
-
-		const unsigned int normalizationFactor = mapping.spatialCostNormalization<tChannels>();
-
-		for (size_t n = 0; n < iterations; ++n)
+		while (true)
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			const unsigned int testWidth = RandomI::random(randomGenerator, 6u, width);
+			const unsigned int testHeight = RandomI::random(randomGenerator, 6u, height);
 
-			CV::PixelPosition target;
-			Vector2 source;
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 
-			while (true)
+			Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+			CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false /*assignFinal*/, CV::PixelBoundingBox());
+
+			const CV::Synthesis::MappingF1 mapping(testWidth, testHeight);
+
+			const unsigned int normalizationFactor = mapping.spatialCostNormalization<tChannels>();
+
+			bool validTestData = true;
+
+			for (size_t n = 0; n < iterations; ++n)
 			{
-				target = CV::PixelPosition(RandomI::random(randomGenerator, 2u, frame.width() - 3u), RandomI::random(randomGenerator, 2u, frame.height() - 3u));
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-				if (mask.constpixel<uint8_t>(target.x(), target.y())[0] != 0xFFu)
+				CV::PixelPosition target;
+				Vector2 source;
+
+				for (unsigned int i = 0u; i < 1000u; ++i)
 				{
+					target = CV::PixelPosition(RandomI::random(randomGenerator, 2u, frame.width() - 3u), RandomI::random(randomGenerator, 2u, frame.height() - 3u));
+
+					if (mask.constpixel<uint8_t>(target.x(), target.y())[0] != 0xFFu)
+					{
+						break;
+					}
+				}
+
+				if (mask.constpixel<uint8_t>(target.x(), target.y())[0] == 0xFFu)
+				{
+					validTestData = false;
 					break;
+				}
+
+				for (unsigned int i = 0u; i < 1000u; ++i)
+				{
+					source = Random::vector2(randomGenerator, Scalar(2), Scalar(frame.width() - 3u) - Numeric::weakEps(), Scalar(2), Scalar(frame.height() - 3u) - Numeric::weakEps());
+
+					const unsigned int xRounded = (unsigned int)(Numeric::round32(source.x()));
+					const unsigned int yRounded = (unsigned int)(Numeric::round32(source.y()));
+
+					if (mask.constpixel<uint8_t>(xRounded, yRounded)[0] == 0xFFu)
+					{
+						break;
+					}
+				}
+
+				if (mask.constpixel<uint8_t>((unsigned int)(Numeric::round32(source.x())), (unsigned int)(Numeric::round32(source.y())))[0] != 0xFFu)
+				{
+					validTestData = false;
+					break;
+				}
+
+				const unsigned int cost = mapping.appearanceCost5x5<tChannels>(target.x(), target.y(), source.x(), source.y(), frame.constdata<uint8_t>(), mask.constdata<uint8_t>(), frame.paddingElements(), mask.paddingElements(), borderFactor);
+
+				const uint64_t testCost = determineAppearanceCost<true>(frame, frame, mask, source, target, patchSize, borderFactor, normalizationFactor);
+
+				ocean_assert((std::is_same<float, Scalar>::value) || uint64_t(cost) == testCost);
+
+				if (uint64_t(cost) != testCost)
+				{
+					scopedIteration.setInaccurate();
 				}
 			}
 
-			while (true)
+			if (!validTestData)
 			{
-				source = Random::vector2(randomGenerator, Scalar(2), Scalar(frame.width() - 3u) - Numeric::weakEps(), Scalar(2), Scalar(frame.height() - 3u) - Numeric::weakEps());
-
-				const unsigned int xRounded = (unsigned int)(Numeric::round32(source.x()));
-				const unsigned int yRounded = (unsigned int)(Numeric::round32(source.y()));
-
-				if (mask.constpixel<uint8_t>(xRounded, yRounded)[0] == 0xFFu)
-				{
-					break;
-				}
+				// we were not able to generate valid test data, so we need try over again
+				continue;
 			}
 
-			const unsigned int cost = mapping.appearanceCost5x5<tChannels>(target.x(), target.y(), source.x(), source.y(), frame.constdata<uint8_t>(), mask.constdata<uint8_t>(), frame.paddingElements(), mask.paddingElements(), borderFactor);
-
-			const uint64_t testCost = determineAppearanceCost<true>(frame, frame, mask, source, target, patchSize, borderFactor, normalizationFactor);
-
-			ocean_assert((std::is_same<float, Scalar>::value) || uint64_t(cost) == testCost);
-
-			if (uint64_t(cost) != testCost)
-			{
-				scopedIteration.setInaccurate();
-			}
+			break;
 		}
 	}
 	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
@@ -692,60 +738,85 @@ bool TestMappingF1::testAppearanceReferenceCost5x5(const unsigned int width, con
 
 	do
 	{
-		const unsigned int testWidth = RandomI::random(randomGenerator, 6u, width);
-		const unsigned int testHeight = RandomI::random(randomGenerator, 6u, height);
-
-		const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
-		const Frame reference = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
-
-		Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-		CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false /*assignFinal*/, CV::PixelBoundingBox());
-
-		const CV::Synthesis::MappingF1 mapping(testWidth, testHeight);
-
-		const unsigned int normalizationFactor = mapping.spatialCostNormalization<tChannels>();
-
-		for (size_t n = 0; n < iterations; ++n)
+		while (true)
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			const unsigned int testWidth = RandomI::random(randomGenerator, 6u, width);
+			const unsigned int testHeight = RandomI::random(randomGenerator, 6u, height);
 
-			CV::PixelPosition target;
-			Vector2 source;
+			const Frame frame = CV::CVUtilities::randomizedFrame(FrameType(testWidth, testHeight, FrameType::genericPixelFormat<uint8_t, tChannels>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+			const Frame reference = CV::CVUtilities::randomizedFrame(frame.frameType(), &randomGenerator);
 
-			while (true)
+			Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+			CV::Segmentation::MaskAnalyzer::determineDistancesToBorder8Bit(mask.data<uint8_t>(), mask.width(), mask.height(), mask.paddingElements(), patchSize + 1u, false /*assignFinal*/, CV::PixelBoundingBox());
+
+			const CV::Synthesis::MappingF1 mapping(testWidth, testHeight);
+
+			const unsigned int normalizationFactor = mapping.spatialCostNormalization<tChannels>();
+
+			bool validTestData = true;
+
+			for (size_t n = 0; n < iterations; ++n)
 			{
-				target = CV::PixelPosition(RandomI::random(randomGenerator, 2u, frame.width() - 3u), RandomI::random(randomGenerator, 2u, frame.height() - 3u));
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-				if (mask.constpixel<uint8_t>(target.x(), target.y())[0] != 0xFFu)
+				CV::PixelPosition target;
+				Vector2 source;
+
+				for (unsigned int i = 0u; i < 1000u; ++i)
 				{
+					target = CV::PixelPosition(RandomI::random(randomGenerator, 2u, frame.width() - 3u), RandomI::random(randomGenerator, 2u, frame.height() - 3u));
+
+					if (mask.constpixel<uint8_t>(target.x(), target.y())[0] != 0xFFu)
+					{
+						break;
+					}
+				}
+
+				if (mask.constpixel<uint8_t>(target.x(), target.y())[0] == 0xFFu)
+				{
+					validTestData = false;
 					break;
+				}
+
+				for (unsigned int i = 0u; i < 1000u; ++i)
+				{
+					source = Random::vector2(randomGenerator, Scalar(2), Scalar(frame.width() - 3u) - Numeric::weakEps(), Scalar(2), Scalar(frame.height() - 3u) - Numeric::weakEps());
+
+					const unsigned int xRounded = (unsigned int)(Numeric::round32(source.x()));
+					const unsigned int yRounded = (unsigned int)(Numeric::round32(source.y()));
+
+					if (mask.constpixel<uint8_t>(xRounded, yRounded)[0] == 0xFFu)
+					{
+						break;
+					}
+				}
+
+				if (mask.constpixel<uint8_t>((unsigned int)(Numeric::round32(source.x())), (unsigned int)(Numeric::round32(source.y())))[0] != 0xFFu)
+				{
+					validTestData = false;
+					break;
+				}
+
+				const unsigned int cost = mapping.appearanceReferenceCost5x5<tChannels>(target.x(), target.y(), source.x(), source.y(), frame.constdata<uint8_t>(), mask.constdata<uint8_t>(), reference.constdata<uint8_t>(), frame.paddingElements(), mask.paddingElements(), reference.paddingElements(), borderFactor);
+
+				const uint64_t testCost = determineAppearanceReferenceCost(frame, reference, mask, source, target, patchSize, borderFactor, normalizationFactor);
+
+				ocean_assert((std::is_same<float, Scalar>::value) || uint64_t(cost) == testCost);
+
+				if (uint64_t(cost) != testCost)
+				{
+					scopedIteration.setInaccurate();
 				}
 			}
 
-			while (true)
+			if (!validTestData)
 			{
-				source = Random::vector2(randomGenerator, Scalar(2), Scalar(frame.width() - 3u) - Numeric::weakEps(), Scalar(2), Scalar(frame.height() - 3u) - Numeric::weakEps());
-
-				const unsigned int xRounded = (unsigned int)(Numeric::round32(source.x()));
-				const unsigned int yRounded = (unsigned int)(Numeric::round32(source.y()));
-
-				if (mask.constpixel<uint8_t>(xRounded, yRounded)[0] == 0xFFu)
-				{
-					break;
-				}
+				// we were not able to generate valid test data, so we need try over again
+				continue;
 			}
 
-			const unsigned int cost = mapping.appearanceReferenceCost5x5<tChannels>(target.x(), target.y(), source.x(), source.y(), frame.constdata<uint8_t>(), mask.constdata<uint8_t>(), reference.constdata<uint8_t>(), frame.paddingElements(), mask.paddingElements(), reference.paddingElements(), borderFactor);
-
-			const uint64_t testCost = determineAppearanceReferenceCost(frame, reference, mask, source, target, patchSize, borderFactor, normalizationFactor);
-
-			ocean_assert((std::is_same<float, Scalar>::value) || uint64_t(cost) == testCost);
-
-			if (uint64_t(cost) != testCost)
-			{
-				scopedIteration.setInaccurate();
-			}
+			break;
 		}
 	}
 	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
@@ -813,45 +884,60 @@ bool TestMappingF1::testSpatialCost4Neighborhood(const unsigned int width, const
 
 	do
 	{
-		const unsigned int testWidth = RandomI::random(randomGenerator, 3u, width);
-		const unsigned int testHeight = RandomI::random(randomGenerator, 3u, height);
-
-		const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
-
-		CV::Synthesis::MappingF1 mapping(testWidth, testHeight);
-
-		const unsigned int normalizationFactor = mapping.appearanceCostNormalization<tChannels>();
-
-		for (unsigned int y = 0u; y < mask.height(); ++y)
+		while (true)
 		{
-			for (unsigned int x = 0u; x < mask.width(); ++x)
+			const unsigned int testWidth = RandomI::random(randomGenerator, 3u, width);
+			const unsigned int testHeight = RandomI::random(randomGenerator, 3u, height);
+
+			const Frame mask = Utilities::randomizedInpaintingMask(testWidth, testHeight, 0x00u, randomGenerator);
+
+			CV::Synthesis::MappingF1 mapping(testWidth, testHeight);
+
+			const unsigned int normalizationFactor = mapping.appearanceCostNormalization<tChannels>();
+
+			for (unsigned int y = 0u; y < mask.height(); ++y)
 			{
-				mapping.setPosition(x, y, Random::vector2(randomGenerator, Scalar(0), Scalar(mask.width() - 1u), Scalar(0), Scalar(mask.height() - 1u)));
+				for (unsigned int x = 0u; x < mask.width(); ++x)
+				{
+					mapping.setPosition(x, y, Random::vector2(randomGenerator, Scalar(0), Scalar(mask.width() - 1u), Scalar(0), Scalar(mask.height() - 1u)));
+				}
 			}
-		}
 
-		const Scalar maxCost = Random::scalar(randomGenerator, Scalar(0.001), Scalar(10000000));
+			const Scalar maxCost = Random::scalar(randomGenerator, Scalar(0.001), Scalar(10000000));
 
-		unsigned int xTarget = (unsigned int)(-1);
-		unsigned int yTarget = (unsigned int)(-1);
+			unsigned int xTarget = (unsigned int)(-1);
+			unsigned int yTarget = (unsigned int)(-1);
 
-		do
-		{
-			xTarget = RandomI::random(randomGenerator, testWidth - 1u);
-			yTarget = RandomI::random(randomGenerator, testHeight - 1u);
-		}
-		while (mask.constpixel<uint8_t>(xTarget, yTarget)[0] == 0xFFu);
+			for (unsigned int n = 0u; n < 1000u; ++n)
+			{
+				xTarget = RandomI::random(randomGenerator, testWidth - 1u);
+				yTarget = RandomI::random(randomGenerator, testHeight - 1u);
 
-		const unsigned int xSource = RandomI::random(randomGenerator, testWidth - 1u);
-		const unsigned int ySource = RandomI::random(randomGenerator, testHeight - 1u);
+				if (mask.constpixel<uint8_t>(xTarget, yTarget)[0] != 0xFFu)
+				{
+					break;
+				}
+			}
 
-		const Scalar cost = mapping.spatialCost4Neighborhood<tChannels>(xTarget, yTarget, Scalar(xSource), Scalar(ySource), mask.constdata<uint8_t>(), mask.paddingElements(), maxCost);
+			if (mask.constpixel<uint8_t>(xTarget, yTarget)[0] == 0xFFu)
+			{
+				// we were not able to generate valid test data, so we need try over again
+				continue;
+			}
 
-		const Scalar testCost = determineSpatialCost4Neighborhood(mapping, mask, Vector2(Scalar(xSource), Scalar(ySource)), CV::PixelPosition(xTarget, yTarget), maxCost, normalizationFactor);
+			const unsigned int xSource = RandomI::random(randomGenerator, testWidth - 1u);
+			const unsigned int ySource = RandomI::random(randomGenerator, testHeight - 1u);
 
-		if (Numeric::isNotEqual(cost, testCost, threshold))
-		{
-			OCEAN_SET_FAILED(validation);
+			const Scalar cost = mapping.spatialCost4Neighborhood<tChannels>(xTarget, yTarget, Scalar(xSource), Scalar(ySource), mask.constdata<uint8_t>(), mask.paddingElements(), maxCost);
+
+			const Scalar testCost = determineSpatialCost4Neighborhood(mapping, mask, Vector2(Scalar(xSource), Scalar(ySource)), CV::PixelPosition(xTarget, yTarget), maxCost, normalizationFactor);
+
+			if (Numeric::isNotEqual(cost, testCost, threshold))
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+
+			break;
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
