@@ -199,8 +199,12 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 		Vectors2 imagePoints0;
 		Vectors2 imagePoints1;
 
-		while (true)
+		bool allPointsInsideCamera = true;
+
+		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			allPointsInsideCamera = true;
+
 			constexpr Scalar maximalRotationAngle = Numeric::deg2rad(10);
 
 			if constexpr (tPureRotation)
@@ -228,8 +232,6 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 			imagePoints0.clear();
 			imagePoints1.clear();
 
-			bool allPointsInsideCamera = true;
-
 			for (const Vector3& objectPoint : objectPoints)
 			{
 				const Vector2 imagePoint0 = camera.projectToImage<false>(world_T_camera0, objectPoint, true);
@@ -251,6 +253,12 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 			{
 				break;
 			}
+		}
+
+		if (!allPointsInsideCamera)
+		{
+			scopedIteration.setInaccurate();
+			continue;
 		}
 
 		HomogenousMatrix4 determinedCamera0_T_determinedCamera1(false);
