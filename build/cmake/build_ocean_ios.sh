@@ -149,7 +149,7 @@ function run_build {
     echo "CMAKE_CONFIGURE_COMMAND = ${CMAKE_CONFIGURE_COMMAND}"
     eval "${CMAKE_CONFIGURE_COMMAND}"
 
-    cmake --build "${BUILD_DIR}" --target install -- CODE_SIGNING_ALLOWED=NO -parallelizeTargets -jobs 16
+    cmake --build "${BUILD_DIR}" --target install --config ${BUILD_CONFIG} -- CODE_SIGNING_ALLOWED=NO -parallelizeTargets -jobs 16
 
     build_exit_code=$?
 
