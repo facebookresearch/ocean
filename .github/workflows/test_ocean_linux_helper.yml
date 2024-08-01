@@ -44,6 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-test-matrix
     if: ${{ needs.build-test-matrix.outputs.matrix != '[]'}}
+    timeout-minutes: 60
     strategy:
       fail-fast: ${{ !!github.event.pull_request }}
       matrix:
