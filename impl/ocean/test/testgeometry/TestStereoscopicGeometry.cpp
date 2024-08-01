@@ -17,6 +17,8 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -162,17 +164,20 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 	ocean_assert(numberCorrespondences >= 5u);
 	ocean_assert(testDuration > 0.0);
 
-	uint64_t iterations = 0ull;
-	uint64_t validIerations = 0ull;
-
 	HighPerformanceStatistic performance;
 
 	RandomGenerator randomGenerator;
+
+	constexpr double successThreshold = std::is_same<float, Scalar>::value ? 0.85 : 0.95;
+
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const Vector3 randomTranslation = Random::vector3(randomGenerator, -10, 10);
 		const Quaternion randomOrientation = Random::quaternion(randomGenerator);
 
@@ -257,19 +262,19 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 		constexpr Scalar rotationalMotionMinimalValidCorrespondencesPercent = tPureRotation ? Scalar(0.99) : Scalar(0.9);
 
 		performance.start();
-			bool localSuccess = Geometry::StereoscopicGeometry::cameraPose(camera, ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), randomGenerator, determinedCamera0_T_determinedCamera1, &determinedObjectPoints, &validIndices, Numeric::sqr(maxRotationalError), Numeric::sqr(maxArbitraryError), 100u /*iterations*/, rotationalMotionMinimalValidCorrespondencesPercent);
+			const bool localSuccess = Geometry::StereoscopicGeometry::cameraPose(camera, ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), randomGenerator, determinedCamera0_T_determinedCamera1, &determinedObjectPoints, &validIndices, Numeric::sqr(maxRotationalError), Numeric::sqr(maxArbitraryError), 100u /*iterations*/, rotationalMotionMinimalValidCorrespondencesPercent);
 		performance.stop();
 
 		if (validIndices.size() != imagePoints0.size())
 		{
-			localSuccess = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if constexpr (tPureRotation)
 		{
 			if (localSuccess && !determinedCamera0_T_determinedCamera1.translation().isNull())
 			{
-				localSuccess = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -285,7 +290,7 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 
 			if (!allObjectPointsInFront || sqrAveragePixelError > Scalar(2 * 2) || sqrMaximalPixelError > Scalar(10 * 10))
 			{
-				localSuccess = false;
+				scopedIteration.setInaccurate();
 			}
 
 			sqrAveragePixelError = Numeric::maxValue();
@@ -298,29 +303,20 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 
 			if (!allObjectPointsInFront || sqrAveragePixelError > Scalar(2 * 2) || sqrMaximalPixelError > Scalar(10 * 10))
 			{
-				localSuccess = false;
+				scopedIteration.setInaccurate();
 			}
 		}
-
-		if (localSuccess)
+		else
 		{
-			++validIerations;
+			scopedIteration.setInaccurate();
 		}
-
-		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Average performance: " << performance.averageMseconds() << "ms";
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIerations) / double(iterations);
-
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 2u) << "% succeeded.";
-
-	constexpr double threshold = std::is_same<double, Scalar>::value ? 0.95 : 0.85;
-
-	return percent >= threshold;
+	return validation.succeeded();
 }
 
 }
