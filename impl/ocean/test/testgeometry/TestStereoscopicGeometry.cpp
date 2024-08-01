@@ -265,45 +265,47 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 			const bool localSuccess = Geometry::StereoscopicGeometry::cameraPose(camera, ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), randomGenerator, determinedCamera0_T_determinedCamera1, &determinedObjectPoints, &validIndices, Numeric::sqr(maxRotationalError), Numeric::sqr(maxArbitraryError), 100u /*iterations*/, rotationalMotionMinimalValidCorrespondencesPercent);
 		performance.stop();
 
-		if (validIndices.size() != imagePoints0.size())
-		{
-			scopedIteration.setInaccurate();
-		}
-
-		if constexpr (tPureRotation)
-		{
-			if (localSuccess && !determinedCamera0_T_determinedCamera1.translation().isNull())
-			{
-				scopedIteration.setInaccurate();
-			}
-		}
-
 		if (localSuccess)
 		{
-			Scalar sqrAveragePixelError = Numeric::maxValue();
-			Scalar sqrMinimalPixelError = Numeric::maxValue();
-			Scalar sqrMaximalPixelError = Numeric::maxValue();
-
-			const HomogenousMatrix4 world_T_determinedCamera0(true); // the first camera is located in the origin
-
-			bool allObjectPointsInFront = Geometry::Error::determinePoseError<ConstArrayAccessor<Vector3>, ConstArrayAccessor<Vector2>, true>(world_T_determinedCamera0, AnyCameraPinhole(camera), ConstArrayAccessor<Vector3>(determinedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints0), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
-
-			if (!allObjectPointsInFront || sqrAveragePixelError > Scalar(2 * 2) || sqrMaximalPixelError > Scalar(10 * 10))
+			if (validIndices.size() != imagePoints0.size())
 			{
 				scopedIteration.setInaccurate();
 			}
-
-			sqrAveragePixelError = Numeric::maxValue();
-			sqrMinimalPixelError = Numeric::maxValue();
-			sqrMaximalPixelError = Numeric::maxValue();
-
-			const HomogenousMatrix4 world_T_determinedCamera1 = world_T_determinedCamera0 * determinedCamera0_T_determinedCamera1;
-
-			allObjectPointsInFront = Geometry::Error::determinePoseError<ConstArrayAccessor<Vector3>, ConstArrayAccessor<Vector2>, true>(world_T_determinedCamera1, AnyCameraPinhole(camera), ConstArrayAccessor<Vector3>(determinedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints1), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
-
-			if (!allObjectPointsInFront || sqrAveragePixelError > Scalar(2 * 2) || sqrMaximalPixelError > Scalar(10 * 10))
+			else
 			{
-				scopedIteration.setInaccurate();
+				if constexpr (tPureRotation)
+				{
+					if (!determinedCamera0_T_determinedCamera1.translation().isNull())
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+
+				Scalar sqrAveragePixelError = Numeric::maxValue();
+				Scalar sqrMinimalPixelError = Numeric::maxValue();
+				Scalar sqrMaximalPixelError = Numeric::maxValue();
+
+				const HomogenousMatrix4 world_T_determinedCamera0(true); // the first camera is located in the origin
+
+				bool allObjectPointsInFront = Geometry::Error::determinePoseError<ConstArrayAccessor<Vector3>, ConstArrayAccessor<Vector2>, true>(world_T_determinedCamera0, AnyCameraPinhole(camera), ConstArrayAccessor<Vector3>(determinedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints0), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
+
+				if (!allObjectPointsInFront || sqrAveragePixelError > Scalar(2 * 2) || sqrMaximalPixelError > Scalar(10 * 10))
+				{
+					scopedIteration.setInaccurate();
+				}
+
+				sqrAveragePixelError = Numeric::maxValue();
+				sqrMinimalPixelError = Numeric::maxValue();
+				sqrMaximalPixelError = Numeric::maxValue();
+
+				const HomogenousMatrix4 world_T_determinedCamera1 = world_T_determinedCamera0 * determinedCamera0_T_determinedCamera1;
+
+				allObjectPointsInFront = Geometry::Error::determinePoseError<ConstArrayAccessor<Vector3>, ConstArrayAccessor<Vector2>, true>(world_T_determinedCamera1, AnyCameraPinhole(camera), ConstArrayAccessor<Vector3>(determinedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints1), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
+
+				if (!allObjectPointsInFront || sqrAveragePixelError > Scalar(2 * 2) || sqrMaximalPixelError > Scalar(10 * 10))
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
 		}
 		else
