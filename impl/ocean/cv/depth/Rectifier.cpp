@@ -18,7 +18,7 @@ namespace CV
 namespace Depth
 {
 
-bool Rectifier::rectify(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Frame& frameA, const Frame& frameB, const PinholeCamera& pinholeCamera, Frame& rectifiedFrameA, Frame& rectifiedFrameB, HomogenousMatrix4& world_T_rectifiedA, HomogenousMatrix4& world_T_rectifiedB, Worker* worker)
+bool Rectifier::rectify(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Frame& frameA, const Frame& frameB, const PinholeCamera& pinholeCamera, Frame& rectifiedFrameA, Frame& rectifiedFrameB, HomogenousMatrix4& world_T_rectifiedA, HomogenousMatrix4& world_T_rectifiedB, const bool useTangentMapping, Worker* worker)
 {
 	ocean_assert(cameraA.isValid());
 	ocean_assert(cameraB.isValid());
@@ -53,7 +53,7 @@ bool Rectifier::rectify(const AnyCamera& cameraA, const AnyCamera& cameraB, cons
 
 	constexpr unsigned int binSizeInPixel = 4u;
 
-	if (!Ocean::CV::FrameInterpolatorBilinear::Comfort::resampleCameraImage(frameA, cameraA, cameraA_R_rectified, AnyCameraPinhole(pinholeCamera), rectifiedFrameA, nullptr, worker, binSizeInPixel))
+	if (!resampleCameraImageWithOptionalTangentMapping(frameA, cameraA, cameraA_R_rectified, AnyCameraPinhole(pinholeCamera), rectifiedFrameA, nullptr, worker, binSizeInPixel, nullptr, useTangentMapping))
 	{
 		ocean_assert(false && "This should never happen!");
 
@@ -61,7 +61,7 @@ bool Rectifier::rectify(const AnyCamera& cameraA, const AnyCamera& cameraB, cons
 		return false;
 	}
 
-	if (!Ocean::CV::FrameInterpolatorBilinear::Comfort::resampleCameraImage(frameB, cameraB, cameraB_R_rectified, AnyCameraPinhole(pinholeCamera), rectifiedFrameB, nullptr, worker, binSizeInPixel))
+	if (!resampleCameraImageWithOptionalTangentMapping(frameB, cameraB, cameraB_R_rectified, AnyCameraPinhole(pinholeCamera), rectifiedFrameB, nullptr, worker, binSizeInPixel, nullptr, useTangentMapping))
 	{
 		ocean_assert(false && "This should never happen!");
 
@@ -116,6 +116,92 @@ bool Rectifier::detemineRectificationRotation(const HomogenousMatrix4& world_T_c
 
 	world_R_rectified = Quaternion(SquareMatrix3(xAxis, yAxis, zAxis));
 
+	return true;
+}
+
+bool Rectifier::resampleCameraImageWithOptionalTangentMapping(const Frame& sourceFrame, const AnyCamera& sourceCamera, const SquareMatrix3& source_R_target, const AnyCamera& targetCamera, Frame& targetFrame,  LookupCorner2<Vector2>* source_OLT_target, Worker* worker, const unsigned int binSizeInPixel, const void* borderColor, const bool useTangentMapping)
+{
+	ocean_assert(sourceFrame.isValid());
+	ocean_assert(sourceCamera.isValid());
+	ocean_assert(sourceFrame.width() == sourceCamera.width() && sourceFrame.height() == sourceCamera.height());
+	ocean_assert(source_R_target.isOrthonormal());
+	ocean_assert(targetCamera.isValid());
+
+	if (sourceFrame.pixelOrigin() != FrameType::ORIGIN_UPPER_LEFT)
+	{
+		ocean_assert(false && "Pixel origin must be top left");
+		return false;
+	}
+
+	const size_t binsX = std::max(1u, targetCamera.width() / binSizeInPixel);
+	const size_t binsY = std::max(1u, targetCamera.height() / binSizeInPixel);
+	FrameInterpolatorBilinear::LookupTable lookupTable(targetCamera.width(), targetCamera.height(), binsX, binsY);
+
+	const Scalar f = Scalar(targetCamera.focalLengthX());
+	if (f <= Numeric::eps())
+	{
+		return false;
+	}
+
+	const Scalar width = Scalar(targetCamera.width());
+	const Scalar height = Scalar(targetCamera.height());
+	const Scalar width_2 = width / Scalar(2); 
+	const Scalar height_2 = height / Scalar(2);
+	const Scalar fovx = 2 * Numeric::atan(width_2 / f);
+	const Scalar fovy = 2 * Numeric::atan(height_2 / f);
+
+	if (useTangentMapping)
+	{
+		Log::debug() << "applying tangent mapping";
+		Log::debug() << "width: " << width << ", height: " << height << ", f: " << f;
+		Log::debug() << "fovx: " << Numeric::rad2deg(fovx) << ", fovy: " << Numeric::rad2deg(fovy);
+	}
+
+	for (size_t yBin = 0; yBin <= lookupTable.binsY(); ++yBin)
+	{
+		for (size_t xBin = 0; xBin <= lookupTable.binsX(); ++xBin)
+		{
+			const Vector2 cornerPosition = lookupTable.binTopLeftCornerPosition(xBin, yBin);
+			Vector2 newCornerPosition = cornerPosition;
+
+			if (useTangentMapping)
+			{
+				const Scalar x = cornerPosition.x() - width_2;
+				const Scalar y = cornerPosition.y() - height_2;
+				const Scalar newx = Numeric::tan(x * fovx / width) * f;
+				const Scalar newy = Numeric::tan(y * fovy / height) * f;
+				newCornerPosition = Vector2(newx + width_2, newy + height_2);
+			}
+			
+			constexpr bool makeUnitVector = false; // we don't need a unit/normalized vector as we project the vector into the camera again
+
+			const Vector3 rayI = source_R_target * targetCamera.vector(newCornerPosition, makeUnitVector);
+			const Vector3 rayIF = Vector3(rayI.x(), -rayI.y(), -rayI.z());
+
+			if (rayIF.z() > Numeric::eps())
+			{
+				const Vector2 projectedPoint = sourceCamera.projectToImageIF(rayIF);
+
+				lookupTable.setBinTopLeftCornerValue(xBin, yBin, projectedPoint - cornerPosition);
+			}
+			else
+			{
+				// simply a coordinate far outside the input
+				lookupTable.setBinTopLeftCornerValue(xBin, yBin, Vector2(Scalar(sourceCamera.width() * 10u), Scalar(sourceCamera.height() * 10u)));
+			}
+		}
+	}
+
+	if (!FrameInterpolatorBilinear::Comfort::lookup(sourceFrame, targetFrame, lookupTable, true /*offset*/, borderColor, worker))
+	{
+		return false;
+	}
+
+	if (source_OLT_target)
+	{
+		*source_OLT_target = std::move(lookupTable);
+	}
+	
 	return true;
 }
 
