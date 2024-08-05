@@ -1,4 +1,4 @@
-libjpeg
+libjpeg-turbo
 googletest
 gl
 zlib

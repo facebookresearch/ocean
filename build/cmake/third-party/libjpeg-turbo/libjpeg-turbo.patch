@@ -1,0 +1,70 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ff9c9c2..444cae6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -5,6 +5,8 @@ if(CMAKE_EXECUTABLE_SUFFIX)
+ endif()
+ 
+ project(libjpeg-turbo C)
++
++
+ set(VERSION 3.0.3)
+ set(COPYRIGHT_YEAR "1991-2024")
+ string(REPLACE "." ";" VERSION_TRIPLET ${VERSION})
+@@ -50,9 +52,9 @@ set(LIBJPEG_TURBO_VERSION_NUMBER ${VERSION_MAJOR}${VERSION_MINOR}${VERSION_REVIS
+ # ExternalProject_Add() or make downstream modifications to the libjpeg-turbo
+ # build system to suit their specific needs.  Please do not file bug reports,
+ # feature requests, or pull requests regarding this.
+-if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+-  message(FATAL_ERROR "The libjpeg-turbo build system cannot be integrated into another build system using add_subdirectory().  Use ExternalProject_Add() instead.")
+-endif()
++#if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
++#  message(FATAL_ERROR "The libjpeg-turbo build system cannot be integrated into another build system using add_subdirectory().  Use ExternalProject_Add() instead.")
++#endif()
+ 
+ # CMake 3.14 and later sets CMAKE_MACOSX_BUNDLE to TRUE by default when
+ # CMAKE_SYSTEM_NAME is iOS, tvOS, or watchOS, which breaks the libjpeg-turbo
+@@ -684,7 +686,7 @@ if(WITH_TURBOJPEG)
+       set(TJMAPFILE ${CMAKE_CURRENT_SOURCE_DIR}/turbojpeg-mapfile.jni)
+     endif()
+     if(MSVC)
+-      configure_file(${CMAKE_SOURCE_DIR}/win/turbojpeg.rc.in
++      configure_file(${CMAKE_CURRENT_LIST_DIR}/win/turbojpeg.rc.in
+         ${CMAKE_BINARY_DIR}/win/turbojpeg.rc)
+       set(TURBOJPEG_SOURCES ${TURBOJPEG_SOURCES}
+         ${CMAKE_BINARY_DIR}/win/turbojpeg.rc)
+@@ -1766,6 +1768,11 @@ if(ENABLE_STATIC)
+     else()
+       set(DIR ${CMAKE_CURRENT_BINARY_DIR})
+     endif()
++    if(IOS)
++        set_target_properties(cjpeg-static PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${DIR})
++        set_target_properties(djpeg-static PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${DIR})
++        set_target_properties(jpegtran-static PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${DIR})
++    endif()
+     install(PROGRAMS ${DIR}/cjpeg-static${EXE}
+       DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT bin RENAME cjpeg${EXE})
+     install(PROGRAMS ${DIR}/djpeg-static${EXE}
+diff --git a/sharedlib/CMakeLists.txt b/sharedlib/CMakeLists.txt
+index eaed9e9..754bf6a 100644
+--- a/sharedlib/CMakeLists.txt
++++ b/sharedlib/CMakeLists.txt
+@@ -44,15 +44,15 @@ if(WIN32)
+   set(DEFFILE ../win/jpeg${SO_MAJOR_VERSION}.def)
+ endif()
+ if(MSVC)
+-  configure_file(${CMAKE_SOURCE_DIR}/win/jpeg.rc.in
++  configure_file(${CMAKE_CURRENT_LIST_DIR}/../win/jpeg.rc.in
+     ${CMAKE_BINARY_DIR}/win/jpeg.rc)
+   set(JPEG_SRCS ${JPEG_SRCS} ${CMAKE_BINARY_DIR}/win/jpeg.rc)
+ endif()
+ add_library(jpeg SHARED ${JPEG_SRCS} ${DEFFILE} ${SIMD_TARGET_OBJECTS}
+   ${SIMD_OBJS} $<TARGET_OBJECTS:jpeg12> $<TARGET_OBJECTS:jpeg16>)
+ 
+-set_target_properties(jpeg PROPERTIES SOVERSION ${SO_MAJOR_VERSION}
+-  VERSION ${SO_MAJOR_VERSION}.${SO_AGE}.${SO_MINOR_VERSION})
++#set_target_properties(jpeg PROPERTIES SOVERSION ${SO_MAJOR_VERSION}
++#  VERSION ${SO_MAJOR_VERSION}.${SO_AGE}.${SO_MINOR_VERSION})
+ if(APPLE AND (NOT CMAKE_OSX_DEPLOYMENT_TARGET OR
+               CMAKE_OSX_DEPLOYMENT_TARGET VERSION_GREATER 10.4))
+   if(NOT CMAKE_SHARED_LIBRARY_RUNTIME_C_FLAG)
