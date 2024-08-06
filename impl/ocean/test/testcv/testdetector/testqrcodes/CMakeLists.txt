@@ -118,6 +118,7 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_cv
             ocean_cv_detector
             ocean_cv_detector_qrcodes
+            ocean_io
             ocean_io_image
             ocean_media
             ocean_media_openimagelibraries

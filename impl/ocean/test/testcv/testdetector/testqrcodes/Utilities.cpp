@@ -14,6 +14,8 @@
 #include "ocean/math/Random.h"
 
 #include <array>
+#include <iomanip>
+#include <sstream>
 
 namespace Ocean
 {
@@ -227,6 +229,53 @@ const std::string& Utilities::getNumericCharset()
 	ocean_assert(numericCharset.size() == 10u);
 
 	return numericCharset;
+}
+
+std::string Utilities::translateQRCodeToString(const CV::Detector::QRCodes::QRCode& qrcode, const bool ignoreModules)
+{
+	std::stringstream ss;
+	
+	ss << "isValid: " << qrcode.isValid() << '\n';
+	ss << "version: " << qrcode.version() << '\n';
+	ss << "encodingMode: " << QRCode::translateEncodingMode(qrcode.encodingMode()) << '\n';
+	ss << "errorCorrectionCapacity: " << QRCode::translateErrorCorrectionCapacity(qrcode.errorCorrectionCapacity()) << '\n';
+	ss << "modulesPerSide: " << qrcode.modulesPerSide() << '\n';
+	ss << "data size: " << qrcode.data().size() << '\n';
+
+	ss << "data:";
+	int count = 0;
+	for (const std::uint8_t& datum : qrcode.data())
+	{
+		if (count % 16 == 0)
+		{
+			ss << '\n';
+		}
+
+		++count;
+		ss << " 0x" << String::toAStringHex(datum);
+	}
+	ss << '\n';
+
+	if (!ignoreModules)
+	{
+		ss << "number of modules: " << qrcode.modules().size() << '\n';
+
+		ss << "modules: ";
+		count = 0;
+		for (const std::uint8_t& module : qrcode.modules())
+		{
+			if (count % qrcode.modulesPerSide() == 0)
+			{
+				ss << '\n';
+			}
+
+			++count;
+			ss << ' ' << (unsigned int)module;
+		}
+		ss << '\n';
+	}
+
+	return std::move(ss).str();
 }
 
 } // namespace TestQRCodes

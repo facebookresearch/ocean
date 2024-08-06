@@ -106,6 +106,13 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @return The numeric charset
 		 */
 		static const std::string& getNumericCharset();
+
+		/**
+		 * Returns human readable string representation of QRCode state suitable for logging
+		 * @param ignoreModules If True, module data is ignored; otherwise, modules data is excluded from resulting string
+		 * @return String representation of QRCode
+		 */
+		static std::string translateQRCodeToString(const CV::Detector::QRCodes::QRCode& qrcode, const bool ignoreModules = false);
 };
 
 } // namespace TestQRCodes

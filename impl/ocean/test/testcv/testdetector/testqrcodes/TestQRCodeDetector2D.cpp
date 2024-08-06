@@ -25,6 +25,18 @@
 
 #include "ocean/test/ValidationPrecision.h"
 
+#include <algorithm>
+#include <cctype>
+
+#ifdef OCEAN_TEST_QRCODES_DETECTOR2D_ENABLE_VERBOSE_LOGGING
+#include "ocean/io/Directory.h"
+#include "ocean/io/image/Image.h"
+
+#include <cstdint>
+#include <fstream>
+#include <sstream>
+#endif
+
 namespace Ocean
 {
 
@@ -57,31 +69,61 @@ bool TestQRCodeDetector2D::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testDetectQRCodesSyntheticData(0u, testDuration, worker) && allSucceeded;
+	allSucceeded = testDetectQRCodesSmallImageSyntheticData(0u, testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testDetectQRCodesSyntheticData(1u, testDuration, worker) && allSucceeded;
+	allSucceeded = testDetectQRCodesSmallImageSyntheticData(1u, testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testDetectQRCodesSyntheticData(3u, testDuration, worker) && allSucceeded;
+	allSucceeded = testDetectQRCodesSmallImageSyntheticData(3u, testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testDetectQRCodesSyntheticData(5u, testDuration, worker) && allSucceeded;
+	allSucceeded = testDetectQRCodesSmallImageSyntheticData(5u, testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testDetectQRCodesSyntheticData(7u, testDuration, worker) && allSucceeded;
+	allSucceeded = testDetectQRCodesSmallImageSyntheticData(7u, testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testDetectQRCodesLargeImageSyntheticData(0u, testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testDetectQRCodesLargeImageSyntheticData(1u, testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testDetectQRCodesLargeImageSyntheticData(3u, testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testDetectQRCodesLargeImageSyntheticData(5u, testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testDetectQRCodesLargeImageSyntheticData(7u, testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -105,34 +147,64 @@ TEST(TestQRCodeDetector2D, StressTest)
 	EXPECT_TRUE(TestQRCodeDetector2D::testStressTest(GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestQRCodeDetector2D, TestDetectQRCodesSyntheticDataNoGaussianFilter)
+TEST(TestQRCodeDetector2D, TestDetectQRCodesSmallImageSyntheticDataNoGaussianFilter)
 {
 	Worker worker;
-	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(0u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSmallImageSyntheticData(0u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestQRCodeDetector2D, TestDetectQRCodesSyntheticDataGaussianFilter1)
+TEST(TestQRCodeDetector2D, TestDetectQRCodesSmallImageSyntheticDataGaussianFilter1)
 {
 	Worker worker;
-	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(1u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSmallImageSyntheticData(1u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestQRCodeDetector2D, TestDetectQRCodesSyntheticDataGaussianFilter3)
+TEST(TestQRCodeDetector2D, TestDetectQRCodesSmallImageSyntheticDataGaussianFilter3)
 {
 	Worker worker;
-	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(3u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSmallImageSyntheticData(3u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestQRCodeDetector2D, TestDetectQRCodesSyntheticDataGaussianFilter5)
+TEST(TestQRCodeDetector2D, TestDetectQRCodesSmallImageSyntheticDataGaussianFilter5)
 {
 	Worker worker;
-	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(5u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSmallImageSyntheticData(5u, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestQRCodeDetector2D, TestDetectQRCodesSyntheticDataGaussianFilter7)
+TEST(TestQRCodeDetector2D, TestDetectQRCodesSmallImageSyntheticDataGaussianFilter7)
 {
 	Worker worker;
-	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSyntheticData(5u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSmallImageSyntheticData(5u, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestQRCodeDetector2D, TestDetectQRCodesLargeImageSyntheticDataNoGaussianFilter)
+{
+	Worker worker;
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesLargeImageSyntheticData(0u, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestQRCodeDetector2D, TestDetectQRCodesLargeImageSyntheticDataGaussianFilter1)
+{
+	Worker worker;
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesLargeImageSyntheticData(1u, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestQRCodeDetector2D, TestDetectQRCodesLargeImageSyntheticDataGaussianFilter3)
+{
+	Worker worker;
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesLargeImageSyntheticData(3u, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestQRCodeDetector2D, TestDetectQRCodesLargeImageSyntheticDataGaussianFilter5)
+{
+	Worker worker;
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesLargeImageSyntheticData(5u, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestQRCodeDetector2D, TestDetectQRCodesLargeImageSyntheticDataGaussianFilter7)
+{
+	Worker worker;
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesLargeImageSyntheticData(7u, GTEST_TEST_DURATION, worker));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -176,20 +248,46 @@ bool TestQRCodeDetector2D::testStressTest(const double testDuration, Worker& wor
 	return validation.succeeded();
 }
 
-bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker)
+bool TestQRCodeDetector2D::testDetectQRCodesSmallImageSyntheticData(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker)
+{
+	static_assert(std::is_same_v<Scalar, double> || std::is_same_v<Scalar, float>);
+
+	const double validationPrecisionThreshold = std::is_same_v<Scalar, double> ? 0.90 : 0.85;
+
+	return testDetectQRCodesSyntheticData_Internal(gaussianFilterSize, testDuration, worker, "SmallImage", validationPrecisionThreshold);
+}
+
+bool TestQRCodeDetector2D::testDetectQRCodesLargeImageSyntheticData(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker)
+{
+	static_assert(std::is_same_v<Scalar, double> || std::is_same_v<Scalar, float>);
+
+	const double validationPrecisionThreshold = std::is_same_v<Scalar, double> ? 0.90 : 0.85;
+
+	return testDetectQRCodesSyntheticData_Internal(gaussianFilterSize, testDuration, worker, "LargeImage", validationPrecisionThreshold, 6u, 45u, 2048u, 4096u);
+}
+
+bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData_Internal(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker, const std::string& testLabel, const double validationPrecisionThreshold, const unsigned int moduleSizePixelsMin, const unsigned int moduleSizePixelsMax, const unsigned int imageDimPixelsMin, const unsigned int imageDimPixelsMax)
 {
 	ocean_assert(gaussianFilterSize == 0u || gaussianFilterSize % 2u == 1u);
 	ocean_assert(testDuration > 0.0);
+	ocean_assert(testLabel.end() == std::find_if(testLabel.begin(), testLabel.end(), [](char c) { return !std::isalnum(c); }) && "testLabel must be alphanumeric");
+	ocean_assert(validationPrecisionThreshold >= 0.0 && validationPrecisionThreshold <= 1.0);
+	ocean_assert(moduleSizePixelsMin >= 1u);
+	ocean_assert(moduleSizePixelsMax >= moduleSizePixelsMin);
+	ocean_assert(imageDimPixelsMin >= 0u);
+	ocean_assert(imageDimPixelsMax >= 0u);
 
-	Log::info() << "Detect QR codes test using synthetic data (" << (gaussianFilterSize == 0u ? "no Gaussian filter" : "Gaussian filter: " + String::toAString(gaussianFilterSize)) + ")";
+	Log::info() << "Detect QR codes test using synthetic data (" << testLabel << ", " << (gaussianFilterSize == 0u ? "no Gaussian filter" : "Gaussian filter:" + String::toAString(gaussianFilterSize)) << ")";
 
 	RandomGenerator randomGenerator;
 
-	constexpr double threshold = std::is_same<Scalar, double>::value ? 0.99 : 0.90;
-
-	ValidationPrecision validation(threshold, randomGenerator);
+	ValidationPrecision validation(validationPrecisionThreshold, randomGenerator);
 
 	Timestamp start(true);
+
+#ifdef OCEAN_TEST_QRCODES_DETECTOR2D_ENABLE_VERBOSE_LOGGING
+	std::uint64_t testImageIndex = 0u;
+#endif
 
 	do
 	{
@@ -257,25 +355,51 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 		const uint8_t foregroundValue = isNormalReflectance ? lowIntensity : highIntensity;
 		const uint8_t backgroundValue = isNormalReflectance ? highIntensity : lowIntensity;
 
-		const unsigned int frameWithCodeSize = RandomI::random(randomGenerator, 6u * groundtruthCode.modulesPerSide(), 8u * groundtruthCode.modulesPerSide()); // ~6-8 pixels per module
+		const unsigned int codeBorderModules = 4u;
+		const unsigned int codeWithBorderModulesPerSide = 2u * codeBorderModules + groundtruthCode.modulesPerSide();
+		const unsigned int targetFrameWithCodeSize = RandomI::random(randomGenerator, moduleSizePixelsMin * codeWithBorderModulesPerSide, moduleSizePixelsMax * codeWithBorderModulesPerSide);
 
-		const Frame frameWithCode = CV::Detector::QRCodes::Utilities::draw(groundtruthCode, frameWithCodeSize, /* allowTrueMultiple */ true, /* border */ 4u, &worker, foregroundValue, backgroundValue);
-		ocean_assert(frameWithCode.isValid() && frameWithCode.width() >= frameWithCodeSize && frameWithCode.height() >= frameWithCodeSize);
+		const Frame frameWithCode = CV::Detector::QRCodes::Utilities::draw(groundtruthCode, targetFrameWithCodeSize, /* allowTrueMultiple */ true, /* border */ codeBorderModules, &worker, foregroundValue, backgroundValue);
+
+		ocean_assert(frameWithCode.isValid() && frameWithCode.width() >= targetFrameWithCodeSize && frameWithCode.height() >= targetFrameWithCodeSize);
+		ocean_assert(frameWithCode.width() % codeWithBorderModulesPerSide == 0);
+
+		const unsigned int codeSizeInFramePixelsPerSide = frameWithCode.width() / codeWithBorderModulesPerSide * groundtruthCode.modulesPerSide();
 
 		// Draw a randomly rotated version of the QR code into the center of the final frame
-		const unsigned int frameWidth = 2u * frameWithCode.width();
-		const unsigned int frameHeight = 2u * frameWithCode.height();
+		const Scalar rotation = Random::scalar(randomGenerator, Scalar(0), Numeric::pi2());
+		const Scalar qrcodeCenterToCornerDistancePixels = codeSizeInFramePixelsPerSide * Scalar(0.5) * Numeric::sqrt(Scalar(2));
+		const Scalar qrcodeDiagonalOrientation = Numeric::pi_4() + rotation;
+		const Scalar maxQRCodeImageDeviationXY = std::max(Numeric::abs(Numeric::cos(qrcodeDiagonalOrientation)), Numeric::abs(Numeric::sin(qrcodeDiagonalOrientation))) * qrcodeCenterToCornerDistancePixels;
+
+		// The QR code is rotated by a random angle and drawn.  Set minimum frame size to be able to accommodate rotated image with room for margin required by detector.
+		constexpr unsigned int imageMarginPixels = 11u;
+		const unsigned int minFrameWidth = std::max(imageDimPixelsMin, (unsigned int)Numeric::round32(maxQRCodeImageDeviationXY * 2) + 2u + 2u * imageMarginPixels);
+		const unsigned int minFrameHeight = std::max(imageDimPixelsMin, (unsigned int)Numeric::round32(maxQRCodeImageDeviationXY * 2) + 2u + 2u * imageMarginPixels);
+
+		const unsigned int maxFrameWidth = std::max(imageDimPixelsMax, minFrameWidth);
+		const unsigned int maxFrameHeight = std::max(imageDimPixelsMax, minFrameHeight);
+
+		const unsigned int frameWidth = RandomI::random(randomGenerator, minFrameWidth, maxFrameWidth);
+		const unsigned int frameHeight = RandomI::random(randomGenerator, minFrameHeight, maxFrameHeight);
 
 		Frame frame = CV::CVUtilities::randomizedFrame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
 		frame.setValue(backgroundValue);
 
-		const Vector2 frameCenterOffset(Scalar(frameWidth) * Scalar(0.5), Scalar(frameHeight) * Scalar(0.5));
-		const Scalar rotation = Random::scalar(randomGenerator, Scalar(0), Numeric::pi2());
+		const Scalar maxOffsetMagnitudeX = frameWidth / 2 - maxQRCodeImageDeviationXY - imageMarginPixels;
+		const Scalar maxOffsetMagnitudeY = frameHeight / 2 - maxQRCodeImageDeviationXY - imageMarginPixels;
 
-		const SquareMatrix3 frameWithCodeCenteredRotated_T_frame = SquareMatrix3(Vector3(Scalar(1), Scalar(0), Scalar(0)), Vector3(Scalar(0), Scalar(1), Scalar(0)), Vector3(-frameCenterOffset, Scalar(1)));
-		const SquareMatrix3 frameWithCodeCentered_R_frameWithCodeCenteredRotated = SquareMatrix3(Rotation(Vector3(Scalar(0), Scalar(0), Scalar(1)), rotation));
-		const SquareMatrix3 frameWithCode_T_frameWithCodeCentered = SquareMatrix3(Vector3(Scalar(1), Scalar(0), Scalar(0)), Vector3(Scalar(0), Scalar(1), Scalar(0)), Vector3(Vector2(Scalar(frameWithCode.width() / 2u), Scalar(frameWithCode.height() / 2u)), Scalar(1)));
-		const SquareMatrix3 frameWithCode_T_frame = frameWithCode_T_frameWithCodeCentered * frameWithCodeCentered_R_frameWithCodeCenteredRotated * frameWithCodeCenteredRotated_T_frame;
+		ocean_assert(maxOffsetMagnitudeX >= 0.0 && maxOffsetMagnitudeY >= 0.0);
+
+		const Scalar offsetX = Random::scalar(randomGenerator, -maxOffsetMagnitudeX, maxOffsetMagnitudeX);
+		const Scalar offsetY = Random::scalar(randomGenerator, -maxOffsetMagnitudeY, maxOffsetMagnitudeY);
+		const Vector2 frameCenterOffset(frame.width() * Scalar(0.5) + offsetX, frame.height() * Scalar(0.5) + offsetY);
+
+
+		const SquareMatrix3 frameWithCodeCenteredRotated_T_frame = SquareMatrix3(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(-frameCenterOffset, 1));
+		const SquareMatrix3 frameWithCodeCentered_R_frameWithCodeCenteredRotated = SquareMatrix3(Rotation(Vector3(0, 0, 1), rotation));
+		const SquareMatrix3 frameWithCode_T_frameWithCodeOffsetFromCenter = SquareMatrix3(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(frameWithCode.width() * Scalar(0.5), frameWithCode.height() * Scalar(0.5), 1));
+		const SquareMatrix3 frameWithCode_T_frame = frameWithCode_T_frameWithCodeOffsetFromCenter * frameWithCodeCentered_R_frameWithCodeCenteredRotated * frameWithCodeCenteredRotated_T_frame;
 
 		if (!CV::FrameInterpolatorBilinear::Comfort::affine(frameWithCode, frame, frameWithCode_T_frame, &backgroundValue, &worker))
 		{
@@ -292,6 +416,12 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 		const SharedAnyCamera anyCamera = std::make_shared<AnyCameraPinhole>(PinholeCamera(frame.width(), frame.height(), Numeric::deg2rad(Scalar(60))));
 		ocean_assert(anyCamera != nullptr && anyCamera->isValid());
 
+#ifdef OCEAN_TEST_QRCODES_DETECTOR2D_ENABLE_VERBOSE_LOGGING
+		unsigned failedDetectionCount = 0u;
+		unsigned failedGroundTruthComparisonCount = 0u;
+		++testImageIndex;
+#endif
+
 		for (const bool useWorker : {true, false})
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
@@ -301,10 +431,108 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData(const unsigned int gau
 			QRCodeDetector2D::Observations observations;
 			const QRCodes codes = QRCodeDetector2D::detectQRCodes(*anyCamera, frame, &observations, workerToUse);
 
-			if (codes.size() != 1 || groundtruthCode != codes[0])
+			bool detectionSuccess = codes.size() == 1;
+			bool groundTruthComparisonSuccess = detectionSuccess && codes[0].isSame(groundtruthCode, false);
+
+			if (!detectionSuccess || !groundTruthComparisonSuccess)
 			{
 				scopedIteration.setInaccurate();
 			}
+
+#ifdef OCEAN_TEST_QRCODES_DETECTOR2D_ENABLE_VERBOSE_LOGGING
+			bool failedAtDetection = !detectionSuccess;
+			bool failedAtGroundTruthComparison = detectionSuccess && !groundTruthComparisonSuccess;
+
+			// Differentiate cases of ground truth comparison failure where extracted modules in detected QR code is wrong but otherwise decoded data is correct due to error correction.
+			bool failedAtGroundTruthModulesComparison = failedAtGroundTruthComparison && codes[0].isSame(groundtruthCode, true);
+
+			if (failedAtDetection)
+			{
+				if (codes.size() == 0)
+				{
+					Log::error() << "Did not detect any QR codes (seed:" << randomGenerator.initialSeed() << ", #" << testImageIndex << ", useWorker:" << useWorker << ")";
+				}
+
+				if (codes.size() > 1)
+				{
+					Log::error() << "Detected " << codes.size() << " QR codes (seed:" << randomGenerator.initialSeed() << ", #" << testImageIndex << ", useWorker:" << useWorker << ")";
+				}
+			}
+
+			if (failedAtGroundTruthComparison)
+			{
+				Log::error() << "Detected 1 QR code as expected but decoded value differs from ground truth value " << (failedAtGroundTruthModulesComparison ? "solely due to difference in modules extracted" : "") << " (seed:" << randomGenerator.initialSeed() << ", #" << testImageIndex << ", useWorker:" << useWorker << ")";
+			}
+
+			failedDetectionCount += failedAtDetection ? 1 : 0;
+			failedGroundTruthComparisonCount += failedAtGroundTruthComparison ? 1 : 0;
+
+			if (failedAtDetection && failedDetectionCount == 1 || failedAtGroundTruthComparison && failedGroundTruthComparisonCount == 1)
+			{
+				IO::Directory failureDataDirectory;
+				ocean_assert(!failureDataDirectory.isNull() && "Destination directory for failure data must be specified.");
+
+				if (!failureDataDirectory.exists())
+				{
+					static bool directoryCreationPreviouslyFailed = false;
+
+					if (directoryCreationPreviouslyFailed)
+					{
+						continue;
+					}
+
+					if (!failureDataDirectory.create())
+					{
+						directoryCreationPreviouslyFailed = true;
+						continue;
+					}
+				}
+
+				ocean_assert(failureDataDirectory.exists() && "Destination directory for failure data must exist.");
+
+				std::stringstream filenameprefix;
+
+				if (failedAtGroundTruthComparison)
+				{
+					if (failedAtGroundTruthModulesComparison)
+					{
+						// Detected QRCode and ground truth QRCode represent same data, but modules extracted by detector does not match ground truth values.
+						filenameprefix << "qrdetect2d_failed_module-comparison_" << testLabel << "_gfs-";
+					}
+					else
+					{
+						filenameprefix << "qrdetect2d_failed_comparison_" << testLabel << "_gfs-";
+					}
+				}
+				else
+				{
+					ocean_assert(failedAtDetection);
+					filenameprefix << "qrdetect2d_failed_detect_" << testLabel << "_gfs-";
+				}
+
+				filenameprefix << gaussianFilterSize << "_" << randomGenerator.initialSeed() << "_" << testImageIndex;
+
+				IO::Image::Comfort::writeImage(frame, (failureDataDirectory + IO::File(filenameprefix.str() + ".png"))(), true);
+
+				Frame rgbFrame;
+				if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT, rgbFrame, true, &worker))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+				CV::Detector::QRCodes::Utilities::drawObservations(*anyCamera, rgbFrame, observations, codes);
+				IO::Image::Comfort::writeImage(rgbFrame, (failureDataDirectory + IO::File(filenameprefix.str() + "_observations.png"))(), true);
+
+				std::ofstream groundtruthFile((failureDataDirectory + IO::File(filenameprefix.str() + "_groundtruth.txt"))());
+				groundtruthFile << Utilities::translateQRCodeToString(groundtruthCode);
+
+				if (failedAtGroundTruthComparison)
+				{
+					std::ofstream groundtruthFile((failureDataDirectory + IO::File(filenameprefix.str() + "_detected.txt"))());
+					groundtruthFile << Utilities::translateQRCodeToString(groundtruthCode);
+				}
+			}
+#endif // #ifdef OCEAN_TEST_QRCODES_DETECTOR2D_ENABLE_VERBOSE_LOGGING
 		}
 	}
 	while (Timestamp(true) < start + testDuration);
