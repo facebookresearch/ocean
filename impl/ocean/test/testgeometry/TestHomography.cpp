@@ -346,7 +346,7 @@ bool TestHomography::testRotationalHomographyOnePose(const double testDuration)
 			}
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -415,7 +415,7 @@ bool TestHomography::testRotationalHomographyTwoPoses(const double testDuration)
 			}
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -478,7 +478,7 @@ bool TestHomography::testPlanarHomographyOnePose(const double testDuration)
 			}
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -557,7 +557,7 @@ bool TestHomography::testPlanarHomographyTwoPoses(const double testDuration)
 			}
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -695,7 +695,7 @@ bool TestHomography::testFactorizationPlanarHomographyOnePose(const double testD
 			}
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -840,7 +840,7 @@ bool TestHomography::testFactorizationPlanarHomographyTwoPoses(const double test
 			}
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -936,7 +936,7 @@ bool TestHomography::testFaultlessPlanarHomography2D(const double testDuration)
 				scopedIteration.setInaccurate();
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Validation: " << validation;
 
@@ -1051,7 +1051,7 @@ bool TestHomography::testFaultlessNoisedPlanarHomography2D(const double testDura
 				break;
 			}
 		}
-		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Validation: " << validation;
 
@@ -1156,7 +1156,7 @@ bool TestHomography::testFaultlessHomography(const double testDuration)
 				}
 			}
 		}
-		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Validation: " << validation;
 
@@ -1270,7 +1270,7 @@ bool TestHomography::testFaultlessNoisedHomography(const double testDuration)
 				}
 			}
 		}
-		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Validation: " << validation;
 
@@ -1434,7 +1434,7 @@ bool TestHomography::testIntrinsic(const double testDuration)
 				OCEAN_SET_FAILED(validation);
 			}
 		}
-		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Validation: " << validation;
 
@@ -1580,7 +1580,7 @@ bool TestHomography::testHomotheticMatrix(const double testDuration, const size_
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -1705,7 +1705,7 @@ bool TestHomography::testSimilarityMatrix(const double testDuration, const size_
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -1819,7 +1819,7 @@ bool TestHomography::testAffineMatrix(const double testDuration, const size_t po
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -1980,7 +1980,7 @@ bool TestHomography::testHomographyMatrix(const double testDuration, const size_
 			scopedIteration.setInaccurate();
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
@@ -2138,7 +2138,7 @@ bool TestHomography::testHomographyMatrixFromPointsAndLinesSVD(const double test
 			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
