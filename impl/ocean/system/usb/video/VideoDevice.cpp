@@ -7,6 +7,8 @@
 
 #include "ocean/system/usb/video/VideoDevice.h"
 
+#include "ocean/base/ScopedValue.h"
+
 #include "ocean/math/Numeric.h"
 
 #include "ocean/system/usb/Manager.h"
@@ -1269,10 +1271,10 @@ VideoDevice::VideoDevice(Device&& device) :
 
 VideoDevice::~VideoDevice()
 {
-	{
-		const ScopedLock scopedLock(lock_);
+	stop();
 
-		stop();
+	{
+		const ScopedLock scopedTransferLock(transferLock_);
 
 		if (interruptTransfer_.isValid())
 		{
@@ -1286,7 +1288,7 @@ VideoDevice::~VideoDevice()
 	{
 		Thread::sleep(1u);
 
-		const ScopedLock scopedLock(lock_);
+		const ScopedLock scopedTransferLock(transferLock_);
 
 		if (!interruptTransfer_.isValid())
 		{
@@ -1311,7 +1313,7 @@ bool VideoDevice::initializeControlInterface()
 
 #ifdef OCEAN_DEBUG
 	{
-		const int isActiveResult = libusb_kernel_driver_active(this->usbDeviceHandle_, videoControlInterface_.bInterfaceIndex_);
+		const int isActiveResult = libusb_kernel_driver_active(usbDeviceHandle_, videoControlInterface_.bInterfaceIndex_);
 
 		if (isActiveResult == LIBUSB_ERROR_NOT_SUPPORTED)
 		{
@@ -1362,21 +1364,25 @@ bool VideoDevice::initializeControlInterface()
 		Log::error() << "VideoDevice: Failed to claim video control interface " << int(videoControlInterface_.bInterfaceIndex_);
 	}
 
-	interruptTransfer_ = ScopedTransfer(libusb_alloc_transfer(0));
-
-	static uint8_t buffer[64];
-	libusb_fill_interrupt_transfer(*interruptTransfer_, usbDeviceHandle_, videoControlInterface_.bEndpointAddress_, buffer, sizeof(buffer), libStatusCallback, this, 0u);
-
-	const int submitResult = libusb_submit_transfer(*interruptTransfer_);
-
-	if (submitResult == LIBUSB_SUCCESS)
 	{
-		Log::debug() << "VideoDevice: Succeeded to submit interrupt transfer for the video control interface";
-	}
-	else
-	{
-		Log::error() << "VideoDevice: Failed to submit interrupt transfer for the video control interface: " << libusb_error_name(submitResult);
-		return false;
+		const ScopedLock scopedTransferLock(transferLock_);
+
+		interruptTransfer_ = ScopedTransfer(libusb_alloc_transfer(0));
+
+		static uint8_t buffer[64];
+		libusb_fill_interrupt_transfer(*interruptTransfer_, usbDeviceHandle_, videoControlInterface_.bEndpointAddress_, buffer, sizeof(buffer), libStatusCallback, this, 0u);
+
+		const int submitResult = libusb_submit_transfer(*interruptTransfer_);
+
+		if (submitResult == LIBUSB_SUCCESS)
+		{
+			Log::debug() << "VideoDevice: Succeeded to submit interrupt transfer for the video control interface";
+		}
+		else
+		{
+			Log::error() << "VideoDevice: Failed to submit interrupt transfer for the video control interface: " << libusb_error_name(submitResult);
+			return false;
+		}
 	}
 
 	initializeControlInterfaceInitialized_ = true;
@@ -1781,7 +1787,7 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 	{
 		const ScopedLock scopedSamplesLock(samplesLock_);
 
-		// let's a second sample for double buffering (addtional samples will be added on demand)
+		// let's add a second sample for double buffering (addtional samples will be added on demand)
 		ocean_assert(reusableSamples_.empty());
 		reusableSamples_.emplace_back(std::make_shared<Sample>(maximalSampleSize_, activeDescriptorFormatIndex_, activeDescriptorFrameIndex_, activeClockFrequency_));
 	}
@@ -1860,7 +1866,7 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 
 			Memory memory(dwMaxPayloadTransferSize);
 
-			libusb_fill_bulk_transfer(transfer, this->usbDeviceHandle_, endpointAddress, (unsigned char*)(memory.data()), dwMaxPayloadTransferSize, libusbStreamCallback, this, 5000);
+			libusb_fill_bulk_transfer(transfer, usbDeviceHandle_, endpointAddress, (unsigned char*)(memory.data()), dwMaxPayloadTransferSize, libusbStreamCallback, this, 5000);
 
 			streamingTransfers_.emplace_back(transfer);
 			streamingTransferMemories_.emplace_back(std::move(memory));
@@ -1900,27 +1906,57 @@ bool VideoDevice::stop()
 	Log::debug() << "VideoDevice::stop()";
 #endif
 
-	{
-		// adjusting the device's states
+	// adjusting the device's states
 
-		const ScopedLock scopedLock(lock_);
+	TemporaryScopedLock temporaryScopedLock(lock_);
+
+		if (isStopping_)
+		{
+			while (true)
+			{
+				if (!isStopping_)
+				{
+					break;
+				}
+
+				temporaryScopedLock.release();
+
+				Thread::sleep(1u);
+
+				temporaryScopedLock.relock(lock_);
+			}
+		}
 
 		if (!isStarted_)
 		{
 			return true;
 		}
 
+		const ScopedValueT<bool> scopedIsStopping(isStopping_, false /*delayedValue*/, true /*immediateValue*/);
+
 		ocean_assert(isValid());
+
+	temporaryScopedLock.release();
+
+	{
+		const ScopedLock scopedTransferLock(transferLock_);
 
 		for (ScopedTransfer& transfer : streamingTransfers_)
 		{
-			const int cancelResult = libusb_cancel_transfer(*transfer);
-
-			if (cancelResult != 0)
+			if (transfer.isValid())
 			{
-				Log::info() << "Failed to cancel transfer: " << libusb_error_name(cancelResult);
+				const int cancelResult = libusb_cancel_transfer(*transfer);
+
+				if (cancelResult != 0)
+				{
+					Log::info() << "Failed to cancel transfer: " << libusb_error_name(cancelResult);
+				}
 			}
 		}
+	}
+
+	{
+		const ScopedLock scopedLock(lock_);
 
 		isStarted_ = false;
 
@@ -1949,7 +1985,7 @@ bool VideoDevice::stop()
 
 	while (true)
 	{
-		TemporaryScopedLock scopedLock(lock_);
+		TemporaryScopedLock scopedLock(transferLock_);
 
 			if (transferIndexMap_.empty())
 			{
@@ -2156,8 +2192,6 @@ void VideoDevice::processPayload(const BufferPointers& bufferPointers)
 
 bool VideoDevice::libStatusCallback(libusb_transfer& usbTransfer)
 {
-	const ScopedLock scopedLock(lock_);
-
 	bool resubmit = true;
 
 	switch (usbTransfer.status)
@@ -2198,6 +2232,8 @@ bool VideoDevice::libStatusCallback(libusb_transfer& usbTransfer)
 
 	if (!resubmit)
 	{
+		const ScopedLock scopedTransferLock(transferLock_);
+
 		if (*interruptTransfer_ == &usbTransfer)
 		{
 			interruptTransfer_.release();
@@ -2209,7 +2245,7 @@ bool VideoDevice::libStatusCallback(libusb_transfer& usbTransfer)
 
 bool VideoDevice::libusbStreamCallback(libusb_transfer& usbTransfer)
 {
-	const ScopedLock scopedLock(lock_);
+	const ScopedLock scopedTransferLock(transferLock_);
 
 	bool resubmit = false;
 

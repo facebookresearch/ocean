@@ -1163,8 +1163,14 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 		/// The memory for the individual streaming transfer objects.
 		std::vector<Memory> streamingTransferMemories_;
 
+		/// The lock for the stream and interrupt transfers.
+		Lock transferLock_;
+
 		/// True, if the video device has an active stream which has been started.
 		bool isStarted_ = false;
+
+		/// True, if the video device is currently stopping
+		bool isStopping_ = false;
 
 		/// The currently active sample which is receiving sample data from the device (but not yet filled).
 		SharedSample activeSample_;
