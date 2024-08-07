@@ -177,6 +177,10 @@ TEST(TestQRCodeDetector2D, TestDetectQRCodesSmallImageSyntheticDataGaussianFilte
 	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSmallImageSyntheticData(7u, GTEST_TEST_DURATION, worker));
 }
 
+// Disable large image tests on hardware with limited performance.
+// Short duration for test (GTEST_TEST_DURATION seconds) does not allow for enough iterations to yield meaningful success rate values and increases noise from frequent failures.
+#if !defined(OCEAN_HARDWARE_REDUCED_PERFORMANCE)
+
 TEST(TestQRCodeDetector2D, TestDetectQRCodesLargeImageSyntheticDataNoGaussianFilter)
 {
 	Worker worker;
@@ -206,6 +210,8 @@ TEST(TestQRCodeDetector2D, TestDetectQRCodesLargeImageSyntheticDataGaussianFilte
 	Worker worker;
 	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesLargeImageSyntheticData(7u, GTEST_TEST_DURATION, worker));
 }
+
+#endif // !defined(OCEAN_HARDWARE_REDUCED_PERFORMANCE)
 
 #endif // OCEAN_USE_GTEST
 
