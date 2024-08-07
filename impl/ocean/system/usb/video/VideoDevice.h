@@ -501,21 +501,7 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 #pragma pack(push)
 #pragma pack(1)
 
-		/**
-		 * Video Probe and Commit Controls.
-		 *
-		 * The streaming parameters selection process is based on a shared negotiation model between the host and the video streaming interface, taking into account the following features:
-		 * - shared nature of the USB
-		 * - interdependency of streaming parameters
-		 * - payload independence
-		 * - modification of streaming parameters during streaming
-		 * This negotiation model is supported by the Video Probe and Commit controls.
-		 * The Probe control allows retrieval and negotiation of streaming parameters.
-		 * When an acceptable combination of streaming parameters has been obtained, the Commit control is used to configure the hardware with the negotiated parameters from the Probe control
-		 *
-		 * @see http://www.cajunbot.com/wiki/images/8/85/USB_Video_Class_1.1.pdf
-		 */
-		class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoControl
+		class OCEAN_SYSTEM_USB_VIDEO_EXPORT Control
 		{
 			public:
 
@@ -544,6 +530,40 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 					RC_GET_DEF = 0x87u
 				};
 
+			public:
+
+				/**
+				 * Executes a control commit or probe request.
+				 * @param usbDeviceHandle The hand of the USB device to which the request will be set
+				 * @param bmRequestType The request type parameter
+				 * @param bRequest The request parameter
+				 * @param wValue The value parameter
+				 * @param wIndex The index parameter
+				 * @param buffer The control buffer, must be valid
+				 * @param size The size of the control buffer, in bytes, with range [1, infinity)
+				 * @return True, if succeeded
+				 */
+				static bool executeControl(libusb_device_handle* usbDeviceHandle, const uint8_t bmRequestType, const uint8_t bRequest, const uint16_t wValue, const uint16_t wIndex, void* buffer, const size_t size);
+		};
+
+		/**
+		 * Video Probe and Commit Controls.
+		 *
+		 * The streaming parameters selection process is based on a shared negotiation model between the host and the video streaming interface, taking into account the following features:
+		 * - shared nature of the USB
+		 * - interdependency of streaming parameters
+		 * - payload independence
+		 * - modification of streaming parameters during streaming
+		 * This negotiation model is supported by the Video Probe and Commit controls.
+		 * The Probe control allows retrieval and negotiation of streaming parameters.
+		 * When an acceptable combination of streaming parameters has been obtained, the Commit control is used to configure the hardware with the negotiated parameters from the Probe control
+		 *
+		 * @see http://www.cajunbot.com/wiki/images/8/85/USB_Video_Class_1.1.pdf
+		 */
+		class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoControl : public Control
+		{
+			public:
+
 				/**
 				 * Returns a string with the content of this object.
 				 * @return The string holding the content of this object
@@ -571,19 +591,6 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 				 * @return True, if succeeded
 				 */
 				static bool executeVideoControlProbe(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, VideoControl& videoControl, const size_t videoControlSize, const uint8_t bRequest = RC_GET_CUR);
-
-				/**
-				 * Executes a video control commit or probe request.
-				 * @param usbDeviceHandle The hand of the USB device to which the request will be set
-				 * @param bmRequestType The request type parameter
-				 * @param bRequest The request parameter
-				 * @param wValue The value parameter
-				 * @param wIndex The index parameter
-				 * @param buffer The control buffer, must be valid
-				 * @param size The size of the control buffer, in bytes, either 26 or 34
-				 * @return True, if succeeded
-				 */
-				static bool executeVideoControl(libusb_device_handle* usbDeviceHandle, const uint8_t bmRequestType, const uint8_t bRequest, const uint16_t wValue, const uint16_t wIndex, uint8_t* buffer, const size_t size);
 
 			public:
 
@@ -805,6 +812,114 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 				uint8_t bMaxVersion_ = 0u;
 		};
 
+		/**
+		 * This class implements functions for a Camera Control terminal
+		 */
+		class OCEAN_SYSTEM_USB_VIDEO_EXPORT CameraTerminalControl : public Control
+		{
+			public:
+
+				/**
+				 * Executes a probe request for an auto focus interface.
+				 * @param usbDeviceHandle The handle of the USB device, must be valid
+				 * @param terminalId The id of the terminal to be used, must be valid
+				 * @param interfaceIndex The index of the interface to be used, must be valid
+				 * @param requestCode The request code to be used
+				 * @param value The resulting value
+				 * @return True, if succeeded
+				 */
+				static bool getFocusAuto(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const RequestCode requestCode, bool& value);
+
+				/**
+				 * Executes a commit request for an auto focus interface.
+				 * @param usbDeviceHandle The handle of the USB device, must be valid
+				 * @param terminalId The id of the terminal to be used, must be valid
+				 * @param interfaceIndex The index of the interface to be used, must be valid
+				 * @param value The value to set
+				 * @return True, if succeeded
+				 */
+				static bool setFocusAuto(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const bool value);
+
+				/**
+				 * Executes a probe request for an absolute focus interface.
+				 * @param usbDeviceHandle The handle of the USB device, must be valid
+				 * @param terminalId The id of the terminal to be used, must be valid
+				 * @param interfaceIndex The index of the interface to be used, must be valid
+				 * @param requestCode The request code to be used
+				 * @param value The resulting value
+				 * @return True, if succeeded
+				 */
+				static bool getFocusAbsolute(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const RequestCode requestCode, uint16_t& value);
+
+				/**
+				 * Executes a commit request for an auto focus interface.
+				 * @param usbDeviceHandle The handle of the USB device, must be valid
+				 * @param terminalId The id of the terminal to be used, must be valid
+				 * @param interfaceIndex The index of the interface to be used, must be valid
+				 * @param value The value to set
+				 * @return True, if succeeded
+				 */
+				static bool setFocusAbsolute(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const uint16_t value);
+
+				/**
+				 * Executes a probe request for an auto exposure interface.
+				 * <pre>
+				 * The setting for the attribute of the addressed Auto-Exposure Mode Control:
+				 * D0: Manual Mode – manual Exposure Time, manual Iris
+				 * D1: Auto Mode – auto Exposure Time, auto Iris
+				 * D2: Shutter Priority Mode – manual Exposure Time, auto Iris
+				 * D3: Aperture Priority Mode – auto Exposure Time, manual Iris
+				 * D4..D7: Reserved, set to zero.
+				 * </pre>
+				 * @param usbDeviceHandle The handle of the USB device, must be valid
+				 * @param terminalId The id of the terminal to be used, must be valid
+				 * @param interfaceIndex The index of the interface to be used, must be valid
+				 * @param requestCode The request code to be used
+				 * @param value The resulting value
+				 * @return True, if succeeded
+				 */
+				static bool getAutoExposureMode(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const RequestCode requestCode, uint8_t& value);
+
+				/**
+				 * Executes a commit request for an auto exposure interface.
+				 * <pre>
+				 * The setting for the attribute of the addressed Auto-Exposure Mode Control:
+				 * D0: Manual Mode – manual Exposure Time, manual Iris
+				 * D1: Auto Mode – auto Exposure Time, auto Iris
+				 * D2: Shutter Priority Mode – manual Exposure Time, auto Iris
+				 * D3: Aperture Priority Mode – auto Exposure Time, manual Iris
+				 * D4..D7: Reserved, set to zero.
+				 * </pre>
+				 * @param usbDeviceHandle The handle of the USB device, must be valid
+				 * @param terminalId The id of the terminal to be used, must be valid
+				 * @param interfaceIndex The index of the interface to be used, must be valid
+				 * @param value The value to set
+				 * @return True, if succeeded
+				 */
+				static bool setAutoExposureMode(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const uint8_t value);
+
+				/**
+				 * Executes a probe request for an absolute exposure interface.
+				 * @param usbDeviceHandle The handle of the USB device, must be valid
+				 * @param terminalId The id of the terminal to be used, must be valid
+				 * @param interfaceIndex The index of the interface to be used, must be valid
+				 * @param requestCode The request code to be used
+				 * @param value The resulting value
+				 * @return True, if succeeded
+				 */
+				static bool getExposureAbsolute(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const RequestCode requestCode, uint32_t& value);
+
+				/**
+				 * Executes a commit request for an absolute exposure interface.
+				 * @param usbDeviceHandle The handle of the USB device, must be valid
+				 * @param terminalId The id of the terminal to be used, must be valid
+				 * @param interfaceIndex The index of the interface to be used, must be valid
+				 * @param value The value to set
+				 * @return True, if succeeded
+				 */
+				static bool setExposureAbsolute(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const uint32_t value);
+		};
+
 #pragma pack(pop)
 
 		static_assert(sizeof(VideoControl) == 34, "Invalid struct size!");
@@ -1007,6 +1122,82 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VideoDevice : public Device
 		 * @return True, if succeeded
 		 */
 		bool stop();
+
+		/**
+		 * Returns whether auto focus is activated or deactivated.
+		 * @param value The resulting auto focus state; True, if activated; False, if deactivated
+		 * @return True, if succeeded; False, if in case of an error or if the device does not support auto focus
+		 * @see setAutoFocus().
+		 */
+		bool autoFocus(bool &value);
+
+		/**
+		 * Activate or deactivate the auto focus of this device.
+		 * @param value True, to activate the auto focus; False, to deactivate the auto focus
+		 * @return True, if succeeded; False, if in case of an error or if the device does not support auto focus
+		 * @see autoFocus().
+		 */
+		bool setAutoFocus(const bool value);
+
+		/**
+		 * Sets the absolute focus of this device.
+		 * @param value The absolute focus value to set, in the domain of the device's focus range, with range [minValue, maxValue]
+		 * @return True, if succeeded; False, if in case of an error or if the device does not support to set the absolute focus
+		 * @see absoluteFocus().
+		 */
+		bool setAbsoluteFocus(const float value);
+
+		/**
+		 * Returns the device's absolute focus.
+		 * @param minValue Optional resulting minimal focus value, in the domain of the device's focus range, nullptr if not of interest
+		 * @param currentValue Optional resulting current focus value, in the domain of the device's focus range, nullptr if not of interest
+		 * @param maxValue Optional resulting maximal focus value, in the domain of the device's focus range, nullptr if not of interest
+		 * @return True, if succeeded; False, if in case of an error or if the device does not support absolute focus
+		 * @see setAbsoluteFocus().
+		 */
+		bool absoluteFocus(float* minValue, float* currentValue, float* maxValue);
+
+		/**
+		 * Returns the supported auto exposure modes.
+		 * @param value The resulting value with supported modes
+		 * @return True, if succeeded
+		 * @see setAutoExposureMode().
+		 */
+		bool supportedAutoExposureModes(uint8_t& value) const;
+
+		/**
+		 * Returns the current auto exposure mode.
+		 * @param value The resulting value of the auto exposure mode
+		 * @return True, if succeeded; False, if in case of an error or if the device does not support the auto exposure mode
+		 * @see setAutoExposureMode(), supportedAutoExposureModes().
+		 */
+		bool autoExposureMode(uint8_t &value) const;
+
+		/**
+		 * Sets the auto exposure mode.
+		 * @param value The value of the auto exposure mode to set
+		 * @return True, if succeeded; False, if in case of an error or if the device does not support the auto exposure mode
+		 * @see autoExposureMode(), supportedAutoExposureModes().
+		 */
+		bool setAutoExposureMode(const uint8_t value);
+
+		/**
+		 * Returns the absolute exposure duration of this device.
+		 * @param minValue Optional resulting minimal exposure duration, in seconds, nullptr if not of interest
+		 * @param currentValue Optional resulting current exposure duration, in seconds, nullptr if not of interest
+		 * @param maxValue Optional resulting maximal exposure duration, in seconds, nullptr if not of interest
+		 * @return True, if succeeded
+		 * @see setAbsoluteExposure().
+		 */
+		bool absoluteExposure(double* minValue, double* currentValue, double* maxValue);
+
+		/**
+		 * Sets the absolute exposure duration of this device.
+		 * @param duration The exposure duration to be set, in seconds, with range (0, infinity), 0 for auto exposure
+		 * @return True, if succeeded
+		 * @see absoluteExposure().
+		 */
+		bool setAbsoluteExposure(const double value);
 
 		/**
 		 * Returns the next sample from this device.

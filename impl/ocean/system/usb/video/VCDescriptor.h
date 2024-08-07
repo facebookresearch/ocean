@@ -196,6 +196,31 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VCInputTerminalDescriptor : public VCDescrip
 			ITT_MEDIA_TRANSPORT_INPUT = 0x0202u
 		};
 
+		/**
+		 * Definition of Camera Terminal Control Selectors.
+		 */
+		enum ControlSelector : uint8_t
+		{
+			CT_CONTROL_UNDEFINED = 0x00u,
+			CT_SCANNING_MODE_CONTROL = 0x01u,
+			CT_AE_MODE_CONTROL = 0x02u,
+			CT_AE_PRIORITY_CONTROL = 0x03u,
+			CT_EXPOSURE_TIME_ABSOLUTE_CONTROL = 0x04u,
+			CT_EXPOSURE_TIME_RELATIVE_CONTROL = 0x05u,
+			CT_FOCUS_ABSOLUTE_CONTROL = 0x06u,
+			CT_FOCUS_RELATIVE_CONTROL = 0x07u,
+			CT_FOCUS_AUTO_CONTROL = 0x08u,
+			CT_IRIS_ABSOLUTE_CONTROL = 0x09u,
+			CT_IRIS_RELATIVE_CONTROL = 0x0Au,
+			CT_ZOOM_ABSOLUTE_CONTROL = 0x0Bu,
+			CT_ZOOM_RELATIVE_CONTROL = 0x0Cu,
+			CT_PANTILT_ABSOLUTE_CONTROL = 0x0Du,
+			CT_PANTILT_RELATIVE_CONTROL = 0x0Eu,
+			CT_ROLL_ABSOLUTE_CONTROL = 0x0Fu,
+			CT_ROLL_RELATIVE_CONTROL = 0x10u,
+			CT_PRIVACY_CONTROL = 0x11u
+		};
+
 	public:
 
 		/**
@@ -216,6 +241,14 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VCInputTerminalDescriptor : public VCDescrip
 		 * @return The string representation of this descriptor
 		 */
 		std::string toString(libusb_device_handle* usbDeviceHandle = nullptr) const;
+
+		/**
+		 * Returns whether this input terminal supports a specified control.
+		 * This descriptor must have type ITT_CAMERA (wTerminalType_).
+		 * @param controlSelector The control to be checked, must be valid
+		 * @return True, if so
+		 */
+		bool isControlSupported(const ControlSelector controlSelector) const;
 
 		/**
 		 * Returns whether this object holds valid descriptor information.
@@ -268,9 +301,9 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VCInputTerminalDescriptor : public VCDescrip
 		 * D3: Exposure Time (Absolute)
 		 * D4: Exposure Time (Relative)
 		 * D5: Focus (Absolute)
-		 * D6 : Focus (Relative)
+		 * D6: Focus (Relative)
 		 * D7: Iris (Absolute)
-		 * D8 : Iris (Relative)
+		 * D8: Iris (Relative)
 		 * D9: Zoom (Absolute)
 		 * D10: Zoom (Relative)
 		 * D11: PanTilt (Absolute)
@@ -313,6 +346,34 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VCProcessingUnitDescriptor : public VCDescri
 	public:
 
 		/**
+		 * Definition of Processing Unit Control Selectors.
+		 */
+		enum ControlSelector : uint8_t
+		{
+			PU_CONTROL_UNDEFINED = 0x00u,
+			PU_BACKLIGHT_COMPENSATION_CONTROL = 0x01u,
+			PU_BRIGHTNESS_CONTROL = 0x02u,
+			PU_CONTRAST_CONTROL = 0x03u,
+			PU_GAIN_CONTROL = 0x04u,
+			PU_POWER_LINE_FREQUENCY_CONTROL = 0x05u,
+			PU_HUE_CONTROL = 0x06u,
+			PU_SATURATION_CONTROL = 0x07u,
+			PU_SHARPNESS_CONTROL = 0x08u,
+			PU_GAMMA_CONTROL = 0x09u,
+			PU_WHITE_BALANCE_TEMPERATURE_CONTROL = 0x0Au,
+			PU_WHITE_BALANCE_TEMPERATURE_AUTO_CONTROL = 0x0Bu,
+			PU_WHITE_BALANCE_COMPONENT_CONTROL = 0x0Cu,
+			PU_WHITE_BALANCE_COMPONENT_AUTO_CONTROL = 0x0Du,
+			PU_DIGITAL_MULTIPLIER_CONTROL = 0x0Eu,
+			PU_DIGITAL_MULTIPLIER_LIMIT_CONTROL = 0x0Fu,
+			PU_HUE_AUTO_CONTROL = 0x10u,
+			PU_ANALOG_VIDEO_STANDARD_CONTROL = 0x11u,
+			PU_ANALOG_LOCK_STATUS_CONTROL = 0x12u
+		};
+
+	public:
+
+		/**
 		 * Default constructor creating an invalid descriptor.
 		 */
 		VCProcessingUnitDescriptor() = default;
@@ -330,6 +391,14 @@ class OCEAN_SYSTEM_USB_VIDEO_EXPORT VCProcessingUnitDescriptor : public VCDescri
 		 * @return The string representation of this descriptor
 		 */
 		std::string toString(libusb_device_handle* usbDeviceHandle = nullptr) const;
+
+		/**
+		 * Returns whether this input terminal supports a specified control.
+		 * This descriptor must have type ITT_CAMERA (wTerminalType_).
+		 * @param controlSelector The control to be checked, must be valid
+		 * @return True, if so
+		 */
+		bool isControlSupported(const ControlSelector controlSelector) const;
 
 		/**
 		 * Returns whether this object holds valid descriptor information.

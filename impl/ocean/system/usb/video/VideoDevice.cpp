@@ -25,6 +25,23 @@ namespace USB
 namespace Video
 {
 
+bool VideoDevice::Control::executeControl(libusb_device_handle* usbDeviceHandle, const uint8_t bmRequestType, const uint8_t bRequest, const uint16_t wValue, const uint16_t wIndex, void* buffer, const size_t size)
+{
+	ocean_assert(usbDeviceHandle != nullptr);
+	ocean_assert(buffer != nullptr);
+	ocean_assert(size >= 1);
+
+	const int result = libusb_control_transfer(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (unsigned char*)(buffer), uint16_t(size), 0u);
+
+	if (result != int(size))
+	{
+		Log::info() << "Control transfer failed: " << result << ", " << libusb_error_name(result);
+		return false;
+	}
+
+	return true;
+}
+
 std::string VideoDevice::VideoControl::toString() const
 {
 	std::string result;
@@ -120,10 +137,10 @@ bool VideoDevice::VideoControl::executeVideoControlCommit(libusb_device_handle* 
 	constexpr uint16_t wValue = uint16_t(VS_COMMIT_CONTROL) << 8u;
 	const uint16_t wIndex = uint16_t(interfaceIndex);
 
-	return executeVideoControl(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (uint8_t*)(&copyVideoControl), videoControlSize);
+	return executeControl(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (uint8_t*)(&copyVideoControl), videoControlSize);
 }
 
-bool VideoDevice::VideoControl::executeVideoControlProbe(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, VideoControl& videoControl, const size_t videoControlSizex, const uint8_t bRequest)
+bool VideoDevice::VideoControl::executeVideoControlProbe(libusb_device_handle* usbDeviceHandle, const uint8_t interfaceIndex, VideoControl& videoControl, const size_t videoControlSize, const uint8_t bRequest)
 {
 	// bmRequestType:          wIndex
 	// 0b10100001              Entity ID and Interface.
@@ -134,20 +151,143 @@ bool VideoDevice::VideoControl::executeVideoControlProbe(libusb_device_handle* u
 	constexpr uint16_t wValue = uint16_t(VS_PROBE_CONTROL) << 8u;
 	const uint16_t wIndex = uint16_t(interfaceIndex);
 
-	return executeVideoControl(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (uint8_t*)(&videoControl), videoControlSizex);
+	return executeControl(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, (uint8_t*)(&videoControl), videoControlSize);
 }
 
-bool VideoDevice::VideoControl::executeVideoControl(libusb_device_handle* usbDeviceHandle, const uint8_t bmRequestType, const uint8_t bRequest, const uint16_t wValue, const uint16_t wIndex, uint8_t* buffer, const size_t size)
+bool VideoDevice::CameraTerminalControl::getFocusAuto(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const RequestCode requestCode, bool& value)
 {
-	ocean_assert(usbDeviceHandle != nullptr);
-	ocean_assert(size == 26 || size == sizeof(VideoControl));
+	constexpr uint8_t bmRequestType = 0b10100001u;
 
-	const int result = libusb_control_transfer(usbDeviceHandle, bmRequestType, bRequest, wValue, wIndex, buffer, uint16_t(size), 0u);
+	constexpr uint16_t wValue = uint16_t(VCInputTerminalDescriptor::CT_FOCUS_AUTO_CONTROL) << 8u;
+	const uint16_t wIndex = uint16_t(terminalId) << 8u | uint16_t(interfaceIndex);
 
-	if (result != int(size))
+	uint8_t data = 0u;
+	if (!executeControl(usbDeviceHandle, bmRequestType, requestCode, wValue, wIndex, &data, 1))
 	{
-		Log::info() << "Control transfer failed: " << result << ", " << libusb_error_name(result);
 		return false;
+	}
+
+	value = data == 1u;
+
+	return true;
+}
+
+bool VideoDevice::CameraTerminalControl::setFocusAuto(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const bool value)
+{
+	constexpr uint8_t bmRequestType = 0b00100001u;
+
+	constexpr uint16_t wValue = uint16_t(VCInputTerminalDescriptor::CT_FOCUS_AUTO_CONTROL) << 8u;
+	const uint16_t wIndex = uint16_t(terminalId) << 8u | uint16_t(interfaceIndex);
+
+	uint8_t data = value ? 1u : 0u;
+	if (!executeControl(usbDeviceHandle, bmRequestType, RC_SET_CUR, wValue, wIndex, &data, 1))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool VideoDevice::CameraTerminalControl::getFocusAbsolute(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const RequestCode requestCode, uint16_t& value)
+{
+	constexpr uint8_t bmRequestType = 0b10100001u;
+
+	constexpr uint16_t wValue = uint16_t(VCInputTerminalDescriptor::CT_FOCUS_ABSOLUTE_CONTROL) << 8u;
+	const uint16_t wIndex = uint16_t(terminalId) << 8u | uint16_t(interfaceIndex);
+
+	static_assert(sizeof(value) == 2, "Invalid data type!");
+
+	return executeControl(usbDeviceHandle, bmRequestType, requestCode, wValue, wIndex, &value, 2);
+}
+
+bool VideoDevice::CameraTerminalControl::setFocusAbsolute(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const uint16_t value)
+{
+	constexpr uint8_t bmRequestType = 0b00100001u;
+
+	constexpr uint16_t wValue = uint16_t(VCInputTerminalDescriptor::CT_FOCUS_ABSOLUTE_CONTROL) << 8u;
+	const uint16_t wIndex = uint16_t(terminalId) << 8u | uint16_t(interfaceIndex);
+
+	static_assert(sizeof(value) == 2, "Invalid data type!");
+
+	uint16_t data = value;
+
+	return executeControl(usbDeviceHandle, bmRequestType, RC_SET_CUR, wValue, wIndex, &data, 2);
+}
+
+bool VideoDevice::CameraTerminalControl::getAutoExposureMode(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const RequestCode requestCode, uint8_t& value)
+{
+	constexpr uint8_t bmRequestType = 0b10100001u;
+
+	constexpr uint16_t wValue = uint16_t(VCInputTerminalDescriptor::CT_AE_MODE_CONTROL) << 8u;
+	const uint16_t wIndex = uint16_t(terminalId) << 8u | uint16_t(interfaceIndex);
+
+	value = 0u;
+
+	return executeControl(usbDeviceHandle, bmRequestType, requestCode, wValue, wIndex, &value, 1);
+}
+
+bool VideoDevice::CameraTerminalControl::setAutoExposureMode(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const uint8_t value)
+{
+	constexpr uint8_t bmRequestType = 0b00100001u;
+
+	constexpr uint16_t wValue = uint16_t(VCInputTerminalDescriptor::CT_AE_MODE_CONTROL) << 8u;
+	const uint16_t wIndex = uint16_t(terminalId) << 8u | uint16_t(interfaceIndex);
+
+	uint8_t data = value;
+
+	return executeControl(usbDeviceHandle, bmRequestType, RC_SET_CUR, wValue, wIndex, &data, 1);
+}
+
+bool VideoDevice::CameraTerminalControl::getExposureAbsolute(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const RequestCode requestCode, uint32_t& value)
+{
+	constexpr uint8_t bmRequestType = 0b10100001u;
+
+	constexpr uint16_t wValue = uint16_t(VCInputTerminalDescriptor::CT_EXPOSURE_TIME_ABSOLUTE_CONTROL) << 8u;
+	const uint16_t wIndex = uint16_t(terminalId) << 8u | uint16_t(interfaceIndex);
+
+	static_assert(sizeof(value) == 4, "Invalid data type!");
+
+	return executeControl(usbDeviceHandle, bmRequestType, requestCode, wValue, wIndex, &value, 4);
+}
+
+bool VideoDevice::CameraTerminalControl::setExposureAbsolute(libusb_device_handle* usbDeviceHandle, const uint8_t terminalId, const uint8_t interfaceIndex, const uint32_t value)
+{
+	// first, let's set the exposure mode to either manual or automatic
+
+	{
+		constexpr uint8_t bmRequestType = 0b00100001u;
+
+		constexpr uint16_t wValue = uint16_t(VCInputTerminalDescriptor::CT_AE_MODE_CONTROL) << 8u;
+		const uint16_t wIndex = uint16_t(terminalId) << 8u | uint16_t(interfaceIndex);
+
+		// D0: Manual Mode – manual Exposure Time, manual Iris
+		// D1: Auto Mode – auto Exposure Time, auto Iris
+
+		uint8_t data = value > 0u ? (1u << 0u) : (1u << 1u);
+
+		if (!executeControl(usbDeviceHandle, bmRequestType, RC_SET_CUR, wValue, wIndex, &data, 1))
+		{
+			return false;
+		}
+	}
+
+	// now, let's set the exposure time in case the mode is manual
+
+	if (value > 0u)
+	{
+		constexpr uint8_t bmRequestType = 0b00100001u;
+
+		constexpr uint16_t wValue = uint16_t(VCInputTerminalDescriptor::CT_EXPOSURE_TIME_ABSOLUTE_CONTROL) << 8u;
+		const uint16_t wIndex = uint16_t(terminalId) << 8u | uint16_t(interfaceIndex);
+
+		static_assert(sizeof(value) == 4, "Invalid data type!");
+
+		uint32_t data = value;
+
+		if (!executeControl(usbDeviceHandle, bmRequestType, RC_SET_CUR, wValue, wIndex, &data, 4))
+		{
+			return false;
+		}
 	}
 
 	return true;
@@ -2006,6 +2146,306 @@ bool VideoDevice::stop()
 	}
 
 	return true;
+}
+
+bool VideoDevice::autoFocus(bool &value)
+{
+	const ScopedLock scopedLock(lock_);
+
+	for (const VCInputTerminalDescriptor& inputTerminalDescriptor : videoControlInterface_.vcInputTerminalDescriptors_)
+	{
+		if (inputTerminalDescriptor.wTerminalType_ == VCInputTerminalDescriptor::ITT_CAMERA)
+		{
+			if (!inputTerminalDescriptor.isControlSupported(VCInputTerminalDescriptor::CT_FOCUS_AUTO_CONTROL))
+			{
+				return false;
+			}
+
+			const uint8_t terminalId = inputTerminalDescriptor.bTerminalID_;
+			const uint8_t interfaceIndex = videoControlInterface_.bInterfaceIndex_;
+
+			return CameraTerminalControl::getFocusAuto(usbDeviceHandle_, terminalId, interfaceIndex, Control::RC_GET_CUR, value);
+		}
+	}
+
+	return false;
+}
+
+bool VideoDevice::setAutoFocus(const bool value)
+{
+	const ScopedLock scopedLock(lock_);
+
+	for (const VCInputTerminalDescriptor& inputTerminalDescriptor : videoControlInterface_.vcInputTerminalDescriptors_)
+	{
+		if (inputTerminalDescriptor.wTerminalType_ == VCInputTerminalDescriptor::ITT_CAMERA)
+		{
+			if (!inputTerminalDescriptor.isControlSupported(VCInputTerminalDescriptor::CT_FOCUS_AUTO_CONTROL))
+			{
+				return false;
+			}
+
+			const uint8_t terminalId = inputTerminalDescriptor.bTerminalID_;
+			const uint8_t interfaceIndex = videoControlInterface_.bInterfaceIndex_;
+
+			return CameraTerminalControl::setFocusAuto(usbDeviceHandle_, terminalId, interfaceIndex, value);
+		}
+	}
+
+	return false;
+}
+
+bool VideoDevice::setAbsoluteFocus(const float value)
+{
+	const ScopedLock scopedLock(lock_);
+
+	for (const VCInputTerminalDescriptor& inputTerminalDescriptor : videoControlInterface_.vcInputTerminalDescriptors_)
+	{
+		if (inputTerminalDescriptor.wTerminalType_ == VCInputTerminalDescriptor::ITT_CAMERA)
+		{
+			if (!inputTerminalDescriptor.isControlSupported(VCInputTerminalDescriptor::CT_FOCUS_ABSOLUTE_CONTROL))
+			{
+				return false;
+			}
+
+			const uint8_t terminalId = inputTerminalDescriptor.bTerminalID_;
+			const uint8_t interfaceIndex = videoControlInterface_.bInterfaceIndex_;
+
+			if (value < 0.0f || value >= 65535.0f)
+			{
+				ocean_assert(false && "Invalid value!");
+				return false;
+			}
+
+			const uint16_t valueInteger = uint16_t(value + 0.5f);
+
+			return CameraTerminalControl::setFocusAbsolute(usbDeviceHandle_, terminalId, interfaceIndex, valueInteger);
+		}
+	}
+
+	return false;
+}
+
+bool VideoDevice::absoluteFocus(float* minValue, float* currentValue, float* maxValue)
+{
+	const ScopedLock scopedLock(lock_);
+
+	for (const VCInputTerminalDescriptor& inputTerminalDescriptor : videoControlInterface_.vcInputTerminalDescriptors_)
+	{
+		if (inputTerminalDescriptor.wTerminalType_ == VCInputTerminalDescriptor::ITT_CAMERA)
+		{
+			if (!inputTerminalDescriptor.isControlSupported(VCInputTerminalDescriptor::CT_FOCUS_ABSOLUTE_CONTROL))
+			{
+				return false;
+			}
+
+			const uint8_t terminalId = inputTerminalDescriptor.bTerminalID_;
+			const uint8_t interfaceIndex = videoControlInterface_.bInterfaceIndex_;
+
+			if (minValue != nullptr)
+			{
+				uint16_t value = uint16_t(-1);
+
+				if (!CameraTerminalControl::getFocusAbsolute(usbDeviceHandle_, terminalId, interfaceIndex, Control::RC_GET_MIN, value))
+				{
+					return false;
+				}
+
+				*minValue = float(value);
+			}
+
+			if (currentValue != nullptr)
+			{
+				uint16_t value = uint16_t(-1);
+
+				if (!CameraTerminalControl::getFocusAbsolute(usbDeviceHandle_, terminalId, interfaceIndex, Control::RC_GET_CUR, value))
+				{
+					return false;
+				}
+
+				*currentValue = float(value);
+			}
+
+			if (maxValue != nullptr)
+			{
+				uint16_t value = uint16_t(-1);
+
+				if (!CameraTerminalControl::getFocusAbsolute(usbDeviceHandle_, terminalId, interfaceIndex, Control::RC_GET_MAX, value))
+				{
+					return false;
+				}
+
+				*maxValue = float(value);
+			}
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool VideoDevice::supportedAutoExposureModes(uint8_t& value) const
+{
+	const ScopedLock scopedLock(lock_);
+
+	for (const VCInputTerminalDescriptor& inputTerminalDescriptor : videoControlInterface_.vcInputTerminalDescriptors_)
+	{
+		if (inputTerminalDescriptor.wTerminalType_ == VCInputTerminalDescriptor::ITT_CAMERA)
+		{
+			if (!inputTerminalDescriptor.isControlSupported(VCInputTerminalDescriptor::CT_AE_MODE_CONTROL))
+			{
+				return false;
+			}
+
+			const uint8_t terminalId = inputTerminalDescriptor.bTerminalID_;
+			const uint8_t interfaceIndex = videoControlInterface_.bInterfaceIndex_;
+
+			return CameraTerminalControl::getAutoExposureMode(usbDeviceHandle_, terminalId, interfaceIndex, Control::RC_GET_RES, value);
+		}
+	}
+
+	return false;
+}
+
+bool VideoDevice::autoExposureMode(uint8_t &value) const
+{
+	const ScopedLock scopedLock(lock_);
+
+	for (const VCInputTerminalDescriptor& inputTerminalDescriptor : videoControlInterface_.vcInputTerminalDescriptors_)
+	{
+		if (inputTerminalDescriptor.wTerminalType_ == VCInputTerminalDescriptor::ITT_CAMERA)
+		{
+			if (!inputTerminalDescriptor.isControlSupported(VCInputTerminalDescriptor::CT_AE_MODE_CONTROL))
+			{
+				return false;
+			}
+
+			const uint8_t terminalId = inputTerminalDescriptor.bTerminalID_;
+			const uint8_t interfaceIndex = videoControlInterface_.bInterfaceIndex_;
+
+			return CameraTerminalControl::getAutoExposureMode(usbDeviceHandle_, terminalId, interfaceIndex, Control::RC_GET_CUR, value);
+		}
+	}
+
+	return false;
+}
+
+bool VideoDevice::setAutoExposureMode(const uint8_t value)
+{
+	const ScopedLock scopedLock(lock_);
+
+	for (const VCInputTerminalDescriptor& inputTerminalDescriptor : videoControlInterface_.vcInputTerminalDescriptors_)
+	{
+		if (inputTerminalDescriptor.wTerminalType_ == VCInputTerminalDescriptor::ITT_CAMERA)
+		{
+			if (!inputTerminalDescriptor.isControlSupported(VCInputTerminalDescriptor::CT_AE_MODE_CONTROL))
+			{
+				return false;
+			}
+
+			const uint8_t terminalId = inputTerminalDescriptor.bTerminalID_;
+			const uint8_t interfaceIndex = videoControlInterface_.bInterfaceIndex_;
+
+			return CameraTerminalControl::setAutoExposureMode(usbDeviceHandle_, terminalId, interfaceIndex, value);
+		}
+	}
+
+	return false;
+}
+
+bool VideoDevice::absoluteExposure(double* minValue, double* currentValue, double* maxValue)
+{
+	const ScopedLock scopedLock(lock_);
+
+	for (const VCInputTerminalDescriptor& inputTerminalDescriptor : videoControlInterface_.vcInputTerminalDescriptors_)
+	{
+		if (inputTerminalDescriptor.wTerminalType_ == VCInputTerminalDescriptor::ITT_CAMERA)
+		{
+			if (!inputTerminalDescriptor.isControlSupported(VCInputTerminalDescriptor::CT_EXPOSURE_TIME_ABSOLUTE_CONTROL))
+			{
+				return false;
+			}
+
+			const uint8_t terminalId = inputTerminalDescriptor.bTerminalID_;
+			const uint8_t interfaceIndex = videoControlInterface_.bInterfaceIndex_;
+
+			if (minValue != nullptr)
+			{
+				uint32_t value = uint32_t(-1);
+
+				if (!CameraTerminalControl::getExposureAbsolute(usbDeviceHandle_, terminalId, interfaceIndex, Control::RC_GET_MIN, value))
+				{
+					return false;
+				}
+
+				// The Exposure Time (Absolute) Control is used to specify the length of exposure.
+				// This value is expressed in 100μs units, where 1 is 1/10,000th of a second, 10,000 is 1 second, and 100,000 is 10 seconds.
+
+				*minValue = Timestamp::microseconds2seconds(int64_t(value) * 100ll);
+			}
+
+			if (currentValue != nullptr)
+			{
+				uint32_t value = uint32_t(-1);
+
+				if (!CameraTerminalControl::getExposureAbsolute(usbDeviceHandle_, terminalId, interfaceIndex, Control::RC_GET_CUR, value))
+				{
+					return false;
+				}
+
+				*currentValue = Timestamp::microseconds2seconds(int64_t(value) * 100ll);
+			}
+
+			if (maxValue != nullptr)
+			{
+				uint32_t value = uint32_t(-1);
+
+				if (!CameraTerminalControl::getExposureAbsolute(usbDeviceHandle_, terminalId, interfaceIndex, Control::RC_GET_MAX, value))
+				{
+					return false;
+				}
+
+				*maxValue = Timestamp::microseconds2seconds(int64_t(value) * 100ll);
+			}
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool VideoDevice::setAbsoluteExposure(const double value)
+{
+	ocean_assert(value >= 0.0);
+
+	const ScopedLock scopedLock(lock_);
+
+	for (const VCInputTerminalDescriptor& inputTerminalDescriptor : videoControlInterface_.vcInputTerminalDescriptors_)
+	{
+		if (inputTerminalDescriptor.wTerminalType_ == VCInputTerminalDescriptor::ITT_CAMERA)
+		{
+			if (!inputTerminalDescriptor.isControlSupported(VCInputTerminalDescriptor::CT_EXPOSURE_TIME_ABSOLUTE_CONTROL))
+			{
+				return false;
+			}
+
+			const uint8_t terminalId = inputTerminalDescriptor.bTerminalID_;
+			const uint8_t interfaceIndex = videoControlInterface_.bInterfaceIndex_;
+
+			const int64_t valueInteger = Timestamp::seconds2microseconds(value) / 100ll;
+
+			if (valueInteger >= int64_t(uint32_t(-1)))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
+
+			return CameraTerminalControl::setExposureAbsolute(usbDeviceHandle_, terminalId, interfaceIndex, uint32_t(valueInteger));
+		}
+	}
+
+	return false;
 }
 
 VideoDevice::DeviceStreamType VideoDevice::extractStreamProperties(const uint8_t descriptorFormatIndex, const uint8_t descriptorFrameIndex, unsigned int& width, unsigned int& height, FrameType::PixelFormat& pixelFormat, VSFrameBasedVideoFormatDescriptor::EncodingFormat& encodingFormat) const

@@ -160,7 +160,10 @@ std::string VCInputTerminalDescriptor::toString(libusb_device_handle* usbDeviceH
 	result += "\nwObjectiveFocalLengthMin: " + String::toAString(wObjectiveFocalLengthMin_);
 	result += "\nwObjectiveFocalLengthMax: " + String::toAString(wObjectiveFocalLengthMax_);
 	result += "\nwOcularFocalLength: " + String::toAString(wOcularFocalLength_);
-	result += "\nbControlSize: " + String::toAString(bControlSize_);
+	result += "\nbControlSize: " + String::toAString(int(bControlSize_));
+
+	result += "\nbmControls: 0x" + String::toAStringHex(bmControls_.data(), bmControls_.size());
+
 
 	bool hasControls = false;
 
@@ -266,6 +269,84 @@ std::string VCInputTerminalDescriptor::toString(libusb_device_handle* usbDeviceH
 	}
 
 	return result;
+}
+
+bool VCInputTerminalDescriptor::isControlSupported(const ControlSelector controlSelector) const
+{
+	ocean_assert(isValid());
+	ocean_assert(wTerminalType_ == ITT_CAMERA);
+
+	if (wTerminalType_ != ITT_CAMERA)
+	{
+		return false;
+	}
+
+	ocean_assert(controlSelector != CT_CONTROL_UNDEFINED);
+
+	if (bmControls_.empty())
+	{
+		return false;
+	}
+
+	switch (controlSelector)
+	{
+		case CT_CONTROL_UNDEFINED:
+			break;
+
+		case CT_SCANNING_MODE_CONTROL:
+			return bmControls_[0] & (1u << 0);
+
+		case CT_AE_MODE_CONTROL:
+			return bmControls_[0] & (1u << 1);
+
+		case CT_AE_PRIORITY_CONTROL:
+			return bmControls_[0] & (1u << 2);
+
+		case CT_EXPOSURE_TIME_ABSOLUTE_CONTROL:
+			return bmControls_[0] & (1u << 3);
+
+		case CT_EXPOSURE_TIME_RELATIVE_CONTROL:
+			return bmControls_[0] & (1u << 4);
+
+		case CT_FOCUS_ABSOLUTE_CONTROL:
+			return bmControls_[0] & (1u << 5);
+
+		case CT_FOCUS_RELATIVE_CONTROL:
+			return bmControls_[0] & (1u << 6);
+
+		case CT_FOCUS_AUTO_CONTROL:
+			return bmControls_.size() >= 3 && bmControls_[2] & (1u << 1);
+
+		case CT_IRIS_ABSOLUTE_CONTROL:
+			return bmControls_[0] & (1u << 7);
+
+		case CT_IRIS_RELATIVE_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 0);
+
+		case CT_ZOOM_ABSOLUTE_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 1);
+
+		case CT_ZOOM_RELATIVE_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 2);
+
+		case CT_PANTILT_ABSOLUTE_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 3);
+
+		case CT_PANTILT_RELATIVE_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 4);
+
+		case CT_ROLL_ABSOLUTE_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 5);
+
+		case CT_ROLL_RELATIVE_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 6);
+
+		case CT_PRIVACY_CONTROL:
+			return bmControls_.size() >= 3 && bmControls_[2] & (1u << 2);
+	}
+
+	ocean_assert(false && "Invalid control selector!");
+	return false;
 }
 
 bool VCInputTerminalDescriptor::isValid() const
@@ -519,6 +600,80 @@ std::string VCProcessingUnitDescriptor::toString(libusb_device_handle* usbDevice
 	return result;
 }
 
+bool VCProcessingUnitDescriptor::isControlSupported(const ControlSelector controlSelector) const
+{
+	ocean_assert(isValid());
+	ocean_assert(controlSelector != PU_CONTROL_UNDEFINED);
+
+	if (bmControls_.empty())
+	{
+		return false;
+	}
+
+	switch (controlSelector)
+	{
+		case PU_CONTROL_UNDEFINED:
+			break;
+
+		case PU_BACKLIGHT_COMPENSATION_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 0);
+
+		case PU_BRIGHTNESS_CONTROL:
+			return bmControls_[0] & (1u << 0);
+
+		case PU_CONTRAST_CONTROL:
+			return bmControls_[0] & (1u << 1);
+
+		case PU_GAIN_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 1);
+
+		case PU_POWER_LINE_FREQUENCY_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 2);
+
+		case PU_HUE_CONTROL:
+			return bmControls_[0] & (1u << 2);
+
+		case PU_SATURATION_CONTROL:
+			return bmControls_[0] & (1u << 3);
+
+		case PU_SHARPNESS_CONTROL:
+			return bmControls_[0] & (1u << 4);
+
+		case PU_GAMMA_CONTROL:
+			return bmControls_[0] & (1u << 5);
+
+		case PU_WHITE_BALANCE_TEMPERATURE_CONTROL:
+			return bmControls_[0] & (1u << 6);
+
+		case PU_WHITE_BALANCE_TEMPERATURE_AUTO_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 4);
+
+		case PU_WHITE_BALANCE_COMPONENT_CONTROL:
+			return bmControls_[0] & (1u << 7);
+
+		case PU_WHITE_BALANCE_COMPONENT_AUTO_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 5);
+
+		case PU_DIGITAL_MULTIPLIER_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 6);
+
+		case PU_DIGITAL_MULTIPLIER_LIMIT_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 7);
+
+		case PU_HUE_AUTO_CONTROL:
+			return bmControls_.size() >= 2 && bmControls_[1] & (1u << 3);
+
+		case PU_ANALOG_VIDEO_STANDARD_CONTROL:
+			return bmControls_.size() >= 3 && bmControls_[2] & (1u << 0);
+
+		case PU_ANALOG_LOCK_STATUS_CONTROL:
+			return bmControls_.size() >= 3 && bmControls_[2] & (1u << 1);
+	}
+
+	ocean_assert(false && "Invalid control selector!");
+	return false;
+}
+
 bool VCProcessingUnitDescriptor::isValid() const
 {
 	if (bDescriptorType_ != CS_INTERFACE || bDescriptorSubtype_ != VC_PROCESSING_UNIT)
@@ -705,10 +860,7 @@ std::string VCExtensionUnitDescriptor::toString(libusb_device_handle* usbDeviceH
 
 	result += "\nbControlSize: " + String::toAString(int(bControlSize_));
 
-	for (size_t n = 0; n < bmControls_.size(); ++n)
-	{
-		result += "\nbmControls " + String::toAString(n) + ": 0x" + String::toAStringHex(bmControls_[n]);
-	}
+	result += "\nbmControls: 0x" + String::toAStringHex(bmControls_.data(), bmControls_.size());
 
 	result += "\niExtension: " + String::toAString(int(iExtension_));
 
