@@ -440,7 +440,7 @@ class NumericT
 		 * @param value The value to handle, with range (-infinity, infinity)
 		 * @return Rounded value
 		 */
-		static constexpr inline long long round64(const T value);
+		static constexpr inline int64_t round64(const T value);
 
 		/**
 		 * Returns the ratio between two values if the denominator is not equal a small epsilon.
@@ -2067,9 +2067,9 @@ constexpr inline int32_t NumericT<T>::round32(const T value)
 }
 
 template <typename T>
-constexpr inline long long NumericT<T>::round64(const T value)
+constexpr inline int64_t NumericT<T>::round64(const T value)
 {
-	return (long long)(value + copySign(T(0.5), value));
+	return int64_t(value + copySign(T(0.5), value));
 }
 
 template <typename T>
