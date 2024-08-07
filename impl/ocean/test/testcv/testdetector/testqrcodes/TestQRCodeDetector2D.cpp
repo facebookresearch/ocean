@@ -174,7 +174,7 @@ TEST(TestQRCodeDetector2D, TestDetectQRCodesSmallImageSyntheticDataGaussianFilte
 TEST(TestQRCodeDetector2D, TestDetectQRCodesSmallImageSyntheticDataGaussianFilter7)
 {
 	Worker worker;
-	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSmallImageSyntheticData(5u, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestQRCodeDetector2D::testDetectQRCodesSmallImageSyntheticData(7u, GTEST_TEST_DURATION, worker));
 }
 
 TEST(TestQRCodeDetector2D, TestDetectQRCodesLargeImageSyntheticDataNoGaussianFilter)
