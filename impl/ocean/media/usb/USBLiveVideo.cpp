@@ -347,6 +347,323 @@ bool USBLiveVideo::setPreferredStreamConfiguration(const StreamConfiguration& st
 	return false;
 }
 
+double USBLiveVideo::exposureDuration(double* minDuration, double* maxDuration, ControlMode* exposureMode) const
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (!videoDevice_)
+	{
+		return -1.0;
+	}
+
+	if (!ensureInitializedExposureMode())
+	{
+		return -1.0;
+	}
+
+	ocean_assert(exposureMode_ == CM_DYNAMIC || fixedExposureDuration_ ==  NumericD::minValue() || fixedExposureDuration_ > 0.0);
+
+	if (exposureMode != nullptr)
+	{
+		*exposureMode = exposureMode_.value();
+	}
+
+	double currentValue = fixedExposureDuration_;
+	double* const exposureRequestCurrentValue = currentValue > 0.0 ? nullptr : &currentValue;
+
+	double* const exposureRequestMinValue = minExposureDuration_ > 0.0 ? nullptr : &minExposureDuration_;
+	double* const exposureRequestMaxValue = maxExposureDuration_ > 0.0 ? nullptr : &maxExposureDuration_;
+
+	if (exposureRequestCurrentValue != nullptr || exposureRequestMinValue != nullptr || exposureRequestMaxValue != nullptr)
+	{
+		if (!videoDevice_->absoluteExposure(exposureRequestMinValue, exposureRequestCurrentValue, exposureRequestMaxValue))
+		{
+			return -1.0;
+		}
+	}
+
+	if (minDuration != nullptr)
+	{
+		*minDuration = minExposureDuration_;
+	}
+
+	if (maxDuration != nullptr)
+	{
+		*maxDuration = maxExposureDuration_;
+	}
+
+	ocean_assert(minExposureDuration_ > 0.0);
+	ocean_assert(maxExposureDuration_ > 0.0);
+	ocean_assert(minExposureDuration_ <= currentValue && currentValue <= maxExposureDuration_);
+
+	if (exposureMode_ == CM_FIXED)
+	{
+		fixedExposureDuration_ = currentValue;
+	}
+	else
+	{
+		ocean_assert(fixedExposureDuration_ <= 0.0);
+		fixedExposureDuration_ = -1.0;
+	}
+
+	return currentValue;
+}
+
+bool USBLiveVideo::setExposureDuration(const double duration)
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (!videoDevice_)
+	{
+		return false;
+	}
+
+	if (!ensureInitializedExposureMode())
+	{
+		return false;
+	}
+
+	ocean_assert(exposureMode_ == CM_DYNAMIC || fixedExposureDuration_ ==  NumericD::minValue() || fixedExposureDuration_ > 0.0);
+
+	if (duration <= 0.0)
+	{
+		if (exposureMode_ == CM_DYNAMIC)
+		{
+			ocean_assert(fixedExposureDuration_ <= 0.0);
+			return true;
+		}
+
+		/**
+		 * The setting for the attribute of the addressed Auto-Exposure Mode Control:
+		 * D0: Manual Mode – manual Exposure Time, manual Iris
+		 * D1: Auto Mode – auto Exposure Time, auto Iris
+		 * D2: Shutter Priority Mode – manual Exposure Time, auto Iris
+		 * D3: Aperture Priority Mode – auto Exposure Time, manual Iris
+		 */
+
+		if (videoDeviceAutoExposureMode_ == uint8_t(-1))
+		{
+			if (videoDevice_->supportedAutoExposureModes(videoDeviceAutoExposureMode_))
+			{
+				Log::debug() << "USBLiveVideo: Supported auto exposure modes: " << int(videoDeviceAutoExposureMode_);
+
+				for (unsigned int n = 1u; n <= 3u; ++n)
+				{
+					const uint8_t testMode = (1u << n);
+
+					if (videoDeviceAutoExposureMode_ & testMode)
+					{
+						videoDeviceAutoExposureMode_ = testMode;
+						break;
+					}
+
+					if (n == 3u)
+					{
+						Log::debug() << "Auto exposure is not supported";
+						videoDeviceAutoExposureMode_ = 0u;
+					}
+				}
+			}
+			else
+			{
+				videoDeviceAutoExposureMode_ = 0u;
+			}
+		}
+
+		if (videoDeviceAutoExposureMode_ == 0u)
+		{
+			return false;
+		}
+
+		if (!videoDevice_->setAutoExposureMode(videoDeviceAutoExposureMode_))
+		{
+			return false;
+		}
+
+		fixedExposureDuration_ = -1.0;
+		exposureMode_ = CM_DYNAMIC;
+	}
+	else
+	{
+		if (NumericD::isEqual(fixedExposureDuration_, duration))
+		{
+			ocean_assert(exposureMode_ == CM_FIXED);
+			return true;
+		}
+
+		/**
+		 * The setting for the attribute of the addressed Auto-Exposure Mode Control:
+		 * D0: Manual Mode – manual Exposure Time, manual Iris
+		 */
+		const uint8_t value = uint8_t(1u << 0u);
+
+		if (!videoDevice_->setAutoExposureMode(value))
+		{
+			return false;
+		}
+
+		if (!videoDevice_->setAbsoluteExposure(duration))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
+		fixedExposureDuration_ = duration;
+		exposureMode_ = CM_FIXED;
+	}
+
+	return true;
+}
+
+float USBLiveVideo::focus(ControlMode* focusMode) const
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (!videoDevice_)
+	{
+		return false;
+	}
+
+	if (!ensureInitializedFocusMode())
+	{
+		return -1.0f;
+	}
+
+	ocean_assert(focusMode_ == CM_DYNAMIC || fixedFocus_ == NumericF::minValue() || fixedFocus_ >= 0.0f);
+
+	if (focusMode != nullptr)
+	{
+		*focusMode = focusMode_.value();
+	}
+
+	float currentValue = fixedFocus_;
+	float* const focusRequestCurrentValue = currentValue > 0.0f ? nullptr : &currentValue;
+
+	float* const focusRequestMinValue = minFocus_ >= 0.0 ? nullptr : &minFocus_;
+	float* const focusRequestMaxValue = maxFocus_ >= 0.0 ? nullptr : &maxFocus_;
+
+	if (focusRequestCurrentValue != nullptr || focusRequestMinValue != nullptr || focusRequestMaxValue != nullptr)
+	{
+		if (!videoDevice_->absoluteFocus(focusRequestMinValue, focusRequestCurrentValue, focusRequestMaxValue))
+		{
+			return -1.0f;
+		}
+	}
+
+	ocean_assert(minFocus_ >= 0.0f);
+	ocean_assert(maxFocus_ >= 0.0f);
+	ocean_assert(minFocus_ <= currentValue && currentValue <= maxFocus_);
+
+	ocean_assert(minFocus_ <= maxFocus_);
+	if (minFocus_ > maxFocus_)
+	{
+		return -1.0f;
+	}
+
+	if (NumericF::isEqual(minFocus_, maxFocus_))
+	{
+		if (NumericF::isEqual(currentValue, minFocus_))
+		{
+			return 0.0f;
+		}
+
+		ocean_assert(false && "Invalid focus range");
+		return -1.0f;
+	}
+
+	// focus = [minFocus_, maxFocus_] ~ [infinity, closest]
+
+	const float result = float(currentValue - minFocus_) / float(maxFocus_ - minFocus_);
+
+	return 1.0f - result;
+}
+
+bool USBLiveVideo::setFocus(const float position)
+{
+	ocean_assert(position == -1.0f || (position >= 0.0f && position <= 1.0f));
+
+	if (position != -1.0f && (position < 0.0f || position > 1.0f))
+	{
+		return false;
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	if (!videoDevice_)
+	{
+		return false;
+	}
+
+	if (!ensureInitializedFocusMode())
+	{
+		return false;
+	}
+
+	ocean_assert(focusMode_ == CM_DYNAMIC || fixedFocus_ == NumericF::minValue() || fixedFocus_ >= 0.0f);
+
+	if (position < 0.0f)
+	{
+		if (focusMode_ == CM_DYNAMIC)
+		{
+			ocean_assert(fixedFocus_ < 0.0f);
+			return true;
+		}
+
+		if (!videoDevice_->setAutoFocus(true))
+		{
+			return false;
+		}
+
+		fixedFocus_ = -1.0f;
+		focusMode_ = CM_DYNAMIC;
+	}
+	else
+	{
+		if (NumericF::isEqual(fixedFocus_, position))
+		{
+			ocean_assert(focusMode_ == CM_FIXED);
+			return true;
+		}
+
+		if (!videoDevice_->setAutoFocus(false))
+		{
+			return false;
+		}
+
+		if (minFocus_ <= 0.0 || maxFocus_ <= 0.0f)
+		{
+			if (!videoDevice_->absoluteFocus(&minFocus_, nullptr, &maxFocus_))
+			{
+				return false;
+			}
+		}
+
+		ocean_assert(minFocus_ >= 0.0f && maxFocus_ >= 0.0f);
+		ocean_assert(minFocus_ <= maxFocus_);
+
+		if (minFocus_ > maxFocus_)
+		{
+			return false;
+		}
+
+		// focus = [minFocus_, maxFocus_] ~ [infinity, closest]
+
+		const float value = (1.0 - position) * (maxFocus_ - minFocus_) + minFocus_;
+		ocean_assert(NumericF::isInsideRange(minFocus_, value, maxFocus_));
+
+		if (!videoDevice_->setAbsoluteFocus(value))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
+		fixedFocus_ = value;
+		focusMode_ = CM_FIXED;
+	}
+
+	return true;
+}
+
 bool USBLiveVideo::isStarted() const
 {
 	const ScopedLock scopedLock(lock_);
@@ -687,7 +1004,16 @@ void USBLiveVideo::threadRun()
 
 				if (!timestamp.isValid())
 				{
-					Log::warning() << "Invalid sample timestamp, using default timestamp instead";
+#ifdef OCEAN_DEBUG
+					static unsigned int debugCounter = 0u;
+					static unsigned int debugModulo = 1u;
+					if ((++debugCounter % debugModulo) == 0u)
+					{
+						Log::debug() << "USBLiveVideo: Invalid sample timestamp, using default timestamp instead";
+						debugModulo *= 2u; // ensuring that we see the message less and less often
+					}
+#endif // OCEAN_DEBUG
+
 					timestamp.toNow();
 				}
 
@@ -776,6 +1102,68 @@ void USBLiveVideo::threadRun()
 			Thread::sleep(1u);
 		}
 	}
+}
+
+bool USBLiveVideo::ensureInitializedExposureMode() const
+{
+	if (!exposureMode_)
+	{
+		uint8_t value = 0u;
+		if (videoDevice_->autoExposureMode(value))
+		{
+			/**
+			 * The setting for the attribute of the addressed Auto-Exposure Mode Control:
+			 * D0: Manual Mode – manual Exposure Time, manual Iris
+			 * D1: Auto Mode – auto Exposure Time, auto Iris
+			 * D2: Shutter Priority Mode – manual Exposure Time, auto Iris
+			 * D3: Aperture Priority Mode – auto Exposure Time, manual Iris
+			 */
+
+#ifdef OCEAN_DEBUG
+			if (videoDevice_->supportedAutoExposureModes(value))
+			{
+				Log::debug() << "USBLiveVideo: Supported auto exposure modes: " << int(value);
+			}
+#endif
+
+			if (value == (1u << 1u) || value == (1u << 3u))
+			{
+				exposureMode_ = CM_DYNAMIC;
+			}
+			else
+			{
+				exposureMode_ = CM_FIXED;
+			}
+		}
+		else
+		{
+			exposureMode_ = CM_INVALID;
+		}
+	}
+
+	ocean_assert(exposureMode_);
+
+	return exposureMode_.has_value();
+}
+
+bool USBLiveVideo::ensureInitializedFocusMode() const
+{
+	if (!focusMode_)
+	{
+		bool value;
+		if (videoDevice_->autoFocus(value))
+		{
+			focusMode_ = value ? CM_DYNAMIC : CM_FIXED;
+		}
+		else
+		{
+			focusMode_ = CM_INVALID;
+		}
+	}
+
+	ocean_assert(focusMode_.has_value());
+
+	return focusMode_.has_value();
 }
 
 Frame USBLiveVideo::processUncompressedSample(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const void* data, const size_t size)

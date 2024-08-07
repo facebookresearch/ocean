@@ -157,6 +157,30 @@ class OCEAN_MEDIA_USB_EXPORT USBLiveVideo final :
 		bool setPreferredStreamConfiguration(const StreamConfiguration& streamConfiguration) override;
 
 		/**
+		 * Returns the current exposure duration of this device.
+		 * @see LiveVideo::exposureDuration().
+		 */
+		double exposureDuration(double* minDuration = nullptr, double* maxDuration = nullptr, ControlMode* exposureMode = nullptr) const override;
+
+		/**
+		 * Sets the exposure duration of this device.
+		 * @see LiveVideo::setExposureDuration().
+		 */
+		bool setExposureDuration(const double duration) override;
+
+		/**
+		 * Returns the current focus of this device.
+		 * @see LiveVideo::focus().
+		 */
+		float focus(ControlMode* focusMode = nullptr) const override;
+
+		/**
+		 * Sets the focus of this device.
+		 @see LiveVideo::setFocus().
+		 */
+		bool setFocus(const float position) override;
+
+		/**
 		 * Returns whether the medium is started currently.
 		 * @see Medium::isStarted().
 		 */
@@ -251,6 +275,18 @@ class OCEAN_MEDIA_USB_EXPORT USBLiveVideo final :
 		void threadRun() override;
 
 		/**
+		 * Ensures that the current exposure mode is initialized.
+		 * @return True, if succeeded
+		 */
+		bool ensureInitializedExposureMode() const;
+
+		/**
+		 * Ensures that the current focus mode is initialized.
+		 * @return True, if succeeded
+		 */
+		bool ensureInitializedFocusMode() const;
+
+		/**
 		 * Processes a sample from an uncompressed video stream.
 		 * @param width The width of the uncompressed frame in pixel, with range [1, infinity)
 		 * @param height The height of the uncompressed frame in pixel, with range [1, infinity)
@@ -324,6 +360,33 @@ class OCEAN_MEDIA_USB_EXPORT USBLiveVideo final :
 
 		/// Stop timestamp.
 		Timestamp stopTimestamp_;
+
+		/// The live video's exposure mode.
+		mutable std::optional<ControlMode> exposureMode_;
+
+		/// The live video's exposure duration in case the duration is fixed, in seconds, -1 if not fixed, minValue() if not yet known.
+		mutable double fixedExposureDuration_ = NumericD::minValue();
+
+		/// The live video's minimal exposure duration, in seconds, -1 if not known.
+		mutable double minExposureDuration_ = -1.0;
+
+		/// The live video's maximal exposure duration, in seconds, -1 if not known.
+		mutable double maxExposureDuration_ = -1.0;
+
+		/// The UVC auto exposure mode to be used, -1 not yet known, 0 if not supported.
+		uint8_t videoDeviceAutoExposureMode_ = uint8_t(-1);
+
+		/// The live video's focus mode.
+		mutable std::optional<ControlMode> focusMode_;
+
+		/// The live video's focus in case the focus is fixed, -1 if not fixed, minValue() if not yet known.
+		mutable float fixedFocus_ = NumericF::minValue();
+
+		/// The live video's minimal focus, -1 if not known.
+		mutable float minFocus_ = -1.0f;
+
+		/// The live video's maximal focus, -1 if not known.
+		mutable float maxFocus_ = -1.0f;
 
 #ifdef OCEAN_PLATFORM_BUILD_ANDROID
 
