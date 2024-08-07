@@ -57,8 +57,12 @@ void ExternalCameraApplication::onFramebufferInitialized()
 	renderingTransform_ = engine_->factory().createTransform();
 	scene->addChild(renderingTransform_);
 
-	Rendering::TransformRef textTransform = Rendering::Utilities::createText(*engine_, "", RGBAColor(1.0f, 1.0f, 1.0f), RGBAColor(0.0f, 0.0f, 0.0f), false /*shaded*/, 0, 0, Scalar(0.05) /*fixedLineHeight*/, Rendering::Text::AM_CENTER, Rendering::Text::HA_CENTER, Rendering::Text::VA_BOTTOM, "", "", &renderingText_);
+	Rendering::TransformRef textTransform = Rendering::Utilities::createText(*engine_, "", RGBAColor(1.0f, 1.0f, 1.0f), RGBAColor(0.0f, 0.0f, 0.0f), false /*shaded*/, 0, 0, Scalar(0.05) /*fixedLineHeight*/, Rendering::Text::AM_CENTER, Rendering::Text::HA_CENTER, Rendering::Text::VA_BOTTOM, "", "", &renderingTextCamera_);
 	textTransform->setTransformation(HomogenousMatrix4(Vector3(0, Scalar(0.55), Scalar(0.01))));
+	renderingTransform_->addChild(std::move(textTransform));
+
+	textTransform = Rendering::Utilities::createText(*engine_, "", RGBAColor(1.0f, 1.0f, 1.0f), RGBAColor(0.0f, 0.0f, 0.0f), false /*shaded*/, 0, 0, Scalar(0.05) /*fixedLineHeight*/, Rendering::Text::AM_LEFT, Rendering::Text::HA_CENTER, Rendering::Text::VA_TOP, "", "", &renderingTextProperties_);
+	textTransform->setTransformation(HomogenousMatrix4(Vector3(0, Scalar(-0.55), Scalar(0.01))));
 	renderingTransform_->addChild(std::move(textTransform));
 }
 
@@ -68,7 +72,8 @@ void ExternalCameraApplication::onFramebufferReleasing()
 
 	renderingTransform_.release();
 	renderingTransformCamera_.release();
-	renderingText_.release();
+	renderingTextCamera_.release();
+	renderingTextProperties_.release();
 
 	liveVideo_.release();
 
@@ -88,7 +93,7 @@ void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime
 {
 	VRNativeApplicationAdvanced::onPreRender(xrPredictedDisplayTime, predictedDisplayTime);
 
-	ocean_assert(renderingText_);
+	ocean_assert(renderingTextCamera_);
 
 	switch (applicationState_)
 	{
@@ -132,7 +137,7 @@ void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime
 							else
 							{
 								Log::error() << "Failed to create the live camera";
-								renderingText_->setText("Failed to create the live camera");
+								renderingTextCamera_->setText("Failed to create the live camera");
 							}
 						}
 
@@ -159,7 +164,7 @@ void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime
 				if (firstTimestamp.hasTimePassed(10.0))
 				{
 					Log::warning() << "Failed to enumerate available stream configurations, permission granted?";
-					renderingText_->setText("Failed to enumerate available stream configurations, permission granted?");
+					renderingTextCamera_->setText("Failed to enumerate available stream configurations, permission granted?");
 				}
 			}
 
@@ -204,13 +209,13 @@ void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime
 							else
 							{
 								Log::error() << "Failed to start live video";
-								renderingText_->setText("Failed to start live video");
+								renderingTextCamera_->setText("Failed to start live video");
 							}
 						}
 						else
 						{
 							Log::error() << "Failed to set preferred stream configuration";
-							renderingText_->setText("Failed to set preferred stream configuration");
+							renderingTextCamera_->setText("Failed to set preferred stream configuration");
 						}
 					}
 
@@ -267,9 +272,120 @@ void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime
 
 			rateCalculator_.addOccurance(Timestamp(true));
 
-			renderingText_->setText(" Video resolution: " + String::toAString(frame->width()) + "x" + String::toAString(frame->height()) + " \n " + String::toAString(rateCalculator_.rate(Timestamp(true)), 1u) + " fps ");
+			renderingTextCamera_->setText(" Video resolution: " + String::toAString(frame->width()) + "x" + String::toAString(frame->height()) + " \n " + String::toAString(rateCalculator_.rate(Timestamp(true)), 1u) + " fps ");
+
+			{
+				std::string text;
+
+				double minExposureDuration = 0.0;
+				double maxExposureDuration = 0.0;
+				Media::LiveVideo::ControlMode exposureMode = Media::LiveVideo::CM_INVALID;
+				const double exposureDuration = liveVideo_->exposureDuration(&minExposureDuration, &maxExposureDuration, &exposureMode);
+
+				if (exposureDuration >= 0.0)
+				{
+					text += " Exposure duration: \n " + String::toAString(exposureDuration * 1000.0, 1u) + " ms \n Mode: " + Media::LiveVideo::translateControlMode(exposureMode) + " \n Range: [" + String::toAString(minExposureDuration * 1000.0, 1u) + ", " + String::toAString(maxExposureDuration * 1000.0, 1u) + "] ms ";
+				}
+				else if (exposureMode != Media::LiveVideo::CM_INVALID)
+				{
+					text += " Exposure mode: " + Media::LiveVideo::translateControlMode(exposureMode) + " \n Manual exposure is not supported ";
+				}
+				else
+				{
+					text += " Exposure control not available ";
+				}
+
+				text += "\n\n";
+
+				Media::LiveVideo::ControlMode focusMode = Media::LiveVideo::CM_INVALID;
+				const float focus = liveVideo_->focus(&focusMode);
+
+				if (focus >= 0.0)
+				{
+					text += " Focus: \n " + String::toAString(focus, 2u) + " \n Mode: " + Media::LiveVideo::translateControlMode(focusMode) + " \n Range: [0.0, 1.0] ";
+				}
+				else if (focusMode != Media::LiveVideo::CM_INVALID)
+				{
+					text += " Focus mode: " + Media::LiveVideo::translateControlMode(focusMode) + " \n Manual focus is not supported ";
+				}
+				else
+				{
+					text += " Focus control not available ";
+				}
+
+				renderingTextProperties_->setText(text);
+			}
 
 			lastFrameTimestamp_ = frame->timestamp();
+		}
+
+		if (predictedDisplayTime > disabledCustomFocusTimestamp_)
+		{
+			const Vector2 leftJoystickTilt = trackedController().joystickTilt(OpenXR::TrackedController::CT_LEFT);
+
+			if (Numeric::abs(leftJoystickTilt.x()) > Scalar(0.1))
+			{
+				const float focus = liveVideo_->focus();
+
+				if (focus >= 0.0f)
+				{
+					const float newFocus = minmax(0.0f, focus + float(leftJoystickTilt.x()) * 0.01f, 1.0f);
+
+					if (!liveVideo_->setFocus(newFocus))
+					{
+						Log::warning() << "Failed to set new focus " << newFocus << ", was " << focus << " range is [0, 1]";
+					}
+				}
+			}
+		}
+
+		if (predictedDisplayTime > disabledCustomExposureDurationTimestamp_)
+		{
+			const Vector2 rightJoystickTilt = trackedController().joystickTilt(OpenXR::TrackedController::CT_RIGHT);
+
+			if (Numeric::abs(rightJoystickTilt.x()) > Scalar(0.1))
+			{
+				double minDurtation = -1.0f;
+				double maxDurtation = -1.0f;
+				const double duration = liveVideo_->exposureDuration(&minDurtation, &maxDurtation);
+
+				if (duration >= 0.0)
+				{
+					const double newDuration = minmax(minDurtation, duration + double(rightJoystickTilt.x()) * 0.001, maxDurtation);
+
+					if (!liveVideo_->setExposureDuration(newDuration))
+					{
+						Log::warning() << "Failed to set new exposure duration " << newDuration << ", was " << duration << " range is [" << minDurtation << ", " << maxDurtation << "]";
+					}
+				}
+			}
+		}
+	}
+}
+
+void ExternalCameraApplication::onButtonPressed(const OpenXR::TrackedController::ButtonType buttons, const Timestamp& timestamp)
+{
+	if (buttons & OpenXR::TrackedController::BT_LEFT_JOYSTICK)
+	{
+		// let's ensure that the focus does not change due to an unintended joystick movement
+
+		disabledCustomFocusTimestamp_ = timestamp + 0.5;
+
+		if (!liveVideo_->setFocus(-1.0f))
+		{
+			Log::warning() << "Failed to enable auto focus mode";
+		}
+	}
+
+	if (buttons & OpenXR::TrackedController::BT_RIGHT_JOYSTICK)
+	{
+		// let's ensure that the exposure rate does not change due to an unintended joystick movement
+
+		disabledCustomExposureDurationTimestamp_ = timestamp + 0.5;
+
+		if (!liveVideo_->setExposureDuration(-1.0))
+		{
+			Log::warning() << "Failed to enable auto exposure mode";
 		}
 	}
 }
@@ -290,7 +406,8 @@ void ExternalCameraApplication::onButtonReleased(const OpenXR::TrackedController
 			renderingTransformCamera_->clear();
 		}
 
-		renderingText_->setText("");
+		renderingTextCamera_->setText("");
+		renderingTextProperties_->setText("");
 
 		applicationState_ = AS_ENUMERATE_CAMERAS;
 	}

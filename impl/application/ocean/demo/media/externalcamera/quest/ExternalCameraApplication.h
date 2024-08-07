@@ -95,6 +95,12 @@ class ExternalCameraApplication : public OpenXR::Application::VRNativeApplicatio
 		void onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime) override;
 
 		/**
+		 * Event functions for pressed buttons (e.g., from a tracked controller).
+		 * @see VRNativeApplication::onButtonPressed().
+		 */
+		void onButtonPressed(const OpenXR::TrackedController::ButtonType buttons, const Timestamp& timestamp) override;
+
+		/**
 		 * Event functions for released buttons (e.g., from a tracked controller).
 		 * @see VRNativeApplication::onButtonReleased().
 		 */
@@ -132,7 +138,10 @@ class ExternalCameraApplication : public OpenXR::Application::VRNativeApplicatio
 		bool anchorCameraInWorld_ = true;
 
 		/// The rendering Text node holding the text displaying information about the selected camera.
-		Rendering::TextRef renderingText_;
+		Rendering::TextRef renderingTextCamera_;
+
+		/// The rendering Text node holding the text displaying information about the camera's properties.
+		Rendering::TextRef renderingTextProperties_;
 
 		/// The external camera.
 		Media::LiveVideoRef liveVideo_;
@@ -151,6 +160,12 @@ class ExternalCameraApplication : public OpenXR::Application::VRNativeApplicatio
 
 		/// The timestamp of the last frame.
 		Timestamp lastFrameTimestamp_;
+
+		/// Timestamp until setting a custom focus is disabled.
+		Timestamp disabledCustomFocusTimestamp_;
+
+		/// Timestamp until setting a custom exposure durtation is disabled.
+		Timestamp disabledCustomExposureDurationTimestamp_;
 };
 
 #endif // OCEAN_META_APPLICATION_DEMO_MEDIA_EXTERNALCAMERA_QUEST_EXTERNAL_CAMERA_APPLICATION_H
