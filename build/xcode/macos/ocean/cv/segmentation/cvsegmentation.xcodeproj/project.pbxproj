@@ -72,6 +72,14 @@
 		9300C95B27CE16E400806E93 /* BinPacking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9300C95927CE16E400806E93 /* BinPacking.cpp */; };
 		9300C95C27CE16E400806E93 /* BinPacking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9300C95927CE16E400806E93 /* BinPacking.cpp */; };
 		9300C95D27CE16E400806E93 /* BinPacking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9300C95927CE16E400806E93 /* BinPacking.cpp */; };
+		9373129A2C640A3E006114EC /* FrameFilterBlur.h in Headers */ = {isa = PBXBuildFile; fileRef = 937312992C640A3E006114EC /* FrameFilterBlur.h */; };
+		9373129B2C640A3E006114EC /* FrameFilterBlur.h in Headers */ = {isa = PBXBuildFile; fileRef = 937312992C640A3E006114EC /* FrameFilterBlur.h */; };
+		9373129C2C640A3E006114EC /* FrameFilterBlur.h in Headers */ = {isa = PBXBuildFile; fileRef = 937312992C640A3E006114EC /* FrameFilterBlur.h */; };
+		9373129D2C640A3E006114EC /* FrameFilterBlur.h in Headers */ = {isa = PBXBuildFile; fileRef = 937312992C640A3E006114EC /* FrameFilterBlur.h */; };
+		9373129F2C640A45006114EC /* FrameFilterBlur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9373129E2C640A45006114EC /* FrameFilterBlur.cpp */; };
+		937312A02C640A45006114EC /* FrameFilterBlur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9373129E2C640A45006114EC /* FrameFilterBlur.cpp */; };
+		937312A12C640A45006114EC /* FrameFilterBlur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9373129E2C640A45006114EC /* FrameFilterBlur.cpp */; };
+		937312A22C640A45006114EC /* FrameFilterBlur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9373129E2C640A45006114EC /* FrameFilterBlur.cpp */; };
 		C041EB231DABD8D300BF5D76 /* Triangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D936A1BA9DDCC00D38120 /* Triangulation.cpp */; };
 		C041EB241DABD8D300BF5D76 /* ContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93621BA9DDCC00D38120 /* ContourFinder.cpp */; };
 		C041EB251DABD8D300BF5D76 /* SeedSegmentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D7D93681BA9DDCC00D38120 /* SeedSegmentation.cpp */; };
@@ -118,6 +126,8 @@
 		5D98613C1D8B55AC00DEDB00 /* libOceanCVSegmentationD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVSegmentationD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9300C95427CE16D700806E93 /* BinPacking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BinPacking.h; path = ../../../../../../impl/ocean/cv/segmentation/BinPacking.h; sourceTree = "<group>"; };
 		9300C95927CE16E400806E93 /* BinPacking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BinPacking.cpp; path = ../../../../../../impl/ocean/cv/segmentation/BinPacking.cpp; sourceTree = "<group>"; };
+		937312992C640A3E006114EC /* FrameFilterBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameFilterBlur.h; path = ../../../../../../impl/ocean/cv/segmentation/FrameFilterBlur.h; sourceTree = "<group>"; };
+		9373129E2C640A45006114EC /* FrameFilterBlur.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameFilterBlur.cpp; path = ../../../../../../impl/ocean/cv/segmentation/FrameFilterBlur.cpp; sourceTree = "<group>"; };
 		C041EB401DABD8D300BF5D76 /* libOceanCVSegmentationD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVSegmentationD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -181,6 +191,7 @@
 				5D7D93621BA9DDCC00D38120 /* ContourFinder.cpp */,
 				5D7D93631BA9DDCC00D38120 /* ContourMapping.cpp */,
 				5D7D93641BA9DDCC00D38120 /* ContourTracker.cpp */,
+				9373129E2C640A45006114EC /* FrameFilterBlur.cpp */,
 				5D7D93661BA9DDCC00D38120 /* MaskAnalyzer.cpp */,
 				5D7D93671BA9DDCC00D38120 /* MaskCreator.cpp */,
 				5D7D93681BA9DDCC00D38120 /* SeedSegmentation.cpp */,
@@ -198,6 +209,7 @@
 				5D7D93791BA9DDE300D38120 /* ContourFinder.h */,
 				5D7D937A1BA9DDE300D38120 /* ContourMapping.h */,
 				5D7D937B1BA9DDE300D38120 /* ContourTracker.h */,
+				937312992C640A3E006114EC /* FrameFilterBlur.h */,
 				5D7D937D1BA9DDE300D38120 /* MaskAnalyzer.h */,
 				5D7D937E1BA9DDE300D38120 /* MaskCreator.h */,
 				5D7D937F1BA9DDE300D38120 /* PixelContour.h */,
@@ -226,6 +238,7 @@
 				5D7D938E1BA9DDE300D38120 /* SeedSegmentation.h in Headers */,
 				5D7D938C1BA9DDE300D38120 /* MaskCreator.h in Headers */,
 				5D7D938B1BA9DDE300D38120 /* MaskAnalyzer.h in Headers */,
+				9373129A2C640A3E006114EC /* FrameFilterBlur.h in Headers */,
 				5D7D93871BA9DDE300D38120 /* ContourFinder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -245,6 +258,7 @@
 				5D936E801BC54A990046ACD4 /* SeedSegmentation.h in Headers */,
 				5D936E811BC54A990046ACD4 /* MaskCreator.h in Headers */,
 				5D936E821BC54A990046ACD4 /* MaskAnalyzer.h in Headers */,
+				9373129B2C640A3E006114EC /* FrameFilterBlur.h in Headers */,
 				5D936E831BC54A990046ACD4 /* ContourFinder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -264,6 +278,7 @@
 				5D9861351D8B55AC00DEDB00 /* SeedSegmentation.h in Headers */,
 				5D9861361D8B55AC00DEDB00 /* MaskCreator.h in Headers */,
 				5D9861371D8B55AC00DEDB00 /* MaskAnalyzer.h in Headers */,
+				9373129C2C640A3E006114EC /* FrameFilterBlur.h in Headers */,
 				5D9861381D8B55AC00DEDB00 /* ContourFinder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -283,6 +298,7 @@
 				C041EB381DABD8D300BF5D76 /* SeedSegmentation.h in Headers */,
 				C041EB391DABD8D300BF5D76 /* MaskCreator.h in Headers */,
 				C041EB3A1DABD8D300BF5D76 /* MaskAnalyzer.h in Headers */,
+				9373129D2C640A3E006114EC /* FrameFilterBlur.h in Headers */,
 				C041EB3B1DABD8D300BF5D76 /* ContourFinder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -451,6 +467,7 @@
 				5D7D936F1BA9DDCC00D38120 /* ContourTracker.cpp in Sources */,
 				5D7D93721BA9DDCC00D38120 /* MaskCreator.cpp in Sources */,
 				5D7D936C1BA9DDCC00D38120 /* ContourAnalyzer.cpp in Sources */,
+				9373129F2C640A45006114EC /* FrameFilterBlur.cpp in Sources */,
 				5D7D93711BA9DDCC00D38120 /* MaskAnalyzer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -467,6 +484,7 @@
 				5D936E6F1BC54A990046ACD4 /* ContourTracker.cpp in Sources */,
 				5D936E701BC54A990046ACD4 /* MaskCreator.cpp in Sources */,
 				5D936E711BC54A990046ACD4 /* ContourAnalyzer.cpp in Sources */,
+				937312A02C640A45006114EC /* FrameFilterBlur.cpp in Sources */,
 				5D936E731BC54A990046ACD4 /* MaskAnalyzer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -483,6 +501,7 @@
 				5D9861241D8B55AC00DEDB00 /* ContourTracker.cpp in Sources */,
 				5D9861251D8B55AC00DEDB00 /* MaskCreator.cpp in Sources */,
 				5D9861261D8B55AC00DEDB00 /* ContourAnalyzer.cpp in Sources */,
+				937312A12C640A45006114EC /* FrameFilterBlur.cpp in Sources */,
 				5D9861281D8B55AC00DEDB00 /* MaskAnalyzer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -499,6 +518,7 @@
 				C041EB271DABD8D300BF5D76 /* ContourTracker.cpp in Sources */,
 				C041EB281DABD8D300BF5D76 /* MaskCreator.cpp in Sources */,
 				C041EB291DABD8D300BF5D76 /* ContourAnalyzer.cpp in Sources */,
+				937312A22C640A45006114EC /* FrameFilterBlur.cpp in Sources */,
 				C041EB2B1DABD8D300BF5D76 /* MaskAnalyzer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

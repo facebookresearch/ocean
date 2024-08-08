@@ -76,6 +76,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\ContourFinder.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\ContourMapping.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\ContourTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\FrameFilterBlur.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\MaskAnalyzer.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\MaskCreator.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\SeedSegmentation.cpp" />
@@ -88,6 +89,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\ContourFinder.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\ContourMapping.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\ContourTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\FrameFilterBlur.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\MaskAnalyzer.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\MaskCreator.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\PixelContour.h" />

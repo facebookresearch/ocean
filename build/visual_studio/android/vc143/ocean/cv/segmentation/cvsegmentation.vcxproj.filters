@@ -36,6 +36,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\BinPacking.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\FrameFilterBlur.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\Clustering.h">
@@ -72,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\BinPacking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\segmentation\FrameFilterBlur.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
