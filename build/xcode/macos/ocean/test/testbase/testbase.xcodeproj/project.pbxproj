@@ -207,6 +207,14 @@
 		9365F00C2BACF16600C10866 /* TestStaticVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9365F00A2BACF16500C10866 /* TestStaticVector.cpp */; };
 		9365F00D2BACF16600C10866 /* TestStaticVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9365F00A2BACF16500C10866 /* TestStaticVector.cpp */; };
 		9365F00E2BACF16600C10866 /* TestStaticVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9365F00A2BACF16500C10866 /* TestStaticVector.cpp */; };
+		937312A42C643555006114EC /* TestThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 937312A32C643555006114EC /* TestThread.h */; };
+		937312A52C643555006114EC /* TestThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 937312A32C643555006114EC /* TestThread.h */; };
+		937312A62C643555006114EC /* TestThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 937312A32C643555006114EC /* TestThread.h */; };
+		937312A72C643555006114EC /* TestThread.h in Headers */ = {isa = PBXBuildFile; fileRef = 937312A32C643555006114EC /* TestThread.h */; };
+		937312A92C643560006114EC /* TestThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937312A82C643560006114EC /* TestThread.cpp */; };
+		937312AA2C643560006114EC /* TestThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937312A82C643560006114EC /* TestThread.cpp */; };
+		937312AB2C643560006114EC /* TestThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937312A82C643560006114EC /* TestThread.cpp */; };
+		937312AC2C643560006114EC /* TestThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 937312A82C643560006114EC /* TestThread.cpp */; };
 		9386478E2AB3A64F003F89EC /* TestScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9386478D2AB3A64F003F89EC /* TestScopedFunction.h */; };
 		9386478F2AB3A64F003F89EC /* TestScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9386478D2AB3A64F003F89EC /* TestScopedFunction.h */; };
 		938647902AB3A64F003F89EC /* TestScopedFunction.h in Headers */ = {isa = PBXBuildFile; fileRef = 9386478D2AB3A64F003F89EC /* TestScopedFunction.h */; };
@@ -363,6 +371,8 @@
 		936481E227FCEBF700483217 /* TestValue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestValue.cpp; path = ../../../../../../impl/ocean/test/testbase/TestValue.cpp; sourceTree = "<group>"; };
 		9365F0052BACF15E00C10866 /* TestStaticVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestStaticVector.h; path = ../../../../../../impl/ocean/test/testbase/TestStaticVector.h; sourceTree = "<group>"; };
 		9365F00A2BACF16500C10866 /* TestStaticVector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestStaticVector.cpp; path = ../../../../../../impl/ocean/test/testbase/TestStaticVector.cpp; sourceTree = "<group>"; };
+		937312A32C643555006114EC /* TestThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestThread.h; path = ../../../../../../impl/ocean/test/testbase/TestThread.h; sourceTree = "<group>"; };
+		937312A82C643560006114EC /* TestThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestThread.cpp; path = ../../../../../../impl/ocean/test/testbase/TestThread.cpp; sourceTree = "<group>"; };
 		9386478D2AB3A64F003F89EC /* TestScopedFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestScopedFunction.h; path = ../../../../../../impl/ocean/test/testbase/TestScopedFunction.h; sourceTree = "<group>"; };
 		938647922AB3A668003F89EC /* TestScopedFunction.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestScopedFunction.cpp; path = ../../../../../../impl/ocean/test/testbase/TestScopedFunction.cpp; sourceTree = "<group>"; };
 		9387B33E24F46E31005088D3 /* TestFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrame.cpp; path = ../../../../../../impl/ocean/test/testbase/TestFrame.cpp; sourceTree = "<group>"; };
@@ -462,6 +472,7 @@
 				5D9C33781B91D58500D6B89A /* TestSTL.cpp */,
 				5D9C33791B91D58500D6B89A /* TestString.cpp */,
 				5DD685A91D478ABF001A262A /* TestSubset.cpp */,
+				937312A82C643560006114EC /* TestThread.cpp */,
 				9329B9E92B51E85B000F4068 /* TestThreadPool.cpp */,
 				5D9C337A1B91D58500D6B89A /* TestTimestamp.cpp */,
 				5D9C337B1B91D58500D6B89A /* TestUtilities.cpp */,
@@ -505,6 +516,7 @@
 				5D936E9B1BC555270046ACD4 /* TestSTL.h */,
 				5D936E9C1BC555270046ACD4 /* TestString.h */,
 				5DD685A61D478AB1001A262A /* TestSubset.h */,
+				937312A32C643555006114EC /* TestThread.h */,
 				9329B9E42B51E83D000F4068 /* TestThreadPool.h */,
 				5D936E9D1BC555270046ACD4 /* TestTimestamp.h */,
 				5D936E9E1BC555270046ACD4 /* TestUtilities.h */,
@@ -530,6 +542,7 @@
 				5D936EAD1BC555270046ACD4 /* TestMemory.h in Headers */,
 				5D936EA31BC555270046ACD4 /* TestDataType.h in Headers */,
 				93BB07D52B9BD670007CD359 /* TestStaticBuffer.h in Headers */,
+				937312A42C643555006114EC /* TestThread.h in Headers */,
 				5D936EB51BC555270046ACD4 /* TestUtilities.h in Headers */,
 				5D936EA81BC555270046ACD4 /* TestHighPerformanceTimer.h in Headers */,
 				5D936EA91BC555270046ACD4 /* TestInheritance.h in Headers */,
@@ -573,6 +586,7 @@
 				5D936FC51BC6C8620046ACD4 /* TestMemory.h in Headers */,
 				5D936FC61BC6C8620046ACD4 /* TestDataType.h in Headers */,
 				93BB07D62B9BD670007CD359 /* TestStaticBuffer.h in Headers */,
+				937312A52C643555006114EC /* TestThread.h in Headers */,
 				5D936FC71BC6C8620046ACD4 /* TestUtilities.h in Headers */,
 				5D936FC81BC6C8620046ACD4 /* TestHighPerformanceTimer.h in Headers */,
 				5D936FC91BC6C8620046ACD4 /* TestInheritance.h in Headers */,
@@ -616,6 +630,7 @@
 				5DF4B8901D941D5C00284665 /* TestMemory.h in Headers */,
 				5DF4B8911D941D5C00284665 /* TestDataType.h in Headers */,
 				93BB07D72B9BD670007CD359 /* TestStaticBuffer.h in Headers */,
+				937312A62C643555006114EC /* TestThread.h in Headers */,
 				5DF4B8921D941D5C00284665 /* TestUtilities.h in Headers */,
 				5DF4B8931D941D5C00284665 /* TestHighPerformanceTimer.h in Headers */,
 				5DF4B8941D941D5C00284665 /* TestInheritance.h in Headers */,
@@ -659,6 +674,7 @@
 				C0E9B0271DACE98D00895C4B /* TestMemory.h in Headers */,
 				C0E9B0281DACE98D00895C4B /* TestDataType.h in Headers */,
 				93BB07D82B9BD670007CD359 /* TestStaticBuffer.h in Headers */,
+				937312A72C643555006114EC /* TestThread.h in Headers */,
 				C0E9B0291DACE98D00895C4B /* TestUtilities.h in Headers */,
 				C0E9B02A1DACE98D00895C4B /* TestHighPerformanceTimer.h in Headers */,
 				C0E9B02B1DACE98D00895C4B /* TestInheritance.h in Headers */,
@@ -847,6 +863,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D9C33841B91D58500D6B89A /* TestHashSet.cpp in Sources */,
+				937312A92C643560006114EC /* TestThread.cpp in Sources */,
 				5D9C33811B91D58500D6B89A /* TestDateTime.cpp in Sources */,
 				93F3E66524FF06FF0028F313 /* TestBinary.cpp in Sources */,
 				5D9C33891B91D58500D6B89A /* TestMedian.cpp in Sources */,
@@ -890,6 +907,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D936FA91BC6C8620046ACD4 /* TestHashSet.cpp in Sources */,
+				937312AA2C643560006114EC /* TestThread.cpp in Sources */,
 				5D936FAA1BC6C8620046ACD4 /* TestDateTime.cpp in Sources */,
 				93F3E66624FF06FF0028F313 /* TestBinary.cpp in Sources */,
 				5D936FAB1BC6C8620046ACD4 /* TestMedian.cpp in Sources */,
@@ -933,6 +951,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DF4B8721D941D5C00284665 /* TestHashSet.cpp in Sources */,
+				937312AB2C643560006114EC /* TestThread.cpp in Sources */,
 				5DF4B8731D941D5C00284665 /* TestDateTime.cpp in Sources */,
 				93F3E66724FF06FF0028F313 /* TestBinary.cpp in Sources */,
 				5DF4B8741D941D5C00284665 /* TestMedian.cpp in Sources */,
@@ -976,6 +995,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0E9B0091DACE98C00895C4B /* TestHashSet.cpp in Sources */,
+				937312AC2C643560006114EC /* TestThread.cpp in Sources */,
 				C0E9B00A1DACE98C00895C4B /* TestDateTime.cpp in Sources */,
 				93F3E66824FF06FF0028F313 /* TestBinary.cpp in Sources */,
 				C0E9B00B1DACE98C00895C4B /* TestMedian.cpp in Sources */,

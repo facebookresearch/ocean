@@ -81,6 +81,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSTL.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestString.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSubset.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestThread.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestThreadPool.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestTimestamp.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestUtilities.h" />
@@ -119,6 +120,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSTL.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestString.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestSubset.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestThread.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestThreadPool.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestTimestamp.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testbase\TestUtilities.cpp" />

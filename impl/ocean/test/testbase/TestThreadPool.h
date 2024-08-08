@@ -23,7 +23,7 @@ namespace TestBase
 {
 
 /**
- * This class implements tests for the TestThreadPool class.
+ * This class implements tests for the ThreadPool class.
  * @ingroup testbase
  */
 class OCEAN_TEST_BASE_EXPORT TestThreadPool

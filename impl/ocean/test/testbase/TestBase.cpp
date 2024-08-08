@@ -35,6 +35,7 @@
 #include "ocean/test/testbase/TestSignal.h"
 #include "ocean/test/testbase/TestString.h"
 #include "ocean/test/testbase/TestSubset.h"
+#include "ocean/test/testbase/TestThread.h"
 #include "ocean/test/testbase/TestThreadPool.h"
 #include "ocean/test/testbase/TestTimestamp.h"
 #include "ocean/test/testbase/TestUtilities.h"
@@ -378,6 +379,15 @@ bool testBase(const double testDuration, Worker& worker, const std::string& test
 		Log::info() << " ";
 		Log::info() << " ";
 		allSucceeded = TestScopedFunction::test(testDuration) && allSucceeded;
+	}
+
+	if (testSet.empty() || testSet.find("thread") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		allSucceeded = TestThread::test(testDuration) && allSucceeded;
 	}
 
 	if (testSet.empty() || testSet.find("threadpool") != testSet.end())
