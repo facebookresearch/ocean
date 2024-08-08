@@ -61,13 +61,13 @@ class OCEAN_BASE_EXPORT Lock
 
 		/**
 		 * Disabled copy constructor.
-		 * @param lock Lock object to be copied
+		 * @param lock The lock object to be copied
 		 */
 		Lock(const Lock& lock) = delete;
 
 		/**
 		 * Disabled assign operator.
-		 * @param lock Lock object to be assigned
+		 * @param lock The lock object to be assigned
 		 * @return Reference to this object
 		 */
 		Lock& operator=(const Lock& lock) = delete;
@@ -112,13 +112,13 @@ class TemplatedLock<false>
 
 		/**
 		 * Disabled copy constructor.
-		 * @param lock Lock object to be copied
+		 * @param lock The lock object to be copied
 		 */
 		TemplatedLock(const TemplatedLock& lock) = delete;
 
 		/**
 		 * Disabled assign operator.
-		 * @param lock Lock object to be assigned
+		 * @param lock The lock object to be assigned
 		 * @return Reference to this object
 		 */
 		TemplatedLock& operator=(const TemplatedLock& lock) = delete;
@@ -137,7 +137,7 @@ class OCEAN_BASE_EXPORT ScopedLock
 
 		/**
 		 * Creates a new scoped lock object by a given lock object.
-		 * @param lock Lock object used for locking
+		 * @param lock The lock object used for locking
 		 */
 		explicit inline ScopedLock(Lock& lock);
 
@@ -150,7 +150,7 @@ class OCEAN_BASE_EXPORT ScopedLock
 
 		/**
 		 * Disabled accessible copy operator.
-		 * @param object Object to copy
+		 * @param object The object to copy
 		 */
 		ScopedLock(const ScopedLock& object) = delete;
 
@@ -180,13 +180,13 @@ class TemplatedScopedLock
 
 		/**
 		 * Creates a new scoped lock object by a given lock object.
-		 * @param lock Lock object used for locking
+		 * @param lock The lock object used for locking
 		 */
 		explicit inline TemplatedScopedLock(Lock& lock);
 
 		/**
 		 * Creates a new scoped lock object by a given lock object.
-		 * @param lock Lock object used for locking
+		 * @param lock The lock object used for locking
 		 */
 		explicit inline TemplatedScopedLock(TemplatedLock<tActive>& lock);
 
@@ -199,7 +199,7 @@ class TemplatedScopedLock
 
 		/**
 		 * Disabled accessible copy operator.
-		 * @param object Object to copy
+		 * @param object The object to copy
 		 */
 		TemplatedScopedLock(const TemplatedScopedLock<tActive>& object) = delete;
 
@@ -228,7 +228,7 @@ class TemplatedScopedLock<false>
 
 		/**
 		 * Creates a new scoped lock object by a given lock object.
-		 * @param lock Lock object used for locking
+		 * @param lock The lock object used for locking
 		 */
 		explicit inline TemplatedScopedLock(Lock& lock)
 		{
@@ -237,7 +237,7 @@ class TemplatedScopedLock<false>
 
 		/**
 		 * Creates a new scoped lock object by a given lock object.
-		 * @param lock Lock object used for locking
+		 * @param lock The lock object used for locking
 		 */
 		explicit inline TemplatedScopedLock(TemplatedLock<false>& lock)
 		{
@@ -257,11 +257,11 @@ class OCEAN_BASE_EXPORT TemporaryScopedLock
 		/**
 		 * Creates a new scoped lock object which is not locked yet.
 		 */
-		inline TemporaryScopedLock();
+		TemporaryScopedLock() = default;
 
 		/**
 		 * Creates a new scoped lock object by a given lock object.
-		 * @param lock Lock object used for locking
+		 * @param lock The lock object used for locking
 		 */
 		explicit inline TemporaryScopedLock(Lock& lock);
 
@@ -293,7 +293,7 @@ class OCEAN_BASE_EXPORT TemporaryScopedLock
 
 		/**
 		 * Disabled accessible copy operator.
-		 * @param object Object to copy
+		 * @param object The object to copy
 		 */
 		inline TemporaryScopedLock(const TemporaryScopedLock& object) = delete;
 
@@ -307,7 +307,7 @@ class OCEAN_BASE_EXPORT TemporaryScopedLock
 	protected:
 
 		/// Lock object which is locked during the existence of this scoped lock object.
-		Lock* lock_;
+		Lock* lock_ = nullptr;
 };
 
 /**
@@ -327,7 +327,7 @@ class OCEAN_BASE_EXPORT OptionalScopedLock
 
 		/**
 		 * Creates a new optional scoped lock object by a given lock object and a boolean statement whether the lock is invoked or not.
-		 * @param lock Lock object used for locking
+		 * @param lock The lock object used for locking
 		 * @param apply True, to invoke the lock; False, to avoid the locking
 		 */
 		inline OptionalScopedLock(Lock& lock, const bool apply);
@@ -341,7 +341,7 @@ class OCEAN_BASE_EXPORT OptionalScopedLock
 
 		/**
 		 * Disabled accessible copy operator.
-		 * @param object Object to copy
+		 * @param object The object to copy
 		 */
 		inline OptionalScopedLock(const OptionalScopedLock& object) = delete;
 
@@ -355,7 +355,7 @@ class OCEAN_BASE_EXPORT OptionalScopedLock
 	protected:
 
 		/// Lock object which is locked during the existence of this scoped lock object.
-		Lock* lock_;
+		Lock* lock_ = nullptr;
 };
 
 inline Lock::Lock()
@@ -479,12 +479,6 @@ inline TemplatedScopedLock<tActive>::~TemplatedScopedLock()
 	lock_.unlock();
 }
 
-inline TemporaryScopedLock::TemporaryScopedLock() :
-	lock_(nullptr)
-{
-	// nothing to do here
-}
-
 inline TemporaryScopedLock::TemporaryScopedLock(Lock& lock) :
 	lock_(&lock)
 {
@@ -504,7 +498,7 @@ inline void TemporaryScopedLock::release()
 {
 	ocean_assert(!isReleased() && "This TemporaryScopedLock object has been released before");
 
-	if (lock_)
+	if (lock_ != nullptr)
 	{
 		lock_->unlock();
 		lock_ = nullptr;
@@ -530,7 +524,7 @@ inline bool TemporaryScopedLock::isReleased() const
 inline OptionalScopedLock::OptionalScopedLock(Lock* lock) :
 	lock_(lock)
 {
-	if (lock_)
+	if (lock_ != nullptr)
 	{
 		lock_->lock();
 	}
@@ -548,7 +542,7 @@ inline OptionalScopedLock::OptionalScopedLock(Lock& lock, const bool apply) :
 
 inline OptionalScopedLock::~OptionalScopedLock()
 {
-	if (lock_)
+	if (lock_ != nullptr)
 	{
 		lock_->unlock();
 	}
