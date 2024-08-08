@@ -10,6 +10,7 @@
 
 #include "ocean/base/Base.h"
 #include "ocean/base/Lock.h"
+#include "ocean/base/Timestamp.h"
 #include "ocean/base/Triple.h"
 
 #if defined(_WINDOWS)
@@ -312,6 +313,33 @@ class OCEAN_BASE_EXPORT Thread
 		 */
 		static bool setThreadPriority(const ThreadPriority priority);
 
+		/**
+		 * Waits until an object/variable has an expected value.
+		 * @param object Reference to the object/variable whose value is to be checked
+		 * @param expectedValue The value that the object/variable is expected to have
+		 * @param timeout The optional timeout of this function, in seconds, with range [0, infinity), -1 to wait forever
+		 * @return True, if the object/variable had the expected value when this function returned; False, if a timeout was defined and the timeout exceeded
+		 * @tparam TObject The data type of the object/variable to check
+		 * @tparam TExpectedValue The data type of the expected value
+		 */
+		template <typename TObject, typename TExpectedValue>
+		static bool waitForValue(TObject& object, const TExpectedValue& expectedValue, const double timeout = -1.0);
+
+		/**
+		 * Waits until an object/variable has an expected value.
+		 * The provided temporary scoped lock will be repeatingly locked and released while the function is waiting and while accessing the object/variable.<br>
+		 * The temporary scoped lock needs to be locked before calling this function, and it will also be locked when the function returns.
+		 * @param object Reference to the object/variable whose value is to be checked
+		 * @param expectedValue The value that the object/variable is expected to have
+		 * @param temporaryScopedLock The temporary scoped lock which needs to be locked when calling the function; will be locked when the function returns
+		 * @param timeout The optional timeout of this function, in seconds, with range [0, infinity), -1 to wait forever
+		 * @return True, if the object/variable had the expected value when this function returned; False, if a timeout was defined and the timeout exceeded
+		 * @tparam TObject The data type of the object/variable to check
+		 * @tparam TExpectedValue The data type of the expected value
+		 */
+		template <typename TObject, typename TExpectedValue>
+		static bool waitForValue(TObject& object, const TExpectedValue& expectedValue, TemporaryScopedLock& temporaryScopedLock, const double timeout = -1.0);
+
 #ifdef __APPLE__
 
 		/**
@@ -465,6 +493,68 @@ inline bool Thread::ThreadId::operator<(const ThreadId& id) const
 constexpr uint64_t Thread::ThreadId::invalidThreadId()
 {
 	return uint64_t(-1);
+}
+
+template <typename TObject, typename TExpectedValue>
+bool Thread::waitForValue(TObject& object, const TExpectedValue& expectedValue, const double timeout)
+{
+	const Timestamp startTimestamp(timeout < 0.0 ? false : true);
+
+	while (true)
+	{
+		if (object == expectedValue)
+		{
+			return true;
+		}
+
+		if (timeout >= 0.0 && startTimestamp.hasTimePassed(timeout))
+		{
+			return false;
+		}
+
+		// let's sleep for 1ms
+
+		sleep(1u);
+	}
+}
+
+template <typename TObject, typename TExpectedValue>
+bool Thread::waitForValue(TObject& object, const TExpectedValue& expectedValue, TemporaryScopedLock& temporaryScopedLock, const double timeout)
+{
+	ocean_assert(!temporaryScopedLock.isReleased());
+
+	Lock* lock = temporaryScopedLock.lock();
+	ocean_assert(lock != nullptr);
+
+	if (object == expectedValue)
+	{
+		return true;
+	}
+
+	temporaryScopedLock.release();
+
+	const Timestamp startTimestamp(timeout < 0.0 ? false : true);
+
+	while (true)
+	{
+		temporaryScopedLock.relock(*lock);
+
+			if (object == expectedValue)
+			{
+				return true;
+			}
+
+			if (timeout >= 0.0 && startTimestamp.hasTimePassed(timeout))
+			{
+				return false;
+			}
+
+		temporaryScopedLock.release();
+
+		// let's sleep for 1ms
+
+		sleep(1u);
+	}
 }
 
 }

@@ -49,7 +49,9 @@ bool Thread::startThread()
 	threadShouldStop_ = false;
 
 	if (isThreadActive())
+	{
 		return false;
+	}
 
 	destroyThread();
 
