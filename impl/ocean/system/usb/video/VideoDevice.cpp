@@ -1708,7 +1708,12 @@ bool VideoDevice::start(const unsigned int preferredWidth, const unsigned int pr
 	Log::debug() << "VideoDevice::start(): " << preferredWidth << "x" << preferredHeight << ", " << String::toAString(preferredFrameRate, 1u) << "fps, " << translateDeviceStreamType(preferredDeviceStreamType) << ", " << FrameType::translatePixelFormat(preferredPixelFormat) << ", " + VSFrameBasedVideoFormatDescriptor::translateEncodingFormat(preferredEncodingFormat);
 #endif
 
-	const ScopedLock scopedLock(lock_);
+	TemporaryScopedLock scopedLock(lock_);
+
+	if (!Thread::waitForValue(isStopping_, false, scopedLock, 5.0))
+	{
+		return false;
+	}
 
 	ocean_assert(isValid());
 	if (!isValid())
@@ -2050,21 +2055,9 @@ bool VideoDevice::stop()
 
 	TemporaryScopedLock temporaryScopedLock(lock_);
 
-		if (isStopping_)
+		if (!Thread::waitForValue(isStopping_, false, temporaryScopedLock, 5.0))
 		{
-			while (true)
-			{
-				if (!isStopping_)
-				{
-					break;
-				}
-
-				temporaryScopedLock.release();
-
-				Thread::sleep(1u);
-
-				temporaryScopedLock.relock(lock_);
-			}
+			return false;
 		}
 
 		if (!isStarted_)
