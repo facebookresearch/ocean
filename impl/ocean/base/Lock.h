@@ -271,6 +271,12 @@ class OCEAN_BASE_EXPORT TemporaryScopedLock
 		inline ~TemporaryScopedLock();
 
 		/**
+		 * Returns the lock object which (if existing) is locked during the existence of this scoped lock object.
+		 * @return The associated lock object, nullptr if this object is already released (or was never locked)
+		 */
+		[[nodiscard]] inline Lock* lock() const;
+
+		/**
 		 * Explicitly releases the lock before the scoped lock object is released.
 		 */
 		inline void release();
@@ -336,6 +342,12 @@ class OCEAN_BASE_EXPORT OptionalScopedLock
 		 * Destructs an optional scoped lock and unlocks the internal lock object if defined.
 		 */
 		inline ~OptionalScopedLock();
+
+		/**
+		 * Returns the lock object which (if existing) is locked during the existence of this scoped lock object.
+		 * @return The associated lock object, nullptr if no lock object was provided when this object was created
+		 */
+		[[nodiscard]] inline Lock* lock() const;
 
 	protected:
 
@@ -494,6 +506,11 @@ inline TemporaryScopedLock::~TemporaryScopedLock()
 	}
 }
 
+inline Lock* TemporaryScopedLock::lock() const
+{
+	return lock_;
+}
+
 inline void TemporaryScopedLock::release()
 {
 	ocean_assert(!isReleased() && "This TemporaryScopedLock object has been released before");
@@ -546,6 +563,11 @@ inline OptionalScopedLock::~OptionalScopedLock()
 	{
 		lock_->unlock();
 	}
+}
+
+inline Lock* OptionalScopedLock::lock() const
+{
+	return lock_;
 }
 
 }
