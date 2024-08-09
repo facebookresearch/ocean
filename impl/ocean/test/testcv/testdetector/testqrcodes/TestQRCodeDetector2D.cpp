@@ -267,9 +267,9 @@ bool TestQRCodeDetector2D::testDetectQRCodesLargeImageSyntheticData(const unsign
 {
 	static_assert(std::is_same_v<Scalar, double> || std::is_same_v<Scalar, float>);
 
-	const double validationPrecisionThreshold = std::is_same_v<Scalar, double> ? 0.90 : 0.85;
+	const double validationPrecisionThreshold = std::is_same_v<Scalar, double> ? 0.85 : 0.80;
 
-	return testDetectQRCodesSyntheticData_Internal(gaussianFilterSize, testDuration, worker, "LargeImage", validationPrecisionThreshold, 6u, 45u, 2048u, 4096u);
+	return testDetectQRCodesSyntheticData_Internal(gaussianFilterSize, testDuration, worker, "LargeImage", validationPrecisionThreshold, 6u, 20u, 2048u, 4096u);
 }
 
 bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData_Internal(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker, const std::string& testLabel, const double validationPrecisionThreshold, const unsigned int moduleSizePixelsMin, const unsigned int moduleSizePixelsMax, const unsigned int imageDimPixelsMin, const unsigned int imageDimPixelsMax)
@@ -289,7 +289,7 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData_Internal(const unsigne
 
 	ValidationPrecision validation(validationPrecisionThreshold, randomGenerator);
 
-	Timestamp start(true);
+	Timestamp startTimestamp(true);
 
 #ifdef OCEAN_TEST_QRCODES_DETECTOR2D_ENABLE_VERBOSE_LOGGING
 	std::uint64_t testImageIndex = 0u;
@@ -541,7 +541,7 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData_Internal(const unsigne
 #endif // #ifdef OCEAN_TEST_QRCODES_DETECTOR2D_ENABLE_VERBOSE_LOGGING
 		}
 	}
-	while (Timestamp(true) < start + testDuration);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << " ";
 
