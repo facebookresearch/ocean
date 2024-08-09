@@ -2575,7 +2575,7 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		 * @return True, if the image data was writable; False, if the image holds read-only memory
 		 */
 		template <typename T>
-		bool setValue(const std::initializer_list<T>& planePixelValues, const unsigned int planeIndex = 0u);
+		bool setValue(const std::initializer_list<typename Identity<T>::Type>& planePixelValues, const unsigned int planeIndex = 0u);
 
 		/**
 		 * Returns whether the frame (one plane) contains a specified pixel value.
@@ -3994,7 +3994,7 @@ bool Frame::setValue(const T* planePixelValue, const size_t planePixelValueSize,
 }
 
 template <typename T>
-bool Frame::setValue(const std::initializer_list<T>& planePixelValues, const unsigned int planeIndex)
+bool Frame::setValue(const std::initializer_list<typename Identity<T>::Type>& planePixelValues, const unsigned int planeIndex)
 {
 	return setValue<T>(planePixelValues.begin(), planePixelValues.size(), planeIndex);
 }

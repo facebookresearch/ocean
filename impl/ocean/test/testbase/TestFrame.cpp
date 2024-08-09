@@ -7454,7 +7454,7 @@ bool TestFrame::testSetValue(const Frame& frame, RandomGenerator& randomGenerato
 		{
 			case 1u:
 			{
-				if (!frameCopy.setValue({values[0]}, planeIndex))
+				if (!frameCopy.setValue<T>({values[0]}, planeIndex))
 				{
 					return false;
 				}
@@ -7464,7 +7464,7 @@ bool TestFrame::testSetValue(const Frame& frame, RandomGenerator& randomGenerato
 
 			case 2u:
 			{
-				if (!frameCopy.setValue({values[0], values[1]}, planeIndex))
+				if (!frameCopy.setValue<T>({values[0], values[1]}, planeIndex))
 				{
 					return false;
 				}
@@ -7474,7 +7474,7 @@ bool TestFrame::testSetValue(const Frame& frame, RandomGenerator& randomGenerato
 
 			case 3u:
 			{
-				if (!frameCopy.setValue({values[0], values[1], values[2]}, planeIndex))
+				if (!frameCopy.setValue<T>({values[0], values[1], values[2]}, planeIndex))
 				{
 					return false;
 				}
@@ -7484,7 +7484,7 @@ bool TestFrame::testSetValue(const Frame& frame, RandomGenerator& randomGenerato
 
 			case 4u:
 			{
-				if (!frameCopy.setValue({values[0], values[1], values[2], values[3]}, planeIndex))
+				if (!frameCopy.setValue<T>({values[0], values[1], values[2], values[3]}, planeIndex))
 				{
 					return false;
 				}
