@@ -648,7 +648,7 @@ bool USBLiveVideo::setFocus(const float position)
 
 		// focus = [minFocus_, maxFocus_] ~ [infinity, closest]
 
-		const float value = (1.0 - position) * (maxFocus_ - minFocus_) + minFocus_;
+		const float value = (1.0f - position) * (maxFocus_ - minFocus_) + minFocus_;
 		ocean_assert(NumericF::isInsideRange(minFocus_, value, maxFocus_));
 
 		if (!videoDevice_->setAbsoluteFocus(value))

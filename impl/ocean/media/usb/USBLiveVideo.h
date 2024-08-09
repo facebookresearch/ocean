@@ -23,6 +23,8 @@
 	#include "ocean/system/usb/android/OceanUSBManager.h"
 #endif
 
+#include <optional>
+
 namespace Ocean
 {
 
