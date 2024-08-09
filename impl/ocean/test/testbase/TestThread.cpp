@@ -274,6 +274,8 @@ bool TestThread::testWaitForValueWithLock(const double testDuration)
 			{
 				OCEAN_EXPECT_TRUE(validation, result);
 			}
+
+			Thread::sleep(10u);
 		}
 
 		{
@@ -345,6 +347,8 @@ bool TestThread::testWaitForValueWithLock(const double testDuration)
 			{
 				OCEAN_EXPECT_TRUE(validation, result);
 			}
+
+			Thread::sleep(10u);
 		}
 
 		{
@@ -416,6 +420,8 @@ bool TestThread::testWaitForValueWithLock(const double testDuration)
 			{
 				OCEAN_EXPECT_TRUE(validation, result);
 			}
+
+			Thread::sleep(10u);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
