@@ -52,6 +52,45 @@ class DataType
 };
 
 /**
+ * This class implements a helper class allowing to define the identity data type of a given type.
+ * The class can be used if e.g., to prevent that the compiler is able to implicitly determine a template data type in a function.
+ *
+ * The following code example explains the usage of the helper class:
+ * @code
+ * template <typename T>
+ * void functionA(T value)
+ * {
+ *     // do something
+ * }
+ *
+ * template <typename T>
+ * void functionB(typename Identity<T>::Type value)
+ * {
+ *     // do something
+ * }
+ *
+ * void main()
+ * {
+ *     functionA(1); // will compile
+ *
+ *     functionB(1); // will not compile, e.g., with error message 'void Ocean::functionB(Identity<T>::Type)': could not deduce template argument for 'T'
+ *
+ *     functionB<double>(1); // will compile
+ * }
+ * @endcode
+ * @tparam T The data type to be used
+ * @ingroup base
+ */
+template <typename T>
+class Identity
+{
+	public:
+
+		/// The data type of 'T'.
+		using Type = T;
+};
+
+/**
  * This class is a helper class allowing to define the square difference data type of a given type.
  * Beware: There is no guarantee that the resulting data type can store any squared value without a value overflow.<br>
  * By default the resulting data type is identical with the given data type.<br>
