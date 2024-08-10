@@ -216,42 +216,42 @@ class OCEAN_BASE_EXPORT Timestamp
 		 * @param seconds The seconds to convert, with range (-infinity, infinity)
 		 * @return The resulting milliseconds
 		 */
-		static inline int64_t seconds2milliseconds(const double seconds);
+		static constexpr int64_t seconds2milliseconds(const double seconds);
 
 		/**
 		 * Converts seconds to microseconds.
 		 * @param seconds The seconds to convert, with range (-infinity, infinity)
 		 * @return The resulting microseconds
 		 */
-		static inline int64_t seconds2microseconds(const double seconds);
+		static constexpr int64_t seconds2microseconds(const double seconds);
 
 		/**
 		 * Converts seconds to nanoseconds.
 		 * @param seconds The seconds to convert, with range (-infinity, infinity)
 		 * @return The resulting nanoseconds
 		 */
-		static inline int64_t seconds2nanoseconds(const double seconds);
+		static constexpr int64_t seconds2nanoseconds(const double seconds);
 
 		/**
 		 * Converts milliseconds to seconds.
 		 * @param milliseconds The milliseconds to convert, with range (-infinity, infinity)
 		 * @return The resulting seconds
 		 */
-		static inline double milliseconds2seconds(const int64_t milliseconds);
+		static constexpr double milliseconds2seconds(const int64_t milliseconds);
 
 		/**
 		 * Converts microseconds to seconds.
 		 * @param microseconds The microseconds to convert, with range (-infinity, infinity)
 		 * @return The resulting seconds
 		 */
-		static inline double microseconds2seconds(const int64_t microseconds);
+		static constexpr double microseconds2seconds(const int64_t microseconds);
 
 		/**
 		 * Converts nanoseconds to seconds.
 		 * @param nanoseconds The nanoseconds to convert, with range (-infinity, infinity)
 		 * @return The resulting seconds
 		 */
-		static inline double nanoseconds2seconds(const int64_t nanoseconds);
+		static constexpr double nanoseconds2seconds(const int64_t nanoseconds);
 
 	protected:
 
@@ -405,7 +405,7 @@ inline size_t Timestamp::operator()(const Timestamp& timestamp) const
 	return std::hash<double>{}(double(timestamp));
 }
 
-inline int64_t Timestamp::seconds2milliseconds(const double seconds)
+constexpr int64_t Timestamp::seconds2milliseconds(const double seconds)
 {
 	// 1000 milliseconds  =  1 second
 
@@ -419,7 +419,7 @@ inline int64_t Timestamp::seconds2milliseconds(const double seconds)
 	}
 }
 
-inline int64_t Timestamp::seconds2microseconds(const double seconds)
+constexpr int64_t Timestamp::seconds2microseconds(const double seconds)
 {
 	// 1000 milliseconds  =  1 second
 	// 1000 microseconds  =  1 milliseconds
@@ -434,7 +434,7 @@ inline int64_t Timestamp::seconds2microseconds(const double seconds)
 	}
 }
 
-inline int64_t Timestamp::seconds2nanoseconds(const double seconds)
+constexpr int64_t Timestamp::seconds2nanoseconds(const double seconds)
 {
 	// 1000 milliseconds  =  1 second
 	// 1000 microseconds  =  1 milliseconds
@@ -450,17 +450,17 @@ inline int64_t Timestamp::seconds2nanoseconds(const double seconds)
 	}
 }
 
-inline double Timestamp::milliseconds2seconds(const int64_t milliseconds)
+constexpr double Timestamp::milliseconds2seconds(const int64_t milliseconds)
 {
 	return double(milliseconds) / 1.0e3;
 }
 
-inline double Timestamp::microseconds2seconds(const int64_t microseconds)
+constexpr double Timestamp::microseconds2seconds(const int64_t microseconds)
 {
 	return double(microseconds) / 1.0e6;
 }
 
-inline double Timestamp::nanoseconds2seconds(const int64_t nanoseconds)
+constexpr double Timestamp::nanoseconds2seconds(const int64_t nanoseconds)
 {
 	return double(nanoseconds) / 1.0e9;
 }
