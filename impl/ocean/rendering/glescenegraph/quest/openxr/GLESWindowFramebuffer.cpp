@@ -98,8 +98,12 @@ void GLESWindowFramebuffer::render()
 	const Timestamp renderTimestamp = engine().timestamp();
 	ocean_assert(renderTimestamp.isValid());
 
-	for (size_t eye = 0; eye < glesFramebuffers_.size(); ++eye)
+	ocean_assert(nextRenderFirstEyeIndex_ < 2);
+
+	for (size_t index = 0; index < glesFramebuffers_.size(); ++index)
 	{
+		const size_t eye = (nextRenderFirstEyeIndex_ + index) % glesFramebuffers_.size();
+
 		setStereoType(eye == 1 ? ST_RIGHT : ST_LEFT);
 
 		const HomogenousMatrix4& camera_T_world = views_T_world[eye];
@@ -109,7 +113,15 @@ void GLESWindowFramebuffer::render()
 
 		ocean_assert(GL_NO_ERROR == glGetError());
 
-		framebuffer.bind();
+		if (!framebuffer.bind())
+		{
+			// the framebuffer cound not be bound (e.g., because the swapchain could not be acquired without a timeout)
+			// the next render call needs to start with the same eye again, otherwise OpenXR will get out of sync with the swapchain
+
+			nextRenderFirstEyeIndex_ = eye;
+			
+			return;
+		}
 
 		const RGBAColor backgroundColor = glesStereoView->backgroundColor();
 
@@ -191,6 +203,8 @@ void GLESWindowFramebuffer::render()
 
 		framebuffer.unbind();
 	}
+
+	nextRenderFirstEyeIndex_ = 0;
 }
 
 bool GLESWindowFramebuffer::initializeContext()

@@ -201,8 +201,11 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT GLESFramebuffer
 		/// The images of the OpenXR swapchain.
 		XrSwapchainImages xrSwapchainImages_;
 
-		/// The index of the current (active) texture in the swap chain, with range [0, textureSwapChainLength_ - 1].
-		size_t textureSwapChainIndex_ = 0;
+		/// The index of the current (active) texture in the swap chain, with range [0, textureSwapChainLength_ - 1], -1 if currently no texture is active.
+		size_t textureSwapChainIndex_ = size_t(-1);
+
+		/// True, if the framebuffer is currently bound.
+		bool framebufferIsBound_ = false;
 
 		/// The color buffers of this framebuffer, one for each depth buffer.
 		std::vector<GLuint> colorBuffers_;

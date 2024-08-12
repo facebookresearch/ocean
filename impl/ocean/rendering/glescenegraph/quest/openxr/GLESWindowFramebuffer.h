@@ -123,6 +123,9 @@ class OCEAN_RENDERING_GLES_EXPORT GLESWindowFramebuffer :
 		/// The actual implementation of the Quest specific framebuffer(s).
 		Platform::Meta::Quest::OpenXR::GLESFramebuffers glesFramebuffers_;
 
+		/// The index of the next eye to be rendered first, with range [0, 1]
+		size_t nextRenderFirstEyeIndex_ = 0;
+
 		/// The traverser which is used for rendering.
 		GLESTraverser traverser_;
 

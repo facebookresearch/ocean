@@ -8,6 +8,7 @@
 #include "ocean/platform/meta/quest/openxr/GLESFramebuffer.h"
 
 #include "ocean/base/String.h"
+#include "ocean/base/Timestamp.h"
 
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
@@ -324,7 +325,6 @@ bool GLESFramebuffer::initialize(const XrSession& xrSession, const GLenum colorF
 	width_ = width;
 	height_ = height;
 	multisamples_ = multisamples;
-	textureSwapChainIndex_ = 0;
 
 	return true;
 }
@@ -332,39 +332,56 @@ bool GLESFramebuffer::initialize(const XrSession& xrSession, const GLenum colorF
 bool GLESFramebuffer::bind()
 {
 	ocean_assert(isValid());
+	ocean_assert(!framebufferIsBound_);
 
-	ocean_assert(!colorBuffers_.empty() && textureSwapChainIndex_ < xrSwapchainImages_.size());
-	if (colorBuffers_.empty() || textureSwapChainIndex_ >= xrSwapchainImages_.size())
+	ocean_assert(!colorBuffers_.empty());
+	if (colorBuffers_.empty())
 	{
 		return false;
 	}
 
 	ocean_assert(colorBuffers_.size() == xrSwapchainImages_.size());
 
-	const XrSwapchainImageAcquireInfo xrSwapchainImageAcquireInfo = {XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO};
-
-	uint32_t textureSwapChainIndex = 0u;
-	XrResult xrResult = xrAcquireSwapchainImage(xrSwapchain_, &xrSwapchainImageAcquireInfo, &textureSwapChainIndex);
-
-	if (xrResult != XR_SUCCESS)
+	if (textureSwapChainIndex_ == size_t(-1))
 	{
-		return false;
-	}
+		const XrSwapchainImageAcquireInfo xrSwapchainImageAcquireInfo = {XR_TYPE_SWAPCHAIN_IMAGE_ACQUIRE_INFO};
 
-	ocean_assert(textureSwapChainIndex < colorBuffers_.size());
+		uint32_t textureSwapChainIndex = 0u;
+		XrResult xrResult = xrAcquireSwapchainImage(xrSwapchain_, &xrSwapchainImageAcquireInfo, &textureSwapChainIndex);
+
+		if (xrResult != XR_SUCCESS)
+		{
+			return false;
+		}
+
+		ocean_assert(textureSwapChainIndex < colorBuffers_.size());
+
+		textureSwapChainIndex_ = size_t(textureSwapChainIndex);
+	}
+	else
+	{
+		Log::debug() << "OpenXR: Reusing swapchain index as we failed to wait for the previous frame";
+	}
 
 	XrSwapchainImageWaitInfo xrSwapchainImageWaitInfo = {XR_TYPE_SWAPCHAIN_IMAGE_WAIT_INFO};
-	xrSwapchainImageWaitInfo.timeout = 10000000; // 10ms
+	xrSwapchainImageWaitInfo.timeout = Timestamp::seconds2nanoseconds(0.01); // 10ms
 
-	xrResult = xrWaitSwapchainImage(xrSwapchain_, &xrSwapchainImageWaitInfo);
+	XrResult xrResult = xrWaitSwapchainImage(xrSwapchain_, &xrSwapchainImageWaitInfo);
 
-	if (xrResult != XR_SUCCESS)
-	{
-		Log::warning() << "OpenXR: Failed to wait for swapchain: " << int64_t(xrResult);
+	if (xrResult == XR_TIMEOUT_EXPIRED)
+	{			
+		Log::warning() << "OpenXR: Failed to wait for swapchain (timeout)";
+
+		// the timeout expired, now we skip this frame, and we need to retry waiting for the next frame (with same index) again for the next render call
+
 		return false;
 	}
+	else if (xrResult != XR_SUCCESS)
+	{
+		Log::warning() << "OpenXR: Failed to wait for swapchain: " << int64_t(xrResult);
 
-	textureSwapChainIndex_ = size_t(textureSwapChainIndex);
+		return false;
+	}
 
 	ocean_assert(GL_NO_ERROR == glGetError());
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, colorBuffers_[textureSwapChainIndex_]);
@@ -376,12 +393,16 @@ bool GLESFramebuffer::bind()
 	glDisable(GL_FRAMEBUFFER_SRGB_EXT);
 	ocean_assert(GL_NO_ERROR == glGetError());
 
+	framebufferIsBound_ = true;
+
 	return true;
 }
 
 bool GLESFramebuffer::unbind()
 {
 	ocean_assert(isValid());
+	ocean_assert(framebufferIsBound_);
+	ocean_assert(textureSwapChainIndex_ < xrSwapchainImages_.size());
 
 	ocean_assert(GL_NO_ERROR == glGetError());
 
@@ -406,6 +427,9 @@ bool GLESFramebuffer::unbind()
 	ocean_assert(GL_NO_ERROR == glGetError());
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	ocean_assert(GL_NO_ERROR == glGetError());
+
+	textureSwapChainIndex_ = size_t(-1);
+	framebufferIsBound_ = false;
 
 	return true;
 }
@@ -447,8 +471,10 @@ void GLESFramebuffer::release()
 bool GLESFramebuffer::isValid() const
 {
 #ifdef OCEAN_DEBUG
-	const bool allValuesInvalid = width_ == 0u && height_ == 0u && multisamples_ == 0u && xrSwapchain_ == XR_NULL_HANDLE && xrSwapchainImages_.empty() && textureSwapChainIndex_ == 0u && colorBuffers_.empty() && depthBuffers_.empty();
-	const bool allValuesValid = width_ != 0u && height_ != 0u && xrSwapchain_ != XR_NULL_HANDLE && !xrSwapchainImages_.empty() && textureSwapChainIndex_ < xrSwapchainImages_.size() && !colorBuffers_.empty() && !depthBuffers_.empty();
+	ocean_assert(textureSwapChainIndex_ == size_t(-1) || textureSwapChainIndex_ < xrSwapchainImages_.size());
+
+	const bool allValuesInvalid = width_ == 0u && height_ == 0u && multisamples_ == 0u && xrSwapchain_ == XR_NULL_HANDLE && xrSwapchainImages_.empty() && colorBuffers_.empty() && depthBuffers_.empty();
+	const bool allValuesValid = width_ != 0u && height_ != 0u && xrSwapchain_ != XR_NULL_HANDLE && !xrSwapchainImages_.empty() && !colorBuffers_.empty() && !depthBuffers_.empty();
 	ocean_assert(allValuesInvalid || allValuesValid);
 #endif
 
@@ -472,7 +498,7 @@ GLESFramebuffer& GLESFramebuffer::operator=(GLESFramebuffer&& framebuffer)
 		xrSwapchainImages_ = std::move(framebuffer.xrSwapchainImages_);
 		textureSwapChainIndex_ = framebuffer.textureSwapChainIndex_;
 		framebuffer.xrSwapchain_ = XR_NULL_HANDLE;
-		framebuffer.textureSwapChainIndex_ = 0;
+		framebuffer.textureSwapChainIndex_ = size_t(-1);
 
 		colorBuffers_ = std::move(framebuffer.colorBuffers_);
 		depthBuffers_ = std::move(framebuffer.depthBuffers_);
