@@ -534,8 +534,8 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData_Internal(const unsigne
 
 				if (failedAtGroundTruthComparison)
 				{
-					std::ofstream groundtruthFile((failureDataDirectory + IO::File(filenameprefix.str() + "_detected.txt"))());
-					groundtruthFile << Utilities::translateQRCodeToString(groundtruthCode);
+					std::ofstream detectedCodeFile((failureDataDirectory + IO::File(filenameprefix.str() + "_detected.txt"))());
+					detectedCodeFile << Utilities::translateQRCodeToString(codes[0]);
 				}
 			}
 #endif // #ifdef OCEAN_TEST_QRCODES_DETECTOR2D_ENABLE_VERBOSE_LOGGING
