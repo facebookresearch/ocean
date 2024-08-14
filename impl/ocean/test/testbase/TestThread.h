@@ -14,6 +14,8 @@
 #include "ocean/base/Thread.h"
 #include "ocean/base/Timestamp.h"
 
+#include <atomic>
+
 namespace Ocean
 {
 
@@ -29,63 +31,6 @@ namespace TestBase
  */
 class OCEAN_TEST_BASE_EXPORT TestThread
 {
-	protected:
-
-		/**
-		 * Helper class to set a value.
-		 * @tparam TObject The data type of the object
-		 * @tparam TValue The data type of the value
-		 */
-		template <typename TObject, typename TValue>
-		class DelayedValueSetter : protected Thread
-		{
-			public:
-
-				/**
-				 * Creates a new object.
-				 * @param object The object which will be set
-				 * @param value The value to use
-				 * @param delay The delay in seconds
-				 * @param lock The lock to be used
-				 */
-				DelayedValueSetter(TObject& object, const TValue& value, const double delay, Lock& lock);
-
-				/**
-				 * Destructs this object.
-				 */
-				~DelayedValueSetter() override;
-
-				/**
-				 * Stops the setter.
-				 * @return True, if the value was set; False, if the value was not set
-				 */
-				bool stop();
-
-			protected:
-
-				/**
-				 * The thread run function.
-				 */
-				void threadRun() override;
-
-			protected:
-
-				/// The object to be set.
-				TObject& object_;
-
-				/// The value to use.
-				const TValue& value_;
-
-				/// The delay in seconds.
-				double delay_ = -1.0;
-
-				/// The lock to be used
-				Lock& lock_;
-
-				/// True, if the value was set.
-				bool wasSet_ = false;
-		};
-
 	public:
 
 		/**
@@ -108,52 +53,35 @@ class OCEAN_TEST_BASE_EXPORT TestThread
 		 * @return True, if succeeded
 		 */
 		static bool testWaitForValueWithLock(const double testDuration);
+
+	protected:
+
+		/**
+		 * Sets a parameter to a specified value after a specified delay.
+		 * @param object The object which will be set
+		 * @param value The value to use
+		 * @param delay The delay in seconds, with range [0, infinity)
+		 * @param lock The lock to be used
+		 * @param isSet Will be set to True if the value was set
+		 * @tparam TObject The data type of the object
+		 * @tparam TValue The data type of the value
+		 */
+		template <typename TObject, typename TValue>
+		static void setValueDelayed(TObject& object, const TValue& value, const double delay, Lock& lock, std::atomic<bool>& isSet);
 };
 
 template <typename TObject, typename TValue>
-TestThread::DelayedValueSetter<TObject, TValue>::DelayedValueSetter(TObject& object, const TValue& value, const double delay, Lock& lock) :
-	object_(object),
-	value_(value),
-	delay_(delay),
-	lock_(lock)
+void TestThread::setValueDelayed(TObject& object, const TValue& value, const double delay, Lock& lock, std::atomic<bool>& isSet)
 {
-	startThread();
-}
+	ocean_assert(!isSet);
 
-template <typename TObject, typename TValue>
-TestThread::DelayedValueSetter<TObject, TValue>::~DelayedValueSetter()
-{
-	stop();
-}
+	Thread::sleep((unsigned int)(Timestamp::seconds2milliseconds(delay)));
 
-template <typename TObject, typename TValue>
-bool TestThread::DelayedValueSetter<TObject, TValue>::stop()
-{
-	stopThreadExplicitly();
+	const ScopedLock scopedLock(lock);
 
-	return wasSet_;
-}
+	object = value;
 
-template <typename TObject, typename TValue>
-void TestThread::DelayedValueSetter<TObject, TValue>::threadRun()
-{
-	const Timestamp startTimestamp(true);
-
-	while (!shouldThreadStop())
-	{
-		ocean_assert(delay_ >= 0.0);
-		if (startTimestamp.hasTimePassed(delay_))
-		{
-			const ScopedLock scopedLock(lock_);
-
-			object_ = value_;
-
-			wasSet_ = true;
-			return;
-		}
-
-		Thread::sleep(1u);
-	}
+	isSet = true;
 }
 
 }

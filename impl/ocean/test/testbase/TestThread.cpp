@@ -11,6 +11,8 @@
 
 #include "ocean/test/Validation.h"
 
+#include <thread>
+
 namespace Ocean
 {
 
@@ -222,17 +224,21 @@ bool TestThread::testWaitForValueWithLock(const double testDuration)
 			}
 
 			Lock lock;
+			std::atomic<bool> isSet = false;
 
-			DelayedValueSetter<bool, bool> delayedValueSetter(object, expectedValue, delay, lock);
+			std::thread delayedValueSetterThread(setValueDelayed<bool, bool>, std::ref(object), expectedValue, delay, std::ref(lock), std::ref(isSet));
 
 			const Timestamp preTimestamp(true);
 
 				TemporaryScopedLock temporaryScopedLock(lock);
-				const bool result = Thread::waitForValue(object, expectedValue, temporaryScopedLock, timeout);
+					const bool result = Thread::waitForValue(object, expectedValue, temporaryScopedLock, timeout);
+				temporaryScopedLock.release();
 
 			const Timestamp postTimestamp(true);
 
-			const bool wasSet = delayedValueSetter.stop();
+			const bool wasSet = isSet;
+
+			delayedValueSetterThread.join();
 
 			const bool timeoutLongerThanDelay = timeout < 0.0 || timeout - delay >= 0.1;
 			const bool timeoutShorterThanDelay = timeout >= 0.0 && delay - timeout >= 0.1;
@@ -274,8 +280,6 @@ bool TestThread::testWaitForValueWithLock(const double testDuration)
 			{
 				OCEAN_EXPECT_TRUE(validation, result);
 			}
-
-			Thread::sleep(10u);
 		}
 
 		{
@@ -295,17 +299,21 @@ bool TestThread::testWaitForValueWithLock(const double testDuration)
 			}
 
 			Lock lock;
+			std::atomic<bool> isSet = false;
 
-			DelayedValueSetter<std::string, std::string> delayedValueSetter(object, expectedValue, delay, lock);
+			std::thread delayedValueSetterThread(setValueDelayed<std::string, std::string>, std::ref(object), expectedValue, delay, std::ref(lock), std::ref(isSet));
 
 			const Timestamp preTimestamp(true);
 
 				TemporaryScopedLock temporaryScopedLock(lock);
-				const bool result = Thread::waitForValue(object, expectedValue, temporaryScopedLock, timeout);
+					const bool result = Thread::waitForValue(object, expectedValue, temporaryScopedLock, timeout);
+				temporaryScopedLock.release();
 
 			const Timestamp postTimestamp(true);
 
-			const bool wasSet = delayedValueSetter.stop();
+			const bool wasSet = isSet;
+
+			delayedValueSetterThread.join();
 
 			const bool timeoutLongerThanDelay = timeout < 0.0 || timeout - delay >= 0.1;
 			const bool timeoutShorterThanDelay = timeout >= 0.0 && delay - timeout >= 0.1;
@@ -347,8 +355,6 @@ bool TestThread::testWaitForValueWithLock(const double testDuration)
 			{
 				OCEAN_EXPECT_TRUE(validation, result);
 			}
-
-			Thread::sleep(10u);
 		}
 
 		{
@@ -368,17 +374,21 @@ bool TestThread::testWaitForValueWithLock(const double testDuration)
 			}
 
 			Lock lock;
+			std::atomic<bool> isSet = false;
 
-			DelayedValueSetter<std::atomic<int>, int> delayedValueSetter(object, expectedValue, delay, lock);
+			std::thread delayedValueSetterThread(setValueDelayed<std::atomic<int>, int>, std::ref(object), expectedValue, delay, std::ref(lock), std::ref(isSet));
 
 			const Timestamp preTimestamp(true);
 
 				TemporaryScopedLock temporaryScopedLock(lock);
-				const bool result = Thread::waitForValue(object, expectedValue, temporaryScopedLock, timeout);
+					const bool result = Thread::waitForValue(object, expectedValue, temporaryScopedLock, timeout);
+				temporaryScopedLock.release();
 
 			const Timestamp postTimestamp(true);
 
-			const bool wasSet = delayedValueSetter.stop();
+			const bool wasSet = isSet;
+
+			delayedValueSetterThread.join();
 
 			const bool timeoutLongerThanDelay = timeout < 0.0 || timeout - delay >= 0.1;
 			const bool timeoutShorterThanDelay = timeout >= 0.0 && delay - timeout >= 0.1;
@@ -420,8 +430,6 @@ bool TestThread::testWaitForValueWithLock(const double testDuration)
 			{
 				OCEAN_EXPECT_TRUE(validation, result);
 			}
-
-			Thread::sleep(10u);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
