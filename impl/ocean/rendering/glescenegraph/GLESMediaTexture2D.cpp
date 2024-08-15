@@ -460,6 +460,17 @@ void GLESMediaTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestam
 								ocean_assert(false && "This should never happen!");
 						}
 					}
+					else
+					{
+						if (secondaryTextureId_ != 0u)
+						{
+							// previously we needed a second texture, now we do not need it anymore
+
+							glDeleteTextures(1, &secondaryTextureId_);
+							ocean_assert(GL_NO_ERROR == glGetError());
+							secondaryTextureId_ = 0u;
+						}
+					}
 				}
 				else
 				{
@@ -718,7 +729,7 @@ bool GLESMediaTexture2D::determinePrimaryTextureProperties(const FrameType& fram
 		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
 		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
 		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
-		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:		
+		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
 		case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
 		case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
 			width = frameType.width();
