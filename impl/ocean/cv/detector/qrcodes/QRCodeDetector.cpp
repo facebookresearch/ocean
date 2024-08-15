@@ -339,10 +339,27 @@ bool QRCodeDetector::computePoses(const AnyCamera& anyCamera, const uint8_t* con
 
 	if (version > 1u)
 	{
-		// Try to determine the image location of the alignment pattern that is closest to the top-left finder pattern and use it as additional correspondence to compute a single pose, if possible
-		ocean_assert(!objectAlignmentPatterns.empty() && !objectAlignmentPatterns[0].empty());
-
-		const Vector3 objectAlignmentPattern = objectAlignmentPatterns[0][0];
+		// Try to detect the image location of one additional alignment pattern to use as a fourth point correspondence.
+		// The alignment pattern is selected in such a way that any colinearity with any of the existing correspondences is avoided.
+		Vector3 objectAlignmentPattern;
+		if (version <= 6u)
+		{
+			// These codes only have alignment pattern.
+			ocean_assert(objectAlignmentPatterns.size() == 1 && objectAlignmentPatterns[0].size() == 1);
+			objectAlignmentPattern = objectAlignmentPatterns[0][0];
+		}
+		else if (version <= 13u)
+		{
+			// For V7-V13, choose the last alignment pattern in the bottom right corner
+			ocean_assert(objectAlignmentPatterns.size() == 3 && objectAlignmentPatterns[2].size() == 2);
+			objectAlignmentPattern = objectAlignmentPatterns[2][1];
+		}
+		else
+		{
+			// For everything else choose the alignment pattern that is one to the right and one down from the top-left finder pattern
+			ocean_assert(objectAlignmentPatterns.size() >= 2 && objectAlignmentPatterns[1].size() >= 2);
+			objectAlignmentPattern = objectAlignmentPatterns[1][1];
+		}
 
 		const Scalar normalizedModuleSize = Scalar(2) / Scalar(QRCode::modulesPerSide(version));
 
