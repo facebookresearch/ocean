@@ -368,15 +368,18 @@ bool QRCodeDetector::computePoses(const AnyCamera& anyCamera, const uint8_t* con
 
 		for (unsigned int iPose = 0u; iPose < numberPoses; ++iPose)
 		{
-			for (const Scalar offsetInModules : { scale * normalizedModuleSize * Scalar(-6), scale * normalizedModuleSize * Scalar(6) })
+			for (const Scalar xOffsetInModules : {scale * normalizedModuleSize * Scalar(-6), scale * normalizedModuleSize * Scalar(6)})
 			{
-				const Vector2 imageAlignmentPattern = anyCamera.projectToImage(possible_code_T_cameras[iPose], objectAlignmentPattern + Vector3(offsetInModules, offsetInModules, Scalar(0)));
+				for (const Scalar yOffsetInModules : {scale * normalizedModuleSize * Scalar(-6), scale * normalizedModuleSize * Scalar(6)})
+				{
+					const Vector2 imageAlignmentPattern = anyCamera.projectToImage(possible_code_T_cameras[iPose], objectAlignmentPattern + Vector3(xOffsetInModules, yOffsetInModules, Scalar(0)));
 
-				topLeft.x() = std::min(topLeft.x(), imageAlignmentPattern.x());
-				topLeft.y() = std::min(topLeft.y(), imageAlignmentPattern.y());
+					topLeft.x() = std::min(topLeft.x(), imageAlignmentPattern.x());
+					topLeft.y() = std::min(topLeft.y(), imageAlignmentPattern.y());
 
-				bottomRight.x() = std::max(bottomRight.x(), imageAlignmentPattern.x());
-				bottomRight.y() = std::max(bottomRight.y(), imageAlignmentPattern.y());
+					bottomRight.x() = std::max(bottomRight.x(), imageAlignmentPattern.x());
+					bottomRight.y() = std::max(bottomRight.y(), imageAlignmentPattern.y());
+				}
 			}
 
 			if (!anyCamera.isInside(topLeft) || !anyCamera.isInside(bottomRight) || topLeft.x() >= bottomRight.x() || topLeft.y() >= bottomRight.y())
