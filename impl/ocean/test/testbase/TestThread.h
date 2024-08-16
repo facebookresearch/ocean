@@ -75,7 +75,23 @@ void TestThread::setValueDelayed(TObject& object, const TValue& value, const dou
 {
 	ocean_assert(!isSet);
 
+#ifdef OCEAN_USE_GTEST
+
+	// running the test with Gtest will result in extreme bad results when using Thread::sleep(),
+	// thus using a while loop instead
+
+	const Timestamp startTimestamp(true);
+
+	while (!startTimestamp.hasTimePassed(delay))
+	{
+		sleep(0u);
+	}
+
+#else
+
 	Thread::sleep((unsigned int)(Timestamp::seconds2milliseconds(delay)));
+
+#endif // OCEAN_USE_GTEST
 
 	const ScopedLock scopedLock(lock);
 
