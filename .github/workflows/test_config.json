@@ -82,7 +82,7 @@
   {
     "id": "testgeometry",
     "test-directory": "impl/ocean/test/testgeometry",
-    "ctest-args": "-E TestStereoscopicGeometry.CameraPose_6DOF_100|TestNonLinearOptimizationObjectPoint.NonLinearOptimizationOrientationalPosesObjectPoints_20Poses_20Points_Outliers_NoNoise",
+    "ctest-args": "-E TestStereoscopicGeometry.CameraPose_6DOF_100|TestNonLinearOptimizationObjectPoint.NonLinearOptimizationOrientationalPosesObjectPoints_20Poses_20Points_Outliers_NoNoise|TestNonLinearOptimizationObjectPoint.NonLinearOptimizationOrientationalPosesObjectPoints_20Poses_20Points_NoOutliers_NoNoise",
     "paths": [
       "impl/ocean/test/testgeometry/**",
       "impl/ocean/geometry/**"
