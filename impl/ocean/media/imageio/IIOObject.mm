@@ -183,6 +183,8 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage, bool* containedPremultip
 		{
 			if (cgColorSpaceMode == kCGColorSpaceModelRGB && bitsPerPixel == 32)
 			{
+				ocean_assert((cgBitmapInfo & kCGBitmapByteOrder32Little) == 0u);
+
 				pixelFormat = FrameType::FORMAT_RGB32;
 			}
 
@@ -194,11 +196,20 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage, bool* containedPremultip
 		{
 			if (cgColorSpaceMode == kCGColorSpaceModelMonochrome && bitsPerPixel == 16)
 			{
+				ocean_assert((cgBitmapInfo & kCGBitmapByteOrder16Little) == 0u);
+
 				pixelFormat = FrameType::FORMAT_YA16;
 			}
 			else if (cgColorSpaceMode == kCGColorSpaceModelRGB && bitsPerPixel == 32)
 			{
-				pixelFormat = FrameType::FORMAT_RGBA32;
+				if (cgBitmapInfo & kCGBitmapByteOrder32Little)
+				{
+					pixelFormat = FrameType::FORMAT_ABGR32;
+				}
+				else
+				{
+					pixelFormat = FrameType::FORMAT_RGBA32;
+				}
 			}
 			else if (cgColorSpaceMode == kCGColorSpaceModelRGB && bitsPerPixel == 64 && bitsPerComponent == 16)
 			{
@@ -213,7 +224,14 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage, bool* containedPremultip
 		{
 			if (cgColorSpaceMode == kCGColorSpaceModelRGB && bitsPerPixel == 32)
 			{
-				pixelFormat = FrameType::FORMAT_ARGB32;
+				if (cgBitmapInfo & kCGBitmapByteOrder32Little)
+				{
+					pixelFormat = FrameType::FORMAT_BGRA32;
+				}
+				else
+				{
+					pixelFormat = FrameType::FORMAT_ARGB32;
+				}
 			}
 
 			break;
