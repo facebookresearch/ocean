@@ -504,7 +504,7 @@ Frame Utilities::castToSupportedPixelFormat(const Frame& frame)
 		return Frame(FrameType(frame, bestPixelFormat), frame.constdata<void>(), Frame::CM_USE_KEEP_LAYOUT);
 	}
 
-	return Frame(frame.frameType(), frame.constdata<void>(), Frame::CM_USE_KEEP_LAYOUT);
+	return Frame(frame, Frame::ACM_USE_KEEP_LAYOUT);
 }
 
 }
