@@ -24,10 +24,15 @@
 #include "ocean/media/Manager.h"
 
 #include "ocean/media/imageio/IIOLibrary.h"
+#include "ocean/media/imageio/IIOObject.h"
 #include "ocean/media/imageio/Image.h"
 
 #include "ocean/media/openimagelibraries/Image.h"
 #include "ocean/media/openimagelibraries/OILLibrary.h"
+
+#include "ocean/platform/apple/Apple.h"
+
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -88,6 +93,12 @@ bool TestImageIO::test(const double testDuration)
 	Log::info() << " ";
 
 	allSucceeded = testInterchangeability(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testConversionCGImage(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -350,6 +361,11 @@ TEST_F(TestImageIOGTestInstance, AnyImageEncodeDecode)
 TEST_F(TestImageIOGTestInstance, Interchangeability)
 {
 	EXPECT_TRUE(TestImageIO::testInterchangeability(GTEST_TEST_DURATION));
+}
+
+TEST_F(TestImageIOGTestInstance, ConversionCGImage)
+{
+	EXPECT_TRUE(TestImageIO::testConversionCGImage(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -937,6 +953,95 @@ bool TestImageIO::testInterchangeability(const double testDuration)
 	}
 
 	return allSucceeded;
+}
+
+bool TestImageIO::testConversionCGImage(const double testDuration)
+{
+	Log::info() << "Conversion CGImage:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const FrameType::PixelFormats pixelFormats = {FrameType::FORMAT_RGBA32, FrameType::FORMAT_BGRA32, FrameType::FORMAT_ARGB32, FrameType::FORMAT_ABGR32};
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
+
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+
+		const FrameType frameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
+
+		Frame frame = CV::CVUtilities::randomizedFrame(frameType, &randomGenerator);
+		frame.makeContinuous();
+
+		const Platform::Apple::ScopedCFDataRef data(CFDataCreate(nullptr, frame.constdata<uint8_t>(), frame.size()));
+		const Platform::Apple::ScopedCGDataProviderRef dataProvider(CGDataProviderCreateWithCFData(data.object()));
+
+		const size_t bitsPerComponent = frame.bytesPerDataType() * 8u;
+		const size_t bitsPerPixel = bitsPerComponent * frame.channels();
+
+		ocean_assert(frame.numberPlanes() == 1u);
+		const size_t bytesPerRow = frame.planeWidthBytes(0u);
+
+		Platform::Apple::ScopedCGColorSpaceRef colorSpace(CGColorSpaceCreateDeviceRGB());
+		CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
+
+		switch (frame.pixelFormat())
+		{
+			case FrameType::FORMAT_RGBA32:
+				bitmapInfo = CGBitmapInfo(uint32_t(kCGBitmapByteOrder32Big) | uint32_t(kCGImageAlphaLast));
+				break;
+
+			case FrameType::FORMAT_BGRA32:
+				bitmapInfo = CGBitmapInfo(uint32_t(kCGBitmapByteOrder32Little) | uint32_t(kCGImageAlphaFirst));
+				break;
+
+			case FrameType::FORMAT_ARGB32:
+				bitmapInfo = CGBitmapInfo(uint32_t(kCGBitmapByteOrder32Big) | uint32_t(kCGImageAlphaFirst));
+				break;
+
+			case FrameType::FORMAT_ABGR32:
+				bitmapInfo = CGBitmapInfo(uint32_t(kCGBitmapByteOrder32Little) | uint32_t(kCGImageAlphaLast));
+				break;
+
+			default:
+				ocean_assert(false && "Invalid pixel format!");
+		}
+
+		Platform::Apple::ScopedCGImageRef cgImage(CGImageCreate(frame.width(), frame.height(), bitsPerComponent, bitsPerPixel, bytesPerRow, colorSpace.object(), bitmapInfo, dataProvider.object(), nullptr, false, kCGRenderingIntentDefault));
+
+		Frame convertedFrame = Media::ImageIO::IIOObject::loadFrameFromImage(*cgImage);
+
+		if (CV::FrameConverter::Comfort::change(convertedFrame, pixelFormat))
+		{
+			for (unsigned int y = 0u; y < frame.height(); ++y)
+			{
+				for (unsigned int x = 0u; x < frame.width(); ++x)
+				{
+					const uint8_t* const sourcePixel = frame.constpixel<uint8_t>(x, y);
+					const uint8_t* const convertedPixel = convertedFrame.constpixel<uint8_t>(x, y);
+
+					OCEAN_EXPECT_EQUAL(validation, sourcePixel[0], convertedPixel[0]);
+					OCEAN_EXPECT_EQUAL(validation, sourcePixel[1], convertedPixel[1]);
+					OCEAN_EXPECT_EQUAL(validation, sourcePixel[2], convertedPixel[2]);
+					OCEAN_EXPECT_EQUAL(validation, sourcePixel[3], convertedPixel[3]);
+				}
+			}
+		}
+		else
+		{
+			OCEAN_SET_FAILED(validation);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestImageIO::testBmpImageEncodeDecode(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const FrameType::PixelOrigin pixelOrigin, const double testDuration)

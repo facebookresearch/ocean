@@ -33,59 +33,66 @@ class OCEAN_TEST_MEDIA_EXPORT TestImageIO
 
 		/**
 		 * Invokes all tests that are defined.
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool test(const double testDuration);
 
 		/**
 		 * Tests the read and write functions for BMP images.
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testBmpImageEncodeDecode(const double testDuration);
 
 		/**
 		 * Tests the read and write functions for JPEG images.
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testJpgImageEncodeDecode(const double testDuration);
 
 		/**
 		 * Tests the read and write functions for HEIC images.
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testHeicImageEncodeDecode(const double testDuration);
 
 		/**
 		 * Tests the read and write functions for PNG images.
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testPngImageEncodeDecode(const double testDuration);
 
 		/**
 		 * Tests the read and write functions for PNG images.
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testTifImageEncodeDecode(const double testDuration);
 
 		/**
 		 * Tests the read and write functions for any image.
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testAnyImageEncodeDecode(const double testDuration);
 
 		/**
 		 * Tests the encoding and decoding between individual media libraries.
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testInterchangeability(const double testDuration);
+
+		/**
+		 * Tests the forward and backward conversion between a Frame and a CGImage.
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testConversionCGImage(const double testDuration);
 
 		/**
 		 * Tests the read and write functions for BMP images.
@@ -93,7 +100,7 @@ class OCEAN_TEST_MEDIA_EXPORT TestImageIO
 		 * @param height The height of the frame to be tested, with range [1, infinity)
 		 * @param pixelFormat The pixel format of the frame to be tested, must be valid
 		 * @param pixelOrigin The pixel origin of the frame to be tested, must be valid
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testBmpImageEncodeDecode(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const FrameType::PixelOrigin pixelOrigin, const double testDuration);
@@ -104,7 +111,7 @@ class OCEAN_TEST_MEDIA_EXPORT TestImageIO
 		 * @param height The height of the frame to be tested, with range [1, infinity)
 		 * @param pixelFormat The pixel format of the frame to be tested, must be valid
 		 * @param pixelOrigin The pixel origin of the frame to be tested, must be valid
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testJpgImageEncodeDecode(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const FrameType::PixelOrigin pixelOrigin, const double testDuration);
@@ -115,7 +122,7 @@ class OCEAN_TEST_MEDIA_EXPORT TestImageIO
 		 * @param height The height of the frame to be tested, with range [1, infinity)
 		 * @param pixelFormat The pixel format of the frame to be tested, must be valid
 		 * @param pixelOrigin The pixel origin of the frame to be tested, must be valid
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testHeicImageEncodeDecode(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const FrameType::PixelOrigin pixelOrigin, const double testDuration);
@@ -126,7 +133,7 @@ class OCEAN_TEST_MEDIA_EXPORT TestImageIO
 		 * @param height The height of the frame to be tested, with range [1, infinity)
 		 * @param pixelFormat The pixel format of the frame to be tested, must be valid
 		 * @param pixelOrigin The pixel origin of the frame to be tested, must be valid
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testPngImageEncodeDecode(const unsigned int width, const unsigned int height, const FrameType::PixelFormat pixelFormat, const FrameType::PixelOrigin pixelOrigin, const double testDuration);
@@ -154,7 +161,7 @@ class OCEAN_TEST_MEDIA_EXPORT TestImageIO
 		/**
 		 * Tests the quality property for a specified image type.
 		 * @param imageType The image type for which the test will be executed
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testQualityProperty(const std::string& imageType, const double testDuration);
@@ -162,7 +169,7 @@ class OCEAN_TEST_MEDIA_EXPORT TestImageIO
 		/**
 		 * Tests setting color profile names for a specified image type.
 		 * @param imageType The image type for which the test will be executed
-		 * @param testDuration The number of seconds for each test
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testColorProfileNameProperty(const std::string& imageType, const double testDuration);
