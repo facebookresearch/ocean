@@ -88,7 +88,7 @@ Frame IIOObject::loadFrameFromImageSource(CGImageSourceRef imageSource, Image::P
 	return result;
 }
 
-Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
+Frame IIOObject::loadFrameFromImage(CGImageRef cgImage, bool* containedPremultipliedAlpha, const bool convertPremultipliedAlpha)
 {
 	ocean_assert(cgImage);
 	if (cgImage == nullptr)
@@ -230,6 +230,11 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 	}
 
 	const bool isPremultiplied = alphaInfo == kCGImageAlphaPremultipliedLast || alphaInfo == kCGImageAlphaPremultipliedFirst;
+
+	if (containedPremultipliedAlpha != nullptr)
+	{
+		*containedPremultipliedAlpha = isPremultiplied;
+	}
 
 	const ScopedCGDataProviderRef provider(CGImageGetDataProvider(cgImage), false /*needsRelease*/); // We must not release the data provider here CGDataProviderRelease(provider), this would cause segmetation faults
 
@@ -374,7 +379,7 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage)
 
 		result = Frame(frameType, dataPtr, Frame::CM_COPY_REMOVE_PADDING_LAYOUT, dataPaddingElements, Timestamp(true));
 
-		if (isPremultiplied)
+		if (isPremultiplied && convertPremultipliedAlpha)
 		{
 			switch (pixelFormat)
 			{

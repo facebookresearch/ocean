@@ -38,12 +38,12 @@ class OCEAN_MEDIA_IIO_EXPORT IIOObject
 		/**
 		 * Definition of a pair combining a pixel format with an Apple string.
 		 */
-		typedef std::pair<FrameType::PixelFormat, const CFStringRef> PixelFormatPair;
+		using PixelFormatPair = std::pair<FrameType::PixelFormat, const CFStringRef>;
 
 		/**
 		 * Definition of an unordered map mapping color profile names to a pair with pixel formats.
 		 */
-		typedef std::unordered_map<std::string, PixelFormatPair> ColorProfileMap;
+		using ColorProfileMap = std::unordered_map<std::string, PixelFormatPair>;
 
 	public:
 
@@ -62,9 +62,11 @@ class OCEAN_MEDIA_IIO_EXPORT IIOObject
 		 * The resulting frame can have one of the following pixel formats:<br>
 		 * FORMAT_Y8, FORMAT_RGB24, FORMAT_YA16, FORMAT_RGBA32, FORMAT_ARGB32.
 		 * @param image The image from which the frame will be loaded, must be valid
+		 * @param containedPremultipliedAlpha Optional resulting statement whether the input image contained premultiplied alpha (not the resulting frame), nullptr if not of interest
+		 * @param convertPremultipliedAlpha True, to convert the resulting frame to a non-premultiplied alpha frame (in case the input contained premultiplied alpha); False, to keep the frame as it is
 		 * @return The resulting frame
 		 */
-		static Frame loadFrameFromImage(CGImageRef image);
+		static Frame loadFrameFromImage(CGImageRef image, bool* containedPremultipliedAlpha = nullptr, const bool convertPremultipliedAlpha = true);
 
 		/**
 		 * Writes a frame to an image destination, in case the pixel format of the given frame is not supported by the destination, the function will fail.
