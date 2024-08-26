@@ -599,17 +599,14 @@ inline bool QRCodeEncoder::decodeFormatBits(const uint32_t formatBits, QRCode::E
 {
 	ocean_assert(formatBits >> 15u == 0u);
 
-	const uint32_t formatBitsUnmasked = formatBits ^ 0b101010000010010u;
-
 	uint32_t minDistanceFormat = uint32_t(-1);
 	uint32_t minDistance = uint32_t(-1);
 	uint32_t minDistanceCounter = 0u;
 
 	for (uint32_t referenceFormat = 0u; referenceFormat < 32u; ++referenceFormat)
 	{
-		const uint32_t referenceFormatBitsMasked = encodeFormat(referenceFormat);
-		const uint32_t referenceFormatBitsUnmasked = referenceFormatBitsMasked ^ 0b101010000010010u; // TODO Is it possible to leave out the unmasking (XOR)?
-		const uint32_t distance = computeHammingWeight(formatBitsUnmasked ^ referenceFormatBitsUnmasked);
+		const uint32_t referenceFormatBits = encodeFormat(referenceFormat);
+		const uint32_t distance = computeHammingWeight(formatBits ^ referenceFormatBits);
 
 		if (distance < minDistance)
 		{
