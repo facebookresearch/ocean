@@ -187,7 +187,8 @@ typedef std::vector<std::wstring> WStrings;
 
 
 // we ensure that OCEAN_DEBUG is also defined as long as DEBUG is defined or _DEBUG is defined
-#if !defined(OCEAN_DEBUG) && (defined(DEBUG) || defined(_DEBUG))
+// but do not define OCEAN_DEBUG in fuzzing mode.
+#if !defined(OCEAN_DEBUG) && (defined(DEBUG) || defined(_DEBUG)) && !defined(FUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION)
 	#define OCEAN_DEBUG
 #endif
 
