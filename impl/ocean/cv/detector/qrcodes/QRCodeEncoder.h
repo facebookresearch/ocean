@@ -9,6 +9,8 @@
 
 #include "ocean/cv/detector/qrcodes/QRCodes.h"
 
+#include "ocean/cv/detector/qrcodes/QRCodeEncoderBase.h"
+
 #include "ocean/cv/detector/qrcodes/QRCode.h"
 
 #include "ocean/math/Vector2.h"
@@ -31,174 +33,9 @@ namespace QRCodes
  * This class implements an encoder and decoder for QR codes.
  * @ingroup cvdetectorqrcodes
  */
-class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
+class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder : public QRCodeEncoderBase
 {
 	public:
-
-		/// Codeword: sequence of 8 bits
-		typedef uint8_t Codeword;
-
-		/// Vector of codewords
-		typedef std::vector<Codeword> Codewords;
-
-		/// Typedef for a bit buffer
-		typedef std::vector<uint8_t> BitBuffer;
-
-		/// Forward declaration of the segment class
-		class Segment;
-
-		/// Typedef for a vector of segments
-		typedef std::vector<Segment> Segments;
-
-		/**
-		 * Definition of the segment class
-		 * A sequence is a sequence of data encoded according to the rules of one ECI or encodation mode
-		 */
-		class OCEAN_CV_DETECTOR_QRCODES_EXPORT Segment
-		{
-			public:
-				/**
-				 * Constructor for segments
-				 * @param mode The data encodation mode of this segment
-				 * @param characters The number of characters stored in this segment, range: [0, infinity)
-				 * @param bitBuffer The bit sequence representing the data stored in this segment, must be valid
-				 */
-				inline Segment(const QRCode::EncodingMode mode, const unsigned int characters, BitBuffer& bitBuffer);
-
-				/**
-				 * Returns the encodation mode set for this segment
-				 * @return The encodation mode
-				 */
-				inline QRCode::EncodingMode encodationMode() const;
-
-				/**
-				 * Returns the number of characters stored in this segment
-				 * @return The number of characters stored in this segment
-				 */
-				inline unsigned int characters() const;
-
-				/**
-				 * Returns the encoded bits stored in this segment
-				 * @return The encoded bits
-				 */
-				inline const BitBuffer& bitBuffer() const;
-
-				/**
-				 * Encode a sequence of digits (0-9) and store it in a segment
-				 * @param data The data that will be encoded, must be a sequence of digits, i.e., `isNumeric(data) == true`
-				 * @param segments The segment storing the encoded data will be appended to this vector, memory will be initialized internally
-				 * @return True if the data was successfully encoded, otherwise false
-				 */
-				static bool generateSegmentNumeric(const std::string& data, Segments& segments);
-
-				/**
-				 * Encode a sequence of alphanumeric characters (cf. ISO/IEC 18004:2015, Table 5) and store it in a segment
-				 * @param data The data that will be encoded, must be a sequence of alphanumeric characters, i.e., `isAlphanumeric(data) == true`
-				 * @param segments The segment storing the encoded data will be appended to this vector, memory will be initialized internally
-				 * @return True if the data was successfully encoded, otherwise false
-				 */
-				static bool generateSegmentAlphanumeric(const std::string& data, Segments& segments);
-
-				/**
-				 * Encode a sequence of bytes and store it in a segment
-				 * @param data The data that will be encoded
-				 * @param segments The segment storing the encoded data will be appended to this vector, memory will be initialized internally
-				 * @return True if the data was successfully encoded, otherwise false
-				 */
-				static bool generateSegmentsBytes(const std::vector<uint8_t>& data, Segments& segments);
-
-				/**
-				 * Returns the bit sequence identifying the encodation mode set for this segment (4 bits long)
-				 * @return The bit sequence of the encodation mode used (only use the first 4 bits)
-				 */
-				static inline unsigned int encodationModeIndicatorBitSequence(QRCode::EncodingMode mode);
-
-				/**
-				 * Returns the number of bits per charactor for a specific version and encodation mode, cf. ISO/IEC 18004:2015, Table 3
-				 * @param version Version number of a QR code, range: [0, 40]
-				 * @param mode The encodation mode
-				 * @return The number of bits per character or `(unsigned int)(-1)` on failure
-				 */
-				static inline unsigned int getBitsInCharacterCountIndicator(unsigned int version, QRCode::EncodingMode mode);
-
-				/**
-				 * Helper function to append a certain number of bits of a number to a bit buffer
-				 * @param value The value of which the first `N` bits will be appended to the bit buffer
-				 * @param bits The number of bits to append, range: [0, sizeof(unsigned int) * 8]
-				 * @param bitBuffer The bit buffer to which the `N` bits will be appended
-				 */
-				static inline void bitBufferAppend(const unsigned int value, size_t bits, BitBuffer& bitBuffer);
-
-				/**
-				 * Test to check if data is numeric (consisting of only digits)
-				 * @param data The data to be tested
-				 * @return True if the data consists of only digits, otherwise false
-				 */
-				static inline bool isNumericData(const std::string& data);
-
-				/**
-				 * Test to check if data contains only alphanumeric characters
-				 * @param data The data to be tested
-				 * @return True if the data consists of alphanumeric characters, otherwise false
-				 * @sa ALPHANUMERIC_CHARSET
-				 */
-				static inline bool isAlphanumericData(const std::string& data);
-
-				/**
-				 * Returns the character set for the alphanumeric data mode
-				 * The character set for the alphanumeric data mode, cf. ISO/IEC 18004:2015, Table 5. The index
-				 * of each character in the string corresponds to the value assigned to them in the alphanumeric
-				 * encoding/decoding table.
-				 * @return The character set for the alphanumeric data mode.
-				 */
-				static inline const std::string& getAlphanumericCharset();
-
-			protected:
-
-				/// The mode used to encode the data of this segment
-				QRCode::EncodingMode encodationMode_;
-
-				/// The number of characters stored in this segment
-				unsigned int characters_;
-
-				/// The actual encoded data (sequence of bits)
-				BitBuffer bitBuffer_;
-		};
-
-		/**
-		 * Definition of the ReedSolomon class
-		 */
-		class ReedSolomon
-		{
-			public:
-
-				/// Coefficients of the divisor polynomial, stored from highest to lower power (excluding the leading term which is always 1). Example x^3 + 255x^2 + 8x + 93 is stored as {255, 8, 93}.
-				typedef std::vector<uint8_t> Coefficients;
-
-			public:
-
-				/**
-				 * Generates the Reed-Solomon coefficients for a divisor polynomial of degree `N`.
-				 * @param degree The degree of the divisor polynomial, range: [1, infinity)
-				 * @return The coeffiencts of the divisor polynomial (will have `N = degree` elements)
-				 */
-				static Coefficients generateCoefficients(const unsigned int degree);
-
-				/**
-				 * Computes the Reed-Solomon error correction codewords for a sequence of data codewords
-				 * @param codewords The input codewords for which the error correction will be computed
-				 * @param coefficients The coefficients of the Reed-Solomon divisor polynomial of degree `N`
-				 * @return The error correction codewords
-				 */
-				static Codewords computeRemainders(const Codewords& codewords, const Coefficients& coefficients);
-
-			protected:
-
-				/**
-				 * Return the product of two fields modulo GF(2^8/0x11D)
-				 */
-				static uint8_t multiply(const uint8_t a, const uint8_t b);
-		};
 
 		/**
 		 * Enum for the mask patterns used to shuffle modules of a QR code.
@@ -240,6 +77,12 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		/// Number of error correction blocks (rows: 0 - low, 1 - medium, 2 - quartile, 3 - high, column 0 is ignored since no version 0 exists), cf. ISO/IEC 18004:2015, Table 9, column 6
 		static const int8_t NUM_ERROR_CORRECTION_BLOCKS[4][41];
 
+		/// Indicates the smallest valid version number of QR codes.
+		static constexpr unsigned int MIN_VERSION = 1u;
+		
+		/// Indicates the largest valid version number of QR codes.
+		static constexpr unsigned int MAX_VERSION = 40u;
+
 	public:
 
 		/**
@@ -249,7 +92,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		 * @param qrcode The QR code that will store the encoded data
 		 * @return True if the QR code has been successfully generated
 		 */
-		static bool encodeText(const std::string& text, QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, QRCode& qrcode);
+		static bool encodeText(const std::string& text, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, QRCode& qrcode);
 
 		/**
 		 * Encode binary data and store it in a QR code, will always use the byte encodation mode
@@ -280,7 +123,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 
 		/**
 		 * Encodes the version numbers as a sequences of 18 bits with error correction ((18, 6) BCH code).
-		 * @param version The version number to be encoded as a 18 bit long sequence, range: [7, 40] (QR code version 1-6 have no version information bit field)
+		 * @param version The version number to be encoded as a 18 bit long sequence, range: [7, MAX_VERSION] (QR code version 1-6 have no version information bit field)
 		 * @return The version number encoded as a 18-bit long sequence
 		 */
 		static inline uint32_t encodeVersion(const uint32_t version);
@@ -296,7 +139,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 
 		/**
 		 * Computes the 2D locations of the alignment patterns for a specified version of a QR code
-		 * @param version The version of a QR code, range: [1, 40]
+		 * @param version The version of a QR code, range: [MIN_VERSION, MAX_VERSION]
 		 * @return The list of the locations of alignment patterns, the locations are guaranteed to be in row-wise order (left-to-right and top-to-bottom), will be empty for version 1
 		 */
 		static VectorsI2 computeAlignmentPatternPositions(const unsigned int version);
@@ -307,34 +150,13 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		 * @return The error correction level and masking pattern encoded as a sequence of 15 bits
 		 * @sa encodeFormat(const ErrorCorrectionCapacity, const MaskingPattern)
 		 */
-		static inline uint32_t encodeFormat(const uint32_t format);
-
-		/**
-		 * Computes the remainder of a polynomial long division for (n, k) BCH codes
-		 * Notation:
-		 * n : block length in bits
-		 * k : number of information/data bits
-		 * @param data The data used as the nominator in this division
-		 * @return The remainder of the polynomial division
-		 * @tparam tBlockLength The length, n, of the BCH code in bits, range: (tDataLength, infinity)
-		 * @tparam tDataLength The number the information/data bits, k, range: [1, tBlockLength)
-		 * @tparam tGeneratorPolynomial The generator polynomial used by this code for the polynomial division. This is specificied as an integer (or binary number). Range: (0, 2^n - 1) (Important: make sure this value is correct according to the Galois field theory behind it, there are no additional sanity checks)
-		 */
-		template <uint32_t tBlockLength, uint32_t tDataLength, uint32_t tGeneratorPolynomial>
-		static inline uint32_t computePolynomialDivisonRemainderBCH(const uint32_t data);
-
-		/**
-		 * Determines the number of 1-bits in an integer value (Hamming weight)
-		 * @param value The value of which the 1-bits will be counted
-		 * @return The number of 1-bits in the input value
-		 */
-		static inline uint32_t computeHammingWeight(uint32_t value);
+		static inline uint32_t encodeFormatBits(const uint32_t format);
 
 	protected:
 
 		/**
 		 * Helper function to initialize a QR code instance
-		 * @param version The version of this QR code, range: [1, 40]
+		 * @param version The version of this QR code, range: [MIN_VERSION, MAX_VERSION]
 		 * @param errorCorrectionCapacity The error correction level that will be used to generate the error-corrected codewords stored in this QR code
 		 * @param rawCodewords The encoded codewords. The size must fit exactly into the selected version of this QR code
 		 * @param mask The index of the bit shuffle masked that was used to generate the modules of this QR code
@@ -351,24 +173,24 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		 * @param version The resulting version of the QR code
 		 * @param finalErrorCorrectionCapacity The resulting error correction capacity that the QR code will finally have
 		 * @param minVersion The minimum version that the final QR code is supposed to have, range: [1, maxVersion]
-		 * @param maxVersion The maximum version that the final QR code is supposed to have, range: [minVersion, 40]. Note: if this value is chosen too small, the initialization may fail
+		 * @param maxVersion The maximum version that the final QR code is supposed to have, range: [minVersion, MAX_VERSION]. Note: if this value is chosen too small, the initialization may fail
 		 * @param mask The index of the bit shuffle mask that is to be used, range: [0, 7] or (unsigned int)(-1). The latter value will cause this function to automatically select the optimal mask (cf. ISO/IEC 18004:2015, Section 7.8.3)
 		 * @param maximizeErrorCorrectionCapacity If true, this function will try to maximize the error correction level as long as it doesn't increase the size of the smallest QR code that can fit the data, cf. `errorCorrectionCapacity`
 		 * @return True on success, otherwise false
 		 */
-		static bool encodeSegments(const Segments& segments, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, std::vector<uint8_t>& modules, unsigned int& version, QRCode::ErrorCorrectionCapacity& finalErrorCorrectionCapacity, const unsigned int minVersion = 1u, const unsigned int maxVersion = 40u, const MaskingPattern mask = MP_PATTERN_UNKNOWN, const bool maximizeErrorCorrectionCapacity = true);
+		static bool encodeSegments(const Segments& segments, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, std::vector<uint8_t>& modules, unsigned int& version, QRCode::ErrorCorrectionCapacity& finalErrorCorrectionCapacity, const unsigned int minVersion = 1u, const unsigned int maxVersion = MAX_VERSION, const MaskingPattern mask = MP_PATTERN_UNKNOWN, const bool maximizeErrorCorrectionCapacity = true);
 
 		/**
 		 * Returns the number of modules that can be used to store data for a given QR code version
 		 * This is the number of all modules less the number of function modules (finder pattern, timing pattern, alignment pattern, version and format information, black pixel, and separators)
-		 * @param version The version of a QR code, range: [1, 40]
+		 * @param version The version of a QR code, range: [MIN_VERSION, MAX_VERSION]
 		 * @return The number of modules that can be used to store data
 		 */
 		static inline unsigned int totalNumberRawDataModules(const unsigned int version);
 
 		/**
 		 * Return the number of codewords for a specified version and error correction level
-		 * @param version The version of a QR code, range: [1, 40]
+		 * @param version The version of a QR code, range: [MIN_VERSION, MAX_VERSION]
 		 * @param errorCorrectionCapacity The error correction level of a QR code
 		 * @return The total number of codewords that fit into such a QR code
 		 */
@@ -377,7 +199,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		/**
 		 * Computes the number of bits used given some data (segments) for a specified version of a QR code (this number varies depending on the version, i.e. bits per character)
 		 * @param segments The segments for which the number of bits will be computed
-		 * @param version The version of a QR code, range: [1, 40]
+		 * @param version The version of a QR code, range: [MIN_VERSION, MAX_VERSION]
 		 * @param bitsUsed The total number of bits the `segments` will need in a QR code of version `version`
 		 * @return True on success, otherwise false (e.g. because of an overflow)
 		 */
@@ -386,7 +208,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		/**
 		 * Generates the error correction codewords and interleaves the with the raw codewords
 		 * @param codewords The raw code words for which the error code will be generated, must be valid
-		 * @param version The version of the designated QR code, range: [1, 40]
+		 * @param version The version of the designated QR code, range: [MIN_VERSION, MAX_VERSION]
 		 * @param errorCorrectionCapacity The level of error correction to be used
 		 * @return The error-corrected + interleaved codewords
 		 */
@@ -396,7 +218,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		 * Applies a data shuffle mask to the specified modules
 		 * Note: Calling this function on the same data and with the same parameters a second time will undo the changes from the first time (because of the XOR used internally)
 		 * @param modules The modules that will be shuffled, must be valid
-		 * @param version The version of the designated QR code, range: [1, 40]
+		 * @param version The version of the designated QR code, range: [MIN_VERSION, MAX_VERSION]
 		 * @param functionPatternMask The binary mask that indicates the location of function patterns (finder patern, etc.), which should not be shuffled, cf. `setFunctionPatterns()`
 		 * @param mask The index of the shuffle mask, range: [0, 7]
 		 * @sa setFunctionPatterns()
@@ -407,7 +229,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		 * Computes a penalty value (fitness value) for a module configuration, cf. ISO/IEC 18004:2015, Section 7.8.3.1
 		 * The result of this function is used to determine the optimal shuffle mask that is used to generate the QR code
 		 * @param modules The modules of the designated QR code, must be valid
-		 * @param version The version of the designated QR code, range: [1, 40]
+		 * @param version The version of the designated QR code, range: [MIN_VERSION, MAX_VERSION]
 		 * @return The penalty score for this configuration of modules
 		 */
 		static unsigned int computeMaskPatternPenalty(const std::vector<uint8_t>& modules, const unsigned int version);
@@ -423,7 +245,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		 * The other set*-functions use this mask in order to avoid overwriting function patterns.
 		 *
 		 * @param modules The modules where the codewords will be written to, must be valid and of size `QRCode::modulesPerSide(version) * QRCode::modulesPerSide(version)`
-		 * @param version The version of the designated QR code, range: [1, 40]
+		 * @param version The version of the designated QR code, range: [MIN_VERSION, MAX_VERSION]
 		 * @param errorCorrectionCapacity The level of error correction for the designated QR code
 		 * @return A binary mask that will denote all locations of the modules with function patterns (pixel value = 255) and data modules (pixel value = 0), the size will be same as for `modules`
 		 */
@@ -434,7 +256,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		 * Note: the size of the codewords must match exactly the version and level of error correction
 		 * @param modules The modules where the codewords will be written to, must be valid and of size `QRCode::modulesPerSide(version) * QRCode::modulesPerSide(version)`
 		 * @param codewords The modules where the codewords will be written to, must be valid
-		 * @param version The version of the designated QR code, range: [1, 40], must match the size of `modules`
+		 * @param version The version of the designated QR code, range: [MIN_VERSION, MAX_VERSION], must match the size of `modules`
 		 * @param functionPatternMask The mask that is used to identify all function patterns in the QR code (and to not overwrite them), cf. `setFunctionPatterns()`
 		 * @sa setFunctionPatterns()
 		 */
@@ -444,7 +266,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		 * Sets (draws) the format information (2x5 bits) into the modules of a QR code
 		 * Note: format information = `e1 e0 | m2 m1 m0`, where `ei` and `mj` are the bits for the error correction level and bit shuffle mask, respectively
 		 * @param[in,out] modules The modules where the format information will be written to, must be valid and of size `QRCode::modulesPerSide(version) * QRCode::modulesPerSide(version)`
-		 * @param version The version of the designated QR code, range: [1, 40], must match the size of `modules`
+		 * @param version The version of the designated QR code, range: [MIN_VERSION, MAX_VERSION], must match the size of `modules`
 		 * @param errorCorrectionCapacity The level of error correction used to generate this QR code
 		 * @param mask The index of the bit shuffle mask used to generate this QR code, range: [0, 7]
 		 * @param functionPatternMask The mask that is used to identify all function patterns in the QR code (and to not overwrite them), cf. `setFunctionPatterns()`
@@ -455,37 +277,28 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder
 		/**
 		 * Sets (draws) the version information (2x15 bits) into the modules of a QR code
 		 * @param [in,out] modules The modules where the version information will be written to, must be valid and of size `QRCode::modulesPerSide(version) * QRCode::modulesPerSide(version)`
-		 * @param version The version of the designated QR code, range: [1, 40], must match the size of `module`
+		 * @param version The version of the designated QR code, range: [MIN_VERSION, MAX_VERSION], must match the size of `module`
 		 * @param functionPatternMask The mask that is used to identify all function pattern in the QR code (and to not overwrite them), cf. `setFunctionPatterns()`
 		 * @sa setFunctionPatterns()
 		 */
 		static void setVersionInformation(std::vector<uint8_t>& modules, const unsigned int version, std::vector<uint8_t>& functionPatternMask);
+
+		/**
+		 * Returns the bit sequence identifying the encodation mode set (up to 4 bits long, cf. ISO/IEC 18004:2015, Table 2)
+		 * @return The bit sequence of the encodation mode used
+		 */
+		static inline unsigned int encodationModeIndicatorBitSequence(QRCode::EncodingMode mode);
+
+		/**
+		 * Returns the number of bits per character for a specific version and encodation mode, cf. ISO/IEC 18004:2015, Table 3
+		 * @param version Version number of a QR code, range: [MIN_VERSION, MAX_VERSION]
+		 * @param mode The encodation mode
+		 * @return The number of bits per character or `(unsigned int)(-1)` on failure
+		*/
+		static inline unsigned int getBitsInCharacterCountIndicator(unsigned int version, QRCode::EncodingMode mode);
 };
 
-inline QRCodeEncoder::Segment::Segment(const QRCode::EncodingMode mode, const unsigned int characters, BitBuffer& bitBuffer) :
-	encodationMode_(mode),
-	characters_(characters),
-	bitBuffer_(bitBuffer)
-{
-	// Nothing else to do.
-}
-
-inline QRCode::EncodingMode QRCodeEncoder::Segment::encodationMode() const
-{
-	return encodationMode_;
-}
-
-inline unsigned int QRCodeEncoder::Segment::characters() const
-{
-	return characters_;
-}
-
-inline const QRCodeEncoder::BitBuffer& QRCodeEncoder::Segment::bitBuffer() const
-{
-	return bitBuffer_;
-}
-
-inline unsigned int QRCodeEncoder::Segment::encodationModeIndicatorBitSequence(QRCode::EncodingMode mode)
+inline unsigned int QRCodeEncoder::encodationModeIndicatorBitSequence(QRCode::EncodingMode mode)
 {
 	static_assert(int(QRCode::EM_NUMERIC) == 0 && int(QRCode::EM_ALPHANUMERIC) == 1 && int(QRCode::EM_BYTE) == 2 && int(QRCode::EM_KANJI) == 3 && int(QRCode::EM_ECI) == 4 && int(QRCode::EM_STRUCTURED_APPEND) == 5 && int(QRCode::EM_FNC1), "Unexpected order of enums");
 	ocean_assert((unsigned int)mode < 7u);
@@ -507,10 +320,10 @@ inline unsigned int QRCodeEncoder::Segment::encodationModeIndicatorBitSequence(Q
 	return encodationModeBitSequences[(unsigned int)mode];
 }
 
-inline unsigned int QRCodeEncoder::Segment::getBitsInCharacterCountIndicator(unsigned int version, QRCode::EncodingMode mode)
+inline unsigned int QRCodeEncoder::getBitsInCharacterCountIndicator(unsigned int version, QRCode::EncodingMode mode)
 {
 	static_assert(int(QRCode::EM_NUMERIC) == 0 && int(QRCode::EM_ALPHANUMERIC) == 1 && int(QRCode::EM_BYTE) == 2 && int(QRCode::EM_KANJI) == 3 && int(QRCode::EM_ECI) == 4, "Unexpected order of enums");
-	ocean_assert(version >= 1u && version <= 40u);
+	ocean_assert(version >= MIN_VERSION && version <= MAX_VERSION);
 	ocean_assert((unsigned int)mode < 5u);
 
 	const unsigned int characterCountIndicators[15] =
@@ -533,66 +346,10 @@ inline unsigned int QRCodeEncoder::Segment::getBitsInCharacterCountIndicator(uns
 	return characterCountIndicators[(unsigned int)mode * 3u + column];
 }
 
-inline bool QRCodeEncoder::Segment::isNumericData(const std::string& data)
-{
-	for (size_t i = 0; i < data.size(); ++i)
-	{
-		if (std::isdigit((unsigned char)data[i]) == false)
-		{
-			return false;
-		}
-	}
-
-	return data.size() != 0;
-}
-
-inline bool QRCodeEncoder::Segment::isAlphanumericData(const std::string& data)
-{
-	if (data.empty())
-	{
-		return false;
-	}
-
-	const std::string& alphanumericCharset = getAlphanumericCharset();
-
-	for (const char character : data)
-	{
-		if (alphanumericCharset.find(character) == std::string::npos)
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
-
-inline const std::string& QRCodeEncoder::Segment::getAlphanumericCharset()
-{
-	const static std::string alphanumericCharset = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
-	ocean_assert(alphanumericCharset.size() == 45);
-
-	return alphanumericCharset;
-}
-
-inline void QRCodeEncoder::Segment::bitBufferAppend(const unsigned int value, size_t bits, BitBuffer& bitBuffer)
-{
-	ocean_assert(bits <= sizeof(unsigned int) * 8);
-
-	if (bits == 0u)
-	{
-		return;
-	}
-
-	for (size_t i = bits - 1; i < bits; --i)
-	{
-		bitBuffer.push_back((value >> i) & 1);
-	}
-}
-
 inline uint32_t QRCodeEncoder::encodeFormat(const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const MaskingPattern maskingPattern)
 {
 	ocean_assert(errorCorrectionCapacity >> 2u == 0u && maskingPattern >> 3u == 0u);
-	return encodeFormat(errorCorrectionCapacity << 3u | maskingPattern);
+	return encodeFormatBits(errorCorrectionCapacity << 3u | maskingPattern);
 }
 
 inline bool QRCodeEncoder::decodeFormatBits(const uint32_t formatBits, QRCode::ErrorCorrectionCapacity& errorCorrectionCapacity, MaskingPattern& maskingPattern)
@@ -605,7 +362,7 @@ inline bool QRCodeEncoder::decodeFormatBits(const uint32_t formatBits, QRCode::E
 
 	for (uint32_t referenceFormat = 0u; referenceFormat < 32u; ++referenceFormat)
 	{
-		const uint32_t referenceFormatBits = encodeFormat(referenceFormat);
+		const uint32_t referenceFormatBits = encodeFormatBits(referenceFormat);
 		const uint32_t distance = computeHammingWeight(formatBits ^ referenceFormatBits);
 
 		if (distance < minDistance)
@@ -629,7 +386,7 @@ inline bool QRCodeEncoder::decodeFormatBits(const uint32_t formatBits, QRCode::E
 
 	ocean_assert(minDistance != uint32_t(-1) && minDistanceFormat != uint32_t(-1));
 	ocean_assert(minDistanceFormat >> 5u == 0u);
-
+	
 	switch (minDistanceFormat >> 3u)
 	{
 		case 0b01u:
@@ -661,7 +418,7 @@ inline bool QRCodeEncoder::decodeFormatBits(const uint32_t formatBits, QRCode::E
 
 inline uint32_t QRCodeEncoder::encodeVersion(const uint32_t version)
 {
-	ocean_assert(version != 0u && version <= 40u);
+	ocean_assert(version >= MIN_VERSION && version <= MAX_VERSION);
 	ocean_assert(version >> 6u == 0u);
 
 	// Details in ISO/IEC 18004:2015, Annex D
@@ -685,7 +442,7 @@ inline bool QRCodeEncoder::decodeVersionBits(const uint32_t versionBits, uint32_
 	uint32_t minDistanceCounter = 0u;
 
 	// Note: QR codes version 1-6 do not have a bit field for their version information but mathematically it's valid to decode those sequences as well
-	for (uint32_t referenceVersion = 1u; referenceVersion <= 40u; ++referenceVersion)
+	for (uint32_t referenceVersion = MIN_VERSION; referenceVersion <= MAX_VERSION; ++referenceVersion)
 	{
 		const uint32_t referenceVersionBits = encodeVersion(referenceVersion);
 		const uint32_t distance = computeHammingWeight(versionBits ^ referenceVersionBits);
@@ -717,7 +474,7 @@ inline bool QRCodeEncoder::decodeVersionBits(const uint32_t versionBits, uint32_
 	return true;
 }
 
-inline uint32_t QRCodeEncoder::encodeFormat(const uint32_t format)
+inline uint32_t QRCodeEncoder::encodeFormatBits(const uint32_t format)
 {
 	ocean_assert(format >> 5u == 0u);
 
@@ -736,73 +493,9 @@ inline uint32_t QRCodeEncoder::encodeFormat(const uint32_t format)
 	return formatBitsMasked;
 }
 
-template <uint32_t tBlockLength, uint32_t tDataLength, uint32_t tGeneratorPolynomial>
-inline uint32_t QRCodeEncoder::computePolynomialDivisonRemainderBCH(const uint32_t data)
-{
-	static_assert(tBlockLength != 0u && tDataLength != 0u && tBlockLength > tDataLength, "The block length must be larger than the number of data bits and both must be nonzero.");
-	static_assert(tGeneratorPolynomial != 0u && tGeneratorPolynomial >> tBlockLength == 0u, "The generator polynomial cannot be zero and must fit into the block length");
-	ocean_assert(data >> tBlockLength == 0u);
-
-	// Example for a (15, 5) BCH code:
-	//
-	//  * block length: 15
-	//  * data length: 5
-	//  * generator polynomial = 10100110111 ~ G(x) = x^10 + x^8 + x^5 + x^4 + x^2 + x + 1
-	//  * data = 000111101011001, i.e. 00011|1101011001
-	//                                 data | error correction
-	//
-	// remainder0 = 000111101011001
-	//            ^ 10100110111     skip step - left-most bit of the remainder is zero
-	//            -----------------
-	// remainder1 = 000111101011001
-	//            ^  10100110111    skip step - left-most bit of the remainder is zero
-	//            -----------------
-	// remainder2 = 000111101011001
-	//            ^   10100110111   skip step - left-most bit of the remainder is zero
-	//            -----------------
-	// remainder3 = 000111101011001
-	//            ^    10100110111
-	//            -----------------
-	// remainder4 = 000010100110111
-	//            ^     10100110111
-	//            -----------------
-	// remainder  = 000000000000000
-
-	constexpr uint32_t errorCorrectionBits = tBlockLength - tDataLength;
-
-	uint32_t remainder = data;
-
-	for (uint32_t i = 0u; i < tDataLength; ++i)
-	{
-		ocean_assert(tDataLength >= i + 1u);
-		const uint32_t shift = tDataLength - i - 1u;
-
-		if (remainder & (1u << (shift + errorCorrectionBits)))
-		{
-			remainder ^= tGeneratorPolynomial << shift;
-		}
-	}
-
-	ocean_assert(tGeneratorPolynomial > remainder);
-	return remainder;
-}
-
-uint32_t QRCodeEncoder::computeHammingWeight(uint32_t value)
-{
-	uint32_t weight = 0u;
-
-	while (value > 0u)
-	{
-		value = value & (value - 1u);
-		weight += 1u;
-	}
-
-	return weight;
-}
-
 inline unsigned int QRCodeEncoder::totalNumberRawDataModules(const unsigned int version)
 {
-	ocean_assert(version != 0u && version <= 40u);
+	ocean_assert(version >= MIN_VERSION && version <= MAX_VERSION);
 
 	// TODO Improve documentation of this calculation
 
@@ -834,7 +527,7 @@ inline unsigned int QRCodeEncoder::totalNumberRawDataModules(const unsigned int 
 
 inline unsigned int QRCodeEncoder::totalNumberDataCodewords(const unsigned int version, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity)
 {
-	ocean_assert(version != 0u && version <= 40u);
+	ocean_assert(version >= MIN_VERSION && version <= MAX_VERSION);
 	ocean_assert(uint32_t(errorCorrectionCapacity) < 4u);
 
 	return (totalNumberRawDataModules(version) / 8u) - (ECC_CODEWORDS_PER_BLOCK[errorCorrectionCapacity][version] * NUM_ERROR_CORRECTION_BLOCKS[errorCorrectionCapacity][version]);
@@ -842,23 +535,25 @@ inline unsigned int QRCodeEncoder::totalNumberDataCodewords(const unsigned int v
 
 inline bool QRCodeEncoder::computeTotalBitsUsed(const Segments& segments, const unsigned int version, unsigned int& bitsUsed)
 {
-	ocean_assert(version != 0u && version <= 40u);
+	ocean_assert(version >= MIN_VERSION && version <= MAX_VERSION);
 
 	bitsUsed = 0u;
 
 	for (const Segment& segment : segments)
 	{
-		const unsigned int bitsPerCharacter = Segment::getBitsInCharacterCountIndicator(version, segment.encodationMode());
+		// ISO/IEC 18004:2015, Table 2
+		constexpr unsigned int modeIndicatorBits = 4u;
+		const unsigned int characterCountBits = getBitsInCharacterCountIndicator(version, segment.encodationMode());
 
 		// Make sure the segment fits into the field's bit width and the sum will not overflow.
-		if (segment.characters() >= (1u << bitsPerCharacter)
-			|| (4u + bitsPerCharacter) > (NumericT<unsigned int>::maxValue() - bitsUsed)
+		if (segment.characters() >= (1u << characterCountBits)
+			|| (modeIndicatorBits + characterCountBits) > (NumericT<unsigned int>::maxValue() - bitsUsed)
 			|| segment.bitBuffer().size() > (NumericT<unsigned int>::maxValue() - bitsUsed))
 		{
 			return false;
 		}
 
-		bitsUsed += 4u + bitsPerCharacter;
+		bitsUsed += modeIndicatorBits + characterCountBits;
 		bitsUsed += (unsigned int)segment.bitBuffer().size();
 	}
 
