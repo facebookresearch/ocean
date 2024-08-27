@@ -49,7 +49,6 @@ class OCEAN_MEDIA_IIO_EXPORT IIOObject
 
 		/**
 		 * Loads a frame from an image source.
-		 * The resulting frame can have one of the following pixel formats:<br>
 		 * @param imageSource The image source from which the frame will be loaded, must be valid
 		 * @param properties Optional resulting properties which are encoded in the image; nullptr if not of interest
 		 * @return The resulting frame
@@ -58,7 +57,6 @@ class OCEAN_MEDIA_IIO_EXPORT IIOObject
 
 		/**
 		 * Loads a frame from an image source.
-		 * The resulting frame can have one of the following pixel formats:<br>
 		 * @param image The image from which the frame will be loaded, must be valid
 		 * @param containedPremultipliedAlpha Optional resulting statement whether the input image contained premultiplied alpha (not the resulting frame), nullptr if not of interest
 		 * @param convertPremultipliedAlpha True, to convert the resulting frame to a non-premultiplied alpha frame (in case the input contained premultiplied alpha); False, to keep the frame as it is
