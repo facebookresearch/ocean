@@ -354,7 +354,7 @@ void FinderPatternDetector::detectFinderPatternInRow(const uint8_t* const yFrame
 						ocean_assert(Numeric::isNotEqualEps(orientation.length()));
 						ocean_assert(Numeric::isNotEqualEps(moduleSize));
 
-						finderPatterns.emplace_back(location, Scalar(diameter), centerIntensity, grayThreshold, symmetryScore, corners, orientation, moduleSize);
+						finderPatterns.emplace_back(location, moduleSize * Scalar(7), centerIntensity, grayThreshold, symmetryScore, corners, orientation, moduleSize);
 					}
 				}
 			}
@@ -877,7 +877,7 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 	ocean_assert(sumCenterToMidPoints.length() > Scalar(0));
 	const Scalar moduleSize = sumCenterToMidPoints.length() / Scalar(14); // 1/14 = 1/4 * 2/7, i.e. average and no. modules from center to the mid-points
 
-	finderPattern = FinderPattern(center, finderPattern.length(), finderPattern.centerIntensity(), finderPattern.grayThreshold(), finderPattern.symmetryScore(), refinedCorners, orientation, moduleSize);
+	finderPattern = FinderPattern(center, moduleSize * Scalar(7), finderPattern.centerIntensity(), finderPattern.grayThreshold(), finderPattern.symmetryScore(), refinedCorners, orientation, moduleSize);
 
 	return true;
 }

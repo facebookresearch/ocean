@@ -327,7 +327,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		 * @param corners The resulting four corners of the finder pattern that will be determined, must be valid, in counter-clockwise order, and must have size of at least 4 elements
 		 * @param orientation The resulting main orientation of the finder pattern that will be determined
 		 * @param moduleSize The resulting size of the modules in this finder pattern candidate
-		 * @param edgePointDistanceTolerance The factor that defines the maximum deviation from the distance between the center and the edge point closest to the center, range: [0, 1]
+		 * @param edgePointDistanceTolerance The factor that defines the maximum deviation from the distance between the center and the edge point closest to the center, range: [0, infinity)
 		 * @param maxEdgeLineDistance The maximum distance (in pixel) that new edge points may have in order to be accepted as "on the edge line", range: [0, infinity)
 		 * @return True on success, otherwise false
 		 */
