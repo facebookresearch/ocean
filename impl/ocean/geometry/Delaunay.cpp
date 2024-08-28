@@ -119,7 +119,7 @@ Delaunay::IndexTriangles Delaunay::triangulation(const Vectors2& points)
 
 			if (iEdge->second == 1u)
 			{
-				workingTriangles.push_back(CircumCricleIndexTriangle(sortedIndex, iEdge->first.firstIndex(), iEdge->first.secondIndex(), points.data(), points.size(), pointsSuperTriangle));
+				workingTriangles.emplace_back(sortedIndex, iEdge->first.firstIndex(), iEdge->first.secondIndex(), points.data(), points.size(), pointsSuperTriangle);
 			}
 		}
 	}
