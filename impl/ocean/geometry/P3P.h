@@ -29,32 +29,6 @@ class OCEAN_GEOMETRY_EXPORT P3P : public PerspectivePose
 	public:
 
 		/**
-		 * Deprecated.
-		 *
-		 * Calculates the possible camera poses for three correspondences between 3D object points and 2D image points.
-		 * The 3D object points as well as the resulting camera poses are defined in relation to a common world coordinate system.<br>
-		 * Each pose is defined using a default camera pointing into the negative z-space of the coordinate system, with x-axis to the right of the camera frame, and y-axis pointing upwards (this coordinate system is often used in Computer Graphics).<br>
-		 * The resulting poses can be transformed to an inverted flipped coordinate system e.g., by using PinholeCamera::standard2InvertedFlipped().<br>
-		 * An inverted and flipped pose is pointing into the positive z-space of the coordinate system, with x-axis to the right of the camera frame, and y-axis pointing downwards (this coordinate system is often used in Computer Vision).<br>
-		 * The provided image points should be defined in the domain of a normal image (with origin in the upper left corner, x pointing to the right, y pointing downwards).<br>
-		 * The resulting pose is based on the following equation:
-		 * <pre>
-		 * imagePoint = K * PinholeCamera::standard2InvertedFlipped(cameraPoses_world_T_camera[n]) * objectPoint
-		 * imagePoint = K * rotate_around_x(cameraPoses_world_T_camera[n], PI)^-1 * objectPoint
-		 * </pre>
-		 * The p3p can result in at most four different poses due to the under-determined system of equations.<br>
-		 * The image points should be undistorted to improve the pose quality.
-		 * @param pinholeCamera The pinhole camera profile defining the projection, must be valid
-		 * @param objectPoints Three 3D objects points each corresponding to a different 2D image point, the points must not be collinear
-		 * @param imagePoints Three 2D image points each corresponding to a different 3D object point
-		 * @param world_T_cameras The resulting transformation matrices receiving the different poses, the buffer must be large enough to store up to four resulting poses
-		 * @param minimalCollinearSqrDistance The minimal collinear square distance between all three points so that the given image points will be accepted, with range [0, infinity)
-		 * @return Resulting number of different poses, with range [0, 4]
-		 * @see PinholeCamera::standard2InvertedFlipped(), PinholeCamera::invertedFlipped2Standard(), PinholeCamera::undistort().
-		 */
-		static unsigned int poses(const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const Vector2* imagePoints, HomogenousMatrix4* world_T_cameras, const Scalar minimalCollinearSqrDistance = Scalar(1 * 1));
-
-		/**
 		 * Calculates the possible camera poses for three correspondences between 3D object points and 2D image points.
 		 * The 3D object points as well as the resulting camera poses are defined in relation to a common world coordinate system.<br>
 		 * Each pose is defined using a default camera pointing into the negative z-space of the coordinate system, with x-axis to the right of the camera frame, and y-axis pointing upwards (this coordinate system is often used in Computer Graphics).<br>
@@ -96,7 +70,7 @@ class OCEAN_GEOMETRY_EXPORT P3P : public PerspectivePose
 		 * Constructs the closest point on the line between two object points and the camera's projection center.
 		 * @param objectPoint0 First object point intersecting the line
 		 * @param objectPoint1 Second object point intersecting the line
-		 * @param objectDistance01 Distance bettween first and second object point
+		 * @param objectDistance01 Distance between first and second object point
 		 * @param objectDistanceToCP0 Distance between first object point and the camera's projection center
 		 * @param objectDistanceToCP1 Distance between second object point and the camera's projection center
 		 * @return Resulting closest point

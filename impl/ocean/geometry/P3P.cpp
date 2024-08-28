@@ -17,66 +17,6 @@ namespace Ocean
 namespace Geometry
 {
 
-unsigned int P3P::poses(const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const Vector2* imagePoints, HomogenousMatrix4* world_T_cameras, const Scalar minimalCollinearSqrDistance)
-{
-	/// p3p algorithm from original RANSAC paper
-
-	ocean_assert(objectPoints != nullptr && imagePoints != nullptr && world_T_cameras != nullptr);
-
-	if (imagePoints[0] == imagePoints[1] || imagePoints[0] == imagePoints[2] || imagePoints[1] == imagePoints[2])
-	{
-		return 0u;
-	}
-
-	// we ensure that the points are not co-linear
-	if (Line2(imagePoints[0], (imagePoints[1] - imagePoints[0]).normalized()).sqrDistance(imagePoints[2]) <= minimalCollinearSqrDistance
-		|| Line2(imagePoints[0], (imagePoints[2] - imagePoints[0]).normalized()).sqrDistance(imagePoints[1]) <= minimalCollinearSqrDistance
-		|| Line2(imagePoints[1], (imagePoints[2] - imagePoints[1]).normalized()).sqrDistance(imagePoints[0]) <= minimalCollinearSqrDistance)
-	{
-		return 0u;
-	}
-
-	const Vector3 imageRays[3] =
-	{
-		pinholeCamera.vector(imagePoints[0]),
-		pinholeCamera.vector(imagePoints[1]),
-		pinholeCamera.vector(imagePoints[2])
-	};
-
-	const unsigned int resultNumberPoses = poses(objectPoints, imageRays, world_T_cameras);
-
-#ifdef OCEAN_INTENSIVE_DEBUG
-	if (std::is_same<Scalar, double>::value)
-	{
-		const Scalar debugEpsilon = Scalar(5 * 5);
-
-		const Scalar cos_ab = pinholeCamera.calculateCosBetween(imagePoints[0], imagePoints[1]);
-		const Scalar cos_ac = pinholeCamera.calculateCosBetween(imagePoints[0], imagePoints[2]);
-		const Scalar cos_bc = pinholeCamera.calculateCosBetween(imagePoints[1], imagePoints[2]);
-
-		const Scalar debugAngle01 = Numeric::rad2deg(Numeric::acos(cos_ab));
-		const Scalar debugAngle02 = Numeric::rad2deg(Numeric::acos(cos_ac));
-		const Scalar debugAngle12 = Numeric::rad2deg(Numeric::acos(cos_bc));
-
-		for (unsigned int n = 0u; n < resultNumberPoses; ++n)
-		{
-			const HomogenousMatrix4& world_T_camera = world_T_cameras[n];
-
-			const Scalar sqrDistance0 = pinholeCamera.projectToImage<true>(world_T_camera, objectPoints[0], false).sqrDistance(imagePoints[0]);
-			const Scalar sqrDistance1 = pinholeCamera.projectToImage<true>(world_T_camera, objectPoints[1], false).sqrDistance(imagePoints[1]);
-			const Scalar sqrDistance2 = pinholeCamera.projectToImage<true>(world_T_camera, objectPoints[2], false).sqrDistance(imagePoints[2]);
-
-			if (debugAngle01 > Scalar(5) && debugAngle12 > Scalar(5) && debugAngle02 > Scalar(5))
-			{
-				ocean_assert(sqrDistance0 <= debugEpsilon && sqrDistance1 <= debugEpsilon && sqrDistance2 <= debugEpsilon);
-			}
-		}
-	}
-#endif
-
-	return resultNumberPoses;
-}
-
 template <typename TCamera, typename TPoint>
 unsigned int P3P::poses(const AnyCameraT<TCamera>& anyCamera, const VectorT3<TPoint>* objectPoints, const VectorT2<TPoint>* imagePoints, HomogenousMatrixT4<TPoint>* world_T_cameras)
 {

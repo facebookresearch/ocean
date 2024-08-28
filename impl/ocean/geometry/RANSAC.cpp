@@ -2287,7 +2287,9 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 	ocean_assert(objectPoints.size() == imagePoints.size());
 
 	if (objectPoints.size() < 4 || objectPoints.size() != imagePoints.size())
+	{
 		return false;
+	}
 
 	const unsigned int correspondences = (unsigned int)objectPoints.size();
 
@@ -2304,8 +2306,12 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 
 	PinholeCamera initialZoomedCamera(pinholeCamera);
 
-	if (initialZoom && *initialZoom > Numeric::eps())
+	if (initialZoom != nullptr && *initialZoom > Numeric::eps())
+	{
 		initialZoomedCamera.applyZoomFactor(*initialZoom);
+	}
+
+	const AnyCameraPinhole initialAnyCamera(initialZoomedCamera);
 
 	Scalar bestSqrErrors = Numeric::maxValue();
 
@@ -2328,7 +2334,7 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 		permutationImagePoints[1] = useDistortionParameters ? initialZoomedCamera.undistort<true>(imagePoints[index1]) : imagePoints[index1];
 		permutationImagePoints[2] = useDistortionParameters ? initialZoomedCamera.undistort<true>(imagePoints[index2]) : imagePoints[index2];
 
-		const unsigned int numberPoses = P3P::poses(initialZoomedCamera, permutationObjectPoints, permutationImagePoints, poses);
+		const unsigned int numberPoses = P3P::poses(initialAnyCamera, permutationObjectPoints, permutationImagePoints, poses);
 		ocean_assert(numberPoses <= 4u);
 
 		// test which of the (at most four) poses is valid for most remaining point correspondences
