@@ -18,10 +18,10 @@
 #define OCEAN_VERSION_MINOR 0
 
 /// The patch version number of Ocean.
-#define OCEAN_VERSION_PATCH 0
+#define OCEAN_VERSION_PATCH 1
 
 /// Indicates whether this is a development or a release version.
-#define OCEAN_VERSION_IS_DEVELEOPMENT_BRANCH 1
+#define OCEAN_VERSION_IS_DEVELEOPMENT_BRANCH 0
 
 /// Combines the major, minor, patch, and development branch version numbers into a single version number.
 #define OCEAN_VERSIONIZE(major, minor, patch, isDevelopmentBranch) (major * 1000000 + minor * 1000 + patch) * 2 + (isDevelopmentBranch != 0 ? 1 : 0)
