@@ -43,12 +43,6 @@ bool TestP3P::test(const double testDuration)
 
 	bool allSucceeded = true;
 
-	allSucceeded = testP3PWithPointsPinholeCamera(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 	allSucceeded = testP3PWithPoints<float>(testDuration) && allSucceeded;
 	Log::info() << " ";
 	allSucceeded = testP3PWithPoints<double>(testDuration) && allSucceeded;
@@ -92,12 +86,6 @@ bool TestP3P::test(const double testDuration)
 }
 
 #ifdef OCEAN_USE_GTEST
-
-TEST(TestP3P, P3PWithPointsPinholeCamera)
-{
-	EXPECT_TRUE(TestP3P::testP3PWithPointsPinholeCamera(GTEST_TEST_DURATION));
-}
-
 
 TEST(TestP3P, P3PWithPoints_float)
 {
@@ -143,166 +131,6 @@ TEST(TestP3P, P3PWithRaysStressTest_double)
 }
 
 #endif // OCEAN_USE_GTEST
-
-bool TestP3P::testP3PWithPointsPinholeCamera(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Testing P3P for 2D image points and pinhole camera:";
-
-	bool allSucceeded = true;
-
-	Vectors3 objectPoints(3);
-	Vectors2 undistortedImagePoints(3);
-	Vectors2 distortedImagePoints(3);
-
-	HighPerformanceStatistic performance;
-
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
-
-	const Timestamp startTimestamp(true);
-	do
-	{
-		// first, we create a random camera profile
-
-		const Scalar aspectRatio = Random::scalar(Scalar(4.0 / 3.0), Scalar(16.0 / 9.0));
-		ocean_assert(aspectRatio > Numeric::eps());
-
-		const unsigned int width = RandomI::random(640u, 1920u);
-		const unsigned int height = (unsigned int)(Scalar(width) / aspectRatio + Scalar(0.5));
-
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(35), Numeric::deg2rad(75));
-
-		const Scalar focalLength = PinholeCamera::fieldOfViewToFocalLength(width, fovX);
-
-		PinholeCamera::DistortionPair radialDistortion = {Random::scalar(Scalar(-0.05), Scalar(0.05)), Random::scalar(Scalar(-0.05), Scalar(0.05))};
-		PinholeCamera::DistortionPair tangentialDistortion = {Random::scalar(Scalar(-0.001), Scalar(0.001)), Random::scalar(Scalar(-0.001), Scalar(0.001))};
-
-		const Scalar principalPointX = Scalar(width) * Random::scalar(Scalar(0.4), Scalar(0.6));
-		const Scalar principalPointY = Scalar(height) * Random::scalar(Scalar(0.4), Scalar(0.6));
-
-		const PinholeCamera pinholeCamera(width, height, focalLength, focalLength, principalPointX, principalPointY, radialDistortion, tangentialDistortion);
-
-		// determine random points inside a small 3D area
-
-		objectPoints[0] = Vector3(Random::scalar(-1, 1), Random::scalar(Scalar(-0.1), Scalar(0.1)), Random::scalar(-1, 1));
-		objectPoints[1] = Vector3(Random::scalar(-1, 1), Random::scalar(Scalar(-0.1), Scalar(0.1)), Random::scalar(-1, 1));
-
-		while (objectPoints[0].distance(objectPoints[1]) < Scalar(0.01))
-		{
-			objectPoints[1] = Vector3(Random::scalar(-1, 1), Random::scalar(Scalar(-0.1), Scalar(0.1)), Random::scalar(-1, 1));
-		}
-
-		objectPoints[2] = Vector3(Random::scalar(-1, 1), Random::scalar(Scalar(-0.1), Scalar(0.1)), Random::scalar(-1, 1));
-
-		while (Line3(objectPoints[0], (objectPoints[1] - objectPoints[0]).normalized()).distance(objectPoints[2]) < Scalar(0.01))
-		{
-			objectPoints[2] = Vector3(Random::scalar(-1, 1), Random::scalar(Scalar(-0.1), Scalar(0.1)), Random::scalar(-1, 1));
-		}
-
-		const Euler euler(Random::euler(Numeric::deg2rad(0), Numeric::deg2rad(30)));
-		const Quaternion quaternion(euler);
-
-		const HomogenousMatrix4 perfectPose(Utilities::viewPosition(pinholeCamera, objectPoints, quaternion * Vector3(0, -1, 0)));
-
-		// determine the perfectly projected image points
-
-		pinholeCamera.projectToImage<true>(perfectPose, objectPoints.data(), 3, false, undistortedImagePoints.data());
-		pinholeCamera.projectToImage<true>(perfectPose, objectPoints.data(), 3, true, distortedImagePoints.data());
-
-		bool imagePointsColinear = false;
-		for (unsigned int n = 0u; n < 3u; ++n)
-		{
-			ocean_assert(pinholeCamera.isInside(undistortedImagePoints[n]));
-			ocean_assert(pinholeCamera.isInside(distortedImagePoints[n]));
-
-			const unsigned int n1 = (n + 1u) % 3u;
-			const unsigned int n2 = (n + 2u) % 3u;
-
-			const Line2 line(undistortedImagePoints[n], (undistortedImagePoints[n1] - undistortedImagePoints[n]).normalized());
-
-			if (line.distance(undistortedImagePoints[n2]) < 5)
-			{
-				imagePointsColinear = true;
-			}
-		}
-
-		if (imagePointsColinear)
-			continue;
-
-		HomogenousMatrix4 poses[4];
-
-		performance.start();
-		const unsigned int numberPoses = Geometry::P3P::poses(pinholeCamera, objectPoints.data(), undistortedImagePoints.data(), poses);
-
-		if (numberPoses != 0u)
-		{
-			performance.stop();
-
-			bool localProjectionAccurate = true;
-			bool localPoseAccurate = std::is_same<Scalar, float>::value ? true : false; // we apply the test for 64 bit floating point values only
-
-			for (unsigned int n = 0u; n < numberPoses; ++n)
-			{
-				Scalar maximalError = 0;
-				for (unsigned int i = 0u; i < 3u; ++i)
-				{
-					maximalError = max(maximalError, distortedImagePoints[i].distance(pinholeCamera.projectToImage<true>(poses[n], objectPoints[i], pinholeCamera.hasDistortionParameters())));
-				}
-
-				const Scalar pixelErrorThreshold = std::is_same<Scalar, double>::value ? Scalar(0.9) : Scalar(5);
-
-				if (maximalError >= pixelErrorThreshold)
-				{
-					localProjectionAccurate = false;
-				}
-
-				if (std::is_same<Scalar, double>::value)
-				{
-					const Scalar translationError = perfectPose.translation().distance(poses[n].translation());
-					const Euler rotationError(perfectPose * poses[n].inverted());
-
-					const Scalar absYawDeg = Numeric::rad2deg(Numeric::abs(rotationError.yaw()));
-					const Scalar absPitchDeg = Numeric::rad2deg(Numeric::abs(rotationError.pitch()));
-					const Scalar absRollDeg = Numeric::rad2deg(Numeric::abs(rotationError.roll()));
-
-					if (translationError < Scalar(0.005) && absYawDeg < Scalar(0.01) && absPitchDeg < Scalar(0.01) && absRollDeg < Scalar(0.01))
-					{
-						localPoseAccurate = true;
-					}
-				}
-			}
-
-			if (localProjectionAccurate && localPoseAccurate)
-			{
-				++validIterations;
-			}
-		}
-		else
-		{
-			performance.skip();
-		}
-
-		++iterations;
-	}
-	while (iterations == 0u || startTimestamp + testDuration > Timestamp(true));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
-
-	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 4u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 4u) << "ms, average: " << String::toAString(performance.averageMseconds(), 4u) << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	const double threshold = std::is_same<Scalar, float>::value ? 0.75 : 0.95;
-
-	if (percent < threshold)
-	{
-		allSucceeded = false;
-	}
-
-	return allSucceeded;
-}
 
 template <typename T>
 bool TestP3P::testP3PWithPoints(const double testDuration)

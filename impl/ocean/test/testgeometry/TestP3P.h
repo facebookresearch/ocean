@@ -39,15 +39,6 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestP3P
 		static bool test(const double testDuration);
 
 		/**
-		 * Deprecated.
-		 *
-		 * Tests the perspective pose problem for three image points and a pinhole camera.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		static bool testP3PWithPointsPinholeCamera(const double testDuration);
-
-		/**
 		 * Tests the perspective pose problem for three image points and any camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
