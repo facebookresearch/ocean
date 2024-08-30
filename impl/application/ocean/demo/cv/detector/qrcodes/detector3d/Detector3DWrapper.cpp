@@ -461,8 +461,6 @@ bool Detector3DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 		// Draw the current code
 		const HomogenousMatrix4 world_T_camera = world_T_device * device_T_cameras[i];
 
-		// TODO Draw a coordinate system as well, cf. Utilities::paintCoordinateSystemIF() in xplat/compphoto/ocean/impl/h/ocean/tracking/Utilities.h
-
 		for (size_t j = 0; j < codes.size(); ++j)
 		{
 			const CV::Detector::QRCodes::QRCode& code = codes[j];
