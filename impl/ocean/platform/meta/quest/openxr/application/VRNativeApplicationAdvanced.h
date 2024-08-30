@@ -229,6 +229,9 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRNativeApplicationAdv
 
 		/// The lock for the 3D model filename queue.
 		Lock modelFilenameQueueLock_;
+
+		/// The timestamp when the scene description was updated the last time.
+		Timestamp sceneDescriptionUpdateTimestamp_;
 };
 
 #ifdef OCEAN_PLATFORM_QUEST_OPENXR_APPLICATION_USE_EXTERNAL_RESOURCES

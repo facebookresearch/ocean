@@ -357,12 +357,26 @@ void VRNativeApplicationAdvanced::onPreRender(const XrTime& xrPredictedDisplayTi
 		}
 	}
 
-	SceneDescription::Manager::get().preUpdate(framebuffer_->view(), predictedDisplayTime);
-	SceneDescription::Manager::get().update(framebuffer_->view(), predictedDisplayTime);
+	// in case a frame is skipped in the headset (e.g., because the headset is stalling/busy), we may get a predicted display time which is younger than the previous one, we don't update the scene description in this case
+
+	if (predictedDisplayTime > sceneDescriptionUpdateTimestamp_)
+	{
+		SceneDescription::Manager::get().preUpdate(framebuffer_->view(), predictedDisplayTime);
+		SceneDescription::Manager::get().update(framebuffer_->view(), predictedDisplayTime);
+	}
 
 	handleModelRemoveQueue();
 
-	handleModelLoadQueue(predictedDisplayTime);
+	if (predictedDisplayTime > sceneDescriptionUpdateTimestamp_)
+	{
+		handleModelLoadQueue(predictedDisplayTime);
+
+		sceneDescriptionUpdateTimestamp_ = predictedDisplayTime;
+	}
+	else
+	{
+		Log::debug() << "OpenXR predicted display timestamp older then previous prediction " << double(predictedDisplayTime) << " vs. " << double(sceneDescriptionUpdateTimestamp_);
+	}
 }
 
 void VRNativeApplicationAdvanced::onModelLoaded(const std::string& /*modelFilename*/, const Rendering::SceneRef& /*scene*/)
