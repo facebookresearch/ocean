@@ -258,7 +258,7 @@ bool TransitionDetector::determineSubPixelLocation(const uint8_t* yFrame, const 
 	return true;
 }
 
-Vector2 TransitionDetector::computeTransitionPointSubpixelAccuracy(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const VectorT2<unsigned int>& lastPointInside, const VectorT2<unsigned int>& firstPointOutside, const unsigned int grayTreshold)
+Vector2 TransitionDetector::computeTransitionPointSubpixelAccuracy(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const VectorT2<unsigned int>& lastPointInside, const VectorT2<unsigned int>& firstPointOutside, const unsigned int grayThreshold)
 {
 	ocean_assert_and_suppress_unused(yFrame != nullptr && width != 0u && height != 0u, height);
 	ocean_assert(std::abs(int(lastPointInside.x()) - int(firstPointOutside.x())) <= 1 || std::abs(int(lastPointInside.y()) - int(firstPointOutside.y())) <= 1);
@@ -269,9 +269,9 @@ Vector2 TransitionDetector::computeTransitionPointSubpixelAccuracy(const uint8_t
 
 	const Scalar lastPointInsideValue = Scalar(yFrame[(unsigned int)lastPointInside.y() * frameStrideElements + (unsigned int)lastPointInside.x()]);
 	const Scalar firstPointOutsideValue = Scalar(yFrame[(unsigned int)firstPointOutside.y() * frameStrideElements + (unsigned int)firstPointOutside.x()]);
-	ocean_assert(lastPointInsideValue < Scalar(grayTreshold) && firstPointOutsideValue >= Scalar(grayTreshold));
+	ocean_assert(lastPointInsideValue < Scalar(grayThreshold) && firstPointOutsideValue >= Scalar(grayThreshold));
 
-	const Vector2 transitionPoint(Vector2(firstPointOutside) + (Vector2(lastPointInside) - Vector2(firstPointOutside)) * ((firstPointOutsideValue - Scalar(grayTreshold)) / (firstPointOutsideValue - lastPointInsideValue)));
+	const Vector2 transitionPoint(Vector2(firstPointOutside) + (Vector2(lastPointInside) - Vector2(firstPointOutside)) * ((firstPointOutsideValue - Scalar(grayThreshold)) / (firstPointOutsideValue - lastPointInsideValue)));
 	ocean_assert(transitionPoint.x() >= 0 && transitionPoint.x() < Scalar(width) && transitionPoint.y() >= 0 && transitionPoint.y() < Scalar(height));
 
 	return transitionPoint;

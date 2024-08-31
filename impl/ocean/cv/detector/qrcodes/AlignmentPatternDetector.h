@@ -115,10 +115,10 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT AlignmentPatternDetector
 		 * @param offsetX The offset in x-direction that will be added to the location of detected alignment patterns, range: [0, infinity)
 		 * @param offsetY The offset in y-direction that will be added to the location of detected alignment patterns, range: [0, infinity)
 		 * @param isNormalReflectance Indicates whether alignment patterns with normal or inverted reflectance are searched
-		 * @param grayThreshold The gray value that has been determined as the separation between foreground and background modules (cf. `FinderPattern::grayThreshold()`)
+		 * @param grayThreshold The gray value that has been determined as the separation between foreground and background modules (cf. `FinderPattern::grayThreshold()`), range: [0, 255]
 		 * @param alignmentPatterns The resulting list of alignment patterns that have been found in the selected row
 		 */
-		static void detectAlignmentPatternsInRow(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const unsigned int row, const unsigned int offsetX, const unsigned int offsetY, const bool isNormalReflectance, const unsigned int grayThreshold, AlignmentPatterns& alignmentPatterns);
+		static void detectAlignmentPatternsInRow(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int paddingElements, const unsigned int row, const unsigned int xOffset, const unsigned int yOffset, const bool isNormalReflectance, const unsigned int grayThreshold, AlignmentPatterns& alignmentPatterns);
 
 		/**
 		 * Performs a circular check around a candidate location to confirm a detection in a row

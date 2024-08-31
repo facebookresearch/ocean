@@ -75,6 +75,7 @@ void AlignmentPatternDetector::detectAlignmentPatternsInRow(const uint8_t* yFram
 {
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(width != 0u);
+	ocean_assert(grayThreshold <= 255);
 
 	const unsigned int strideElements = width + paddingElements;
 	const uint8_t* const yRow = yFrame + strideElements * row;
@@ -161,26 +162,33 @@ void AlignmentPatternDetector::detectAlignmentPatternsInRow(const uint8_t* yFram
 		if (lengths[1] >= minLength && lengths[1] <= maxLength &&
 			lengths[2] >= minLength && lengths[2] <= maxLength)
 		{
-			const unsigned int xCenter = (xStarts[1] + xStarts[2] + 1u) / 2u;
+			Scalar xTransitionPointLeft;
+			Scalar xTransitionPointRight;
 
-			const unsigned int diameter = lengths[0] + lengths[1] + lengths[2];
-			const unsigned int diameter3_4 = (diameter * 3u + 2u) / 4u;
-
-			if (xCenter >= diameter3_4 && xCenter + diameter3_4 < width &&
-				row >= diameter3_4 && row + diameter3_4 < height)
+			if (TransitionDetector::computeHorizontalTransitionPointSubpixelAccuracy(yRow, width, xStarts[1] - 1u, grayThreshold, xTransitionPointLeft)
+			    && TransitionDetector::computeHorizontalTransitionPointSubpixelAccuracy(yRow, width, xStarts[2] - 1u, grayThreshold, xTransitionPointRight))
 			{
-				// Increase min-max-range in order to account for Pythagoras
-				const unsigned int minCircularLength = minLength / 2u;
-				const unsigned int maxCircularLength = maxLength * 2u;
+				const unsigned int xCenter = (unsigned int)Numeric::round32((xTransitionPointLeft + xTransitionPointRight) / 2);
 
-				if (checkInCircle(yFrame, width, height, paddingElements, xCenter, row, minCircularLength, maxCircularLength, isNormalReflectance, grayThreshold))
+				const unsigned int diameter = lengths[0] + lengths[1] + lengths[2];
+				const unsigned int diameter3_4 = (diameter * 3u + 2u) / 4u;
+
+				if (xCenter >= diameter3_4 && xCenter + diameter3_4 < width &&
+					row >= diameter3_4 && row + diameter3_4 < height)
 				{
-					Vector2 location;
+					// Increase min-max-range in order to account for Pythagoras
+					const unsigned int minCircularLength = minLength / 2u;
+					const unsigned int maxCircularLength = maxLength * 2u;
 
-					if (TransitionDetector::determineSubPixelLocation(yFrame, width, height, paddingElements, xCenter, row, isNormalReflectance, grayThreshold, location))
+					if (checkInCircle(yFrame, width, height, paddingElements, xCenter, row, minCircularLength, maxCircularLength, isNormalReflectance, grayThreshold))
 					{
-						const unsigned int averageSegmentSize = ((lengths[0] + lengths[1] + lengths[2]) * 2u + 3u) / 6u;
-						alignmentPatterns.emplace_back(location + Vector2(Scalar(xOffset), Scalar(yOffset)), averageSegmentSize);
+						Vector2 location;
+
+						if (TransitionDetector::determineSubPixelLocation(yFrame, width, height, paddingElements, xCenter, row, isNormalReflectance, grayThreshold, location))
+						{
+							const unsigned int averageSegmentSize = ((lengths[0] + lengths[1] + lengths[2]) * 2u + 3u) / 6u;
+							alignmentPatterns.emplace_back(location + Vector2(Scalar(xOffset), Scalar(yOffset)), averageSegmentSize);
+						}
 					}
 				}
 			}

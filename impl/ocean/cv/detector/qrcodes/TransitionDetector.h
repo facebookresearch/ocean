@@ -39,7 +39,6 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT TransitionDetector
 		 */
 		typedef bool (*FindNextPixelFunc)(const uint8_t* const, const unsigned int, const unsigned int, const unsigned int, const unsigned int, const unsigned int, CV::Bresenham&, const unsigned int, const unsigned int, unsigned int&, unsigned int&, VectorT2<unsigned int>&, VectorT2<unsigned int>&);
 
-
 		/**
 		 * Function pointer for pixel comparison functions
 		 * @sa TransitionDetector::isLessOrEqual(), TransitionDetector::isGreater()
@@ -122,10 +121,10 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT TransitionDetector
 		 * @param yFramePaddingElements Number of padding elements of this frame, range: [0, infinity)
 		 * @param pointInside The point before the intensity transition, range: x,y in [0, infinity)
 		 * @param pointOutside The point after the intensity transition, range: x,y in [0, infinity)
-		 * @param grayTreshold The threshold that is used to compute the location of the transition with sub-pixel accuracy
-		 * @return True if the transition point was computed successfully, otherwise false
+		 * @param grayThreshold The threshold that is used to compute the location of the transition with sub-pixel accuracy
+		 * @return The transition point
 		 */
-		static Vector2 computeTransitionPointSubpixelAccuracy(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const VectorT2<unsigned int>& pointInside, const VectorT2<unsigned int>& pointOutside, const unsigned int grayTreshold);
+		static Vector2 computeTransitionPointSubpixelAccuracy(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const VectorT2<unsigned int>& pointInside, const VectorT2<unsigned int>& pointOutside, const unsigned int grayThreshold);
 
 		/**
 		 * Returns true if the pixel is less or equal to a threshold
@@ -140,6 +139,17 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT TransitionDetector
 		 * @param threshold The threshold that is used for the comparison, range: [0, 256)
 		 */
 		static inline bool isGreater(const uint8_t* yFramePixel, unsigned int threshold);
+
+		/**
+		 * Determines whether a transition occurred between pixel values of two neighboring pixels in a row and, if so, calculates the sub-pixel horizontal position of transition point
+		 * @param yRow Pointer to a row in a grayscale image `width` pixels wide, must be valid
+		 * @param width The width of the input frame, range: [1, infinity)
+		 * @param xPointLeft Horizontal position of the left pixel, range: [0, width - 2]
+		 * @param grayThreshold Threshold value that is used to check whether a transition occurred between the two neighboring pixels
+		 * @param xTransitionPoint Resulting sub-pixel horizontal position of the transition point
+		 * @return True if transition across `grayThreshold` exists between left and right pixel, otherwise false
+		 */
+		static inline bool computeHorizontalTransitionPointSubpixelAccuracy(const std::uint8_t* yRow, const unsigned int width, const unsigned int xPointLeft, const std::uint8_t grayThreshold, Scalar& xTransitionPoint);
 };
 
 inline bool TransitionDetector::isLessOrEqual(const uint8_t* yFramePixel, unsigned int threshold)
@@ -156,6 +166,24 @@ inline bool TransitionDetector::isGreater(const uint8_t* yFramePixel, unsigned i
 	ocean_assert(threshold < 256u);
 
 	return *yFramePixel > threshold;
+}
+
+inline bool TransitionDetector::computeHorizontalTransitionPointSubpixelAccuracy(const std::uint8_t* yRow, const unsigned int width, const unsigned int xPointLeft, const std::uint8_t grayThreshold, Scalar& xTransitionPoint)
+{
+	ocean_assert(yRow != nullptr);
+	ocean_assert_and_suppress_unused(xPointLeft <= width - 2u, width);
+
+	const std::uint8_t leftPixelValue = yRow[xPointLeft];
+	const std::uint8_t rightPixelValue = yRow[xPointLeft + 1u];
+
+	if (leftPixelValue <= grayThreshold == rightPixelValue <= grayThreshold)
+	{
+		return false;
+	}
+
+	xTransitionPoint = xPointLeft + Scalar((int)leftPixelValue - (int)grayThreshold) / ((int)leftPixelValue - (int)rightPixelValue);
+
+	return true;
 }
 
 } // namespace QRCodes
