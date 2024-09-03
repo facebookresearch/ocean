@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\AlignmentPatternDetector.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\CalibratedQRCodeDetector2D.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\FinderPatternDetector.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\LegacyQRCodeDetector2D.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\QRCode.h" />
@@ -62,6 +61,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\QRCodeDetector2D.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\QRCodeDetector3D.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\QRCodeEncoder.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\QRCodeEncoderBase.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\QRCodes.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\TransitionDetector.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\Utilities.h" />
@@ -75,6 +75,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\QRCodeDetector2D.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\QRCodeDetector3D.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\QRCodeEncoder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\QRCodeEncoderBase.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\TransitionDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\qrcodes\Utilities.cpp" />
   </ItemGroup>
