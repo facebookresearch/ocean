@@ -165,8 +165,8 @@ void AlignmentPatternDetector::detectAlignmentPatternsInRow(const uint8_t* yFram
 			Scalar xTransitionPointLeft;
 			Scalar xTransitionPointRight;
 
-			if (TransitionDetector::computeHorizontalTransitionPointSubpixelAccuracy(yRow, width, xStarts[1] - 1u, grayThreshold, xTransitionPointLeft)
-			    && TransitionDetector::computeHorizontalTransitionPointSubpixelAccuracy(yRow, width, xStarts[2] - 1u, grayThreshold, xTransitionPointRight))
+			if (TransitionDetector::computeHorizontalTransitionPointSubpixelAccuracy(yRow, width, xStarts[1] - 1u, uint8_t(grayThreshold), xTransitionPointLeft)
+			    && TransitionDetector::computeHorizontalTransitionPointSubpixelAccuracy(yRow, width, xStarts[2] - 1u, uint8_t(grayThreshold), xTransitionPointRight))
 			{
 				const unsigned int xCenter = (unsigned int)Numeric::round32((xTransitionPointLeft + xTransitionPointRight) / 2);
 
