@@ -11,6 +11,7 @@
 #include "ocean/test/testcv/testdetector/testqrcodes/TestQRCodeDetector2D.h"
 #include "ocean/test/testcv/testdetector/testqrcodes/TestFinderPatternDetector.h"
 #include "ocean/test/testcv/testdetector/testqrcodes/TestLegacyQRCodeDetector2D.h"
+#include "ocean/test/testcv/testdetector/testqrcodes/TestMicroQRCodeEncoder.h"
 #include "ocean/test/testcv/testdetector/testqrcodes/TestQRCodeDecoder.h"
 #include "ocean/test/testcv/testdetector/testqrcodes/TestQRCodeEncoder.h"
 #include "ocean/test/testcv/testdetector/testqrcodes/TestUtilities.h"
@@ -136,6 +137,15 @@ bool testCVDetectorQRCodes(const double testDuration, Worker& worker, const std:
 		Log::info() << " ";
 		Log::info() << " ";
 		allSucceeded = TestQRCodeEncoder::test(testDuration) && allSucceeded;
+	}
+
+	if (testSet.empty() || testSet.find("microqrcodeencoder") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		allSucceeded = TestMicroQRCodeEncoder::test(testDuration) && allSucceeded;
 	}
 
 	if (testSet.empty() || testSet.find("legacyqrcodedetector2d") != testSet.end())

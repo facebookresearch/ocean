@@ -59,6 +59,8 @@ class QRCodeBase
 			ECC_25 = 0b11u,
 			/// Indicates that 30% of the modules reserved error correction
 			ECC_30 = 0b10u,
+			/// Indicates that the capacity is limited to error detection only (used only by Micro QR Code version M1)
+			ECC_DETECTION_ONLY = 5u,
 			/// Indicator for an invalid error correction capacity
 			ECC_INVALID = uint32_t(-1),
 		};
@@ -147,6 +149,12 @@ class QRCodeBase
 		 * @return The version number
 		 */
 		inline unsigned int version() const;
+
+		/**
+		 * Returns the version of the QR code as a string
+		 * @return The version string
+		 */
+		virtual inline std::string versionString() const;
 
 		/**
 		 * Returns the number of modules per side of the QR code
@@ -299,6 +307,11 @@ inline unsigned int QRCodeBase::version() const
 	return version_;
 }
 
+inline std::string QRCodeBase::versionString() const
+{
+	return std::to_string(version_);
+}
+
 inline bool QRCodeBase::isSame(const QRCodeBase& otherCode, const bool ignoreModules) const
 {
 	if (isValid() != otherCode.isValid())
@@ -414,6 +427,9 @@ inline std::string QRCodeBase::translateErrorCorrectionCapacity(const QRCodeBase
 		case ECC_30:
 			return "30";
 		
+		case ECC_DETECTION_ONLY:
+			return "DETECTION_ONLY";
+		
 		case ECC_INVALID:
 			return "INVALID";
 	}
@@ -437,6 +453,9 @@ inline unsigned int QRCodeBase::getErrorCorrectionCapacityValue(const ErrorCorre
 
 		case ECC_30:
 			return 30u;
+
+		case ECC_DETECTION_ONLY:
+			return 0u;
 
 		case ECC_INVALID:
 			// Handled below

@@ -279,20 +279,21 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder : public QRCodeEncoderBase
 
 		/**
 		 * Returns the bit sequence identifying the encodation mode set (up to 4 bits long, cf. ISO/IEC 18004:2015, Table 2)
+		 * @param mode The encodation mode
 		 * @return The bit sequence of the encodation mode used
 		 */
-		static inline unsigned int encodationModeIndicatorBitSequence(QRCode::EncodingMode mode);
+		static inline unsigned int encodationModeIndicatorBitSequence(const QRCode::EncodingMode mode);
 
 		/**
 		 * Returns the number of bits per character for a specific version and encodation mode, cf. ISO/IEC 18004:2015, Table 3
 		 * @param version Version number of a QR code, range: [QRCode::MIN_VERSION, QRCode::MAX_VERSION]
 		 * @param mode The encodation mode
-		 * @return The number of bits per character or `(unsigned int)(-1)` on failure
+		 * @return The number of bits per character
 		*/
-		static inline unsigned int getBitsInCharacterCountIndicator(unsigned int version, QRCode::EncodingMode mode);
+		static inline unsigned int getBitsInCharacterCountIndicator(const unsigned int version, const QRCode::EncodingMode mode);
 };
 
-inline unsigned int QRCodeEncoder::encodationModeIndicatorBitSequence(QRCode::EncodingMode mode)
+inline unsigned int QRCodeEncoder::encodationModeIndicatorBitSequence(const QRCode::EncodingMode mode)
 {
 	static_assert(int(QRCode::EM_NUMERIC) == 0 && int(QRCode::EM_ALPHANUMERIC) == 1 && int(QRCode::EM_BYTE) == 2 && int(QRCode::EM_KANJI) == 3 && int(QRCode::EM_ECI) == 4 && int(QRCode::EM_STRUCTURED_APPEND) == 5 && int(QRCode::EM_FNC1), "Unexpected order of enums");
 	ocean_assert((unsigned int)mode < 7u);
@@ -314,7 +315,7 @@ inline unsigned int QRCodeEncoder::encodationModeIndicatorBitSequence(QRCode::En
 	return encodationModeBitSequences[(unsigned int)mode];
 }
 
-inline unsigned int QRCodeEncoder::getBitsInCharacterCountIndicator(unsigned int version, QRCode::EncodingMode mode)
+inline unsigned int QRCodeEncoder::getBitsInCharacterCountIndicator(const unsigned int version, const QRCode::EncodingMode mode)
 {
 	static_assert(int(QRCode::EM_NUMERIC) == 0 && int(QRCode::EM_ALPHANUMERIC) == 1 && int(QRCode::EM_BYTE) == 2 && int(QRCode::EM_KANJI) == 3 && int(QRCode::EM_ECI) == 4, "Unexpected order of enums");
 	ocean_assert(version >= QRCode::MIN_VERSION && version <= QRCode::MAX_VERSION);

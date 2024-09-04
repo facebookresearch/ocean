@@ -42,7 +42,7 @@ Utilities::CoordinateSystem::CoordinateSystem(const unsigned int version, const 
 	yScale_ = -xScale_;
 }
 
-Frame Utilities::draw(const QRCode& code, const unsigned int border, const uint8_t foregroundColor, const uint8_t backgroundColor)
+Frame Utilities::draw(const QRCodeBase& code, const unsigned int border, const uint8_t foregroundColor, const uint8_t backgroundColor)
 {
 	ocean_assert(std::abs(int(foregroundColor) - int(backgroundColor)) >= 30);
 
@@ -77,7 +77,7 @@ Frame Utilities::draw(const QRCode& code, const unsigned int border, const uint8
 	return frame;
 }
 
-Frame Utilities::draw(const QRCode& code, const unsigned int frameSize, const bool allowTrueMultiple, const unsigned int border, Worker* worker, const uint8_t foregroundColor, const uint8_t backgroundColor)
+Frame Utilities::draw(const QRCodeBase& code, const unsigned int frameSize, const bool allowTrueMultiple, const unsigned int border, Worker* worker, const uint8_t foregroundColor, const uint8_t backgroundColor)
 {
 	ocean_assert(std::abs(int(foregroundColor) - int(backgroundColor)) >= 30);
 
@@ -457,7 +457,7 @@ void Utilities::drawQRCodeOutline(const AnyCamera& anyCamera, Frame& frame, cons
 
 #endif // OCEAN_QRCODES_QRCODEDEBUGELEMENTS_ENABLED
 
-std::string Utilities::toString(const QRCode& code, const unsigned int border)
+std::string Utilities::toString(const QRCodeBase& code, const unsigned int border)
 {
 	if (!code.isValid())
 	{

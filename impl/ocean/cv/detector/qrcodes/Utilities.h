@@ -229,7 +229,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @param backgroundColor The color that the background modules (i.e. module value is 0) should have, range: [0, 255], this value must differ from `foregroundColor` by at least 30 intensity steps
 		 * @return The frame holding the image of the QR code, will be invalid in case of a failure
 		 */
-		static Frame draw(const QRCode& code, const unsigned int border, const uint8_t foregroundColor = 0u, const uint8_t backgroundColor = 255u);
+		static Frame draw(const QRCodeBase& code, const unsigned int border, const uint8_t foregroundColor = 0u, const uint8_t backgroundColor = 255u);
 
 		/**
 		 * Draws a scaled image of a QR code (FORMAT_Y8)
@@ -242,7 +242,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @param backgroundColor The color that the background modules (i.e. module value is 0) should have, range: [0, 255], this value must differ from `foregroundColor` by at least 30 intensity steps
 		 * @return The frame holding the image of the QR code, will be invalid in case of a failure
 		 */
-		static Frame draw(const QRCode& code, const unsigned int frameSize, const bool allowTrueMultiple, const unsigned int border, Worker* worker = nullptr, const uint8_t foregroundColor = 0u, const uint8_t backgroundColor = 255u);
+		static Frame draw(const QRCodeBase& code, const unsigned int frameSize, const bool allowTrueMultiple, const unsigned int border, Worker* worker = nullptr, const uint8_t foregroundColor = 0u, const uint8_t backgroundColor = 255u);
 
 		/**
 		 * Draws an observation of a QR code into a given frame.
@@ -363,7 +363,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @param border The border in multiples of modules around the ASCII representation of the QR code, range: [0, infinity)
 		 * @return The QR code in ASCII representation; will be empty in case of a failure
 		 */
-		static std::string toString(const QRCode& code, const unsigned int border);
+		static std::string toString(const QRCodeBase& code, const unsigned int border);
 
 		/**
 		 * Computes the number of pixel per module for a given observation of a QR code

@@ -97,7 +97,12 @@ inline bool QRCode::isValid() const
 		return false;
 	}
 
-	if (encodingMode_ == EM_INVALID_ENCODING_MODE || errorCorrectionCapacity_ == ECC_INVALID)
+	if (encodingMode_ == EM_INVALID_ENCODING_MODE)
+	{
+		return false;
+	}
+
+	if (errorCorrectionCapacity_ == ECC_INVALID || errorCorrectionCapacity_ == ECC_DETECTION_ONLY)
 	{
 		return false;
 	}

@@ -233,49 +233,49 @@ const std::string& Utilities::getNumericCharset()
 
 std::string Utilities::translateQRCodeToString(const CV::Detector::QRCodes::QRCode& qrcode, const bool ignoreModules)
 {
-	std::stringstream ss;
+	std::stringstream stream;
 	
-	ss << "isValid: " << qrcode.isValid() << '\n';
-	ss << "version: " << qrcode.version() << '\n';
-	ss << "encodingMode: " << QRCode::translateEncodingMode(qrcode.encodingMode()) << '\n';
-	ss << "errorCorrectionCapacity: " << QRCode::translateErrorCorrectionCapacity(qrcode.errorCorrectionCapacity()) << '\n';
-	ss << "modulesPerSide: " << qrcode.modulesPerSide() << '\n';
-	ss << "data size: " << qrcode.data().size() << '\n';
+	stream << "isValid: " << qrcode.isValid() << '\n';
+	stream << "version: " << qrcode.versionString() << '\n';
+	stream << "encodingMode: " << QRCode::translateEncodingMode(qrcode.encodingMode()) << '\n';
+	stream << "errorCorrectionCapacity: " << QRCode::translateErrorCorrectionCapacity(qrcode.errorCorrectionCapacity()) << '\n';
+	stream << "modulesPerSide: " << qrcode.modulesPerSide() << '\n';
+	stream << "data size: " << qrcode.data().size() << '\n';
 
-	ss << "data:";
+	stream << "data:";
 	int count = 0;
 	for (const std::uint8_t& datum : qrcode.data())
 	{
 		if (count % 16 == 0)
 		{
-			ss << '\n';
+			stream << '\n';
 		}
 
 		++count;
-		ss << " 0x" << String::toAStringHex(datum);
+		stream << " 0x" << String::toAStringHex(datum);
 	}
-	ss << '\n';
+	stream << '\n';
 
 	if (!ignoreModules)
 	{
-		ss << "number of modules: " << qrcode.modules().size() << '\n';
+		stream << "number of modules: " << qrcode.modules().size() << '\n';
 
-		ss << "modules: ";
+		stream << "modules: ";
 		count = 0;
 		for (const std::uint8_t& module : qrcode.modules())
 		{
 			if (count % qrcode.modulesPerSide() == 0)
 			{
-				ss << '\n';
+				stream << '\n';
 			}
 
 			++count;
-			ss << ' ' << (unsigned int)module;
+			stream << ' ' << (unsigned int)module;
 		}
-		ss << '\n';
+		stream << '\n';
 	}
 
-	return std::move(ss).str();
+	return std::move(stream).str();
 }
 
 } // namespace TestQRCodes
