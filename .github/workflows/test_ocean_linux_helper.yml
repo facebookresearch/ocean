@@ -69,7 +69,7 @@ jobs:
           cd $TEST_PATH
           if !(ctest $CTEST_ARGS); then
             echo "::warning::Re-running failed tests"
-            ctest --rerun-failed
+            ctest $CTEST_ARGS --rerun-failed
           fi
         env:
           INSTALL_PATH: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config.capitalcase }}
