@@ -33,6 +33,8 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 		return false;
 	}
 
+	const AnyCameraPinhole camera(pinholeCamera);
+
 	// we define that the first camera pose is located at the origin and pointing towards the negative z-space with y-axis upwards
 	const HomogenousMatrix4 world_T_camera0(true);
 	const HomogenousMatrix4 flippedCamera0_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera0));
@@ -50,7 +52,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 
 	SquareMatrix3 world_R_camera1(false);
 	Indices32 usedIndices;
-	if (Geometry::RANSAC::orientation(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints1, randomGenerator, world_R_camera1, 5u, 100u, Scalar(4) * maxRotationalSqrError, nullptr, &usedIndices) // we take a slightly larger maxSqrError as the RANSAC does not apply any optimization
+	if (Geometry::RANSAC::orientation(camera, ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints1, randomGenerator, world_R_camera1, 5u, 100u, Scalar(4) * maxRotationalSqrError, nullptr, &usedIndices) // we take a slightly larger maxSqrError as the RANSAC does not apply any optimization
 			&& Scalar(usedIndices.size()) >= Scalar(initialBadObjectPoints.size()) * rotationalMotionMinimalValidCorrespondencesPercent)
 	{
 		ocean_assert(!world_R_camera1.isSingular());
@@ -62,7 +64,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 
 		Scalar sqrAverageError = Numeric::maxValue();
 		SquareMatrix3 world_R_optimizedCamera1_(false);
-		if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(AnyCameraPinhole(pinholeCamera), world_R_camera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), usedIndices), world_R_optimizedCamera1_, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &sqrAverageError))
+		if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, world_R_camera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), usedIndices), world_R_optimizedCamera1_, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &sqrAverageError))
 		{
 			ocean_assert(!world_R_optimizedCamera1_.isSingular());
 
@@ -194,7 +196,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 
 			reusableTriangulatedObjectPoints.clear();
 			reusableValidTriangulatedObjectPoints.clear();
-			Geometry::Utilities::triangulateObjectPoints(pinholeCamera, pinholeCamera, world_T_camera0, world_T_optimizedCamera1, ConstArrayAccessor<Vector2>(imagePoints0.data(), imagePoints0.size()), ConstArrayAccessor<Vector2>(imagePoints1.data(), imagePoints1.size()), reusableTriangulatedObjectPoints, reusableValidTriangulatedObjectPoints, pinholeCamera.hasDistortionParameters(), true, Scalar(-1));
+			Geometry::Utilities::triangulateObjectPoints(camera, camera, world_T_camera0, world_T_optimizedCamera1, ConstArrayAccessor<Vector2>(imagePoints0.data(), imagePoints0.size()), ConstArrayAccessor<Vector2>(imagePoints1.data(), imagePoints1.size()), reusableTriangulatedObjectPoints, reusableValidTriangulatedObjectPoints, true, Scalar(-1));
 
 			if (reusableValidTriangulatedObjectPoints.size() == imagePoints0.size())
 			{
