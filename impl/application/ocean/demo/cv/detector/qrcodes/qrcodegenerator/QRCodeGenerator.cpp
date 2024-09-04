@@ -8,12 +8,14 @@
 #include "ocean/base/CommandArguments.h"
 #include "ocean/base/Frame.h"
 #include "ocean/base/Messenger.h"
+#include "ocean/base/ObjectRef.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/String.h"
 #include "ocean/base/WorkerPool.h"
 
 #include "ocean/cv/FrameInterpolatorNearestPixel.h"
 
+#include "ocean/cv/detector/qrcodes/MicroQRCodeEncoder.h"
 #include "ocean/cv/detector/qrcodes/QRCodeEncoder.h"
 #include "ocean/cv/detector/qrcodes/Utilities.h"
 
@@ -22,6 +24,7 @@
 #include "ocean/media/openimagelibraries/Image.h"
 
 using namespace Ocean;
+using namespace Ocean::CV::Detector::QRCodes;
 
 int main(int argc, char** argv)
 {
@@ -32,8 +35,9 @@ int main(int argc, char** argv)
 	commandArguments.registerNamelessParameters("The message that will be encoded into a QR code, must be valid");
 	commandArguments.registerParameter("output", "o", "Location where the generated QR code will be stored, default: ./qrcode.png");
 	commandArguments.registerParameter("size", "s", "Size in pixels of the image of the QR code that will be generated, will set to the closest multiple of the actual QR code size.");
-	commandArguments.registerParameter("ecc", "e", "Level of error correction, accepted values: 7, 15, 25, 30 (default: 7)");
+	commandArguments.registerParameter("ecc", "e", "Level of error correction, standard QR codes: 7, 15, 25, 30 (default: 7), micro QR codes: 0, 7, 15, 25 (default: 0)");
 	commandArguments.registerParameter("no-quiet-zone", "q", "If specified, no quiet zone will be added around the generated QR code.");
+	commandArguments.registerParameter("micro", "m", "If specified, a micro QR code will be generated.");
 	commandArguments.registerParameter("help", "h", "Showing this help output.");
 
 	if (!commandArguments.parse(argv, argc))
@@ -69,6 +73,8 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	const bool generateMicroQRCode = commandArguments.hasValue("micro");
+
 	const Value outputValue(commandArguments.value("output"));
 	std::string outputFilename = "./qrcode.png";
 
@@ -85,62 +91,105 @@ int main(int argc, char** argv)
 		imageSize = (unsigned int)(imageSizeValue.intValue());
 	}
 
-	CV::Detector::QRCodes::QRCode::ErrorCorrectionCapacity errorCorrectionCapacity = CV::Detector::QRCodes::QRCode::ECC_07;
+	QRCode::ErrorCorrectionCapacity errorCorrectionCapacity = generateMicroQRCode ? QRCode::ECC_DETECTION_ONLY : QRCode::ECC_07;
+
 	if (commandArguments.hasValue("ecc"))
 	{
 		const Value eccValue(commandArguments.value("ecc"));
-		errorCorrectionCapacity = CV::Detector::QRCodes::QRCode::ECC_INVALID;
 
-		if (eccValue.isInt() && eccValue.intValue() > 0)
+		errorCorrectionCapacity = QRCode::ECC_INVALID;
+
+		if (eccValue.isInt())
 		{
 			switch (eccValue.intValue())
 			{
+				case 0:
+					errorCorrectionCapacity = QRCode::ECC_DETECTION_ONLY;
+					break;
+
 				case 7:
-					errorCorrectionCapacity = CV::Detector::QRCodes::QRCode::ECC_07;
+					errorCorrectionCapacity = QRCode::ECC_07;
 					break;
 
 				case 15:
-					errorCorrectionCapacity = CV::Detector::QRCodes::QRCode::ECC_15;
+					errorCorrectionCapacity = QRCode::ECC_15;
 					break;
 
 				case 25:
-					errorCorrectionCapacity = CV::Detector::QRCodes::QRCode::ECC_25;
+					errorCorrectionCapacity = QRCode::ECC_25;
 					break;
 
 				case 30:
-					errorCorrectionCapacity = CV::Detector::QRCodes::QRCode::ECC_30;
+					errorCorrectionCapacity = QRCode::ECC_30;
 					break;
+
+				default:
+					Log::error() << "Invalid error-correction value: " << eccValue.intValue();
+					return 1;
 			}
 		}
 	}
-	
-	if (errorCorrectionCapacity == CV::Detector::QRCodes::QRCode::ECC_INVALID)
+
+	if (errorCorrectionCapacity == QRCode::ECC_INVALID)
 	{
 		Log::error() << "Invalid error-correction value";
 		return 1;
+	}
+
+	if (generateMicroQRCode)
+	{
+		if (errorCorrectionCapacity == QRCode::ECC_30)
+		{
+			Log::error() << "Error correction level 30 is not supported for micro QR codes";
+			return 1;
+		}
+	}
+	else
+	{
+		if (errorCorrectionCapacity == QRCode::ECC_DETECTION_ONLY)
+		{
+			Log::error() << "Error correction level 0 is not supported for standard QR codes";
+			return 1;
+		}
 	}
 
 	const bool noQuietZone = commandArguments.hasValue("no-quiet-zone");
 
 	ocean_assert(message.empty() == false);
 	ocean_assert(outputFilename.empty() == false);
-	ocean_assert(errorCorrectionCapacity != CV::Detector::QRCodes::QRCode::ECC_INVALID);
+ocean_assert(errorCorrectionCapacity != QRCode::ECC_INVALID);
 
-	CV::Detector::QRCodes::QRCode code;
+	using QRCodeBaseRef = ObjectRef<QRCodeBase>;
 
-	if (!CV::Detector::QRCodes::QRCodeEncoder::encodeText(message, errorCorrectionCapacity, code))
+	QRCodeBaseRef codeRef;
+	bool encodeTextSuccess = false;
+
+	if (generateMicroQRCode)
+	{
+		MicroQRCode code;
+		encodeTextSuccess = MicroQRCodeEncoder::encodeText(message, errorCorrectionCapacity, code);
+		codeRef = QRCodeBaseRef(new MicroQRCode(code));
+	}
+	else
+	{
+		QRCode code;
+		encodeTextSuccess = QRCodeEncoder::encodeText(message, errorCorrectionCapacity, code);
+		codeRef = QRCodeBaseRef(new QRCode(code));
+	}
+
+	if (!encodeTextSuccess)
 	{
 		Log::error() << "Failed to generate a QR code";
 		return 1;
 	}
 
-	ocean_assert(code.isValid());
+	ocean_assert(!codeRef.isNull() && codeRef->isValid());
 
 	Log::info() << " ";
-	Log::info() << "ASCII version of the QR code:" << CV::Detector::QRCodes::Utilities::toString(code, /* border */ 4u);
+	Log::info() << "ASCII version of the QR code:" << CV::Detector::QRCodes::Utilities::toString(*codeRef, /* border */ 4u);
 
 	const bool quietZoneBorder = noQuietZone ? 0u : 4u;
-	const Frame frame = CV::Detector::QRCodes::Utilities::draw(code, imageSize, /* allowTrueMultiple */ true, quietZoneBorder, WorkerPool::get().scopedWorker()());
+	const Frame frame = CV::Detector::QRCodes::Utilities::draw(*codeRef, imageSize, /* allowTrueMultiple */ true, quietZoneBorder, WorkerPool::get().scopedWorker()());
 
 	ocean_assert(frame.isValid());
 
@@ -159,9 +208,9 @@ int main(int argc, char** argv)
 	Log::info() << "Image size:  " << imageSize << ", final size: " << frame.width();
 	Log::info() << " ";
 	Log::info() << "QR code:";
-	Log::info() << " * version: " << code.version();
-	Log::info() << " * modules: " << code.modulesPerSide();
-	Log::info() << " ";
+	Log::info() << " * type:    " << codeRef->translateCodeType(codeRef->codeType());
+	Log::info() << " * version: " << codeRef->versionString();
+	Log::info() << " * modules: " << codeRef->modulesPerSide();
 
 	return 0;
 }
