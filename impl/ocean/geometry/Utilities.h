@@ -200,25 +200,6 @@ class OCEAN_GEOMETRY_EXPORT Utilities
 		static void triangulateObjectPoints(const AnyCamera& camera0, const AnyCamera& camera1, const HomogenousMatrix4& world_T_camera0, const HomogenousMatrix4& world_T_camera1, const ConstIndexedAccessor<Vector2>& imagePoints0, const ConstIndexedAccessor<Vector2>& imagePoints1, Vectors3& objectPoints, Indices32& validIndices, const bool onlyFrontPoints = true, const Scalar maximalSqrError = Scalar(3 * 3));
 
 		/**
-		 * Deprecated.
-		 *
-		 * Determines 3D object points by triangulating two sets of 2D image points from different camera poses.
-		 * Beware: The resulting object points can lie behind the camera if the point correspondences or the camera poses are invalid.<br>
-		 * @param camera0 The camera profile of the first camera, must be valid
-		 * @param camera1 The camera profile of the second camera, must be valid
-		 * @param pose0 The camera pose of the first image, must be valid
-		 * @param pose1 The camera pose of the second image, must be valid and must point into the same direction as the first camera
-		 * @param imagePoints0 The 2D image points located in the first camera
-		 * @param imagePoints1 The 2D image points located in the second camera, each point must have a corresponding point in the first camera
-		 * @param objectPoints The resulting valid 3D object points, does not provide invalid object points
-		 * @param validIndices The resulting indices of the valid point correspondences for which a 3D object points could be determined, one index of reach resulting 3D object point
-		 * @param undistortImagePoints True, if the distortion parameters of the camera profiles are used to undistort the image points before triangulation
-		 * @param onlyFrontPoints True, if only front object points are determined
-		 * @param maximalSqrError The maximal squared projection pixel error for valid object points
-		 */
-		static void triangulateObjectPoints(const PinholeCamera& camera0, const PinholeCamera& camera1, const HomogenousMatrix4& pose0, const HomogenousMatrix4& pose1, const ConstIndexedAccessor<Vector2>& imagePoints0, const ConstIndexedAccessor<Vector2>& imagePoints1, Vectors3& objectPoints, Indices32& validIndices, const bool undistortImagePoints, const bool onlyFrontPoints = true, const Scalar maximalSqrError = Scalar(3 * 3));
-
-		/**
 		 * Projects a set of given 2D image triangles onto a 3D plane and returns the resulting 3D object triangles.
 		 * @param pinholeCamera The pinhole camera object
 		 * @param pose Pose of the camera

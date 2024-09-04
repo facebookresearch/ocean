@@ -378,14 +378,6 @@ void Utilities::triangulateObjectPoints(const AnyCamera& camera0, const AnyCamer
 	}
 }
 
-void Utilities::triangulateObjectPoints(const PinholeCamera& camera0, const PinholeCamera& camera1, const HomogenousMatrix4& pose0, const HomogenousMatrix4& pose1, const ConstIndexedAccessor<Vector2>& imagePoints0, const ConstIndexedAccessor<Vector2>& imagePoints1, Vectors3& objectPoints, Indices32& validIndices, const bool undistortImagePoints, const bool onlyFrontPoints, const Scalar maximalSqrError)
-{
-	const AnyCameraPinhole anyCamera0(PinholeCamera(camera0, undistortImagePoints));
-	const AnyCameraPinhole anyCamera1(PinholeCamera(camera1, undistortImagePoints));
-
-	triangulateObjectPoints(anyCamera0, anyCamera1, pose0, pose1, imagePoints0, imagePoints1, objectPoints, validIndices, onlyFrontPoints, maximalSqrError);
-}
-
 Triangles3 Utilities::backProjectTriangles(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& pose, const Plane3& plane, const Triangle2* triangles, const size_t numberTriangles, const bool useDistortionParameters)
 {
 	ocean_assert(pinholeCamera.isValid() && pose.isValid());
