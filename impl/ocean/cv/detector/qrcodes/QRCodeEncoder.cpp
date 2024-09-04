@@ -130,7 +130,7 @@ bool QRCodeEncoder::addErrorCorrectionAndCreateQRCode(const unsigned int version
 {
 	// TODO Refactor this 1. pull out the error correction, 2. pull out the computation of the optimal mask, 3. only leave the initialization of the modules
 
-	ocean_assert(version >= MIN_VERSION && version <= MAX_VERSION);
+	ocean_assert(version >= QRCode::MIN_VERSION && version <= QRCode::MAX_VERSION);
 	ocean_assert(mask < 8u || mask == (unsigned int)(-1));
 
 	std::vector<uint8_t> localModules(QRCode::modulesPerSide(version) * QRCode::modulesPerSide(version), 0u);
@@ -188,7 +188,7 @@ bool QRCodeEncoder::addErrorCorrectionAndCreateQRCode(const unsigned int version
 bool QRCodeEncoder::encodeSegments(const Segments& segments, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, std::vector<uint8_t>& modules, unsigned int& version, QRCode::ErrorCorrectionCapacity& finalErrorCorrectionCapacity, const unsigned int minVersion, const unsigned int maxVersion, const MaskingPattern mask, const bool maximizeErrorCorrectionCapacity)
 {
 	ocean_assert(segments.empty() == false);
-	ocean_assert(minVersion >= 1u && minVersion <= maxVersion && maxVersion <= MAX_VERSION);
+	ocean_assert(minVersion >= 1u && minVersion <= maxVersion && maxVersion <= QRCode::MAX_VERSION);
 	ocean_assert(mask == (unsigned int)(-1) || (mask >= 1u && mask <= 7u));
 
 	// Determine the lowest version that can hold the data (in range [minVersion, maxVersion], if it exists)
@@ -207,7 +207,7 @@ bool QRCodeEncoder::encodeSegments(const Segments& segments, const QRCode::Error
 		}
 	}
 
-	if (version < MIN_VERSION || version > MAX_VERSION || bitsUsed == 0u)
+	if (version < QRCode::MIN_VERSION || version > QRCode::MAX_VERSION || bitsUsed == 0u)
 	{
 		return false;
 	}
@@ -297,7 +297,7 @@ bool QRCodeEncoder::encodeSegments(const Segments& segments, const QRCode::Error
 
 QRCodeEncoder::Codewords QRCodeEncoder::addErrorCorrectionAndInterleave(const Codewords& codewords, const unsigned int version, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity)
 {
-	ocean_assert(version >= MIN_VERSION && version <= MAX_VERSION);
+	ocean_assert(version >= QRCode::MIN_VERSION && version <= QRCode::MAX_VERSION);
 	ocean_assert(codewords.size() == totalNumberDataCodewords(version, errorCorrectionCapacity));
 	ocean_assert((unsigned int)errorCorrectionCapacity < 4u);
 
@@ -350,7 +350,7 @@ QRCodeEncoder::Codewords QRCodeEncoder::addErrorCorrectionAndInterleave(const Co
 
 void QRCodeEncoder::applyMaskPattern(std::vector<uint8_t>& modules, const unsigned int version, const std::vector<uint8_t>& functionPatternMask, const MaskingPattern mask)
 {
-	ocean_assert(version >= MIN_VERSION && version <= MAX_VERSION);
+	ocean_assert(version >= QRCode::MIN_VERSION && version <= QRCode::MAX_VERSION);
 	ocean_assert(mask < 8u);
 
 	const unsigned int size = QRCode::modulesPerSide(version);
@@ -584,7 +584,7 @@ unsigned int QRCodeEncoder::computeMaskPatternPenalty(const std::vector<uint8_t>
 
 std::vector<uint8_t> QRCodeEncoder::setFunctionPatterns(std::vector<uint8_t>& modules, const unsigned int version, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity)
 {
-	ocean_assert(version >= 1u && version <= MAX_VERSION);
+	ocean_assert(version >= 1u && version <= QRCode::MAX_VERSION);
 
 	const unsigned int size = QRCode::modulesPerSide(version);
 	ocean_assert(modules.size() == size * size);
@@ -701,7 +701,7 @@ std::vector<uint8_t> QRCodeEncoder::setFunctionPatterns(std::vector<uint8_t>& mo
 void QRCodeEncoder::setCodewords(std::vector<uint8_t>& modules, const Codewords& codewords, const unsigned int version, const std::vector<uint8_t>& functionPatternMask)
 {
 	ocean_assert(codewords.size() == totalNumberRawDataModules(version) / 8);
-	ocean_assert(version >= 1u && version <= MAX_VERSION);
+	ocean_assert(version >= 1u && version <= QRCode::MAX_VERSION);
 
 	const unsigned int size = QRCode::modulesPerSide(version);
 
@@ -746,7 +746,7 @@ void QRCodeEncoder::setCodewords(std::vector<uint8_t>& modules, const Codewords&
 
 void QRCodeEncoder::setFormatInformation(std::vector<uint8_t>& modules, const unsigned int version, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const MaskingPattern mask, std::vector<uint8_t>& functionPatternMask)
 {
-	ocean_assert(version >= MIN_VERSION && version <= MAX_VERSION);
+	ocean_assert(version >= QRCode::MIN_VERSION && version <= QRCode::MAX_VERSION);
 	ocean_assert(mask < 8u);
 
 	const unsigned int size = QRCode::modulesPerSide(version);
@@ -798,7 +798,7 @@ void QRCodeEncoder::setFormatInformation(std::vector<uint8_t>& modules, const un
 
 void QRCodeEncoder::setVersionInformation(std::vector<uint8_t>& modules, const unsigned int version, std::vector<uint8_t>& functionPatternMask)
 {
-	ocean_assert(version >= MIN_VERSION && version <= MAX_VERSION);
+	ocean_assert(version >= QRCode::MIN_VERSION && version <= QRCode::MAX_VERSION);
 
 	if (version < 7u)
 	{
@@ -830,7 +830,7 @@ void QRCodeEncoder::setVersionInformation(std::vector<uint8_t>& modules, const u
 
 VectorsI2 QRCodeEncoder::computeAlignmentPatternPositions(const unsigned int version)
 {
-	ocean_assert(version >= MIN_VERSION && version <= MAX_VERSION);
+	ocean_assert(version >= QRCode::MIN_VERSION && version <= QRCode::MAX_VERSION);
 
 	if (version == 1u)
 	{
