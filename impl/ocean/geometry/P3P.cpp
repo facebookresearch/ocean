@@ -178,7 +178,14 @@ unsigned int P3P::poses(const VectorT3<T>* objectPoints, const VectorT3<T>* imag
 			continue;
 		}
 
-		const T denominator = NumericT<T>::sqrt(x * x - 2 * x * cos_ab + 1);
+		const T denominatorSquare = x * x - 2 * x * cos_ab + 1;
+
+		if (denominatorSquare < T(0))
+		{
+			continue;
+		}
+
+		const T denominator = NumericT<T>::sqrt(denominatorSquare);
 
 		if (NumericT<T>::isEqualEps(denominator))
 		{
