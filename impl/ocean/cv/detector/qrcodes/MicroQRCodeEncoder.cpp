@@ -405,7 +405,8 @@ unsigned int MicroQRCodeEncoder::computeMaskPatternScore(const std::vector<uint8
 	// cf. ISO/IEC 18004:2015, Section 7.8.3.2
 
 	unsigned int sum1 = 0u;
-	for (int i = 1; i < size; i++) {
+	for (int i = 1; i < int(size); i++)
+	{
 		if (modules[size * i + size - 1] != 0)
 		{
 			sum1++;
@@ -413,7 +414,8 @@ unsigned int MicroQRCodeEncoder::computeMaskPatternScore(const std::vector<uint8
 	}
 
 	unsigned int sum2 = 0u;
-	for (int j = 1; j < size; j++) {
+	for (int j = 1; j < int(size); j++)
+	{
 		if (modules[size * (size - 1) + j] != 0)
 		{
 			sum2++;
