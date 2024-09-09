@@ -341,7 +341,7 @@ void FinderPatternDetector::detectFinderPatternInRow(const uint8_t* const yFrame
 				Vector2 edgePoints[16];
 
 				if (xCenter >= diameter3_4 && y >= diameter3_4 && xCenter < width - diameter3_4 && y < height - diameter3_4
-					&& checkFinderPatternInNeighborhood(yFrame, width, height, paddingElements, xCenter, y, grayThreshold, blackSquareSegmentMin * 307u / 512u, blackSquareSegmentMax * 1280u / 512u, whiteSquareSegmentMin * 307u / 512u, whiteSquareSegmentMax * 1280u / 512u, centerSegmentMin * 307u / 512u, centerSegmentMax * 1280u / 512u, symmetryScore, edgePoints))
+					&& checkFinderPatternInNeighborhood(yFrame, width, height, paddingElements, xCenter, y, grayThreshold, blackSquareSegmentMin * 217u / 512u, blackSquareSegmentMax * 1280u / 512u, whiteSquareSegmentMin * 217u / 512u, whiteSquareSegmentMax * 1280u / 512u, centerSegmentMin * 217u / 512u, centerSegmentMax * 1280u / 512u, symmetryScore, edgePoints))
 				{
 					Vector2 location;
 					Vector2 corners[4];
@@ -1047,10 +1047,10 @@ bool FinderPatternDetector::checkFinderPatternDirectional(const uint8_t* const y
 
 	if (TransitionDetector::findNextPixel<true>(yFrame, topOut.x(), topOut.y(), width, height, paddingElements, bresenhamTop, whiteSquareSegmentMax + 1u, threshold, topColumns, topRows, topIn, topOut) == false
 		|| TransitionDetector::findNextPixel<true>(yFrame, bottomOut.x(), bottomOut.y(), width, height, paddingElements, bresenhamBottom, whiteSquareSegmentMax + 1u, threshold, bottomColumns, bottomRows, bottomIn, bottomOut) == false
-		|| (topColumns + topRows) * (topColumns + topRows) < whiteSquareSegmentMin * whiteSquareSegmentMin
-		|| (bottomColumns + bottomRows) * (bottomColumns + bottomRows) < whiteSquareSegmentMin * whiteSquareSegmentMin
-		|| (topColumns + topRows) * (topColumns + topRows) > whiteSquareSegmentMax * whiteSquareSegmentMax
-		|| (bottomColumns + bottomRows) * (bottomColumns + bottomRows) > whiteSquareSegmentMax * whiteSquareSegmentMax
+		|| topColumns * topColumns + topRows * topRows < whiteSquareSegmentMin * whiteSquareSegmentMin
+		|| bottomColumns * bottomColumns + bottomRows * bottomRows < whiteSquareSegmentMin * whiteSquareSegmentMin
+		|| topColumns * topColumns + topRows * topRows > whiteSquareSegmentMax * whiteSquareSegmentMax
+		|| bottomColumns * bottomColumns + bottomRows * bottomRows > whiteSquareSegmentMax * whiteSquareSegmentMax
 		)
 	{
 		return false;
@@ -1063,10 +1063,10 @@ bool FinderPatternDetector::checkFinderPatternDirectional(const uint8_t* const y
 
 	if (TransitionDetector::findNextPixel<false>(yFrame, topOut.x(), topOut.y(), width, height, paddingElements, bresenhamTop, blackSquareSegmentMax + 1u, threshold, topColumns, topRows, topIn, topOut) == false
 		|| TransitionDetector::findNextPixel<false>(yFrame, bottomOut.x(), bottomOut.y(), width, height, paddingElements, bresenhamBottom, blackSquareSegmentMax + 1u, threshold, bottomColumns, bottomRows, bottomIn, bottomOut) == false
-		|| (topColumns + topRows) * (topColumns + topRows) < blackSquareSegmentMin * blackSquareSegmentMin
-		|| (bottomColumns + bottomRows) * (bottomColumns + bottomRows) < blackSquareSegmentMin * blackSquareSegmentMin
-		|| (topColumns + topRows) * (topColumns + topRows) > blackSquareSegmentMax * blackSquareSegmentMax
-		|| (bottomColumns + bottomRows) * (bottomColumns + bottomRows) > blackSquareSegmentMax * blackSquareSegmentMax
+		|| topColumns * topColumns + topRows * topRows < blackSquareSegmentMin * blackSquareSegmentMin
+		|| bottomColumns * bottomColumns + bottomRows * bottomRows < blackSquareSegmentMin * blackSquareSegmentMin
+		|| topColumns * topColumns + topRows * topRows > blackSquareSegmentMax * blackSquareSegmentMax
+		|| bottomColumns * bottomColumns + bottomRows * bottomRows > blackSquareSegmentMax * blackSquareSegmentMax
 		)
 	{
 		return false;
