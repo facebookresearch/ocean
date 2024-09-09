@@ -12,6 +12,8 @@
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/Utilities.h"
 
+#include "ocean/test/Validation.h"
+
 #include <numeric>
 #include <random>
 
@@ -264,11 +266,12 @@ namespace TestBase
 bool TestRandomI::testDistribution32(RandomGenerator& randomGenerator, const double testDuration)
 {
 	constexpr unsigned int numberBits = 32u;
+	constexpr unsigned int numberIterations = 100000u;
 
 	Log::info() << "Random " << numberBits << " bit distribution test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const double threshold = 0.01; // 1%
 
@@ -281,7 +284,7 @@ bool TestRandomI::testDistribution32(RandomGenerator& randomGenerator, const dou
 
 		do
 		{
-			for (unsigned int n = 0u; n < 10000u; ++n)
+			for (unsigned int n = 0u; n < numberIterations; ++n)
 			{
 				const uint32_t value = RandomI::random32();
 
@@ -325,14 +328,12 @@ bool TestRandomI::testDistribution32(RandomGenerator& randomGenerator, const dou
 			Log::info() << "Default, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -347,7 +348,7 @@ bool TestRandomI::testDistribution32(RandomGenerator& randomGenerator, const dou
 
 		do
 		{
-			for (unsigned int n = 0u; n < 10000u; ++n)
+			for (unsigned int n = 0u; n < numberIterations; ++n)
 			{
 				const uint32_t value = RandomI::random32(randomGenerator);
 
@@ -391,14 +392,12 @@ bool TestRandomI::testDistribution32(RandomGenerator& randomGenerator, const dou
 			Log::info() << "Generator object, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -417,7 +416,7 @@ bool TestRandomI::testDistribution32(RandomGenerator& randomGenerator, const dou
 
 		do
 		{
-			for (unsigned int n = 0u; n < 10000u; ++n)
+			for (unsigned int n = 0u; n < numberIterations; ++n)
 			{
 				const uint32_t value = distribution(twisterEngine);
 
@@ -461,39 +460,31 @@ bool TestRandomI::testDistribution32(RandomGenerator& randomGenerator, const dou
 			Log::info() << "C++ mt19937, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testDistribution64(RandomGenerator& randomGenerator, const double testDuration)
 {
 	constexpr unsigned int numberBits = 64u;
+	constexpr unsigned int numberIterations = 100000u;
 
 	Log::info() << "Random " << numberBits << " bit distribution test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const double threshold = 0.01; // 1%
 
@@ -506,7 +497,7 @@ bool TestRandomI::testDistribution64(RandomGenerator& randomGenerator, const dou
 
 		do
 		{
-			for (unsigned int n = 0u; n < 10000u; ++n)
+			for (unsigned int n = 0u; n < numberIterations; ++n)
 			{
 				const uint64_t value = RandomI::random64();
 
@@ -550,14 +541,12 @@ bool TestRandomI::testDistribution64(RandomGenerator& randomGenerator, const dou
 			Log::info() << "Default, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -572,7 +561,7 @@ bool TestRandomI::testDistribution64(RandomGenerator& randomGenerator, const dou
 
 		do
 		{
-			for (unsigned int n = 0u; n < 10000u; ++n)
+			for (unsigned int n = 0u; n < numberIterations; ++n)
 			{
 				const uint64_t value = RandomI::random64(randomGenerator);
 
@@ -616,14 +605,12 @@ bool TestRandomI::testDistribution64(RandomGenerator& randomGenerator, const dou
 			Log::info() << "Generator object, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -642,7 +629,7 @@ bool TestRandomI::testDistribution64(RandomGenerator& randomGenerator, const dou
 
 		do
 		{
-			for (unsigned int n = 0u; n < 10000u; ++n)
+			for (unsigned int n = 0u; n < numberIterations; ++n)
 			{
 				const uint64_t value = distribution(twisterEngine);
 
@@ -686,29 +673,20 @@ bool TestRandomI::testDistribution64(RandomGenerator& randomGenerator, const dou
 			Log::info() << "C++ mt19937, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, const double testDuration)
@@ -716,7 +694,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 	Log::info() << "Random distribution test (small range):";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const double threshold = 0.05; // 5%
 
@@ -748,7 +726,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -783,14 +761,12 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Default, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -817,7 +793,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -852,14 +828,12 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Generator object, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -897,7 +871,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -932,14 +906,12 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Default, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -975,7 +947,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -1010,14 +982,12 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Generator object, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -1055,7 +1025,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -1090,14 +1060,12 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Default, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -1133,7 +1101,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -1168,14 +1136,12 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Generator object, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -1202,7 +1168,7 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -1237,29 +1203,20 @@ bool TestRandomI::testDistributionSmallRange(RandomGenerator& randomGenerator, c
 			Log::info() << "C++ mt19937, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, const double testDuration)
@@ -1267,7 +1224,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 	Log::info() << "Random distribution test (large range):";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const double threshold = 0.05; // 5%
 
@@ -1302,7 +1259,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -1337,14 +1294,12 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Default, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -1370,7 +1325,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -1405,14 +1360,12 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Generator object, Created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -1451,7 +1404,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -1486,14 +1439,12 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Default, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -1531,7 +1482,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -1566,14 +1517,12 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Generator object, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -1613,7 +1562,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -1648,14 +1597,12 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Default, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -1693,7 +1640,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -1728,14 +1675,12 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 			Log::info() << "Generator object, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -1763,7 +1708,7 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 
 				++iterations;
@@ -1798,36 +1743,27 @@ bool TestRandomI::testDistributionLargeRange(RandomGenerator& randomGenerator, c
 			Log::info() << "C++ mt19937, created values: " << iterations;
 			Log::info() << "Maximal bit error to average: " << percentActual * 100.0 << "% (actual), " << percentPerfect * 100.0 << "% (perfect)";
 
-			if (percentActual > threshold || percentPerfect > threshold)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentPerfect, threshold);
+			OCEAN_EXPECT_LESS_EQUAL(validation, percentActual, threshold);
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testOneParameter(RandomGenerator& randomGenerator)
 {
 	Log::info() << "One random parameter test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);;
 
 	constexpr unsigned int iterations = 1000000u;
 
@@ -1835,99 +1771,68 @@ bool TestRandomI::testOneParameter(RandomGenerator& randomGenerator)
 	{
 		const unsigned int value = RandomI::random(0u);
 
-		if (value != 0u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value, 0u);
 	}
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
 		const unsigned int value = RandomI::random(randomGenerator, 0u);
 
-		if (value != 0u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value, 0u);
 	}
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
 		const int value = RandomI::random(-5, -5);
 
-		if (value != -5)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value, -5);
 	}
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
 		const int value = RandomI::random(randomGenerator, -5, -5);
 
-		if (value != -5)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value, -5);
 	}
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
 		const int value = RandomI::random(5, 5);
 
-		if (value != 5)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value, 5);
 	}
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
 		const int value = RandomI::random(randomGenerator, 5, 5);
 
-		if (value != 5)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value, 5);
 	}
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
 		const unsigned int value = RandomI::random(5u, 5u);
 
-		if (value != 5u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value, 5u);
 	}
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
 		const unsigned int value = RandomI::random(randomGenerator, 5u, 5u);
 
-		if (value != 5u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, value, 5u);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 {
 	Log::info() << "Two random parameter test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int iterations = 1000000u;
 
@@ -1949,7 +1854,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -1958,10 +1863,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		const unsigned int percentDifference = (unsigned int)(std::abs(int(percentFirst) - int(percentSecond)));
 
-		if (percentDifference > 4u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_LESS_EQUAL(validation, percentDifference, 4u);
 	}
 
 	{
@@ -1982,7 +1884,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -1991,10 +1893,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		const unsigned int percentDifference = (unsigned int)(std::abs(int(percentFirst) - int(percentSecond)));
 
-		if (percentDifference > 4u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_LESS_EQUAL(validation, percentDifference, 4u);
 	}
 
 	{
@@ -2015,7 +1914,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2024,10 +1923,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		const unsigned int percentDifference = (unsigned int)(std::abs(int(percentFirst) - int(percentSecond)));
 
-		if (percentDifference > 4u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_LESS_EQUAL(validation, percentDifference, 4u);
 	}
 
 	{
@@ -2048,7 +1944,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2058,10 +1954,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		const unsigned int percentDifference = (unsigned int)(std::abs(int(percentFirst) - int(percentSecond)));
 
-		if (percentDifference > 4u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_LESS_EQUAL(validation, percentDifference, 4u);
 	}
 
 	{
@@ -2082,7 +1975,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2091,10 +1984,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		const unsigned int percentDifference = (unsigned int)(std::abs(int(percentFirst) - int(percentSecond)));
 
-		if (percentDifference > 4u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_LESS_EQUAL(validation, percentDifference, 4u);
 	}
 
 	{
@@ -2115,7 +2005,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2124,10 +2014,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		const unsigned int percentDifference = (unsigned int)(std::abs(int(percentFirst) - int(percentSecond)));
 
-		if (percentDifference > 4u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_LESS_EQUAL(validation, percentDifference, 4u);
 	}
 
 	{
@@ -2148,7 +2035,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2157,10 +2044,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		const unsigned int percentDifference = (unsigned int)(std::abs(int(percentFirst) - int(percentSecond)));
 
-		if (percentDifference > 4u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_LESS_EQUAL(validation, percentDifference, 4u);
 	}
 
 	{
@@ -2181,7 +2065,7 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2190,29 +2074,19 @@ bool TestRandomI::testTwoParameter(RandomGenerator& randomGenerator)
 
 		const unsigned int percentDifference = (unsigned int)(std::abs(int(percentFirst) - int(percentSecond)));
 
-		if (percentDifference > 4u)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_LESS_EQUAL(validation, percentDifference, 4u);
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 {
 	Log::info() << "Three random parameter test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int iterations = 1000000u;
 
@@ -2239,7 +2113,7 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2247,11 +2121,11 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 		const unsigned int percentSecond = second * 100u / iterations;
 		const unsigned int percentThird = third * 100u / iterations;
 
-		if ((unsigned int)(std::abs(int(percentFirst) - int(percentSecond))) > 4
-				|| (unsigned int)(std::abs(int(percentSecond) - int(percentThird))) > 4
-				|| (unsigned int)(std::abs(int(percentFirst) - int(percentThird))) > 4)
+		if (std::abs(int(percentFirst) - int(percentSecond)) > 4
+				|| std::abs(int(percentSecond) - int(percentThird)) > 4
+				|| std::abs(int(percentFirst) - int(percentThird)) > 4)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -2278,7 +2152,7 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2286,11 +2160,11 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 		const unsigned int percentSecond = second * 100u / iterations;
 		const unsigned int percentThird = third * 100u / iterations;
 
-		if ((unsigned int)(std::abs(int(percentFirst) - int(percentSecond))) > 4
-				|| (unsigned int)(std::abs(int(percentSecond) - int(percentThird))) > 4
-				|| (unsigned int)(std::abs(int(percentFirst) - int(percentThird))) > 4)
+		if (std::abs(int(percentFirst) - int(percentSecond)) > 4
+				|| std::abs(int(percentSecond) - int(percentThird)) > 4
+				|| std::abs(int(percentFirst) - int(percentThird)) > 4)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -2317,7 +2191,7 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2325,11 +2199,11 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 		const unsigned int percentSecond = second * 100u / iterations;
 		const unsigned int percentThird = third * 100u / iterations;
 
-		if ((unsigned int)(std::abs(int(percentFirst) - int(percentSecond))) > 4
-				|| (unsigned int)(std::abs(int(percentSecond) - int(percentThird))) > 4
-				|| (unsigned int)(std::abs(int(percentFirst) - int(percentThird))) > 4)
+		if (std::abs(int(percentFirst) - int(percentSecond)) > 4
+				|| std::abs(int(percentSecond) - int(percentThird)) > 4
+				|| std::abs(int(percentFirst) - int(percentThird)) > 4)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -2356,7 +2230,7 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2364,11 +2238,11 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 		const unsigned int percentSecond = second * 100u / iterations;
 		const unsigned int percentThird = third * 100u / iterations;
 
-		if ((unsigned int)(std::abs(int(percentFirst) - int(percentSecond))) > 4
-				|| (unsigned int)(std::abs(int(percentSecond) - int(percentThird))) > 4
-				|| (unsigned int)(std::abs(int(percentFirst) - int(percentThird))) > 4)
+		if (std::abs(int(percentFirst) - int(percentSecond)) > 4
+				|| std::abs(int(percentSecond) - int(percentThird)) > 4
+				|| std::abs(int(percentFirst) - int(percentThird)) > 4)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -2395,7 +2269,7 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2403,11 +2277,11 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 		const unsigned int percentSecond = second * 100u / iterations;
 		const unsigned int percentThird = third * 100u / iterations;
 
-		if ((unsigned int)(std::abs(int(percentFirst) - int(percentSecond))) > 4
-				|| (unsigned int)(std::abs(int(percentSecond) - int(percentThird))) > 4
-				|| (unsigned int)(std::abs(int(percentFirst) - int(percentThird))) > 4)
+		if (std::abs(int(percentFirst) - int(percentSecond)) > 4
+				|| std::abs(int(percentSecond) - int(percentThird)) > 4
+				|| std::abs(int(percentFirst) - int(percentThird)) > 4)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -2434,7 +2308,7 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2442,31 +2316,24 @@ bool TestRandomI::testThreeParameter(RandomGenerator& randomGenerator)
 		const unsigned int percentSecond = second * 100u / iterations;
 		const unsigned int percentThird = third * 100u / iterations;
 
-		if ((unsigned int)(std::abs(int(percentFirst) - int(percentSecond))) > 4
-				|| (unsigned int)(std::abs(int(percentSecond) - int(percentThird))) > 4
-				|| (unsigned int)(std::abs(int(percentFirst) - int(percentThird))) > 4)
+		if (std::abs(int(percentFirst) - int(percentSecond)) > 4
+				|| std::abs(int(percentSecond) - int(percentThird)) > 4
+				|| std::abs(int(percentFirst) - int(percentThird)) > 4)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 {
 	Log::info() << "n random parameter test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int iterations = 1000000u;
 
@@ -2488,7 +2355,7 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 
 				if (value < start || value > stop)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
@@ -2510,7 +2377,7 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 
 			if (std::abs(int(minValue * 100u / iterations) - int(maxValue * 100u / iterations)) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
@@ -2533,7 +2400,7 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 
 				if (value < start || value > stop)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
@@ -2555,7 +2422,7 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 
 			if (std::abs(int(minValue * 100u / iterations) - int(maxValue * 100u / iterations)) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
@@ -2576,7 +2443,7 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 
 				if (value < start || value > stop)
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 				else
 				{
@@ -2598,21 +2465,14 @@ bool TestRandomI::testSeveralParameter(RandomGenerator& randomGenerator)
 
 			if (std::abs(int(minValue * 100u / iterations) - int(maxValue * 100u / iterations)) > 1)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testRandomPair(RandomGenerator& randomGenerator, const double testDuration)
@@ -2621,7 +2481,7 @@ bool TestRandomI::testRandomPair(RandomGenerator& randomGenerator, const double 
 
 	Log::info() << "Random pair test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int iterations = 1000u;
 
@@ -2639,7 +2499,7 @@ bool TestRandomI::testRandomPair(RandomGenerator& randomGenerator, const double 
 		Utilities::sortLowestToFront2(first, second);
 		if (first != 0u || second != 1u)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		first = 0u;
@@ -2650,7 +2510,7 @@ bool TestRandomI::testRandomPair(RandomGenerator& randomGenerator, const double 
 		Utilities::sortLowestToFront2(first, second);
 		if (first != 0u || second != 1u)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		// now, we check a random maximal value:
@@ -2665,7 +2525,7 @@ bool TestRandomI::testRandomPair(RandomGenerator& randomGenerator, const double 
 
 			if (first == second || first > maxValue || second > maxValue)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2677,22 +2537,15 @@ bool TestRandomI::testRandomPair(RandomGenerator& randomGenerator, const double 
 
 			if (first == second || first > maxValue || second > maxValue)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const double testDuration)
@@ -2701,7 +2554,7 @@ bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const doubl
 
 	Log::info() << "Random triple test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int iterations = 1000u;
 
@@ -2720,7 +2573,7 @@ bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const doubl
 		Utilities::sortLowestToFront3(first, second, third);
 		if (first != 0u || second != 1u || third != 2u)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		first = 0u;
@@ -2732,7 +2585,7 @@ bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const doubl
 		Utilities::sortLowestToFront3(first, second, third);
 		if (first != 0u || second != 1u || third != 2u)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
 		// now, we check a random maximal value:
@@ -2748,7 +2601,7 @@ bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const doubl
 
 			if (first == second || first == third || second == third || first > maxValue || second > maxValue || third > maxValue)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2761,22 +2614,15 @@ bool TestRandomI::testRandomTriple(RandomGenerator& randomGenerator, const doubl
 
 			if (first == second || first == third || second == third || first > maxValue || second > maxValue || third > maxValue)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testRandomBoolean(RandomGenerator& randomGenerator, const double testDuration)
@@ -2785,7 +2631,7 @@ bool TestRandomI::testRandomBoolean(RandomGenerator& randomGenerator, const doub
 
 	Log::info() << "Random boolean test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int iterations = 100000u;
 
@@ -2814,7 +2660,7 @@ bool TestRandomI::testRandomBoolean(RandomGenerator& randomGenerator, const doub
 
 			if (difference > iterations * 5u / 100u) // 5%
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2839,22 +2685,15 @@ bool TestRandomI::testRandomBoolean(RandomGenerator& randomGenerator, const doub
 
 			if (difference > iterations * 5u / 100u) // 5%
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 
 }
 
@@ -2864,7 +2703,7 @@ bool TestRandomI::testRandomElementsVector(RandomGenerator& randomGenerator, con
 
 	Log::info() << "Random elements per vector test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int iterations = 100000u;
 
@@ -2894,7 +2733,7 @@ bool TestRandomI::testRandomElementsVector(RandomGenerator& randomGenerator, con
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -2904,7 +2743,7 @@ bool TestRandomI::testRandomElementsVector(RandomGenerator& randomGenerator, con
 
 			if (difference > iterations * 5u / 100u) // 5%
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -2922,7 +2761,7 @@ bool TestRandomI::testRandomElementsVector(RandomGenerator& randomGenerator, con
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -2932,22 +2771,15 @@ bool TestRandomI::testRandomElementsVector(RandomGenerator& randomGenerator, con
 
 			if (difference > iterations * 5u / 100u) // 5%
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testRandomElementsInitializerList(RandomGenerator& randomGenerator, const double testDuration)
@@ -2956,7 +2788,7 @@ bool TestRandomI::testRandomElementsInitializerList(RandomGenerator& randomGener
 
 	Log::info() << "Random elements per initializer-list test:";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	constexpr unsigned int iterations = 100000u;
 
@@ -2980,7 +2812,7 @@ bool TestRandomI::testRandomElementsInitializerList(RandomGenerator& randomGener
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -2990,7 +2822,7 @@ bool TestRandomI::testRandomElementsInitializerList(RandomGenerator& randomGener
 
 			if (difference > iterations * 5u / 100u) // 5%
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
@@ -3008,7 +2840,7 @@ bool TestRandomI::testRandomElementsInitializerList(RandomGenerator& randomGener
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 
@@ -3018,29 +2850,22 @@ bool TestRandomI::testRandomElementsInitializerList(RandomGenerator& randomGener
 
 			if (difference > iterations * 5u / 100u) // 5%
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestRandomI::testExtremeValueRange(RandomGenerator& randomGenerator)
 {
 	Log::info() << "Testing extreme value range";
 
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	// just testing whether something unexpected happens - e.g., an assert
 
@@ -3058,7 +2883,7 @@ bool TestRandomI::testExtremeValueRange(RandomGenerator& randomGenerator)
 			|| int64_t(valueD) > int64_t(uint32_t(-1)))
 		{
 			ocean_assert(false && " This should never happen!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -3074,20 +2899,13 @@ bool TestRandomI::testExtremeValueRange(RandomGenerator& randomGenerator)
 			|| int64_t(valueD) > int64_t(uint32_t(-1)))
 		{
 			ocean_assert(false && " This should never happen!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
