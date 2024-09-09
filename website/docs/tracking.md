@@ -35,7 +35,7 @@ For scenarios requiring robustness against more significant variations in camera
     - **Flexibility**: Suitable for matching features in images that are not sequentially captured or that undergo different camera rotations.
     - **Comprehensive Matching**: Although typically slower than patch-based methods, descriptor-based tracking offers enhanced accuracy in complex scenarios.
 
-Explore these capabilities through the [**Feature Tracker**](demoapps/crossplatformapps/feature_tracker.md) demo app, which utilizes patch-based point tracking.
+Explore these capabilities through the [**Feature Tracker**](demoapps/crossplatformapps/feature_tracker.md) demo app, which utilizes feature descriptor-based planar pattern tracking.
 
 
 ### Feature Detection
