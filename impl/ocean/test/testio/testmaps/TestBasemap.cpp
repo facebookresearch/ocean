@@ -9,6 +9,8 @@
 
 #include "ocean/network/HTTPSClient.h"
 
+#include "ocean/test/Validation.h"
+
 #include <regex>
 #include <string>
 
@@ -74,7 +76,7 @@ bool TestBasemap::testTileFromPBFData()
 	Log::info() << "Tile from PBF data test:";
 	Log::info() << " ";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	// hard-coded location in Seattle downtown
 
@@ -169,38 +171,22 @@ bool TestBasemap::testTileFromPBFData()
 						}
 					}
 
-					if (numberBuildings < 150 || numberBuildings > 200) // 165 expected
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_INSIDE_RANGE(validation, size_t(150), numberBuildings, size_t(200)); // 165 expected
 
 					if (numberBuildings > 0)
 					{
-						if (double(numberBuildingsWithCorrectHeight) / double(numberBuildings) < 0.75) // we want at least 75% buildings with correct height
-						{
-							allSucceeded = false;
-						}
+						const double percentCorrectHeight = double(numberBuildingsWithCorrectHeight) / double(numberBuildings);
+
+						OCEAN_EXPECT_GREATER_EQUAL(validation, percentCorrectHeight, 0.75);
 					}
 
-					if (numberBuildings != numberBuildingsWithCorrectHeight + numberBuildingsWithDefaultHeight)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, numberBuildings, numberBuildingsWithCorrectHeight + numberBuildingsWithDefaultHeight);
 
-					if (numberRoads < 25 || numberRoads > 45) // 32 expected
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_INSIDE_RANGE(validation, size_t(25), numberRoads, size_t(45)); // 32 expected
 
-					if (numberTransits < 1 || numberTransits > 5) // 1 expected
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_INSIDE_RANGE(validation, size_t(1), numberTransits, size_t(5)); // 1 expected
 
-					if (numberUnknowns != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, numberUnknowns, size_t(0));
 
 					Log::info() << "The tile contains:";
 					Log::info() << "Buildings: " << numberBuildings << ", with correct height: " << numberBuildingsWithCorrectHeight << ", with default height: " << numberBuildingsWithDefaultHeight;
@@ -213,42 +199,37 @@ bool TestBasemap::testTileFromPBFData()
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	else
 	{
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBasemap::testMissingFeatures()
 {
 	Log::info() << "Testing missing features:";
 	Log::info() << " ";
+
+	Validation validation;
 
 	// several hardcoded locations at which we download tiles
 	const Vectors2 locations =
@@ -306,20 +287,13 @@ bool TestBasemap::testMissingFeatures()
 		}
 	}
 
-	const bool allSucceeded = numberTiles == numberTilesSucceeded;
+	OCEAN_EXPECT_EQUAL(validation, numberTiles, numberTilesSucceeded);
 
 	Log::info() << " ";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded to load " << numberTilesSucceeded << " tiles";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED to load " << (numberTiles - numberTilesSucceeded) << " of " << numberTiles << " tiles";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestBasemap::httpRequest(const std::string& url, std::vector<uint8_t>& response)

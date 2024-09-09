@@ -393,7 +393,7 @@ class Validation
 #endif
 
 #ifndef OCEAN_EXPECT_INSIDE_RANGE
-	#define OCEAN_EXPECT_INSIDE_RANGE(validation, lower, value, upper) validation.expectGreaterEqual(lower, value, upper, __FILE__, __LINE__)
+	#define OCEAN_EXPECT_INSIDE_RANGE(validation, lower, value, upper) validation.expectInsideRange(lower, value, upper, __FILE__, __LINE__)
 #endif
 
 #ifndef OCEAN_SET_FAILED
