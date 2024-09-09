@@ -285,6 +285,33 @@ class Validation
 		inline void expectGreaterEqual(const T& value0, const T& value1, const char* file, const int line);
 
 		/**
+		 * Informs this validation object that a value is expected to be inside a range.
+		 * In case 'lower <= value && value <= upper' is false, the validation object will not succeed.
+		 * @param lower The lower bound of the range (inclusive)
+		 * @param value The value to be checked
+		 * @param upper The upper bound of the range (inclusive)
+		 * @see succeeded().
+		 * @tparam T The data type of the value
+		 */
+		template <typename T>
+		inline void expectInsideRange(const T& lower, const T& value, const T& upper);
+
+		/**
+		 * Informs this validation object that a value is expected to be inside a range.
+		 * In case 'lower <= value && value <= upper' is false, the validation object will not succeed.
+		 * This function will also write a message to the error log.
+		 * @param lower The lower bound of the range (inclusive)
+		 * @param value The value to be checked
+		 * @param upper The upper bound of the range (inclusive)
+		 * @param file The source file in which the function call happens, e.g., __FILE__, must be valid
+		 * @param line The line in the source file in which the function call happens, e.g., __LINE__, must be valid
+		 * @see succeeded().
+		 * @tparam T The data type of the value
+		 */
+		template <typename T>
+		inline void expectInsideRange(const T& lower, const T& value, const T& upper, const char* file, const int line);
+
+		/**
 		 * Explicitly sets the validation to be failed.
 		 * @see succeeded().
 		 */
@@ -363,6 +390,10 @@ class Validation
 
 #ifndef OCEAN_EXPECT_GREATER_EQUAL
 	#define OCEAN_EXPECT_GREATER_EQUAL(validation, value0, value1) validation.expectGreaterEqual(value0, value1, __FILE__, __LINE__)
+#endif
+
+#ifndef OCEAN_EXPECT_INSIDE_RANGE
+	#define OCEAN_EXPECT_INSIDE_RANGE(validation, lower, value, upper) validation.expectGreaterEqual(lower, value, upper, __FILE__, __LINE__)
 #endif
 
 #ifndef OCEAN_SET_FAILED
@@ -687,6 +718,57 @@ inline void Validation::expectGreaterEqual(const T& value0, const T& value1, con
 			else
 			{
 				Log::error() << "Validation::expectGreaterEqual() failed in '" << file << "', in line " << line << randomGeneratorOutput();
+			}
+#endif // OCEAN_USE_GTEST
+		}
+	}
+}
+
+template <typename T>
+inline void Validation::expectInsideRange(const T& lower, const T& value, const T& upper)
+{
+	if (!(lower <= value && value <= upper))
+	{
+		setSucceededFalse();
+
+		if constexpr (Log::isSupported<T>())
+		{
+			Log::debug() << "Validation::expectInsideRange(" << lower << ", " << value << ", " << upper << ") failed at unknown location" << randomGeneratorOutput();
+		}
+		else
+		{
+			Log::debug() << "Validation::expectInsideRange() failed at unknown location" << randomGeneratorOutput();
+		}
+	}
+}
+
+template <typename T>
+inline void Validation::expectInsideRange(const T& lower, const T& value, const T& upper, const char* file, const int line)
+{
+	if (!(lower <= value && value <= upper))
+	{
+		setSucceededFalse();
+
+		ocean_assert(file != nullptr);
+		if (file != nullptr)
+		{
+#ifdef OCEAN_USE_GTEST
+			if constexpr (Log::isSupported<T, std::ostream>())
+			{
+				std::cerr << "\nValidation::expectInsideRange(" << lower << ", " << value << ", " << upper <<") failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+			}
+			else
+			{
+				std::cerr << "\nValidation::expectInsideRange() failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+			}
+#else
+			if constexpr (Log::isSupported<T>())
+			{
+				Log::error() << "Validation::expectInsideRange(" << lower << ", " << value << ", " << upper << ") failed in '" << file << "', in line " << line << randomGeneratorOutput();
+			}
+			else
+			{
+				Log::error() << "Validation::expectInsideRange() failed in '" << file << "', in line " << line << randomGeneratorOutput();
 			}
 #endif // OCEAN_USE_GTEST
 		}
