@@ -1075,10 +1075,13 @@ bool FinderPatternDetector::checkFinderPatternDirectional(const uint8_t* const y
 
 	// Determine the location of the top border with sub-pixel accuracy
 
-	topBorder = TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, paddingElements, topIn, topOut, threshold);
-	ocean_assert(topBorder.x() >= 0 && topBorder.x() < Scalar(width) && topBorder.y() >= 0 && topBorder.y() < Scalar(height));
+	if (!TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, paddingElements, topIn, topOut, threshold, topBorder)
+	    || !TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, paddingElements, bottomIn, bottomOut, threshold, bottomBorder))
+	{
+		return false;
+	}
 
-	bottomBorder = TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, paddingElements, bottomIn, bottomOut, threshold);
+	ocean_assert(topBorder.x() >= 0 && topBorder.x() < Scalar(width) && topBorder.y() >= 0 && topBorder.y() < Scalar(height));
 	ocean_assert(bottomBorder.x() >= 0 && bottomBorder.x() < Scalar(width) && bottomBorder.y() >= 0 && bottomBorder.y() < Scalar(height));
 
 	return true;

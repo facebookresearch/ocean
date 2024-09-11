@@ -964,13 +964,15 @@ bool LegacyQRCodeDetector2D::computeRefinedHomography(const uint8_t* const yFram
 
 		// Determine transition points with sub-pixel accuracy, compute the refined center of the current alignment pattern, and add a new correspondence to point lists
 
-		const Vector2 transitionPoints[4] =
+		Vector2 transitionPoints[4];
+
+		if (!TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, yFramePaddingElements, lastPointInside[0], firstPointOutside[0], grayThreshold, transitionPoints[0])
+		    || !TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, yFramePaddingElements, lastPointInside[1], firstPointOutside[1], grayThreshold, transitionPoints[1])
+		    || !TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, yFramePaddingElements, lastPointInside[2], firstPointOutside[2], grayThreshold, transitionPoints[2])
+		    || !TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, yFramePaddingElements, lastPointInside[3], firstPointOutside[3], grayThreshold, transitionPoints[3]))
 		{
-			TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, yFramePaddingElements, lastPointInside[0], firstPointOutside[0], grayThreshold),
-			TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, yFramePaddingElements, lastPointInside[1], firstPointOutside[1], grayThreshold),
-			TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, yFramePaddingElements, lastPointInside[2], firstPointOutside[2], grayThreshold),
-			TransitionDetector::computeTransitionPointSubpixelAccuracy(yFrame, width, height, yFramePaddingElements, lastPointInside[3], firstPointOutside[3], grayThreshold)
-		};
+			continue;
+		}
 
 		const Vector2 refinedAlignmentPatternCenterImage(Scalar(0.5) * (transitionPoints[0].x() + transitionPoints[1].x()), Scalar(0.5) * (transitionPoints[2].y() + transitionPoints[3].y()));
 		ocean_assert(refinedAlignmentPatternCenterImage.x() >= 0 && refinedAlignmentPatternCenterImage.x() < Scalar(width) && refinedAlignmentPatternCenterImage.y() >= 0 && refinedAlignmentPatternCenterImage.y() < Scalar(height));

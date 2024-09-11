@@ -124,9 +124,10 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT TransitionDetector
 		 * @param pointInside The point before the intensity transition, range: x,y in [0, infinity)
 		 * @param pointOutside The point after the intensity transition, range: x,y in [0, infinity)
 		 * @param grayThreshold The threshold that is used to compute the location of the transition with sub-pixel accuracy, range: [0, 255]
-		 * @return The transition point
+		 * @param transitionPoint Resulting sub-pixel position of the transition point
+		 * @return True if sub-pixel position can be computed (i.e. transition across `grayThreshold` exists between pixels at `pointInside` and `pointOutside`), otherwise false
 		 */
-		static Vector2 computeTransitionPointSubpixelAccuracy(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const VectorT2<unsigned int>& pointInside, const VectorT2<unsigned int>& pointOutside, const unsigned int grayThreshold);
+		static bool computeTransitionPointSubpixelAccuracy(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const VectorT2<unsigned int>& pointInside, const VectorT2<unsigned int>& pointOutside, const unsigned int grayThreshold, Vector2& transitionPoint);
 
 		/**
 		 * Determines whether an intensity value is black according to threshold value
