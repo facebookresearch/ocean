@@ -7,8 +7,6 @@
 
 #include "ocean/cv/detector/qrcodes/FinderPatternDetector.h"
 
-#include "ocean/cv/detector/qrcodes/TransitionDetector.h"
-
 namespace Ocean
 {
 
@@ -330,7 +328,7 @@ void FinderPatternDetector::detectFinderPatternInRow(const uint8_t* const yFrame
 			const unsigned int centerIntensity = yFrame[y * yFrameStrideElements + xCenter];
 			const unsigned int grayThreshold = determineThreshold(yRow + segment_1_start_black, segment_1_size, segment_2_size, segment_3_size, segment_4_size, segment_5_size);
 
-			if (grayThreshold <= 255u && centerIntensity < grayThreshold)
+			if (grayThreshold <= 255u && TransitionDetector::isBlack(centerIntensity, grayThreshold))
 			{
 				const unsigned int diameter = x - segment_1_start_black;
 				ocean_assert(diameter >= 6u);
@@ -383,7 +381,7 @@ IndexTriplets FinderPatternDetector::extractIndexTriplets(const FinderPatterns& 
 
 	IndexTriplets finderPatternTriplets;
 
-	const Scalar parallelOrientationTreshold = Numeric::cos(angleTolerance);
+	const Scalar parallelOrientationThreshold = Numeric::cos(angleTolerance);
 	const Scalar perpendicularOrientationThreshold = Numeric::cos(Numeric::pi_2() - angleTolerance);
 
 	for (size_t a = 0; a < finderPatterns.size() - 2; ++a)
@@ -405,7 +403,7 @@ IndexTriplets FinderPatternDetector::extractIndexTriplets(const FinderPatterns& 
 			}
 
 			const Scalar absCosOrientationAB = std::abs(finderPatternA.orientation() * finderPatternB.orientation());
-			if (absCosOrientationAB <= parallelOrientationTreshold && absCosOrientationAB >= perpendicularOrientationThreshold)
+			if (absCosOrientationAB <= parallelOrientationThreshold && absCosOrientationAB >= perpendicularOrientationThreshold)
 			{
 				ocean_assert(Numeric::acos(absCosOrientationAB) >= angleTolerance && Numeric::acos(absCosOrientationAB) <= Numeric::pi_2() - angleTolerance);
 				continue;
@@ -432,8 +430,8 @@ IndexTriplets FinderPatternDetector::extractIndexTriplets(const FinderPatterns& 
 
 				const Scalar absCosOrientationAC = std::abs(finderPatternA.orientation() * finderPatternC.orientation());
 				const Scalar absCosOrientationBC = std::abs(finderPatternB.orientation() * finderPatternC.orientation());
-				if ((absCosOrientationAC <= parallelOrientationTreshold && absCosOrientationAC >= perpendicularOrientationThreshold)
-					|| (absCosOrientationBC <= parallelOrientationTreshold && absCosOrientationBC >= perpendicularOrientationThreshold))
+				if ((absCosOrientationAC <= parallelOrientationThreshold && absCosOrientationAC >= perpendicularOrientationThreshold)
+					|| (absCosOrientationBC <= parallelOrientationThreshold && absCosOrientationBC >= perpendicularOrientationThreshold))
 				{
 					ocean_assert((Numeric::acos(absCosOrientationAC) >= angleTolerance && Numeric::acos(absCosOrientationAC) <= Numeric::pi_2() - angleTolerance)
 						|| (Numeric::acos(absCosOrientationBC) >= angleTolerance && Numeric::acos(absCosOrientationBC) <= Numeric::pi_2() - angleTolerance));
@@ -642,6 +640,7 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(finderPattern.position().x() >= 0 && finderPattern.position().x() <= Scalar(width - 1u) && finderPattern.position().y() >= 0 && finderPattern.position().y() <= Scalar(height - 1u));
+	ocean_assert(finderPattern.grayThreshold() <= 255u);
 
 	if (finderPattern.cornersKnown() == false)
 	{
@@ -711,7 +710,7 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 
 			// If the value of the current pixel (x, y) is below the threshold, search in the outward direction (perpendicular to edge and away from the center of the finder pattern), otherwise search in the inward direction
 
-			if (yFrame[y * frameStrideElements + x] < finderPattern.grayThreshold())
+			if (TransitionDetector::isBlackPixel(yFrame + y * frameStrideElements + x, finderPattern.grayThreshold()))
 			{
 				Bresenham bresenham(int(x), int(y), Numeric::round32(point.x() + perpendicularOut.x()), Numeric::round32(point.y() + perpendicularOut.y()));
 
@@ -722,7 +721,7 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 			}
 			else
 			{
-				ocean_assert(yFrame[y * frameStrideElements + x] >= finderPattern.grayThreshold());
+				ocean_assert(TransitionDetector::isWhitePixel(yFrame + y * frameStrideElements + x, finderPattern.grayThreshold()));
 				Bresenham bresenham(int(x), int(y), Numeric::round32(point.x() - perpendicularOut.x()), Numeric::round32(point.y() - perpendicularOut.y()));
 
 				if (bresenham.isValid())
@@ -742,7 +741,7 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 
 			pixelValuesIn[linePointsCount] = Scalar(yFrame[pixelLocationsIn[linePointsCount].y() * frameStrideElements + pixelLocationsIn[linePointsCount].x()]);
 			pixelValuesOut[linePointsCount] = Scalar(yFrame[pixelLocationsOut[linePointsCount].y() * frameStrideElements + pixelLocationsOut[linePointsCount].x()]);
-			ocean_assert(pixelValuesIn[linePointsCount] < Scalar(finderPattern.grayThreshold()) && pixelValuesOut[linePointsCount] >= Scalar(finderPattern.grayThreshold()));
+			ocean_assert(TransitionDetector::isBlack(pixelValuesIn[linePointsCount], Scalar(finderPattern.grayThreshold())) && TransitionDetector::isWhite(pixelValuesOut[linePointsCount], Scalar(finderPattern.grayThreshold())));
 
 			interpolationWeights[linePointsCount] = (pixelValuesOut[linePointsCount] - Scalar(finderPattern.grayThreshold())) / (pixelValuesOut[linePointsCount] - pixelValuesIn[linePointsCount]);
 			ocean_assert(interpolationWeights[linePointsCount] >= 0 && interpolationWeights[linePointsCount] <= 1);
@@ -887,6 +886,7 @@ bool FinderPatternDetector::checkFinderPatternInNeighborhood(const uint8_t* cons
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(width >= 29u && height >= 29u);
 	ocean_assert(xCenter < width && yCenter < height);
+	ocean_assert(threshold <= 255u);
 	ocean_assert(edgePoints != nullptr);
 
 	// Apply directional scanline checks: 8 directions yielding 16 edge points pairs: (i, i + 8)
@@ -976,7 +976,7 @@ bool FinderPatternDetector::checkFinderPatternInNeighborhood(const uint8_t* cons
 				{
 					ocean_assert(x >= 0 && x < int(width));
 
-					if (yRow[x] >= threshold)
+					if (TransitionDetector::isWhitePixel(yRow + x, threshold))
 					{
 						return false;
 					}
@@ -997,6 +997,7 @@ bool FinderPatternDetector::checkFinderPatternDirectional(const uint8_t* const y
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(xCenter < width && yCenter < height);
 	ocean_assert(Numeric::isInsideRange(Scalar(0), angle, Numeric::pi()));
+	ocean_assert(threshold <= 255u);
 
 #if 1
 	const Vector3 scanlineDirectionHomogeneous = Quaternion(Vector3(0, 0, 1), -angle) * Vector3(1, 0, 1);

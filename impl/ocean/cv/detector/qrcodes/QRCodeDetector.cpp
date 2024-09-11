@@ -212,7 +212,7 @@ bool QRCodeDetector::extractModulesFromImage(const AnyCamera& anyCamera, const u
 
 	const unsigned int strideElements = width + paddingElements;
 
-	TransitionDetector::PixelComparisonFunc isForegroundPixel = isNormalReflectance ? TransitionDetector::isLessOrEqual : TransitionDetector::isGreater;
+	TransitionDetector::PixelBinaryThresholdFunc isForegroundPixel = isNormalReflectance ? TransitionDetector::isBlackPixel : TransitionDetector::isWhitePixel;
 
 	ocean_assert(yFrame != nullptr && width != 0u && height != 0u);
 	ocean_assert(grayThreshold <= 255u);

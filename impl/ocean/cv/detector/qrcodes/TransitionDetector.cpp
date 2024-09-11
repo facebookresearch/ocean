@@ -25,13 +25,14 @@ bool TransitionDetector::findNextPixel(const uint8_t* const yPointer, const unsi
 	ocean_assert(yPointer != nullptr);
 	ocean_assert(maximumDistance != 0u);
 	ocean_assert(x < width && y < height);
+	ocean_assert(threshold <= 255u);
 
 	const unsigned int yPointerStrideElements = width + yPointerPaddingElements;
 
 	rows = 0u;
 	columns = 0u;
 
-	if (tFindBlackPixel ? ((unsigned int)(yPointer[y * yPointerStrideElements + x]) < threshold) : ((unsigned int)(yPointer[y * yPointerStrideElements + x]) >= threshold))
+	if (tFindBlackPixel == isBlackPixel(yPointer + y * yPointerStrideElements + x, threshold))
 	{
 		return false;
 	}
@@ -50,7 +51,7 @@ bool TransitionDetector::findNextPixel(const uint8_t* const yPointer, const unsi
 	ocean_assert(nextX >= 0 && nextX < int(width) && nextY >= 0 && nextY < int(height));
 	const uint8_t* nextPixel = yPointer + (unsigned int)nextY * yPointerStrideElements + (unsigned int)nextX;
 
-	while (nextX >= 0 && nextX < int(width) && nextY >= 0 && nextY < int(height) && columns <= maximumDistance && rows <= maximumDistance && (tFindBlackPixel ? (int(*nextPixel) >= int(threshold)) : (int(*nextPixel) < int(threshold))))
+	while (nextX >= 0 && nextX < int(width) && nextY >= 0 && nextY < int(height) && columns <= maximumDistance && rows <= maximumDistance && tFindBlackPixel != isBlackPixel(nextPixel, threshold))
 	{
 		ocean_assert(currentX >= 0 && currentX < int(width) && currentY >= 0 && currentY < int(height));
 		ocean_assert(std::abs(nextX - currentX) <= 1 && std::abs(nextY - currentY) <= 1);
@@ -83,8 +84,8 @@ bool TransitionDetector::findNextPixel(const uint8_t* const yPointer, const unsi
 		&& (currentX != nextX || currentY != nextY)
 		&& nextX >= 0 && nextX < int(width) && nextY >= 0 && nextY < int(height)
 		&& columns <= maximumDistance && rows <= maximumDistance
-		&& (tFindBlackPixel ? ((unsigned int)(yPointer[currentY * yPointerStrideElements + currentX]) >= threshold) : ((unsigned int)(yPointer[currentY * yPointerStrideElements + currentX]) < threshold))
-		&& (tFindBlackPixel ? ((unsigned int)(yPointer[nextY * yPointerStrideElements + nextX]) < threshold) : ((unsigned int)(yPointer[nextY * yPointerStrideElements + nextX]) >= threshold));
+		&& tFindBlackPixel != isBlackPixel(yPointer + currentY * yPointerStrideElements + currentX, threshold)
+		&& tFindBlackPixel == isBlackPixel(yPointer + nextY * yPointerStrideElements + nextX, threshold);
 }
 
 // Explicit instantiations
@@ -97,6 +98,7 @@ bool TransitionDetector::findNextUpperPixel(const uint8_t* yPointer, unsigned in
 	ocean_assert(yPointer != nullptr);
 	ocean_assert(maximalRows != 0u);
 	ocean_assert_and_suppress_unused(maximalRows <= height - y, height);
+	ocean_assert(threshold <= 255u);
 	ocean_assert(frameStrideElements != 0u);
 
 	if (y == 0u)
@@ -106,7 +108,7 @@ bool TransitionDetector::findNextUpperPixel(const uint8_t* yPointer, unsigned in
 
 	rows = 0u;
 
-	while (int(--y) >= 0 && ++rows <= maximalRows && (tFindBlackPixel ? (int(*(yPointer - frameStrideElements)) > int(threshold)) : (int(*(yPointer - frameStrideElements)) < int(threshold))))
+	while (int(--y) >= 0 && ++rows <= maximalRows && tFindBlackPixel != isBlackPixel(yPointer - frameStrideElements, threshold))
 	{
 		yPointer -= frameStrideElements;
 	}
@@ -124,6 +126,7 @@ bool TransitionDetector::findNextLowerPixel(const uint8_t* yPointer, unsigned in
 	ocean_assert(yPointer != nullptr);
 	ocean_assert(maximalRows != 0u);
 	ocean_assert(y < height);
+	ocean_assert(threshold <= 255u);
 	ocean_assert(frameStrideElements != 0u);
 
 	if (y >= height - 1u)
@@ -133,7 +136,7 @@ bool TransitionDetector::findNextLowerPixel(const uint8_t* yPointer, unsigned in
 
 	rows = 0u;
 
-	while (++y < height && ++rows <= maximalRows && (tFindBlackPixel ? (int(*(yPointer + frameStrideElements)) > int(threshold)) : (int(*(yPointer + frameStrideElements)) < int(threshold))))
+	while (++y < height && ++rows <= maximalRows && tFindBlackPixel != isBlackPixel(yPointer + frameStrideElements, threshold))
 	{
 		yPointer += frameStrideElements;
 	}
@@ -150,12 +153,13 @@ bool TransitionDetector::determineSubPixelLocation(const uint8_t* yFrame, const 
 	ocean_assert(yFrame != nullptr);
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(xCenter < width && yCenter < height);
+	ocean_assert(grayThreshold <= 255u);
 
 	const unsigned int strideElements = width + paddingElements;
 
-	TransitionDetector::PixelComparisonFunc isForegroundPixel = isNormalReflectance ? TransitionDetector::isLessOrEqual : TransitionDetector::isGreater;
+	TransitionDetector::PixelBinaryThresholdFunc isForegroundPixel = isNormalReflectance ? TransitionDetector::isBlackPixel : TransitionDetector::isWhitePixel;
 #if defined(OCEAN_DEBUG)
-	TransitionDetector::PixelComparisonFunc isBackgroundPixel = isNormalReflectance ? TransitionDetector::isGreater : TransitionDetector::isLessOrEqual;
+	TransitionDetector::PixelBinaryThresholdFunc isBackgroundPixel = isNormalReflectance ? TransitionDetector::isWhitePixel : TransitionDetector::isBlackPixel;
 #endif
 
 	ocean_assert(isForegroundPixel(yFrame + yCenter * strideElements + xCenter, grayThreshold));
@@ -269,7 +273,7 @@ Vector2 TransitionDetector::computeTransitionPointSubpixelAccuracy(const uint8_t
 
 	const Scalar lastPointInsideValue = Scalar(yFrame[(unsigned int)lastPointInside.y() * frameStrideElements + (unsigned int)lastPointInside.x()]);
 	const Scalar firstPointOutsideValue = Scalar(yFrame[(unsigned int)firstPointOutside.y() * frameStrideElements + (unsigned int)firstPointOutside.x()]);
-	ocean_assert(lastPointInsideValue < Scalar(grayThreshold) && firstPointOutsideValue >= Scalar(grayThreshold));
+	ocean_assert(isBlack(lastPointInsideValue, Scalar(grayThreshold)) && isWhite(firstPointOutsideValue, Scalar(grayThreshold)));
 
 	const Vector2 transitionPoint(Vector2(firstPointOutside) + (Vector2(lastPointInside) - Vector2(firstPointOutside)) * ((firstPointOutsideValue - Scalar(grayThreshold)) / (firstPointOutsideValue - lastPointInsideValue)));
 	ocean_assert(transitionPoint.x() >= 0 && transitionPoint.x() < Scalar(width) && transitionPoint.y() >= 0 && transitionPoint.y() < Scalar(height));

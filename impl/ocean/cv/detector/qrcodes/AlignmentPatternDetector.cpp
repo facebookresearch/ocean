@@ -80,8 +80,8 @@ void AlignmentPatternDetector::detectAlignmentPatternsInRow(const uint8_t* yFram
 	const unsigned int strideElements = width + paddingElements;
 	const uint8_t* const yRow = yFrame + strideElements * row;
 
-	TransitionDetector::PixelComparisonFunc isForegroundPixel = isNormalReflectance ? TransitionDetector::isLessOrEqual : TransitionDetector::isGreater;
-	TransitionDetector::PixelComparisonFunc isBackgroundPixel = isNormalReflectance ? TransitionDetector::isGreater : TransitionDetector::isLessOrEqual;
+	TransitionDetector::PixelBinaryThresholdFunc isForegroundPixel = isNormalReflectance ? TransitionDetector::isBlackPixel : TransitionDetector::isWhitePixel;
+	TransitionDetector::PixelBinaryThresholdFunc isBackgroundPixel = isNormalReflectance ? TransitionDetector::isWhitePixel : TransitionDetector::isBlackPixel;
 
 	unsigned int x = 0u;
 

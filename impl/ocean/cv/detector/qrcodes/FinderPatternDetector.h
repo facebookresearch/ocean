@@ -10,6 +10,7 @@
 #include "ocean/cv/detector/qrcodes/QRCodes.h"
 #include "ocean/cv/detector/qrcodes/QRCode.h"
 #include "ocean/cv/detector/qrcodes/QRCodeEncoder.h"
+#include "ocean/cv/detector/qrcodes/TransitionDetector.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/Memory.h"
@@ -546,7 +547,7 @@ inline const Vector2& FinderPattern::orientation() const
 
 inline bool FinderPattern::isNormalReflectance() const
 {
-	return centerIntensity_ <= grayThreshold_;
+	return TransitionDetector::isBlack(centerIntensity_, grayThreshold_);
 }
 
 inline bool FinderPattern::comesBefore(const FinderPattern& first, const FinderPattern& second)

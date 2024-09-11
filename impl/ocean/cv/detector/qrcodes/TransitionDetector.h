@@ -13,6 +13,8 @@
 
 #include "ocean/math/Vector2.h"
 
+#include <type_traits>
+
 namespace Ocean
 {
 
@@ -37,13 +39,13 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT TransitionDetector
 		 * Function pointer to functions that detect a transition
 		 * @sa TransitionDetector::findNextPixel<bool>()
 		 */
-		typedef bool (*FindNextPixelFunc)(const uint8_t* const, const unsigned int, const unsigned int, const unsigned int, const unsigned int, const unsigned int, CV::Bresenham&, const unsigned int, const unsigned int, unsigned int&, unsigned int&, VectorT2<unsigned int>&, VectorT2<unsigned int>&);
+		using FindNextPixelFunc = bool(*)(const uint8_t* const, const unsigned int, const unsigned int, const unsigned int, const unsigned int, const unsigned int, CV::Bresenham&, const unsigned int, const unsigned int, unsigned int&, unsigned int&, VectorT2<unsigned int>&, VectorT2<unsigned int>&);
 
 		/**
-		 * Function pointer for pixel comparison functions
-		 * @sa TransitionDetector::isLessOrEqual(), TransitionDetector::isGreater()
+		 * Function pointer for applying a binary threshold to a pixel to determine whether it is black or white
+		 * @sa TransitionDetector::isBlackPixel(), TransitionDetector::isWhitePixel()
 		 */
-		typedef bool (*PixelComparisonFunc)(const uint8_t*, const unsigned int);
+		using PixelBinaryThresholdFunc = bool(*)(const uint8_t*, const uint8_t);
 
 	public:
 
@@ -121,24 +123,46 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT TransitionDetector
 		 * @param yFramePaddingElements Number of padding elements of this frame, range: [0, infinity)
 		 * @param pointInside The point before the intensity transition, range: x,y in [0, infinity)
 		 * @param pointOutside The point after the intensity transition, range: x,y in [0, infinity)
-		 * @param grayThreshold The threshold that is used to compute the location of the transition with sub-pixel accuracy
+		 * @param grayThreshold The threshold that is used to compute the location of the transition with sub-pixel accuracy, range: [0, 255]
 		 * @return The transition point
 		 */
 		static Vector2 computeTransitionPointSubpixelAccuracy(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const VectorT2<unsigned int>& pointInside, const VectorT2<unsigned int>& pointOutside, const unsigned int grayThreshold);
 
 		/**
-		 * Returns true if the pixel is less or equal to a threshold
-		 * @param yFramePixel Pointer to a pixel in an 8-bit grayscale image, must be value
-		 * @param threshold The threshold that is used for the comparison, range: [0, 256)
+		 * Determines whether an intensity value is black according to threshold value
+		 * @param intensityValue Intensity value in a grayscale image
+		 * @param threshold The threshold that is used for the comparison, range: [0, 255]
+		 * @return True if the intensity value is black relative to threshold value (i.e. less or equal to a threshold), false otherwise
+		 * @tparam T The data type of the intensity value, `T` can be an arithmetic type (integral or floating point type) able to represent values ranging from 0 to 255
 		 */
-		static inline bool isLessOrEqual(const uint8_t* yFramePixel, unsigned int threshold);
+		template<typename T>
+		static inline bool isBlack(const T& intensityValue, const T& threshold);
 
 		/**
-		 * Returns true if the pixel is larger than a threshold
-		 * @param yFramePixel Pointer to a pixel in an 8-bit grayscale image, must be value
-		 * @param threshold The threshold that is used for the comparison, range: [0, 256)
+		 * Determines whether an intensity value is white according to threshold value
+		 * @param intensityValue Intensity value in a grayscale image
+		 * @param threshold The threshold that is used for the comparison, range: [0, 255]
+		 * @return True if the intensity value is white relative to threshold value (i.e. is greater than a threshold), false otherwise
+		 * @tparam T The data type of the intensity value, `T` can be an arithmetic type (integer or floating point type) able to represent values ranging from 0 to 255
 		 */
-		static inline bool isGreater(const uint8_t* yFramePixel, unsigned int threshold);
+		template<typename T>
+		static inline bool isWhite(const T& intensityValue, const T& threshold);
+
+		/**
+		 * Determines whether a pixel is black according to threshold value
+		 * @param yFramePixel Pointer to a pixel in an 8-bit grayscale image, must be valid
+		 * @param threshold The threshold that is used for the comparison, range: [0, 255]
+		 * @return True if the pixel value is black relative to threshold value (i.e. less or equal to a threshold), false otherwise
+		 */
+		static inline bool isBlackPixel(const uint8_t* yFramePixel, uint8_t threshold);
+
+		/**
+		 * Determines whether a pixel is white according to threshold value
+		 * @param yFramePixel Pointer to a pixel in an 8-bit grayscale image, must be valid
+		 * @param threshold The threshold that is used for the comparison, range: [0, 255]
+		 * @return True if the pixel value is white relative to threshold value (i.e. is greater than a threshold), false otherwise
+		 */
+		static inline bool isWhitePixel(const uint8_t* yFramePixel, uint8_t threshold);
 
 		/**
 		 * Determines whether a transition occurred between pixel values of two neighboring pixels in a row and, if so, calculates the sub-pixel horizontal position of transition point
@@ -147,25 +171,41 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT TransitionDetector
 		 * @param xPointLeft Horizontal position of the left pixel, range: [0, width - 2]
 		 * @param grayThreshold Threshold value that is used to check whether a transition occurred between the two neighboring pixels
 		 * @param xTransitionPoint Resulting sub-pixel horizontal position of the transition point
-		 * @return True if transition across `grayThreshold` exists between left and right pixel, otherwise false
+		 * @return True if sub-pixel position can be computed (i.e. if transition across `grayThreshold` exists between left and right pixel), otherwise false
 		 */
 		static inline bool computeHorizontalTransitionPointSubpixelAccuracy(const std::uint8_t* yRow, const unsigned int width, const unsigned int xPointLeft, const std::uint8_t grayThreshold, Scalar& xTransitionPoint);
 };
 
-inline bool TransitionDetector::isLessOrEqual(const uint8_t* yFramePixel, unsigned int threshold)
+template<typename T>
+inline bool TransitionDetector::isBlack(const T& intensityValue, const T& threshold)
 {
-	ocean_assert(yFramePixel != nullptr);
-	ocean_assert(threshold < 256u);
+	static_assert(std::is_arithmetic_v<T> && NumericT<T>::maxValue() >= 255, "`T` must be an arithmetic type able to hold values up to 255!");
+	ocean_assert (threshold >= T(0) && threshold <= T(255));
 
-	return *yFramePixel <= threshold;
+	return intensityValue <= threshold;
 }
 
-inline bool TransitionDetector::isGreater(const uint8_t* yFramePixel, unsigned int threshold)
+template<typename T>
+inline bool TransitionDetector::isWhite(const T& intensityValue, const T& threshold)
+{
+	static_assert(std::is_arithmetic_v<T> && NumericT<T>::maxValue() >= 255, "`T` must be an arithmetic type able to hold values up to 255!");
+	ocean_assert (threshold >= T(0) && threshold <= T(255));
+
+	return intensityValue > threshold;
+}
+
+inline bool TransitionDetector::isBlackPixel(const uint8_t* yFramePixel, uint8_t threshold)
 {
 	ocean_assert(yFramePixel != nullptr);
-	ocean_assert(threshold < 256u);
 
-	return *yFramePixel > threshold;
+	return isBlack(*yFramePixel, threshold);
+}
+
+inline bool TransitionDetector::isWhitePixel(const uint8_t* yFramePixel, uint8_t threshold)
+{
+	ocean_assert(yFramePixel != nullptr);
+
+	return isWhite(*yFramePixel, threshold);
 }
 
 inline bool TransitionDetector::computeHorizontalTransitionPointSubpixelAccuracy(const std::uint8_t* yRow, const unsigned int width, const unsigned int xPointLeft, const std::uint8_t grayThreshold, Scalar& xTransitionPoint)
