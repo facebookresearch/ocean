@@ -710,7 +710,7 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 
 			// If the value of the current pixel (x, y) is below the threshold, search in the outward direction (perpendicular to edge and away from the center of the finder pattern), otherwise search in the inward direction
 
-			if (TransitionDetector::isBlackPixel(yFrame + y * frameStrideElements + x, finderPattern.grayThreshold()))
+			if (TransitionDetector::isBlackPixel(yFrame + y * frameStrideElements + x, uint8_t(finderPattern.grayThreshold())))
 			{
 				Bresenham bresenham(int(x), int(y), Numeric::round32(point.x() + perpendicularOut.x()), Numeric::round32(point.y() + perpendicularOut.y()));
 
@@ -721,7 +721,7 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 			}
 			else
 			{
-				ocean_assert(TransitionDetector::isWhitePixel(yFrame + y * frameStrideElements + x, finderPattern.grayThreshold()));
+				ocean_assert(TransitionDetector::isWhitePixel(yFrame + y * frameStrideElements + x, uint8_t(finderPattern.grayThreshold())));
 				Bresenham bresenham(int(x), int(y), Numeric::round32(point.x() - perpendicularOut.x()), Numeric::round32(point.y() - perpendicularOut.y()));
 
 				if (bresenham.isValid())
@@ -976,7 +976,7 @@ bool FinderPatternDetector::checkFinderPatternInNeighborhood(const uint8_t* cons
 				{
 					ocean_assert(x >= 0 && x < int(width));
 
-					if (TransitionDetector::isWhitePixel(yRow + x, threshold))
+					if (TransitionDetector::isWhitePixel(yRow + x, uint8_t(threshold)))
 					{
 						return false;
 					}

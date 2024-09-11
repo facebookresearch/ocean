@@ -32,7 +32,7 @@ bool TransitionDetector::findNextPixel(const uint8_t* const yPointer, const unsi
 	rows = 0u;
 	columns = 0u;
 
-	if (tFindBlackPixel == isBlackPixel(yPointer + y * yPointerStrideElements + x, threshold))
+	if (tFindBlackPixel == isBlackPixel(yPointer + y * yPointerStrideElements + x, uint8_t(threshold)))
 	{
 		return false;
 	}
@@ -51,7 +51,7 @@ bool TransitionDetector::findNextPixel(const uint8_t* const yPointer, const unsi
 	ocean_assert(nextX >= 0 && nextX < int(width) && nextY >= 0 && nextY < int(height));
 	const uint8_t* nextPixel = yPointer + (unsigned int)nextY * yPointerStrideElements + (unsigned int)nextX;
 
-	while (nextX >= 0 && nextX < int(width) && nextY >= 0 && nextY < int(height) && columns <= maximumDistance && rows <= maximumDistance && tFindBlackPixel != isBlackPixel(nextPixel, threshold))
+	while (nextX >= 0 && nextX < int(width) && nextY >= 0 && nextY < int(height) && columns <= maximumDistance && rows <= maximumDistance && tFindBlackPixel != isBlackPixel(nextPixel, uint8_t(threshold)))
 	{
 		ocean_assert(currentX >= 0 && currentX < int(width) && currentY >= 0 && currentY < int(height));
 		ocean_assert(std::abs(nextX - currentX) <= 1 && std::abs(nextY - currentY) <= 1);
@@ -84,8 +84,8 @@ bool TransitionDetector::findNextPixel(const uint8_t* const yPointer, const unsi
 		&& (currentX != nextX || currentY != nextY)
 		&& nextX >= 0 && nextX < int(width) && nextY >= 0 && nextY < int(height)
 		&& columns <= maximumDistance && rows <= maximumDistance
-		&& tFindBlackPixel != isBlackPixel(yPointer + currentY * yPointerStrideElements + currentX, threshold)
-		&& tFindBlackPixel == isBlackPixel(yPointer + nextY * yPointerStrideElements + nextX, threshold);
+		&& tFindBlackPixel != isBlackPixel(yPointer + currentY * yPointerStrideElements + currentX, uint8_t(threshold))
+		&& tFindBlackPixel == isBlackPixel(yPointer + nextY * yPointerStrideElements + nextX, uint8_t(threshold));
 }
 
 // Explicit instantiations
@@ -108,7 +108,7 @@ bool TransitionDetector::findNextUpperPixel(const uint8_t* yPointer, unsigned in
 
 	rows = 0u;
 
-	while (int(--y) >= 0 && ++rows <= maximalRows && tFindBlackPixel != isBlackPixel(yPointer - frameStrideElements, threshold))
+	while (int(--y) >= 0 && ++rows <= maximalRows && tFindBlackPixel != isBlackPixel(yPointer - frameStrideElements, uint8_t(threshold)))
 	{
 		yPointer -= frameStrideElements;
 	}
@@ -136,7 +136,7 @@ bool TransitionDetector::findNextLowerPixel(const uint8_t* yPointer, unsigned in
 
 	rows = 0u;
 
-	while (++y < height && ++rows <= maximalRows && tFindBlackPixel != isBlackPixel(yPointer + frameStrideElements, threshold))
+	while (++y < height && ++rows <= maximalRows && tFindBlackPixel != isBlackPixel(yPointer + frameStrideElements, uint8_t(threshold)))
 	{
 		yPointer += frameStrideElements;
 	}
@@ -162,13 +162,13 @@ bool TransitionDetector::determineSubPixelLocation(const uint8_t* yFrame, const 
 	TransitionDetector::PixelBinaryThresholdFunc isBackgroundPixel = isNormalReflectance ? TransitionDetector::isWhitePixel : TransitionDetector::isBlackPixel;
 #endif
 
-	ocean_assert(isForegroundPixel(yFrame + yCenter * strideElements + xCenter, grayThreshold));
+	ocean_assert(isForegroundPixel(yFrame + yCenter * strideElements + xCenter, uint8_t(grayThreshold)));
 
 	// First, we identify the first left, right, top, and bottom pixel that do not match with the threshold anymore
 
 	unsigned int xLeft = xCenter - 1u; // exclusive location
 
-	while (xLeft < width && isForegroundPixel(yFrame + (yCenter * strideElements + xLeft), grayThreshold))
+	while (xLeft < width && isForegroundPixel(yFrame + (yCenter * strideElements + xLeft), uint8_t(grayThreshold)))
 	{
 		--xLeft;
 	}
@@ -180,7 +180,7 @@ bool TransitionDetector::determineSubPixelLocation(const uint8_t* yFrame, const 
 
 	unsigned int xRight = xCenter + 1u; // exclusive location
 
-	while (xRight < width && isForegroundPixel(yFrame + (yCenter * strideElements + xRight), grayThreshold))
+	while (xRight < width && isForegroundPixel(yFrame + (yCenter * strideElements + xRight), uint8_t(grayThreshold)))
 	{
 		++xRight;
 	}
@@ -192,7 +192,7 @@ bool TransitionDetector::determineSubPixelLocation(const uint8_t* yFrame, const 
 
 	unsigned int yTop = yCenter - 1u; // exclusive location
 
-	while (yTop < height && isForegroundPixel(yFrame + (yTop * strideElements + xCenter), grayThreshold))
+	while (yTop < height && isForegroundPixel(yFrame + (yTop * strideElements + xCenter), uint8_t(grayThreshold)))
 	{
 		--yTop;
 	}
@@ -204,7 +204,7 @@ bool TransitionDetector::determineSubPixelLocation(const uint8_t* yFrame, const 
 
 	unsigned int yBottom = yCenter + 1u; // exclusive location
 
-	while (yBottom < height && isForegroundPixel(yFrame + (yBottom * strideElements + xCenter), grayThreshold))
+	while (yBottom < height && isForegroundPixel(yFrame + (yBottom * strideElements + xCenter), uint8_t(grayThreshold)))
 	{
 		++yBottom;
 	}
@@ -219,8 +219,8 @@ bool TransitionDetector::determineSubPixelLocation(const uint8_t* yFrame, const 
 	// x = (out - threshold) / (out - in)
 
 	// left border
-	ocean_assert(isForegroundPixel(yFrame + yCenter * strideElements + xLeft + 1u, grayThreshold));
-	ocean_assert(isBackgroundPixel(yFrame + yCenter * strideElements + xLeft + 0u, grayThreshold));
+	ocean_assert(isForegroundPixel(yFrame + yCenter * strideElements + xLeft + 1u, uint8_t(grayThreshold)));
+	ocean_assert(isBackgroundPixel(yFrame + yCenter * strideElements + xLeft + 0u, uint8_t(grayThreshold)));
 	const float leftIn = float(yFrame[yCenter * strideElements + xLeft + 1u]);
 	const float leftOut = float(yFrame[yCenter * strideElements + xLeft + 0u]);
 
@@ -228,8 +228,8 @@ bool TransitionDetector::determineSubPixelLocation(const uint8_t* yFrame, const 
 	const float leftBorder = float(xLeft) + (leftOut - float(grayThreshold)) / (leftOut - leftIn);
 
 	// right border
-	ocean_assert(isForegroundPixel(yFrame + yCenter * strideElements + xRight - 1u, grayThreshold));
-	ocean_assert(isBackgroundPixel(yFrame + yCenter * strideElements + xRight + 0u, grayThreshold));
+	ocean_assert(isForegroundPixel(yFrame + yCenter * strideElements + xRight - 1u, uint8_t(grayThreshold)));
+	ocean_assert(isBackgroundPixel(yFrame + yCenter * strideElements + xRight + 0u, uint8_t(grayThreshold)));
 	const float rightIn = float(yFrame[yCenter * strideElements + xRight - 1u]);
 	const float rightOut = float(yFrame[yCenter * strideElements + xRight + 0u]);
 
@@ -237,8 +237,8 @@ bool TransitionDetector::determineSubPixelLocation(const uint8_t* yFrame, const 
 	const float rightBorder = float(xRight) - (rightOut - float(grayThreshold)) / (rightOut - rightIn);
 
 	// top border
-	ocean_assert(isForegroundPixel(yFrame + (yTop + 1u) * strideElements + xCenter, grayThreshold));
-	ocean_assert(isBackgroundPixel(yFrame + (yTop + 0u) * strideElements + xCenter, grayThreshold));
+	ocean_assert(isForegroundPixel(yFrame + (yTop + 1u) * strideElements + xCenter, uint8_t(grayThreshold)));
+	ocean_assert(isBackgroundPixel(yFrame + (yTop + 0u) * strideElements + xCenter, uint8_t(grayThreshold)));
 	const float topIn = float(yFrame[(yTop + 1u) * strideElements + xCenter]);
 	const float topOut = float(yFrame[(yTop + 0u) * strideElements + xCenter]);
 
@@ -246,8 +246,8 @@ bool TransitionDetector::determineSubPixelLocation(const uint8_t* yFrame, const 
 	const float topBorder = float(yTop) + (topOut - float(grayThreshold)) / (topOut - topIn);
 
 	// bottom border
-	ocean_assert(isForegroundPixel(yFrame + (yBottom - 1u) * strideElements + xCenter, grayThreshold));
-	ocean_assert(isBackgroundPixel(yFrame + (yBottom + 0u) * strideElements + xCenter, grayThreshold));
+	ocean_assert(isForegroundPixel(yFrame + (yBottom - 1u) * strideElements + xCenter, uint8_t(grayThreshold)));
+	ocean_assert(isBackgroundPixel(yFrame + (yBottom + 0u) * strideElements + xCenter, uint8_t(grayThreshold)));
 	const float bottomIn = float(yFrame[(yBottom - 1u) * strideElements + xCenter]);
 	const float bottomOut = float(yFrame[(yBottom + 0u) * strideElements + xCenter]);
 
@@ -275,7 +275,7 @@ bool TransitionDetector::computeTransitionPointSubpixelAccuracy(const uint8_t* c
 	const uint8_t lastPointInsideValue = yFrame[(unsigned int)lastPointInside.y() * frameStrideElements + (unsigned int)lastPointInside.x()];
 	const uint8_t firstPointOutsideValue = yFrame[(unsigned int)firstPointOutside.y() * frameStrideElements + (unsigned int)firstPointOutside.x()];
 
-	if (isBlack<uint8_t>(firstPointOutsideValue, grayThreshold) == isBlack<uint8_t>(lastPointInsideValue, grayThreshold))
+	if (isBlack<uint8_t>(firstPointOutsideValue, uint8_t(grayThreshold)) == isBlack<uint8_t>(lastPointInsideValue, uint8_t(grayThreshold)))
 	{
 		return false;
 	}

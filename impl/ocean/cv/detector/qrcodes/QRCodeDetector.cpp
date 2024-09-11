@@ -244,7 +244,7 @@ bool QRCodeDetector::extractModulesFromImage(const AnyCamera& anyCamera, const u
 			if (anyCamera.isInside(imagePoint, Scalar(0.5)))
 			{
 				const unsigned int pixelOffset = (unsigned int)(imagePoint.y() + Scalar(0.5)) * strideElements + (unsigned int)(imagePoint.x() + Scalar(0.5));
-				modules[moduleIndex] = isForegroundPixel(yFrame + pixelOffset, grayThreshold) ? 1u : 0u;
+				modules[moduleIndex] = isForegroundPixel(yFrame + pixelOffset, uint8_t(grayThreshold)) ? 1u : 0u;
 			}
 
 			moduleIndex++;

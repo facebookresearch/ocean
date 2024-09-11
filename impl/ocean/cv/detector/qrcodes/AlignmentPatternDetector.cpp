@@ -85,7 +85,7 @@ void AlignmentPatternDetector::detectAlignmentPatternsInRow(const uint8_t* yFram
 
 	unsigned int x = 0u;
 
-	while (x < width && isBackgroundPixel(yRow + x, grayThreshold))
+	while (x < width && isBackgroundPixel(yRow + x, uint8_t(grayThreshold)))
 	{
 		++x;
 	}
@@ -95,7 +95,7 @@ void AlignmentPatternDetector::detectAlignmentPatternsInRow(const uint8_t* yFram
 		return;
 	}
 
-	while (x < width && isForegroundPixel(yRow + x, grayThreshold))
+	while (x < width && isForegroundPixel(yRow + x, uint8_t(grayThreshold)))
 	{
 		++x;
 	}
@@ -107,7 +107,7 @@ void AlignmentPatternDetector::detectAlignmentPatternsInRow(const uint8_t* yFram
 
 	unsigned int xStarts[4] = { x, 0u, 0u, 0u };
 
-	while (x < width && isBackgroundPixel(yRow + x, grayThreshold))
+	while (x < width && isBackgroundPixel(yRow + x, uint8_t(grayThreshold)))
 	{
 		++x;
 	}
@@ -121,7 +121,7 @@ void AlignmentPatternDetector::detectAlignmentPatternsInRow(const uint8_t* yFram
 
 	while (x < width)
 	{
-		while (x < width && isForegroundPixel(yRow + x, grayThreshold))
+		while (x < width && isForegroundPixel(yRow + x, uint8_t(grayThreshold)))
 		{
 			++x;
 		}
@@ -133,7 +133,7 @@ void AlignmentPatternDetector::detectAlignmentPatternsInRow(const uint8_t* yFram
 
 		xStarts[2] = x;
 
-		while (x < width && isBackgroundPixel(yRow + x, grayThreshold))
+		while (x < width && isBackgroundPixel(yRow + x, uint8_t(grayThreshold)))
 		{
 			++x;
 		}
