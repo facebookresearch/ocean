@@ -89,9 +89,38 @@ void MaskBlurMainWindow::onMouseMove(const MouseButton buttons, const int x, con
 void MaskBlurMainWindow::onKeyDown(const int key)
 {
 	std::string keyType;
-	if (Platform::Win::Keyboard::translateVirtualkey(key, keyType) && keyType == "B")
+	if (Platform::Win::Keyboard::translateVirtualkey(key, keyType))
 	{
-		blurImage();
+		if (keyType == "B")
+		{
+			blurImage();
+		}
+		else if (keyType == "up")
+		{
+			if (blurBorder_ == 0u)
+			{
+				blurBorder_ = 1u;
+			}
+			else
+			{
+				blurBorder_ += 2u;
+			}
+
+			repaint(true);
+		}
+		else if (keyType == "down")
+		{
+			if (blurBorder_ <= 1u)
+			{
+				blurBorder_ = 0u;
+			}
+			else
+			{
+				blurBorder_ -= 2u;
+			}
+
+			repaint(true);
+		}
 	}
 }
 
@@ -136,6 +165,8 @@ void MaskBlurMainWindow::onPaint()
 	}
 
 	BitmapWindow::onPaint();
+
+	Platform::Win::Utilities::textOutput(bitmap().dc(), 5, 5, "Blur border: " + String::toAString(blurBorder_) + "px");
 }
 
 void MaskBlurMainWindow::onDragAndDrop(const Files& files)
@@ -190,7 +221,7 @@ bool MaskBlurMainWindow::blurImage()
 {
 	const HighPerformanceTimer timer;
 
-	if (!CV::Segmentation::FrameFilterBlur::Comfort::blurMaskRegions(image_, mask_, 21u, nullptr))
+	if (!CV::Segmentation::FrameFilterBlur::Comfort::blurMaskRegions(image_, mask_, blurBorder_, nullptr))
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;

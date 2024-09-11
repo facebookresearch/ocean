@@ -104,6 +104,9 @@ class MaskBlurMainWindow :
 
 		/// True, if the mask has changed.
 		bool maskHasChanged_ = false;
+
+		/// The size of the blur border, in pixels.
+		unsigned int blurBorder_ = 21u;
 };
 
 #endif // META_OCEAN_APPLICATION_OCEAN_DEMO_CV_SEGMENTATION_MASKBLUR_WIN_MASK_BLUR_MAIN_WINDOW_H
