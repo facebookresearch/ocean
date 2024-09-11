@@ -62,35 +62,10 @@ using namespace Ocean;
 		return 0;
 	}
 
-	unsigned int testWidth = 1280u;
-	unsigned int testHeight = 720u;
 
 	double testDuration = 2.0;
 	std::string outputFilename;
 	std::string functionList;
-
-	Value resolutionValue;
-	if (commandArguments.hasValue("resolution", &resolutionValue, true) && resolutionValue.isString())
-	{
-		const std::string resolution = resolutionValue.stringValue();
-
-		if (!resolution.empty())
-		{
-			const std::string::size_type pos = resolution.find('x');
-
-			if (pos != std::string::npos)
-			{
-				int width = -1;
-				int height = -1;
-
-				if (String::isInteger32(resolution.substr(0, pos), &width) && String::isInteger32(resolution.substr(pos + 1), &height) && width > 0 && height > 0)
-				{
-					testWidth = (unsigned int)(width);
-					testHeight = (unsigned int)(height);
-				}
-			}
-		}
-	}
 
 	Value durationValue;
 	if (commandArguments.hasValue("duration", &durationValue, true) && durationValue.isFloat64(true))

@@ -249,7 +249,7 @@ bool DisassemblerIOS::parseTextText(std::istream& stream, BinaryAnalyzer& binary
 
 	while (true)
 	{
-		unsigned long long localAddressPointerIntermediate = 0ull;
+		// unsigned long long localAddressPointerIntermediate = 0ull;
 
 		lineBuffer = lineReader.readNextLine(lineBufferSize);
 
@@ -469,7 +469,7 @@ bool DisassemblerIOS::parseTextText(std::istream& stream, BinaryAnalyzer& binary
 						{
 							// current (CP / 4K) * 4K + addressOffset * 4K + 'pending offset in next add instruction'
 
-							localAddressPointerIntermediate = (unsigned long long)((((long long)addressValue) / 0x1000ll) * 0x1000ll + (long long)intValue * 0x1000ll);
+							// localAddressPointerIntermediate = (unsigned long long)((((long long)addressValue) / 0x1000ll) * 0x1000ll + (long long)intValue * 0x1000ll);
 						}
 						else
 						{
