@@ -141,6 +141,17 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterRGGB10_Packed
 		static bool testRGGB10_PackedToRGB24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
 
 		/**
+		 * Tests the RGGB10_PACKED to RGB48 conversion.
+		 * @param width The width of the original frame in pixel, with range [1, infinity)
+		 * @param height The height of the original frame in pixel, with range [1, infinity)
+		 * @param flag The conversion flag that has been applied during conversion
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		static bool testRGGB10_PackedToRGB48(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
+
+		/**
 		 * Tests the RGGB10_PACKED to RGB24 conversion with black-level subtraction, white balancing, and gamma encoding.
 		 * @param randomGenerator The random generator to be used
 		 * @param width The width of the original frame in pixel, with range [1, infinity)

@@ -61,6 +61,20 @@ bool TestFrameConverterRGGB10_Packed::test(const unsigned int width, const unsig
 	Log::info() << " ";
 
 	{
+		Log::info() << "Testing RGGB10_PACKED to RGB48 conversion with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testRGGB10_PackedToRGB48(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
 		Log::info() << "Testing RGGB10_PACKED to RGB24 conversion with black-level subtraction, white balancing, and gamma encoding at resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
@@ -135,6 +149,32 @@ TEST(TestFrameConverterRGGB10_Packed, RGGB10_PackedToRGB24FlippedMirrored)
 	EXPECT_TRUE(TestFrameConverterRGGB10_Packed::testRGGB10_PackedToRGB24(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
+
+TEST(TestFrameConverterRGGB10_Packed, RGGB10_PackedToRGB48Normal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterRGGB10_Packed::testRGGB10_PackedToRGB48(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterRGGB10_Packed, RGGB10_PackedToRGB48Flipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterRGGB10_Packed::testRGGB10_PackedToRGB48(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterRGGB10_Packed, RGGB10_PackedToRGB48Mirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterRGGB10_Packed::testRGGB10_PackedToRGB48(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterRGGB10_Packed, RGGB10_PackedToRGB48FlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterRGGB10_Packed::testRGGB10_PackedToRGB48(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
 TEST(TestFrameConverterRGGB10_Packed, RGGB10_PackedToRGB24BlackLevelWhiteBalanceGammaLUTNormal)
 {
 	RandomGenerator randomGenerator;
@@ -197,6 +237,20 @@ bool TestFrameConverterRGGB10_Packed::testRGGB10_PackedToRGB24(const unsigned in
 	transformationMatrix(2, 2) = 1.0 / 4.003913895;
 
 	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24), flag, TestFrameConverterRGGB10_Packed::PixelFunctorRGGB10_Packed::pixelFunctionRGGB10_Packed, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+}
+
+bool TestFrameConverterRGGB10_Packed::testRGGB10_PackedToRGB48(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	// | R16 |   |   1.0      0.0       0.0   |   | R10 |
+	// | G16 | = |   0.0      1.0       0.0   | * | G10 |
+	// | B16 |   |   0.0      0.0       1.0   |   | B10 |
+
+	const MatrixD transformationMatrix(3, 3, true);
+
+	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB48, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB48), flag, TestFrameConverterRGGB10_Packed::PixelFunctorRGGB10_Packed::pixelFunctionRGGB10_Packed, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 1023.0, testDuration, worker);
 }
 
 bool TestFrameConverterRGGB10_Packed::testConvertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT(RandomGenerator& randomGenerator, const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)

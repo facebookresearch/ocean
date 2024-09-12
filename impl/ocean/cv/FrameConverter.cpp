@@ -255,6 +255,7 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	// FORMAT_RGGB10_Packed
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_BGR24), FrameConverterRGGB10_Packed::convertRGGB10_PackedToBGR24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB24), FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB48), FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB48);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB24, Options::OT_BLACKLEVEL_WHITEBALANCE_GAMMA), FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT);
 
 	// FORMAT_UYVY16

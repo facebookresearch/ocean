@@ -56,6 +56,19 @@ class OCEAN_CV_EXPORT FrameConverterRGGB10_Packed : public FrameConverter
 		static inline void convertRGGB10_PackedToRGB24(const uint8_t* const source, uint8_t* const target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
+		 * Converts a RGGB10_PACKED frame to a RGB48 frame.
+		 * @param source The source frame buffer, must be valid
+		 * @param target The target frame buffer, must be valid
+		 * @param width The width of the frame in pixel, with range [4, infinity), must be a multiple of 4
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param flag Determining the type of conversion
+		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
+		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computational load
+		 */
+		static inline void convertRGGB10_PackedToRGB48(const uint8_t* const source, uint16_t* const target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+
+		/**
 		 * Converts a RGGB10_PACKED frame to a RGB24 frame with black level subtraction, white balance, and gamma encoding
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
@@ -84,7 +97,7 @@ inline void FrameConverterRGGB10_Packed::convertRGGB10_PackedToBGR24(const uint8
 		int(sourcePaddingElements), int(targetPaddingElements)
 	};
 
-	FrameConverter::convertArbitraryPixelFormat((const void**)&source, (void**)&target, width, height, flag, 2u, FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels8Bit<2u, 1u, 0u>, options, worker);
+	FrameConverter::convertArbitraryPixelFormat((const void**)(&source), (void**)(&target), width, height, flag, 2u, FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels8Bit<2u, 1u, 0u>, options, worker);
 }
 
 inline void FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
@@ -99,7 +112,22 @@ inline void FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24(const uint8
 		int(sourcePaddingElements), int(targetPaddingElements)
 	};
 
-	FrameConverter::convertArbitraryPixelFormat((const void**)&source, (void**)&target, width, height, flag, 2u, FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels8Bit<0u, 1u, 2u>, options, worker);
+	FrameConverter::convertArbitraryPixelFormat((const void**)(&source), (void**)(&target), width, height, flag, 2u, FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels8Bit<0u, 1u, 2u>, options, worker);
+}
+
+inline void FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB48(const uint8_t* const source, uint16_t* const target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
+{
+	ocean_assert(source != nullptr && target != nullptr);
+	ocean_assert(width >= 4u && height >= 1u);
+	ocean_assert(width % 4u == 0u);
+
+	const int options[2] =
+	{
+		// padding parameters
+		int(sourcePaddingElements), int(targetPaddingElements)
+	};
+
+	FrameConverter::convertArbitraryPixelFormat((const void**)(&source), (void**)(&target), width, height, flag, 2u, FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels16Bit<0u, 1u, 2u>, options, worker);
 }
 
 inline void FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const uint16_t blackLevel, const float* whiteBalance, const float gamma, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
