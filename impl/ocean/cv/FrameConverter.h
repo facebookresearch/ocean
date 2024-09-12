@@ -2460,7 +2460,7 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[0] uint32_t: sourcePaddingElements
 		 * options[1] uint32_t: targetPaddingElements
 		 * </pre>
-		 * @param sources The pointer to the first, second, and third memory block of the source image, must be valid
+		 * @param sources The one pointer to the source image with Bayer mosaic, must be valid
 		 * @param targets The one pointer to the target image, must be valid
 		 * @param multipleRowIndex The index of the multiple-row to be handled, with range [0, height/2 - 1]
 		 * @param width The width of the frame in pixel, with range [4, infinity), must be a multiple of 4
@@ -2473,6 +2473,27 @@ class OCEAN_CV_EXPORT FrameConverter
 		 */
 		template <unsigned int tIndexRed, unsigned int tIndexGreen, unsigned int tIndexBlue>
 		static void convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels8Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options);
+
+		/**
+		 * Converts two rows of an image with 3-channel Bayer mosaic pixel format with packed 10-bit pixel values to an image with 3-channel un-packed 16-bit pixel format.
+		 * The layout of the options parameters is as follows:
+		 * <pre>
+		 * options[0] uint32_t: sourcePaddingElements
+		 * options[1] uint32_t: targetPaddingElements
+		 * </pre>
+		 * @param sources The one pointer to the source image with Bayer mosaic, must be valid
+		 * @param targets The one pointer to the target image, must be valid
+		 * @param multipleRowIndex The index of the multiple-row to be handled, with range [0, height/2 - 1]
+		 * @param width The width of the frame in pixel, with range [4, infinity), must be a multiple of 4
+		 * @param height The height of the frame in pixel, with range [2, infinity), must be a multiple of 2
+		 * @param conversionFlag The conversion to be applied
+		 * @param options The 2 options parameters: 2 padding parameters
+		 * @tparam tIndexRed The index of red channel in the target image, with range [0, 2]
+		 * @tparam tIndexGreen The index of green channel in the target image, with range [0, 2]
+		 * @tparam tIndexBlue The index of blue channel in the target image, with range [0, 2]
+		 */
+		template <unsigned int tIndexRed, unsigned int tIndexGreen, unsigned int tIndexBlue>
+		static void convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels16Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options);
 
 		/**
 		 * Converts two rows of an image with 3-channel Bayer mosaic pixel format with packed 10-bit pixel values to an image with 3-channel un-packed 8-bit pixel format and applies black level subtraction, white balance, and gamma encoding

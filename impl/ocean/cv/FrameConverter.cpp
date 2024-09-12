@@ -7040,6 +7040,219 @@ template void OCEAN_CV_EXPORT FrameConverter::convertTwoRows_1PlaneMosaicPacked1
 template void OCEAN_CV_EXPORT FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels8Bit<2u, 1u, 0u>(const void**, void**, const unsigned int, const unsigned int, const unsigned int, const ConversionFlag, const void*);
 
 template <unsigned int tIndexRed, unsigned int tIndexGreen, unsigned int tIndexBlue>
+void FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels16Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options)
+{
+	static_assert(tIndexRed < 3u && tIndexGreen < 3u && tIndexBlue < 3u, "Invalid channel indices!");
+	static_assert(tIndexRed != tIndexGreen && tIndexRed != tIndexBlue && tIndexGreen != tIndexBlue, "Invalid channel indices!");
+
+	ocean_assert(sources != nullptr && targets != nullptr);
+	ocean_assert(width >= 4u && width % 4u == 0u && height % 2u == 0u);
+	ocean_assert(height >= 2u);
+
+	ocean_assert(multipleRowIndex < height / 2u);
+
+	const unsigned int rowIndex = multipleRowIndex * 2u;
+
+	ocean_assert(options != nullptr);
+	const int* intOptions = reinterpret_cast<const int*>(options);
+	ocean_assert(intOptions != nullptr);
+
+	// options layout:
+	// uint32_t: sourcePaddingElements
+	// uint32_t: targetPaddingElements
+
+	const unsigned int sourcePaddingElements = (unsigned int)(intOptions[0]);
+	const unsigned int targetPaddingElements = (unsigned int)(intOptions[1]);
+
+	const uint8_t* source = (const uint8_t*)(sources[0]);
+	uint16_t* target = (uint16_t*)(targets[0]);
+
+	const unsigned int sourceStrideElements = (width * 5u) / 4u + sourcePaddingElements;
+	const unsigned int targetStrideElements = width * 3u + targetPaddingElements;
+
+	// example RGGB10_PACKED
+
+	// R G R G X   R G R G X   R G . .
+	// G B G B X   G B G B X   G B . .
+	// R G R G X   R G R G X   R G . .
+	// G B G B X   G B G B X   G B . .
+	// R G R G X   R G R G X   R G . .
+
+	// second pixel in third row:
+	// red:         green:       blue:
+	// G B G B      G B G B      G b G B
+	// r G r G      R g R G      R G R G
+	// G B G B      G B G B      G b G B
+	// (sampling pixels marked with lower case characters)
+
+	// third pixel in third row:
+	// red:         green:       blue:
+	// G B G B      G B g B      G b G b
+	// R G r G      R g R g      R G R G
+	// G B G B      G B g B      G b G b
+	// (sampling pixels marked with lower case characters)
+
+	// in case we are handling the two top rows or two bottom rows, mirror the missing rows to the correct row (1, or height - 2)
+
+	const unsigned int topRowIndex = rowIndex > 0u ? (rowIndex - 1u) : 1u;
+	const unsigned int bottomRowIndex = rowIndex + 2u < height ? rowIndex + 2u : (height - 2u);
+
+	const uint8_t* sourceRowA = source + topRowIndex * sourceStrideElements;
+	const uint8_t* sourceRowB = source + rowIndex * sourceStrideElements;
+	const uint8_t* sourceRowC = source + (rowIndex + 1u) * sourceStrideElements;
+	const uint8_t* sourceRowD = source + bottomRowIndex * sourceStrideElements;
+
+	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+
+	uint16_t* targetRow0 = nullptr;
+	uint16_t* targetRow1 = nullptr;
+
+	if (flipTarget)
+	{
+		targetRow0 = target + (height - rowIndex - 1u) * targetStrideElements;
+		targetRow1 = target + (height - rowIndex - 2u) * targetStrideElements;
+	}
+	else
+	{
+		targetRow0 = target + rowIndex * targetStrideElements;
+		targetRow1 = target + (rowIndex + 1u) * targetStrideElements;
+	}
+
+	ocean_assert(targetRow0 != nullptr);
+	ocean_assert(targetRow1 != nullptr);
+
+	// Memory for the unpacked pixel values: 4 values of the current block and 4 of the next block
+	uint16_t sourceBlockA[8];
+	uint16_t sourceBlockB[8];
+	uint16_t sourceBlockC[8];
+	uint16_t sourceBlockD[8];
+
+	unpack5ElementsBayerMosaicPacked10Bit(sourceRowA, sourceBlockA);
+	unpack5ElementsBayerMosaicPacked10Bit(sourceRowB, sourceBlockB);
+	unpack5ElementsBayerMosaicPacked10Bit(sourceRowC, sourceBlockC);
+	unpack5ElementsBayerMosaicPacked10Bit(sourceRowD, sourceBlockD);
+
+	// first pixel in rows
+	targetRow0[0u + tIndexRed] = sourceBlockB[0];
+	targetRow0[0u + tIndexGreen] = (sourceBlockA[0] + sourceBlockC[0] + 1u) / 2u;
+	targetRow0[0u + tIndexBlue] = (sourceBlockA[1] + sourceBlockC[1] + 1u) / 2u;
+
+	targetRow1[0u + tIndexRed] = (sourceBlockB[0] + sourceBlockD[0] + 1u) / 2u;
+	targetRow1[0u + tIndexGreen] = sourceBlockC[0];
+	targetRow1[0u + tIndexBlue] = sourceBlockC[1];
+
+	targetRow0 += 3;
+	targetRow1 += 3;
+
+	for (unsigned int lastSourceElement = 5u; lastSourceElement < width; lastSourceElement += 4u)
+	{
+		// Unpack the next block
+		unpack5ElementsBayerMosaicPacked10Bit(sourceRowA + 5, sourceBlockA + 4);
+		unpack5ElementsBayerMosaicPacked10Bit(sourceRowB + 5, sourceBlockB + 4);
+		unpack5ElementsBayerMosaicPacked10Bit(sourceRowC + 5, sourceBlockC + 4);
+		unpack5ElementsBayerMosaicPacked10Bit(sourceRowD + 5, sourceBlockD + 4);
+
+		// first row, first core pixel
+		targetRow0[0u + tIndexRed] = (sourceBlockB[0] + sourceBlockB[2] + 1u) / 2u;
+		targetRow0[0u + tIndexGreen] = sourceBlockB[1];
+		targetRow0[0u + tIndexBlue] = (sourceBlockA[1] + sourceBlockC[1] + 1u) / 2u;
+
+		// second pixel
+		targetRow0[3u + tIndexRed] = sourceBlockB[2];
+		targetRow0[3u + tIndexGreen] = (sourceBlockA[2] + sourceBlockB[1] + sourceBlockB[3] + sourceBlockC[2] + 2u) / 4u;
+		targetRow0[3u + tIndexBlue] = (sourceBlockA[1] + sourceBlockA[3] + sourceBlockC[1] + sourceBlockC[3] + 2u) / 4u;
+
+		// third pixel
+		targetRow0[6u + tIndexRed] = (sourceBlockB[2] + sourceBlockB[4] + 1u) / 2u;
+		targetRow0[6u + tIndexGreen] = sourceBlockB[3];
+		targetRow0[6u + tIndexBlue] = (sourceBlockA[3] + sourceBlockC[3] + 1u) / 2u;
+
+		// fourth pixel
+		targetRow0[9u + tIndexRed] = sourceBlockB[4];
+		targetRow0[9u + tIndexGreen] = (sourceBlockA[4] + sourceBlockB[3] + sourceBlockB[5] + sourceBlockC[4] + 2u) / 4u;
+		targetRow0[9u + tIndexBlue] = (sourceBlockA[3] + sourceBlockA[5] + sourceBlockC[3] + sourceBlockC[5] + 2u) / 4u;
+
+
+		// second row, first core pixel
+		targetRow1[0u + tIndexRed] = (sourceBlockB[0] + sourceBlockB[2] + sourceBlockD[0] + sourceBlockD[2] + 2u) / 4u;
+		targetRow1[0u + tIndexGreen] = (sourceBlockB[1] + sourceBlockC[0] + sourceBlockC[2] + sourceBlockD[1] + 2u) / 4u;
+		targetRow1[0u + tIndexBlue] = sourceBlockC[1];
+
+		// second pixel
+		targetRow1[3u + tIndexRed] = (sourceBlockB[2] + sourceBlockD[2] + 1u) / 2u;
+		targetRow1[3u + tIndexGreen] = sourceBlockC[2];
+		targetRow1[3u + tIndexBlue] = (sourceBlockC[1] + sourceBlockC[3] + 1u) / 2u;
+
+		// third pixel
+		targetRow1[6u + tIndexRed] = (sourceBlockB[2] + sourceBlockB[4] + sourceBlockD[2] + sourceBlockD[4] + 2u) / 4u;
+		targetRow1[6u + tIndexGreen] = (sourceBlockB[3] + sourceBlockC[2] + sourceBlockC[4] + sourceBlockD[3] + 2u) / 4u;
+		targetRow1[6u + tIndexBlue] = sourceBlockC[3];
+
+		// fourth pixel
+		targetRow1[9u + tIndexRed] = (sourceBlockB[4] + sourceBlockD[4] + 1u) / 2u;
+		targetRow1[9u + tIndexGreen] = sourceBlockC[4];
+		targetRow1[9u + tIndexBlue] = (sourceBlockC[3] + sourceBlockC[5] + 1u) / 2u;
+
+		memcpy(sourceBlockA, sourceBlockA + 4, 4 * sizeof(uint16_t)); // previous block = current block
+		memcpy(sourceBlockB, sourceBlockB + 4, 4 * sizeof(uint16_t));
+		memcpy(sourceBlockC, sourceBlockC + 4, 4 * sizeof(uint16_t));
+		memcpy(sourceBlockD, sourceBlockD + 4, 4 * sizeof(uint16_t));
+
+		targetRow0 += 12;
+		targetRow1 += 12;
+
+		sourceRowA += 5; // 4 + 1 for the packed 2 bit per pixel
+		sourceRowB += 5;
+		sourceRowC += 5;
+		sourceRowD += 5;
+	}
+
+	// last three pixels
+
+	// first row, first pixel
+	targetRow0[0u + tIndexRed] = (sourceBlockB[0] + sourceBlockB[2] + 1u) / 2u;
+	targetRow0[0u + tIndexGreen] = sourceBlockB[1];
+	targetRow0[0u + tIndexBlue] = (sourceBlockA[1] + sourceBlockC[1] + 1u) / 2u;
+
+	// second pixel
+	targetRow0[3u + tIndexRed] = sourceBlockB[2];
+	targetRow0[3u + tIndexGreen] = (sourceBlockA[2] + sourceBlockC[2] + sourceBlockB[1] + sourceBlockB[3] + 2u) / 4u;
+	targetRow0[3u + tIndexBlue] = (sourceBlockA[1] + sourceBlockA[3] + sourceBlockC[1] + sourceBlockC[3] + 2u) / 4u;
+
+	// third pixel
+	targetRow0[6u + tIndexRed] = sourceBlockB[2];
+	targetRow0[6u + tIndexGreen] = sourceBlockB[3];
+	targetRow0[6u + tIndexBlue] = (sourceBlockA[3] + sourceBlockC[3] + 1u) / 2u;
+
+
+	// second row, first pixel
+	targetRow1[0u + tIndexRed] = (sourceBlockB[0] + sourceBlockB[2] + sourceBlockD[0] + sourceBlockD[2] + 2u) / 4u;
+	targetRow1[0u + tIndexGreen] = (sourceBlockB[1] + sourceBlockC[0] + sourceBlockC[2] + sourceBlockD[1] + 2u) / 4u;
+	targetRow1[0u + tIndexBlue] = sourceBlockC[1];
+
+	// second pixel
+	targetRow1[3u + tIndexRed] = (sourceBlockB[2] + sourceBlockD[2] + 1u) / 2u;
+	targetRow1[3u + tIndexGreen] = sourceBlockC[2];
+	targetRow1[3u + tIndexBlue] = (sourceBlockC[1] + sourceBlockC[3] + 1u) / 2u;
+
+	// third pixel
+	targetRow1[6u + tIndexRed] = (sourceBlockB[2] + sourceBlockD[2] + 1u) / 2u;
+	targetRow1[6u + tIndexGreen] = (sourceBlockB[3] + sourceBlockD[3] + 1u) / 2u;
+	targetRow1[6u + tIndexBlue] = sourceBlockC[3];
+
+	if (mirrorTarget)
+	{
+		// note that the target pointers are currently 3 pixels from the end of the row
+		CV::FrameChannels::reverseRowPixelOrderInPlace<uint16_t, 3u>(targetRow0 - (width - 3u) * 3u, width);
+		CV::FrameChannels::reverseRowPixelOrderInPlace<uint16_t, 3u>(targetRow1 - (width - 3u) * 3u, width);
+	}
+}
+
+template void OCEAN_CV_EXPORT FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels16Bit<0u, 1u, 2u>(const void**, void**, const unsigned int, const unsigned int, const unsigned int, const ConversionFlag, const void*);
+template void OCEAN_CV_EXPORT FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels16Bit<2u, 1u, 0u>(const void**, void**, const unsigned int, const unsigned int, const unsigned int, const ConversionFlag, const void*);
+
+template <unsigned int tIndexRed, unsigned int tIndexGreen, unsigned int tIndexBlue>
 void FrameConverter::convertTwoRows_1PlaneMosaicPacked10Bit_To_1PlaneUnpacked3Channels8BitAdvanced(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options)
 {
 	static_assert(tIndexRed < 3u && tIndexGreen < 3u && tIndexBlue < 3u, "Invalid channel indices!");
