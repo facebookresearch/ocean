@@ -741,11 +741,6 @@ bool Utilities::computeNumberPixelsPerModule(const AnyCamera& anyCamera, const H
 		const Scalar x = coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(iX));
 		const Vector2 imagePoint = anyCamera.projectToImageIF(flippedCamera_T_code, Vector3(x, Scalar(0), Scalar(0)));
 
-		if (!anyCamera.isInside(imagePoint))
-		{
-			return false;
-		}
-
 		topCorners.emplace_back(imagePoint);
 	}
 
@@ -764,20 +759,15 @@ bool Utilities::computeNumberPixelsPerModule(const AnyCamera& anyCamera, const H
 
 		bottomCorners[0] = anyCamera.projectToImageIF(flippedCamera_T_code, Vector3(Scalar(0), y, Scalar(0)));
 
-		if (!anyCamera.isInside(bottomCorners[0]))
-		{
-			return false;
-		}
-
 		for (unsigned int iX = 1u; iX <= modulesPerSide; ++iX)
 		{
 			const Scalar x = coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(iX));
 
 			bottomCorners[iX] = anyCamera.projectToImageIF(flippedCamera_T_code, Vector3(x, y, Scalar(0)));
 
-			if (!anyCamera.isInside(bottomCorners[iX]))
+			if (!anyCamera.isInside(topCorners[iX - 1u]) || !anyCamera.isInside(bottomCorners[iX - 1u]) || !anyCamera.isInside(bottomCorners[iX]) || !anyCamera.isInside(topCorners[iX]))
 			{
-				return false;
+				continue;
 			}
 
 			//                 ...
@@ -787,7 +777,7 @@ bool Utilities::computeNumberPixelsPerModule(const AnyCamera& anyCamera, const H
 			//  bottomCorners: *---*---*---*...
 			//                 |   |   |   |
 			//                 ...
-			const Scalar areaTriangle0 = Triangle2(topCorners[iX - 1u], bottomCorners[iX - 1], bottomCorners[iX]).area();
+			const Scalar areaTriangle0 = Triangle2(topCorners[iX - 1u], bottomCorners[iX - 1u], bottomCorners[iX]).area();
 			const Scalar areaTriangle1 = Triangle2(topCorners[iX - 1u], bottomCorners[iX], topCorners[iX]).area();
 
 			const Scalar areaModule = areaTriangle0 + areaTriangle1;
@@ -803,6 +793,11 @@ bool Utilities::computeNumberPixelsPerModule(const AnyCamera& anyCamera, const H
 		std::swap(topCorners, bottomCorners);
 	}
 
+	if (moduleAreas.empty())
+	{
+		return false;
+	}
+
 	if (minNumberPixelsPerModule)
 	{
 		*minNumberPixelsPerModule = minAreaModule;
@@ -815,7 +810,6 @@ bool Utilities::computeNumberPixelsPerModule(const AnyCamera& anyCamera, const H
 
 	if (medianNumberPixelsPerModule)
 	{
-		ocean_assert(moduleAreas.size() == size_t(modulesPerSide * modulesPerSide));
 		std::partial_sort(moduleAreas.begin(), moduleAreas.begin() + moduleAreas.size() / 2 + 1, moduleAreas.end());
 
 		*medianNumberPixelsPerModule = moduleAreas[moduleAreas.size() / 2];
@@ -823,7 +817,7 @@ bool Utilities::computeNumberPixelsPerModule(const AnyCamera& anyCamera, const H
 
 	if (avgNumberPixelsPerModule)
 	{
-		*avgNumberPixelsPerModule = sumArea / Scalar(modulesPerSide * modulesPerSide);
+		*avgNumberPixelsPerModule = sumArea / Scalar(moduleAreas.size());
 	}
 
 	return true;
@@ -892,7 +886,7 @@ bool Utilities::computeContrast(const AnyCamera& anyCamera, const Frame& yFrame,
 
 			if (!anyCamera.isInside(center, /* signedBorder */ Scalar(3)))
 			{
-				return false;
+				continue;
 			}
 
 			uint8_t intensity;
