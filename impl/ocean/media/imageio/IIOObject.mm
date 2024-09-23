@@ -406,6 +406,7 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage, bool* containedPremultip
 					break;
 
 				case FrameType::FORMAT_RGBA32:
+				case FrameType::FORMAT_BGRA32:
 					CV::FrameChannels::premultipliedAlphaToStraightAlpha8BitPerChannel<4u, 3u>(result.data<uint8_t>(), result.width(), result.height(), result.paddingElements());
 					break;
 
