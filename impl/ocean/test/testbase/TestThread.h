@@ -84,7 +84,7 @@ void TestThread::setValueDelayed(TObject& object, const TValue& value, const dou
 
 	while (!startTimestamp.hasTimePassed(delay))
 	{
-		sleep(0u);
+		Thread::sleep(0u);
 	}
 
 #else
