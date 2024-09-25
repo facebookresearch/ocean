@@ -47,10 +47,22 @@ class OCEAN_RENDERING_GLES_EXPORT GLESLineStrips :
 		unsigned int numberStrips() const override;
 
 		/**
+		 * Returns the width (thickness ) in pixels at which all lines will be rendered
+		 * @see LineStrips::lineWidth().
+		 */
+		Scalar lineWidth() const override;
+
+		/**
 		 * Sets the strips of this primitive object.
 		 * @see StripPtrimitive::setStrips().
 		 */
 		void setStrips(const VertexIndexGroups& strips) override;
+
+		/**
+		 * Sets the width (thickness) in pixels at which all lines will be rendered.
+		 * @see LineStrips::setLineWidth().
+		 */
+		void setLineWidth(const Scalar width) override;
 
 		/**
 		 * Renders the line strips defined by the associated vertex set and the defined line faces.
@@ -63,6 +75,11 @@ class OCEAN_RENDERING_GLES_EXPORT GLESLineStrips :
 		 * @see Renderable::render().
 		 */
 		void render(const SquareMatrix4& projectionMatrix, const HomogenousMatrix4& camera_T_object, const HomogenousMatrix4& camera_T_world, const SquareMatrix3& normalMatrix, GLESShaderProgram& shaderProgram) override;
+
+		/**
+		 * Draws all line strips with the currently bound shader program.
+		 */
+		void drawLineStrips();
 
 	protected:
 
@@ -94,6 +111,9 @@ class OCEAN_RENDERING_GLES_EXPORT GLESLineStrips :
 
 		/// The line strips.
 		VertexIndexGroups strips_;
+
+		/// The width (thickness) of the line in pixels, with range [1, infinity)
+		Scalar lineWidth_ = Scalar(1);
 };
 
 }

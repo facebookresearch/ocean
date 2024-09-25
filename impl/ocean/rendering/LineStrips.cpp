@@ -13,22 +13,31 @@ namespace Ocean
 namespace Rendering
 {
 
-	LineStrips::LineStrips() :
+LineStrips::LineStrips() :
 	Primitive()
 {
 	// nothing to do here
 }
 
-	LineStrips::~LineStrips()
+LineStrips::~LineStrips()
 {
 	// nothing to do here
 }
 
-	LineStrips::ObjectType LineStrips::type() const
+LineStrips::ObjectType LineStrips::type() const
 {
 	return TYPE_LINE_STRIPS;
 }
 
+Scalar LineStrips::lineWidth() const
+{
+	throw NotSupportedException();
+}
+
+void LineStrips::setLineWidth(const Scalar /*width*/)
+{
+	throw NotSupportedException();
+}
 
 }
 

@@ -41,6 +41,20 @@ class OCEAN_RENDERING_EXPORT LineStrips : virtual public StripPrimitive
 		 */
 		ObjectType type() const override;
 
+		/**
+		 * Returns the width (thickness ) in pixels at which all lines will be rendered
+		 * @return The width of all lines, in pixels, with range [1, infinity)
+		 * @exception NotSupportedException Is thrown if this function is not supported
+		 */
+		virtual Scalar lineWidth() const;
+
+		/**
+		 * Sets the width (thickness) in pixels at which all lines will be rendered.
+		 * @param width The width of all lines, in pixels, with range [1, infinity)
+		 * @exception NotSupportedException Is thrown if this function is not supported
+		 */
+		virtual void setLineWidth(const Scalar width);
+
 	protected:
 
 		/**

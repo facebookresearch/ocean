@@ -45,6 +45,13 @@ unsigned int GLESLineStrips::numberStrips() const
 	return (unsigned int)(strips_.size());
 }
 
+Scalar GLESLineStrips::lineWidth() const
+{
+	const ScopedLock scopedLock(objectLock);
+
+	return lineWidth_;
+}
+
 void GLESLineStrips::setStrips(const VertexIndexGroups& strips)
 {
 	const ScopedLock scopedLock(objectLock);
@@ -110,6 +117,19 @@ void GLESLineStrips::setStrips(const VertexIndexGroups& strips)
 	updateBoundingBox();
 }
 
+void GLESLineStrips::setLineWidth(const Scalar width)
+{
+	if (width < Scalar(1))
+	{
+		ocean_assert(false && "Invalid input!");
+		return;
+	}
+
+	const ScopedLock scopedLock(objectLock);
+
+	lineWidth_ = width;
+}
+
 void GLESLineStrips::render(const GLESFramebuffer& framebuffer, const SquareMatrix4& projectionMatrix, const HomogenousMatrix4& camera_T_object, const HomogenousMatrix4& camera_T_world, const SquareMatrix3& normalMatrix, GLESAttributeSet& attributeSet, const Lights& lights)
 {
 	if (vboIndices_ == 0u)
@@ -135,22 +155,7 @@ void GLESLineStrips::render(const GLESFramebuffer& framebuffer, const SquareMatr
 			setUniform(locationColor, RGBAColor(1.0f, 1.0f, 1.0f));
 		}
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndices_);
-		ocean_assert(GL_NO_ERROR == glGetError());
-
-		static_assert(sizeof(unsigned int) == 4, "Invalid data type!");
-
-		size_t offset = 0;
-
-		for (const Indices32& strip : strips_)
-		{
-			const GLsizei stripSize = GLsizei(strip.size());
-
-			glDrawElements(GL_LINE_STRIP, stripSize, GL_UNSIGNED_INT, (const void*)(offset));
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			offset += strip.size() * sizeof(unsigned int);
-		}
+		drawLineStrips();
 	}
 
 	attributeSet.unbindAttributes();
@@ -175,6 +180,22 @@ void GLESLineStrips::render(const SquareMatrix4& projectionMatrix, const Homogen
 
 	glesVertexSet->bindVertexSet(programShader.id());
 
+	drawLineStrips();
+}
+
+void GLESLineStrips::drawLineStrips()
+{
+	float previousLineWidth = -1.0f;
+
+	if (lineWidth_ != Scalar(1))
+	{
+		glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
+		ocean_assert(GL_NO_ERROR == glGetError());
+
+		glLineWidth(float(lineWidth_));
+		ocean_assert(GL_NO_ERROR == glGetError());
+	}
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndices_);
 	ocean_assert(GL_NO_ERROR == glGetError());
 
@@ -190,6 +211,12 @@ void GLESLineStrips::render(const SquareMatrix4& projectionMatrix, const Homogen
 		ocean_assert(GL_NO_ERROR == glGetError());
 
 		offset += strip.size() * sizeof(unsigned int);
+	}
+
+	if (previousLineWidth != -1.0f)
+	{
+		glLineWidth(previousLineWidth);
+		ocean_assert(GL_NO_ERROR == glGetError());
 	}
 }
 
