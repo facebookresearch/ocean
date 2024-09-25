@@ -276,6 +276,7 @@ class OCEAN_RENDERING_EXPORT Utilities
 		 * @param vertices The vertices of all points to be rendered, at least one
 		 * @param triangleFaces The indices of triangle vertices for which lines will be created, at least one
 		 * @param emissiveColor The emissiveColor of all vertices in case 'colorsPerVertex' is empty, can be transparent
+		 * @param lineWidth The width of the lines in pixels, with range [1, infinity)
 		 * @param colorsPerVertex The optional colors of the individual vertices, one for each vertex or empty to use the 'emissiveColor'
 		 * @param material Optional resulting Material node; will be invalid if colorPerVertex is not empty
 		 * @param attributeSet Optional resulting AttributeSet node
@@ -283,7 +284,7 @@ class OCEAN_RENDERING_EXPORT Utilities
 		 * @param vertexSet Optional resulting VertexSet node
 		 * @return The resulting transform node holding the geometry node
 		 */
-		static TransformRef createLines(const Engine& engine, const Vectors3& vertices, const TriangleFaces& triangleFaces, const RGBAColor& emissiveColor, const RGBAColors& colorsPerVertex = RGBAColors(), MaterialRef* material = nullptr, AttributeSetRef* attributeSet = nullptr, LinesRef* lines = nullptr, VertexSetRef* vertexSet = nullptr);
+		static TransformRef createLines(const Engine& engine, const Vectors3& vertices, const TriangleFaces& triangleFaces, const RGBAColor& emissiveColor, const Scalar lineWidth = Scalar(1), const RGBAColors& colorsPerVertex = RGBAColors(), MaterialRef* material = nullptr, AttributeSetRef* attributeSet = nullptr, LinesRef* lines = nullptr, VertexSetRef* vertexSet = nullptr);
 
 		/**
 		 * Returns a Transform holding a geometry with lines (normals for given points).
@@ -293,11 +294,12 @@ class OCEAN_RENDERING_EXPORT Utilities
 		 * @param size The number of points (and normals), with range [1, infinity)
 		 * @param scale The scale which will be applied to each normal (allowing to control the length of the normals), with range (-infinity, infinity)
 		 * @param emissiveColor The emissiveColor of all normals, can be transparent
+		 * @param lineWidth The width of the lines in pixels, with range [1, infinity)
 		 * @param material Optional resulting Material node
 		 * @param vertexSet Optional result vertex set object which holds the vertices of the 3D normals, two vertices for each normal
 		 * @return The Transform node holding the normals
 		 */
-		static TransformRef createLines(const Engine& engine, const Vector3* points, const Vector3* normals, const size_t size, const Scalar scale, const RGBAColor& emissiveColor, MaterialRef* material = nullptr, VertexSetRef* vertexSet = nullptr);
+		static TransformRef createLines(const Engine& engine, const Vector3* points, const Vector3* normals, const size_t size, const Scalar scale, const RGBAColor& emissiveColor, const Scalar lineWidth = Scalar(1), MaterialRef* material = nullptr, VertexSetRef* vertexSet = nullptr);
 
 		/**
 		 * Returns the first attribute set object that is located in a given node tree.

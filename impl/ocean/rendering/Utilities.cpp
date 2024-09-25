@@ -1140,7 +1140,7 @@ TransformRef Utilities::createLines(const Engine& engine, const Vectors3& vertic
 	return TransformRef();
 }
 
-TransformRef Utilities::createLines(const Engine& engine, const Vectors3& vertices, const TriangleFaces& triangleFaces, const RGBAColor& emissiveColor, const RGBAColors& colorsPerVertex, MaterialRef* material, AttributeSetRef* attributeSet, LinesRef* lines, VertexSetRef* vertexSet)
+TransformRef Utilities::createLines(const Engine& engine, const Vectors3& vertices, const TriangleFaces& triangleFaces, const RGBAColor& emissiveColor, const Scalar lineWidth, const RGBAColors& colorsPerVertex, MaterialRef* material, AttributeSetRef* attributeSet, LinesRef* lines, VertexSetRef* vertexSet)
 {
 	try
 	{
@@ -1219,6 +1219,11 @@ TransformRef Utilities::createLines(const Engine& engine, const Vectors3& vertic
 		internalLines->setVertexSet(internalVertexSet);
 		internalLines->setIndices((unsigned int)(lineVertices.size()));
 
+		if (lineWidth != Scalar(1))
+		{
+			internalLines->setLineWidth(lineWidth);
+		}
+
 		const GeometryRef internalGeometry = engine.factory().createGeometry();
 
 		const AttributeSetRef internalAttributeSet = engine.factory().createAttributeSet();
@@ -1273,7 +1278,7 @@ TransformRef Utilities::createLines(const Engine& engine, const Vectors3& vertic
 	return TransformRef();
 }
 
-TransformRef Utilities::createLines(const Engine& engine, const Vector3* points, const Vector3* normals, const size_t size, const Scalar scale, const RGBAColor& emissiveColor, MaterialRef* material, VertexSetRef* vertexSet)
+TransformRef Utilities::createLines(const Engine& engine, const Vector3* points, const Vector3* normals, const size_t size, const Scalar scale, const RGBAColor& emissiveColor, const Scalar lineWidth, MaterialRef* material, VertexSetRef* vertexSet)
 {
 	ocean_assert(points != nullptr && normals != nullptr);
 	ocean_assert(size > 0);
@@ -1296,6 +1301,11 @@ TransformRef Utilities::createLines(const Engine& engine, const Vector3* points,
 		const LinesRef internalLines = engine.factory().createLines();
 		internalLines->setVertexSet(internalVertexSet);
 		internalLines->setIndices((unsigned int)(vertices.size()));
+
+		if (lineWidth != Scalar(1))
+		{
+			internalLines->setLineWidth(lineWidth);
+		}
 
 		const GeometryRef internalGeometry = engine.factory().createGeometry();
 
