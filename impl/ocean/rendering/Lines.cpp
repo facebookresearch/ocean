@@ -34,12 +34,22 @@ unsigned int Lines::numberIndices() const
 	throw NotSupportedException();
 }
 
+Scalar Lines::lineWidth() const
+{
+	throw NotSupportedException();
+}
+
 void Lines::setIndices(const VertexIndices& /*indices*/)
 {
 	throw NotSupportedException();
 }
 
 void Lines::setIndices(const unsigned int /*numberImplicitPoints*/)
+{
+	throw NotSupportedException();
+}
+
+void Lines::setLineWidth(const Scalar /*width*/)
 {
 	throw NotSupportedException();
 }

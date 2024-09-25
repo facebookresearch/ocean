@@ -61,6 +61,13 @@ class OCEAN_RENDERING_EXPORT Lines : virtual public IndependentPrimitive
 		virtual unsigned int numberIndices() const;
 
 		/**
+		 * Returns the width (thickness ) in pixels at which all lines will be rendered
+		 * @return The width of all lines, in pixels, with range [1, infinity)
+		 * @exception NotSupportedException Is thrown if this function is not supported
+		 */
+		virtual Scalar lineWidth() const;
+
+		/**
 		 * Sets the indices of the used vertex lines.
 		 * The indices must not extend the number of defined vertices inside the used vertex set
 		 * @param indices Vertex indices to be set
@@ -75,6 +82,13 @@ class OCEAN_RENDERING_EXPORT Lines : virtual public IndependentPrimitive
 		 * @exception NotSupportedException Is thrown if this function is not supported
 		 */
 		virtual void setIndices(const unsigned int numberImplicitLines);
+
+		/**
+		 * Sets the width (thickness) in pixels at which all lines will be rendered.
+		 * @param width The width of all lines, in pixels, with range [1, infinity)
+		 * @exception NotSupportedException Is thrown if this function is not supported
+		 */
+		virtual void setLineWidth(const Scalar width);
 
 	protected:
 

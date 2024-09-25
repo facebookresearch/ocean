@@ -51,6 +51,13 @@ unsigned int GLESLines::numberIndices() const
 	return (unsigned int)(explicitLineIndices_.size());
 }
 
+Scalar GLESLines::lineWidth() const
+{
+	const ScopedLock scopedLock(objectLock);
+
+	return lineWidth_;
+}
+
 void GLESLines::setIndices(const VertexIndices& indices)
 {
 	const ScopedLock scopedLock(objectLock);
@@ -101,6 +108,19 @@ void GLESLines::setIndices(const unsigned int numberImplicitLines)
 	numberImplicitLines_ = numberImplicitLines;
 
 	updateBoundingBox();
+}
+
+void GLESLines::setLineWidth(const Scalar width)
+{
+	if (width < Scalar(1))
+	{
+		ocean_assert(false && "Invalid input!");
+		return;
+	}
+
+	const ScopedLock scopedLock(objectLock);
+
+	lineWidth_ = width;
 }
 
 void GLESLines::render(const GLESFramebuffer& framebuffer, const SquareMatrix4& projectionMatrix, const HomogenousMatrix4& camera_T_object, const HomogenousMatrix4& camera_T_world, const SquareMatrix3& normalMatrix, GLESAttributeSet& attributeSet, const Lights& lights)
@@ -158,6 +178,17 @@ void GLESLines::render(const SquareMatrix4& projectionMatrix, const HomogenousMa
 
 void GLESLines::drawLines()
 {
+	float previousLineWidth = -1.0f;
+
+	if (lineWidth_ != Scalar(1))
+	{
+		glGetFloatv(GL_LINE_WIDTH, &previousLineWidth);
+		ocean_assert(GL_NO_ERROR == glGetError());
+
+		glLineWidth(float(lineWidth_));
+		ocean_assert(GL_NO_ERROR == glGetError());
+	}
+
 	if (numberImplicitLines_ == 0u)
 	{
 		ocean_assert(vboIndices_ != 0u);
@@ -175,6 +206,12 @@ void GLESLines::drawLines()
 	else
 	{
 		glDrawArrays(GL_LINES, 0u, numberImplicitLines_);
+		ocean_assert(GL_NO_ERROR == glGetError());
+	}
+
+	if (previousLineWidth != -1.0f)
+	{
+		glLineWidth(previousLineWidth);
 		ocean_assert(GL_NO_ERROR == glGetError());
 	}
 }
