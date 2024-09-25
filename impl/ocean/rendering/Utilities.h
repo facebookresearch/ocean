@@ -261,6 +261,7 @@ class OCEAN_RENDERING_EXPORT Utilities
 		 * @param vertices The vertices of all points to be rendered, at least one
 		 * @param lineIndexGroups The group of vertex indices defining several individual lines, at least one
 		 * @param emissiveColor The emissiveColor of all vertices in case 'colorsPerVertex' is empty, can be transparent
+		 * @param lineWidth The width of the lines in pixels, with range [1, infinity)
 		 * @param colorsPerVertex The optional colors of the individual vertices, one for each vertex or empty to use the 'emissiveColor'
 		 * @param material Optional resulting Material node; will be invalid if colorPerVertex is not empty
 		 * @param attributeSet Optional resulting AttributeSet node
@@ -268,7 +269,7 @@ class OCEAN_RENDERING_EXPORT Utilities
 		 * @param vertexSet Optional resulting VertexSet node
 		 * @return The resulting transform node holding the geometry node
 		 */
-		static TransformRef createLines(const Engine& engine, const Vectors3& vertices, const VertexIndexGroups& lineIndexGroups, const RGBAColor& emissiveColor, const RGBAColors& colorsPerVertex = RGBAColors(), MaterialRef* material = nullptr, AttributeSetRef* attributeSet = nullptr, LineStripsRef* lineStrips = nullptr, VertexSetRef* vertexSet = nullptr);
+		static TransformRef createLines(const Engine& engine, const Vectors3& vertices, const VertexIndexGroups& lineIndexGroups, const RGBAColor& emissiveColor, const Scalar lineWidth = Scalar(1), const RGBAColors& colorsPerVertex = RGBAColors(), MaterialRef* material = nullptr, AttributeSetRef* attributeSet = nullptr, LineStripsRef* lineStrips = nullptr, VertexSetRef* vertexSet = nullptr);
 
 		/**
 		 * Returns a Transform holding a geometry with lines (a wireframe of a mesh).

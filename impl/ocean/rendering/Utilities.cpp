@@ -1066,7 +1066,7 @@ TransformRef Utilities::createPoints(const Engine& engine, const Vectors3& verti
 	return TransformRef();
 }
 
-TransformRef Utilities::createLines(const Engine& engine, const Vectors3& vertices, const VertexIndexGroups& lineIndexGroups, const RGBAColor& emissiveColor, const RGBAColors& colorsPerVertex, MaterialRef* material, AttributeSetRef* attributeSet, LineStripsRef* lineStrips, VertexSetRef* vertexSet)
+TransformRef Utilities::createLines(const Engine& engine, const Vectors3& vertices, const VertexIndexGroups& lineIndexGroups, const RGBAColor& emissiveColor, const Scalar lineWidth, const RGBAColors& colorsPerVertex, MaterialRef* material, AttributeSetRef* attributeSet, LineStripsRef* lineStrips, VertexSetRef* vertexSet)
 {
 	try
 	{
@@ -1085,6 +1085,11 @@ TransformRef Utilities::createLines(const Engine& engine, const Vectors3& vertic
 		const LineStripsRef internalLineStrips = engine.factory().createLineStrips();
 		internalLineStrips->setVertexSet(internalVertexSet);
 		internalLineStrips->setStrips(lineIndexGroups);
+
+		if (lineWidth != Scalar(1))
+		{
+			internalLineStrips->setLineWidth(lineWidth);
+		}
 
 		const GeometryRef internalGeometry = engine.factory().createGeometry();
 
