@@ -63,6 +63,8 @@ class OCEAN_RENDERING_EXPORT Points : virtual public IndependentPrimitive
 		 * Returns the size in pixels at which all points will be rendered.
 		 * The size of a point is defined by the diameter of the point.
 		 * @return The size of all points, in pixels, with range [1, infinity)
+		 * @exception NotSupportedException Is thrown if this function is not supported
+		 * @see setPointSize().
 		 */
 		virtual Scalar pointSize() const;
 
@@ -85,6 +87,8 @@ class OCEAN_RENDERING_EXPORT Points : virtual public IndependentPrimitive
 		/**
 		 * Sets the size in pixels at which all points will be rendered.
 		 * @param size The size of all points, in pixels, with range [1, infinity)
+		 * @exception NotSupportedException Is thrown if this function is not supported
+		 * @see pointSize().
 		 */
 		virtual void setPointSize(const Scalar size);
 
