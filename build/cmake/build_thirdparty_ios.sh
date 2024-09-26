@@ -106,6 +106,9 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+OTP_BUILD_DIR=$( cd -- "$( dirname -- "${OTP_BUILD_DIR}" )" &> /dev/null && pwd )/"$(basename "${OTP_BUILD_DIR}")"
+OTP_INSTALL_DIR=$( cd -- "$( dirname -- "${OTP_INSTALL_DIR}" )" &> /dev/null && pwd )/"$(basename "${OTP_INSTALL_DIR}")"
+
 # Builds the third-party libraries for Ocean (iOS)
 #
 # BUILD_CONFIG: The build type to be used, valid values: Debug, Release

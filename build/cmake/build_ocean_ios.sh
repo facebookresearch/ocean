@@ -216,6 +216,10 @@ else
     fi
 fi
 
+OCEAN_BUILD_DIR=$( cd -- "$( dirname -- "${OCEAN_BUILD_DIR}" )" &> /dev/null && pwd )/"$(basename "${OCEAN_BUILD_DIR}")"
+OCEAN_INSTALL_DIR=$( cd -- "$( dirname -- "${OCEAN_INSTALL_DIR}" )" &> /dev/null && pwd )/"$(basename "${OCEAN_INSTALL_DIR}")"
+OCEAN_THIRD_PARTY_DIR=$( cd -- "$( dirname -- "${OCEAN_THIRD_PARTY_DIR}" )" &> /dev/null && pwd )/"$(basename "${OCEAN_THIRD_PARTY_DIR}")"
+
 if [ "${OCEAN_BUILD_CONFIGS}" == "" ]; then
     echo "ERROR: At least one build type has to be specified." >&2
     exit 1
