@@ -210,7 +210,7 @@ void quirc_extract(const struct quirc *q, int index,
 		   struct quirc_code *code);
 
 /* Decode a QR-code, returning the payload data. */
-quirc_decode_error_t quirc_decode(const struct quirc_code *code,
+static quirc_decode_error_t quirc_decode(const struct quirc_code *code,
 				  struct quirc_data *data);
 
 /* Flip a QR-code according to optional mirror feature of ISO 18004:2015 */
@@ -365,8 +365,6 @@ struct quirc_version_info {
 	int				apat[QUIRC_MAX_ALIGNMENT];
 	struct quirc_rs_params          ecc[4];
 };
-
-extern const struct quirc_version_info quirc_version_db[QUIRC_MAX_VERSION + 1];
 
 #endif
 
@@ -1682,7 +1680,7 @@ done:
 	return QUIRC_SUCCESS;
 }
 
-quirc_decode_error_t quirc_decode(const struct quirc_code *code,
+static quirc_decode_error_t quirc_decode(const struct quirc_code *code,
 				  struct quirc_data *data)
 {
 	quirc_decode_error_t err;
