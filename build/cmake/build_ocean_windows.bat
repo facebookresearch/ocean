@@ -112,7 +112,8 @@ for %%c in (!-config!) do (
 
     set TPSPEC=
     if NOT !-third-party! == NULL (
-        set TPDIR=!-third-party!\!bibase!
+	call :normalize_path !-third-party!
+        set TPDIR=!NORMEDPATH!\!bibase!
         set TPSPEC="-DCMAKE_PREFIX_PATH=!TPDIR!"
     )
 
@@ -153,3 +154,8 @@ if %errorlevel% neq 0 (
 ) else (
     exit /b 0
 )
+
+:normalize_path
+set NORMEDPATH=%~f1
+exit /b
+

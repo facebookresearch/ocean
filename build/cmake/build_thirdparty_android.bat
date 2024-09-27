@@ -128,8 +128,10 @@ for %%a in (!-android_abi!) do (
         exit /b
       )
 
-      set BUILD_DIRECTORY="!-build!\!bibase!"
-      set INSTALL_DIRECTORY=!-install!\!bibase!
+      call :normalize_path !-build!
+      set BUILD_DIRECTORY="!NORMEDPATH!\!bibase!"
+      call :normalize_path !-install!
+      set INSTALL_DIRECTORY=!NORMEDPATH!\!bibase!
 
       echo BUILD_TYPE           !BUILD_TYPE!
       echo BUILD_SHARED_LIBS    !BUILD_SHARED_LIBS!
@@ -182,3 +184,8 @@ if %errorlevel% neq 0 (
 ) else (
     exit /b 0
 )
+
+:normalize_path
+set NORMEDPATH=%~f1
+exit /b
+

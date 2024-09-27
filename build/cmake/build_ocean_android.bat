@@ -141,10 +141,13 @@ for %%a in (!-android_abi!) do (
         exit /b
       )
 
-      set BUILD_DIRECTORY=!-build!\!bibase!
-      set INSTALL_DIRECTORY=!-install!\!bibase!
+      call :normalize_path !-build!
+      set BUILD_DIRECTORY=!NORMEDPATH!\!bibase!
+      call :normalize_path !-install!
+      set INSTALL_DIRECTORY=!NORMEDPATH!\!bibase!
 
-      set TPFWD=!-third-party:\=/!
+      call :normalize_path !-third-party!
+      set TPFWD=!NORMEDPATH:\=/!
       set TPDIR=!TPFWD!/!bibase!
       set TPSPEC=-DCMAKE_PREFIX_PATH="!TPDIR!" -DCMAKE_MODULE_PATH="!TPDIR!" -DCMAKE_FIND_ROOT_PATH="!TPDIR!"
 
@@ -202,3 +205,7 @@ if %errorlevel% neq 0 (
 ) else (
     exit /b 0
 )
+
+:normalize_path
+set NORMEDPATH=%~f1
+exit /b
