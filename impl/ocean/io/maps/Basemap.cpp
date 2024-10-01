@@ -743,7 +743,7 @@ Basemap::SharedObject Basemap::parseBuilding(vtzero::feature& vtzeroFeature, Pix
 	{
 		ocean_assert(vtzeroProperty.valid());
 
-		if (vtzeroProperty.key().compare("building_height") == 0)
+		if (vtzeroProperty.key().compare("building_height") == 0 || vtzeroProperty.key().compare("buildingHeight") == 0)
 		{
 			ocean_assert(buildingHeight == -1.0);
 
