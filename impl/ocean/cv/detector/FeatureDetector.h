@@ -33,6 +33,31 @@ namespace Detector
  */
 class OCEAN_CV_DETECTOR_EXPORT FeatureDetector
 {
+	public:
+
+		/**
+		 * The following comfort class provides comfortable functions simplifying prototyping applications but also increasing binary size of the resulting applications.
+		 * Best practice is to avoid using these functions if binary size matters,<br>
+		 * as for every comfort function a corresponding function exists with specialized functionality not increasing binary size significantly.<br>
+		 */
+		class OCEAN_CV_EXPORT Comfort
+		{
+			public:
+
+				/**
+				 * Determines strong feature points in a given image, optional a sub-region can be specified in that the points are detected.
+				 * @param frame The frame in which the feature points are detected, will be converted to a frame with pixel format FORMAT_Y8 internally, must be valid
+				 * @param subRegion Optional sub-region specifying a small image area in that the points are detected, an invalid sub-region to use the entire frame
+				 * @param horizontalBins Optional horizontal bins that can be used to distribute the tracked points into array bins (in each bin there will be at most one point)
+				 * @param verticalBins Optional vertical bins that can be used to distribute the tracked points into array bins (in each bin there will be at most one point)
+				 * @param strength Minimal aiming strength parameter of the tracked feature points, this value will be weakened if too less feature points can be detected
+				 * @param worker Optional worker object to distribute the computation
+				 * @param strengths Optional resulting strength values individual for each point
+				 * @return The resulting feature points, feature points with high strength value first
+				 */
+				static Vectors2 determineHarrisPoints(const Frame& frame, const SubRegion& subRegion = SubRegion(), const unsigned int horizontalBins = 0u, const unsigned int verticalBins = 0u, const unsigned int strength = 30u, Worker* worker = nullptr, std::vector<int>* strengths = nullptr);
+		};
+
 	protected:
 
 		/**
@@ -47,7 +72,7 @@ class OCEAN_CV_DETECTOR_EXPORT FeatureDetector
 				 * Beware: The elements are neither zero nor a specific value!
 				 * @see VectorT2::VectorT2()
 				 */
-				inline IntensityVector2();
+				IntensityVector2() = default;
 
 				/**
 				 * Creates a new intensity vector by the given position and intensity value.
@@ -72,13 +97,13 @@ class OCEAN_CV_DETECTOR_EXPORT FeatureDetector
 			private:
 
 				/// Intensity value.
-				int vectorIntensity;
+				int intensity_ = NumericT<int>::minValue();
 		};
 
 		/**
 		 * Definition of a vector holding intensity vector objects.
 		 */
-		typedef std::vector<IntensityVector2> IntensityVectors2;
+		using IntensityVectors2 = std::vector<IntensityVector2>;
 
 	public:
 
@@ -99,7 +124,7 @@ class OCEAN_CV_DETECTOR_EXPORT FeatureDetector
 
 		/**
 		 * Determines strong feature points in a given image, optional a sub-region can be specified in that the points are detected.
-		 * @param frame The frame in which the feature points are detected, will be converted to a frame with pixel format FORMAT_Y internally, must be valid
+		 * @param yFrame The grayscale frame in which the feature points are detected, must have pixel format FORMAT_Y8, must be valid
 		 * @param subRegion Optional sub-region specifying a small image area in that the points are detected, an invalid sub-region to use the entire frame
 		 * @param horizontalBins Optional horizontal bins that can be used to distribute the tracked points into array bins (in each bin there will be at most one point)
 		 * @param verticalBins Optional vertical bins that can be used to distribute the tracked points into array bins (in each bin there will be at most one point)
@@ -108,7 +133,7 @@ class OCEAN_CV_DETECTOR_EXPORT FeatureDetector
 		 * @param strengths Optional resulting strength values individual for each point
 		 * @return The resulting feature points, feature points with high strength value first
 		 */
-		static Vectors2 determineHarrisPoints(const Frame& frame, const SubRegion& subRegion = SubRegion(), const unsigned int horizontalBins = 0u, const unsigned int verticalBins = 0u, const unsigned int strength = 30u, Worker* worker = nullptr, std::vector<int>* strengths = nullptr);
+		static inline Vectors2 determineHarrisPoints(const Frame& yFrame, const SubRegion& subRegion = SubRegion(), const unsigned int horizontalBins = 0u, const unsigned int verticalBins = 0u, const unsigned int strength = 30u, Worker* worker = nullptr, std::vector<int>* strengths = nullptr);
 
 		/**
 		 * Determines strong feature points in a given image, optional a sub-region can be specified in that the points are detected.
@@ -127,28 +152,34 @@ class OCEAN_CV_DETECTOR_EXPORT FeatureDetector
 		static Vectors2 determineHarrisPoints(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const SubRegion& subRegion, const unsigned int horizontalBins = 0u, const unsigned int verticalBins = 0u, const unsigned int strength = 30u, Worker* worker = nullptr, std::vector<int>* strengths = nullptr);
 };
 
-inline FeatureDetector::IntensityVector2::IntensityVector2() :
-	Vector2(),
-	vectorIntensity(NumericT<int>::minValue())
-{
-	// nothing to do here
-}
-
 inline FeatureDetector::IntensityVector2::IntensityVector2(const Vector2& position, const int intensity) :
 	Vector2(position),
-	vectorIntensity(intensity)
+	intensity_(intensity)
 {
 	// nothing to do here
 }
 
 inline int FeatureDetector::IntensityVector2::intensity() const
 {
-	return vectorIntensity;
+	return intensity_;
 }
 
 inline bool FeatureDetector::IntensityVector2::operator<(const IntensityVector2& object) const
 {
-	return vectorIntensity > object.vectorIntensity;
+	return intensity_ > object.intensity_;
+}
+
+inline Vectors2 FeatureDetector::determineHarrisPoints(const Frame& yFrame, const SubRegion& subRegion, const unsigned int horizontalBins, const unsigned int verticalBins, const unsigned int strength, Worker* worker, std::vector<int>* strengths)
+{
+	ocean_assert(yFrame.isValid());
+	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+
+	if (!yFrame.isValid() || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+	{
+		return Vectors2();
+	}
+
+	return determineHarrisPoints(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), subRegion, horizontalBins, verticalBins, strength, worker, strengths);
 }
 
 }

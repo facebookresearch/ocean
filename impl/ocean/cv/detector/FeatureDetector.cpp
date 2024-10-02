@@ -23,6 +23,20 @@ namespace CV
 namespace Detector
 {
 
+Vectors2 FeatureDetector::Comfort::determineHarrisPoints(const Frame& frame, const SubRegion& subRegion, const unsigned int horizontalBins, const unsigned int verticalBins, const unsigned int strength, Worker* worker, std::vector<int>* strengths)
+{
+	ocean_assert(frame.isValid());
+
+	Frame yFrame;
+	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
+	{
+		ocean_assert(false && "Invalid pixel format!");
+		return Vectors2();
+	}
+
+	return FeatureDetector::determineHarrisPoints(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), subRegion, horizontalBins, verticalBins, strength, worker, strengths);
+}
+
 Vectors2 FeatureDetector::filterStrongHarrisPoints(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const Vectors2& positions, const unsigned int maximalPoints, const Scalar minSqrDistance, const int harrisThreshold, Worker* worker)
 {
 	ocean_assert(yFrame != nullptr);
@@ -179,20 +193,6 @@ Vectors2 FeatureDetector::determineHarrisPoints(const uint8_t* yFrame, const uns
 	}
 
 	return Detector::HarrisCorner::corners2imagePoints(cornersSubRegion);
-}
-
-Vectors2 FeatureDetector::determineHarrisPoints(const Frame& frame, const SubRegion& subRegion, const unsigned int horizontalBins, const unsigned int verticalBins, const unsigned int strength, Worker* worker, std::vector<int>* strengths)
-{
-	ocean_assert(frame.isValid());
-
-	Frame yFrame;
-	if (!CV::FrameConverter::Comfort::convert(frame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, worker))
-	{
-		ocean_assert(false && "Invalid pixel format!");
-		return Vectors2();
-	}
-
-	return determineHarrisPoints(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), subRegion, horizontalBins, verticalBins, strength, worker, strengths);
 }
 
 }
