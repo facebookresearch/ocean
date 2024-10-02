@@ -95,7 +95,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 
 	// we detect strong feature points in the start frame
 	Strengths startFrameFeatureStrengths;
-	Vectors2 startFrameFeaturePoints = CV::Detector::FeatureDetector::determineHarrisPoints(initialFrame, CV::SubRegion(), horizontalBins, verticalBins, trackingConfiguration.strength(), worker, &startFrameFeatureStrengths);
+	Vectors2 startFrameFeaturePoints = CV::Detector::FeatureDetector::Comfort::determineHarrisPoints(initialFrame, CV::SubRegion(), horizontalBins, verticalBins, trackingConfiguration.strength(), worker, &startFrameFeatureStrengths);
 
 	if (horizontalBins != 0u && verticalBins != 0u)
 	{
@@ -253,7 +253,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 
 		// we detect strong feature points in the current frame
 		Strengths newCurrentFeatureStrengths;
-		Vectors2 newCurrentFeaturePoints = CV::Detector::FeatureDetector::determineHarrisPoints(frame, CV::SubRegion(), horizontalBins, verticalBins, trackingConfiguration.strength(), worker, &newCurrentFeatureStrengths);
+		Vectors2 newCurrentFeaturePoints = CV::Detector::FeatureDetector::Comfort::determineHarrisPoints(frame, CV::SubRegion(), horizontalBins, verticalBins, trackingConfiguration.strength(), worker, &newCurrentFeatureStrengths);
 
 		Vectors2 currentFeaturePoints;
 		Strengths currentFeatureStrengths = previousFeatureStrengths;
@@ -539,7 +539,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 
 		// we detect strong feature points in the current frame
 		Strengths newCurrentFeatureStrengths;
-		Vectors2 newCurrentFeaturePoints = CV::Detector::FeatureDetector::determineHarrisPoints(frame, CV::SubRegion(), horizontalBins, verticalBins, trackingConfiguration.strength(), worker, &newCurrentFeatureStrengths);
+		Vectors2 newCurrentFeaturePoints = CV::Detector::FeatureDetector::Comfort::determineHarrisPoints(frame, CV::SubRegion(), horizontalBins, verticalBins, trackingConfiguration.strength(), worker, &newCurrentFeatureStrengths);
 
 		Vectors2 currentFeaturePoints;
 		Strengths currentFeatureStrengths = previousFeatureStrengths;
@@ -818,7 +818,7 @@ bool PointPaths::determinePointPaths(CV::FrameProviderInterface& frameProviderIn
 
 	// we detect strong feature points in the current frame
 	Strengths subRegionFeatureStrengths;
-	Vectors2 subRegionFeaturePoints = CV::Detector::FeatureDetector::determineHarrisPoints(initialFrame, subRegion, horizontalBins, verticalBins, trackingConfiguration.strength(), worker, &subRegionFeatureStrengths);
+	Vectors2 subRegionFeaturePoints = CV::Detector::FeatureDetector::Comfort::determineHarrisPoints(initialFrame, subRegion, horizontalBins, verticalBins, trackingConfiguration.strength(), worker, &subRegionFeatureStrengths);
 
 	if (horizontalBins != 0u && verticalBins != 0u)
 	{
@@ -1414,7 +1414,7 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 
 	// we detect feature points in the start frame with the smallest 'realistic' feature point strength
 	Strengths featureStrengths;
-	Vectors2 featurePoints = CV::Detector::FeatureDetector::determineHarrisPoints(frame, CV::SubRegion(), 0u, 0u, 5u, worker, &featureStrengths);
+	Vectors2 featurePoints = CV::Detector::FeatureDetector::Comfort::determineHarrisPoints(frame, CV::SubRegion(), 0u, 0u, 5u, worker, &featureStrengths);
 
 	unsigned int lowCoarsestLayerRadius = 0u;
 	unsigned int lowPyramidLayers = 0u;
@@ -1705,7 +1705,7 @@ bool PointPaths::determineAutomaticTrackingConfiguration(CV::FrameProviderInterf
 
 		ocean_assert(frameWidth == frame.width() && frameHeight == frame.height());
 
-		featurePointGroups[n] = CV::Detector::FeatureDetector::determineHarrisPoints(frame, CV::SubRegion(), 0u, 0u, 5u, worker, &featureStrengthGroups[n]);
+		featurePointGroups[n] = CV::Detector::FeatureDetector::Comfort::determineHarrisPoints(frame, CV::SubRegion(), 0u, 0u, 5u, worker, &featureStrengthGroups[n]);
 	}
 
 	ocean_assert(frameWidth != 0u && frameHeight != 0u);
