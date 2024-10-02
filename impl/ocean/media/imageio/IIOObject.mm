@@ -175,16 +175,10 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage, bool* containedPremultip
 		}
 
 		case kCGImageAlphaNoneSkipFirst:
-		{
-			break;
-		}
-
 		case kCGImageAlphaNoneSkipLast:
 		{
 			if (cgColorSpaceMode == kCGColorSpaceModelRGB && bitsPerPixel == 32)
 			{
-				ocean_assert((cgBitmapInfo & kCGBitmapByteOrder32Little) == 0u);
-
 				pixelFormat = FrameType::FORMAT_RGB32;
 			}
 
@@ -321,7 +315,14 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage, bool* containedPremultip
 		unsigned int dataPaddingElements = 0u;
 		if (dataPtr != nullptr && Frame::strideBytes2paddingElements(pixelFormat, (unsigned int)(width), (unsigned int)(bytesPerRow), dataPaddingElements))
 		{
-			CV::FrameChannels::removeLastChannel<uint8_t, 4u>((const uint8_t*)(dataPtr), result.data<uint8_t>(), result.width(), result.height(), CV::FrameConverter::CONVERT_NORMAL, dataPaddingElements, result.paddingElements());
+			if (alphaInfo == kCGImageAlphaNoneSkipLast)
+			{
+				CV::FrameChannels::removeLastChannel<uint8_t, 4u>((const uint8_t*)(dataPtr), result.data<uint8_t>(), result.width(), result.height(), CV::FrameConverter::CONVERT_NORMAL, dataPaddingElements, result.paddingElements());
+			}
+			else
+			{
+				CV::FrameChannels::removeFirstChannel<uint8_t, 4u>((const uint8_t*)(dataPtr), result.data<uint8_t>(), result.width(), result.height(), CV::FrameConverter::CONVERT_NORMAL, dataPaddingElements, result.paddingElements());
+			}
 		}
 		else
 		{
