@@ -112,7 +112,7 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @param ignoreModules If True, module data is ignored; otherwise, modules data is excluded from resulting string
 		 * @return String representation of QRCode
 		 */
-		static std::string translateQRCodeToString(const CV::Detector::QRCodes::QRCode& qrcode, const bool ignoreModules = false);
+		static std::string translateQRCodeToString(const CV::Detector::QRCodes::QRCodeBase& qrcode, const bool ignoreModules = false);
 };
 
 } // namespace TestQRCodes

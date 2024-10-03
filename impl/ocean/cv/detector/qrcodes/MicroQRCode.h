@@ -34,6 +34,7 @@ typedef std::vector<MicroQRCode> MicroQRCodes;
 class MicroQRCode final : public QRCodeBase
 {
 	friend class MicroQRCodeEncoder;
+	friend class MicroQRCodeDecoder;
 
 	public:
 

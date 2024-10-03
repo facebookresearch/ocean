@@ -231,7 +231,7 @@ const std::string& Utilities::getNumericCharset()
 	return numericCharset;
 }
 
-std::string Utilities::translateQRCodeToString(const CV::Detector::QRCodes::QRCode& qrcode, const bool ignoreModules)
+std::string Utilities::translateQRCodeToString(const CV::Detector::QRCodes::QRCodeBase& qrcode, const bool ignoreModules)
 {
 	std::stringstream stream;
 	
