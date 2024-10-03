@@ -247,7 +247,7 @@ bool VRHandVisualizer::visualizeHands(const HandPoses& handPoses)
 
 	if (renderMode_ & RM_JOINTS)
 	{
-		if (!visalizeJoints(handPoses))
+		if (!visualizeJoints(handPoses))
 		{
 			return false;
 		}
@@ -303,7 +303,7 @@ void VRHandVisualizer::release()
 	engine_.release();
 }
 
-bool VRHandVisualizer::visalizeJoints(const HandPoses& handPoses)
+bool VRHandVisualizer::visualizeJoints(const HandPoses& handPoses)
 {
 	ocean_assert(engine_ && scene_);
 

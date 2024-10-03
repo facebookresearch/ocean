@@ -289,7 +289,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRHandVisualizer : pub
 		 * @param handPoses The hand poses object providing the necessary information to render the hands
 		 * @return True, if succeeded
 		 */
-		bool visalizeJoints(const HandPoses& handPoses);
+		bool visualizeJoints(const HandPoses& handPoses);
 
 		/**
 		 * Visualizes the wireframe of the hands.
