@@ -188,7 +188,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRHandVisualizer : pub
 		 * Disable the copy constructor
 		 * @param vrHandVisualizer Another instance of the hand visualizer that would have been copied to this instance
 		 */
-		inline VRHandVisualizer(const VRHandVisualizer& vrHandVisualizer) = delete;
+		VRHandVisualizer(const VRHandVisualizer& vrHandVisualizer) = delete;
 
 		/**
 		 * Destructor
