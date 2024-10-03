@@ -75,6 +75,15 @@ class MicroQRCode final : public QRCodeBase
 		 * @return The number of modules per side
 		 */
 		static inline unsigned int modulesPerSide(const unsigned int version);
+
+		/**
+		 * Unpacks a Micro QR code symbol number into the version number and error correction capacity
+		 * @param symbolNumber The symbol number, range: [0, 7]
+		 * @param version The version number, range: [MIN_VERSION, MAX_VERSION]
+		 * @param errorCorrectionCapacity The error correction capacity, one of `ECC_DETECTION_ONLY`, `ECC_07`, `ECC_15`, or `ECC_25`
+		 * @return True if the symbol number is valid and the version and error correction capacity were successfully unpacked, otherwise false
+		 */
+		static inline bool unpackSymbolNumber(const unsigned int symbolNumber, unsigned int& version, ErrorCorrectionCapacity& errorCorrectionCapacity);
 	
 	protected:
 
@@ -177,6 +186,33 @@ inline unsigned int MicroQRCode::modulesPerSide(const unsigned int version)
 	}
 
 	return 0u;
+}
+
+inline bool MicroQRCode::unpackSymbolNumber(const unsigned int symbolNumber, unsigned int& version, MicroQRCode::ErrorCorrectionCapacity& errorCorrectionCapacity)
+{
+	if (symbolNumber > 7u)
+	{
+		return false;
+	}
+
+	if (symbolNumber == 0u)
+	{
+		version = 1u;
+		errorCorrectionCapacity = ECC_DETECTION_ONLY;
+		return true;
+	}
+
+	if (symbolNumber == 7u)
+	{
+		version = 4u;
+		errorCorrectionCapacity = ECC_25;
+		return true;
+	}
+
+	version = (symbolNumber + 3u)  / 2u;
+	errorCorrectionCapacity = (symbolNumber % 2u == 1u) ? ECC_07 : ECC_15;
+
+	return true;
 }
 
 } // namespace QRCodes

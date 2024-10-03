@@ -38,20 +38,6 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestMicroQRCodeEncoder
 {
 	friend class TestMicroQRCodeDecoder;
 
-	protected:
-
-		/**
-		 * Helper data structure for Micro QR Code symbol numbers
-		 */
-		struct SymbolNumber
-		{
-			/// The version number of the Micro QR code symbol number
-			unsigned int version_;
-
-			/// The level of the error correction capacity of the Micro QR code symbol number
-			CV::Detector::QRCodes::MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity_;
-		};
-
 	public:
 
 		/**

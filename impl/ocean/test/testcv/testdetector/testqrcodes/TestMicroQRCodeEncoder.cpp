@@ -220,18 +220,6 @@ bool TestMicroQRCodeEncoder::testMicroQRCodeFormatEncodingDecoding()
 
 	RandomGenerator randomGenerator;
 
-	const std::array<SymbolNumber, 8> symbolNumbers = 
-	{{
-		{1u, MicroQRCode::ECC_DETECTION_ONLY},
-		{2u, MicroQRCode::ECC_07},
-		{2u, MicroQRCode::ECC_15},
-		{3u, MicroQRCode::ECC_07},
-		{3u, MicroQRCode::ECC_15},
-		{4u, MicroQRCode::ECC_07},
-		{4u, MicroQRCode::ECC_15},
-		{4u, MicroQRCode::ECC_25},
-	}};
-
 	const std::array<MicroQRCodeEncoder::MaskingPattern, 4> maskingPatterns =
 	{
 		MicroQRCodeEncoder::MP_PATTERN_0,
@@ -240,11 +228,19 @@ bool TestMicroQRCodeEncoder::testMicroQRCodeFormatEncodingDecoding()
 		MicroQRCodeEncoder::MP_PATTERN_3,
 	};
 
-	for (const SymbolNumber& symbolNumber : symbolNumbers)
+	for (unsigned int symbolNumber = 0u; symbolNumber < 8; symbolNumber++)
 	{
+		unsigned int version;
+		MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity;
+		if (!MicroQRCode::unpackSymbolNumber(symbolNumber, version, errorCorrectionCapacity))
+		{
+			ocean_assert(false && "This should never happen!");
+			continue;
+		}
+
 		for (const MicroQRCodeEncoder::MaskingPattern& maskingPattern : maskingPatterns)
 		{
-			const uint32_t encodedFormat = MicroQRCodeEncoder::encodeFormat(symbolNumber.version_, symbolNumber.errorCorrectionCapacity_, maskingPattern);
+			const uint32_t encodedFormat = MicroQRCodeEncoder::encodeFormat(version, errorCorrectionCapacity, maskingPattern);
 
 			if (encodedFormat >> 15u != 0u)
 			{
@@ -255,7 +251,7 @@ bool TestMicroQRCodeEncoder::testMicroQRCodeFormatEncodingDecoding()
 			MicroQRCode::ErrorCorrectionCapacity decodedErrorCorrectionCapacity;
 			MicroQRCodeEncoder::MaskingPattern decodedMaskingPattern;
 
-			if (MicroQRCodeEncoder::decodeFormatBits(encodedFormat, decodedVersion, decodedErrorCorrectionCapacity, decodedMaskingPattern) == false || symbolNumber.version_ != decodedVersion || symbolNumber.errorCorrectionCapacity_ != decodedErrorCorrectionCapacity || maskingPattern != decodedMaskingPattern)
+			if (MicroQRCodeEncoder::decodeFormatBits(encodedFormat, decodedVersion, decodedErrorCorrectionCapacity, decodedMaskingPattern) == false || version != decodedVersion || errorCorrectionCapacity != decodedErrorCorrectionCapacity || maskingPattern != decodedMaskingPattern)
 			{
 				allSucceeded = false;
 			}
@@ -280,7 +276,7 @@ bool TestMicroQRCodeEncoder::testMicroQRCodeFormatEncodingDecoding()
 			ocean_assert(xorMask >> 15u == 0u);
 			const uint32_t encodedFormatWithErrors = encodedFormat ^ xorMask;
 
-			if (MicroQRCodeEncoder::decodeFormatBits(encodedFormatWithErrors, decodedVersion, decodedErrorCorrectionCapacity, decodedMaskingPattern) == false || symbolNumber.version_ != decodedVersion || symbolNumber.errorCorrectionCapacity_ != decodedErrorCorrectionCapacity || maskingPattern != decodedMaskingPattern)
+			if (MicroQRCodeEncoder::decodeFormatBits(encodedFormatWithErrors, decodedVersion, decodedErrorCorrectionCapacity, decodedMaskingPattern) == false || version != decodedVersion || errorCorrectionCapacity != decodedErrorCorrectionCapacity || maskingPattern != decodedMaskingPattern)
 			{
 				allSucceeded = false;
 			}

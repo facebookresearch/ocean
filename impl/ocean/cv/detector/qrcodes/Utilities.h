@@ -12,6 +12,7 @@
 #include "ocean/cv/detector/qrcodes/QRCodeDetector2D.h"
 #include "ocean/cv/detector/qrcodes/FinderPatternDetector.h"
 #include "ocean/cv/detector/qrcodes/LegacyQRCodeDetector2D.h"
+#include "ocean/cv/detector/qrcodes/MicroQRCodeDetector2D.h"
 
 #include "ocean/base/Worker.h"
 
@@ -71,7 +72,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 *   * the origin is in the top-left corner of the QR code
 		 *   * the pixel origin is in the top-left corner of each pixel
 		 *
-		 * In the example below, `s = 4 * version + 17` is the number of modules per side:
+		 * In the example below, `s` is the number of modules per side:
 		 *
 		 * <pre>
 		 *   (0, 0)          (s, 0)
@@ -111,17 +112,11 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 *  z' = 0
 		 * </pre>
 		 */
-		class OCEAN_CV_DETECTOR_QRCODES_EXPORT CoordinateSystem
+		class OCEAN_CV_DETECTOR_QRCODES_EXPORT CoordinateSystemBase
 		{
 			public:
 
-				/**
-				 * Constructs an coordinate system object
-				 * Coordinates are normalized to the range `[-1, 1]` or `[-scale, scale]` for `scale != 1`.
-				 * @param version The version for which the coordinate system should be prepared, range: [1, 40]
-				 * @param scale Optional scaling factor for the coordinates in the object space, range: (0, infinity)
-				 */
-				CoordinateSystem(const unsigned int version, const Scalar scale = Scalar(1));
+				virtual ~CoordinateSystemBase() = default;
 
 				/**
 				 * Returns the scaling factor that is used for coordinate scaling
@@ -150,6 +145,44 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 				 * @return The 4 corners in object space in the order top-left, bottom-left, bottom-right, and top-right.
 				 */
 				static inline Vectors3 computeCornersInObjectSpace(const Scalar scale = Scalar(1));
+
+			protected:
+
+				/**
+				 * Constructs an coordinate system object
+				 * Coordinates are normalized to the range `[-1, 1]` or `[-scale, scale]` for `scale != 1`.
+				 * @param modulesPerSide The number of modules per side of the QR code, range: [11, 177]
+				 * @param scale Optional scaling factor for the coordinates in the object space, range: (0, infinity)
+				 */
+				explicit CoordinateSystemBase(const unsigned int modulesPerSide, const Scalar scale = Scalar(1));
+
+				/// The number of modules per side of the QR code, range: [11, 177]
+				unsigned int modulesPerSide_;
+
+				/// Global factor for coordinate scaling
+				Scalar scale_;
+
+				/// The scale factor for x-coordinates
+				Scalar xScale_;
+
+				/// The scale factor for y-coordinates
+				Scalar yScale_;
+		};
+
+		/**
+		 * Definition of a helper class to convert between the coordinate systems that are used for QR codes.
+		 */
+		class OCEAN_CV_DETECTOR_QRCODES_EXPORT CoordinateSystem : public CoordinateSystemBase
+		{
+			public:
+
+				/**
+				 * Constructs a coordinate system object
+				 * Coordinates are normalized to the range `[-1, 1]` or `[-scale, scale]` for `scale != 1`.
+				 * @param version The version for which the coordinate system should be prepared, range: [1, 40]
+				 * @param scale Optional scaling factor for the coordinates in the object space, range: (0, infinity)
+				 */
+				explicit CoordinateSystem(const unsigned int version, const Scalar scale = Scalar(1));
 
 				/**
 				 * Computes the locations of the centers of the 3 finder patterns for a specific QR code version in object space
@@ -201,22 +234,57 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 				 *   ##############
 				 * </pre>
 				 *
-				 * @param version The version for which the locations of the alignment patterns will be computed, range: [7, 40]
+				 * @param version The version for which the locations of the version information fields will be computed, range: [1, 40]
 				 * @param versionInformation1 If true, the module locations of the first field in the top right corner will be returned, otherwise the ones of the second field in the lower left corner
 				 * @return The 3D locations of the 18 modules of the selected version information field in object space (in the order that they will need to be read)
 				 */
 				static Vectors3 computeVersionInformationModulesInObjectSpace(const unsigned int version, const bool versionInformation1);
+		};
 
-			protected:
+		/**
+		 * Definition of a helper class to convert between the coordinate systems that are used for Micro QR codes.
+		 */
+		class OCEAN_CV_DETECTOR_QRCODES_EXPORT MicroQRCoordinateSystem : public CoordinateSystemBase
+		{
+			public:
 
-				/// Global factor for coordinate scaling
-				Scalar scale_;
+				/**
+				 * Constructs a Micro QR coordinate system object
+				 * Coordinates are normalized to the range `[-1, 1]` or `[-scale, scale]` for `scale != 1`.
+				 * @param version The version for which the coordinate system should be prepared, range: [1, 4]
+				 * @param scale Optional scaling factor for the coordinates in the object space, range: (0, infinity)
+				 */
+				explicit MicroQRCoordinateSystem(const unsigned int version, const Scalar scale = Scalar(1));
 
-				/// The scale factor for x-coordinates
-				Scalar xScale_;
+				/**
+				 * Computes the location of the center of the finder pattern
+				 * Coordinates are normalized to the range `[-1, 1]` or `[-scale, scale]` for `scale != 1`.
+				 * @return The 3D location of the finder pattern center in object space
+				 */
+				Vector3 computeFinderPatternCenterInObjectSpace() const;
 
-				/// The scale factor for y-coordinates
-				Scalar yScale_;
+				/**
+				 * Computes the locations of the modules in the horizontal (top edge) timing pattern
+				 * Coordinates are normalized to the range `[-1, 1]` or `[-scale, scale]` for `scale != 1`.
+				 * @return The 3D locations of the timing pattern modules in object space
+				 */
+				Vectors3 computeHorizontalTimingPatternModulesInObjectSpace() const;
+
+				/**
+				 * Computes the locations of the modules in the vertical (left edge) timing pattern
+				 * Coordinates are normalized to the range `[-1, 1]` or `[-scale, scale]` for `scale != 1`.
+				 * @return The 3D locations of the timing pattern modules in object space
+				 */
+				Vectors3 computeVerticalTimingPatternModulesInObjectSpace() const;
+
+				/**
+				 * Computes the locations of the corners of the finder pattern for a specific Micro QR code version in object space
+				 * Coordinates are normalized to the range `[-1, 1]` or `[-scale, scale]` for `scale != 1`.
+				 * @param version The version for which the locations of the finder pattern corners will be computed, range: [1, 4]
+				 * @param scale Optional scaling factor for the coordinates in the object space, range: (0, infinity)
+				 * @return The 3D locations of the finder pattern corners in object space
+				 */
+				Vectors3 computeFinderPatternCornersInObjectSpace() const;
 		};
 
 	public:
@@ -278,6 +346,15 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @param codes The corresponding QR codes, must have the same size as `observations`
 		 */
 		static void drawObservations(const AnyCamera& anyCamera, Frame& frame, const QRCodeDetector2D::Observations& observations, const QRCodes& codes);
+
+		/**
+		 * Draws observations of Micro QR codes into a given frame.
+		 * @param anyCamera The camera that was used for the detection of the Micro QR codes, must be valid
+		 * @param frame The frame into which observations of the Micro QR codes will be drawn, must be valid, match the camera size, have its origin in the upper left corner, and have a pixel format that is compatible with RGB24
+		 * @param observations The observations of Micro QR codes that will be drawn, must have the same size as `codes`
+		 * @param codes The corresponding Micro QR codes, must have the same size as `observations`
+		 */
+		static void drawObservations(const AnyCamera& anyCamera, Frame& frame, const MicroQRCodeDetector2D::Observations& observations, const MicroQRCodes& codes);
 
 		/**
 		 * Draw the location of a finder pattern in a given frame.
@@ -389,7 +466,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @param yModule The vertical coordinate of the module, range: [0, no. modules of the corresponding code)
 		 * @return The length of the module diagonal in pixels, range: [0, infinity)
 		 */
-		static Scalar computeModuleDiagonalLength(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_code, const CoordinateSystem& coordinateSystem, const unsigned int xModule, const unsigned int yModule);
+		static Scalar computeModuleDiagonalLength(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_code, const CoordinateSystemBase& coordinateSystem, const unsigned int xModule, const unsigned int yModule);
 
 		/**
 		 * Computes the contrast between fore- and background modules for a given observation of a QR code.
@@ -403,7 +480,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		 * @param averageContrast The resulting construct of the average fore- and background values, will be ignored if `nullptr`
 		 * @return True if the computation was successful, otherwise false
 		 */
-		static bool computeContrast(const AnyCamera& anyCamera, const Frame& yFrame, const HomogenousMatrix4& world_T_camera, const QRCode& code, const HomogenousMatrix4& world_T_code, const Scalar codeSize, unsigned int* medianContrast, unsigned int* averageContrast);
+		static bool computeContrast(const AnyCamera& anyCamera, const Frame& yFrame, const HomogenousMatrix4& world_T_camera, const QRCodeBase& code, const HomogenousMatrix4& world_T_code, const Scalar codeSize, unsigned int* medianContrast, unsigned int* averageContrast);
 
 		/**
 		 * Computes the tilt and view angles for an observation of a QR code
@@ -553,12 +630,12 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		static bool computeCodeCenterInImage(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const QRCode& code, const HomogenousMatrix4& world_T_code, const Scalar codeSize, Vector2& imageCodeCenter, Scalar* maxSquareRadius = nullptr);
 };
 
-inline Scalar Utilities::CoordinateSystem::scale() const
+inline Scalar Utilities::CoordinateSystemBase::scale() const
 {
 	return scale_;
 }
 
-inline Scalar Utilities::CoordinateSystem::convertCodeSpaceToObjectSpaceX(const Scalar xCodeSpace) const
+inline Scalar Utilities::CoordinateSystemBase::convertCodeSpaceToObjectSpaceX(const Scalar xCodeSpace) const
 {
 	const Scalar xObjectSpace = xScale_ * xCodeSpace - Scalar(scale_);
 	ocean_assert(Numeric::isInsideRange(Scalar(-scale_), xObjectSpace, Scalar(scale_)));
@@ -566,7 +643,7 @@ inline Scalar Utilities::CoordinateSystem::convertCodeSpaceToObjectSpaceX(const 
 	return xObjectSpace;
 }
 
-inline Scalar Utilities::CoordinateSystem::convertCodeSpaceToObjectSpaceY(const Scalar yCodeSpace) const
+inline Scalar Utilities::CoordinateSystemBase::convertCodeSpaceToObjectSpaceY(const Scalar yCodeSpace) const
 {
 	const Scalar yObjectSpace = yScale_ * yCodeSpace + Scalar(scale_);
 	ocean_assert(Numeric::isInsideRange(Scalar(-scale_), yObjectSpace, Scalar(scale_)));
@@ -574,7 +651,7 @@ inline Scalar Utilities::CoordinateSystem::convertCodeSpaceToObjectSpaceY(const 
 	return yObjectSpace;
 }
 
-inline Vectors3 Utilities::CoordinateSystem::computeCornersInObjectSpace(const Scalar scale)
+inline Vectors3 Utilities::CoordinateSystemBase::computeCornersInObjectSpace(const Scalar scale)
 {
 	ocean_assert(scale > Scalar(0));
 

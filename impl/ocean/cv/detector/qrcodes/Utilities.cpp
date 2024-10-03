@@ -12,6 +12,7 @@
 #include "ocean/cv/FrameInterpolatorBilinear.h"
 
 #include "ocean/cv/detector/qrcodes/AlignmentPatternDetector.h"
+#include "ocean/cv/detector/qrcodes/MicroQRCode.h"
 #include "ocean/cv/detector/qrcodes/QRCode.h"
 #include "ocean/cv/detector/qrcodes/QRCodeEncoder.h"
 
@@ -29,17 +30,26 @@ namespace Detector
 namespace QRCodes
 {
 
-Utilities::CoordinateSystem::CoordinateSystem(const unsigned int version, const Scalar scale) :
-	scale_(scale)
+Utilities::CoordinateSystemBase::CoordinateSystemBase(const unsigned int modulesPerSide, const Scalar scale) :
+	modulesPerSide_(modulesPerSide), scale_(scale)
 {
-	ocean_assert(version >= 1u && version <= 40u);
+	ocean_assert(modulesPerSide >= 11u && modulesPerSide <= 177u);
 	ocean_assert(scale_ > Scalar(0));
-
-	const unsigned int modulesPerSide = QRCode::modulesPerSide(version);
-	ocean_assert(modulesPerSide >= 21u);
 
 	xScale_ = (Scalar(2) * scale_) / Scalar(modulesPerSide);
 	yScale_ = -xScale_;
+}
+
+Utilities::CoordinateSystem::CoordinateSystem(const unsigned int version, const Scalar scale) :
+	Utilities::CoordinateSystemBase(QRCode::modulesPerSide(version), scale)	
+{
+	ocean_assert(version >= 1u && version <= 40u);
+}
+
+Utilities::MicroQRCoordinateSystem::MicroQRCoordinateSystem(const unsigned int version, const Scalar scale) :
+	Utilities::CoordinateSystemBase(MicroQRCode::modulesPerSide(version), scale)	
+{
+	ocean_assert(version >= 1u && version <= 4u);
 }
 
 Frame Utilities::draw(const QRCodeBase& code, const unsigned int border, const uint8_t foregroundColor, const uint8_t backgroundColor)
@@ -317,6 +327,125 @@ void Utilities::drawObservations(const AnyCamera& anyCamera, Frame& frame, const
 			for (const Vector3& objectAlignmentPattern : objectAlignmentPatternsRow)
 			{
 				CV::Canvas::point<9u>(frame, anyCamera.projectToImageIF(flippedCamera_T_code, objectAlignmentPattern), color);
+			}
+		}
+	}
+}
+
+void Utilities::drawObservations(const AnyCamera& anyCamera, Frame& frame, const MicroQRCodeDetector2D::Observations& observations, const MicroQRCodes& codes)
+{
+	ocean_assert(anyCamera.isValid());
+	ocean_assert(frame.isValid() && FrameType::arePixelFormatsCompatible(frame.pixelFormat(), FrameType::FORMAT_RGB24) && frame.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
+	ocean_assert(observations.size() == codes.size());
+
+	const uint8_t* color = CV::Canvas::red(frame.pixelFormat());
+	const uint8_t* foregroundColor = CV::Canvas::red(frame.pixelFormat());
+	const uint8_t* backgroundColor = CV::Canvas::green(frame.pixelFormat());
+
+	typedef bool (*DrawPointFunc)(Frame& frame, const Vector2& position, const uint8_t* value);
+	DrawPointFunc drawPointFunc = frame.width() >= 2000u ? CV::Canvas::point<9u> : CV::Canvas::point<5u>;
+
+	for (size_t i = 0; i < observations.size(); ++i)
+	{
+		const MicroQRCodeDetector2D::Observation& observation = observations[i];
+		const MicroQRCode& code = codes[i];
+
+		ocean_assert(observation.isValid());
+		ocean_assert(code.isValid());
+
+		const HomogenousMatrix4 flippedCamera_T_code = PinholeCamera::standard2InvertedFlipped(observation.code_T_camera());
+		ocean_assert(flippedCamera_T_code.isValid());
+
+		const unsigned int version = code.version();
+		const unsigned int modulesPerSide = MicroQRCode::modulesPerSide(version);
+		ocean_assert(modulesPerSide >= 11u);
+
+		const Utilities::MicroQRCoordinateSystem coordinateSystem(version);
+
+		// Draw the modules
+		const std::vector<uint8_t>& modules = code.modules();
+		ocean_assert(modules.size() == modulesPerSide * modulesPerSide);
+
+		for (unsigned int yModule = 0u; yModule < modulesPerSide; ++yModule)
+		{
+			const Scalar y = coordinateSystem.convertCodeSpaceToObjectSpaceY(Scalar(yModule) + Scalar(0.5));
+			ocean_assert(y > Scalar(-1) && y < Scalar(1));
+
+			for (unsigned int xModule = 0u; xModule < modulesPerSide; ++xModule)
+			{
+				const Scalar x = coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(xModule) + Scalar(0.5));
+				ocean_assert(x > Scalar(-1) && x < Scalar(1));
+
+				const Vector2 imagePoint = anyCamera.projectToImageIF(flippedCamera_T_code, Vector3(x, y, Scalar(0)));
+
+				const unsigned int moduleIndex = yModule * modulesPerSide + xModule;
+				const uint8_t* moduleColor = modules[moduleIndex] == 0u ? backgroundColor : foregroundColor;
+
+				drawPointFunc(frame, imagePoint, moduleColor);
+			}
+		}
+
+		const Vectors3 objectCornerPoints = Utilities::MicroQRCoordinateSystem::computeCornersInObjectSpace();
+		ocean_assert(objectCornerPoints.size() == 4);
+
+		const std::array<Vector2, 4> imageCornerPoints =
+		{
+			anyCamera.projectToImageIF(flippedCamera_T_code, objectCornerPoints[0]),
+			anyCamera.projectToImageIF(flippedCamera_T_code, objectCornerPoints[1]),
+			anyCamera.projectToImageIF(flippedCamera_T_code, objectCornerPoints[2]),
+			anyCamera.projectToImageIF(flippedCamera_T_code, objectCornerPoints[3]),
+		};
+
+		// Draw the outline
+		drawLine<5u>(anyCamera, frame, imageCornerPoints[0], imageCornerPoints[1], color);
+		drawLine<5u>(anyCamera, frame, imageCornerPoints[1], imageCornerPoints[2], color);
+		drawLine<5u>(anyCamera, frame, imageCornerPoints[2], imageCornerPoints[3], color);
+		drawLine<5u>(anyCamera, frame, imageCornerPoints[3], imageCornerPoints[0], color);
+
+		// Draw the center of the finder pattern - its center is 3.5 modules away from the border of the code; normalize that offset to range [0, 2]
+		const Vector3 objectFinderPatternCenter = coordinateSystem.computeFinderPatternCenterInObjectSpace();
+
+		CV::Canvas::point<9u>(frame, anyCamera.projectToImageIF(flippedCamera_T_code, objectFinderPatternCenter), color);
+
+		// Draw the horizontal and vertical timing patterns
+		ocean_assert(modulesPerSide >= 11u);
+		const unsigned int timingPatternLength = modulesPerSide - 7u;
+
+		const Scalar normalizedModuleSize = Scalar(2) / Scalar(modulesPerSide);
+
+		for (const bool isHorizontal : {true, false})
+		{
+			Vector3 objectTimingPatternStart;
+			Vector3 objectTimingPatternEnd;
+
+			Vector3 objectTimingPatternStep;
+
+			if (isHorizontal)
+			{
+				objectTimingPatternStart = Vector3(coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(7.5)), coordinateSystem.convertCodeSpaceToObjectSpaceY(Scalar(0.5)), Scalar(0));
+				objectTimingPatternEnd = Vector3(coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(modulesPerSide) - Scalar(0.5)), coordinateSystem.convertCodeSpaceToObjectSpaceY(Scalar(0.5)), Scalar(0));
+
+				objectTimingPatternStep = Vector3(normalizedModuleSize, Scalar(0), Scalar(0));
+			}
+			else
+			{
+				objectTimingPatternStart = Vector3(coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(0.5)), coordinateSystem.convertCodeSpaceToObjectSpaceY(Scalar(7.5)), Scalar(0));
+				objectTimingPatternEnd = Vector3(coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(0.5)), coordinateSystem.convertCodeSpaceToObjectSpaceY(Scalar(modulesPerSide) - Scalar(0.5)), Scalar(0));
+
+				objectTimingPatternStep = Vector3(Scalar(0), -normalizedModuleSize, Scalar(0));
+			}
+
+			const Vector2 imageTimingPatternStart = anyCamera.projectToImageIF(flippedCamera_T_code, objectTimingPatternStart);
+			const Vector2 imageTimingPatternEnd = anyCamera.projectToImageIF(flippedCamera_T_code, objectTimingPatternEnd);
+
+			drawLine<1u>(anyCamera, frame, imageTimingPatternStart, imageTimingPatternEnd, color);
+
+			Vector3 objectTimerPatternPoint = objectTimingPatternStart;
+			for (size_t iPoint = 0; iPoint < timingPatternLength; ++iPoint)
+			{
+				CV::Canvas::point<3u>(frame, anyCamera.projectToImageIF(flippedCamera_T_code, objectTimerPatternPoint), color);
+
+				objectTimerPatternPoint += objectTimingPatternStep;
 			}
 		}
 	}
@@ -718,6 +847,67 @@ Vectors3 Utilities::CoordinateSystem::computeVersionInformationModulesInObjectSp
 	return objectPoints;
 }
 
+Vector3 Utilities::MicroQRCoordinateSystem::computeFinderPatternCenterInObjectSpace() const
+{
+	return Vector3(convertCodeSpaceToObjectSpaceX(Scalar(3.5)), convertCodeSpaceToObjectSpaceY(Scalar(3.5)), Scalar(0));
+}
+
+Vectors3 Utilities::MicroQRCoordinateSystem::computeHorizontalTimingPatternModulesInObjectSpace() const
+{
+	Vectors3 objectPoints;
+	objectPoints.reserve((modulesPerSide_ - 7u));
+
+	const Scalar yRow0 = convertCodeSpaceToObjectSpaceY(Scalar(0.5));
+
+	for (unsigned int i = 7u; i < modulesPerSide_; ++i)
+	{
+		const Scalar x = convertCodeSpaceToObjectSpaceX(Scalar(i) + Scalar(0.5));
+
+		objectPoints.emplace_back(x, yRow0, Scalar(0));
+	}
+
+	ocean_assert(objectPoints.size() == (modulesPerSide_ - 7u));
+
+	return objectPoints;
+}
+
+Vectors3 Utilities::MicroQRCoordinateSystem::computeVerticalTimingPatternModulesInObjectSpace() const
+{
+	Vectors3 objectPoints;
+	objectPoints.reserve((modulesPerSide_ - 7u));
+
+	const Scalar xCol0 = convertCodeSpaceToObjectSpaceX(Scalar(0.5));
+
+	for (unsigned int i = 7u; i < modulesPerSide_; ++i)
+	{
+		const Scalar y = convertCodeSpaceToObjectSpaceY(Scalar(i) + Scalar(0.5));
+
+		objectPoints.emplace_back(xCol0, y, Scalar(0));
+	}
+
+	ocean_assert(objectPoints.size() == (modulesPerSide_ - 7u));
+
+	return objectPoints;
+}
+
+Vectors3 Utilities::MicroQRCoordinateSystem::computeFinderPatternCornersInObjectSpace() const
+{
+	const Scalar normalizedModuleSize = Scalar(2) / Scalar(modulesPerSide_);
+
+	// The corners of the finder patterns are 7 modules away from the border of the code.
+	const Scalar finderPatternSize = Scalar(7) * normalizedModuleSize;
+
+	const Vectors3 objectPoints =
+	{
+		Vector3(scale_ * (-Scalar(1) + 0), scale_ * (Scalar(1) - 0), Scalar(0)), // top-left
+		Vector3(scale_ * (-Scalar(1) + 0), scale_ * (Scalar(1) - finderPatternSize), Scalar(0)), // bottom-left
+		Vector3(scale_ * (-Scalar(1) + finderPatternSize), scale_ * (Scalar(1) - finderPatternSize), Scalar(0)), // bottom-right
+		Vector3(scale_ * (-Scalar(1) + finderPatternSize), scale_ * (Scalar(1) - 0), Scalar(0)), // top-right
+	};
+
+	return objectPoints;
+}
+
 bool Utilities::computeNumberPixelsPerModule(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const HomogenousMatrix4& world_T_code, const Scalar codeSize, const unsigned int version, Scalar* minNumberPixelsPerModule, Scalar* maxNumberPixelsPerModule, Scalar* medianNumberPixelsPerModule, Scalar* avgNumberPixelsPerModule)
 {
 	ocean_assert(anyCamera.isValid());
@@ -823,7 +1013,7 @@ bool Utilities::computeNumberPixelsPerModule(const AnyCamera& anyCamera, const H
 	return true;
 }
 
-Scalar Utilities::computeModuleDiagonalLength(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_code, const CoordinateSystem& coordinateSystem, const unsigned int xModule, const unsigned int yModule)
+Scalar Utilities::computeModuleDiagonalLength(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_code, const CoordinateSystemBase& coordinateSystem, const unsigned int xModule, const unsigned int yModule)
 {
 	const Scalar xTop = coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(xModule));
 	const Scalar yTop = coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(yModule));
@@ -841,7 +1031,7 @@ Scalar Utilities::computeModuleDiagonalLength(const AnyCamera& anyCamera, const 
 	return averageDiagonalDistance;
 }
 
-bool Utilities::computeContrast(const AnyCamera& anyCamera, const Frame& yFrame, const HomogenousMatrix4& world_T_camera, const QRCode& code, const HomogenousMatrix4& world_T_code, const Scalar codeSize, unsigned int* medianContrast, unsigned int* averageContrast)
+bool Utilities::computeContrast(const AnyCamera& anyCamera, const Frame& yFrame, const HomogenousMatrix4& world_T_camera, const QRCodeBase& code, const HomogenousMatrix4& world_T_code, const Scalar codeSize, unsigned int* medianContrast, unsigned int* averageContrast)
 {
 	ocean_assert(anyCamera.isValid());
 	ocean_assert(yFrame.isValid() && FrameType::arePixelFormatsCompatible(yFrame.pixelFormat(), FrameType::FORMAT_Y8));
@@ -853,9 +1043,23 @@ bool Utilities::computeContrast(const AnyCamera& anyCamera, const Frame& yFrame,
 	const HomogenousMatrix4& flippedCamera_T_code = PinholeCamera::standard2InvertedFlipped(world_T_code.inverted() * world_T_camera);
 
 	const unsigned int modulesPerSide = code.modulesPerSide();
-	ocean_assert(modulesPerSide >= 21u);
+	ocean_assert(modulesPerSide >= 11u);
 
-	const CV::Detector::QRCodes::Utilities::CoordinateSystem coordinateSystem(code.version(), codeSize * Scalar(0.5));
+	std::shared_ptr<CV::Detector::QRCodes::Utilities::CoordinateSystemBase> coordinateSystem;
+	switch(code.codeType())
+	{
+		case QRCodeBase::CT_STANDARD:
+			coordinateSystem.reset(new CV::Detector::QRCodes::Utilities::CoordinateSystem(code.version(), codeSize * Scalar(0.5)));
+			break;
+
+		case QRCodeBase::CT_MICRO:
+			coordinateSystem.reset(new CV::Detector::QRCodes::Utilities::MicroQRCoordinateSystem(code.version(), codeSize * Scalar(0.5)));
+			break;
+
+		default:
+			ocean_assert(false && "Invalid code type!");
+			return false;
+	}
 
 	const std::vector<uint8_t>& modules = code.modules();
 	ocean_assert(modules.size() == size_t(modulesPerSide * modulesPerSide));
@@ -874,13 +1078,13 @@ bool Utilities::computeContrast(const AnyCamera& anyCamera, const Frame& yFrame,
 
 	for (unsigned int iY = 0u; iY < modulesPerSide; ++iY)
 	{
-		const Scalar yCenter = coordinateSystem.convertCodeSpaceToObjectSpaceY(Scalar(iY) + Scalar(0.5));
+		const Scalar yCenter = coordinateSystem->convertCodeSpaceToObjectSpaceY(Scalar(iY) + Scalar(0.5));
 
 		const uint8_t* const modulesRow = modules.data() + iY * modulesPerSide;
 
 		for (unsigned int iX = 0u; iX < modulesPerSide; ++iX)
 		{
-			const Scalar xCenter = coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(iX) + Scalar(0.5));
+			const Scalar xCenter = coordinateSystem->convertCodeSpaceToObjectSpaceX(Scalar(iX) + Scalar(0.5));
 
 			const Vector2 center = anyCamera.projectToImageIF(flippedCamera_T_code, Vector3(xCenter, yCenter, Scalar(0)));
 
@@ -1422,7 +1626,7 @@ bool Utilities::computeCodeCenterInImage(const AnyCamera& anyCamera, const Homog
 			Vector2(Scalar(modulesPerSide), Scalar(0)), // TR
 		};
 
-		const CoordinateSystem coordinateSystem(code.version(), Scalar(0.5) * codeSize);
+		const CoordinateSystem coordinateSystem(modulesPerSide, Scalar(0.5) * codeSize);
 
 		Scalar squareRadius = Scalar(0);
 
