@@ -106,6 +106,9 @@ class Detector2DWrapper
 		/// Indicates whether the old detector should be used instead of the new one.
 		bool useOldDetector_ = false;
 
+		/// Indicates whether to include Micro QR codes.
+		bool includeMicro_ = false;
+
 		/// Device player which may be used for replay.
 		Devices::SharedDevicePlayer devicePlayer_;
 

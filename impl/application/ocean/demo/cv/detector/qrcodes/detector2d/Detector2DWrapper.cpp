@@ -66,6 +66,7 @@ Detector2DWrapper::Detector2DWrapper(const std::vector<std::wstring>& separatedC
 	commandArguments.registerParameter("resolution", "r", "Resolution of the input, e.g. \"1280x720\"");
 	commandArguments.registerParameter("loop", "l", "If set, will start the input again when it reaches the end");
 	commandArguments.registerParameter("olddetector", "d", "If set, the old QR code detector will be used");
+	commandArguments.registerParameter("micro", "m", "If set, Micro QR codes will be detected as well as standard QR codes");
 
 	commandArguments.parse(separatedCommandArguments);
 
@@ -227,6 +228,8 @@ Detector2DWrapper::Detector2DWrapper(const std::vector<std::wstring>& separatedC
 
 	useOldDetector_ = commandArguments.hasValue("olddetector");
 
+	includeMicro_ = commandArguments.hasValue("micro");
+
 	// We start the medium so that medium will deliver frames and wait for the first frame to be able to receive the matching camera calibration
 
 	frameMedium_->start();
@@ -339,24 +342,21 @@ bool Detector2DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 	}
 
 	CV::Detector::QRCodes::QRCodes codes;
+	CV::Detector::QRCodes::MicroQRCodes microCodes;
+
+	CV::Detector::QRCodes::QRCodeDetector2D::Observations observations;
+	CV::Detector::QRCodes::LegacyQRCodeDetector2D::Observations legacyObservations;
+	CV::Detector::QRCodes::MicroQRCodeDetector2D::Observations microObservations;
+
+	HighPerformanceStatistic::ScopedStatistic scopedPerformance(performance_);
 
 	if (useOldDetector_)
 	{
-		HighPerformanceStatistic::ScopedStatistic scopedPerformance(performance_);
-
 		ocean_assert(yFrame.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
-		CV::Detector::QRCodes::LegacyQRCodeDetector2D::Observations observations;
-		codes = CV::Detector::QRCodes::LegacyQRCodeDetector2D::detectQRCodes(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), WorkerPool::get().scopedWorker()(), CV::Detector::QRCodes::LegacyQRCodeDetector2D::DM_STANDARD, &observations);
-
-		scopedPerformance.release();
-
-		CV::Detector::QRCodes::Utilities::drawObservations(rgbFrame, observations, codes);
+		codes = CV::Detector::QRCodes::LegacyQRCodeDetector2D::detectQRCodes(yFrame.constdata<uint8_t>(), yFrame.width(), yFrame.height(), yFrame.paddingElements(), WorkerPool::get().scopedWorker()(), CV::Detector::QRCodes::LegacyQRCodeDetector2D::DM_STANDARD, &legacyObservations);
 	}
 	else
 	{
-		HighPerformanceStatistic::ScopedStatistic scopedPerformance(performance_);
-
-		CV::Detector::QRCodes::QRCodeDetector2D::Observations observations;
 		if (sharedAnyCamera)
 		{
 			codes = CV::Detector::QRCodes::QRCodeDetector2D::detectQRCodes(*sharedAnyCamera, yFrame, &observations, WorkerPool::get().scopedWorker()());
@@ -366,15 +366,45 @@ bool Detector2DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 			codes = CV::Detector::QRCodes::QRCodeDetector2D::detectQRCodes(yFrame, &observations, WorkerPool::get().scopedWorker()(), &sharedAnyCamera);
 			ocean_assert(sharedAnyCamera && sharedAnyCamera->isValid());
 		}
+	}
 
-		scopedPerformance.release();
+	if (includeMicro_)
+	{
+		if (sharedAnyCamera)
+		{
+			microCodes = CV::Detector::QRCodes::MicroQRCodeDetector2D::detectMicroQRCodes(*sharedAnyCamera, yFrame, &microObservations, WorkerPool::get().scopedWorker()());
+		}
+		else
+		{
+			microCodes = CV::Detector::QRCodes::MicroQRCodeDetector2D::detectMicroQRCodes(yFrame, &microObservations, WorkerPool::get().scopedWorker()(), &sharedAnyCamera);
+			ocean_assert(sharedAnyCamera && sharedAnyCamera->isValid());
+		}
+	}
 
+	scopedPerformance.release();
+
+	if (useOldDetector_)
+	{
+		CV::Detector::QRCodes::Utilities::drawObservations(rgbFrame, legacyObservations, codes);
+	}
+	else
+	{
 		CV::Detector::QRCodes::Utilities::drawObservations(*sharedAnyCamera, rgbFrame, observations, codes);
 	}
 
 	for (const CV::Detector::QRCodes::QRCode& code : codes)
 	{
 		messages.push_back(code.dataString());
+	}
+
+	if (includeMicro_)
+	{
+		CV::Detector::QRCodes::Utilities::drawObservations(*sharedAnyCamera, rgbFrame, microObservations, microCodes);
+
+		for (const CV::Detector::QRCodes::MicroQRCode& code : microCodes)
+		{
+			messages.push_back(code.dataString());
+		}
 	}
 
 	outputFrame = std::move(rgbFrame);
@@ -390,7 +420,7 @@ bool Detector2DWrapper::detectAndDecode(Frame& outputFrame, double& time, std::v
 		imageSequence->forceNextFrame();
 	}
 
-	return codes.empty() == false;
+	return messages.empty() == false;
 }
 
 Detector2DWrapper& Detector2DWrapper::operator=(Detector2DWrapper&& detector2dWrapper)
@@ -401,6 +431,7 @@ Detector2DWrapper& Detector2DWrapper::operator=(Detector2DWrapper&& detector2dWr
 		ocean_assert(frameMedium_.isNull());
 
 		useOldDetector_ = detector2dWrapper.useOldDetector_;
+		includeMicro_ = detector2dWrapper.includeMicro_;
 
 		devicePlayer_ = std::move(detector2dWrapper.devicePlayer_);
 
