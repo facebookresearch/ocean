@@ -36,6 +36,7 @@ void GLMainView::initializeQRCode(const std::string& inputMedium, const std::str
 
 	commandLines.push_back(String::toWString(inputMedium));
 	commandLines.push_back(String::toWString(resolution));
+	commandLines.push_back(String::toWString("--micro"));
 
 	detector2DWrapper_ = Detector2DWrapper(commandLines);
 
