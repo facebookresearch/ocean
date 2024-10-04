@@ -64,7 +64,7 @@ bool MicroQRCodeDetector::getTimingPatternModules(const uint8_t* const yFrame, c
 	Bresenham bresenhamBack(xBack, yBack, Numeric::round32(farPointBack.x()), Numeric::round32(farPointBack.y()));
 
 	VectorT2<unsigned int> lastIn, firstOut;
-	if(TransitionDetector::findNextPixel<true>(yFrame, xBack, yBack, width, height, paddingElements, bresenhamBack, maxStepSize, finderPattern.grayThreshold(), columns, rows, lastIn, firstOut))
+	if(xBack < width && yBack < height && TransitionDetector::findNextPixel<true>(yFrame, xBack, yBack, width, height, paddingElements, bresenhamBack, maxStepSize, finderPattern.grayThreshold(), columns, rows, lastIn, firstOut))
 	{
 		// Found dark pixel in quiet zone
 		return false;
@@ -96,7 +96,8 @@ bool MicroQRCodeDetector::getTimingPatternModules(const uint8_t* const yFrame, c
 		bool foundDark = true;
 		for (bool start : {true, false})
 		{
-			if ((start && !TransitionDetector::findNextPixel<true>(yFrame, x, y, width, height, paddingElements, bresenham, maxStepSize, finderPattern.grayThreshold(), columns, rows, lastIn, firstOut))
+			if ( x >= width || y >= height
+					|| (start && !TransitionDetector::findNextPixel<true>(yFrame, x, y, width, height, paddingElements, bresenham, maxStepSize, finderPattern.grayThreshold(), columns, rows, lastIn, firstOut))
 					|| (!start && !TransitionDetector::findNextPixel<false>(yFrame, x, y, width, height, paddingElements, bresenham, maxStepSize, finderPattern.grayThreshold(), columns, rows, lastIn, firstOut)))
 			{
 				foundDark = false;

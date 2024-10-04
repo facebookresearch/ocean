@@ -89,6 +89,7 @@
 	std::vector<std::wstring> commandLines;
 	commandLines.push_back(L"LiveVideoId:0"); // 0. Video source
 	commandLines.push_back(L"1280x720"); // 1. Video resolution
+	commandLines.push_back(L"--micro"); // 2. Include micro QR codes
 
 	detectorWrapper_ = Detector2DWrapper(commandLines);
 
