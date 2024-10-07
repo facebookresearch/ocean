@@ -41,6 +41,12 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeEncoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeDetector2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeDecoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestCVDetectorQRCodes.cpp">
@@ -71,6 +77,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeEncoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeDecoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeDetector2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -55,6 +55,8 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestCVDetectorQRCodes.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestFinderPatternDetector.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestLegacyQRCodeDetector2D.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeDecoder.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeDetector2D.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeEncoder.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestQRCodeDecoder.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestQRCodeDetector2D.h" />
@@ -67,6 +69,8 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestCVDetectorQRCodes.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestFinderPatternDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestLegacyQRCodeDetector2D.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeDecoder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeDetector2D.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestMicroQRCodeEncoder.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestQRCodeDecoder.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testdetector\testqrcodes\TestQRCodeDetector2D.cpp" />
