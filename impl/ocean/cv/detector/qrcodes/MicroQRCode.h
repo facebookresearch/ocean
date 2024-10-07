@@ -40,7 +40,7 @@ class MicroQRCode final : public QRCodeBase
 
 		/// Indicates the smallest valid version number of Micro QR codes.
 		static constexpr unsigned int MIN_VERSION = 1u;
-		
+
 		/// Indicates the largest valid version number of Micro QR codes.
 		static constexpr unsigned int MAX_VERSION = 4u;
 
@@ -84,7 +84,7 @@ class MicroQRCode final : public QRCodeBase
 		 * @return True if the symbol number is valid and the version and error correction capacity were successfully unpacked, otherwise false
 		 */
 		static inline bool unpackSymbolNumber(const unsigned int symbolNumber, unsigned int& version, ErrorCorrectionCapacity& errorCorrectionCapacity);
-	
+
 	protected:
 
 		/**

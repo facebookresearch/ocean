@@ -822,7 +822,7 @@ static bool decodeFormatBits(const uint16_t formatBits, uint32_t& version, Micro
 	uint16_t format = formatBits ^ 0x4445;
 
 	quirc_decode_error_t err = correct_format(&format);
-	if (err) 
+	if (err)
 	{
 		return false;
 	}
@@ -935,7 +935,7 @@ static void getCodewords(const std::vector<uint8_t>& modules, const unsigned int
 						i += 4u;
 					}
 
-					if (modules[index] ^ dataMask(mask, x, y))
+					if (modules[index] ^ uint8_t(dataMask(mask, x, y) ? 1u : 0u))
 					{
 						uint8_t& codeword = codewords[i >> 3];
 						const unsigned int bit = 7u - (i & 7u);
@@ -1003,13 +1003,13 @@ uint32_t MicroQRCodeDecoder::BitStream::consumeBits(const unsigned int numberOfB
 
 	while (bitsTaken < bitsToRead)
 	{
-		result = (result << 1u) | consumeBit();
+		result = (result << 1u) | uint32_t(consumeBit() ? 1u : 0u);
 		bitsTaken++;
 	}
 
 	// Pad with zeros if we ran out of bits
 	result <<= (numberOfBits - bitsTaken);
-	
+
 	return result;
 }
 
@@ -1052,7 +1052,7 @@ static bool decodeNumericSegment(const unsigned int version, MicroQRCodeDecoder:
 	unsigned int characterCount = bitstream.consumeBits(characterCountBits);
 
 	data.reserve(data.size() + characterCount);
-	
+
 	while (characterCount >= 3u)
 	{
 		if (bitstream.bitsRemaining() < 10u)
@@ -1067,13 +1067,13 @@ static bool decodeNumericSegment(const unsigned int version, MicroQRCodeDecoder:
 			return false;
 		}
 
-		data.push_back((digits / 100u) + '0');
-		data.push_back(((digits / 10u) % 10u) + '0');
-		data.push_back((digits % 10u) + '0');
+		data.push_back(uint8_t(digits / 100u) + uint8_t('0'));
+		data.push_back(uint8_t((digits / 10u) % 10u) + uint8_t('0'));
+		data.push_back(uint8_t(digits % 10u) + uint8_t('0'));
 
 		characterCount -= 3u;
 	}
-	
+
 	if (characterCount == 2u)
 	{
 		if (bitstream.bitsRemaining() < 7u)
@@ -1088,8 +1088,8 @@ static bool decodeNumericSegment(const unsigned int version, MicroQRCodeDecoder:
 			return false;
 		}
 
-		data.push_back(digits / 10u + '0');
-		data.push_back(digits % 10u + '0');
+		data.push_back(uint8_t(digits / 10u) + uint8_t('0'));
+		data.push_back(uint8_t(digits % 10u) + uint8_t('0'));
 
 		characterCount -= 2u;
 	}
@@ -1108,7 +1108,7 @@ static bool decodeNumericSegment(const unsigned int version, MicroQRCodeDecoder:
 			return false;
 		}
 
-		data.push_back(digit + '0');
+		data.push_back(uint8_t(digit) + uint8_t('0'));
 
 		characterCount -= 1u;
 	}
@@ -1201,7 +1201,7 @@ static bool decodeByteSegment(const unsigned int version, MicroQRCodeDecoder::Bi
 
 	for (unsigned int i = 0u; i < characterCount; ++i)
 	{
-		data.push_back(bitstream.consumeBits(8u));
+		data.push_back(uint8_t(bitstream.consumeBits(8u)));
 	}
 
 	return true;
@@ -1283,7 +1283,7 @@ static bool decodeModules(const std::vector<uint8_t>& modules, unsigned int& ver
 			ocean_assert(false && "Invalid number of modules");
 			return false;
 	}
-	
+
 	// Read format information
 	const uint16_t formatBits = readFormatBits(modules, modulesPerSide);
 	MicroQRCodeEncoder::MaskingPattern maskingPattern;

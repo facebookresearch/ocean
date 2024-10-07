@@ -30,8 +30,8 @@ bool MicroQRCodeDetector::getTimingPatternModules(const uint8_t* const yFrame, c
 {
 	ocean_assert(yFrame != nullptr && width != 0u && height != 0u);
 	ocean_assert(topLeftCorner < 4u && timingAdjacentFinderCorner < 4u);
-	
-	if(!finderPattern.cornersKnown())
+
+	if (!finderPattern.cornersKnown())
 	{
 		return false;
 	}
@@ -48,7 +48,8 @@ bool MicroQRCodeDetector::getTimingPatternModules(const uint8_t* const yFrame, c
 	const unsigned int maxStepSize = Numeric::round32(moduleSize * Scalar(1.5));
 	Vector2 direction = edge.normalized();
 
-	unsigned int columns, rows;
+	unsigned int columns = (unsigned int)(-1);
+	unsigned int rows = (unsigned int)(-1);
 
 	// First check in the backward direction for a clear quiet zone
 
@@ -64,7 +65,7 @@ bool MicroQRCodeDetector::getTimingPatternModules(const uint8_t* const yFrame, c
 	Bresenham bresenhamBack(xBack, yBack, Numeric::round32(farPointBack.x()), Numeric::round32(farPointBack.y()));
 
 	VectorT2<unsigned int> lastIn, firstOut;
-	if(xBack < width && yBack < height && TransitionDetector::findNextPixel<true>(yFrame, xBack, yBack, width, height, paddingElements, bresenhamBack, maxStepSize, finderPattern.grayThreshold(), columns, rows, lastIn, firstOut))
+	if (xBack < width && yBack < height && TransitionDetector::findNextPixel<true>(yFrame, xBack, yBack, width, height, paddingElements, bresenhamBack, maxStepSize, finderPattern.grayThreshold(), columns, rows, lastIn, firstOut))
 	{
 		// Found dark pixel in quiet zone
 		return false;
@@ -89,14 +90,15 @@ bool MicroQRCodeDetector::getTimingPatternModules(const uint8_t* const yFrame, c
 	moduleCentersTmp.reserve(10);
 	moduleCentersTmp.push_back(startPoint);
 
-	while(darkModule <= 5)
+	while (darkModule <= 5)
 	{
 		// Find the start and end of the next dark module
 
 		bool foundDark = true;
-		for (bool start : {true, false})
+
+		for (const bool start : {true, false})
 		{
-			if ( x >= width || y >= height
+			if (x >= width || y >= height
 					|| (start && !TransitionDetector::findNextPixel<true>(yFrame, x, y, width, height, paddingElements, bresenham, maxStepSize, finderPattern.grayThreshold(), columns, rows, lastIn, firstOut))
 					|| (!start && !TransitionDetector::findNextPixel<false>(yFrame, x, y, width, height, paddingElements, bresenham, maxStepSize, finderPattern.grayThreshold(), columns, rows, lastIn, firstOut)))
 			{
@@ -140,7 +142,7 @@ bool MicroQRCodeDetector::computePosesAndProvisionalVersions(const AnyCamera& an
 	std::vector<unsigned int> candidateVersions;
 	HomogenousMatrices4 candidatePoses;
 
-	if(!finderPattern.cornersKnown())
+	if (!finderPattern.cornersKnown())
 	{
 		return false;
 	}
