@@ -116,6 +116,9 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		{
 			public:
 
+				/**
+				 * The default constructor
+				 */
 				virtual ~CoordinateSystemBase() = default;
 
 				/**
