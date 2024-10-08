@@ -176,7 +176,7 @@ bool TestMicroQRCodeEncoder::testMicroQRCodeEncoding(const double testDuration)
 			const MicroQRCodeVerificationItem& verificationItem = verificationItems[randomIndex];
 
 			MicroQRCode testCode;
-			if (!MicroQRCodeEncoder::encodeText(verificationItem.message_, verificationItem.errorCorrectionCapacity_, testCode) || !testCode.isValid())
+			if (MicroQRCodeEncoder::encodeText(verificationItem.message_, verificationItem.errorCorrectionCapacity_, testCode) != QRCodeEncoderBase::SC_SUCCESS || !testCode.isValid())
 			{
 				allSucceeded = false;
 			}

@@ -159,19 +159,19 @@ bool TestMicroQRCodeDecoder::testMicroQRCodeDecoding(const double testDuration)
 			{
 				case MicroQRCode::EM_NUMERIC:
 					messageString = Utilities::generateRandomNumericString(randomGenerator, messageLength);
-					qrcodeGenerated = MicroQRCodeEncoder::encodeText(messageString, params.eccMin, code) && code.isValid();
+					qrcodeGenerated = (MicroQRCodeEncoder::encodeText(messageString, params.eccMin, code) == MicroQRCodeEncoder::SC_SUCCESS) && code.isValid();
 					break;
 
 				case MicroQRCode::EM_ALPHANUMERIC:
 					do {
 						messageString = Utilities::generateRandomAlphanumericString(randomGenerator, messageLength);
 					} while (QRCodeEncoderBase::Segment::isNumericData(messageString));
-					qrcodeGenerated = MicroQRCodeEncoder::encodeText(messageString, params.eccMin, code) && code.isValid();
+					qrcodeGenerated = (MicroQRCodeEncoder::encodeText(messageString, params.eccMin, code) == MicroQRCodeEncoder::SC_SUCCESS) && code.isValid();
 					break;
 
 				case MicroQRCode::EM_BYTE:
 					allSucceeded = Utilities::generateRandomByteData(randomGenerator, messageLength, message) && allSucceeded;
-					qrcodeGenerated = MicroQRCodeEncoder::encodeBinary(message, params.eccMin, code) && code.isValid();
+					qrcodeGenerated = (MicroQRCodeEncoder::encodeBinary(message, params.eccMin, code) == MicroQRCodeEncoder::SC_SUCCESS) && code.isValid();
 					break;
 
 				default:

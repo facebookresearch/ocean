@@ -187,7 +187,7 @@ bool TestQRCodeEncoder::testQRCodeEncoding(const double testDuration)
 			const QRCodeVerificationItem& verificationItem = verificationItems[randomIndex];
 
 			QRCode testCode;
-			if (!QRCodeEncoder::encodeText(verificationItem.message_, verificationItem.errorCorrectionCapacity_, testCode) || !testCode.isValid())
+			if (QRCodeEncoder::encodeText(verificationItem.message_, verificationItem.errorCorrectionCapacity_, testCode) != QRCodeEncoderBase::SC_SUCCESS || !testCode.isValid())
 			{
 				allSucceeded = false;
 			}

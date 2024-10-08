@@ -84,18 +84,18 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder : public QRCodeEncoderBase
 		 * @param text The text/data to be encoded as a QR code
 		 * @param errorCorrectionCapacity Specifies the level of possible error correction
 		 * @param qrcode The QR code that will store the encoded data
-		 * @return True if the QR code has been successfully generated
+		 * @return `SC_SUCCESS` on success, otherwise it will return a status indicating the reason for failure
 		 */
-		static bool encodeText(const std::string& text, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, QRCode& qrcode);
+		static StatusCode encodeText(const std::string& text, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, QRCode& qrcode);
 
 		/**
 		 * Encode binary data and store it in a QR code, will always use the byte encodation mode
 		 * @param data The data to be encoded as a QR code
 		 * @param errorCorrectionCapacity Specifies the level of possible error correction
 		 * @param qrcode The QR code that will store the encoded data
-		 * @return True if the QR code has been successfully generated
+		 * @return `SC_SUCCESS` on success, otherwise it will return a status indicating the reason for failure
 		 */
-		static bool encodeBinary(const std::vector<uint8_t>& data, QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, QRCode& qrcode);
+		static StatusCode encodeBinary(const std::vector<uint8_t>& data, QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, QRCode& qrcode);
 
 		/**
 		 * Encodes the error correction level and the index of the masking pattern as a sequence of 15 bits with error correction ((15, 5) BCH code).
@@ -155,9 +155,9 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder : public QRCodeEncoderBase
 		 * @param rawCodewords The encoded codewords. The size must fit exactly into the selected version of this QR code
 		 * @param mask The index of the bit shuffle masked that was used to generate the modules of this QR code
 		 * @param modules The resulting modules of the QR code
-		 * @return True if the initialization was successful, otherwise false
+		 * @return `SC_SUCCESS` on success, otherwise it will return a status indicating the reason for failure
 		 */
-		static bool addErrorCorrectionAndCreateQRCode(const unsigned int version, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const Codewords& rawCodewords, MaskingPattern mask, std::vector<uint8_t>& modules);
+		static StatusCode addErrorCorrectionAndCreateQRCode(const unsigned int version, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const Codewords& rawCodewords, MaskingPattern mask, std::vector<uint8_t>& modules);
 
 		/**
 		 * Encodes segments and writes them into a QR code
@@ -170,9 +170,9 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoder : public QRCodeEncoderBase
 		 * @param maxVersion The maximum version that the final QR code is supposed to have, range: [minVersion, QRCode::MAX_VERSION]. Note: if this value is chosen too small, the initialization may fail
 		 * @param mask The index of the bit shuffle mask that is to be used, range: [0, 7] or (unsigned int)(-1). The latter value will cause this function to automatically select the optimal mask (cf. ISO/IEC 18004:2015, Section 7.8.3)
 		 * @param maximizeErrorCorrectionCapacity If true, this function will try to maximize the error correction level as long as it doesn't increase the size of the smallest QR code that can fit the data, cf. `errorCorrectionCapacity`
-		 * @return True on success, otherwise false
+		 * @return `SC_SUCCESS` on success, otherwise it will return a status indicating the reason for failure
 		 */
-		static bool encodeSegments(const Segments& segments, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, std::vector<uint8_t>& modules, unsigned int& version, QRCode::ErrorCorrectionCapacity& finalErrorCorrectionCapacity, const unsigned int minVersion = 1u, const unsigned int maxVersion = QRCode::MAX_VERSION, const MaskingPattern mask = MP_PATTERN_UNKNOWN, const bool maximizeErrorCorrectionCapacity = true);
+		static StatusCode encodeSegments(const Segments& segments, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, std::vector<uint8_t>& modules, unsigned int& version, QRCode::ErrorCorrectionCapacity& finalErrorCorrectionCapacity, const unsigned int minVersion = 1u, const unsigned int maxVersion = QRCode::MAX_VERSION, const MaskingPattern mask = MP_PATTERN_UNKNOWN, const bool maximizeErrorCorrectionCapacity = true);
 
 		/**
 		 * Returns the number of modules that can be used to store data for a given QR code version

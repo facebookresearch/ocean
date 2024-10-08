@@ -190,7 +190,7 @@ bool Utilities::generateUniqueRandomQRCodes(RandomGenerator& randomGenerator, co
 
 			QRCode code;
 
-			if (!QRCodeEncoder::encodeBinary(newRandomPayload, errorCorrectionCapacity, code))
+			if (QRCodeEncoder::encodeBinary(newRandomPayload, errorCorrectionCapacity, code) != QRCodeEncoderBase::SC_SUCCESS)
 			{
 				Log::error() << "Failed to generate QR code!";
 				ocean_assert(false && "This should never happen!");

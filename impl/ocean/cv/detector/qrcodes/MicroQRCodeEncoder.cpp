@@ -20,7 +20,7 @@ namespace Detector
 namespace QRCodes
 {
 
-bool MicroQRCodeEncoder::encodeText(const std::string& text, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, MicroQRCode& qrcode)
+QRCodeEncoderBase::StatusCode MicroQRCodeEncoder::encodeText(const std::string& text, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, MicroQRCode& qrcode)
 {
 	Segments segments;
 	MicroQRCode::EncodingMode encodingMode = MicroQRCode::EM_INVALID_ENCODING_MODE;
@@ -30,32 +30,35 @@ bool MicroQRCodeEncoder::encodeText(const std::string& text, const MicroQRCode::
 	if (errorCorrectionCapacity == MicroQRCode::ECC_30)
 	{
 		ocean_assert(false && "Invalid error correction capability for Micro QR codes.");
-		return false;
+		return SC_INVALID_ERROR_CORRECTION_CAPACITY;
 	}
 
 	if (Segment::isNumericData(text))
 	{
-		if (!Segment::generateSegmentNumeric(text, segments))
+		const StatusCode status = Segment::generateSegmentNumeric(text, segments);
+		if (status != SC_SUCCESS)
 		{
-			return false;
+			return status;
 		}
 
 		encodingMode = MicroQRCode::EM_NUMERIC;
 	}
 	else if (Segment::isAlphanumericData(text))
 	{
-		if (!Segment::generateSegmentAlphanumeric(text, segments))
+		const StatusCode status = Segment::generateSegmentAlphanumeric(text, segments);
+		if (status != SC_SUCCESS)
 		{
-			return false;
+			return status;
 		}
 
 		encodingMode = MicroQRCode::EM_ALPHANUMERIC;
 	}
 	else
 	{
-		if (!Segment::generateSegmentsBytes(data, segments))
+		const StatusCode status = Segment::generateSegmentsBytes(data, segments);
+		if (status != SC_SUCCESS)
 		{
-			return false;
+			return status;
 		}
 
 		encodingMode = MicroQRCode::EM_BYTE;
@@ -63,49 +66,64 @@ bool MicroQRCodeEncoder::encodeText(const std::string& text, const MicroQRCode::
 
 	if (encodingMode == MicroQRCode::EM_INVALID_ENCODING_MODE)
 	{
-		return false;
+		return SC_INVALID_DATA;
 	}
 
 	std::vector<uint8_t> modules;
 	unsigned int version;
 	MicroQRCode::ErrorCorrectionCapacity finalErrorCorrectionCapacity;
 
-	if (encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity))
+	const StatusCode status = encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity);
+	if (status != SC_SUCCESS)
 	{
-		qrcode = MicroQRCode(std::move(data), encodingMode, finalErrorCorrectionCapacity, std::move(modules), version);
-		ocean_assert(qrcode.isValid());
-
-		return qrcode.isValid();
+		return status;
 	}
 
-	return false;
+	qrcode = MicroQRCode(std::move(data), encodingMode, finalErrorCorrectionCapacity, std::move(modules), version);
+	ocean_assert(qrcode.isValid());
+
+	if (qrcode.isValid())
+	{
+		return SC_SUCCESS;
+	}
+
+	return SC_UNKNOWN_ERROR;
 }
 
-bool MicroQRCodeEncoder::encodeBinary(const std::vector<uint8_t>& data, MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, MicroQRCode& qrcode)
+QRCodeEncoderBase::StatusCode MicroQRCodeEncoder::encodeBinary(const std::vector<uint8_t>& data, MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, MicroQRCode& qrcode)
 {
 	Segments segments;
 
-	if (Segment::generateSegmentsBytes(data, segments))
+	StatusCode status = Segment::generateSegmentsBytes(data, segments);
+	if (status != SC_SUCCESS)
 	{
-		std::vector<uint8_t> modules;
-		unsigned int version;
-		MicroQRCode::ErrorCorrectionCapacity finalErrorCorrectionCapacity;
-
-		if (encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity))
-		{
-			std::vector<uint8_t> finalData(data.begin(), data.end());
-
-			qrcode = MicroQRCode(std::move(finalData), MicroQRCode::EM_BYTE, finalErrorCorrectionCapacity, std::move(modules), version);
-			ocean_assert(qrcode.isValid());
-
-			return qrcode.isValid();
-		}
+		return status;
 	}
 
-	return false;
+	std::vector<uint8_t> modules;
+	unsigned int version;
+	MicroQRCode::ErrorCorrectionCapacity finalErrorCorrectionCapacity;
+
+	status = encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity);
+	if (status != SC_SUCCESS)
+	{
+		return status;
+	}
+
+	std::vector<uint8_t> finalData(data.begin(), data.end());
+
+	qrcode = MicroQRCode(std::move(finalData), MicroQRCode::EM_BYTE, finalErrorCorrectionCapacity, std::move(modules), version);
+	ocean_assert(qrcode.isValid());
+
+	if (qrcode.isValid())
+	{
+		return SC_SUCCESS;
+	}
+
+	return SC_UNKNOWN_ERROR;
 }
 
-bool MicroQRCodeEncoder::addErrorCorrectionAndCreateQRCode(const unsigned int version, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const Codewords& rawCodewords, MaskingPattern mask, std::vector<uint8_t>& modules)
+void MicroQRCodeEncoder::addErrorCorrectionAndCreateQRCode(const unsigned int version, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const Codewords& rawCodewords, MaskingPattern mask, std::vector<uint8_t>& modules)
 {
 	ocean_assert(version >= MicroQRCode::MIN_VERSION && version <= MicroQRCode::MAX_VERSION);
 	ocean_assert(mask < 4u || mask == (unsigned int)(-1));
@@ -154,11 +172,9 @@ bool MicroQRCodeEncoder::addErrorCorrectionAndCreateQRCode(const unsigned int ve
 	MicroQRCodeEncoder::setFormatInformation(localModules, version, errorCorrectionCapacity, mask, functionPatternMask);
 
 	modules = std::move(localModules);
-
-	return true;
 }
 
-bool MicroQRCodeEncoder::encodeSegments(const Segments& segments, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, std::vector<uint8_t>& modules, unsigned int& version, MicroQRCode::ErrorCorrectionCapacity& finalErrorCorrectionCapacity, unsigned int minVersion, unsigned int maxVersion, const MaskingPattern mask, const bool maximizeErrorCorrectionCapacity)
+QRCodeEncoderBase::StatusCode MicroQRCodeEncoder::encodeSegments(const Segments& segments, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, std::vector<uint8_t>& modules, unsigned int& version, MicroQRCode::ErrorCorrectionCapacity& finalErrorCorrectionCapacity, unsigned int minVersion, unsigned int maxVersion, const MaskingPattern mask, const bool maximizeErrorCorrectionCapacity)
 {
 	ocean_assert(segments.empty() == false);
 	ocean_assert(minVersion >= 1u && minVersion <= maxVersion && maxVersion <= MicroQRCode::MAX_VERSION);
@@ -224,7 +240,7 @@ bool MicroQRCodeEncoder::encodeSegments(const Segments& segments, const MicroQRC
 
 	if (version < MicroQRCode::MIN_VERSION || version > MicroQRCode::MAX_VERSION || bitsUsed == 0u)
 	{
-		return false;
+		return SC_CODE_CAPACITY_EXCEEDED;
 	}
 
 	// Determine the highest error correction level that still fits into the selected version
@@ -325,7 +341,9 @@ bool MicroQRCodeEncoder::encodeSegments(const Segments& segments, const MicroQRC
  		ocean_assert((codewords[codewords.size() - 1u] & 0b1111u) == 0u);
 	}
 
-	return addErrorCorrectionAndCreateQRCode(version, finalErrorCorrectionCapacity, codewords, mask, modules);
+	addErrorCorrectionAndCreateQRCode(version, finalErrorCorrectionCapacity, codewords, mask, modules);
+
+	return SC_SUCCESS;
 }
 
 MicroQRCodeEncoder::Codewords MicroQRCodeEncoder::addErrorCorrection(const Codewords& codewords, const unsigned int version, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity)

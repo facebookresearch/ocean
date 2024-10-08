@@ -47,7 +47,7 @@ const int8_t QRCodeEncoder::NUM_ERROR_CORRECTION_BLOCKS[4][41] =
 	// clang-format on
 };
 
-bool QRCodeEncoder::encodeText(const std::string& text, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, QRCode& qrcode)
+QRCodeEncoder::StatusCode QRCodeEncoder::encodeText(const std::string& text, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, QRCode& qrcode)
 {
 	Segments segments;
 	QRCode::EncodingMode encodingMode = QRCode::EM_INVALID_ENCODING_MODE;
@@ -56,27 +56,30 @@ bool QRCodeEncoder::encodeText(const std::string& text, const QRCode::ErrorCorre
 
 	if (Segment::isNumericData(text))
 	{
-		if (!Segment::generateSegmentNumeric(text, segments))
+		StatusCode status = Segment::generateSegmentNumeric(text, segments);
+		if (status != SC_SUCCESS)
 		{
-			return false;
+			return status;
 		}
 
 		encodingMode = QRCode::EM_NUMERIC;
 	}
 	else if (Segment::isAlphanumericData(text))
 	{
-		if (!Segment::generateSegmentAlphanumeric(text, segments))
+		StatusCode status = Segment::generateSegmentAlphanumeric(text, segments);
+		if (status != SC_SUCCESS)
 		{
-			return false;
+			return status;
 		}
 
 		encodingMode = QRCode::EM_ALPHANUMERIC;
 	}
 	else
 	{
-		if (!Segment::generateSegmentsBytes(data, segments))
+		StatusCode status = Segment::generateSegmentsBytes(data, segments);
+		if (status != SC_SUCCESS)
 		{
-			return false;
+			return status;
 		}
 
 		encodingMode = QRCode::EM_BYTE;
@@ -84,49 +87,64 @@ bool QRCodeEncoder::encodeText(const std::string& text, const QRCode::ErrorCorre
 
 	if (encodingMode == QRCode::EM_INVALID_ENCODING_MODE)
 	{
-		return false;
+		return SC_INVALID_DATA;
 	}
 
 	std::vector<uint8_t> modules;
 	unsigned int version;
 	QRCode::ErrorCorrectionCapacity finalErrorCorrectionCapacity;
 
-	if (encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity))
+	StatusCode status = encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity);
+	if (status != SC_SUCCESS)
 	{
-		qrcode = QRCode(std::move(data), encodingMode, finalErrorCorrectionCapacity, std::move(modules), version);
-		ocean_assert(qrcode.isValid());
-
-		return qrcode.isValid();
+		return status;
 	}
 
-	return false;
+	qrcode = QRCode(std::move(data), encodingMode, finalErrorCorrectionCapacity, std::move(modules), version);
+	ocean_assert(qrcode.isValid());
+
+	if (qrcode.isValid())
+	{
+		return SC_SUCCESS;
+	}
+
+	return SC_UNKNOWN_ERROR;
 }
 
-bool QRCodeEncoder::encodeBinary(const std::vector<uint8_t>& data, QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, QRCode& qrcode)
+QRCodeEncoder::StatusCode QRCodeEncoder::encodeBinary(const std::vector<uint8_t>& data, QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, QRCode& qrcode)
 {
 	Segments segments;
 
-	if (Segment::generateSegmentsBytes(data, segments))
+	StatusCode status = Segment::generateSegmentsBytes(data, segments);
+	if (status != SC_SUCCESS)
 	{
-		std::vector<uint8_t> modules;
-		unsigned int version;
-		QRCode::ErrorCorrectionCapacity finalErrorCorrectionCapacity;
-
-		if (encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity))
-		{
-			std::vector<uint8_t> finalData(data.begin(), data.end());
-
-			qrcode = QRCode(std::move(finalData), QRCode::EM_BYTE, finalErrorCorrectionCapacity, std::move(modules), version);
-			ocean_assert(qrcode.isValid());
-
-			return qrcode.isValid();
-		}
+		return status;
 	}
 
-	return false;
+	std::vector<uint8_t> modules;
+	unsigned int version;
+	QRCode::ErrorCorrectionCapacity finalErrorCorrectionCapacity;
+
+	status = encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity);
+	if (status != SC_SUCCESS)
+	{
+		return status;
+	}
+
+	std::vector<uint8_t> finalData(data.begin(), data.end());
+
+	qrcode = QRCode(std::move(finalData), QRCode::EM_BYTE, finalErrorCorrectionCapacity, std::move(modules), version);
+	ocean_assert(qrcode.isValid());
+
+	if (qrcode.isValid())
+	{
+		return SC_SUCCESS;
+	}
+
+	return SC_UNKNOWN_ERROR;
 }
 
-bool QRCodeEncoder::addErrorCorrectionAndCreateQRCode(const unsigned int version, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const Codewords& rawCodewords, MaskingPattern mask, std::vector<uint8_t>& modules)
+QRCodeEncoderBase::StatusCode QRCodeEncoder::addErrorCorrectionAndCreateQRCode(const unsigned int version, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const Codewords& rawCodewords, MaskingPattern mask, std::vector<uint8_t>& modules)
 {
 	// TODO Refactor this 1. pull out the error correction, 2. pull out the computation of the optimal mask, 3. only leave the initialization of the modules
 
@@ -182,10 +200,10 @@ bool QRCodeEncoder::addErrorCorrectionAndCreateQRCode(const unsigned int version
 
 	modules = std::move(localModules);
 
-	return true;
+	return SC_SUCCESS;
 }
 
-bool QRCodeEncoder::encodeSegments(const Segments& segments, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, std::vector<uint8_t>& modules, unsigned int& version, QRCode::ErrorCorrectionCapacity& finalErrorCorrectionCapacity, const unsigned int minVersion, const unsigned int maxVersion, const MaskingPattern mask, const bool maximizeErrorCorrectionCapacity)
+QRCodeEncoderBase::StatusCode QRCodeEncoder::encodeSegments(const Segments& segments, const QRCode::ErrorCorrectionCapacity errorCorrectionCapacity, std::vector<uint8_t>& modules, unsigned int& version, QRCode::ErrorCorrectionCapacity& finalErrorCorrectionCapacity, const unsigned int minVersion, const unsigned int maxVersion, const MaskingPattern mask, const bool maximizeErrorCorrectionCapacity)
 {
 	ocean_assert(segments.empty() == false);
 	ocean_assert(minVersion >= 1u && minVersion <= maxVersion && maxVersion <= QRCode::MAX_VERSION);
@@ -209,7 +227,7 @@ bool QRCodeEncoder::encodeSegments(const Segments& segments, const QRCode::Error
 
 	if (version < QRCode::MIN_VERSION || version > QRCode::MAX_VERSION || bitsUsed == 0u)
 	{
-		return false;
+		return SC_CODE_CAPACITY_EXCEEDED;
 	}
 
 	// Determine the highest error correction level that still fits into the selected version

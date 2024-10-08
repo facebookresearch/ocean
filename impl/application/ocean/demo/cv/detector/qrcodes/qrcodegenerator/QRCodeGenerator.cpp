@@ -162,25 +162,41 @@ ocean_assert(errorCorrectionCapacity != QRCode::ECC_INVALID);
 	using QRCodeBaseRef = ObjectRef<QRCodeBase>;
 
 	QRCodeBaseRef codeRef;
-	bool encodeTextSuccess = false;
+	QRCodeEncoderBase::StatusCode encodeTextStatus;
 
 	if (generateMicroQRCode)
 	{
 		MicroQRCode code;
-		encodeTextSuccess = MicroQRCodeEncoder::encodeText(message, errorCorrectionCapacity, code);
+		encodeTextStatus = MicroQRCodeEncoder::encodeText(message, errorCorrectionCapacity, code);
 		codeRef = QRCodeBaseRef(new MicroQRCode(code));
 	}
 	else
 	{
 		QRCode code;
-		encodeTextSuccess = QRCodeEncoder::encodeText(message, errorCorrectionCapacity, code);
+		encodeTextStatus = QRCodeEncoder::encodeText(message, errorCorrectionCapacity, code);
 		codeRef = QRCodeBaseRef(new QRCode(code));
 	}
 
-	if (!encodeTextSuccess)
+	switch(encodeTextStatus)
 	{
-		Log::error() << "Failed to generate a QR code";
-		return 1;
+		case QRCodeEncoderBase::SC_SUCCESS:
+			break;
+
+		case QRCodeEncoderBase::SC_CODE_CAPACITY_EXCEEDED:
+			Log::error() << "The message is too long for the QR code type selected";
+			return 1;
+
+		case QRCodeEncoderBase::SC_INVALID_DATA:
+			Log::error() << "The message contains invalid characters";
+			return 1;
+
+		case QRCodeEncoderBase::SC_INVALID_ERROR_CORRECTION_CAPACITY:
+			Log::error() << "The error correction capacity is invalid";
+			return 1;
+
+		case QRCodeEncoderBase::SC_UNKNOWN_ERROR:
+			Log::error() << "An unknown error occurred";
+			return 1;
 	}
 
 	ocean_assert(!codeRef.isNull() && codeRef->isValid());

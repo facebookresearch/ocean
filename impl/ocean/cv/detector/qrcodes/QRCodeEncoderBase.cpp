@@ -20,11 +20,11 @@ namespace Detector
 namespace QRCodes
 {
 
-bool QRCodeEncoderBase::Segment::generateSegmentNumeric(const std::string& data, Segments& segments)
+QRCodeEncoderBase::StatusCode QRCodeEncoderBase::Segment::generateSegmentNumeric(const std::string& data, Segments& segments)
 {
 	if (isNumericData(data) == false)
 	{
-		return false;
+		return SC_INVALID_DATA;
 	}
 
 	// Cf. ISO/IEC 18004:2015, Section 7.4.3
@@ -40,7 +40,7 @@ bool QRCodeEncoderBase::Segment::generateSegmentNumeric(const std::string& data,
 		int value;
 		if (String::isInteger32(data.substr(i, length), &value) == false)
 		{
-			return false;
+			return SC_INVALID_DATA;
 		}
 		ocean_assert(value >= 0);
 
@@ -49,14 +49,14 @@ bool QRCodeEncoderBase::Segment::generateSegmentNumeric(const std::string& data,
 
 	segments.emplace_back(QRCode::EM_NUMERIC, (unsigned int)data.size(), bitBuffer);
 
-	return true;
+	return SC_SUCCESS;
 }
 
-bool QRCodeEncoderBase::Segment::generateSegmentAlphanumeric(const std::string& data, Segments& segments)
+QRCodeEncoderBase::StatusCode QRCodeEncoderBase::Segment::generateSegmentAlphanumeric(const std::string& data, Segments& segments)
 {
 	if (!isAlphanumericData(data))
 	{
-		return false;
+		return SC_INVALID_DATA;
 	}
 
 	// Cf. ISO/IEC 18004:2015, Section 7.4.4
@@ -96,10 +96,10 @@ bool QRCodeEncoderBase::Segment::generateSegmentAlphanumeric(const std::string& 
 
 	segments.emplace_back(QRCode::EM_ALPHANUMERIC, (unsigned int)data.size(), bitBuffer);
 
-	return true;
+	return SC_SUCCESS;
 }
 
-bool QRCodeEncoderBase::Segment::generateSegmentsBytes(const std::vector<uint8_t>& data, Segments& segments)
+QRCodeEncoderBase::StatusCode QRCodeEncoderBase::Segment::generateSegmentsBytes(const std::vector<uint8_t>& data, Segments& segments)
 {
 	ocean_assert(data.empty() == false);
 
@@ -112,7 +112,7 @@ bool QRCodeEncoderBase::Segment::generateSegmentsBytes(const std::vector<uint8_t
 	}
 	segments.emplace_back(QRCode::EM_BYTE, (unsigned int)data.size(), bitBuffer);
 
-	return true;
+	return SC_SUCCESS;
 }
 
 QRCodeEncoderBase::ReedSolomon::Coefficients QRCodeEncoderBase::ReedSolomon::generateCoefficients(const unsigned int degree)

@@ -138,16 +138,16 @@ bool TestQRCodeDecoder::testQRCodeDecoding(const double testDuration)
 			switch (encodationMode)
 			{
 				case QRCode::EM_NUMERIC:
-					qrcodeGenerated = QRCodeEncoder::encodeText(Utilities::generateRandomNumericString(randomGenerator, messageLength), QRCode::ECC_07, code) && allSucceeded;
+					qrcodeGenerated = (QRCodeEncoder::encodeText(Utilities::generateRandomNumericString(randomGenerator, messageLength), QRCode::ECC_07, code) == QRCodeEncoder::SC_SUCCESS) && allSucceeded;
 					break;
 
 				case QRCode::EM_ALPHANUMERIC:
-					qrcodeGenerated = QRCodeEncoder::encodeText(Utilities::generateRandomAlphanumericString(randomGenerator, messageLength), QRCode::ECC_07, code) && allSucceeded;
+					qrcodeGenerated = (QRCodeEncoder::encodeText(Utilities::generateRandomAlphanumericString(randomGenerator, messageLength), QRCode::ECC_07, code) == QRCodeEncoder::SC_SUCCESS) && allSucceeded;
 					break;
 
 				case QRCode::EM_BYTE:
 					allSucceeded = Utilities::generateRandomByteData(randomGenerator, messageLength, message) && allSucceeded;
-					qrcodeGenerated = QRCodeEncoder::encodeBinary(message, QRCode::ECC_07, code) && allSucceeded;
+					qrcodeGenerated = (QRCodeEncoder::encodeBinary(message, QRCode::ECC_07, code) == QRCodeEncoder::SC_SUCCESS) && allSucceeded;
 					break;
 
 				default:

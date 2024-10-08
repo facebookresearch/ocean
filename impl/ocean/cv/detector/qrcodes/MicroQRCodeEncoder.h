@@ -68,18 +68,18 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT MicroQRCodeEncoder : public QRCodeEncoder
 		 * @param text The text/data to be encoded as a QR code
 		 * @param errorCorrectionCapacity Specifies the level of possible error correction
 		 * @param qrcode The Micro QR code that will store the encoded data
-		 * @return True if the Micro QR code has been successfully generated
+		 * @return `SC_SUCCESS` on success, otherwise it will return a status indicating the reason for failure
 		 */
-		static bool encodeText(const std::string& text, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, MicroQRCode& qrcode);
+		static QRCodeEncoderBase::StatusCode encodeText(const std::string& text, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, MicroQRCode& qrcode);
 
 		/**
 		 * Encode binary data and store it in a QR code, will always use the byte encodation mode
 		 * @param data The data to be encoded as a QR code
 		 * @param errorCorrectionCapacity Specifies the level of possible error correction
 		 * @param qrcode The Micro QR code that will store the encoded data
-		 * @return True if the Micro QR code has been successfully generated
+		 * @return `SC_SUCCESS` on success, otherwise it will return a status indicating the reason for failure
 		 */
-		static bool encodeBinary(const std::vector<uint8_t>& data, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, MicroQRCode& qrcode);
+		static QRCodeEncoderBase::StatusCode encodeBinary(const std::vector<uint8_t>& data, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, MicroQRCode& qrcode);
 
 		/**
 		 * Encodes the error correction level and the index of the masking pattern as a sequence of 15 bits with error correction ((15, 5) BCH code).
@@ -118,9 +118,8 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT MicroQRCodeEncoder : public QRCodeEncoder
 		 * @param rawCodewords The encoded codewords. The size must fit exactly into the selected version of this Micro QR code
 		 * @param mask The index of the bit shuffle masked that was used to generate the modules of this Micro QR code
 		 * @param modules The resulting modules of the Micro QR code
-		 * @return True if the initialization was successful, otherwise false
 		 */
-		static bool addErrorCorrectionAndCreateQRCode(const unsigned int version, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const Codewords& rawCodewords, MaskingPattern mask, std::vector<uint8_t>& modules);
+		static void addErrorCorrectionAndCreateQRCode(const unsigned int version, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, const Codewords& rawCodewords, MaskingPattern mask, std::vector<uint8_t>& modules);
 
 		/**
 		 * Encodes segments and writes them into a Micro QR code
@@ -133,9 +132,9 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT MicroQRCodeEncoder : public QRCodeEncoder
 		 * @param maxVersion The maximum version that the final Micro QR code is supposed to have, range: [minVersion, 4]. Note: if this value is chosen too small, the initialization may fail
 		 * @param mask The index of the bit shuffle mask that is to be used, range: [0, 3] or (unsigned int)(-1). The latter value will cause this function to automatically select the optimal mask (cf. ISO/IEC 18004:2015, Section 7.8.3)
 		 * @param maximizeErrorCorrectionCapacity If true, this function will try to maximize the error correction level as long as it doesn't increase the size of the smallest Micro QR code that can fit the data, cf. `errorCorrectionCapacity`
-		 * @return True on success, otherwise false
+		 * @return `SC_SUCCESS` on success, otherwise it will return a status indicating the reason for failure
 		 */
-		static bool encodeSegments(const Segments& segments, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, std::vector<uint8_t>& modules, unsigned int& version, MicroQRCode::ErrorCorrectionCapacity& finalErrorCorrectionCapacity, unsigned int minVersion = 1u, unsigned int maxVersion = MicroQRCode::MAX_VERSION, const MaskingPattern mask = MP_PATTERN_UNKNOWN, const bool maximizeErrorCorrectionCapacity = true);
+		static QRCodeEncoderBase::StatusCode encodeSegments(const Segments& segments, const MicroQRCode::ErrorCorrectionCapacity errorCorrectionCapacity, std::vector<uint8_t>& modules, unsigned int& version, MicroQRCode::ErrorCorrectionCapacity& finalErrorCorrectionCapacity, unsigned int minVersion = 1u, unsigned int maxVersion = MicroQRCode::MAX_VERSION, const MaskingPattern mask = MP_PATTERN_UNKNOWN, const bool maximizeErrorCorrectionCapacity = true);
 
 		/**
 		 * Returns the number of modules that can be used to store data for a given Micro QR code version

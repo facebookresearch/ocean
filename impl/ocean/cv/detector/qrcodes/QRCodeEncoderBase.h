@@ -51,6 +51,27 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoderBase
 		typedef std::vector<Segment> Segments;
 
 		/**
+		 * Enum for the error codes returned by the encoding functions
+		 */
+		enum StatusCode : uint32_t
+		{
+			/// The encoding was successful
+			SC_SUCCESS = 0u,
+
+			/// The data given exceeds the maximum capacity of the QR code
+			SC_CODE_CAPACITY_EXCEEDED,
+
+			/// The data given is not valid
+			SC_INVALID_DATA,
+
+			// The error correction level is not valid
+			SC_INVALID_ERROR_CORRECTION_CAPACITY,
+
+			/// The encoding failed due to an unknown reason
+			SC_UNKNOWN_ERROR
+		};
+
+		/**
 		 * Definition of the segment class
 		 * A sequence is a sequence of data encoded according to the rules of one ECI or encodation mode
 		 */
@@ -89,7 +110,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoderBase
 				 * @param segments The segment storing the encoded data will be appended to this vector, memory will be initialized internally
 				 * @return True if the data was successfully encoded, otherwise false
 				 */
-				static bool generateSegmentNumeric(const std::string& data, Segments& segments);
+				static StatusCode generateSegmentNumeric(const std::string& data, Segments& segments);
 
 				/**
 				 * Encode a sequence of alphanumeric characters (cf. ISO/IEC 18004:2015, Table 5) and store it in a segment
@@ -97,7 +118,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoderBase
 				 * @param segments The segment storing the encoded data will be appended to this vector, memory will be initialized internally
 				 * @return True if the data was successfully encoded, otherwise false
 				 */
-				static bool generateSegmentAlphanumeric(const std::string& data, Segments& segments);
+				static StatusCode generateSegmentAlphanumeric(const std::string& data, Segments& segments);
 
 				/**
 				 * Encode a sequence of bytes and store it in a segment
@@ -105,7 +126,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoderBase
 				 * @param segments The segment storing the encoded data will be appended to this vector, memory will be initialized internally
 				 * @return True if the data was successfully encoded, otherwise false
 				 */
-				static bool generateSegmentsBytes(const std::vector<uint8_t>& data, Segments& segments);
+				static StatusCode generateSegmentsBytes(const std::vector<uint8_t>& data, Segments& segments);
 
 				/**
 				 * Helper function to append a certain number of bits of a number to a bit buffer
@@ -206,6 +227,11 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoderBase
 		 * @return The number of 1-bits in the input value
 		 */
 		static inline uint32_t computeHammingWeight(uint32_t value);
+
+		/**
+		 * Translates the given status code into a human readable string
+		 */
+		static inline std::string translateStatusCode(const StatusCode statusCode);
 };
 
 inline QRCodeEncoderBase::Segment::Segment(const QRCode::EncodingMode mode, const unsigned int characters, BitBuffer& bitBuffer) :
@@ -349,6 +375,26 @@ inline uint32_t QRCodeEncoderBase::computeHammingWeight(uint32_t value)
 	}
 
 	return weight;
+}
+
+std::string QRCodeEncoderBase::translateStatusCode(const StatusCode statusCode)
+{
+	switch (statusCode)
+	{
+		case SC_SUCCESS:
+			return "SUCCESS";
+		case SC_CODE_CAPACITY_EXCEEDED:
+			return "CODE_CAPACITY_EXCEEDED";
+		case SC_INVALID_DATA:
+			return "INVALID_DATA";
+		case SC_INVALID_ERROR_CORRECTION_CAPACITY:
+			return "INVALID_ERROR_CORRECTION_CAPACITY";
+		case SC_UNKNOWN_ERROR:
+			return "UNKNOWN_ERROR";
+	}
+
+	ocean_assert(false && "Never be here!");
+	return "UNKOWN";
 }
 
 } // namespace QRCodes
