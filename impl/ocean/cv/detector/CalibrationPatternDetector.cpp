@@ -67,6 +67,8 @@ void CalibrationPatternDetector::release()
 
 bool CalibrationPatternDetector::detectCalibrationPatternWithPreviousCorners(const Frame& yFrame, const Timestamp timestamp, Worker* worker)
 {
+	ocean_assert(yFrame.isValid());
+
 	if (trackingThresholdIndex_ > 0u)
 	{
 		--trackingThresholdIndex_;
@@ -74,9 +76,9 @@ bool CalibrationPatternDetector::detectCalibrationPatternWithPreviousCorners(con
 
 	const std::vector<TrackingThresholds> trackingThresholds =
 	{
-		TrackingThresholds(640u, 480u, 70, 11),
-		TrackingThresholds(640u, 480u, 50, 15),
-		TrackingThresholds(640u, 480u, 30, 17)
+		TrackingThresholds(yFrame.width(), yFrame.height(), 70, 11),
+		TrackingThresholds(yFrame.width(), yFrame.height(), 50, 15),
+		TrackingThresholds(yFrame.width(), yFrame.height(), 30, 17)
 	};
 
 	while (true)
@@ -108,6 +110,8 @@ bool CalibrationPatternDetector::detectCalibrationPatternWithPreviousCorners(con
 
 bool CalibrationPatternDetector::detectCalibrationPatternWithoutKnowledge(const Frame& yFrame, const Timestamp timestamp, Worker* worker)
 {
+	ocean_assert(yFrame.isValid());
+
 	if (detectionThresholdIndex_ > 0u)
 	{
 		--detectionThresholdIndex_;
@@ -115,10 +119,10 @@ bool CalibrationPatternDetector::detectCalibrationPatternWithoutKnowledge(const 
 
 	const std::vector<DetectionThresholds> detectionThresholds =
 	{
-		DetectionThresholds(640u, 480u, 70, 7, Numeric::deg2rad(3), Numeric::deg2rad(0.5)),
-		DetectionThresholds(640u, 480u, 60, 11, Numeric::deg2rad(4), Numeric::deg2rad(1)),
-		DetectionThresholds(640u, 480u, 50, 15, Numeric::deg2rad(5), Numeric::deg2rad(1.5)),
-		DetectionThresholds(640u, 480u, 30, 20, Numeric::deg2rad(6), Numeric::deg2rad(2))
+		DetectionThresholds(yFrame.width(), yFrame.height(), 70, 7, Numeric::deg2rad(3), Numeric::deg2rad(0.5)),
+		DetectionThresholds(yFrame.width(), yFrame.height(), 60, 11, Numeric::deg2rad(4), Numeric::deg2rad(1)),
+		DetectionThresholds(yFrame.width(), yFrame.height(), 50, 15, Numeric::deg2rad(5), Numeric::deg2rad(1.5)),
+		DetectionThresholds(yFrame.width(), yFrame.height(), 30, 20, Numeric::deg2rad(6), Numeric::deg2rad(2))
 	};
 
 	while (true)
