@@ -73,7 +73,117 @@ QRCodeEncoderBase::StatusCode MicroQRCodeEncoder::encodeText(const std::string& 
 	unsigned int version;
 	MicroQRCode::ErrorCorrectionCapacity finalErrorCorrectionCapacity;
 
-	const StatusCode status = encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity);
+	StatusCode status = encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity);
+
+	// If the message is too long, try splitting it into multiple segments
+
+	if (status == SC_CODE_CAPACITY_EXCEEDED && encodingMode != MicroQRCode::EM_NUMERIC)
+	{
+		// Try starting with a numeric segment
+		unsigned int numericSegmentLength = 0u;
+		while (numericSegmentLength < text.size() && std::isdigit((unsigned char)text[numericSegmentLength]))
+		{
+			++numericSegmentLength;
+		}
+
+		if (numericSegmentLength > 0u)
+		{
+			segments.clear();
+			if (Segment::generateSegmentNumeric(text.substr(0, numericSegmentLength), segments) == SC_SUCCESS)
+			{
+				StatusCode tmpStatus = SC_UNKNOWN_ERROR;
+				if (encodingMode == MicroQRCode::EM_ALPHANUMERIC)
+				{
+					tmpStatus = Segment::generateSegmentAlphanumeric(text.substr(numericSegmentLength), segments);
+				}
+				else if (encodingMode == MicroQRCode::EM_BYTE)
+				{
+					std::vector<uint8_t> byteSegmentData(text.begin() + numericSegmentLength, text.end());
+					tmpStatus = Segment::generateSegmentsBytes(byteSegmentData, segments);
+				}
+
+				if (tmpStatus == SC_SUCCESS)
+				{
+					status = encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity);
+				}
+			}
+		}
+	}
+
+	if (status == SC_CODE_CAPACITY_EXCEEDED && encodingMode != MicroQRCode::EM_NUMERIC)
+	{
+		// Try ending with a numeric segment
+		unsigned int nonNumericSegmentLength = (unsigned int)(text.size());
+		while (nonNumericSegmentLength > 0u && std::isdigit(text[nonNumericSegmentLength - 1u]))
+		{
+			--nonNumericSegmentLength;
+		}
+
+		if (nonNumericSegmentLength < text.size())
+		{
+			segments.clear();
+			StatusCode tmpStatus = SC_UNKNOWN_ERROR;
+			if (encodingMode == MicroQRCode::EM_ALPHANUMERIC)
+			{
+				tmpStatus = Segment::generateSegmentAlphanumeric(text.substr(0, nonNumericSegmentLength), segments);
+			}
+			else if (encodingMode == MicroQRCode::EM_BYTE)
+			{
+				std::vector<uint8_t> byteSegmentData(text.begin(), text.begin() + nonNumericSegmentLength);
+				tmpStatus = Segment::generateSegmentsBytes(byteSegmentData, segments);
+			}
+
+			if (tmpStatus == SC_SUCCESS && Segment::generateSegmentNumeric(text.substr(nonNumericSegmentLength), segments) == SC_SUCCESS)
+			{
+				status = encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity);
+			}
+		}
+	}
+
+	if (status == SC_CODE_CAPACITY_EXCEEDED && encodingMode == MicroQRCode::EM_BYTE)
+	{
+		// Try starting with an alphanumeric segment
+		unsigned int alphaSegmentLength = 0u;
+
+		while (alphaSegmentLength < text.size() && Segment::isAlphanumericData(text.substr(alphaSegmentLength, 1u)))
+		{
+			++alphaSegmentLength;
+		}
+
+		if (alphaSegmentLength > 0u)
+		{
+			segments.clear();
+			if (Segment::generateSegmentAlphanumeric(text.substr(0, alphaSegmentLength), segments) == SC_SUCCESS)
+			{
+				std::vector<uint8_t> byteSegmentData(text.begin() + alphaSegmentLength, text.end());
+				if (Segment::generateSegmentsBytes(byteSegmentData, segments) == SC_SUCCESS)
+				{
+					status = encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity);
+				}
+			}
+		}
+	}
+
+	if (status == SC_CODE_CAPACITY_EXCEEDED && encodingMode == MicroQRCode::EM_BYTE)
+	{
+		// Try ending with an alphanumeric segment
+		unsigned int nonAlphaSegmentLength = (unsigned int)(text.size());
+		while (nonAlphaSegmentLength > 0u && Segment::isAlphanumericData(text.substr(nonAlphaSegmentLength - 1u, 1u)))
+		{
+			--nonAlphaSegmentLength;
+		}
+
+		if (nonAlphaSegmentLength < text.size())
+		{
+			segments.clear();
+			std::vector<uint8_t> byteSegmentData(text.begin(), text.begin() + nonAlphaSegmentLength);
+			if (Segment::generateSegmentsBytes(byteSegmentData, segments) == SC_SUCCESS && Segment::generateSegmentAlphanumeric(text.substr(nonAlphaSegmentLength), segments) == SC_SUCCESS)
+			{
+				status = encodeSegments(segments, errorCorrectionCapacity, modules, version, finalErrorCorrectionCapacity);
+			}
+		}
+	}
+
 	if (status != SC_SUCCESS)
 	{
 		return status;
