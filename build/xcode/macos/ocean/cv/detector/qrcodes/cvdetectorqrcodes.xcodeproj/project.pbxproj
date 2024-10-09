@@ -7,6 +7,42 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18CAB5B92CB59D3C00C1A6DF /* MicroQRCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B62CB59D3C00C1A6DF /* MicroQRCodeDetector.h */; };
+		18CAB5BA2CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B72CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h */; };
+		18CAB5BB2CB59D3C00C1A6DF /* MicroQRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B52CB59D3C00C1A6DF /* MicroQRCodeDecoder.h */; };
+		18CAB5BC2CB59D3C00C1A6DF /* MicroQRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B82CB59D3C00C1A6DF /* MicroQRCodeEncoder.h */; };
+		18CAB5BD2CB59D3C00C1A6DF /* MicroQRCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B42CB59D3C00C1A6DF /* MicroQRCode.h */; };
+		18CAB5BE2CB59D3C00C1A6DF /* MicroQRCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B62CB59D3C00C1A6DF /* MicroQRCodeDetector.h */; };
+		18CAB5BF2CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B72CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h */; };
+		18CAB5C02CB59D3C00C1A6DF /* MicroQRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B52CB59D3C00C1A6DF /* MicroQRCodeDecoder.h */; };
+		18CAB5C12CB59D3C00C1A6DF /* MicroQRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B82CB59D3C00C1A6DF /* MicroQRCodeEncoder.h */; };
+		18CAB5C22CB59D3C00C1A6DF /* MicroQRCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B42CB59D3C00C1A6DF /* MicroQRCode.h */; };
+		18CAB5C32CB59D3C00C1A6DF /* MicroQRCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B62CB59D3C00C1A6DF /* MicroQRCodeDetector.h */; };
+		18CAB5C42CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B72CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h */; };
+		18CAB5C52CB59D3C00C1A6DF /* MicroQRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B52CB59D3C00C1A6DF /* MicroQRCodeDecoder.h */; };
+		18CAB5C62CB59D3C00C1A6DF /* MicroQRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B82CB59D3C00C1A6DF /* MicroQRCodeEncoder.h */; };
+		18CAB5C72CB59D3C00C1A6DF /* MicroQRCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B42CB59D3C00C1A6DF /* MicroQRCode.h */; };
+		18CAB5C82CB59D3C00C1A6DF /* MicroQRCodeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B62CB59D3C00C1A6DF /* MicroQRCodeDetector.h */; };
+		18CAB5C92CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B72CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h */; };
+		18CAB5CA2CB59D3C00C1A6DF /* MicroQRCodeDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B52CB59D3C00C1A6DF /* MicroQRCodeDecoder.h */; };
+		18CAB5CB2CB59D3C00C1A6DF /* MicroQRCodeEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B82CB59D3C00C1A6DF /* MicroQRCodeEncoder.h */; };
+		18CAB5CC2CB59D3C00C1A6DF /* MicroQRCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 18CAB5B42CB59D3C00C1A6DF /* MicroQRCode.h */; };
+		18CAB5D12CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CD2CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp */; };
+		18CAB5D22CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5D02CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp */; };
+		18CAB5D32CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CE2CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp */; };
+		18CAB5D42CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CF2CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp */; };
+		18CAB5D52CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CD2CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp */; };
+		18CAB5D62CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5D02CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp */; };
+		18CAB5D72CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CE2CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp */; };
+		18CAB5D82CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CF2CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp */; };
+		18CAB5D92CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CD2CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp */; };
+		18CAB5DA2CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5D02CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp */; };
+		18CAB5DB2CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CE2CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp */; };
+		18CAB5DC2CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CF2CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp */; };
+		18CAB5DD2CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CD2CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp */; };
+		18CAB5DE2CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5D02CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp */; };
+		18CAB5DF2CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CE2CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp */; };
+		18CAB5E02CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18CAB5CF2CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp */; };
 		5044442127B72BBF00B2E4B0 /* QRCodeDetector3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5044442027B72BBF00B2E4B0 /* QRCodeDetector3D.h */; };
 		5044442227B72BBF00B2E4B0 /* QRCodeDetector3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5044442027B72BBF00B2E4B0 /* QRCodeDetector3D.h */; };
 		5044442327B72BBF00B2E4B0 /* QRCodeDetector3D.h in Headers */ = {isa = PBXBuildFile; fileRef = 5044442027B72BBF00B2E4B0 /* QRCodeDetector3D.h */; };
@@ -102,6 +138,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		18CAB5B42CB59D3C00C1A6DF /* MicroQRCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MicroQRCode.h; path = /Users/danthornton/fbsource/xplat/ocean/impl/ocean/cv/detector/qrcodes/MicroQRCode.h; sourceTree = "<absolute>"; };
+		18CAB5B52CB59D3C00C1A6DF /* MicroQRCodeDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MicroQRCodeDecoder.h; path = /Users/danthornton/fbsource/xplat/ocean/impl/ocean/cv/detector/qrcodes/MicroQRCodeDecoder.h; sourceTree = "<absolute>"; };
+		18CAB5B62CB59D3C00C1A6DF /* MicroQRCodeDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MicroQRCodeDetector.h; path = /Users/danthornton/fbsource/xplat/ocean/impl/ocean/cv/detector/qrcodes/MicroQRCodeDetector.h; sourceTree = "<absolute>"; };
+		18CAB5B72CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MicroQRCodeDetector2D.h; path = /Users/danthornton/fbsource/xplat/ocean/impl/ocean/cv/detector/qrcodes/MicroQRCodeDetector2D.h; sourceTree = "<absolute>"; };
+		18CAB5B82CB59D3C00C1A6DF /* MicroQRCodeEncoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MicroQRCodeEncoder.h; path = /Users/danthornton/fbsource/xplat/ocean/impl/ocean/cv/detector/qrcodes/MicroQRCodeEncoder.h; sourceTree = "<absolute>"; };
+		18CAB5CD2CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MicroQRCodeDecoder.cpp; path = /Users/danthornton/fbsource/xplat/ocean/impl/ocean/cv/detector/qrcodes/MicroQRCodeDecoder.cpp; sourceTree = "<absolute>"; };
+		18CAB5CE2CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MicroQRCodeDetector.cpp; path = /Users/danthornton/fbsource/xplat/ocean/impl/ocean/cv/detector/qrcodes/MicroQRCodeDetector.cpp; sourceTree = "<absolute>"; };
+		18CAB5CF2CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MicroQRCodeDetector2D.cpp; path = /Users/danthornton/fbsource/xplat/ocean/impl/ocean/cv/detector/qrcodes/MicroQRCodeDetector2D.cpp; sourceTree = "<absolute>"; };
+		18CAB5D02CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MicroQRCodeEncoder.cpp; path = /Users/danthornton/fbsource/xplat/ocean/impl/ocean/cv/detector/qrcodes/MicroQRCodeEncoder.cpp; sourceTree = "<absolute>"; };
 		5044442027B72BBF00B2E4B0 /* QRCodeDetector3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QRCodeDetector3D.h; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDetector3D.h; sourceTree = "<group>"; };
 		5044442527B72BE300B2E4B0 /* QRCodeDetector3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QRCodeDetector3D.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDetector3D.cpp; sourceTree = "<group>"; };
 		507AFD5627B4D5FF00E4DBB3 /* QRCodeDetector2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = QRCodeDetector2D.cpp; path = ../../../../../../../impl/ocean/cv/detector/qrcodes/QRCodeDetector2D.cpp; sourceTree = "<group>"; };
@@ -166,6 +211,11 @@
 		5D222C651BB18C1400298788 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
+				18CAB5B42CB59D3C00C1A6DF /* MicroQRCode.h */,
+				18CAB5B52CB59D3C00C1A6DF /* MicroQRCodeDecoder.h */,
+				18CAB5B62CB59D3C00C1A6DF /* MicroQRCodeDetector.h */,
+				18CAB5B72CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h */,
+				18CAB5B82CB59D3C00C1A6DF /* MicroQRCodeEncoder.h */,
 				50F61DE527471EA4003833F2 /* AlignmentPatternDetector.h */,
 				50AE05502708109700242F7A /* FinderPatternDetector.h */,
 				507CAAF627B301E9006F5468 /* LegacyQRCodeDetector2D.h */,
@@ -206,6 +256,10 @@
 		5DCE0D441BAABFC1002E9E7D /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
+				18CAB5CD2CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp */,
+				18CAB5CE2CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp */,
+				18CAB5CF2CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp */,
+				18CAB5D02CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp */,
 				50F61DEA27471EBC003833F2 /* AlignmentPatternDetector.cpp */,
 				50AE0575270810B700242F7A /* FinderPatternDetector.cpp */,
 				507CAAFB27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp */,
@@ -236,6 +290,11 @@
 				507CAAF827B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */,
 				50AE05562708109700242F7A /* QRCodeEncoder.h in Headers */,
 				50AE055E2708109700242F7A /* FinderPatternDetector.h in Headers */,
+				18CAB5B92CB59D3C00C1A6DF /* MicroQRCodeDetector.h in Headers */,
+				18CAB5BA2CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h in Headers */,
+				18CAB5BB2CB59D3C00C1A6DF /* MicroQRCodeDecoder.h in Headers */,
+				18CAB5BC2CB59D3C00C1A6DF /* MicroQRCodeEncoder.h in Headers */,
+				18CAB5BD2CB59D3C00C1A6DF /* MicroQRCode.h in Headers */,
 				50C73EC02733976C004E80DA /* QRCodeDebugElements.h in Headers */,
 				50AE055A2708109700242F7A /* QRCodeDecoder.h in Headers */,
 				50AE05662708109700242F7A /* QRCodeDetector2D.h in Headers */,
@@ -256,6 +315,11 @@
 				507CAAF927B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */,
 				50AE05572708109700242F7A /* QRCodeEncoder.h in Headers */,
 				50AE055F2708109700242F7A /* FinderPatternDetector.h in Headers */,
+				18CAB5C32CB59D3C00C1A6DF /* MicroQRCodeDetector.h in Headers */,
+				18CAB5C42CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h in Headers */,
+				18CAB5C52CB59D3C00C1A6DF /* MicroQRCodeDecoder.h in Headers */,
+				18CAB5C62CB59D3C00C1A6DF /* MicroQRCodeEncoder.h in Headers */,
+				18CAB5C72CB59D3C00C1A6DF /* MicroQRCode.h in Headers */,
 				50C73EC12733976C004E80DA /* QRCodeDebugElements.h in Headers */,
 				50AE055B2708109700242F7A /* QRCodeDecoder.h in Headers */,
 				50AE05672708109700242F7A /* QRCodeDetector2D.h in Headers */,
@@ -276,6 +340,11 @@
 				507CAAF727B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */,
 				50AE05552708109700242F7A /* QRCodeEncoder.h in Headers */,
 				50AE055D2708109700242F7A /* FinderPatternDetector.h in Headers */,
+				18CAB5C82CB59D3C00C1A6DF /* MicroQRCodeDetector.h in Headers */,
+				18CAB5C92CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h in Headers */,
+				18CAB5CA2CB59D3C00C1A6DF /* MicroQRCodeDecoder.h in Headers */,
+				18CAB5CB2CB59D3C00C1A6DF /* MicroQRCodeEncoder.h in Headers */,
+				18CAB5CC2CB59D3C00C1A6DF /* MicroQRCode.h in Headers */,
 				50C73EBF2733976C004E80DA /* QRCodeDebugElements.h in Headers */,
 				50AE05592708109700242F7A /* QRCodeDecoder.h in Headers */,
 				50AE05652708109700242F7A /* QRCodeDetector2D.h in Headers */,
@@ -296,6 +365,11 @@
 				507CAAFA27B301E9006F5468 /* LegacyQRCodeDetector2D.h in Headers */,
 				50AE05582708109700242F7A /* QRCodeEncoder.h in Headers */,
 				50AE05602708109700242F7A /* FinderPatternDetector.h in Headers */,
+				18CAB5BE2CB59D3C00C1A6DF /* MicroQRCodeDetector.h in Headers */,
+				18CAB5BF2CB59D3C00C1A6DF /* MicroQRCodeDetector2D.h in Headers */,
+				18CAB5C02CB59D3C00C1A6DF /* MicroQRCodeDecoder.h in Headers */,
+				18CAB5C12CB59D3C00C1A6DF /* MicroQRCodeEncoder.h in Headers */,
+				18CAB5C22CB59D3C00C1A6DF /* MicroQRCode.h in Headers */,
 				50C73EC22733976C004E80DA /* QRCodeDebugElements.h in Headers */,
 				50AE055C2708109700242F7A /* QRCodeDecoder.h in Headers */,
 				50AE05682708109700242F7A /* QRCodeDetector2D.h in Headers */,
@@ -471,6 +545,10 @@
 				50AE0577270810B700242F7A /* QRCodeEncoder.cpp in Sources */,
 				507CAAFD27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */,
 				50ED88E22811DC0A0024E01F /* QRCodeDetector.cpp in Sources */,
+				18CAB5D12CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp in Sources */,
+				18CAB5D22CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp in Sources */,
+				18CAB5D32CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp in Sources */,
+				18CAB5D42CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -488,6 +566,10 @@
 				50AE0578270810B700242F7A /* QRCodeEncoder.cpp in Sources */,
 				507CAAFE27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */,
 				50ED88E32811DC0A0024E01F /* QRCodeDetector.cpp in Sources */,
+				18CAB5D52CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp in Sources */,
+				18CAB5D62CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp in Sources */,
+				18CAB5D72CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp in Sources */,
+				18CAB5D82CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +587,10 @@
 				50AE0576270810B700242F7A /* QRCodeEncoder.cpp in Sources */,
 				507CAAFC27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */,
 				50ED88E12811DC0A0024E01F /* QRCodeDetector.cpp in Sources */,
+				18CAB5DD2CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp in Sources */,
+				18CAB5DE2CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp in Sources */,
+				18CAB5DF2CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp in Sources */,
+				18CAB5E02CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,6 +608,10 @@
 				50AE0579270810B700242F7A /* QRCodeEncoder.cpp in Sources */,
 				507CAAFF27B3025D006F5468 /* LegacyQRCodeDetector2D.cpp in Sources */,
 				50ED88E42811DC0A0024E01F /* QRCodeDetector.cpp in Sources */,
+				18CAB5D92CB59D5E00C1A6DF /* MicroQRCodeDecoder.cpp in Sources */,
+				18CAB5DA2CB59D5E00C1A6DF /* MicroQRCodeEncoder.cpp in Sources */,
+				18CAB5DB2CB59D5E00C1A6DF /* MicroQRCodeDetector.cpp in Sources */,
+				18CAB5DC2CB59D5E00C1A6DF /* MicroQRCodeDetector2D.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
