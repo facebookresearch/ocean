@@ -11,7 +11,10 @@
 
 #include "ocean/rendering/Utilities.h"
 
-using namespace Platform::Meta;
+using namespace Ocean;
+using namespace Ocean::Platform::Meta;
+using namespace Ocean::Platform::Meta::Quest;
+using namespace Ocean::Platform::Meta::Quest::OpenXR::Application;
 
 HandGestures::HandGestures(struct android_app* androidApp) :
 	VRNativeApplicationAdvanced(androidApp)

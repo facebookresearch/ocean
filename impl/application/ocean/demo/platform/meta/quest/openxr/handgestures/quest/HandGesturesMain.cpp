@@ -18,7 +18,7 @@
 void android_main(struct android_app* androidApp)
 {
 	ocean_assert(androidApp != nullptr);
-	Messenger::get().setOutputType(Messenger::OUTPUT_STANDARD);
+	Ocean::Messenger::get().setOutputType(Ocean::Messenger::OUTPUT_STANDARD);
 
 	HandGestures nativeApplication(androidApp);
 	nativeApplication.run();

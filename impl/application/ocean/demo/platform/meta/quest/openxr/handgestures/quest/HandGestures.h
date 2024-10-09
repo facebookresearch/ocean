@@ -16,15 +16,11 @@
 #include "ocean/rendering/Text.h"
 #include "ocean/rendering/Transform.h"
 
-using namespace Ocean;
-using namespace Platform::Meta::Quest;
-using namespace Platform::Meta::Quest::OpenXR::Application;
-
 /**
  * Implements a specialization of the VRNativeApplicationAdvanced.
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class HandGestures final : public VRNativeApplicationAdvanced
+class HandGestures final : public Ocean::Platform::Meta::Quest::OpenXR::Application::VRNativeApplicationAdvanced
 {
 	public:
 
@@ -52,33 +48,33 @@ class HandGestures final : public VRNativeApplicationAdvanced
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplication::onPreRender().
 		 */
-		void onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime) override;
+		void onPreRender(const XrTime& xrPredictedDisplayTime, const Ocean::Timestamp& predictedDisplayTime) override;
 
 		/**
 		 * Event functions for pressed buttons (e.g., from a tracked controller).
 		 * @see VRNativeApplication::onButtonPressed().
 		 */
-		void onButtonPressed(const OpenXR::TrackedController::ButtonType buttons, const Timestamp& timestamp) override;
+		void onButtonPressed(const Ocean::Platform::Meta::Quest::OpenXR::TrackedController::ButtonType buttons, const Ocean::Timestamp& timestamp) override;
 
 	protected:
 
 		/// The rendering text node for the left hand.
-		Rendering::TextRef renderingTextHandLeft_;
+		Ocean::Rendering::TextRef renderingTextHandLeft_;
 
 		/// The rendering text node for the right hand.
-		Rendering::TextRef renderingTextHandRight_;
+		Ocean::Rendering::TextRef renderingTextHandRight_;
 
 		/// The rendering transform node for the left hand.
-		Rendering::TransformRef renderingTransformHandLeft_;
+		Ocean::Rendering::TransformRef renderingTransformHandLeft_;
 
 		/// The rendering transform node for the right hand.
-		Rendering::TransformRef renderingTransformHandRight_;
+		Ocean::Rendering::TransformRef renderingTransformHandRight_;
 
 		/// The rendering group node holding hand joint indices.
-		Rendering::GroupRef renderingGroupHandJoints_;
+		Ocean::Rendering::GroupRef renderingGroupHandJoints_;
 
 		/// The rendering group node holding hand gestures.
-		Rendering::GroupRef renderingGroupHandGestures_;
+		Ocean::Rendering::GroupRef renderingGroupHandGestures_;
 };
 
 #endif // META_OCEAN_APPLICATION_DEMO_PLATFORM_META_QUEST_OPENXR_HANDGESTURES_QUEST_HAND_GESTURES_H

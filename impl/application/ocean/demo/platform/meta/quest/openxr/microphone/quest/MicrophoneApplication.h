@@ -18,13 +18,11 @@
 #include "ocean/rendering/Transform.h"
 #include "ocean/rendering/VertexSet.h"
 
-using namespace Ocean;
-
 /**
  * Implements a specialization of the VRApplication.
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class MicrophoneApplication : public Platform::Meta::Quest::OpenXR::Application::VRNativeApplication
+class MicrophoneApplication : public Ocean::Platform::Meta::Quest::OpenXR::Application::VRNativeApplication
 {
 	protected:
 
@@ -79,7 +77,7 @@ class MicrophoneApplication : public Platform::Meta::Quest::OpenXR::Application:
 		 * Events function called before the scene is rendered.
 		 * @see VRNativeApplication::onPreRender().
 		 */
-		void onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime) override;
+		void onPreRender(const XrTime& xrPredictedDisplayTime, const Ocean::Timestamp& predictedDisplayTime) override;
 
 		/**
 		 * Updates the rendering information of the microphone spectrum.
@@ -95,16 +93,16 @@ class MicrophoneApplication : public Platform::Meta::Quest::OpenXR::Application:
 	protected:
 
 		/// The rendering Transform node holding the rendering content.
-		Rendering::TransformRef renderingTransform_;
+		Ocean::Rendering::TransformRef renderingTransform_;
 
 		/// The rendering VertexSet object holding the microphone spectrum.
-		Rendering::VertexSetRef renderingVertexSet_;
+		Ocean::Rendering::VertexSetRef renderingVertexSet_;
 
 		/// The indicies of the line strips associated with the vertices.
-		Rendering::LineStripsRef renderingLineStrips_;
+		Ocean::Rendering::LineStripsRef renderingLineStrips_;
 
 		/// The subscription object for the microphone.
-		Platform::Meta::Quest::PlatformSDK::Microphone::ScopedSubscription microphoneSubscription_;
+		Ocean::Platform::Meta::Quest::PlatformSDK::Microphone::ScopedSubscription microphoneSubscription_;
 
 		/// The recenty history of the microphone frequencies.
 		ValuesGroup frequenciesHistory_;
@@ -113,19 +111,19 @@ class MicrophoneApplication : public Platform::Meta::Quest::OpenXR::Application:
 		Values newSample_;
 
 		/// Reusable memory for vertices.
-		Vectors3 reusableVertices_;
+		Ocean::Vectors3 reusableVertices_;
 
 		/// Reusable memory for colors.
-		RGBAColors reusableColorsPerVertex_;
+		Ocean::RGBAColors reusableColorsPerVertex_;
 
 		/// Reusable memory for indices.
-		Rendering::VertexIndexGroups lineIndexGroups_;
+		Ocean::Rendering::VertexIndexGroups lineIndexGroups_;
 
 		/// The counter for microphone samples.
 		size_t sampleCounter_ = 0;
 
 		/// The lock for new microphone samples.
-		Lock lock_;
+		Ocean::Lock lock_;
 };
 
 #endif // OCEAN_META_APPLICATION_DEMO_PLATFORM_META_QUEST_OPENXR_MICROPHONE_OPEN_XR_MICROPHONE_APPLICATION_H

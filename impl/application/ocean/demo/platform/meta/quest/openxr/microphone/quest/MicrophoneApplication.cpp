@@ -17,6 +17,7 @@
 #include "ocean/rendering/Geometry.h"
 #include "ocean/rendering/Scene.h"
 
+using namespace Ocean;
 using namespace Platform::Meta::Quest;
 
 MicrophoneApplication::MicrophoneApplication(struct android_app* androidApp) :
