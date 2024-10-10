@@ -133,6 +133,14 @@ bool FrameFilterBlur::blurMaskRegions8BitPerChannel(uint8_t* image, const uint8_
 			}
 		}
 
+		ocean_assert(pixels != 0);
+		ocean_assert(pixelBoundingBox.isValid());
+
+		if (pixels == 0)
+		{
+			return false;
+		}
+
 		uint8_t averageColors[tChannels];
 
 		for (unsigned int n = 0u; n < tChannels; ++n)
@@ -144,8 +152,6 @@ bool FrameFilterBlur::blurMaskRegions8BitPerChannel(uint8_t* image, const uint8_
 				averageColors[n] = uint8_t(minmax(0, int(averageColors[n]) + RandomI::random(*randomGenerator, -10, 10), 255));
 			}
 		}
-
-		pixels = 0u;
 
 		for (unsigned int y = pixelBoundingBox.top(); y < pixelBoundingBox.bottomEnd(); ++y)
 		{
@@ -160,8 +166,6 @@ bool FrameFilterBlur::blurMaskRegions8BitPerChannel(uint8_t* image, const uint8_
 					{
 						rowImage[x * tChannels + n] = averageColors[n];
 					}
-
-					++pixels;
 				}
 			}
 		}
@@ -175,6 +179,8 @@ bool FrameFilterBlur::blurMaskRegions8BitPerChannel(uint8_t* image, const uint8_
 		// we blend the results with a Gaussian blur
 
 		ocean_assert(maskBlocks.size() == pixelBoundingBoxes.size());
+
+		CV::PixelPositions borderPixels;
 
 		for (size_t n = 0; n < maskBlocks.size(); ++n)
 		{
@@ -192,8 +198,6 @@ bool FrameFilterBlur::blurMaskRegions8BitPerChannel(uint8_t* image, const uint8_
 			}
 
 			Frame blendMask = imageMask.subFrame(extendedBoundingBox.left(), extendedBoundingBox.top(), extendedBoundingBox.width(), extendedBoundingBox.height(), Frame::CM_COPY_REMOVE_PADDING_LAYOUT);
-
-			CV::PixelPositions borderPixels;
 
 			for (unsigned int iteration = 1u; iteration < blurBorder; ++iteration)
 			{
