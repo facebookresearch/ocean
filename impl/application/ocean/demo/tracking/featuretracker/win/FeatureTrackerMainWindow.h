@@ -15,6 +15,8 @@
 #include "ocean/platform/win/ApplicationWindow.h"
 #include "ocean/platform/win/BitmapWindow.h"
 
+using namespace Ocean;
+
 /**
  * This class implements a main window.
  * @ingroup applicationdemotrackingfeaturetrackerwin
