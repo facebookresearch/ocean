@@ -273,8 +273,8 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		/**
 		 * Detects finder patterns of a QR code in a 8 bit grayscale image.
 		 * @param yFrame The 8 bit grayscale frame in which the finder patterns will be detected, must be valid
-		 * @param width The width of the given grayscale frame in pixel, with range [29, infinity)
-		 * @param height The height of the given grayscale frame in pixel, with range [29, infinity)
+		 * @param width The width of the given grayscale frame in pixel, with range [15, infinity)
+		 * @param height The height of the given grayscale frame in pixel, with range [15, infinity)
 		 * @param minimumDistance The minimum distance in pixels that is enforced between any pair of finder patterns, range: [0, infinity), default: 10
 		 * @param paddingElements Optional number of padding elements at the end of each image row, in elements, with range [0, infinity), default: 0
 		 * @param worker Optional worker to distribute the computation
@@ -297,22 +297,22 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		/**
 		 * Detects finder patterns of QR codes in subregion of a given 8 bit grayscale image.
 		 * @param yFrame The 8 bit grayscale frame in which the finder patterns will be detected, must be valid
-		 * @param width The width of the given grayscale frame in pixel, with range [29, infinity)
-		 * @param height The height of the given grayscale frame in pixel, with range [29, infinity)
+		 * @param width The width of the given grayscale frame in pixel, with range [15, infinity)
+		 * @param height The height of the given grayscale frame in pixel, with range [15, infinity)
 		 * @param finderPatterns The resulting finderPatterns, will be added to the end of the vector
 		 * @param multiThreadLock Lock object in case this function is executed in multiple threads concurrently, otherwise nullptr
 		 * @param paddingElements Optional number of padding elements at the end of each image row, in elements, with range [0, infinity)
-		 * @param firstRow The first row to be handled, with range [10, height - 10)
-		 * @param numberRows The number of rows to be handled, with range [1, height - 10 - firstRow]
+		 * @param firstRow The first row to be handled, with range [7, height - 7)
+		 * @param numberRows The number of rows to be handled, with range [1, height - 7 - firstRow]
 		 */
 		static void detectFinderPatternsSubset(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, FinderPatterns* finderPatterns, Lock* multiThreadLock, const unsigned int paddingElements, const unsigned int firstRow, const unsigned int numberRows);
 
 		/**
 		 * Detects finder patterns of QR codes in a single row of an grayscale image.
 		 * @param yFrame The 8 bit grayscale frame in which the finder patterns will be detected, must be valid
-		 * @param width The width of the given grayscale frame in pixel, with range [29, infinity)
-		 * @param height The height of the given grayscale frame in pixel, with range [29, infinity)
-		 * @param y The index of the row in which the finder patterns will be detected, with range [10, height - 11]
+		 * @param width The width of the given grayscale frame in pixel, with range [15, infinity)
+		 * @param height The height of the given grayscale frame in pixel, with range [15, infinity)
+		 * @param y The index of the row in which the finder patterns will be detected, with range [7, height - 8]
 		 * @param finderPatterns The resulting detected finder patterns, will be added to the end of the vector
 		 * @param paddingElements Optional number of padding elements at the end of each image row, in elements, with range [0, infinity)
 		 */
@@ -349,8 +349,8 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		/**
 		 * Performs a check around a given candidate location looking for a correct configuration of light and dark pixels (testing 8 angles each yielding 2 edge points)
 		 * @param yFrame The 8 bit grayscale frame in which the finder pattern candidate will be tested, must be valid
-		 * @param width The width of the given grayscale frame in pixels, range: [29, infinity)
-		 * @param height The height of the given grayscale frame in pixels, range: [29, infinity)
+		 * @param width The width of the given grayscale frame in pixels, range: [15, infinity)
+		 * @param height The height of the given grayscale frame in pixels, range: [15, infinity)
 		 * @param paddingElements The number of padding elements in the given image with range [0, infinity)
 		 * @param xCenter The horizontal location within the frame at which the existence of the finder pattern will be checked, in pixels, with range [0, width - 1]
 		 * @param yCenter The vertical location within the frame at which the existence of the finder pattern will be checked, in pixels, with range [0, height - 1]
@@ -370,8 +370,8 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT FinderPatternDetector
 		/**
 		 * Performs a check for a given candidate location in a specified direction (yielding 2 edge points)
 		 * @param yFrame The 8 bit grayscale frame in which the finder pattern candidate will be tested, must be valid
-		 * @param width The width of the given grayscale frame in pixels, range: [29, infinity)
-		 * @param height The height of the given grayscale frame in pixels, range: [29, infinity)
+		 * @param width The width of the given grayscale frame in pixels, range: [15, infinity)
+		 * @param height The height of the given grayscale frame in pixels, range: [15, infinity)
 		 * @param paddingElements The number of padding elements in the given image with range [0, infinity)
 		 * @param xCenter The horizontal location within the frame at which the existence of the finder pattern will be checked, in pixels, with range [0, width - 1]
 		 * @param yCenter The vertical location within the frame at which the existence of the finder pattern will be checked, in pixels, with range [0, height - 1]

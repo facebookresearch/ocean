@@ -24,7 +24,7 @@ FinderPatterns FinderPatternDetector::detectFinderPatterns(const uint8_t* const 
 	ocean_assert(yFrame != nullptr);
 
 	// Abort early if the image is too small
-	if (width < 21u || height < 21u)
+	if (width < 15u || height < 15u)
 	{
 		return FinderPatterns();
 	}
@@ -35,11 +35,11 @@ FinderPatterns FinderPatternDetector::detectFinderPatterns(const uint8_t* const 
 	if (worker && height >= 600u)
 	{
 		Lock multiThreadLock;
-		worker->executeFunction(Worker::Function::createStatic(&detectFinderPatternsSubset, yFrame, width, height, &finderPatterns, &multiThreadLock, paddingElements, 0u, 0u), 10u, height - 20u, 6u, 7u);
+		worker->executeFunction(Worker::Function::createStatic(&detectFinderPatternsSubset, yFrame, width, height, &finderPatterns, &multiThreadLock, paddingElements, 0u, 0u), 7u, height - 14u, 6u, 7u);
 	}
 	else
 	{
-		detectFinderPatternsSubset(yFrame, width, height, &finderPatterns, nullptr, paddingElements, 10u, height - 20u);
+		detectFinderPatternsSubset(yFrame, width, height, &finderPatterns, nullptr, paddingElements, 7u, height - 14u);
 	}
 
 	// Filter the finder patterns
@@ -83,9 +83,9 @@ FinderPatterns FinderPatternDetector::detectFinderPatterns(const uint8_t* const 
 void FinderPatternDetector::detectFinderPatternsSubset(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, FinderPatterns* finderPatterns, Lock* multiThreadLock, const unsigned int paddingElements, const unsigned int firstRow, const unsigned int numberRows)
 {
 	ocean_assert(yFrame != nullptr);
-	ocean_assert(width >= 21u && height >= 21u);
+	ocean_assert(width >= 15u && height >= 15u);
 	ocean_assert(finderPatterns != nullptr);
-	ocean_assert(firstRow >= 10u && numberRows <= height - 10u);
+	ocean_assert(firstRow >= 7u && numberRows <= height - 14u);
 
 	FinderPatterns localFinderPatterns;
 
@@ -110,8 +110,8 @@ void FinderPatternDetector::detectFinderPatternsSubset(const uint8_t* const yFra
 void FinderPatternDetector::detectFinderPatternInRow(const uint8_t* const yFrame, const unsigned int width, const unsigned int height, const unsigned int y, FinderPatterns& finderPatterns, const unsigned int paddingElements)
 {
 	ocean_assert(yFrame != nullptr);
-	ocean_assert(width >= 29u && height >= 29u);
-	ocean_assert(y >= 10u && y < height - 10u);
+	ocean_assert(width >= 15u && height >= 15u);
+	ocean_assert(y >= 7u && y < height - 7u);
 
 	const unsigned int yFrameStrideElements = width + paddingElements;
 
@@ -884,7 +884,7 @@ bool FinderPatternDetector::refineFinderPatternLocation(const uint8_t* const yFr
 bool FinderPatternDetector::checkFinderPatternInNeighborhood(const uint8_t* const yFrame, const unsigned width, const unsigned height, const unsigned int paddingElements, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int blackSquareSegmentMin, const unsigned int blackSquareSegmentMax, const unsigned int whiteSquareSegmentMin, const unsigned int whiteSquareSegmentMax, const unsigned int centerSegmentMin, const unsigned int centerSegmentMax, Scalar& symmetryScore, Vector2* edgePoints)
 {
 	ocean_assert(yFrame != nullptr);
-	ocean_assert(width >= 29u && height >= 29u);
+	ocean_assert(width >= 15u && height >= 15u);
 	ocean_assert(xCenter < width && yCenter < height);
 	ocean_assert(threshold <= 255u);
 	ocean_assert(edgePoints != nullptr);
