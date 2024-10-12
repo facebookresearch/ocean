@@ -1342,7 +1342,7 @@ bool MicroQRCodeDecoder::decodeMicroQRCode(const std::vector<uint8_t>& modules, 
 
 	std::vector<uint8_t> finalModules;
 
-	if (!decodeModules(modules, version, encodingMode, errorCorrectionCapacity, decodedData, finalModules))
+	if (!decodeModules(modules, version, encodingMode, errorCorrectionCapacity, decodedData, finalModules) || decodedData.empty())
 	{
 		return false;
 	}
@@ -1350,11 +1350,6 @@ bool MicroQRCodeDecoder::decodeMicroQRCode(const std::vector<uint8_t>& modules, 
 	ocean_assert(version >= MicroQRCode::MIN_VERSION && version <= MicroQRCode::MAX_VERSION);
 	ocean_assert(errorCorrectionCapacity != MicroQRCode::ECC_INVALID);
 	ocean_assert(encodingMode != MicroQRCode::EM_INVALID_ENCODING_MODE);
-
-	if (decodedData.empty())
-	{
-		return false;
-	}
 
 	code = MicroQRCode(std::move(decodedData), encodingMode, errorCorrectionCapacity, std::move(finalModules), version);
 	ocean_assert(code.isValid());
