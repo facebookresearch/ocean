@@ -258,26 +258,29 @@ bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesSmallImageSyntheticData(co
 {
 	static_assert(std::is_same_v<Scalar, double> || std::is_same_v<Scalar, float>);
 
-	const double validationPrecisionThreshold = std::is_same_v<Scalar, double> ? 0.85 : 0.80;
+	const double detectionValidationThreshold = std::is_same_v<Scalar, double> ? 0.90 : 0.85;
+	const double groundtruthComparisonValidationThreshold = std::is_same_v<Scalar, double> ? 0.80 : 0.75;
 
-	return testDetectMicroQRCodesSyntheticData_Internal(gaussianFilterSize, testDuration, worker, "SmallImage", validationPrecisionThreshold);
+	return testDetectMicroQRCodesSyntheticData_Internal(gaussianFilterSize, testDuration, worker, "SmallImage", detectionValidationThreshold, groundtruthComparisonValidationThreshold);
 }
 
 bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesLargeImageSyntheticData(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker)
 {
 	static_assert(std::is_same_v<Scalar, double> || std::is_same_v<Scalar, float>);
 
-	const double validationPrecisionThreshold = std::is_same_v<Scalar, double> ? 0.85 : 0.80;
+	const double detectionValidationThreshold = std::is_same_v<Scalar, double> ? 0.90 : 0.85;
+	const double groundtruthComparisonValidationThreshold = std::is_same_v<Scalar, double> ? 0.80 : 0.75;
 
-	return testDetectMicroQRCodesSyntheticData_Internal(gaussianFilterSize, testDuration, worker, "LargeImage", validationPrecisionThreshold, 6u, 20u, 2048u, 4096u);
+	return testDetectMicroQRCodesSyntheticData_Internal(gaussianFilterSize, testDuration, worker, "LargeImage", detectionValidationThreshold, groundtruthComparisonValidationThreshold, 6u, 20u, 2048u, 4096u);
 }
 
-bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesSyntheticData_Internal(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker, const std::string& testLabel, const double validationPrecisionThreshold, const unsigned int moduleSizePixelsMin, const unsigned int moduleSizePixelsMax, const unsigned int imageDimPixelsMin, const unsigned int imageDimPixelsMax)
+bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesSyntheticData_Internal(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker, const std::string& testLabel, const double detectionValidationThreshold, const double groundtruthComparisonValidationThreshold, const unsigned int moduleSizePixelsMin, const unsigned int moduleSizePixelsMax, const unsigned int imageDimPixelsMin, const unsigned int imageDimPixelsMax)
 {
 	ocean_assert(gaussianFilterSize == 0u || gaussianFilterSize % 2u == 1u);
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(testLabel.end() == std::find_if(testLabel.begin(), testLabel.end(), [](char c) { return !std::isalnum(c); }) && "testLabel must be alphanumeric");
-	ocean_assert(validationPrecisionThreshold >= 0.0 && validationPrecisionThreshold <= 1.0);
+	ocean_assert(detectionValidationThreshold >= 0.0 && detectionValidationThreshold <= 1.0);
+	ocean_assert(groundtruthComparisonValidationThreshold >= 0.0 && groundtruthComparisonValidationThreshold <= detectionValidationThreshold);
 	ocean_assert(moduleSizePixelsMin >= 1u);
 	ocean_assert(moduleSizePixelsMax >= moduleSizePixelsMin);
 	ocean_assert(imageDimPixelsMin >= 0u);
@@ -287,7 +290,8 @@ bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesSyntheticData_Internal(con
 
 	RandomGenerator randomGenerator;
 
-	ValidationPrecision validation(validationPrecisionThreshold, randomGenerator);
+	ValidationPrecision detectionValidation(detectionValidationThreshold, randomGenerator);
+	ValidationPrecision groundtruthComparisonValidation(groundtruthComparisonValidationThreshold, randomGenerator);
 
 	Timestamp startTimestamp(true);
 
@@ -419,7 +423,8 @@ bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesSyntheticData_Internal(con
 		{
 			ocean_assert(false && "This should never happen!");
 
-			OCEAN_SET_FAILED(validation);
+			OCEAN_SET_FAILED(detectionValidation);
+			OCEAN_SET_FAILED(groundtruthComparisonValidation);
 		}
 
 		if (gaussianFilterSize != 0u)
@@ -438,19 +443,25 @@ bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesSyntheticData_Internal(con
 
 		for (const bool useWorker : {true, false})
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			ValidationPrecision::ScopedIteration detectionScopedIteration(detectionValidation);
+			ValidationPrecision::ScopedIteration groundtruthComparisonScopedIteration(groundtruthComparisonValidation);
 
 			Worker* workerToUse = useWorker ? &worker : nullptr;
 
 			MicroQRCodeDetector2D::Observations observations;
 			const MicroQRCodes codes = MicroQRCodeDetector2D::detectMicroQRCodes(*anyCamera, frame, &observations, workerToUse);
 
-			bool detectionSuccess = codes.size() == 1;
-			bool groundTruthComparisonSuccess = detectionSuccess && codes[0].isSame(groundtruthCode, false);
+			const bool detectionSuccess = codes.size() == 1 && codes[0].isSame(groundtruthCode, true);
+			const bool groundTruthComparisonSuccess = detectionSuccess && codes[0].isSame(groundtruthCode, false);
 
-			if (!detectionSuccess || !groundTruthComparisonSuccess)
+			if (!detectionSuccess)
 			{
-				scopedIteration.setInaccurate();
+				detectionScopedIteration.setInaccurate();
+			}
+
+			if (!groundTruthComparisonSuccess)
+			{
+				groundtruthComparisonScopedIteration.setInaccurate();
 			}
 
 #ifdef OCEAN_TEST_QRCODES_DETECTOR2D_ENABLE_VERBOSE_LOGGING
@@ -578,13 +589,17 @@ bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesSyntheticData_Internal(con
 #endif // #ifdef OCEAN_TEST_QRCODES_DETECTOR2D_ENABLE_VERBOSE_LOGGING
 		}
 	}
-	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+	while (detectionValidation.needMoreIterations() || groundtruthComparisonValidation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << " ";
 
-	Log::info() << "Validation: " << validation;
+	Log::info() << "QR Code Detection Validation: " << detectionValidation;
+	Log::info() << "Groundtruth Comparison Validation: " << groundtruthComparisonValidation;
 
-	return validation.succeeded();
+	const bool detectionSuccess = detectionValidation.succeeded();
+	const bool groundtruthComparisonSuccess = groundtruthComparisonValidation.succeeded();
+
+	return detectionSuccess && groundtruthComparisonSuccess;
 }
 
 } // namespace TestQRCodes

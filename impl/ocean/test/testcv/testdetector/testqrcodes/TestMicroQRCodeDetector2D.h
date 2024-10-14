@@ -98,7 +98,8 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestMicroQRCodeDetector2D : protecte
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker A worker object
 		 * @param testLable Label specified by caller test function, used in log messages and within generated file names.  Must be alphanumeric.
-		 * @param validationPrecisionThreshold Proportion of Micro QR code detection attempts that must succeed for the test to pass, range: [0, 1]
+		 * @param detectionValidationThreshold Proportion of Micro QR code detection attempts that must succeed for the test to pass, range: [0, 1]
+		 * @param groundtruthComparisonValidationThreshold Proportion of Micro QR code detection attempts that must succeed with exact match to groundtruth for the test to pass, range: [0, detectionValidationThreshold]
 		 * @param moduleSizePixelsMin Minimum module size in pixels, range: [1, infinity)
 		 * @param moduleSizePixelsMax Maximum module size in pixels, range: [moduleSizePixelsMin, infinity)
 		 * @param imageDimPixelsMin Hard limit on how small width or height of generated image can be, in terms of pixels, range: [0, infinity)
@@ -106,7 +107,7 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestMicroQRCodeDetector2D : protecte
 		 * @return True, if succeeded
 		 * @remark Images generated may have width or height greater than `imageDimPixelsMax` if the image needs to be larger to fit the Micro QR code generated due to other parameter values
 		 */
-		static bool testDetectMicroQRCodesSyntheticData_Internal(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker, const std::string& testLabel, const double validationPrecisionThreshold = 0.99, const unsigned int moduleSizePixelsMin = 6u, const unsigned int moduleSizePixelsMax = 8u, const unsigned int imageDimPixelsMin = 0u, const unsigned int imageDimPixelsMax = 720u);
+		static bool testDetectMicroQRCodesSyntheticData_Internal(const unsigned int gaussianFilterSize, const double testDuration, Worker& worker, const std::string& testLabel, const double detectionValidationThreshold, const double groundtruthComparisonValidationThreshold, const unsigned int moduleSizePixelsMin = 6u, const unsigned int moduleSizePixelsMax = 8u, const unsigned int imageDimPixelsMin = 0u, const unsigned int imageDimPixelsMax = 720u);
 };
 
 } // namespace TestQRCodes
