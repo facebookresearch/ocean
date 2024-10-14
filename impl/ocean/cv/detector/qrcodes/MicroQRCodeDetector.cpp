@@ -205,8 +205,11 @@ bool MicroQRCodeDetector::computePosesAndProvisionalVersions(const AnyCamera& an
 
 			Vectors2 imagePoints;
 			imagePoints.reserve(numPoints);
-			imagePoints.push_back(finderPattern.position());
-			imagePoints.insert(imagePoints.end(), finderPattern.corners(), finderPattern.corners() + 4u);
+			imagePoints.emplace_back(finderPattern.position());
+			for (unsigned int i = 0u; i < 4u; i++)
+			{
+				imagePoints.emplace_back(finderPattern.corners()[(corner + i) % 4u]);
+			}
 			imagePoints.insert(imagePoints.end(), horizontalTimingCenters.begin(), horizontalTimingCenters.begin() + numHorizontalTimingModules);
 			imagePoints.insert(imagePoints.end(), verticalTimingCenters.begin(), verticalTimingCenters.begin() + numVerticalTimingModules);
 
