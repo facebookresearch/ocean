@@ -43,6 +43,8 @@ class Device
 			DT_QUEST_2,
 			/// Quest device, version 3.
 			DT_QUEST_3,
+			// Quest device, version 3S.
+			DT_QUEST_3S,
 			/// Quest Pro device.
 			DT_QUEST_PRO,
 

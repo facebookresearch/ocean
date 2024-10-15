@@ -40,6 +40,7 @@ VRControllerVisualizer::VRControllerVisualizer(const Rendering::EngineRef& engin
 
 		case Device::DT_QUEST_2:
 		case Device::DT_QUEST_3:
+		case Device::DT_QUEST_3S:
 		case Device::DT_QUEST_PRO:
 			controllerAim_t_controllerModel_ = Vector3(0, 0, Scalar(0.055));
 			break;

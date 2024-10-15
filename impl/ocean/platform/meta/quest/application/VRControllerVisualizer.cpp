@@ -10,10 +10,10 @@
 #include "ocean/io/Directory.h"
 #include "ocean/io/File.h"
 
-#include "ocean/rendering/AbsoluteTransform.h"
+#include "ocean/rendering/AttributeSet.h"
 #include "ocean/rendering/Cylinder.h"
-#include "ocean/rendering/Manager.h"
-#include "ocean/rendering/Utilities.h"
+#include "ocean/rendering/Geometry.h"
+#include "ocean/rendering/Material.h"
 
 #include "ocean/scenedescription/Manager.h"
 #include "ocean/scenedescription/Scene.h"
@@ -321,8 +321,9 @@ bool VRControllerVisualizer::loadModels(const Device::DeviceType deviceType, con
 			rightRenderModelFile = renderModelDirectory + IO::File("quest2_controller_right.obj");
 			break;
 
-		case Device::DT_QUEST_PRO:
 		case Device::DT_QUEST_3:
+		case Device::DT_QUEST_3S:
+		case Device::DT_QUEST_PRO:
 			leftRenderModelFile = renderModelDirectory + IO::File("quest3_controller_left.obj");
 			rightRenderModelFile = renderModelDirectory + IO::File("quest3_controller_right.obj");
 			break;

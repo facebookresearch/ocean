@@ -50,6 +50,11 @@ Device::DeviceType Device::deviceType()
 		return DT_QUEST_3;
 	}
 
+	if (productModel == "quest 3s")
+	{
+		return DT_QUEST_3S;
+	}
+
 	if (productModel == "quest pro")
 	{
 		return DT_QUEST_PRO;
@@ -99,6 +104,9 @@ std::string Device::deviceName(const DeviceType deviceType)
 
 		case DT_QUEST_3:
 			return std::string("Quest 3");
+
+		case DT_QUEST_3S:
+			return std::string("Quest 3S");
 
 		case DT_QUEST_PRO:
 			return std::string("Quest Pro");
