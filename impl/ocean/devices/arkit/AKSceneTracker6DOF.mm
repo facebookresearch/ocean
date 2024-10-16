@@ -285,7 +285,7 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 
 					// ARKit sometimes provides invalid per-vertex normals, we remove these triangles
 
-					for (size_t n = 0; n < triangleIndices.size(); n += 3)
+					for (size_t n = 0; n < triangleIndices.size(); /*noop*/)
 					{
 						if (Numeric::isNan(perVertexNormals[triangleIndices[n + 0]].x())
 								|| Numeric::isNan(perVertexNormals[triangleIndices[n + 1]].x())
@@ -296,6 +296,10 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 							triangleIndices[n + 2] = triangleIndices[triangleIndices.size() - 1];
 
 							triangleIndices.resize(triangleIndices.size() - 3);
+						}
+						else
+						{
+							n += 3;
 						}
 					}
 
