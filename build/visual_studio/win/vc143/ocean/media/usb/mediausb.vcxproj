@@ -199,11 +199,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\usb\USBLiveVideo.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\media\usb\USBMedium.h" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\io\image\ioimage.vcxproj">
-      <Project>{64ac6979-b5a6-4921-a61c-c4f688c48140}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
