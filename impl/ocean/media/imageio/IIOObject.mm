@@ -408,10 +408,12 @@ Frame IIOObject::loadFrameFromImage(CGImageRef cgImage, bool* containedPremultip
 
 				case FrameType::FORMAT_RGBA32:
 				case FrameType::FORMAT_BGRA32:
+				case FrameType::FORMAT_YUVA32:
 					CV::FrameChannels::premultipliedAlphaToStraightAlpha8BitPerChannel<4u, 3u>(result.data<uint8_t>(), result.width(), result.height(), result.paddingElements());
 					break;
 
 				case FrameType::FORMAT_ARGB32:
+				case FrameType::FORMAT_ABGR32:
 					CV::FrameChannels::premultipliedAlphaToStraightAlpha8BitPerChannel<4u, 0u>(result.data<uint8_t>(), result.width(), result.height(), result.paddingElements());
 					break;
 
