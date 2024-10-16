@@ -358,7 +358,8 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 	bool trackerResult = false;
 
 	performance_.start();
-		trackerResult = oculusTagTracker_.trackTagsStereo(*anyCameras[cameraIndex0], *anyCameras[cameraIndex1], yFrames[0], yFrames[1], HomogenousMatrix4(world_T_device), HomogenousMatrix4(device_T_cameras[0]), HomogenousMatrix4(device_T_cameras[1]), trackedTags);
+	trackerResult = oculusTagTracker_.trackTagsStereo(*anyCameras[cameraIndex0], *anyCameras[cameraIndex1], yFrames[0], yFrames[1], HomogenousMatrix4(world_T_device), HomogenousMatrix4(device_T_cameras[0]), HomogenousMatrix4(device_T_cameras[1]), trackedTags);
+	(void)trackerResult;
 	performance_.stop();
 
 	const OculusTagTracker::TrackedTagMap& trackedTagMap = oculusTagTracker_.trackedTagMap();
