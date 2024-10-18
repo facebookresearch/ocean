@@ -556,7 +556,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 
 		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
 		{
-			while (true)
+			do
 			{
 				const Vector3 randomObjectPoint(*i + Random::vector3(-objectDimension, objectDimension));
 
@@ -577,9 +577,14 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 					break;
 				}
 			}
+			while (startTimestamp + testDuration > Timestamp(true));
 		}
 
-		ocean_assert(objectPoints.size() == perfectObjectPoints.size());
+		if(objectPoints.size() != perfectObjectPoints.size())
+		{
+			Log::warning() << "Failed to generate enough suitable object points";
+			continue;
+		}
 
 		// create outliers
 		for (unsigned int n = 0u; n < numberObjectPoints; ++n)
@@ -2415,7 +2420,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 
 		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
 		{
-			while (true)
+			do
 			{
 				const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(-objectDimension, objectDimension));
 
@@ -2438,6 +2443,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 					break;
 				}
 			}
+			while (startTimestamp + testDuration > Timestamp(true));
 		}
 
 		HomogenousMatrices4 world_T_faultyCameras(world_T_cameras);
@@ -2446,7 +2452,11 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 			world_T_faultyCamera *= HomogenousMatrix4(Random::vector3(-objectDimension, objectDimension) * Scalar(0.1), Random::euler(Numeric::deg2rad(1), Numeric::deg2rad(15)));
 		}
 
-		ocean_assert(faultyObjectPoints.size() == perfectObjectPoints.size());
+		if(faultyObjectPoints.size() != perfectObjectPoints.size())
+		{
+			Log::warning() << "Failed to generate enough suitable object points";
+			continue;
+		}
 
 		for (unsigned int poseIndex = 0u; poseIndex < numberPoses; ++poseIndex)
 		{
@@ -2816,7 +2826,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 
 		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
 		{
-			while (true)
+			do
 			{
 				const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(randomGenerator, -objectDimension, objectDimension));
 
@@ -2848,6 +2858,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 					break;
 				}
 			}
+			while (startTimestamp + testDuration > Timestamp(true));
 		}
 
 		HomogenousMatrices4 world_T_faultyCameras(world_T_cameras);
@@ -2861,7 +2872,11 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 			ocean_assert(world_T_cameras[n].translation() == world_T_faultyCameras[n].translation());
 		}
 
-		ocean_assert(faultyObjectPoints.size() == perfectObjectPoints.size());
+		if(faultyObjectPoints.size() != perfectObjectPoints.size())
+		{
+			Log::warning() << "Failed to generate enough suitable object points";
+			continue;
+		}
 
 		for (unsigned int poseIndex = 0u; poseIndex < numberPoses; ++poseIndex)
 		{
