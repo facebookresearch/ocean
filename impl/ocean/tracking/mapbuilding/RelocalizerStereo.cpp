@@ -54,7 +54,7 @@ bool RelocalizerStereo::relocalize(const AnyCamera& cameraA, const AnyCamera& ca
 	SharedUnifiedDescriptors imagePointDescriptorsA;
 
 	ocean_assert(imageFeaturePointDetectorFunction_);
-	if (!imageFeaturePointDetectorFunction_(cameraA, yFrameA, imagePointsA, imagePointDescriptorsA))
+	if (!imageFeaturePointDetectorFunction_(cameraA, yFrameA, imagePointsA, imagePointDescriptorsA) || imagePointsA.empty())
 	{
 		return false;
 	}
@@ -63,7 +63,7 @@ bool RelocalizerStereo::relocalize(const AnyCamera& cameraA, const AnyCamera& ca
 	SharedUnifiedDescriptors imagePointDescriptorsB;
 
 	ocean_assert(imageFeaturePointDetectorFunction_);
-	if (!imageFeaturePointDetectorFunction_(cameraB, yFrameB, imagePointsB, imagePointDescriptorsB))
+	if (!imageFeaturePointDetectorFunction_(cameraB, yFrameB, imagePointsB, imagePointDescriptorsB) || imagePointsB.empty())
 	{
 		return false;
 	}
