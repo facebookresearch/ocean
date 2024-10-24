@@ -29,7 +29,7 @@ namespace Application
 {
 
 /**
- * @ingroup platformmeta
+ * @ingroup platformmetaquestopenxr
  * @defgroup platformmetaquestopenxrapplication Ocean Platform Meta Quest OpenXR Application Library
  * @{
  * The Ocean Meta Quest OpenXR Application Library provides specific functionalities for Quest applications based on OpenXR.
