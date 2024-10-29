@@ -509,8 +509,30 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 
 		const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
 
+		Vectors3 objectPoints;
+		objectPoints.reserve(perfectObjectPoints.size());
+		Box3 objectVolume(perfectObjectPoints);
+		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);
+
+		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
+		{
+			const Vector3 randomObjectPoint(*i + Random::vector3(-objectDimension, objectDimension));
+			objectPoints.push_back(randomObjectPoint);
+		}
+
+		Vectors3 allVisibleObjectPoints(perfectObjectPoints);
+		allVisibleObjectPoints.insert(allVisibleObjectPoints.end(), objectPoints.begin(), objectPoints.end());
+
 		HomogenousMatrices4 poses;
-		poses.push_back(Utilities::viewPosition(pinholeCamera, perfectObjectPoints, viewDirection0, true));
+		poses.push_back(Utilities::viewPosition(pinholeCamera, allVisibleObjectPoints, viewDirection0, true));
+
+#ifdef OCEAN_DEBUG
+		const HomogenousMatrix4 poseIF(PinholeCamera::standard2InvertedFlipped(poses.back()));
+		for (const Vector3& objectPoint : allVisibleObjectPoints)
+		{
+			ocean_assert((poseIF * objectPoint).z() > 0);
+		}
+#endif // OCEAN_DEBUG
 
 		while (poses.size() < numberPoses)
 		{
@@ -522,12 +544,11 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 			const Scalar angle(Numeric::rad2deg(viewDirection0.angle(newViewDirection)));
 			ocean_assert_and_suppress_unused(Numeric::isInsideRange(5, angle, 85), angle);
 
-			poses.push_back(Utilities::viewPosition(pinholeCamera, perfectObjectPoints, newViewDirection, true));
+			poses.push_back(Utilities::viewPosition(pinholeCamera, allVisibleObjectPoints, newViewDirection, true));
 		}
 
 		Vectors2 imagePoints;
 		Vectors2 perfectImagePoints;
-		Vectors3 objectPoints;
 
 		for (unsigned int p = 0u; p < numberPoses; ++p)
 		{
@@ -546,44 +567,6 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationObjectPoints
 				perfectImagePoints.push_back(imagePoint);
 				imagePoints.push_back(imagePoint + imagePointNoise);
 			}
-		}
-
-		Box3 objectVolume(perfectObjectPoints);
-		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);
-
-		const HomogenousMatrices4 posesIF(PinholeCamera::standard2InvertedFlipped(poses));
-		const Box2 cameraBox(-50, -50, Scalar(pinholeCamera.width()) + Scalar(50), Scalar(pinholeCamera.height()) + Scalar(50));
-
-		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
-		{
-			do
-			{
-				const Vector3 randomObjectPoint(*i + Random::vector3(-objectDimension, objectDimension));
-
-				bool valid = true;
-
-				for (HomogenousMatrices4::const_iterator p = posesIF.begin(); p != posesIF.end(); ++p)
-				{
-					if ((*p * randomObjectPoint).z() <= 0)
-					{
-						valid = false;
-						break;
-					}
-				}
-
-				if (valid)
-				{
-					objectPoints.push_back(randomObjectPoint);
-					break;
-				}
-			}
-			while (startTimestamp + testDuration > Timestamp(true));
-		}
-
-		if(objectPoints.size() != perfectObjectPoints.size())
-		{
-			Log::warning() << "Failed to generate enough suitable object points";
-			continue;
 		}
 
 		// create outliers
@@ -1757,18 +1740,38 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 		const Scalar angle(Numeric::rad2deg(viewDirection0.angle(viewDirection1)));
 		ocean_assert_and_suppress_unused(Numeric::isInsideRange(5, angle, 85), angle);
 
-		const HomogenousMatrix4 pose0(Utilities::viewPosition(pinholeCamera, perfectObjectPoints, viewDirection0, true));
-		const HomogenousMatrix4 pose1(Utilities::viewPosition(pinholeCamera, perfectObjectPoints, viewDirection1, true));
+		Box3 objectVolume(perfectObjectPoints);
+		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.05);
 
+		Vectors3 objectPoints;
+
+		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
+		{
+			const Vector3 randomObjectPoint(*i + Random::vector3(-objectDimension, objectDimension));
+			objectPoints.push_back(randomObjectPoint);
+		}
+
+		Vectors3 allVisibleObjectPoints(perfectObjectPoints);
+		allVisibleObjectPoints.insert(allVisibleObjectPoints.end(), objectPoints.begin(), objectPoints.end());
+
+		const HomogenousMatrix4 pose0(Utilities::viewPosition(pinholeCamera, allVisibleObjectPoints, viewDirection0, true));
+		const HomogenousMatrix4 pose1(Utilities::viewPosition(pinholeCamera, allVisibleObjectPoints, viewDirection1, true));
+
+#ifdef OCEAN_DEBUG
 		const HomogenousMatrix4 poseIF0(PinholeCamera::standard2InvertedFlipped(pose0));
+		const HomogenousMatrix4 poseIF1(PinholeCamera::standard2InvertedFlipped(pose1));
+		for (const Vector3& objectPoint : allVisibleObjectPoints)
+		{
+			ocean_assert((poseIF0 * objectPoint).z() > 0);
+			ocean_assert((poseIF1 * objectPoint).z() > 0);
+		}
+#endif // OCEAN_DEBUG
 
 		Vectors2 imagePoints0;
 		Vectors2 imagePoints1;
 
 		Vectors2 perfectImagePoints0;
 		Vectors2 perfectImagePoints1;
-
-		Vectors3 objectPoints;
 
 		Matrix invertedCovariances0(numberObjectPoints * 2u, 2u);
 		Matrix invertedCovariances1(numberObjectPoints * 2u, 2u);
@@ -1832,36 +1835,6 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 		const Quaternion faultyRotation1(pose1.rotation() * errorRotation1);
 
 		const HomogenousMatrix4 faultyPose1(faultyTranslation1, faultyRotation1);
-		const HomogenousMatrix4 faultyPoseIF1(PinholeCamera::standard2InvertedFlipped(faultyPose1));
-
-		Box3 objectVolume(perfectObjectPoints);
-		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.05);
-		const Box2 cameraBox(-50, -50, Scalar(pinholeCamera.width()) + Scalar(50), Scalar(pinholeCamera.height()) + Scalar(50));
-
-		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
-		{
-			unsigned int randomSteps = 0u;
-
-			while (randomSteps++ < 100u)
-			{
-				const Vector3 randomObjectPoint(*i + Random::vector3(-objectDimension, objectDimension));
-
-				if ((poseIF0 * randomObjectPoint).z() <= 0)
-					continue;
-
-				if ((faultyPoseIF1 * randomObjectPoint).z() <= 0)
-					continue;
-
-				objectPoints.push_back(randomObjectPoint);
-				break;
-			}
-
-			if (randomSteps >= 100u)
-				break;
-		}
-
-		if (objectPoints.size() != perfectObjectPoints.size())
-			continue;
 
 		ocean_assert(objectPoints.size() == perfectObjectPoints.size());
 
@@ -2067,18 +2040,38 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 		const Scalar angle(Numeric::rad2deg(viewDirection0.angle(viewDirection1)));
 		ocean_assert_and_suppress_unused(Numeric::isInsideRange(5, angle, 85), angle);
 
-		const HomogenousMatrix4 pose0(Utilities::viewPosition(pinholeCamera, perfectObjectPoints, viewDirection0, true));
-		const HomogenousMatrix4 pose1(Utilities::viewPosition(pinholeCamera, perfectObjectPoints, viewDirection1, true));
+		Box3 objectVolume(perfectObjectPoints);
+		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);
 
+		Vectors3 objectPoints;
+
+		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
+		{
+			const Vector3 randomObjectPoint(*i + Random::vector3(-objectDimension, objectDimension));
+			objectPoints.push_back(randomObjectPoint);
+		}
+
+		Vectors3 allVisibleObjectPoints(perfectObjectPoints);
+		allVisibleObjectPoints.insert(allVisibleObjectPoints.end(), objectPoints.begin(), objectPoints.end());
+
+		const HomogenousMatrix4 pose0(Utilities::viewPosition(pinholeCamera, allVisibleObjectPoints, viewDirection0, true));
+		const HomogenousMatrix4 pose1(Utilities::viewPosition(pinholeCamera, allVisibleObjectPoints, viewDirection1, true));
+
+#ifdef OCEAN_DEBUG
 		const HomogenousMatrix4 poseIF0(PinholeCamera::standard2InvertedFlipped(pose0));
+		const HomogenousMatrix4 poseIF1(PinholeCamera::standard2InvertedFlipped(pose1));
+		for (const Vector3& objectPoint : allVisibleObjectPoints)
+		{
+			ocean_assert((poseIF0 * objectPoint).z() > 0);
+			ocean_assert((poseIF1 * objectPoint).z() > 0);
+		}
+#endif // OCEAN_DEBUG
 
 		Vectors2 imagePoints0;
 		Vectors2 imagePoints1;
 
 		Vectors2 perfectImagePoints0;
 		Vectors2 perfectImagePoints1;
-
-		Vectors3 objectPoints;
 
 		Matrix invertedCovariances0(numberObjectPoints * 2u, 2u);
 		Matrix invertedCovariances1(numberObjectPoints * 2u, 2u);
@@ -2150,39 +2143,6 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 		const Quaternion faultyRotation1(pose1.rotation() * errorRotation1);
 
 		const HomogenousMatrix4 faultyPose1(faultyTranslation1, faultyRotation1);
-		const HomogenousMatrix4 faultyPoseIF1(PinholeCamera::standard2InvertedFlipped(faultyPose1));
-
-		Box3 objectVolume(perfectObjectPoints);
-		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);
-		const Box2 cameraBox(-50, -50, Scalar(pinholeCamera.width()) + Scalar(50), Scalar(pinholeCamera.height()) + Scalar(50));
-
-
-		for (Vectors3::const_iterator i = perfectObjectPoints.begin(); i != perfectObjectPoints.end(); ++i)
-		{
-			unsigned int randomSteps = 0u;
-
-			while (randomSteps++ < 100u)
-			{
-				const Vector3 randomObjectPoint(*i + Random::vector3(-objectDimension, objectDimension));
-
-				if ((poseIF0 * randomObjectPoint).z() <= 0)
-					continue;
-
-				if ((faultyPoseIF1 * randomObjectPoint).z() <= 0)
-					continue;
-
-				objectPoints.push_back(randomObjectPoint);
-				break;
-			}
-
-			if (randomSteps >= 100u)
-				break;
-		}
-
-		if (objectPoints.size() != perfectObjectPoints.size())
-			continue;
-
-		ocean_assert(objectPoints.size() == perfectObjectPoints.size());
 
 		const IndexSet32 outlierSet(Utilities::randomIndices(numberObjectPoints, numberOutliers));
 		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
@@ -2372,8 +2332,22 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 
 		const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
 
+		Box3 objectVolume(perfectObjectPoints);
+		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);		
+		Vectors3 faultyObjectPoints;
+		faultyObjectPoints.reserve(perfectObjectPoints.size());
+
+		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
+		{
+			const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(-objectDimension, objectDimension));
+			faultyObjectPoints.push_back(randomObjectPoint);
+		}
+
+		Vectors3 allVisibleObjectPoints(perfectObjectPoints);
+		allVisibleObjectPoints.insert(allVisibleObjectPoints.end(), faultyObjectPoints.begin(), faultyObjectPoints.end());
+
 		HomogenousMatrices4 world_T_cameras;
-		world_T_cameras.emplace_back(Utilities::viewPosition(*camera, perfectObjectPoints, viewDirection0));
+		world_T_cameras.emplace_back(Utilities::viewPosition(*camera, allVisibleObjectPoints, viewDirection0));
 
 		while (world_T_cameras.size() < numberPoses)
 		{
@@ -2385,7 +2359,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 			const Scalar angle(Numeric::rad2deg(viewDirection0.angle(newViewDirection)));
 			ocean_assert_and_suppress_unused(Numeric::isInsideRange(5, angle, 85), angle);
 
-			world_T_cameras.emplace_back(Utilities::viewPosition(*camera, perfectObjectPoints, newViewDirection, false));
+			world_T_cameras.emplace_back(Utilities::viewPosition(*camera, allVisibleObjectPoints, newViewDirection, false));
 		}
 
 		Vectors2 imagePoints;
@@ -2410,52 +2384,24 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 			}
 		}
 
-		Box3 objectVolume(perfectObjectPoints);
-		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);
-
 		const HomogenousMatrices4 flippedCameras_T_world(PinholeCamera::standard2InvertedFlipped(world_T_cameras));
 
-		Vectors3 faultyObjectPoints;
-		faultyObjectPoints.reserve(perfectObjectPoints.size());
-
-		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
+#ifdef OCEAN_DEBUG
+		for (const HomogenousMatrix4& flippedCamera_T_world : flippedCameras_T_world)
 		{
-			do
+			for (const Vector3& objectPoint : allVisibleObjectPoints)
 			{
-				const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(-objectDimension, objectDimension));
-
-				bool valid = true;
-
-				for (const HomogenousMatrix4& flippedCamera_T_world : flippedCameras_T_world)
-				{
-					const Vector2 projectedRandomObjectPoint(camera->projectToImageIF(flippedCamera_T_world, randomObjectPoint));
-
-					if (!camera->isInside(projectedRandomObjectPoint, -50) || !AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, randomObjectPoint))
-					{
-						valid = false;
-						break;
-					}
-				}
-
-				if (valid)
-				{
-					faultyObjectPoints.emplace_back(randomObjectPoint);
-					break;
-				}
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint));
+				const Vector2 projectedObjectPoint(camera->projectToImageIF(flippedCamera_T_world, objectPoint));
+				ocean_assert(camera->isInside(projectedObjectPoint, -50));
 			}
-			while (startTimestamp + testDuration > Timestamp(true));
 		}
+#endif // OCEAN_DEBUG
 
 		HomogenousMatrices4 world_T_faultyCameras(world_T_cameras);
 		for (HomogenousMatrix4& world_T_faultyCamera : world_T_faultyCameras)
 		{
 			world_T_faultyCamera *= HomogenousMatrix4(Random::vector3(-objectDimension, objectDimension) * Scalar(0.1), Random::euler(Numeric::deg2rad(1), Numeric::deg2rad(15)));
-		}
-
-		if(faultyObjectPoints.size() != perfectObjectPoints.size())
-		{
-			Log::warning() << "Failed to generate enough suitable object points";
-			continue;
 		}
 
 		for (unsigned int poseIndex = 0u; poseIndex < numberPoses; ++poseIndex)
@@ -2769,8 +2715,22 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 
 		const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints, &randomGenerator));
 
+		Box3 objectVolume(perfectObjectPoints);
+		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);
+		Vectors3 faultyObjectPoints;
+		faultyObjectPoints.reserve(perfectObjectPoints.size());
+
+		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
+		{
+			const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(randomGenerator, -objectDimension, objectDimension));
+			faultyObjectPoints.push_back(randomObjectPoint);
+		}
+
+		Vectors3 allVisibleObjectPoints(perfectObjectPoints);
+		allVisibleObjectPoints.insert(allVisibleObjectPoints.end(), faultyObjectPoints.begin(), faultyObjectPoints.end());
+
 		HomogenousMatrices4 world_T_cameras;
-		world_T_cameras.emplace_back(Utilities::viewPosition(*cameras.back(), perfectObjectPoints, viewDirection0));
+		world_T_cameras.emplace_back(Utilities::viewPosition(*cameras.back(), allVisibleObjectPoints, viewDirection0));
 
 		while (world_T_cameras.size() < numberPoses)
 		{
@@ -2791,8 +2751,27 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 			const Scalar angle(Numeric::rad2deg(viewDirection0.angle(newViewDirection)));
 			ocean_assert_and_suppress_unused(Numeric::isInsideRange(5, angle, 85), angle);
 
-			world_T_cameras.emplace_back(Utilities::viewPosition(*cameras.back(), perfectObjectPoints, newViewDirection, false));
+			world_T_cameras.emplace_back(Utilities::viewPosition(*cameras.back(), allVisibleObjectPoints, newViewDirection, false));
 		}
+
+#ifdef OCEAN_DEBUG
+		const HomogenousMatrices4 flippedCameras_T_world(PinholeCamera::standard2InvertedFlipped(world_T_cameras));
+
+		for (const Vector3& objectPoint : allVisibleObjectPoints)
+		{
+			for (size_t p = 0u; p < flippedCameras_T_world.size(); ++p)
+			{
+				const SharedAnyCamera& camera = cameras[p];
+				const HomogenousMatrix4 flippedCamera_T_world = flippedCameras_T_world[p];
+
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint));
+
+				const Vector2 projectedObjectPoint(camera->projectToImageIF(flippedCameras_T_world[p], objectPoint));
+
+				ocean_assert(camera->isInside(projectedObjectPoint, -50));
+			}
+		}
+#endif // OCEAN_DEBUG
 
 		Vectors2 imagePoints;
 		Vectors2 perfectImagePoints;
@@ -2816,51 +2795,6 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 			}
 		}
 
-		Box3 objectVolume(perfectObjectPoints);
-		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);
-
-		const HomogenousMatrices4 flippedCameras_T_world(PinholeCamera::standard2InvertedFlipped(world_T_cameras));
-
-		Vectors3 faultyObjectPoints;
-		faultyObjectPoints.reserve(perfectObjectPoints.size());
-
-		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
-		{
-			do
-			{
-				const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(randomGenerator, -objectDimension, objectDimension));
-
-				bool valid = true;
-
-				for (size_t p = 0u; p < flippedCameras_T_world.size(); ++p)
-				{
-					const SharedAnyCamera& camera = cameras[p];
-					const HomogenousMatrix4 flippedCamera_T_world = flippedCameras_T_world[p];
-
-					if (!AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, randomObjectPoint))
-					{
-						valid = false;
-						break;
-					}
-
-					const Vector2 projectedRandomObjectPoint(camera->projectToImageIF(flippedCameras_T_world[p], randomObjectPoint));
-
-					if (!camera->isInside(projectedRandomObjectPoint, -50))
-					{
-						valid = false;
-						break;
-					}
-				}
-
-				if (valid)
-				{
-					faultyObjectPoints.emplace_back(randomObjectPoint);
-					break;
-				}
-			}
-			while (startTimestamp + testDuration > Timestamp(true));
-		}
-
 		HomogenousMatrices4 world_T_faultyCameras(world_T_cameras);
 		for (HomogenousMatrix4& world_T_faultyCamera : world_T_faultyCameras)
 		{
@@ -2870,12 +2804,6 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationa
 		for (size_t n = 0; n < world_T_cameras.size(); ++n)
 		{
 			ocean_assert(world_T_cameras[n].translation() == world_T_faultyCameras[n].translation());
-		}
-
-		if(faultyObjectPoints.size() != perfectObjectPoints.size())
-		{
-			Log::warning() << "Failed to generate enough suitable object points";
-			continue;
 		}
 
 		for (unsigned int poseIndex = 0u; poseIndex < numberPoses; ++poseIndex)
