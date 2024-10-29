@@ -26,6 +26,61 @@ namespace Quest
 namespace OpenXR
 {
 
+Passthrough::ScopedState::ScopedState(Passthrough& passthrough)
+{
+	if (passthrough.isValid())
+	{
+		passthrough_ = &passthrough;
+
+		wasRunning_ = passthrough.isStarted();
+	}
+}
+
+Passthrough::ScopedState::ScopedState(ScopedState&& scopedState)
+{
+	*this = std::move(scopedState);
+}
+
+Passthrough::ScopedState::~ScopedState()
+{
+	release();
+}
+
+void Passthrough::ScopedState::release()
+{
+	if (passthrough_ != nullptr)
+	{
+		if (wasRunning_)
+		{
+			passthrough_->start();
+		}
+		else
+		{
+			passthrough_->pause();
+		}
+
+		passthrough_ = nullptr;
+	}
+
+	wasRunning_ = false;
+}
+
+Passthrough::ScopedState& Passthrough::ScopedState::operator=(ScopedState&& scopedState)
+{
+	if (this != &scopedState)
+	{
+		release();
+
+		passthrough_ = scopedState.passthrough_;
+		scopedState.passthrough_ = nullptr;
+
+		wasRunning_ = scopedState.wasRunning_;
+		scopedState.wasRunning_ = false;
+	}
+
+	return *this;
+}
+
 Passthrough::~Passthrough()
 {
 	release();

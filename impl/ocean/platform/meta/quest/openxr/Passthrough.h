@@ -41,6 +41,77 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT Passthrough final
 		 */
 		typedef std::unordered_set<std::string> StringSet;
 
+		/**
+		 * This class implements a scoped state object allowing to reset all passthrough states of a visualizer.
+		 * The state can be stored locally or states can be pushed onto a stack.
+		 * @see pushState(), popState().
+		 */
+		class ScopedState
+		{
+			public:
+
+				/**
+				 * Default constructor.
+				 */
+				ScopedState() = default;
+
+				/**
+				 * Creates a new state object.
+				 * @param passthrough The visualizer to which this new object belongs
+				 */
+				ScopedState(Passthrough& passthrough);
+
+				/**
+				 * Move constructor.
+				 * @param scopedState The state object to be moved
+				 */
+				ScopedState(ScopedState&& scopedState);
+
+				/**
+				 * Destructs this object and releases the state.
+				 */
+				~ScopedState();
+
+				/**
+				 * Explicitly releases this state.
+				 * The properties of the owning visualizer will be reset to the situation when the state was created.
+				 */
+				void release();
+
+				/**
+				 * Move operator.
+				 * @param scopedState The state object to be moved
+				 * @return Reference to this object
+				 */
+				ScopedState& operator=(ScopedState&& scopedState);
+
+			protected:
+
+				/**
+				 * Disabled copy constructor.
+				 */
+				ScopedState(const ScopedState&) = delete;
+
+				/**
+				 * Disabled assign operator.
+				 * @return The reference to this object
+				 */
+				ScopedState& operator=(const ScopedState&) = delete;
+
+			protected:
+
+				/// The visualizer to which this state object belongs.
+				Passthrough* passthrough_ = nullptr;
+
+				/// True, if the passthrough service was actively running when this object was created.
+				bool wasRunning_ = false;
+		};
+
+		/**
+		 * Definition of a vector holding state objects.
+		 */
+		typedef std::vector<ScopedState> ScopedStates;
+
 	public:
 
 		/**
@@ -118,6 +189,18 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT Passthrough final
 		inline bool isValid() const;
 
 		/**
+		 * Pushes a new configuration state to the stack.
+		 * Each push needs to be balanced with a pop.
+		 * @see popState().
+		 */
+		inline void pushState();
+
+		/**
+		 * Pops the most recent state from the stack and resets the visualizer's configuration accordingly.
+		 */
+		inline void popState();
+
+		/**
 		 * Move operator.
 		 * @param passthrough The object to be moved
 		 * @return Reference to this object
@@ -184,6 +267,9 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT Passthrough final
 		/// True, if passthrough is currently started.
 		bool isStarted_ = false;
 
+		/// A stack of visualization states.
+		ScopedStates stateStack_;
+
 		/// The lock object.
 		mutable Lock lock_;
 };
@@ -215,6 +301,22 @@ inline bool Passthrough::isValid() const
 	const ScopedLock scopedLock(lock_);
 
 	return xrInstance_ != XR_NULL_HANDLE;
+}
+
+inline void Passthrough::pushState()
+{
+	const ScopedLock scopedLock(lock_);
+
+	stateStack_.emplace_back(*this);
+}
+
+inline void Passthrough::popState()
+{
+	const ScopedLock scopedLock(lock_);
+
+	ocean_assert(!stateStack_.empty());
+
+	stateStack_.pop_back();
 }
 
 }
