@@ -117,7 +117,7 @@ void VarianceMainWindow::onFrame(const Frame& frame)
 	}
 
 	Frames separatedFrames;
-	if (!CV::FrameChannels::Comfort::separateTo1Channel(frame, separatedFrames, FrameType::FORMAT_Y8) || separatedFrames.size() != 3)
+	if (!CV::FrameChannels::Comfort::separateTo1Channel(yuvFrame, separatedFrames, FrameType::FORMAT_Y8) || separatedFrames.size() != 3)
 	{
 		ocean_assert(false && "This should never happen!");
 		return;
