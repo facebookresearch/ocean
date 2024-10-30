@@ -1762,8 +1762,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 		const HomogenousMatrix4 poseIF1(PinholeCamera::standard2InvertedFlipped(pose1));
 		for (const Vector3& objectPoint : allVisibleObjectPoints)
 		{
-			ocean_assert((poseIF0 * objectPoint).z() > 0);
-			ocean_assert((poseIF1 * objectPoint).z() > 0);
+			ocean_assert(PinholeCamera::isObjectPointInFrontIF(poseIF0, objectPoint));
+			ocean_assert(PinholeCamera::isObjectPointInFrontIF(poseIF1, objectPoint));
 		}
 #endif // OCEAN_DEBUG
 
@@ -2062,8 +2062,8 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationTwoPosesObje
 		const HomogenousMatrix4 poseIF1(PinholeCamera::standard2InvertedFlipped(pose1));
 		for (const Vector3& objectPoint : allVisibleObjectPoints)
 		{
-			ocean_assert((poseIF0 * objectPoint).z() > 0);
-			ocean_assert((poseIF1 * objectPoint).z() > 0);
+			ocean_assert(PinholeCamera::isObjectPointInFrontIF(poseIF0, objectPoint));
+			ocean_assert(PinholeCamera::isObjectPointInFrontIF(poseIF1, objectPoint));
 		}
 #endif // OCEAN_DEBUG
 
@@ -2359,7 +2359,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 			const Scalar angle(Numeric::rad2deg(viewDirection0.angle(newViewDirection)));
 			ocean_assert_and_suppress_unused(Numeric::isInsideRange(5, angle, 85), angle);
 
-			world_T_cameras.emplace_back(Utilities::viewPosition(*camera, allVisibleObjectPoints, newViewDirection, false));
+			world_T_cameras.emplace_back(Utilities::viewPosition(*camera, allVisibleObjectPoints, newViewDirection, true));
 		}
 
 		Vectors2 imagePoints;
