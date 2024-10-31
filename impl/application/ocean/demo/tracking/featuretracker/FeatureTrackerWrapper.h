@@ -10,6 +10,8 @@
 
 #include "application/ocean/demo/tracking/ApplicationDemoTracking.h"
 
+using namespace Ocean;
+
 #include "ocean/base/CommandArguments.h"
 #include "ocean/base/HighPerformanceTimer.h"
 #include "ocean/base/Timestamp.h"
