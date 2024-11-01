@@ -95,15 +95,16 @@ class ValidationPrecision
 		/**
 		 * Creates a new precision-based validation object with specified threshold.
 		 * @param threshold The necessary percent of accurate iterations necessary for a successful verification, with range (0, 1]
+		 * @param minimumIterations The minimum number of iterations necessary for a successful verification, with range [1, infinity)
 		 */
-		explicit inline ValidationPrecision(const double threshold);
+		explicit inline ValidationPrecision(const double threshold, const unsigned int minimumIterations = 1u);
 
 		/**
 		 * Creates a new validation object associated with a random generator, by default the verified has succeeded.
 		 * @param threshold The necessary percent of accurate iterations necessary for a successful verification, with range (0, 1]
 		 * @param randomGenerator The random generator which will be used during verification
 		 */
-		inline ValidationPrecision(const double threshold, RandomGenerator& randomGenerator);
+		inline ValidationPrecision(const double threshold, RandomGenerator& randomGenerator, const unsigned int minimumIterations = 1u);
 
 		/**
 		 * Destructs this validation object.
@@ -262,7 +263,7 @@ inline void ValidationPrecision::ScopedIteration::setInaccurate(const T& expecte
 	}
 }
 
-inline ValidationPrecision::ValidationPrecision(const double threshold)
+inline ValidationPrecision::ValidationPrecision(const double threshold, const unsigned int minimumIterations)
 {
 	ocean_assert(threshold > 0.0 && threshold <= 1.0);
 
@@ -276,7 +277,7 @@ inline ValidationPrecision::ValidationPrecision(const double threshold)
 		const double idealIterations = 1.0 / failureRate;
 
 		ocean_assert(idealIterations <= 1000000000u);
-		necessaryIterations_ = std::max(1u, (unsigned int)(std::ceil(idealIterations) * 2.0));
+		necessaryIterations_ = std::max(minimumIterations, (unsigned int)(std::ceil(idealIterations) * 2.0));
 	}
 	else
 	{
@@ -284,8 +285,8 @@ inline ValidationPrecision::ValidationPrecision(const double threshold)
 	}
 }
 
-inline ValidationPrecision::ValidationPrecision(const double threshold, RandomGenerator& randomGenerator) :
-	ValidationPrecision(threshold)
+inline ValidationPrecision::ValidationPrecision(const double threshold, RandomGenerator& randomGenerator, const unsigned int minimumIterations) :
+	ValidationPrecision(threshold, minimumIterations)
 {
 	randomGenerator_ = &randomGenerator;
 }

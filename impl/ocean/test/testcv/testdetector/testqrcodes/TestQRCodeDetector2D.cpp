@@ -290,8 +290,8 @@ bool TestQRCodeDetector2D::testDetectQRCodesSyntheticData_Internal(const unsigne
 
 	RandomGenerator randomGenerator;
 
-	ValidationPrecision detectionValidation(detectionValidationThreshold, randomGenerator);
-	ValidationPrecision groundtruthComparisonValidation(groundtruthComparisonValidationThreshold, randomGenerator);
+	ValidationPrecision detectionValidation(detectionValidationThreshold, randomGenerator, 50u);
+	ValidationPrecision groundtruthComparisonValidation(groundtruthComparisonValidationThreshold, randomGenerator, 50u);
 
 	Timestamp startTimestamp(true);
 
