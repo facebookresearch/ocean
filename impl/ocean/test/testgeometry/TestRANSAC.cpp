@@ -687,7 +687,7 @@ bool TestRANSAC::testP3PZoom(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
