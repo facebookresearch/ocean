@@ -175,6 +175,31 @@ void AKWorldTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 			metadata["ambientIntensity"] = Value(arFrame.lightEstimate.ambientIntensity);
 		}
 
+		if (@available(iOS 16, *))
+		{
+			const id exposureBiasValue = arFrame.exifData[@"ExposureBiasValue"];
+			if ([exposureBiasValue isKindOfClass:[NSNumber class]])
+			{
+				metadata["exposureBiasValue"] = Value([exposureBiasValue doubleValue]);
+			}
+
+			const id exposureTime = arFrame.exifData[@"ExposureTime"];
+			if ([exposureTime isKindOfClass:[NSNumber class]])
+			{
+				metadata["exposureTime"] = Value([exposureTime doubleValue]);
+			}
+
+			const id isoSpeedRatings = arFrame.exifData[@"ISOSpeedRatings"];
+			if ([isoSpeedRatings isKindOfClass:[NSArray class]] && [isoSpeedRatings count] > 0)
+			{
+				const id isoSpeedRating0 = [arFrame.exifData[@"ISOSpeedRatings"] objectAtIndex:0];
+				if ([isoSpeedRating0 isKindOfClass:[NSNumber class]])
+				{
+					metadata["isoSpeedRating"] = Value([isoSpeedRating0 doubleValue]);
+				}
+			}
+		}
+
 		postNewSample(SampleRef(new Tracker6DOFSample(timestamp, RS_DEVICE_IN_OBJECT, std::move(sampleObjectIds), std::move(sampleOrientations), std::move(samplePositions), std::move(metadata))));
 	}
 	else
