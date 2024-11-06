@@ -257,7 +257,7 @@ class OCEAN_CV_EXPORT FrameConverterRGB24 : public FrameConverter
 		static inline void convertRGB24FullRangeToY_U_V12LimitedRange(const uint8_t* source, uint8_t* yTarget, uint8_t* uTarget, uint8_t* vTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uTargetPaddingElements, const unsigned int vTargetPaddingElements, Worker* worker = nullptr);
 
 		/**
-		 * Converts a full range RGB24 frame to a full range Y_V_U12 frame with 7-bit precision using BT.601.
+		 * Converts a full range RGB24 frame to a limited range Y_V_U12 frame with 7-bit precision using BT.601.
 		 * <pre>
 		 * RGB input value range:  [ 0, 255]x[ 0, 255]x[0 , 255]
 		 * YVU input value range:  [16, 235]x[16, 240]x[16, 240]
