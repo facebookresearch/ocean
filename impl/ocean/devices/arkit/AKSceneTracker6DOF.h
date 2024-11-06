@@ -11,6 +11,8 @@
 #include "ocean/devices/arkit/ARKit.h"
 #include "ocean/devices/arkit/AKDevice.h"
 
+#include "ocean/base/StringApple.h"
+
 #include "ocean/devices/SceneTracker6DOF.h"
 #include "ocean/devices/VisualTracker.h"
 
@@ -40,6 +42,24 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKSceneTracker6DOF :
 		 * Definition of an unordered map mapping anchor identifier strings to unique ids.
 		 */
 		using IdentifierMap = std::unordered_map<std::string, Index32>;
+
+		/**
+		 * Helper class implementing a hash function for ARMeshAnchor.
+		 */
+		struct ARMeshAnchorHash
+		{
+			/**
+			 * Hash function returning a hash value for an ARMeshAnchor object
+			 * @param anchor The anchor for which the hash will be returned
+			 * @return The resulting hash value
+			 */
+			inline size_t operator()(const ARMeshAnchor* anchor) const;
+		};
+
+		/**
+		 * Definition of an unordered set holding ARMeshAnchor objects.
+		 */
+		using ARMeshAnchorSet = std::unordered_set<ARMeshAnchor*, ARMeshAnchorHash>;
 
 	public:
 
@@ -91,6 +111,18 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKSceneTracker6DOF :
 		 * @param metadata The metadata of the sample
 		 */
 		void onNewSample(const HomogenousMatrix4& world_T_camera, SharedSceneElements&& sceneElements, const Timestamp& timestamp, Metadata&& metadata);
+
+		/**
+		 * Event function for added anchors.
+		 * @see AKDevice::onAddedAnchors().
+		 */
+		void onAddedAnchors(const ARAnchors& anchors) override;
+
+		/**
+		 * Event function for updated anchors.
+		 * @see AKDevice::onUpdateAnchors().
+		 */
+		void onUpdateAnchors(const ARAnchors& anchors) override;
 
 		/**
 		 * Returns the name of this tracker.
@@ -151,9 +183,14 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKSceneTracker6DOF :
 		/// The counter for unique mesh ids.
 		unsigned int meshIdCounter_ = 0u;
 
-		/// The number of triangles each mesh currently has.
-		std::vector<size_t> numberTriangles_;
+		/// The set holding all updated ARMeshAnchor objects.
+		ARMeshAnchorSet updatedMeshAnchors_;
 };
+
+inline size_t AKSceneTracker6DOF::ARMeshAnchorHash::operator()(const ARMeshAnchor* anchor) const
+{
+	return std::hash<std::string>()(StringApple::toUTF8(anchor.identifier.UUIDString));
+}
 
 inline std::string AKSceneTracker6DOF::deviceNameAKSceneTracker6DOF()
 {

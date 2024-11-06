@@ -199,8 +199,6 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 
 		// first, we check whether any mesh as changed, unfortuately ARKit does not provide some kind of mesh version, so that we use the number of triangles to decided whether the mesh has been updated
 
-		bool meshHasChanged = false;
-
 		for (ARAnchor* anchor in arFrame.anchors)
 		{
 			if (![anchor isKindOfClass:[ARMeshAnchor class]])
@@ -210,106 +208,73 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 
 			ARMeshAnchor* meshAnchor = (ARMeshAnchor*)(anchor);
 
+			if (updatedMeshAnchors_.find(meshAnchor) == updatedMeshAnchors_.cend())
+			{
+				continue;
+			}
+
 			const std::string meshIdentifier = StringApple::toUTF8(meshAnchor.identifier.UUIDString);
 
-			const IdentifierMap::const_iterator iMesh = identifierMap_.find(meshIdentifier);
+			IdentifierMap::iterator iMesh = identifierMap_.find(meshIdentifier);
 			if (iMesh == identifierMap_.cend())
 			{
-				meshHasChanged = true;
-				break;
+				iMesh = identifierMap_.insert(std::make_pair(meshIdentifier, ++meshIdCounter_)).first;
 			}
-			else
-			{
-				ARMeshGeometry* meshGeometry = meshAnchor.geometry;
+			const Index32 meshId = iMesh->second;
 
-				ocean_assert(iMesh->second < numberTriangles_.size());
-				if (meshGeometry.faces.count != numberTriangles_[iMesh->second])
+			const simd_float4x4 simdTransform = meshAnchor.transform;
+			HomogenousMatrixF4 world_T_mesh;
+
+			memcpy(world_T_mesh.data() +  0, &simdTransform.columns[0], sizeof(float) * 4);
+			memcpy(world_T_mesh.data() +  4, &simdTransform.columns[1], sizeof(float) * 4);
+			memcpy(world_T_mesh.data() +  8, &simdTransform.columns[2], sizeof(float) * 4);
+			memcpy(world_T_mesh.data() + 12, &simdTransform.columns[3], sizeof(float) * 4);
+
+			ARMeshGeometry* meshGeometry = meshAnchor.geometry;
+
+			Vectors3 vertices;
+			Vectors3 perVertexNormals;
+			Indices32 triangleIndices;
+
+			if (extractVectors3(meshGeometry.vertices, vertices) && extractVectors3(meshGeometry.normals, perVertexNormals) && extractIndices(meshGeometry.faces, triangleIndices))
+			{
+#ifdef OCEAN_DEBUG
+				ocean_assert(vertices.size() == perVertexNormals.size());
+				for (const Index32& index : triangleIndices)
 				{
-					meshHasChanged = true;
-					break;
+					ocean_assert(index < vertices.size());
 				}
-			}
-		}
+#endif
 
-		if (meshHasChanged)
-		{
-			for (ARAnchor* anchor in arFrame.anchors)
-			{
-				if (![anchor isKindOfClass:[ARMeshAnchor class]])
+				ocean_assert(triangleIndices.size() % 3 == 0);
+				if (triangleIndices.empty() || triangleIndices.size() % 3 != 0)
 				{
 					continue;
 				}
 
-				ARMeshAnchor* meshAnchor = (ARMeshAnchor*)(anchor);
+				// ARKit sometimes provides invalid per-vertex normals, we remove these triangles
 
-				const std::string meshIdentifier = StringApple::toUTF8(meshAnchor.identifier.UUIDString);
-
-				IdentifierMap::iterator iMesh = identifierMap_.find(meshIdentifier);
-				if (iMesh == identifierMap_.cend())
+				for (size_t n = 0; n < triangleIndices.size(); /*noop*/)
 				{
-					iMesh = identifierMap_.insert(std::make_pair(meshIdentifier, ++meshIdCounter_)).first;
+					if (Numeric::isNan(perVertexNormals[triangleIndices[n + 0]].x())
+							|| Numeric::isNan(perVertexNormals[triangleIndices[n + 1]].x())
+							|| Numeric::isNan(perVertexNormals[triangleIndices[n + 2]].x()))
+					{
+						triangleIndices[n + 0] = triangleIndices[triangleIndices.size() - 3];
+						triangleIndices[n + 1] = triangleIndices[triangleIndices.size() - 2];
+						triangleIndices[n + 2] = triangleIndices[triangleIndices.size() - 1];
 
-					numberTriangles_.resize(meshIdCounter_ + 1, 0);
+						triangleIndices.resize(triangleIndices.size() - 3);
+					}
+					else
+					{
+						n += 3;
+					}
 				}
-				const Index32 meshId = iMesh->second;
 
-				const simd_float4x4 simdTransform = meshAnchor.transform;
-				HomogenousMatrixF4 world_T_mesh;
-
-				memcpy(world_T_mesh.data() +  0, &simdTransform.columns[0], sizeof(float) * 4);
-				memcpy(world_T_mesh.data() +  4, &simdTransform.columns[1], sizeof(float) * 4);
-				memcpy(world_T_mesh.data() +  8, &simdTransform.columns[2], sizeof(float) * 4);
-				memcpy(world_T_mesh.data() + 12, &simdTransform.columns[3], sizeof(float) * 4);
-
-				ARMeshGeometry* meshGeometry = meshAnchor.geometry;
-
-				Vectors3 vertices;
-				Vectors3 perVertexNormals;
-				Indices32 triangleIndices;
-
-				if (extractVectors3(meshGeometry.vertices, vertices) && extractVectors3(meshGeometry.normals, perVertexNormals) && extractIndices(meshGeometry.faces, triangleIndices))
+				if (!triangleIndices.empty())
 				{
-#ifdef OCEAN_DEBUG
-					ocean_assert(vertices.size() == perVertexNormals.size());
-					for (const Index32& index : triangleIndices)
-					{
-						ocean_assert(index < vertices.size());
-					}
-#endif
-
-					ocean_assert(triangleIndices.size() % 3 == 0);
-					if (triangleIndices.empty() || triangleIndices.size() % 3 != 0)
-					{
-						continue;
-					}
-
-					// ARKit sometimes provides invalid per-vertex normals, we remove these triangles
-
-					for (size_t n = 0; n < triangleIndices.size(); /*noop*/)
-					{
-						if (Numeric::isNan(perVertexNormals[triangleIndices[n + 0]].x())
-								|| Numeric::isNan(perVertexNormals[triangleIndices[n + 1]].x())
-								|| Numeric::isNan(perVertexNormals[triangleIndices[n + 2]].x()))
-						{
-							triangleIndices[n + 0] = triangleIndices[triangleIndices.size() - 3];
-							triangleIndices[n + 1] = triangleIndices[triangleIndices.size() - 2];
-							triangleIndices[n + 2] = triangleIndices[triangleIndices.size() - 1];
-
-							triangleIndices.resize(triangleIndices.size() - 3);
-						}
-						else
-						{
-							n += 3;
-						}
-					}
-
-					if (!triangleIndices.empty())
-					{
-						ocean_assert(meshId < numberTriangles_.size());
-						numberTriangles_[meshId] = triangleIndices.size() / 3;
-
-						meshes.emplace_back(std::make_shared<SceneElementMeshes::Mesh>(meshId, HomogenousMatrix4(world_T_mesh), std::move(vertices), std::move(perVertexNormals), std::move(triangleIndices)));
-					}
+					meshes.emplace_back(std::make_shared<SceneElementMeshes::Mesh>(meshId, HomogenousMatrix4(world_T_mesh), std::move(vertices), std::move(perVertexNormals), std::move(triangleIndices)));
 				}
 			}
 		}
@@ -319,6 +284,8 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 			sceneElements.emplace_back(std::make_shared<SceneElementMeshes>(std::move(meshes)));
 		}
 	}
+
+	updatedMeshAnchors_.clear();
 
 	if (sceneElements.empty())
 	{
@@ -376,6 +343,36 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, Sh
 		scopedLock.release();
 
 		postLostTrackerObjects(lostObjectIds, timestamp);
+	}
+}
+
+void AKSceneTracker6DOF::onAddedAnchors(const ARAnchors& anchors)
+{
+	for (ARAnchor* anchor : anchors)
+	{
+		if (![anchor isKindOfClass:[ARMeshAnchor class]])
+		{
+			continue;
+		}
+
+		ARMeshAnchor* meshAnchor = (ARMeshAnchor*)(anchor);
+
+		updatedMeshAnchors_.insert(meshAnchor);
+	}
+}
+
+void AKSceneTracker6DOF::onUpdateAnchors(const ARAnchors& anchors)
+{
+	for (ARAnchor* anchor : anchors)
+	{
+		if (![anchor isKindOfClass:[ARMeshAnchor class]])
+		{
+			continue;
+		}
+
+		ARMeshAnchor* meshAnchor = (ARMeshAnchor*)(anchor);
+
+		updatedMeshAnchors_.insert(meshAnchor);
 	}
 }
 
