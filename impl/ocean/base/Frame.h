@@ -676,7 +676,7 @@ class OCEAN_BASE_EXPORT FrameType
 
 			/**
 			 * This pixel format is deprecated and is currently an alias for FORMAT_Y_U_V24_LIMITED_RANGE.
-			 * Pixel format with 8 bits Y frame as individual block, followed 8 bits U frame as individual block, followed by a V frame as individual block, resulting in 24 bits per pixel.
+			 * Pixel format with 8 bits Y frame as individual block, followed by 8 bits U frame as individual block, followed by a V frame as individual block, resulting in 24 bits per pixel.
 			 * Sometimes also denoted as 'I444'.
 			 *
 			 * The memory layout of a Y_U_V24 image looks like this:
@@ -693,7 +693,7 @@ class OCEAN_BASE_EXPORT FrameType
 			FORMAT_Y_U_V24 = 39ull | GenericPixelFormat<DT_UNSIGNED_INTEGER_8, CV_CHANNELS_UNDEFINED /* as non-generic */, PV_PLANES_3, MV_MULTIPLE_1, MV_MULTIPLE_1>::value,
 
 			/**
-			 * Pixel format with 8 bits Y frame as individual block, followed 8 bits U frame as individual block, followed by a V frame as individual block, resulting in 24 bits per pixel.
+			 * Pixel format with 8 bits Y frame as individual block, followed by 8 bits U frame as individual block, followed by a V frame as individual block, resulting in 24 bits per pixel.
 			 * Sometimes also denoted as 'I444'.
 			 *
 			 * The pixel format is using a limited value range for the individual channels:
@@ -718,7 +718,7 @@ class OCEAN_BASE_EXPORT FrameType
 			FORMAT_Y_U_V24_LIMITED_RANGE = FORMAT_Y_U_V24,
 
 			/**
-			 * Pixel format with 8 bits Y frame as individual block, followed 8 bits U frame as individual block, followed by a V frame as individual block, resulting in 24 bits per pixel.
+			 * Pixel format with 8 bits Y frame as individual block, followed by 8 bits U frame as individual block, followed by a V frame as individual block, resulting in 24 bits per pixel.
 			 * Sometimes also denoted as 'I444'.
 			 *
 			 * The pixel format is using a full value range for all three channels:
@@ -997,9 +997,41 @@ class OCEAN_BASE_EXPORT FrameType
 			FORMAT_F64 = 47ull | GenericPixelFormat<DT_SIGNED_FLOAT_64, CV_CHANNELS_1, PV_PLANES_1, MV_MULTIPLE_1, MV_MULTIPLE_1>::value,
 
 			/**
+			 * Pixel format with 8 bits R frame as individual block, followed by 8 bits G frame as individual block, followed by a B frame as individual block, resulting in 24 bits per pixel.
+			 *
+			 * The memory layout of a R_G_B24 image looks like this:
+			 * <pre>
+			 *  r-plane:        g-plane:        b-plane:
+			 *  ---------       ---------       ---------
+			 * | R R R R |     | G G G G |     | B B B B |
+			 * | R R R R |     | G G G G |     | B B B B |
+			 * | R R R R |     | G G G G |     | B B B B |
+			 * | R R R R |     | G G G G |     | B B B B |
+			 *  ---------       ---------       ---------
+			 * </pre>
+			 */
+			FORMAT_R_G_B24 = 48ull | GenericPixelFormat<DT_UNSIGNED_INTEGER_8, CV_CHANNELS_UNDEFINED /* as non-generic */, PV_PLANES_3, MV_MULTIPLE_1, MV_MULTIPLE_1>::value,
+
+			/**
+			 * Pixel format with 8 bits B frame as individual block, followed by 8 bits G frame as individual block, followed by a R frame as individual block, resulting in 24 bits per pixel.
+			 *
+			 * The memory layout of a B_G_R24 image looks like this:
+			 * <pre>
+			 *  b-plane:        g-plane:        r-plane:
+			 *  ---------       ---------       ---------
+			 * | B B B B |     | G G G G |     | R R R R |
+			 * | B B B B |     | G G G G |     | R R R R |
+			 * | B B B B |     | G G G G |     | R R R R |
+			 * | B B B B |     | G G G G |     | R R R R |
+			 *  ---------       ---------       ---------
+			 * </pre>
+			 */
+			FORMAT_B_G_R24 = 49ull | GenericPixelFormat<DT_UNSIGNED_INTEGER_8, CV_CHANNELS_UNDEFINED /* as non-generic */, PV_PLANES_3, MV_MULTIPLE_1, MV_MULTIPLE_1>::value,
+
+			/**
 			 * The helper pixel format which can be used to identify the last defined pixel format, FORMAT_END is exclusive.
 			 */
-			FORMAT_END = 48ull
+			FORMAT_END = 50ull
 		};
 
 		/**

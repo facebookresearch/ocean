@@ -2208,6 +2208,8 @@ bool TestFrame::testPlaneLayout(const double testDuration)
 
 						case FrameType::FORMAT_Y_U_V24_LIMITED_RANGE:
 						case FrameType::FORMAT_Y_U_V24_FULL_RANGE:
+						case FrameType::FORMAT_R_G_B24:
+						case FrameType::FORMAT_B_G_R24:
 						{
 							expectedPlaneChannels = 1u;
 							break;
@@ -4098,6 +4100,8 @@ bool TestFrame::testPlaneBytesPerPixel()
 			case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
 			case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
 			case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
+			case FrameType::FORMAT_R_G_B24:
+			case FrameType::FORMAT_B_G_R24:
 			{
 				if (frame.numberPlanes() != 3u)
 				{

@@ -9,10 +9,12 @@
 #include "ocean/cv/FrameChannels.h"
 #include "ocean/cv/FrameConverterABGR32.h"
 #include "ocean/cv/FrameConverterARGB32.h"
+#include "ocean/cv/FrameConverterB_G_R24.h"
 #include "ocean/cv/FrameConverterBGR24.h"
 #include "ocean/cv/FrameConverterBGR32.h"
 #include "ocean/cv/FrameConverterBGR565.h"
 #include "ocean/cv/FrameConverterBGRA32.h"
+#include "ocean/cv/FrameConverterR_G_B24.h"
 #include "ocean/cv/FrameConverterRGB24.h"
 #include "ocean/cv/FrameConverterRGB32.h"
 #include "ocean/cv/FrameConverterRGB565.h"
@@ -376,6 +378,14 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	// FORMAT_Y_VU12_FULL_RANGE
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_FULL_RANGE, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterY_VU12::convertY_VU12ToY8);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_FULL_RANGE, FrameType::FORMAT_RGB24), FrameConverterY_VU12::convertY_VU12FullRangeToRGB24FullRangePrecision6Bit);
+
+	// FORMAT_R_G_B24
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_R_G_B24, FrameType::FORMAT_RGB24), FrameConverterR_G_B24::convertR_G_B24ToRGB24);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_R_G_B24, FrameType::FORMAT_BGR24), FrameConverterR_G_B24::convertR_G_B24ToBGR24);
+
+	// FORMAT_B_G_R24
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_B_G_R24, FrameType::FORMAT_BGR24), FrameConverterB_G_R24::convertB_G_R24ToBGR24);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_B_G_R24, FrameType::FORMAT_RGB24), FrameConverterB_G_R24::convertB_G_R24ToRGB24);
 }
 
 const void* FrameConverter::ConversionFunctionMap::function(const FrameType::PixelFormat& sourcePixelFormat, const FrameType::PixelFormat& targetPixelFormat, FunctionType& functionType, const Options& options) const

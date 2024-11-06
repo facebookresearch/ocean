@@ -46,6 +46,8 @@ unsigned int FrameType::channels(const PixelFormat pixelFormat)
 		case FORMAT_Y_VU12_FULL_RANGE:
 		case FORMAT_UYVY16:
 		case FORMAT_YUYV16:
+		case FORMAT_R_G_B24:
+		case FORMAT_B_G_R24:
 			return 3u;
 
 		case FORMAT_BGR4444: // similar to RGB32 which has 4 channels
@@ -140,6 +142,8 @@ unsigned int FrameType::formatBitsPerPixelRedChannel(const PixelFormat pixelForm
 		case FORMAT_RGB32:
 		case FORMAT_RGBA32:
 		case FORMAT_RGBT32:
+		case FORMAT_R_G_B24:
+		case FORMAT_B_G_R24:
 			return 8u;
 
 		case FORMAT_BGR4444:
@@ -214,6 +218,8 @@ unsigned int FrameType::formatBitsPerPixelGreenChannel(const PixelFormat pixelFo
 		case FORMAT_RGB32:
 		case FORMAT_RGBA32:
 		case FORMAT_RGBT32:
+		case FORMAT_R_G_B24:
+		case FORMAT_B_G_R24:
 			return 8u;
 
 		case FORMAT_BGR4444:
@@ -290,6 +296,8 @@ unsigned int FrameType::formatBitsPerPixelBlueChannel(const PixelFormat pixelFor
 		case FORMAT_RGB32:
 		case FORMAT_RGBA32:
 		case FORMAT_RGBT32:
+		case FORMAT_R_G_B24:
+		case FORMAT_B_G_R24:
 			return 8u;
 
 		case FORMAT_BGR4444:
@@ -391,6 +399,8 @@ unsigned int FrameType::formatBitsPerPixelAlphaChannel(const PixelFormat pixelFo
 		case FORMAT_Y64:
 		case FORMAT_F32:
 		case FORMAT_F64:
+		case FORMAT_R_G_B24:
+		case FORMAT_B_G_R24:
 			return 0u;
 
 		case FORMAT_ABGR32:
@@ -459,6 +469,8 @@ bool FrameType::formatHasAlphaChannel(const PixelFormat pixelFormat, bool* isLas
 		case FORMAT_Y64:
 		case FORMAT_F32:
 		case FORMAT_F64:
+		case FORMAT_R_G_B24:
+		case FORMAT_B_G_R24:
 			ocean_assert(formatBitsPerPixelAlphaChannel(pixelFormat) == 0u);
 			return false;
 
@@ -537,6 +549,7 @@ FrameType::PixelFormat FrameType::genericSinglePlanePixelFormat(const PixelForma
 		case FORMAT_BGR4444:
 		case FORMAT_BGR5551:
 		case FORMAT_BGR565:
+		case FORMAT_B_G_R24:
 			return FORMAT_BGR24;
 
 		case FORMAT_BGRA4444:
@@ -545,6 +558,7 @@ FrameType::PixelFormat FrameType::genericSinglePlanePixelFormat(const PixelForma
 		case FORMAT_RGB4444:
 		case FORMAT_RGB5551:
 		case FORMAT_RGB565:
+		case FORMAT_R_G_B24:
 			return FORMAT_RGB24;
 
 		case FORMAT_RGBA4444:
@@ -720,6 +734,8 @@ FrameType::PixelFormat FrameType::formatRemoveAlphaChannel(const PixelFormat pix
 		case FORMAT_Y64:
 		case FORMAT_F32:
 		case FORMAT_F64:
+		case FORMAT_R_G_B24:
+		case FORMAT_B_G_R24:
 			return pixelFormat;
 
 		default:
@@ -995,6 +1011,8 @@ bool FrameType::planeLayout(const PixelFormat imagePixelFormat, const unsigned i
 
 		case FORMAT_Y_U_V24:
 		case FORMAT_Y_U_V24_FULL_RANGE:
+		case FORMAT_R_G_B24:
+		case FORMAT_B_G_R24:
 		{
 			ocean_assert(dataType(imagePixelFormat) == DT_UNSIGNED_INTEGER_8);
 
@@ -1241,6 +1259,12 @@ FrameType::PixelFormat FrameType::translatePixelFormat(const std::string& pixelF
 	if (upperValue == "F64")
 		return FORMAT_F64;
 
+	if (upperValue == "R_G_B24")
+		return FORMAT_R_G_B24;
+
+	if (upperValue == "B_G_R24")
+		return FORMAT_B_G_R24;
+
 	ocean_assert(false && "Invalid input!");
 	return FORMAT_UNDEFINED;
 }
@@ -1460,6 +1484,12 @@ std::string FrameType::translatePixelFormat(const PixelFormat pixelFormat)
 
 		case FORMAT_END:
 			break;
+
+		case FORMAT_R_G_B24:
+			return "R_G_B24";
+
+		case FORMAT_B_G_R24:
+			return "B_G_R24";
 	}
 
 	ocean_assert(false && "Invalid pixel format.");
@@ -1696,6 +1726,8 @@ const FrameType::PixelFormats& FrameType::definedPixelFormats()
 		FrameType::FORMAT_Y_V_U12_FULL_RANGE,
 		FrameType::FORMAT_F32,
 		FrameType::FORMAT_F64,
+		FrameType::FORMAT_R_G_B24,
+		FrameType::FORMAT_B_G_R24,
 	};
 
 	if (pixelFormats.size() != size_t(FrameType::FORMAT_END) - 1)
