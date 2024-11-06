@@ -165,6 +165,7 @@ void AKDepthTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 				const Frame& depthFrame = depthPixelBufferAccessor.frame();
 
 				std::shared_ptr<Frame> depth = std::make_shared<Frame>(depthFrame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+				depth->setTimestamp(timestamp);
 
 				SharedAnyCamera depthCamera = camera;
 
@@ -186,6 +187,7 @@ void AKDepthTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 					if (confidencePixelBufferAccessor)
 					{
 						confidence = std::make_shared<Frame>(confidencePixelBufferAccessor.frame(), Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+						confidence->setTimestamp(timestamp);
 					}
 				}
 
