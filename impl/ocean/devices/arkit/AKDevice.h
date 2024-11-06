@@ -69,6 +69,16 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKDevice : virtual public Device
 			TC_FACE = 1u << 5u
 		};
 
+		/**
+		 * Definition of a vector holding ARAnchors.
+		 */
+		using ARAnchors = std::vector<ARAnchor*>;
+
+		/**
+		 * Definition of an unordered map mapping devices to usage counters.
+		 */
+		using DeviceMap = std::unordered_map<AKDevice*, unsigned int>;
+
 	protected:
 
 		/**
@@ -144,6 +154,24 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKDevice : virtual public Device
 		 * @return The tracker capabilities
 		 */
 		inline TrackerCapabilities trackerCapabilities() const;
+
+		/**
+		 * Event function for added anchors.
+		 * @param anchors The added anchors, at least one
+		 */
+		virtual void onAddedAnchors(const ARAnchors& anchors);
+
+		/**
+		 * Event function for updated anchors.
+		 * @param anchors The updated anchors, at least one
+		 */
+		virtual void onUpdateAnchors(const ARAnchors& anchors);
+
+		/**
+		 * Event function for removed anchors.
+		 * @param anchors The removed anchors, at least one
+		 */
+		virtual void onRemovedAnchors(const ARAnchors& anchors);
 
 		/**
 		 * Translates the value of an ARGeoTrackingState to a readable string.

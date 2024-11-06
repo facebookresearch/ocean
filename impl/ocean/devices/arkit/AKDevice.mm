@@ -44,10 +44,10 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 	Media::LiveVideoRef inputLiveVideo_;
 
 	/// The map mapping devices to reference counters.
-	std::unordered_map<AKDevice*, unsigned int> deviceMap_;
+	AKDevice::DeviceMap deviceMap_;
 
-	/// The map mapping object ids to anchors.
-	std::unordered_map<Devices::Measurement::ObjectId, ARAnchor*> anchorMap_;
+	/// The map mapping object ids to geo anchors.
+	std::unordered_map<Devices::Measurement::ObjectId, ARAnchor*> geoAnchorMap_;
 
 	/// The last ARGeoTrackingState value.
 	API_AVAILABLE(ios(14.0)) ARGeoTrackingState lastARGeoTrackingState_;
@@ -57,6 +57,9 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 	/// The last ARGeoTrackingAccuracy value.
 	API_AVAILABLE(ios(14.0)) ARGeoTrackingAccuracy lastARGeoTrackingAccuracy_;
+
+	/// Reusable anchors.
+	AKDevice::ARAnchors reusableAnchors_;
 
 	/// The delegate's lock.
 	@public Lock lock_;
@@ -97,7 +100,7 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 	}
 
 #ifdef OCEAN_DEBUG
-	for (std::unordered_map<AKDevice*, unsigned int>::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
+	for (AKDevice::DeviceMap::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
 	{
 		ocean_assert(iDevice->first == device || iDevice->first->name() != device->name());
 	}
@@ -375,7 +378,7 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 - (bool)stop:(AKDevice*)tracker
 {
-	std::unordered_map<AKDevice*, unsigned int>::iterator iDevice = deviceMap_.find(tracker);
+	AKDevice::DeviceMap::iterator iDevice = deviceMap_.find(tracker);
 	ocean_assert(iDevice != deviceMap_.cend());
 	ocean_assert(iDevice->second >= 1u);
 
@@ -399,12 +402,12 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 		return false;
 	}
 
-	for (std::pair<Devices::Measurement::ObjectId, ARAnchor*> pair : anchorMap_)
+	for (std::pair<Devices::Measurement::ObjectId, ARAnchor*> pair : geoAnchorMap_)
 	{
 		[arSession_ removeAnchor:pair.second];
 	}
 
-	anchorMap_.clear();
+	geoAnchorMap_.clear();
 
 	[arSession_ pause];
 
@@ -432,7 +435,7 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 		return false;
 	}
 
-	if (anchorMap_.find(objectId) != anchorMap_.cend())
+	if (geoAnchorMap_.find(objectId) != geoAnchorMap_.cend())
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
@@ -473,7 +476,7 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 		[arSession_ addAnchor:geoAnchor];
 
-		anchorMap_.emplace(objectId, geoAnchor);
+		geoAnchorMap_.emplace(objectId, geoAnchor);
 
 		return true;
 	}
@@ -483,9 +486,9 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 - (bool)removeGeoAnchor:(Devices::Measurement::ObjectId)objectId
 {
-	const std::unordered_map<Devices::Measurement::ObjectId, ARAnchor*>::const_iterator iAnchor = anchorMap_.find(objectId);
+	const std::unordered_map<Devices::Measurement::ObjectId, ARAnchor*>::const_iterator iAnchor = geoAnchorMap_.find(objectId);
 
-	if (iAnchor == anchorMap_.cend())
+	if (iAnchor == geoAnchorMap_.cend())
 	{
 		ocean_assert(false && "This should never happen!");
 		return false;
@@ -493,7 +496,7 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 	[arSession_ removeAnchor:iAnchor->second];
 
-	anchorMap_.erase(iAnchor);
+	geoAnchorMap_.erase(iAnchor);
 
 	return true;
 }
@@ -565,7 +568,7 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 	bool containsGeoTracker = false;
 
-	for (std::unordered_map<AKDevice*, unsigned int>::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
+	for (AKDevice::DeviceMap::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
 	{
 		AKDevice* device = iDevice->first;
 
@@ -655,35 +658,61 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 - (void)session:(ARSession *)session didAddAnchors:(NSArray<__kindof ARAnchor *> *)anchors
 {
-	if (@available(iOS 14.0, *))
+	ocean_assert(anchors.count > 0);
+
+	reusableAnchors_.clear();
+	reusableAnchors_.reserve(anchors.count);
+
+	for (ARAnchor* anchor in anchors)
 	{
-#ifdef OCEAN_DEBUG
-		for (ARAnchor* anchor in anchors)
-		{
-			const std::string anchorName = StringApple::toUTF8(anchor.name);
-			if (!anchorName.empty())
-			{
-				Log::debug() << "Added anchor with id '" << anchorName;
-			}
-		}
-#endif
+		reusableAnchors_.push_back(anchor);
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	for (AKDevice::DeviceMap::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
+	{
+		iDevice->first->onAddedAnchors(reusableAnchors_);
+	}
+}
+
+- (void)session:(ARSession *)session didUpdateAnchors:(NSArray<__kindof ARAnchor *> *)anchors
+{
+	ocean_assert(anchors.count > 0);
+
+	reusableAnchors_.clear();
+	reusableAnchors_.reserve(anchors.count);
+
+	for (ARAnchor* anchor in anchors)
+	{
+		reusableAnchors_.push_back(anchor);
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	for (AKDevice::DeviceMap::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
+	{
+		iDevice->first->onUpdateAnchors(reusableAnchors_);
 	}
 }
 
 - (void)session:(ARSession *)session didRemoveAnchors:(NSArray<__kindof ARAnchor *> *)anchors
 {
-	if (@available(iOS 14.0, *))
+	ocean_assert(anchors.count > 0);
+
+	reusableAnchors_.clear();
+	reusableAnchors_.reserve(anchors.count);
+
+	for (ARAnchor* anchor in anchors)
 	{
-#ifdef OCEAN_DEBUG
-		for (ARAnchor* anchor in anchors)
-		{
-			const std::string anchorName = StringApple::toUTF8(anchor.name);
-			if (!anchorName.empty())
-			{
-				Log::debug() << "Removed anchor with id '" << anchorName;
-			}
-		}
-#endif
+		reusableAnchors_.push_back(anchor);
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	for (AKDevice::DeviceMap::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
+	{
+		iDevice->first->onRemovedAnchors(reusableAnchors_);
 	}
 }
 
@@ -931,6 +960,21 @@ AKDevice::AKDevice(const TrackerCapabilities trackerCapabilities, const std::str
 const std::string& AKDevice::library() const
 {
 	return nameARKitLibrary();
+}
+
+void AKDevice::onAddedAnchors(const ARAnchors& /*anchors*/)
+{
+	// nothing to do here
+}
+
+void AKDevice::onUpdateAnchors(const ARAnchors& /*anchors*/)
+{
+	// nothing to do here
+}
+
+void AKDevice::onRemovedAnchors(const ARAnchors& /*anchors*/)
+{
+	// nothing to do here
 }
 
 API_AVAILABLE(ios(14.0))
