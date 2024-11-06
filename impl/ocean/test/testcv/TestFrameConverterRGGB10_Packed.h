@@ -9,7 +9,7 @@
 #define META_OCEAN_TEST_TESTCV_TEST_FRAME_CONVERTER_RGGB_10_PACKED_H
 
 #include "ocean/test/testcv/TestCV.h"
-#include "ocean/test/testcv/TestFrameConverter.h"
+#include "ocean/test/testcv/FrameConverterTestUtilities.h"
 
 #include "ocean/base/Worker.h"
 
@@ -49,13 +49,13 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterRGGB10_Packed
 
 				/**
 				 * Extracts one pixel from a RGGB10_PACKED source frame and subtracts the black level and applies white balancing as well as gamma
-				 * The signature of this function intentionally matches that of `TestFrameConverter::FunctionPixelValue`.
+				 * The signature of this function intentionally matches that of `FrameConverterTestUtilities::FunctionPixelValue`.
 				 * @param frame The frame from which the pixel will be extracted, must be valid
 				 * @param x The horizontal pixel location within the frame, with range [0, frame.width() - 1]
 				 * @param y The vertical pixel location within the frame, with range [0, frame.height() - 1]
 				 * @param conversionFlag The conversion flag that will be applied, must be valid
 				 * @return The vector holding the frame's color value at the specified location
-				 * @sa TestFrameConverter::FunctionPixelValue
+				 * @sa FrameConverterTestUtilities::FunctionPixelValue
 				 */
 				inline MatrixD operator()(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag) const;
 

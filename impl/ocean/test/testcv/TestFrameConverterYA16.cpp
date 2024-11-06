@@ -213,7 +213,7 @@ bool TestFrameConverterYA16::testYA16ToRGBA32(const unsigned int width, const un
 	transformationMatrix(2, 0) = 1;
 	transformationMatrix(3, 1) = 1;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_YA16, FrameType::FORMAT_RGBA32, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterYA16::convertYA16ToRGBA32), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_YA16, FrameType::FORMAT_RGBA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterYA16::convertYA16ToRGBA32), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterYA16::testYA16ToBGRA32(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -232,7 +232,7 @@ bool TestFrameConverterYA16::testYA16ToBGRA32(const unsigned int width, const un
 	transformationMatrix(2, 0) = 1;
 	transformationMatrix(3, 1) = 1;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_YA16, FrameType::FORMAT_BGRA32, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterYA16::convertYA16ToBGRA32), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_YA16, FrameType::FORMAT_BGRA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterYA16::convertYA16ToBGRA32), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterYA16::testYA16ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -246,7 +246,7 @@ bool TestFrameConverterYA16::testYA16ToY8(const unsigned int width, const unsign
 	MatrixD transformationMatrix(1, 2, false);
 	transformationMatrix(0, 0) = 1;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_YA16, FrameType::FORMAT_Y8, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterYA16::convertYA16ToY8), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_YA16, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterYA16::convertYA16ToY8), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterYA16::testYA16ToYA16(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -259,7 +259,7 @@ bool TestFrameConverterYA16::testYA16ToYA16(const unsigned int width, const unsi
 
 	const MatrixD transformationMatrix(2, 2, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_YA16, FrameType::FORMAT_YA16, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterYA16::convertYA16ToYA16), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_YA16, FrameType::FORMAT_YA16, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterYA16::convertYA16ToYA16), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 }

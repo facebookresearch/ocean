@@ -361,7 +361,7 @@ bool TestFrameConverterY_UV12::testY_UV12LimitedRangeToBGR24FullRange(const unsi
 
 	constexpr unsigned int thresholdMaximalErrorToInteger = 5u;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_UV12_LIMITED_RANGE, FrameType::FORMAT_BGR24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12LimitedRangeToBGR24FullRange), conversionFlag, pixelFunctionY_UV12ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_UV12_LIMITED_RANGE, FrameType::FORMAT_BGR24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12LimitedRangeToBGR24FullRange), conversionFlag, pixelFunctionY_UV12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
 }
 
 bool TestFrameConverterY_UV12::testY_UV12LimitedRangeToRGB24FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -373,7 +373,7 @@ bool TestFrameConverterY_UV12::testY_UV12LimitedRangeToRGB24FullRange(const unsi
 
 	constexpr unsigned int thresholdMaximalErrorToInteger = 5u;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_UV12_LIMITED_RANGE, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12LimitedRangeToRGB24FullRange), conversionFlag, pixelFunctionY_UV12ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_UV12_LIMITED_RANGE, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12LimitedRangeToRGB24FullRange), conversionFlag, pixelFunctionY_UV12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
 }
 
 bool TestFrameConverterY_UV12::testY_UV12FullRangeToBGR24FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -385,7 +385,7 @@ bool TestFrameConverterY_UV12::testY_UV12FullRangeToBGR24FullRange(const unsigne
 
 	constexpr unsigned int thresholdMaximalErrorToInteger = 5u;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_UV12_FULL_RANGE, FrameType::FORMAT_BGR24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12FullRangeToBGR24FullRange), conversionFlag, pixelFunctionY_UV12ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_UV12_FULL_RANGE, FrameType::FORMAT_BGR24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12FullRangeToBGR24FullRange), conversionFlag, pixelFunctionY_UV12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
 }
 
 bool TestFrameConverterY_UV12::testY_UV12FullRangeToRGB24FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -397,7 +397,7 @@ bool TestFrameConverterY_UV12::testY_UV12FullRangeToRGB24FullRange(const unsigne
 
 	constexpr unsigned int thresholdMaximalErrorToInteger = 5u;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_UV12_FULL_RANGE, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12FullRangeToRGB24FullRange), conversionFlag, pixelFunctionY_UV12ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_UV12_FULL_RANGE, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12FullRangeToRGB24FullRange), conversionFlag, pixelFunctionY_UV12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
 }
 
 bool TestFrameConverterY_UV12::testY_UV12ToYUV24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -411,7 +411,7 @@ bool TestFrameConverterY_UV12::testY_UV12ToYUV24(const unsigned int width, const
 
 	const MatrixD transformationMatrix(3, 3, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_YUV24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12ToYUV24), conversionFlag, pixelFunctionY_UV12ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_YUV24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12ToYUV24), conversionFlag, pixelFunctionY_UV12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY_UV12::testY_UV12ToYVU24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -428,7 +428,7 @@ bool TestFrameConverterY_UV12::testY_UV12ToYVU24(const unsigned int width, const
 	transformationMatrix(1, 2) = 1.0;
 	transformationMatrix(2, 1) = 1.0;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_YVU24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12ToYVU24), conversionFlag, pixelFunctionY_UV12ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_YVU24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12ToYVU24), conversionFlag, pixelFunctionY_UV12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY_UV12::testY_UV12ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -443,7 +443,7 @@ bool TestFrameConverterY_UV12::testY_UV12ToY8(const unsigned int width, const un
 	MatrixD transformationMatrix(1, 3, false);
 	transformationMatrix(0, 0) = 1.0;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_Y8, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12ToY8), conversionFlag, pixelFunctionY_UV12ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12ToY8), conversionFlag, pixelFunctionY_UV12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY_UV12::testY_UV12ToY_U_V12(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -457,7 +457,7 @@ bool TestFrameConverterY_UV12::testY_UV12ToY_U_V12(const unsigned int width, con
 
 	const MatrixD transformationMatrix(3, 3, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_Y_U_V12, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12ToY_U_V12), conversionFlag, pixelFunctionY_UV12ForYUV24, pixelFunctionY_U_V12ForYUV24, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_Y_U_V12, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_UV12::convertY_UV12ToY_U_V12), conversionFlag, pixelFunctionY_UV12ForYUV24, pixelFunctionY_U_V12ForYUV24, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 MatrixD TestFrameConverterY_UV12::pixelFunctionY_UV12ForYUV24(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)

@@ -132,7 +132,7 @@ bool TestFrameConverterRGB565::testRGB565ToRGB24(const unsigned int width, const
 
 	MatrixD transformationMatrix(3, 3, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGB565, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGB565::convertRGB565ToRGB24), conversionFlag, pixelFunctionRGB565ForRGB24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGB565, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGB565::convertRGB565ToRGB24), conversionFlag, pixelFunctionRGB565ForRGB24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterRGB565::testRGB565ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -149,7 +149,7 @@ bool TestFrameConverterRGB565::testRGB565ToY8(const unsigned int width, const un
 	transformationMatrix(0, 1) = 0.587;
 	transformationMatrix(0, 2) = 0.114;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGB565, FrameType::FORMAT_Y8, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGB565::convertRGB565ToY8), conversionFlag, pixelFunctionRGB565ForRGB24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGB565, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGB565::convertRGB565ToY8), conversionFlag, pixelFunctionRGB565ForRGB24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 MatrixD TestFrameConverterRGB565::pixelFunctionRGB565ForRGB24(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)

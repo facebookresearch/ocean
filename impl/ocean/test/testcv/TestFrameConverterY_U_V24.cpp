@@ -282,7 +282,7 @@ bool TestFrameConverterY_U_V24::testY_U_V24ToYUV24(const unsigned int width, con
 
 	const MatrixD transformationMatrix(3, 3, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_YUV24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24ToYUV24), conversionFlag, pixelFunctionY_U_V24ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_YUV24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24ToYUV24), conversionFlag, pixelFunctionY_U_V24ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY_U_V24::testY_U_V24LimitedRangeToBGR24FullRangePrecision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -294,7 +294,7 @@ bool TestFrameConverterY_U_V24::testY_U_V24LimitedRangeToBGR24FullRangePrecision
 
 	constexpr unsigned int thresholdMaximalErrorToInteger = 6u;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_BGR24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24LimitedRangeToBGR24), conversionFlag, pixelFunctionY_U_V24ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_BGR24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24LimitedRangeToBGR24), conversionFlag, pixelFunctionY_U_V24ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
 }
 
 bool TestFrameConverterY_U_V24::testY_U_V24LimitedRangeToRGB24FullRangePrecision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -306,7 +306,7 @@ bool TestFrameConverterY_U_V24::testY_U_V24LimitedRangeToRGB24FullRangePrecision
 
 	constexpr unsigned int thresholdMaximalErrorToInteger = 6u;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24LimitedRangeToRGB24), conversionFlag, pixelFunctionY_U_V24ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24LimitedRangeToRGB24), conversionFlag, pixelFunctionY_U_V24ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
 }
 
 bool TestFrameConverterY_U_V24::testY_U_V24LimitedRangeToBGRA32FullRangePrecision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -315,11 +315,11 @@ bool TestFrameConverterY_U_V24::testY_U_V24LimitedRangeToBGRA32FullRangePrecisio
 	ocean_assert(width != 0u && height != 0u);
 
 	MatrixD transformationMatrix(4, 4, CV::FrameConverter::transformationMatrix_LimitedRangeYUV24_To_FullRangeBGR24_BT601(), 0, 0);
-	transformationMatrix(3, 3) = double(TestFrameConverter::ValueProvider::get().alphaValue());
+	transformationMatrix(3, 3) = double(FrameConverterTestUtilities::ValueProvider::get().alphaValue());
 
 	constexpr unsigned int thresholdMaximalErrorToInteger = 6u;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_BGRA32, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24LimitedRangeToBGRA32), conversionFlag, pixelFunctionY_U_V24ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_BGRA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24LimitedRangeToBGRA32), conversionFlag, pixelFunctionY_U_V24ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
 }
 
 bool TestFrameConverterY_U_V24::testY_U_V24LimitedRangeToRGBA32FullRangePrecision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -328,11 +328,11 @@ bool TestFrameConverterY_U_V24::testY_U_V24LimitedRangeToRGBA32FullRangePrecisio
 	ocean_assert(width != 0u && height != 0u);
 
 	MatrixD transformationMatrix(4, 4, CV::FrameConverter::transformationMatrix_LimitedRangeYUV24_To_FullRangeRGB24_BT601(), 0, 0);
-	transformationMatrix(3, 3) = double(TestFrameConverter::ValueProvider::get().alphaValue());
+	transformationMatrix(3, 3) = double(FrameConverterTestUtilities::ValueProvider::get().alphaValue());
 
 	constexpr unsigned int thresholdMaximalErrorToInteger = 6u;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_RGBA32, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24LimitedRangeToRGBA32), conversionFlag, pixelFunctionY_U_V24ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_RGBA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24LimitedRangeToRGBA32), conversionFlag, pixelFunctionY_U_V24ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
 }
 
 bool TestFrameConverterY_U_V24::testY_U_V24FullRangeToBGRA32FullRangeAndroidPrecision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -341,9 +341,9 @@ bool TestFrameConverterY_U_V24::testY_U_V24FullRangeToBGRA32FullRangeAndroidPrec
 	ocean_assert(width != 0u && height != 0u);
 
 	MatrixD transformationMatrix(4, 4, CV::FrameConverter::transformationMatrix_FullRangeYUV24_To_FullRangeBGR24_Android(), 0, 0);
-	transformationMatrix(3, 3) = double(TestFrameConverter::ValueProvider::get().alphaValue());
+	transformationMatrix(3, 3) = double(FrameConverterTestUtilities::ValueProvider::get().alphaValue());
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_BGRA32, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24FullRangeToBGRA32FullRangeAndroid), conversionFlag, pixelFunctionY_U_V24ForYUV24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_U_V24, FrameType::FORMAT_BGRA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_U_V24::convertY_U_V24FullRangeToBGRA32FullRangeAndroid), conversionFlag, pixelFunctionY_U_V24ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 MatrixD TestFrameConverterY_U_V24::pixelFunctionY_U_V24ForYUV24(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)

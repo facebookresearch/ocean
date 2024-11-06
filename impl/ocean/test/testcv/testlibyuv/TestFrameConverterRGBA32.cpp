@@ -17,7 +17,7 @@
 
 #include "ocean/math/Matrix.h"
 
-#include "ocean/test/testcv/TestFrameConverter.h"
+#include "ocean/test/testcv/FrameConverterTestUtilities.h"
 
 #include <libyuv/convert.h>
 
@@ -143,7 +143,7 @@ bool TestFrameConverterRGBA32::testConvertRGBA32ToY8(const double testDuration, 
 
 					if (!skipValidation)
 					{
-						if (!TestFrameConverter::validateConversion(frameRGBA32, frameY8, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0))
+						if (!FrameConverterTestUtilities::validateConversion(frameRGBA32, frameY8, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0))
 						{
 							allSucceeded = false;
 						}
@@ -172,7 +172,7 @@ bool TestFrameConverterRGBA32::testConvertRGBA32ToY8(const double testDuration, 
 
 				if (!skipValidation)
 				{
-					if (!TestFrameConverter::validateConversion(frameRGBA32, frameY8, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0))
+					if (!FrameConverterTestUtilities::validateConversion(frameRGBA32, frameY8, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0))
 					{
 						allSucceeded = false;
 					}

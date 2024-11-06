@@ -169,7 +169,7 @@ bool TestFrameConverterBGR565::testBGR565ToBGR24(const unsigned int width, const
 
 	MatrixD transformationMatrix(3, 3, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_BGR565, FrameType::FORMAT_BGR24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterBGR565::convertBGR565ToBGR24), conversionFlag, pixelFunctionBGR565ForBGR24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_BGR565, FrameType::FORMAT_BGR24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterBGR565::convertBGR565ToBGR24), conversionFlag, pixelFunctionBGR565ForBGR24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterBGR565::testBGR565ToRGB24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -186,7 +186,7 @@ bool TestFrameConverterBGR565::testBGR565ToRGB24(const unsigned int width, const
 	transformationMatrix(1, 1) = 1.0;
 	transformationMatrix(2, 0) = 1.0;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_BGR565, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterBGR565::convertBGR565ToRGB24), conversionFlag, pixelFunctionBGR565ForBGR24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_BGR565, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterBGR565::convertBGR565ToRGB24), conversionFlag, pixelFunctionBGR565ForBGR24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterBGR565::testBGR565ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -203,7 +203,7 @@ bool TestFrameConverterBGR565::testBGR565ToY8(const unsigned int width, const un
 	transformationMatrix(0, 1) = 0.587;
 	transformationMatrix(0, 2) = 0.299;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_BGR565, FrameType::FORMAT_Y8, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterBGR565::convertBGR565ToY8), conversionFlag, pixelFunctionBGR565ForBGR24, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_BGR565, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterBGR565::convertBGR565ToY8), conversionFlag, pixelFunctionBGR565ForBGR24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 MatrixD TestFrameConverterBGR565::pixelFunctionBGR565ForBGR24(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)

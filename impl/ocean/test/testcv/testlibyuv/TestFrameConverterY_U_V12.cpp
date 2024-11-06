@@ -17,7 +17,7 @@
 
 #include "ocean/math/Matrix.h"
 
-#include "ocean/test/testcv/TestFrameConverter.h"
+#include "ocean/test/testcv/FrameConverterTestUtilities.h"
 
 #include <libyuv/convert.h>
 
@@ -140,7 +140,7 @@ bool TestFrameConverterY_U_V12::testConvertY_U_V12ToRGBA32Precision6Bit(const do
 
 					if (!skipValidation)
 					{
-						if (!TestFrameConverter::validateConversion(yuvFrame, rgbaFrame, pixelFunctionY_U_V12ForYUV24, TestFrameConverter::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0))
+						if (!FrameConverterTestUtilities::validateConversion(yuvFrame, rgbaFrame, pixelFunctionY_U_V12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0))
 						{
 							allSucceeded = false;
 						}
@@ -162,7 +162,7 @@ bool TestFrameConverterY_U_V12::testConvertY_U_V12ToRGBA32Precision6Bit(const do
 
 				if (!skipValidation)
 				{
-					if (!TestFrameConverter::validateConversion(yuvFrame, rgbaFrame, pixelFunctionY_U_V12ForYUV24, TestFrameConverter::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0))
+					if (!FrameConverterTestUtilities::validateConversion(yuvFrame, rgbaFrame, pixelFunctionY_U_V12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0))
 					{
 						allSucceeded = false;
 					}

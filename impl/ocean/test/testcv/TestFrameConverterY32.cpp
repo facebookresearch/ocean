@@ -129,7 +129,7 @@ bool TestFrameConverterY32::testY32ToY8(const unsigned int width, const unsigned
 	MatrixD transformationMatrix(1, 1, false);
 	transformationMatrix(0, 0) = 1.0 / 16810048.1213308; // (2^32 - 1) / x < 255.5, x = 16,810,048.12133072407045
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y32, FrameType::FORMAT_Y8, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY32::convertY32ToY8), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y32, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY32::convertY32ToY8), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY32::testY32ToY16(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -142,7 +142,7 @@ bool TestFrameConverterY32::testY32ToY16(const unsigned int width, const unsigne
 	MatrixD transformationMatrix(1, 1, false);
 	transformationMatrix(0, 0) = 1.0 / 65536.5; // (2^32 - 1) / x < 65,535.5, x = 65,536.499988555820891
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y32, FrameType::FORMAT_Y16, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY32::convertY32ToY16), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 65535.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y32, FrameType::FORMAT_Y16, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY32::convertY32ToY16), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 65535.0, testDuration, worker);
 }
 
 }

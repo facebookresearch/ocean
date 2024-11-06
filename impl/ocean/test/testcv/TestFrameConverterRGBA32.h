@@ -9,7 +9,7 @@
 #define META_OCEAN_TEST_TESTCV_TEST_FRAME_CONVERTER_RGBA_32_H
 
 #include "ocean/test/testcv/TestCV.h"
-#include "ocean/test/testcv/TestFrameConverter.h"
+#include "ocean/test/testcv/FrameConverterTestUtilities.h"
 
 #include "ocean/base/Worker.h"
 

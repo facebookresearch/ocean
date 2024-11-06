@@ -72,7 +72,7 @@ bool TestFrameConverterY10_Packed::test(const unsigned int width, const unsigned
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y10_PACKED to Y8 conversion with LUT gamma correction (x^" << String::toAString(TestFrameConverter::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y10_PACKED to Y8 conversion with LUT gamma correction (x^" << String::toAString(FrameConverterTestUtilities::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -86,7 +86,7 @@ bool TestFrameConverterY10_Packed::test(const unsigned int width, const unsigned
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y10_PACKED to Y8 conversion with approximated gamma correction (x^" << String::toAString(TestFrameConverter::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y10_PACKED to Y8 conversion with approximated gamma correction (x^" << String::toAString(FrameConverterTestUtilities::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -290,7 +290,7 @@ bool TestFrameConverterY10_Packed::testY10_PackedToBGR24(const unsigned int widt
 	transformationMatrix(1, 0) = 1.0 / 4.003913895;
 	transformationMatrix(2, 0) = 1.0 / 4.003913895;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_BGR24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToBGR24), flag, TestFrameConverterY10_Packed::pixelFunctionY10_Packed<false>, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_BGR24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToBGR24), flag, TestFrameConverterY10_Packed::pixelFunctionY10_Packed<false>, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY10_Packed::testY10_PackedToRGB24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -307,7 +307,7 @@ bool TestFrameConverterY10_Packed::testY10_PackedToRGB24(const unsigned int widt
 	transformationMatrix(1, 0) = 1.0 / 4.003913895;
 	transformationMatrix(2, 0) = 1.0 / 4.003913895;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToRGB24), flag, TestFrameConverterY10_Packed::pixelFunctionY10_Packed<false>, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToRGB24), flag, TestFrameConverterY10_Packed::pixelFunctionY10_Packed<false>, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY10_Packed::testY10_PackedToY8Linear(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -320,7 +320,7 @@ bool TestFrameConverterY10_Packed::testY10_PackedToY8Linear(const unsigned int w
 	MatrixD transformationMatrix(1, 1, false);
 	transformationMatrix(0, 0) = 1.0 / 4.003913895; // (2^10 - 1) / x < 255.5, x = 4.0039138943248532289628180039139
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_Y8, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToY8Linear), flag, TestFrameConverterY10_Packed::pixelFunctionY10_Packed<false>, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToY8Linear), flag, TestFrameConverterY10_Packed::pixelFunctionY10_Packed<false>, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY10_Packed::testY10_PackedToY8GammaLUT(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -332,7 +332,7 @@ bool TestFrameConverterY10_Packed::testY10_PackedToY8GammaLUT(const unsigned int
 
 	const MatrixD transformationMatrix(1, 1, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_Y8, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToY8GammaLUT), flag, TestFrameConverterY10_Packed::pixelFunctionY10_Packed<true>, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToY8GammaLUT), flag, TestFrameConverterY10_Packed::pixelFunctionY10_Packed<true>, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY10_Packed::testY10_PackedToY8GammaApproximated(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -344,7 +344,7 @@ bool TestFrameConverterY10_Packed::testY10_PackedToY8GammaApproximated(const uns
 
 	const MatrixD transformationMatrix(1, 1, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_Y8, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToY8GammaApproximated), flag, TestFrameConverterY10_Packed::pixelFunctionY10_PackedApproximated, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, 5u);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToY8GammaApproximated), flag, TestFrameConverterY10_Packed::pixelFunctionY10_PackedApproximated, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, 5u);
 }
 
 bool TestFrameConverterY10_Packed::testY10_PackedToY10(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -356,7 +356,7 @@ bool TestFrameConverterY10_Packed::testY10_PackedToY10(const unsigned int width,
 
 	MatrixD transformationMatrix(1, 1, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_Y10, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToY10), flag, TestFrameConverterY10_Packed::pixelFunctionY10_Packed<false>, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 1023.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y10_PACKED, FrameType::FORMAT_Y10, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY10_Packed::convertY10_PackedToY10), flag, TestFrameConverterY10_Packed::pixelFunctionY10_Packed<false>, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 1023.0, testDuration, worker);
 }
 
 template <bool tApplyGamma>
@@ -404,7 +404,7 @@ MatrixD TestFrameConverterY10_Packed::pixelFunctionY10_Packed(const Frame& frame
 
 	if constexpr (tApplyGamma)
 	{
-		colorVector(0, 0) = NumericD::pow(double(allBits) / 1023.0, double(TestFrameConverter::ValueProvider::get().gammaValue())) * 255.0;
+		colorVector(0, 0) = NumericD::pow(double(allBits) / 1023.0, double(FrameConverterTestUtilities::ValueProvider::get().gammaValue())) * 255.0;
 	}
 	else
 	{
@@ -421,7 +421,7 @@ MatrixD TestFrameConverterY10_Packed::pixelFunctionY10_PackedApproximated(const 
 	const double unpacked = colorVector(0, 0);
 	ocean_assert(unpacked >= 0.0 && unpacked < 1024.0);
 
-	const float gamma = float(TestFrameConverter::ValueProvider::get().gammaValue());
+	const float gamma = float(FrameConverterTestUtilities::ValueProvider::get().gammaValue());
 
 	constexpr float step01 = 40.0f;
 	constexpr float step12 = 280.0f;

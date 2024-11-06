@@ -86,7 +86,7 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y8 to Y8 conversion with LUT gamma correction (x^" << String::toAString(TestFrameConverter::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y8 to Y8 conversion with LUT gamma correction (x^" << String::toAString(FrameConverterTestUtilities::ValueProvider::get().gammaValue(), 1u) << ") with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -251,7 +251,7 @@ bool TestFrameConverterY8::testY8ToBGR24(const unsigned int width, const unsigne
 	transformationMatrix(1, 0) = 1;
 	transformationMatrix(2, 0) = 1;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_BGR24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY8::convertY8ToBGR24), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_BGR24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8ToBGR24), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY8::testY8ToRGB24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -268,7 +268,7 @@ bool TestFrameConverterY8::testY8ToRGB24(const unsigned int width, const unsigne
 	transformationMatrix(1, 0) = 1;
 	transformationMatrix(2, 0) = 1;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY8::convertY8ToRGB24), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8ToRGB24), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY8::testY8ToRGBA32(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -285,9 +285,9 @@ bool TestFrameConverterY8::testY8ToRGBA32(const unsigned int width, const unsign
 	transformationMatrix(0, 0) = 1;
 	transformationMatrix(1, 0) = 1;
 	transformationMatrix(2, 0) = 1;
-	transformationMatrix(3, 1) = double(TestFrameConverter::ValueProvider::get().alphaValue());
+	transformationMatrix(3, 1) = double(FrameConverterTestUtilities::ValueProvider::get().alphaValue());
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_RGBA32, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY8::convertY8ToRGBA32), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_RGBA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8ToRGBA32), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY8::testY8ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -299,7 +299,7 @@ bool TestFrameConverterY8::testY8ToY8(const unsigned int width, const unsigned i
 
 	const MatrixD transformationMatrix(1, 1, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY8::convertY8ToY8), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8ToY8), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY8::testY8ToY8GammaLUT(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -311,7 +311,7 @@ bool TestFrameConverterY8::testY8ToY8GammaLUT(const unsigned int width, const un
 
 	const MatrixD transformationMatrix(1, 1, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterY8::convertY8ToY8GammaLUT), flag, TestFrameConverterY8::pixelFunctionY8Gamma, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8ToY8GammaLUT), flag, TestFrameConverterY8::pixelFunctionY8Gamma, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 MatrixD TestFrameConverterY8::pixelFunctionY8Gamma(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)
@@ -328,7 +328,7 @@ MatrixD TestFrameConverterY8::pixelFunctionY8Gamma(const Frame& frame, const uns
 
 	MatrixD colorVector(1, 1);
 
-	colorVector(0, 0) = NumericD::pow(double(pixelValue) / 255.0, double(TestFrameConverter::ValueProvider::get().gammaValue())) * 255.0;
+	colorVector(0, 0) = NumericD::pow(double(pixelValue) / 255.0, double(FrameConverterTestUtilities::ValueProvider::get().gammaValue())) * 255.0;
 
 	return colorVector;
 }

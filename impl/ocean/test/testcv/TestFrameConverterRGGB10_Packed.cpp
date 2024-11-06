@@ -219,7 +219,7 @@ bool TestFrameConverterRGGB10_Packed::testRGGB10_PackedToBGR24(const unsigned in
 	transformationMatrix(1, 1) = 1.0 / 4.003913895;
 	transformationMatrix(2, 0) = 1.0 / 4.003913895;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_BGR24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToBGR24), flag, TestFrameConverterRGGB10_Packed::PixelFunctorRGGB10_Packed::pixelFunctionRGGB10_Packed, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_BGR24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToBGR24), flag, TestFrameConverterRGGB10_Packed::PixelFunctorRGGB10_Packed::pixelFunctionRGGB10_Packed, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterRGGB10_Packed::testRGGB10_PackedToRGB24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -236,7 +236,7 @@ bool TestFrameConverterRGGB10_Packed::testRGGB10_PackedToRGB24(const unsigned in
 	transformationMatrix(1, 1) = 1.0 / 4.003913895;
 	transformationMatrix(2, 2) = 1.0 / 4.003913895;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24), flag, TestFrameConverterRGGB10_Packed::PixelFunctorRGGB10_Packed::pixelFunctionRGGB10_Packed, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24), flag, TestFrameConverterRGGB10_Packed::PixelFunctorRGGB10_Packed::pixelFunctionRGGB10_Packed, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterRGGB10_Packed::testRGGB10_PackedToRGB48(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -250,7 +250,7 @@ bool TestFrameConverterRGGB10_Packed::testRGGB10_PackedToRGB48(const unsigned in
 
 	const MatrixD transformationMatrix(3, 3, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB48, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB48), flag, TestFrameConverterRGGB10_Packed::PixelFunctorRGGB10_Packed::pixelFunctionRGGB10_Packed, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 1023.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB48, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB48), flag, TestFrameConverterRGGB10_Packed::PixelFunctorRGGB10_Packed::pixelFunctionRGGB10_Packed, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 1023.0, testDuration, worker);
 }
 
 bool TestFrameConverterRGGB10_Packed::testConvertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT(RandomGenerator& randomGenerator, const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -296,7 +296,7 @@ bool TestFrameConverterRGGB10_Packed::testConvertRGGB10_PackedToRGB24BlacklevelW
 
 	constexpr unsigned int thresholdMaximalErrorToInteger = 5u;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT), flag, pixelFunctorRGGB10_Packed, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger, options);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGGB10_PACKED, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGGB10_Packed::convertRGGB10_PackedToRGB24BlacklevelWhiteBalanceGammaLUT), flag, pixelFunctorRGGB10_Packed, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger, options);
 }
 
 MatrixD TestFrameConverterRGGB10_Packed::PixelFunctorRGGB10_Packed::pixelFunctionRGGB10_PackedWithBlackLevelWhiteBalanceGamma(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag, const uint16_t blackLevel, const double* whiteBalance, const double gamma)

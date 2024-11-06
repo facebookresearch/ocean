@@ -6,7 +6,6 @@
  */
 
 #include "ocean/test/testcv/TestFrameChannels.h"
-#include "ocean/test/testcv/TestFrameConverter.h"
 
 #include "ocean/cv/CVUtilities.h"
 

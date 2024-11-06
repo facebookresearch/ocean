@@ -93,7 +93,7 @@ bool TestFrameConverterYUVA32::testYUVA32ToY8(const unsigned int width, const un
 	MatrixD transformationMatrix(1, 4, false);
 	transformationMatrix(0, 0) = 1.0;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_YUVA32, FrameType::FORMAT_Y8, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterYUVA32::convertYUVA32ToY8), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_YUVA32, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterYUVA32::convertYUVA32ToY8), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 }

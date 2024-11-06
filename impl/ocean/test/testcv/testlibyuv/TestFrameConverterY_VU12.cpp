@@ -17,7 +17,7 @@
 
 #include "ocean/math/Matrix.h"
 
-#include "ocean/test/testcv/TestFrameConverter.h"
+#include "ocean/test/testcv/FrameConverterTestUtilities.h"
 
 #include <libyuv/convert.h>
 
@@ -133,7 +133,7 @@ bool TestFrameConverterY_VU12::testConvertY_VU12ToBGRA32(const double testDurati
 
 					if (!skipValidation)
 					{
-						if (!TestFrameConverter::validateConversion(y_vuFrame, bgraFrame, pixelFunctionY_VU12ForYVU24, TestFrameConverter::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0))
+						if (!FrameConverterTestUtilities::validateConversion(y_vuFrame, bgraFrame, pixelFunctionY_VU12ForYVU24, FrameConverterTestUtilities::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0))
 						{
 							allSucceeded = false;
 						}
@@ -157,7 +157,7 @@ bool TestFrameConverterY_VU12::testConvertY_VU12ToBGRA32(const double testDurati
 				{
 					constexpr bool skipPlausibilityCheck = true; // libyuv is quite off, so we need to skip the plausibility check (which ensures that the conversion is within a certain range)
 
-					if (!TestFrameConverter::validateConversion(y_vuFrame, bgraFrame, pixelFunctionY_VU12ForYVU24, TestFrameConverter::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0, skipPlausibilityCheck))
+					if (!FrameConverterTestUtilities::validateConversion(y_vuFrame, bgraFrame, pixelFunctionY_VU12ForYVU24, FrameConverterTestUtilities::functionGenericPixel, colorSpaceTransformationMatrix, CV::FrameConverter::CONVERT_NORMAL, nullptr, &localAverageErrorToInteger, nullptr, &localMaximalErrorToInteger, 0.0, 255.0, skipPlausibilityCheck))
 					{
 						allSucceeded = false;
 					}

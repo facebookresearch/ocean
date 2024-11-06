@@ -174,7 +174,7 @@ bool TestFrameConverterRGBA64::testRGBA64ToRGB24(const unsigned int width, const
 	transformationMatrix(1, 1) = 1.0 / 256.5;
 	transformationMatrix(2, 2) = 1.0 / 256.5;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGBA64, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGBA64::convertRGBA64ToRGB24), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGBA64, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGBA64::convertRGBA64ToRGB24), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterRGBA64::testRGBA64ToRGBA32(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -194,7 +194,7 @@ bool TestFrameConverterRGBA64::testRGBA64ToRGBA32(const unsigned int width, cons
 	transformationMatrix(2, 2) = 1.0 / 256.5;
 	transformationMatrix(3, 3) = 1.0 / 256.5;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGBA64, FrameType::FORMAT_RGBA32, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGBA64::convertRGBA64ToRGBA32), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGBA64, FrameType::FORMAT_RGBA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGBA64::convertRGBA64ToRGBA32), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterRGBA64::testRGBA64ToRGBA64(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -209,7 +209,7 @@ bool TestFrameConverterRGBA64::testRGBA64ToRGBA64(const unsigned int width, cons
 
 	const MatrixD transformationMatrix(4, 4, true);
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_RGBA64, FrameType::FORMAT_RGBA64, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterRGBA64::convertRGBA64ToRGBA64), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 65535.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGBA64, FrameType::FORMAT_RGBA64, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGBA64::convertRGBA64ToRGBA64), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 65535.0, testDuration, worker);
 }
 
 }

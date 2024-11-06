@@ -134,7 +134,7 @@ bool TestFrameConverterBGR32::testBGR32ToRGB24(const unsigned int width, const u
 	transformationMatrix(1, 1) = 1;
 	transformationMatrix(2, 0) = 1;
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_BGR32, FrameType::FORMAT_RGB24, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterBGR32::convertBGR32ToRGB24), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_BGR32, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterBGR32::convertBGR32ToRGB24), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 
@@ -153,9 +153,9 @@ bool TestFrameConverterBGR32::testBGR32ToRGBA32(const unsigned int width, const 
 	transformationMatrix(0, 2) = 1;
 	transformationMatrix(1, 1) = 1;
 	transformationMatrix(2, 0) = 1;
-	transformationMatrix(3, 4) = double(TestFrameConverter::ValueProvider::get().alphaValue());
+	transformationMatrix(3, 4) = double(FrameConverterTestUtilities::ValueProvider::get().alphaValue());
 
-	return TestFrameConverter::testFrameConversion(FrameType::FORMAT_BGR32, FrameType::FORMAT_RGBA32, width, height, TestFrameConverter::FunctionWrapper(CV::FrameConverterBGR32::convertBGR32ToRGBA32), flag, TestFrameConverter::functionGenericPixel, TestFrameConverter::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_BGR32, FrameType::FORMAT_RGBA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterBGR32::convertBGR32ToRGBA32), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 }
