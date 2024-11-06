@@ -99,16 +99,16 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 		return false;
 	}
 
-#ifdef OCEAN_DEBUG
+	const ScopedLock scopedLock(lock_);
+
+	AKDevice::TrackerCapabilities necessaryTrackerCapabilities = device->trackerCapabilities();
+
 	for (AKDevice::DeviceMap::const_iterator iDevice = deviceMap_.cbegin(); iDevice != deviceMap_.cend(); ++iDevice)
 	{
 		ocean_assert(iDevice->first == device || iDevice->first->name() != device->name());
+
+		necessaryTrackerCapabilities = AKDevice::TrackerCapabilities(necessaryTrackerCapabilities | iDevice->first->trackerCapabilities());
 	}
-#endif
-
-	const AKDevice::TrackerCapabilities necessaryTrackerCapabilities = device->trackerCapabilities();
-
-	const ScopedLock scopedLock(lock_);
 
 	if (inputLiveVideo_ && &*inputLiveVideo_ != &*inputLiveVideo)
 	{
@@ -265,7 +265,11 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 						}
 					}
 
-					if (!sceneReconstructionActivated)
+					if (sceneReconstructionActivated)
+					{
+						trackerCapabilities_ = Devices::ARKit::AKDevice::TrackerCapabilities(trackerCapabilities_ | Devices::ARKit::AKDevice::TC_MESH_RECONSTRUCTION);
+					}
+					else
 					{
 						Log::warning() << "The devices does not support ARKit's scene reconstruction";
 					}
@@ -278,6 +282,8 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 						if ([ARWorldTrackingConfiguration supportsFrameSemantics:ARFrameSemanticSceneDepth])
 						{
 							arWorldTrackingConfiguration.frameSemantics = ARFrameSemanticSceneDepth;
+
+							trackerCapabilities_ = Devices::ARKit::AKDevice::TrackerCapabilities(trackerCapabilities_ | Devices::ARKit::AKDevice::TC_DEPTH);
 						}
 					}
 				}
@@ -289,6 +295,8 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 						if (ARWorldTrackingConfiguration.supportsUserFaceTracking)
 						{
 							arWorldTrackingConfiguration.userFaceTrackingEnabled = true;
+
+							trackerCapabilities_ = Devices::ARKit::AKDevice::TrackerCapabilities(trackerCapabilities_ | Devices::ARKit::AKDevice::TC_FACE);
 						}
 						else
 						{
@@ -330,6 +338,8 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 					}
 				}
 			}
+
+			trackerCapabilities_ = Devices::ARKit::AKDevice::TrackerCapabilities(trackerCapabilities_ | Devices::ARKit::AKDevice::TC_FACE);
 
 			arConfiguration_ = arFaceTrackingConfiguration;
 		}
