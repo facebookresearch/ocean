@@ -18,13 +18,15 @@ namespace Devices
 namespace ARKit
 {
 
-Frame Utilities::extractFrame(const ARFrame* arFrame, const bool copyData)
+Frame Utilities::extractFrame(const ARFrame* arFrame, const bool copyData, const FrameType::PixelFormat preferredPixelFormat)
 {
 	ocean_assert(arFrame != nullptr);
 
 	const CVPixelBufferRef capturedImage = arFrame.capturedImage;
 
-	const Media::AVFoundation::PixelBufferAccessor pixelBufferAccessor(capturedImage, true /*readOnly*/);
+	const bool accessYPlaneOnly = preferredPixelFormat == FrameType::FORMAT_Y8;
+
+	const Media::AVFoundation::PixelBufferAccessor pixelBufferAccessor(capturedImage, true /*readOnly*/, accessYPlaneOnly);
 
 	if (!pixelBufferAccessor)
 	{

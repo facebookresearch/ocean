@@ -65,8 +65,9 @@ class OCEAN_DEVICES_ARKIT_EXPORT Utilities
 		 * Extracts the color image from an ARKit frame.
 		 * @param arFrame The ARKit frame from which the color image will be extracted, must be valid
 		 * @param copyData True, to copy the data; False, to only use the memory of the ARKit frame
+		 * @param preferredPixelFormat Optional preferred pixel format of the resulting frame, however the resulting frame can have any pixel format, FORMAT_UNDEFINED if not of interest
 		 */
-		static Frame extractFrame(const ARFrame* arFrame, const bool copyData = true);
+		static Frame extractFrame(const ARFrame* arFrame, const bool copyData = true, const FrameType::PixelFormat preferredPixelFormat = FrameType::FORMAT_UNDEFINED);
 
 		/**
 		 * Extracts the depth image from an ARKit frame, if existing.
