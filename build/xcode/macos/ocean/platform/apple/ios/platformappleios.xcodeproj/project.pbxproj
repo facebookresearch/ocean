@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5042A4502CDAEFE10088D9DC /* System.h in Headers */ = {isa = PBXBuildFile; fileRef = 5042A44F2CDAEFE10088D9DC /* System.h */; };
+		5042A4512CDAEFE10088D9DC /* System.h in Headers */ = {isa = PBXBuildFile; fileRef = 5042A44F2CDAEFE10088D9DC /* System.h */; };
+		5042A4532CDAF02C0088D9DC /* System.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5042A4522CDAF02C0088D9DC /* System.mm */; };
+		5042A4542CDAF02C0088D9DC /* System.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5042A4522CDAF02C0088D9DC /* System.mm */; };
 		5DF0BD601D901DA400BE5D21 /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 5DD0BFC71BD1547700ABBC5B /* Utilities.h */; };
 		9309A54126B1D2CA00E3924A /* MessengerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9309A54026B1D2CA00E3924A /* MessengerView.h */; };
 		9309A54226B1D2CA00E3924A /* MessengerView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9309A54026B1D2CA00E3924A /* MessengerView.h */; };
@@ -28,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5042A44F2CDAEFE10088D9DC /* System.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = System.h; path = /Users/nilsplath/fbsource/xplat/ocean/impl/ocean/platform/apple/ios/System.h; sourceTree = "<absolute>"; };
+		5042A4522CDAF02C0088D9DC /* System.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = System.mm; path = /Users/nilsplath/fbsource/xplat/ocean/impl/ocean/platform/apple/ios/System.mm; sourceTree = "<absolute>"; };
 		5DD0BFC71BD1547700ABBC5B /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../../impl/ocean/platform/apple/ios/Utilities.h; sourceTree = "<group>"; };
 		5DF0BD661D901DA400BE5D21 /* libOceanPlatformAppleIOSD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanPlatformAppleIOSD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9309A54026B1D2CA00E3924A /* MessengerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MessengerView.h; path = ../../../../../../../impl/ocean/platform/apple/ios/MessengerView.h; sourceTree = "<group>"; };
@@ -83,6 +89,7 @@
 				9309A54326B1D30800E3924A /* MessengerView.mm */,
 				93B184431FD2144F006F8B9B /* OpenGLFrameMediumViewController.mm */,
 				93C7C90D1FD2049600C8D59C /* OpenGLViewController.mm */,
+				5042A4522CDAF02C0088D9DC /* System.mm */,
 				93D233261F9566AA00F8BCAD /* Utilities.mm */,
 			);
 			name = "Source Files";
@@ -95,6 +102,7 @@
 				9309A54026B1D2CA00E3924A /* MessengerView.h */,
 				93B184461FD2145F006F8B9B /* OpenGLFrameMediumViewController.h */,
 				93C7C9081FD2045A00C8D59C /* OpenGLViewController.h */,
+				5042A44F2CDAEFE10088D9DC /* System.h */,
 				5DD0BFC71BD1547700ABBC5B /* Utilities.h */,
 			);
 			name = "Header Files";
@@ -112,6 +120,7 @@
 				5DF0BD601D901DA400BE5D21 /* Utilities.h in Headers */,
 				9309A54126B1D2CA00E3924A /* MessengerView.h in Headers */,
 				93B184471FD2145F006F8B9B /* OpenGLFrameMediumViewController.h in Headers */,
+				5042A4502CDAEFE10088D9DC /* System.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +133,7 @@
 				C041EC9F1DABEF6E00BF5D76 /* Utilities.h in Headers */,
 				9309A54226B1D2CA00E3924A /* MessengerView.h in Headers */,
 				93B184481FD2145F006F8B9B /* OpenGLFrameMediumViewController.h in Headers */,
+				5042A4512CDAEFE10088D9DC /* System.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9309A54426B1D30800E3924A /* MessengerView.mm in Sources */,
+				5042A4532CDAF02C0088D9DC /* System.mm in Sources */,
 				9360F7951FA15BC000BD37D1 /* Utilities.mm in Sources */,
 				93C7C9101FD2049600C8D59C /* OpenGLViewController.mm in Sources */,
 				93B184441FD2144F006F8B9B /* OpenGLFrameMediumViewController.mm in Sources */,
@@ -240,6 +251,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9309A54526B1D30800E3924A /* MessengerView.mm in Sources */,
+				5042A4542CDAF02C0088D9DC /* System.mm in Sources */,
 				9360F7961FA15BC000BD37D1 /* Utilities.mm in Sources */,
 				93C7C9111FD2049600C8D59C /* OpenGLViewController.mm in Sources */,
 				93B184451FD2144F006F8B9B /* OpenGLFrameMediumViewController.mm in Sources */,
