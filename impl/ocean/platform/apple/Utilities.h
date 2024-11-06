@@ -128,6 +128,14 @@ class Utilities
 		 * @return True, if succeeded
 		 */
 		static bool bundleVersion(std::string& bundleShortVersion, std::string* bundleVersionKey = nullptr);
+
+		/**
+		 * Returns the application's identifier name.
+		 * @param bundleIdentifier The resulting release identifier number of the bundle
+		 * @param bundleIdentifierKey Optional resulting identifier key of the bundle, nullptr if not of interest
+		 * @return True, if succeeded
+		 */
+		static bool bundleIdentifier(std::string& bundleIdentifier, std::string* bundleIdentifierKey = nullptr);
 };
 
 }

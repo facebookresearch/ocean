@@ -246,6 +246,41 @@ bool Utilities::bundleVersion(std::string& bundleShortVersion, std::string* bund
 	return true;
 }
 
+bool Utilities::bundleIdentifier(std::string& bundleIdentifier, std::string* bundleIdentifierKey)
+{
+	NSBundle* mainBundle = [NSBundle mainBundle];
+
+	if (mainBundle == nullptr)
+	{
+		return false;
+	}
+
+	NSString* bundleIdentifierString = [[mainBundle infoDictionary] objectForKey:@"CFBundleIdentifier"];
+
+	if (bundleIdentifierString == nullptr)
+	{
+		return false;
+	}
+
+	bundleIdentifier = StringApple::toUTF8(bundleIdentifierString);
+
+	if (bundleIdentifierKey != nullptr)
+	{
+		NSString* bundleIdentifierKeyString = [[mainBundle infoDictionary] objectForKey:(NSString*)(kCFBundleIdentifierKey)];
+
+		if (bundleIdentifierKeyString != nullptr)
+		{
+			*bundleIdentifierKey = StringApple::toUTF8(bundleIdentifierKeyString);
+		}
+		else
+		{
+			bundleIdentifierKey->clear();
+		}
+	}
+
+	return true;
+}
+
 }
 
 }
