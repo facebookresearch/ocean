@@ -234,7 +234,13 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGR565.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterB_G_RA32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGRA32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterR_G_B24.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGB24.h">

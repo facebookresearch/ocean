@@ -14,10 +14,12 @@
 #include "ocean/test/testcv/TestFrameConverter.h"
 #include "ocean/test/testcv/TestFrameConverterABGR32.h"
 #include "ocean/test/testcv/TestFrameConverterARGB32.h"
+#include "ocean/test/testcv/TestFrameConverterB_G_R24.h"
 #include "ocean/test/testcv/TestFrameConverterBGR24.h"
 #include "ocean/test/testcv/TestFrameConverterBGR32.h"
 #include "ocean/test/testcv/TestFrameConverterBGR565.h"
 #include "ocean/test/testcv/TestFrameConverterBGRA32.h"
+#include "ocean/test/testcv/TestFrameConverterR_G_B24.h"
 #include "ocean/test/testcv/TestFrameConverterRGB24.h"
 #include "ocean/test/testcv/TestFrameConverterRGB32.h"
 #include "ocean/test/testcv/TestFrameConverterRGB565.h"
@@ -381,6 +383,19 @@ bool testCV(const double testDuration, Worker& worker, const unsigned int width,
 		}
 	}
 
+	if (testSet.empty() || testSet.find("frameconverterb_g_r24") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		if (!TestFrameConverterB_G_R24::test(width, height, testDuration, worker))
+		{
+			allSucceeded = false;
+		}
+	}
+
 	if (testSet.empty() || testSet.find("frameconverterbgr32") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
 	{
 		Log::info() << " ";
@@ -428,6 +443,19 @@ bool testCV(const double testDuration, Worker& worker, const unsigned int width,
 		Log::info() << " ";
 
 		if (!TestFrameConverterRGB24::test(width, height, testDuration, worker))
+		{
+			allSucceeded = false;
+		}
+	}
+
+	if (testSet.empty() || testSet.find("frameconverterr_g_b24") != testSet.end() || testSet.find("frameconverter*") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+
+		if (!TestFrameConverterR_G_B24::test(width, height, testDuration, worker))
 		{
 			allSucceeded = false;
 		}

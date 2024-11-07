@@ -81,10 +81,12 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverter.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterABGR32.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterARGB32.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterB_G_R24.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGR24.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGR32.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGR565.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGRA32.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterR_G_B24.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGB24.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGB32.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGB565.h" />

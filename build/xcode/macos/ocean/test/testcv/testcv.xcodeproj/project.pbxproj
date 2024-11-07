@@ -7,6 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18BCAAF62CDC2C280083F864 /* TestFrameConverterB_G_R24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAAF52CDC2C280083F864 /* TestFrameConverterB_G_R24.h */; };
+		18BCAAF72CDC2C280083F864 /* TestFrameConverterB_G_R24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAAF52CDC2C280083F864 /* TestFrameConverterB_G_R24.h */; };
+		18BCAAF82CDC2C280083F864 /* TestFrameConverterB_G_R24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAAF52CDC2C280083F864 /* TestFrameConverterB_G_R24.h */; };
+		18BCAAF92CDC2C280083F864 /* TestFrameConverterB_G_R24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAAF52CDC2C280083F864 /* TestFrameConverterB_G_R24.h */; };
+		18BCAAFB2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAAFA2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h */; };
+		18BCAAFC2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAAFA2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h */; };
+		18BCAAFD2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAAFA2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h */; };
+		18BCAAFE2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAAFA2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h */; };
+		18BCAB002CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BCAAFF2CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp */; };
+		18BCAB012CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BCAAFF2CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp */; };
+		18BCAB022CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BCAAFF2CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp */; };
+		18BCAB032CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BCAAFF2CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp */; };
+		18BCAB052CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BCAB042CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp */; };
+		18BCAB062CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BCAB042CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp */; };
+		18BCAB072CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BCAB042CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp */; };
+		18BCAB082CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18BCAB042CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp */; };
 		504A0AA121B0908900ACA006 /* TestHistogram.h in Headers */ = {isa = PBXBuildFile; fileRef = 504A0A9F21B0908800ACA006 /* TestHistogram.h */; };
 		504A0AA221B0908900ACA006 /* TestHistogram.h in Headers */ = {isa = PBXBuildFile; fileRef = 504A0A9F21B0908800ACA006 /* TestHistogram.h */; };
 		504A0AA321B0908900ACA006 /* TestHistogram.h in Headers */ = {isa = PBXBuildFile; fileRef = 504A0A9F21B0908800ACA006 /* TestHistogram.h */; };
@@ -674,6 +690,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		18BCAAF52CDC2C280083F864 /* TestFrameConverterB_G_R24.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TestFrameConverterB_G_R24.h; path = ../../../../../../impl/ocean/test/testcv/TestFrameConverterB_G_R24.h; sourceTree = "<group>"; };
+		18BCAAFA2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TestFrameConverterR_G_B24.h; path = ../../../../../../impl/ocean/test/testcv/TestFrameConverterR_G_B24.h; sourceTree = "<group>"; };
+		18BCAAFF2CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameConverterB_G_R24.cpp; path = ../../../../../../impl/ocean/test/testcv/TestFrameConverterB_G_R24.cpp; sourceTree = "<group>"; };
+		18BCAB042CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameConverterR_G_B24.cpp; path = ../../../../../../impl/ocean/test/testcv/TestFrameConverterR_G_B24.cpp; sourceTree = "<group>"; };
 		504A0A9F21B0908800ACA006 /* TestHistogram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestHistogram.h; path = ../../../../../../impl/ocean/test/testcv/TestHistogram.h; sourceTree = "<group>"; };
 		504A0AA021B0908800ACA006 /* TestNEON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestNEON.h; path = ../../../../../../impl/ocean/test/testcv/TestNEON.h; sourceTree = "<group>"; };
 		504A0AA921B0912D00ACA006 /* TestHistogram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestHistogram.cpp; path = ../../../../../../impl/ocean/test/testcv/TestHistogram.cpp; sourceTree = "<group>"; };
@@ -914,10 +934,12 @@
 				9351CE452236DB81006A8AEE /* TestFrameConverterABGR32.cpp */,
 				5D67D3E11B93762100138225 /* TestFrameConverterARGB32.cpp */,
 				5D67D3E21B93762100138225 /* TestFrameConverterBGR24.cpp */,
+				18BCAAFF2CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp */,
 				9E8D049B2B326E97000590B4 /* TestFrameConverterBGR32.cpp */,
 				933BD56F223B31D3002C4E18 /* TestFrameConverterBGR565.cpp */,
 				5D67D3E31B93762100138225 /* TestFrameConverterBGRA32.cpp */,
 				5D67D3E41B93762100138225 /* TestFrameConverterRGB24.cpp */,
+				18BCAB042CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp */,
 				9E8D049A2B326E97000590B4 /* TestFrameConverterRGB32.cpp */,
 				937178CE21D46BDD006D005E /* TestFrameConverterRGB565.cpp */,
 				5D67D3E51B93762100138225 /* TestFrameConverterRGBA32.cpp */,
@@ -1004,10 +1026,12 @@
 				5D93701C1BC6CD2F0046ACD4 /* TestFrameConverter.h */,
 				9351CE4A2236DB95006A8AEE /* TestFrameConverterABGR32.h */,
 				5D93701D1BC6CD2F0046ACD4 /* TestFrameConverterARGB32.h */,
+				18BCAAF52CDC2C280083F864 /* TestFrameConverterB_G_R24.h */,
 				5D93701E1BC6CD2F0046ACD4 /* TestFrameConverterBGR24.h */,
 				9E8D04992B326491000590B4 /* TestFrameConverterBGR32.h */,
 				933BD574223B31F5002C4E18 /* TestFrameConverterBGR565.h */,
 				5D93701F1BC6CD2F0046ACD4 /* TestFrameConverterBGRA32.h */,
+				18BCAAFA2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h */,
 				5D9370201BC6CD2F0046ACD4 /* TestFrameConverterRGB24.h */,
 				9E8D04982B32646D000590B4 /* TestFrameConverterRGB32.h */,
 				937178C921D46B30006D005E /* TestFrameConverterRGB565.h */,
@@ -1131,11 +1155,13 @@
 				5D9370631BC6CD2F0046ACD4 /* TestFrameFilterGradient.h in Headers */,
 				5D93705E1BC6CD2F0046ACD4 /* TestFrameEnlarger.h in Headers */,
 				5D93706C1BC6CD2F0046ACD4 /* TestFrameInterpolatorBicubic.h in Headers */,
+				18BCAAF62CDC2C280083F864 /* TestFrameConverterB_G_R24.h in Headers */,
 				937F76E320B6105700D768AB /* TestFrameNorm.h in Headers */,
 				93B3B54129EF209500388FBC /* TestFrameConverterThreshold.h in Headers */,
 				93FA817D20EAA5F10049FD7E /* TestFrameMinMax.h in Headers */,
 				5D9370771BC6CD2F0046ACD4 /* TestMotion.h in Headers */,
 				C0F6E5DC1E1EA20800F90052 /* TestFrameFilterCanny.h in Headers */,
+				18BCAAFB2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */,
 				5D9370731BC6CD2F0046ACD4 /* TestFrameTransposer.h in Headers */,
 				93E4DB2F203D419E00C42CCE /* TestFrameMean.h in Headers */,
 				930D183521D003D00067F705 /* TestFrameInverter.h in Headers */,
@@ -1220,11 +1246,13 @@
 				9308ACF92169FCAF00FAEDD9 /* TestFrameInterpolator.h in Headers */,
 				9391E0CC287501BA00B0D39B /* TestSumAbsoluteDifferences.h in Headers */,
 				9391E0A9287501BA00B0D39B /* TestZeroMeanSumSquareDifferences.h in Headers */,
+				18BCAAF72CDC2C280083F864 /* TestFrameConverterB_G_R24.h in Headers */,
 				C0F6E6071E1EA8CB00F90052 /* TestFrameFilterCanny.h in Headers */,
 				93B3B54229EF209500388FBC /* TestFrameConverterThreshold.h in Headers */,
 				9391E0C0287501BA00B0D39B /* TestFrameInterpolatorBicubic.h in Headers */,
 				9391E0AE287501BA00B0D39B /* TestFrameConverterRGB24.h in Headers */,
 				9391E09C287501A700B0D39B /* TestFrameBlender.h in Headers */,
+				18BCAAFE2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */,
 				9328F845209702AD0050A262 /* TestFrameFilterGaussian.h in Headers */,
 				9391E0BA287501BA00B0D39B /* TestSSE.h in Headers */,
 				9391E0992875019700B0D39B /* TestFrameConverterRGBA64.h in Headers */,
@@ -1309,11 +1337,13 @@
 				5DF4B8FB1D941FE700284665 /* TestFrameFilterGradient.h in Headers */,
 				5DF4B8FC1D941FE700284665 /* TestFrameEnlarger.h in Headers */,
 				5DF4B8FD1D941FE700284665 /* TestFrameInterpolatorBicubic.h in Headers */,
+				18BCAAF82CDC2C280083F864 /* TestFrameConverterB_G_R24.h in Headers */,
 				5DF4B8FE1D941FE700284665 /* TestMotion.h in Headers */,
 				93B3B54329EF209500388FBC /* TestFrameConverterThreshold.h in Headers */,
 				C0F6E6081E1EA8CC00F90052 /* TestFrameFilterCanny.h in Headers */,
 				5DF4B8FF1D941FE700284665 /* TestFrameTransposer.h in Headers */,
 				93E4DB31203D419E00C42CCE /* TestFrameMean.h in Headers */,
+				18BCAAFC2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */,
 				5DF4B9001D941FE700284665 /* TestFrameFilterErosion.h in Headers */,
 				5DF4B9011D941FE700284665 /* TestFrameFilterScharrMagnitude.h in Headers */,
 				5DF4B9021D941FE700284665 /* TestFrameConverterY_U_V12.h in Headers */,
@@ -1398,11 +1428,13 @@
 				C0E9B0931DACEA7100895C4B /* TestFrameFilterGradient.h in Headers */,
 				C0E9B0941DACEA7100895C4B /* TestFrameEnlarger.h in Headers */,
 				C0E9B0951DACEA7100895C4B /* TestFrameInterpolatorBicubic.h in Headers */,
+				18BCAAF92CDC2C280083F864 /* TestFrameConverterB_G_R24.h in Headers */,
 				C0E9B0961DACEA7100895C4B /* TestMotion.h in Headers */,
 				93B3B54429EF209500388FBC /* TestFrameConverterThreshold.h in Headers */,
 				C0F6E6091E1EA8CC00F90052 /* TestFrameFilterCanny.h in Headers */,
 				C0E9B0971DACEA7100895C4B /* TestFrameTransposer.h in Headers */,
 				93E4DB32203D419E00C42CCE /* TestFrameMean.h in Headers */,
+				18BCAAFD2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */,
 				C0E9B0981DACEA7100895C4B /* TestFrameFilterErosion.h in Headers */,
 				C0E9B0991DACEA7100895C4B /* TestFrameFilterScharrMagnitude.h in Headers */,
 				C0E9B09A1DACEA7100895C4B /* TestFrameConverterY_U_V12.h in Headers */,
@@ -1629,6 +1661,7 @@
 				5D67D4241B93762100138225 /* TestFrameFilterDilation.cpp in Sources */,
 				5D67D4371B93762100138225 /* TestFrameVariance.cpp in Sources */,
 				5D67D41A1B93762100138225 /* TestFrameConverterY_V_U12.cpp in Sources */,
+				18BCAB022CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp in Sources */,
 				5D67D4321B93762100138225 /* TestFrameInterpolatorNearestPixel.cpp in Sources */,
 				9316986021124E6F00F49D58 /* TestEigenUtilities.cpp in Sources */,
 				9308ACF32169FC9A00FAEDD9 /* TestFrameInterpolator.cpp in Sources */,
@@ -1677,6 +1710,7 @@
 				5D67D4201B93762100138225 /* TestFrameConverterYVU24.cpp in Sources */,
 				5D67D4111B93762100138225 /* TestFrameChannels.cpp in Sources */,
 				5D67D41D1B93762100138225 /* TestFrameConverterYUV24.cpp in Sources */,
+				18BCAB072CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp in Sources */,
 				504A0AAF21B0912E00ACA006 /* TestNEON.cpp in Sources */,
 				5D67D4381B93762100138225 /* TestIntegralImage.cpp in Sources */,
 				9359657525647CDD003EF092 /* TestFrameConverterRGGB10_Packed.cpp in Sources */,
@@ -1720,6 +1754,7 @@
 				5D936FF51BC6CBC30046ACD4 /* TestFrameFilterDilation.cpp in Sources */,
 				5D936FF61BC6CBC30046ACD4 /* TestFrameVariance.cpp in Sources */,
 				5D936FF71BC6CBC30046ACD4 /* TestFrameConverterY_V_U12.cpp in Sources */,
+				18BCAB032CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp in Sources */,
 				5D936FF81BC6CBC30046ACD4 /* TestFrameInterpolatorNearestPixel.cpp in Sources */,
 				9316986121124E6F00F49D58 /* TestEigenUtilities.cpp in Sources */,
 				9308ACF42169FC9A00FAEDD9 /* TestFrameInterpolator.cpp in Sources */,
@@ -1768,6 +1803,7 @@
 				5D93700F1BC6CBC30046ACD4 /* TestFrameChannels.cpp in Sources */,
 				93E56288203E1F5C00C1D103 /* TestFrameOperations.cpp in Sources */,
 				5D9370101BC6CBC30046ACD4 /* TestFrameConverterYUV24.cpp in Sources */,
+				18BCAB082CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp in Sources */,
 				504A0AB021B0912E00ACA006 /* TestNEON.cpp in Sources */,
 				5D9370111BC6CBC30046ACD4 /* TestIntegralImage.cpp in Sources */,
 				9359657625647CDD003EF092 /* TestFrameConverterRGGB10_Packed.cpp in Sources */,
@@ -1811,6 +1847,7 @@
 				5DF4B8C31D941FE700284665 /* TestFrameFilterDilation.cpp in Sources */,
 				5DF4B8C41D941FE700284665 /* TestFrameVariance.cpp in Sources */,
 				5DF4B8C51D941FE700284665 /* TestFrameConverterY_V_U12.cpp in Sources */,
+				18BCAB012CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp in Sources */,
 				5DF4B8C61D941FE700284665 /* TestFrameInterpolatorNearestPixel.cpp in Sources */,
 				9316986221124E6F00F49D58 /* TestEigenUtilities.cpp in Sources */,
 				9308ACF52169FC9A00FAEDD9 /* TestFrameInterpolator.cpp in Sources */,
@@ -1859,6 +1896,7 @@
 				5DF4B8DE1D941FE700284665 /* TestFrameChannels.cpp in Sources */,
 				93E56289203E1F5D00C1D103 /* TestFrameOperations.cpp in Sources */,
 				5DF4B8DF1D941FE700284665 /* TestFrameConverterYUV24.cpp in Sources */,
+				18BCAB052CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp in Sources */,
 				504A0AB121B0912E00ACA006 /* TestNEON.cpp in Sources */,
 				5DF4B8E01D941FE700284665 /* TestIntegralImage.cpp in Sources */,
 				9359657725647CDD003EF092 /* TestFrameConverterRGGB10_Packed.cpp in Sources */,
@@ -1902,6 +1940,7 @@
 				C0E9B05B1DACEA7100895C4B /* TestFrameFilterDilation.cpp in Sources */,
 				C0E9B05C1DACEA7100895C4B /* TestFrameVariance.cpp in Sources */,
 				C0E9B05D1DACEA7100895C4B /* TestFrameConverterY_V_U12.cpp in Sources */,
+				18BCAB002CDC2D270083F864 /* TestFrameConverterB_G_R24.cpp in Sources */,
 				C0E9B05E1DACEA7100895C4B /* TestFrameInterpolatorNearestPixel.cpp in Sources */,
 				9316986321124E6F00F49D58 /* TestEigenUtilities.cpp in Sources */,
 				9308ACF62169FC9A00FAEDD9 /* TestFrameInterpolator.cpp in Sources */,
@@ -1950,6 +1989,7 @@
 				C0E9B0761DACEA7100895C4B /* TestFrameChannels.cpp in Sources */,
 				93E5628A203E1F5D00C1D103 /* TestFrameOperations.cpp in Sources */,
 				C0E9B0771DACEA7100895C4B /* TestFrameConverterYUV24.cpp in Sources */,
+				18BCAB062CDC2D4B0083F864 /* TestFrameConverterR_G_B24.cpp in Sources */,
 				504A0AB221B0912E00ACA006 /* TestNEON.cpp in Sources */,
 				C0E9B0781DACEA7100895C4B /* TestIntegralImage.cpp in Sources */,
 				9359657825647CDD003EF092 /* TestFrameConverterRGGB10_Packed.cpp in Sources */,

@@ -26,7 +26,13 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameEnlarger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterB_G_R24.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR24.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterR_G_B24.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB24.cpp">
@@ -277,7 +283,13 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameEnlarger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterB_G_R24.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR24.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterR_G_B24.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB24.h">

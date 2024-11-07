@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18BCAB0A2CDC2E0F0083F864 /* FrameConverterB_G_R24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAB092CDC2E0F0083F864 /* FrameConverterB_G_R24.h */; };
+		18BCAB0B2CDC2E0F0083F864 /* FrameConverterB_G_R24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAB092CDC2E0F0083F864 /* FrameConverterB_G_R24.h */; };
+		18BCAB0C2CDC2E0F0083F864 /* FrameConverterB_G_R24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAB092CDC2E0F0083F864 /* FrameConverterB_G_R24.h */; };
+		18BCAB0D2CDC2E0F0083F864 /* FrameConverterB_G_R24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAB092CDC2E0F0083F864 /* FrameConverterB_G_R24.h */; };
+		18BCAB0F2CDC2E3C0083F864 /* FrameConverterR_G_B24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAB0E2CDC2E3C0083F864 /* FrameConverterR_G_B24.h */; };
+		18BCAB102CDC2E3C0083F864 /* FrameConverterR_G_B24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAB0E2CDC2E3C0083F864 /* FrameConverterR_G_B24.h */; };
+		18BCAB112CDC2E3C0083F864 /* FrameConverterR_G_B24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAB0E2CDC2E3C0083F864 /* FrameConverterR_G_B24.h */; };
+		18BCAB122CDC2E3C0083F864 /* FrameConverterR_G_B24.h in Headers */ = {isa = PBXBuildFile; fileRef = 18BCAB0E2CDC2E3C0083F864 /* FrameConverterR_G_B24.h */; };
 		50554DFA20354F93007EA3BF /* FrameOperations.h in Headers */ = {isa = PBXBuildFile; fileRef = 50554DF920354F93007EA3BF /* FrameOperations.h */; };
 		507FEE6D2488B06A0056A32C /* FrameMinMax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507FEE6C2488B06A0056A32C /* FrameMinMax.cpp */; };
 		507FEE6E2488B06A0056A32C /* FrameMinMax.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507FEE6C2488B06A0056A32C /* FrameMinMax.cpp */; };
@@ -636,6 +644,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		18BCAB092CDC2E0F0083F864 /* FrameConverterB_G_R24.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FrameConverterB_G_R24.h; path = ../../../../../impl/ocean/cv/FrameConverterB_G_R24.h; sourceTree = "<group>"; };
+		18BCAB0E2CDC2E3C0083F864 /* FrameConverterR_G_B24.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FrameConverterR_G_B24.h; path = ../../../../../impl/ocean/cv/FrameConverterR_G_B24.h; sourceTree = "<group>"; };
 		50554DF920354F93007EA3BF /* FrameOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FrameOperations.h; path = ../../../../../impl/ocean/cv/FrameOperations.h; sourceTree = "<group>"; };
 		507FEE6C2488B06A0056A32C /* FrameMinMax.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FrameMinMax.cpp; path = ../../../../../impl/ocean/cv/FrameMinMax.cpp; sourceTree = "<group>"; };
 		5D188D0F1B90C39A00FA7DD7 /* libOceanCVD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVD.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -929,11 +939,13 @@
 				5D188D8C1B90CA4200FA7DD7 /* FrameConverter.h */,
 				5D188D8D1B90CA4200FA7DD7 /* FrameConverterABGR32.h */,
 				5D188D8E1B90CA4200FA7DD7 /* FrameConverterARGB32.h */,
+				18BCAB092CDC2E0F0083F864 /* FrameConverterB_G_R24.h */,
 				5D188D8F1B90CA4200FA7DD7 /* FrameConverterBGR24.h */,
 				9E8D04932B2D191F000590B4 /* FrameConverterBGR32.h */,
 				933BD560223B2ECE002C4E18 /* FrameConverterBGR565.h */,
 				5D188D901B90CA4200FA7DD7 /* FrameConverterBGRA32.h */,
 				93CBEEC825CDBBF400B8A928 /* FrameConverterColorMap.h */,
+				18BCAB0E2CDC2E3C0083F864 /* FrameConverterR_G_B24.h */,
 				5D188D911B90CA4200FA7DD7 /* FrameConverterRGB24.h */,
 				9E8D048E2B2D130C000590B4 /* FrameConverterRGB32.h */,
 				933BD579223B4006002C4E18 /* FrameConverterRGB565.h */,
@@ -1090,6 +1102,7 @@
 				5D188DF51B90CA4200FA7DD7 /* CV.h in Headers */,
 				5D188DFF1B90CA4200FA7DD7 /* FrameConverterThreshold.h in Headers */,
 				5D188E141B90CA4200FA7DD7 /* FrameFilterMorphology.h in Headers */,
+				18BCAB0C2CDC2E0F0083F864 /* FrameConverterB_G_R24.h in Headers */,
 				5D188E261B90CA4200FA7DD7 /* FrameShrinker.h in Headers */,
 				5D188DFC1B90CA4200FA7DD7 /* FrameConverterBGRA32.h in Headers */,
 				5D188E2E1B90CA4300FA7DD7 /* Motion.h in Headers */,
@@ -1102,6 +1115,7 @@
 				9391E0D7287501F100B0D39B /* FrameConverterRGBA64.h in Headers */,
 				5D188E001B90CA4200FA7DD7 /* FrameConverterY_U_V12.h in Headers */,
 				5D188E351B90CA4300FA7DD7 /* SubRegion.h in Headers */,
+				18BCAB112CDC2E3C0083F864 /* FrameConverterR_G_B24.h in Headers */,
 				9E8D048F2B2D130C000590B4 /* FrameConverterRGB32.h in Headers */,
 				5D188DF81B90CA4200FA7DD7 /* FrameConverter.h in Headers */,
 				5D188DF71B90CA4200FA7DD7 /* FrameChannels.h in Headers */,
@@ -1164,6 +1178,7 @@
 				5D222B9B1BB1878100298788 /* NEON.h in Headers */,
 				9328F8362096FEC30050A262 /* FrameFilterGaussian.h in Headers */,
 				5D222B9D1BB1878100298788 /* FrameFilterSobel.h in Headers */,
+				18BCAB0F2CDC2E3C0083F864 /* FrameConverterR_G_B24.h in Headers */,
 				5D222B9E1BB1878100298788 /* FrameInterpolatorNearestPixel.h in Headers */,
 				5D222B9F1BB1878100298788 /* Histogram.h in Headers */,
 				5D222BA01BB1878100298788 /* FrameConverterRGB24.h in Headers */,
@@ -1196,6 +1211,7 @@
 				5D222BBA1BB1878100298788 /* FrameConverterBGRA32.h in Headers */,
 				5D222BBB1BB1878100298788 /* Motion.h in Headers */,
 				5D222BBC1BB1878100298788 /* FrameNormalizer.h in Headers */,
+				18BCAB0A2CDC2E0F0083F864 /* FrameConverterB_G_R24.h in Headers */,
 				5D222BBE1BB1878100298788 /* FrameInverter.h in Headers */,
 				5D222BBF1BB1878100298788 /* Bresenham.h in Headers */,
 				5D222BC01BB1878100298788 /* FrameVariance.h in Headers */,
@@ -1271,6 +1287,7 @@
 				5D491C691D8F548F00C4099B /* NEON.h in Headers */,
 				9328F8382096FEC30050A262 /* FrameFilterGaussian.h in Headers */,
 				5D491C6B1D8F548F00C4099B /* FrameFilterSobel.h in Headers */,
+				18BCAB102CDC2E3C0083F864 /* FrameConverterR_G_B24.h in Headers */,
 				5D491C6C1D8F548F00C4099B /* FrameInterpolatorNearestPixel.h in Headers */,
 				5D491C6D1D8F548F00C4099B /* Histogram.h in Headers */,
 				5D491C6E1D8F548F00C4099B /* FrameConverterRGB24.h in Headers */,
@@ -1303,6 +1320,7 @@
 				5D491C881D8F548F00C4099B /* FrameConverterBGRA32.h in Headers */,
 				5D491C891D8F548F00C4099B /* Motion.h in Headers */,
 				5D491C8A1D8F548F00C4099B /* FrameNormalizer.h in Headers */,
+				18BCAB0D2CDC2E0F0083F864 /* FrameConverterB_G_R24.h in Headers */,
 				5D491C8C1D8F548F00C4099B /* FrameInverter.h in Headers */,
 				5D491C8D1D8F548F00C4099B /* Bresenham.h in Headers */,
 				5D491C8E1D8F548F00C4099B /* FrameVariance.h in Headers */,
@@ -1378,6 +1396,7 @@
 				5D9860431D8B4DFB00DEDB00 /* NEON.h in Headers */,
 				9328F8372096FEC30050A262 /* FrameFilterGaussian.h in Headers */,
 				5D9860451D8B4DFB00DEDB00 /* FrameFilterSobel.h in Headers */,
+				18BCAB122CDC2E3C0083F864 /* FrameConverterR_G_B24.h in Headers */,
 				5D9860461D8B4DFB00DEDB00 /* FrameInterpolatorNearestPixel.h in Headers */,
 				5D9860471D8B4DFB00DEDB00 /* Histogram.h in Headers */,
 				5D9860481D8B4DFB00DEDB00 /* FrameConverterRGB24.h in Headers */,
@@ -1410,6 +1429,7 @@
 				5D9860621D8B4DFB00DEDB00 /* FrameConverterBGRA32.h in Headers */,
 				5D9860631D8B4DFB00DEDB00 /* Motion.h in Headers */,
 				5D9860641D8B4DFB00DEDB00 /* FrameNormalizer.h in Headers */,
+				18BCAB0B2CDC2E0F0083F864 /* FrameConverterB_G_R24.h in Headers */,
 				5D9860661D8B4DFB00DEDB00 /* FrameInverter.h in Headers */,
 				5D9860671D8B4DFB00DEDB00 /* Bresenham.h in Headers */,
 				5D9860681D8B4DFB00DEDB00 /* FrameVariance.h in Headers */,

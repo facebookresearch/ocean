@@ -81,10 +81,12 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverter.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterABGR32.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterARGB32.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterB_G_R24.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR24.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR32.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR565.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGRA32.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterR_G_B24.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB24.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB32.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB565.h" />
@@ -165,10 +167,12 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverter.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterABGR32.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterARGB32.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterB_G_R24.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR24.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR32.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR565.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGRA32.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterR_G_B24.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB24.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB32.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB565.cpp" />

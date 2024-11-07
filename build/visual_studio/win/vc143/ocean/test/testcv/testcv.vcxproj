@@ -237,7 +237,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_VU12.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterDilation.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterErosion.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterB_G_R24.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR24.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterR_G_B24.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB24.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYUV24.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_UV12.cpp" />
@@ -324,7 +326,9 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterErosion.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameFilterScharr.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestMotion.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterB_G_R24.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterBGR24.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterR_G_B24.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB24.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterYUV24.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterY_UV12.h" />
