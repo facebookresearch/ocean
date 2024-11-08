@@ -56,7 +56,7 @@ class OCEAN_TEST_CV_LIBYUV_EXPORT TestFrameConverterY_U_V24
 		static void specialRandomizeFrame(Frame& frame);
 
 		/**
-		 * Extracts one pixel from a Y_U_V12 source frame.
+		 * Extracts one pixel from a Y_U_V24 source frame.
 		 * @param frame The frame from which the pixel will be extracted, must be valid
 		 * @param x The horizontal pixel location within the frame, with range [0, frame.width() - 1]
 		 * @param y The vertical pixel location within the frame, with range [0, frame.height() - 1]

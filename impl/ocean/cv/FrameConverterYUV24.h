@@ -125,15 +125,15 @@ class OCEAN_CV_EXPORT FrameConverterYUV24 : public FrameConverter
 		 * Converts a YUV 24 bit frame to a Y_U_V 12 bit frame.
 		 * @param source The source frame buffer, with (width * 3 + targetPaddingElements) * height elements, must be valid
 		 * @param yTarget The y target frame buffer, with (width + yPaddingElements) * height elements, must be valid
-		 * @param uTarget The u target frame buffer, with (2 * width/2 + vPaddingElements) * height/2 elements, must be valid
-		 * @param vTarget The v target frame buffer, with (2 * width/2 + uPaddingElements) * height/2 elements, must be valid
+		 * @param uTarget The u target frame buffer, with (2 * width/2 + uPaddingElements) * height/2 elements, must be valid
+		 * @param vTarget The v target frame buffer, with (2 * width/2 + vPaddingElements) * height/2 elements, must be valid
 		 * @param width The width of the frame in pixel, with range [2, infinity), must be a multiple of 2
 		 * @param height The height of the frame in pixel, with range [2, infinity), must be a multiple of 2
 		 * @param flag Determining the type of conversion
 		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in (uint8_t) elements, with range [0, infinity)
 		 * @param yTargetPaddingElements The number of padding elements at the end of each y-target row, in (uint8_t) elements, with range [0, infinity)
-		 * @param vTargetPaddingElements The number of padding elements at the end of each v-target row, in (uint8_t) elements, with range [0, infinity)
 		 * @param uTargetPaddingElements The number of padding elements at the end of each u-target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param vTargetPaddingElements The number of padding elements at the end of each v-target row, in (uint8_t) elements, with range [0, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 */
 		static inline void convertYUV24ToY_U_V12(const uint8_t* source, uint8_t* yTarget, uint8_t* uTarget, uint8_t* vTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uTargetPaddingElements, const unsigned int vTargetPaddingElements, Worker* worker = nullptr);

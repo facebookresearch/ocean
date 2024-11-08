@@ -133,7 +133,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterYUV24
 	protected:
 
 		/**
-		 * Extracts one pixel from a Y_VU12 source frame.
+		 * Extracts one pixel from a Y_U_V12 source frame.
 		 * @param frame The frame from which the pixel will be extracted, must be valid
 		 * @param x The horizontal pixel location within the frame, with range [0, frame.width() - 1]
 		 * @param y The vertical pixel location within the frame, with range [0, frame.height() - 1]
@@ -143,7 +143,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterYUV24
 		static MatrixD pixelFunctionYUV24ForY_U_V12(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag);
 
 		/**
-		 * Extracts one pixel from a Y_VU12 source frame.
+		 * Extracts one pixel from a Y_U_V12 source frame.
 		 * @param frame The frame from which the pixel will be extracted, must be valid
 		 * @param x The horizontal pixel location within the frame, with range [0, frame.width() - 1]
 		 * @param y The vertical pixel location within the frame, with range [0, frame.height() - 1]

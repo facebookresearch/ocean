@@ -111,7 +111,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterYVU24
 	protected:
 
 		/**
-		 * Extracts one pixel from a Y_VU12 source frame.
+		 * Extracts one pixel from a YUV24 source frame for a Y_V_U12 target frame.
 		 * @param frame The frame from which the pixel will be extracted, must be valid
 		 * @param x The horizontal pixel location within the frame, with range [0, frame.width() - 1]
 		 * @param y The vertical pixel location within the frame, with range [0, frame.height() - 1]

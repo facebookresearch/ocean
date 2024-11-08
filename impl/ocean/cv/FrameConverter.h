@@ -2075,8 +2075,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * t1 = tSourceChannelIndex1 == 0 ? s0, or tSourceChannelIndex1 == 1 ? s1, or tSourceChannelIndex1 == 2 ? s2
 		 * t2 = tSourceChannelIndex2 == 0 ? s0, or tSourceChannelIndex2 == 1 ? s1, or tSourceChannelIndex2 == 2 ? s2
 		 * </pre>
-		 * @param sources The pointer to the first, second, and third memory block of the source image, must be valid
-		 * @param targets The one pointer to the target image, must be valid
+		 * @param sources The one pointer to the source image, must be valid
+		 * @param targets The pointer to the first, second, and third memory block of the target image, must be valid
 		 * @param multipleRowIndex The index of the multiple-row to be handled, with range [0, height / 2 - 1]
 		 * @param width The width of the frame in pixel, with range [2, infinity), must be even
 		 * @param height The height of the frame in pixel, with range [2, infinity), must be even
