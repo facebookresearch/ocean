@@ -137,6 +137,12 @@ bool TestFrameConverter::test(const double testDuration, Worker& /*worker*/)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testMapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testMapOneRow_1Plane3ChannelsWith2ChannelsDownsampled2x1BackIsDownsampled_To_1Plane3Channels_8BitPerChannel(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -321,6 +327,12 @@ TEST(TestFrameConverter, MapOneRow_3Plane1Channel_To_1Plane3Channels_8BitPerChan
 {
 	Worker worker;
 	EXPECT_TRUE(TestFrameConverter::testMapOneRow_3Plane1Channel_To_1Plane3Channels_8BitPerChannel(GTEST_TEST_DURATION));
+}
+
+TEST(TestFrameConverter, MapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverter::testMapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel(GTEST_TEST_DURATION));
 }
 
 TEST(TestFrameConverter, MapOneRow_1Plane3ChannelsWith2ChannelsDownsampled2x1BackIsDownsampled_To_1Plane3Channels_8BitPerChannel)
@@ -2606,6 +2618,70 @@ bool TestFrameConverter::testMapOneRow_3Plane1Channel_To_1Plane3Channels_8BitPer
 					{
 						allSucceeded = false;
 					}
+				}
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestFrameConverter::testMapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing 1-row map of 1 plane 3 channels to 3 planes 1 channel:";
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
+		constexpr unsigned int height = 1u;
+
+		const Frame sourceFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 3u, 1u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+
+		Frame targetFrame = CV::CVUtilities::randomizedFrame(FrameType(width, height, FrameType::genericPixelFormat<uint8_t, 1u, 3u>(), FrameType::ORIGIN_UPPER_LEFT), &randomGenerator);
+
+		const Frame copyTargetFrame(targetFrame, Frame::ACM_COPY_KEEP_LAYOUT_COPY_PADDING_DATA);
+
+		const void* sources[1] = {sourceFrame.constdata<uint8_t>()};
+		void* targets[3] = {targetFrame.data<uint8_t>(0u), targetFrame.data<uint8_t>(1u), targetFrame.data<uint8_t>(2u)};
+
+		const unsigned int options[4] = {sourceFrame.paddingElements(), targetFrame.paddingElements(0u), targetFrame.paddingElements(1u), targetFrame.paddingElements(2u)};
+
+		CV::FrameConverter::mapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel<0u, 1u, 2u>(sources, targets, 0u, width, 1u, CV::FrameConverter::CONVERT_NORMAL, &options);
+
+		if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
+		{
+			ocean_assert(false && "This must never happen!");
+			return false;
+		}
+
+		for (unsigned int x = 0u; x < width; ++x)
+		{
+			const uint8_t* sourcePixel = sourceFrame.constpixel<uint8_t>(x, 0u);
+			const uint8_t targetPixel[3] = {targetFrame.constpixel<uint8_t>(x, 0u, 0u)[0], targetFrame.constpixel<uint8_t>(x, 0u, 1u)[0], targetFrame.constpixel<uint8_t>(x, 0u, 2u)[0]};
+
+			for (unsigned int n = 0u; n < 3u; ++n)
+			{
+				if (targetPixel[n] != sourcePixel[n])
+				{
+					allSucceeded = false;
 				}
 			}
 		}

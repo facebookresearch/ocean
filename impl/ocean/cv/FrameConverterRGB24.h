@@ -336,6 +336,23 @@ class OCEAN_CV_EXPORT FrameConverterRGB24 : public FrameConverter
 		 */
 		static inline void convertRGB24ToYUV24Pixel(const uint8_t* rgb, uint8_t* yuv);
 
+		/**
+		 * Converts a RGB 24 bit frame to a R_G_B 24 bit frame.
+		 * @param source The source frame buffer, with (width * 3 + targetPaddingElements) * height elements, must be valid
+		 * @param rTarget The r target frame buffer, with (width + rPaddingElements) * height elements, must be valid
+		 * @param gTarget The g target frame buffer, with (width + gPaddingElements) * height elements, must be valid
+		 * @param bTarget The b target frame buffer, with (width + bPaddingElements) * height elements, must be valid
+		 * @param width The width of the frame in pixel, with range [2, infinity)
+		 * @param height The height of the frame in pixel, with range [2, infinity)
+		 * @param flag Determining the type of conversion
+		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in (uint8_t) elements, with range [0, infinity)
+		 * @param rTargetPaddingElements The number of padding elements at the end of each r-target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param gTargetPaddingElements The number of padding elements at the end of each g-target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param bTargetPaddingElements The number of padding elements at the end of each b-target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computation
+		 */
+		static inline void convertRGB24ToR_G_B24(const uint8_t* source, uint8_t* rTarget, uint8_t* gTarget, uint8_t* bTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int rTargetPaddingElements, const unsigned int gTargetPaddingElements, const unsigned int bTargetPaddingElements, Worker* worker = nullptr);
+
 	protected:
 
 		/**
@@ -842,6 +859,27 @@ inline void FrameConverterRGB24::convertRGB24ToYUV24Pixel(const uint8_t* rgb, ui
 	ocean_assert(abs(int(yuv[0]) - int(((rgb[0] * 66 + rgb[1] * 129 + rgb[2] * 25 + 128) / 256) + 16)) <= 1);
 	ocean_assert(abs(int(yuv[1]) - int(((rgb[0] * -38 - rgb[1] * 74 + rgb[2] * 112 + 128) / 256) + 128)) <= 1);
 	ocean_assert(abs(int(yuv[2]) - int(((rgb[0] * 112 - rgb[1] * 94 - rgb[2] * 18 + 128) / 256) + 128)) <= 1);
+}
+
+inline void FrameConverterRGB24::convertRGB24ToR_G_B24(const uint8_t* source, uint8_t* rTarget, uint8_t* gTarget, uint8_t* bTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int rTargetPaddingElements, const unsigned int gTargetPaddingElements, const unsigned int bTargetPaddingElements, Worker* worker)
+{
+	ocean_assert(source != nullptr && rTarget != nullptr && gTarget != nullptr && bTarget != nullptr);
+
+	if (width < 1u || height < 1u)
+	{
+		return;
+	}
+
+	const unsigned int options[4] = {sourcePaddingElements, rTargetPaddingElements, gTargetPaddingElements, bTargetPaddingElements};
+
+	void* targets[3] =
+	{
+		rTarget,
+		gTarget,
+		bTarget
+	};
+
+	FrameConverter::convertArbitraryPixelFormat((const void**)(&source), targets, width, height, flag, 1u, FrameConverter::mapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel<0u, 1u, 2u>, options, worker);
 }
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10

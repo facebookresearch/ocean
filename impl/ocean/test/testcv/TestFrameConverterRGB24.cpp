@@ -280,6 +280,21 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 	}
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing RGB24 to R_G_B24 conversion with resolution " << width << "x" << height << ":";
+		Log::info() << " ";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testRGB24ToR_G_B24(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -719,6 +734,30 @@ TEST(TestFrameConverterRGB24, RGB24FullRangeToY_V_U12FullRangeFlippedMirrored)
 	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24FullRangeToY_V_U12FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
+TEST(TestFrameConverterRGB24, RGB24ToR_G_B24Normal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToR_G_B24(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterRGB24, RGB24ToR_G_B24Flipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToR_G_B24(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterRGB24, RGB24ToR_G_B24Mirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToR_G_B24(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterRGB24, RGB24ToR_G_B24FlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToR_G_B24(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
 #endif // OCEAN_USE_GTEST
 
 bool TestFrameConverterRGB24::testRGB24ToARGB32(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -946,6 +985,16 @@ bool TestFrameConverterRGB24::testRGB24FullRangeToY_V_U12FullRange(const unsigne
 	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGB24, FrameType::FORMAT_Y_V_U12_FULL_RANGE, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGB24::convertRGB24FullRangeToY_V_U12FullRange), flag, TestFrameConverterRGB24::pixelFunctionRGBForY_UV12, TestFrameConverterRGB24::pixelFunctionY_U_V12ForYUV24, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
+bool TestFrameConverterRGB24::testRGB24ToR_G_B24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	const MatrixD transformationMatrix(3, 3, true);
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGB24, FrameType::FORMAT_R_G_B24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGB24::convertRGB24ToR_G_B24), conversionFlag, FrameConverterTestUtilities::functionGenericPixel, pixelFunctionR_G_B24, transformationMatrix, 0.0, 255.0, testDuration, worker);
+}
+
 MatrixD TestFrameConverterRGB24::pixelFunctionRGBForY_UV12(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)
 {
 	ocean_assert(frame.isValid());
@@ -1059,6 +1108,45 @@ MatrixD TestFrameConverterRGB24::pixelFunctionY_U_V12ForYUV24(const Frame& frame
 	colorVector(0, 0) = double(frame.constpixel<uint8_t>(xAdjusted, yAdjusted, 0u)[0]);
 	colorVector(1, 0) = double(frame.constpixel<uint8_t>(xAdjusted_2, yAdjusted_2, 1u)[0]);
 	colorVector(2, 0) = double(frame.constpixel<uint8_t>(xAdjusted_2, yAdjusted_2, 2u)[0]);
+
+	return colorVector;
+}
+
+MatrixD TestFrameConverterRGB24::pixelFunctionR_G_B24(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)
+{
+	ocean_assert(frame.isValid());
+	ocean_assert(x < frame.width() && y < frame.height());
+
+	unsigned int xAdjusted = x;
+	unsigned int yAdjusted = y;
+
+	switch (conversionFlag)
+	{
+		case CV::FrameConverter::CONVERT_NORMAL:
+			break;
+
+		case CV::FrameConverter::CONVERT_FLIPPED:
+			yAdjusted = frame.height() - y - 1u;
+			break;
+
+		case CV::FrameConverter::CONVERT_MIRRORED:
+			xAdjusted = frame.width() - x - 1u;
+			break;
+
+		case CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED:
+			xAdjusted = frame.width() - x - 1u;
+			yAdjusted = frame.height() - y - 1u;
+			break;
+
+		default:
+			ocean_assert(false && "Not supported conversion flag.");
+	}
+
+	MatrixD colorVector(3, 1);
+
+	colorVector(0, 0) = double(*frame.constpixel<uint8_t>(xAdjusted, yAdjusted, 0u));
+	colorVector(1, 0) = double(*frame.constpixel<uint8_t>(xAdjusted, yAdjusted, 1u));
+	colorVector(2, 0) = double(*frame.constpixel<uint8_t>(xAdjusted, yAdjusted, 2u));
 
 	return colorVector;
 }

@@ -229,6 +229,17 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterRGB24
 		 */
 		static bool testRGB24FullRangeToY_V_U12FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
 
+		/**
+		 * Tests the RGB24 to R_G_B24 conversion.
+		 * @param width The width of the original frame in pixel, with range [1, infinity)
+		 * @param height The height of the original frame in pixel, with range [1, infinity)
+		 * @param conversionFlag The conversion flag that has been applied during conversion
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		static bool testRGB24ToR_G_B24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
+
 	protected:
 
 		/**
@@ -260,6 +271,17 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterRGB24
 		 * @return The vector holding the frame's color value at the specified location
 		 */
 		static MatrixD pixelFunctionY_U_V12ForYUV24(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag);
+
+		/**
+		 * Extracts one pixel from a R_G_B24 source frame.
+		 * @param frame The frame from which the pixel will be extracted, must be valid
+		 * @param x The horizontal pixel location within the frame, with range [0, frame.width() - 1]
+		 * @param y The vertical pixel location within the frame, with range [0, frame.height() - 1]
+		 * @param conversionFlag The conversion flag that will be applied, must be valid
+		 * @return The vector holding the frame's color value at the specified location
+		 */
+		static MatrixD pixelFunctionR_G_B24(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag);
+
 };
 
 }

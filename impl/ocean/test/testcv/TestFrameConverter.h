@@ -160,6 +160,13 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverter : protected CV::FrameConverter
 		static bool testMapOneRow_3Plane1Channel_To_1Plane3Channels_8BitPerChannel(const double testDuration);
 
 		/**
+		 * Test the 1-row-based mapper for pixel formats with 1 plane and 3 channels to 3 planes and 1 channel.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if the test was successful, otherwise false
+		 */
+		static bool testMapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel(const double testDuration);
+
+		/**
 		 * Test the 1-row-based mapper for pixel formats with 3 channels, 1 planes and a 2x1 downsampling of channel 2 and 3.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if the test was successful, otherwise false

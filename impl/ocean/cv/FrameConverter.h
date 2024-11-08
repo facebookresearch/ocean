@@ -1796,6 +1796,57 @@ class OCEAN_CV_EXPORT FrameConverter
 		static void mapOneRow_3Plane1Channel_To_1Plane3Channels_8BitPerChannel(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options);
 
 		/**
+		 * Converts (maps) one row of an image with e.g., a RGB24 pixel format to one row of an image with e.g., a R_G_B24 pixel format.
+		 * This function needs one source plane holding three channels.<br>
+		 * The layout of the source image of e.g., a RGB24 image looks like this:
+		 * <pre>
+		 *  source:
+		 *  ----------------------------
+		 * | R G B  R G B  R G B  R G B |
+		 * | R G B  R G B  R G B  R G B |
+		 * | R G B  R G B  R G B  R G B |
+		 * | R G B  R G B  R G B  R G B |
+		 *  ----------------------------
+		 * </pre>
+		 *
+		 * The layout of the target image of e.g., a R_G_B24 image looks like this:
+		 * <pre>
+		 *  target0:        target1:        target2:
+		 *  ---------       ---------       ---------
+		 * | R R R R |     | G G G G |     | B B B B |
+		 * | R R R R |     | G G G G |     | B B B B |
+		 * | R R R R |     | G G G G |     | B B B B |
+		 * | R R R R |     | G G G G |     | B B B B |
+		 *  ---------       ---------       ---------
+		 * </pre>
+		 *
+		 * The layout of the options parameters is as follows:
+		 * <pre>
+		 * options[0] uint32_t: sourcePlanePaddingElements
+		 * options[1] uint32_t: targetPlane0PaddingElements
+		 * options[2] uint32_t: targetPlane1PaddingElements
+		 * options[3] uint32_t: targetPlane2PaddingElements
+		 *
+		 * with transformation:
+		 * t0 = tSourceChannelIndex0 == 0 ? s0, or tSourceChannelIndex0 == 1 ? s1, or tSourceChannelIndex0 == 2 ? s2
+		 * t1 = tSourceChannelIndex1 == 0 ? s0, or tSourceChannelIndex1 == 1 ? s1, or tSourceChannelIndex1 == 2 ? s2
+		 * t2 = tSourceChannelIndex2 == 0 ? s0, or tSourceChannelIndex2 == 1 ? s1, or tSourceChannelIndex2 == 2 ? s2
+		 * </pre>
+		 * @param sources The one pointer to the source image, must be valid
+		 * @param targets The pointer to the first, second, and third memory block of the target image, must be valid
+		 * @param multipleRowIndex The index of the multiple-row to be handled, with range [0, height - 1]
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param conversionFlag The conversion to be applied
+		 * @param options The 4 options parameters: 4 padding parameters, with ranges [0, infinity), must be valid
+		 * @tparam tSourceChannelIndex0 The index of the source channels which will be mapped to the first target channel, with range [0, 2]
+		 * @tparam tSourceChannelIndex1 The index of the source channels which will be mapped to the second target channel, with range [0, 2]
+		 * @tparam tSourceChannelIndex2 The index of the source channels which will be mapped to the third target channel, with range [0, 2]
+		 */
+		template <unsigned int tSourceChannelIndex0, unsigned int tSourceChannelIndex1, unsigned int tSourceChannelIndex2>
+		static void mapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options);
+
+		/**
 		 * Converts (matches) one row of an image with e.g., a Y_UV12 pixel format to one row of an image with e.g., an YUV24 or YVU24 pixel format.
 		 * This function needs one plane with the first channel and another plane/block of 2x2 sub-sampled pixels containing the second and third channels.<br>
 		 * The layout of the source image of e.g., an Y_UV12 image looks like this:

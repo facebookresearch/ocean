@@ -2952,6 +2952,166 @@ template void OCEAN_CV_EXPORT FrameConverter::mapOneRow_3Plane1Channel_To_1Plane
 template void OCEAN_CV_EXPORT FrameConverter::mapOneRow_3Plane1Channel_To_1Plane3Channels_8BitPerChannel<2u, 1u, 0u>(const void**, void**, const unsigned int, const unsigned int, const unsigned int, const ConversionFlag, const void*);
 
 template <unsigned int tSourceChannelIndex0, unsigned int tSourceChannelIndex1, unsigned int tSourceChannelIndex2>
+void FrameConverter::mapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options)
+{
+	static_assert(tSourceChannelIndex0 < 3u && tSourceChannelIndex1 < 3u && tSourceChannelIndex2 < 3u, "Invalid source channels!");
+
+	ocean_assert(sources != nullptr && targets != nullptr);
+
+	ocean_assert(options != nullptr);
+	const int* intOptions = reinterpret_cast<const int*>(options);
+	ocean_assert(intOptions != nullptr);
+
+	// options layout:
+	// uint32_t: sourceZippedPaddingElements
+	// uint32_t: targetPlane0PaddingElements
+	// uint32_t: targetPlane1PaddingElements
+	// uint32_t: targetPlane2PaddingElements
+
+	const unsigned int sourceZippedPaddingElements = (unsigned int)intOptions[0];
+	const unsigned int targetPlane0PaddingElements = (unsigned int)intOptions[1];
+	const unsigned int targetPlane1PaddingElements = (unsigned int)intOptions[2];
+	const unsigned int targetPlane2PaddingElements = (unsigned int)intOptions[3];
+
+	const uint8_t* sourceZipped = (const uint8_t*)(sources[0]);
+
+	uint8_t* targetPlane0 = (uint8_t*)(targets[0]);
+	uint8_t* targetPlane1 = (uint8_t*)(targets[1]);
+	uint8_t* targetPlane2 = (uint8_t*)(targets[2]);
+
+	const unsigned int sourceZippedStrideElements = width * 3u + sourceZippedPaddingElements;
+	const unsigned int targetPlane0StrideElements = width + targetPlane0PaddingElements;
+	const unsigned int targetPlane1StrideElements = width + targetPlane1PaddingElements;
+	const unsigned int targetPlane2StrideElements = width + targetPlane2PaddingElements;
+
+	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+
+	sourceZipped += multipleRowIndex * sourceZippedStrideElements;
+
+	uint8_t* tPlane0 = flipTarget ? (targetPlane0 + (height - multipleRowIndex - 1u) * targetPlane0StrideElements) : targetPlane0 + multipleRowIndex * targetPlane0StrideElements;
+	uint8_t* tPlane1 = flipTarget ? (targetPlane1 + (height - multipleRowIndex - 1u) * targetPlane1StrideElements) : targetPlane1 + multipleRowIndex * targetPlane1StrideElements;
+	uint8_t* tPlane2 = flipTarget ? (targetPlane2 + (height - multipleRowIndex - 1u) * targetPlane2StrideElements) : targetPlane2 + multipleRowIndex * targetPlane2StrideElements;
+
+	const uint8_t* const sZippedEnd = sourceZipped + width * 3u;
+
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	constexpr unsigned int blockSize = 16u;
+	const unsigned int blocks = width / blockSize;
+
+	for (unsigned int n = 0u; n < blocks; ++n)
+	{
+		const uint8x16x3_t sZipped_u_8x16x3 = vld3q_u8(sourceZipped);
+
+
+		// target channel 0:
+
+		uint8x16_t tPlane0_u_8x16;
+
+		if constexpr (tSourceChannelIndex0 == 0u)
+		{
+			tPlane0_u_8x16 = sZipped_u_8x16x3.val[0];
+		}
+		else if constexpr (tSourceChannelIndex0 == 1u)
+		{
+			tPlane0_u_8x16 = sZipped_u_8x16x3.val[1];
+		}
+		else
+		{
+			ocean_assert(tSourceChannelIndex0 == 2u);
+			tPlane0_u_8x16 = sZipped_u_8x16x3.val[2];
+		}
+
+		vst1q_u8(tPlane0, tPlane0_u_8x16);
+
+
+		// target channel 1:
+
+		uint8x16_t tPlane1_u_8x16;
+
+		if constexpr (tSourceChannelIndex1 == 0u)
+		{
+			tPlane1_u_8x16 = sZipped_u_8x16x3.val[0];
+		}
+		else if constexpr (tSourceChannelIndex1 == 1u)
+		{
+			tPlane1_u_8x16 = sZipped_u_8x16x3.val[1];
+		}
+		else
+		{
+			ocean_assert(tSourceChannelIndex1 == 2u);
+			tPlane1_u_8x16 = sZipped_u_8x16x3.val[2];
+		}
+
+		vst1q_u8(tPlane1, tPlane1_u_8x16);
+
+		// target channel 2:
+
+		uint8x16_t tPlane2_u_8x16;
+
+		if constexpr (tSourceChannelIndex2 == 0u)
+		{
+			tPlane2_u_8x16 = sZipped_u_8x16x3.val[0];
+		}
+		else if constexpr (tSourceChannelIndex2 == 1u)
+		{
+			tPlane2_u_8x16 = sZipped_u_8x16x3.val[1];
+		}
+		else
+		{
+			ocean_assert(tSourceChannelIndex2 == 2u);
+			tPlane2_u_8x16 = sZipped_u_8x16x3.val[2];
+		}
+
+		vst1q_u8(tPlane2, tPlane2_u_8x16);
+
+
+		sourceZipped += blockSize * 3u;
+
+		tPlane0 += blockSize;
+		tPlane1 += blockSize;
+		tPlane2 += blockSize;
+	}
+
+#endif // OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	while (sourceZipped != sZippedEnd)
+	{
+		ocean_assert(sourceZipped < sZippedEnd);
+
+		// target channel 0:
+		tPlane0[0u] = sourceZipped[tSourceChannelIndex0];
+
+		// target channel 1:
+		tPlane1[0u] = sourceZipped[tSourceChannelIndex1];
+
+		// target channel 2
+		tPlane2[0u] = sourceZipped[tSourceChannelIndex2];
+
+		sourceZipped += 3u;
+
+		tPlane0++;
+		tPlane1++;
+		tPlane2++;
+	}
+
+	if (mirrorTarget)
+	{
+		CV::FrameChannels::reverseRowPixelOrderInPlace<uint8_t, 1u>(tPlane0 - width, width);
+		CV::FrameChannels::reverseRowPixelOrderInPlace<uint8_t, 1u>(tPlane1 - width, width);
+		CV::FrameChannels::reverseRowPixelOrderInPlace<uint8_t, 1u>(tPlane2 - width, width);
+	}
+}
+
+template void OCEAN_CV_EXPORT FrameConverter::mapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel<0u, 1u, 2u>(const void**, void**, const unsigned int, const unsigned int, const unsigned int, const ConversionFlag, const void*);
+template void OCEAN_CV_EXPORT FrameConverter::mapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel<0u, 2u, 1u>(const void**, void**, const unsigned int, const unsigned int, const unsigned int, const ConversionFlag, const void*);
+template void OCEAN_CV_EXPORT FrameConverter::mapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel<1u, 0u, 2u>(const void**, void**, const unsigned int, const unsigned int, const unsigned int, const ConversionFlag, const void*);
+template void OCEAN_CV_EXPORT FrameConverter::mapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel<1u, 2u, 0u>(const void**, void**, const unsigned int, const unsigned int, const unsigned int, const ConversionFlag, const void*);
+template void OCEAN_CV_EXPORT FrameConverter::mapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel<2u, 0u, 1u>(const void**, void**, const unsigned int, const unsigned int, const unsigned int, const ConversionFlag, const void*);
+template void OCEAN_CV_EXPORT FrameConverter::mapOneRow_1Plane3Channels_To_3Plane1Channel_8BitPerChannel<2u, 1u, 0u>(const void**, void**, const unsigned int, const unsigned int, const unsigned int, const ConversionFlag, const void*);
+
+template <unsigned int tSourceChannelIndex0, unsigned int tSourceChannelIndex1, unsigned int tSourceChannelIndex2>
 void FrameConverter::mapOneRow_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options)
 {
 	static_assert(tSourceChannelIndex0 < 3u && tSourceChannelIndex1 < 3u && tSourceChannelIndex2 < 3u, "Invalid source channels!");
