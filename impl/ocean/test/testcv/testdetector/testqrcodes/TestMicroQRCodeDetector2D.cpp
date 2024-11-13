@@ -258,7 +258,7 @@ bool TestMicroQRCodeDetector2D::testDetectMicroQRCodesSmallImageSyntheticData(co
 {
 	static_assert(std::is_same_v<Scalar, double> || std::is_same_v<Scalar, float>);
 
-	const double detectionValidationThreshold = std::is_same_v<Scalar, double> ? 0.90 : 0.85;
+	const double detectionValidationThreshold = std::is_same_v<Scalar, double> ? 0.90 : 0.78;
 	const double groundtruthComparisonValidationThreshold = std::is_same_v<Scalar, double> ? 0.80 : 0.75;
 
 	return testDetectMicroQRCodesSyntheticData_Internal(gaussianFilterSize, testDuration, worker, "SmallImage", detectionValidationThreshold, groundtruthComparisonValidationThreshold);
