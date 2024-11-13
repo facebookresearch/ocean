@@ -1426,6 +1426,9 @@ inline bool FrameInterpolatorBilinear::Comfort::resize(Frame& frame, const unsig
 		return false;
 	}
 
+	target.setTimestamp(frame.timestamp());
+	target.setRelativeTimestamp(frame.relativeTimestamp());
+
 	frame = std::move(target);
 	return true;
 }
