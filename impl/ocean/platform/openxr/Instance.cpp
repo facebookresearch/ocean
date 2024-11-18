@@ -395,7 +395,7 @@ bool Instance::determineViewConfigurations(const XrInstance& xrInstance, const X
 
 	for (const XrViewConfigurationType& xrEnumeratedViewConfigurationType : xrEnumeratedViewConfigurationTypes)
 	{
-		XrViewConfigurationProperties xrViewConfigurationProperties = {};
+		XrViewConfigurationProperties xrViewConfigurationProperties = {/*type=*/ XR_TYPE_VIEW_CONFIGURATION_PROPERTIES};
 		xrResult = xrGetViewConfigurationProperties(xrInstance, xrSystemId, xrEnumeratedViewConfigurationType, &xrViewConfigurationProperties);
 
 		if (xrResult != XR_SUCCESS)
