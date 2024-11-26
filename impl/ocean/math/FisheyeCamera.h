@@ -1118,19 +1118,39 @@ VectorT2<T> FisheyeCameraT<T>::undistortNormalized(const VectorT2<T>& distortedN
 
 			const T df = T(1) + T(3) * k3 * theta2 + T(5) * k5 * theta4 + T(7) * k7 * theta6 + T(9) * k9 * theta8 + T(11) * k11 * theta10 + T(13) * k13 * theta12;
 
-			if (NumericT<T>::isEqualEps(df))
+			if constexpr (std::is_same_v<T, float>)
 			{
-				break;
+				if (NumericT<T>::isNan(df) || NumericT<T>::isInf(df) || NumericT<T>::isEqualEps(df))
+				{
+					break;
+				}
+			}
+			else
+			{
+				if (NumericT<T>::isEqualEps(df))
+				{
+					break;
+				}
 			}
 
 			const T delta = error / df;
 
-			theta -= delta;
-
-			if (NumericT<T>::isEqualEps(delta))
+			if constexpr (std::is_same_v<T, float>)
 			{
-				break;
+				if (NumericT<T>::isNan(delta) || NumericT<T>::isInf(delta) || NumericT<T>::isEqualEps(delta))
+				{
+					break;
+				}
 			}
+			else
+			{
+				if (NumericT<T>::isEqualEps(delta))
+				{
+					break;
+				}
+			}
+
+			theta -= delta;
 		}
 
 		const T scale = NumericT<T>::tan(theta) / r;
