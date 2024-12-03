@@ -10,7 +10,6 @@
 	<uses-feature android:name="android.hardware.vr.headtracking" android:required="false" />
 
 	<application android:allowBackup="false" android:label="Renderer" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
-		<meta-data android:name="com.samsung.android.vr.application.mode" android:value="vr_only"/>
 		<activity
 				android:name="com.meta.ocean.app.demo.platform.meta.quest.openxr.renderer.quest.OpenXRRendererApplicationActivity"
 				android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
@@ -24,6 +23,7 @@
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
+				<category android:name="com.oculus.intent.category.VR" />
 			</intent-filter>
 		</activity>
 	</application>
