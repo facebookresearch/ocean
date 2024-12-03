@@ -18,6 +18,6 @@ jobs:
     uses: ./.github/workflows/build_ocean_linux_helper.yml
     secrets: inherit
 
-  tmp:
+  test:
     needs: build
     uses: ./.github/workflows/test_ocean_linux_helper.yml
