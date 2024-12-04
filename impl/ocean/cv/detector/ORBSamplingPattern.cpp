@@ -342,7 +342,7 @@ ORBSamplingPattern::LookupTables ORBSamplingPattern::createLookupTables(const un
 			ocean_assert(point0.x() > -threshold && point0.x() < threshold);
 			ocean_assert(point1.y() > -threshold && point1.y() < threshold);
 
-			const Scalar layerFactor = Numeric::sqrt(Scalar(1.41421)); // sqrt(2)
+			const Scalar layerFactor = Scalar(1.41421); // sqrt(2)
 
 			constexpr Scalar layerThreshold = Scalar(26);
 
