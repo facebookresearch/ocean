@@ -175,7 +175,7 @@ void ThreadPool::threadRun()
 				}
 			}
 
-			while (capacity_ < busyPoolThreads_.size() + idlePoolThreads_.size() && idlePoolThreads_.empty())
+			while (capacity_ < busyPoolThreads_.size() + idlePoolThreads_.size() && !idlePoolThreads_.empty())
 			{
 				// we have an idle pool thread and we have more threads than the specified capacity (e.g., because the capacity has been reduced lately)
 

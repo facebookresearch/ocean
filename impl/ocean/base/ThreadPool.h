@@ -145,6 +145,12 @@ class OCEAN_BASE_EXPORT ThreadPool : protected Thread
 		 */
 		inline size_t pending() const;
 
+		/**
+		 * Returns whether the ThreadPool has completed all jobs that have been submitted
+		 * @return True, if the results of size() and pending() are atomically both 0
+		 */
+		inline bool isEmpty() const;
+
 	protected:
 
 		/**
@@ -218,6 +224,13 @@ inline size_t ThreadPool::pending() const
 	const ScopedLock scopedLock(lock_);
 
 	return pendingFunctions_.size();
+}
+
+inline bool ThreadPool::isEmpty() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	return (pendingFunctions_.size() + busyPoolThreads_.size()) == 0;
 }
 
 }
