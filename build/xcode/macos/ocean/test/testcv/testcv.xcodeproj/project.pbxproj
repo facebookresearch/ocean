@@ -337,6 +337,14 @@
 		930D183621D003D00067F705 /* TestFrameInverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D183421D003D00067F705 /* TestFrameInverter.h */; };
 		930D183721D003D00067F705 /* TestFrameInverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D183421D003D00067F705 /* TestFrameInverter.h */; };
 		930D183821D003D00067F705 /* TestFrameInverter.h in Headers */ = {isa = PBXBuildFile; fileRef = 930D183421D003D00067F705 /* TestFrameInverter.h */; };
+		9311241B2D134EC80036C08F /* FrameConverterTestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 9311241A2D134EC80036C08F /* FrameConverterTestUtilities.h */; };
+		9311241C2D134EC80036C08F /* FrameConverterTestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 9311241A2D134EC80036C08F /* FrameConverterTestUtilities.h */; };
+		9311241D2D134EC80036C08F /* FrameConverterTestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 9311241A2D134EC80036C08F /* FrameConverterTestUtilities.h */; };
+		9311241E2D134EC80036C08F /* FrameConverterTestUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 9311241A2D134EC80036C08F /* FrameConverterTestUtilities.h */; };
+		931124202D134ED90036C08F /* FrameConverterTestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9311241F2D134ED90036C08F /* FrameConverterTestUtilities.cpp */; };
+		931124212D134ED90036C08F /* FrameConverterTestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9311241F2D134ED90036C08F /* FrameConverterTestUtilities.cpp */; };
+		931124222D134ED90036C08F /* FrameConverterTestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9311241F2D134ED90036C08F /* FrameConverterTestUtilities.cpp */; };
+		931124232D134ED90036C08F /* FrameConverterTestUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9311241F2D134ED90036C08F /* FrameConverterTestUtilities.cpp */; };
 		9316986021124E6F00F49D58 /* TestEigenUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9316985F21124E6E00F49D58 /* TestEigenUtilities.cpp */; };
 		9316986121124E6F00F49D58 /* TestEigenUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9316985F21124E6E00F49D58 /* TestEigenUtilities.cpp */; };
 		9316986221124E6F00F49D58 /* TestEigenUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9316985F21124E6E00F49D58 /* TestEigenUtilities.cpp */; };
@@ -815,6 +823,8 @@
 		9308ACF72169FCAF00FAEDD9 /* TestFrameInterpolator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameInterpolator.h; path = ../../../../../../impl/ocean/test/testcv/TestFrameInterpolator.h; sourceTree = "<group>"; };
 		930D182F21D0038D0067F705 /* TestFrameInverter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestFrameInverter.cpp; path = ../../../../../../impl/ocean/test/testcv/TestFrameInverter.cpp; sourceTree = "<group>"; };
 		930D183421D003D00067F705 /* TestFrameInverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameInverter.h; path = ../../../../../../impl/ocean/test/testcv/TestFrameInverter.h; sourceTree = "<group>"; };
+		9311241A2D134EC80036C08F /* FrameConverterTestUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FrameConverterTestUtilities.h; path = ../../../../../../impl/ocean/test/testcv/FrameConverterTestUtilities.h; sourceTree = "<group>"; };
+		9311241F2D134ED90036C08F /* FrameConverterTestUtilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FrameConverterTestUtilities.cpp; path = ../../../../../../impl/ocean/test/testcv/FrameConverterTestUtilities.cpp; sourceTree = "<group>"; };
 		9316985F21124E6E00F49D58 /* TestEigenUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TestEigenUtilities.cpp; path = ../../../../../../impl/ocean/test/testcv/TestEigenUtilities.cpp; sourceTree = "<group>"; };
 		9316986421124E9300F49D58 /* TestEigenUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestEigenUtilities.h; path = ../../../../../../impl/ocean/test/testcv/TestEigenUtilities.h; sourceTree = "<group>"; };
 		931A74E72554F88D0050C677 /* TestFrameConverterY10_Packed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFrameConverterY10_Packed.h; path = ../../../../../../impl/ocean/test/testcv/TestFrameConverterY10_Packed.h; sourceTree = "<group>"; };
@@ -924,6 +934,7 @@
 		5D67D3DD1B9375EB00138225 /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
+				9311241F2D134ED90036C08F /* FrameConverterTestUtilities.cpp */,
 				5D1BD2F71EF12F9A003D898C /* TestBresenham.cpp */,
 				9300A26421B64FA900F20761 /* TestCanvas.cpp */,
 				5D67D4421B93766D00138225 /* TestCV.cpp */,
@@ -1017,6 +1028,7 @@
 		5D9370181BC6CCE60046ACD4 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
+				9311241A2D134EC80036C08F /* FrameConverterTestUtilities.h */,
 				5D1BD2FC1EF12FA8003D898C /* TestBresenham.h */,
 				9300A25F21B64F8600F20761 /* TestCanvas.h */,
 				5D9370191BC6CD2F0046ACD4 /* TestCV.h */,
@@ -1161,6 +1173,7 @@
 				93FA817D20EAA5F10049FD7E /* TestFrameMinMax.h in Headers */,
 				5D9370771BC6CD2F0046ACD4 /* TestMotion.h in Headers */,
 				C0F6E5DC1E1EA20800F90052 /* TestFrameFilterCanny.h in Headers */,
+				9311241C2D134EC80036C08F /* FrameConverterTestUtilities.h in Headers */,
 				18BCAAFB2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */,
 				5D9370731BC6CD2F0046ACD4 /* TestFrameTransposer.h in Headers */,
 				93E4DB2F203D419E00C42CCE /* TestFrameMean.h in Headers */,
@@ -1252,6 +1265,7 @@
 				9391E0C0287501BA00B0D39B /* TestFrameInterpolatorBicubic.h in Headers */,
 				9391E0AE287501BA00B0D39B /* TestFrameConverterRGB24.h in Headers */,
 				9391E09C287501A700B0D39B /* TestFrameBlender.h in Headers */,
+				9311241D2D134EC80036C08F /* FrameConverterTestUtilities.h in Headers */,
 				18BCAAFE2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */,
 				9328F845209702AD0050A262 /* TestFrameFilterGaussian.h in Headers */,
 				9391E0BA287501BA00B0D39B /* TestSSE.h in Headers */,
@@ -1343,6 +1357,7 @@
 				C0F6E6081E1EA8CC00F90052 /* TestFrameFilterCanny.h in Headers */,
 				5DF4B8FF1D941FE700284665 /* TestFrameTransposer.h in Headers */,
 				93E4DB31203D419E00C42CCE /* TestFrameMean.h in Headers */,
+				9311241B2D134EC80036C08F /* FrameConverterTestUtilities.h in Headers */,
 				18BCAAFC2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */,
 				5DF4B9001D941FE700284665 /* TestFrameFilterErosion.h in Headers */,
 				5DF4B9011D941FE700284665 /* TestFrameFilterScharrMagnitude.h in Headers */,
@@ -1434,6 +1449,7 @@
 				C0F6E6091E1EA8CC00F90052 /* TestFrameFilterCanny.h in Headers */,
 				C0E9B0971DACEA7100895C4B /* TestFrameTransposer.h in Headers */,
 				93E4DB32203D419E00C42CCE /* TestFrameMean.h in Headers */,
+				9311241E2D134EC80036C08F /* FrameConverterTestUtilities.h in Headers */,
 				18BCAAFD2CDC2CDE0083F864 /* TestFrameConverterR_G_B24.h in Headers */,
 				C0E9B0981DACEA7100895C4B /* TestFrameFilterErosion.h in Headers */,
 				C0E9B0991DACEA7100895C4B /* TestFrameFilterScharrMagnitude.h in Headers */,
@@ -1697,6 +1713,7 @@
 				9300A26521B64FA900F20761 /* TestCanvas.cpp in Sources */,
 				9E8D049C2B326E97000590B4 /* TestFrameConverterRGB32.cpp in Sources */,
 				93E4DB2A203D418300C42CCE /* TestFrameMean.cpp in Sources */,
+				931124222D134ED90036C08F /* FrameConverterTestUtilities.cpp in Sources */,
 				933BD570223B31D4002C4E18 /* TestFrameConverterBGR565.cpp in Sources */,
 				9E8D04A02B326E97000590B4 /* TestFrameConverterBGR32.cpp in Sources */,
 				5DEB48501C6DF36000F618DC /* TestFrameConverterYA16.cpp in Sources */,
@@ -1790,6 +1807,7 @@
 				9300A26621B64FA900F20761 /* TestCanvas.cpp in Sources */,
 				9E8D049D2B326E97000590B4 /* TestFrameConverterRGB32.cpp in Sources */,
 				5DEB48511C6DF36000F618DC /* TestFrameConverterYA16.cpp in Sources */,
+				931124212D134ED90036C08F /* FrameConverterTestUtilities.cpp in Sources */,
 				933BD571223B31D4002C4E18 /* TestFrameConverterBGR565.cpp in Sources */,
 				9E8D04A12B326E97000590B4 /* TestFrameConverterBGR32.cpp in Sources */,
 				5D93700A1BC6CBC30046ACD4 /* TestFrameInterpolatorBilinearAlpha.cpp in Sources */,
@@ -1883,6 +1901,7 @@
 				9300A26721B64FA900F20761 /* TestCanvas.cpp in Sources */,
 				9E8D049E2B326E97000590B4 /* TestFrameConverterRGB32.cpp in Sources */,
 				5DF4B8D81D941FE700284665 /* TestFrameConverterYA16.cpp in Sources */,
+				931124232D134ED90036C08F /* FrameConverterTestUtilities.cpp in Sources */,
 				933BD572223B31D4002C4E18 /* TestFrameConverterBGR565.cpp in Sources */,
 				9E8D04A22B326E97000590B4 /* TestFrameConverterBGR32.cpp in Sources */,
 				5DF4B8D91D941FE700284665 /* TestFrameInterpolatorBilinearAlpha.cpp in Sources */,
@@ -1976,6 +1995,7 @@
 				9300A26821B64FA900F20761 /* TestCanvas.cpp in Sources */,
 				9E8D049F2B326E97000590B4 /* TestFrameConverterRGB32.cpp in Sources */,
 				C0E9B0701DACEA7100895C4B /* TestFrameConverterYA16.cpp in Sources */,
+				931124202D134ED90036C08F /* FrameConverterTestUtilities.cpp in Sources */,
 				933BD573223B31D4002C4E18 /* TestFrameConverterBGR565.cpp in Sources */,
 				9E8D04A32B326E97000590B4 /* TestFrameConverterBGR32.cpp in Sources */,
 				C0E9B0711DACEA7100895C4B /* TestFrameInterpolatorBilinearAlpha.cpp in Sources */,

@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\FrameOperations.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\FrameConverterTestUtilities.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestBresenham.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestCanvas.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestCV.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestZeroMeanSumSquareDifferences.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\FrameConverterTestUtilities.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestBresenham.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestCanvas.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestCV.cpp" />

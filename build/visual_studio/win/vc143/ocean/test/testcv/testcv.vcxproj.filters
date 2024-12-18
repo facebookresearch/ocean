@@ -266,6 +266,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB32.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\FrameConverterTestUtilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestCanvas.h">
@@ -521,6 +524,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameConverterRGB32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\FrameConverterTestUtilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

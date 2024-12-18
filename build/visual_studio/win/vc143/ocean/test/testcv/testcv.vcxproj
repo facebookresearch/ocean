@@ -181,6 +181,7 @@
     <_ProjectFileVersion>10.0.30128.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\FrameConverterTestUtilities.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestBresenham.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestCanvas.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameBlender.cpp" />
@@ -268,6 +269,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestImageQuality.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\FrameConverterTestUtilities.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestBresenham.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestCanvas.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testcv\TestFrameBlender.h" />
