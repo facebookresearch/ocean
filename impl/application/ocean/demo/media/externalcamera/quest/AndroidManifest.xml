@@ -10,6 +10,7 @@
 	<uses-feature android:name="android.hardware.vr.headtracking" android:required="false" />
 
 	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-permission android:name="horizonos.permission.USB_CAMERA"/>
 
 	<uses-feature android:name="android.hardware.usb.host" />
     <uses-feature android:name="android.hardware.camera" />

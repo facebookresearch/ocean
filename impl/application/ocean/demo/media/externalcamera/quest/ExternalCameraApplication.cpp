@@ -15,12 +15,22 @@
 
 using namespace Platform::Meta::Quest;
 
+static std::string getUsbCameraPermissionName(struct android_app* androidApp)
+{
+	if (androidApp->activity->sdkVersion >= 34) 
+	{
+		return "horizonos.permission.USB_CAMERA";
+	}
+
+	return "android.permission.CAMERA";
+}
+
 ExternalCameraApplication::ExternalCameraApplication(struct android_app* androidApp) :
 	VRNativeApplicationAdvanced(androidApp)
 {
 	Media::USB::registerUSBLibrary();
 
-	requestAndroidPermission("android.permission.CAMERA");
+	requestAndroidPermission(getUsbCameraPermissionName(androidApp));
 }
 
 XrSpace ExternalCameraApplication::baseSpace() const
@@ -34,7 +44,7 @@ void ExternalCameraApplication::onAndroidPermissionGranted(const std::string& pe
 {
 	VRNativeApplicationAdvanced::onAndroidPermissionGranted(permission);
 
-	if (permission == "android.permission.CAMERA")
+	if (permission == getUsbCameraPermissionName(androidApp_))
 	{
 		Log::info() << "Camera permission granted";
 
