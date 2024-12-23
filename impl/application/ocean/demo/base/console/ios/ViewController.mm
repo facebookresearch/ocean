@@ -36,7 +36,7 @@ using namespace Ocean;
 	// writing the logs to standard output (e.g,. debug window) and queuing the messages to allow popping them
 	Messenger::get().setOutputType(Messenger::MessageOutput(Messenger::OUTPUT_STANDARD | Messenger::OUTPUT_QUEUED));
 
-	const CGRect rect = [[UIScreen mainScreen] applicationFrame];
+	const CGRect rect = [UIApplication sharedApplication].delegate.window.frame;
 	messengerView_ = [[MessengerView alloc] initWithFrame:rect];
 	[self.view addSubview:messengerView_];
 
