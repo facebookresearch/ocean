@@ -6,6 +6,7 @@
  */
 
 #include "ocean/base/Frame.h"
+#include "ocean/base/Messenger.h"
 #include "ocean/base/String.h"
 
 namespace Ocean
@@ -1491,6 +1492,13 @@ std::string FrameType::translatePixelFormat(const PixelFormat pixelFormat)
 		case FORMAT_B_G_R24:
 			return "B_G_R24";
 	}
+
+#ifdef OCEAN_DEBUG
+	const DataType pixelFormatDataType = dataType(pixelFormat);
+	const unsigned int pixelFormatChannels = channels(pixelFormat);
+
+	Log::debug() << "The pixel format is generic and thus cannot be translated, the format has " << pixelFormatChannels << " channels and holds " << translateDataType(pixelFormatDataType) << " values per channel";
+#endif
 
 	ocean_assert(false && "Invalid pixel format.");
 	return "UNDEFINED";
