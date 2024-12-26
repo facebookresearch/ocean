@@ -448,9 +448,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterARGB32.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterB_GR_24.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterBGR24.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -491,6 +488,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterRGB32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\cv\FrameConverterB_G_R24.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
