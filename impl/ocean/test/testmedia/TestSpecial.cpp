@@ -196,12 +196,12 @@ TEST(TestSpecial, BmpImageY8LowerLeft)
 
 TEST(TestSpecial, PfmImageFloat1UpperLeft)
 {
-	EXPECT_TRUE(TestSpecial::testPfmImageEncodeDecode(1920u, 1080u, FrameType::genericPixelFormat<float, 1u>(), FrameType::ORIGIN_UPPER_LEFT, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestSpecial::testPfmImageEncodeDecode(1920u, 1080u, FrameType::FORMAT_F32, FrameType::ORIGIN_UPPER_LEFT, GTEST_TEST_DURATION));
 }
 
 TEST(TestSpecial, PfmImageFloat1LowerLeft)
 {
-	EXPECT_TRUE(TestSpecial::testPfmImageEncodeDecode(1920u, 1080u, FrameType::genericPixelFormat<float, 1u>(), FrameType::ORIGIN_LOWER_LEFT, GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestSpecial::testPfmImageEncodeDecode(1920u, 1080u, FrameType::FORMAT_F32, FrameType::ORIGIN_LOWER_LEFT, GTEST_TEST_DURATION));
 }
 
 TEST(TestSpecial, PfmImageFloat3UpperLeft)
@@ -466,7 +466,7 @@ bool TestSpecial::testPfmImageEncodeDecode(const double testDuration)
 
 	const FrameType::PixelFormats pixelFormats =
 	{
-		FrameType::genericPixelFormat<float, 1u>(),
+		FrameType::FORMAT_F32,
 		FrameType::genericPixelFormat<float, 3u>()
 	};
 

@@ -66,11 +66,11 @@ bool ImagePfm::encodeImage(const Frame& frame, std::vector<uint8_t>& buffer)
 
 	std::string header;
 
-	if (FrameType::arePixelFormatsCompatible(frame.pixelFormat(), FrameType::genericPixelFormat<float, 1u>()))
+	if (frame.isPixelFormatCompatible(FrameType::FORMAT_F32))
 	{
 		header = "Pf\n" + String::toAString(frame.width()) + " " + String::toAString(frame.height()) + "\n-1.0\n";
 	}
-	else if (FrameType::arePixelFormatsCompatible(frame.pixelFormat(), FrameType::genericPixelFormat<float, 3u>()))
+	else if (frame.isPixelFormatCompatible(FrameType::genericPixelFormat<float, 3u>()))
 	{
 		header = "PF\n" + String::toAString(frame.width()) + " " + String::toAString(frame.height()) + "\n-1.0\n";
 	}
@@ -127,7 +127,7 @@ bool ImagePfm::readHeader(const uint8_t*& data, size_t& size, FrameType& frameTy
 	}
 	else if (data[0] == 'P' && data[1] == 'f' && data[2] == '\n')
 	{
-		pixelFormat = FrameType::genericPixelFormat<float, 1u>();
+		pixelFormat = FrameType::FORMAT_F32;
 	}
 	else
 	{
