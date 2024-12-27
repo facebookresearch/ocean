@@ -51,9 +51,21 @@ bool Rectifier::rectify(const AnyCamera& cameraA, const AnyCamera& cameraB, cons
 		ocean_assert(Numeric::isEqualEps(rectifiedA_T_rectifiedB.translation().y()) && Numeric::isEqualEps(rectifiedA_T_rectifiedB.translation().z()));
 #endif
 
+	const void* borderColor = nullptr;
+
+	std::vector<float> floatBorderColor;
+
+	ocean_assert(frameA.pixelFormat() == frameB.pixelFormat());
+	if (frameA.dataType() == FrameType::DT_SIGNED_FLOAT_32 && frameA.pixelFormat() == frameB.pixelFormat())
+	{
+		floatBorderColor.resize(frameA.channels(), NumericF::nan());
+
+		borderColor = floatBorderColor.data();
+	}
+
 	constexpr unsigned int binSizeInPixel = 4u;
 
-	if (!resampleCameraImageWithOptionalTangentMapping(frameA, cameraA, cameraA_R_rectified, AnyCameraPinhole(pinholeCamera), rectifiedFrameA, nullptr, worker, binSizeInPixel, nullptr, useTangentMapping))
+	if (!resampleCameraImageWithOptionalTangentMapping(frameA, cameraA, cameraA_R_rectified, AnyCameraPinhole(pinholeCamera), rectifiedFrameA, nullptr, worker, binSizeInPixel, borderColor, useTangentMapping))
 	{
 		ocean_assert(false && "This should never happen!");
 
@@ -61,7 +73,7 @@ bool Rectifier::rectify(const AnyCamera& cameraA, const AnyCamera& cameraB, cons
 		return false;
 	}
 
-	if (!resampleCameraImageWithOptionalTangentMapping(frameB, cameraB, cameraB_R_rectified, AnyCameraPinhole(pinholeCamera), rectifiedFrameB, nullptr, worker, binSizeInPixel, nullptr, useTangentMapping))
+	if (!resampleCameraImageWithOptionalTangentMapping(frameB, cameraB, cameraB_R_rectified, AnyCameraPinhole(pinholeCamera), rectifiedFrameB, nullptr, worker, binSizeInPixel, borderColor, useTangentMapping))
 	{
 		ocean_assert(false && "This should never happen!");
 
@@ -145,7 +157,7 @@ bool Rectifier::resampleCameraImageWithOptionalTangentMapping(const Frame& sourc
 
 	const Scalar width = Scalar(targetCamera.width());
 	const Scalar height = Scalar(targetCamera.height());
-	const Scalar width_2 = width / Scalar(2); 
+	const Scalar width_2 = width / Scalar(2);
 	const Scalar height_2 = height / Scalar(2);
 	const Scalar fovx = 2 * Numeric::atan(width_2 / f);
 	const Scalar fovy = 2 * Numeric::atan(height_2 / f);
@@ -172,7 +184,7 @@ bool Rectifier::resampleCameraImageWithOptionalTangentMapping(const Frame& sourc
 				const Scalar newy = Numeric::tan(y * fovy / height) * f;
 				newCornerPosition = Vector2(newx + width_2, newy + height_2);
 			}
-			
+
 			constexpr bool makeUnitVector = false; // we don't need a unit/normalized vector as we project the vector into the camera again
 
 			const Vector3 rayI = source_R_target * targetCamera.vector(newCornerPosition, makeUnitVector);
@@ -201,7 +213,7 @@ bool Rectifier::resampleCameraImageWithOptionalTangentMapping(const Frame& sourc
 	{
 		*source_OLT_target = std::move(lookupTable);
 	}
-	
+
 	return true;
 }
 
