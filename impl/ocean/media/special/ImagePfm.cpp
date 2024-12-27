@@ -54,7 +54,14 @@ Frame ImagePfm::decodeImage(const void* buffer, const size_t size)
 	else
 	{
 		Frame frame(frameType);
-		CV::FrameChannels::reverseChannelOrder<uint8_t, 4u>(remainingBuffer, (uint8_t*)(frame.data<void>()), frame.width(), frame.height(), CV::FrameConverter::CONVERT_NORMAL, sourcePaddingElements, frame.paddingElements());
+		ocean_assert(frame.paddingElements() == 0u);
+
+		constexpr unsigned int targetPaddingElements = 0u;
+
+		// we need to apply a conversion from big endian to little endian for each float value
+		const unsigned int rowPixels = frame.width() * frame.channels();
+
+		CV::FrameChannels::reverseChannelOrder<uint8_t, 4u>(remainingBuffer, (uint8_t*)(frame.data<void>()), rowPixels, frame.height(), CV::FrameConverter::CONVERT_NORMAL, sourcePaddingElements, targetPaddingElements);
 
 		return frame;
 	}
