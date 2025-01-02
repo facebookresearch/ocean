@@ -40,7 +40,7 @@ void Utilities::showMessageBoxApple(const std::string& title, const std::string&
 	UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {}];
 
 	[alertController addAction:defaultAction];
-	[[[[UIApplication sharedApplication] keyWindow] rootViewController]  presentViewController:alertController animated:YES completion:nil];
+	[[[UIApplication sharedApplication].delegate.window rootViewController]  presentViewController:alertController animated:YES completion:nil];
 
 #endif
 }
