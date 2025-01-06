@@ -317,10 +317,11 @@ bool AVFLiveVideo::setExposureDuration(const double duration)
 			}
 			else
 			{
-				const CMTime exposureDuration = CMTimeMake(int64_t(duration * 1000.0 + 0.5), 1000);
+				const CMTime exposureDuration = CMTimeMakeWithSeconds(duration, 1000 * 1000 * 10);
 
-				[captureDevice_ setExposureModeCustomWithDuration:exposureDuration ISO:[captureDevice_ ISO] completionHandler:nil];
 				[captureDevice_ setExposureMode:AVCaptureExposureModeLocked];
+				[captureDevice_ setExposureModeCustomWithDuration:exposureDuration ISO:AVCaptureISOCurrent completionHandler:nil];
+
 				result = true;
 			}
 
