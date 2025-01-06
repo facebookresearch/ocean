@@ -147,7 +147,17 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 		unsigned int preferredHeight = 720u;
 
 		float preferredFps = -1.0f;
-		constexpr int preferredHDR = -1;
+
+		int preferredHDR = -1;
+
+		Value valuePreferredHDR;
+		if (device->parameter("preferredHDR", valuePreferredHDR))
+		{
+			if (valuePreferredHDR.isBool())
+			{
+				preferredHDR = valuePreferredHDR.boolValue() ? 1 : 0;
+			}
+		}
 
 		if (inputLiveVideo->preferredFrameWidth() != 0u || inputLiveVideo->preferredFrameHeight() != 0u)
 		{
@@ -985,6 +995,34 @@ void AKDevice::onUpdateAnchors(const ARAnchors& /*anchors*/)
 void AKDevice::onRemovedAnchors(const ARAnchors& /*anchors*/)
 {
 	// nothing to do here
+}
+
+bool AKDevice::setParameter(const std::string& parameter, const Value& value)
+{
+	if (value.isNull())
+	{
+		return false;
+	}
+
+	const ScopedLock scopedLock(deviceLock);
+
+	parameterMap_[parameter] = value;
+
+	return true;
+}
+
+bool AKDevice::parameter(const std::string& parameter, Value& value)
+{
+	const ParameterMap::const_iterator iParameter = parameterMap_.find(parameter);
+
+	if (iParameter == parameterMap_.cend())
+	{
+		return false;
+	}
+
+	value = iParameter->second;
+
+	return true;
 }
 
 API_AVAILABLE(ios(14.0))

@@ -141,6 +141,11 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKDevice : virtual public Device
 				AKTracker6DOFDelegate* akTracker6DOFDelegate_ = nullptr;
 		};
 
+		/**
+		 * Definition of an unordered map mapping names to values.
+		 */
+		using ParameterMap = std::unordered_map<std::string, Value>;
+
 	public:
 
 		/**
@@ -172,6 +177,20 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKDevice : virtual public Device
 		 * @param anchors The removed anchors, at least one
 		 */
 		virtual void onRemovedAnchors(const ARAnchors& anchors);
+
+		/**
+		 * Sets a parameter  for this tracker.
+		 * Supprted parameters 'noFrameToFrameTracking', 'noDownsamplingOnAndroid'.
+		 * @see Device::setParameter().
+		 */
+		bool setParameter(const std::string& parameter, const Value& value) override;
+
+		/**
+		 * Returns a parameter of this device.
+		 * Supprted parameters 'noFrameToFrameTracking', 'noDownsamplingOnAndroid'.
+		 * @see Device::parameter().
+		 */
+		bool parameter(const std::string& parameter, Value& value) override;
 
 		/**
 		 * Translates the value of an ARGeoTrackingState to a readable string.
@@ -211,6 +230,9 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKDevice : virtual public Device
 
 		/// The capabilities of the tracker for this device.
 		TrackerCapabilities trackerCapabilities_ = TC_INVALID;
+
+		/// The map with optional parameters.
+		ParameterMap parameterMap_;
 };
 
 inline AKDevice::TrackerCapabilities AKDevice::trackerCapabilities() const
