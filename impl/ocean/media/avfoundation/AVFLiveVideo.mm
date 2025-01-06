@@ -349,12 +349,14 @@ bool AVFLiveVideo::setISO(const float iso)
 			if (iso <= 0.0f)
 			{
 				[captureDevice_ setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
+
 				result = true;
 			}
 			else
 			{
-				[captureDevice_ setExposureModeCustomWithDuration:[captureDevice_ exposureDuration] ISO:iso completionHandler:nil];
 				[captureDevice_ setExposureMode:AVCaptureExposureModeLocked];
+				[captureDevice_ setExposureModeCustomWithDuration:AVCaptureExposureDurationCurrent ISO:iso completionHandler:nil];
+
 				result = true;
 			}
 
