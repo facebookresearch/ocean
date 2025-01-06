@@ -385,11 +385,13 @@ bool AVFLiveVideo::setFocus(const float position)
 				if ([captureDevice_ isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus])
 				{
 					[captureDevice_ setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
+
 					result = true;
 				}
 				else if ([captureDevice_ isFocusModeSupported:AVCaptureFocusModeAutoFocus])
 				{
 					[captureDevice_ setFocusMode:AVCaptureFocusModeAutoFocus];
+
 					result = true;
 				}
 				else
@@ -401,8 +403,9 @@ bool AVFLiveVideo::setFocus(const float position)
 			{
 				if (captureDevice_.isLockingFocusWithCustomLensPositionSupported)
 				{
+					[captureDevice_ setFocusMode:AVCaptureFocusModeLocked];
 					[captureDevice_ setFocusModeLockedWithLensPosition:position completionHandler:nil];
-					[captureDevice_ setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
+					
 					result = true;
 				}
 			}
