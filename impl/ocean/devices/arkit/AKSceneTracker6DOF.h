@@ -150,7 +150,7 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKSceneTracker6DOF :
 
 		/**
 		 * Exracts the 3D vectors from a geometry source.
-		 * @param geometrySource The geometry source from wich all vectors will be extracted
+		 * @param geometrySource The geometry source from wich all vectors will be extracted, must be valid
 		 * @param vectors The resulting 3D vectors
 		 * @return True, if succeeded
 		 */
@@ -159,12 +159,21 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKSceneTracker6DOF :
 
 		/**
 		 * Extracts the indices from a geometry element.
-		 * @param geometryElement The geometry elemnt from which the indices will be extracted
+		 * @param geometryElement The geometry elemnt from which the indices will be extracted, must be valid
 		 * @param indices The resulting indices
 		 * @return True, if succeeded
 		 */
 		API_AVAILABLE(ios(13.4))
 		static bool extractIndices(ARGeometryElement* geometryElement, Indices32& indices);
+
+		/**
+		 * Extracts the face classification from a geometry source.
+		 * @param geometrySource The geometry source from which the face classification will be extracted, must be valid
+		 * @param faceTypes The resulting face types
+		 * @return True, if succeeded
+		 */
+		API_AVAILABLE(ios(13.4))
+		static bool extractFaceClassification(ARGeometrySource* geometrySource, SceneElementMeshes::Mesh::FaceTypes& faceTypes);
 
 	protected:
 

@@ -197,8 +197,6 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 	{
 		SceneElementMeshes::SharedMeshes meshes;
 
-		// first, we check whether any mesh as changed, unfortuately ARKit does not provide some kind of mesh version, so that we use the number of triangles to decided whether the mesh has been updated
-
 		for (ARAnchor* anchor in arFrame.anchors)
 		{
 			if (![anchor isKindOfClass:[ARMeshAnchor class]])
@@ -252,29 +250,50 @@ void AKSceneTracker6DOF::onNewSample(const HomogenousMatrix4& world_T_camera, co
 					continue;
 				}
 
+				SceneElementMeshes::Mesh::FaceTypes faceTypes;
+
+				if (meshGeometry.classification != nullptr)
+				{
+					const bool result = extractFaceClassification(meshGeometry.classification, faceTypes);
+					ocean_assert_and_suppress_unused(result, result);
+				}
+
+				ocean_assert(faceTypes.empty() || faceTypes.size() == triangleIndices.size() / 3);
+
 				// ARKit sometimes provides invalid per-vertex normals, we remove these triangles
 
-				for (size_t n = 0; n < triangleIndices.size(); /*noop*/)
+				size_t nIndex = 0;
+
+				for (size_t nFace = 0; nFace < triangleIndices.size() / 3; /*noop*/)
 				{
-					if (Numeric::isNan(perVertexNormals[triangleIndices[n + 0]].x())
-							|| Numeric::isNan(perVertexNormals[triangleIndices[n + 1]].x())
-							|| Numeric::isNan(perVertexNormals[triangleIndices[n + 2]].x()))
+					if (Numeric::isNan(perVertexNormals[triangleIndices[nIndex + 0]].x())
+							|| Numeric::isNan(perVertexNormals[triangleIndices[nIndex + 1]].x())
+							|| Numeric::isNan(perVertexNormals[triangleIndices[nIndex + 2]].x()))
 					{
-						triangleIndices[n + 0] = triangleIndices[triangleIndices.size() - 3];
-						triangleIndices[n + 1] = triangleIndices[triangleIndices.size() - 2];
-						triangleIndices[n + 2] = triangleIndices[triangleIndices.size() - 1];
+						triangleIndices[nIndex + 0] = triangleIndices[triangleIndices.size() - 3];
+						triangleIndices[nIndex + 1] = triangleIndices[triangleIndices.size() - 2];
+						triangleIndices[nIndex + 2] = triangleIndices[triangleIndices.size() - 1];
 
 						triangleIndices.resize(triangleIndices.size() - 3);
+
+						if (!faceTypes.empty())
+						{
+							faceTypes[nIndex] = faceTypes.back();
+							faceTypes.pop_back();
+						}
 					}
 					else
 					{
-						n += 3;
+						++nFace;
+						nIndex += 3;
 					}
 				}
 
+				ocean_assert(faceTypes.empty() || faceTypes.size() == triangleIndices.size() / 3);
+
 				if (!triangleIndices.empty())
 				{
-					meshes.emplace_back(std::make_shared<SceneElementMeshes::Mesh>(meshId, HomogenousMatrix4(world_T_mesh), std::move(vertices), std::move(perVertexNormals), std::move(triangleIndices)));
+					meshes.emplace_back(std::make_shared<SceneElementMeshes::Mesh>(meshId, HomogenousMatrix4(world_T_mesh), std::move(vertices), std::move(perVertexNormals), std::move(triangleIndices), std::move(faceTypes)));
 				}
 			}
 		}
@@ -441,6 +460,46 @@ bool AKSceneTracker6DOF::extractIndices(ARGeometryElement* geometryElement, Indi
 	}
 
 	return false;
+}
+
+bool AKSceneTracker6DOF::extractFaceClassification(ARGeometrySource* geometrySource, SceneElementMeshes::Mesh::FaceTypes& faceTypes)
+{
+	static_assert(uint8_t(ARMeshClassificationNone) == SceneElementMeshes::Mesh::FT_UNKNOWN, "Invalid classification value");
+	static_assert(uint8_t(ARMeshClassificationWall) == SceneElementMeshes::Mesh::FT_WALL, "Invalid classification value");
+	static_assert(uint8_t(ARMeshClassificationFloor) == SceneElementMeshes::Mesh::FT_FLOOR, "Invalid classification value");
+	static_assert(uint8_t(ARMeshClassificationCeiling) == SceneElementMeshes::Mesh::FT_CEILING, "Invalid classification value");
+	static_assert(uint8_t(ARMeshClassificationTable) == SceneElementMeshes::Mesh::FT_TABLE, "Invalid classification value");
+	static_assert(uint8_t(ARMeshClassificationSeat) == SceneElementMeshes::Mesh::FT_SEAT, "Invalid classification value");
+	static_assert(uint8_t(ARMeshClassificationWindow) == SceneElementMeshes::Mesh::FT_WINDOW, "Invalid classification value");
+	static_assert(uint8_t(ARMeshClassificationDoor) == SceneElementMeshes::Mesh::FT_DOOR, "Invalid classification value");
+
+	ocean_assert(geometrySource != nullptr);
+
+	if (geometrySource == nullptr)
+	{
+		return false;
+	}
+
+	const size_t components = geometrySource.componentsPerVector;
+	ocean_assert(components == 1);
+
+	const MTLVertexFormat format = geometrySource.format;
+	ocean_assert(format == MTLVertexFormatUChar);
+
+	if (components != 1 || format != MTLVertexFormatUChar)
+	{
+		return false;
+	}
+
+	const size_t offsetBytes = geometrySource.offset;
+
+	const uint8_t* data = (const uint8_t*)(geometrySource.buffer.contents);
+
+	faceTypes.resize(geometrySource.count);
+
+	memcpy(faceTypes.data(), data + offsetBytes, faceTypes.size() * sizeof(uint8_t));
+
+	return true;
 }
 
 }

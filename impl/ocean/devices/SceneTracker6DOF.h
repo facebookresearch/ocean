@@ -355,27 +355,34 @@ class OCEAN_DEVICES_EXPORT SceneTracker6DOF : virtual public Tracker6DOF
 					public:
 
 						/**
-						 * Definition of individual mesh types.
+						 * Definition of individual face types.
 						 */
-						enum MeshType : uint32_t
+						enum FaceType : uint8_t
 						{
-							/// The mesh type is unknown.
-							MT_UNKNOWN = 0u,
-							/// The mesh is representing a ceiling.
-							MT_CEILING,
-							/// The mesh is representing a door.
-							MT_DOOR,
-							/// The mesh is representing a floor.
-							MT_FLOOR,
-							/// The mesh is representing a seat.
-							MT_SEAT,
-							/// The mesh is representing a table.
-							MT_TABLE,
-							/// The mesh is representing a wall.
-							MT_WALL,
-							/// The mesh is representing a window.
-							MT_WINDOW
+							/// The face type is unknown.
+							FT_UNKNOWN = 0u,
+							/// The face is representing a wall.
+							FT_WALL,
+							/// The face is representing a floor.
+							FT_FLOOR,
+							/// The face is representing a ceiling.
+							FT_CEILING,
+							/// The face is representing a table.
+							FT_TABLE,
+							/// The face is representing a seat.
+							FT_SEAT,
+							/// The face is representing a window.
+							FT_WINDOW,
+							/// The face is representing a door.
+							FT_DOOR,
+							/// The exlusive end value.
+							FT_END
 						};
+
+						/**
+						 * Definition of a vector holding face types.
+						 */
+						using FaceTypes = std::vector<FaceType>;
 
 					public:
 
@@ -386,8 +393,9 @@ class OCEAN_DEVICES_EXPORT SceneTracker6DOF : virtual public Tracker6DOF
 						 * @param vertices The mesh's vertices, defined in the mesh's coordinate system, at least 3
 						 * @param perVertexNormals The per-vertex normals of the mesh's faces, defined in the mesh's coordinate system, one for each vertex
 						 * @param triangleIndices The indices of the vertices representing the mesh's surface triangles, three indices define one triangle, always a multiple of three
+						 * @param faceTypes Optional face types of the mesh, one for each triangle, empty if unknown
 						 */
-						inline Mesh(const Index32 meshId, const HomogenousMatrix4& world_T_mesh, Vectors3&& vertices, Vectors3&& perVertexNormals, Indices32&& triangleIndices);
+						inline Mesh(const Index32 meshId, const HomogenousMatrix4& world_T_mesh, Vectors3&& vertices, Vectors3&& perVertexNormals, Indices32&& triangleIndices, FaceTypes&& faceTypes = FaceTypes());
 
 						/**
 						 * Returns the unique id of the mesh.
@@ -419,13 +427,16 @@ class OCEAN_DEVICES_EXPORT SceneTracker6DOF : virtual public Tracker6DOF
 						 */
 						inline const Indices32& triangleIndices() const;
 
+						/**
+						 * Returns the face types of the mesh, one for each triangle, empty if unknown.
+						 * @return The mesh's face types, empty if unknown
+						 */
+						inline const FaceTypes& faceTypes() const;
+
 					protected:
 
 						/// The unique id of this mesh.
 						Index32 meshId_ = Index32(-1);
-
-						/// The type of the mesh.
-						MeshType meshType_ = MT_UNKNOWN;
 
 						/// The transformation between mesh and world.
 						HomogenousMatrix4 world_T_mesh_ = HomogenousMatrix4(false);
@@ -438,6 +449,9 @@ class OCEAN_DEVICES_EXPORT SceneTracker6DOF : virtual public Tracker6DOF
 
 						/// The indices of the vertices representing the mesh's surface triangles, three indices define one triangle, always a multiple of three.
 						Indices32 triangleIndices_;
+
+						/// The face types of the mesh, one for each triangle, empty if unknown.
+						FaceTypes faceTypes_;
 				};
 
 				/**
@@ -1128,15 +1142,18 @@ inline const SceneTracker6DOF::SceneElementPlanes::Planes& SceneTracker6DOF::Sce
 	return planes_;
 }
 
-inline SceneTracker6DOF::SceneElementMeshes::Mesh::Mesh(const Index32 meshId, const HomogenousMatrix4& world_T_mesh, Vectors3&& vertices, Vectors3&& perVertexNormals, Indices32&& triangleIndices) :
+inline SceneTracker6DOF::SceneElementMeshes::Mesh::Mesh(const Index32 meshId, const HomogenousMatrix4& world_T_mesh, Vectors3&& vertices, Vectors3&& perVertexNormals, Indices32&& triangleIndices, FaceTypes&& faceTypes) :
 	meshId_(meshId),
 	world_T_mesh_(world_T_mesh),
 	vertices_(std::move(vertices)),
 	perVertexNormals_(std::move(perVertexNormals)),
-	triangleIndices_(std::move(triangleIndices))
+	triangleIndices_(std::move(triangleIndices)),
+	faceTypes_(std::move(faceTypes))
 {
 	ocean_assert(triangleIndices_.size() % 3 == 0);
 	ocean_assert(vertices_.size() == perVertexNormals_.size());
+
+	ocean_assert(faceTypes_.empty() || faceTypes_.size() == triangleIndices_.size() / 3);
 }
 
 inline Index32 SceneTracker6DOF::SceneElementMeshes::Mesh::meshId() const
@@ -1162,6 +1179,11 @@ inline const Vectors3& SceneTracker6DOF::SceneElementMeshes::Mesh::perVertexNorm
 inline const Indices32& SceneTracker6DOF::SceneElementMeshes::Mesh::triangleIndices() const
 {
 	return triangleIndices_;
+}
+
+inline const SceneTracker6DOF::SceneElementMeshes::Mesh::FaceTypes& SceneTracker6DOF::SceneElementMeshes::Mesh::faceTypes() const
+{
+	return faceTypes_;
 }
 
 inline SceneTracker6DOF::SceneElementMeshes::SceneElementMeshes(SharedMeshes meshes) :
