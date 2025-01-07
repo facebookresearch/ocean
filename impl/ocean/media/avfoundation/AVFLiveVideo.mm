@@ -303,16 +303,23 @@ bool AVFLiveVideo::setExposureDuration(const double duration)
 		{
 			if (duration <= -1.0)
 			{
-				// this is an intermediate solution until the interface of LiveVideo supports any possible combination of exposure/ios/white balance modes
+				// -1 for a one-time auto exposure
 
 				[captureDevice_ setExposureMode:AVCaptureExposureModeAutoExpose];
 				[captureDevice_ setWhiteBalanceMode:AVCaptureWhiteBalanceModeLocked];
+
+				exposureDuration_ = -1.0;
 
 				result = true;
 			}
 			else if (duration == 0.0)
 			{
+				// 0 for auto exposure
+
 				[captureDevice_ setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
+
+				exposureDuration_ = 0.0;
+
 				result = true;
 			}
 			else
@@ -320,7 +327,17 @@ bool AVFLiveVideo::setExposureDuration(const double duration)
 				const CMTime exposureDuration = CMTimeMakeWithSeconds(duration, 1000 * 1000 * 10);
 
 				[captureDevice_ setExposureMode:AVCaptureExposureModeLocked];
-				[captureDevice_ setExposureModeCustomWithDuration:exposureDuration ISO:AVCaptureISOCurrent completionHandler:nil];
+
+				float iso = AVCaptureISOCurrent;
+
+				if (iso_ > 0.0f)
+				{
+					iso = iso_;
+				}
+
+				[captureDevice_ setExposureModeCustomWithDuration:exposureDuration ISO:iso completionHandler:nil];
+
+				exposureDuration_ = duration;
 
 				result = true;
 			}
@@ -350,12 +367,24 @@ bool AVFLiveVideo::setISO(const float iso)
 			{
 				[captureDevice_ setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
 
+				iso_ = -1.0f;
+
 				result = true;
 			}
 			else
 			{
 				[captureDevice_ setExposureMode:AVCaptureExposureModeLocked];
-				[captureDevice_ setExposureModeCustomWithDuration:AVCaptureExposureDurationCurrent ISO:iso completionHandler:nil];
+
+				CMTime exposureDuration = AVCaptureExposureDurationCurrent;
+
+				if (exposureDuration_ > 0.0)
+				{
+					exposureDuration = CMTimeMakeWithSeconds(exposureDuration_, 1000 * 1000 * 10);
+				}
+
+				[captureDevice_ setExposureModeCustomWithDuration:exposureDuration ISO:iso completionHandler:nil];
+
+				iso_ = iso;
 
 				result = true;
 			}

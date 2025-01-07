@@ -203,6 +203,12 @@ class AVFLiveVideo :
 		/// The delegate object for new sample callbacks.
 		NSObject<AVCaptureVideoDataOutputSampleBufferDelegate>* sampleBufferDelegate_ = nullptr;
 
+		/// The manual exposure duration of live video device, in seconds -1 or 0 if no manual exposure is selected.
+		double exposureDuration_ = -1.0;
+
+		/// The manual ISO of the live video device, -1 if no manual exposure is selected.
+		float iso_ = -1.0f;
+
 		/// The number of measurements of ISO and exposure values.
 		unsigned int isoExposureMeasurements_ = 0u;
 
