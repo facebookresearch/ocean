@@ -736,6 +736,28 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 	}
 }
 
+- (void)session:(ARSession*)session cameraDidChangeTrackingState:(ARCamera*)camera
+{
+	Log::debug() << "ARKit camera tracking state changed: " << AKDevice::translateTrackingState(camera.trackingState);
+}
+
+- (void)sessionWasInterrupted:(ARSession*)session
+{
+	Log::warning() << "ARKit session was interrupted";
+}
+
+- (void)sessionInterruptionEnded:(ARSession*)session
+{
+	Log::debug() << "ARKit session interruption ended";
+}
+
+- (BOOL)sessionShouldAttemptRelocalization:(ARSession*)session
+{
+	Log::debug() << "ARKit session should attempt relocalization";
+
+	return YES;
+}
+
 + (ARVideoFormat*)determinePreferredVideoFormat:(NSArray<ARVideoFormat*>*)supportedVideoFormats withWidth:(unsigned int)preferredWidth withHeight:(unsigned int)preferredHeight withFps:(float)preferredFps withHDR:(int)preferredHDR
 {
 #ifdef OCEAN_DEBUG
@@ -1023,6 +1045,24 @@ bool AKDevice::parameter(const std::string& parameter, Value& value)
 	value = iParameter->second;
 
 	return true;
+}
+
+std::string AKDevice::translateTrackingState(const ARTrackingState& state)
+{
+	switch (state)
+	{
+		case ARTrackingStateNotAvailable:
+			return std::string("ARTrackingStateNotAvailable");
+
+		case ARTrackingStateLimited:
+			return std::string("ARTrackingStateLimited");
+
+		case ARTrackingStateNormal:
+			return std::string("ARTrackingStateNormal");
+	}
+
+	ocean_assert(false && "Unknown");
+	return std::string("Unknown");
 }
 
 API_AVAILABLE(ios(14.0))

@@ -19,7 +19,7 @@
 
 #include <ARKit/ARKit.h>
 
-@interface AKTracker6DOFDelegate : NSObject<ARSessionDelegate>
+@interface AKTracker6DOFDelegate : NSObject<ARSessionDelegate, ARSessionObserver>
 @end
 
 namespace Ocean
@@ -191,6 +191,13 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKDevice : virtual public Device
 		 * @see Device::parameter().
 		 */
 		bool parameter(const std::string& parameter, Value& value) override;
+
+		/**
+		 * Translates the value of an ARTrackingState to a readable string.
+		 * @param state The state to translate
+		 * @return The readable string
+		 */
+		static std::string translateTrackingState(const ARTrackingState& state);
 
 		/**
 		 * Translates the value of an ARGeoTrackingState to a readable string.
