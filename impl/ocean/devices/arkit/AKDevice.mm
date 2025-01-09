@@ -736,14 +736,14 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 	}
 }
 
-+ (ARVideoFormat*)determinePreferredVideoFormat:(NSArray<ARVideoFormat *> *)supportedVideoFormats withWidth:(unsigned int)preferredWidth withHeight:(unsigned int)preferredHeight withFps:(float)preferredFps withHDR:(int)preferredHDR
++ (ARVideoFormat*)determinePreferredVideoFormat:(NSArray<ARVideoFormat*>*)supportedVideoFormats withWidth:(unsigned int)preferredWidth withHeight:(unsigned int)preferredHeight withFps:(float)preferredFps withHDR:(int)preferredHDR
 {
 #ifdef OCEAN_DEBUG
 	Log::debug() << "Supported video formats for tracker:";
 
-	for (size_t n = 0; n < ARWorldTrackingConfiguration.supportedVideoFormats.count; ++n)
+	for (size_t n = 0; n < supportedVideoFormats.count; ++n)
 	{
-		ARVideoFormat* videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[n];
+		ARVideoFormat* videoFormat = supportedVideoFormats[n];
 
 		if (@available(iOS 16.0, *))
 		{
@@ -782,9 +782,9 @@ API_AVAILABLE(ios(11.0)) // expect iOS 11.0 or higher
 
 	while (result == nullptr)
 	{
-		for (size_t n = 0; n < ARWorldTrackingConfiguration.supportedVideoFormats.count; ++n)
+		for (size_t n = 0; n < supportedVideoFormats.count; ++n)
 		{
-			ARVideoFormat* videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[n];
+			ARVideoFormat* videoFormat = supportedVideoFormats[n];
 
 			if (bestResolutionError < 0.0)
 			{
