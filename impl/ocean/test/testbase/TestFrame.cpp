@@ -45,6 +45,18 @@ bool TestFrame::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testIsSumInsideValueRange(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testIsProductInsideValueRange(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testPlaneContructors(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -239,6 +251,16 @@ TEST(TestFrame, DefinedDataTypes)
 TEST(TestFrame, DefinedPixelFormats)
 {
 	EXPECT_TRUE(TestFrame::testDefinedPixelFormats());
+}
+
+TEST(TestFrame, IsSumInsideValueRange)
+{
+	EXPECT_TRUE(TestFrame::testIsSumInsideValueRange(GTEST_TEST_DURATION));
+}
+
+TEST(TestFrame, IsProductInsideValueRange)
+{
+	EXPECT_TRUE(TestFrame::testIsProductInsideValueRange(GTEST_TEST_DURATION));
 }
 
 TEST(TestFrame, PlaneContructors)
@@ -453,6 +475,119 @@ bool TestFrame::testDefinedPixelFormats()
 	}
 
 	return allSucceeded;
+}
+
+bool TestFrame::testIsSumInsideValueRange(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing Sum Inside Value range:";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int valueA = (unsigned int)(RandomI::random32(randomGenerator));
+
+		const unsigned int valueB = (unsigned int)(RandomI::random32(randomGenerator));
+
+		const bool result = FrameType::isSumInsideValueRange(valueA, valueB);
+
+		constexpr unsigned int maxValue = (unsigned int)(-1);
+		constexpr unsigned int maxValue_2 = maxValue / 2u;
+		static_assert(maxValue_2 * 2u == (unsigned int)(-2));
+
+		if (valueA <= maxValue_2 && valueB <= maxValue_2)
+		{
+			OCEAN_EXPECT_TRUE(validation, result);
+		}
+		else
+		{
+			if (valueA >= valueB)
+			{
+				const unsigned int remaining = maxValue - valueA;
+
+				if (valueB <= remaining)
+				{
+					OCEAN_EXPECT_TRUE(validation, result);
+				}
+				else
+				{
+					OCEAN_EXPECT_FALSE(validation, result);
+				}
+			}
+			else
+			{
+				const unsigned int remaining = maxValue - valueB;
+
+				if (valueA <= remaining)
+				{
+					OCEAN_EXPECT_TRUE(validation, result);
+				}
+				else
+				{
+					OCEAN_EXPECT_FALSE(validation, result);
+				}
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestFrame::testIsProductInsideValueRange(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing Product Inside Value range:";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int valueA = (unsigned int)(RandomI::random32(randomGenerator));
+
+		const unsigned int valueB = (unsigned int)(RandomI::random32(randomGenerator));
+
+		const bool result = FrameType::isProductInsideValueRange(valueA, valueB);
+
+		constexpr unsigned int maxValue = (unsigned int)(-1);
+		constexpr unsigned int maxSqrFactor = 65535u;
+
+		if (valueA <= maxSqrFactor && valueB <= maxSqrFactor)
+		{
+			OCEAN_EXPECT_TRUE(validation, result);
+		}
+
+		static_assert(sizeof(unsigned int) == sizeof(uint32_t));
+
+		const uint64_t product64 = uint64_t(valueA) * uint64_t(valueB);
+
+		if (product64 <= uint64_t(maxValue))
+		{
+			OCEAN_EXPECT_TRUE(validation, result);
+		}
+		else
+		{
+			OCEAN_EXPECT_FALSE(validation, result);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestFrame::testPlaneContructors(const double testDuration)

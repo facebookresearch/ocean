@@ -1729,6 +1729,22 @@ class OCEAN_BASE_EXPORT FrameType
 		 */
 		static const FrameType::PixelFormats& definedPixelFormats();
 
+		/**
+		 * Returns whether two values can be added with each other without producing an overflow.
+		 * @param valueA The first value to add
+		 * @param valueB The second value to add
+		 * @return True, if the sum is within a valid value range
+		 */
+		static constexpr bool isSumInsideValueRange(const unsigned int valueA, const unsigned int valueB);
+
+		/**
+		 * Returns whether two values can be multiplied with each other without producing an overflow.
+		 * @param valueA The first value to multiply
+		 * @param valueB The second value to multiply
+		 * @return True, if the product is within a valid value range
+		 */
+		static constexpr bool isProductInsideValueRange(const unsigned int valueA, const unsigned int valueB);
+
 	private:
 
 		/// Frame width in pixel, with range [0, infinity)
@@ -2923,7 +2939,7 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 
 		/**
 		 * Returns whether this frame is valid.
-		 * This function is mainly callying `FrameType::isValid()`, while in debug builds, addtional checks are performed.
+		 * This function is mainly calling `FrameType::isValid()`, while in debug builds, additional checks are performed.
 		 * @return True, if so
 		 */
 		inline bool isValid() const;
@@ -3471,6 +3487,16 @@ inline bool FrameType::dataIsAligned(const void* data)
 {
 	ocean_assert(data != nullptr);
 	return size_t(data) % sizeof(T) == size_t(0);
+}
+
+constexpr bool FrameType::isSumInsideValueRange(const unsigned int valueA, const unsigned int valueB)
+{
+	return valueA <= (unsigned int)(-1) - valueB;
+}
+
+constexpr bool FrameType::isProductInsideValueRange(const unsigned int valueA, const unsigned int valueB)
+{
+	return valueB == 0u || valueA <= (unsigned int)(-1) / valueB;
 }
 
 inline Frame::Plane::Plane(Plane&& plane) noexcept

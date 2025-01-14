@@ -50,6 +50,20 @@ class OCEAN_TEST_BASE_EXPORT TestFrame
 		static bool testDefinedPixelFormats();
 
 		/**
+		 * Sets the is sum inside value range functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testIsSumInsideValueRange(const double testDuration);
+
+		/**
+		 * Sets the is product inside value range functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testIsProductInsideValueRange(const double testDuration);
+
+		/**
 		 * Tests the Plane constructors.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
