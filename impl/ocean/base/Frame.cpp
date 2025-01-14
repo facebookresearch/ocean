@@ -2336,37 +2336,58 @@ Frame::Frame(const FrameType& frameType, const PlaneInitializer<void>* planeInit
 			{
 				const PlaneInitializer<void>& planeInitializer = planeInitializers[planeIndex];
 
-				if (planeInitializer.data_ == nullptr && planeInitializer.constdata_ == nullptr)
+				if (Plane::validateMemoryLayout(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.paddingElements_))
 				{
-					planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.paddingElements_));
-				}
-				else
-				{
-					if (planeInitializer.copyMode_ == CM_USE_KEEP_LAYOUT)
+					if (planeInitializer.data_ == nullptr && planeInitializer.constdata_ == nullptr)
 					{
-						if (planeInitializer.data_ != nullptr)
-						{
-							planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.data_, planeInitializer.paddingElements_));
-						}
-						else
-						{
-							ocean_assert(planeInitializer.constdata_ != nullptr);
-							planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.constdata_, planeInitializer.paddingElements_));
-						}
+						planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.paddingElements_));
 					}
 					else
 					{
-						const void* const data = planeInitializer.constdata_ ? planeInitializer.constdata_ : planeInitializer.data_;
-						ocean_assert(data != nullptr);
+						if (planeInitializer.copyMode_ == CM_USE_KEEP_LAYOUT)
+						{
+							if (planeInitializer.data_ != nullptr)
+							{
+								planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.data_, planeInitializer.paddingElements_));
+							}
+							else
+							{
+								ocean_assert(planeInitializer.constdata_ != nullptr);
+								planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, planeInitializer.constdata_, planeInitializer.paddingElements_));
+							}
+						}
+						else
+						{
+							const void* const data = planeInitializer.constdata_ ? planeInitializer.constdata_ : planeInitializer.data_;
+							ocean_assert(data != nullptr);
 
-						planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, data, planeInitializer.paddingElements_, planeInitializer.copyMode_));
+							planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, data, planeInitializer.paddingElements_, planeInitializer.copyMode_));
+						}
 					}
+				}
+				else
+				{
+					ocean_assert(false && "Invalid frame type!");
+
+					release();
+					return;
 				}
 			}
 			else
 			{
 				constexpr unsigned int paddingElements = 0u;
-				planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, paddingElements));
+
+				if (Plane::validateMemoryLayout(planeWidth, planeHeight, planeChannels, bytesPerElement, paddingElements))
+				{
+					planes_.pushBack(Plane(planeWidth, planeHeight, planeChannels, bytesPerElement, paddingElements));
+				}
+				else
+				{
+					ocean_assert(false && "Invalid frame type!");
+
+					release();
+					return;
+				}
 			}
 		}
 		else

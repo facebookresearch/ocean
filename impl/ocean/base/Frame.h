@@ -2133,6 +2133,17 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 				 */
 				static void* alignedMemory(const size_t size, const size_t alignment, void*& alignedData);
 
+				/**
+				 * Returns whether the memory layout of a plane is valid (and fits into the memory).
+				 * @param planeWidth The width of the plane, in pixel, with range [0, infinity)
+				 * @param planeHeight The height of the plane, in pixel, with range [0, infinity)
+				 * @param planeChannels The channels of the plane, with range [0, infinity)
+				 * @param bytesPerElement The number of bytes each element has, with range [1, infinity)
+				 * @param paddingElements The optional number of padding elements at the end of each plane row, in elements, with range [0, infinity)
+				 * @return True, if so; False, if the memory usage is out of bounds
+				 */
+				static constexpr bool validateMemoryLayout(const unsigned int planeWidth, const unsigned int planeHeight, const unsigned int planeChannels, const unsigned int bytesPerElement, const unsigned int paddingElements);
+
 			protected:
 
 				/**
@@ -3662,6 +3673,37 @@ inline bool Frame::Plane::isReadOnly() const
 inline bool Frame::Plane::isValid() const
 {
 	return width_ != 0u && height_ != 0u && channels_ != 0u;
+}
+
+constexpr bool Frame::Plane::validateMemoryLayout(const unsigned int planeWidth, const unsigned int planeHeight, const unsigned int planeChannels, const unsigned int bytesPerElement, const unsigned int paddingElements)
+{
+	if (!isProductInsideValueRange(planeWidth, planeChannels))
+	{
+		return false;
+	}
+
+	const unsigned int planeWidthElements = planeWidth * planeChannels;
+
+	if (!isSumInsideValueRange(planeWidthElements, paddingElements))
+	{
+		return false;
+	}
+
+	const unsigned int planeStideElements = planeWidthElements + paddingElements;
+
+	if (!isProductInsideValueRange(planeStideElements, bytesPerElement))
+	{
+		return false;
+	}
+
+	const unsigned int planeStrideBytes = planeStideElements * bytesPerElement;
+
+	if (!isProductInsideValueRange(planeStrideBytes, planeHeight))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 inline unsigned int Frame::Plane::calculateStrideBytes() const
