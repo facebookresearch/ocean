@@ -3208,6 +3208,8 @@ inline FrameType::PixelOrigin FrameType::pixelOrigin() const
 
 inline unsigned int FrameType::pixels() const
 {
+	ocean_assert(isProductInsideValueRange(width_, height_));
+
 	return width_ * height_;
 }
 
@@ -3506,28 +3508,28 @@ inline Frame::Plane::Plane(Plane&& plane) noexcept
 
 template <typename T>
 inline Frame::Plane::Plane(const unsigned int width, const unsigned int height, const unsigned int channels, const T* dataToUse, const unsigned int paddingElements) noexcept :
-	Plane(width, height, channels, sizeof(T), (const void*)dataToUse, paddingElements)
+	Plane(width, height, channels, sizeof(T), (const void*)(dataToUse), paddingElements)
 {
 	// nothing to do here
 }
 
 template <typename T>
 inline Frame::Plane::Plane(const unsigned int width, const unsigned int height, const unsigned int channels, T* dataToUse, const unsigned int paddingElements) noexcept :
-	Plane(width, height, channels, sizeof(T), (void*)dataToUse, paddingElements)
+	Plane(width, height, channels, sizeof(T), (void*)(dataToUse), paddingElements)
 {
 	// nothing to do here
 }
 
 template <typename T>
 inline Frame::Plane::Plane(const T* sourceDataToCopy, const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int targetPaddingElements, const unsigned int sourcePaddingElements, const bool makeCopyOfPaddingData) noexcept :
-	Plane(width, height, channels, sizeof(T), (const void*)sourceDataToCopy, targetPaddingElements, sourcePaddingElements, makeCopyOfPaddingData)
+	Plane(width, height, channels, sizeof(T), (const void*)(sourceDataToCopy), targetPaddingElements, sourcePaddingElements, makeCopyOfPaddingData)
 {
 	// nothing to do here
 }
 
 template <typename T>
 inline Frame::Plane::Plane(const T* sourceDataToCopy, const unsigned int width, const unsigned int height, const unsigned int channels, const unsigned int sourcePaddingElements, const CopyMode copyMode) noexcept :
-	Plane(width, height, channels, sizeof(T), (const void*)sourceDataToCopy, sourcePaddingElements, copyMode)
+	Plane(width, height, channels, sizeof(T), (const void*)(sourceDataToCopy), sourcePaddingElements, copyMode)
 {
 	// nothing to do here
 }
@@ -3595,17 +3597,23 @@ inline unsigned int Frame::Plane::elementTypeSize() const
 
 inline unsigned int Frame::Plane::widthElements() const
 {
+	ocean_assert(isProductInsideValueRange(width_, channels_));
+
 	return width_ * channels_;
 }
 
 inline unsigned int Frame::Plane::widthBytes() const
 {
+	ocean_assert(isProductInsideValueRange(widthElements(), elementTypeSize_));
+
 	return widthElements() * elementTypeSize_;
 }
 
 inline unsigned int Frame::Plane::strideElements() const
 {
-	return width_ * channels_ + paddingElements_;
+	ocean_assert(isSumInsideValueRange(widthElements(), paddingElements_));
+
+	return widthElements() + paddingElements_;
 }
 
 inline unsigned int Frame::Plane::strideBytes() const
@@ -3631,6 +3639,8 @@ inline bool Frame::Plane::isCompatibleWithDataType() const
 
 inline unsigned int Frame::Plane::size() const
 {
+	ocean_assert(isProductInsideValueRange(strideBytes(), height_));
+
 	return strideBytes() * height_;
 }
 
@@ -3656,6 +3666,8 @@ inline bool Frame::Plane::isValid() const
 
 inline unsigned int Frame::Plane::calculateStrideBytes() const
 {
+	ocean_assert(isProductInsideValueRange(strideElements(), elementTypeSize_));
+
 	return strideElements() * elementTypeSize_;
 }
 

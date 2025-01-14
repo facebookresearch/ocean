@@ -764,6 +764,8 @@ bool FrameType::planeLayout(const PixelFormat imagePixelFormat, const unsigned i
 	ocean_assert(imagePixelFormat != FORMAT_UNDEFINED);
 	ocean_assert(imageWidth != 0u && imageHeight != 0u);
 
+	const DataType planeDataType = dataType(imagePixelFormat);
+
 	if (formatIsGeneric(imagePixelFormat))
 	{
 		// the pixel format is generic (e.g, FORMAT_RGB24, or FORMAT_Y8) and each pixel channel is composed of one data type
@@ -786,268 +788,294 @@ bool FrameType::planeLayout(const PixelFormat imagePixelFormat, const unsigned i
 		{
 			*planeHeightElementsMultiple = 1u;
 		}
-
-		return true;
 	}
-
-	const unsigned int widthMultiple = FrameType::widthMultiple(imagePixelFormat);
-	const unsigned int heightMultiple = FrameType::heightMultiple(imagePixelFormat);
-
-	if (widthMultiple == 0u || heightMultiple == 0u || (imageWidth % widthMultiple != 0u) || (imageHeight % heightMultiple != 0u))
+	else
 	{
-		ocean_assert(false && "Invalid pixel format or image resolutions!");
-		return false;
-	}
+		const unsigned int widthMultiple = FrameType::widthMultiple(imagePixelFormat);
+		const unsigned int heightMultiple = FrameType::heightMultiple(imagePixelFormat);
 
-	switch (imagePixelFormat)
-	{
-		case FORMAT_BGR4444:
-		case FORMAT_BGRA4444:
-		case FORMAT_RGB4444:
-		case FORMAT_RGBA4444:
-		case FORMAT_BGR5551:
-		case FORMAT_BGR565:
-		case FORMAT_RGB5551:
-		case FORMAT_RGB565:
+		if (widthMultiple == 0u || heightMultiple == 0u || (imageWidth % widthMultiple != 0u) || (imageHeight % heightMultiple != 0u))
 		{
-			ocean_assert(dataType(imagePixelFormat) == DT_UNSIGNED_INTEGER_16);
-
-			if (planeIndex != 0u)
-			{
-				return false;
-			}
-
-			// one data type covers one pixel
-			planeWidth = imageWidth;
-			planeHeight = imageHeight;
-			planeChannels = 1u;
-
-			if (planeWidthElementsMultiple != nullptr)
-			{
-				*planeWidthElementsMultiple = 1u;
-			}
-
-			if (planeHeightElementsMultiple != nullptr)
-			{
-				*planeHeightElementsMultiple = 1u;
-			}
-
-			return true;
+			ocean_assert(false && "Invalid pixel format or image resolutions!");
+			return false;
 		}
 
-		case FORMAT_BGGR10_PACKED:
-		case FORMAT_RGGB10_PACKED:
+		switch (imagePixelFormat)
 		{
-			ocean_assert(dataType(imagePixelFormat) == DT_UNSIGNED_INTEGER_8);
-
-			if (planeIndex != 0u)
+			case FORMAT_BGR4444:
+			case FORMAT_BGRA4444:
+			case FORMAT_RGB4444:
+			case FORMAT_RGBA4444:
+			case FORMAT_BGR5551:
+			case FORMAT_BGR565:
+			case FORMAT_RGB5551:
+			case FORMAT_RGB565:
 			{
-				return false;
-			}
+				ocean_assert(planeDataType == DT_UNSIGNED_INTEGER_16);
 
-			ocean_assert(imageWidth % 4u == 0u);
-			ocean_assert(imageHeight % 2u == 0u);
+				if (planeIndex != 0u)
+				{
+					return false;
+				}
 
-			// four pixels cover 5 bytes
-			planeWidth = (imageWidth / 4u) * 5u;
-			planeHeight = imageHeight;
-			planeChannels = 1u;
-
-			if (planeWidthElementsMultiple != nullptr)
-			{
-				*planeWidthElementsMultiple = 5u;
-			}
-
-			if (planeHeightElementsMultiple != nullptr)
-			{
-				*planeHeightElementsMultiple = 2u;
-			}
-
-			return true;
-		}
-
-		case FORMAT_Y10_PACKED:
-		{
-			ocean_assert(dataType(imagePixelFormat) == DT_UNSIGNED_INTEGER_8);
-
-			if (planeIndex != 0u)
-			{
-				return false;
-			}
-
-			ocean_assert(imageWidth % 4u == 0u);
-
-			// four pixels cover 5 bytes
-			planeWidth = (imageWidth / 4u) * 5u;
-			planeHeight = imageHeight;
-			planeChannels = 1u;
-
-			if (planeWidthElementsMultiple != nullptr)
-			{
-				*planeWidthElementsMultiple = 5u;
-			}
-
-			if (planeHeightElementsMultiple != nullptr)
-			{
-				*planeHeightElementsMultiple = 1u;
-			}
-
-			return true;
-		}
-
-		case FORMAT_Y_U_V12:
-		case FORMAT_Y_V_U12:
-		case FORMAT_Y_U_V12_FULL_RANGE:
-		case FORMAT_Y_V_U12_FULL_RANGE:
-		{
-			ocean_assert(dataType(imagePixelFormat) == DT_UNSIGNED_INTEGER_8);
-			ocean_assert(widthMultiple == 2u);
-			ocean_assert(heightMultiple == 2u);
-
-			if (planeIndex > 2u)
-			{
-				return false;
-			}
-
-			planeChannels = 1u;
-
-			if (planeIndex == 0u)
-			{
-				planeWidth = imageWidth;
-				planeHeight = imageHeight;
-			}
-			else
-			{
-				ocean_assert(planeIndex == 1u || planeIndex == 2u);
-
-				planeWidth = imageWidth / 2u;
-				planeHeight = imageHeight / 2u;
-			}
-
-			if (planeWidthElementsMultiple != nullptr)
-			{
-				*planeWidthElementsMultiple = 1u;
-			}
-
-			if (planeHeightElementsMultiple != nullptr)
-			{
-				*planeHeightElementsMultiple = 1u;
-			}
-
-			return true;
-		}
-
-		case FORMAT_Y_UV12:
-		case FORMAT_Y_VU12:
-		case FORMAT_Y_UV12_FULL_RANGE:
-		case FORMAT_Y_VU12_FULL_RANGE:
-		{
-			ocean_assert(dataType(imagePixelFormat) == DT_UNSIGNED_INTEGER_8);
-			ocean_assert(widthMultiple == 2u);
-			ocean_assert(heightMultiple == 2u);
-
-			if (planeIndex > 2u)
-			{
-				return false;
-			}
-
-			if (planeIndex == 0u)
-			{
+				// one data type covers one pixel
 				planeWidth = imageWidth;
 				planeHeight = imageHeight;
 				planeChannels = 1u;
-			}
-			else
-			{
-				ocean_assert(planeIndex == 1u);
 
-				planeWidth = imageWidth / 2u;
-				planeHeight = imageHeight / 2u;
+				if (planeWidthElementsMultiple != nullptr)
+				{
+					*planeWidthElementsMultiple = 1u;
+				}
+
+				if (planeHeightElementsMultiple != nullptr)
+				{
+					*planeHeightElementsMultiple = 1u;
+				}
+
+				break;
+			}
+
+			case FORMAT_BGGR10_PACKED:
+			case FORMAT_RGGB10_PACKED:
+			{
+				ocean_assert(planeDataType == DT_UNSIGNED_INTEGER_8);
+
+				if (planeIndex != 0u)
+				{
+					return false;
+				}
+
+				ocean_assert(imageWidth % 4u == 0u);
+				ocean_assert(imageHeight % 2u == 0u);
+
+				// four pixels cover 5 bytes
+				planeWidth = (imageWidth / 4u) * 5u;
+				planeHeight = imageHeight;
+				planeChannels = 1u;
+
+				if (planeWidthElementsMultiple != nullptr)
+				{
+					*planeWidthElementsMultiple = 5u;
+				}
+
+				if (planeHeightElementsMultiple != nullptr)
+				{
+					*planeHeightElementsMultiple = 2u;
+				}
+
+				break;
+			}
+
+			case FORMAT_Y10_PACKED:
+			{
+				ocean_assert(planeDataType == DT_UNSIGNED_INTEGER_8);
+
+				if (planeIndex != 0u)
+				{
+					return false;
+				}
+
+				ocean_assert(imageWidth % 4u == 0u);
+
+				// four pixels cover 5 bytes
+				planeWidth = (imageWidth / 4u) * 5u;
+				planeHeight = imageHeight;
+				planeChannels = 1u;
+
+				if (planeWidthElementsMultiple != nullptr)
+				{
+					*planeWidthElementsMultiple = 5u;
+				}
+
+				if (planeHeightElementsMultiple != nullptr)
+				{
+					*planeHeightElementsMultiple = 1u;
+				}
+
+				break;
+			}
+
+			case FORMAT_Y_U_V12:
+			case FORMAT_Y_V_U12:
+			case FORMAT_Y_U_V12_FULL_RANGE:
+			case FORMAT_Y_V_U12_FULL_RANGE:
+			{
+				ocean_assert(planeDataType == DT_UNSIGNED_INTEGER_8);
+				ocean_assert(widthMultiple == 2u);
+				ocean_assert(heightMultiple == 2u);
+
+				if (planeIndex > 2u)
+				{
+					return false;
+				}
+
+				planeChannels = 1u;
+
+				if (planeIndex == 0u)
+				{
+					planeWidth = imageWidth;
+					planeHeight = imageHeight;
+				}
+				else
+				{
+					ocean_assert(planeIndex == 1u || planeIndex == 2u);
+
+					planeWidth = imageWidth / 2u;
+					planeHeight = imageHeight / 2u;
+				}
+
+				if (planeWidthElementsMultiple != nullptr)
+				{
+					*planeWidthElementsMultiple = 1u;
+				}
+
+				if (planeHeightElementsMultiple != nullptr)
+				{
+					*planeHeightElementsMultiple = 1u;
+				}
+
+				break;
+			}
+
+			case FORMAT_Y_UV12:
+			case FORMAT_Y_VU12:
+			case FORMAT_Y_UV12_FULL_RANGE:
+			case FORMAT_Y_VU12_FULL_RANGE:
+			{
+				ocean_assert(planeDataType == DT_UNSIGNED_INTEGER_8);
+				ocean_assert(widthMultiple == 2u);
+				ocean_assert(heightMultiple == 2u);
+
+				if (planeIndex > 2u)
+				{
+					return false;
+				}
+
+				if (planeIndex == 0u)
+				{
+					planeWidth = imageWidth;
+					planeHeight = imageHeight;
+					planeChannels = 1u;
+				}
+				else
+				{
+					ocean_assert(planeIndex == 1u);
+
+					planeWidth = imageWidth / 2u;
+					planeHeight = imageHeight / 2u;
+					planeChannels = 2u;
+				}
+
+				if (planeWidthElementsMultiple != nullptr)
+				{
+					*planeWidthElementsMultiple = 1u;
+				}
+
+				if (planeHeightElementsMultiple != nullptr)
+				{
+					*planeHeightElementsMultiple = 1u;
+				}
+
+				break;
+			}
+
+			case FORMAT_UYVY16:
+			case FORMAT_YUYV16:
+			{
+				ocean_assert(planeDataType == DT_UNSIGNED_INTEGER_8);
+				ocean_assert(widthMultiple == 2u);
+				ocean_assert(heightMultiple == 1u);
+
+				if (planeIndex != 0u)
+				{
+					return false;
+				}
+
+				planeWidth = imageWidth;
+				planeHeight = imageHeight;
 				planeChannels = 2u;
+
+				if (planeWidthElementsMultiple != nullptr)
+				{
+					*planeWidthElementsMultiple = 1u;
+				}
+
+				if (planeHeightElementsMultiple != nullptr)
+				{
+					*planeHeightElementsMultiple = 1u;
+				}
+
+				ocean_assert(planeWidth * planeHeight * planeChannels * 8u == imageWidth * imageHeight * 16u);
+
+				break;
 			}
 
-			if (planeWidthElementsMultiple != nullptr)
+			case FORMAT_Y_U_V24:
+			case FORMAT_Y_U_V24_FULL_RANGE:
+			case FORMAT_R_G_B24:
+			case FORMAT_B_G_R24:
 			{
-				*planeWidthElementsMultiple = 1u;
+				ocean_assert(planeDataType == DT_UNSIGNED_INTEGER_8);
+
+				if (planeIndex > 2u)
+				{
+					return false;
+				}
+
+				ocean_assert(planeIndex == 0u || planeIndex == 1u || planeIndex == 2u);
+
+				// we treat the three planes as one
+				planeWidth = imageWidth;
+				planeHeight = imageHeight;
+				planeChannels = 1u;
+
+				if (planeWidthElementsMultiple != nullptr)
+				{
+					*planeWidthElementsMultiple = 1u;
+				}
+
+				if (planeHeightElementsMultiple != nullptr)
+				{
+					*planeHeightElementsMultiple = 1u;
+				}
+
+				break;
 			}
 
-			if (planeHeightElementsMultiple != nullptr)
-			{
-				*planeHeightElementsMultiple = 1u;
-			}
-
-			return true;
-		}
-
-		case FORMAT_UYVY16:
-		case FORMAT_YUYV16:
-		{
-			ocean_assert(dataType(imagePixelFormat) == DT_UNSIGNED_INTEGER_8);
-			ocean_assert(widthMultiple == 2u);
-			ocean_assert(heightMultiple == 1u);
-
-			if (planeIndex != 0u)
-			{
+			default:
+				ocean_assert(false && "Invalid pixel format!");
 				return false;
-			}
-
-			planeWidth = imageWidth;
-			planeHeight = imageHeight;
-			planeChannels = 2u;
-
-			if (planeWidthElementsMultiple != nullptr)
-			{
-				*planeWidthElementsMultiple = 1u;
-			}
-
-			if (planeHeightElementsMultiple != nullptr)
-			{
-				*planeHeightElementsMultiple = 1u;
-			}
-
-			ocean_assert(planeWidth * planeHeight * planeChannels * 8u == imageWidth * imageHeight * 16u);
-
-			return true;
 		}
-
-		case FORMAT_Y_U_V24:
-		case FORMAT_Y_U_V24_FULL_RANGE:
-		case FORMAT_R_G_B24:
-		case FORMAT_B_G_R24:
-		{
-			ocean_assert(dataType(imagePixelFormat) == DT_UNSIGNED_INTEGER_8);
-
-			if (planeIndex > 2u)
-			{
-				return false;
-			}
-
-			ocean_assert(planeIndex == 0u || planeIndex == 1u || planeIndex == 2u);
-
-			// we treat the three planes as one
-			planeWidth = imageWidth;
-			planeHeight = imageHeight;
-			planeChannels = 1u;
-
-			if (planeWidthElementsMultiple != nullptr)
-			{
-				*planeWidthElementsMultiple = 1u;
-			}
-
-			if (planeHeightElementsMultiple != nullptr)
-			{
-				*planeHeightElementsMultiple = 1u;
-			}
-
-			return true;
-		}
-
-		default:
-			break;
 	}
 
-	ocean_assert(false && "Invalid pixel format!");
-	return false;
+	// let's ensure that the number of image elements is not out of bounds
+
+	ocean_assert(isProductInsideValueRange(planeWidth, planeHeight));
+	if (!isProductInsideValueRange(planeWidth, planeHeight))
+	{
+		return false;
+	}
+
+	const unsigned int planePixels = planeWidth * planeHeight;
+
+	ocean_assert(isProductInsideValueRange(planePixels, planeChannels));
+	if (!isProductInsideValueRange(planePixels, planeChannels))
+	{
+		return false;
+	}
+
+	const unsigned int planeElements = planePixels * planeChannels;
+
+	const unsigned int planeBytesPerElement = FrameType::bytesPerDataType(planeDataType);
+
+	ocean_assert(isProductInsideValueRange(planeElements, planeBytesPerElement));
+	if (!isProductInsideValueRange(planeElements, planeBytesPerElement))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 FrameType::DataType FrameType::translateDataType(const std::string& dataType)
@@ -1611,7 +1639,16 @@ unsigned int FrameType::frameTypeSize() const
 			return 0u;
 		}
 
-		sumBytes += planeWidth * planeHeight * planeChannels * bytesPerElement;
+#ifdef OCEAN_DEBUG
+		const uint64_t debugBytes = uint64_t(planeWidth) * uint64_t(planeHeight) * uint64_t(planeChannels) * uint64_t(bytesPerElement);
+		ocean_assert(debugBytes <= uint64_t((unsigned int)(-1)));
+#endif
+
+		const unsigned int bytes = planeWidth * planeHeight * planeChannels * bytesPerElement;
+
+		ocean_assert(isSumInsideValueRange(sumBytes, bytes));
+
+		sumBytes += bytes;
 	}
 
 	return sumBytes;
@@ -1848,6 +1885,10 @@ Frame::Plane::Plane(const unsigned int width, const unsigned int height, const u
 	allocatedData_ = alignedMemory(size(), elementTypeSize, data_);
 	constData_ = data_;
 
+	ocean_assert(isProductInsideValueRange(width, channels));
+	ocean_assert(isSumInsideValueRange(width * channels, sourcePaddingElements));
+	ocean_assert(isProductInsideValueRange(width * channels + sourcePaddingElements, elementTypeSize));
+
 	const unsigned int sourceStrideBytes = (width * channels + sourcePaddingElements) * elementTypeSize;
 
 	copy(sourceDataToCopy, sourceStrideBytes, sourcePaddingElements, makeCopyOfPaddingData);
@@ -1892,6 +1933,10 @@ Frame::Plane::Plane(const unsigned int width, const unsigned int height, const u
 
 		allocatedData_ = alignedMemory(size(), elementTypeSize, data_);
 		constData_ = data_;
+
+		ocean_assert(isProductInsideValueRange(width, channels));
+		ocean_assert(isSumInsideValueRange(width * channels, sourcePaddingElements));
+		ocean_assert(isProductInsideValueRange(width * channels + sourcePaddingElements, elementTypeSize));
 
 		const unsigned int sourceStrideBytes = (width * channels + sourcePaddingElements) * elementTypeSize;
 
@@ -1960,7 +2005,13 @@ bool Frame::Plane::copy(const Plane& sourcePlane, const AdvancedCopyMode advance
 
 	const unsigned int newPaddingElements = (advancedCopyMode == ACM_COPY_REMOVE_PADDING_LAYOUT || advancedCopyMode == ACM_USE_OR_COPY) ? 0u : sourcePlane.paddingElements_;
 
+	ocean_assert(isProductInsideValueRange(newPaddingElements, sourcePlane.elementTypeSize_));
+	ocean_assert(isSumInsideValueRange(sourcePlane.widthBytes(), newPaddingElements * sourcePlane.elementTypeSize_));
+
 	const unsigned int newStrideBytes = sourcePlane.widthBytes() + newPaddingElements * sourcePlane.elementTypeSize_;
+
+	ocean_assert(isProductInsideValueRange(newStrideBytes, sourcePlane.height_));
+
 	const unsigned int newMemorySize = newStrideBytes * sourcePlane.height_;
 
 	const unsigned int thisOldMemorySize = size();
@@ -2158,6 +2209,8 @@ void Frame::Plane::copy(const void* sourceData, const unsigned int sourceStrideB
 	ocean_assert(sourceData != nullptr);
 	ocean_assert(sourceStrideBytes != 0u);
 
+	ocean_assert(isProductInsideValueRange(sourcePaddingElements, elementTypeSize_));
+
 	ocean_assert(sourcePaddingElements * elementTypeSize_ <= sourceStrideBytes);
 	ocean_assert(sourceStrideBytes - sourcePaddingElements * elementTypeSize_ == widthBytes());
 
@@ -2166,6 +2219,8 @@ void Frame::Plane::copy(const void* sourceData, const unsigned int sourceStrideB
 		ocean_assert(strideBytes() == sourceStrideBytes);
 
 		// we can copy the entire memory block at once
+
+		ocean_assert(isProductInsideValueRange(strideBytes(), height_));
 
 		memcpy(data_, sourceData, strideBytes() * height_);
 	}
@@ -2497,18 +2552,32 @@ bool Frame::copy(const int targetLeft, const int targetTop, const Frame& source,
 
 		// we need to consider that some planes may contain a down-samples image of the actual resolution (e.g., Y_UV12)
 
+		if (!isProductInsideValueRange(xSourceStart, sourcePlaneWidth) || !isProductInsideValueRange(ySourceStart, sourcePlaneHeight))
+		{
+			return false;
+		}
+
 		const unsigned int xSourceStartPlane = xSourceStart * sourcePlaneWidth / sourceWidth;
 		const unsigned int ySourceStartPlane = ySourceStart * sourcePlaneHeight / sourceHeight;
 		ocean_assert(xSourceStartPlane * sourceWidth == xSourceStart * sourcePlaneWidth);
 		ocean_assert(ySourceStartPlane * sourceHeight == ySourceStart * sourcePlaneHeight);
+
+		if (!isProductInsideValueRange((unsigned int)(xTargetStart), targetPlaneWidth) || !isProductInsideValueRange((unsigned int)(yTargetStart), targetPlaneHeight))
+		{
+			return false;
+		}
 
 		const unsigned int xTargetStartPlane = (unsigned int)(xTargetStart) * targetPlaneWidth / targetWidth;
 		const unsigned int yTargetStartPlane = (unsigned int)(yTargetStart) * targetPlaneHeight / targetHeight;
 		ocean_assert(xTargetStartPlane * targetWidth == (unsigned int)(xTargetStart) * targetPlaneWidth);
 		ocean_assert(yTargetStartPlane * targetHeight == (unsigned int)(yTargetStart) * targetPlaneHeight);
 
+		ocean_assert(isProductInsideValueRange(ySize, sourcePlaneHeight));
+
 		const unsigned int ySizePlane = ySize * sourcePlaneHeight / sourceHeight;
 		ocean_assert(ySizePlane == ySize * targetPlaneHeight / targetHeight);
+
+		ocean_assert(isProductInsideValueRange(xSize, planeWidthBytes(planeIndex)));
 
 		const unsigned int bytes = xSize * planeWidthBytes(planeIndex) / width();
 		ocean_assert(bytes == xSize * source.planeWidthBytes(planeIndex) / sourceWidth);
@@ -2717,6 +2786,9 @@ Frame Frame::subFrame(const unsigned int subFrameLeft, const unsigned int subFra
 		ocean_assert(subFrameOffsetTopLeftBytes < planes_[planeIndex].size());
 
 		const unsigned int planeStrideElements = strideElements(planeIndex);
+
+		ocean_assert(isProductInsideValueRange(planeSubFrameWidth, planeChannels(planeIndex)));
+
 		const unsigned int planeSubFrameElements = planeSubFrameWidth * planeChannels(planeIndex);
 		ocean_assert(planeSubFrameElements <= planeStrideElements);
 
@@ -2768,6 +2840,8 @@ bool Frame::setValue(const uint8_t value, const unsigned int planeIndex, const b
 
 		for (unsigned int y = 0u; y < plane.height(); ++y)
 		{
+			ocean_assert(isProductInsideValueRange(y, planeStrideBytes));
+
 			memset(plane.data<uint8_t>() + y * planeStrideBytes, value, planeWidthBytes);
 		}
 	}
@@ -2920,8 +2994,6 @@ bool Frame::strideBytes2paddingElements(const PixelFormat& pixelFormat, const un
 		return false;
 	}
 
-	const unsigned int planeStrideElements = planeStrideBytes / bytesPerElement;
-
 	unsigned int planeWidth = 0u;
 	unsigned int planeHeight = 0u;
 	unsigned int planeChannels = 0u;
@@ -2931,7 +3003,11 @@ bool Frame::strideBytes2paddingElements(const PixelFormat& pixelFormat, const un
 		return false;
 	}
 
+	ocean_assert(isProductInsideValueRange(planeWidth, planeChannels));
+
 	const unsigned int planeRowElements = planeWidth * planeChannels;
+
+	const unsigned int planeStrideElements = planeStrideBytes / bytesPerElement;
 
 	ocean_assert(planeStrideElements >= planeRowElements);
 	if (planeStrideElements < planeRowElements)
@@ -2940,6 +3016,10 @@ bool Frame::strideBytes2paddingElements(const PixelFormat& pixelFormat, const un
 	}
 
 	planePaddingElements = planeStrideElements - planeRowElements;
+
+	ocean_assert(isProductInsideValueRange(planeWidth, planeChannels));
+	ocean_assert(isSumInsideValueRange(planeWidth * planeChannels, planePaddingElements));
+	ocean_assert(isProductInsideValueRange(planeWidth * planeChannels + planePaddingElements, bytesPerElement));
 
 	ocean_assert(planeStrideBytes == (planeWidth * planeChannels + planePaddingElements) * bytesPerElement);
 
