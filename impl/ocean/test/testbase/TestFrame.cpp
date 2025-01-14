@@ -227,6 +227,16 @@ bool TestFrame::test(const double testDuration)
 
 	allSucceeded = testTranslatePixelFormat() && allSucceeded;
 
+#ifndef OCEAN_DEBUG // this test will raise a couple of asserts, so only executing in release builds
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testExtremeResolutions(testDuration) && allSucceeded;
+
+#endif // OCEAN_DEBUG
+
 	Log::info() << " ";
 
 	if (allSucceeded)
@@ -397,6 +407,15 @@ TEST(TestFrame, TranslatePixelFormat)
 {
 	EXPECT_TRUE(TestFrame::testTranslatePixelFormat());
 }
+
+#ifndef OCEAN_DEBUG
+
+TEST(TestFrame, ExtremeResolutions)
+{
+	EXPECT_TRUE(TestFrame::testExtremeResolutions(GTEST_TEST_DURATION));
+}
+
+#endif // OCEAN_DEBUG
 
 TEST(TestFrame, TranslateDataType)
 {
@@ -2299,7 +2318,12 @@ bool TestFrame::testPlaneLayout(const double testDuration)
 				}
 			}
 
-			const Frame frame(FrameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT), paddingElementsPerPlane);
+			const FrameType frameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
+
+			const unsigned int bytesPerElement = frameType.bytesPerDataType();
+			OCEAN_SUPPRESS_UNUSED_WARNING(bytesPerElement);
+
+			const Frame frame(frameType, paddingElementsPerPlane);
 
 			for (unsigned int planeIndex = 0u; planeIndex < frame.numberPlanes(); ++planeIndex)
 			{
@@ -2312,6 +2336,8 @@ bool TestFrame::testPlaneLayout(const double testDuration)
 
 				if (FrameType::planeLayout(frame.frameType(), planeIndex, planeWidth, planeHeight, planeChannels, &planeWidthMultiple, &planeHeightMultiple))
 				{
+					ocean_assert(Frame::Plane::validateMemoryLayout(planeWidth, planeHeight, planeChannels, bytesPerElement, 0u));
+
 					unsigned int expectedPlaneWidth = width;
 					unsigned int expectedPlaneHeight = height;
 					unsigned int expectedPlaneChannels = frame.channels();
@@ -2444,6 +2470,8 @@ bool TestFrame::testPlaneLayout(const double testDuration)
 				}
 				else
 				{
+					ocean_assert(!Frame::Plane::validateMemoryLayout(planeWidth, planeHeight, planeChannels, bytesPerElement, 0u));
+
 					allSucceeded = false;
 				}
 			}
@@ -5825,6 +5853,140 @@ bool TestFrame::testTranslatePixelFormat()
 	}
 
 	return allSucceeded;
+}
+
+bool TestFrame::testExtremeResolutions(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing extreme resolutions:";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const FrameType::PixelFormats pixelFormats = definedPixelFormats();
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+
+		const FrameType::DataType dataType = FrameType::dataType(pixelFormat);
+		const unsigned int bytesPerElement = FrameType::bytesPerDataType(dataType);
+
+		const unsigned int numberPlanes = FrameType::numberPlanes(pixelFormat);
+		OCEAN_EXPECT_GREATER_EQUAL(validation, numberPlanes, 1u);
+
+		const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
+		const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
+
+		unsigned int width = RandomI::random(randomGenerator, 1u, 2000u) * widthMultiple;
+		unsigned int height = RandomI::random(randomGenerator, 1u, 2000u) * heightMultiple;
+
+		const bool useExtremeDimensions = RandomI::boolean(randomGenerator);
+
+		if (useExtremeDimensions)
+		{
+			const unsigned int maxWidth = (unsigned int)(-1) / widthMultiple;
+			const unsigned int maxHeight = (unsigned int)(-1) / heightMultiple;
+
+			width = RandomI::random(randomGenerator, widthMultiple, maxWidth) * widthMultiple;
+			height = RandomI::random(randomGenerator, heightMultiple, maxHeight) * heightMultiple;
+		}
+
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
+
+		if (width <= 1024u * 8u && height <= 1024u * 8u)
+		{
+			OCEAN_EXPECT_TRUE(validation, frameType.isValid());
+		}
+
+		bool useExtremePaddingElements = false;
+
+		if (frameType.isValid())
+		{
+			OCEAN_EXPECT_EQUAL(validation, frameType.numberPlanes(), numberPlanes);
+
+			Indices32 planePaddingElements;
+
+			if (RandomI::boolean(randomGenerator))
+			{
+				useExtremePaddingElements = RandomI::boolean(randomGenerator);
+
+				const unsigned int maxPaddingElements = useExtremePaddingElements ? (unsigned int)(-1) : 1024u * 8u;
+
+				for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
+				{
+					planePaddingElements.push_back(RandomI::random(randomGenerator, maxPaddingElements));
+				}
+			}
+
+			const Frame frame(frameType, planePaddingElements);
+
+			bool expectedIsValid = true;
+
+			for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
+			{
+				unsigned int planeWidth = 0u;
+				unsigned int planeHeight = 0u;
+				unsigned int planeChannels = 0u;
+
+				if (FrameType::planeLayout(frameType, planeIndex, planeWidth, planeHeight, planeChannels))
+				{
+					unsigned int paddingElements = 0u;
+
+					if (!planePaddingElements.empty())
+					{
+						ocean_assert(planeIndex < planePaddingElements.size());
+
+						paddingElements = planePaddingElements[planeIndex];
+					}
+
+					if (!Frame::Plane::validateMemoryLayout(planeWidth, planeHeight, planeChannels, bytesPerElement, paddingElements))
+					{
+						expectedIsValid = false;
+					}
+				}
+				else
+				{
+					expectedIsValid = false;
+				}
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, frame.isValid(), expectedIsValid);
+		}
+		else
+		{
+			bool expectedIsValid = true;
+
+			for (unsigned int planeIndex = 0u; planeIndex < numberPlanes; ++planeIndex)
+			{
+				unsigned int planeWidth = 0u;
+				unsigned int planeHeight = 0u;
+				unsigned int planeChannels = 0u;
+
+				if (FrameType::planeLayout(pixelFormat, width, height, planeIndex, planeWidth, planeHeight, planeChannels))
+				{
+					OCEAN_EXPECT_TRUE(validation, Frame::Plane::validateMemoryLayout(planeWidth, planeHeight, planeChannels, bytesPerElement, 0u));
+				}
+				else
+				{
+					expectedIsValid = false;
+				}
+			}
+
+			OCEAN_EXPECT_FALSE(validation, expectedIsValid);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename T>
