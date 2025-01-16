@@ -29,7 +29,7 @@ namespace Quest
 namespace Application
 {
 
-void VRImageVisualizer::visualizeImage(const unsigned int id, const HomogenousMatrix4& reference_T_image, Frame&& frame, const ObjectSize& objectSize, const bool referenceIsWorld)
+void VRImageVisualizer::visualizeImage(const unsigned int id, const HomogenousMatrix4& reference_T_image, Frame&& frame, const ObjectSize& objectSize, const bool referenceIsWorld, const bool useMipMaps)
 {
 	ocean_assert(engine_ && framebuffer_);
 	if (!engine_ && !framebuffer_)
@@ -99,7 +99,7 @@ void VRImageVisualizer::visualizeImage(const unsigned int id, const HomogenousMa
 		pixelImage->start();
 
 		Rendering::MediaTexture2DRef texture;
-		transform = Rendering::Utilities::createBox(engine_, Vector3(1, 1, 0.0001), pixelImage, &texture);
+		transform = Rendering::Utilities::createBox(engine_, Vector3(1, 1, 0.0001), pixelImage, &texture, useMipMaps);
 		ocean_assert(transform && texture);
 
 		transform->setName(transformName);

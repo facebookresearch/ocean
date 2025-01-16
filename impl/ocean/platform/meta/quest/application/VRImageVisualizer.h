@@ -80,9 +80,10 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRImageVisualizer : public VR
 		 * @param world_T_image The transformation at which the image will be displayed, transforming image to world, can be invalid to remove the existing visualization
 		 * @param frame The frame to visualize, can be invalid to remove the existing visualization
 		 * @param objectSize The size of the visualized image in virtual space (in object space), an invalid object to remove the visualization
+		 * @param useMipMaps Use mipmaps to reduce aliasing artifacts.
 		 * @see visualizeImageInView().
 		 */
-		inline void visualizeImageInWorld(const unsigned int id, const HomogenousMatrix4& world_T_image, Frame&& frame, const ObjectSize& objectSize);
+		inline void visualizeImageInWorld(const unsigned int id, const HomogenousMatrix4& world_T_image, Frame&& frame, const ObjectSize& objectSize, const bool useMipMaps = true);
 
 		/**
 		 * Visualizes an image (e.g., for debugging purposes) at a specific location in the virtual environment (defined in relation to the world).
@@ -92,9 +93,10 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRImageVisualizer : public VR
 		 * @param world_T_image The transformation at which the image will be displayed, transforming image to world, can be invalid to remove the existing visualization
 		 * @param frame The frame to visualize, can be invalid to remove the existing visualization
 		 * @param objectSize The size of the visualized image in virtual space (in object space), an invalid object to remove the visualization
+		 * @param useMipMaps Use mipmaps to reduce aliasing artifacts.
 		 * @see visualizeImageInView().
 		 */
-		inline void visualizeImageInWorld(const unsigned int id, const HomogenousMatrix4& world_T_image, const Frame& frame, const ObjectSize& objectSize);
+		inline void visualizeImageInWorld(const unsigned int id, const HomogenousMatrix4& world_T_image, const Frame& frame, const ObjectSize& objectSize, const bool useMipMaps = true);
 
 		/**
 		 * Visualizes an image (e.g., for debugging purposes) at a specific location in the virtual environment (defined in relation to the view).
@@ -104,9 +106,10 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRImageVisualizer : public VR
 		 * @param view_T_image The transformation at which the image will be displayed, transforming image to view, can be invalid to remove the existing visualization
 		 * @param frame The frame to visualize, can be invalid to remove the existing visualization
 		 * @param objectSize The size of the visualized image in virtual space (in object space), an invalid object to remove the visualization
+		 * @param useMipMaps Use mipmaps to reduce aliasing artifacts.
 		 * @see visualizeImageInWorld().
 		 */
-		inline void visualizeImageInView(const unsigned int id, const HomogenousMatrix4& view_T_image, Frame&& frame, const ObjectSize& objectSize);
+		inline void visualizeImageInView(const unsigned int id, const HomogenousMatrix4& view_T_image, Frame&& frame, const ObjectSize& objectSize, const bool useMipMaps = true);
 
 		/**
 		 * Visualizes an image (e.g., for debugging purposes) at a specific location in the virtual environment (defined in relation to the view).
@@ -116,9 +119,10 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRImageVisualizer : public VR
 		 * @param view_T_image The transformation at which the image will be displayed, transforming image to view, can be invalid to remove the existing visualization
 		 * @param frame The frame to visualize, can be invalid to remove the existing visualization
 		 * @param objectSize The size of the visualized image in virtual space (in object space), an invalid object to remove the visualization
+		 * @param useMipMaps Use mipmaps to reduce aliasing artifacts.
 		 * @see visualizeImageInWorld().
 		 */
-		inline void visualizeImageInView(const unsigned int id, const HomogenousMatrix4& view_T_image, const Frame& frame, const ObjectSize& objectSize);
+		inline void visualizeImageInView(const unsigned int id, const HomogenousMatrix4& view_T_image, const Frame& frame, const ObjectSize& objectSize, const bool useMipMaps = true);
 
 		/**
 		 * Visualizes an image (e.g., for debugging purposes) at a specific location in the virtual environment (defined in relation to the world or to the view).
@@ -129,8 +133,9 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRImageVisualizer : public VR
 		 * @param frame The frame to visualize, can be invalid to remove the existing visualization
 		 * @param objectSize The size of the visualized image in virtual space (in object space), an invalid object to remove the visualization
 		 * @param referenceIsWorld True, if reference is world; False, if reference is view
+		 * @param useMipMaps Use mipmaps to reduce aliasing artifacts.
 		 */
-		void visualizeImage(const unsigned int id, const HomogenousMatrix4& reference_T_image, Frame&& frame, const ObjectSize& objectSize, const bool referenceIsWorld = true);
+		void visualizeImage(const unsigned int id, const HomogenousMatrix4& reference_T_image, Frame&& frame, const ObjectSize& objectSize, const bool referenceIsWorld = true, const bool useMipMaps = true);
 
 		/**
 		 * Visualizes an image (e.g., for debugging purposes) at a specific location in the virtual environment (defined in relation to the world or to the view).
@@ -141,8 +146,9 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRImageVisualizer : public VR
 		 * @param frame The frame to visualize, can be invalid to remove the existing visualization
 		 * @param objectSize The size of the visualized image in virtual space (in object space), an invalid object to remove the visualization
 		 * @param referenceIsWorld True, if reference is world; False, if reference is view
+		 * @param useMipMaps Use mipmaps to reduce aliasing artifacts.
 		 */
-		inline void visualizeImage(const unsigned int id, const HomogenousMatrix4& reference_T_image, const Frame& frame, const ObjectSize& objectSize, const bool referenceIsWorld = true);
+		inline void visualizeImage(const unsigned int id, const HomogenousMatrix4& reference_T_image, const Frame& frame, const ObjectSize& objectSize, const bool referenceIsWorld = true, const bool useMipMaps = true);
 };
 
 VRImageVisualizer::VRImageVisualizer()
@@ -156,29 +162,29 @@ VRImageVisualizer::VRImageVisualizer(const Rendering::EngineRef& engine, const R
 	// nothing to do here
 }
 
-inline void VRImageVisualizer::visualizeImageInWorld(const unsigned int id, const HomogenousMatrix4& world_T_image, Frame&& frame, const ObjectSize& objectSize)
+inline void VRImageVisualizer::visualizeImageInWorld(const unsigned int id, const HomogenousMatrix4& world_T_image, Frame&& frame, const ObjectSize& objectSize, const bool useMipMaps)
 {
-	return visualizeImage(id, world_T_image, std::move(frame), objectSize, true);
+	return visualizeImage(id, world_T_image, std::move(frame), objectSize, true, useMipMaps);
 }
 
-inline void VRImageVisualizer::visualizeImageInWorld(const unsigned int id, const HomogenousMatrix4& world_T_image, const Frame& frame, const ObjectSize& objectSize)
+inline void VRImageVisualizer::visualizeImageInWorld(const unsigned int id, const HomogenousMatrix4& world_T_image, const Frame& frame, const ObjectSize& objectSize, const bool useMipMaps)
 {
-	return visualizeImage(id, world_T_image, frame, objectSize, true);
+	return visualizeImage(id, world_T_image, frame, objectSize, true, useMipMaps);
 }
 
-inline void VRImageVisualizer::visualizeImageInView(const unsigned int id, const HomogenousMatrix4& world_T_image, Frame&& frame, const ObjectSize& objectSize)
+inline void VRImageVisualizer::visualizeImageInView(const unsigned int id, const HomogenousMatrix4& world_T_image, Frame&& frame, const ObjectSize& objectSize, const bool useMipMaps)
 {
-	return visualizeImage(id, world_T_image, std::move(frame), objectSize, false);
+	return visualizeImage(id, world_T_image, std::move(frame), objectSize, false, useMipMaps);
 }
 
-inline void VRImageVisualizer::visualizeImageInView(const unsigned int id, const HomogenousMatrix4& world_T_image, const Frame& frame, const ObjectSize& objectSize)
+inline void VRImageVisualizer::visualizeImageInView(const unsigned int id, const HomogenousMatrix4& world_T_image, const Frame& frame, const ObjectSize& objectSize, const bool useMipMaps)
 {
-	return visualizeImage(id, world_T_image, frame, objectSize, false);
+	return visualizeImage(id, world_T_image, frame, objectSize, false, useMipMaps);
 }
 
-inline void VRImageVisualizer::visualizeImage(const unsigned int id, const HomogenousMatrix4& reference_T_image, const Frame& frame, const ObjectSize& objectSize, const bool referenceIsWorld)
+inline void VRImageVisualizer::visualizeImage(const unsigned int id, const HomogenousMatrix4& reference_T_image, const Frame& frame, const ObjectSize& objectSize, const bool referenceIsWorld, const bool useMipMaps)
 {
-	return visualizeImage(id, reference_T_image, Frame(frame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT), objectSize, referenceIsWorld);
+	return visualizeImage(id, reference_T_image, Frame(frame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT), objectSize, referenceIsWorld, useMipMaps);
 }
 
 }
