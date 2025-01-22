@@ -67,7 +67,7 @@ const char* Disassembler::LineReader::readNextLine(size_t& size)
 					}
 
 					// in the case we reached the end of the line we have to remove the '\n' character from the stream
-					const char endOfLineCharacter = inputStream_.get();
+     [[maybe_unused]] const char endOfLineCharacter = inputStream_.get();
 					ocean_assert(endOfLineCharacter == '\n');
 				}
 
