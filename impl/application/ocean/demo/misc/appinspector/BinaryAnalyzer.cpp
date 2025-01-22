@@ -58,7 +58,7 @@ bool BinaryAnalyzer::analyzeBinaryAsynchron(const std::string& filenameBinary, c
 		return false;
 	}
 
-	const bool clearResult = clear();
+ [[maybe_unused]] const bool clearResult = clear();
 	ocean_assert(clearResult);
 
 	analyzerState_ = AS_WORKING;
