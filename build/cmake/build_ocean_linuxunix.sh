@@ -235,7 +235,7 @@ for type in ${OCEAN_LINKING_TYPES[@]}; do
     fi
 done
 
-echo "The third-party libraries will be build for the following combinations:"
+echo "Ocean will be built for the following combinations:"
 for build_config in ${OCEAN_BUILD_CONFIGS[@]}; do
     for link_type in ${OCEAN_LINKING_TYPES[@]}; do
         echo " * ${build_config} + ${link_type}"
@@ -245,7 +245,7 @@ done
 echo ""
 echo ""
 echo ""
-echo "Build directory: ${OCEAN_INSTALL_DIR}"
+echo "Build directory: ${OCEAN_BUILD_DIR}"
 echo "Installation directory: ${OCEAN_INSTALL_DIR}"
 echo ""
 echo ""
