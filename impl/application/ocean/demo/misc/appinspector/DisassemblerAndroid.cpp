@@ -42,7 +42,7 @@ bool DisassemblerAndroid::parseExecutableSections(const std::string& objdumpPath
 	}
 
 	// we remove the temporary file/pipe again
-	const int deleteResult = remove(temporaryFilenameDisassembly.c_str());
+ [[maybe_unused]] const int deleteResult = remove(temporaryFilenameDisassembly.c_str());
 	ocean_assert(deleteResult == 0);
 
 	if (result)
