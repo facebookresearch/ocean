@@ -81,7 +81,7 @@ bool DisassemblerIOS::parseTextString(const std::string& objdumpPath, const std:
 	}
 
 	// we remove the temporary file/pipe again
-	const int deleteResult = remove(temporaryFilenameDisassembly.c_str());
+ [[maybe_unused]] const int deleteResult = remove(temporaryFilenameDisassembly.c_str());
 	ocean_assert(deleteResult == 0);
 
 	if (result)
@@ -117,7 +117,7 @@ bool DisassemblerIOS::parseRodataString(const std::string& objdumpPath, const st
 	}
 
 	// we remove the temporary file/pipe again
-	const int deleteResult = remove(temporaryFilenameDisassembly.c_str());
+ [[maybe_unused]] const int deleteResult = remove(temporaryFilenameDisassembly.c_str());
 	ocean_assert(deleteResult == 0);
 
 	if (result)
@@ -199,7 +199,7 @@ bool DisassemblerIOS::parseTextText(const std::string& objdumpPath, const std::s
 	}
 
 	// we remove the temporary file/pipe again
-	const int deleteResult = remove(temporaryFilenameDisassembly.c_str());
+ [[maybe_unused]] const int deleteResult = remove(temporaryFilenameDisassembly.c_str());
 	ocean_assert(deleteResult == 0);
 
 	if (result)
