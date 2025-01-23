@@ -78,7 +78,7 @@ std::string Processor::brand()
 		char buffer[1025] = {'\0'};
 		size_t bufferSize = 1024;
 
-		const int result = sysctlbyname("machdep.cpu.brand_string", buffer, &bufferSize, nullptr, 0);
+		[[maybe_unused]] const int result = sysctlbyname("machdep.cpu.brand_string", buffer, &bufferSize, nullptr, 0);
 		ocean_assert(result == 0);
 
 		if (bufferSize >= 1024)
