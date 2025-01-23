@@ -168,8 +168,7 @@ void AKFactory::onKnownGeoAnchorAvailability(const GeoAnchorAvailabilityChecker:
 
 Device* AKFactory::createAKTracker6DOF(const std::string& name, const Device::DeviceType& deviceType)
 {
-	const GeoAnchorAvailabilityChecker::AvailabilityState availabilityState = geoAnchorAvailabilityChecker_.availabilityState();
-	ocean_assert(availabilityState != GeoAnchorAvailabilityChecker::AS_UNKNOWN); // should be know when the first tracker is created
+	ocean_assert(geoAnchorAvailabilityChecker_.availabilityState() != GeoAnchorAvailabilityChecker::AS_UNKNOWN); // should be know when the first tracker is created
 
 	if (name == AKWorldTracker6DOF::deviceNameAKWorldTracker6DOF())
 	{
