@@ -166,9 +166,10 @@ class OCEAN_MEDIA_USB_EXPORT USBLiveVideo final :
 
 		/**
 		 * Sets the exposure duration of this device.
+		 * Note: 'allowShorterExposure' is ignored
 		 * @see LiveVideo::setExposureDuration().
 		 */
-		bool setExposureDuration(const double duration) override;
+		bool setExposureDuration(const double duration, const bool allowShorterExposure = false) override;
 
 		/**
 		 * Returns the current focus of this device.

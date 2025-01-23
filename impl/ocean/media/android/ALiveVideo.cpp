@@ -175,7 +175,7 @@ float ALiveVideo::focus(ControlMode* focusMode) const
 	return focusPosition_;
 }
 
-bool ALiveVideo::setExposureDuration(const double duration)
+bool ALiveVideo::setExposureDuration(const double duration, const bool /*allowShorterExposure*/)
 {
 	const ScopedLock scopedLock(lock_);
 

@@ -150,7 +150,7 @@ bool LiveVideo::setPreferredStreamConfiguration(const StreamConfiguration& /*str
 	return false;
 }
 
-bool LiveVideo::setExposureDuration(const double /*duration*/)
+bool LiveVideo::setExposureDuration(const double /*duration*/, const bool /*allowShorterExposure*/)
 {
 	return false;
 }

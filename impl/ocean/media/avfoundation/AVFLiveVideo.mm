@@ -289,7 +289,7 @@ float AVFLiveVideo::focus(ControlMode* focusMode) const
 	return result;
 }
 
-bool AVFLiveVideo::setExposureDuration(const double duration)
+bool AVFLiveVideo::setExposureDuration(const double duration, const bool allowShorterExposure)
 {
 	bool result = false;
 
@@ -312,11 +312,20 @@ bool AVFLiveVideo::setExposureDuration(const double duration)
 
 				result = true;
 			}
-			else if (duration == 0.0)
+			else if (duration == 0.0 || allowShorterExposure)
 			{
 				// 0 for auto exposure
 
 				[captureDevice_ setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
+
+				if (duration > 0.0)
+				{
+					ocean_assert(allowShorterExposure);
+
+					const CMTime exposureDuration = CMTimeMakeWithSeconds(duration, 1000 * 1000 * 10);
+
+					[captureDevice_ setActiveMaxExposureDuration:exposureDuration];
+				}
 
 				exposureDuration_ = 0.0;
 
@@ -437,7 +446,7 @@ bool AVFLiveVideo::setFocus(const float position)
 				{
 					[captureDevice_ setFocusMode:AVCaptureFocusModeLocked];
 					[captureDevice_ setFocusModeLockedWithLensPosition:position completionHandler:nil];
-					
+
 					result = true;
 				}
 			}

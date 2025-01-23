@@ -210,10 +210,11 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		/**
 		 * Sets the exposure duration of this device.
 		 * @param duration The exposure duration to be set, in seconds, with range (0, infinity), 0 for auto exposure, -1 for a one-time auto exposure
+		 * @param allowShorterExposure True, to allow shorter exposure durations than the specified duration; False, to enforce the specified duration; Ignored if auto exposure is used
 		 * @return True, if succeeded
 		 * @see exposureDuration().
 		 */
-		virtual bool setExposureDuration(const double duration);
+		virtual bool setExposureDuration(const double duration, const bool allowShorterExposure = false);
 
 		/**
 		 * Sets the ISO of this device.

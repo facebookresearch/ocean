@@ -409,7 +409,7 @@ double USBLiveVideo::exposureDuration(double* minDuration, double* maxDuration, 
 	return currentValue;
 }
 
-bool USBLiveVideo::setExposureDuration(const double duration)
+bool USBLiveVideo::setExposureDuration(const double duration, const bool /*allowShorterExposure*/)
 {
 	const ScopedLock scopedLock(lock_);
 

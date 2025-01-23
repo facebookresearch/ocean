@@ -106,9 +106,10 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 
 		/**
 		 * Sets the exposure duration of this device.
+		 * Note: 'allowShorterExposure' is ignored
 		 * @see setExposureDuration().
 		 */
-		bool setExposureDuration(const double duration) override;
+		bool setExposureDuration(const double duration, const bool allowShorterExposure = false) override;
 
 		/**
 		 * Sets the ISO of this device.
