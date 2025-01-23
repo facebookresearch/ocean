@@ -45,11 +45,19 @@ if (IOS)
 endif()
 
 # Build options
-option(OCEAN_BUILD_MINIMAL "When enabled, build only base, cv, and math components of Ocean" FALSE)
+option(OCEAN_BUILD_MINIMAL "When enabled, build only base, cv, and math components of Ocean" OFF)
+
+if (OCEAN_BUILD_MINIMAL)
+    set(NOT_OCEAN_BUILD_MINIMAL FALSE)
+else()
+    set(NOT_OCEAN_BUILD_MINIMAL TRUE)
+endif()
+
+
 option(BUILD_SHARED_LIBS "Build using shared libraries" FALSE)
-option(OCEAN_ENABLE_MESSENGER "When enabled, the logging mechanism in Ocean will be enabled. Otherwise it will be disabled" "NOT OCEAN_BUILD_MINIMAL")
-option(OCEAN_BUILD_DEMOS "When enabled, the desktop demo applications will be included in the build. Otherwise they will be ignored." "NOT OCEAN_BUILD_MINIMAL")
-option(OCEAN_BUILD_TESTS "When enabled, the desktop test libraries and applications will be included in the build. Otherwise they will be ignored." "NOT OCEAN_BUILD_MINIMAL")
+option(OCEAN_ENABLE_MESSENGER "When enabled, the logging mechanism in Ocean will be enabled. Otherwise it will be disabled" ${NOT_OCEAN_BUILD_MINIMAL})
+option(OCEAN_BUILD_DEMOS "When enabled, the desktop demo applications will be included in the build. Otherwise they will be ignored." ${NOT_OCEAN_BUILD_MINIMAL})
+option(OCEAN_BUILD_TESTS "When enabled, the desktop test libraries and applications will be included in the build. Otherwise they will be ignored." ${NOT_OCEAN_BUILD_MINIMAL})
 
 # Build config and definitions
 set(CMAKE_CXX_STANDARD 20)
