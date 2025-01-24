@@ -466,6 +466,18 @@ class VectorT4
 		inline size_t operator()(const VectorT4<T>& vector) const;
 
 		/**
+		 * Returns a 4D vector with all elements set to NumericT::minValue().
+		 * @return The resulting 4D vector
+		 */
+		static inline VectorT4<T> minValue();
+
+		/**
+		 * Returns a 4D vector with all elements set to NumericT::maxValue().
+		 * @return The resulting 4D vector
+		 */
+		static inline VectorT4<T> maxValue();
+
+		/**
 		 * Converts vectors with specific data type to vectors with different data type.
 		 * @param vectors The vectors to convert
 		 * @return The converted vectors
@@ -929,6 +941,18 @@ inline size_t VectorT4<T>::operator()(const VectorT4<T>& vector) const
 	seed ^= std::hash<T>{}(vector.w()) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 
 	return seed;
+}
+
+template <typename T>
+inline VectorT4<T> VectorT4<T>::minValue()
+{
+	return VectorT4<T>(NumericT<T>::minValue(), NumericT<T>::minValue(), NumericT<T>::minValue(), NumericT<T>::minValue());
+}
+
+template <typename T>
+inline VectorT4<T> VectorT4<T>::maxValue()
+{
+	return VectorT4<T>(NumericT<T>::maxValue(), NumericT<T>::maxValue(), NumericT<T>::maxValue(), NumericT<T>::maxValue());
 }
 
 template <>

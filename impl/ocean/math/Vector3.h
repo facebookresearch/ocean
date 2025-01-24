@@ -497,6 +497,18 @@ class VectorT3
 		inline size_t operator()(const VectorT3<T>& vector) const;
 
 		/**
+		 * Returns a 3D vector with all elements set to NumericT::minValue().
+		 * @return The resulting 3D vector
+		 */
+		static inline VectorT3<T> minValue();
+
+		/**
+		 * Returns a 3D vector with all elements set to NumericT::maxValue().
+		 * @return The resulting 3D vector
+		 */
+		static inline VectorT3<T> maxValue();
+
+		/**
 		 * Converts vectors with specific data type to vectors with different data type.
 		 * @param vectors The vectors to convert
 		 * @return The converted vectors
@@ -1041,6 +1053,18 @@ inline size_t VectorT3<T>::operator()(const VectorT3<T>& vector) const
 	seed ^= std::hash<T>{}(vector.z()) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 
 	return seed;
+}
+
+template <typename T>
+inline VectorT3<T> VectorT3<T>::minValue()
+{
+	return VectorT3<T>(NumericT<T>::minValue(), NumericT<T>::minValue(), NumericT<T>::minValue());
+}
+
+template <typename T>
+inline VectorT3<T> VectorT3<T>::maxValue()
+{
+	return VectorT3<T>(NumericT<T>::maxValue(), NumericT<T>::maxValue(), NumericT<T>::maxValue());
 }
 
 template <>

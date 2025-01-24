@@ -456,6 +456,18 @@ class VectorT2
 		inline size_t operator()(const VectorT2<T>& vector) const;
 
 		/**
+		 * Returns a 2D vector with all elements set to NumericT::minValue().
+		 * @return The resulting 2D vector
+		 */
+		static inline VectorT2<T> minValue();
+
+		/**
+		 * Returns a 2D vector with all elements set to NumericT::maxValue().
+		 * @return The resulting 2D vector
+		 */
+		static inline VectorT2<T> maxValue();
+
+		/**
 		 * Converts vectors with specific data type to vectors with different data type.
 		 * @param vectors The vectors to convert
 		 * @return The converted vectors
@@ -908,6 +920,18 @@ inline size_t VectorT2<T>::operator()(const VectorT2<T>& vector) const
 	seed ^= std::hash<T>{}(vector.y()) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 
 	return seed;
+}
+
+template <typename T>
+inline VectorT2<T> VectorT2<T>::minValue()
+{
+	return VectorT2<T>(NumericT<T>::minValue(), NumericT<T>::minValue());
+}
+
+template <typename T>
+inline VectorT2<T> VectorT2<T>::maxValue()
+{
+	return VectorT2<T>(NumericT<T>::maxValue(), NumericT<T>::maxValue());
 }
 
 template <>
