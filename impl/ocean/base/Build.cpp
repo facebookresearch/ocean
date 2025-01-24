@@ -27,7 +27,7 @@ std::string Build::platformType()
 
 	return std::string("android");
 
-#elif defined(OCEAN_PLATFORM_BUILD_APPLE_IOS) || defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_SUMULATOR)
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE_IOS) || defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_SIMULATOR)
 
 	return std::string("ios");
 
