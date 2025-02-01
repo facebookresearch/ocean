@@ -5,14 +5,14 @@
 
 cmake_minimum_required(VERSION 3.26)
 
-add_subdirectory(advanced)
-add_subdirectory(depth)
-add_subdirectory(detector)
 if (NOT OCEAN_BUILD_MINIMAL)
+    add_subdirectory(advanced)
+    add_subdirectory(depth)
+    add_subdirectory(detector)
     add_subdirectory(fonts)
+    add_subdirectory(segmentation)
+    add_subdirectory(synthesis)
 endif()
-add_subdirectory(segmentation)
-add_subdirectory(synthesis)
 
 if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
 
