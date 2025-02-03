@@ -86,6 +86,13 @@ using ScopedCGImageRef = ScopedObjectCompileTimeVoidT<CGImageRef, CGImageRelease
 using ScopedCGDataProviderRef = ScopedObjectCompileTimeVoidT<CGDataProviderRef, CGDataProviderRelease>;
 
 /**
+ * Definition of a scoped object holding a CGColorRef object.
+ * The wrapped CGColorRef object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup platformapple
+ */
+using ScopedCGColorRef = ScopedObjectCompileTimeVoidT<CGColorRef, CGColorRelease>;
+
+/**
  * Definition of a scoped object holding a CGColorSpaceRef object.
  * The wrapped CGColorSpaceRef object will be released automatically once the scoped object does not exist anymore.
  * @ingroup platformapple
