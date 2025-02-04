@@ -12,8 +12,6 @@
 #include "ocean/math/Numeric.h"
 #include "ocean/math/Vector3.h"
 
-#include <vector>
-
 namespace Ocean
 {
 

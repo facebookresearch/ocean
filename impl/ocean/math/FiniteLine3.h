@@ -12,8 +12,6 @@
 #include "ocean/math/Line3.h"
 #include "ocean/math/Vector3.h"
 
-#include <vector>
-
 namespace Ocean
 {
 
@@ -25,21 +23,21 @@ template <typename T> class FiniteLineT3;
  * @see FiniteLineT3
  * @ingroup math
  */
-typedef FiniteLineT3<Scalar> FiniteLine3;
+using FiniteLine3 = FiniteLineT3<Scalar>;
 
 /**
  * Instantiation of the LineT3 template class using a double precision float data type.
  * @see FiniteLineT3
  * @ingroup math
  */
-typedef FiniteLineT3<double> FiniteLineD3;
+using FiniteLineD3 = FiniteLineT3<double>;
 
 /**
  * Instantiation of the LineT3 template class using a single precision float data type.
  * @see FiniteLineT3
  * @ingroup math
  */
-typedef FiniteLineT3<float> FiniteLineF3;
+using FiniteLineF3 = FiniteLineT3<float>;
 
 /**
  * Definition of a typename alias for vectors with FiniteLineT3 objects.
@@ -54,11 +52,11 @@ using FiniteLinesT3 = std::vector<FiniteLineT3<T>>;
  * @see Line3
  * @ingroup math
  */
-typedef std::vector<FiniteLine3> FiniteLines3;
+using FiniteLines3 = std::vector<FiniteLine3>;
 
 /**
  * This class implements an finite line in 3D space.
- * The finite line object is invalid if both end points of the line object are identical.<br>
+ * The finite line object is invalid if both end points of the line object are identical.
  * @tparam T Data type used to represent lines
  * @see FiniteLine3, FiniteLineF3, FiniteLineD3, Line3, Line3
  * @ingroup math
@@ -71,14 +69,14 @@ class FiniteLineT3
 		/**
 		 * Definition of the used data type.
 		 */
-		typedef T Type;
+		using Type = T;
 
 	public:
 
 		/**
 		 * Creates a finite line with default parameters.
 		 */
-		FiniteLineT3();
+		FiniteLineT3() = default;
 
 		/**
 		 * Creates a finite line defined by two end points of the line.
@@ -93,7 +91,7 @@ class FiniteLineT3
 		 * @tparam U The data type of the second line
 		 */
 		template <typename U>
-		inline explicit FiniteLineT3(const FiniteLineT3<U>& line);
+		explicit inline FiniteLineT3(const FiniteLineT3<U>& line);
 
 		/**
 		 * Returns the first end point of the line.
@@ -129,7 +127,7 @@ class FiniteLineT3
 
 		/**
 		 * Returns whether a given point is part of the finite line.
-		 * @param point Point to check
+		 * @param point The point to check
 		 * @return True, if so
 		 */
 		inline bool isOnLine(const VectorT3<T>& point) const;
@@ -137,14 +135,14 @@ class FiniteLineT3
 		/**
 		 * Returns the distance between the line and a given point.
 		 * This function needs a unit vector as direction!
-		 * @param point Point to return the distance for
+		 * @param point The point to return the distance for
 		 * @return Distance between point and line
 		 */
 		inline T distance(const VectorT3<T>& point) const;
 
 		/**
 		 * Returns the square distance between the line and a given point.
-		 * @param point Point to return the distance for
+		 * @param point The point to return the distance for
 		 * @return Square distance between point and line
 		 */
 		inline T sqrDistance(const VectorT3<T>& point) const;
@@ -159,7 +157,7 @@ class FiniteLineT3
 
 		/**
 		 * Returns the intersection pointer of two finite lines.
-		 * @param right Right line for intersection calculation
+		 * @param right The right line for intersection calculation
 		 * @param point Resulting intersection pointer
 		 * @return True, if both lines have a common intersection point
 		 */
@@ -180,15 +178,15 @@ class FiniteLineT3
 
 		/**
 		 * Returns whether two line are identical up to a small epsilon.
-		 * Two finite lines are identical if both lines have the same endpoint (independent of the order of the end points).<br>
-		 * @param right Right line
+		 * Two finite lines are identical if both lines have the same endpoint (independent of the order of the end points).
+		 * @param right The right line
 		 * @return True, if so
 		 */
 		inline bool operator==(const FiniteLineT3<T>& right) const;
 
 		/**
 		 * Returns whether two line are identical up to a small epsilon.
-		 * @param right Right line
+		 * @param right The right line
 		 * @return True, if so
 		 */
 		inline bool operator!=(const FiniteLineT3<T>& right) const;
@@ -202,29 +200,20 @@ class FiniteLineT3
 	protected:
 
 		/// First end point of the line.
-		VectorT3<T> linePoint0;
+		VectorT3<T> point0_ = VectorT3<T>(0, 0, 0);
 
 		/// Second end point of the line.
-		VectorT3<T> linePoint1;
+		VectorT3<T> point1_ = VectorT3<T>(0, 0, 0);
 
 		/// Direction of the line with unit length, if the object holds valid parameters.
-		VectorT3<T> lineDirection;
+		VectorT3<T> direction_ = VectorT3<T>(0, 0, 0);
 };
 
 template <typename T>
-FiniteLineT3<T>::FiniteLineT3() :
-	linePoint0(T(0), T(0), T(0)),
-	linePoint1(T(0), T(0), T(0)),
-	lineDirection(T(0), T(0), T(0))
-{
-	// nothing to do here
-}
-
-template <typename T>
 FiniteLineT3<T>::FiniteLineT3(const VectorT3<T>& point0, const VectorT3<T>& point1) :
-	linePoint0(point0),
-	linePoint1(point1),
-	lineDirection((point1 - point0).normalizedOrZero())
+	point0_(point0),
+	point1_(point1),
+	direction_((point1 - point0).normalizedOrZero())
 {
 	// nothing to do here
 }
@@ -233,21 +222,21 @@ template <typename T>
 template <typename U>
 inline FiniteLineT3<T>::FiniteLineT3(const FiniteLineT3<U>& line)
 {
-	linePoint0 = VectorT3<T>(line.linePoint0);
-	linePoint1 = VectorT3<T>(line.linePoint1);
-	lineDirection = VectorT3<T>(line.lineDirection);
+	point0_ = VectorT3<T>(line.point0_);
+	point1_ = VectorT3<T>(line.point1_);
+	direction_ = VectorT3<T>(line.direction_);
 }
 
 template <typename T>
 inline const VectorT3<T>& FiniteLineT3<T>::point0() const
 {
-	return linePoint0;
+	return point0_;
 }
 
 template <typename T>
 inline const VectorT3<T>& FiniteLineT3<T>::point1() const
 {
-	return linePoint1;
+	return point1_;
 }
 
 template <typename T>
@@ -257,24 +246,24 @@ inline const VectorT3<T>& FiniteLineT3<T>::point(const unsigned int index) const
 
 	if (index == 0u)
 	{
-		return linePoint0;
+		return point0_;
 	}
 	else
 	{
-		return linePoint1;
+		return point1_;
 	}
 }
 
 template <typename T>
 inline VectorT3<T> FiniteLineT3<T>::midpoint() const
 {
-  return (linePoint0 + linePoint1) * T(0.5);
+  return (point0_ + point1_) * T(0.5);
 }
 
 template <typename T>
 inline const VectorT3<T>& FiniteLineT3<T>::direction() const
 {
-	return lineDirection;
+	return direction_;
 }
 
 template <typename T>
@@ -306,31 +295,31 @@ VectorT3<T> FiniteLineT3<T>::nearestPoint(const VectorT3<T>& point) const
 {
 	ocean_assert(isValid());
 
-	const VectorT3<T> lineOffset(linePoint1 - linePoint0);
-	const VectorT3<T> pointOffset(point - linePoint0);
+	const VectorT3<T> lineOffset(point1_ - point0_);
+	const VectorT3<T> pointOffset(point - point0_);
 
 	const Scalar dotProduct = lineOffset * pointOffset;
 
 	// the projected point does not lie on the finite line (before the first end point)
 	if (dotProduct <= 0)
 	{
-		return linePoint0;
+		return point0_;
 	}
 
 	// the projected point does not lie on the finite line (behind the second end point)
 	if (dotProduct >= lineOffset.sqr())
 	{
-		return linePoint1;
+		return point1_;
 	}
 
 	// the projected point lies on the finite line
-	return linePoint0 + lineDirection * (pointOffset * lineDirection);
+	return point0_ + direction_ * (pointOffset * direction_);
 }
 
 template <typename T>
 inline bool FiniteLineT3<T>::intersection(const FiniteLineT3<T>& right, VectorT3<T>& point) const
 {
-	return LineT3<T>(linePoint0, lineDirection).intersection(LineT3<T>(right.linePoint0, right.lineDirection), point) && isOnLine(point);
+	return LineT3<T>(point0_, direction_).intersection(LineT3<T>(right.point0_, right.direction_), point) && isOnLine(point);
 }
 
 template <typename T>
@@ -338,20 +327,20 @@ inline bool FiniteLineT3<T>::isParallel(const FiniteLineT3<T>& right) const
 {
 	ocean_assert(isValid() && right.isValid());
 
-	return lineDirection == right.lineDirection || lineDirection == -right.lineDirection;
+	return direction_ == right.direction_ || direction_ == -right.direction_;
 }
 
 template <typename T>
 inline bool FiniteLineT3<T>::isValid() const
 {
-	return !lineDirection.isNull();
+	return !direction_.isNull();
 }
 
 template <typename T>
 bool FiniteLineT3<T>::operator==(const FiniteLineT3<T>& right) const
 {
-	return (linePoint0 == right.linePoint0 && linePoint1 == right.linePoint1)
-				|| (linePoint0 == right.linePoint1 && linePoint1 == right.linePoint0);
+	return (point0_ == right.point0_ && point1_ == right.point1_)
+				|| (point0_ == right.point1_ && point1_ == right.point0_);
 }
 
 template <typename T>

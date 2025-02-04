@@ -25,21 +25,21 @@ template <typename T> class FiniteLineT2;
  * @see FiniteLineT2
  * @ingroup math
  */
-typedef FiniteLineT2<Scalar> FiniteLine2;
+using FiniteLine2 = FiniteLineT2<Scalar>;
 
 /**
  * Instantiation of the LineT2 template class using a double precision float data type.
  * @see FiniteLineT2
  * @ingroup math
  */
-typedef FiniteLineT2<double> FiniteLineD2;
+using FiniteLineD2 = FiniteLineT2<double>;
 
 /**
  * Instantiation of the LineT2 template class using a single precision float data type.
  * @see FiniteLineT2
  * @ingroup math
  */
-typedef FiniteLineT2<float> FiniteLineF2;
+using FiniteLineF2 = FiniteLineT2<float>;
 
 /**
  * Definition of a typename alias for vectors with FiniteLineT2 objects.
@@ -54,21 +54,21 @@ using FiniteLinesT2 = std::vector<FiniteLineT2<T>>;
  * @see FiniteLineF2, Line2
  * @ingroup math
  */
-typedef std::vector<FiniteLine2> FiniteLines2;
+using FiniteLines2 = std::vector<FiniteLine2>;
 
 /**
  * Definition of a vector holding FiniteLineD2 objects.
  * @see FiniteLineD2, Line2
  * @ingroup math
  */
-typedef std::vector<FiniteLineD2> FiniteLinesD2;
+using FiniteLinesD2 = std::vector<FiniteLineD2>;
 
 /**
  * Definition of a vector holding FiniteLineF2 objects.
  * @see FiniteLineF2, Line2
  * @ingroup math
  */
-typedef std::vector<FiniteLineF2> FiniteLinesF2;
+using FiniteLinesF2 = std::vector<FiniteLineF2>;
 
 /**
  * This class implements an finite line in 2D space.
@@ -107,7 +107,7 @@ class FiniteLineT2
 		 * @tparam U The data type of the second line
 		 */
 		template <typename U>
-		inline explicit FiniteLineT2(const FiniteLineT2<U>& line);
+		explicit inline FiniteLineT2(const FiniteLineT2<U>& line);
 
 		/**
 		 * Returns the first end point of the line.
