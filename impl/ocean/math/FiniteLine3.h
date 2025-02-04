@@ -126,6 +126,18 @@ class FiniteLineT3
 		inline const VectorT3<T>& direction() const;
 
 		/**
+		 * Returns the squared length of the finite line.
+		 * @return Squared distance between the end points of the line
+		 */
+		inline T sqrLength() const;
+
+		/**
+		 * Returns the length of the finite line.
+		 * @return Distance between the end points of the line
+		 */
+		inline T length() const;
+
+		/**
 		 * Returns whether a given point is part of the finite line.
 		 * @param point The point to check
 		 * @return True, if so
@@ -156,9 +168,9 @@ class FiniteLineT3
 		VectorT3<T> nearestPoint(const VectorT3<T>& point) const;
 
 		/**
-		 * Returns the intersection pointer of two finite lines.
-		 * @param right The right line for intersection calculation
-		 * @param point Resulting intersection pointer
+		 * Returns the intersection point of two finite lines.
+		 * @param right The right line for intersection calculation, must be valid
+		 * @param point Resulting intersection point, if any
 		 * @return True, if both lines have a common intersection point
 		 */
 		inline bool intersection(const FiniteLineT3<T>& right, VectorT3<T>& point) const;
@@ -267,6 +279,18 @@ inline const VectorT3<T>& FiniteLineT3<T>::direction() const
 }
 
 template <typename T>
+inline T FiniteLineT3<T>::sqrLength() const
+{
+	return (point1_ - point0_).sqr();
+}
+
+template <typename T>
+inline T FiniteLineT3<T>::length() const
+{
+	return (point1_ - point0_).length();
+}
+
+template <typename T>
 inline bool FiniteLineT3<T>::isOnLine(const VectorT3<T>& point) const
 {
 	ocean_assert(isValid());
@@ -319,7 +343,17 @@ VectorT3<T> FiniteLineT3<T>::nearestPoint(const VectorT3<T>& point) const
 template <typename T>
 inline bool FiniteLineT3<T>::intersection(const FiniteLineT3<T>& right, VectorT3<T>& point) const
 {
-	return LineT3<T>(point0_, direction_).intersection(LineT3<T>(right.point0_, right.direction_), point) && isOnLine(point);
+	ocean_assert(isValid());
+	ocean_assert(right.isValid());
+
+	VectorT3<T> intersectionPoint;
+
+	if (!LineT3<T>(point0_, direction_).nearestPoint(LineT3<T>(right.point0_, right.direction_), intersectionPoint))
+	{
+		return false;
+	}
+
+	return isOnLine(intersectionPoint) && right.isOnLine(intersectionPoint);
 }
 
 template <typename T>
