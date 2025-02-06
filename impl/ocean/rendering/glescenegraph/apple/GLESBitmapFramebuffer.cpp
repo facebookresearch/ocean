@@ -150,7 +150,7 @@ bool GLESBitmapFramebuffer::initializeContext()
 
 		GLint numberVirtualScreens = 0;
 		const CGLError result = CGLChoosePixelFormat(attributes, &pixelFormatObject, &numberVirtualScreens);
-		ocean_assert(result == kCGLNoError);
+		ocean_assert_and_suppress_unused(result == kCGLNoError, result);
 
 		if (pixelFormatObject != nullptr)
 		{
