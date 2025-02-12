@@ -8,6 +8,7 @@
 #include "ocean/base/Build.h"
 #include "ocean/base/String.h"
 
+#include <charconv>
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
@@ -235,22 +236,20 @@ std::string Build::buildString()
 	return result;
 }
 
-std::string Build::buildDate(const char* d)
+std::string Build::buildDate(const std::string_view date)
 {
-	std::string dateStr(d);
+	ocean_assert(date.length() == 11);
 
-	ocean_assert(dateStr.length() == 11);
-
-	if (dateStr.length() != 11)
+	if (date.length() != 11)
 	{
 		return std::string();
 	}
 
-	const std::string months[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+	static constexpr std::string_view months[12] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-	std::string monthStr = dateStr.substr(0, 3);
-	std::string dayStr = dateStr.substr(4, 2);
-	std::string yearStr = dateStr.substr(7, 4);
+	const std::string_view monthStr = date.substr(0, 3);
+	const std::string_view dayStr   = date.substr(4, 2);
+	const std::string_view yearStr  = date.substr(7, 4);
 
 	unsigned int month = 0u;
 	for (unsigned int n = 0u; n < 12; n++)
@@ -268,8 +267,15 @@ std::string Build::buildDate(const char* d)
 		return std::string();
 	}
 
-	unsigned int day = atoi(dayStr.c_str());
-	unsigned int year = atoi(yearStr.c_str());
+    const auto parseNumber = [](const std::string_view number){
+		unsigned int parsed;
+        auto [ptr, errorCode] = std::from_chars(number.data(), number.data() + number.length(), parsed);
+		// Assert that there was no error in parsing
+		ocean_assert(errorCode == std::errc());
+		return parsed;
+	};
+	const unsigned int day  = parseNumber(dayStr);
+	const unsigned int year = parseNumber(yearStr);
 
 	ocean_assert(day >= 1 && day <= 31);
 	if (day < 1 || day > 31)

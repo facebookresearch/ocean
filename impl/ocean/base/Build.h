@@ -67,7 +67,7 @@ class OCEAN_BASE_EXPORT Build
 		 * @param date Compiler build date which must be __DATE__
 		 * @return Date of build process
 		 */
-		static std::string buildDate(const char* date);
+		static std::string buildDate(const std::string_view date);
 
 		/**
 		 * Returns the time of the compiler building process as string.
