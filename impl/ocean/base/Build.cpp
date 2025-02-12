@@ -251,15 +251,16 @@ std::string Build::buildDate(const std::string_view date)
 	const std::string_view dayStr   = date.substr(4, 2);
 	const std::string_view yearStr  = date.substr(7, 4);
 
-	unsigned int month = 0u;
-	for (unsigned int n = 0u; n < 12; n++)
-	{
-		if (months[n] == monthStr)
+	const unsigned int month = [&](){
+		for (unsigned int n = 0u; n < 12; n++)
 		{
-		  month = n + 1u;
-		  break;
+			if (months[n] == monthStr)
+			{
+		  		return n + 1u;
+			}
 		}
-	}
+		return 0u;
+	}();
 
 	ocean_assert(month >= 1 && month <= 12);
 	if (month < 1 || month > 12)
