@@ -115,7 +115,7 @@ bool writeImage(const Frame& frame, const std::string& filename, const Propertie
 #elif defined(_WINDOWS)
 	bool result = Media::WIC::Image::writeImage(frame, filename /*, properties*/);
 #else
-	bool result = Media::OpenImageLibraries::Image::writeImage(frame, filename /*, properties*/);
+	bool result = Media::OpenImageLibraries::Image::writeImage(frame, filename, true /*allowConversion*/, nullptr /*hasBeenConverted*/, properties);
 #endif
 
 	if (result == false)
@@ -141,7 +141,7 @@ bool Comfort::encodeImage(const Frame& frame, const std::string& imageType, std:
 #elif defined(_WINDOWS)
 	bool result = Media::WIC::Image::encodeImage(frame, imageType, buffer, allowConversion, hasBeenConverted /*, properties*/);
 #else
-	bool result = Media::OpenImageLibraries::Image::encodeImage(frame, imageType, buffer, allowConversion, hasBeenConverted /*, properties*/);
+	bool result = Media::OpenImageLibraries::Image::encodeImage(frame, imageType, buffer, allowConversion, hasBeenConverted, properties);
 #endif
 
 	if (result == false)
@@ -167,7 +167,7 @@ bool Comfort::writeImage(const Frame& frame, const std::string& filename, const 
 #elif defined(_WINDOWS)
 	bool result = Media::WIC::Image::writeImage(frame, filename, allowConversion, hasBeenConverted /*, properties*/);
 #else
-	bool result = Media::OpenImageLibraries::Image::writeImage(frame, filename, allowConversion, hasBeenConverted /*, properties*/);
+	bool result = Media::OpenImageLibraries::Image::writeImage(frame, filename, allowConversion, hasBeenConverted, properties);
 #endif
 
 	if (result == false)
