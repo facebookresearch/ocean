@@ -138,7 +138,7 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 	return result;
 }
 
-bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::vector<unsigned char>& buffer, const bool allowConversion, bool* hasBeenConverted)
+bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::vector<unsigned char>& buffer, const bool allowConversion, bool* hasBeenConverted, const Properties& properties)
 {
 	if (!frame.isValid() || imageType.empty())
 	{
@@ -150,7 +150,14 @@ bool Image::encodeImage(const Frame& frame, const std::string& imageType, std::v
 #ifdef OCEAN_MEDIA_OIL_SUPPORT_JPG
 	if (imageTypeOut == "jpg" || imageTypeOut == "jpeg" || imageTypeOut == "jpe")
 	{
-		return ImageJpg::encodeImage(frame, buffer, allowConversion, hasBeenConverted);
+		int quality = 80;
+
+		if (properties.quality_ >= 0.0f && properties.quality_ <= 1.0f)
+		{
+			quality = int(properties.quality_ * 100.0f);
+		}
+
+		return ImageJpg::encodeImage(frame, buffer, allowConversion, hasBeenConverted, quality);
 	}
 #endif // OCEAN_MEDIA_OIL_SUPPORT_JPG
 
@@ -258,7 +265,7 @@ Frame Image::readImage(const std::string& filename)
 	return decodeImage(buffer.data(), buffer.size(), filename.substr(fileExtensionPos + 1));
 }
 
-bool Image::writeImage(const Frame& frame, const std::string& filename, const bool allowConversion, bool* hasBeenConverted)
+bool Image::writeImage(const Frame& frame, const std::string& filename, const bool allowConversion, bool* hasBeenConverted, const Properties& properties)
 {
 	const std::string::size_type fileExtensionPos = filename.rfind('.');
 
@@ -268,7 +275,7 @@ bool Image::writeImage(const Frame& frame, const std::string& filename, const bo
 	}
 
 	std::vector<uint8_t> buffer;
-	if (!encodeImage(frame, filename.substr(fileExtensionPos + 1), buffer, allowConversion, hasBeenConverted))
+	if (!encodeImage(frame, filename.substr(fileExtensionPos + 1), buffer, allowConversion, hasBeenConverted, properties))
 	{
 		return false;
 	}

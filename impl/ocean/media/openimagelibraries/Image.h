@@ -12,6 +12,8 @@
 
 #include "ocean/base/Frame.h"
 
+#include "ocean/media/Image.h"
+
 namespace Ocean
 {
 
@@ -58,6 +60,13 @@ class OCEAN_MEDIA_OIL_EXPORT Image
 	public:
 
 		/**
+ 		 * Re-definition of Media::Image::Properties.
+ 		 */
+		using Properties = Media::Image::Properties;
+
+	public:
+
+		/**
 		 * Decodes (reads/loads) an image from a given binary buffer.
 		 * @param buffer The buffer from which the image will be loaded, must be valid
 		 * @param size The size of the given buffer in bytes, with range [1, infinity)
@@ -75,10 +84,11 @@ class OCEAN_MEDIA_OIL_EXPORT Image
 		 * @param buffer The resulting buffer storing the binary information of the image
 		 * @param allowConversion True, to allow an internal conversion of the frame if does not support the given frame type; False, to prevent a conversion and to stop creating the buffer
 		 * @param hasBeenConverted Optional resulting statement whether the frame had to be converted to a different pixel format before it could be written; True, if so; False, if not
+		 * @param properties The properties to be used when writing the image, must be valid
 		 * @return True, if succeeded; False, if the frame could not be written as image e.g., if the frame contained an alpha channel
 		 * @see readImage().
 		 */
-		static bool encodeImage(const Frame& frame, const std::string& imageType, std::vector<uint8_t>& buffer, const bool allowConversion = true, bool* hasBeenConverted = nullptr);
+		static bool encodeImage(const Frame& frame, const std::string& imageType, std::vector<uint8_t>& buffer, const bool allowConversion = true, bool* hasBeenConverted = nullptr, const Properties& properties = Properties());
 
 		/**
 		 * Reads/loads an image from a specified file.
@@ -94,10 +104,11 @@ class OCEAN_MEDIA_OIL_EXPORT Image
 		 * @param filename The name of the file to which the frame will be written, must contain a valid image extension like e.g. jpg, png, gif, or tif), must be valid
 		 * @param allowConversion True, to allow an internal conversion of the frame if the image format does not support the given frame type; False, to prevent a conversion and to stop writing the file
 		 * @param hasBeenConverted Optional resulting statement whether the frame had to be converted to a different pixel format before it could be written; True, if so; False, if not
+		 * @param properties The properties to be used when writing the image, must be valid
 		 * @return True, if succeeded
 		 * @see readImage().
 		 */
-		static bool writeImage(const Frame& frame, const std::string& filename, const bool allowConversion = true, bool* hasBeenConverted = nullptr);
+		static bool writeImage(const Frame& frame, const std::string& filename, const bool allowConversion = true, bool* hasBeenConverted = nullptr, const Properties& properties = Properties());
 };
 
 }
