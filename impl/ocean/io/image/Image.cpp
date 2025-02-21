@@ -65,7 +65,7 @@ bool encodeImage(const Frame& frame, const std::string& imageType, std::vector<u
 #elif defined(_WINDOWS)
 	bool result = Media::WIC::Image::encodeImage(frame, imageType, buffer /*, properties*/);
 #else
-	bool result = Media::OpenImageLibraries::Image::encodeImage(frame, imageType, buffer /*, properties*/);
+	bool result = Media::OpenImageLibraries::Image::encodeImage(frame, imageType, buffer, true /*allowConversion*/, nullptr /*hasBeenConverted*/, properties);
 #endif
 
 	if (result == false)
