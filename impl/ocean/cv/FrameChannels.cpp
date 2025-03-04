@@ -140,7 +140,9 @@ bool FrameChannels::Comfort::separateTo1Channel(const Frame& sourceFrame, const 
 
 	for (Frame* targetFrame : targetFrames)
 	{
-		if (!FrameType::arePixelFormatsCompatible(targetFrame->pixelFormat(), individualFrameType.pixelFormat()) || targetFrame->pixelOrigin() != individualFrameType.pixelOrigin())
+		ocean_assert(targetFrame != nullptr);
+
+		if (!targetFrame->isValid() || !FrameType::arePixelFormatsCompatible(targetFrame->pixelFormat(), individualFrameType.pixelFormat()) || targetFrame->pixelOrigin() != individualFrameType.pixelOrigin())
 		{
 			targetFrame->set(individualFrameType, false /*forceOwner*/, true /*forceWritable*/);
 		}
