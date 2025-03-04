@@ -314,6 +314,7 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_U_V24_LIMITED_RANGE, FrameType::FORMAT_BGRA32, Options::OT_ALPHA_CHANNEL_TARGET_VALUE), FrameConverterY_U_V24::convertY_U_V24LimitedRangeToBGRA32);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_U_V24_LIMITED_RANGE, FrameType::FORMAT_RGB24), FrameConverterY_U_V24::convertY_U_V24LimitedRangeToRGB24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_U_V24_LIMITED_RANGE, FrameType::FORMAT_RGBA32, Options::OT_ALPHA_CHANNEL_TARGET_VALUE), FrameConverterY_U_V24::convertY_U_V24LimitedRangeToRGBA32);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_U_V24_LIMITED_RANGE, FrameType::FORMAT_YUV24), FrameConverterY_U_V24::convertY_U_V24ToYUV24);
 
 	// FORMAT_YUV24
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_YUV24, FrameType::FORMAT_BGR24), FrameConverterYUV24::convertYUV24ToBGR24);
@@ -821,6 +822,13 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 	}
 	else
 	{
+#ifdef OCEAN_DEBUG
+		const std::string debugSourcePixelFormat = FrameType::formatIsPureGeneric(source.pixelFormat()) ? "generic (" + String::toAString(source.pixelFormat()) + ")" : FrameType::translatePixelFormat(source.pixelFormat());
+		const std::string debugTargetPixelFormat = FrameType::formatIsPureGeneric(targetType.pixelFormat()) ? "generic (" + String::toAString(targetType.pixelFormat()) + ")" : FrameType::translatePixelFormat(targetType.pixelFormat());
+
+		Log::debug() << "Failed to convert frmae with pixel format '" << debugSourcePixelFormat << "' to '" << debugTargetPixelFormat << "'";
+#endif
+
 		ocean_assert(false && "Invalid frame types.");
 		return false;
 	}
