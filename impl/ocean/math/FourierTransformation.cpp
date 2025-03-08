@@ -1202,7 +1202,7 @@ RealDFT( const T* src, T* dst, int n, int nf, int* factors, const int* itab,
 			_dst[j+1].im = 0;
 		}
 		DFT( _dst, _dst, n, nf, factors, itab, wave,
-			 tab_size, 0, buf, DFT_NO_PERMUTE, 1 );
+			 tab_size, nullptr, buf, DFT_NO_PERMUTE, 1 );
 		if( !complex_output )
 			dst[1] = dst[0];
 	}
@@ -1215,7 +1215,7 @@ RealDFT( const T* src, T* dst, int n, int nf, int* factors, const int* itab,
 
 		DFT( (Complex<T>*)src, (Complex<T>*)dst, n2, nf - (factors[0] == 1),
 			 factors + (factors[0] == 1),
-			 itab, wave, tab_size, 0, buf, 0, 1 );
+			 itab, wave, tab_size, nullptr, buf, 0, 1 );
 		factors[0] <<= 1;
 
 		t = dst[0] - dst[1];
@@ -1316,7 +1316,7 @@ CCSIDFT( const T* src, T* dst, int n, int nf, int* factors, const int* itab,
 		}
 
 		DFT( _dst, _dst, n, nf, factors, itab, wave,
-			 tab_size, 0, buf, DFT_NO_PERMUTE, 1. );
+			 tab_size, nullptr, buf, DFT_NO_PERMUTE, 1. );
 		dst[0] *= scale;
 		for( j = 1; j < n; j += 2 )
 		{
@@ -1398,7 +1398,7 @@ CCSIDFT( const T* src, T* dst, int n, int nf, int* factors, const int* itab,
 		DFT( (Complex<T>*)dst, (Complex<T>*)dst, n2,
 			 nf - (factors[0] == 1),
 			 factors + (factors[0] == 1), itab,
-			 wave, tab_size, 0, buf,
+			 wave, tab_size, nullptr, buf,
 			 inplace ? 0 : DFT_NO_PERMUTE, 1. );
 		factors[0] <<= 1;
 
@@ -1768,8 +1768,8 @@ static bool dft(const void* source, const unsigned int width, const unsigned int
 		const int dstStep = (int)targetStrideBytes;
 
 		double scale = 1;
-		unsigned char* wave = 0;
-		int* itab = 0;
+		unsigned char* wave = nullptr;
+		int* itab = nullptr;
 		unsigned char* ptr;
 		int i, len, count, sz = 0;
 		int use_buf = 0, odd_real = 0;
@@ -1793,7 +1793,7 @@ static bool dft(const void* source, const unsigned int width, const unsigned int
 			sz = 2 * len * complex_elem_size;
 		}
 
-		void *spec = 0;
+		void *spec = nullptr;
 
 		{
 			if( len != prev_len )
@@ -1835,7 +1835,7 @@ static bool dft(const void* source, const unsigned int width, const unsigned int
 
 		if( stage == 0 )
 		{
-			unsigned char* tmp_buf = 0;
+			unsigned char* tmp_buf = nullptr;
 			int dptr_offset = 0;
 			int dst_full_len = len*elem_size;
 			int _flags = (int)inv + (srcChannels != dstChannels ?
