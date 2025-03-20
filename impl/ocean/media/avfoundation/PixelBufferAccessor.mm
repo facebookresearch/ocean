@@ -56,6 +56,12 @@ PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const boo
 
 	FrameType frameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
 
+	ocean_assert(frameType.isValid());
+	if (!frameType.isValid())
+	{
+		return;
+	}
+
 	const size_t bufferSize = CVPixelBufferGetDataSize(pixelBuffer);
 
 	ocean_assert(bufferSize >= frameType.frameTypeSize());
@@ -80,7 +86,8 @@ PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const boo
 
 	ocean_assert(frame_.isValid() == false);
 
-	if (pixelFormat == FrameType::FORMAT_Y_UV12 || pixelFormat == FrameType::FORMAT_Y_VU12)
+	if (pixelFormat == FrameType::FORMAT_Y_UV12_LIMITED_RANGE || pixelFormat == FrameType::FORMAT_Y_UV12_FULL_RANGE
+			|| pixelFormat == FrameType::FORMAT_Y_VU12_LIMITED_RANGE || pixelFormat == FrameType::FORMAT_Y_VU12_FULL_RANGE)
 	{
 		const size_t planeCount = CVPixelBufferGetPlaneCount(pixelBuffer_);
 
@@ -323,8 +330,12 @@ FrameType::PixelFormat PixelBufferAccessor::translatePixelFormat(const OSType pi
 			return FrameType::FORMAT_Y_U_V12_FULL_RANGE;
 
 		case kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange:
+			// Bi-Planar Component Y’CbCr 8-bit 4:2:0, video-range (luma=[16,235] chroma=[16,240])
+			return FrameType::FORMAT_Y_UV12_LIMITED_RANGE;
+
 		case kCVPixelFormatType_420YpCbCr8BiPlanarFullRange:
-			return FrameType::FORMAT_Y_UV12;
+			// Bi-Planar Component Y’CbCr 8-bit 4:2:0, full-range (luma=[0,255] chroma=[1,255])
+			return FrameType::FORMAT_Y_UV12_FULL_RANGE;
 
 		case kCVPixelFormatType_DepthFloat32:
 			return FrameType::FORMAT_F32;
@@ -370,8 +381,11 @@ OSType PixelBufferAccessor::translatePixelFormat(const FrameType::PixelFormat pi
 		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
 			return kCVPixelFormatType_420YpCbCr8PlanarFullRange;
 
-		case FrameType::FORMAT_Y_UV12:
+		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
 			return kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange;
+
+		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
+			return kCVPixelFormatType_420YpCbCr8BiPlanarFullRange;
 
 		case FrameType::FORMAT_F32:
 			return kCVPixelFormatType_DepthFloat32;
