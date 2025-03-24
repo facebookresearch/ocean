@@ -359,10 +359,15 @@ void NativeApplication::processOpenXREvents()
 			}
 
 			default:
-				Log::debug() << "OpenXR Received unknown event type: " << int(xrEventDataBaseHeader.type);
+				onOpenXREvent(xrEventDataBaseHeader);
 				break;
 		}
 	}
+}
+
+void NativeApplication::onOpenXREvent(const XrEventDataBaseHeader& xrEventDataBaseHeader)
+{
+	Log::debug() << "OpenXR Received unknown event type: " << int(xrEventDataBaseHeader.type);
 }
 
 void NativeApplication::onChangedReferenceSpace(const XrReferenceSpaceType xrReferenceSpaceType, const HomogenousMatrix4& previous_T_changed, const XrTime& changeTime)

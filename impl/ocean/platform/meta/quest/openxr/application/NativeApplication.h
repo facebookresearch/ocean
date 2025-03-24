@@ -161,6 +161,12 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT NativeApplication
 		virtual void processOpenXREvents();
 
 		/**
+		 * Event function for OpenXR events which are not handled in processOpenXREvents().
+		 * @param xrEventDataBaseHeader The base header of the OpenXR event
+		 */
+		virtual void onOpenXREvent(const XrEventDataBaseHeader& xrEventDataBaseHeader);
+
+		/**
 		 * Event functions for changed reference spaces.
 		 * @param xrReferenceSpaceType The type of the reference which has changed
 		 * @param previous_T_changed The transformation between the changed space and the previous space, invalid if unknown
