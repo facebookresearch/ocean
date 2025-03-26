@@ -524,14 +524,28 @@ bool GLESTextureFramebuffer::copyColorTextureToFrame(Frame& frame, const CV::Pix
 				break;
 
 			case FrameType::FORMAT_F32:
+			{
 #ifdef OCEAN_RENDERING_GLES_USE_ES
-				ocean_assert(false && "OpenGLES does not support to read float framebuffers, use the Y32 workaround instead");
-				return false;
+				if (majorVersion_ == 0)
+				{
+					glGetIntegerv(GL_MAJOR_VERSION, &majorVersion_);
+					ocean_assert(GL_NO_ERROR == glGetError());
+				}
+
+				if (majorVersion_ <= 2)
+				{
+					ocean_assert(false && "OpenGLES 2.0 does not support to read float framebuffers, use the Y32 workaround instead");
+					return false;
+				}
+
+				textureFormat = GL_RED;
+				textureType = GL_FLOAT;
 #else
 				textureFormat = GL_RED;
 				textureType = GL_FLOAT;
 #endif
 				break;
+			}
 
 			default:
 				ocean_assert(false && "This must never happen!");

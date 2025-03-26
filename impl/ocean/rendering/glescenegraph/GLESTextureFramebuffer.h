@@ -265,6 +265,9 @@ class OCEAN_RENDERING_GLES_EXPORT GLESTextureFramebuffer :
 		PFNGLBLITFRAMEBUFFERPROC glBlitFramebuffer_ = nullptr;
 
 #endif // OCEAN_PLATFORM_BUILD_WINDOWS
+
+		/// The major OpenGL version
+		GLint majorVersion_ = 0;
 };
 
 inline unsigned int GLESTextureFramebuffer::width() const
