@@ -119,9 +119,12 @@ void GLESWindowFramebuffer::render()
 			// the next render call needs to start with the same eye again, otherwise OpenXR will get out of sync with the swapchain
 
 			nextRenderFirstEyeIndex_ = eye;
-			
+
 			return;
 		}
+
+		glViewport(GLint(0), GLint(0), GLint(framebuffer.width()), GLint(framebuffer.height()));
+		ocean_assert(GL_NO_ERROR == glGetError());
 
 		const RGBAColor backgroundColor = glesStereoView->backgroundColor();
 
