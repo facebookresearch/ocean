@@ -61,6 +61,18 @@ class OCEAN_MEDIA_A_EXPORT ALibrary : public Library
 		RecorderRef newRecorder(const Recorder::Type type) override;
 
 		/**
+		 * Returns a list of selectable mediums.
+		 * @see Library::selectableMedia().
+		 */
+		Definitions selectableMedia() const override;
+
+		/**
+		 * Returns a list of specific selectable mediums.
+		 * @see Library::selectableMedia().
+		 */
+		Definitions selectableMedia(const Medium::Type type) const override;
+
+		/**
 		 * Returns the supported medium types.
 		 * @see Library::supportedTypes().
 		 */

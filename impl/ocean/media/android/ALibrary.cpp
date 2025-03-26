@@ -164,6 +164,65 @@ RecorderRef ALibrary::newRecorder(const Recorder::Type type)
 	return RecorderRef();
 }
 
+ALibrary::Definitions ALibrary::selectableMedia() const
+{
+	return selectableMedia(Medium::LIVE_VIDEO);
+}
+
+ALibrary::Definitions ALibrary::selectableMedia(const Medium::Type type) const
+{
+	Definitions definitions;
+
+	if (type & Medium::LIVE_VIDEO)
+	{
+#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
+
+		const ALiveVideo::Devices devices = ALiveVideo::selectableDevices();
+
+		for (size_t nDevice = 0; nDevice < devices.size(); ++nDevice)
+		{
+			const ALiveVideo::Device& device = devices[nDevice];
+			ocean_assert(device.isValid());
+
+#ifdef OCEAN_DEBUG
+
+			// let's run a simple check in case we are on a Quest
+			// https://developers.meta.com/horizon/documentation/native/android/pca-native-overview
+
+			const ALiveVideo::Device::MetadataMap& metadataMap = device.metadataMap();
+
+			const ALiveVideo::Device::MetadataMap::const_iterator iMetaCameraSource = metadataMap.find(0x80004d00); // com.meta.extra_metadata.camera_source
+			const ALiveVideo::Device::MetadataMap::const_iterator iMetaCameraPosition = metadataMap.find(0x80004d01); // com.meta.extra_metadata.position
+
+			if (iMetaCameraSource != metadataMap.cend() && iMetaCameraPosition != metadataMap.cend())
+			{
+				// the camera is a Quest camera available through Passthrough API
+
+				const Value& cameraSource = iMetaCameraSource->second;
+				const Value& cameraPosition = iMetaCameraPosition->second;
+
+				ocean_assert(cameraSource.type() == Value::VT_INT_32 && cameraPosition.type() == Value::VT_INT_32);
+
+				const bool isLeftPassthoughCamera = cameraSource.intValue() == 0 && cameraPosition.intValue() == 0;
+				const bool isRightPassthoughCamera = cameraSource.intValue() == 0 && cameraPosition.intValue() == 1;
+
+				ocean_assert(nDevice != 0 || isLeftPassthoughCamera);
+				ocean_assert(nDevice != 1 || isRightPassthoughCamera);
+			}
+
+#endif // OCEAN_DEBUG
+
+			std::string url = "LiveVideoId:" + String::toAString(nDevice);
+
+			definitions.emplace_back(std::move(url), Medium::LIVE_VIDEO, name(), device.id());
+		}
+
+#endif // OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
+	}
+
+	return definitions;
+}
+
 Medium::Type ALibrary::supportedTypes() const
 {
 	return Medium::Type(Medium::LIVE_VIDEO | Medium::MOVIE | Medium::AUDIO | Medium::LIVE_AUDIO | Medium::MICROPHONE);
@@ -376,7 +435,7 @@ MediumRef ALibrary::newMovie(const std::string& url, bool useExclusive)
 		}
 	}
 
-#if defined(__ANDROID_API__) && __ANDROID_API__ >= 24
+#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 
 	AMovie* medium = new AMovie(url);
 	ocean_assert(medium != nullptr);
@@ -400,7 +459,7 @@ MediumRef ALibrary::newMovie(const std::string& url, bool useExclusive)
 
 	return MediumRef();
 
-#endif // __ANDROID_API__
+#endif // OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 }
 
 LibraryRef ALibrary::create()

@@ -13,6 +13,8 @@
 #include "ocean/media/android/NativeCameraLibrary.h"
 #include "ocean/media/android/NativeMediaLibrary.h"
 
+#include "ocean/base/Value.h"
+
 #include "ocean/math/AnyCamera.h"
 
 #include "ocean/media/LiveVideo.h"
@@ -28,7 +30,7 @@ namespace Media
 namespace Android
 {
 
-#if defined(__ANDROID_API__) && __ANDROID_API__ >= 24
+#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 
 /**
  * This class implements an live video class for Android.
@@ -40,6 +42,76 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 {
 	friend class ALibrary;
 	friend class ALiveVideoManager;
+
+	public:
+
+		/**
+		 * This class holds the relevant information of a selectable live video device.
+		 */
+		class Device
+		{
+			friend class ALiveVideo;
+
+			public:
+
+				/// Definition of an unordered map mapping metadata tags to their values.
+				using MetadataMap = std::unordered_map<uint32_t, Value>;
+
+			public:
+
+				/**
+				 * Default constructor.
+				 */
+				Device() = default;
+
+				/**
+				 * Returns the device's id.
+				 * @return The id of the device
+				 */
+				inline const std::string& id() const;
+
+				/**
+				 * Returns the device's direction.
+				 * @param readable Optional readable direction of the device, nullptr if not of interest
+				 * @return The direction of the device
+				 */
+				inline acamera_metadata_enum_android_lens_facing_t lensFacing(std::string* readable = nullptr) const;
+
+				/**
+				 * Returns the optional metadata map of the device.
+				 * @return The optional metadata map of the device
+				 */
+				inline const MetadataMap& metadataMap() const;
+
+				/**
+				 * Returns whether this object is valid.
+				 * @return True, if so
+				 */
+				inline bool isValid() const;
+
+			protected:
+
+				/**
+				 * Creates a new device object.
+				 * @param id The id of the device
+				 * @param lensFacing The direction of the device
+				 * @param metadataMap The optional metadata map of the device
+				 */
+				inline Device(const std::string& id, const acamera_metadata_enum_android_lens_facing_t lensFacing, MetadataMap&& metadataMap = MetadataMap());
+
+			protected:
+
+				/// The device's id.
+				std::string id_;
+
+				/// The device's direction.
+				acamera_metadata_enum_android_lens_facing_t lensFacing_ = acamera_metadata_enum_acamera_lens_facing(-1);
+
+				/// The optional metadata map of the device.
+				MetadataMap metadataMap_;
+		};
+
+		using Devices = std::vector<Device>;
 
 	private:
 
@@ -87,6 +159,18 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		HomogenousMatrixD4 device_T_camera() const override;
 
 		/**
+		 * Returns the supported stream types.
+		 * @see LiveVideo::supportedStreamTypes().
+		 */
+		StreamTypes supportedStreamTypes() const override;
+
+		/**
+		 * Returns the supported stream configurations for a given stream type.
+		 * @see LiveVideo::supportedStreamConfigurations().
+		 */
+		StreamConfigurations supportedStreamConfigurations(const StreamType streamType = ST_INVALID) const override;
+
+		/**
 		 * Returns the current exposure duration of this device.
 		 * @see exposureDuration().
 		 */
@@ -100,9 +184,21 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 
 		/**
 		 * Returns the current focus of this device.
-		 * @see focus().
+		 * @see LiveVideo::focus().
 		 */
 		float focus(ControlMode* focusMode = nullptr) const override;
+
+		/**
+		 * Sets the preferred stream type.
+		 * @see LiveVideo::setPreferredStreamConfiguration().
+		 */
+		bool setPreferredStreamType(const StreamType streamType) override;
+
+		/**
+		 * Sets the preferred stream configuration.
+		 * @see LiveVideo::setPreferredStreamConfiguration().
+		 */
+		bool setPreferredStreamConfiguration(const StreamConfiguration& streamConfiguration) override;
 
 		/**
 		 * Sets the exposure duration of this device.
@@ -145,6 +241,12 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		 * @return True, if succeeded
 		 */
 		bool forceRestart();
+
+		/**
+		 * Returns the list of currently selectable devices.
+		 * @return The list of currently selectable devices
+		 */
+		static Devices selectableDevices();
 
 	protected:
 
@@ -289,9 +391,10 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		 * @param url The URL for which the camera id will be determined
 		 * @param preferredFrameType The preferred frame type (may contain a valid image dimension, or just a pixel format), can be invalid
 		 * @param frameType The resulting frame type matching with the resulting id
+		 * @param streamConfigurations Optional resulting stream configurations
 		 * @return The resulting id of the camera
 		 */
-		static std::string cameraIdForMedium(ACameraManager* cameraManager, const std::string& url, const FrameType& preferredFrameType, FrameType& frameType);
+		static std::string cameraIdForMedium(ACameraManager* cameraManager, const std::string& url, const FrameType& preferredFrameType, FrameType& frameType, StreamConfigurations* streamConfigurations = nullptr);
 
 		/**
 		 * Determines the range of the exposure duration of the camera sensor.
@@ -368,6 +471,13 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		 * @return The corresponding Android pixel format, 0 if no corresponding Android pixel format exists
 		 */
 		static int32_t pixelFormatToAndroidFormat(const FrameType::PixelFormat pixelFormat);
+
+		/**
+		 * Determines the available stream configurations for the camera metadata from a camera.
+		 * @param cameraMetadata The camera metadata from which the stream configurations will be determined, must be valid
+		 * @return The resulting stream configurations
+		 */
+		static StreamConfigurations determineAvailableStreamConfigurations(const ACameraMetadata* cameraMetadata);
 
 		/**
 		 * The static callback function for camera images.
@@ -498,9 +608,6 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		/// The horizontal size of the physical camera sensor, if known; -1 if unknown.
 		float cameraSensorPhysicalSizeX_ = -1.0f;
 
-		/// Recent frame type.
-		FrameType imageRecentFrameType;
-
 		/// The current exposure mode of this device.
 		ControlMode exposureMode_ = CM_INVALID;
 
@@ -534,6 +641,9 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		/// The minimal focus distance (reciprocal of the focus distance in meters), -1 if unknown.
 		float focusPositionMin_ = -1.0f;
 
+		/// The stream configurations available for this camera.
+		StreamConfigurations availableStreamConfigurations_;
+
 		/// Start timestamp.
 		Timestamp startTimestamp_;
 
@@ -544,7 +654,57 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		Timestamp stopTimestamp_;
 };
 
-#else // #if __ANDROID_API__ >= 24
+inline ALiveVideo::Device::Device(const std::string& id, const acamera_metadata_enum_android_lens_facing_t lensFacing, MetadataMap&& metadataMap) :
+	id_(id),
+	lensFacing_(lensFacing),
+	metadataMap_(std::move(metadataMap))
+{
+	// nothing to do here
+}
+
+inline const std::string& ALiveVideo::Device::id() const
+{
+	return id_;
+}
+
+inline acamera_metadata_enum_android_lens_facing_t ALiveVideo::Device::lensFacing(std::string* readable) const
+{
+	if (readable != nullptr)
+	{
+		switch (lensFacing_)
+		{
+			case ACAMERA_LENS_FACING_FRONT:
+				*readable = "Front-facing";
+				break;
+
+			case ACAMERA_LENS_FACING_BACK:
+				*readable = "Back-facing";
+				break;
+
+			case ACAMERA_LENS_FACING_EXTERNAL:
+				*readable = "External";
+				break;
+
+			default:
+				*readable = "Unknown";
+				break;
+		}
+	}
+
+	return lensFacing_;
+}
+
+inline const ALiveVideo::Device::MetadataMap& ALiveVideo::Device::metadataMap() const
+{
+	return metadataMap_;
+}
+
+inline bool ALiveVideo::Device::isValid() const
+{
+	return !id_.empty();
+}
+
+#else // OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 
 /**
  * Java native interface function for new camera framebuffer events.
@@ -775,7 +935,7 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		Timestamp mediumStopTimestamp;
 };
 
-#endif // __ANDROID_API__ >= 24
+#endif // OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 
 }
 
