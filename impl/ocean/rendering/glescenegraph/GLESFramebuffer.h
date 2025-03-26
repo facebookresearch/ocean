@@ -217,6 +217,22 @@ class OCEAN_RENDERING_GLES_EXPORT GLESFramebuffer :
 		 */
 		void release() override;
 
+#ifdef OCEAN_DEBUG
+
+		/**
+		 * Event function for debug messages.
+		 * @param source The source of the message
+		 * @param type The type of the message
+		 * @param id The user-supplied identifier of the message
+		 * @param severity The severity of the message
+		 * @param length The length of the message, in characters
+		 * @param message The actual message
+		 * @param userParam The user-specified pointer
+		 */
+		static void onDebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+
+#endif // OCEAN_DEBUG
+
 	protected:
 
 #ifndef OCEAN_RENDERING_GLES_USE_ES

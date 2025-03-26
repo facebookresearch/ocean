@@ -525,8 +525,27 @@ bool GLESFramebuffer::initializeOpenGLES()
 	glCullFace(GL_BACK);
 	ocean_assert(GL_NO_ERROR == glGetError());
 
+#ifdef OCEAN_DEBUG
+
+	glEnable(GL_DEBUG_OUTPUT);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glDebugMessageCallback(onDebugMessage, this);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+#endif // OCEAN_DEBUG
+
 	return true;
 }
+
+#ifdef OCEAN_DEBUG
+
+void GLESFramebuffer::onDebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
+{
+	Log::debug() << "GLES debug message: " << message;
+}
+
+#endif // OCEAN_DEBUG
 
 void GLESFramebuffer::release()
 {
