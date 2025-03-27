@@ -148,7 +148,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRNativeApplicationAdv
 
 		/**
 		 * Event function called whenever the session is stopping, when the session state changed to XR_SESSION_STATE_STOPPING.
-		 * @see RNativeApplication::onOpenXRSessionStopping().
+		 * @see VRNativeApplication::onOpenXRSessionStopping().
 		 */
 		void onOpenXRSessionStopping() override;
 
