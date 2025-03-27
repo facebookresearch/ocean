@@ -172,14 +172,14 @@ inline void VRImageVisualizer::visualizeImageInWorld(const unsigned int id, cons
 	return visualizeImage(id, world_T_image, frame, objectSize, true, useMipMaps);
 }
 
-inline void VRImageVisualizer::visualizeImageInView(const unsigned int id, const HomogenousMatrix4& world_T_image, Frame&& frame, const ObjectSize& objectSize, const bool useMipMaps)
+inline void VRImageVisualizer::visualizeImageInView(const unsigned int id, const HomogenousMatrix4& view_T_image, Frame&& frame, const ObjectSize& objectSize, const bool useMipMaps)
 {
-	return visualizeImage(id, world_T_image, std::move(frame), objectSize, false, useMipMaps);
+	return visualizeImage(id, view_T_image, std::move(frame), objectSize, false, useMipMaps);
 }
 
-inline void VRImageVisualizer::visualizeImageInView(const unsigned int id, const HomogenousMatrix4& world_T_image, const Frame& frame, const ObjectSize& objectSize, const bool useMipMaps)
+inline void VRImageVisualizer::visualizeImageInView(const unsigned int id, const HomogenousMatrix4& view_T_image, const Frame& frame, const ObjectSize& objectSize, const bool useMipMaps)
 {
-	return visualizeImage(id, world_T_image, frame, objectSize, false, useMipMaps);
+	return visualizeImage(id, view_T_image, frame, objectSize, false, useMipMaps);
 }
 
 inline void VRImageVisualizer::visualizeImage(const unsigned int id, const HomogenousMatrix4& reference_T_image, const Frame& frame, const ObjectSize& objectSize, const bool referenceIsWorld, const bool useMipMaps)
