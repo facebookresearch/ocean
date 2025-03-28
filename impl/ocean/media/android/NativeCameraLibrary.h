@@ -126,6 +126,26 @@ class OCEAN_MEDIA_A_EXPORT NativeCameraLibrary : public Singleton<NativeCameraLi
 				explicit ScopedACaptureSessionOutput(ANativeWindow* nativeWindow);
 		};
 
+		/**
+		 * Definition of a scoped object for AACameraMetadata objects.
+		 */
+		class ScopedACameraMetadata : public ScopedObjectT<ACameraMetadata*, ACameraMetadata*, std::function<void(ACameraMetadata*)>>
+		{
+			public:
+
+				/**
+				 * Default constructor creating an invalid object.
+				 */
+				ScopedACameraMetadata() = default;
+
+				/**
+				 * Creates a new scoped object and takes over the ownership of the created camera metadata.
+				 * @param cameraManager The camera manager which will be used to create the camera metadata, must be valid
+				 * @param cameraId The id of the camera for which the camera metadata will be created, must be valid
+				 */
+				ScopedACameraMetadata(ACameraManager* cameraManager, const char* cameraId);
+		};
+
 	protected:
 
 		/**

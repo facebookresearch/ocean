@@ -61,6 +61,27 @@ NativeCameraLibrary::ScopedACaptureSessionOutput::ScopedACaptureSessionOutput(AN
 	}
 }
 
+NativeCameraLibrary::ScopedACameraMetadata::ScopedACameraMetadata(ACameraManager* cameraManager, const char* cameraId)
+{
+	ocean_assert(cameraManager != nullptr);
+	ocean_assert(cameraId != nullptr);
+
+	NativeCameraLibrary& nativeCameraLibrary = NativeCameraLibrary::get();
+
+	ACameraMetadata* cameraMetadata = nullptr;
+	if (nativeCameraLibrary.ACameraManager_getCameraCharacteristics(cameraManager, cameraId, &cameraMetadata) == ACAMERA_OK)
+	{
+		object_ = cameraMetadata;
+		releaseFunction_ = std::bind(&NativeCameraLibrary::ACameraMetadata_free, &nativeCameraLibrary, cameraMetadata);
+
+		ocean_assert(isValid());
+	}
+	else
+	{
+		ocean_assert(!isValid());
+	}
+}
+
 NativeCameraLibrary::NativeCameraLibrary()
 {
 	// nothing to do here
