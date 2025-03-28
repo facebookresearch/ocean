@@ -130,20 +130,8 @@ Timestamp ALiveVideo::stopTimestamp() const
 
 HomogenousMatrixD4 ALiveVideo::device_T_camera() const
 {
-	if (cameraId_ == "0")
-	{
-		// back-facing camera
-		// the camera on all Android devices is rotated by 90 degree in relation to the screen
-
-		return HomogenousMatrixD4(QuaternionD(VectorD3(0.0, 0.0, 1.0), -NumericD::pi_2()));
-	}
-	else
-	{
-		// front-facing camera
-		// the user facing camera has a different orientation than the user facing camera on iOS platforms
-
-		return HomogenousMatrixD4(QuaternionD(VectorD3(0.0, 0.0, 1.0), -NumericD::pi_2()) * QuaternionD(VectorD3(0.0, 1.0, 0.0), NumericD::pi()));
-	}
+	ocean_assert(device_T_camera_.isValid());
+	return device_T_camera_;
 }
 
 ALiveVideo::StreamTypes ALiveVideo::supportedStreamTypes() const
