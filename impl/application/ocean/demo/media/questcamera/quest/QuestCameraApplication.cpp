@@ -19,6 +19,7 @@ QuestCameraApplication::QuestCameraApplication(struct android_app* androidApp) :
 {
 	Media::Android::registerAndroidLibrary();
 
+	requestAndroidPermission("android.permission.CAMERA");
 	requestAndroidPermission("horizonos.permission.HEADSET_CAMERA");
 }
 
