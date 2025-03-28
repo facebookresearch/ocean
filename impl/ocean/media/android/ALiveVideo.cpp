@@ -29,7 +29,25 @@ namespace Android
 
 #ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 
-ALiveVideo::ALiveVideo(const std::string& url) :
+std::string ALiveVideo::Device::readableLensFacing(const acamera_metadata_enum_android_lens_facing_t lensFacing)
+{
+	switch (lensFacing)
+	{
+		case ACAMERA_LENS_FACING_FRONT:
+			return "Front-facing";
+
+		case ACAMERA_LENS_FACING_BACK:
+			return "Back-facing";
+
+		case ACAMERA_LENS_FACING_EXTERNAL:
+			return "External";
+	}
+
+	ocean_assert(false && "Invalid lens facing!");
+	return "Unknown";
+}
+
+ALiveVideo::ALiveVideo(const std::string& url, const std::string& id) :
 	Medium(url),
 	AMedium(url),
 	FrameMedium(url),
@@ -49,8 +67,9 @@ ALiveVideo::ALiveVideo(const std::string& url) :
 		{
 			FrameType frameType;
 			StreamConfigurations streamConfigurations;
+			HomogenousMatrixD4 device_T_camera(false);
 
-			cameraId_ = cameraIdForMedium(*cameraManager, url_, preferredFrameType_, frameType, &streamConfigurations);
+			cameraId_ = cameraIdForMedium(*cameraManager, url_, id, preferredFrameType_, frameType, &streamConfigurations, &device_T_camera);
 
 			if (!cameraId_.empty())
 			{
@@ -58,6 +77,7 @@ ALiveVideo::ALiveVideo(const std::string& url) :
 
 				frameCollection_ = FrameCollection(10);
 				availableStreamConfigurations_ = std::move(streamConfigurations);
+				device_T_camera_ = device_T_camera;
 
 				isValid_ = true;
 			}
@@ -638,7 +658,8 @@ bool ALiveVideo::createCamera(FrameType& frameType)
 		return false;
 	}
 
-	std::string cameraId = cameraIdForMedium(*cameraManager, url_, preferredFrameType_, frameType);
+	HomogenousMatrixD4 device_T_camera(false);
+	std::string cameraId = cameraIdForMedium(*cameraManager, url_, cameraId_, preferredFrameType_, frameType, nullptr, &device_T_camera);
 
 	if (cameraId.empty())
 	{
@@ -685,6 +706,8 @@ bool ALiveVideo::createCamera(FrameType& frameType)
 	// we update the camera id (which was set in the constructor, most likely it has not changed)
 	cameraId_ = std::move(cameraId);
 	cameraSensorPhysicalSizeX_ = cameraSensorPhysicalSizeX;
+
+	device_T_camera_ = device_T_camera;
 
 	return true;
 }
@@ -1262,6 +1285,81 @@ bool ALiveVideo::frameFromImage(AImage* image, Frame& frame)
 	return false;
 }
 
+HomogenousMatrixD4 ALiveVideo::determineCameraTransformation(ACameraMetadata* cameraMetadata)
+{
+	ocean_assert(cameraMetadata);
+
+	if (cameraMetadata == nullptr)
+	{
+		return HomogenousMatrixD4(false);
+	}
+
+	// let's check the special case that we have a Quest Passthrough camera
+	// com.meta.extra_metadata.camera_source == 0x80004d00, For Passthrough RGB camera this will always have value ‘0’
+	// https://developers.meta.com/horizon/documentation/native/android/pca-native-overview/
+
+	ACameraMetadata_const_entry constCameraSourceEntry = {};
+	if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, 0x80004d00, &constCameraSourceEntry) == ACAMERA_OK)
+	{
+		if (constCameraSourceEntry.type == ACAMERA_TYPE_BYTE && constCameraSourceEntry.count == 1)
+		{
+			if (constCameraSourceEntry.data.u8[0] == 0u)
+			{
+				// we have a passthrough camera
+
+				ACameraMetadata_const_entry constPositionEntry = {};
+				ACameraMetadata_const_entry constRotationEntry = {};
+
+				if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_LENS_POSE_TRANSLATION, &constPositionEntry) == ACAMERA_OK
+						&& NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_LENS_POSE_ROTATION, &constRotationEntry) == ACAMERA_OK)
+				{
+					ocean_assert(constPositionEntry.type == ACAMERA_TYPE_FLOAT && constPositionEntry.count == 3);
+					ocean_assert(constRotationEntry.type == ACAMERA_TYPE_FLOAT && constRotationEntry.count == 4);
+
+					if (constPositionEntry.type == ACAMERA_TYPE_FLOAT && constPositionEntry.count == 3
+							&& constRotationEntry.type == ACAMERA_TYPE_FLOAT && constRotationEntry.count == 4)
+					{
+						const VectorF3 position(constPositionEntry.data.f[0], constPositionEntry.data.f[1], constPositionEntry.data.f[2]);
+						const QuaternionF rotation(constRotationEntry.data.f[3], constRotationEntry.data.f[0], constRotationEntry.data.f[1], constRotationEntry.data.f[2]);
+						ocean_assert(rotation.isValid());
+
+						const HomogenousMatrixD4 device_T_flippedCamera = HomogenousMatrixD4(VectorD3(position), QuaternionD(rotation));
+
+						return CameraD::flippedTransformationRightSide(device_T_flippedCamera);
+					}
+				}
+			}
+			else
+			{
+				return HomogenousMatrixD4(true);
+			}
+		}
+	}
+
+	ACameraMetadata_const_entry constEntry = {};
+	if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_LENS_FACING, &constEntry) == ACAMERA_OK)
+	{
+		const acamera_metadata_enum_android_lens_facing_t lensFacing = acamera_metadata_enum_android_lens_facing_t(constEntry.data.u8[0]);
+
+		if (lensFacing == ACAMERA_LENS_FACING_BACK)
+		{
+			// the camera on all Android devices is rotated by 90 degree in relation to the screen
+
+			return HomogenousMatrixD4(QuaternionD(VectorD3(0.0, 0.0, 1.0), -NumericD::pi_2()));
+		}
+		else if (lensFacing == ACAMERA_LENS_FACING_FRONT)
+		{
+			// the user facing camera has a different orientation than the user facing camera on iOS platforms
+
+			return HomogenousMatrixD4(QuaternionD(VectorD3(0.0, 0.0, 1.0), -NumericD::pi_2()) * QuaternionD(VectorD3(0.0, 1.0, 0.0), NumericD::pi()));
+		}
+	}
+
+	Log::warning() << "ALiveVideo: Camera transformation could not be determined using identity instead";
+
+	return HomogenousMatrixD4(true);
+}
+
 FrameType::PixelFormat ALiveVideo::androidFormatToPixelFormat(const int32_t androidFormat)
 {
 	switch (androidFormat)
@@ -1442,156 +1540,208 @@ ALiveVideo::Devices ALiveVideo::selectableDevices()
 
 	Log::debug() << "ALiveVideo: Found " << cameraIdList->numCameras << " cameras:";
 
-	for (int i = 0; i < cameraIdList->numCameras; ++i)
-	{
-		Device device;
+	using TypeCounterMap = std::unordered_map<std::string, unsigned int>;
 
-		const char* id = cameraIdList->cameraIds[i];
+	TypeCounterMap typeCounterMap;
+
+	for (int nCamera = 0; nCamera < cameraIdList->numCameras; ++nCamera)
+	{
+		const char* id = cameraIdList->cameraIds[nCamera];
 		ocean_assert(id != nullptr);
 
-		if (id != nullptr)
+		if (id == nullptr)
 		{
-			acamera_metadata_enum_android_lens_facing_t lensFacing = acamera_metadata_enum_android_lens_facing_t(-1);
+			ocean_assert(false && "This should never happen!");
+			continue;
+		}
 
-			Device::MetadataMap metadataMap;
+		Device device;
 
-			ACameraMetadata* cameraMetadata;
-			if (NativeCameraLibrary::get().ACameraManager_getCameraCharacteristics(*cameraManager, id, &cameraMetadata) == ACAMERA_OK)
+		acamera_metadata_enum_android_lens_facing_t lensFacing = acamera_metadata_enum_android_lens_facing_t(-1);
+
+		Device::MetadataMap metadataMap;
+
+		const NativeCameraLibrary::ScopedACameraMetadata cameraMetadata(*cameraManager, id);
+
+		if (cameraMetadata.isValid())
+		{
+			ACameraMetadata_const_entry constEntry = {};
+			if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_LENS_FACING, &constEntry) == ACAMERA_OK)
 			{
-				ACameraMetadata_const_entry constEntry = {};
-				if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_LENS_FACING, &constEntry) == ACAMERA_OK)
-				{
-					lensFacing = acamera_metadata_enum_android_lens_facing_t(constEntry.data.u8[0]);
-				}
+				lensFacing = acamera_metadata_enum_android_lens_facing_t(constEntry.data.u8[0]);
+			}
 
-				int32_t numberTags = 0u;
-				const uint32_t* tags = nullptr;
+			int32_t numberTags = 0u;
+			const uint32_t* tags = nullptr;
 
-				if (NativeCameraLibrary::get().ACameraMetadata_getAllTags(cameraMetadata, &numberTags, &tags) == ACAMERA_OK)
+			if (NativeCameraLibrary::get().ACameraMetadata_getAllTags(*cameraMetadata, &numberTags, &tags) == ACAMERA_OK)
+			{
+				for (int32_t n = 0u; n < numberTags; ++n)
 				{
-					for (int32_t n = 0u; n < numberTags; ++n)
+					constEntry = {};
+					if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, tags[n], &constEntry) == ACAMERA_OK)
 					{
-						constEntry = {};
-						if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, tags[n], &constEntry) == ACAMERA_OK)
+						switch (constEntry.type)
 						{
-							switch (constEntry.type)
+							case ACAMERA_TYPE_BYTE:
 							{
-								case ACAMERA_TYPE_BYTE:
+								if (constEntry.count == 1)
 								{
-									if (constEntry.count == 1)
-									{
-										metadataMap.emplace(tags[n], Value(int32_t(constEntry.data.u8[0])));
-									}
-									else if (constEntry.count > 1)
-									{
-										std::string value(constEntry.count, ' ');
+									metadataMap.emplace(tags[n], Value(int32_t(constEntry.data.u8[0])));
+								}
+								else if (constEntry.count > 1)
+								{
+									std::string value(constEntry.count, ' ');
 
-										for (unsigned int n = 0u; n < constEntry.count; ++n)
-										{
-											value[n] = char(constEntry.data.u8[n]);
-										}
-
-										metadataMap.emplace(tags[n], Value(value));
+									for (unsigned int n = 0u; n < constEntry.count; ++n)
+									{
+										value[n] = char(constEntry.data.u8[n]);
 									}
 
-									break;
+									metadataMap.emplace(tags[n], Value(value));
 								}
 
-								case ACAMERA_TYPE_INT32:
-								{
-									if (constEntry.count == 1)
-									{
-										metadataMap.emplace(tags[n], Value(constEntry.data.i32[0]));
-									}
+								break;
+							}
 
-									break;
+							case ACAMERA_TYPE_INT32:
+							{
+								if (constEntry.count == 1)
+								{
+									metadataMap.emplace(tags[n], Value(constEntry.data.i32[0]));
 								}
 
-								case ACAMERA_TYPE_FLOAT:
-								{
-									if (constEntry.count == 1)
-									{
-										metadataMap.emplace(tags[n], Value(constEntry.data.f[0]));
-									}
+								break;
+							}
 
-									break;
+							case ACAMERA_TYPE_FLOAT:
+							{
+								if (constEntry.count == 1)
+								{
+									metadataMap.emplace(tags[n], Value(constEntry.data.f[0]));
 								}
 
-								case ACAMERA_TYPE_INT64:
-								{
-									if (constEntry.count == 1)
-									{
-										metadataMap.emplace(tags[n], Value(constEntry.data.i64[0]));
-									}
+								break;
+							}
 
-									break;
+							case ACAMERA_TYPE_INT64:
+							{
+								if (constEntry.count == 1)
+								{
+									metadataMap.emplace(tags[n], Value(constEntry.data.i64[0]));
 								}
 
-								case ACAMERA_TYPE_DOUBLE:
-								{
-									if (constEntry.count == 1)
-									{
-										metadataMap.emplace(tags[n], Value(constEntry.data.d[0]));
-									}
+								break;
+							}
 
-									break;
+							case ACAMERA_TYPE_DOUBLE:
+							{
+								if (constEntry.count == 1)
+								{
+									metadataMap.emplace(tags[n], Value(constEntry.data.d[0]));
 								}
 
-								case ACAMERA_TYPE_RATIONAL:
+								break;
+							}
+
+							case ACAMERA_TYPE_RATIONAL:
+							{
+								if (constEntry.count == 1)
 								{
-									if (constEntry.count == 1)
+									const ACameraMetadata_rational& rotational = constEntry.data.r[0];
+
+									if (rotational.denominator != 0)
 									{
-										const ACameraMetadata_rational& rotational = constEntry.data.r[0];
-
-										if (rotational.denominator != 0)
-										{
-											metadataMap.emplace(tags[n], Value(double(rotational.numerator) / double(rotational.denominator)));
-										}
+										metadataMap.emplace(tags[n], Value(double(rotational.numerator) / double(rotational.denominator)));
 									}
-
-									break;
 								}
+
+								break;
 							}
 						}
 					}
 				}
 			}
-
-			device = Device(id, lensFacing, std::move(metadataMap));
 		}
+
+		std::string name;
+
+		// special handling for Quest cameras
+		// https://developers.meta.com/horizon/documentation/native/android/pca-native-overview
+
+		const ALiveVideo::Device::MetadataMap::const_iterator iMetaCameraSource = metadataMap.find(0x80004d00); // com.meta.extra_metadata.camera_source
+		const ALiveVideo::Device::MetadataMap::const_iterator iMetaCameraPosition = metadataMap.find(0x80004d01); // com.meta.extra_metadata.position
+
+		if (iMetaCameraSource != metadataMap.cend() && iMetaCameraPosition != metadataMap.cend())
+		{
+			// the camera is a Quest camera available through Passthrough API
+
+			const Value& cameraSource = iMetaCameraSource->second;
+			const Value& cameraPosition = iMetaCameraPosition->second;
+
+			ocean_assert(cameraSource.type() == Value::VT_INT_32 && cameraPosition.type() == Value::VT_INT_32);
+
+			if (cameraSource.intValue() == 0 && cameraPosition.intValue() == 0)
+			{
+				name = "Left Quest RGB Camera";
+			}
+			else if (cameraSource.intValue() == 0 && cameraPosition.intValue() == 1)
+			{
+				name = "Right Quest RGB Camera";
+			}
+			else
+			{
+				ocean_assert(false && "Invalid camera source or position!");
+			}
+		}
+
+		if (name.empty())
+		{
+			// the camera is not a Quest camera
+			// let's create a suitable name for the camera
+
+			const std::string readableLenseFacing = Device::readableLensFacing(lensFacing);
+
+			unsigned int counter = typeCounterMap[readableLenseFacing];
+
+			name = readableLenseFacing + " Camera " + String::toAString(counter);
+
+			++counter;
+		}
+
+		ocean_assert(!name.empty());
+
+		device = Device(id, name, lensFacing, std::move(metadataMap));
 
 		if (device.isValid())
 		{
-			std::string readableLenseFacing;
-			device.lensFacing(&readableLenseFacing);
-
-			Log::debug() << "ALiveVideo: Camera "  << i << ": " << device.id() << ", type: " << readableLenseFacing;
+			Log::debug() << "ALiveVideo: Camera " << nCamera << ": '" << device.name() << "', with id " << device.id() << ", has type '" << Device::readableLensFacing(device.lensFacing()) << "'";
 
 			devices.emplace_back(std::move(device));
 		}
 		else
 		{
-			Log::error() << "Failed to extract device information for camera with index " << i;
+			Log::error() << "Failed to extract device information for camera with index " << nCamera;
 		}
 	}
 
 	return devices;
 }
 
-std::string ALiveVideo::cameraIdForMedium(ACameraManager* cameraManager, const std::string& url, const FrameType& preferredFrameType, FrameType& frameType, StreamConfigurations* streamConfigurations)
+std::string ALiveVideo::cameraIdForMedium(ACameraManager* cameraManager, const std::string& url, const std::string& id, const FrameType& preferredFrameType, FrameType& frameType, StreamConfigurations* streamConfigurations, HomogenousMatrixD4* device_T_camera)
 {
 	ocean_assert(cameraManager != nullptr);
-
-	int oceanLiveVideoId = -1;
-
-	if (url.find("LiveVideoId:") == 0 && url.size() >= 13)
-	{
-		String::isInteger32(url.substr(12), &oceanLiveVideoId);
-	}
 
 	const NativeCameraLibrary::ScopedACameraIdList cameraIdList(cameraManager);
 
 	if (!cameraIdList.isValid())
+	{
+		return std::string();
+	}
+
+	const std::string cameraId = cameraIdForMedium(*cameraIdList, url, id);
+
+	if (cameraId.empty())
 	{
 		return std::string();
 	}
@@ -1602,120 +1752,166 @@ std::string ALiveVideo::cameraIdForMedium(ACameraManager* cameraManager, const s
 	const unsigned int preferredFrameWidth = preferredFrameType.width() != 0u ? preferredFrameType.width() : defaultPreferredFrameWidth;
 	const unsigned int preferredFrameHeight = preferredFrameType.height() != 0u ? preferredFrameType.height() : defaultPreferredFrameHeight;
 
-	std::string result;
-
-	for (int i = 0; i < cameraIdList->numCameras; ++i)
+	const NativeCameraLibrary::ScopedACameraMetadata cameraMetadata(cameraManager, cameraId.c_str());
+	if (!cameraMetadata.isValid())
 	{
-		if (oceanLiveVideoId == -1 || oceanLiveVideoId == i)
-		{
-			const char* id = cameraIdList->cameraIds[i];
-			ocean_assert(id != nullptr);
+		return std::string();
+	}
 
-			if (id == nullptr)
+#ifdef OCEAN_DEBUG
+	{
+		ACameraMetadata_const_entry constEntry = {};
+		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_SENSOR_EXPOSURE_TIME, &constEntry) == ACAMERA_OK)
+		{
+			const int64_t exposure = constEntry.data.i64[0];
+			Log::debug() << "Current exposure: " << exposure;
+		}
+	}
+
+	{
+		ACameraMetadata_const_entry constEntry = {};
+		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_LENS_FACING, &constEntry) == ACAMERA_OK)
+		{
+			const acamera_metadata_enum_android_lens_facing_t lensFacing = acamera_metadata_enum_android_lens_facing_t(constEntry.data.u8[0]);
+
+			if (lensFacing == ACAMERA_LENS_FACING_FRONT)
+			{
+				Log::debug() << "ALiveVideo: Front-facing camera";
+			}
+			else if (lensFacing == ACAMERA_LENS_FACING_BACK)
+			{
+				Log::debug() << "ALiveVideo: Back-facing camera";
+			}
+		}
+	}
+
+	{
+		ACameraMetadata_const_entry constEntry = {};
+		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_SENSOR_INFO_TIMESTAMP_SOURCE, &constEntry) == ACAMERA_OK)
+		{
+			const acamera_metadata_enum_android_sensor_info_timestamp_source_t timestampSource = acamera_metadata_enum_android_sensor_info_timestamp_source_t(constEntry.data.u8[0]);
+
+			if (timestampSource == ACAMERA_SENSOR_INFO_TIMESTAMP_SOURCE_UNKNOWN)
+			{
+				Log::debug() << "ALiveVideo: Unknown timestamp source";
+			}
+			else if (timestampSource == ACAMERA_SENSOR_INFO_TIMESTAMP_SOURCE_REALTIME)
+			{
+				Log::debug() << "ALiveVideo: Realtime timestamp";
+			}
+		}
+	}
+#endif // OCEAN_DEBUG
+
+	// we check whether the camera provides a compatible stream
+
+	FrameType bestFrameType;
+	unsigned int bestSizeDelta = (unsigned int)(-1);
+
+	StreamConfigurations availableStreamConfigurations = determineAvailableStreamConfigurations(*cameraMetadata);
+
+	Log::debug() << "Supported streams: " <<  availableStreamConfigurations.size();
+
+	for (const StreamConfiguration& availableStreamConfiguration : availableStreamConfigurations)
+	{
+		Log::debug() << availableStreamConfiguration.toString();
+
+		if (availableStreamConfiguration.framePixelFormat_ == FrameType::FORMAT_Y_U_V12)
+		{
+			if (availableStreamConfiguration.width_ == preferredFrameWidth && availableStreamConfiguration.height_ == preferredFrameHeight)
+			{
+				bestFrameType = FrameType(availableStreamConfiguration.width_, availableStreamConfiguration.height_, FrameType::FORMAT_Y_U_V12, FrameType::ORIGIN_UPPER_LEFT);
+				break;
+			}
+			else if (availableStreamConfiguration.width_ >= preferredFrameWidth && availableStreamConfiguration.height_ >= preferredFrameHeight)
+			{
+				const unsigned int sizeDelta = std::max(availableStreamConfiguration.width_ - preferredFrameWidth, availableStreamConfiguration.height_ - preferredFrameHeight);
+
+				if (sizeDelta < bestSizeDelta)
+				{
+					bestFrameType = FrameType(availableStreamConfiguration.width_, availableStreamConfiguration.height_, FrameType::FORMAT_Y_U_V12, FrameType::ORIGIN_UPPER_LEFT);
+					bestSizeDelta = sizeDelta;
+				}
+			}
+		}
+	}
+
+	if (bestFrameType.isValid())
+	{
+		frameType = bestFrameType;
+
+		if (streamConfigurations != nullptr)
+		{
+			*streamConfigurations = std::move(availableStreamConfigurations);
+		}
+
+		if (device_T_camera != nullptr)
+		{
+			*device_T_camera = determineCameraTransformation(*cameraMetadata);
+		}
+
+		return cameraId;
+	}
+
+	return std::string();
+}
+
+std::string ALiveVideo::cameraIdForMedium(ACameraIdList* cameraIdList, const std::string& url, const std::string& id)
+{
+	ocean_assert(cameraIdList != nullptr);
+
+	// first, we check whether we have a perfect match
+
+	if (!id.empty())
+	{
+		for (int nCamera = 0; nCamera < cameraIdList->numCameras; ++nCamera)
+		{
+			const char* cameraId = cameraIdList->cameraIds[nCamera];
+			ocean_assert(cameraId != nullptr);
+
+			if (cameraId == nullptr)
 			{
 				continue;
 			}
 
-			ACameraMetadata* cameraMetadata;
-			if (NativeCameraLibrary::get().ACameraManager_getCameraCharacteristics(cameraManager, id, &cameraMetadata) == ACAMERA_OK)
+			if (id == cameraId)
 			{
-#ifdef OCEAN_DEBUG
-				{
-					ACameraMetadata_const_entry constEntry = {};
-					if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_SENSOR_EXPOSURE_TIME, &constEntry) == ACAMERA_OK)
-					{
-						const int64_t exposure = constEntry.data.i64[0];
-						Log::debug() << "Current exposure: " << exposure;
-					}
-				}
-
-				{
-					ACameraMetadata_const_entry constEntry = {};
-					if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_LENS_FACING, &constEntry) == ACAMERA_OK)
-					{
-						const acamera_metadata_enum_android_lens_facing_t lensFacing = acamera_metadata_enum_android_lens_facing_t(constEntry.data.u8[0]);
-
-						if (lensFacing == ACAMERA_LENS_FACING_FRONT)
-						{
-							Log::debug() << "ALiveVideo: Front-facing camera";
-						}
-						else if (lensFacing == ACAMERA_LENS_FACING_BACK)
-						{
-							Log::debug() << "ALiveVideo: Back-facing camera";
-						}
-					}
-				}
-
-				{
-					ACameraMetadata_const_entry constEntry = {};
-					if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_SENSOR_INFO_TIMESTAMP_SOURCE, &constEntry) == ACAMERA_OK)
-					{
-						const acamera_metadata_enum_android_sensor_info_timestamp_source_t timestampSource = acamera_metadata_enum_android_sensor_info_timestamp_source_t(constEntry.data.u8[0]);
-
-						if (timestampSource == ACAMERA_SENSOR_INFO_TIMESTAMP_SOURCE_UNKNOWN)
-						{
-							Log::debug() << "ALiveVideo: Unknown timestamp source";
-						}
-						else if (timestampSource == ACAMERA_SENSOR_INFO_TIMESTAMP_SOURCE_REALTIME)
-						{
-							Log::debug() << "ALiveVideo: Realtime timestamp";
-						}
-					}
-				}
-#endif // OCEAN_DEBUG
-
-				// we check whether the camera provides a compatible stream
-
-				FrameType bestFrameType;
-				unsigned int bestSizeDelta = (unsigned int)(-1);
-
-				StreamConfigurations availableStreamConfigurations = determineAvailableStreamConfigurations(cameraMetadata);
-
-				Log::debug() << "Supported streams: " <<  availableStreamConfigurations.size();
-
-				for (const StreamConfiguration& availableStreamConfiguration : availableStreamConfigurations)
-				{
-					Log::debug() << availableStreamConfiguration.toString();
-
-					if (availableStreamConfiguration.framePixelFormat_ == FrameType::FORMAT_Y_U_V12)
-					{
-						if (availableStreamConfiguration.width_ == preferredFrameWidth && availableStreamConfiguration.height_ == preferredFrameHeight)
-						{
-							bestFrameType = FrameType(availableStreamConfiguration.width_, availableStreamConfiguration.height_, FrameType::FORMAT_Y_U_V12, FrameType::ORIGIN_UPPER_LEFT);
-							break;
-						}
-						else if (availableStreamConfiguration.width_ >= preferredFrameWidth && availableStreamConfiguration.height_ >= preferredFrameHeight)
-						{
-							const unsigned int sizeDelta = std::max(availableStreamConfiguration.width_ - preferredFrameWidth, availableStreamConfiguration.height_ - preferredFrameHeight);
-
-							if (sizeDelta < bestSizeDelta)
-							{
-								bestFrameType = FrameType(availableStreamConfiguration.width_, availableStreamConfiguration.height_, FrameType::FORMAT_Y_U_V12, FrameType::ORIGIN_UPPER_LEFT);
-								bestSizeDelta = sizeDelta;
-							}
-						}
-					}
-				}
-
-				if (bestFrameType.isValid())
-				{
-					frameType = bestFrameType;
-					result = id;
-
-					if (streamConfigurations != nullptr)
-					{
-						*streamConfigurations = std::move(availableStreamConfigurations);
-					}
-
-					break;
-				}
+				return id;
 			}
-
-			NativeCameraLibrary::get().ACameraMetadata_free(cameraMetadata);
 		}
 	}
 
-	return result;
+	// second, we check whether the user specified the camera via a LiveVideoId
+
+	if (url.find("LiveVideoId:") == 0 && url.size() >= 13)
+	{
+		int oceanLiveVideoId = -1;
+		if (String::isInteger32(url.substr(12), &oceanLiveVideoId) && oceanLiveVideoId >= 0)
+		{
+			if (size_t(oceanLiveVideoId) < cameraIdList->numCameras)
+			{
+				const char* cameraId = cameraIdList->cameraIds[oceanLiveVideoId];
+				ocean_assert(cameraId != nullptr);
+
+				if (cameraId != nullptr)
+				{
+					return cameraId;
+				}
+			}
+		}
+	}
+
+	const Devices devices = selectableDevices();
+
+	for (const Device& device : devices)
+	{
+		if (device.name() == url)
+		{
+			return device.id();
+		}
+	}
+
+	return std::string();
 }
 
 bool ALiveVideo::cameraExposureDurationRange(ACameraManager* cameraManager, const std::string& cameraId, double& minExposureDuration, double& maxExposureDuration)
@@ -1724,11 +1920,12 @@ bool ALiveVideo::cameraExposureDurationRange(ACameraManager* cameraManager, cons
 
 	bool result = false;
 
-	ACameraMetadata* cameraMetadata;
-	if (NativeCameraLibrary::get().ACameraManager_getCameraCharacteristics(cameraManager, cameraId.c_str(), &cameraMetadata) == ACAMERA_OK)
+	const NativeCameraLibrary::ScopedACameraMetadata cameraMetadata(cameraManager, cameraId.c_str());
+
+	if (cameraMetadata.isValid())
 	{
 		ACameraMetadata_const_entry constEntry = {};
-		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_SENSOR_INFO_EXPOSURE_TIME_RANGE, &constEntry) == ACAMERA_OK)
+		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_SENSOR_INFO_EXPOSURE_TIME_RANGE, &constEntry) == ACAMERA_OK)
 		{
 			const int64_t minExposure = constEntry.data.i64[0];
 			const int64_t maxExposure = constEntry.data.i64[1];
@@ -1738,8 +1935,6 @@ bool ALiveVideo::cameraExposureDurationRange(ACameraManager* cameraManager, cons
 
 			result = true;
 		}
-
-		NativeCameraLibrary::get().ACameraMetadata_free(cameraMetadata);
 	}
 
 	return result;
@@ -1751,19 +1946,18 @@ bool ALiveVideo::cameraISORange(ACameraManager* cameraManager, const std::string
 
 	bool result = false;
 
-	ACameraMetadata* cameraMetadata;
-	if (NativeCameraLibrary::get().ACameraManager_getCameraCharacteristics(cameraManager, cameraId.c_str(), &cameraMetadata) == ACAMERA_OK)
+	const NativeCameraLibrary::ScopedACameraMetadata cameraMetadata(cameraManager, cameraId.c_str());
+
+	if (cameraMetadata.isValid())
 	{
 		ACameraMetadata_const_entry constEntry = {};
-		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_SENSOR_INFO_SENSITIVITY_RANGE, &constEntry) == ACAMERA_OK)
+		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_SENSOR_INFO_SENSITIVITY_RANGE, &constEntry) == ACAMERA_OK)
 		{
 			minISO = float(constEntry.data.i32[0]);
 			maxISO = float(constEntry.data.i32[1]);
 
 			result = true;
 		}
-
-		NativeCameraLibrary::get().ACameraMetadata_free(cameraMetadata);
 	}
 
 	return result;
@@ -1775,21 +1969,20 @@ bool ALiveVideo::cameraMinFocus(ACameraManager* cameraManager, const std::string
 
 	bool result = false;
 
-	ACameraMetadata* cameraMetadata;
-	if (NativeCameraLibrary::get().ACameraManager_getCameraCharacteristics(cameraManager, cameraId.c_str(), &cameraMetadata) == ACAMERA_OK)
+	const NativeCameraLibrary::ScopedACameraMetadata cameraMetadata(cameraManager, cameraId.c_str());
+
+	if (cameraMetadata.isValid())
 	{
 		// from Android documentation:
 		// ... the focus distance value will still be in the range of [0, ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE], where 0 represents the farthest focus
 
 		ACameraMetadata_const_entry constEntry = {};
-		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE, &constEntry) == ACAMERA_OK)
+		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE, &constEntry) == ACAMERA_OK)
 		{
 			minFocusPosition = constEntry.data.f[0];
 
 			result = true;
 		}
-
-		NativeCameraLibrary::get().ACameraMetadata_free(cameraMetadata);
 	}
 
 	return result;
@@ -1801,18 +1994,17 @@ bool ALiveVideo::cameraSensorPysicalSize(ACameraManager* cameraManager, const st
 
 	bool result = false;
 
-	ACameraMetadata* cameraMetadata;
-	if (NativeCameraLibrary::get().ACameraManager_getCameraCharacteristics(cameraManager, cameraId.c_str(), &cameraMetadata) == ACAMERA_OK)
+	const NativeCameraLibrary::ScopedACameraMetadata cameraMetadata(cameraManager, cameraId.c_str());
+
+	if (cameraMetadata.isValid())
 	{
 		ACameraMetadata_const_entry constEntryPysicalSize = {};
-		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(cameraMetadata, ACAMERA_SENSOR_INFO_PHYSICAL_SIZE, &constEntryPysicalSize) == ACAMERA_OK)
+		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_SENSOR_INFO_PHYSICAL_SIZE, &constEntryPysicalSize) == ACAMERA_OK)
 		{
 			cameraSensorPhysicalSizeX = constEntryPysicalSize.data.f[0];
 
 			result = true;
 		}
-
-		NativeCameraLibrary::get().ACameraMetadata_free(cameraMetadata);
 	}
 
 	return result;

@@ -71,11 +71,16 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 				inline const std::string& id() const;
 
 				/**
+				 * Returns the device's name.
+				 * @return The name of the device
+				 */
+				inline const std::string& name() const;
+
+				/**
 				 * Returns the device's direction.
-				 * @param readable Optional readable direction of the device, nullptr if not of interest
 				 * @return The direction of the device
 				 */
-				inline acamera_metadata_enum_android_lens_facing_t lensFacing(std::string* readable = nullptr) const;
+				inline acamera_metadata_enum_android_lens_facing_t lensFacing() const;
 
 				/**
 				 * Returns the optional metadata map of the device.
@@ -89,20 +94,31 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 				 */
 				inline bool isValid() const;
 
+				/**
+				 * Returns the readable string for a lens facing type.
+				 * @param lensFacing The lens facing type to return the readable string for
+				 * @return The readable string for the given lens facing type
+				 */
+				static std::string readableLensFacing(const acamera_metadata_enum_android_lens_facing_t lensFacing);
+
 			protected:
 
 				/**
 				 * Creates a new device object.
-				 * @param id The id of the device
+				 * @param id The id of the device, must be valid
+				 * @param name The human redable name of the device, must be valid
 				 * @param lensFacing The direction of the device
 				 * @param metadataMap The optional metadata map of the device
 				 */
-				inline Device(const std::string& id, const acamera_metadata_enum_android_lens_facing_t lensFacing, MetadataMap&& metadataMap = MetadataMap());
+				inline Device(const std::string& id, const std::string& name_, const acamera_metadata_enum_android_lens_facing_t lensFacing, MetadataMap&& metadataMap = MetadataMap());
 
 			protected:
 
 				/// The device's id.
 				std::string id_;
+
+				/// The device's human readable name.
+				std::string name_;
 
 				/// The device's direction.
 				acamera_metadata_enum_android_lens_facing_t lensFacing_ = acamera_metadata_enum_acamera_lens_facing(-1);
@@ -253,8 +269,9 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		/**
 		 * Creates a new medium by a given url.
 		 * @param url Url of the medium
+		 * @param id Optional unique id of the medium
 		 */
-		explicit ALiveVideo(const std::string& url);
+		explicit ALiveVideo(const std::string& url, const std::string& id);
 
 		/**
 		 * Destructs the live video object.
@@ -389,12 +406,23 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		 * Determines the camera id and associated frame type for a given URL.
 		 * @param cameraManager The camera manager from which the camera id will be determined, must be valid
 		 * @param url The URL for which the camera id will be determined
+		 * @param id Optional known id of the camera, if provided the camera id will be verified again
 		 * @param preferredFrameType The preferred frame type (may contain a valid image dimension, or just a pixel format), can be invalid
 		 * @param frameType The resulting frame type matching with the resulting id
 		 * @param streamConfigurations Optional resulting stream configurations
+		 * @param device_T_camera Optional resulting transformation between camera and device
 		 * @return The resulting id of the camera
 		 */
-		static std::string cameraIdForMedium(ACameraManager* cameraManager, const std::string& url, const FrameType& preferredFrameType, FrameType& frameType, StreamConfigurations* streamConfigurations = nullptr);
+		static std::string cameraIdForMedium(ACameraManager* cameraManager, const std::string& url, const std::string& id, const FrameType& preferredFrameType, FrameType& frameType, StreamConfigurations* streamConfigurations = nullptr, HomogenousMatrixD4* device_T_camera = nullptr);
+
+		/**
+		 * Determines the camera id and associated frame type for a given URL or/and id.
+		 * @param cameraIdList The camera id list from which the camera id will be determined, must be valid
+		 * @param url The URL for which the camera id will be determined
+		 * @param id Optional known id of the camera, if provided the camera id will be verified again
+		 * @return The resulting id of the camera, empty if no camera could be found
+		 */
+		static std::string cameraIdForMedium(ACameraIdList* cameraIdList, const std::string& url, const std::string& id);
 
 		/**
 		 * Determines the range of the exposure duration of the camera sensor.
@@ -450,6 +478,13 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		 * @return True, if succeeded
 		 */
 		static bool frameFromImage(AImage* image, Frame& frame);
+
+		/**
+		 * Returns the transformation between camera and device (device_T_camera).
+		 * @param cameraMetadata The camera metadata from which the transformation will be determined, must be valid
+		 * @return The camera transformation with default camera pointing towards the negative z-space with y-axis upwards; invalid if the transformation could not be determined
+		 */
+		static HomogenousMatrixD4 determineCameraTransformation(ACameraMetadata* cameraMetadata);
 
 		/**
 		 * Translates an Android pixel format to an Ocean pixel format.
@@ -608,6 +643,9 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		/// The horizontal size of the physical camera sensor, if known; -1 if unknown.
 		float cameraSensorPhysicalSizeX_ = -1.0f;
 
+		/// The transformation between camera and device, with default camera pointing towards the negative z-space with y-axis up.
+		HomogenousMatrixD4 device_T_camera_ = HomogenousMatrixD4(false);
+
 		/// The current exposure mode of this device.
 		ControlMode exposureMode_ = CM_INVALID;
 
@@ -654,12 +692,14 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		Timestamp stopTimestamp_;
 };
 
-inline ALiveVideo::Device::Device(const std::string& id, const acamera_metadata_enum_android_lens_facing_t lensFacing, MetadataMap&& metadataMap) :
+inline ALiveVideo::Device::Device(const std::string& id, const std::string& name, const acamera_metadata_enum_android_lens_facing_t lensFacing, MetadataMap&& metadataMap) :
 	id_(id),
+	name_(name),
 	lensFacing_(lensFacing),
 	metadataMap_(std::move(metadataMap))
 {
-	// nothing to do here
+	ocean_assert(!id_.empty());
+	ocean_assert(!name_.empty());
 }
 
 inline const std::string& ALiveVideo::Device::id() const
@@ -667,30 +707,13 @@ inline const std::string& ALiveVideo::Device::id() const
 	return id_;
 }
 
-inline acamera_metadata_enum_android_lens_facing_t ALiveVideo::Device::lensFacing(std::string* readable) const
+inline const std::string& ALiveVideo::Device::name() const
 {
-	if (readable != nullptr)
-	{
-		switch (lensFacing_)
-		{
-			case ACAMERA_LENS_FACING_FRONT:
-				*readable = "Front-facing";
-				break;
+	return name_;
+}
 
-			case ACAMERA_LENS_FACING_BACK:
-				*readable = "Back-facing";
-				break;
-
-			case ACAMERA_LENS_FACING_EXTERNAL:
-				*readable = "External";
-				break;
-
-			default:
-				*readable = "Unknown";
-				break;
-		}
-	}
-
+inline acamera_metadata_enum_android_lens_facing_t ALiveVideo::Device::lensFacing() const
+{
 	return lensFacing_;
 }
 

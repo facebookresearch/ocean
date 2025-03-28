@@ -9,6 +9,7 @@
 #define META_OCEAN_MEDIA_ANDROID_A_LIBRARY_H
 
 #include "ocean/media/android/Android.h"
+#include "ocean/media/android/ALiveVideo.h"
 #include "ocean/media/android/NativeCameraLibrary.h"
 #include "ocean/media/android/NativeMediaLibrary.h"
 
@@ -149,7 +150,7 @@ class OCEAN_MEDIA_A_EXPORT ALibrary : public Library
 		 * @param useExclusive Determines whether the caller would like to use this medium exclusively
 		 * @return Reference of the new medium
 		 */
-		static MediumRef newLiveVideo(const std::string& url, bool useExclusive);
+		MediumRef newLiveVideo(const std::string& url, bool useExclusive) const;
 
 		/**
 		 * Creates a new movie medium.
@@ -176,6 +177,9 @@ class OCEAN_MEDIA_A_EXPORT ALibrary : public Library
 #ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 		/// The subscription for the native camera library
 		NativeCameraLibrary::ScopedSubscription nativeCameraLibrarySubscription_;
+
+		/// The selectable live video devices.
+		mutable ALiveVideo::Devices selectableLiveVideoDevices_;
 #endif
 
 #ifdef OCEAN_MEDIA_ANDROID_NATIVEMEDIALIBRARY_AVAILABLE

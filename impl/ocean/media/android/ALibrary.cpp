@@ -171,50 +171,19 @@ ALibrary::Definitions ALibrary::selectableMedia() const
 
 ALibrary::Definitions ALibrary::selectableMedia(const Medium::Type type) const
 {
+	const ScopedLock scopedLock(lock);
+
 	Definitions definitions;
 
 	if (type & Medium::LIVE_VIDEO)
 	{
 #ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 
-		const ALiveVideo::Devices devices = ALiveVideo::selectableDevices();
+		selectableLiveVideoDevices_ = ALiveVideo::selectableDevices();
 
-		for (size_t nDevice = 0; nDevice < devices.size(); ++nDevice)
+		for (ALiveVideo::Device& selectableLiveVideoDevice : selectableLiveVideoDevices_)
 		{
-			const ALiveVideo::Device& device = devices[nDevice];
-			ocean_assert(device.isValid());
-
-#ifdef OCEAN_DEBUG
-
-			// let's run a simple check in case we are on a Quest
-			// https://developers.meta.com/horizon/documentation/native/android/pca-native-overview
-
-			const ALiveVideo::Device::MetadataMap& metadataMap = device.metadataMap();
-
-			const ALiveVideo::Device::MetadataMap::const_iterator iMetaCameraSource = metadataMap.find(0x80004d00); // com.meta.extra_metadata.camera_source
-			const ALiveVideo::Device::MetadataMap::const_iterator iMetaCameraPosition = metadataMap.find(0x80004d01); // com.meta.extra_metadata.position
-
-			if (iMetaCameraSource != metadataMap.cend() && iMetaCameraPosition != metadataMap.cend())
-			{
-				// the camera is a Quest camera available through Passthrough API
-
-				const Value& cameraSource = iMetaCameraSource->second;
-				const Value& cameraPosition = iMetaCameraPosition->second;
-
-				ocean_assert(cameraSource.type() == Value::VT_INT_32 && cameraPosition.type() == Value::VT_INT_32);
-
-				const bool isLeftPassthoughCamera = cameraSource.intValue() == 0 && cameraPosition.intValue() == 0;
-				const bool isRightPassthoughCamera = cameraSource.intValue() == 0 && cameraPosition.intValue() == 1;
-
-				ocean_assert(nDevice != 0 || isLeftPassthoughCamera);
-				ocean_assert(nDevice != 1 || isRightPassthoughCamera);
-			}
-
-#endif // OCEAN_DEBUG
-
-			std::string url = "LiveVideoId:" + String::toAString(nDevice);
-
-			definitions.emplace_back(std::move(url), Medium::LIVE_VIDEO, name(), device.id());
+			definitions.emplace_back(selectableLiveVideoDevice.name(), Medium::LIVE_VIDEO, name(), selectableLiveVideoDevice.id());
 		}
 
 #endif // OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
@@ -394,11 +363,37 @@ void ALibrary::releaseAudioEngine()
 	}
 }
 
-MediumRef ALibrary::newLiveVideo(const std::string& url, bool useExclusive)
+MediumRef ALibrary::newLiveVideo(const std::string& url, bool useExclusive) const
 {
-	if (useExclusive == false)
+	std::string resolvedUrl = url;
+	std::string resolvedId;
+
+	if (resolvedUrl.find("LiveVideoId:") == 0)
 	{
-		MediumRef mediumRef(MediumRefManager::get().medium(url, nameAndroidLibrary(), Medium::LIVE_VIDEO));
+		int index = 0;
+		if (String::isInteger32(resolvedUrl.substr(12), &index) && index >= 0)
+		{
+#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
+
+			if (selectableLiveVideoDevices_.empty())
+			{
+				selectableLiveVideoDevices_ = ALiveVideo::selectableDevices();
+			}
+
+			if (size_t(index) < selectableLiveVideoDevices_.size())
+			{
+				const ALiveVideo::Device& device = selectableLiveVideoDevices_[size_t(index)];
+
+				resolvedUrl = device.name();
+				resolvedId = device.id();
+			}
+#endif
+		}
+	}
+
+	if (!useExclusive)
+	{
+		MediumRef mediumRef(MediumRefManager::get().medium(resolvedUrl, nameAndroidLibrary(), Medium::LIVE_VIDEO));
 
 		if (mediumRef)
 		{
@@ -406,7 +401,12 @@ MediumRef ALibrary::newLiveVideo(const std::string& url, bool useExclusive)
 		}
 	}
 
-	ALiveVideo* medium = new ALiveVideo(url);
+#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
+	ALiveVideo* medium = new ALiveVideo(resolvedUrl, resolvedId);
+#else
+	ALiveVideo* medium = new ALiveVideo(resolvedUrl);
+#endif
+
 	ocean_assert(medium != nullptr);
 
 	if (medium->isValid() == false)
