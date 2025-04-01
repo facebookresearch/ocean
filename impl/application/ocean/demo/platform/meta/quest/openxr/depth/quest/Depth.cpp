@@ -130,7 +130,15 @@ void Depth::onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& p
 	xrEnvironmentDepthImageMETA.views[0] = {XR_TYPE_ENVIRONMENT_DEPTH_IMAGE_VIEW_META};
 	xrEnvironmentDepthImageMETA.views[1] = {XR_TYPE_ENVIRONMENT_DEPTH_IMAGE_VIEW_META};
 
-	XrResult xrResult = xrAcquireEnvironmentDepthImageMETA_(xrEnvironmentDepthProvider_, &xrEnvironmentDepthImageAcquireInfoMETA, &xrEnvironmentDepthImageMETA);
+	const XrResult xrResult = xrAcquireEnvironmentDepthImageMETA_(xrEnvironmentDepthProvider_, &xrEnvironmentDepthImageAcquireInfoMETA, &xrEnvironmentDepthImageMETA);
+
+	if (xrResult == XR_ENVIRONMENT_DEPTH_NOT_AVAILABLE_META)
+	{
+		// the depth frame is not available yet (i.e. the provider was recently started and did not yet have time to compute depth)
+
+		Log::debug() << "OpenXR Depth: Depth image not yet available";
+		return;
+	}
 
 	if (xrResult != XR_SUCCESS)
 	{
