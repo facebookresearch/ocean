@@ -48,7 +48,7 @@ namespace GLESceneGraph
  * @{
  * The Ocean Rendering GLESceneGraph Library is a rendering library using OpenGL ES for rendering.
  * This library is platform independent.<br>
- * However, the library is using Nativ Platform Graphic Interface (EGL) as default.<br>
+ * However, the library is using Native Platform Graphic Interface (EGL) as default.<br>
  * To avoid the usage of the EGL implement an own engine and framebuffer object.<br>
  * @}
  */

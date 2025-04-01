@@ -37,6 +37,7 @@ namespace Ocean
 #define glCompressedTexImage2D(a, b, c, d, e, f, g, h)     Rendering::GLESceneGraph::GLESDynamicLibrary::glCompressedTexImage2D_(a, b, c, d, e, f, g, h)
 #define glCreateProgram()                                  Rendering::GLESceneGraph::GLESDynamicLibrary::glCreateProgram_()
 #define glCreateShader(a)                                  Rendering::GLESceneGraph::GLESDynamicLibrary::glCreateShader_(a)
+#define glDebugMessageCallback(a, b)                       Rendering::GLESceneGraph::GLESDynamicLibrary::glDebugMessageCallback_(a, b)
 #define glDeleteBuffers(a, b)                              Rendering::GLESceneGraph::GLESDynamicLibrary::glDeleteBuffers_(a, b)
 #define glDeleteFramebuffers(a, b)                         Rendering::GLESceneGraph::GLESDynamicLibrary::glDeleteFramebuffers_(a, b)
 #define glDeleteProgram(a)                                 Rendering::GLESceneGraph::GLESDynamicLibrary::glDeleteProgram_(a)
@@ -95,6 +96,8 @@ class OCEAN_RENDERING_GLES_EXPORT GLESDynamicLibrary
 {
 	public:
 
+		typedef void (*DebugCallbackFunction)(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+
 		typedef void (__stdcall *glActiveTextureFunction)(GLenum texture);
 		typedef void (__stdcall *glAttachShaderFunction)(GLuint, GLuint);
 		typedef void (__stdcall *glBindBufferFunction)(GLenum, GLuint);
@@ -107,6 +110,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESDynamicLibrary
 		typedef void (__stdcall *glCompressedTexImage2DFunction)(GLenum, GLint, GLenum, GLsizei, GLsizei, GLint, GLsizei, const void*);
 		typedef GLuint (__stdcall *glCreateProgramFunction)();
 		typedef GLuint (__stdcall *glCreateShaderFunction)(GLenum type);
+		typedef void (__stdcall *glDebugMessageCallbackFunction)(DebugCallbackFunction, const void*);
 		typedef void (__stdcall *glDeleteBuffersFunction)(GLsizei, const GLuint*);
 		typedef void (__stdcall *glDeleteFramebuffersFunction)(GLsizei n, const GLuint * framebuffers);
 		typedef void (__stdcall *glDeleteProgramFunction)(GLuint);
@@ -155,7 +159,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESDynamicLibrary
 
 		/**
 		 * Initializes the library interface.
-		 * The windows mobile dynamic egl dll will be loaded and all function pointers will be extracted.<br>
+		 * The windows mobile dynamic EGL dll will be loaded and all function pointers will be extracted.<br>
 		 * Don't call any interface function before a successful initialization.
 		 */
 		static bool initialize();
@@ -190,6 +194,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESDynamicLibrary
 		static glCompressedTexImage2DFunction glCompressedTexImage2D_;
 		static glCreateProgramFunction glCreateProgram_;
 		static glCreateShaderFunction glCreateShader_;
+		static glDebugMessageCallbackFunction glDebugMessageCallback_;
 		static glDeleteBuffersFunction glDeleteBuffers_;
 		static glDeleteFramebuffersFunction glDeleteFramebuffers_;
 		static glDeleteProgramFunction glDeleteProgram_;

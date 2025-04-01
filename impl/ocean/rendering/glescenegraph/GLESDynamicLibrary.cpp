@@ -30,6 +30,7 @@ GLESDynamicLibrary::glCompileShaderFunction GLESDynamicLibrary::glCompileShader_
 GLESDynamicLibrary::glCompressedTexImage2DFunction GLESDynamicLibrary::glCompressedTexImage2D_ = nullptr;
 GLESDynamicLibrary::glCreateProgramFunction GLESDynamicLibrary::glCreateProgram_ = nullptr;
 GLESDynamicLibrary::glCreateShaderFunction GLESDynamicLibrary::glCreateShader_ = nullptr;
+GLESDynamicLibrary::glDebugMessageCallbackFunction GLESDynamicLibrary::glDebugMessageCallback_ = nullptr;
 GLESDynamicLibrary::glDeleteBuffersFunction GLESDynamicLibrary::glDeleteBuffers_ = nullptr;
 GLESDynamicLibrary::glDeleteFramebuffersFunction GLESDynamicLibrary::glDeleteFramebuffers_ = nullptr;
 GLESDynamicLibrary::glDeleteProgramFunction GLESDynamicLibrary::glDeleteProgram_ = nullptr;
@@ -93,6 +94,7 @@ bool GLESDynamicLibrary::initialize()
 	initializeFunction(glCompressedTexImage2D_, "glCompressedTexImage2D");
 	initializeFunction(glCreateProgram_, "glCreateProgram");
 	initializeFunction(glCreateShader_, "glCreateShader");
+	initializeFunction(glDebugMessageCallback_, "glDebugMessageCallback");
 	initializeFunction(glDeleteBuffers_, "glDeleteBuffers");
 	initializeFunction(glDeleteFramebuffers_, "glDeleteFramebuffers");
 	initializeFunction(glDeleteProgram_, "glDeleteProgram");
@@ -168,6 +170,7 @@ void GLESDynamicLibrary::release()
 	glCompressedTexImage2D_ = nullptr;
 	glCreateProgram_ = nullptr;
 	glCreateShader_ = nullptr;
+	glDebugMessageCallback_ = nullptr;
 	glDeleteBuffers_ = nullptr;
 	glDeleteFramebuffers_ = nullptr;
 	glDeleteProgram_ = nullptr;
