@@ -525,7 +525,7 @@ bool GLESFramebuffer::initializeOpenGLES()
 	glCullFace(GL_BACK);
 	ocean_assert(GL_NO_ERROR == glGetError());
 
-#if defined(OCEAN_DEBUG) && !defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY)
+#if defined(OCEAN_DEBUG) && !defined(OCEAN_PLATFORM_BUILD_APPLE)
 
 	glEnable(GL_DEBUG_OUTPUT);
 	ocean_assert(GL_NO_ERROR == glGetError());
@@ -533,19 +533,19 @@ bool GLESFramebuffer::initializeOpenGLES()
 	glDebugMessageCallback(onDebugMessage, this);
 	ocean_assert(GL_NO_ERROR == glGetError());
 
-#endif // defined(OCEAN_DEBUG) && !defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY)
+#endif // defined(OCEAN_DEBUG) && !defined(OCEAN_PLATFORM_BUILD_APPLE)
 
 	return true;
 }
 
-#if defined(OCEAN_DEBUG) && !defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY)
+#if defined(OCEAN_DEBUG) && !defined(OCEAN_PLATFORM_BUILD_APPLE)
 
 void GLESFramebuffer::onDebugMessage(GLenum /*source*/, GLenum /*type*/, GLuint /*id*/, GLenum /*severity*/, GLsizei /*length*/, const GLchar* message, const void* /*userParam*/)
 {
 	Log::debug() << "GLES debug message: " << message;
 }
 
-#endif // defined(OCEAN_DEBUG) && !defined(OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY)
+#endif // defined(OCEAN_DEBUG) && !defined(OCEAN_PLATFORM_BUILD_APPLE)
 
 void GLESFramebuffer::release()
 {
