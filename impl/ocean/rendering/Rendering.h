@@ -38,7 +38,7 @@ namespace Rendering
  * Using the abstract rendering objects guarantees that different rendering plugins can be used by the same code.<br>
  *
  * Each engine provides an object factory to create object and nodes necessary for scene graph building.<br>
- * Implemented (not abstract) rendering plugins are e.g. the NvidiaSceniX or GLESceneGraph rendering pludings.<br>
+ * Implemented (not abstract) rendering plugins are e.g. GLESceneGraph rendering plugins.<br>
  *
  * However, a rendering plugin is allowed to implement a subset of the entire functionality only.<br>
  * Therefore, not supported functions will throw an exception.<br>

@@ -34,9 +34,9 @@ typedef Ocean::ObjectRef<Engine> EngineRef;
  * The main task of this class is to provide a framebuffer and a factory to create and render geometry nodes.<br>
  * The factory is able to create all supported rendering nodes and objects.<br>
  * The framebuffer holds the scene, the view and the resulting frame.<br>
- * Beware: Do not use the derivated instances of this object.<br>
+ * Beware: Do not use the derived instances of this object.
  *
- * The manager holds and manages all engine instances for the registered rendering plugins like e.g. Nvidia SceniX or the GLESceneGraph.<br>
+ * The manager holds and manages all engine instances for the registered rendering plugins like e.g. GLESceneGraph.<br>
  * Therefore, receive an engine instance for a specific render engine from the manager only.<br>
  * Afterwards, the engine must be initialized before usage.<br>
  * @see Factory, Framebuffer, Manager

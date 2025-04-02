@@ -32,7 +32,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESEngineAndroid : public GLESEngine
 	public:
 
 		/**
-		 * Creates this engine and registeres it at the global engine manager.<br>
+		 * Creates this engine and registers it at the global engine manager.<br>
 		 * Do not register this engine if using it as plugin, because it's done by the plugin itself.<br>
 		 * However, if your not using the plugin mechanism you have to initialize this engine once at program initialization.<br>
 		 * If the library is not used anymore unregister it using the unregister function.<br>
@@ -61,7 +61,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESEngineAndroid : public GLESEngine
 		Framebuffer* internalCreateFramebuffer(const Framebuffer::FramebufferType type, const Framebuffer::FramebufferConfig& config) override;
 
 		/**
-		 * Creates a new Nvidia SceniX rendering engine.
+		 * Creates a new rendering engine.
 		 * @param graphicAPI Preferred graphic API to use by the engine
 		 * @return New rendering engine
 		 */
