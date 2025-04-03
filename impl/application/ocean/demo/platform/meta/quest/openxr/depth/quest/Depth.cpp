@@ -180,6 +180,25 @@ void Depth::onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& p
 	}
 }
 
+void Depth::onButtonPressed(const OpenXR::TrackedController::ButtonType buttons, const Timestamp& timestamp)
+{
+	if ((buttons & OpenXR::TrackedController::BT_LEFT_Y) == OpenXR::TrackedController::BT_LEFT_Y
+			|| (buttons & OpenXR::TrackedController::BT_RIGHT_B) == OpenXR::TrackedController::BT_RIGHT_B)
+	{
+		isHandRemovalEnabled_ = !isHandRemovalEnabled_;
+
+		const XrEnvironmentDepthHandRemovalSetInfoMETA handRemovalInfo{XR_TYPE_ENVIRONMENT_DEPTH_HAND_REMOVAL_SET_INFO_META, nullptr, isHandRemovalEnabled_};
+
+		const XrResult xrResult = xrSetEnvironmentDepthHandRemovalMETA_(xrEnvironmentDepthProvider_, &handRemovalInfo);
+		ocean_assert(xrResult == XR_SUCCESS);
+
+		if (xrResult != XR_SUCCESS)
+		{
+			Log::error() << "OpenXR Depth: Failed to toggle hand removal.";
+		}
+	}
+}
+
 bool Depth::initializeDepth()
 {
 	XrSystemEnvironmentDepthPropertiesMETA xrSystemEnvironmentDepthPropertiesMETA{XR_TYPE_SYSTEM_ENVIRONMENT_DEPTH_PROPERTIES_META};
@@ -223,15 +242,19 @@ bool Depth::initializeDepth()
 		return false;
 	}
 
-	constexpr bool handRemovalEnabled = false;
-	const XrEnvironmentDepthHandRemovalSetInfoMETA handRemovalInfo{XR_TYPE_ENVIRONMENT_DEPTH_HAND_REMOVAL_SET_INFO_META, nullptr, handRemovalEnabled};
+	isHandRemovalSupported_ = xrSystemEnvironmentDepthPropertiesMETA.supportsHandRemoval;
 
-	xrResult = xrSetEnvironmentDepthHandRemovalMETA_(xrEnvironmentDepthProvider_, &handRemovalInfo);
-	ocean_assert(xrResult == XR_SUCCESS);
-
-	if (xrResult != XR_SUCCESS)
+	if (isHandRemovalSupported_)
 	{
-		return false;
+		const XrEnvironmentDepthHandRemovalSetInfoMETA handRemovalInfo{XR_TYPE_ENVIRONMENT_DEPTH_HAND_REMOVAL_SET_INFO_META, nullptr, isHandRemovalEnabled_};
+
+		xrResult = xrSetEnvironmentDepthHandRemovalMETA_(xrEnvironmentDepthProvider_, &handRemovalInfo);
+		ocean_assert(xrResult == XR_SUCCESS);
+
+		if (xrResult != XR_SUCCESS)
+		{
+			return false;
+		}
 	}
 
 	ocean_assert(xrEnvironmentDepthProvider_ != XR_NULL_HANDLE);

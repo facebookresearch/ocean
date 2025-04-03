@@ -15,7 +15,8 @@
 #include "ocean/rendering/Group.h"
 
 using namespace Ocean;
-using namespace Platform::Meta::Quest::OpenXR::Application;
+using namespace Ocean::Platform::Meta::Quest;
+using namespace Ocean::Platform::Meta::Quest::OpenXR::Application;
 
 /**
  * Implements a specialization of the VRNativeApplicationAdvanced.
@@ -74,6 +75,12 @@ class Depth final : public VRNativeApplicationAdvanced
 		 * @see VRNativeApplication::onPreRender().
 		 */
 		void onPreRender(const XrTime& xrPredictedDisplayTime, const Timestamp& predictedDisplayTime) override;
+
+		/**
+		 * Event functions for pressed buttons (e.g., from a tracked controller).
+		 * @see VRNativeApplication::onButtonPressed().
+		 */
+		void onButtonPressed(const OpenXR::TrackedController::ButtonType buttons, const Timestamp& timestamp) override;
 
 		/**
 		 * Initializes the depth API.
@@ -145,6 +152,12 @@ class Depth final : public VRNativeApplicationAdvanced
 
 		/// The triangles object holding two triangles when rendering the depth textures to the depth texture framebuffer.
 		Rendering::TrianglesRef triangles_;
+
+		/// Indicates if the current device supports hand removal.
+		bool isHandRemovalSupported_ = false;
+
+		/// Indicates if hand removal is enabled, if applicable.
+		bool isHandRemovalEnabled_ = false;
 };
 
 #endif // META_OCEAN_APPLICATION_DEMO_PLATFORM_META_QUEST_OPENXR_DEPTH_QUEST_DEPTH_H
