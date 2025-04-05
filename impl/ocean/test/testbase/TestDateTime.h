@@ -40,6 +40,12 @@ class OCEAN_TEST_BASE_EXPORT TestDateTime
 		 * @return True, if succeeded
 		 */
 		static bool testConversion(const double testDuration);
+
+		/**
+		 * Tests the Build::buildDate() function
+		 * @return True, if succeeded
+		 */
+		static bool testBuildDate();
 };
 
 }

@@ -12,6 +12,7 @@
 #include "ocean/base/RandomI.h"
 #include "ocean/base/String.h"
 #include "ocean/base/Timestamp.h"
+#include "ocean/base/Build.h"
 
 namespace Ocean
 {
@@ -32,6 +33,7 @@ bool TestDateTime::test(const double testDuration)
 	bool allSucceeded = true;
 
 	allSucceeded = testConversion(testDuration) && allSucceeded;
+	allSucceeded = testBuildDate()              && allSucceeded;
 
 	Log::info() << " ";
 
@@ -177,6 +179,24 @@ bool TestDateTime::testConversion(const double testDuration)
 	}
 
 	return allSucceeded;
+}
+
+bool TestDateTime::testBuildDate()
+{
+	Log::info() << "buildDate test:";
+
+    static const std::string testData = "Jan 02 1970";
+	static const std::string expected = "1970.01.02";
+	const std::string actual          = Build::buildDate(testData.c_str());
+	if(expected == actual)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+	return expected == actual;
 }
 
 }
