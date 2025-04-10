@@ -29,6 +29,8 @@ OCEAN_LINKING_TYPES="static"
 
 OCEAN_THIRD_PARTY_DIR=""
 
+OCEAN_BUILD_MINIMAL="OFF"  # Default value
+
 # Collection of builds that have errors that will be listed at the end of the script
 OCEAN_FAILED_BUILDS=()
 
@@ -67,6 +69,8 @@ display_help()
     echo "  -t | --third-party : The base location where the third-party libraries of Ocean are located, if"
     echo "                they were built manually. Otherwise standard CMake locations will be search for"
     echo "                compatible third-party libraries."
+    echo ""
+    echo "  -m | --minimal : Enable ocean minimal build configuration."
     echo ""
     echo "  -h | --help : This summary"
     echo ""
@@ -108,12 +112,16 @@ function run_build {
     echo " "
     echo "BUILD_DIR: ${BUILD_DIR}"
     echo "INSTALL_DIR: ${INSTALL_DIR}"
+    echo " "
+    echo "OCEAN_BUILD_MINIMAL: ${OCEAN_BUILD_MINIMAL}"
+
 
     CMAKE_CONFIGURE_COMMAND="cmake \\
     -S \"${OCEAN_SOURCE_DIR}\" \\
     -B \"${BUILD_DIR}\" \\
     -DCMAKE_INSTALL_PREFIX=\"${INSTALL_DIR}\" \\
     -DCMAKE_BUILD_TYPE=\"${BUILD_CONFIG}\" \\
+    -DOCEAN_BUILD_MINIMAL=\"${OCEAN_BUILD_MINIMAL}\" \\
     -DBUILD_SHARED_LIBS=\"${ENABLE_BUILD_SHARED_LIBS}\""
 
     if [ -n "${OCEAN_THIRD_PARTY_DIR}" ]; then
@@ -178,6 +186,10 @@ while [[ $# -gt 0 ]]; do
         OCEAN_THIRD_PARTY_DIR="$2"
         shift # past argument
         shift # past value
+        ;;
+        -m|--minimal)
+        OCEAN_BUILD_MINIMAL="ON"
+        shift # past argument
         ;;
         *)
         echo "ERROR: Unknown value \"$1\"." >&2
