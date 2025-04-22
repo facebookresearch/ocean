@@ -189,7 +189,18 @@ unsigned int Processor::realCores()
 
 #elif defined(__APPLE__)
 
-	return realCoresApple();
+	int mib[4] = { CTL_HW, HW_AVAILCPU, 0, 0 };
+	int numCPU = 0;
+	size_t len = sizeof(numCPU); 
+	if (sysctl(mib, 2, &numCPU, &len, NULL, 0) != 0 || numCPU < 1) 
+	{
+			mib[1] = HW_NCPU;
+			if (sysctl(mib, 2, &numCPU, &len, NULL, 0) != 0 || numCPU < 1)
+			{
+				numCPU = 1;
+			}
+	}
+	return numCPU;
 
 #else
 
