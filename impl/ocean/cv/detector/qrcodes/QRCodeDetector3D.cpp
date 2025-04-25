@@ -164,13 +164,13 @@ bool QRCodeDetector3D::detectQRCodes(const SharedAnyCameras& sharedAnyCameras, c
 						continue;
 					}
 
-					ocean_assert(code.isValid());
-					ocean_assert(world_T_code.isValid());
-					ocean_assert(codeSize > Scalar(0));
-
-					codes.emplace_back(std::move(code));
-					world_T_codes.emplace_back(std::move(world_T_code));
-					codeSizes.emplace_back(codeSize);
+						ocean_assert(code.isValid());
+						ocean_assert(world_T_code.isValid());
+						ocean_assert(codeSize > Scalar(0));
+	
+						codes.emplace_back(std::move(code));
+						world_T_codes.emplace_back(std::move(world_T_code));
+						codeSizes.emplace_back(codeSize);
 				}
 			}
 		}
@@ -557,12 +557,13 @@ bool QRCodeDetector3D::computePoseAndExtractQRCodeStereo(const Frame& yFrameA, c
 		{
 			const Scalar estimatedCodeSize_2 = Scalar(0.5) * estimatedCodeSize;
 
+			QRCode internalCodes[2];
 			for (const bool useCameraA : { true, false })
 			{
+				const size_t cameraIndex = useCameraA ? 0 : 1;
+
 				const SharedAnyCamera& anyCamera = useCameraA ? sharedAnyCameraA : sharedAnyCameraB;
-
 				const Frame& yFrame = useCameraA ? yFrameA : yFrameB;
-
 				const HomogenousMatrix4& world_T_camera = useCameraA ? world_T_cameraA : world_T_cameraB;
 
 				const HomogenousMatrix4 code_T_camera = internalWorld_T_code.inverted() * world_T_camera;
@@ -580,7 +581,15 @@ bool QRCodeDetector3D::computePoseAndExtractQRCodeStereo(const Frame& yFrameA, c
 				{
 					ocean_assert(internalCode.isValid());
 
-					code = std::move(internalCode);
+					internalCodes[cameraIndex] = std::move(internalCode);
+				}
+			}
+
+			if (internalCodes[0].isValid() && internalCodes[1].isValid())
+			{
+				if (internalCodes[0] == internalCodes[1])
+				{
+					code = std::move(internalCodes[0]);
 					world_T_code = std::move(internalWorld_T_code);
 					codeSize = estimatedCodeSize;
 
