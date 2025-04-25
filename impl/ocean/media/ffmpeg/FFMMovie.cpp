@@ -439,7 +439,7 @@ bool FFMMovie::createAndOpenVideoCodec()
 
 	if (avTimeBase.num < 0 || avTimeBase.den <= 0)
 	{
-		Log::error() << "FFmpeg: Invalid time base";
+		Log::error() << "FFmpeg: Invalid time base: numerator " << avTimeBase.num << ", denominator " << avTimeBase.den;
 		return false;
 	}
 
