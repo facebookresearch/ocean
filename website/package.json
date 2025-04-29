@@ -24,11 +24,14 @@
     "clsx": "^2.1.1",
     "docusaurus-plugin-internaldocs-fb": "^1.18.2",
     "dompurify": "^3.2.4",
+    "estree-util-value-to-estree": "^3.3.3",
     "postcss": "^8.4.39",
     "prism-react-renderer": "^2.3.0",
-    "react": "^18.3.1",
+    "prismjs": "^1.30.0",
     "react-dom": "^18.3.1",
-    "react-loadable": "^5.5.0"
+    "react-loadable": "^5.5.0",
+    "react-router": "^7.5.2",
+    "react": "^18.3.1"
   },
   "browserslist": {
     "production": [
