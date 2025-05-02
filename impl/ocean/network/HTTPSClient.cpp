@@ -74,6 +74,16 @@ class HTTPSClient::CurlSessionData
 		 */
 		static int onProgress(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow);
 
+		/**
+		 * The Curl debug callback function.
+		 * @param handle The handle of the curl session
+		 * @param type The type of the debug message
+		 * @param data The data of the debug message
+		 * @param size The size of the data
+		 * @param clientp The user data of the curl session
+		 */
+		static int curlDebugCallback(CURL* handle, curl_infotype type, char* data, size_t size, void* clientp);
+
 	protected:
 
 		/// The chunks of the curl session.
@@ -158,14 +168,34 @@ int HTTPSClient::CurlSessionData::onProgress(void* clientp, curl_off_t dltotal, 
 	return 0;
 }
 
-#endif // OCEAN_PLATFORM_BUILD_LINUX
-
-bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Port& port, const double timeout, bool* abort, const ProgressCallback& progressCallback)
+int HTTPSClient::CurlSessionData::curlDebugCallback(CURL* /*handle*/, curl_infotype type, char* data, size_t /*size*/, void* /*clientp*/)
 {
+	if (data != nullptr && type == CURLINFO_TEXT)
+	{
+		Log::debug() << "HTTPSClient CURL debug: " << data;
+	}
+	else
+	{
+		Log::debug() << "HTTPSClient CURL debug data message with type " << type;
+	}
+
+	return 0;
+}
+
+#endif // defined(OCEAN_PLATFORM_BUILD_LINUX) || defined(OCEAN_PLATFORM_BUILD_ANDROID)
+
+bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Port& port, const double timeout, bool* abort, const ProgressCallback& progressCallback, const std::string& caCertificates)
+{
+	ocean_assert(timeout > 0.0);
+
 #if defined(_WINDOWS)
 
+	if (!caCertificates.empty())
+	{
+		Log::debug() << "HTTPSClient::httpsGetRequest(): Windows does not support custom certificates";
+	}
+
 	ocean_assert(data.empty());
-	ocean_assert(timeout > 0);
 	data.clear();
 
 	std::string protocol, host, uri;
@@ -256,6 +286,11 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 
 #elif defined(__APPLE__)
 
+	if (!caCertificates.empty())
+	{
+		Log::debug() << "HTTPSClient::httpsGetRequest(): Apple does not support custom certificates";
+	}
+
 	return httpsGetRequestApple(url, data, port, timeout, abort, progressCallback);
 
 #elif defined(OCEAN_PLATFORM_BUILD_LINUX) || defined(OCEAN_PLATFORM_BUILD_ANDROID)
@@ -269,6 +304,16 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 		return false;
 	}
 
+#if 0 // enable if needed
+	curl_easy_setopt(*curlHandle, CURLOPT_DEBUGFUNCTION, CurlSessionData::curlDebugCallback);
+	curl_easy_setopt(*curlHandle, CURLOPT_VERBOSE, 1l);
+#endif
+
+	if (!caCertificates.empty())
+	{
+		curl_easy_setopt(*curlHandle, CURLOPT_CAINFO, caCertificates.c_str());
+	}
+
 	curl_easy_setopt(*curlHandle, CURLOPT_URL, url.c_str());
 	curl_easy_setopt(*curlHandle, CURLOPT_PORT, long(port.readable()));
 
@@ -280,6 +325,16 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 	curl_easy_setopt(*curlHandle, CURLOPT_XFERINFOFUNCTION, CurlSessionData::onProgress);
 	curl_easy_setopt(*curlHandle, CURLOPT_XFERINFODATA, &curlSessionData);
 
+	const long timeoutMilliseconds = long(timeout * 1000.0);
+
+	if (timeoutMilliseconds <= 0)
+	{
+		ocean_assert(false && "Invalid timeout!");
+		return false;
+	}
+
+	curl_easy_setopt(*curlHandle, CURLOPT_CONNECTTIMEOUT_MS, timeoutMilliseconds);
+
 	const CURLcode result = curl_easy_perform(*curlHandle);
 
 	if (result != CURLE_OK)
@@ -287,7 +342,7 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 		long responseCode = 0;
 		curl_easy_getinfo(*curlHandle, CURLINFO_RESPONSE_CODE, &responseCode);
 
-		Log::error() << "HTTP request failed with response " << responseCode;
+		Log::error() << "HTTPS get request failed with error '" << curl_easy_strerror(result) << "' (" << result << ") and response code " << responseCode;
 
 		return false;
 	}
@@ -312,12 +367,18 @@ bool HTTPSClient::httpsGetRequest(const std::string& url, Buffer& data, const Po
 #endif
 }
 
-bool HTTPSClient::httpsPostRequest(const std::string& url, const uint8_t* requestData, const size_t requestDataSize, Buffer& data, const Port& port, const double timeout, const Strings& additionalHeaders)
+bool HTTPSClient::httpsPostRequest(const std::string& url, const uint8_t* requestData, const size_t requestDataSize, Buffer& data, const Port& port, const double timeout, const Strings& additionalHeaders, const std::string& caCertificates)
 {
+	ocean_assert(timeout > 0.0);
+
 #if defined(_WINDOWS)
 
+	if (!caCertificates.empty())
+	{
+		Log::debug() << "HTTPSClient::httpsPostRequest(): Windows does not support custom certificates";
+	}
+
 	ocean_assert(data.empty());
-	ocean_assert(timeout > 0);
 	data.clear();
 
 	std::string protocol, host, uri;
@@ -401,6 +462,11 @@ bool HTTPSClient::httpsPostRequest(const std::string& url, const uint8_t* reques
 
 #elif defined(__APPLE__)
 
+	if (!caCertificates.empty())
+	{
+		Log::debug() << "HTTPSClient::httpsPostRequest(): Apple does not support custom certificates";
+	}
+
 	return httpsPostRequestApple(url, requestData, requestDataSize, data, port, timeout, additionalHeaders);
 
 #elif defined(OCEAN_PLATFORM_BUILD_LINUX) || defined(OCEAN_PLATFORM_BUILD_ANDROID)
@@ -415,6 +481,16 @@ bool HTTPSClient::httpsPostRequest(const std::string& url, const uint8_t* reques
 		return false;
 	}
 
+#if 0 // enable if needed
+	curl_easy_setopt(*curlHandle, CURLOPT_DEBUGFUNCTION, CurlSessionData::curlDebugCallback);
+	curl_easy_setopt(*curlHandle, CURLOPT_VERBOSE, 1l);
+#endif
+
+	if (!caCertificates.empty())
+	{
+		curl_easy_setopt(*curlHandle, CURLOPT_CAINFO, caCertificates.c_str());
+	}
+
 	curl_easy_setopt(*curlHandle, CURLOPT_URL, url.c_str());
 	curl_easy_setopt(*curlHandle, CURLOPT_PORT, long(port.readable()));
 
@@ -425,6 +501,16 @@ bool HTTPSClient::httpsPostRequest(const std::string& url, const uint8_t* reques
 
 	curl_easy_setopt(*curlHandle, CURLOPT_XFERINFOFUNCTION, CurlSessionData::onProgress);
 	curl_easy_setopt(*curlHandle, CURLOPT_XFERINFODATA, &curlSessionData);
+
+	const long timeoutMilliseconds = long(timeout * 1000.0);
+
+	if (timeoutMilliseconds <= 0)
+	{
+		ocean_assert(false && "Invalid timeout!");
+		return false;
+	}
+
+	curl_easy_setopt(*curlHandle, CURLOPT_CONNECTTIMEOUT_MS, timeoutMilliseconds);
 
 	if (!NumericT<long>::isInsideValueRange(requestDataSize))
 	{
@@ -460,7 +546,7 @@ bool HTTPSClient::httpsPostRequest(const std::string& url, const uint8_t* reques
 		long responseCode = 0;
 		curl_easy_getinfo(*curlHandle, CURLINFO_RESPONSE_CODE, &responseCode);
 
-		Log::error() << "HTTP request failed with response " << responseCode;
+		Log::error() << "HTTPS post request failed with error '" << curl_easy_strerror(result) << "' (" << result << ") and response code " << responseCode;
 
 		return false;
 	}

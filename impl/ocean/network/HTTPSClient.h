@@ -61,9 +61,10 @@ class OCEAN_NETWORK_EXPORT HTTPSClient
 		 * @param timeout The timeout this function waits for the server's response, with range (0, infinity)
 		 * @param abort Optional flag that may be set to True by another thread to abort the request
 		 * @param progressCallback Optional callback for receiving progress information
+		 * @param caCertificates Optional path to a file containing a list of trusted CA certificates, in PEM format; otherwise, the default trusted CA certificates will be used
 		 * @return True, if succeeded
 		 */
-		static bool httpsGetRequest(const std::string& url, Buffer& data, const Port& port = Port(443, Port::TYPE_READABLE), const double timeout = 5.0, bool* abort = nullptr, const ProgressCallback& progressCallback = ProgressCallback());
+		static bool httpsGetRequest(const std::string& url, Buffer& data, const Port& port = Port(443, Port::TYPE_READABLE), const double timeout = 5.0, bool* abort = nullptr, const ProgressCallback& progressCallback = ProgressCallback(), const std::string& caCertificates = std::string());
 
 		/**
 		 * Function to executes a HTTPS POST (site/file upload) request.
@@ -74,9 +75,10 @@ class OCEAN_NETWORK_EXPORT HTTPSClient
 		 * @param port The port of the HTTPS server
 		 * @param timeout The timeout this function waits for the server's response, with range (0, infinity)
 		 * @param additionalHeaders Optional additional HTTP headers
+		 * @param caCertificates Optional path to a file containing a list of trusted CA certificates, in PEM format; otherwise, the default trusted CA certificates will be used
 		 * @return True, if succeeded
 		 */
-		static bool httpsPostRequest(const std::string& url, const uint8_t* requestData, const size_t requestDataSize, Buffer& data, const Port& port = Port(443, Port::TYPE_READABLE), const double timeout = 5.0, const Strings& additionalHeaders = Strings());
+		static bool httpsPostRequest(const std::string& url, const uint8_t* requestData, const size_t requestDataSize, Buffer& data, const Port& port = Port(443, Port::TYPE_READABLE), const double timeout = 5.0, const Strings& additionalHeaders = Strings(), const std::string& caCertificates = std::string());
 
 		/**
 		 * Converts a URL to a URI.
