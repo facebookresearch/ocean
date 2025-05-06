@@ -820,13 +820,19 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 			}
 		}
 	}
+	else if (source.frameType() == targetType)
+	{
+		const Frame::AdvancedCopyMode advancedCopyMode = forceCopy ? Frame::ACM_COPY_REMOVE_PADDING_LAYOUT : Frame::ACM_USE_KEEP_LAYOUT;
+
+		target = Frame(source, advancedCopyMode);
+	}
 	else
 	{
 #ifdef OCEAN_DEBUG
 		const std::string debugSourcePixelFormat = FrameType::formatIsPureGeneric(source.pixelFormat()) ? "generic (" + String::toAString(source.pixelFormat()) + ")" : FrameType::translatePixelFormat(source.pixelFormat());
 		const std::string debugTargetPixelFormat = FrameType::formatIsPureGeneric(targetType.pixelFormat()) ? "generic (" + String::toAString(targetType.pixelFormat()) + ")" : FrameType::translatePixelFormat(targetType.pixelFormat());
 
-		Log::debug() << "Failed to convert frmae with pixel format '" << debugSourcePixelFormat << "' to '" << debugTargetPixelFormat << "'";
+		Log::debug() << "Failed to convert frame with pixel format '" << debugSourcePixelFormat << "' to '" << debugTargetPixelFormat << "'";
 #endif
 
 		ocean_assert(false && "Invalid frame types.");
