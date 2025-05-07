@@ -33,7 +33,7 @@ using namespace Ocean;
 	const double testDurations = 2.0;
 
 	// define the subset of functions which will be invoked, an empty set invokes all functions
-	const std::string testFunctions = "";
+	const std::string testFunctions;
 
 	// we seek for the resource file containing the media file
 	const std::wstring testMediaFilename = Platform::Apple::Resource::resourcePath(L"tropical-island-with-toucans_800x800", L"jpg");
