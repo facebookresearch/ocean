@@ -199,13 +199,6 @@ class OCEAN_BASE_EXPORT Processor : public Singleton<Processor>
 
 #if defined(__APPLE__)
 
-		/**
-		 * Returns the number of available processor cores currently detectable.
-		 * @return Number of processor cores
-		 * @see realCores().
-		 */
-		static unsigned int realCoresApple();
-
 	#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE==1
 
 		/**
