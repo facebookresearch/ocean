@@ -33,7 +33,7 @@ using namespace Ocean;
 	const bool skipValidation = false;
 
 	// define the subset of functions which will be invoked, an empty set invokes all functions
-	const std::string testFunctions = "";
+	const std::string testFunctions;
 
 	Test::TestCV::TestLibyuv::testCVLibyuvAsynchron(testDurations, skipValidation, testFunctions);
 
