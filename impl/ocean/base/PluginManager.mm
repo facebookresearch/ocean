@@ -145,7 +145,7 @@ bool PluginManager::determinePluginApple(const std::string& filename, Plugin& pl
 
 	while (!dependencesValue.empty())
 	{
-		const std::string::size_type pos = dependencesValue.find(" ");
+		const std::string::size_type pos = dependencesValue.find(' ');
 		const std::string dependency = dependencesValue.substr(0, pos);
 
 		const PluginType dependencyValue = translateType(String::toAString(dependency));

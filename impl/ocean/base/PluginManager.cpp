@@ -321,7 +321,7 @@ unsigned int PluginManager::collectPlugins(const std::string& directory, const b
 #else
 
 	std::string closedDirectory;
-	if (directory.rfind("/") == directory.size() - 1 || directory.rfind("\\") == directory.size() - 1)
+	if (directory.rfind('/') == directory.size() - 1 || directory.rfind('\\') == directory.size() - 1)
 	{
 		closedDirectory = directory;
 	}
