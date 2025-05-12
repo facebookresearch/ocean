@@ -121,7 +121,7 @@ bool ExperiencesLibrary::load(const UserInterface& userInterface, const Renderin
 		return false;
 	}
 
-	const std::string::size_type position = filename.find("@");
+	const std::string::size_type position = filename.find('@');
 
 	std::string experienceName;
 	std::string properties;
