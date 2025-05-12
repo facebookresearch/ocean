@@ -228,7 +228,7 @@ StreamingClient::Channels StreamingClient::selectableChannels()
 
 	while (true)
 	{
-		std::string::size_type pos = value.find(";");
+		std::string::size_type pos = value.find(';');
 		if (pos == std::string::npos)
 		{
 			if (value.empty() == false)

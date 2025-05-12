@@ -274,7 +274,7 @@ bool Streaming::parse(const unsigned char* data, const size_t size, bool& isResp
 
 	message = value.substr(0, pos);
 
-	pos = message.find("-");
+	pos = message.find('-');
 	if (pos != std::string::npos)
 	{
 		optionalValue = message.substr(pos + 1);
