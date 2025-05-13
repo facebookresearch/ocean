@@ -437,6 +437,11 @@ void GLESText::rebuildPrimitives()
 
 	FontManager::FontData fontData = FontManager::get().fontData(engine(), fontFamily_, styleName_);
 
+	if (!fontData.isValid())
+	{
+		Log::debug() << "No font data available for '" << fontFamily_ << "' and '" << styleName_ << "'";
+	}
+
 	if (!fontData.isValid() || text_.empty())
 	{
 		setFaces(TriangleFaces());
