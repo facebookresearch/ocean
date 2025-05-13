@@ -38,9 +38,10 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Battery
 
 		/**
 		 * Returns the current battery capacity status in percent.
+		 * @param path Optional path to the battery file, if not specified the default path will be used
 		 * @return Current battery capacity status, -1 if invalid
 		 */
-		static float currentCapacity();
+		static float currentCapacity(const char* path = nullptr);
 
 		/**
 		 * Returns the current battery temperature in Celsius.

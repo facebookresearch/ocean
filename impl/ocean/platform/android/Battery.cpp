@@ -22,7 +22,7 @@ namespace Platform
 namespace Android
 {
 
-float Battery::currentCapacity()
+float Battery::currentCapacity(const char* path)
 {
 
 #ifdef OCEAN_SUPPORT_EXCEPTIONS
@@ -31,7 +31,10 @@ float Battery::currentCapacity()
 #endif // OCEAN_SUPPORT_EXCEPTIONS
 
 		std::ifstream stream;
-		stream.open("/sys/class/power_supply/battery/capacity", std::ios::binary);
+
+		const char* pathToUse = path != nullptr ? path : "/sys/class/power_supply/battery/capacity";
+
+		stream.open(pathToUse, std::ios::binary);
 
 		if (stream.fail())
 		{
