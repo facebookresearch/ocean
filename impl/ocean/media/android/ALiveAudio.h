@@ -242,6 +242,12 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 		bool release();
 
 		/**
+		 * Returns the preferred playback stream type for this live audio object.
+		 * @return The object's preferred stream type.
+		 */
+		SLint32 preferredStreamType() const;
+
+		/**
 		 * Event callback function to fill the OpenSL buffer queue.
 		 * @param bufferQueue The buffer queue to fill with the next samples, must be valid
 		 */

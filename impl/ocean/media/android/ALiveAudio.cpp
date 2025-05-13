@@ -454,9 +454,9 @@ bool ALiveAudio::initialize(const SLEngineItf& slEngineInterface)
 
 	if (noError && slPlayerConfiguration != nullptr)
 	{
-		constexpr bool useMediaStream = true;
+		const SLint32 streamType = preferredStreamType();
+		ocean_assert(streamType >= SL_ANDROID_STREAM_VOICE && streamType <= SL_ANDROID_STREAM_SYSTEM);
 
-		const SLint32 streamType = useMediaStream ? SL_ANDROID_STREAM_MEDIA : SL_ANDROID_STREAM_VOICE;
 		if ((*slPlayerConfiguration)->SetConfiguration(slPlayerConfiguration, SL_ANDROID_KEY_STREAM_TYPE, &streamType, sizeof(SLint32)) != SL_RESULT_SUCCESS)
 		{
 			Log::warning() << "Failed to set SL player's stream type";
@@ -524,6 +524,34 @@ bool ALiveAudio::release()
 	}
 
 	return true;
+}
+
+SLint32 ALiveAudio::preferredStreamType() const
+{
+	const std::string lowerURL(String::toLower(url_));
+
+	if (lowerURL.find("/voice") != std::string::npos)
+	{
+		return SL_ANDROID_STREAM_VOICE;
+	}
+	else if (lowerURL.find("/system") != std::string::npos)
+	{
+		return SL_ANDROID_STREAM_SYSTEM;
+	}
+	else if (lowerURL.find("/ring") != std::string::npos)
+	{
+		return SL_ANDROID_STREAM_RING;
+	}
+	else if (lowerURL.find("/alarm") != std::string::npos)
+	{
+		return SL_ANDROID_STREAM_ALARM;
+	}
+	else if (lowerURL.find("/notification") != std::string::npos)
+	{
+		return SL_ANDROID_STREAM_NOTIFICATION;
+	}
+
+	return SL_ANDROID_STREAM_MEDIA;
 }
 
 void ALiveAudio::onFillBufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue)
