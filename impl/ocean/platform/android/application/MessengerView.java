@@ -71,6 +71,25 @@ public class MessengerView extends ScrollView
 	}
 
 	/**
+	 * Sets the background color of the ScallView and the internal TextView.
+	 * @param backgroundColor The color of the background to be used
+	 */
+	public void setBackgroundColor(int backgroundColor)
+	{
+		super.setBackgroundColor(backgroundColor);
+		textView_.setBackgroundColor(backgroundColor);
+	}
+
+	/**
+	 *  Sets the text size of the internal TextView.
+	 * @param size The size of the text to be used, as scaled pixels
+	 */
+	public void setTextSize(float size)
+	{
+		textView_.setTextSize(size);
+	}
+
+	/**
 	 * The timer event function.
 	 */
 	private void onTimer()

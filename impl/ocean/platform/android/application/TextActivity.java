@@ -18,13 +18,18 @@ import android.os.Bundle;
 public class TextActivity extends Activity
 {
 	/// The text view showing the message.
-	private MessengerView textView;
+	private MessengerView textView_;
 
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 
-		textView = new MessengerView(this, false);
-		setContentView(textView);
+		textView_ = new MessengerView(this, false);
+		setContentView(textView_);
+	}
+
+	public MessengerView getMessengerView()
+	{
+		return textView_;
 	}
 }
