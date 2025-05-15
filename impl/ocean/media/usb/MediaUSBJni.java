@@ -14,14 +14,14 @@ package com.meta.ocean.media.usb;
 public class MediaUSBJni
 {
 	/**
-	 * Java native interface function to register the OpenIL Media component.
+	 * Java native interface function to register the Media USB component.
 	 * @return True, if succeeded
 	 * @see unregisterLibrary().
 	 */
 	public static native boolean registerLibrary();
 
 	/**
-	 * Java native interface function to unregister the OpenIL Media component.
+	 * Java native interface function to unregister the Media USB component.
 	 * @return True, if succeeded
 	 * @see registerLibrary.
 	 */

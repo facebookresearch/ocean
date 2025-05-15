@@ -365,6 +365,8 @@ void ALibrary::releaseAudioEngine()
 
 MediumRef ALibrary::newLiveVideo(const std::string& url, bool useExclusive) const
 {
+#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
+
 	std::string resolvedUrl = url;
 	std::string resolvedId;
 
@@ -373,8 +375,6 @@ MediumRef ALibrary::newLiveVideo(const std::string& url, bool useExclusive) cons
 		int index = 0;
 		if (String::isInteger32(resolvedUrl.substr(12), &index) && index >= 0)
 		{
-#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
-
 			if (selectableLiveVideoDevices_.empty())
 			{
 				selectableLiveVideoDevices_ = ALiveVideo::selectableDevices();
@@ -387,7 +387,6 @@ MediumRef ALibrary::newLiveVideo(const std::string& url, bool useExclusive) cons
 				resolvedUrl = device.name();
 				resolvedId = device.id();
 			}
-#endif
 		}
 	}
 
@@ -401,11 +400,7 @@ MediumRef ALibrary::newLiveVideo(const std::string& url, bool useExclusive) cons
 		}
 	}
 
-#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 	ALiveVideo* medium = new ALiveVideo(resolvedUrl, resolvedId);
-#else
-	ALiveVideo* medium = new ALiveVideo(resolvedUrl);
-#endif
 
 	ocean_assert(medium != nullptr);
 
@@ -421,6 +416,14 @@ MediumRef ALibrary::newLiveVideo(const std::string& url, bool useExclusive) cons
 	}
 
 	return MediumRefManager::get().registerMedium(medium);
+
+#else
+
+	Log::warning() << "__ANDROID_API__ needs to be 24+ to load live videos on Android";
+
+	return MediumRef();
+
+#endif // OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 }
 
 MediumRef ALibrary::newMovie(const std::string& url, bool useExclusive)

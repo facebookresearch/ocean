@@ -92,8 +92,6 @@ public class VideoPreviewActivity extends Activity
 	{
 		super.onResume();
 
-		MediaAndroidJni.recoverResources();
-
 		Log.i(getClass().getSimpleName(), "onResume");
 	}
 
@@ -104,7 +102,6 @@ public class VideoPreviewActivity extends Activity
 	@Override
 	public void onPause()
 	{
-		MediaAndroidJni.releaseResources();
 		super.onPause();
 
 		Log.i(getClass().getSimpleName(), "onPause");
@@ -117,7 +114,6 @@ public class VideoPreviewActivity extends Activity
 	@Override
 	public void onStop()
 	{
-		MediaAndroidJni.releaseResources();
 		GLFrameView.release();
 
 		super.onStop();
@@ -131,8 +127,6 @@ public class VideoPreviewActivity extends Activity
 	@Override
 	protected void onDestroy()
 	{
-		MediaAndroidJni.releaseResources();
-
 		super.onDestroy();
 
 		Log.i(getClass().getSimpleName(), "onDestroy");

@@ -71,8 +71,6 @@ public class GLViewActivity extends OceanActivity
 		Log.d("Ocean", "GLViewActivity::onResume()");
 
 		super.onResume();
-
-		MediaAndroidJni.recoverResources();
 	}
 
 	/**
@@ -85,8 +83,6 @@ public class GLViewActivity extends OceanActivity
 		Log.d("Ocean", "GLViewActivity::onPause()");
 
 		super.onPause();
-
-		MediaAndroidJni.releaseResources();
 	}
 
 	/**
@@ -99,8 +95,6 @@ public class GLViewActivity extends OceanActivity
 		Log.d("Ocean", "GLViewActivity::onStop()");
 
 		super.onStop();
-
-		MediaAndroidJni.releaseResources();
 	}
 
 	/**
@@ -112,8 +106,6 @@ public class GLViewActivity extends OceanActivity
 	protected void onDestroy()
 	{
 		Log.d("Ocean", "GLViewActivity::onDestroy()");
-
-		MediaAndroidJni.releaseResources();
 
 		GLFrameView.release();
 

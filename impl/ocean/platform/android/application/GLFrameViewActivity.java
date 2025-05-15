@@ -82,8 +82,6 @@ public class GLFrameViewActivity extends OceanActivity
 	public void onResume()
 	{
 		super.onResume();
-
-		MediaAndroidJni.recoverResources();
 	}
 
 	/**
@@ -94,8 +92,6 @@ public class GLFrameViewActivity extends OceanActivity
 	public void onPause()
 	{
 		super.onPause();
-
-		MediaAndroidJni.releaseResources();
 	}
 
 	/**
@@ -106,8 +102,6 @@ public class GLFrameViewActivity extends OceanActivity
 	public void onStop()
 	{
 		super.onStop();
-
-		MediaAndroidJni.releaseResources();
 	}
 
 	/**
@@ -118,8 +112,6 @@ public class GLFrameViewActivity extends OceanActivity
 	@Override
 	protected void onDestroy()
 	{
-		MediaAndroidJni.releaseResources();
-
 		GLFrameView.release();
 
 		RenderingGLESceneGraphJni.unregisterLibrary();

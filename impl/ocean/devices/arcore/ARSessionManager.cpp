@@ -423,9 +423,11 @@ bool ARSessionManager::Session::stop(ACDevice* tracker)
 
 	if (frameMedium_)
 	{
+#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 		// ARCore borrowed the camera resource but does not automatically return the resource when not needed anymore
 		// therefore, we need to force a restart of the camera
 		frameMedium_.force<Media::Android::ALiveVideo>().forceRestart();
+#endif
 	}
 
 	return true;
@@ -558,7 +560,9 @@ void ARSessionManager::Session::update(unsigned int textureId)
 		{
 			frame.setTimestamp(frameUnixTimestamp);
 
+#ifdef OCEAN_MEDIA_ANDROID_NATIVECAMERALIBRARY_AVAILABLE
 			frameMedium_.force<Ocean::Media::Android::ALiveVideo>().feedNewFrame(std::move(frame), std::move(anyCamera), exposureMode, exposureDurtation, isoMode, iso, focusMode, focusValue);
+#endif
 		}
 	}
 

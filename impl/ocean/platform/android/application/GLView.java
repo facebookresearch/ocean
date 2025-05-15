@@ -40,9 +40,6 @@ public class GLView extends GLSurfaceView
 		@Override
 		public void onDrawFrame(GL10 gl)
 		{
-			// we update the Android Media system with each new render call
-			MediaAndroidJni.update();
-
 			// calling the native render function
 			render();
 		}
