@@ -15,20 +15,13 @@ import android.os.Bundle;
 
 import android.util.Log;
 
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-
-import java.util.Set;
-import java.util.HashSet;
-
 import com.meta.ocean.base.BaseJni;
 import com.meta.ocean.media.android.MediaAndroidJni;
 import com.meta.ocean.platform.android.*;
 import com.meta.ocean.rendering.glescenegraph.RenderingGLESceneGraphJni;
 
 /**
- * This class implements the base class for all activities using a GLFrameView as content view.
+ * This class implements the base class for all activities using a GLFrameView as content view (a view allowing to render a video background).
  * @ingroup platformandroid
  */
 public class GLFrameViewActivity extends OceanActivity
@@ -41,9 +34,9 @@ public class GLFrameViewActivity extends OceanActivity
 		MediaAndroidJni.registerLibrary();
 		RenderingGLESceneGraphJni.registerLibrary();
 
-		glViewFrame = new GLFrameView(getApplication(), true /*translucent*/, 24 /*depth*/, 0 /*stencil*/);
-		glViewFrame.setKeepScreenOn(true);
-		setContentView(glViewFrame);
+		glFrameView_ = new GLFrameView(getApplication(), true /*translucent*/, 24 /*depth*/, 0 /*stencil*/);
+		glFrameView_.setKeepScreenOn(true);
+		setContentView(glFrameView_);
 
 		requestPermission("android.permission.CAMERA");
 	}
@@ -121,5 +114,5 @@ public class GLFrameViewActivity extends OceanActivity
 	}
 
 	/// The OpenGLES FrameView of this activity.
-	protected GLFrameView glViewFrame = null;
+	protected GLFrameView glFrameView_ = null;
 }

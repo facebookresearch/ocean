@@ -14,34 +14,37 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.meta.ocean.platform.android.*;
+import com.meta.ocean.rendering.glescenegraph.RenderingGLESceneGraphJni;
 
 /**
- * This class implements an Activity with basic OpenGL ES support.
+ * This class implements an Activity with with GLRenderView to render 3D content.
  * @see GLViewAppCompatActivity.
  * @ingroup platformandroid
  */
-public class GLViewActivity extends OceanActivity
+public class GLRendererViewActivity extends OceanActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		Log.d("Ocean", "GLViewActivity::onStart()");
+		Log.d("Ocean", "GLRendererViewActivity::onStart()");
 
 		super.onCreate(savedInstanceState);
 
-		glView_= new GLView(getApplication(), true /*translucent*/, 24 /*depth*/, 0 /*stencil*/);
-		glView_.setKeepScreenOn(true);
-		setContentView(glView_);
+		RenderingGLESceneGraphJni.registerLibrary();
+
+		glRendererView_ = new GLRendererView(getApplication(), true /*translucent*/, 24 /*depth*/, 0 /*stencil*/);
+		glRendererView_.setKeepScreenOn(true);
+		setContentView(glRendererView_);
 	}
 
 	@Override
 	protected void onPermissionGranted(String permission)
 	{
-		Log.d("Ocean", "GLViewActivity::onPermissionGranted(): " + permission);
+		Log.d("Ocean", "GLRendererViewActivity::onPermissionGranted(): " + permission);
 
 		super.onPermissionGranted(permission);
 
-		GLView.onPermissionGranted(permission);
+		GLRendererView.onPermissionGranted(permission);
 	}
 
 	/**
@@ -51,7 +54,7 @@ public class GLViewActivity extends OceanActivity
 	@Override
 	public void onResume()
 	{
-		Log.d("Ocean", "GLViewActivity::onResume()");
+		Log.d("Ocean", "GLRendererViewActivity::onResume()");
 
 		super.onResume();
 	}
@@ -63,7 +66,7 @@ public class GLViewActivity extends OceanActivity
 	@Override
 	public void onPause()
 	{
-		Log.d("Ocean", "GLViewActivity::onPause()");
+		Log.d("Ocean", "GLRendererViewActivity::onPause()");
 
 		super.onPause();
 	}
@@ -75,7 +78,7 @@ public class GLViewActivity extends OceanActivity
 	@Override
 	public void onStop()
 	{
-		Log.d("Ocean", "GLViewActivity::onStop()");
+		Log.d("Ocean", "GLRendererViewActivity::onStop()");
 
 		super.onStop();
 	}
@@ -88,13 +91,15 @@ public class GLViewActivity extends OceanActivity
 	@Override
 	protected void onDestroy()
 	{
-		Log.d("Ocean", "GLViewActivity::onDestroy()");
+		Log.d("Ocean", "GLRendererViewActivity::onDestroy()");
 
 		GLFrameView.release();
+
+		RenderingGLESceneGraphJni.unregisterLibrary();
 
 		super.onDestroy();
 	}
 
-	/// The OpenGLES View of this activity.
-	protected GLView glView_ = null;
+	/// The OpenGLES Renderer View of this activity.
+	protected GLRendererView glRendererView_ = null;
 }
