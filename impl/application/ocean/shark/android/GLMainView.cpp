@@ -33,13 +33,7 @@ namespace Shark
 namespace Android
 {
 
-const bool GLMainView::viewInstanceRegistered = GLMainView::registerInstanceFunction(GLMainView::createInstance);
-
-GLMainView::GLMainView() :
-	viewInitialized(false)
-{
-	// nothing to do here
-}
+const bool GLMainView::instanceRegistered_ = GLMainView::registerInstanceFunction(GLMainView::createInstance);
 
 GLMainView::~GLMainView()
 {
@@ -53,14 +47,14 @@ bool GLMainView::initialize()
 		return false;
 	}
 
-	ocean_assert(viewInitialized == false);
-	viewInitialized = true;
+	ocean_assert(initialized_ == false);
+	initialized_ = true;
 
 	const ScopedLock scopedLock(lock_);
 
-	for (SceneFilenamePairs::const_iterator i = viewPendingScenes.begin(); i != viewPendingScenes.end(); ++i)
+	for (const SceneFilenamePair& pendingScene : pendingScenes_)
 	{
-		loadScene(i->first, i->second);
+		loadScene(pendingScene.first, pendingScene.second);
 	}
 
 	return true;
@@ -70,7 +64,7 @@ bool GLMainView::release()
 {
 	const ScopedLock scopedLock(lock_);
 
-	Log::info() << "Performance: " << viewPerformance.averageMseconds() << "ms / frame";
+	Log::info() << "Performance: " << performance_.averageMseconds() << "ms / frame";
 
 	Timestamp timestampNow(true);
 
@@ -86,15 +80,15 @@ bool GLMainView::loadScene(const std::string& filename, const bool replace)
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (!viewInitialized)
+	if (!initialized_)
 	{
 		if (replace)
 		{
-			viewPendingScenes = SceneFilenamePairs(1, SceneFilenamePair(filename, replace));
+			pendingScenes_ = SceneFilenamePairs(1, SceneFilenamePair(filename, replace));
 		}
 		else
 		{
-			viewPendingScenes.push_back(SceneFilenamePair(filename, replace));
+			pendingScenes_.emplace_back(filename, replace);
 		}
 
 		Log::info() << "The scene \"" << filename << "\" will be loaded after the view has been initialized.";
@@ -126,7 +120,7 @@ bool GLMainView::loadScene(const std::string& filename, const bool replace)
 				const SceneDescription::SDXSceneRef sdxScene(scene);
 				ocean_assert(sdxScene);
 
-				viewPermanentSceneIds.push_back(sdxScene->sceneId());
+				permanentSceneIds_.push_back(sdxScene->sceneId());
 
 				framebuffer_->addScene(sdxScene->renderingScene());
 			}
@@ -176,20 +170,20 @@ bool GLMainView::unloadScenes()
 
 	try
 	{
-		for (SceneIds::const_iterator i = viewPermanentSceneIds.begin(); i != viewPermanentSceneIds.end(); ++i)
+		for (const SceneDescription::SceneId& sceneId : permanentSceneIds_)
 		{
-			if (SceneDescription::Manager::get().unload(*i))
+			if (SceneDescription::Manager::get().unload(sceneId))
 			{
-				Log::info() << "Successfully unloaded scene with id: " << *i;
+				Log::info() << "Successfully unloaded scene with id: " << sceneId;
 			}
 			else
 			{
-				Log::error() << "Failed to unload scene with id: " << *i;
+				Log::error() << "Failed to unload scene with id: " << sceneId;
 				result = false;
 			}
 		}
 
-		viewPermanentSceneIds.clear();
+		permanentSceneIds_.clear();
 
 		if (framebuffer_)
 		{
@@ -239,7 +233,7 @@ bool GLMainView::render()
 		}
 
 		// starts performance measurement
-		viewPerformance.start();
+		performance_.start();
 
 		// Applying specific pre-updates on all scene descriptions necessary before the interaction plugins are applied
 		Timestamp updateTimestamp = SceneDescription::Manager::get().preUpdate(framebuffer_->view(), Timestamp(true));
@@ -260,7 +254,7 @@ bool GLMainView::render()
 		framebuffer_->render();
 
 		// stops the performance measurement
-		viewPerformance.stop();
+		performance_.stop();
 
 		return true;
 	}

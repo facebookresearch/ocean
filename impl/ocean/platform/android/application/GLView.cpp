@@ -27,7 +27,7 @@ GLView& GLView::Instance::instance()
 
 		if (!view_)
 		{
-			// we create the default GLView object is no specific instance function is defined at this moment
+			// we create the default GLView object if no specific instance function is defined at this moment
 
 			if (derivedInstanceFunction_ != nullptr)
 			{

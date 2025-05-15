@@ -38,17 +38,17 @@ class GLMainView : public Platform::Android::Application::GLFrameView
 		/**
 		 * Definition of a vector holding scene description scene ids.
 		 */
-		typedef std::vector<SceneDescription::SceneId> SceneIds;
+		using SceneIds = std::vector<SceneDescription::SceneId>;
 
 		/**
 		 * Definition of a pair holding a scene filename and a replacement state.
 		 */
-		typedef std::pair<std::string, bool> SceneFilenamePair;
+		using SceneFilenamePair = std::pair<std::string, bool>;
 
 		/**
 		 * Definition of a vector holding scene filename pair objects.
 		 */
-		typedef std::vector<SceneFilenamePair> SceneFilenamePairs;
+		using SceneFilenamePairs = std::vector<SceneFilenamePair>;
 
 	public:
 
@@ -56,13 +56,13 @@ class GLMainView : public Platform::Android::Application::GLFrameView
 		 * Initializes the view.
 		 * @see GLFrameView.
 		 */
-		virtual bool initialize();
+		bool initialize() override;
 
 		/**
 		 * Releases the view.
 		 * @return True, if succeeded
 		 */
-		virtual bool release();
+		bool release() override;
 
 		/**
 		 * Loads or adds a new scene.
@@ -81,7 +81,7 @@ class GLMainView : public Platform::Android::Application::GLFrameView
 		 * Renders the next frame.
 		 * @see GLFrameView.
 		 */
-		virtual bool render();
+		bool render() override;
 
 		/**
 		 * Creates an instance of this object.
@@ -94,29 +94,29 @@ class GLMainView : public Platform::Android::Application::GLFrameView
 		/**
 		 * Creates a new main view object.
 		 */
-		GLMainView();
+		GLMainView() = default;
 
 		/**
 		 * Destructs a main view object.
 		 */
-		virtual ~GLMainView();
+		~GLMainView() override;
 
 	private:
 
 		/// The pending scenes that will be loaded after the view has been initialized.
-		SceneFilenamePairs viewPendingScenes;
+		SceneFilenamePairs pendingScenes_;
 
 		/// Scene description ids of all loaded permanent scenes.
-		SceneIds viewPermanentSceneIds;
+		SceneIds permanentSceneIds_;
 
 		/// True, if the view has been initialized.
-		bool viewInitialized;
+		bool initialized_ = false;
 
 		/// High performance statistics objects.
-		HighPerformanceStatistic viewPerformance;
+		HighPerformanceStatistic performance_;
 
 		/// Static helper variable ensuring that the instance function will be registered.
-		const static bool viewInstanceRegistered;
+		const static bool instanceRegistered_;
 };
 
 inline Platform::Android::Application::GLView* GLMainView::createInstance()

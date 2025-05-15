@@ -38,7 +38,7 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLView
 		/**
 		 * Definition of a function pointer creating an instance of the GLView object.
 		 */
-		typedef GLView* (*InstanceFunction)();
+		using InstanceFunction = GLView*(*)();
 
 	protected:
 
@@ -69,7 +69,7 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLView
 				/**
 				 * Creates a new instance.
 				 */
-				inline Instance();
+				Instance() = default;
 
 				/**
 				 * Destructs an instance.
@@ -82,10 +82,10 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLView
 				GLView* view_;
 
 				/// The instance function.
-				InstanceFunction baseInstanceFunction_;
+				InstanceFunction baseInstanceFunction_ = nullptr;
 
-                /// The instance function.
-				InstanceFunction derivedInstanceFunction_;
+				/// The instance function.
+				InstanceFunction derivedInstanceFunction_ = nullptr;
 
 				/// The lock of this object.
 				Lock lock_;
@@ -216,14 +216,6 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLView
 		 */
 		virtual ~GLView() = default;
 };
-
-inline GLView::Instance::Instance() :
-	view_(nullptr),
-	baseInstanceFunction_(nullptr),
-    derivedInstanceFunction_(nullptr)
-{
-	// nothing to do here
-}
 
 inline void GLView::Instance::setInstanceFunction(const InstanceFunction& instanceFunction, const bool isBaseClass)
 {
