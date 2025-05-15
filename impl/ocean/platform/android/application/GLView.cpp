@@ -81,26 +81,19 @@ bool GLView::render()
 	return true;
 }
 
-bool GLView::screen2frame(const Scalar xScreen, const Scalar yScreen, Scalar& xFrame, Scalar& yFrame)
-{
-    // should be implemented in derived classes
-
-	return false;
-}
-
 void GLView::onTouchDown(const float x, const float y)
 {
-	 // should be implemented in derived classes
+	// should be implemented in derived classes
 }
 
 void GLView::onTouchMove(const float x, const float y)
 {
-	 // should be implemented in derived classes
+	// should be implemented in derived classes
 }
 
 void GLView::onTouchUp(const float x, const float y)
 {
-	 // should be implemented in derived classes
+	// should be implemented in derived classes
 }
 
 void GLView::onResume()

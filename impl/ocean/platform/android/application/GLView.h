@@ -12,8 +12,6 @@
 
 #include "ocean/base/Singleton.h"
 
-#include "ocean/math/Math.h"
-
 namespace Ocean
 {
 
@@ -118,16 +116,6 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLView
 		 * @return True, if succeeded
 		 */
 		virtual bool render();
-
-		/**
-		 * Converts the given screen positions into frame positions.
-		 * @param xScreen Horizontal screen position, with range [0, infinity)
-		 * @param yScreen Vertical screen position, with range [0, infinity)
-		 * @param xFrame Resulting horizontal frame position, with range [0, infinity)
-		 * @param yFrame Resulting vertical frame position, with range [0, infinity)
-		 * @return True, if succeeded
-		 */
-		virtual bool screen2frame(const Scalar xScreen, const Scalar yScreen, Scalar& xFrame, Scalar& yFrame);
 
 		/**
 		 * Touch down event function.

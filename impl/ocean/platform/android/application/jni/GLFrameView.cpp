@@ -15,33 +15,6 @@ using namespace Ocean;
 using namespace Ocean::Platform::Android;
 using namespace Ocean::Platform::Android::Application;
 
-jboolean Java_com_meta_ocean_platform_android_application_GLFrameView_setFovX(JNIEnv* env, jobject javaThis, jdouble angle)
-{
-	try
-	{
-		Log::info() << "Setting the FovX to " << Numeric::rad2deg(angle);
-
-		GLView::get<GLFrameView>().setFovX(angle);
-	}
-	catch (const std::exception& exception)
-	{
-		Log::error() << exception.what();
-		return false;
-	}
-	catch (...)
-	{
-		Log::error() << "Uncaught exception occured!";
-		return false;
-	}
-
-	return true;
-}
-
-jboolean Java_com_meta_ocean_platform_android_application_GLFrameView_setBackgroundColor(JNIEnv* env, jobject javaThis, jdouble red, jdouble green, jdouble blue)
-{
-	return GLView::get<GLFrameView>().setBackgroundColor(RGBAColor(float(red), float(green), float(blue)));
-}
-
 jboolean Java_com_meta_ocean_platform_android_application_GLFrameView_setFrameMedium(JNIEnv* env, jobject javaThis, jstring url, jstring type, jint preferredWidth, jint preferredHeight, jboolean adjustFov)
 {
 	const std::string urlValue(Platform::Android::Utilities::toAString(env, url));

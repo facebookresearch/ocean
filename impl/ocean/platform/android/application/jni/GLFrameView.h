@@ -13,28 +13,6 @@
 #include <jni.h>
 
 /**
- * Java native interface function to set or change the view's horizontal field of view.
- * @param env JNI environment
- * @param javaThis JNI object
- * @param angle New horizontal field of view in radian
- * @return True, if succeeded
- * @ingroup platformandroidapplicationjni
- */
-extern "C" jboolean Java_com_meta_ocean_platform_android_application_GLFrameView_setFovX(JNIEnv* env, jobject javaThis, jdouble angle);
-
-/**
- * Java native interface function to set or change the view's background color.
- * @param env JNI environment
- * @param javaThis JNI object
- * @param red Red color value, with range [0.0, 1.0]
- * @param green Green color value, with range [0.0, 1.0]
- * @param blue Blue color value, with range [0.0, 1.0]
- * @return True, if succeeded
- * @ingroup platformandroidapplicationjni
- */
-extern "C" jboolean Java_com_meta_ocean_platform_android_application_GLFrameView_setBackgroundColor(JNIEnv* env, jobject javaThis, jdouble red, jdouble green, jdouble blue);
-
-/**
  * Java native interface function to set or change the view's background media object.
  * @param env JNI environment
  * @param javaThis JNI object

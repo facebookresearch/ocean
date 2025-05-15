@@ -8,22 +8,12 @@
 package com.meta.ocean.platform.android.application;
 
 import android.content.Context;
-import android.graphics.PixelFormat;
-import android.opengl.GLSurfaceView;
-import android.util.Log;
-import android.view.MotionEvent;
-
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLContext;
-import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * This class implements an OpenGL surface view able to visualze frames.
  * @ingroup platformandroid
  */
-public class GLFrameView extends GLView
+public class GLFrameView extends GLRendererView
 {
 	/**
 	 * Creates a new view object.
@@ -42,22 +32,6 @@ public class GLFrameView extends GLView
 
 		registerInstance();
 	}
-
-	/**
-	 * Java native interface function to set or change the view's horizontal field of view.
-	 * @param angle New horizontal field of view in radian
-	 * @return True, if succeeded
-	 */
-	public static native boolean setFovX(double angle);
-
-	/**
-	 * Java native interface functio to set or change the view's background color
-	 * @param red Red color value, with range [0.0, 1.0]
-	 * @param green Green color value, with range [0.0, 1.0]
-	 * @param blue Blue color value, with range [0.0, 1.0]
-	 * @return True, if succeeded
-	 */
-	public static native boolean setBackgroundColor(double red, double green, double blue);
 
 	/**
 	 * Java native interface function to set or change the view's background media object.
