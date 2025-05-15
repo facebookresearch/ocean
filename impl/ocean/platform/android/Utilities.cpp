@@ -448,6 +448,36 @@ bool Utilities::manifestSdkVersions(JNIEnv* env, jobject activity, unsigned int&
 	return true;
 }
 
+bool Utilities::androidReleaseVersion(JNIEnv* env, std::string& version)
+{
+	ocean_assert(env != nullptr);
+
+	const ScopedJClass jVersionClass(*env, env->FindClass("android/os/Build$VERSION"));
+
+	if (!jVersionClass)
+	{
+		return false;
+	}
+
+	jfieldID jReleaseField = env->GetStaticFieldID(jVersionClass, "RELEASE", "Ljava/lang/String;");
+
+	if (jReleaseField == nullptr)
+	{
+		return false;
+	}
+
+	const jstring jReleaseString = jstring(env->GetStaticObjectField(jVersionClass, jReleaseField));
+
+	if (jReleaseString == nullptr)
+	{
+		return false;
+	}
+
+	version = toAString(env, jReleaseString);
+
+	return !version.empty();
+}
+
 bool Utilities::androidSdkVersion(JNIEnv* env, unsigned int& version)
 {
 	ocean_assert(env != nullptr);

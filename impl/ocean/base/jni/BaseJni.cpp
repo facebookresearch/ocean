@@ -145,12 +145,34 @@ bool BaseJni::initialize(const Messenger::MessageOutput messageOutputType, const
 
 	Messenger::get().setOutputType(messageOutputType);
 
+	std::string releaseVersion;
+	unsigned int androidSdkVersion = 0u;
+	if (Platform::Android::Utilities::androidReleaseVersion(Platform::Android::NativeInterfaceManager::get().environment(), releaseVersion) && Platform::Android::Utilities::androidSdkVersion(Platform::Android::NativeInterfaceManager::get().environment(), androidSdkVersion))
+	{
+		Log::info() << "Android version: " << releaseVersion << ", and SDK version: " << androidSdkVersion;
+	}
+	else
+	{
+		Log::info() << "Android release version or SDK version unknown";
+	}
+	Log::info() << " ";
+
 	Log::info() << "Build: " << Build::buildString();
 	Log::info() << "Time: " << DateTime::localString();
 	Log::info() << " ";
 	Log::info() << "Floating point precision: " << sizeof(Scalar);
 	Log::info() << " ";
-	Log::info() << "Battery capacity: " << Platform::Android::Battery::currentCapacity() << "%";
+
+	const float batteryCapacity = Platform::Android::Battery::currentCapacity();
+
+	if (batteryCapacity >= 0.0f)
+	{
+		Log::info() << "Battery capacity: " << String::toAString(batteryCapacity, 1u) << "%";
+	}
+	else
+	{
+		Log::info() << "Battery capacity: unknown";
+	}
 	Log::info() << " ";
 
 	return true;

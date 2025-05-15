@@ -110,7 +110,15 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 		static bool manifestSdkVersions(JNIEnv* env, jobject activity, unsigned int& minSdkVersion, unsigned int& targetSdkVersion);
 
 		/**
-		 * Return the Android SDK version of the system.
+		 * Return the Android release version of the system (android.os.Build.VERSION.RELEASE).
+		 * @param env The Java environment, must be valid
+		 * @param version The resulting Android release version, only valid if this function returns 'true'
+		 * @return True, if succeeded, otherwise false
+		 */
+		 static bool androidReleaseVersion(JNIEnv* env, std::string& version);
+
+		/**
+		 * Return the Android SDK version of the system (android.os.Build.VERSION.SDK).
 		 * @param env The Java environment, must be valid
 		 * @param version The resulting Android SDK version, only valid if this function returns 'true'
 		 * @return True, if succeeded, otherwise false
