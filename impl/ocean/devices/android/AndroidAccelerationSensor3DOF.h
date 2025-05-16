@@ -23,7 +23,13 @@ namespace Android
 {
 
 /**
- * This class implements all 3DOF acceleration sensors (including the linear acceleration sensors).
+ * This class implements all 3DOF acceleration sensors (including linear acceleration sensors).
+ *
+ * The coordinate system is as follows (assuming the phone is lying flat on a table):<br>
+ * The X-axis points to the right, the Y-axis points away from the user, and the Z-axis points towards the sky.
+ *
+ * The non-linear acceleration sensor will show a positive 9.81 m/s² reading for the Z-axis when the device is lying flat on the table.<br>
+ * When moving the device along an individual axis towards the positive direction, the acceleration value for that axis will be positive.
  * @ingroup devicesandroid
  */
 class OCEAN_DEVICES_EXPORT AndroidAccelerationSensor3DOF :
