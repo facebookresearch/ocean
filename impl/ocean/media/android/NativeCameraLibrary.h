@@ -314,55 +314,55 @@ class OCEAN_MEDIA_A_EXPORT NativeCameraLibrary : public Singleton<NativeCameraLi
 		void* libraryHandle_ = nullptr;
 
 		/// All ACameraDevice function pointers.
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraDevice_close* ACameraDevice_close_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraDevice_getId* ACameraDevice_getId_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraDevice_createCaptureRequest* ACameraDevice_createCaptureRequest_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureSessionOutputContainer_create* ACaptureSessionOutputContainer_create_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureSessionOutputContainer_free* ACaptureSessionOutputContainer_free_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureSessionOutput_create* ACaptureSessionOutput_create_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureSessionOutput_free* ACaptureSessionOutput_free_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureSessionOutputContainer_add* ACaptureSessionOutputContainer_add_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureSessionOutputContainer_remove* ACaptureSessionOutputContainer_remove_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraDevice_createCaptureSession* ACameraDevice_createCaptureSession_ = nullptr;
+		Function_ACameraDevice_close* ACameraDevice_close_ = nullptr;
+		Function_ACameraDevice_getId* ACameraDevice_getId_ = nullptr;
+		Function_ACameraDevice_createCaptureRequest* ACameraDevice_createCaptureRequest_ = nullptr;
+		Function_ACaptureSessionOutputContainer_create* ACaptureSessionOutputContainer_create_ = nullptr;
+		Function_ACaptureSessionOutputContainer_free* ACaptureSessionOutputContainer_free_ = nullptr;
+		Function_ACaptureSessionOutput_create* ACaptureSessionOutput_create_ = nullptr;
+		Function_ACaptureSessionOutput_free* ACaptureSessionOutput_free_ = nullptr;
+		Function_ACaptureSessionOutputContainer_add* ACaptureSessionOutputContainer_add_ = nullptr;
+		Function_ACaptureSessionOutputContainer_remove* ACaptureSessionOutputContainer_remove_ = nullptr;
+		Function_ACameraDevice_createCaptureSession* ACameraDevice_createCaptureSession_ = nullptr;
 
 		/// All ACameraManager function pointers.
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraManager_create* ACameraManager_create_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraManager_delete* ACameraManager_delete_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraManager_getCameraIdList* ACameraManager_getCameraIdList_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraManager_deleteCameraIdList* ACameraManager_deleteCameraIdList_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraManager_registerAvailabilityCallback* ACameraManager_registerAvailabilityCallback_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraManager_unregisterAvailabilityCallback* ACameraManager_unregisterAvailabilityCallback_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraManager_getCameraCharacteristics* ACameraManager_getCameraCharacteristics_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraManager_openCamera* ACameraManager_openCamera_ = nullptr;
+		Function_ACameraManager_create* ACameraManager_create_ = nullptr;
+		Function_ACameraManager_delete* ACameraManager_delete_ = nullptr;
+		Function_ACameraManager_getCameraIdList* ACameraManager_getCameraIdList_ = nullptr;
+		Function_ACameraManager_deleteCameraIdList* ACameraManager_deleteCameraIdList_ = nullptr;
+		Function_ACameraManager_registerAvailabilityCallback* ACameraManager_registerAvailabilityCallback_ = nullptr;
+		Function_ACameraManager_unregisterAvailabilityCallback* ACameraManager_unregisterAvailabilityCallback_ = nullptr;
+		Function_ACameraManager_getCameraCharacteristics* ACameraManager_getCameraCharacteristics_ = nullptr;
+		Function_ACameraManager_openCamera* ACameraManager_openCamera_ = nullptr;
 
 		/// All ACameraMetadata function pointers.
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraMetadata_getConstEntry* ACameraMetadata_getConstEntry_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraMetadata_getAllTags* ACameraMetadata_getAllTags_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraMetadata_copy* ACameraMetadata_copy_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraMetadata_free* ACameraMetadata_free_ = nullptr;
+		Function_ACameraMetadata_getConstEntry* ACameraMetadata_getConstEntry_ = nullptr;
+		Function_ACameraMetadata_getAllTags* ACameraMetadata_getAllTags_ = nullptr;
+		Function_ACameraMetadata_copy* ACameraMetadata_copy_ = nullptr;
+		Function_ACameraMetadata_free* ACameraMetadata_free_ = nullptr;
 
 		/// All capture request function pointers.
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraOutputTarget_create* ACameraOutputTarget_create_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraOutputTarget_free* ACameraOutputTarget_free_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureRequest_addTarget* ACaptureRequest_addTarget_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureRequest_removeTarget* ACaptureRequest_removeTarget_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureRequest_getConstEntry* ACaptureRequest_getConstEntry_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureRequest_getAllTags* ACaptureRequest_getAllTags_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureRequest_setEntry_u8* ACaptureRequest_setEntry_u8_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureRequest_setEntry_i32* ACaptureRequest_setEntry_i32_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureRequest_setEntry_float* ACaptureRequest_setEntry_float_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureRequest_setEntry_i64* ACaptureRequest_setEntry_i64_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureRequest_setEntry_double* ACaptureRequest_setEntry_double_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureRequest_setEntry_rational* ACaptureRequest_setEntry_rational_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACaptureRequest_free* ACaptureRequest_free_ = nullptr;
+		Function_ACameraOutputTarget_create* ACameraOutputTarget_create_ = nullptr;
+		Function_ACameraOutputTarget_free* ACameraOutputTarget_free_ = nullptr;
+		Function_ACaptureRequest_addTarget* ACaptureRequest_addTarget_ = nullptr;
+		Function_ACaptureRequest_removeTarget* ACaptureRequest_removeTarget_ = nullptr;
+		Function_ACaptureRequest_getConstEntry* ACaptureRequest_getConstEntry_ = nullptr;
+		Function_ACaptureRequest_getAllTags* ACaptureRequest_getAllTags_ = nullptr;
+		Function_ACaptureRequest_setEntry_u8* ACaptureRequest_setEntry_u8_ = nullptr;
+		Function_ACaptureRequest_setEntry_i32* ACaptureRequest_setEntry_i32_ = nullptr;
+		Function_ACaptureRequest_setEntry_float* ACaptureRequest_setEntry_float_ = nullptr;
+		Function_ACaptureRequest_setEntry_i64* ACaptureRequest_setEntry_i64_ = nullptr;
+		Function_ACaptureRequest_setEntry_double* ACaptureRequest_setEntry_double_ = nullptr;
+		Function_ACaptureRequest_setEntry_rational* ACaptureRequest_setEntry_rational_ = nullptr;
+		Function_ACaptureRequest_free* ACaptureRequest_free_ = nullptr;
 
 		/// All ACameraCaptureSession function pointers.
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraCaptureSession_close* ACameraCaptureSession_close_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraCaptureSession_getDevice* ACameraCaptureSession_getDevice_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraCaptureSession_capture* ACameraCaptureSession_capture_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraCaptureSession_setRepeatingRequest* ACameraCaptureSession_setRepeatingRequest_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraCaptureSession_stopRepeating* ACameraCaptureSession_stopRepeating_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_ACameraCaptureSession_abortCaptures* ACameraCaptureSession_abortCaptures_ = nullptr;
+		Function_ACameraCaptureSession_close* ACameraCaptureSession_close_ = nullptr;
+		Function_ACameraCaptureSession_getDevice* ACameraCaptureSession_getDevice_ = nullptr;
+		Function_ACameraCaptureSession_capture* ACameraCaptureSession_capture_ = nullptr;
+		Function_ACameraCaptureSession_setRepeatingRequest* ACameraCaptureSession_setRepeatingRequest_ = nullptr;
+		Function_ACameraCaptureSession_stopRepeating* ACameraCaptureSession_stopRepeating_ = nullptr;
+		Function_ACameraCaptureSession_abortCaptures* ACameraCaptureSession_abortCaptures_ = nullptr;
 
 		/// The counter for counting the usage of this library.
 		unsigned int initializationCounter_ = 0u;

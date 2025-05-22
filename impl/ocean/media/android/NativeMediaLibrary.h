@@ -351,85 +351,85 @@ class OCEAN_MEDIA_A_EXPORT NativeMediaLibrary : public Singleton<NativeMediaLibr
 #if __ANDROID_API__ >= 24
 
 		/// All AImage function pointers.
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImage_delete* AImage_delete_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImage_getWidth* AImage_getWidth_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImage_getHeight* AImage_getHeight_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImage_getFormat* AImage_getFormat_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImage_getCropRect* AImage_getCropRect_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImage_getTimestamp* AImage_getTimestamp_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImage_getNumberOfPlanes* AImage_getNumberOfPlanes_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImage_getPlanePixelStride* AImage_getPlanePixelStride_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImage_getPlaneRowStride* AImage_getPlaneRowStride_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImage_getPlaneData* AImage_getPlaneData_ = nullptr;
+		Function_AImage_delete* AImage_delete_ = nullptr;
+		Function_AImage_getWidth* AImage_getWidth_ = nullptr;
+		Function_AImage_getHeight* AImage_getHeight_ = nullptr;
+		Function_AImage_getFormat* AImage_getFormat_ = nullptr;
+		Function_AImage_getCropRect* AImage_getCropRect_ = nullptr;
+		Function_AImage_getTimestamp* AImage_getTimestamp_ = nullptr;
+		Function_AImage_getNumberOfPlanes* AImage_getNumberOfPlanes_ = nullptr;
+		Function_AImage_getPlanePixelStride* AImage_getPlanePixelStride_ = nullptr;
+		Function_AImage_getPlaneRowStride* AImage_getPlaneRowStride_ = nullptr;
+		Function_AImage_getPlaneData* AImage_getPlaneData_ = nullptr;
 
 		/// All AImageReader function pointers.
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImageReader_new* AImageReader_new_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImageReader_delete* AImageReader_delete_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImageReader_getWindow* AImageReader_getWindow_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImageReader_getWidth* AImageReader_getWidth_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImageReader_getHeight* AImageReader_getHeight_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImageReader_getFormat* AImageReader_getFormat_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImageReader_getMaxImages* AImageReader_getMaxImages_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImageReader_acquireNextImage* AImageReader_acquireNextImage_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImageReader_acquireLatestImage* AImageReader_acquireLatestImage_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AImageReader_setImageListener* AImageReader_setImageListener_ = nullptr;
+		Function_AImageReader_new* AImageReader_new_ = nullptr;
+		Function_AImageReader_delete* AImageReader_delete_ = nullptr;
+		Function_AImageReader_getWindow* AImageReader_getWindow_ = nullptr;
+		Function_AImageReader_getWidth* AImageReader_getWidth_ = nullptr;
+		Function_AImageReader_getHeight* AImageReader_getHeight_ = nullptr;
+		Function_AImageReader_getFormat* AImageReader_getFormat_ = nullptr;
+		Function_AImageReader_getMaxImages* AImageReader_getMaxImages_ = nullptr;
+		Function_AImageReader_acquireNextImage* AImageReader_acquireNextImage_ = nullptr;
+		Function_AImageReader_acquireLatestImage* AImageReader_acquireLatestImage_ = nullptr;
+		Function_AImageReader_setImageListener* AImageReader_setImageListener_ = nullptr;
 
 #endif // __ANDROID_API__ >= 24
 
 		/// All AMediaCodec function pointers.
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_createDecoderByType* AMediaCodec_createDecoderByType_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_createEncoderByType* AMediaCodec_createEncoderByType_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_configure* AMediaCodec_configure_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_delete* AMediaCodec_delete_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_dequeueInputBuffer* AMediaCodec_dequeueInputBuffer_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_dequeueOutputBuffer* AMediaCodec_dequeueOutputBuffer_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_flush* AMediaCodec_flush_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_getBufferFormat* AMediaCodec_getBufferFormat_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_getInputBuffer* AMediaCodec_getInputBuffer_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_getInputFormat* AMediaCodec_getInputFormat_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_getOutputBuffer* AMediaCodec_getOutputBuffer_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_getOutputFormat* AMediaCodec_getOutputFormat_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_queueInputBuffer* AMediaCodec_queueInputBuffer_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_releaseOutputBuffer* AMediaCodec_releaseOutputBuffer_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_start* AMediaCodec_start_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaCodec_stop* AMediaCodec_stop_ = nullptr;
+		Function_AMediaCodec_createDecoderByType* AMediaCodec_createDecoderByType_ = nullptr;
+		Function_AMediaCodec_createEncoderByType* AMediaCodec_createEncoderByType_ = nullptr;
+		Function_AMediaCodec_configure* AMediaCodec_configure_ = nullptr;
+		Function_AMediaCodec_delete* AMediaCodec_delete_ = nullptr;
+		Function_AMediaCodec_dequeueInputBuffer* AMediaCodec_dequeueInputBuffer_ = nullptr;
+		Function_AMediaCodec_dequeueOutputBuffer* AMediaCodec_dequeueOutputBuffer_ = nullptr;
+		Function_AMediaCodec_flush* AMediaCodec_flush_ = nullptr;
+		Function_AMediaCodec_getBufferFormat* AMediaCodec_getBufferFormat_ = nullptr;
+		Function_AMediaCodec_getInputBuffer* AMediaCodec_getInputBuffer_ = nullptr;
+		Function_AMediaCodec_getInputFormat* AMediaCodec_getInputFormat_ = nullptr;
+		Function_AMediaCodec_getOutputBuffer* AMediaCodec_getOutputBuffer_ = nullptr;
+		Function_AMediaCodec_getOutputFormat* AMediaCodec_getOutputFormat_ = nullptr;
+		Function_AMediaCodec_queueInputBuffer* AMediaCodec_queueInputBuffer_ = nullptr;
+		Function_AMediaCodec_releaseOutputBuffer* AMediaCodec_releaseOutputBuffer_ = nullptr;
+		Function_AMediaCodec_start* AMediaCodec_start_ = nullptr;
+		Function_AMediaCodec_stop* AMediaCodec_stop_ = nullptr;
 
 		// All AMediaFormat function pointers.
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_delete* AMediaFormat_delete_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_new* AMediaFormat_new_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_getInt32* AMediaFormat_getInt32_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_getInt64* AMediaFormat_getInt64_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_getString* AMediaFormat_getString_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_getRect* AMediaFormat_getRect_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_setBuffer* AMediaFormat_setBuffer_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_setFloat* AMediaFormat_setFloat_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_setInt32* AMediaFormat_setInt32_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_setInt64* AMediaFormat_setInt64_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_setString* AMediaFormat_setString_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaFormat_toString* AMediaFormat_toString_ = nullptr;
+		Function_AMediaFormat_delete* AMediaFormat_delete_ = nullptr;
+		Function_AMediaFormat_new* AMediaFormat_new_ = nullptr;
+		Function_AMediaFormat_getInt32* AMediaFormat_getInt32_ = nullptr;
+		Function_AMediaFormat_getInt64* AMediaFormat_getInt64_ = nullptr;
+		Function_AMediaFormat_getString* AMediaFormat_getString_ = nullptr;
+		Function_AMediaFormat_getRect* AMediaFormat_getRect_ = nullptr;
+		Function_AMediaFormat_setBuffer* AMediaFormat_setBuffer_ = nullptr;
+		Function_AMediaFormat_setFloat* AMediaFormat_setFloat_ = nullptr;
+		Function_AMediaFormat_setInt32* AMediaFormat_setInt32_ = nullptr;
+		Function_AMediaFormat_setInt64* AMediaFormat_setInt64_ = nullptr;
+		Function_AMediaFormat_setString* AMediaFormat_setString_ = nullptr;
+		Function_AMediaFormat_toString* AMediaFormat_toString_ = nullptr;
 
 		/// All AMediaMixer function pointers.
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaMuxer_addTrack* AMediaMuxer_addTrack_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaMuxer_delete* AMediaMuxer_delete_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaMuxer_new* AMediaMuxer_new_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaMuxer_setLocation* AMediaMuxer_setLocation_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaMuxer_setOrientationHint* AMediaMuxer_setOrientationHint_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaMuxer_start* AMediaMuxer_start_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaMuxer_stop* AMediaMuxer_stop_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaMuxer_writeSampleData* AMediaMuxer_writeSampleData_ = nullptr;
+		Function_AMediaMuxer_addTrack* AMediaMuxer_addTrack_ = nullptr;
+		Function_AMediaMuxer_delete* AMediaMuxer_delete_ = nullptr;
+		Function_AMediaMuxer_new* AMediaMuxer_new_ = nullptr;
+		Function_AMediaMuxer_setLocation* AMediaMuxer_setLocation_ = nullptr;
+		Function_AMediaMuxer_setOrientationHint* AMediaMuxer_setOrientationHint_ = nullptr;
+		Function_AMediaMuxer_start* AMediaMuxer_start_ = nullptr;
+		Function_AMediaMuxer_stop* AMediaMuxer_stop_ = nullptr;
+		Function_AMediaMuxer_writeSampleData* AMediaMuxer_writeSampleData_ = nullptr;
 
 		/// All AMediaExtractor function pointers.
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_advance* AMediaExtractor_advance_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_delete* AMediaExtractor_delete_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_getSampleTime* AMediaExtractor_getSampleTime_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_getTrackCount* AMediaExtractor_getTrackCount_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_getTrackFormat* AMediaExtractor_getTrackFormat_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_new* AMediaExtractor_new_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_readSampleData* AMediaExtractor_readSampleData_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_seekTo* AMediaExtractor_seekTo_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_selectTrack* AMediaExtractor_selectTrack_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_setDataSource* AMediaExtractor_setDataSource_ = nullptr;
-		__attribute__((annotate("dynamic_fn_ptr"))) Function_AMediaExtractor_setDataSourceFd* AMediaExtractor_setDataSourceFd_ = nullptr;
+		Function_AMediaExtractor_advance* AMediaExtractor_advance_ = nullptr;
+		Function_AMediaExtractor_delete* AMediaExtractor_delete_ = nullptr;
+		Function_AMediaExtractor_getSampleTime* AMediaExtractor_getSampleTime_ = nullptr;
+		Function_AMediaExtractor_getTrackCount* AMediaExtractor_getTrackCount_ = nullptr;
+		Function_AMediaExtractor_getTrackFormat* AMediaExtractor_getTrackFormat_ = nullptr;
+		Function_AMediaExtractor_new* AMediaExtractor_new_ = nullptr;
+		Function_AMediaExtractor_readSampleData* AMediaExtractor_readSampleData_ = nullptr;
+		Function_AMediaExtractor_seekTo* AMediaExtractor_seekTo_ = nullptr;
+		Function_AMediaExtractor_selectTrack* AMediaExtractor_selectTrack_ = nullptr;
+		Function_AMediaExtractor_setDataSource* AMediaExtractor_setDataSource_ = nullptr;
+		Function_AMediaExtractor_setDataSourceFd* AMediaExtractor_setDataSourceFd_ = nullptr;
 
 		/// The counter for counting the usage of this library.
 		unsigned int initializationCounter_ = 0u;
