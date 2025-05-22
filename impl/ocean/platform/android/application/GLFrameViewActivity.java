@@ -24,29 +24,36 @@ import com.meta.ocean.rendering.glescenegraph.RenderingGLESceneGraphJni;
  * This class implements the base class for all activities using a GLFrameView as content view (a view allowing to render a video background).
  * @ingroup platformandroid
  */
-public class GLFrameViewActivity extends OceanActivity
+public class GLFrameViewActivity extends GLRendererViewActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
+		Log.d("Ocean", "GLFrameViewActivity::onCreate()");
 
 		MediaAndroidJni.registerLibrary();
-		RenderingGLESceneGraphJni.registerLibrary();
 
-		glFrameView_ = new GLFrameView(getApplication(), true /*translucent*/, 24 /*depth*/, 0 /*stencil*/);
-		glFrameView_.setKeepScreenOn(true);
-		setContentView(glFrameView_);
+		super.onCreate(savedInstanceState);
 
 		requestPermission("android.permission.CAMERA");
+	}
+
+	/**
+	 * Creates the OpenGLES View of this activity.
+	 * @see GLViewActivity::createGLView().
+	 */
+	@Override
+	protected GLView createGLView()
+	{
+		Log.d("Ocean", "GLFrameViewActivity::createGLView()");
+
+		return new GLFrameView(getApplication(), true /*translucent*/, 24 /*depth*/, 0 /*stencil*/);
 	}
 
 	@Override
 	protected void onPermissionGranted(String permission)
 	{
 		super.onPermissionGranted(permission);
-
-		GLFrameView.onPermissionGranted(permission);
 
 		if (permission.equals("android.permission.CAMERA"))
 		{
@@ -105,14 +112,8 @@ public class GLFrameViewActivity extends OceanActivity
 	@Override
 	protected void onDestroy()
 	{
-		GLFrameView.release();
-
-		RenderingGLESceneGraphJni.unregisterLibrary();
-		MediaAndroidJni.unregisterLibrary();
-
 		super.onDestroy();
-	}
 
-	/// The OpenGLES FrameView of this activity.
-	protected GLFrameView glFrameView_ = null;
+		MediaAndroidJni.unregisterLibrary();
+	}
 }

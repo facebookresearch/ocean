@@ -7,13 +7,14 @@
 
 package com.meta.ocean.platform.android.application;
 
-import android.app.Activity;
-
-import android.os.Bundle;
-
-import android.util.Log;
-
 import com.meta.ocean.platform.android.*;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 /**
  * This class implements an Activity with basic OpenGL ES support.
@@ -25,13 +26,54 @@ public class GLViewActivity extends OceanActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		Log.d("Ocean", "GLViewActivity::onStart()");
+		Log.d("Ocean", "GLViewActivity::onCreate()");
 
 		super.onCreate(savedInstanceState);
 
-		glView_= new GLView(getApplication(), true /*translucent*/, 24 /*depth*/, 0 /*stencil*/);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+		glView_= createGLView();
 		glView_.setKeepScreenOn(true);
 		setContentView(glView_);
+
+		WindowManager.LayoutParams windowParams = getWindow().getAttributes();
+		windowParams.screenBrightness = 1;
+		getWindow().setAttributes(windowParams);
+
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		displayWidth_ = displayMetrics.widthPixels;
+		displayHeight_ = displayMetrics.heightPixels;
+	}
+
+	/**
+	 * Creates the OpenGLES View of this activity.
+	 * Override this function to provide a custom GLView.
+	 */
+	protected GLView createGLView()
+	{
+		Log.d("Ocean", "GLViewActivity::createGLView()");
+
+		return new GLView(getApplication(), true /*translucent*/, 24 /*depth*/, 0 /*stencil*/);
+	}
+
+	/**
+	 * Returns the width of the display when the activity was created.
+	 * @return The display's width, in pixel, with range [1, infinity)
+	 */
+	public int displayWidth()
+	{
+		return displayWidth_;
+	}
+
+	/**
+	 * Returns the height of the display when the activity was created.
+	 * @return The display's height, in pixel, with range [1, infinity)
+	 */
+	public int displayHeight()
+	{
+		return displayHeight_;
 	}
 
 	@Override
@@ -97,4 +139,10 @@ public class GLViewActivity extends OceanActivity
 
 	/// The OpenGLES View of this activity.
 	protected GLView glView_ = null;
+
+	/// The width of the display in pixels.
+	protected int displayWidth_;
+
+	/// The height of the display in pixels.
+	protected int displayHeight_;
 }
