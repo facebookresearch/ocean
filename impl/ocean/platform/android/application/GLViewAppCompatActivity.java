@@ -7,28 +7,14 @@
 
 package com.meta.ocean.platform.android.application;
 
-import android.app.Activity;
-
-import android.content.pm.PackageManager;
-
 import android.os.Bundle;
-import android.os.Handler;
 
 import android.util.Log;
 
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-
-import java.util.Set;
-import java.util.HashSet;
-
-import com.meta.ocean.media.android.MediaAndroidJni;
 import com.meta.ocean.platform.android.*;
-import com.meta.ocean.rendering.glescenegraph.RenderingGLESceneGraphJni;
 
 /**
- * This class implements the an Activity with live video background based on an AppCompatActivity.
+ * This class implements an AppCompatActivity with basic OpenGL ES support.
  * @see GLViewActivity.
  * @ingroup platformandroid
  */
@@ -41,14 +27,9 @@ public class GLViewAppCompatActivity extends OceanAppCompatActivity
 
 		super.onCreate(savedInstanceState);
 
-		MediaAndroidJni.registerLibrary();
-		RenderingGLESceneGraphJni.registerLibrary();
-
 		glView_ = new GLView(getApplication(), true /*translucent*/, 24 /*depth*/, 0 /*stencil*/);
 		glView_.setKeepScreenOn(true);
 		setContentView(glView_);
-
-		requestPermission("android.permission.CAMERA");
 	}
 
 	@Override
@@ -107,10 +88,7 @@ public class GLViewAppCompatActivity extends OceanAppCompatActivity
 	{
 		Log.d("Ocean", "GLViewAppCompatActivity::onDestroy()");
 
-		GLFrameView.release();
-
-		RenderingGLESceneGraphJni.unregisterLibrary();
-		MediaAndroidJni.unregisterLibrary();
+		GLView.release();
 
 		super.onDestroy();
 	}
