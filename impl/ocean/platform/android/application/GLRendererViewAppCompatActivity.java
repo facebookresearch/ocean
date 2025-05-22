@@ -7,8 +7,6 @@
 
 package com.meta.ocean.platform.android.application;
 
-import android.app.Activity;
-
 import android.os.Bundle;
 
 import android.util.Log;
@@ -17,34 +15,32 @@ import com.meta.ocean.platform.android.*;
 import com.meta.ocean.rendering.glescenegraph.RenderingGLESceneGraphJni;
 
 /**
- * This class implements an Activity with with GLRenderView to render 3D content.
- * @see GLViewAppCompatActivity.
+ * This class implements an AppCompatActivity with with GLRenderView to render 3D content..
+ * @see GLViewActivity.
  * @ingroup platformandroid
  */
-public class GLRendererViewActivity extends OceanActivity
+public class GLRendererViewAppCompatActivity extends GLViewAppCompatActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		Log.d("Ocean", "GLRendererViewActivity::onStart()");
-
-		super.onCreate(savedInstanceState);
+		Log.d("Ocean", "GLRendererViewAppCompatActivity::onCreate()");
 
 		RenderingGLESceneGraphJni.registerLibrary();
 
-		glRendererView_ = new GLRendererView(getApplication(), true /*translucent*/, 24 /*depth*/, 0 /*stencil*/);
-		glRendererView_.setKeepScreenOn(true);
-		setContentView(glRendererView_);
+		super.onCreate(savedInstanceState);
 	}
 
+	/**
+	 * Creates the OpenGLES View of this activity.
+	 * @see GLViewAppCompatActivity::createGLView().
+	 */
 	@Override
-	protected void onPermissionGranted(String permission)
+	protected GLView createGLView()
 	{
-		Log.d("Ocean", "GLRendererViewActivity::onPermissionGranted(): " + permission);
+		Log.d("Ocean", "GLRendererViewAppCompatActivity::createGLView()");
 
-		super.onPermissionGranted(permission);
-
-		GLRendererView.onPermissionGranted(permission);
+		return new GLRendererView(getApplication(), true /*translucent*/, 24 /*depth*/, 0 /*stencil*/);
 	}
 
 	/**
@@ -54,7 +50,7 @@ public class GLRendererViewActivity extends OceanActivity
 	@Override
 	public void onResume()
 	{
-		Log.d("Ocean", "GLRendererViewActivity::onResume()");
+		Log.d("Ocean", "GLRendererViewAppCompatActivity::onResume()");
 
 		super.onResume();
 	}
@@ -66,7 +62,7 @@ public class GLRendererViewActivity extends OceanActivity
 	@Override
 	public void onPause()
 	{
-		Log.d("Ocean", "GLRendererViewActivity::onPause()");
+		Log.d("Ocean", "GLRendererViewAppCompatActivity::onPause()");
 
 		super.onPause();
 	}
@@ -78,7 +74,7 @@ public class GLRendererViewActivity extends OceanActivity
 	@Override
 	public void onStop()
 	{
-		Log.d("Ocean", "GLRendererViewActivity::onStop()");
+		Log.d("Ocean", "GLRendererViewAppCompatActivity::onStop()");
 
 		super.onStop();
 	}
@@ -91,15 +87,10 @@ public class GLRendererViewActivity extends OceanActivity
 	@Override
 	protected void onDestroy()
 	{
-		Log.d("Ocean", "GLRendererViewActivity::onDestroy()");
-
-		GLRendererView.release();
-
-		RenderingGLESceneGraphJni.unregisterLibrary();
+		Log.d("Ocean", "GLRendererViewAppCompatActivity::onDestroy()");
 
 		super.onDestroy();
-	}
 
-	/// The OpenGLES Renderer View of this activity.
-	protected GLRendererView glRendererView_ = null;
+		RenderingGLESceneGraphJni.unregisterLibrary();
+	}
 }
