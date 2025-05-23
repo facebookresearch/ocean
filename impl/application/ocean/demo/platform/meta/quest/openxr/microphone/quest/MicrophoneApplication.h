@@ -26,7 +26,7 @@ class MicrophoneApplication : public Ocean::Platform::Meta::Quest::OpenXR::Appli
 {
 	protected:
 
-		/// The size of the frequency historty which will be visualized, with range [1, infinity)
+		/// The size of the frequency history which will be visualized, with range [1, infinity)
 		constexpr static size_t historySize_ = 50;
 
 		/**
