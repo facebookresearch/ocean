@@ -27,3 +27,9 @@ res/**/win/**/*.res
 # XCode temporary files
 ProjectSettings.plist
 ProjectSettings.plist.lock
+
+# default build directories
+ocean_build
+ocean_build_thirdparty
+ocean_install
+ocean_install_thirdparty
