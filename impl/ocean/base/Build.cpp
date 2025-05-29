@@ -164,7 +164,7 @@ std::string Build::compilerVersion()
 	#elif OCEAN_MSC_VERSION >= 1920 && OCEAN_MSC_VERSION < 1930
 		// Visual Studio 2019
 		return std::string("vc142");
-	#elif OCEAN_MSC_VERSION >= 1930 && OCEAN_MSC_VERSION < 1942
+	#elif OCEAN_MSC_VERSION >= 1930 && OCEAN_MSC_VERSION < 1960
 		return std::string("vc143");
 	#else
 		#error Missing implementation
