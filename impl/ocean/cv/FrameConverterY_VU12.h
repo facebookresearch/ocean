@@ -155,6 +155,25 @@ class OCEAN_CV_EXPORT FrameConverterY_VU12 : public FrameConverter
 		 */
 		static inline void convertY_VU12ToYVU24(const uint8_t* ySource, const uint8_t* vuSource, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int vuSourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
+		/**
+		 * Converts a Y_VU12 frame to a Y_U_V12 frame into a second image buffer.
+		 * @param ySource The y source frame buffer, with (width + yPaddingElements) * height elements, must be valid
+		 * @param vuSource The vu source frame buffer, with (2 * width/2 + vuPaddingElements) * height/2 elements, must be valid
+		 * @param yTarget The target frame buffer, with (width + yTargetPaddingElements) * height elements, must be valid
+		 * @param uTarget The target frame buffer, with (width/2 + uTargetPaddingElements) * height/2 elements, must be valid
+		 * @param vTarget The target frame buffer, with (width/2 + vTargetPaddingElements) * height/2 elements, must be valid
+		 * @param width The width of the frame in pixel, with range [2, infinity), must be a multiple of 2
+		 * @param height The height of the frame in pixel, with range [2, infinity), must be a multiple of 2
+		 * @param flag Determining the type of conversion
+		 * @param ySourcePaddingElements The number of padding elements at the end of each y-source row, in (uint8_t) elements, with range [0, infinity)
+		 * @param vuSourcePaddingElements The number of padding elements at the end of each vu-source row, in (uint8_t) elements, with range [0, infinity)
+		 * @param yTargetPaddingElements The number of padding elements at the end of each y-target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param uTargetPaddingElements The number of padding elements at the end of each u-target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param vTargetPaddingElements The number of padding elements at the end of each v-target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computational to several CPU cores
+		 */
+		static inline void convertY_VU12ToY_U_V12(const uint8_t* ySource, const uint8_t* vuSource, uint8_t* yTarget, uint8_t* uTarget, uint8_t* vTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int vuSourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uTargetPaddingElements, const unsigned int vTargetPaddingElements, Worker* worker = nullptr);
+
 	protected:
 
 		/**
@@ -252,7 +271,7 @@ inline void FrameConverterY_VU12::convertY_VU12LimitedRangeToBGR24FullRange(cons
 		vuSource
 	};
 
-	FrameConverter::convertArbitraryPixelFormat(sources, (void**)&target, width, height, flag, 2u, FrameConverter::convertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel_Precision6Bit, options, worker);
+	FrameConverter::convertArbitraryPixelFormat(sources, (void**)(&target), width, height, flag, 2u, FrameConverter::convertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel_Precision6Bit, options, worker);
 
 #else
 
@@ -280,7 +299,7 @@ inline void FrameConverterY_VU12::convertY_VU12LimitedRangeToBGR24FullRange(cons
 		vuSource
 	};
 
-	FrameConverter::convertArbitraryPixelFormat(sources, (void**)&target, width, height, flag, 1u, FrameConverter::convertOneRow1PlaneAnd2ChannelsZippedDownsampled2x2ToZipped3Channels8BitPerChannelPrecision10Bit, options, worker);
+	FrameConverter::convertArbitraryPixelFormat(sources, (void**)(&target), width, height, flag, 1u, FrameConverter::convertOneRow1PlaneAnd2ChannelsZippedDownsampled2x2ToZipped3Channels8BitPerChannelPrecision10Bit, options, worker);
 
 #endif
 
@@ -314,9 +333,9 @@ inline void FrameConverterY_VU12::convertY_VU12FullRangeToBGRA32FullRangeAndroid
 	};
 
 #if 1
-	FrameConverter::convertArbitraryPixelFormat(sources, (void**)&target, width, height, flag, 1u, FrameConverterY_VU12::convertOneRowY_VU12FullRangeToBGRA32FullRangeAndroidPrecision6Bit, options, worker);
+	FrameConverter::convertArbitraryPixelFormat(sources, (void**)(&target), width, height, flag, 1u, FrameConverterY_VU12::convertOneRowY_VU12FullRangeToBGRA32FullRangeAndroidPrecision6Bit, options, worker);
 #else
-	FrameConverter::convertArbitraryPixelFormat(sources, (void**)&target, width, height, flag, 2u, FrameConverterY_VU12::convertTwoRowsY_VU12FullRangeToBGRA32FullRangeAndroidPrecision6Bit, options, worker);
+	FrameConverter::convertArbitraryPixelFormat(sources, (void**)(&target), width, height, flag, 2u, FrameConverterY_VU12::convertTwoRowsY_VU12FullRangeToBGRA32FullRangeAndroidPrecision6Bit, options, worker);
 #endif
 
 }
@@ -367,7 +386,7 @@ inline void FrameConverterY_VU12::convertY_VU12LimitedRangeToRGB24FullRange(cons
 		vuSource
 	};
 
-	FrameConverter::convertArbitraryPixelFormat(sources, (void**)&target, width, height, flag, 2u, FrameConverter::convertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel_Precision6Bit, options, worker);
+	FrameConverter::convertArbitraryPixelFormat(sources, (void**)(&target), width, height, flag, 2u, FrameConverter::convertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel_Precision6Bit, options, worker);
 
 #else
 
@@ -395,7 +414,7 @@ inline void FrameConverterY_VU12::convertY_VU12LimitedRangeToRGB24FullRange(cons
 		vuSource
 	};
 
-	FrameConverter::convertArbitraryPixelFormat(sources, (void**)&target, width, height, flag, 1u, FrameConverter::convertOneRow1PlaneAnd2ChannelsZippedDownsampled2x2ToZipped3Channels8BitPerChannelPrecision10Bit, options, worker);
+	FrameConverter::convertArbitraryPixelFormat(sources, (void**)(&target), width, height, flag, 1u, FrameConverter::convertOneRow1PlaneAnd2ChannelsZippedDownsampled2x2ToZipped3Channels8BitPerChannelPrecision10Bit, options, worker);
 
 #endif
 
@@ -443,7 +462,7 @@ inline void FrameConverterY_VU12::convertY_VU12FullRangeToRGB24FullRangePrecisio
 		vuSource
 	};
 
-	FrameConverter::convertArbitraryPixelFormat(sources, (void**)&target, width, height, flag, 2u, FrameConverter::convertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel_Precision6Bit, options, worker);
+	FrameConverter::convertArbitraryPixelFormat(sources, (void**)(&target), width, height, flag, 2u, FrameConverter::convertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel_Precision6Bit, options, worker);
 }
 
 inline void FrameConverterY_VU12::convertY_VU12ToYUV24(const uint8_t* ySource, const uint8_t* vuSource, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int vuSourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
@@ -466,7 +485,7 @@ inline void FrameConverterY_VU12::convertY_VU12ToYUV24(const uint8_t* ySource, c
 		vuSource
 	};
 
-	FrameConverter::convertArbitraryPixelFormat(sources, (void**)&target, width, height, flag, 2u, FrameConverter::mapTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel<0u, 2u, 1u>, options, worker);
+	FrameConverter::convertArbitraryPixelFormat(sources, (void**)(&target), width, height, flag, 2u, FrameConverter::mapTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel<0u, 2u, 1u>, options, worker);
 }
 
 inline void FrameConverterY_VU12::convertY_VU12ToYVU24(const uint8_t* ySource, const uint8_t* vuSource, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int vuSourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
@@ -489,7 +508,35 @@ inline void FrameConverterY_VU12::convertY_VU12ToYVU24(const uint8_t* ySource, c
 		vuSource
 	};
 
-	FrameConverter::convertArbitraryPixelFormat(sources, (void**)&target, width, height, flag, 2u, FrameConverter::mapTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel<0u, 1u, 2u>, options, worker);
+	FrameConverter::convertArbitraryPixelFormat(sources, (void**)(&target), width, height, flag, 2u, FrameConverter::mapTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel<0u, 1u, 2u>, options, worker);
+}
+
+inline void FrameConverterY_VU12::convertY_VU12ToY_U_V12(const uint8_t* ySource, const uint8_t* vuSource, uint8_t* yTarget, uint8_t* uTarget, uint8_t* vTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int vuSourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uTargetPaddingElements, const unsigned int vTargetPaddingElements, Worker* worker)
+{
+	ocean_assert(ySource != nullptr && vuSource != nullptr && yTarget != nullptr && yTarget != nullptr && vTarget != nullptr);
+
+	ocean_assert(width >= 2u && width % 2u == 0u);
+	ocean_assert(height >= 2u && height % 2u == 0u);
+
+	if (width < 2u || height < 2u || width % 2u != 0u || height % 2u != 0u)
+	{
+		return;
+	}
+
+	// first, we handle the y-plane
+	FrameChannels::transformGeneric<uint8_t, 1u>(ySource, yTarget, width, height, flag, ySourcePaddingElements, yTargetPaddingElements, worker);
+
+	// now we handle the uv-plane
+
+	const unsigned int options[3] = {vuSourcePaddingElements, vTargetPaddingElements, uTargetPaddingElements};
+
+	void* targets[2] =
+	{
+		vTarget,
+		uTarget
+	};
+
+	FrameConverter::convertArbitraryPixelFormat((const void**)(&vuSource), targets, width / 2u, height / 2u, flag, 1u, FrameConverter::mapOneRow_1Plane2Channels_To_2Planes1Channel_8BitPerChannel, options, worker);
 }
 
 }
