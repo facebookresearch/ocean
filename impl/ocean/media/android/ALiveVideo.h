@@ -690,6 +690,9 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 
 		/// Stop timestamp.
 		Timestamp stopTimestamp_;
+
+		/// True, if the capture session is currently closing (a release has been invoked but not yet finished).
+		std::atomic<bool> sessionCurrentlyClosing_ = false;
 };
 
 inline ALiveVideo::Device::Device(const std::string& id, const std::string& name, const acamera_metadata_enum_android_lens_facing_t lensFacing, MetadataMap&& metadataMap) :

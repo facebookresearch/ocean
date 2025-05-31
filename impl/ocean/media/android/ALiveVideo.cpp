@@ -92,6 +92,24 @@ ALiveVideo::ALiveVideo(const std::string& url, const std::string& id) :
 ALiveVideo::~ALiveVideo()
 {
 	release();
+
+	if (sessionCurrentlyClosing_)
+	{
+		// the session is currently closing, so we wait until the session is closed
+
+		const Timestamp startTimestamp(true);
+
+		while (sessionCurrentlyClosing_)
+		{
+			if (startTimestamp.hasTimePassed(5.0))
+			{
+				Log::info() << "ALiveVideo::~ALiveVideo(): Waiting for session to be closed timed out";
+				break;
+			}
+
+			Thread::sleep(1u);
+		}
+	}
 }
 
 bool ALiveVideo::isStarted() const
@@ -859,6 +877,8 @@ void ALiveVideo::releaseCaptureSession()
 
 	if (captureSession_ != nullptr)
 	{
+		sessionCurrentlyClosing_ = true;
+
 		NativeCameraLibrary::get().ACameraCaptureSession_close(captureSession_);
 		captureSession_ = nullptr;
 	}
@@ -936,6 +956,8 @@ void ALiveVideo::onSessionClosed(ACameraCaptureSession* session)
 
 	startTimestamp_.toInvalid();
 	stopTimestamp_.toNow();
+
+	sessionCurrentlyClosing_ = false;
 }
 
 void ALiveVideo::onCaptureStarted(ACameraCaptureSession* /*session*/, const ACaptureRequest* /*request*/, int64_t /*timestamp*/)
