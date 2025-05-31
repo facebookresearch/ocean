@@ -18,6 +18,57 @@ namespace Platform
 namespace Android
 {
 
+Frame Bitmap::toFrame(JNIEnv* env, jobject bitmap, const bool copyData)
+{
+	ocean_assert(env != nullptr && bitmap != nullptr);
+	if (env == nullptr || bitmap == nullptr)
+	{
+		return Frame();
+	}
+
+	AndroidBitmapInfo bitmapInfo;
+	if (AndroidBitmap_getInfo(env, bitmap, &bitmapInfo) < 0)
+	{
+		return Frame();
+	}
+
+	ocean_assert(bitmapInfo.format == ANDROID_BITMAP_FORMAT_RGBA_8888);
+	if (bitmapInfo.format != ANDROID_BITMAP_FORMAT_RGBA_8888)
+	{
+		return Frame();
+	}
+
+	const unsigned int width = bitmapInfo.width;
+	const unsigned int height = bitmapInfo.height;
+	const unsigned int strideBytes = bitmapInfo.stride;
+
+	unsigned int paddingElements = 0u;
+	if (!Frame::strideBytes2paddingElements(FrameType::FORMAT_RGBA32, width, strideBytes, paddingElements))
+	{
+		return Frame();
+	}
+
+	void* pixelData = nullptr;
+
+	if (AndroidBitmap_lockPixels(env, bitmap, &pixelData) < 0)
+	{
+		ocean_assert(false && "Could not lock the pixel data!");
+		return Frame();
+	}
+
+	const Frame::CopyMode copyMode = copyData ? Frame::CM_COPY_REMOVE_PADDING_LAYOUT : Frame::CM_USE_KEEP_LAYOUT;
+
+	Frame frame(FrameType(width, height, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT), pixelData, copyMode, paddingElements);
+
+	if (AndroidBitmap_unlockPixels(env, bitmap) < 0)
+	{
+		ocean_assert(false && "Could not unlock the pixel data!");
+		return Frame();
+	}
+
+	return frame;
+}
+
 FrameType::PixelFormat Bitmap::translateFormat(const AndroidBitmapFormat format)
 {
 	switch (format)

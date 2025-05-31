@@ -44,6 +44,16 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Bitmap
 		 * @return The corresponding Android bitmap format, ANDROID_BITMAP_FORMAT_NONE if unknown
 		 */
 		static AndroidBitmapFormat translateFormat(const FrameType::PixelFormat pixelFormat);
+
+		/**
+		 * Converts an Android bitmap to an Ocean frame.
+		 * The Android bitmap must have format ANDROID_BITMAP_FORMAT_RGBA_8888.
+		 * @param env The JNI environment, must be valid
+		 * @param bitmap The Android bitmap to convert, must be valid
+		 * @param copyData True, to copy the bitmap data; False, to use the bitmap data directly
+		 * @return The resulting Ocean frame, an invalid frame if the conversion failed
+		 */
+		static Frame toFrame(JNIEnv* env, jobject bitmap, const bool copyData = true);
 };
 
 }
