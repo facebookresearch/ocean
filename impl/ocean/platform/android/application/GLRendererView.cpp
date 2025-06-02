@@ -228,6 +228,13 @@ bool GLRendererView::render()
 	return false;
 }
 
+void GLRendererView::setViewInteractionEnabled(const bool enabled)
+{
+	const ScopedLock scopedLock(lock_);
+
+	viewInteractionEnabled_ = enabled;
+}
+
 void GLRendererView::onTouchDown(const float x, const float y)
 {
 	const ScopedLock scopedLock(lock_);
@@ -242,34 +249,37 @@ void GLRendererView::onTouchMove(const float x, const float y)
 
 	if (previousTouchX_ != -1.0f && previousTouchY_ != -1.0f && framebuffer_)
 	{
-		try
+		if (viewInteractionEnabled_)
 		{
-			const Rendering::ViewRef view(framebuffer_->view());
+			try
+			{
+				const Rendering::ViewRef view(framebuffer_->view());
 
-			Scalar xDifference = Scalar(previousTouchX_ - x);
-			Scalar yDifference = Scalar(previousTouchY_ - y);
+				Scalar xDifference = Scalar(previousTouchX_ - x);
+				Scalar yDifference = Scalar(previousTouchY_ - y);
 
-			Quaternion orientation = view->transformation().rotation();
+				Quaternion orientation = view->transformation().rotation();
 
-			Vector3 xAxis(1, 0, 0);
-			Vector3 yAxis(0, 1, 0);
-			Scalar factor = 0.5;
+				Vector3 xAxis(1, 0, 0);
+				Vector3 yAxis(0, 1, 0);
+				Scalar factor = 0.5;
 
-			Quaternion xRotation(orientation * xAxis, Numeric::deg2rad(Scalar(yDifference)) * factor);
-			Quaternion yRotation(orientation * yAxis, Numeric::deg2rad(Scalar(xDifference)) * factor);
+				Quaternion xRotation(orientation * xAxis, Numeric::deg2rad(Scalar(yDifference)) * factor);
+				Quaternion yRotation(orientation * yAxis, Numeric::deg2rad(Scalar(xDifference)) * factor);
 
-			Quaternion rotation(xRotation * yRotation);
-			rotation.normalize();
+				Quaternion rotation(xRotation * yRotation);
+				rotation.normalize();
 
-			view->setTransformation(HomogenousMatrix4(rotation) * view->transformation());
-
-			previousTouchX_ = x;
-			previousTouchY_ = y;
+				view->setTransformation(HomogenousMatrix4(rotation) * view->transformation());
+			}
+			catch (const std::exception& exception)
+			{
+				Log::error() << exception.what();
+			}
 		}
-		catch (const std::exception& exception)
-		{
-			Log::error() << exception.what();
-		}
+
+		previousTouchX_ = x;
+		previousTouchY_ = y;
 	}
 }
 

@@ -106,9 +106,6 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLFrameView : public GLRendererV
 		/// Rendering undistorted background object.
 		Rendering::UndistortedBackgroundRef background_;
 
-		/// State determining that the view's field of view has to be adjusted to the background's field of view.
-		bool adjustFovXToBackground_ = false;
-
 		/// The frame medium of the background which is stored as long as the view hasn't been initialized.
 		Media::FrameMediumRef intermediateBackgroundFrameMedium_;
 

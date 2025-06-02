@@ -78,6 +78,12 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLRendererView : public GLView
 		bool render() override;
 
 		/**
+		 * Sets whether the user can change the view's position and rotation by touch events.
+		 * @param enabled True, to allow the interaction; False, to disable the interaction
+		 */
+		virtual void setViewInteractionEnabled(const bool enabled);
+
+		/**
 		 * Touch down event function.
 		 * @param x Horizontal touch position
 		 * @param y Vertical touch position
@@ -143,7 +149,10 @@ class OCEAN_PLATFORM_ANDROID_APPLICATION_EXPORT GLRendererView : public GLView
 		unsigned int renderingIterations_ = 0u;
 
 		/// State determining that the view's field of view has to be adjusted to the background's field of view.
-		bool adjustFovXToBackground_;
+		bool adjustFovXToBackground_ = false;
+
+		/// True, to allow the user to change the view's position and rotation by touch events; False, to disable the user interaction.
+		bool viewInteractionEnabled_ = true;
 
 		/// View lock object.
 		mutable Lock lock_;
