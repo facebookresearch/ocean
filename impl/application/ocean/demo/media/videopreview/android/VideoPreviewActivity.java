@@ -37,7 +37,10 @@ public class VideoPreviewActivity extends Activity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
+		Log.d("Ocean", "VideoPreviewActivity::onCreate()");
+
 		super.onCreate(savedInstanceState);
+
 		android.os.Process.setThreadPriority(-20);
 
 		BaseJni.initialize("STANDARD, QUEUED");
@@ -90,9 +93,9 @@ public class VideoPreviewActivity extends Activity
 	@Override
 	public void onResume()
 	{
-		super.onResume();
+		Log.d("Ocean", "VideoPreviewActivity::onResume()");
 
-		Log.i(getClass().getSimpleName(), "onResume");
+		super.onResume();
 	}
 
 	/**
@@ -102,9 +105,9 @@ public class VideoPreviewActivity extends Activity
 	@Override
 	public void onPause()
 	{
-		super.onPause();
+		Log.d("Ocean", "VideoPreviewActivity::onPause()");
 
-		Log.i(getClass().getSimpleName(), "onPause");
+		super.onPause();
 	}
 
 	/**
@@ -114,11 +117,11 @@ public class VideoPreviewActivity extends Activity
 	@Override
 	public void onStop()
 	{
+		Log.d("Ocean", "VideoPreviewActivity::onStop()");
+
 		GLFrameView.release();
 
 		super.onStop();
-
-		Log.i(getClass().getSimpleName(), "onStop");
 	}
 
 	/**
@@ -127,8 +130,8 @@ public class VideoPreviewActivity extends Activity
 	@Override
 	protected void onDestroy()
 	{
-		super.onDestroy();
+		Log.d("Ocean", "VideoPreviewActivity::onDestroy()");
 
-		Log.i(getClass().getSimpleName(), "onDestroy");
+		super.onDestroy();
 	}
 }

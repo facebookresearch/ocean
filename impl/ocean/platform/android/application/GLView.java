@@ -126,7 +126,7 @@ public class GLView extends GLSurfaceView
 
 		public EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig eglConfig)
 		{
-			Log.i(getClass().getSimpleName(), "creating OpenGL ES 3.0 context");
+			Log.i("Ocean", "GLView::createContext(): Creating OpenGL ES 3.0 context");
 
 			checkEglError("Before eglCreateContext", egl);
 
@@ -135,7 +135,7 @@ public class GLView extends GLSurfaceView
 
 			if (context == null)
 			{
-				Log.w(getClass().getSimpleName(), "FAILED to create EGL context");
+				Log.e("Ocean", "GLView::createContext(): Failed to create EGL context");
 			}
 
 			checkEglError("After eglCreateContext", egl);
@@ -144,7 +144,8 @@ public class GLView extends GLSurfaceView
 
 		public void destroyContext(EGL10 egl, EGLDisplay display, EGLContext context)
 		{
-			Log.i(getClass().getSimpleName(), "destroyed OpenGL ES 3.0 context");
+			Log.i("Ocean", "GLView::destroyContext(): Destroying OpenGL ES 3.0 context");
+
 			egl.eglDestroyContext(display, context);
 		}
 	}
@@ -154,7 +155,7 @@ public class GLView extends GLSurfaceView
 		int error;
 		while ((error = egl.eglGetError()) != EGL10.EGL_SUCCESS)
 		{
-			Log.e("GLFrameView", String.format("%s: EGL error: 0x%x", prompt, error));
+			Log.e("Ocean", "GLView::checkEglError(), " + String.format("%s: EGL error: 0x%x", prompt, error));
 		}
 	}
 
