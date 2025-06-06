@@ -1430,6 +1430,21 @@ bool Utilities::triggerVibration(JNIEnv* env, jobject activity, unsigned int int
 		return false;
 	}
 
+	const jmethodID jHasVibratorMethodId = env->GetMethodID(jVibratorClass, "hasVibrator", "()Z");
+
+	if (jHasVibratorMethodId == nullptr)
+	{
+		return false;
+	}
+
+	const bool hasVibrator = env->CallBooleanMethod(jVibratorServiceObject, jHasVibratorMethodId);
+
+	if (!hasVibrator)
+	{
+		Log::debug() << "Vibrator service does not have a vibrator";
+		return false;
+	}
+
 	unsigned int version = 0u;
 	if (!androidSdkVersion(env, version))
 	{
