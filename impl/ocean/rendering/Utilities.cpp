@@ -227,6 +227,8 @@ TransformRef Utilities::createBox(const EngineRef& engine, const Vector3& dimens
 
 		const Rendering::AttributeSetRef internalAttributeSet(engine->factory().createAttributeSet());
 
+		bool needsBlending = frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8 && frame.hasTransparentPixel<uint8_t>(0xFFu);
+
 		const Rendering::FrameTexture2DRef internalTexture = engine->factory().createFrameTexture2D();
 		internalTexture->setTexture(std::move(frame));
 
@@ -245,8 +247,13 @@ TransformRef Utilities::createBox(const EngineRef& engine, const Vector3& dimens
 
 			if (internalMaterial->transparency() != 0)
 			{
-				internalAttributeSet->addAttribute(engine->factory().createBlendAttribute());
+				needsBlending = true;
 			}
+		}
+
+		if (needsBlending)
+		{
+			internalAttributeSet->addAttribute(engine->factory().createBlendAttribute());
 		}
 
 		const Rendering::GeometryRef internalGeometry(engine->factory().createGeometry());
