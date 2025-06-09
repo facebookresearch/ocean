@@ -80,16 +80,21 @@ bool GLRendererView::release()
 
 	const ScopedLock scopedLock(lock_);
 
-	const std::string engineName(engine_->engineName());
-	const Timestamp timestampNow(true);
+	ocean_assert((engine_ && framebuffer_) || (!engine_ && !framebuffer_));
 
-	Log::info() << "Render iterations " << renderingIterations_;
-	Log::info() << "Real performance: " << String::toAString(1000.0 * double(timestampNow - renderingStartTimestamp_) / max(1.0, double(renderingIterations_)), 8) << "ms / frame";
+	if (engine_)
+	{
+		const std::string engineName(engine_->engineName());
+		const Timestamp timestampNow(true);
 
-	framebuffer_.release();
-	engine_.release();
+		Log::info() << "Render iterations " << renderingIterations_;
+		Log::info() << "Real performance: " << String::toAString(1000.0 * double(timestampNow - renderingStartTimestamp_) / max(1.0, double(renderingIterations_)), 8) << "ms / frame";
 
-	ocean_assert(Rendering::ObjectRefManager::get().hasEngineObject(engineName, true) == false);
+		framebuffer_.release();
+		engine_.release();
+
+		ocean_assert(Rendering::ObjectRefManager::get().hasEngineObject(engineName, true) == false);
+	}
 
 	return GLView::release();
 }
