@@ -883,6 +883,161 @@ TransformRef Utilities::createTexturedPlane(const EngineRef& engine, const Scala
 	return createBox(engine, Vector3(width, height, Scalar(0.0001)), textureMedium, texture, createMipmaps, attributeSet, geometry);
 }
 
+TransformRef Utilities::createPanel(const EngineRef& engine, const Scalar xDimension, Frame&& frame, const Scalar yDimension, const bool bothSides, FrameTexture2DRef* texture, const bool createMipmaps, AttributeSetRef* attributeSet, GeometryRef* geometry, const RGBAColor* color)
+{
+	if (engine.isNull() || xDimension <= 0)
+	{
+		return TransformRef();
+	}
+
+	if (!frame.isValid() || !frame.isOwner())
+	{
+		ocean_assert(false && "Frame must be valid and must own the memory");
+		return TransformRef();
+	}
+
+	try
+	{
+		const Scalar xDimension_2 = xDimension * Scalar(0.5);
+
+		const Scalar yDimensionToUse = yDimension > 0 ? yDimension : Numeric::ratio(Scalar(frame.height()), Scalar(frame.width())) * xDimension;
+
+		const Scalar yDimension_2 = yDimensionToUse * Scalar(0.5);
+
+		Vectors3 vertices =
+		{
+			Vector3(-xDimension_2, yDimension_2, 0),
+			Vector3(-xDimension_2, -yDimension_2, 0),
+			Vector3(xDimension_2, -yDimension_2, 0),
+			Vector3(xDimension_2, yDimension_2, 0)
+		};
+
+		Vectors2 textureCoordinates =
+		{
+			Vector2(0, 1),
+			Vector2(0, 0),
+			Vector2(1, 0),
+			Vector2(1, 1)
+		};
+
+		Vectors3 normals =
+		{
+			Vector3(0, 0, 1),
+			Vector3(0, 0, 1),
+			Vector3(0, 0, 1),
+			Vector3(0, 0, 1)
+		};
+
+		if (bothSides)
+		{
+			vertices.emplace_back(xDimension_2, yDimension_2, 0);
+			vertices.emplace_back(xDimension_2, -yDimension_2, 0);
+			vertices.emplace_back(-xDimension_2, -yDimension_2, 0);
+			vertices.emplace_back(-xDimension_2, yDimension_2, 0);
+
+			textureCoordinates.emplace_back(0, 1);
+			textureCoordinates.emplace_back(0, 0);
+			textureCoordinates.emplace_back(1, 0);
+			textureCoordinates.emplace_back(1, 1);
+
+			normals.emplace_back(0, 0, -1);
+			normals.emplace_back(0, 0, -1);
+			normals.emplace_back(0, 0, -1);
+			normals.emplace_back(0, 0, -1);
+		}
+
+		const VertexSetRef internalVertexSet = engine->factory().createVertexSet();
+		internalVertexSet->setVertices(vertices);
+		internalVertexSet->setTextureCoordinates(textureCoordinates, 0);
+		internalVertexSet->setNormals(normals);
+
+		TriangleFaces triangleFaces =
+		{
+			TriangleFace(0u, 1u, 2u),
+			TriangleFace(0u, 2u, 3u),
+		};
+
+		if (bothSides)
+		{
+			triangleFaces.emplace_back(4u, 5u, 6u);
+			triangleFaces.emplace_back(4u, 6u, 7u);
+		}
+
+		const TrianglesRef triangles = engine->factory().createTriangles();
+		triangles->setVertexSet(internalVertexSet);
+		triangles->setFaces(triangleFaces);
+
+		const Rendering::AttributeSetRef internalAttributeSet(engine->factory().createAttributeSet());
+
+		bool needsBlending = frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8 && frame.hasTransparentPixel<uint8_t>(0xFFu);
+
+		const Rendering::FrameTexture2DRef internalTexture = engine->factory().createFrameTexture2D();
+		internalTexture->setTexture(std::move(frame));
+
+		const Rendering::TexturesRef textures = engine->factory().createTextures();
+		textures->addTexture(internalTexture);
+
+		internalAttributeSet->addAttribute(textures);
+
+		if (color != nullptr)
+		{
+			const MaterialRef internalMaterial(engine->factory().createMaterial());
+			internalMaterial->setDiffuseColor(*color);
+			internalMaterial->setTransparency(1.0f - color->alpha());
+
+			internalAttributeSet->addAttribute(internalMaterial);
+
+			if (internalMaterial->transparency() != 0)
+			{
+				needsBlending = true;
+			}
+		}
+
+		if (needsBlending)
+		{
+			internalAttributeSet->addAttribute(engine->factory().createBlendAttribute());
+		}
+
+		const Rendering::GeometryRef internalGeometry(engine->factory().createGeometry());
+		internalGeometry->addRenderable(triangles, internalAttributeSet);
+
+		Rendering::TransformRef transform = engine->factory().createTransform();
+		transform->addChild(internalGeometry);
+
+		internalTexture->setMagnificationFilterMode(Texture::MAG_MODE_LINEAR);
+
+		if (createMipmaps)
+		{
+			internalTexture->setMinificationFilterMode(Texture::MIN_MODE_LINEAR_MIPMAP_LINEAR);
+		}
+
+		internalTexture->setUseMipmaps(createMipmaps);
+
+		if (texture)
+		{
+			*texture = internalTexture;
+		}
+
+		if (attributeSet)
+		{
+			*attributeSet = internalAttributeSet;
+		}
+
+		if (geometry)
+		{
+			*geometry = internalGeometry;
+		}
+
+		return transform;
+	}
+	catch (...)
+	{
+		// nothing to do here
+	}
+
+	return TransformRef();
+}
+
 TransformRef Utilities::createText(const Engine& engine, const std::string& textString, const RGBAColor& foregroundColor, const RGBAColor& backgroundColor, const bool shaded, const Scalar fixedWidth, const Scalar fixedHeight, const Scalar fixedLineHeight, const Text::AlignmentMode alignmentMode, const Text::HorizontalAnchor horizontalAnchor, const Text::VerticalAnchor verticalAnchor, const std::string& fontFamily, const std::string& styleName, TextRef* text, MaterialRef* foregroundMaterial, MaterialRef* backgroundMaterial)
 {
 	try

@@ -220,6 +220,22 @@ class OCEAN_RENDERING_EXPORT Utilities
 		static TransformRef createTexturedPlane(const EngineRef& engine, const Scalar width, const Scalar height, const Media::FrameMediumRef textureMedium, MediaTexture2DRef* texture = nullptr, const bool createMipmaps = true, AttributeSetRef* attributeSet = nullptr, GeometryRef* geometry = nullptr);
 
 		/**
+		 * Returns a Transform object holding a flat 2D panel (a rectangle) with specified dimension.
+		 * The resulting panel's normal is the z-axis, the panel is located in the x,y plane.
+		 * @param engine Rendering engine to be used
+		 * @param xDimension The dimension of the panel in x direction, with range (0, infinity)
+		 * @param frame The frame which is used for the texture, must own the image memory, must be valid
+		 * @param yDimension The dimension of the panel in y direction, with range (0, infinity), of 0 to automatically determine the dimension based on the frame's resolution
+		 * @param bothSides True, to render the panel on the backside as well; False, to render the panel only on the front side
+		 * @param texture Optional resulting texture object which is attached with the resulting panle
+		 * @param createMipmaps True, to create a texture with mipmaps; False, to create a texture without mipmaps
+		 * @param attributeSet Optional resulting AttributeSet object which is attached with the geometry
+		 * @param geometry Optional resulting geometry object which is encapsulating the 3D object
+		 * @param color Optional color to be used, nullptr to create a box without material
+		 */
+		static TransformRef createPanel(const EngineRef& engine, const Scalar xDimension, Frame&& frame, const Scalar yDimension = 0, const bool bothSides = false, FrameTexture2DRef* texture = nullptr, const bool createMipmaps = true, AttributeSetRef* attributeSet = nullptr, GeometryRef* geometry = nullptr, const RGBAColor* color = nullptr);
+
+		/**
 		 * Returns a planar text within the x,y plane.
 		 * @param engine The rendering engine to be used
 		 * @param textString The actual text to show
