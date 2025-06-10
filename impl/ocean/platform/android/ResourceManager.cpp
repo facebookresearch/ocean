@@ -86,9 +86,12 @@ bool ResourceManager::initialize(JavaVM* javaVM, jobject activity, AAssetManager
 		return false;
 	}
 
-	if (!getExternalFilesDirectory(scopedJNIEnvironment.jniEnv(), activity, externalDirectoryName_, ExternalDirectoryType::DEFAULT_TYPE) || externalDirectoryName_.empty())
+	const bool hasExternalFilesDirectory = getExternalFilesDirectory(scopedJNIEnvironment.jniEnv(), activity, externalDirectoryName_, ExternalDirectoryType::DEFAULT_TYPE) || externalDirectoryName_.empty();
+
+	if (!hasExternalFilesDirectory)
 	{
-		return false;
+		// in case the Android system has disabled external storage
+		Log::debug() << "ResourceManager: The external files directory could not be determined";
 	}
 
 	return true;

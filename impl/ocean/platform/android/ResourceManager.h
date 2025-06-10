@@ -238,7 +238,6 @@ std::string ResourceManager::externalFilesDirectory() const
 {
 	const ScopedLock scopedLock(lock_);
 
-	ocean_assert(!externalDirectoryName_.empty());
 	return externalDirectoryName_;
 }
 
