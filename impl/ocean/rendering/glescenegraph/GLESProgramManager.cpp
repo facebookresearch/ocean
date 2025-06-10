@@ -1370,7 +1370,7 @@ GLESShaderProgramRef GLESProgramManager::program(const Engine& engine, const GLE
 	ocean_assert(programMap_.find(programType) == programMap_.cend());
 	programMap_.emplace(programType, newProgram);
 
-	Log::info() << "Created shader program: " << GLESAttribute::translateProgramType(programType);
+	Log::debug() << "Created shader program: " << GLESAttribute::translateProgramType(programType);
 
 	return newProgram;
 }
