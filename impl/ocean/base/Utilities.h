@@ -615,6 +615,30 @@ static inline void createIndices(const size_t numberIndices, const T& startIndex
 template <typename T>
 [[nodiscard]] static inline std::vector<T> createIndices(const size_t numberIndices, const T& startIndex);
 
+/**
+ * Helper struct allowing to determine a hash value for a std::pair.
+ * This struct can be used in combination with the std::unordered_map or std::unordered_set.
+ * @ingroup base
+ */
+struct PairHash
+{
+	/**
+	 * Returns the hash value for a std::pair.
+	 * @param pair The pair for which the hash value will be returned
+	 * @return The resulting hash value
+	 * @tparam T1 The data type of the first pair value
+	 * @tparam T2 The data type of the second pair value
+	 */
+	template <typename T1, typename T2>
+	std::size_t operator()(const std::pair<T1, T2>& pair) const
+	{
+		size_t seed = std::hash<T1>{}(pair.first);
+		seed ^= std::hash<T2>{}(pair.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+
+		return seed;
+	}
+};
+
 template <typename T>
 void Utilities::sortLowestToFront2(T& value0, T& value1)
 {
