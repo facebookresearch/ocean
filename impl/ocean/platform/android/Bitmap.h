@@ -9,6 +9,7 @@
 #define META_OCEAN_PLATFORM_ANDROID_BITMAP_H
 
 #include "ocean/platform/android/Android.h"
+#include "ocean/platform/android/ScopedJNIObject.h"
 
 #include "ocean/base/Frame.h"
 
@@ -32,20 +33,6 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Bitmap
 	public:
 
 		/**
-		 * Translates an Android bitmap format to an Ocean pixel format.
-		 * @param format The Android bitmap format to translate
-		 * @return The corresponding Ocean pixel format, FORMAT_UNDEFINED if unknown
-		 */
-		static FrameType::PixelFormat translateFormat(const AndroidBitmapFormat format);
-
-		/**
-		 * Translates an Ocean pixel format to an Android bitmap format.
-		 * @param pixelFormat The Ocean pixel format to translate
-		 * @return The corresponding Android bitmap format, ANDROID_BITMAP_FORMAT_NONE if unknown
-		 */
-		static AndroidBitmapFormat translateFormat(const FrameType::PixelFormat pixelFormat);
-
-		/**
 		 * Converts an Android bitmap to an Ocean frame.
 		 * The Android bitmap must have format ANDROID_BITMAP_FORMAT_RGBA_8888.
 		 * @param env The JNI environment, must be valid
@@ -54,6 +41,28 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Bitmap
 		 * @return The resulting Ocean frame, an invalid frame if the conversion failed
 		 */
 		static Frame toFrame(JNIEnv* env, jobject bitmap, const bool copyData = true);
+
+		/**
+		 * Converts a frame with pixel format FORMAT_RGBA32 to an Android bitmap.
+		 * @param env The JNI environment, must be valid
+		 * @param rgbaFrame The frame to convert, with pixel format FORMAT_RGBA32, must be valid
+		 * @return The resulting Android bitmap, nullptr if the conversion failed
+		 */
+		static ScopedJObject toBitmap(JNIEnv* env, const Frame& rgbaFrame);
+
+		/**
+		 * Translates an Android bitmap format to an Ocean pixel format.
+		 * @param format The Android bitmap format to translate
+		 * @return The corresponding Ocean pixel format, FORMAT_UNDEFINED if unknown
+		 */
+		 static FrameType::PixelFormat translateFormat(const AndroidBitmapFormat format);
+
+		 /**
+		  * Translates an Ocean pixel format to an Android bitmap format.
+		  * @param pixelFormat The Ocean pixel format to translate
+		  * @return The corresponding Android bitmap format, ANDROID_BITMAP_FORMAT_NONE if unknown
+		  */
+		 static AndroidBitmapFormat translateFormat(const FrameType::PixelFormat pixelFormat);
 };
 
 }
