@@ -58,7 +58,7 @@ int AndroidHeadingTracker3DOF::onEventFunction()
 
 	while (ASensorEventQueue_getEvents(eventQueue_, &sensorEvent, 1) > 0)
 	{
-		ocean_assert(sensorEvent.type == AST_ROTATION_VECTOR || sensorEvent.type >= AST_END);
+		ocean_assert(sensorEvent.type == AST_ROTATION_VECTOR);
 
 		if (firstUnixEventTimestamp_.isInvalid())
 		{

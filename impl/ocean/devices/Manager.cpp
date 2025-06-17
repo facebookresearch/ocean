@@ -298,29 +298,6 @@ bool Manager::unregisterFactory(const std::string& factory)
 	return false;
 }
 
-Factory* Manager::factory(const std::string& name, TemporaryScopedLock& scopedLock)
-{
-	ocean_assert(name.empty() == false);
-
-	if (!scopedLock.isReleased())
-	{
-		return nullptr;
-	}
-
-	scopedLock.relock(lock_);
-
-	for (std::unique_ptr<Factory>& existingFactory : factories_)
-	{
-		if (existingFactory->name() == name)
-		{
-			return existingFactory.get();
-		}
-	}
-
-	return nullptr;
-
-}
-
 }
 
 }
