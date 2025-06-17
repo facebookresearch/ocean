@@ -45,6 +45,30 @@ bool AndroidFactory::unregisterFactory()
 	return Factory::unregisterFactory(nameAndroidLibrary());
 }
 
+std::string AndroidFactory::registerCustomDevice(const std::string& stringType, const Device::DeviceType& deviceType)
+{
+	TemporaryScopedLock scopedLock;
+
+	Factory* androidFactory = Factory::factory(nameAndroidLibrary(), scopedLock);
+
+	if (androidFactory == nullptr)
+	{
+		assert(false && "This should never happen!");
+		return std::string();
+	}
+
+	assert(androidFactory->name() == nameAndroidLibrary());
+
+	std::string deviceName = "Custom " + stringType;
+
+	if (!dynamic_cast<AndroidFactory*>(androidFactory)->registerCustomDevice(deviceName, stringType, deviceType))
+	{
+		return std::string();
+	}
+
+	return deviceName;
+}
+
 void AndroidFactory::newGPSLocation(const double latitude, const double longitude, const float altitude, const float direction, const float speed, const float accuracy, const float altitudeAccuracy, const float directionAccuracy, const float speedAccuracy, const Timestamp& timestamp)
 {
 	const DeviceRef device = DeviceRefManager::get().device(AndroidGPSTracker::deviceNameAndroidGPSTracker());
@@ -265,6 +289,54 @@ void AndroidFactory::registerDevices()
 				Log::debug() << "Type: Heart Beat";
 				break;
 
+			case AndroidSensor::AST_DYNAMIC_SENSOR_META:
+				Log::debug() << "Type: Dynamic Sensor Meta";
+				break;
+
+			case AndroidSensor::AST_ADDITIONAL_INFO:
+				Log::debug() << "Type: Additional Info";
+				break;
+
+			case AndroidSensor::AST_LOW_LATENCY_OFFBODY_DETECT:
+				Log::debug() << "Type: Low Latency Offbody Detect";
+				break;
+
+			case AndroidSensor::AST_ACCELEROMETER_UNCALIBRATED:
+				Log::debug() << "Type: Accelerometer Uncalibrated";
+				break;
+
+			case AndroidSensor::AST_HINGE_ANGLE:
+				Log::debug() << "Type: Hinge Angle";
+				break;
+
+			case AndroidSensor::AST_HEAD_TRACKER:
+				Log::debug() << "Type: Head Tracker";
+				break;
+
+			case AndroidSensor::AST_ACCELEROMETER_LIMITED_AXES:
+				Log::debug() << "Type: Accelerometer Limited Axes";
+				break;
+
+			case AndroidSensor::AST_GYROSCOPE_LIMITED_AXES:
+				Log::debug() << "Type: Gyroscope Limited Axes";
+				break;
+
+			case AndroidSensor::AST_ACCELEROMETER_LIMITED_AXES_UNCALIBRATED:
+				Log::debug() << "Type: Accelerometer Limited Axes Uncalibrated";
+				break;
+
+			case AndroidSensor::AST_GYROSCOPE_LIMITED_AXES_UNCALIBRATED:
+				Log::debug() << "Type: Gyroscope Limited Axes Uncalibrated";
+				break;
+
+			case AndroidSensor::AST_HEADING:
+				Log::debug() << "Type: Heading";
+				break;
+
+			case AndroidSensor::AST_END:
+				assert(false && "This should never happen!");
+				break;
+
 			default:
 #if defined(__ANDROID_API__) && __ANDROID_API__ >= 21
 				Log::debug() << "Type: UNKNOWN: " << type << ", \"" << ASensor_getStringType(sensor) << "\"";
@@ -344,6 +416,75 @@ Device* AndroidFactory::createAndroidHeadingTracker3DOF(const std::string& name,
 	ocean_assert(sensorRotationVector_ != nullptr);
 
 	return new AndroidHeadingTracker3DOF(sensorRotationVector_);
+}
+
+Device* AndroidFactory::createCustomDevice(const std::string& name, const Device::DeviceType& deviceType)
+{
+	const ScopedLock scopedLock(lock_);
+
+	CustomDeviceMap::const_iterator iDevice = customDeviceMap_.find(name);
+
+	if (iDevice == customDeviceMap_.cend())
+	{
+		return nullptr;
+	}
+
+	assert(deviceType == iDevice->second.first);
+
+	if (deviceType == OrientationTracker3DOF::deviceTypeOrientationTracker3DOF())
+	{
+		return new AndroidOrientationTracker3DOF(iDevice->second.second);
+	}
+
+	return nullptr;
+}
+
+bool AndroidFactory::registerCustomDevice(const std::string& deviceName, const std::string& stringType, const Device::DeviceType& deviceType)
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (customDeviceMap_.find(deviceName) != customDeviceMap_.cend())
+	{
+		return false;
+	}
+
+	ASensorManager* sensorManager = AndroidSensor::sensorManager();
+
+	if (!sensorManager)
+	{
+		Log::error() << "No sensor manager!";
+		return false;
+	}
+
+	ASensorList sensorList;
+
+	const int number = ASensorManager_getSensorList(sensorManager, &sensorList);
+
+	for (int n = 0; n < number; ++n)
+	{
+		const ASensor* sensor = sensorList[n];
+
+		const char* sensorStringType = ASensor_getStringType(sensor);
+
+		if (sensorStringType != nullptr && sensorStringType == stringType)
+		{
+			customDeviceMap_.emplace(deviceName, CustomDevicePair(deviceType, sensor));
+
+			if (registerDevice(deviceName, deviceType, InstanceFunction::create(*this, &AndroidFactory::createCustomDevice)))
+			{
+				const char* name = ASensor_getName(sensor);
+
+				if (name != nullptr)
+				{
+					Log::debug() << "Registered custom device: " << name << ", '" << stringType << "', as '" << deviceName << "'";
+				}
+
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 }

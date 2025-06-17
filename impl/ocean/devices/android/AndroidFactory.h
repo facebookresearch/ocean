@@ -29,6 +29,18 @@ namespace Android
  */
 class OCEAN_DEVICES_ANDROID_EXPORT AndroidFactory : public Factory
 {
+	protected:
+
+		/**
+		 * Definition of a pair combining a device type with a sensor.
+		 */
+		using CustomDevicePair = std::pair<Device::DeviceType, const ASensor*>;
+
+		/**
+		 * Definition of an unordered map mapping names of custom devices to sensors.
+		 */
+		using CustomDeviceMap = std::unordered_map<std::string, CustomDevicePair>;
+
 	public:
 
 		/**
@@ -44,6 +56,14 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidFactory : public Factory
 		 * @return True, if this factory could be unregistered
 		 */
 		static bool unregisterFactory();
+
+		/**
+		 * Registers a custom device which is otherwise unknown to this factory.
+		 * @param stringType The string type of the device, must be valid
+		 * @param deviceType The device type of the device, must be valid
+		 * @return The name of the custom device, an empty string if the device could not be registered
+		 */
+		static std::string registerCustomDevice(const std::string& stringType, const Device::DeviceType& deviceType);
 
 		/**
 		 * Sends a new GPS location to the tracker which is managed by this factory.
@@ -145,6 +165,17 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidFactory : public Factory
 		 */
 		Device* createAndroidHeadingTracker3DOF(const std::string& name, const Device::DeviceType& deviceType);
 
+		Device* createCustomDevice(const std::string& name, const Device::DeviceType& deviceType);
+
+		/**
+		 * Registers a custom device which is otherwise unknown to this factory.
+		 * @param deviceName The name of the device, must be valid
+		 * @param stringType The string type of the device, must be valid
+		 * @param deviceType The device type of the device, must be valid
+		 * @return True, if the device could be registered
+		 */
+		bool registerCustomDevice(const std::string& deviceName, const std::string& stringType, const Device::DeviceType& deviceType);
+
 	private:
 
 		/// The accelerometer sensor.
@@ -167,6 +198,12 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidFactory : public Factory
 
 		/// The gravity sensor.
 		const ASensor* sensorGravity_ = nullptr;
+
+		/// The custom devices.
+		CustomDeviceMap customDeviceMap_;
+
+		/// The factory's lock.
+		Lock lock_;
 };
 
 }

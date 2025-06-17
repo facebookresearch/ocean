@@ -222,6 +222,11 @@ DeviceRef Factory::createDevice(const DeviceDescriptor& deviceDescriptor, bool u
 	return DeviceRefManager::get().registerDevice(device, useExclusive);
 }
 
+Factory* Factory::factory(const std::string& name, TemporaryScopedLock& scopedLock)
+{
+	return Manager::get().factory(name, scopedLock);
+}
+
 }
 
 }
