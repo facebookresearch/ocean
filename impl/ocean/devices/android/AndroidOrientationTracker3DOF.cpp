@@ -58,7 +58,7 @@ int AndroidOrientationTracker3DOF::onEventFunction()
 
 	while (ASensorEventQueue_getEvents(eventQueue_, &sensorEvent, 1) > 0)
 	{
-		ocean_assert(sensorEvent.type == AST_ROTATION_VECTOR || sensorEvent.type == AST_GAME_ROTATION_VECTOR);
+		ocean_assert(sensorEvent.type == AST_ROTATION_VECTOR || sensorEvent.type == AST_GAME_ROTATION_VECTOR || sensorEvent.type >= AST_END);
 
 		if (firstUnixEventTimestamp_.isInvalid())
 		{

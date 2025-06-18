@@ -186,6 +186,14 @@ class OCEAN_DEVICES_EXPORT Manager : public Singleton<Manager>
 		 */
 		bool unregisterFactory(const std::string& factory);
 
+		/**
+		 * Returns a specified factory
+		 * @param name The name of the factory to return, must be valid
+		 * @param scopedLock The scoped lock which will be used to lock access the access to the factor, needs to be released as soon as possible
+		 * @return The requested factory, nullptr if the factory does not exist
+		 */
+		Factory* factory(const std::string& name, TemporaryScopedLock& scopedLock);
+
 	private:
 
 		/// The map mapping object ids to descriptions.
