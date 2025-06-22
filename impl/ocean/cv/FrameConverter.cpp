@@ -824,9 +824,22 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 	}
 	else if (source.frameType() == targetType)
 	{
-		const Frame::AdvancedCopyMode advancedCopyMode = forceCopy ? Frame::ACM_COPY_REMOVE_PADDING_LAYOUT : Frame::ACM_USE_KEEP_LAYOUT;
+		if (forceCopy && target.isValid() && target.frameType() == targetType)
+		{
+			// the target frame has the correct frame type, and we need to make a copy
+			// therefore, we can use the target memory
 
-		target = Frame(source, advancedCopyMode);
+			if (!target.copy(0, 0, source))
+			{
+				ocean_assert(false && "This should never happen!");
+				return false;
+			}
+		}
+		else
+		{
+			const Frame::AdvancedCopyMode advancedCopyMode = forceCopy ? Frame::ACM_COPY_REMOVE_PADDING_LAYOUT : Frame::ACM_USE_KEEP_LAYOUT;
+			target = Frame(source, advancedCopyMode);
+		}
 	}
 	else
 	{
