@@ -119,6 +119,102 @@ class ResourceManager : public Singleton<ResourceManager>
 				const size_t size_ = 0;
 		};
 
+		/**
+		 * This class provides access to the file descriptor of an asset file as long as the object exists.
+		 */
+		class ScopedFile
+		{
+			friend class ResourceManager;
+
+			public:
+
+				/**
+				 * Default constructor creating an invalid object.
+				 */
+				ScopedFile() = default;
+
+				/**
+				 * Move constructor.
+				 * @param scopedFile The file object to be moved
+				 */
+				inline ScopedFile(ScopedFile&& scopedFile);
+
+				/**
+				 * Destructs the object and releases the file descriptor.
+				 */
+				inline ~ScopedFile();
+
+				/**
+				 * Returns the file descriptor of the asset file.
+				 * @return The object's file descriptor, -1 if the object is invalid
+				 * @see isValid()
+				 */
+				inline int fileDescriptor() const;
+
+				/**
+				 * Returns the offset of the asset file.
+				 * @return The object's file offset
+				 * @see isValid()
+				 */
+				inline off64_t offset() const;
+
+				/**
+				 * Returns the size of the asset file.
+				 * @return The object's file size
+				 * @see isValid()
+				 */
+				inline off64_t size() const;
+
+				/**
+				 * Explicitly releases the file descriptor.
+				 */
+				inline void release();
+
+				/**
+				 * Returns whether the object is valid.
+				 * @return True, if so
+				 */
+				inline bool isValid() const;
+
+				/**
+				 * Move operator.
+				 * @param scopedFile The file object to be moved
+				 * @return Reference to this object
+				 */
+				inline ScopedFile& operator=(ScopedFile&& scopedFile);
+
+				/**
+				 * Returns whether the object is valid.
+				 * @return True, if so
+				 */
+				inline operator bool() const;
+
+			protected:
+
+				/**
+				 * Creates a new object with valid file descriptor.
+				 * @param asset The asset handle, must be valid
+				 * @param fileDescriptor The file descriptor of the asset, must be valid
+				 * @param offset The offset of the asset, with range [0, infinity)
+				 * @param size The size of the asset, with range [1, infinity)
+				 */
+				inline ScopedFile(AAsset* asset, const int fileDescriptor, const off64_t offset, const off64_t size);
+
+			protected:
+
+				/// The asset handle.
+				AAsset* asset_ = nullptr;
+
+				/// The file descriptor of the asset.
+				int fileDescriptor_ = -1;
+
+				/// The offset of the asset.
+				off64_t offset_ = 0;
+
+				/// The size of the asset.
+				off64_t size_ = 0;
+		};
+
 	public:
 
 		/**
@@ -144,6 +240,13 @@ class ResourceManager : public Singleton<ResourceManager>
 		 * @return The resource object, nullptr if invalid
 		 */
 		std::unique_ptr<ScopedResource> accessAsset(const std::string& assetFilename) const;
+
+		/**
+		 * Opens an asset file and returns a file object providing access to the file descriptor of the asset.
+		 * @param assetFilename The filename of the asset to open, must be valid
+		 * @return The file object, invalid if the asset file could not be opened
+		 */
+		ScopedFile openAsset(const std::string& assetFilename) const;
 
 		/**
 		 * Copies all assets located in a specified asset folder to a specified target location.
@@ -226,6 +329,89 @@ inline const void* ResourceManager::ScopedResource::data() const
 inline size_t ResourceManager::ScopedResource::size() const
 {
 	return size_;
+}
+
+inline ResourceManager::ScopedFile::ScopedFile(AAsset* asset, const int fileDescriptor, const off64_t offset, const off64_t size) :
+	asset_(asset),
+	fileDescriptor_(fileDescriptor),
+	offset_(offset),
+	size_(size)
+{
+	ocean_assert(asset_ != nullptr);
+	ocean_assert(fileDescriptor_ >= 0);
+	ocean_assert(size_ > 0);
+}
+
+inline ResourceManager::ScopedFile::ScopedFile(ScopedFile&& scopedFile)
+{
+	*this = std::move(scopedFile);
+}
+
+inline ResourceManager::ScopedFile::~ScopedFile()
+{
+	release();
+}
+
+inline int ResourceManager::ScopedFile::fileDescriptor() const
+{
+	return fileDescriptor_;
+}
+
+inline off64_t ResourceManager::ScopedFile::offset() const
+{
+	return offset_;
+}
+
+inline off64_t ResourceManager::ScopedFile::size() const
+{
+	return size_;
+}
+
+inline void ResourceManager::ScopedFile::release()
+{
+	if (asset_ != nullptr)
+	{
+		AAsset_close(asset_);
+	}
+
+	asset_ = nullptr;
+	fileDescriptor_ = -1;
+	offset_ = 0;
+	size_ = 0;
+}
+
+inline bool ResourceManager::ScopedFile::isValid() const
+{
+	ocean_assert(fileDescriptor_ == -1 || (asset_ != nullptr && size_ > 0));
+
+	return fileDescriptor_ != -1;
+}
+
+inline ResourceManager::ScopedFile& ResourceManager::ScopedFile::operator=(ScopedFile&& scopedFile)
+{
+	if (this != &scopedFile)
+	{
+		release();
+
+		asset_ = scopedFile.asset_;
+		scopedFile.asset_ = nullptr;
+
+		fileDescriptor_ = scopedFile.fileDescriptor_;
+		scopedFile.fileDescriptor_ = -1;
+
+		offset_ = scopedFile.offset_;
+		scopedFile.offset_ = 0;
+
+		size_ = scopedFile.size_;
+		scopedFile.size_ = 0;
+	}
+
+	return *this;
+}
+
+inline ResourceManager::ScopedFile::operator bool() const
+{
+	return isValid();
 }
 
 inline bool ResourceManager::isValid() const

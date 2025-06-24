@@ -34,7 +34,7 @@ bool ResourceManager::initialize(JavaVM* javaVM, jobject activity, AAssetManager
 
 	if (javaVM == nullptr || activity == nullptr)
 	{
-		assert(false && "Invalid input!");
+		ocean_assert(false && "Invalid input!");
 		return false;
 	}
 
@@ -161,6 +161,42 @@ std::unique_ptr<ResourceManager::ScopedResource> ResourceManager::accessAsset(co
 	}
 
 	return std::unique_ptr<ScopedResource>(new ScopedResource(asset, buffer, size));
+}
+
+ResourceManager::ScopedFile ResourceManager::openAsset(const std::string& assetFilename) const
+{
+	ocean_assert(!assetFilename.empty());
+
+	if (!isValid())
+	{
+		Log::warning() << "ResourceManager: Not initialized yet";
+		return ScopedFile();
+	}
+
+	AAsset* asset = AAssetManager_open(assetManager_, assetFilename.c_str(), AASSET_MODE_UNKNOWN);
+
+	if (asset == nullptr)
+	{
+		return ScopedFile();
+	}
+
+	off64_t offset = 0;
+	off64_t size = 0;
+	const int fileDescriptor = AAsset_openFileDescriptor64(asset, &offset, &size);
+
+	if (fileDescriptor < 0)
+	{
+		AAsset_close(asset);
+		return ScopedFile();
+	}
+
+	if (size <= 0)
+	{
+		AAsset_close(asset);
+		return ScopedFile();
+	}
+
+	return ScopedFile(asset, fileDescriptor, offset, size);
 }
 
 bool ResourceManager::copyAssets(const std::string& targetDirectoryName, const bool createDirectory, const std::string& assetDirectoryName) const
