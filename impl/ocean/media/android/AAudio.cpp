@@ -335,14 +335,32 @@ bool AAudio::initialize(const SLEngineItf& slEngineInterface)
 	{
 		if (!IO::File(localUrl).exists())
 		{
-			Log::warning() << "The given audio url '" << localUrl << "' does not exist";
-			return false;
+			scopedFile_ = Platform::Android::ResourceManager::get().openAsset(localUrl);
+
+			if (!scopedFile_)
+			{
+				Log::warning() << "The given audio url '" << localUrl << "' does not exist";
+				return false;
+			}
 		}
 	}
 
-	SLDataLocator_URI slDataLocatorUrl = {SL_DATALOCATOR_URI, (SLchar*)(localUrl.c_str())};
+	SLDataSource slAudioSource;
 	SLDataFormat_MIME slDataFormatMime = {SL_DATAFORMAT_MIME, nullptr, SL_CONTAINERTYPE_UNSPECIFIED};
-	SLDataSource slAudioSource = {&slDataLocatorUrl, &slDataFormatMime};
+
+	SLDataLocator_URI slDataLocatorUrl;
+	SLDataLocator_AndroidFD slDataLocaltorAndroidFD;
+
+	if (scopedFile_)
+	{
+		slDataLocaltorAndroidFD = {SL_DATALOCATOR_ANDROIDFD, SLint32(scopedFile_.fileDescriptor()), SLAint64(scopedFile_.offset()), SLAint64(scopedFile_.size())};
+		slAudioSource = {&slDataLocaltorAndroidFD, &slDataFormatMime};
+	}
+	else
+	{
+		slDataLocatorUrl = {SL_DATALOCATOR_URI, (SLchar*)(localUrl.c_str())};
+		slAudioSource = {&slDataLocatorUrl, &slDataFormatMime};
+	}
 
 	ocean_assert(slOutputMix_ != nullptr);
 	SLDataLocator_OutputMix dataLocatorOutputMix = {SL_DATALOCATOR_OUTPUTMIX, slOutputMix_};
@@ -356,6 +374,22 @@ bool AAudio::initialize(const SLEngineItf& slEngineInterface)
 	{
 		Log::error() << "Failed to create SL audio player";
 		noError = false;
+	}
+
+	SLAndroidConfigurationItf slPlayerConfiguration = nullptr;
+	if (noError && (*slPlayer_)->GetInterface(slPlayer_, SL_IID_ANDROIDCONFIGURATION, &slPlayerConfiguration) != SL_RESULT_SUCCESS)
+	{
+		Log::warning() << "Failed to create SL player configuration interface";
+	}
+
+	if (noError && slPlayerConfiguration != nullptr)
+	{
+		const SLint32 streamType = SL_ANDROID_STREAM_VOICE;
+
+		if ((*slPlayerConfiguration)->SetConfiguration(slPlayerConfiguration, SL_ANDROID_KEY_STREAM_TYPE, &streamType, sizeof(SLint32)) != SL_RESULT_SUCCESS)
+		{
+			Log::warning() << "Failed to set SL player's stream type";
+		}
 	}
 
 	if (noError && (*slPlayer_)->Realize(slPlayer_, SL_BOOLEAN_FALSE) != SL_RESULT_SUCCESS)
@@ -432,6 +466,8 @@ bool AAudio::release()
 		(*slOutputMix_)->Destroy(slOutputMix_);
 		slOutputMix_ = nullptr;
 	}
+
+	scopedFile_.release();
 
 	return true;
 }

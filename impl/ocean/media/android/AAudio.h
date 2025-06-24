@@ -13,6 +13,8 @@
 
 #include "ocean/media/Audio.h"
 
+#include "ocean/platform/android/ResourceManager.h"
+
 #include <jni.h>
 
 #include <SLES/OpenSLES.h>
@@ -219,6 +221,9 @@ class OCEAN_MEDIA_A_EXPORT AAudio final :
 
 		/// The SL volume interface.
 		SLVolumeItf slVolumeInterface_ = nullptr;
+
+		/// The optional file object for Android assets.
+		Platform::Android::ResourceManager::ScopedFile scopedFile_;
 };
 
 }
