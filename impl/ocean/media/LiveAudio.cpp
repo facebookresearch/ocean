@@ -34,7 +34,7 @@ bool LiveAudio::writeWavFile(const std::string& filename, const SampleType sampl
 	ocean_assert(!filename.empty());
 	ocean_assert(data != nullptr && size != 0);
 
-	if (size + 44 >= size_t(NumericT<unsigned int>::maxValue()))
+	if (size + 44 >= size_t(NumericT<uint32_t>::maxValue()))
 	{
 		return false;
 	}
