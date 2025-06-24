@@ -568,7 +568,7 @@ void HarrisCornerDetector::detectCornerCandidatesSubset(const uint8_t* yFrame, c
 	const uint8_t* const yFrameEnd = yFrame + (endHarrisRow + 1u) * frameStrideElements + firstColumn;
 	while (yFrameRow != yFrameEnd)
 	{
-		assert(yFrameRow < yFrameEnd);
+		ocean_assert(yFrameRow < yFrameEnd);
 
 		/// response1 -> response0
 		std::swap(response0, response1);

@@ -120,7 +120,7 @@ Rendering::GeometryRef Mesh::parseMesh(const Rendering::Engine& engine, const st
 	{
 		const aiFace& assimpFace = assimpMesh.mFaces[n];
 
-		assert(assimpFace.mNumIndices == 3u);
+		ocean_assert(assimpFace.mNumIndices == 3u);
 
 		triangleFaces.emplace_back(assimpFace.mIndices);
 	}

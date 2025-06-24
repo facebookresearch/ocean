@@ -31,7 +31,7 @@ namespace TestCV
 
 bool TestHistogram::test(const double testDuration, Worker& worker)
 {
-	assert(testDuration > 0.0);
+	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "---   Histogram test:   ---";
 	Log::info() << " ";

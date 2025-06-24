@@ -258,8 +258,8 @@ void AdvancedFrameChannels::separateTo1Channel(const TSource* const sourceFrame,
 
 	ocean_assert(width != 0u && height != 0u);
 
-	assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
-	assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
+	ocean_assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
+	ocean_assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
 
 	ocean_assert(tChannels == CHANNELS_NOT_KNOWN_AT_COMPILE_TIME || tChannels == channels);
 
@@ -353,8 +353,8 @@ void AdvancedFrameChannels::separateTo1Channel(const TSource* const sourceFrame,
 	ocean_assert(targetFrames.size() >= 1);
 	ocean_assert(targetFramesPaddingElements.size() == 0 || targetFrames.size() == targetFramesPaddingElements.size());
 
-	assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
-	assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
+	ocean_assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
+	ocean_assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
 
 	if (targetFrames.size() == 2)
 	{
@@ -382,8 +382,8 @@ void AdvancedFrameChannels::zipChannels(const TSource* const* sourceFrames, TTar
 
 	ocean_assert(width != 0u && height != 0u);
 
-	assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
-	assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
+	ocean_assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
+	ocean_assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
 
 	ocean_assert(tChannels == CHANNELS_NOT_KNOWN_AT_COMPILE_TIME || tChannels == channels);
 
@@ -470,8 +470,8 @@ void AdvancedFrameChannels::zipChannels(const std::initializer_list<const TSourc
 	ocean_assert(sourceFrames.size() >= 1);
 	ocean_assert(sourceFramePaddingElements.size() == 0 || sourceFrames.size() == sourceFramePaddingElements.size());
 
-	assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
-	assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
+	ocean_assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
+	ocean_assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
 
 	if (sourceFrames.size() == 2)
 	{
@@ -500,8 +500,8 @@ void AdvancedFrameChannels::separateTo1ChannelRuntime(const TSource* const sourc
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(channels != 0u);
 
-	assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
-	assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
+	ocean_assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
+	ocean_assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
 
 #ifdef OCEAN_DEBUG
 	for (unsigned int c = 0u; c < channels; ++c)
@@ -576,8 +576,8 @@ void AdvancedFrameChannels::zipChannelsRuntime(const TSource* const* sourceFrame
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(channels != 0u);
 
-	assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
-	assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
+	ocean_assert(sourceFactor != TSource(0) && targetFactor != TTarget(0));
+	ocean_assert(sourceFactor != TSource(1) || targetFactor != TTarget(1)); // Identity factors, use FrameChannels::separateTo1Channel() instead!
 
 	bool allSourceFramesContinuous = true;
 

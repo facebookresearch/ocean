@@ -62,8 +62,8 @@ IndexPair32 SumSquareDifferencesBase::patchAtBorder8BitPerChannel(const uint8_t*
 {
 	ocean_assert(image0 != nullptr && image1 != nullptr);
 
-	assert(channels != 0u);
-	assert(patchSize % 2u == 1u);
+	ocean_assert(channels != 0u);
+	ocean_assert(patchSize % 2u == 1u);
 
 	const unsigned int patchSize_2 = patchSize / 2u;
 

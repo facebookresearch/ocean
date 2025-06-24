@@ -183,7 +183,7 @@ size_t MapMerging::closeLoops(Database& database, FreakMultiDescriptorMap256& fr
 				else
 				{
 					return 1;
-					assert(false && "This must never happen!");
+					ocean_assert(false && "This must never happen!");
 				}
 			}
 		}

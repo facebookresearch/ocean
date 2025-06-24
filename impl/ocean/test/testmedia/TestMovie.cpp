@@ -463,7 +463,7 @@ bool TestMovie::testLoop()
 
 					Timestamp lastFrameTimestamp(true);
 					bool movieTaskFinished = false;
-					
+
 					while (!movieTaskFinished)
 					{
 						// If playback is finished, set loop to break after checking for frame that may have been generated after last check for new frames.
@@ -901,7 +901,7 @@ IO::File TestMovie::writeMovie(const IO::Directory& directory, const unsigned in
 		return IO::File();
 	}
 
-	assert(numberBits_ * bitSize_ <= width && bitSize_ <= height);
+	ocean_assert(numberBits_ * bitSize_ <= width && bitSize_ <= height);
 	if (numberBits_ * bitSize_ > width || bitSize_ > height)
 	{
 		return IO::File();

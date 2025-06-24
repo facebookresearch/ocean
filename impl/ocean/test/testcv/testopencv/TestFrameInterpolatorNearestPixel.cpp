@@ -354,7 +354,7 @@ void TestFrameInterpolatorNearestPixel::testAffine(const unsigned int width, con
 
 		if (!CV::CVUtilities::isPaddingMemoryIdentical(targetFrame, copyTargetFrame))
 		{
-			assert(false && "This must never happen!");
+			ocean_assert(false && "This must never happen!");
 			Log::info() << "Invalid padding memory!";
 		}
 

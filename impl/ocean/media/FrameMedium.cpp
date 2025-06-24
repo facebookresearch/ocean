@@ -269,7 +269,7 @@ FrameMedium::FrameCallbackScopedSubscription FrameMedium::addFrameCallback(Frame
 {
 	ocean_assert(frameCallbackFunction);
 
-	assert(frameCallbackHandler_.isThreadSafe_ && "Handler must be thread-safe");
+	ocean_assert(frameCallbackHandler_.isThreadSafe_ && "Handler must be thread-safe");
 
 	return frameCallbackHandler_.addCallback(std::move(frameCallbackFunction));
 }
@@ -379,7 +379,7 @@ bool FrameMedium::deliverNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera)
 		return false;
 	}
 
-	assert(frameCallbackHandler_.isThreadSafe_ && "Handler must be thread-safe");
+	ocean_assert(frameCallbackHandler_.isThreadSafe_ && "Handler must be thread-safe");
 
 	if (frameCallbackHandler_.isEmpty())
 	{

@@ -1195,7 +1195,7 @@ bool TestVocabularyTree::testMatchingDescriptors(const double testDuration, Work
 							break;
 
 						default:
-							assert(false && "Invalid stage index");
+							ocean_assert(false && "Invalid stage index");
 					}
 				performanceQueryBestLeafs[stageIndex].stop();
 
@@ -1393,7 +1393,7 @@ bool TestVocabularyTree::testMatchingDescriptorsWithForest(const double testDura
 							break;
 
 						default:
-							assert(false && "Invalid stage index");
+							ocean_assert(false && "Invalid stage index");
 					}
 				performanceQueryBestLeafs[stageIndex].stop();
 

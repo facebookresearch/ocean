@@ -40,7 +40,7 @@ TEST(TestOpenCV, TestCLAHE)
 
 bool TestHistogram::test(const double testDuration)
 {
-	assert(testDuration > 0.0);
+	ocean_assert(testDuration > 0.0);
 
 	bool success = true;
 
@@ -231,7 +231,7 @@ bool TestHistogram::testCLAHE(const double testDuration)
 					iterValidationSuccessful = false;
 				}
 			}
-		} 
+		}
 		while (startTimeValidation + testDuration > Timestamp(true));
 
 		Log::info() << "Validation (" << (imageSizeMultipleOfTiles ? "image size multiple of tiles count" : "image size random") << "): " << (iterValidationSuccessful ? "passed" : "FAILED");

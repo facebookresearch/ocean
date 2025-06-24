@@ -558,7 +558,7 @@ void MultiViewMapCreator::determineObservations(const Index32 currentFrameIndex,
 
 							ocean_assert(currentMatchStatement != Index32(nFeature));
 
-							assert(currentMatchStatement < nFeature);
+							ocean_assert(currentMatchStatement < nFeature);
 							features_[currentMatchStatement].copyObservations(feature);
 
 							deleteFeaturePoint = true;

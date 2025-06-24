@@ -53,11 +53,11 @@ std::string AndroidFactory::registerCustomDevice(const std::string& stringType, 
 
 	if (androidFactory == nullptr)
 	{
-		assert(false && "This should never happen!");
+		ocean_assert(false && "This should never happen!");
 		return std::string();
 	}
 
-	assert(androidFactory->name() == nameAndroidLibrary());
+	ocean_assert(androidFactory->name() == nameAndroidLibrary());
 
 	std::string deviceName = "Custom " + stringType;
 
@@ -334,7 +334,7 @@ void AndroidFactory::registerDevices()
 				break;
 
 			case AndroidSensor::AST_END:
-				assert(false && "This should never happen!");
+			ocean_assert(false && "This should never happen!");
 				break;
 
 			default:
@@ -429,7 +429,7 @@ Device* AndroidFactory::createCustomDevice(const std::string& name, const Device
 		return nullptr;
 	}
 
-	assert(deviceType == iDevice->second.first);
+	ocean_assert(deviceType == iDevice->second.first);
 
 	if (deviceType == OrientationTracker3DOF::deviceTypeOrientationTracker3DOF())
 	{
