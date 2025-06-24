@@ -53,30 +53,85 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 			protected:
 
 				/**
-				 * Definition of a chunk holding stereo samples.
+				 * This class holds one stereo chunk.
 				 */
-				using StereoChunk = std::vector<int16_t>;
+				class StereoChunk
+				{
+					protected:
 
-				/**
-				 * Returns the size of one stereo chunk in elements.
-				 * @return The size of one stereo chunk, in elements
-				 */
-				static constexpr size_t stereoChunkSize();
+						/**
+						 * Returns the number of elements in a stereo chunk.
+						 * @return The size of one stereo chunk, in elements
+						 */
+						static constexpr size_t stereoChunkElements();
+
+						/**
+						 * Definition of a buffer holding the chunk elements
+						 */
+						using Buffer = std::vector<int16_t>;
+
+					public:
+
+						/**
+						 * Creates a new chunk object and initializes the internal buffer.
+						 */
+						inline StereoChunk();
+
+						/**
+						 * Adds new elements to this chunk
+						 * @param sampleType The type of the elements to add
+						 * @param elements The elements to add, must be valid
+						 * @param size The number of elements to add
+						 * @return The number of actually added elements, with range [1, size]
+						 */
+						size_t addElements(const SampleType sampleType, const int16_t* elements, const size_t size);
+
+						/**
+						 * Returns whether this chunk is full and whether it can be forwarded to the player.
+						 * @return True, if so
+						 */
+						inline bool isFull() const;
+
+						/**
+						 * Returns the elements of this chunk
+						 * @return The chunk's elements
+						 */
+						inline const void* data() const;
+
+						/**
+						 * Returns the number of elements the chunk currently holds.
+						 * @return The chunk's number of elements, with range [0, stereoChunkElements()]
+						 */
+						inline size_t size() const;
+
+						/**
+						 * Resets the chunk so that it can be filled again.
+						 */
+						inline void reset();
+
+					protected:
+
+						/// The buffer holding the chunk elements.
+						Buffer buffer_;
+
+						/// The number of elements currently stored in the buffer, with range [0, buffer_.size()].
+						size_t position_ = 0;
+				};
 
 				/**
 				 * Definition of shared pointer holding a stereo chunk.
 				 */
-				using SharedStereoChunk = std::shared_ptr<StereoChunk>;
+				using UniqueStereoChunk = std::unique_ptr<StereoChunk>;
 
 				/**
 				 * Definition of a vector holding stereo chunks.
 				 */
-				typedef std::vector<SharedStereoChunk> StereoChunks;
+				using StereoChunks = std::vector<UniqueStereoChunk>;
 
 				/**
 				 * Definition of a queue holding stereo chunks.
 				 */
-				typedef std::queue<SharedStereoChunk> StereoChunkQueue;
+				using StereoChunkQueue = std::queue<UniqueStereoChunk>;
 
 			public:
 
@@ -101,11 +156,19 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 				inline bool needNewSamples() const;
 
 				/**
-				 * Enqueues the next pending chunk into OpenSL buffer.
+				 * Fills OpenSL's buffer queue with another buffer (if available).
 				 * @param bufferQueueInterface The interface of the buffer queue in which the chunk will be queued, must be valid
 				 * @return True, if succeeded; False, if there was no pending chunk
 				 */
-				bool enqueueNextPendingChunk(SLAndroidSimpleBufferQueueItf bufferQueueInterface);
+				bool fillBufferQueue(SLAndroidSimpleBufferQueueItf bufferQueueInterface);
+
+			protected:
+
+				/**
+				 * Enqueues a pending buffer into OpenSL's buffer queue.
+				 * @param bufferQueueInterface The interface of the buffer queue in which the chunk will be queued, must be valid
+				 */
+				void enqueueNextPendingChunk(SLAndroidSimpleBufferQueueItf bufferQueueInterface);
 
 			protected:
 
@@ -119,7 +182,7 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 				StereoChunks freeStereoChunks_;
 
 				/// The stereo chunk which is currently filled.
-				SharedStereoChunk fillingStereoChunk_;
+				UniqueStereoChunk fillingStereoChunk_;
 
 				/// The position within the current (not yet entirely filled) stereo chunk.
 				size_t positionInFillingChunk_ = size_t(0);
@@ -296,12 +359,37 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 		std::atomic<bool> hasBeenStopped_ = true;
 };
 
-constexpr size_t ALiveAudio::ChunkManager::stereoChunkSize()
+constexpr size_t ALiveAudio::ChunkManager::StereoChunk::stereoChunkElements()
 {
 	constexpr size_t samplesPerSecondMono = 48000; // 48kHz
 	constexpr size_t samplesPerSecondStereo = samplesPerSecondMono * 2;
 
 	return samplesPerSecondStereo / 50; // 20ms
+}
+
+inline ALiveAudio::ChunkManager::StereoChunk::StereoChunk()
+{
+	buffer_.resize(stereoChunkElements());
+}
+
+inline bool ALiveAudio::ChunkManager::StereoChunk::isFull() const
+{
+	return position_ == stereoChunkElements();
+}
+
+inline const void* ALiveAudio::ChunkManager::StereoChunk::data() const
+{
+	return buffer_.data();
+}
+
+inline size_t ALiveAudio::ChunkManager::StereoChunk::size() const
+{
+	return position_;
+}
+
+inline void ALiveAudio::ChunkManager::StereoChunk::reset()
+{
+	position_ = 0;
 }
 
 inline bool ALiveAudio::ChunkManager::needNewSamples() const

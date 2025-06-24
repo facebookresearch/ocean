@@ -20,6 +20,51 @@ namespace Media
 namespace Android
 {
 
+size_t ALiveAudio::ChunkManager::StereoChunk::addElements(const SampleType sampleType, const int16_t* elements, const size_t size)
+{
+	ocean_assert(elements != nullptr && size > 0);
+
+	ocean_assert(!buffer_.empty());
+	ocean_assert(position_ <= buffer_.size());
+
+	const size_t remainingElements = buffer_.size() - position_;
+	ocean_assert(remainingElements % 2 == 0);
+
+	if (remainingElements == 0)
+	{
+		return 0;
+	}
+
+	size_t elementsToCopy = 0;
+
+	if (sampleType == ST_INTEGER_16_MONO_48)
+	{
+		elementsToCopy = std::min(size, remainingElements / 2);
+
+		for (size_t n = 0; n < elementsToCopy; ++n)
+		{
+			buffer_[position_++] = elements[n];
+			buffer_[position_++] = elements[n];
+		}
+	}
+	else
+	{
+		ocean_assert(sampleType == ST_INTEGER_16_STEREO_48);
+
+		ocean_assert(size % 2 == 0);
+
+		elementsToCopy = std::min(size, remainingElements);
+
+		memcpy(buffer_.data() + position_, elements, elementsToCopy * sizeof(int16_t));
+		position_ += elementsToCopy;
+	}
+
+	ocean_assert(position_ <= buffer_.size());
+	ocean_assert(elementsToCopy > 0);
+
+	return elementsToCopy;
+}
+
 bool ALiveAudio::ChunkManager::addSamples(const SampleType sampleType, const void* data, const size_t size, SLAndroidSimpleBufferQueueItf bufferQueueInterface)
 {
 	if (sampleType != ST_INTEGER_16_MONO_48 && sampleType != ST_INTEGER_16_STEREO_48)
@@ -28,105 +73,65 @@ bool ALiveAudio::ChunkManager::addSamples(const SampleType sampleType, const voi
 		return false;
 	}
 
-	const size_t numberSourceElements = size / sizeof(int16_t);
+	size_t remainingSourceElements = size / sizeof(int16_t);
 	const int16_t* sourceElements = (const int16_t*)(data);
 
-	const int16_t* sourceElementsEnd = sourceElements + numberSourceElements;
-
-	while (sourceElements != sourceElementsEnd)
+	while (remainingSourceElements != 0)
 	{
-		TemporaryScopedLock scopedLock(lock_);
-
-			if (!fillingStereoChunk_)
-			{
-				if (freeStereoChunks_.empty())
-				{
-					fillingStereoChunk_ = std::make_shared<StereoChunk>(stereoChunkSize());
-				}
-				else
-				{
-					fillingStereoChunk_ = std::move(freeStereoChunks_.back());
-					freeStereoChunks_.pop_back();
-				}
-			}
-
-		scopedLock.release();
-
-		ocean_assert(sourceElements < sourceElementsEnd);
-
-		ocean_assert(fillingStereoChunk_);
-		StereoChunk& currentChunk = *fillingStereoChunk_;
-
-		ocean_assert(positionInFillingChunk_ % 2 == 0);
-		int16_t* stereoElementsInChunk = currentChunk.data();
-
-		if (sampleType == ST_INTEGER_16_MONO_48)
+		if (!fillingStereoChunk_)
 		{
-			while (sourceElements != sourceElementsEnd && positionInFillingChunk_ < stereoChunkSize())
+			const ScopedLock scopedLock(lock_);
+
+			if (freeStereoChunks_.empty())
 			{
-				ocean_assert(sourceElements < sourceElementsEnd);
-
-				stereoElementsInChunk[positionInFillingChunk_++] = *sourceElements;
-				stereoElementsInChunk[positionInFillingChunk_++] = *sourceElements++;
-			}
-		}
-		else
-		{
-			ocean_assert(sampleType == ST_INTEGER_16_STEREO_48);
-
-			const size_t remainingSourceElements = sourceElementsEnd - sourceElements;
-			const size_t remainingTargetElements = stereoChunkSize() - positionInFillingChunk_;
-
-			const size_t elements = std::min(remainingSourceElements, remainingTargetElements);
-
-			memcpy(stereoElementsInChunk, sourceElements, elements * sizeof(int16_t));
-
-			positionInFillingChunk_ += elements;
-			sourceElements += elements;
-		}
-
-		ocean_assert(positionInFillingChunk_ <= stereoChunkSize());
-		if (positionInFillingChunk_ == stereoChunkSize())
-		{
-			// we have reached the end of the current chunk, so we switch to a fresh chunk
-
-			scopedLock.relock(lock_);
-
-			positionInFillingChunk_ = 0;
-
-			ocean_assert(bufferQueueInterface != nullptr);
-
-			if (openslStereoChunkQueue_.size() < numberBuffers_)
-			{
-				ocean_assert(pendingStereoChunks_.empty());
-
-				// OpenSL's buffer queue is not yet full, so appending the current chunk to the OpenSL queue directly
-
-				openslStereoChunkQueue_.emplace(fillingStereoChunk_);
-
-				if ((*bufferQueueInterface)->Enqueue(bufferQueueInterface, fillingStereoChunk_->data(), SLuint32(fillingStereoChunk_->size() * sizeof(int16_t))) != SL_RESULT_SUCCESS)
-				{
-					ocean_assert(false && "This should never happen!");
-					Log::warning() << "ALiveAudio: Failed to enqueue sample";
-				}
-
-				fillingStereoChunk_ = nullptr;
+				fillingStereoChunk_ = std::make_unique<StereoChunk>();
 			}
 			else
 			{
-				// OpenSL's buffer queue is full, so we need to add the current chunk to the pending queue
+				fillingStereoChunk_ = std::move(freeStereoChunks_.back());
+				assert(fillingStereoChunk_->size() == 0);
 
-				pendingStereoChunks_.emplace(std::move(fillingStereoChunk_));
+				freeStereoChunks_.pop_back();
+			}
+		}
 
-				if (pendingStereoChunks_.size() >= numberBuffers_ * 3u)
+		ocean_assert(fillingStereoChunk_);
+		ocean_assert(!fillingStereoChunk_->isFull());
+
+		const size_t addedElements = fillingStereoChunk_->addElements(sampleType, sourceElements, remainingSourceElements);
+		ocean_assert(addedElements > 0 && addedElements <= remainingSourceElements);
+
+		sourceElements += addedElements;
+		remainingSourceElements -= addedElements;
+
+		if (fillingStereoChunk_->isFull())
+		{
+			// we have reached the end of the current chunk, so we switch to a fresh chunk
+
+			ScopedLock scopedLock(lock_);
+
+			pendingStereoChunks_.emplace(std::move(fillingStereoChunk_));
+			fillingStereoChunk_ = nullptr;
+
+			while (openslStereoChunkQueue_.size() < numberBuffers_ && !pendingStereoChunks_.empty())
+			{
+				// OpenSL's buffer queue has still a remaining spot left, so appending the current chunk to the OpenSL queue directly
+
+				enqueueNextPendingChunk(bufferQueueInterface);
+			}
+
+			if (pendingStereoChunks_.size() >= numberBuffers_ * 3u)
+			{
+				Log::warning() << "ALiveAudio sample queue too long, skipping most pending buffers";
+
+				while (pendingStereoChunks_.size() > numberBuffers_)
 				{
-					Log::warning() << "ALiveAudio sample queue too long, skipping most pending buffers";
+					UniqueStereoChunk pendingChunk = std::move(pendingStereoChunks_.front());
+					pendingStereoChunks_.pop();
 
-					while (pendingStereoChunks_.size() > numberBuffers_)
-					{
-						freeStereoChunks_.emplace_back(std::move(pendingStereoChunks_.front()));
-						pendingStereoChunks_.pop();
-					}
+					pendingChunk->reset();
+
+					freeStereoChunks_.emplace_back(std::move(pendingChunk));
 				}
 			}
 		}
@@ -135,7 +140,7 @@ bool ALiveAudio::ChunkManager::addSamples(const SampleType sampleType, const voi
 	return true;
 }
 
-bool ALiveAudio::ChunkManager::enqueueNextPendingChunk(SLAndroidSimpleBufferQueueItf bufferQueueInterface)
+bool ALiveAudio::ChunkManager::fillBufferQueue(SLAndroidSimpleBufferQueueItf bufferQueueInterface)
 {
 	ocean_assert(bufferQueueInterface != nullptr);
 
@@ -143,26 +148,43 @@ bool ALiveAudio::ChunkManager::enqueueNextPendingChunk(SLAndroidSimpleBufferQueu
 
 	ocean_assert(!openslStereoChunkQueue_.empty());
 
-	freeStereoChunks_.emplace_back(std::move(openslStereoChunkQueue_.front()));
+	UniqueStereoChunk finishedChunk = std::move(openslStereoChunkQueue_.front());
 	openslStereoChunkQueue_.pop();
+
+	finishedChunk->reset();
+	freeStereoChunks_.emplace_back(std::move(finishedChunk));
 
 	if (pendingStereoChunks_.empty())
 	{
 		return false;
 	}
 
-	SharedStereoChunk nextChunk = std::move(pendingStereoChunks_.front());
+	enqueueNextPendingChunk(bufferQueueInterface);
+
+	return true;
+}
+
+void ALiveAudio::ChunkManager::enqueueNextPendingChunk(SLAndroidSimpleBufferQueueItf bufferQueueInterface)
+{
+	// lock_ is already locked
+
+	assert(!pendingStereoChunks_.empty());
+
+	UniqueStereoChunk nextChunk = std::move(pendingStereoChunks_.front());
 	pendingStereoChunks_.pop();
 
-	openslStereoChunkQueue_.emplace(nextChunk);
-
-	if ((*bufferQueueInterface)->Enqueue(bufferQueueInterface, nextChunk->data(), SLuint32(nextChunk->size() * sizeof(int16_t))) != SL_RESULT_SUCCESS)
+	if ((*bufferQueueInterface)->Enqueue(bufferQueueInterface, nextChunk->data(), SLuint32(nextChunk->size() * sizeof(int16_t))) == SL_RESULT_SUCCESS)
+	{
+		openslStereoChunkQueue_.emplace(std::move(nextChunk));
+	}
+	else
 	{
 		ocean_assert(false && "This should never happen!");
 		Log::warning() << "ALiveAudio: Failed to enqueue sample";
-	}
 
-	return true;
+		nextChunk->reset();
+		freeStereoChunks_.emplace_back(std::move(nextChunk));
+	}
 }
 
 ALiveAudio::ALiveAudio(const SLEngineItf& slEngineInterface, const std::string& url) :
@@ -455,7 +477,7 @@ bool ALiveAudio::initialize(const SLEngineItf& slEngineInterface)
 	if (noError && slPlayerConfiguration != nullptr)
 	{
 		const SLint32 streamType = preferredStreamType();
-		ocean_assert(streamType >= SL_ANDROID_STREAM_VOICE && streamType <= SL_ANDROID_STREAM_SYSTEM);
+		ocean_assert(streamType >= SL_ANDROID_STREAM_VOICE && streamType <= SL_ANDROID_STREAM_NOTIFICATION);
 
 		if ((*slPlayerConfiguration)->SetConfiguration(slPlayerConfiguration, SL_ANDROID_KEY_STREAM_TYPE, &streamType, sizeof(SLint32)) != SL_RESULT_SUCCESS)
 		{
@@ -560,7 +582,7 @@ void ALiveAudio::onFillBufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQ
 	ocean_assert(bufferQueue == slBufferQueueInterface_);
 
 	// the oldst buffer has been processed by OpenSL
-	chunkManager_.enqueueNextPendingChunk(bufferQueue);
+	chunkManager_.fillBufferQueue(bufferQueue);
 }
 
 void ALiveAudio::onFillBufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue, void* context)
