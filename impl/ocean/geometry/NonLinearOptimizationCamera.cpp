@@ -1212,22 +1212,21 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 		/**
 		 * Creates a new optimization provider object.
 		 * @param pinholeCamera The camera object to be optimized
-		 * @param posesIF Inverted and flipped extrinsic camera matrix
+		 * @param flippedCameras_T_world The inverted and flipped camera poses to be optimized
 		 * @param objectPointGroups Groups of 3D object points
 		 * @param imagePointGroups Groups of 2D observation image points
 		 * @param onlyFrontObjectPoints True, to allow only object points in front of the camera
 		 */
-		inline CameraPosesOptimizationProvider(PinholeCamera& pinholeCamera, NonconstTemplateArrayAccessor<HomogenousMatrix4>& posesIF, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, const bool onlyFrontObjectPoints) :
+		inline CameraPosesOptimizationProvider(PinholeCamera& pinholeCamera, NonconstTemplateArrayAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, const bool onlyFrontObjectPoints) :
 			camera_(pinholeCamera),
 			candidateCamera_(pinholeCamera),
-			flippedCamera_T_world_(posesIF),
+			flippedCameras_T_world_(flippedCameras_T_world),
 			objectPointGroups_(objectPointGroups),
-			candidateFlippedCamera_T_world_(Accessor::accessor2elements(posesIF)),
+			candidateFlippedCameras_T_world_(Accessor::accessor2elements(flippedCameras_T_world)),
 			imagePointGroups_(imagePointGroups),
-			onlyFrontObjectPoints_(onlyFrontObjectPoints),
-			observations_(0)
+			onlyFrontObjectPoints_(onlyFrontObjectPoints)
 		{
-			ocean_assert(flippedCamera_T_world_.size() == objectPointGroups_.size());
+			ocean_assert(flippedCameras_T_world_.size() == objectPointGroups_.size());
 			ocean_assert(objectPointGroups_.size() == imagePointGroups_.size());
 
 			for (size_t n = 0; n < objectPointGroups_.size(); ++n)
@@ -1263,19 +1262,19 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 			Scalar jacobianX[14], jacobianY[14];
 			size_t row = 0;
 
-			for (size_t p = 0; p < flippedCamera_T_world_.size(); ++p)
+			for (size_t p = 0; p < flippedCameras_T_world_.size(); ++p)
 			{
-				const HomogenousMatrix4& transformationPoseIF = flippedCamera_T_world_[p];
+				const HomogenousMatrix4& flippedCamera_T_world = flippedCameras_T_world_[p];
 				const Vectors3& objectPoints = objectPointGroups_[p];
 
-				const Pose poseIF(transformationPoseIF);
+				const Pose flippedCamera_P_world(flippedCamera_T_world);
 
 				SquareMatrix3 Rwx, Rwy, Rwz;
-				Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(Vector3(poseIF.rx(), poseIF.ry(), poseIF.rz())), Rwx, Rwy, Rwz);
+				Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
 
 				for (size_t i = 0; i < objectPoints.size(); ++i)
 				{
-					Jacobian::calculateJacobianCameraPoseRodrigues2x14(jacobianX, jacobianY, camera_, transformationPoseIF, poseIF, objectPoints[i], Rwx, Rwy, Rwz);
+					Jacobian::calculateJacobianCameraPoseRodrigues2x14(jacobianX, jacobianY, camera_, flippedCamera_T_world, flippedCamera_P_world, objectPoints[i], Rwx, Rwy, Rwz);
 
 					for (size_t e = 0u; e < 8u; ++e)
 					{
@@ -1299,7 +1298,7 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 
 			ocean_assert(row == observations_ * 2);
 
-			jacobian = SparseMatrix(2 * observations_, 8 + flippedCamera_T_world_.size() * 6, jacobianEntries);
+			jacobian = SparseMatrix(2 * observations_, 8 + flippedCameras_T_world_.size() * 6, jacobianEntries);
 			ocean_assert(SparseMatrix::Entry::hasOneEntry(jacobian.rows(), jacobian.columns(), jacobianEntries));
 		}
 
@@ -1329,14 +1328,14 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 
 			candidateCamera_ = PinholeCamera(SquareMatrix3(newFx, 0, 0, 0, newFy, 0, newMx, newMy, 1), camera_.width(), camera_.height(), PinholeCamera::DistortionPair(newK1, newK2), PinholeCamera::DistortionPair(newP1, newP2));
 
-			for (size_t n = 0; n < flippedCamera_T_world_.size(); ++n)
+			for (size_t n = 0; n < flippedCameras_T_world_.size(); ++n)
 			{
-				const Pose pose(flippedCamera_T_world_[n]);
+				const Pose pose(flippedCameras_T_world_[n]);
 
 				const Pose deltaPose(deltas(8 + n * 6 + 3), deltas(8 + n * 6 + 4), deltas(8 + n * 6 + 5), deltas(8 + n * 6 + 0), deltas(8 + n * 6 + 1), deltas(8 + n * 6 + 2));
 				const Pose newPose(pose - deltaPose);
 
-				candidateFlippedCamera_T_world_[n] = newPose.transformation();
+				candidateFlippedCameras_T_world_[n] = newPose.transformation();
 			}
 		}
 
@@ -1368,9 +1367,9 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 			size_t row = 0;
 			Scalar sqrError = 0;
 
-			for (size_t p = 0; p < flippedCamera_T_world_.size(); ++p)
+			for (size_t p = 0; p < flippedCameras_T_world_.size(); ++p)
 			{
-				const HomogenousMatrix4& poseIF = candidateFlippedCamera_T_world_[p];
+				const HomogenousMatrix4& candidateFlippedCamera_T_world = candidateFlippedCameras_T_world_[p];
 				const Vectors3& objectPoints = objectPointGroups_[p];
 				const Vectors2& imagePoints = imagePointGroups_[p];
 
@@ -1378,12 +1377,12 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 				{
 					const Vector3& objectPoint = objectPoints[i];
 
-					if (onlyFrontObjectPoints_ && !PinholeCamera::isObjectPointInFrontIF(poseIF, objectPoint))
+					if (onlyFrontObjectPoints_ && !PinholeCamera::isObjectPointInFrontIF(candidateFlippedCamera_T_world, objectPoint))
 					{
 						return Numeric::maxValue();
 					}
 
-					const Vector2 error = Error::determinePoseErrorIF(poseIF, candidateCamera_, objectPoint, imagePoints[i], true);
+					const Vector2 error = Error::determinePoseErrorIF(candidateFlippedCamera_T_world, candidateCamera_, objectPoint, imagePoints[i], true);
 					weightedErrors[row++] = error;
 
 					if constexpr (Estimator::isStandardEstimator<tEstimator>())
@@ -1416,7 +1415,7 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 				ocean_assert(sqrErrors.size() == observations_);
 
 				// the model size is the number of columns in the jacobian row as so many parameters will be modified
-				return sqrErrors2robustErrors2<tEstimator>(sqrErrors, 8 + flippedCamera_T_world_.size() * 6, weightedErrors, (Vector2*)(weightVector.data()), transposedInvertedCovariances);
+				return sqrErrors2robustErrors2<tEstimator>(sqrErrors, 8 + flippedCameras_T_world_.size() * 6, weightedErrors, (Vector2*)(weightVector.data()), transposedInvertedCovariances);
 			}
 		}
 
@@ -1427,10 +1426,10 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 		{
 			camera_ = candidateCamera_;
 
-			ocean_assert(flippedCamera_T_world_.size() == candidateFlippedCamera_T_world_.size());
-			for (size_t n = 0; n < flippedCamera_T_world_.size(); ++n)
+			ocean_assert(flippedCameras_T_world_.size() == candidateFlippedCameras_T_world_.size());
+			for (size_t n = 0; n < flippedCameras_T_world_.size(); ++n)
 			{
-				flippedCamera_T_world_[n] = candidateFlippedCamera_T_world_[n];
+				flippedCameras_T_world_[n] = candidateFlippedCameras_T_world_[n];
 			}
 		}
 
@@ -1443,13 +1442,13 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 		PinholeCamera candidateCamera_;
 
 		/// The accessor for all camera poses.
-		NonconstTemplateArrayAccessor<HomogenousMatrix4>& flippedCamera_T_world_;
+		NonconstTemplateArrayAccessor<HomogenousMatrix4>& flippedCameras_T_world_;
 
 		/// The accessor for all object point groups.
 		const ConstIndexedAccessor<Vectors3>& objectPointGroups_;
 
 		/// The candidates of new camera poses.
-		HomogenousMatrices4 candidateFlippedCamera_T_world_;
+		HomogenousMatrices4 candidateFlippedCameras_T_world_;
 
 		/// The accessor for all image point groups.
 		const ConstIndexedAccessor<Vectors2>& imagePointGroups_;
@@ -1458,7 +1457,7 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 		const bool onlyFrontObjectPoints_;
 
 		// The entire number of observations.
-		size_t observations_;
+		size_t observations_ = 0;
 };
 
 bool NonLinearOptimizationCamera::optimizeCameraPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& poses, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* optimizedPoses, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
