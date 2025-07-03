@@ -409,7 +409,7 @@ class FisheyeCameraT : public CameraT<T>
 		VectorT2<T> projectToImageIF(const VectorT3<T>& cameraFlippedObjectPoint) const;
 
 		/**
-		 * Returns a unit vector (with length 1) starting at the camera's center and intersecting a given 2D point in the image.
+		 * Returns a vector starting at the camera's center and intersecting a given 2D point in the image.
 		 * The vector is determined for the default camera looking into the negative z-space with y-axis up.
 		 * @param distortedImagePoint 2D (distorted) position within the image, with range [0, width())x[0, height())
 		 * @param makeUnitVector True, to return a vector with length 1; False, to return a vector with any length
@@ -421,7 +421,7 @@ class FisheyeCameraT : public CameraT<T>
 		inline VectorT3<T> vector(const VectorT2<T>& distortedImagePoint, const bool makeUnitVector = true) const;
 
 		/**
-		 * Returns a normalized vector (with length 1) starting at the camera's center and intersecting a given 2D point on the image plane.
+		 * Returns a vector starting at the camera's center and intersecting a given 2D point on the image plane.
 		 * The vector is determined for the default camera looking into the positive z-space with y-axis down.
 		 * @param distortedImagePoint 2D (distorted) position within the image, with range [0, width())x[0, height())
 		 * @param makeUnitVector True, to return a vector with length 1; False, to return a vector with any length

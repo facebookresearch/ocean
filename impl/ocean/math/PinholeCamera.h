@@ -976,7 +976,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		void projectToImageDampedIF(const HomogenousMatrixT4<T>& invertedFlippedExtrinsic, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints, VectorT2<T>* imagePoints, const T dampingFactor = T(1), const T zoom = T(1)) const;
 
 		/**
-		 * Returns a normalized vector (with length 1) starting at the camera's center and intersecting a given 2D point on the image plane.
+		 * Returns a vector starting at the camera's center and intersecting a given 2D point on the image plane.
 		 * @param position The 2D position on the image plane, specified in the pixel domain
 		 * @param makeUnitVector True, to return a vector with length 1; False, to return a vector with any length
 		 * @return The normalized vector with -Z direction
@@ -985,7 +985,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		inline VectorT3<T> vector(const VectorT2<T>& position, const bool makeUnitVector = true) const;
 
 		/**
-		 * Returns a normalized vector (with length 1) starting at the camera's center and intersecting a given 2D point on the image plane.
+		 * Returns a vector starting at the camera's center and intersecting a given 2D point on the image plane.
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
 		 * @param position The 2D position on the image plane, specified in the pixel domain
 		 * @param zoom The zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
@@ -1018,7 +1018,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		inline VectorT3<T> vectorToPlane(const VectorT2<T>& position, const T distance, const T zoom) const;
 
 		/**
-		 * Returns a normalized vector (with length 1) starting at the camera's center and intersecting a given 2D point on the image plane.
+		 * Returns a vector starting at the camera's center and intersecting a given 2D point on the image plane.
 		 * @param position The 2D position on the image plane, specified in the pixel domain
 		 * @param makeUnitVector True, to return a vector with length 1; False, to return a vector with any length
 		 * @return The normalized vector with +Z direction
@@ -1026,7 +1026,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		inline VectorT3<T> vectorIF(const VectorT2<T>& position, const bool makeUnitVector = true) const;
 
 		/**
-		 * Returns a normalized vector (with length 1) starting at the camera's center and intersecting a given 2D point on the image plane.
+		 * Returns a vector starting at the camera's center and intersecting a given 2D point on the image plane.
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
 		 * @param position The 2D position on the image plane, specified in the pixel domain
 		 * @param zoom The zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
