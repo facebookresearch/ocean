@@ -595,7 +595,7 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		static void calculateCameraDistortionJacobian2x4(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const Vector2& normalizedImagePoint);
 
 		/**
-		 * Calculates the two jacobian rows for a given camera and image point.
+		 * Calculates the two jacobian rows for the intrinsics of a given camera and image point.
 		 * The jacobian is determined for the focal length, the principal point and the radial distortion parameters.<br>
 		 * The resulting jacobian has the following form:
 		 * <pre>
@@ -610,7 +610,7 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		static void calculateCameraJacobian2x6(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const Vector2& normalizedImagePoint);
 
 		/**
-		 * Calculates the two jacobian rows for a given camera and image point.
+		 * Calculates the two jacobian rows for the intrinsics of a given camera and image point.
 		 * The jacobian is determined for the focal length (same for horizontal and vertical axis), the principal point and the radial and tangential distortion parameters.<br>
 		 * The resulting jacobian has the following form:
 		 * <pre>
@@ -625,7 +625,7 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		static void calculateCameraJacobian2x7(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const Vector2& normalizedImagePoint);
 
 		/**
-		 * Calculates the two jacobian rows for a given camera and image point.
+		 * Calculates the two jacobian rows for the intrinsics of a given camera and image point.
 		 * The jacobian is determined for the focal length, the principal point and the radial and tangential distortion parameters.<br>
 		 * The resulting jacobian has the following form:
 		 * <pre>
@@ -638,6 +638,23 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * @param normalizedImagePoint Normalized 2D image point to determine the jacobian for
 		 */
 		static void calculateCameraJacobian2x8(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const Vector2& normalizedImagePoint);
+
+		/**
+		 * Calculates the two jacobian rows for the intrinsics of a given fisheye camera and image point.
+		 * The jacobian is determined for the focal length, the principal point, the radial distortion parameters, and the tangential distortion parameters.<br>
+		 * The resulting jacobian has the following form:
+		 * <pre>
+		 * | dfx / dk3, dfx / dk5, dfx / dk7, dfx / dk9, dfx / dk11, dfx / dk13, dfx / dp1, dfx / dp2, dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy |
+		 * | dfy / dk3, dfy / dk5, dfy / dk7, dfy / dk9, dfy / dk11, dfy / dk13, dfy / dp1, dfy / dp2, dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy |
+		 * </pre>
+		 * @param jx First row of the jacobian, with 12 column entries
+		 * @param jy Second row of the jacobian, with 12 column entries
+		 * @param fisheyeCamera The fisheye camera to determine the jacobian values for
+		 * @param normalizedImagePoint The normalized 2D image point for which the Jacobian will be determined
+		 * @tparam T The scalar data type, either 'float' or 'double'
+		 */
+		template <typename T>
+		static void calculateCameraJacobian2x12(T* jx, T* jy, const FisheyeCameraT<T>& fisheyeCamera, const VectorT2<T>& normalizedImagePoint);
 
 		/**
 		 * Calculates the two jacobian rows for a given (orientational pose) and a camera and a static object point.

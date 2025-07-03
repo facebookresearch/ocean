@@ -2687,6 +2687,189 @@ void Jacobian::calculateCameraJacobian2x8(Scalar* jx, Scalar* jy, const PinholeC
 	jy[7] = 1;
 }
 
+template <typename T>
+void Jacobian::calculateCameraJacobian2x12(T* jx, T* jy, const FisheyeCameraT<T>& fisheyeCamera, const VectorT2<T>& normalizedImagePoint)
+{
+	ocean_assert(jx != nullptr && jy != nullptr);
+
+	const T& x = normalizedImagePoint.x();
+	const T& y = normalizedImagePoint.y();
+
+	const T& Fx = fisheyeCamera.focalLengthX();
+	const T& Fy = fisheyeCamera.focalLengthY();
+
+	const T* radialDistortion = fisheyeCamera.radialDistortion();
+	const T* tangentialDistortion = fisheyeCamera.tangentialDistortion();
+
+	const T& k3 = radialDistortion[0];
+	const T& k5 = radialDistortion[1];
+	const T& k7 = radialDistortion[2];
+	const T& k9 = radialDistortion[3];
+	const T& k11 = radialDistortion[4];
+	const T& k13 = radialDistortion[5];
+
+	const T& p1 = tangentialDistortion[0];
+	const T& p2 = tangentialDistortion[1];
+
+	/**
+	 * For fisheye camera:
+	 * An undistorted image point (x, y), is transformed to the corresponding distorted image point (x', y') as follows:
+	 * x' = x_r + x_t
+	 * y' = y_r + y_t
+	 *
+	 * radial distortion:
+	 * x_r = x * (theta + k3 * theta^3 + k5 * theta^5 + k7 * theta^7 + k9 * theta^9 + k11 * theta^11 + k13 * theta^13) / r
+	 * y_r = y * (theta + k3 * theta^3 + k5 * theta^5 + k7 * theta^7 + k9 * theta^9 + k11 * theta^11 + k13 * theta^13) / r
+	 *
+	 * tangential distortion:
+	 * x_t = p1 * (2 * x_r^2 + radial^2) + p2 * 2 * x_r * y_r
+	 * y_t = p2 * (2 * y_r^2 + radial^2) + p1 * 2 * x_r * y_r
+	 *
+	 * with
+	 * r = sqrt(x^2 + y^2)
+	 * theta = atan(r)
+	 * radial^2 = x_r^2 + y_r^2
+	 *
+	 * u = Fx * x' + mx
+	 * v = Fy * y' + my
+	 */
+
+	const T xy2 = x * x + y * y;
+	const T r = NumericT<T>::sqrt(xy2);
+
+	if (NumericT<T>::isEqualEps(r))
+	{
+		// we are close to zero, the distortion parameters do not have any effect
+		for (unsigned int n = 0u; n < 8u; ++n)
+		{
+			jx[n] = T(0);
+			jy[n] = T(0);
+		}
+
+		jx[8] = x;
+		jy[8] = T(0);
+
+		jx[9] = T(0);
+		jy[9] = y;
+
+		jx[10] = T(1);
+		jy[10] = T(0);
+
+		jx[11] = T(0);
+		jy[11] = 1;
+
+		return;
+	}
+
+	const T theta = NumericT<T>::atan(r);
+	const T theta2 = theta * theta;
+	const T theta3 = theta2 * theta;
+	const T theta5 = theta3 * theta2;
+	const T theta7 = theta5 * theta2;
+	const T theta9 = theta7 * theta2;
+	const T theta11 = theta9 * theta2;
+	const T theta13 = theta11 * theta2;
+
+	// Calculate the radial distortion factor
+	const T radialDistortionFactor = (theta + k3 * theta3 + k5 * theta5 + k7 * theta7 + k9 * theta9 + k11 * theta11 + k13 * theta13) / r;
+
+	// Calculate the radially distorted coordinates
+	const T x_r = x * radialDistortionFactor;
+	const T y_r = y * radialDistortionFactor;
+
+	// Calculate the squared radius of the radially distorted coordinates
+	const T radius_r2 = x_r * x_r + y_r * y_r;
+
+	/**
+	 * dfui_xy / dk3
+	 * Fx * (x * theta3 / r + p1 * (6 * x_r * x * theta3 / r + 2 * y_r * y * theta3 / r) + 2 * p2 * (x_r * y * theta3 / r + y_r * x * theta3 / r));
+	 * Fy * (y * theta3 / r + p2 * (6 * y_r * y * theta3 / r + 2 * x_r * x * theta3 / r) + 2 * p1 * (x_r * y * theta3 / r + y_r * x * theta3 / r));
+	 */
+	const T x_theta3_r = x * theta3 / r;
+	const T y_theta3_r = y * theta3 / r;
+	jx[0] = Fx * (x_theta3_r + p1 * (6 * x_r * x_theta3_r + 2 * y_r * y_theta3_r) + 2 * p2 * (x_r * y_theta3_r + y_r * x_theta3_r));
+	jy[0] = Fy * (y_theta3_r + p2 * (6 * y_r * y_theta3_r + 2 * x_r * x_theta3_r) + 2 * p1 * (x_r * y_theta3_r + y_r * x_theta3_r));
+
+	/**
+	 * dfui_xy / dk5
+	 */
+	const T x_theta5_r = x * theta5 / r;
+	const T y_theta5_r = y * theta5 / r;
+	jx[1] = Fx * (x_theta5_r + p1 * (6 * x_r * x_theta5_r + 2 * y_r * y_theta5_r) + 2 * p2 * (x_r * y_theta5_r + y_r * x_theta5_r));
+	jy[1] = Fy * (y_theta5_r + p2 * (6 * y_r * y_theta5_r + 2 * x_r * x_theta5_r) + 2 * p1 * (x_r * y_theta5_r + y_r * x_theta5_r));
+
+	/**
+	 * dfui_xy / dk7
+	 */
+	const T x_theta7_r = x * theta7 / r;
+	const T y_theta7_r = y * theta7 / r;
+	jx[2] = Fx * (x_theta7_r + p1 * (6 * x_r * x_theta7_r + 2 * y_r * y_theta7_r) + 2 * p2 * (x_r * y_theta7_r + y_r * x_theta7_r));
+	jy[2] = Fy * (y_theta7_r + p2 * (6 * y_r * y_theta7_r + 2 * x_r * x_theta7_r) + 2 * p1 * (x_r * y_theta7_r + y_r * x_theta7_r));
+
+	/**
+	 * dfui_xy / dk9
+	 */
+	const T x_theta9_r = x * theta9 / r;
+	const T y_theta9_r = y * theta9 / r;
+	jx[3] = Fx * (x_theta9_r + p1 * (6 * x_r * x_theta9_r + 2 * y_r * y_theta9_r) + 2 * p2 * (x_r * y_theta9_r + y_r * x_theta9_r));
+	jy[3] = Fy * (y_theta9_r + p2 * (6 * y_r * y_theta9_r + 2 * x_r * x_theta9_r) + 2 * p1 * (x_r * y_theta9_r + y_r * x_theta9_r));
+
+	/**
+	 * dfui_xy / dk11
+	 */
+	const T x_theta11_r = x * theta11 / r;
+	const T y_theta11_r = y * theta11 / r;
+	jx[4] = Fx * (x_theta11_r + p1 * (6 * x_r * x_theta11_r + 2 * y_r * y_theta11_r) + 2 * p2 * (x_r * y_theta11_r + y_r * x_theta11_r));
+	jy[4] = Fy * (y_theta11_r + p2 * (6 * y_r * y_theta11_r + 2 * x_r * x_theta11_r) + 2 * p1 * (x_r * y_theta11_r + y_r * x_theta11_r));
+
+	/**
+	 * dfui_xy / dk13
+	 */
+	const T x_theta13_r = x * theta13 / r;
+	const T y_theta13_r = y * theta13 / r;
+	jx[5] = Fx * (x_theta13_r + p1 * (6 * x_r * x_theta13_r + 2 * y_r * y_theta13_r) + 2 * p2 * (x_r * y_theta13_r + y_r * x_theta13_r));
+	jy[5] = Fy * (y_theta13_r + p2 * (6 * y_r * y_theta13_r + 2 * x_r * x_theta13_r) + 2 * p1 * (x_r * y_theta13_r + y_r * x_theta13_r));
+
+	/**
+	 * dfui_xy / dp1
+	 */
+	jx[6] = Fx * (3 * x_r * x_r + y_r * y_r);
+	jy[6] = Fy * (2 * x_r * y_r);
+
+	/**
+	 * dfui_xy / dp2
+	 */
+	jx[7] = Fx * (2 * x_r * y_r);
+	jy[7] = Fy * (3 * y_r * y_r + x_r * x_r);
+
+	/**
+	 * dfui_xy / dFx
+	 */
+	jx[8] = x_r + p1 * (2 * x_r * x_r + radius_r2) + p2 * 2 * x_r * y_r;
+	jy[8] = 0;
+
+	/**
+	 * dfui_xy / dFy
+	 */
+	jx[9] = 0;
+	jy[9] = y_r + p2 * (2 * y_r * y_r + radius_r2) + p1 * 2 * x_r * y_r;
+
+	/**
+	 * dfui_xy / dmx
+	 */
+	jx[10] = 1;
+	jy[10] = 0;
+
+	/**
+	 * dfui_xy / dmy
+	 */
+	jx[11] = 0;
+	jy[11] = 1;
+}
+
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x12(float* jx, float* jy, const FisheyeCameraT<float>& fisheyeCamera, const VectorT2<float>& normalizedImagePoint);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x12(double* jx, double* jy, const FisheyeCameraT<double>& fisheyeCamera, const VectorT2<double>& normalizedImagePoint);
+
 void Jacobian::calculateJacobianCameraPoseRodrigues2x12(Scalar* jacobianX, Scalar* jacobianY, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& objectPoint)
 {
 	ocean_assert(jacobianX && jacobianY && pinholeCamera.isValid());
