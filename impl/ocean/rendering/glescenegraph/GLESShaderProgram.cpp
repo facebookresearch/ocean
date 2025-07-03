@@ -612,9 +612,15 @@ void GLESShaderProgram::release()
 
 	if (id_ != 0)
 	{
+#ifdef OCEAN_DEBUG
 		const GLboolean isProgram = glIsProgram(id_);
 		ocean_assert(GL_NO_ERROR == glGetError());
-		ocean_assert_and_suppress_unused(isProgram == GL_TRUE, isProgram);
+
+		if (isProgram != GL_TRUE)
+		{
+			Log::warning() << "GLESShaderProgram: Shader program with id " << id_ << " is not a valid program (anymore), calling release from a non-render thread?";
+		}
+#endif
 
 		for (GLESShaderRef& shader : shaders_)
 		{
