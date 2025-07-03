@@ -164,25 +164,34 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		static bool testCameraDistortionJacobian2x4(const double testDuration);
 
 		/**
-		 * Tests the Jacobian for the intrinsic and radial distortion camera parameters.
+		 * Tests the Jacobian for the intrinsic and radial distortion of pinhole camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testCameraJacobian2x6(const double testDuration);
+		static bool testPinholeCameraJacobian2x6(const double testDuration);
 
 		/**
-		 * Tests the Jacobian for the intrinsic and radial and tangential distortion camera parameters.
+		 * Tests the Jacobian for the intrinsic and radial and tangential distortion of pinhole camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testCameraJacobian2x7(const double testDuration);
+		static bool testPinholeCameraJacobian2x7(const double testDuration);
 
 		/**
-		 * Tests the Jacobian for the intrinsic and radial and tangential distortion camera parameters.
+		 * Tests the Jacobian for the intrinsic, radial and tangential distortion of pinhole camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testCameraJacobian2x8(const double testDuration);
+		static bool testPinholeCameraJacobian2x8(const double testDuration);
+
+		/**
+		 * Tests the Jacobian for the intrinsic, radial and tangential distortion of fisheye camera parameters.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T the data type of the scalar to be used, either 'float' or 'double'
+		 */
+		template <typename T>
+		static bool testFisheyeCameraJacobian2x12(const double testDuration);
 
 		/**
 		 * Tests the Jacobian for the rotational part of the extrinsic camera matrix, intrinsic and radial and tangential camera parameters.

@@ -141,19 +141,27 @@ bool TestJacobian::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testCameraJacobian2x6(testDuration) && allSucceeded;
+	allSucceeded = testPinholeCameraJacobian2x6(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testCameraJacobian2x7(testDuration) && allSucceeded;
+	allSucceeded = testPinholeCameraJacobian2x7(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testCameraJacobian2x8(testDuration) && allSucceeded;
+	allSucceeded = testPinholeCameraJacobian2x8(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testFisheyeCameraJacobian2x12<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testFisheyeCameraJacobian2x12<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -331,19 +339,29 @@ TEST(TestJacobian, CameraDistortionJacobian2x4)
 	EXPECT_TRUE(TestJacobian::testCameraDistortionJacobian2x4(GTEST_TEST_DURATION));
 }
 
-TEST(TestJacobian, CameraJacobian2x6)
+TEST(TestJacobian, PinholeCameraJacobian2x6)
 {
-	EXPECT_TRUE(TestJacobian::testCameraJacobian2x6(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestJacobian::testPinholeCameraJacobian2x6(GTEST_TEST_DURATION));
 }
 
-TEST(TestJacobian, CameraJacobian2x7)
+TEST(TestJacobian, PinholeCameraJacobian2x7)
 {
-	EXPECT_TRUE(TestJacobian::testCameraJacobian2x7(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestJacobian::testPinholeCameraJacobian2x7(GTEST_TEST_DURATION));
 }
 
-TEST(TestJacobian, CameraJacobian2x8)
+TEST(TestJacobian, PinholeCameraJacobian2x8)
 {
-	EXPECT_TRUE(TestJacobian::testCameraJacobian2x8(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestJacobian::testPinholeCameraJacobian2x8(GTEST_TEST_DURATION));
+}
+
+TEST(TestJacobian, FisheyeCameraJacobian2x12_float)
+{
+	EXPECT_TRUE(TestJacobian::testFisheyeCameraJacobian2x12<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestJacobian, FisheyeCameraJacobian2x12_double)
+{
+	EXPECT_TRUE(TestJacobian::testFisheyeCameraJacobian2x12<double>(GTEST_TEST_DURATION));
 }
 
 TEST(TestJacobian, OrientationCameraJacobian2x11)
@@ -4739,11 +4757,11 @@ bool TestJacobian::testCameraDistortionJacobian2x4(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestJacobian::testCameraJacobian2x6(const double testDuration)
+bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing camera jacobian 2x6:";
+	Log::info() << "Testing pinhole camera jacobian 2x6:";
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
@@ -4970,11 +4988,11 @@ bool TestJacobian::testCameraJacobian2x6(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestJacobian::testCameraJacobian2x7(const double testDuration)
+bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing camera jacobian 2x7:";
+	Log::info() << "Testing pinhole camera jacobian 2x7:";
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
@@ -5220,11 +5238,11 @@ bool TestJacobian::testCameraJacobian2x7(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestJacobian::testCameraJacobian2x8(const double testDuration)
+bool TestJacobian::testPinholeCameraJacobian2x8(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing camera jacobian 2x8:";
+	Log::info() << "Testing pinhole camera jacobian 2x8:";
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
@@ -5499,6 +5517,118 @@ bool TestJacobian::testCameraJacobian2x8(const double testDuration)
 	}
 
 	return allSucceeded;
+}
+
+template <typename T>
+bool TestJacobian::testFisheyeCameraJacobian2x12(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing fisheye camera jacobian 2x12, with " << TypeNamer::name<T>() << ":";
+
+	const std::vector<T> epsilons = {NumericT<T>::weakEps(), NumericT<T>::weakEps() / T(10), NumericT<T>::weakEps() * T(10), NumericT<T>::weakEps() / T(100), NumericT<T>::weakEps() * T(100)};
+
+	constexpr size_t numberPoints = 100;
+
+	RandomGenerator randomGenerator;
+
+	constexpr double threshold = std::is_same<float, T>::value ? 0.65 : 0.99;
+
+	ValidationPrecision validation(threshold, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		//const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(0u);
+
+		const unsigned int width = 1000u;
+		const unsigned int height = 1000u;
+
+		const T width2 = T(width) * T(0.5);
+		const T height2 = T(height) * T(0.5);
+
+		const T fovX = RandomT<T>::scalar(randomGenerator, NumericT<T>::deg2rad(70), NumericT<T>::deg2rad(140));
+		const T fovY = RandomT<T>::scalar(randomGenerator, NumericT<T>::deg2rad(70), NumericT<T>::deg2rad(140));
+
+		const T principalX = RandomT<T>::scalar(randomGenerator, width2 - T(50), width2 + T(50));
+		const T principalY = RandomT<T>::scalar(randomGenerator, height2 - T(50), height2 + T(50));
+
+		const T focalLengthX = principalX / NumericT<T>::tan(fovX * T(0.5));
+		const T focalLengthY = principalY / NumericT<T>::tan(fovY * T(0.5));
+
+		std::vector<T> parameters =
+		{
+			focalLengthX, focalLengthY,
+			principalX, principalY,
+			0, 0, 0, 0, 0, 0,
+			0, 0
+		};
+
+		ocean_assert(parameters.size() == 12);
+
+		for (size_t n = 4; n < parameters.size(); ++n)
+		{
+			parameters[n] = RandomT<T>::scalar(randomGenerator, T(-0.01), T(0.01));
+		}
+
+		const FisheyeCameraT<T> fisheyeCamera(width, height, FisheyeCameraT<T>::PC_12_PARAMETERS, parameters.data());
+
+		/**
+		 * jacobian x: | dfx / dk3, dfx / dk5, dfx / dk7, dfx / dk9, dfx / dk11, dfx / dk13, dfx / dp1, dfx / dp2, dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy |
+		 * jacobian y: | dfy / dk3, dfy / dk5, dfy / dk7, dfy / dk9, dfy / dk11, dfy / dk13, dfy / dp1, dfy / dp2, dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy |
+		 */
+		T jacobianX[12];
+		T jacobianY[12];
+
+		for (size_t n = 0; n < numberPoints; ++n)
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const VectorT2<T> distortedImagePoint = RandomT<T>::vector2(randomGenerator, T(0), T(width), T(0), T(height));
+			const VectorT3<T> objectPoint = fisheyeCamera.vectorIF(distortedImagePoint);
+			ocean_assert(objectPoint.z() > Numeric::eps());
+
+			const VectorT2<T> normalizedUndistortedImagePoint = VectorT2<T>(objectPoint.x() / objectPoint.z(), objectPoint.y() / objectPoint.z());
+
+			Geometry::Jacobian::calculateCameraJacobian2x12(jacobianX, jacobianY, fisheyeCamera, normalizedUndistortedImagePoint);
+
+			const VectorT2<T> imagePoint(fisheyeCamera.projectToImageIF(objectPoint));
+
+			for (size_t indexJacobian = 0; indexJacobian < 12; ++indexJacobian)
+			{
+				const size_t indexParameter = (indexJacobian + 4) % 12; // Fx, Fy, mx, my, | k3, k5, k7, k9, k11, k13, p1, p2
+
+				bool localAccuracy = false;
+
+				for (const T epsilon : epsilons)
+				{
+					std::vector<T> deltaParameters(parameters);
+					deltaParameters[indexParameter] += epsilon;
+
+					const FisheyeCameraT<T> deltaFisheyeCamera(width, height, FisheyeCameraT<T>::PC_12_PARAMETERS, deltaParameters.data());
+
+					const VectorT2<T> deltaImagePoint = deltaFisheyeCamera.projectToImageIF(objectPoint);
+
+					if (checkAccuracy(imagePoint, deltaImagePoint, epsilon, jacobianX[indexJacobian], jacobianY[indexJacobian]))
+					{
+						localAccuracy = true;
+						break;
+					}
+				}
+
+				if (!localAccuracy)
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+		}
+	}
+	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestJacobian::testOrientationCameraJacobian2x11(const double testDuration)
