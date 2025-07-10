@@ -517,8 +517,6 @@ bool WICObject::writeFrameToBitmapDecoder(IWICImagingFactory* imagingFactory, IW
 		noError = false;
 	}
 
-	ocean_assert(frame.numberPlanes() == 1u);
-
 	IWICBitmapFrameEncode* bitmapFrameEncode = nullptr;
 	IPropertyBag2* propertyBag = nullptr;
 
