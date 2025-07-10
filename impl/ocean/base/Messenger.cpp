@@ -432,8 +432,6 @@ std::string Messenger::popMessage(const MessageType type, bool* isNew)
 			{
 				return location + std::string(", ") + message;
 			}
-
-			break;
 		}
 
 		case TYPE_DEBUG:
