@@ -150,12 +150,12 @@ class NonMaximumSuppression
 		/**
 		 * Definition of a vector holding strength candidate objects.
 		 */
-		typedef std::vector<StrengthCandidate> StrengthCandidateRow;
+		using StrengthCandidateRow = std::vector<StrengthCandidate>;
 
 		/**
 		 * Definition of a vector holding a vector of strength candidates.
 		 */
-		typedef ShiftVector<StrengthCandidateRow> StrengthCandidateRows;
+		using StrengthCandidateRows = ShiftVector<StrengthCandidateRow>;
 
 	public:
 
@@ -245,6 +245,17 @@ class NonMaximumSuppression
 		 */
 		template <typename TCoordinate, typename TStrength, bool tStrictMaximum = true>
 		StrengthPositions<TCoordinate, TStrength> suppressNonMaximum(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, Worker* worker = nullptr, const PositionCallback<TCoordinate, TStrength>* positionCallback = nullptr) const;
+
+		/**
+		 * Returns all gathered candidates of this object.
+		 * The resulting candidates are raw candidates without any suppression.
+		 * @param firstColumn The first column from which candidates will be returned, with range [0, width() - 1]
+		 * @param numberColumns The number of columns for which candidates will be returned, with range [1, width() - firstColumn]
+		 * @param firstRow The first row from which candidates will be returned, with range [yOffset(), height() - 1]
+		 * @param numberRows The number of rows for which candidates will be returned, with range [1, height() - firstRow]
+		 * @param strengthPositions The resulting strength positions
+		 */
+		void candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, StrengthPositions<unsigned int, T>& strengthPositions);
 
 		/**
 		 * Removes the gathered non-maximum suppression information so that this object can be reused again (for the same task with same resolution etc.).
@@ -524,6 +535,35 @@ typename NonMaximumSuppression<T>::template StrengthPositions<TCoordinate, TStre
 	}
 
 	return result;
+}
+
+template <typename T>
+void NonMaximumSuppression<T>::candidates(const unsigned int firstColumn, const unsigned int numberColumns, const unsigned int firstRow, const unsigned int numberRows, NonMaximumSuppression<T>::StrengthPositions<unsigned int, T>& strengthPositions)
+{
+	ocean_assert(firstColumn + numberColumns <= width_);
+	ocean_assert(firstRow + numberRows <= (unsigned int)(rows_.endIndex()));
+
+	const unsigned int endColumn = firstColumn + numberColumns;
+
+	for (unsigned int y = firstRow; y < firstRow + numberRows; ++y)
+	{
+		const StrengthCandidateRow& row = rows_[y];
+
+		for (const StrengthCandidate& candidate : row)
+		{
+			if (candidate.x() < firstColumn)
+			{
+				continue;
+			}
+
+			if (candidate.x() >= endColumn)
+			{
+				break;
+			}
+
+			strengthPositions.emplace_back(candidate.x(), y, candidate.strength());
+		}
+	}
 }
 
 template <typename T>
