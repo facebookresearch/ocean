@@ -776,35 +776,38 @@ inline Canvas::FilterFactors<tFilterSize>::FilterFactors()
 {
 	static_assert(tFilterSize % 2u == 1u, "Invalid aliasing direction filter size.");
 
+	// the filter factors are symmetric, let's calculate only the first half of the factors (including the center factor)
+
 	if constexpr (tFilterSize <= 5u)
 	{
-		for (unsigned int k = 0u; k < tFilterSize; ++k)
+		for (unsigned int k = 0u; k <= tFilterSize / 2; ++k)
 		{
 			factors_[k] = NumericT<unsigned int>::binomialCoefficient(tFilterSize - 1u, k);
 		}
-
-		maximalFactor_ = NumericT<unsigned int>::binomialCoefficient(tFilterSize - 1, tFilterSize / 2u);
 	}
 	else
 	{
-		for (unsigned int k = 0u; k < tFilterSize; ++k)
+		for (unsigned int k = 0u; k <= tFilterSize / 2u; ++k)
 		{
 			if (k < 5u / 2u)
 			{
 				factors_[k] = NumericT<unsigned int>::binomialCoefficient(5u - 1u, k);
-			}
-			else if (k >= tFilterSize - 5u / 2u)
-			{
-				factors_[k] = NumericT<unsigned int>::binomialCoefficient(5u - 1u, 5u - (tFilterSize - k));
 			}
 			else
 			{
 				factors_[k] = NumericT<unsigned int>::binomialCoefficient(5u - 1u, 5u / 2u);
 			}
 		}
-
-		maximalFactor_ = NumericT<unsigned int>::binomialCoefficient(5u - 1u, 5u / 2u);
 	}
+
+	// let's copy the first half of the factors to the second half of the factors
+
+	for (unsigned int k = tFilterSize / 2u + 1u; k < tFilterSize; ++k)
+	{
+		factors_[k] = factors_[tFilterSize - k - 1u];
+	}
+
+	maximalFactor_ = factors_[tFilterSize / 2u];
 }
 
 template <unsigned int tFilterSize>
