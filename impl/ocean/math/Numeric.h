@@ -1888,7 +1888,7 @@ template <typename T>
 constexpr inline T NumericT<T>::factorial(const T& value)
 {
 	ocean_assert(value >= 0);
-	ocean_assert(T((long long)(value)) == value);
+	ocean_assert(T(int64_t(value)) == value);
 
 	if (value <= 1)
 	{
@@ -1899,7 +1899,7 @@ constexpr inline T NumericT<T>::factorial(const T& value)
 
 	for (unsigned int n = 3u; n <= (unsigned int)value; ++n)
 	{
-		ocean_assert(std::numeric_limits<T>::max() / T(n) >= result);
+		ocean_assert(maxValue() / T(n) >= result);
 		result *= T(n);
 	}
 
@@ -1957,8 +1957,8 @@ template <typename T>
 constexpr inline T NumericT<T>::binomialCoefficient(const T& n, const T& k)
 {
 	ocean_assert(n >= 0 && k >= 0);
-	ocean_assert(T((long long)(n)) == n);
-	ocean_assert(T((long long)(k)) == k);
+	ocean_assert(T(int64_t(n)) == n);
+	ocean_assert(T(int64_t(k)) == k);
 
 	if (n <= T(1) || k == T(0) || n == k)
 	{
@@ -1969,13 +1969,13 @@ constexpr inline T NumericT<T>::binomialCoefficient(const T& n, const T& k)
 
 	T result = n - k + T(1);
 
-	for (unsigned int i = (unsigned int)(n - k) + 2u; i <= (unsigned int)n; ++i)
+	for (unsigned int i = (unsigned int)(n - k) + 2u; i <= (unsigned int)(n); ++i)
 	{
-		ocean_assert(std::numeric_limits<T>::max() / T(i) >= result);
+		ocean_assert(maxValue() / T(i) >= result);
 		result *= T(i);
 	}
 
-	for (unsigned int i = 2u; i <= (unsigned int)k; ++i)
+	for (unsigned int i = 2u; i <= (unsigned int)(k); ++i)
 	{
 		ocean_assert((result / T(i)) * T(i) == result);
 		result /= T(i);
@@ -3280,21 +3280,25 @@ constexpr inline T NumericT<T>::copySign(const T signReceiver, const T signProvi
 template <>
 constexpr inline double NumericT<double>::copySign(const double first, const double second)
 {
-	const unsigned long long value = ((*(unsigned long long*)&first) & 0x7FFFFFFFFFFFFFFFll)
-							| ((*(unsigned long long*)&second) & 0x8000000000000000ll);
+	const uint64_t value = ((*(uint64_t*)&first) & 0x7FFFFFFFFFFFFFFFull)
+							| ((*(uint64_t*)&second) & 0x8000000000000000ull);
 
 #ifdef OCEAN_DEBUG
 
-	ocean_assert(sizeof(unsigned long long) == sizeof(double));
+	ocean_assert(sizeof(uint64_t) == sizeof(double));
 
-	const double result = *(double*)&value;
+	const double result = *(double*)(&value);
 
 	double testValue = 0;
 
 	if (second >= 0.0)
+	{
 		testValue = NumericT<double>::abs(first);
+	}
 	else
+	{
 		testValue = -NumericT<double>::abs(first);
+	}
 
 	ocean_assert(result == testValue || second == 0.0);
 
@@ -3310,20 +3314,24 @@ constexpr inline double NumericT<double>::copySign(const double first, const dou
 template <>
 constexpr inline float NumericT<float>::copySign(const float first, const float second)
 {
-	const unsigned int value = ((*(unsigned int*)&first) & 0x7FFFFFFF) | ((*(unsigned int*)&second) & 0x80000000);
+	const uint32_t value = ((*(uint32_t*)&first) & 0x7FFFFFFFu) | ((*(uint32_t*)&second) & 0x80000000u);
 
 #ifdef OCEAN_DEBUG
 
-	ocean_assert(sizeof(unsigned int) == sizeof(float));
+	ocean_assert(sizeof(uint32_t) == sizeof(float));
 
-	const float result = *(float*)&value;
+	const float result = *(float*)(&value);
 
 	float testValue = 0;
 
 	if (second >= 0.0f)
+	{
 		testValue = NumericT<float>::abs(first);
+	}
 	else
+	{
 		testValue = -NumericT<float>::abs(first);
+	}
 
 	ocean_assert(result == testValue || second == 0.0);
 
@@ -3354,21 +3362,25 @@ constexpr inline T NumericT<T>::invertSign(const T signReceiver, const T signPro
 template <>
 constexpr inline double NumericT<double>::invertSign(const double first, const double second)
 {
-	const unsigned long long value = ((*(unsigned long long*)&first) & 0x7FFFFFFFFFFFFFFFll)
-							| ((~*(unsigned long long*)&second) & 0x8000000000000000ll);
+	const uint64_t value = ((*(uint64_t*)&first) & 0x7FFFFFFFFFFFFFFFull)
+							| ((~*(uint64_t*)&second) & 0x8000000000000000ull);
 
 #ifdef OCEAN_DEBUG
 
-	ocean_assert(sizeof(unsigned long long) == sizeof(double));
+	ocean_assert(sizeof(uint64_t) == sizeof(double));
 
 	const double result = *(double*)&value;
 
 	double testValue = 0;
 
 	if (second < 0)
+	{
 		testValue = NumericT<double>::abs(first);
+	}
 	else
+	{
 		testValue = -NumericT<double>::abs(first);
+	}
 
 	ocean_assert(result == testValue);
 
@@ -3385,20 +3397,24 @@ constexpr inline double NumericT<double>::invertSign(const double first, const d
 template <>
 constexpr inline float NumericT<float>::invertSign(const float first, const float second)
 {
-	const unsigned int value = ((*(unsigned int*)&first) & 0x7FFFFFFF) | ((~*(unsigned int*)&second) & 0x80000000);
+	const uint32_t value = ((*(uint32_t*)&first) & 0x7FFFFFFFu) | ((~*(uint32_t*)&second) & 0x80000000u);
 
 #ifdef OCEAN_DEBUG
 
-	ocean_assert(sizeof(unsigned int) == sizeof(float));
+	ocean_assert(sizeof(uint32_t) == sizeof(float));
 
 	const float result = *(float*)&value;
 
 	double testValue = 0;
 
 	if (second < 0)
+	{
 		testValue = NumericT<float>::abs(first);
+	}
 	else
+	{
 		testValue = -NumericT<float>::abs(first);
+	}
 
 	ocean_assert(result == testValue);
 
