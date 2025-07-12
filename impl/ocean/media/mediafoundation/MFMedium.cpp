@@ -146,6 +146,21 @@ HRESULT STDMETHODCALLTYPE MFMedium::EventCallback::Invoke(IMFAsyncResult* pAsync
 
 				break;
 			}
+
+			case MESessionTopologyStatus:
+			{
+				uint32_t topologyStatus = 0u;
+				if (S_OK == mediaEvent->GetUINT32(MF_EVENT_TOPOLOGY_STATUS, &topologyStatus))
+				{
+					Log::debug() << "Topology status: " << MF_TOPOSTATUS(topologyStatus);
+				}
+
+				break;
+			}
+
+			default:
+				Log::debug() << "MFMedium::EventCallback::Invoke(): Unknown event type: " << eventType;
+				break;
 		}
 	}
 
@@ -282,11 +297,13 @@ void MFMedium::releaseMediaSession()
 				}
 				else
 				{
-					Log::warning() << "MediaFoundatoin: Failed to wait for closed media session";
+					Log::warning() << "MediaFoundation: Failed to wait for closed media session";
 					break;
 				}
 			}
 		}
+
+		mediaSession_->Shutdown();
 
 		mediaSession_.release();
 	}
@@ -304,6 +321,20 @@ void MFMedium::releaseTopology()
 	if (mediaSession_.isValid())
 	{
 		mediaSession_->ClearTopologies();
+	}
+
+	if (topology_.isValid())
+	{
+		HRESULT result = topology_->Clear();
+		ocean_assert_and_suppress_unused(result == S_OK, result);
+
+		WORD topologyNodeCount = 0u;
+		topology_->GetNodeCount(&topologyNodeCount);
+		ocean_assert(topologyNodeCount == 0u);
+		ocean_assert_and_suppress_unused(result == S_OK, result);
+
+		result = topology_->DeleteAllItems();
+		ocean_assert_and_suppress_unused(result == S_OK, result);
 	}
 
 	topology_.release();
@@ -411,17 +442,17 @@ void MFMedium::onTopologySet(IMFTopology* /*topology*/)
 
 void MFMedium::onSessionStarted()
 {
-	// nothing to do here
+	Log::debug() << "MFMedium::onSessionStarted()";
 }
 
 void MFMedium::onSessionStopped()
 {
-	// nothing to do here
+	Log::debug() << "MFMedium::onSessionStopped()";
 }
 
 void MFMedium::onSessionEnded()
 {
-	// nothing to do here
+	Log::debug() << "MFMedium::onSessionEnded()";
 }
 
 void MFMedium::onFormatTypeChanged(const TOPOID /*nodeId*/)
