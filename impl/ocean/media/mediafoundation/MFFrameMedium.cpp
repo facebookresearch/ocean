@@ -177,8 +177,6 @@ bool MFFrameMedium::extractFrameFormat(IMFMediaType* mediaType, MediaFrameType& 
 
 ScopedIMFMediaType MFFrameMedium::createMediaType(const MediaFrameType& frameType)
 {
-	ocean_assert(frameType.isValid());
-
 	ScopedIMFMediaType mediaType;
 
 	HRESULT result = MFCreateMediaType(&mediaType.resetObject());
@@ -203,8 +201,6 @@ ScopedIMFMediaType MFFrameMedium::createMediaType(const MediaFrameType& frameTyp
 	{
 		result = MFSetAttributeSize(*mediaType, MF_MT_FRAME_SIZE, frameType.width(), frameType.height());
 		ocean_assert(result == S_OK);
-
-		mediaType->SetUINT32(MF_MT_AVG_BITRATE, frameType.frameTypeSize());
 	}
 
 	if (frameType.frequency() > 0)
@@ -222,11 +218,6 @@ ScopedIMFMediaType MFFrameMedium::createMediaType(const MediaFrameType& frameTyp
 
 	// we have uncompressed media types
 	mediaType->SetUINT32(MF_MT_ALL_SAMPLES_INDEPENDENT, TRUE);
-
-	// aspect ratio: 1-1
-	MFSetAttributeRatio(*mediaType, MF_MT_PIXEL_ASPECT_RATIO, 1u, 1u);
-
-	mediaType->SetUINT32(MF_MT_INTERLACE_MODE, 7);
 
 	return mediaType;
 }
