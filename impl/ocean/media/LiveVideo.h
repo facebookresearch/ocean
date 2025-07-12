@@ -86,9 +86,78 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		};
 
 		/**
+		 * This class holds the relevant information describing the property of a stream.
+		 */
+		class OCEAN_MEDIA_EXPORT StreamProperty
+		{
+			public:
+
+				/**
+				 * Simple helper struct allowing to calculate a hash value for stream property.
+				 */
+				struct Hash
+				{
+					/**
+					 * Returns a hash value for a StreamProperty object.
+					 * @param streamProperty The object for which the hash will be returned
+					 * @return The hash value
+					 */
+					inline size_t operator()(const StreamProperty& streamProperty) const;
+				};
+
+			public:
+
+				/**
+				 * Default constructor creating an invalid object.
+				 */
+				StreamProperty() = default;
+
+				/**
+				 * Creates a new stream property object.
+				 * @param streamType The type of the stream
+				 * @param width The width of the stream in pixel
+				 * @param height The height of the stream in pixel
+				 * @param framePixelFormat The pixel format of the stream, invalid if stream type is not ST_FRAME
+				 * @param codecType The type of the stream, invalid if stream type is not ST_CODEC
+				 */
+				StreamProperty(const StreamType streamType, const unsigned int width, unsigned int height, const FrameType::PixelFormat framePixelFormat, const CodecType codecType);
+
+				/**
+				 * Returns whether this configuration object holds a valid configuration.
+				 * The configuration is valid if a valid stream type and a valid image resolution is defined.
+				 * @return True, if so
+				 */
+				inline bool isValid() const;
+
+				/**
+				 * Returns whether this configuration object holds the same configuration as the given one.
+				 * @param right The configuration object to compare
+				 * @return True, if so
+				 */
+				bool operator==(const StreamProperty& right) const;
+
+			public:
+
+				/// The type of the stream.
+				StreamType streamType_ = ST_INVALID;
+
+				/// The width of the stream in pixel.
+				unsigned int width_ = 0u;
+
+				/// The height of the stream in pixel.
+				unsigned int height_ = 0u;
+
+				/// The pixel format of the stream, only valid if the stream type is ST_FRAME.
+				FrameType::PixelFormat framePixelFormat_ = FrameType::FORMAT_UNDEFINED;
+
+				/// The codec of the stream, only valid if the stream type is ST_CODEC.
+				CodecType codecType_ = CT_INVALID;
+		};
+
+		/**
 		 * This class holds the relevant information describing a video stream configuration.
 		 */
-		class OCEAN_MEDIA_EXPORT StreamConfiguration
+		class OCEAN_MEDIA_EXPORT StreamConfiguration : public StreamProperty
 		{
 			public:
 
@@ -96,6 +165,13 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 				 * Default constructor creating an invalid object.
 				 */
 				StreamConfiguration() = default;
+
+				/**
+				 * Creates a new stream configuration object.
+				 * @param streamProperty The property of the stream
+				 * @param frameRates The frame rates of the stream in Hz
+				 */
+				StreamConfiguration(const StreamProperty& streamProperty, std::vector<double>&& frameRates);
 
 				/**
 				 * Creates a new stream configuration object.
@@ -114,32 +190,10 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 				 */
 				std::string toString() const;
 
-				/**
-				 * Returns whether this configuration object holds a valid configuration.
-				 * The configuration is valid if a valid stream type and a valid image resolution is defined.
-				 * @return True, if so
-				 */
-				inline bool isValid() const;
-
 			public:
-
-				/// The type of the stream.
-				StreamType streamType_ = ST_INVALID;
-
-				/// The width of the stream in pixel.
-				unsigned int width_ = 0u;
-
-				/// The height of the stream in pixel.
-				unsigned int height_ = 0u;
 
 				/// The frame rates of the stream in Hz.
 				std::vector<double> frameRates_;
-
-				/// The pixel format of the stream, only valid if the stream type is ST_FRAME.
-				FrameType::PixelFormat framePixelFormat_ = FrameType::FORMAT_UNDEFINED;
-
-				/// The codec of the stream, only valid if the stream type is ST_CODEC.
-				CodecType codecType_ = CT_INVALID;
 		};
 
 		/**
@@ -262,7 +316,18 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		explicit LiveVideo(const std::string& url);
 };
 
-inline bool LiveVideo::StreamConfiguration::isValid() const
+inline size_t LiveVideo::StreamProperty::Hash::operator()(const StreamProperty& streamProperty) const
+{
+	size_t seed = std::hash<StreamType>{}(streamProperty.streamType_);
+	seed ^= std::hash<unsigned int>{}(streamProperty.width_) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+	seed ^= std::hash<unsigned int>{}(streamProperty.height_) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+	seed ^= std::hash<FrameType::PixelFormat>{}(streamProperty.framePixelFormat_) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+	seed ^= std::hash<CodecType>{}(streamProperty.codecType_) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+
+	return seed;
+}
+
+inline bool LiveVideo::StreamProperty::isValid() const
 {
 	return streamType_ != ST_INVALID && width_ > 0u && height_ > 0u;
 }

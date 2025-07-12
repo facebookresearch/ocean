@@ -13,13 +13,31 @@ namespace Ocean
 namespace Media
 {
 
-LiveVideo::StreamConfiguration::StreamConfiguration(const StreamType streamType, const unsigned int width, unsigned int height, std::vector<double>&& frameRates, const FrameType::PixelFormat framePixelFormat, const CodecType codecType) :
+LiveVideo::StreamProperty::StreamProperty(const StreamType streamType, const unsigned int width, unsigned int height, const FrameType::PixelFormat framePixelFormat, const CodecType codecType) :
 	streamType_(streamType),
 	width_(width),
 	height_(height),
-	frameRates_(std::move(frameRates)),
 	framePixelFormat_(framePixelFormat),
 	codecType_(codecType)
+{
+	// nothing to do here
+}
+
+bool LiveVideo::StreamProperty::operator==(const StreamProperty& right) const
+{
+	return streamType_ == right.streamType_ && width_ == right.width_ && height_ == right.height_ && framePixelFormat_ == right.framePixelFormat_ && codecType_ == right.codecType_;
+}
+
+LiveVideo::StreamConfiguration::StreamConfiguration(const StreamProperty& streamProperty, std::vector<double>&& frameRates) :
+	StreamProperty(streamProperty),
+	frameRates_(std::move(frameRates))
+{
+	// nothing to do here
+}
+
+LiveVideo::StreamConfiguration::StreamConfiguration(const StreamType streamType, const unsigned int width, unsigned int height, std::vector<double>&& frameRates, const FrameType::PixelFormat framePixelFormat, const CodecType codecType) :
+	StreamProperty(streamType, width, height, framePixelFormat, codecType),
+	frameRates_(std::move(frameRates))
 {
 	// nothing to do here
 }
