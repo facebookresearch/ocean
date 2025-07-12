@@ -156,7 +156,7 @@ bool MFFrameMedium::extractMediaFrameType(IMFMediaType* mediaType, MediaFrameTyp
 	}
 
 	const FrameType::PixelFormat pixelFormat = Utilities::mediaSubtypeToPixelFormat(mediaSubType);
-	const FrameType::PixelOrigin pixelOrigin = Utilities::extractPixelOrigin(mediaSubType);
+	constexpr FrameType::PixelOrigin pixelOrigin = FrameType::ORIGIN_UPPER_LEFT;
 
 	frameType = MediaFrameType(frameType, pixelFormat, pixelOrigin);
 

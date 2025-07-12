@@ -399,21 +399,6 @@ FrameType::PixelFormat Utilities::mediaSubtypeToPixelFormat(const GUID& mediaSub
 	return FrameType::FORMAT_UNDEFINED;
 }
 
-FrameType::PixelOrigin Utilities::extractPixelOrigin(const GUID& mediaSubtype)
-{
-	if (mediaSubtype == MFVideoFormat_RGB24 || mediaSubtype == MFVideoFormat_RGB32)
-	{
-		return FrameType::ORIGIN_LOWER_LEFT;
-	}
-
-	if (mediaSubtype == MFVideoFormat_I420 || mediaSubtype == MFVideoFormat_IYUV || mediaSubtype == MFVideoFormat_YUY2 || mediaSubtype == MFVideoFormat_NV12 || mediaSubtype == MFVideoFormat_YV12)
-	{
-		return FrameType::ORIGIN_UPPER_LEFT;
-	}
-
-	return FrameType::ORIGIN_INVALID;
-}
-
 GUID Utilities::convertPixelFormat(const FrameType::PixelFormat pixelFormat)
 {
 	switch (pixelFormat)

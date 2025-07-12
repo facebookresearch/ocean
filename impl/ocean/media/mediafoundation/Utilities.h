@@ -132,13 +132,6 @@ class OCEAN_MEDIA_MF_EXPORT Utilities
 		static FrameType::PixelFormat mediaSubtypeToPixelFormat(const GUID& mediaSubtype);
 
 		/**
-		 * Returns the pixel origin of a Media Foundation media subtype.
-		 * @param mediaSubtype Media Foundation media type to return the pixel origin for
-		 * @return Pixel origin
-		 */
-		static FrameType::PixelOrigin extractPixelOrigin(const GUID& mediaSubtype);
-
-		/**
 		 * Converts a pixel format to a Media Foundation media subtype.
 		 * @param pixelFormat Pixel format
 		 * @return Media Foundation media type
