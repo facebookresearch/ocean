@@ -42,7 +42,7 @@ class SampleGrabber final : public IMFSampleGrabberSinkCallback
 		/**
 		 * Definition of a callback for samples.
 		 */
-		typedef Callback<void, const GUID&, const unsigned int, const long long, const long long, const void*, const unsigned int> SampleCallback;
+		using SampleCallback = Callback<void, const GUID&, const unsigned int, const long long, const long long, const void*, const unsigned int>;
 
 	public:
 

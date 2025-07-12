@@ -14,8 +14,6 @@
 
 #include "ocean/base/Frame.h"
 
-#include <map>
-
 namespace Ocean
 {
 
@@ -50,7 +48,7 @@ class OCEAN_MEDIA_MF_EXPORT Utilities
 		/**
 		 * Definition of a map mapping GUID objects to strings.
 		 */
-		typedef std::map<GUID, std::string, GUIDCompare> IdMap;
+		using IdMap = std::map<GUID, std::string, GUIDCompare>;
 
 	public:
 

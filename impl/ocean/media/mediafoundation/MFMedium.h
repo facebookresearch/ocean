@@ -41,17 +41,17 @@ class OCEAN_MEDIA_MF_EXPORT MFMedium : virtual public Medium
 				/**
 				 * Definition of a callback function without parameter.
 				 */
-				typedef Callback<void> EventFunction;
+				using EventFunction = Callback<void>;
 
 				/**
 				 * Definition of a callback function with topology as parameter.
 				 */
-				typedef Callback<void, IMFTopology*> TopologyEventFunction;
+				using TopologyEventFunction = Callback<void, IMFTopology*>;
 
 				/**
 				 * Definition of a callback function with node as parameter.
 				 */
-				typedef Callback<void, const TOPOID> TopologyNodeEventFunction;
+				using TopologyNodeEventFunction = Callback<void, const TOPOID>;
 
 			public:
 

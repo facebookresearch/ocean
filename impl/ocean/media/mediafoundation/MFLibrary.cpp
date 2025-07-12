@@ -228,10 +228,6 @@ MediumRef MFLibrary::newLiveVideo(const std::string& url, const bool useExclusiv
 					uniqueIdentifier = definitions[size_t(index)].uniqueIdentifier();
 				}
 			}
-			else
-			{
-
-			}
 		}
 		else
 		{
