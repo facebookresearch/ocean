@@ -40,7 +40,7 @@ class OCEAN_CV_DETECTOR_EXPORT FeatureDetector
 		 * Best practice is to avoid using these functions if binary size matters,<br>
 		 * as for every comfort function a corresponding function exists with specialized functionality not increasing binary size significantly.<br>
 		 */
-		class OCEAN_CV_EXPORT Comfort
+		class OCEAN_CV_DETECTOR_EXPORT Comfort
 		{
 			public:
 
