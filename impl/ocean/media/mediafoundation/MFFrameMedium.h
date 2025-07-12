@@ -13,8 +13,7 @@
 #include "ocean/media/mediafoundation/MFMedium.h"
 
 #include "ocean/media/FrameMedium.h"
-
-#include <vector>
+#include "ocean/media/LiveVideo.h"
 
 namespace Ocean
 {
@@ -54,12 +53,21 @@ class OCEAN_MEDIA_MF_EXPORT MFFrameMedium :
 		bool setPreferredFrameFrequency(const FrameFrequency frequency) override;
 
 		/**
-		 * Extracts the video format of a given Media Foundation media type.
+		 * Extracts the video stream type of a given Media Foundation media type.
 		 * @param mediaType Media Foundation media type, must be valid
-		 * @param frameType Resulting frame type
+		 * @param streamType Resulting stream type
+		 * @param codecType Optional resulting codec type, only if the resulting stream type is ST_CODEC; nullptr if not of interest
 		 * @return True, if succeeded
 		 */
-		static bool extractFrameFormat(IMFMediaType* mediaType, MediaFrameType& frameType);
+		static bool extractStreamType(IMFMediaType* mediaType, LiveVideo::StreamType& streamType, LiveVideo::CodecType* codecType = nullptr);
+
+		/**
+		 * Extracts the media frame type of a given Media Foundation media type.
+		 * @param mediaType Media Foundation media type, must be valid
+		 * @param frameType Resulting media frame type
+		 * @return True, if succeeded
+		 */
+		static bool extractMediaFrameType(IMFMediaType* mediaType, MediaFrameType& frameType);
 
 		/**
 		 * Creates the video format of a given Media Foundation media type.

@@ -311,7 +311,50 @@ bool Utilities::enumerateTransforms(std::string& result)
 	return true;
 }
 
-FrameType::PixelFormat Utilities::convertMediaSubtype(const GUID& mediaSubtype)
+LiveVideo::StreamType Utilities::mediaSubtypeToStreamType(const GUID& mediaSubtype, LiveVideo::CodecType* codecType)
+{
+	if (codecType != nullptr)
+	{
+		*codecType= LiveVideo::CT_INVALID;
+	}
+
+	if (mediaSubtype == MFVideoFormat_I420
+			|| mediaSubtype == MFVideoFormat_RGB24
+			|| mediaSubtype == MFVideoFormat_RGB32
+			|| mediaSubtype == MFVideoFormat_YUY2
+			|| mediaSubtype == MFVideoFormat_NV12)
+	{
+		return LiveVideo::ST_FRAME;
+	}
+
+	if (mediaSubtype == MFVideoFormat_MJPG)
+	{
+		return LiveVideo::ST_MJPEG;
+	}
+
+	if (mediaSubtype == MFVideoFormat_H264
+			|| mediaSubtype == MFVideoFormat_H265)
+	{
+		if (codecType != nullptr)
+		{
+			if (mediaSubtype == MFVideoFormat_H264)
+			{
+				*codecType= LiveVideo::CT_H264;
+			}
+			else
+			{
+				ocean_assert(mediaSubtype == MFVideoFormat_H265);
+				*codecType= LiveVideo::CT_H265;
+			}
+		}
+
+		return LiveVideo::ST_CODEC;
+	}
+
+	return LiveVideo::ST_INVALID;
+}
+
+FrameType::PixelFormat Utilities::mediaSubtypeToPixelFormat(const GUID& mediaSubtype)
 {
 	if (mediaSubtype == MFVideoFormat_I420)
 	{

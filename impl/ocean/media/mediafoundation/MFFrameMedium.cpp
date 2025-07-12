@@ -118,7 +118,7 @@ bool MFFrameMedium::setPreferredFrameFrequency(const FrameFrequency frequency)
 	return true;
 }
 
-bool MFFrameMedium::extractFrameFormat(IMFMediaType* mediaType, MediaFrameType& frameType)
+bool MFFrameMedium::extractStreamType(IMFMediaType* mediaType, LiveVideo::StreamType& streamType, LiveVideo::CodecType* codecType)
 {
 	ocean_assert(mediaType);
 
@@ -134,13 +134,31 @@ bool MFFrameMedium::extractFrameFormat(IMFMediaType* mediaType, MediaFrameType& 
 		return false;
 	}
 
-	const FrameType::PixelFormat pixelFormat = Utilities::convertMediaSubtype(mediaSubType);
-	if (pixelFormat == FrameType::FORMAT_UNDEFINED)
+	streamType = Utilities::mediaSubtypeToStreamType(mediaSubType, codecType);
+
+	return streamType != LiveVideo::ST_INVALID;
+}
+
+bool MFFrameMedium::extractMediaFrameType(IMFMediaType* mediaType, MediaFrameType& frameType)
+{
+	ocean_assert(mediaType);
+
+	GUID majorType;
+	if (S_OK != mediaType->GetMajorType(&majorType) || majorType != MFMediaType_Video)
 	{
 		return false;
 	}
 
-	frameType = MediaFrameType(frameType, pixelFormat, Utilities::extractPixelOrigin(mediaSubType));
+	GUID mediaSubType;
+	if (S_OK != mediaType->GetGUID(MF_MT_SUBTYPE, &mediaSubType))
+	{
+		return false;
+	}
+
+	const FrameType::PixelFormat pixelFormat = Utilities::mediaSubtypeToPixelFormat(mediaSubType);
+	const FrameType::PixelOrigin pixelOrigin = Utilities::extractPixelOrigin(mediaSubType);
+
+	frameType = MediaFrameType(frameType, pixelFormat, pixelOrigin);
 
 	unsigned int width = 0u;
 	unsigned int height = 0u;
@@ -269,7 +287,7 @@ bool MFFrameMedium::determineMediaType(IMFTopologyNode* node, FrameMedium::Media
 
 			if (S_OK == mediaTypeHandler->GetCurrentMediaType(&mediaType.resetObject()))
 			{
-				if (extractFrameFormat(*mediaType, mediaFrameType))
+				if (extractMediaFrameType(*mediaType, mediaFrameType))
 				{
 					success = true;
 				}
@@ -462,7 +480,8 @@ bool MFFrameMedium::buildFrameTopology(const bool respectPlaybackTime)
 	{
 		mediaType = createMediaType(preferredFrameType_);
 	}
-	else
+
+	if (!mediaType.isValid())
 	{
 		MFCreateMediaType(&mediaType.resetObject());
 
@@ -564,10 +583,32 @@ bool MFFrameMedium::connectSelectedStream(IMFActivate* sinkActivate, const Media
 						ScopedIMFMediaType mediaType;
 						if (S_OK == mediaTypeHandler_->GetMediaTypeByIndex(mediaTypeIndex, &mediaType.resetObject()))
 						{
+							LiveVideo::StreamType streamType = LiveVideo::ST_INVALID;
+							LiveVideo::CodecType codecType = LiveVideo::CT_INVALID;
+
+							MFFrameMedium::extractStreamType(*mediaType, streamType, &codecType);
+
 							MFFrameMedium::MediaFrameType mediaFrameType;
-							if (MFFrameMedium::extractFrameFormat(*mediaType, mediaFrameType))
+							if (MFFrameMedium::extractMediaFrameType(*mediaType, mediaFrameType))
 							{
-								Log::debug() << mediaFrameType.width() << "x" << mediaFrameType.height() << ", " << FrameType::translatePixelFormat(mediaFrameType.pixelFormat()) << ", " << mediaFrameType.frequency() << "fps";
+								std::string streamInformation = LiveVideo::translateStreamType(streamType);
+
+								if (streamType == LiveVideo::ST_CODEC)
+								{
+									streamInformation += " (" + LiveVideo::translateCodecType(codecType) + ")";
+								}
+
+								std::string additionalInformation;
+
+								if (streamType == LiveVideo::ST_FRAME)
+								{
+									if (mediaFrameType.pixelFormat() != FrameType::FORMAT_UNDEFINED && FrameType::numberPlanes(mediaFrameType.pixelFormat()) >= 2u)
+									{
+										additionalInformation += ", (most likely via MJPEG)";
+									}
+								}
+
+								Log::debug() << String::toAString((unsigned int)(mediaTypeIndex), 4u) << ": " << streamInformation << ", " << mediaFrameType.width() << "x" << mediaFrameType.height() << ", " << FrameType::translatePixelFormat(mediaFrameType.pixelFormat()) << ", " << mediaFrameType.frequency() << "fps" + additionalInformation;
 							}
 						}
 					}
@@ -647,7 +688,7 @@ ScopedIMFMediaType MFFrameMedium::determineBestMatchingMediaType(IMFMediaTypeHan
 			if (S_OK == mediaTypeHandler->GetMediaTypeByIndex(mediaTypeIndex, &mediaType.resetObject()))
 			{
 				MFFrameMedium::MediaFrameType mediaFrameType;
-				if (MFFrameMedium::extractFrameFormat(*mediaType, mediaFrameType))
+				if (MFFrameMedium::extractMediaFrameType(*mediaType, mediaFrameType))
 				{
 					if (preferredWidth != 0u && preferredWidth != mediaFrameType.width())
 					{

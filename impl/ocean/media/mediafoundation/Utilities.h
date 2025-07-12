@@ -10,7 +10,7 @@
 
 #include "ocean/media/mediafoundation/MediaFoundation.h"
 
-#include "ocean/media/FrameMedium.h"
+#include "ocean/media/LiveVideo.h"
 
 #include "ocean/base/Frame.h"
 
@@ -117,11 +117,19 @@ class OCEAN_MEDIA_MF_EXPORT Utilities
 		static bool enumerateTransforms(std::string& result);
 
 		/**
-		 * Converts a Media Foundation media subtype to a pixel format.
-		 * @param mediaSubtype Media Foundation media type to convert
-		 * @return Resulting pixel format
+		 * Returns the stream type of a Media Foundation media subtype.
+		 * @param mediaSubtype Media Foundation media type for that the stream type will be returned
+		 * @param codecType Optional resulting codec type, nullptr if not of interest
+		 * @return The resulting stream type, ST_INVALID if no corresponding stream type exists
 		 */
-		static FrameType::PixelFormat convertMediaSubtype(const GUID& mediaSubtype);
+		static LiveVideo::StreamType mediaSubtypeToStreamType(const GUID& mediaSubtype, LiveVideo::CodecType* codecType = nullptr);
+
+		/**
+		 * Returns the pixel format of a Media Foundation media subtype.
+		 * @param mediaSubtype Media Foundation media type to convert
+		 * @return The resulting pixel format, FORMAT_UNDEFINED if no corresponding pixel format exists
+		 */
+		static FrameType::PixelFormat mediaSubtypeToPixelFormat(const GUID& mediaSubtype);
 
 		/**
 		 * Returns the pixel origin of a Media Foundation media subtype.

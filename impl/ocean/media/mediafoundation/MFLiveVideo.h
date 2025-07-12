@@ -33,6 +33,13 @@ class OCEAN_MEDIA_MF_EXPORT MFLiveVideo :
 {
 	friend class MFLibrary;
 
+	protected:
+
+		/**
+		 * Definition of an unordered map mapping stream properties to their frame rates.
+		 */
+		using StreamPropertyMap = std::unordered_map<StreamProperty, std::vector<double>, StreamProperty::Hash>;
+
 	public:
 
 		/**

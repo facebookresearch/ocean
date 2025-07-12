@@ -93,19 +93,10 @@ MFLiveVideo::StreamTypes MFLiveVideo::supportedStreamTypes() const
 			ScopedIMFMediaType mediaType;
 			if (S_OK == mediaTypeHandler_->GetMediaTypeByIndex(mediaTypeIndex, &mediaType.resetObject()))
 			{
-				MFFrameMedium::MediaFrameType mediaFrameType;
-				if (MFFrameMedium::extractFrameFormat(*mediaType, mediaFrameType))
+				StreamType streamType = ST_INVALID;
+				if (MFFrameMedium::extractStreamType(*mediaType, streamType))
 				{
-					// we do not explicitly know whether a media type is based on an uncompressed frame or a encoded video stream, thus we us the number of planes as decision
-
-					if (mediaFrameType.numberPlanes() == 1u)
-					{
-						streamTypes.emplace(ST_FRAME);
-					}
-					else
-					{
-						streamTypes.emplace(ST_CODEC);
-					}
+					streamTypes.emplace(streamType);
 				}
 			}
 		}
@@ -123,61 +114,60 @@ MFLiveVideo::StreamConfigurations MFLiveVideo::supportedStreamConfigurations(con
 		return StreamConfigurations();
 	}
 
-	StreamConfigurations streamConfigurations;
-
 	DWORD mediaTypeCount = 0u;
-	if (S_OK == mediaTypeHandler_->GetMediaTypeCount(&mediaTypeCount))
+	if (S_OK != mediaTypeHandler_->GetMediaTypeCount(&mediaTypeCount))
 	{
-		streamConfigurations.reserve(mediaTypeCount);
+		ocean_assert(false && "This should never happen!");
+		return StreamConfigurations();
+	}
 
-		unsigned int currentWidth = 0u;
-		unsigned int currentHeight = 0u;
-		StreamType currentStreamType = ST_INVALID;
-		std::vector<double> currentFrameRates;
-		FrameType::PixelFormat currentPixelFormat = FrameType::FORMAT_UNDEFINED;
+	StreamPropertyMap streamPropertyMap;
 
-		for (DWORD mediaTypeIndex = 0u; mediaTypeIndex < mediaTypeCount; ++mediaTypeIndex)
+	for (DWORD mediaTypeIndex = 0u; mediaTypeIndex < mediaTypeCount; ++mediaTypeIndex)
+	{
+		ScopedIMFMediaType mediaType;
+		if (S_OK != mediaTypeHandler_->GetMediaTypeByIndex(mediaTypeIndex, &mediaType.resetObject()))
 		{
-			ScopedIMFMediaType mediaType;
-			if (S_OK == mediaTypeHandler_->GetMediaTypeByIndex(mediaTypeIndex, &mediaType.resetObject()))
-			{
-				MFFrameMedium::MediaFrameType mediaFrameType;
-				if (MFFrameMedium::extractFrameFormat(*mediaType, mediaFrameType))
-				{
-					const StreamType mediaStreamType = mediaFrameType.numberPlanes() == 1u ? ST_FRAME : ST_CODEC; // we do not explicitly know whether a media type is based on an uncompressed frame or a encoded video stream, thus we us the number of planes as decision
-
-					if (currentWidth == mediaFrameType.width() && currentHeight == mediaFrameType.height() && currentStreamType == mediaStreamType && currentPixelFormat == mediaFrameType.pixelFormat())
-					{
-						currentFrameRates.push_back(mediaFrameType.frequency());
-					}
-					else
-					{
-						if (!currentFrameRates.empty())
-						{
-							if (streamType == ST_INVALID || streamType == mediaStreamType)
-							{
-								streamConfigurations.emplace_back(currentStreamType, currentWidth, currentHeight, std::move(currentFrameRates), currentPixelFormat, CT_INVALID);
-							}
-						}
-
-						currentWidth = mediaFrameType.width();
-						currentHeight = mediaFrameType.height();
-						currentStreamType = mediaStreamType;
-						currentPixelFormat = mediaFrameType.pixelFormat();
-
-						currentFrameRates = std::vector<double>(1, mediaFrameType.frequency());
-					}
-				}
-			}
+			ocean_assert(false && "This should never happen!");
+			continue;
 		}
 
-		if (!currentFrameRates.empty())
+		StreamType mediaStreamType = ST_INVALID;
+		CodecType mediaCodecType = CT_INVALID;
+		if (!MFFrameMedium::extractStreamType(*mediaType, mediaStreamType, &mediaCodecType))
 		{
-			if (streamType == ST_INVALID || streamType == currentStreamType)
-			{
-				streamConfigurations.emplace_back(currentStreamType, currentWidth, currentHeight, std::move(currentFrameRates), currentPixelFormat, CT_INVALID);
-			}
+			continue;
 		}
+
+		ocean_assert(mediaStreamType != ST_INVALID);
+
+		if (streamType != ST_INVALID && streamType != mediaStreamType)
+		{
+			// this stream type is not of interest
+			continue;
+		}
+
+
+		MFFrameMedium::MediaFrameType mediaFrameType;
+		if (!MFFrameMedium::extractMediaFrameType(*mediaType, mediaFrameType))
+		{
+			continue;
+		}
+
+		const StreamProperty streamProperty(mediaStreamType, mediaFrameType.width(), mediaFrameType.height(), mediaFrameType.pixelFormat(), mediaCodecType);
+
+		streamPropertyMap[streamProperty].emplace_back(mediaFrameType.frequency());
+	}
+
+	StreamConfigurations streamConfigurations;
+	streamConfigurations.reserve(streamPropertyMap.size());
+
+	for (StreamPropertyMap::value_type& streamPropertyMapValue : streamPropertyMap)
+	{
+		const StreamProperty& streamProperty = streamPropertyMapValue.first;
+		std::vector<double>& frameRates = streamPropertyMapValue.second;
+
+		streamConfigurations.emplace_back(streamProperty, std::move(frameRates));
 	}
 
 	return streamConfigurations;
