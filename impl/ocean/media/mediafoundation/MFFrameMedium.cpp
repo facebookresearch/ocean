@@ -707,13 +707,15 @@ ScopedIMFMediaType MFFrameMedium::determineBestMatchingMediaType(IMFMediaTypeHan
 
 		if (!bestMediaType.isValid())
 		{
-			if (preferredPixelFormat != FrameType::FORMAT_UNDEFINED) // let's see whether we can weaken our expectations
-			{
-				preferredPixelFormat = FrameType::FORMAT_UNDEFINED;
-			}
-			else if (preferredFrameRate > 0.0)
+			// let's see whether we can weaken our expectations
+
+			if (preferredFrameRate > 0.0)
 			{
 				preferredFrameRate = 0.0;
+			}
+			else if (preferredPixelFormat != FrameType::FORMAT_UNDEFINED)
+			{
+				preferredPixelFormat = FrameType::FORMAT_UNDEFINED;
 			}
 			else if (preferredWidth != 0u || preferredHeight != 0u)
 			{
