@@ -64,13 +64,11 @@ bool MFFrameMedium::setPreferredFrameDimension(const unsigned int width, const u
 		return true;
 	}
 
-	releaseFrameTopology();
-	releaseTopology();
+	releasePipeline();
 
 	preferredFrameType_ = MediaFrameType(preferredFrameType_, width, height);
 
-	ocean_assert(!topology_.isValid());
-	return createTopology(respectPlaybackTime_);
+	return true;
 }
 
 bool MFFrameMedium::setPreferredFramePixelFormat(const FrameType::PixelFormat format)
@@ -87,13 +85,11 @@ bool MFFrameMedium::setPreferredFramePixelFormat(const FrameType::PixelFormat fo
 		return true;
 	}
 
-	releaseFrameTopology();
-	releaseTopology();
+	releasePipeline();
 
 	preferredFrameType_ = MediaFrameType(preferredFrameType_, format);
 
-	ocean_assert(!topology_.isValid());
-	return createTopology(respectPlaybackTime_);
+	return true;
 }
 
 bool MFFrameMedium::setPreferredFrameFrequency(const FrameFrequency frequency)
@@ -115,13 +111,11 @@ bool MFFrameMedium::setPreferredFrameFrequency(const FrameFrequency frequency)
 		return true;
 	}
 
-	releaseFrameTopology();
-	releaseTopology();
+	releasePipeline();
 
 	preferredFrameType_.setFrequency(frequency);
 
-	ocean_assert(!topology_.isValid());
-	return createTopology(respectPlaybackTime_);
+	return true;
 }
 
 bool MFFrameMedium::extractFrameFormat(IMFMediaType* mediaType, MediaFrameType& frameType)
