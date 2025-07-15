@@ -19,7 +19,6 @@ std::string SceneTracker6DOF::SceneElementRoom::RoomObject::translateObjectType(
 	{
 		case OT_UNDEFINED:
 			return "UNDEFINED";
-			break;
 
 		case OT_PLANAR:
 			return "PLANAR";

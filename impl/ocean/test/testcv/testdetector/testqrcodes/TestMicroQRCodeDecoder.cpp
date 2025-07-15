@@ -178,7 +178,6 @@ bool TestMicroQRCodeDecoder::testMicroQRCodeDecoding(const double testDuration)
 					ocean_assert(false && "Never be here");
 					allSucceeded = false;
 					return false;
-					break;
 			}
 
 			allSucceeded = allSucceeded && qrcodeGenerated;
