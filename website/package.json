@@ -28,10 +28,11 @@
     "postcss": "^8.4.39",
     "prism-react-renderer": "^2.3.0",
     "prismjs": "^1.30.0",
+    "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-loadable": "^5.5.0",
     "react-router": "^7.5.2",
-    "react": "^18.3.1"
+    "webpack-dev-server": "^5.2.1"
   },
   "browserslist": {
     "production": [
