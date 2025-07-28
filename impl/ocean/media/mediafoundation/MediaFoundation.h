@@ -28,6 +28,9 @@
 #endif
 
 DISABLE_WARNINGS_BEGIN
+	#include <devicetopology.h>
+	#include <ks.h>
+	#include <ksproxy.h>
 	#include <mfapi.h>
 	#include <mfidl.h>
 DISABLE_WARNINGS_END
@@ -105,6 +108,13 @@ template <class T> void release(T *object);
  */
 template <typename T>
 using ScopedMediaFoundationObject = ScopedObjectCompileTimeVoidT<T*, release>;
+
+/**
+ * Definition of a scoped object holding a IKsControl object.
+ * The wrapped IKsControl object will be released automatically once the scoped object does not exist anymore.
+ * @ingroup mediamf
+ */
+using ScopedIKsControl = ScopedMediaFoundationObject<IKsControl>;
 
 /**
  * Definition of a scoped object holding a IMFActivate object.

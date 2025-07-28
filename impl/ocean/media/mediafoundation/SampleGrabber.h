@@ -135,7 +135,7 @@ class SampleGrabber final : public IMFSampleGrabberSinkCallback
 		 * @param pSampleBuffer A pointer to a buffer that contains the sample data
 		 * @param dwSampleSize Size of the pSampleBuffer buffer, in bytes
 		 */
-		STDMETHODIMP OnProcessSample(REFGUID guidMajorMediaType, DWORD dwSampleFlags, LONGLONG llSampleTime, LONGLONG llSampleDuration, const BYTE * pSampleBuffer, DWORD dwSampleSize) override;
+		STDMETHODIMP OnProcessSample(REFGUID guidMajorMediaType, DWORD dwSampleFlags, LONGLONG llSampleTime, LONGLONG llSampleDuration, const BYTE* pSampleBuffer, DWORD dwSampleSize) override;
 
 		/**
 		 * Called when the sample-grabber sink is shut down.

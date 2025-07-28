@@ -55,6 +55,18 @@ class OCEAN_MEDIA_MF_EXPORT MFLiveVideo :
 		StreamConfigurations supportedStreamConfigurations(const StreamType streamType) const override;
 
 		/**
+		 * Returns the current exposure duration of this device.
+		 * @see LiveVideo::exposureDuration().
+		 */
+		double exposureDuration(double* minDuration = nullptr, double* maxDuration = nullptr, ControlMode* exposureMode = nullptr) const override;
+
+		/**
+		 * Sets the exposure duration of this device.
+		 * @see LiveVideo::setExposureDuration().
+		 */
+		bool setExposureDuration(const double duration, const bool allowShorterExposure = false) override;
+
+		/**
 		 * Enumerates all currently available video devices.
 		 * @param definitions The resulting video devices
 		 * @return True, if succeeded
@@ -92,10 +104,68 @@ class OCEAN_MEDIA_MF_EXPORT MFLiveVideo :
 		 */
 		void releaseTopology() override;
 
+		/**
+		 * Session started event function.
+		 * @see MFMedium::onSessionStarted().
+		 */
+		void onSessionStarted() override;
+
+		/**
+		 * Session stopped event function.
+		 * @see MFMedium::onSessionStopped().
+		 */
+		void onSessionStopped() override;
+
+		/**
+		 * Determines the exposure range of the camera.
+		 * @param iKsControl The IKsControl interface of the camera, must be valid
+		 * @param minExposure The resulting minimal exposure value, in seconds
+		 * @param maxExposure The resulting maximal exposure value, in seconds
+		 * @return True, if succeeded
+		 */
+		static bool exposureRange(IKsControl* iKsControl, double& minExposure, double& maxExposure);
+
+		/**
+		 * Sets the exposure of the camera.
+		 * @param iKsControl The IKsControl interface of the camera, must be valid
+		 * @param exposure The exposure to be set, in seconds, with range (0, infinity), 0 for auto exposure
+		 * @return True, if succeeded
+		 */
+		static bool setExposure(IKsControl* iKsControl, const double exposure);
+
+		/**
+		 * Returns the exposure of the camera.
+		 * @param iKsControl The IKsControl interface of the camera, must be valid
+		 * @param exposure The resulting exposure value, in seconds
+		 * @param controlMode The resulting control mode
+		 * @return True, if succeeded
+		 */
+		static bool exposure(IKsControl* iKsControl, double& exposure, ControlMode& controlMode);
+
+		/**
+		 * Translates the exposure value from log base 2 to a linear exposure in seconds.
+		 * @param logBase2 The exposure value in log base 2, with range (-infinity, infinity)
+		 * @return The resulting exposure value in seconds, with range [0, infinity)
+		 */
+		static double translateExposure(const LONG logBase2);
+
+		/**
+		 * Translates the exposure value from a linear exposure in seconds to log base 2.
+		 * @param exposure The exposure value in seconds, with range [0, infinity)
+		 * @return The resulting exposure value in log base 2, with range (-infinity, infinity)
+		 */
+		static LONG translateExposure(const double exposure);
+
 	protected:
 
 		/// The symbolic link of the device.
 		std::string symbolicLink_;
+
+		/// True, if the session has been started.
+		bool sesssionStarted_ = false;
+
+		/// The exposure duration of the camera which will be set once the session has been started.
+		double delayedExposureDuration_ = NumericD::minValue();
 };
 
 }

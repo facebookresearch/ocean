@@ -97,7 +97,7 @@ STDMETHODIMP SampleGrabber::OnSetPresentationClock(IMFPresentationClock* /*pCloc
 	return S_OK;
 }
 
-STDMETHODIMP SampleGrabber::OnProcessSample(REFGUID guidMajorMediaType, DWORD dwSampleFlags, LONGLONG llSampleTime, LONGLONG llSampleDuration, const BYTE * pSampleBuffer, DWORD dwSampleSize)
+STDMETHODIMP SampleGrabber::OnProcessSample(REFGUID guidMajorMediaType, DWORD dwSampleFlags, LONGLONG llSampleTime, LONGLONG llSampleDuration, const BYTE* pSampleBuffer, DWORD dwSampleSize)
 {
 	if (active_)
 	{

@@ -9,6 +9,10 @@
 #include "ocean/media/mediafoundation/MFLibrary.h"
 #include "ocean/media/mediafoundation/Utilities.h"
 
+#include <ks.h>
+#include <ksmedia.h>
+#include <ksproxy.h>
+
 namespace Ocean
 {
 
@@ -173,6 +177,78 @@ MFLiveVideo::StreamConfigurations MFLiveVideo::supportedStreamConfigurations(con
 	return streamConfigurations;
 }
 
+double MFLiveVideo::exposureDuration(double* minDuration, double* maxDuration, ControlMode* exposureMode) const
+{
+	const ScopedLock scopedLock(lock_);
+
+	ScopedIKsControl iKsControl;
+	if (S_OK != mediaSource_->QueryInterface(IID_IKsControl, (void**)(&iKsControl.resetObject())))
+	{
+		return false;
+	}
+
+	if (minDuration != nullptr || maxDuration != nullptr)
+	{
+		double minExposure = NumericD::minValue();
+		double maxExposure = NumericD::minValue();
+
+		const bool result = exposureRange(*iKsControl, minExposure, maxExposure);
+		ocean_assert_and_suppress_unused(result, result);
+
+		if (minDuration != nullptr)
+		{
+			*minDuration = minExposure;
+		}
+
+		if (maxDuration != nullptr)
+		{
+			*maxDuration = maxExposure;
+		}
+	}
+
+	double duration = Numeric::minValue();
+
+	ControlMode controlMode = CM_INVALID;
+	if (!exposure(*iKsControl, duration, controlMode))
+	{
+		return -1.0;
+	}
+
+	if (exposureMode != nullptr)
+	{
+		*exposureMode = controlMode;
+	}
+
+	return duration;
+}
+
+bool MFLiveVideo::setExposureDuration(const double duration, const bool /*allowShorterExposure*/)
+{
+	if (duration < 0.0)
+	{
+		Log::warning() << "MFLiveVideo::setExposureDuration() does not support one-time auto exposure";
+
+		return false;
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	if (!sesssionStarted_)
+	{
+		delayedExposureDuration_ = duration;
+
+		return true;
+	}
+
+	ScopedIKsControl iKsControl;
+	if (S_OK != mediaSource_->QueryInterface(IID_IKsControl, (void**)(&iKsControl.resetObject())))
+	{
+		return false;
+	}
+
+	return setExposure(*iKsControl, duration);
+}
+
 bool MFLiveVideo::enumerateVideoDevices(Library::Definitions& definitions)
 {
 	definitions.clear();
@@ -292,6 +368,178 @@ void MFLiveVideo::releaseTopology()
 	releaseFrameTopology();
 
 	MFMedium::releaseTopology();
+}
+
+void MFLiveVideo::onSessionStarted()
+{
+	const ScopedLock scopedLock(lock_);
+
+	MFFrameMedium::onSessionStarted();
+
+	sesssionStarted_ = true;
+
+	if (delayedExposureDuration_ != NumericD::minValue())
+	{
+		setExposureDuration(delayedExposureDuration_);
+
+		delayedExposureDuration_ = NumericD::minValue();
+	}
+}
+
+void MFLiveVideo::onSessionStopped()
+{
+	const ScopedLock scopedLock(lock_);
+
+	MFFrameMedium::onSessionStopped();
+
+	sesssionStarted_ = false;
+}
+
+bool MFLiveVideo::exposureRange(IKsControl* iKsControl, double& minExposure, double& maxExposure)
+{
+	// User-mode clients use the KSPROPERTY_CAMERACONTROL_EXPOSURE property to get or set a digital camera's exposure time. This property is optional.
+
+	KSPROPERTY ksProperty = {};
+	ksProperty.Set = PROPSETID_VIDCAP_CAMERACONTROL;
+	ksProperty.Id = KSPROPERTY_CAMERACONTROL_EXPOSURE;
+	ksProperty.Flags = KSPROPERTY_TYPE_BASICSUPPORT;
+
+	KSPROPERTY_DESCRIPTION ksPropertyDescription = {};
+	ULONG bytesReturned = 0;
+	if (S_OK != iKsControl->KsProperty(&ksProperty, sizeof(ksProperty), &ksPropertyDescription, sizeof(ksPropertyDescription), &bytesReturned))
+	{
+		return false;
+	}
+
+	if (bytesReturned < sizeof(KSPROPERTY_DESCRIPTION))
+	{
+		return false;
+	}
+
+	constexpr size_t expectedSize = sizeof(KSPROPERTY_DESCRIPTION) + sizeof(KSPROPERTY_MEMBERSHEADER) + sizeof(KSPROPERTY_STEPPING_LONG);
+
+	if (ksPropertyDescription.DescriptionSize < expectedSize)
+	{
+		return false;
+	}
+
+	std::vector<uint8_t> buffer(ksPropertyDescription.DescriptionSize);
+
+	bytesReturned = 0;
+	if (S_OK != iKsControl->KsProperty(&ksProperty, sizeof(ksProperty), buffer.data(), ULONG(buffer.size()), &bytesReturned))
+	{
+		return false;
+	}
+
+	const KSPROPERTY_MEMBERSHEADER* propertyMember = (const KSPROPERTY_MEMBERSHEADER*)(buffer.data() + sizeof(KSPROPERTY_DESCRIPTION));
+
+	if (propertyMember->MembersFlags & KSPROPERTY_MEMBER_RANGES)
+	{
+		const KSPROPERTY_STEPPING_LONG* range = (const KSPROPERTY_STEPPING_LONG*)(buffer.data() + sizeof(KSPROPERTY_DESCRIPTION) + sizeof(KSPROPERTY_MEMBERSHEADER));
+
+		const LONG minLogBase2 = range->Bounds.SignedMinimum;
+		const LONG maxLogBase2 = range->Bounds.SignedMaximum;
+
+		minExposure = translateExposure(minLogBase2);
+		maxExposure = translateExposure(maxLogBase2);
+
+		return true;
+	}
+
+	return false;
+}
+
+bool MFLiveVideo::setExposure(IKsControl* iKsControl, const double exposure)
+{
+	ocean_assert(iKsControl != nullptr);
+
+	LONG exposureValue = 0;
+
+	if (exposure > 0.0)
+	{
+		exposureValue = translateExposure(exposure);
+	}
+
+	KSPROPERTY_CAMERACONTROL_S cameraControl = {};
+
+	cameraControl.Property.Set = PROPSETID_VIDCAP_CAMERACONTROL;
+	cameraControl.Property.Id = KSPROPERTY_CAMERACONTROL_EXPOSURE;
+	cameraControl.Property.Flags = KSPROPERTY_TYPE_SET;
+	cameraControl.Value = exposureValue;
+	cameraControl.Flags = exposure > 0.0 ? KSPROPERTY_CAMERACONTROL_FLAGS_MANUAL : KSPROPERTY_CAMERACONTROL_FLAGS_AUTO;
+	cameraControl.Capabilities = KSPROPERTY_CAMERACONTROL_FLAGS_ABSOLUTE;
+
+	ULONG bytesReturned = 0;
+
+    const HRESULT result = iKsControl->KsProperty(&cameraControl.Property, sizeof(cameraControl), &cameraControl, sizeof(cameraControl), &bytesReturned);
+
+	return result == S_OK;
+}
+
+bool MFLiveVideo::exposure(IKsControl* iKsControl, double& exposure, ControlMode& controlMode)
+{
+	KSPROPERTY_CAMERACONTROL_S cameraControl = {};
+
+	cameraControl.Property.Set = PROPSETID_VIDCAP_CAMERACONTROL;
+	cameraControl.Property.Id = KSPROPERTY_CAMERACONTROL_EXPOSURE;
+	cameraControl.Property.Flags = KSPROPERTY_TYPE_GET;
+	cameraControl.Value = 0;
+	cameraControl.Flags = 0;
+	cameraControl.Capabilities = 0;
+
+	ULONG bytesReturned = 0;
+
+    if (S_OK != iKsControl->KsProperty(&cameraControl.Property, sizeof(cameraControl), &cameraControl, sizeof(cameraControl), &bytesReturned))
+	{
+		return false;
+	}
+
+	exposure = translateExposure(cameraControl.Value);
+
+	if (cameraControl.Flags & KSPROPERTY_CAMERACONTROL_FLAGS_AUTO)
+	{
+		controlMode = CM_DYNAMIC;
+	}
+	else if (cameraControl.Flags & KSPROPERTY_CAMERACONTROL_FLAGS_MANUAL)
+	{
+		controlMode = CM_FIXED;
+	}
+	else
+	{
+		controlMode = CM_INVALID;
+	}
+
+	return true;
+}
+
+double MFLiveVideo::translateExposure(const LONG logBase2)
+{
+	if (logBase2 >= 0)
+	{
+		return double(logBase2) * 2.0;
+	}
+	else
+	{
+		return 1.0 / NumericD::pow(2.0, double(-logBase2));
+	}
+}
+
+LONG MFLiveVideo::translateExposure(const double exposure)
+{
+	ocean_assert(exposure > 0.0);
+
+	if (exposure >= 1.0)
+	{
+		const double exposureValueD = exposure / 2.0;
+
+		return NumericD::round32(exposureValueD);
+	}
+	else
+	{
+		const double exposureValueD = NumericD::log2(exposure);
+
+		return NumericD::round32(exposureValueD);
+	}
 }
 
 }
