@@ -103,10 +103,11 @@ bool TestStaticMatrix::test(const double testDuration)
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Static Matrix test succeeded.";
-	else
+	} else {
 		Log::info() << "Static Matrix test FAILED!";
+}
 
 	return allSucceeded;
 }
@@ -473,53 +474,63 @@ bool TestStaticMatrix::testMatrixAdd(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testMatrixAdd<1, 1>())
+			if (testMatrixAdd<1, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if ( testMatrixAdd<1, 2>())
+			if ( testMatrixAdd<1, 2>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAdd<2, 1>())
+			if (testMatrixAdd<2, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAdd<5, 5>())
+			if (testMatrixAdd<5, 5>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAdd<9, 10>())
+			if (testMatrixAdd<9, 10>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAdd<10, 9>())
+			if (testMatrixAdd<10, 9>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAdd<1, 11>())
+			if (testMatrixAdd<1, 11>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAdd<11, 1>())
+			if (testMatrixAdd<11, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAdd<4, 16>())
+			if (testMatrixAdd<4, 16>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAdd<25, 25>())
+			if (testMatrixAdd<25, 25>()) {
 				validIterations++;
+}
 
 			iterations++;
 
@@ -582,58 +593,69 @@ bool TestStaticMatrix::testMatrixAddTransposed(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testMatrixAddTransposed<1, 1>())
+			if (testMatrixAddTransposed<1, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAddTransposed<1, 2>())
+			if (testMatrixAddTransposed<1, 2>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAddTransposed<2, 1>())
+			if (testMatrixAddTransposed<2, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAddTransposed<5, 5>())
+			if (testMatrixAddTransposed<5, 5>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAddTransposed<5, 5>())
+			if (testMatrixAddTransposed<5, 5>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAddTransposed<1, 11>())
+			if (testMatrixAddTransposed<1, 11>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAddTransposed<11, 1>())
+			if (testMatrixAddTransposed<11, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAddTransposed<4, 16>())
+			if (testMatrixAddTransposed<4, 16>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAddTransposed<25, 25>())
+			if (testMatrixAddTransposed<25, 25>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAddTransposed<2, 113>())
+			if (testMatrixAddTransposed<2, 113>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixAddTransposed<3, 82>())
+			if (testMatrixAddTransposed<3, 82>()) {
 				validIterations++;
+}
 
 			iterations++;
 		}
@@ -691,43 +713,51 @@ bool TestStaticMatrix::testScalarMultiplication(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testScalarMultiplication<1, 1>())
+			if (testScalarMultiplication<1, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testScalarMultiplication<1, 2>())
+			if (testScalarMultiplication<1, 2>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testScalarMultiplication<2, 1>())
+			if (testScalarMultiplication<2, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testScalarMultiplication<5, 5>())
+			if (testScalarMultiplication<5, 5>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testScalarMultiplication<1, 11>())
+			if (testScalarMultiplication<1, 11>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testScalarMultiplication<11, 1>())
+			if (testScalarMultiplication<11, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testScalarMultiplication<4, 16>())
+			if (testScalarMultiplication<4, 16>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testScalarMultiplication<25, 25>())
+			if (testScalarMultiplication<25, 25>()) {
 				validIterations++;
+}
 
 			iterations++;
 		}
@@ -889,48 +919,57 @@ bool TestStaticMatrix::testMatrixMultiplication(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testMatrixMultiplication<1, 1, 1>())
+			if (testMatrixMultiplication<1, 1, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplication<1, 2, 1>())
+			if (testMatrixMultiplication<1, 2, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplication<2, 1, 1>())
+			if (testMatrixMultiplication<2, 1, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplication<5, 5, 2>())
+			if (testMatrixMultiplication<5, 5, 2>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplication<5, 5, 5>())
+			if (testMatrixMultiplication<5, 5, 5>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplication<1, 11, 7>())
+			if (testMatrixMultiplication<1, 11, 7>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplication<11, 1, 11>())
+			if (testMatrixMultiplication<11, 1, 11>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplication<4, 16, 9>())
+			if (testMatrixMultiplication<4, 16, 9>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplication<25, 25, 4>())
+			if (testMatrixMultiplication<25, 25, 4>()) {
 				validIterations++;
+}
 
 			iterations++;
 		}
@@ -977,23 +1016,29 @@ bool TestStaticMatrix::testMatrixMultiplication()
 		{
 			Scalar value = 0;
 
-			for (size_t n = 0; n < tColumns; ++n)
+			for (size_t n = 0; n < tColumns; ++n) {
 				value += left(r, n) * right(n, c);
+}
 
-			if (Numeric::isNotEqual(value, result0(r, c), epsilon))
+			if (Numeric::isNotEqual(value, result0(r, c), epsilon)) {
 				return false;
+}
 
-			if (Numeric::isNotEqual(value, result1(r, c), epsilon))
+			if (Numeric::isNotEqual(value, result1(r, c), epsilon)) {
 				return false;
+}
 
-			if (Numeric::isNotEqual(value, result2(r, c), epsilon))
+			if (Numeric::isNotEqual(value, result2(r, c), epsilon)) {
 				return false;
+}
 
-			if (Numeric::isNotEqual(value, result3(r, c), epsilon))
+			if (Numeric::isNotEqual(value, result3(r, c), epsilon)) {
 				return false;
+}
 
-			if (Numeric::isNotEqual(value, result4(r, c), epsilon))
+			if (Numeric::isNotEqual(value, result4(r, c), epsilon)) {
 				return false;
+}
 		}
 	}
 
@@ -1013,58 +1058,69 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedLeft(const double testD
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testMatrixMultiplicationTransposedLeft<1, 1>())
+			if (testMatrixMultiplicationTransposedLeft<1, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<1, 2>())
+			if (testMatrixMultiplicationTransposedLeft<1, 2>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<2, 1>())
+			if (testMatrixMultiplicationTransposedLeft<2, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<5, 5>())
+			if (testMatrixMultiplicationTransposedLeft<5, 5>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<5, 5>())
+			if (testMatrixMultiplicationTransposedLeft<5, 5>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<1, 11>())
+			if (testMatrixMultiplicationTransposedLeft<1, 11>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<11, 1>())
+			if (testMatrixMultiplicationTransposedLeft<11, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<4, 16>())
+			if (testMatrixMultiplicationTransposedLeft<4, 16>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<25, 25>())
+			if (testMatrixMultiplicationTransposedLeft<25, 25>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<2, 113>())
+			if (testMatrixMultiplicationTransposedLeft<2, 113>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<3, 82>())
+			if (testMatrixMultiplicationTransposedLeft<3, 82>()) {
 				validIterations++;
+}
 
 			iterations++;
 		}
@@ -1135,58 +1191,69 @@ bool TestStaticMatrix::testMatrixMultiplicationTransposedRight(const double test
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			if (testMatrixMultiplicationTransposedLeft<1, 1>())
+			if (testMatrixMultiplicationTransposedLeft<1, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<1, 2>())
+			if (testMatrixMultiplicationTransposedLeft<1, 2>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<2, 1>())
+			if (testMatrixMultiplicationTransposedLeft<2, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<5, 5>())
+			if (testMatrixMultiplicationTransposedLeft<5, 5>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<5, 5>())
+			if (testMatrixMultiplicationTransposedLeft<5, 5>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<1, 11>())
+			if (testMatrixMultiplicationTransposedLeft<1, 11>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<11, 1>())
+			if (testMatrixMultiplicationTransposedLeft<11, 1>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<4, 16>())
+			if (testMatrixMultiplicationTransposedLeft<4, 16>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<25, 25>())
+			if (testMatrixMultiplicationTransposedLeft<25, 25>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<2, 113>())
+			if (testMatrixMultiplicationTransposedLeft<2, 113>()) {
 				validIterations++;
+}
 
 			iterations++;
 
-			if (testMatrixMultiplicationTransposedLeft<3, 82>())
+			if (testMatrixMultiplicationTransposedLeft<3, 82>()) {
 				validIterations++;
+}
 
 			iterations++;
 		}
@@ -1346,10 +1413,11 @@ bool TestStaticMatrix::testSolveCholesky(const double testDuration)
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Cholesky decomposition test succeeded.";
-	else
+	} else {
 		Log::info() << "Cholesky decomposition test FAILED!";
+}
 
 	return allSucceeded;
 }

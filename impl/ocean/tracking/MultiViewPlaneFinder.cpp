@@ -22,8 +22,9 @@ bool MultiViewPlaneFinder::determinePlane(const PinholeCamera& pinholeCamera, Pl
 	ocean_assert(imagePointCorrespondences.size() >= 2);
 
 	const std::vector<Vectors2>& correspondences = imagePointCorrespondences.correspondences();
-	if (correspondences.size() < 2)
+	if (correspondences.size() < 2) {
 		return false;
+}
 
 	const Vectors2& imagePointsFirst = correspondences.front();
 
@@ -36,15 +37,18 @@ bool MultiViewPlaneFinder::determinePlane(const PinholeCamera& pinholeCamera, Pl
 	}
 
 	HomogenousMatrix4 secondPose;
-	if (!determinePlaneFromTwoViews(pinholeCamera, initialPose, initialPlane, ConstArrayAccessor<Vector2>(imagePointsFirst), ConstArrayAccessor<Vector2>(successiveImagePoints.front()), secondPose, plane))
+	if (!determinePlaneFromTwoViews(pinholeCamera, initialPose, initialPlane, ConstArrayAccessor<Vector2>(imagePointsFirst), ConstArrayAccessor<Vector2>(successiveImagePoints.front()), secondPose, plane)) {
 		return false;
+}
 
 	HomogenousMatrices4 successivePoses;
-	if (!determineInitialPoses(pinholeCamera, initialPose, plane, imagePointsFirst, successiveImagePoints, successivePoses))
+	if (!determineInitialPoses(pinholeCamera, initialPose, plane, imagePointsFirst, successiveImagePoints, successivePoses)) {
 		return false;
+}
 
-	if (!Geometry::NonLinearOptimizationPlane::optimizePosesPlane(pinholeCamera, initialPose, imagePointsFirst, successivePoses, initialPlane, successiveImagePoints, pinholeCamera.hasDistortionParameters(), poses, plane, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true))
+	if (!Geometry::NonLinearOptimizationPlane::optimizePosesPlane(pinholeCamera, initialPose, imagePointsFirst, successivePoses, initialPlane, successiveImagePoints, pinholeCamera.hasDistortionParameters(), poses, plane, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true)) {
 		return false;
+}
 
 	ocean_assert(plane.isValid());
 
@@ -78,11 +82,13 @@ bool MultiViewPlaneFinder::determineInitialPoses(const PinholeCamera& pinholeCam
 		const Vectors2& imagePoints = imagePointsSuccessive[n];
 		ocean_assert(imagePoints.size() == objectPoints.size());
 
-		if (imagePoints.size() != objectPoints.size())
+		if (imagePoints.size() != objectPoints.size()) {
 			return false;
+}
 
-		if (!Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, poseFirst, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), pinholeCamera.hasDistortionParameters(), posesSuccessive[n]))
+		if (!Geometry::NonLinearOptimizationPose::optimizePose(pinholeCamera, poseFirst, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), pinholeCamera.hasDistortionParameters(), posesSuccessive[n])) {
 			return false;
+}
 	}
 
 	return true;

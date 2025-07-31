@@ -29,13 +29,15 @@ PoseProjection::PoseProjection(const HomogenousMatrix4& pose, const PinholeCamer
 {
 	ocean_assert(objectPoints);
 
-	if (number > 0)
+	if (number > 0) {
 		pinholeCamera.projectToImageIF<true>(PinholeCamera::standard2InvertedFlipped(pose), objectPoints, number, distortImagePoints, poseImagePoints.data());
+}
 
-	if (distortImagePoints)
+	if (distortImagePoints) {
 		poseDistortionState = CV::Detector::PointFeature::DS_DISTORTED;
-	else
+	} else {
 		poseDistortionState = CV::Detector::PointFeature::DS_UNDISTORTED;
+}
 }
 
 PoseProjectionSet::PoseProjectionSet() :

@@ -131,8 +131,9 @@ bool HomographyPlaneFinder::addPlaneCandidates(const PinholeCamera& pinholeCamer
 	Indices32 validIndices;
 
 	// first use RANSAC to find the subset of point pairs defining a valid homography
-	if (!Geometry::RANSAC::homographyMatrix(imagePoints0.data(), imagePoints1.data(), imagePoints0.size(), randomGenerator, homography, 8u, true, 200u, Scalar(1.5 * 1.5), &validIndices, WorkerPool::get().scopedWorker()()))
+	if (!Geometry::RANSAC::homographyMatrix(imagePoints0.data(), imagePoints1.data(), imagePoints0.size(), randomGenerator, homography, 8u, true, 200u, Scalar(1.5 * 1.5), &validIndices, WorkerPool::get().scopedWorker()())) {
 		return false;
+}
 
 	const Vectors2 validImagePoints0(Subset::subset(imagePoints0, validIndices));
 	const Vectors2 validImagePoints1(Subset::subset(imagePoints1, validIndices));
@@ -189,8 +190,9 @@ bool HomographyPlaneFinder::determineMostAccuratePlanes(Plane3 planes[2])
 	}
 
 	// check whether the quality of the plane is high enough
-	if (bestNormalAngle > Numeric::deg2rad(2))
+	if (bestNormalAngle > Numeric::deg2rad(2)) {
 		return false; // **TODO** provide feedback what the user should do now
+}
 
 	ocean_assert(bestNormalPairIndex > 0 && bestNormalPairIndex + 1 < planeFinderNormalPairs.size());
 

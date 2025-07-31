@@ -41,10 +41,11 @@ bool TestSparseMatrix::test(const double testDuration)
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Sparse Matrix test suceeded.";
-	else
+	} else {
 		Log::info() << "Sparse Matrix test FAILED!";
+}
 
 	return allSucceeded;
 }
@@ -69,30 +70,35 @@ bool TestSparseMatrix::testRank()
 
 	{
 		const SparseMatrix zeroMatrix1(1, 1, 0);
-		if (zeroMatrix1.rank() != 0u)
+		if (zeroMatrix1.rank() != 0u) {
 			allSucceeded = false;
+}
 
 		const SparseMatrix zeroMatrix3(3, 3, 0);
-		if (zeroMatrix3.rank() != 0u)
+		if (zeroMatrix3.rank() != 0u) {
 			allSucceeded = false;
+}
 
 		const SparseMatrix zeroMatrix7(7, 7, 0);
-		if (zeroMatrix7.rank() != 0u)
+		if (zeroMatrix7.rank() != 0u) {
 			allSucceeded = false;
+}
 	}
 
 	{
 		const Scalar data[3] = { 1, 1, 1 };
 		SparseMatrix identityMatrix3(3, 3, Matrix(3, 1, data));
-		if (identityMatrix3.rank() != 3u)
+		if (identityMatrix3.rank() != 3u) {
 			allSucceeded = false;
+}
 	}
 
 	{
 		const Scalar data[7] = { 1, 1, 1, 1, 1, 1, 1 };
 		const SparseMatrix identityMatrix7(7, 7, Matrix(7, 1, data));
-		if (identityMatrix7.rank() != 7u)
+		if (identityMatrix7.rank() != 7u) {
 			allSucceeded = false;
+}
 	}
 
 	{
@@ -104,8 +110,9 @@ bool TestSparseMatrix::testRank()
 			unsigned int y = i / 3;
 			matrix(y, x) = data[i];
 		}
-		if (matrix.rank() != 3u)
+		if (matrix.rank() != 3u) {
 			allSucceeded = false;
+}
 	}
 
 	{
@@ -117,8 +124,9 @@ bool TestSparseMatrix::testRank()
 			unsigned int y = i / 3;
 			matrix(y, x) = data[i];
 		}
-		if (matrix.rank() != 2u)
+		if (matrix.rank() != 2u) {
 			allSucceeded = false;
+}
 	}
 
 	{
@@ -130,14 +138,16 @@ bool TestSparseMatrix::testRank()
 			unsigned int y = i / 2;
 			matrix(y, x) = data[i];
 		}
-		if (matrix.rank() != 2u)
+		if (matrix.rank() != 2u) {
 			allSucceeded = false;
+}
 	}
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Validation: succeeded.";
-	else
+	} else {
 		Log::info() << "Validation: FAILED!";
+}
 
 	return allSucceeded;
 }
@@ -187,10 +197,11 @@ bool TestSparseMatrix::testNonNegativeMatrixFactorization(const double testDurat
 //	Log::info() << "Performance for " << matrix.rows()*matrix.columns() << " ("<<  matrix.nonZeroElements() << " non-zero) elements: " << String::toAString(performance.averageMseconds(), 1u) << "ms";
 	Log::info() << "Performance: " << String::toAString(performance.averageMseconds(), 1u) << "ms";
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Validation: succeeded.";
-	else
+	} else {
 		Log::info() << "Validation: FAILED!";
+}
 
 	return allSucceeded;
 
