@@ -26,13 +26,11 @@ SDXDynamicNode::~SDXDynamicNode()
 
 bool SDXDynamicNode::setDynamicField(const std::string& fieldName, const Field& field)
 {
-	if (!dynamicField(fieldName).assign(field)) {
+	if (!dynamicField(fieldName).assign(field))
 		return false;
-}
 
-	if (initialized_) {
+	if (initialized_)
 		onFieldChanged(fieldName);
-}
 
 	return true;
 }
@@ -41,23 +39,19 @@ bool SDXDynamicNode::setAnyField(const std::string& fieldName, const Field& fiel
 {
 	if (hasField(fieldName))
 	{
-		if (!Node::field(fieldName).assign(field)) {
+		if (!Node::field(fieldName).assign(field))
 			return false;
-}
 	}
 	else if (hasDynamicField(fieldName))
 	{
-		if (!DynamicNode::dynamicField(fieldName).assign(field)) {
+		if (!DynamicNode::dynamicField(fieldName).assign(field))
 			return false;
-}
 	}
-	else {
+	else
 		return false;
-}
 
-	if (initialized_) {
+	if (initialized_)
 		onFieldChanged(fieldName);
-}
 
 	return true;
 }

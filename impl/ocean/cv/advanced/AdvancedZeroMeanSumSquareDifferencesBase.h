@@ -254,9 +254,8 @@ inline IndexPair32 AdvancedZeroMeanSumSquareDifferencesBase::determine8BitPerCha
 
 	int means1_0[tChannels];
 
-	for (unsigned int n = 0u; n < tChannels; ++n) {
+	for (unsigned int n = 0u; n < tChannels; ++n)
 		means1_0[n] = int((means1[n] + (pixels / 2u)) / pixels) - int((means0[n] + (pixels / 2u)) / pixels);
-}
 
 	unsigned int ssd = 0u;
 
@@ -281,9 +280,8 @@ inline IndexPair32 AdvancedZeroMeanSumSquareDifferencesBase::determine8BitPerCha
 
 			const unsigned int factor = (*mask0 * *mask1) != 0u;
 
-			for (unsigned int n = 0u; n < tChannels; ++n) {
+			for (unsigned int n = 0u; n < tChannels; ++n)
 				ssd += sqr(int(frame0[n]) - int(frame1[n]) + means1_0[n]) * factor;
-}
 
 			frame0 += tChannels;
 			frame1 += tChannels;
@@ -332,15 +330,13 @@ inline unsigned int AdvancedZeroMeanSumSquareDifferencesBase::sum8BitPerChannelP
 	const unsigned int pSizeX = sizeX - patchLeftBorder - patchRightBorder;
 	const unsigned int pSizeY = sizeY - patchTopBorder - patchBottomBorder;
 
-	if (pSizeX > sizeX || pSizeY > sizeY) {
+	if (pSizeX > sizeX || pSizeY > sizeY)
 		return 0u;
-}
 
 	unsigned int pixels = 0u;
 
-	for (unsigned int n = 0u; n < tChannels; ++n) {
+	for (unsigned int n = 0u; n < tChannels; ++n)
 		sums[n] = 0u;
-}
 
 	frame += (pTop * int(width) + pLeft) * int(tChannels);
 	mask += (pTop * int(width) + pLeft);
@@ -360,9 +356,8 @@ inline unsigned int AdvancedZeroMeanSumSquareDifferencesBase::sum8BitPerChannelP
 
 			const unsigned int factor = *mask != 0u;
 
-			for (unsigned int n = 0u; n < tChannels; ++n) {
+			for (unsigned int n = 0u; n < tChannels; ++n)
 				sums[n] += frame[n] * factor;
-}
 
 			pixels += factor;
 
@@ -414,16 +409,13 @@ inline unsigned int AdvancedZeroMeanSumSquareDifferencesBase::sum8BitPerChannelP
 	const unsigned int pSizeX = sizeX - patchLeftBorder - patchRightBorder;
 	const unsigned int pSizeY = sizeY - patchTopBorder - patchBottomBorder;
 
-	if (pSizeX > sizeX || pSizeY > sizeY) {
+	if (pSizeX > sizeX || pSizeY > sizeY)
 		return 0u;
-}
 
-	for (unsigned int n = 0u; n < tChannels; ++n) {
+	for (unsigned int n = 0u; n < tChannels; ++n)
 		sums0[n] = 0u;
-}
-	for (unsigned int n = 0u; n < tChannels; ++n) {
+	for (unsigned int n = 0u; n < tChannels; ++n)
 		sums1[n] = 0u;
-}
 
 	unsigned int pixels = 0u;
 
@@ -448,13 +440,11 @@ inline unsigned int AdvancedZeroMeanSumSquareDifferencesBase::sum8BitPerChannelP
 
 			const unsigned int factor = (*mask0 * *mask1) != 0u;
 
-			for (unsigned int n = 0u; n < tChannels; ++n) {
+			for (unsigned int n = 0u; n < tChannels; ++n)
 				sums0[n] += frame0[n] * factor;
-}
 
-			for (unsigned int n = 0u; n < tChannels; ++n) {
+			for (unsigned int n = 0u; n < tChannels; ++n)
 				sums1[n] += frame1[n] * factor;
-}
 
 			pixels += factor;
 

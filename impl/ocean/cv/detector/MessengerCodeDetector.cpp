@@ -1072,61 +1072,49 @@ bool MessengerCodeDetector::checkBullseyeInNeighborhood(const uint8_t* const yFr
 	// inner white ring
 	for (unsigned int n = 0u; n < numberLookupLocations; ++n)
 	{
-		if (yFrame[(yCenter - (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold) {
+		if (yFrame[(yCenter - (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold)
 			return false;
-}
 
-		if (yFrame[(yCenter + (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold) {
+		if (yFrame[(yCenter + (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold)
 			return false;
-}
 
-		if (yFrame[(yCenter - (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold) {
+		if (yFrame[(yCenter - (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold)
 			return false;
-}
 
-		if (yFrame[(yCenter + (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold) {
+		if (yFrame[(yCenter + (whiteRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (whiteRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold)
 			return false;
-}
 	}
 
 	// black ring
 	for (unsigned int n = 0u; n < numberLookupLocations; ++n)
 	{
-		if (yFrame[(yCenter - (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] > threshold) {
+		if (yFrame[(yCenter - (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] > threshold)
 			return false;
-}
 
-		if (yFrame[(yCenter + (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] > threshold) {
+		if (yFrame[(yCenter + (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] > threshold)
 			return false;
-}
 
-		if (yFrame[(yCenter - (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] > threshold) {
+		if (yFrame[(yCenter - (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] > threshold)
 			return false;
-}
 
-		if (yFrame[(yCenter + (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] > threshold) {
+		if (yFrame[(yCenter + (blackRingRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (blackRingRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] > threshold)
 			return false;
-}
 	}
 
 	// outer white border
 	for (unsigned int n = 0u; n < numberLookupLocations; ++n)
 	{
-		if (yFrame[(yCenter - (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold) {
+		if (yFrame[(yCenter - (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold)
 			return false;
-}
 
-		if (yFrame[(yCenter + (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold) {
+		if (yFrame[(yCenter + (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter - (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold)
 			return false;
-}
 
-		if (yFrame[(yCenter - (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold) {
+		if (yFrame[(yCenter - (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold)
 			return false;
-}
 
-		if (yFrame[(yCenter + (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold) {
+		if (yFrame[(yCenter + (whiteBorderRadius1024 * offsets1024[n].y() + 524288u) / 1048576u) * frameStrideElements + xCenter + (whiteBorderRadius1024 * offsets1024[n].x() + 524288u) / 1048576u] < threshold)
 			return false;
-}
 	}
 
 	return true;
@@ -1139,25 +1127,20 @@ unsigned int MessengerCodeDetector::determineThreshold(const uint8_t* yPosition,
 
 	sumWhite += *(yPosition - 1);
 
-	for (unsigned int n = 0u; n < segmentSize1; ++n) {
+	for (unsigned int n = 0u; n < segmentSize1; ++n)
 		sumBlack += *yPosition++;
-}
 
-	for (unsigned int n = 0u; n < segmentSize2; ++n) {
+	for (unsigned int n = 0u; n < segmentSize2; ++n)
 		sumWhite += *yPosition++;
-}
 
-	for (unsigned int n = 0u; n < segmentSize3; ++n) {
+	for (unsigned int n = 0u; n < segmentSize3; ++n)
 		sumBlack += *yPosition++;
-}
 
-	for (unsigned int n = 0u; n < segmentSize4; ++n) {
+	for (unsigned int n = 0u; n < segmentSize4; ++n)
 		sumWhite += *yPosition++;
-}
 
-	for (unsigned int n = 0u; n < segmentSize5; ++n) {
+	for (unsigned int n = 0u; n < segmentSize5; ++n)
 		sumBlack += *yPosition++;
-}
 
 	sumWhite += *yPosition;
 

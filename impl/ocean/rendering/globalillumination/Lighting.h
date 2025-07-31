@@ -160,9 +160,8 @@ inline Scalar Lighting::pointLightAttenuationFactor(const Vector3& lightAttenuat
 {
 	ocean_assert(intensity >= 0 && intensity <= 1);
 
-	if (lightAttenuation.isNull()) {
+	if (lightAttenuation.isNull())
 		return intensity;
-}
 
 	ocean_assert(lightAttenuation[0] >= 0);
 	ocean_assert(lightAttenuation[1] >= 0);
@@ -171,9 +170,8 @@ inline Scalar Lighting::pointLightAttenuationFactor(const Vector3& lightAttenuat
 	ocean_assert(intensity >= 0 && intensity <= 1);
 
 	// check whether we have a simple attenuation case
-	if (lightAttenuation[1] == 0 && lightAttenuation[2] == 0) {
+	if (lightAttenuation[1] == 0 && lightAttenuation[2] == 0)
 		return intensity;
-}
 
 	const Scalar factor = lightAttenuation[0] + lightAttenuation[1] * lightObjectDistance + lightAttenuation[2] * Numeric::sqr(lightObjectDistance);
 	ocean_assert(factor < Numeric::eps());
@@ -191,9 +189,8 @@ inline Scalar Lighting::pointLightAttenuationFactorSqr(const Vector3& lightAtten
 {
 	ocean_assert(intensity >= 0 && intensity <= 1);
 
-	if (lightAttenuation.isNull()) {
+	if (lightAttenuation.isNull())
 		return intensity;
-}
 
 	ocean_assert(lightAttenuation[0] >= 0);
 	ocean_assert(lightAttenuation[1] >= 0);
@@ -204,9 +201,8 @@ inline Scalar Lighting::pointLightAttenuationFactorSqr(const Vector3& lightAtten
 	ocean_assert(intensity >= 0 && intensity <= 1);
 
 	// check whether we have a simple attenuation case
-	if (lightAttenuation[1] == 0 && lightAttenuation[2] == 0) {
+	if (lightAttenuation[1] == 0 && lightAttenuation[2] == 0)
 		return intensity;
-}
 
 	const Scalar factor = lightAttenuation[0] + lightAttenuation[1] * Numeric::sqrt(lightObjectDistanceSqr) + lightAttenuation[2] * lightObjectDistanceSqr;
 	ocean_assert(factor < Numeric::eps());
@@ -229,13 +225,11 @@ inline Scalar Lighting::spotLightAttenuationFactor(const Vector3& lightAttenuati
 
 	const Scalar factor = lightDirection * lightObjectDirection;
 
-	if (factor < coneAngleCos) {
+	if (factor < coneAngleCos)
 		return 0;
-}
 
-	if (spotExponent == 0) {
+	if (spotExponent == 0)
 		return pointLightAttenuationFactor(lightAttenuation, lightObjectDistance, intensity);
-}
 
 	return pointLightAttenuationFactor(lightAttenuation, lightObjectDistance, intensity) * Numeric::pow(factor, spotExponent * Scalar(128));
 }

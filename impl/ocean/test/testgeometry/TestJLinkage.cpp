@@ -234,13 +234,11 @@ bool TestJLinkage::testFaultlessSingleHomography(const double testDuration)
 					localSucceeded = false;
 				}
 			}
-			else {
+			else
 				localSucceeded = false;
-}
 
-			if (localSucceeded) {
+			if (localSucceeded)
 				++validIterations;
-}
 
 			++iterations;
 		}
@@ -533,9 +531,8 @@ bool TestJLinkage::testFaultlessMultipleHomography(const double testDuration)
 					localSucceeded = false;
 				}
 
-				if (localSucceeded) {
+				if (localSucceeded)
 					++validIterations;
-}
 
 				++iterations;
 			}

@@ -88,9 +88,8 @@ unsigned int GLESUndistortedBackground::verticalElements() const
 
 void GLESUndistortedBackground::setHorizontalElements(const unsigned int elements)
 {
-	if (elements < 1 || backgroundHorizontalElements == elements) {
+	if (elements < 1 || backgroundHorizontalElements == elements)
 		return;
-}
 
 	backgroundHorizontalElements = elements;
 	cameraChanged_ = true;
@@ -98,9 +97,8 @@ void GLESUndistortedBackground::setHorizontalElements(const unsigned int element
 
 void GLESUndistortedBackground::setVerticalElements(const unsigned int elements)
 {
-	if (elements < 1 || backgroundVerticalElements == elements) {
+	if (elements < 1 || backgroundVerticalElements == elements)
 		return;
-}
 
 	backgroundVerticalElements = elements;
 	cameraChanged_ = true;
@@ -108,9 +106,8 @@ void GLESUndistortedBackground::setVerticalElements(const unsigned int elements)
 
 bool GLESUndistortedBackground::setDisplayType(const DisplayType type)
 {
-	if (type == DT_FASTEST) {
+	if (type == DT_FASTEST)
 		return true;
-}
 
 	Log::warning() << "This display type is not supported!";
 	return false;

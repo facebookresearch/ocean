@@ -62,11 +62,10 @@ bool TestFrameInterpolatorBicubic::test(const unsigned int width, const unsigned
 
 	Log::info() << " ";
 
-	if (result) {
+	if (result)
 		Log::info() << "Bicubic interpolation test succeeded.";
-	} else {
+	else
 		Log::info() << "Bicubic interpolation test FAILED!";
-}
 
 	return result;
 }

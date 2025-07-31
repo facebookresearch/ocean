@@ -413,9 +413,8 @@ inline bool PoseProjectionSet::ErrorObject::operator<(const ErrorObject& element
 template <Geometry::Estimator::EstimatorType tEstimator>
 Scalar PoseProjection::minimalAverageSquareError(const Geometry::ImagePoint* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Geometry::Error::ErrorDetermination errorDetermination)
 {
-	if (isEmpty()) {
+	if (isEmpty())
 		return Numeric::maxValue();
-}
 
 	const size_t points = min(size(), numberImagePoints);
 	const size_t validPoints = min(validImagePoints, points);
@@ -428,23 +427,20 @@ HomogenousMatrix4 PoseProjectionSet::findPoseWithMinimalError(const Geometry::Im
 {
 	ocean_assert(!isEmpty());
 
-	if (isEmpty()) {
+	if (isEmpty())
 		return HomogenousMatrix4();
-}
 
 	ErrorObjects errorObjects(projectionSetPoseProjections.size(), ErrorObject(0xFFFFFFFF, Numeric::maxValue()));
 
-	if (worker) {
+	if (worker)
 		worker->executeFunction(Worker::Function::create(*this, &PoseProjectionSet::findPoseWithMinimalErrorSubset<tEstimator>, imagePoints, numberImagePoints, validImagePoints, errorDetermination, errorObjects.data(), 0u, 0u), 0u, size(), 5u, 6u);
-	} else {
+	else
 		findPoseWithMinimalErrorSubset<tEstimator>(imagePoints, numberImagePoints, validImagePoints, errorDetermination, errorObjects.data(), 0u, (unsigned int)size());
-}
 
 	std::sort(errorObjects.begin(), errorObjects.end());
 
-	if (resultingError) {
+	if (resultingError)
 		*resultingError = errorObjects.front().error();
-}
 
 	ocean_assert(errorObjects.front().index() < projectionSetPoseProjections.size());
 	return projectionSetPoseProjections[errorObjects.front().index()].pose();
@@ -455,17 +451,15 @@ unsigned int PoseProjectionSet::findPosesWithMinimalError(const Geometry::ImageP
 {
 	ocean_assert(poses);
 
-	if (isEmpty() || numberPoses == 0) {
+	if (isEmpty() || numberPoses == 0)
 		return 0;
-}
 
 	ErrorObjects errorObjects(projectionSetPoseProjections.size(), ErrorObject(0xFFFFFFFF, Numeric::maxValue()));
 
-	if (worker) {
+	if (worker)
 		worker->executeFunction(Worker::Function::create(*this, &PoseProjectionSet::findPoseWithMinimalErrorSubset<tEstimator>, imagePoints, numberImagePoints, validImagePoints, errorDetermination, errorObjects.data(), 0u, 0u), 0u, (unsigned int)size(), 5u, 6u);
-	} else {
+	else
 		findPoseWithMinimalErrorSubset<tEstimator>(imagePoints, numberImagePoints, validImagePoints, errorDetermination, errorObjects.data(), 0u, (unsigned int)size());
-}
 
 	// **NOTE** We should seek a slightly larger set of best matching poses as we should try to find good poses but also different poses
 	// **NOTE** We should think about the application of more suitable data structures like KD-Trees to improve the performance
@@ -477,9 +471,8 @@ unsigned int PoseProjectionSet::findPosesWithMinimalError(const Geometry::ImageP
 	for (size_t n = 0; n < results; ++n)
 	{
 		poses[n] = projectionSetPoseProjections[errorObjects[n].index()].pose();
-		if (resultingErrors) {
+		if (resultingErrors)
 			resultingErrors[n] = errorObjects[n].error();
-}
 	}
 
 	return (unsigned int)results;

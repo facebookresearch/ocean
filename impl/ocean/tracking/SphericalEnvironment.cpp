@@ -976,9 +976,8 @@ bool SphericalEnvironment::determinePointCorrespondencesHomography(const CV::Fra
 		return false;
 	}
 
-	if (usedPointCandidates) {
+	if (usedPointCandidates)
 		*usedPointCandidates = subRegionSourcePoints.size();
-}
 
 	// although the patch size has been defined from the caller we may need to reduce the patch size
 
@@ -1761,9 +1760,8 @@ IndexPairs32 SphericalEnvironment::findBidirectionalCorrespondences8BitPerChanne
 		Lock lock;
 		worker->executeFunction(Worker::Function::createStatic(findBidirectionalCorrespondences8BitPerChannelSubset<tChannels, tSize>, &pinholeCamera0, &pinholeCamera1, &orientation0, &orientation1, datas0, datas1, &points0, &points1, &distribution0, &distribution1, &lock, &results, 0u, 0u), 0u, (unsigned int)points0.size(), 12u, 13u);
 	}
-	else {
+	else
 		findBidirectionalCorrespondences8BitPerChannelSubset<tChannels, tSize>(&pinholeCamera0, &pinholeCamera1, &orientation0, &orientation1, datas0, datas1, &points0, &points1, &distribution0, &distribution1, nullptr, &results, 0u, (unsigned int)points0.size());
-}
 
 	return results;
 }

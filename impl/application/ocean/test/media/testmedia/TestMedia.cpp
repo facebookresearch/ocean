@@ -131,9 +131,8 @@ using namespace Ocean;
 
 	try
 	{
-		if (Test::TestMedia::testMedia(testDuration, worker, functionList)) {
+		if (Test::TestMedia::testMedia(testDuration, worker, functionList))
 			resultValue = 0;
-}
 	}
 	catch(...)
 	{

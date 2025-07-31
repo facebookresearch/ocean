@@ -20,11 +20,10 @@ void AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8Bit(const unsigne
 {
 	ocean_assert(source && target);
 
-	if (worker) {
+	if (worker)
 		worker->executeFunction(Worker::Function::createStatic(&AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8Bit, source, target, width, height, depth, 0u, 0u), 0u, depth, 5u, 6u);
-	} else {
+	else
 		filterHorizontalVerticalMaximum8Bit(source, target, width, height, depth, 0u, depth);
-}
 }
 
 void AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8Bit(const unsigned char* source, unsigned short* target, const unsigned int width, const unsigned int height, const unsigned int depth, const unsigned int firstFrame, const unsigned int numberFrames)
@@ -38,9 +37,8 @@ void AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8Bit(const unsigne
 	const unsigned int frameSize = width * height;
 
 	// set the first frame to zero
-	if (beginFilterFrame == 1u) {
+	if (beginFilterFrame == 1u)
 		memset(target, 0, frameSize * sizeof(unsigned short));
-}
 
 	ocean_assert(beginFilterFrame >= 1u);
 
@@ -152,9 +150,8 @@ void AdvancedFrameFilterSobel::filterHorizontalVerticalMaximum8Bit(const unsigne
 	}
 
 	// set the last frame to zero
-	if (endFilterFrame == depth - 1u) {
+	if (endFilterFrame == depth - 1u)
 		memset(target, 0, frameSize * sizeof(unsigned short));
-}
 }
 
 }

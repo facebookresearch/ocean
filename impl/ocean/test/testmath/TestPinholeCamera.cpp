@@ -512,9 +512,8 @@ bool TestPinholeCamera::testDistortion(const unsigned int width, const unsigned 
 			T k1 = (n % 2u == 0u) ? 0 : RandomT<T>::scalar(T(-0.1), T(0.1));
 			T k2 = (n % 2u == 0u) ? 0 : RandomT<T>::scalar(T(-0.1), T(0.1));
 
-			if (k1 * k2 > 0) {
+			if (k1 * k2 > 0)
 				continue;
-}
 
 			T p1 = (n <= 1) ? 0 : RandomT<T>::scalar(T(-0.01), T(0.01));
 			T p2 = (n <= 1) ? 0 : RandomT<T>::scalar(T(-0.01), T(0.01));
@@ -533,9 +532,8 @@ bool TestPinholeCamera::testDistortion(const unsigned int width, const unsigned 
 				const VectorT2<T> calculatedUndistortedPoint = pinholeCamera.template undistort<true>(distortedPoint, 100u);
 
 				if (!pinholeCamera.isInside(distortedPoint) || (NumericT<T>::isEqual(undistortedPoint.x(), calculatedUndistortedPoint.x(), T(0.1))
-					&& NumericT<T>::isEqual(undistortedPoint.y(), calculatedUndistortedPoint.y(), T(0.1)))) {
+					&& NumericT<T>::isEqual(undistortedPoint.y(), calculatedUndistortedPoint.y(), T(0.1))))
 					++succeeded;
-}
 
 				++iterations;
 			}
@@ -580,9 +578,8 @@ bool TestPinholeCamera::testVectorDistortionFree(const unsigned int width, const
 		const VectorT3<T> rayVector(pinholeCamera.vector(imagePoint));
 
 		// the vector must have length 1
-		if (NumericT<T>::isNotEqual(rayVector.length(), 1) || rayVector.z() > 0) {
+		if (NumericT<T>::isNotEqual(rayVector.length(), 1) || rayVector.z() > 0)
 			result = false;
-}
 
 		// 3D -> 2D projection
 		const VectorT3<T> rayVectorFlipped(rayVector.x(), -rayVector.y(), -rayVector.z());
@@ -594,9 +591,8 @@ bool TestPinholeCamera::testVectorDistortionFree(const unsigned int width, const
 
 		const VectorT2<T> projectedImagePoint(projectedHomogenousImagePoint.x() / projectedHomogenousImagePoint.z(), projectedHomogenousImagePoint.y() / projectedHomogenousImagePoint.z());
 
-		if (NumericT<T>::abs(projectedImagePoint.x() - imagePoint.x()) <= 0.05 && NumericT<T>::abs(projectedImagePoint.y() - imagePoint.y()) <= 0.05) {
+		if (NumericT<T>::abs(projectedImagePoint.x() - imagePoint.x()) <= 0.05 && NumericT<T>::abs(projectedImagePoint.y() - imagePoint.y()) <= 0.05)
 			succeeded++;
-}
 
 		iterations++;
 	}
@@ -605,11 +601,10 @@ bool TestPinholeCamera::testVectorDistortionFree(const unsigned int width, const
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
 
-	if (result) {
+	if (result)
 		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-	} else {
+	else
 		Log::info() << "Validation: FAILED!";
-}
 
 	return result && percent >= 0.97;
 }
@@ -649,9 +644,8 @@ bool TestPinholeCamera::testVectorDistorted(const unsigned int width, const unsi
 		bool localResult = true;
 
 		// the vector must have length 1
-		if (NumericT<T>::isNotEqual(rayVector.length(), 1) || rayVector.z() > 0) {
+		if (NumericT<T>::isNotEqual(rayVector.length(), 1) || rayVector.z() > 0)
 			localResult = false;
-}
 
 		// 3D -> 2D projection
 		const VectorT3<T> rayVectorFlipped(rayVector.x(), -rayVector.y(), -rayVector.z());
@@ -661,19 +655,16 @@ bool TestPinholeCamera::testVectorDistorted(const unsigned int width, const unsi
 
 		const VectorT2<T> undistortedProjectedImagePoint(undistortedProjectedHomogenousImagePoint.x() / undistortedProjectedHomogenousImagePoint.z(), undistortedProjectedHomogenousImagePoint.y() / undistortedProjectedHomogenousImagePoint.z());
 
-		if (NumericT<T>::abs(undistortedProjectedImagePoint.x() - undistortedImagePoint.x()) > 0.05 || NumericT<T>::abs(undistortedProjectedImagePoint.y() - undistortedImagePoint.y()) > 0.05) {
+		if (NumericT<T>::abs(undistortedProjectedImagePoint.x() - undistortedImagePoint.x()) > 0.05 || NumericT<T>::abs(undistortedProjectedImagePoint.y() - undistortedImagePoint.y()) > 0.05)
 			localResult = false;
-}
 
 		const VectorT2<T> distortedProjectedImagePoint(pinholeCamera.template distort<true>(undistortedProjectedImagePoint));
 
-		if (NumericT<T>::abs(distortedProjectedImagePoint.x() - distortedImagePoint.x()) > 0.05 || NumericT<T>::abs(distortedProjectedImagePoint.y() - distortedImagePoint.y()) > 0.05) {
+		if (NumericT<T>::abs(distortedProjectedImagePoint.x() - distortedImagePoint.x()) > 0.05 || NumericT<T>::abs(distortedProjectedImagePoint.y() - distortedImagePoint.y()) > 0.05)
 			localResult = false;
-}
 
-		if (localResult) {
+		if (localResult)
 			succeeded++;
-}
 
 		iterations++;
 	}
@@ -682,11 +673,10 @@ bool TestPinholeCamera::testVectorDistorted(const unsigned int width, const unsi
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
 
-	if (result) {
+	if (result)
 		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-	} else {
+	else
 		Log::info() << "Validation: FAILED!";
-}
 
 	return result && percent >= 0.97;
 }
@@ -721,9 +711,8 @@ bool TestPinholeCamera::testObjectPointInFront(const double testDuration)
 				const VectorT3<T> frontObjectPoint(RandomT<T>::scalar(-100, 100), RandomT<T>::scalar(-100, 100), RandomT<T>::scalar(-100, -NumericT<T>::eps() * T(100)));
 				const VectorT3<T> backObjectPoint(RandomT<T>::scalar(-100, 100), RandomT<T>::scalar(-100, 100), RandomT<T>::scalar(0, 100));
 
-				if (PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, frontObjectPoint) && PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, frontObjectPoint) && !PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, backObjectPoint) && !PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, backObjectPoint)) {
+				if (PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, frontObjectPoint) && PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, frontObjectPoint) && !PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, backObjectPoint) && !PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, backObjectPoint))
 					validIteration++;
-}
 
 				iterations++;
 			}
@@ -746,9 +735,8 @@ bool TestPinholeCamera::testObjectPointInFront(const double testDuration)
 				const VectorT3<T> poseFrontObjectPoint(pose * localFrontObjectPoint);
 				const VectorT3<T> poseBackObjectPoint(pose * localBackObjectPoint);
 
-				if (PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, poseFrontObjectPoint) && PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, orientationFrontObjectPoint) && !PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, poseBackObjectPoint) && !PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, orientationBackObjectPoint)) {
+				if (PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, poseFrontObjectPoint) && PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, orientationFrontObjectPoint) && !PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, poseBackObjectPoint) && !PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, orientationBackObjectPoint))
 					validIteration++;
-}
 
 				iterations++;
 			}

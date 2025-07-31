@@ -91,9 +91,8 @@ bool TestLine2::testIsOnLine(const double testDuration)
 
 			Vector2 perpendicular(line.direction().perpendicular());
 
-			if (!perpendicular.normalize()) {
+			if (!perpendicular.normalize())
 				ocean_assert(false && "This must never happen!");
-}
 
 			ocean_assert(line.direction() != perpendicular);
 			ocean_assert(Numeric::isEqual(perpendicular.length(), 1));
@@ -103,25 +102,21 @@ bool TestLine2::testIsOnLine(const double testDuration)
 
 			const Vector2 pointOnLine(line.point() + line.direction() * Random::scalar(-range * Scalar(10), range * Scalar(10)));
 
-			if (line.isOnLine(pointOnLine) == false) {
+			if (line.isOnLine(pointOnLine) == false)
 				localSucceeded = false;
-}
 
 			const Vector2 pointOffset(line.point() + perpendicular * Random::scalar(-range, range));
 
-			if (line.point() != pointOffset && line.isOnLine(pointOffset) == true) {
+			if (line.point() != pointOffset && line.isOnLine(pointOffset) == true)
 				localSucceeded = false;
-}
 
 			const Vector2 pointOffset2(pointOnLine + perpendicular * Random::scalar(Scalar(0.5), range) * Random::sign());
 
-			if (line.isOnLine(pointOffset2) == true) {
+			if (line.isOnLine(pointOffset2) == true)
 				localSucceeded = false;
-}
 
-			if (localSucceeded) {
+			if (localSucceeded)
 				validIterations++;
-}
 
 			iterations++;
 		}
@@ -162,17 +157,14 @@ bool TestLine2::testIsLeftOfLine(const double testDuration)
 			const Vector2 pointRightOfReferenceLine(-pointLeftOfReferenceLine.x(), pointLeftOfReferenceLine.y());
 			const Vector2 pointOnReferenceLine(referenceLine.point() + referenceLine.direction().normalized() * pointLeftOfReferenceLine.y());
 
-			if (referenceLine.isLeftOfLine(pointLeftOfReferenceLine) != true) {
+			if (referenceLine.isLeftOfLine(pointLeftOfReferenceLine) != true)
 				soFarSoGood = false;
-}
 
-			if (referenceLine.isLeftOfLine(pointRightOfReferenceLine) != false) {
+			if (referenceLine.isLeftOfLine(pointRightOfReferenceLine) != false)
 				soFarSoGood = false;
-}
 
-			if (referenceLine.isLeftOfLine(pointOnReferenceLine) != false) {
+			if (referenceLine.isLeftOfLine(pointOnReferenceLine) != false)
 				soFarSoGood = false;
-}
 
 			const SquareMatrix3 randomRotation = SquareMatrix3(Rotation(0, 0, 1, Random::scalar(-Numeric::pi(), Numeric::pi())));
 			const SquareMatrix3 randomTranslation = SquareMatrix3(1, 0, 0, 0, 1, 0, Random::scalar(-range, range), Random::scalar(-range, range), 1);
@@ -185,21 +177,17 @@ bool TestLine2::testIsLeftOfLine(const double testDuration)
 			const Vector2 pointRightOfTransformedLine = randomTransformation * pointRightOfReferenceLine;
 			const Vector2 pointOnTransformedLine = randomTransformation * pointOnReferenceLine;
 
-			if (transformedLine.isLeftOfLine(pointLeftOfTransformedLine) != true) {
+			if (transformedLine.isLeftOfLine(pointLeftOfTransformedLine) != true)
 				soFarSoGood = false;
-}
 
-			if (transformedLine.isLeftOfLine(pointRightOfTransformedLine) != false) {
+			if (transformedLine.isLeftOfLine(pointRightOfTransformedLine) != false)
 				soFarSoGood = false;
-}
 
-			if (transformedLine.isLeftOfLine(pointOnTransformedLine) != false) {
+			if (transformedLine.isLeftOfLine(pointOnTransformedLine) != false)
 				soFarSoGood = false;
-}
 
-			if (soFarSoGood) {
+			if (soFarSoGood)
 				validIterations++;
-}
 
 			iterations++;
 		}

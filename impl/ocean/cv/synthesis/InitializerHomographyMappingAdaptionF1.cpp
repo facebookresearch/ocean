@@ -109,7 +109,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 							const bool distance02 = newPositionTopLeft.sqrDistance(newPositionBottomLeft) < 2 * 2;
 							const bool distance03 = newPositionTopLeft.sqrDistance(newPositionBottomRight) < 2 * 2;
 
-							if (distance01 && distance02 && distance03) {
+							if (distance01 && distance02 && distance03)
 								newPosition = (newPositionTopLeft * tx_ + newPositionTopRight * tx) * ty_ + (newPositionBottomLeft * tx_ + newPositionBottomRight * tx) * ty;
 							/*else if (distance01 && distance02)
 								newPosition = (newPositionTopLeft + newPositionTopRight + newPositionBottomLeft) / 3;
@@ -123,9 +123,8 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 								newPosition = (newPositionTopLeft * ty_ + newPositionBottomLeft * ty);
 							else if (distance03)
 								newPosition = (newPositionTopLeft + newPositionBottomRight) / 2;*/
-							} else {
+							else
 								newPosition = newPositionTopLeft;
-}
 						}
 						else if (roundedX == left && roundedY == bottom)
 						{
@@ -137,7 +136,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 							const bool distance21 = newPositionBottomLeft.sqrDistance(newPositionTopRight) < 2 * 2;
 							const bool distance23 = newPositionBottomLeft.sqrDistance(newPositionBottomRight) < 2 * 2;
 
-							if (distance20 && distance21 && distance23) {
+							if (distance20 && distance21 && distance23)
 								newPosition = (newPositionTopLeft * tx_ + newPositionTopRight * tx) * ty_ + (newPositionBottomLeft * tx_ + newPositionBottomRight * tx) * ty;
 							/*else if (distance20 && distance21)
 								newPosition = (newPositionBottomLeft + newPositionTopLeft + newPositionTopRight) / 3;
@@ -151,9 +150,8 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 								newPosition = (newPositionBottomLeft + newPositionTopRight) / 2;
 							else if (distance23)
 								newPosition = (newPositionBottomLeft * tx_ + newPositionBottomRight * tx);*/
-							} else {
+							else
 								newPosition = newPositionBottomLeft;
-}
 						}
 						else if (roundedX == right && roundedY == top)
 						{
@@ -165,7 +163,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 							const bool distance12 = newPositionTopRight.sqrDistance(newPositionBottomLeft) < 2 * 2;
 							const bool distance13 = newPositionTopRight.sqrDistance(newPositionBottomRight) < 2 * 2;
 
-							if (distance10 && distance12 && distance13) {
+							if (distance10 && distance12 && distance13)
 								newPosition = (newPositionTopLeft * tx_ + newPositionTopRight * tx) * ty_ + (newPositionBottomLeft * tx_ + newPositionBottomRight * tx) * ty;
 							/*else if (distance10 && distance12)
 								newPosition = (newPositionTopRight + newPositionTopLeft + newPositionBottomLeft) / 3;
@@ -179,9 +177,8 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 								newPosition = (newPositionTopRight + newPositionBottomLeft) / 2;
 							else if (distance13)
 								newPosition = newPositionTopRight * ty_ + newPositionBottomRight * ty;*/
-							} else {
+							else
 								newPosition = newPositionTopRight;
-}
 						}
 						else
 						{
@@ -195,7 +192,7 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 							const bool distance31 = newPositionBottomRight.sqrDistance(newPositionTopRight) < 2 * 2;
 							const bool distance32 = newPositionBottomRight.sqrDistance(newPositionBottomLeft) < 2 * 2;
 
-							if (distance30 && distance31 && distance32) {
+							if (distance30 && distance31 && distance32)
 								newPosition = (newPositionTopLeft * tx_ + newPositionTopRight * tx) * ty_ + (newPositionBottomLeft * tx_ + newPositionBottomRight * tx) * ty;
 							/*else if (distance30 && distance31)
 								newPosition = (newPositionBottomRight + newPositionTopLeft + newPositionTopRight) / 3;
@@ -209,9 +206,8 @@ void InitializerHomographyMappingAdaptionF1::initializeSubsetF1(const unsigned i
 								newPosition = newPositionBottomRight * ty + newPositionTopRight * ty_;
 							else if (distance32)
 								newPosition = newPositionBottomRight * tx + newPositionBottomLeft * tx_;*/
-							} else {
+							else
 								newPosition = newPositionBottomRight;
-}
 						}
 
 						if (newPosition.x() >= 2 && newPosition.x() < Scalar(layerWidth - 3) && newPosition.y() >= 2 && newPosition.y() < Scalar(layerHeight - 3))

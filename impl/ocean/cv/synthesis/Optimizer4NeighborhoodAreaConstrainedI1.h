@@ -304,9 +304,8 @@ void Optimizer4NeighborhoodAreaConstrainedI1<tWeightFactor, tBorderFactor, tUpda
 						if ((testPositionX == newPositionX && testPositionY == newPositionY)
 								|| testPositionX >= layerWidth || testPositionY >= layerHeight
 								|| layerMaskData[testPositionY * layerMaskStrideElements + testPositionX] != 0xFFu
-								|| layerFilterData[testPositionY * layerFilterStrideElements + testPositionX] != 0xFFu) {
+								|| layerFilterData[testPositionY * layerFilterStrideElements + testPositionX] != 0xFFu)
 							continue;
-}
 
 						const unsigned int testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, maxSpatialCost);
 						const unsigned int testColorCost = layerMapping.appearanceCost5x5<tChannels, tBorderFactor>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, layerFramePaddingElements, layerMaskPaddingElements);
@@ -465,9 +464,8 @@ void Optimizer4NeighborhoodAreaConstrainedI1<tWeightFactor, tBorderFactor, tUpda
 						if ((testPositionX == newPositionX && testPositionY == newPositionY)
 								|| testPositionX >= layerWidth || testPositionY >= layerHeight
 								|| layerMaskData[testPositionY * layerMaskStrideElements + testPositionX] != 0xFFu
-								|| layerFilterData[testPositionY * layerFilterStrideElements + testPositionX] != 0xFFu) {
+								|| layerFilterData[testPositionY * layerFilterStrideElements + testPositionX] != 0xFFu)
 							continue;
-}
 
 						const unsigned int testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, maxSpatialCost);
 						const unsigned int testColorCost = layerMapping.appearanceCost5x5<tChannels, tBorderFactor>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, layerFramePaddingElements, layerMaskPaddingElements);

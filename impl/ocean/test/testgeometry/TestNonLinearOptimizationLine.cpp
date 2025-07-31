@@ -128,13 +128,11 @@ bool TestNonLinearOptimizationLine::testOptimizeLineIdeal(const unsigned int num
 		}
 
 		IndexSet32 outlierIndices;
-		while (outlierIndices.size() < outliers) {
+		while (outlierIndices.size() < outliers)
 			outlierIndices.insert(RandomI::random(numberPoints - 1u));
-}
 
-		for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i) {
+		for (IndexSet32::const_iterator i = outlierIndices.begin(); i != outlierIndices.end(); ++i)
 			linePoints[*i] = line.nearestPoint(linePoints[*i]) + line.normal() * environmentRadius * Random::scalar(Scalar(0.5), 1000) * Random::sign();
-}
 
 		const Rotation offsetRotation(0, 0, 1, Random::scalar(Numeric::deg2rad(5), Numeric::deg2rad(20)) * Random::sign());
 		const Vector3 faultyLineDirection3(offsetRotation * Vector3(lineDirection, 0));
@@ -158,9 +156,8 @@ bool TestNonLinearOptimizationLine::testOptimizeLineIdeal(const unsigned int num
 			medianInitialErrors.push_back(initialError);
 			medianOptimizedErrors.push_back(finalError);
 		}
-		else {
+		else
 			performance.skip();
-}
 
 		iterations++;
 	}

@@ -46,9 +46,8 @@ void GIPointLight::setPosition(const Vector3& position)
 
 bool GIPointLight::setAttenuation(const Vector3& factors)
 {
-	if (factors.x() < 0 || factors.y() < 0 || factors.z() < 0) {
+	if (factors.x() < 0 || factors.y() < 0 || factors.z() < 0)
 		return false;
-}
 
 	const ScopedLock scopedLock(objectLock);
 

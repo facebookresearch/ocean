@@ -41,13 +41,11 @@ void TracingBox::findNearestIntersection(const Line3& ray, RayIntersection& inte
 {
 	ocean_assert(ray.isValid());
 
-	if (this == excludedObject) {
+	if (this == excludedObject)
 		return;
-}
 
-	if (!tracingLocalBoundingBox.hasIntersection(ray, invertedObjectTransformation_)) {
+	if (!tracingLocalBoundingBox.hasIntersection(ray, invertedObjectTransformation_))
 		return;
-}
 
 	Vector3 intersectionPoint;
 	Normal normal;
@@ -61,11 +59,10 @@ void TracingBox::findNearestIntersection(const Line3& ray, RayIntersection& inte
 		ocean_assert(Numeric::isEqual(normal.length(), 1));
 		ocean_assert(frontFace && normal * ray.direction() < 0 || !frontFace && normal * ray.direction() > 0);
 
-		if (attributes_) {
+		if (attributes_)
 			intersection = RayIntersection(intersectionPoint, ray.direction(), normal, textureCoordinate, intersectionDistance, this, lightSources_);
-		} else {
+		else
 			intersection = RayIntersection(intersectionPoint, ray.direction(), normal, textureCoordinate, intersectionDistance, this, lightSources_);
-}
 	}
 }
 
@@ -73,9 +70,8 @@ bool TracingBox::hasIntersection(const Line3& ray, const Scalar maximalDistance,
 {
 	ocean_assert(ray.isValid());
 
-	if (this == excludedObject) {
+	if (this == excludedObject)
 		return false;
-}
 
 	Vector3 intersectionPoint;
 	Scalar intersectionDistance;

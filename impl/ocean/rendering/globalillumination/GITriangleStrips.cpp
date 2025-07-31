@@ -43,13 +43,11 @@ BoundingBox GITriangleStrips::boundingBox() const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (primitiveStrips.empty()) {
+	if (primitiveStrips.empty())
 		return BoundingBox();
-}
 
-	if (primitiveVertexSet.isNull()) {
+	if (primitiveVertexSet.isNull())
 		return BoundingBox();
-}
 
 	BoundingBox boundingBox;
 	const Vertices vertices(primitiveVertexSet->vertices());

@@ -101,9 +101,8 @@ bool Framebuffer::hasExtension(const std::string& /*extension*/) const
 
 void Framebuffer::addScene(const SceneRef& scene)
 {
-	if (scene.isNull()) {
+	if (scene.isNull())
 		return;
-}
 
 	const ScopedLock scopedLock(objectLock);
 

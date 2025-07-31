@@ -128,9 +128,8 @@ using namespace Ocean;
 
 	try
 	{
-		if (Test::TestGeometry::testGeometry(testDuration, worker, functionList)) {
+		if (Test::TestGeometry::testGeometry(testDuration, worker, functionList))
 			resultValue = 0;
-}
 	}
 	catch (...)
 	{

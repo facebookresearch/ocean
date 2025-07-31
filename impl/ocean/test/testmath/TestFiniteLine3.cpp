@@ -84,9 +84,8 @@ bool TestFiniteLine3::testIsOnLine(const double testDuration)
 			const Vector3 point0(Random::vector3(-100, 100));
 			Vector3 point1(Random::vector3(-100, 100));
 
-			while (point0 == point1) {
+			while (point0 == point1)
 				point1 = Random::vector3(-100, 100);
-}
 
 			const FiniteLine3 line(point0, point1);
 
@@ -96,15 +95,13 @@ bool TestFiniteLine3::testIsOnLine(const double testDuration)
 
 				if (scalar >= 0 && scalar <= 1)
 				{
-					if (line.isOnLine(point) == false) {
+					if (line.isOnLine(point) == false)
 						localSucceeded = false;
-}
 				}
 				else if (scalar < -Numeric::weakEps() || scalar > 1 + Numeric::weakEps())
 				{
-					if (line.isOnLine(point) == true) {
+					if (line.isOnLine(point) == true)
 						localSucceeded = false;
-}
 				}
 				else
 				{
@@ -126,14 +123,12 @@ bool TestFiniteLine3::testIsOnLine(const double testDuration)
 				const Vector3 pointA = point0 + direction0 * scalar0 + direction1 * scalar1;
 				const Vector3 pointB = point0 - direction0 * scalar0 - direction1 * scalar1;
 
-				if (line.isOnLine(pointA) || line.isOnLine(pointB)) {
+				if (line.isOnLine(pointA) || line.isOnLine(pointB))
 					localSucceeded = false;
-}
 			}
 
-			if (localSucceeded) {
+			if (localSucceeded)
 				validIterations++;
-}
 
 			iterations++;
 		}
@@ -166,9 +161,8 @@ bool TestFiniteLine3::testDistance(const double testDuration)
 			const Vector3 point0(Random::vector3(-100, 100));
 			Vector3 point1(Random::vector3(-100, 100));
 
-			while (point0 == point1) {
+			while (point0 == point1)
 				point1 = Random::vector3(-100, 100);
-}
 
 			const FiniteLine3 line(point0, point1);
 
@@ -183,15 +177,13 @@ bool TestFiniteLine3::testDistance(const double testDuration)
 
 			Scalar test = Numeric::maxValue();
 
-			if (line.isOnLine(pointOnInfiniteLine)) {
+			if (line.isOnLine(pointOnInfiniteLine))
 				test = pointOnInfiniteLine.distance(point);
-			} else {
+			else
 				test = min(point.distance(point0), point.distance(point1));
-}
 
-			if (Numeric::isEqual(test, result, std::is_same<float, Scalar>::value ? Numeric::eps() * 100 : Numeric::eps())) {
+			if (Numeric::isEqual(test, result, std::is_same<float, Scalar>::value ? Numeric::eps() * 100 : Numeric::eps()))
 				validIterations++;
-}
 
 			iterations++;
 		}

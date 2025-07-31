@@ -255,11 +255,10 @@ bool TestPointTracking::testSparseOpticalFlow(const cv::Mat & frame, int window,
 	cv::destroyAllWindows();
 #endif
 
-	if (matchRatio == 1.0) {
+	if (matchRatio == 1.0)
 		return true;
-	} else {
+	else
 		return false;
-}
 }
 
 bool TestPointTracking::testTemplateMatching(const cv::Mat & frame)

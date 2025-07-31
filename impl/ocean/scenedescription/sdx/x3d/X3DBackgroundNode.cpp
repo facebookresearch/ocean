@@ -69,9 +69,8 @@ void X3DBackgroundNode::onInitialize(const Rendering::SceneRef& scene, const Tim
 					pairs.push_back(Rendering::SkyBackground::ColorPair(groundAngle_.values()[n], groundColor_.values()[n + 1]));
 				}
 
-				if (valid) {
+				if (valid)
 					skyBackground->setGroundColors(pairs);
-}
 			}
 
 			if (skyAngle_.values().size() + 1 == skyColor_.values().size())
@@ -92,9 +91,8 @@ void X3DBackgroundNode::onInitialize(const Rendering::SceneRef& scene, const Tim
 					pairs.push_back(Rendering::SkyBackground::ColorPair(skyAngle_.values()[n], skyColor_.values()[n + 1]));
 				}
 
-				if (valid) {
+				if (valid)
 					skyBackground->setSkyColors(pairs);
-}
 			}
 		}
 	}
@@ -129,9 +127,8 @@ void X3DBackgroundNode::onFieldChanged(const std::string& fieldName)
 					pairs.push_back(Rendering::SkyBackground::ColorPair(groundAngle_.values()[n], groundColor_.values()[n + 1]));
 				}
 
-				if (valid) {
+				if (valid)
 					skyBackground->setGroundColors(pairs);
-}
 
 				return;
 			}
@@ -154,9 +151,8 @@ void X3DBackgroundNode::onFieldChanged(const std::string& fieldName)
 					pairs.push_back(Rendering::SkyBackground::ColorPair(skyAngle_.values()[n], skyColor_.values()[n + 1]));
 				}
 
-				if (valid) {
+				if (valid)
 					skyBackground->setSkyColors(pairs);
-}
 
 				return;
 			}

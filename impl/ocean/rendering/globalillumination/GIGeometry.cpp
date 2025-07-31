@@ -76,9 +76,8 @@ BoundingBox GIGeometry::boundingBox(const bool /*involveLocalTransformation*/) c
 
 BoundingSphere GIGeometry::boundingSphere(const bool /*involveLocalTransformation*/) const
 {
-	if (geometryRenderables.empty()) {
+	if (geometryRenderables.empty())
 		return BoundingSphere();
-}
 
 	if (geometryRenderables.size() == 1)
 	{

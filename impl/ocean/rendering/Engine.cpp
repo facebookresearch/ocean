@@ -220,9 +220,8 @@ void Engine::registerDynamicObject(DynamicObject* dynamicObject)
 
 void Engine::unregisterDynamicObject(DynamicObject* dynamicObject)
 {
-	if (dynamicObject == nullptr) {
+	if (dynamicObject == nullptr)
 		return;
-}
 
 	const ScopedLock scopedLock(objectLock_);
 

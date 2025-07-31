@@ -154,9 +154,8 @@ inline Scalar PlaneFinder::sqrDistance() const
 {
 	const ImagePointCorrespondenceSet::ElementsVector& correspondences = imagePointCorrespondences.correspondences();
 
-	if (correspondences.size() <= 1) {
+	if (correspondences.size() <= 1)
 		return 0;
-}
 
 	return Geometry::Error::determineAverageError(correspondences.front(), correspondences.back());
 }

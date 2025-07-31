@@ -361,9 +361,8 @@ inline unsigned int Mapping::spatialCostNormalization<4u>() const
 template <unsigned int tChannels>
 unsigned int Mapping::calculateAppearanceCostNormalization(const unsigned int width, const unsigned int height)
 {
-	if (width == 0u || height == 0u) {
+	if (width == 0u || height == 0u)
 		return 1u;
-}
 
 	unsigned int appearanceNormalization = tChannels * 255u * 255u;
 	unsigned int spatialCost = width * width + height * height;
@@ -385,9 +384,8 @@ unsigned int Mapping::calculateAppearanceCostNormalization(const unsigned int wi
 template <unsigned int tChannels>
 unsigned int Mapping::calculateSpatialCostNormalization(const unsigned int width, const unsigned int height)
 {
-	if (width == 0u || height == 0u) {
+	if (width == 0u || height == 0u)
 		return 1u;
-}
 
 	unsigned int appearanceNormalization = tChannels * 255u * 255u;
 	unsigned int spatialCost = width * width + height * height;

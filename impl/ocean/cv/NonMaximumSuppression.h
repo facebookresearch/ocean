@@ -1036,9 +1036,8 @@ void NonMaximumSuppression<T>::suppressNonMaximumSubset(StrengthPositions<TCoord
 
 						if (i2Plus != row2.end() && i2Plus->x() <= i1->x() + 1u)
 						{
-							if (i2Plus->strength() >= i1->strength()) {
+							if (i2Plus->strength() >= i1->strength())
 								goto next;
-}
 
 							// check if there is a further candidate in the south row
 
@@ -1048,9 +1047,8 @@ void NonMaximumSuppression<T>::suppressNonMaximumSubset(StrengthPositions<TCoord
 							{
 								ocean_assert(i2PlusPlus->x() == i1->x() + 1u);
 
-								if (i2PlusPlus->strength() >= i1->strength()) {
+								if (i2PlusPlus->strength() >= i1->strength())
 									goto next;
-}
 							}
 						}
 					}
@@ -1075,9 +1073,8 @@ next:
 
 			i1Minus = i1;
 
-			if (i1Plus != row1.end()) {
+			if (i1Plus != row1.end())
 				++i1Plus;
-}
 		}
 	}
 

@@ -50,13 +50,11 @@ Scalar GICylinder::radius() const
 
 bool GICylinder::setHeight(const Scalar height)
 {
-	if (height <= 0) {
+	if (height <= 0)
 		return false;
-}
 
-	if (height == cylinderHeight) {
+	if (height == cylinderHeight)
 		return true;
-}
 
 	cylinderHeight = height;
 	rebuildPrimitives();
@@ -66,13 +64,11 @@ bool GICylinder::setHeight(const Scalar height)
 
 bool GICylinder::setRadius(const Scalar radius)
 {
-	if (radius <= 0) {
+	if (radius <= 0)
 		return false;
-}
 
-	if (radius == cylinderRadius) {
+	if (radius == cylinderRadius)
 		return true;
-}
 
 	cylinderRadius = radius;
 	rebuildPrimitives();
@@ -82,9 +78,8 @@ bool GICylinder::setRadius(const Scalar radius)
 
 bool GICylinder::setTop(const bool visible)
 {
-	if (cylinderTop == visible) {
+	if (cylinderTop == visible)
 		return true;
-}
 
 	cylinderTop = visible;
 	rebuildPrimitives();
@@ -94,9 +89,8 @@ bool GICylinder::setTop(const bool visible)
 
 bool GICylinder::setSide(const bool visible)
 {
-	if (cylinderSide == visible) {
+	if (cylinderSide == visible)
 		return true;
-}
 
 	cylinderSide = visible;
 	rebuildPrimitives();
@@ -106,9 +100,8 @@ bool GICylinder::setSide(const bool visible)
 
 bool GICylinder::setBottom(const bool visible)
 {
-	if (cylinderBottom == visible) {
+	if (cylinderBottom == visible)
 		return true;
-}
 
 	cylinderBottom = visible;
 	rebuildPrimitives();
@@ -163,15 +156,12 @@ void GICylinder::rebuildPrimitives()
 
 	unsigned int numberStrips = 0u;
 
-	if (cylinderSide) {
+	if (cylinderSide)
 		++numberStrips;
-}
-	if (cylinderTop) {
+	if (cylinderTop)
 		++numberStrips;
-}
-	if (cylinderBottom) {
+	if (cylinderBottom)
 		++numberStrips;
-}
 
 	Vertices vertices;
 	Normals normals;
@@ -211,9 +201,8 @@ void GICylinder::rebuildPrimitives()
 
 		// strip for the side
 		strips[stripIndex].reserve(side);
-		for (unsigned int n = 0; n < side; n++) {
+		for (unsigned int n = 0; n < side; n++)
 			strips[stripIndex].push_back(n);
-}
 
 		++stripIndex;
 	}
@@ -239,16 +228,14 @@ void GICylinder::rebuildPrimitives()
 		while (true)
 		{
 			++low;
-			if (low == high) {
+			if (low == high)
 				break;
-}
 
 			strips[stripIndex].push_back(low);
 
 			--high;
-			if (low == high) {
+			if (low == high)
 				break;
-}
 
 			strips[stripIndex].push_back(high);
 		}
@@ -278,16 +265,14 @@ void GICylinder::rebuildPrimitives()
 		while (true)
 		{
 			--high;
-			if (low == high) {
+			if (low == high)
 				break;
-}
 
 			strips[stripIndex].push_back(high);
 
 			++low;
-			if (low == high) {
+			if (low == high)
 				break;
-}
 
 			strips[stripIndex].push_back(low);
 		}

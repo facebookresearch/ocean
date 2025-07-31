@@ -4705,11 +4705,10 @@ ShapeDetector::Rectangles ShapeDetector::guessShapedRectanglesFromUpperCorners(c
 
 	for (Index32 nLShape = 0u; nLShape < Index32(lShapes.size()); ++nLShape)
 	{
-		if (topLeftCornerDirection * lShapes[nLShape].direction() >= thresholdCornerDirectionAngleCos) {
+		if (topLeftCornerDirection * lShapes[nLShape].direction() >= thresholdCornerDirectionAngleCos)
 			cornerIndicesTopLeft.emplace_back(nLShape);
-		} else if (topRightCornerDirection * lShapes[nLShape].direction() >= thresholdCornerDirectionAngleCos) {
+		else if (topRightCornerDirection * lShapes[nLShape].direction() >= thresholdCornerDirectionAngleCos)
 			cornerIndicesTopRight.emplace_back(nLShape);
-}
 	}
 
 	// Make sure we have potential corners for both upper vertices of the rectangle

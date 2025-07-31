@@ -293,9 +293,8 @@ void Optimizer4NeighborhoodHighPerformanceI1<tWeightFactor, tBorderFactor, tUpda
 						// the test position must lie inside the mask
 						if ((testPositionX == newPositionX && testPositionY == newPositionY)
 								|| testPositionX >= layerWidth || testPositionY >= layerHeight
-								|| layerMaskData[testPositionY * layerMaskStrideElements + testPositionX] != 0xFF) {
+								|| layerMaskData[testPositionY * layerMaskStrideElements + testPositionX] != 0xFF)
 							continue;
-}
 
 						const uint64_t testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, maxSpatialCost);
 						const uint64_t testColorCost = layerMapping.appearanceCost5x5<tChannels, tBorderFactor>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, layerFramePaddingElements, layerMaskPaddingElements);
@@ -451,9 +450,8 @@ void Optimizer4NeighborhoodHighPerformanceI1<tWeightFactor, tBorderFactor, tUpda
 
 						if ((testPositionX == newPositionX && testPositionY == newPositionY)
 								|| testPositionX >= layerWidth || testPositionY >= layerHeight
-								|| layerMaskData[testPositionY * layerWidth + testPositionX] != 0xFF) {
+								|| layerMaskData[testPositionY * layerWidth + testPositionX] != 0xFF)
 							continue;
-}
 
 						const uint64_t testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, maxSpatialCost);
 						const uint64_t testColorCost = layerMapping.appearanceCost5x5<tChannels, tBorderFactor>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, layerFramePaddingElements, layerMaskPaddingElements);

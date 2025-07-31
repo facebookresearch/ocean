@@ -80,9 +80,8 @@ void TextureTransform::onFieldChanged(const std::string& fieldName)
 	}
 
 	if (fieldName == "anisotropicDegree" || fieldName == "borderColor" || fieldName == "borderWidth" || fieldName == "boundaryModeS"
-			|| fieldName == "boundaryModeT" || fieldName == "boundaryModeR" || fieldName == "textureCompression" || fieldName == "texturePriority") {
+			|| fieldName == "boundaryModeT" || fieldName == "boundaryModeR" || fieldName == "textureCompression" || fieldName == "texturePriority")
 		Log::warning() << "TextureProperties::" << fieldName << " is not supported";
-}
 
 	X3DNode::onFieldChanged(fieldName);
 }

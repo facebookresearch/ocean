@@ -1267,19 +1267,16 @@ bool TestSSE::testSumInterleave1Channel8Bit15Elements(const double testDuration)
 			elements16Back[0] = uint8_t(RandomI::random(255u));
 
 			__m128i sums = CV::SSE::sum1Channel8BitFront15Elements<false>(elements15);
-			if (CV::SSE::value_u32<0u>(sums) != test) {
+			if (CV::SSE::value_u32<0u>(sums) != test)
 				allSucceeded = false;
-}
 
 			sums = CV::SSE::sum1Channel8BitFront15Elements<true>(elements16Front);
-			if (CV::SSE::value_u32<0u>(sums) != test) {
+			if (CV::SSE::value_u32<0u>(sums) != test)
 				allSucceeded = false;
-}
 
 			sums = CV::SSE::sum1Channel8BitBack15Elements(elements16Back);
-			if (CV::SSE::value_u32<0u>(sums) != test) {
+			if (CV::SSE::value_u32<0u>(sums) != test)
 				allSucceeded = false;
-}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));

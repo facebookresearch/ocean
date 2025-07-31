@@ -250,11 +250,10 @@ bool TestFeatureDetectors::testFeatureDetectors(const cv::Mat& frame, const doub
 
 	Log::info() << " ";
 
-	if (allSucceeded) {
+	if (allSucceeded)
 		Log::info() << "OpenCV feature detectors succeeded.";
-	} else {
+	else
 		Log::info() << "OpenCV feature detectors FAILED!";
-}
 
 	return allSucceeded;
 }

@@ -5052,8 +5052,7 @@ bool TestFrame::testStrideBytes2paddingElements(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true)) {;
-}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{

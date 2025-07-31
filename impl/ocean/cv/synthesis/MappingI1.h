@@ -439,14 +439,12 @@ inline unsigned int MappingI1::spatialCost8Neighborhood(const unsigned int xTarg
 		const unsigned int localCost = sqr(mappingPointer->x() - xSource + 1u) + sqr(mappingPointer->y() - ySource + 1u);
 
 		// stop if we cannot get better
-		if (localCost == 0u) {
+		if (localCost == 0u)
 			return 0u;
-}
 
 		// take the minimum cost only
-		if (localCost < cost) {
+		if (localCost < cost)
 			cost = localCost;
-}
 	}
 
 	// forward points one pixel to the right
@@ -466,14 +464,12 @@ inline unsigned int MappingI1::spatialCost8Neighborhood(const unsigned int xTarg
 		ocean_assert(localCost == sqr(int(mappingPointer->x()) - int(xSource)) + sqr(int(mappingPointer->y()) - int(ySource) + 1));
 
 		// stop if we cannot get better
-		if (localCost == 0u) {
+		if (localCost == 0u)
 			return 0u;
-}
 
 		// take the minimum cost only
-		if (localCost < cost) {
+		if (localCost < cost)
 			cost = localCost;
-}
 	}
 
 	// forward points one pixel to the right
@@ -494,14 +490,12 @@ inline unsigned int MappingI1::spatialCost8Neighborhood(const unsigned int xTarg
 		const unsigned int localCost = sqr(mappingPointer->x() - xSource - 1u) + sqr(mappingPointer->y() - ySource + 1u);
 
 		// stop if we cannot get better
-		if (localCost == 0u) {
+		if (localCost == 0u)
 			return 0u;
-}
 
 		// take the minimum cost only
-		if (localCost < cost) {
+		if (localCost < cost)
 			cost = localCost;
-}
 	}
 
 	// forward pointers to next pixel position
@@ -522,14 +516,12 @@ inline unsigned int MappingI1::spatialCost8Neighborhood(const unsigned int xTarg
 		ocean_assert(localCost == sqr(int(mappingPointer->x()) - int(xSource) + 1) + sqr(int(mappingPointer->y()) - int(ySource)));
 
 		// stop if we cannot get better
-		if (localCost == 0u) {
+		if (localCost == 0u)
 			return 0u;
-}
 
 		// take the minimum cost only
-		if (localCost < cost) {
+		if (localCost < cost)
 			cost = localCost;
-}
 	}
 
 	// forward pointers to next pixel position
@@ -549,14 +541,12 @@ inline unsigned int MappingI1::spatialCost8Neighborhood(const unsigned int xTarg
 		ocean_assert(localCost == sqr(int(mappingPointer->x()) - int(xSource) - 1) + sqr(int(mappingPointer->y()) - int(ySource)));
 
 		// stop if we cannot get better
-		if (localCost == 0u) {
+		if (localCost == 0u)
 			return 0u;
-}
 
 		// take the minimum cost only
-		if (localCost < cost) {
+		if (localCost < cost)
 			cost = localCost;
-}
 	}
 
 	// forward pointers to next pixel position
@@ -578,14 +568,12 @@ inline unsigned int MappingI1::spatialCost8Neighborhood(const unsigned int xTarg
 		const unsigned int localCost = sqr(mappingPointer->x() - xSource + 1u) + sqr(mappingPointer->y() - ySource - 1u);
 
 		// stop if we cannot get better
-		if (localCost == 0u) {
+		if (localCost == 0u)
 			return 0u;
-}
 
 		// take the minimum cost only
-		if (localCost < cost) {
+		if (localCost < cost)
 			cost = localCost;
-}
 	}
 
 	// forward points one pixel to the right
@@ -605,14 +593,12 @@ inline unsigned int MappingI1::spatialCost8Neighborhood(const unsigned int xTarg
 		ocean_assert(localCost == sqr(int(mappingPointer->x()) - int(xSource)) + sqr(int(mappingPointer->y()) - int(ySource) - 1));
 
 		// stop if we cannot get better
-		if (localCost == 0u) {
+		if (localCost == 0u)
 			return 0u;
-}
 
 		// take the minimum cost only
-		if (localCost < cost) {
+		if (localCost < cost)
 			cost = localCost;
-}
 	}
 
 	// forward points one pixel to the right
@@ -633,14 +619,12 @@ inline unsigned int MappingI1::spatialCost8Neighborhood(const unsigned int xTarg
 		const unsigned int localCost = sqr(mappingPointer->x() - xSource - 1u) + sqr(mappingPointer->y() - ySource - 1u);
 
 		// stop if we cannot get better
-		if (localCost == 0u) {
+		if (localCost == 0u)
 			return 0u;
-}
 
 		// take the minimum cost only
-		if (localCost < cost) {
+		if (localCost < cost)
 			cost = localCost;
-}
 	}
 
 	return cost;

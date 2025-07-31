@@ -150,20 +150,18 @@ inline Scalar ColorChannelCurve::linearizeSRGB(const unsigned char value)
 {
 	const Scalar c = value * Scalar(0.00392156862745098); // 0.00392... = 1/255.0
 
-	if (c <= Scalar(0.03928)) {
+	if (c <= Scalar(0.03928))
 		return c * Scalar(0.07739938080495357); // 0.07739... = 1/12.92
-	} else {
+	else
 		return Numeric::pow((c + Scalar(0.055)) * Scalar(0.9478672985781991), Scalar(2.4)); // 0.94786 = 1/1.055
-}
 }
 
 inline Scalar ColorChannelCurve::linearizeSRGB(const Scalar value)
 {
-	if (value <= Scalar(0.03928)) {
+	if (value <= Scalar(0.03928))
 		return value * Scalar(0.07739938080495357); // 0.07739... = 1/12.92
-	} else {
+	else
 		return Numeric::pow((value + Scalar(0.055)) * Scalar(0.9478672985781991), Scalar(2.4)); // 0.94786 = 1/1.055
-}
 }
 
 }

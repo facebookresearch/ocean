@@ -38,11 +38,10 @@ bool TestBoundingBox::test(const double testDuration)
 
 	Log::info() << " ";
 
-	if (allSucceeded) {
+	if (allSucceeded)
 		Log::info() << "Bounding box test succeeded.";
-	} else {
+	else
 		Log::info() << "Bounding box test FAILED!";
-}
 
 	return allSucceeded;
 }
@@ -104,18 +103,15 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 			{
 				ocean_assert(intersectingRay.isOnLine(position));
 
-				if (!box.isOnSurface(position, epsilon)) {
+				if (!box.isOnSurface(position, epsilon))
 					localSucceeded = false;
-}
 
 				const Vector3 testPosition = intersectingRay.point(distance);
-				if (!testPosition.isEqual(position, epsilon)) {
+				if (!testPosition.isEqual(position, epsilon))
 					localSucceeded = false;
-}
 
-				if (intersectingRay.point().distance(center) < intersectingRay.point().distance(position)) {
+				if (intersectingRay.point().distance(center) < intersectingRay.point().distance(position))
 					localSucceeded = false;
-}
 
 				Vector3 position2(0, 0, 0);
 				Scalar distance2;
@@ -127,13 +123,11 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 				ocean_assert(distance == distance2);
 
 				const Vector3 normalOffset = position + normal2 * Scalar(0.01);
-				if (box.isInside(normalOffset) || box.isInside(normalOffset, Numeric::eps()) || box.isOnSurface(normalOffset, epsilon)) {
+				if (box.isInside(normalOffset) || box.isInside(normalOffset, Numeric::eps()) || box.isOnSurface(normalOffset, epsilon))
 					localSucceeded = false;
-}
 
-				if (normal2 * intersectingRay.direction() > 0) {
+				if (normal2 * intersectingRay.direction() > 0)
 					localSucceeded = false;
-}
 
 				Vector3 position3(0, 0, 0);
 				Scalar distance3;
@@ -148,13 +142,11 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 
 				ocean_assert(textureCoordinate3.x() >= 0 && textureCoordinate3.x() <= 1 && textureCoordinate3.y() >= 0 && textureCoordinate3.y() <= 1);
 			}
-			else {
+			else
 				localSucceeded = false;
-}
 
-			if (localSucceeded) {
+			if (localSucceeded)
 				validIterations++;
-}
 
 			iterations++;
 		}
@@ -188,13 +180,11 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 
 			if (box.positiveFrontIntersection(intersectingRay, position, distance)
 					|| box.positiveFrontIntersection(intersectingRay, position, distance, normal)
-					|| box.positiveFrontIntersection(intersectingRay, position, distance, normal, textureCoordinate)) {
+					|| box.positiveFrontIntersection(intersectingRay, position, distance, normal, textureCoordinate))
 				localSucceeded = false;
-}
 
-			if (localSucceeded) {
+			if (localSucceeded)
 				validIterations++;
-}
 
 			iterations++;
 		}
@@ -229,13 +219,11 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 
 			if (box.positiveFrontIntersection(intersectingRay, position, distance)
 					|| box.positiveFrontIntersection(intersectingRay, position, distance, normal)
-					|| box.positiveFrontIntersection(intersectingRay, position, distance, normal, textureCoordinate)) {
+					|| box.positiveFrontIntersection(intersectingRay, position, distance, normal, textureCoordinate))
 				localSucceeded = false;
-}
 
-			if (localSucceeded) {
+			if (localSucceeded)
 				validIterations++;
-}
 
 			iterations++;
 		}
@@ -295,14 +283,12 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 			{
 				ocean_assert(intersectingRay.isOnLine(position));
 
-				if (!box.isOnSurface(position, epsilon)) {
+				if (!box.isOnSurface(position, epsilon))
 					localSucceeded = false;
-}
 
 				const Vector3 testPosition = intersectingRay.point(distance);
-				if (!testPosition.isEqual(position, epsilon)) {
+				if (!testPosition.isEqual(position, epsilon))
 					localSucceeded = false;
-}
 
 				Vector3 position2(0, 0, 0);
 				Scalar distance2;
@@ -314,13 +300,11 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 				ocean_assert(Numeric::isEqual(distance, distance2));
 
 				const Vector3 normalOffset = position + normal2 * Scalar(0.01);
-				if (box.isInside(normalOffset) || box.isInside(normalOffset, Numeric::eps()) || box.isOnSurface(normalOffset, epsilon)) {
+				if (box.isInside(normalOffset) || box.isInside(normalOffset, Numeric::eps()) || box.isOnSurface(normalOffset, epsilon))
 					localSucceeded = false;
-}
 
-				if (normal2 * intersectingRay.direction() < 0) {
+				if (normal2 * intersectingRay.direction() < 0)
 					localSucceeded = false;
-}
 
 				Vector3 position3(0, 0, 0);
 				Scalar distance3;
@@ -335,13 +319,11 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 
 				ocean_assert(textureCoordinate3.x() >= 0 && textureCoordinate3.x() <= 1 && textureCoordinate3.y() >= 0 && textureCoordinate3.y() <= 1);
 			}
-			else {
+			else
 				localSucceeded = false;
-}
 
-			if (localSucceeded) {
+			if (localSucceeded)
 				validIterations++;
-}
 
 			iterations++;
 		}
@@ -375,14 +357,12 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 			{
 				ocean_assert(intersectingRay.isOnLine(position));
 
-				if (!box.isOnSurface(position, epsilon)) {
+				if (!box.isOnSurface(position, epsilon))
 					localSucceeded = false;
-}
 
 				const Vector3 testPosition = intersectingRay.point(distance);
-				if (!testPosition.isEqual(position, epsilon)) {
+				if (!testPosition.isEqual(position, epsilon))
 					localSucceeded = false;
-}
 
 				Vector3 position2(0, 0, 0);
 				Scalar distance2;
@@ -394,13 +374,11 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 				ocean_assert(Numeric::isEqual(distance, distance2));
 
 				const Vector3 normalOffset = position + normal2 * Scalar(0.01);
-				if (box.isInside(normalOffset) || box.isInside(normalOffset, Numeric::eps()) || box.isOnSurface(normalOffset, epsilon)) {
+				if (box.isInside(normalOffset) || box.isInside(normalOffset, Numeric::eps()) || box.isOnSurface(normalOffset, epsilon))
 					localSucceeded = false;
-}
 
-				if (normal2 * intersectingRay.direction() < 0) {
+				if (normal2 * intersectingRay.direction() < 0)
 					localSucceeded = false;
-}
 
 				Vector3 position3(0, 0, 0);
 				Scalar distance3;
@@ -415,13 +393,11 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 
 				ocean_assert(textureCoordinate3.x() >= 0 && textureCoordinate3.x() <= 1 && textureCoordinate3.y() >= 0 && textureCoordinate3.y() <= 1);
 			}
-			else {
+			else
 				localSucceeded = false;
-}
 
-			if (localSucceeded) {
+			if (localSucceeded)
 				validIterations++;
-}
 
 			iterations++;
 		}
@@ -456,13 +432,11 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 
 			if (box.positiveBackIntersection(intersectingRay, position, distance)
 					|| box.positiveBackIntersection(intersectingRay, position, distance, normal)
-					|| box.positiveBackIntersection(intersectingRay, position, distance, normal, textureCoordinate)) {
+					|| box.positiveBackIntersection(intersectingRay, position, distance, normal, textureCoordinate))
 				localSucceeded = false;
-}
 
-			if (localSucceeded) {
+			if (localSucceeded)
 				validIterations++;
-}
 
 			iterations++;
 		}

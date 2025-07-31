@@ -86,9 +86,8 @@ HomogenousMatrix4 MotionModel::predictPose(const HomogenousMatrices4& previousPo
 {
 	ocean_assert(previousPoses.size() >= 2);
 
-	if (previousPoses.size() == 1) {
+	if (previousPoses.size() == 1)
 		return previousPoses.front();
-}
 
 	HomogenousMatrices4 predictedPoses;
 	predictedPoses.reserve(previousPoses.size() - 1);
@@ -106,15 +105,13 @@ HomogenousMatrix4 MotionModel::predictPose(const HomogenousMatrices4& previousPo
 
 	ocean_assert(predictedPoses.size() >= 1);
 
-	if (predictedPoses.size() == 1) {
+	if (predictedPoses.size() == 1)
 		return predictedPoses.front();
-}
 
 	HomogenousMatrix4 predictedPose(interpolate(predictedPoses[0], predictedPoses[1], factor));
 
-	for (size_t n = 2; n < predictedPoses.size(); ++n) {
+	for (size_t n = 2; n < predictedPoses.size(); ++n)
 		predictedPose = interpolate(predictedPose, predictedPoses[n], factor);
-}
 
 	return predictedPose;
 }
