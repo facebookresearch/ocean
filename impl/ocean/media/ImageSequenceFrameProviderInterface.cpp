@@ -54,8 +54,7 @@ ImageSequenceFrameProviderInterface::~ImageSequenceFrameProviderInterface()
 			return;
 		}
 	}
-	while (pendingAsynchronousRequests_ != 0u) {;
-}
+	while (pendingAsynchronousRequests_ != 0u);
 
 	ocean_assert(false && "Still pending asynchronous requests");
 }

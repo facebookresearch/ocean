@@ -337,19 +337,15 @@ inline bool SoundMedium::SoundType::operator==(const SoundType& right) const
 
 inline bool SoundMedium::SoundType::operator<(const SoundType& right) const
 {
-	if (typeChannels < right.typeChannels) {
+	if (typeChannels < right.typeChannels)
 		return true;
-}
-	if (typeChannels > right.typeChannels) {
+	if (typeChannels > right.typeChannels)
 		return false;
-}
 
-	if (typeFrequency < right.typeFrequency) {
+	if (typeFrequency < right.typeFrequency)
 		return true;
-}
-	if (typeFrequency > right.typeFrequency) {
+	if (typeFrequency > right.typeFrequency)
 		return false;
-}
 
 	return typeBitsPerSample < right.typeBitsPerSample;
 }
