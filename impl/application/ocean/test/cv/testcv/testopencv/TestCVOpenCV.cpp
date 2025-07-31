@@ -144,8 +144,9 @@ using namespace Ocean;
 
 	try
 	{
-		if (Test::TestCV::TestOpenCV::testCVOpenCV(testDuration, mediaFilename, functionList))
+		if (Test::TestCV::TestOpenCV::testCVOpenCV(testDuration, mediaFilename, functionList)) {
 			resultValue = 0;
+}
 	}
 	catch (const std::exception& exception)
 	{
