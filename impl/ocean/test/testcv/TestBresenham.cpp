@@ -193,8 +193,9 @@ bool TestBresenham::testIntegerBorderIntersection(const double testDuration)
 			const Vector2 point0(Random::scalar(Scalar(borderLeft - 100), Scalar(borderRight + 100)), Random::scalar(Scalar(borderTop - 100), Scalar(borderBottom + 100)));
 			Vector2 point1(Random::scalar(Scalar(borderLeft - 100), Scalar(borderRight + 100)), Random::scalar(Scalar(borderTop - 100), Scalar(borderBottom + 100)));
 
-			while (point0.isEqual(point1, Scalar(1)))
+			while (point0.isEqual(point1, Scalar(1))) {
 				point1 = Vector2(Random::scalar(Scalar(borderLeft - 100), Scalar(borderRight + 100)), Random::scalar(Scalar(borderTop - 100), Scalar(borderBottom + 100)));
+}
 
 			const Line2 line(point0, (point1 - point0).normalized());
 
@@ -219,17 +220,21 @@ bool TestBresenham::testIntegerBorderIntersection(const double testDuration)
 			typedef std::set<Coordinate> CoordinateSet;
 			CoordinateSet testIntersectionSet;
 
-			if (leftIntersection)
+			if (leftIntersection) {
 				testIntersectionSet.insert(Coordinate(borderLeft, Numeric::round32(leftIntersectionPoint.y())));
+}
 
-			if (rightIntersection)
+			if (rightIntersection) {
 				testIntersectionSet.insert(Coordinate(borderRight, Numeric::round32(rightIntersectionPoint.y())));
+}
 
-			if (topIntersection)
+			if (topIntersection) {
 				testIntersectionSet.insert(Coordinate(Numeric::round32(topIntersectionPoint.x()), borderTop));
+}
 
-			if (bottomIntersection)
+			if (bottomIntersection) {
 				testIntersectionSet.insert(Coordinate(Numeric::round32(bottomIntersectionPoint.x()), borderBottom));
+}
 
 			ocean_assert(testIntersectionSet.size() <= 2);
 
@@ -238,32 +243,36 @@ bool TestBresenham::testIntegerBorderIntersection(const double testDuration)
 			{
 				ocean_assert(line.distance(Vector2(Scalar(x0), Scalar(y0))) <= 2 && line.distance(Vector2(Scalar(x1), Scalar(y1))) <= 2);
 
-				for (CoordinateSet::const_iterator i = testIntersectionSet.begin(); i != testIntersectionSet.end(); ++i)
+				for (CoordinateSet::const_iterator i = testIntersectionSet.begin(); i != testIntersectionSet.end(); ++i) {
 					ocean_assert(i->first >= borderLeft && i->first <= borderRight && i->second >= borderTop && i->second <= borderBottom);
+}
 
-				if (testIntersectionSet.size() == 0 || testIntersectionSet.size() > 2)
+				if (testIntersectionSet.size() == 0 || testIntersectionSet.size() > 2) {
 					localSucceeded = false;
-				else
+				} else
 				{
 					CoordinateSet intersectionSet;
 					intersectionSet.insert(Coordinate(x0, y0));
 					intersectionSet.insert(Coordinate(x1, y1));
 
-					if (intersectionSet != testIntersectionSet)
+					if (intersectionSet != testIntersectionSet) {
 						localSucceeded = false;
+}
 				}
 			}
 			else
 			{
 				if (leftIntersection || rightIntersection || topIntersection || bottomIntersection)
 				{
-					if (testIntersectionSet.size() != 1)
+					if (testIntersectionSet.size() != 1) {
 						localSucceeded = false;
+}
 				}
 			}
 
-			if (localSucceeded)
+			if (localSucceeded) {
 				validIterations++;
+}
 
 			iterations++;
 		}
@@ -399,8 +408,9 @@ bool TestBresenham::testFloatBorderIntersection(const double testDuration)
 			const Vector2 point0(Random::scalar(Scalar(borderLeft - 100), Scalar(borderRight + 100)), Random::scalar(Scalar(borderTop - 100), Scalar(borderBottom + 100)));
 			Vector2 point1(Random::scalar(Scalar(borderLeft - 100), Scalar(borderRight + 100)), Random::scalar(Scalar(borderTop - 100), Scalar(borderBottom + 100)));
 
-			while (point0.isEqual(point1, Scalar(1)))
+			while (point0.isEqual(point1, Scalar(1))) {
 				point1 = Vector2(Random::scalar(Scalar(borderLeft - 100), Scalar(borderRight + 100)), Random::scalar(Scalar(borderTop - 100), Scalar(borderBottom + 100)));
+}
 
 			const Line2 line(point0, (point1 - point0).normalized());
 
@@ -423,17 +433,21 @@ bool TestBresenham::testFloatBorderIntersection(const double testDuration)
 
 			Vectors2 testIntersections;
 
-			if (leftIntersection)
+			if (leftIntersection) {
 				testIntersections.push_back(Vector2(Scalar(borderLeft), leftIntersectionPoint.y()));
+}
 
-			if (rightIntersection)
+			if (rightIntersection) {
 				testIntersections.push_back(Vector2(Scalar(borderRight), rightIntersectionPoint.y()));
+}
 
-			if (topIntersection)
+			if (topIntersection) {
 				testIntersections.push_back(Vector2(topIntersectionPoint.x(), Scalar(borderTop)));
+}
 
-			if (bottomIntersection)
+			if (bottomIntersection) {
 				testIntersections.push_back(Vector2(bottomIntersectionPoint.x(), Scalar(borderBottom)));
+}
 
 			ocean_assert(testIntersections.size() <= 2);
 
@@ -442,28 +456,32 @@ bool TestBresenham::testFloatBorderIntersection(const double testDuration)
 			{
 				ocean_assert(line.distance(Vector2(Scalar(x0), Scalar(y0))) <= Scalar(0.001) && line.distance(Vector2(Scalar(x1), Scalar(y1))) <= Scalar(0.001));
 
-				for (Vectors2::const_iterator i = testIntersections.begin(); i != testIntersections.end(); ++i)
+				for (Vectors2::const_iterator i = testIntersections.begin(); i != testIntersections.end(); ++i) {
 					ocean_assert(i->x() >= borderLeft && i->x() <= borderRight && i->y() >= borderTop && i->y() <= borderBottom);
+}
 
-				if (testIntersections.size() != 2)
+				if (testIntersections.size() != 2) {
 					localSucceeded = false;
-				else
+				} else
 				{
-					if (!(((Vector2(x0, y0).isEqual(testIntersections[0], Scalar(0.001)) && Vector2(x1, y1).isEqual(testIntersections[1], Scalar(0.001))) || (Vector2(x0, y0).isEqual(testIntersections[1], Scalar(0.001)) && Vector2(x1, y1).isEqual(testIntersections[0], Scalar(0.001))))))
+					if (!(((Vector2(x0, y0).isEqual(testIntersections[0], Scalar(0.001)) && Vector2(x1, y1).isEqual(testIntersections[1], Scalar(0.001))) || (Vector2(x0, y0).isEqual(testIntersections[1], Scalar(0.001)) && Vector2(x1, y1).isEqual(testIntersections[0], Scalar(0.001)))))) {
 						localSucceeded = false;
+}
 				}
 			}
 			else
 			{
 				if (leftIntersection || rightIntersection || topIntersection || bottomIntersection)
 				{
-					if (testIntersections.size() != 1)
+					if (testIntersections.size() != 1) {
 						localSucceeded = false;
+}
 				}
 			}
 
-			if (localSucceeded)
+			if (localSucceeded) {
 				validIterations++;
+}
 
 			iterations++;
 		}

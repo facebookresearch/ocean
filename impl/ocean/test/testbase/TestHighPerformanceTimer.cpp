@@ -108,7 +108,8 @@ bool TestHighPerformanceTimer::testPrecision()
 		const Timestamp startTimestamp(true);
 
 		timer.start();
-		while(timer.seconds() < 2.0);
+		while(timer.seconds() < 2.0) {;
+}
 
 		const Timestamp stopTimestamp(true);
 
@@ -128,7 +129,8 @@ bool TestHighPerformanceTimer::testPrecision()
 			const HighPerformanceStatistic::ScopedStatistic scopedPerformance(performance);
 
 			const Timestamp startTimestamp(true);
-			while (Timestamp(true) < startTimestamp + 1.5);
+			while (Timestamp(true) < startTimestamp + 1.5) {;
+}
 		}
 
 		Log::info() << "Performance statistic for 10 iterations for 1.5 seconds: " << performance.average() << "s";

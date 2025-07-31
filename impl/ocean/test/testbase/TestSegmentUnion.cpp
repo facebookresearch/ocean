@@ -394,8 +394,9 @@ bool TestSegmentUnion::testMaximalGap(const double testDuration)
 
 				while (++i < testElements.endIndex())
 				{
-					if (testElements[i] != 0u)
+					if (testElements[i] != 0u) {
 						break;
+}
 				}
 
 				const ptrdiff_t nonActiveBlockEnd = i; // exclusive

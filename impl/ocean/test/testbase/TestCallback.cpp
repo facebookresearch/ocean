@@ -264,10 +264,11 @@ bool TestCallback::test()
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Callback test succeeded.";
-	else
+	} else {
 		Log::info() << "Callback test FAILED!";
+}
 
 	return allSucceeded;
 }
@@ -428,10 +429,11 @@ bool TestCallback::testCallbackMembers()
 	const bool allSucceeded = result0 == 0 && result1 == 1 && result2 == 2 && result3 == 3 && result4 == 4 && result5 == 5 && result6 == 6 && result7 == 7 && result8 == 8 && result9 == 9
 								&& result10 == 10 && result11 == 11 && result12 == 12 && result13 == 13 && result14 == 14 && result15 == 15 && result16 == 16 && result17 == 17 && result18 == 18 && result19 == 19 && result20 == 20;
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Validation: succeeded.";
-	else
+	} else {
 		Log::info() << "Validation: FAILED.";
+}
 
 	return allSucceeded;
 }
@@ -578,10 +580,11 @@ bool TestCallback::testCallbackStatics()
 	const bool allSucceeded = result0 == 0 && result1 == 1 && result2 == 2 && result3 == 3 && result4 == 4 && result5 == 5 && result6 == 6 && result7 == 7 && result8 == 8 && result9 == 9
 									&& result10 == 10	&& result11 == 11 && result12 == 12 && result13 == 13 && result14 == 14 && result15 == 15 && result16 == 16 && result17 == 17 && result18 == 18 && result19 == 19 && result20 == 20;
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Validation: succeeded.";
-	else
+	} else {
 		Log::info() << "Validation: FAILED.";
+}
 
 	return allSucceeded;
 }
