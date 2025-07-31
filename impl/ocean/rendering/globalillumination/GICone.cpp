@@ -47,11 +47,13 @@ Scalar GICone::height() const
 
 bool GICone::setRadius(const Scalar radius)
 {
-	if (radius <= 0)
+	if (radius <= 0) {
 		return false;
+}
 
-	if (radius == coneRadius)
+	if (radius == coneRadius) {
 		return true;
+}
 
 	coneRadius = radius;
 	rebuildPrimitives();
@@ -60,11 +62,13 @@ bool GICone::setRadius(const Scalar radius)
 
 bool GICone::setHeight(const Scalar height)
 {
-	if (height <= 0)
+	if (height <= 0) {
 		return false;
+}
 
-	if (height == coneHeight)
+	if (height == coneHeight) {
 		return true;
+}
 
 	coneHeight = height;
 	rebuildPrimitives();
@@ -165,8 +169,9 @@ void GICone::rebuildPrimitives()
 	faces.push_back(TriangleFace(index, index + 1, index + 2));
 
 	// triangle faces for the bottom
-	for (unsigned int n = side + 1; n < side + bottom - 1; n++)
+	for (unsigned int n = side + 1; n < side + bottom - 1; n++) {
 		faces.push_back(TriangleFace(side, n + 1, n));
+}
 
 	ocean_assert(numberFaces == faces.size());
 

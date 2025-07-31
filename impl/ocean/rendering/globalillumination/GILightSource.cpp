@@ -74,8 +74,9 @@ void GILightSource::get(RGBAColor& ambient, RGBAColor& diffuse, RGBAColor& specu
 
 bool GILightSource::setAmbientColor(const RGBAColor& color)
 {
-	if (!color.isValid())
+	if (!color.isValid()) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -85,8 +86,9 @@ bool GILightSource::setAmbientColor(const RGBAColor& color)
 
 bool GILightSource::setDiffuseColor(const RGBAColor& color)
 {
-	if (!color.isValid())
+	if (!color.isValid()) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -96,8 +98,9 @@ bool GILightSource::setDiffuseColor(const RGBAColor& color)
 
 bool GILightSource::setSpecularColor(const RGBAColor& color)
 {
-	if (!color.isValid())
+	if (!color.isValid()) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -107,8 +110,9 @@ bool GILightSource::setSpecularColor(const RGBAColor& color)
 
 bool GILightSource::setIntensity(const Scalar intensity)
 {
-	if (intensity < 0 || intensity > 1)
+	if (intensity < 0 || intensity > 1) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 

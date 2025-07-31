@@ -90,8 +90,9 @@ void GIMaterial::get(RGBAColor& ambient, RGBAColor& diffuse, RGBAColor& emissive
 
 bool GIMaterial::setAmbientColor(const RGBAColor& color)
 {
-	if (!color.isValid())
+	if (!color.isValid()) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -101,8 +102,9 @@ bool GIMaterial::setAmbientColor(const RGBAColor& color)
 
 bool GIMaterial::setDiffuseColor(const RGBAColor& color)
 {
-	if (!color.isValid())
+	if (!color.isValid()) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -112,8 +114,9 @@ bool GIMaterial::setDiffuseColor(const RGBAColor& color)
 
 bool GIMaterial::setEmissiveColor(const RGBAColor& color)
 {
-	if (!color.isValid())
+	if (!color.isValid()) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -123,8 +126,9 @@ bool GIMaterial::setEmissiveColor(const RGBAColor& color)
 
 bool GIMaterial::setSpecularColor(const RGBAColor& color)
 {
-	if (!color.isValid())
+	if (!color.isValid()) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -134,8 +138,9 @@ bool GIMaterial::setSpecularColor(const RGBAColor& color)
 
 bool GIMaterial::setSpecularExponent(const float specularExponent)
 {
-	if (specularExponent < 0)
+	if (specularExponent < 0) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -145,8 +150,9 @@ bool GIMaterial::setSpecularExponent(const float specularExponent)
 
 bool GIMaterial::setTransparency(const float transparency)
 {
-	if (transparency < 0 || transparency > 1)
+	if (transparency < 0 || transparency > 1) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -156,8 +162,9 @@ bool GIMaterial::setTransparency(const float transparency)
 
 bool GIMaterial::setReflectivity(const float reflectivity)
 {
-	if (reflectivity < 0 || reflectivity > 1)
+	if (reflectivity < 0 || reflectivity > 1) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -167,8 +174,9 @@ bool GIMaterial::setReflectivity(const float reflectivity)
 
 bool GIMaterial::setRefractionIndex(const float index)
 {
-	if (index < 0)
+	if (index < 0) {
 		return false;
+}
 
 	const ScopedLock scopedLock(objectLock);
 
