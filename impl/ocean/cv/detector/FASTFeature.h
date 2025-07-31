@@ -100,8 +100,9 @@ inline Geometry::ImagePoints FASTFeature::features2imagePoints(const FASTFeature
 	Geometry::ImagePoints result;
 	result.reserve(features.size());
 
-	for (FASTFeatures::const_iterator i = features.begin(); i != features.end(); ++i)
+	for (FASTFeatures::const_iterator i = features.begin(); i != features.end(); ++i) {
 		result.push_back(i->observation());
+}
 
 	return result;
 }
@@ -113,8 +114,9 @@ inline Geometry::ImagePoints FASTFeature::features2imagePoints(const FASTFeature
 	Geometry::ImagePoints result;
 	result.reserve(realNumber);
 
-	for (unsigned int n = 0; n < realNumber; ++n)
+	for (unsigned int n = 0; n < realNumber; ++n) {
 		result.push_back(features[n].observation());
+}
 
 	return result;
 }
@@ -124,8 +126,9 @@ inline PointFeatures FASTFeature::features2pointFeatures(const FASTFeatures& fea
 	PointFeatures result;
 	result.reserve(features.size());
 
-	for (FASTFeatures::const_iterator i = features.begin(); i != features.end(); ++i)
+	for (FASTFeatures::const_iterator i = features.begin(); i != features.end(); ++i) {
 		result.push_back(*i);
+}
 
 	return result;
 }
@@ -137,8 +140,9 @@ inline PointFeatures FASTFeature::features2pointFeatures(const FASTFeatures& fea
 	PointFeatures result;
 	result.reserve(realNumber);
 
-	for (unsigned int n = 0; n < realNumber; ++n)
+	for (unsigned int n = 0; n < realNumber; ++n) {
 		result.push_back(features[n]);
+}
 
 	return result;
 }
