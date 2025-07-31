@@ -162,8 +162,9 @@ Utilities::Commands Utilities::commandArguments()
 		std::wstring argument = StringApple::toWString((NSString*)commandArguments[n]);
 
 		// special handling for Xcode as we do not want any Xcode-default command arguments
-		if (argument == L"-NSDocumentRevisionsDebugMode")
+		if (argument == L"-NSDocumentRevisionsDebugMode") {
 			break;
+}
 
 		result.push_back(std::move(argument));
 	}

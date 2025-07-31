@@ -38,8 +38,9 @@ using namespace Ocean::Platform::Apple::MacOS;
 {
 	ocean_assert(menuOwner != nullptr);
 
-	if (menuOwner)
+	if (menuOwner) {
 		menuOwner->onItemSelected((NSMenuItem*)sender);
+}
 }
 
 @end
@@ -104,12 +105,13 @@ void ContextMenu::onItemSelected(NSMenuItem* item)
 
 	const std::string itemTitle = StringApple::toUTF8([item title]);
 
-	for (size_t n = 0; n < contextMenuItemTexts.size(); ++n)
+	for (size_t n = 0; n < contextMenuItemTexts.size(); ++n) {
 		if (contextMenuItemTexts[n] == itemTitle)
 		{
 			contextSelectedIndex = int(n);
 			break;
 		}
+}
 }
 
 ContextMenu& ContextMenu::operator=(ContextMenu&& contextMenu) noexcept

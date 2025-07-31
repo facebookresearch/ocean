@@ -117,13 +117,15 @@ bool Utilities::decodeFrame(const uint8_t*& data, size_t& size, Frame& frame)
 {
 	static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
 
-	if (size < 16)
+	if (size < 16) {
 		return false;
+}
 
 	const size_t bytesType = size_t(((unsigned long long*)data)[0]);
 
-	if (bytesType > size - 16)
+	if (bytesType > size - 16) {
 		return false;
+}
 
 	std::string frameType((char*)data + 8, bytesType);
 

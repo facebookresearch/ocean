@@ -36,7 +36,7 @@ std::string System::environmentVariable(const std::string& variable, const bool 
 
 #endif
 
-	if (removeQuotes)
+	if (removeQuotes) {
 		while (value.length() != 0)
 		{
 			if (value[0] == '\"')
@@ -52,6 +52,7 @@ std::string System::environmentVariable(const std::string& variable, const bool 
 				break;
 			}
 		}
+}
 
 	return value;
 }

@@ -21,8 +21,9 @@ FileResolver::FileResolver()
 
 bool FileResolver::addReferencePath(const Directory& reference)
 {
-	if (!reference.isAbsolute())
+	if (!reference.isAbsolute()) {
 		return false;
+}
 
 	referencePaths.push_back(reference);
 	return true;
@@ -32,8 +33,9 @@ Files FileResolver::resolve(const File& file, const bool checkExistence) const
 {
 	if (file.isAbsolute())
 	{
-		if (!checkExistence || file.exists())
+		if (!checkExistence || file.exists()) {
 			return Files(1, file);
+}
 	}
 
 	Files files;
@@ -42,8 +44,9 @@ Files FileResolver::resolve(const File& file, const bool checkExistence) const
 	{
 		const IO::File resolvedFile(*i + file);
 
-		if (!checkExistence || resolvedFile.exists())
+		if (!checkExistence || resolvedFile.exists()) {
 			files.push_back(*i + file);
+}
 	}
 
 	return files;
@@ -66,8 +69,9 @@ Files FileResolver::resolve(const File& file, const Path& reference, const bool 
 {
 	if (file.isAbsolute())
 	{
-		if (!checkExistence || file.exists())
+		if (!checkExistence || file.exists()) {
 			return Files(1, file);
+}
 	}
 
 	Files result;
@@ -78,24 +82,27 @@ Files FileResolver::resolve(const File& file, const Path& reference, const bool 
 	{
 		const IO::File refFile(refDirectory + file);
 
-		if (!checkExistence || refFile.exists())
+		if (!checkExistence || refFile.exists()) {
 			result.push_back(refFile);
+}
 	}
 
 	for (Directories::const_iterator i = referencePaths.begin(); i != referencePaths.end(); ++i)
 	{
 		const IO::File resolvedFile(*i + file);
 
-		if (!checkExistence || resolvedFile.exists())
+		if (!checkExistence || resolvedFile.exists()) {
 			result.push_back(*i + file);
+}
 	}
 
 	if (result.empty())
 	{
 		const IO::File defaultFile(file);
 
-		if (!checkExistence || defaultFile.exists())
+		if (!checkExistence || defaultFile.exists()) {
 			result.push_back(defaultFile);
+}
 	}
 
 	return result;

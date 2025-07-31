@@ -29,11 +29,12 @@ Socket::Socket()
 
 Socket::~Socket()
 {
-	if (socketId_ != invalidSocketId())
+	if (socketId_ != invalidSocketId()) {
 #ifdef _WINDOWS
 		closesocket(socketId_);
 #else
 		close(socketId_);
+}
 #endif
 
 	SocketScheduler::get().unregisterSocket(*this);
