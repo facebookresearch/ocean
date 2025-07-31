@@ -875,8 +875,9 @@ bool TestFrameFilterTemplate::validateFilterPixel(const uint8_t* frame, const un
 		{
 			const TResponse response0 = TFilterTemplate::template filterPixel<uint8_t, TResponse, TNormalization, tNormalization, tBias, 0u, 1u, tDirection>(frame, width, height, x, y);
 
-			if (response0 != testResponse[0])
+			if (response0 != testResponse[0]) {
 				return false;
+}
 
 			break;
 		}
@@ -886,8 +887,9 @@ bool TestFrameFilterTemplate::validateFilterPixel(const uint8_t* frame, const un
 			const TResponse response0 = TFilterTemplate::template filterPixel<uint8_t, TResponse, TNormalization, tNormalization, tBias, 0u, 2u, tDirection>(frame, width, height, x, y);
 			const TResponse response1 = TFilterTemplate::template filterPixel<uint8_t, TResponse, TNormalization, tNormalization, tBias, 1u, 2u, tDirection>(frame, width, height, x, y);
 
-			if (response0 != testResponse[0] || response1 != testResponse[1])
+			if (response0 != testResponse[0] || response1 != testResponse[1]) {
 				return false;
+}
 
 			break;
 		}

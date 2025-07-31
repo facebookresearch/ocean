@@ -176,13 +176,15 @@ bool generateRandomizedPnPData(ObjectPoints& cvObjectPoints, ImagePoints& cvImag
 			objectPoints[0] = Vector3(Random::scalar(-1, 1), 0, Random::scalar(-1, 1));
 			objectPoints[1] = Vector3(Random::scalar(-1, 1), 0, Random::scalar(-1, 1));
 
-			while (objectPoints[0].distance(objectPoints[1]) < minimumDistance)
+			while (objectPoints[0].distance(objectPoints[1]) < minimumDistance) {
 				objectPoints[1] = Vector3(Random::scalar(-1, 1), 0, Random::scalar(-1, 1));
+}
 
 			objectPoints[2] = Vector3(Random::scalar(-1, 1), 0, Random::scalar(-1, 1));
 
-			while (Line3(objectPoints[0], (objectPoints[1] - objectPoints[0]).normalized()).distance(objectPoints[2]) < minimumDistance)
+			while (Line3(objectPoints[0], (objectPoints[1] - objectPoints[0]).normalized()).distance(objectPoints[2]) < minimumDistance) {
 				objectPoints[2] = Vector3(Random::scalar(-1, 1), 0, Random::scalar(-1, 1));
+}
 
 			const Euler euler(Random::euler(Numeric::deg2rad(0), Numeric::deg2rad(30)));
 			const Quaternion quaternion(euler);
@@ -201,8 +203,9 @@ bool generateRandomizedPnPData(ObjectPoints& cvObjectPoints, ImagePoints& cvImag
 
 				const Line2 line(imagePoints[n], (imagePoints[n1] - imagePoints[n]).normalized());
 
-				if (line.distance(imagePoints[n2]) < 5)
+				if (line.distance(imagePoints[n2]) < 5) {
 					imagePointsColinear = true;
+}
 			}
 
 		}
@@ -264,8 +267,9 @@ bool generateRandomizedPnPData(ObjectPoints& cvObjectPoints, ImagePoints& cvImag
 
 	// Extract and convert the rotation and translation of the camera from the groundtruth pose
 	ocean_assert(groundtruthPose.isValid());
-	if (!groundtruthPose.isValid())
+	if (!groundtruthPose.isValid()) {
 		return false;
+}
 
 	const ExponentialMap rotationEM(groundtruthPose.rotation());
 	const Vector3 axis = rotationEM.axis().normalized();
@@ -296,8 +300,9 @@ Scalar computeProjectionError(const ObjectPoints& objectPoints, const ImagePoint
 
 	Scalar error(0);
 	ocean_assert(imagePoints.size() == projectedPoints.size());
-	for (ImagePoints::const_iterator iter0 = imagePoints.begin(), iter1 = projectedPoints.begin(); iter0 != imagePoints.end() && iter1 != projectedPoints.end(); ++iter0, ++iter1)
+	for (ImagePoints::const_iterator iter0 = imagePoints.begin(), iter1 = projectedPoints.begin(); iter0 != imagePoints.end() && iter1 != projectedPoints.end(); ++iter0, ++iter1) {
 		error += computeDistance(*iter0, *iter1);
+}
 
 	return error;
 }
@@ -439,8 +444,9 @@ bool runTestPnP(const double testDuration, const PinholeCamera& camera, const si
 
 		bool generationSuccessful = generateRandomizedPnPData(objectPoints, imagePoints, trueRotation, numberOfPoints, camera);
 
-		if (!generationSuccessful)
+		if (!generationSuccessful) {
 			continue;
+}
 
 		if (numberOfPoints != objectPoints.size() || numberOfPoints != imagePoints.size())
 		{
@@ -455,8 +461,9 @@ bool runTestPnP(const double testDuration, const PinholeCamera& camera, const si
 		Scalar error = computeProjectionError(objectPoints, imagePoints, cameraMatrix, estimatedRotation, estimatedTranslation);
 		projectionErrors.push_back(error);
 
-		if (error < Scalar(0.9))
+		if (error < Scalar(0.9)) {
 			succeeded++;
+}
 
 		iterations++;
 	} while (startTimestamp + testDuration > Timestamp(true));

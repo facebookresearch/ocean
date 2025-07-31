@@ -28,13 +28,15 @@ Vectors2 Utilities::imagePoints(const PinholeCamera& pinholeCamera, const size_t
 
 	if (randomGenerator)
 	{
-		for (size_t n = 0; n < number; ++n)
+		for (size_t n = 0; n < number; ++n) {
 			result[n] = Vector2(Random::scalar(*randomGenerator, Scalar(0), Scalar(pinholeCamera.width())), Random::scalar(*randomGenerator, Scalar(0), Scalar(pinholeCamera.height())));
+}
 	}
 	else
 	{
-		for (size_t n = 0; n < number; ++n)
+		for (size_t n = 0; n < number; ++n) {
 			result[n] = Vector2(Random::scalar(Scalar(0), Scalar(pinholeCamera.width())), Random::scalar(Scalar(0), Scalar(pinholeCamera.height())));
+}
 	}
 
 	return result;

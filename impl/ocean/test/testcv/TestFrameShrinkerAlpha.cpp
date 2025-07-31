@@ -185,17 +185,19 @@ void TestFrameShrinkerAlpha::invokeFrameDivideByTwo(const Frame& source, Frame& 
 		{
 			if (alphaAtFront)
 			{
-				if (transparentIs0xFF)
+				if (transparentIs0xFF) {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<1u, true, true>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				else
+				} else {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<1u, true, false>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+}
 			}
 			else
 			{
-				if (transparentIs0xFF)
+				if (transparentIs0xFF) {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<1u, false, true>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				else
+				} else {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<1u, false, false>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+}
 			}
 			break;
 		}
@@ -204,17 +206,19 @@ void TestFrameShrinkerAlpha::invokeFrameDivideByTwo(const Frame& source, Frame& 
 		{
 			if (alphaAtFront)
 			{
-				if (transparentIs0xFF)
+				if (transparentIs0xFF) {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<2u, true, true>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				else
+				} else {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<2u, true, false>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+}
 			}
 			else
 			{
-				if (transparentIs0xFF)
+				if (transparentIs0xFF) {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<2u, false, true>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				else
+				} else {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<2u, false, false>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+}
 			}
 			break;
 		}
@@ -223,17 +227,19 @@ void TestFrameShrinkerAlpha::invokeFrameDivideByTwo(const Frame& source, Frame& 
 		{
 			if (alphaAtFront)
 			{
-				if (transparentIs0xFF)
+				if (transparentIs0xFF) {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<3u, true, true>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				else
+				} else {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<3u, true, false>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+}
 			}
 			else
 			{
-				if (transparentIs0xFF)
+				if (transparentIs0xFF) {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<3u, false, true>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				else
+				} else {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<3u, false, false>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+}
 			}
 			break;
 		}
@@ -242,17 +248,19 @@ void TestFrameShrinkerAlpha::invokeFrameDivideByTwo(const Frame& source, Frame& 
 		{
 			if (alphaAtFront)
 			{
-				if (transparentIs0xFF)
+				if (transparentIs0xFF) {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<4u, true, true>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				else
+				} else {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<4u, true, false>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+}
 			}
 			else
 			{
-				if (transparentIs0xFF)
+				if (transparentIs0xFF) {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<4u, false, true>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				else
+				} else {
 					CV::FrameShrinkerAlpha::divideByTwo8BitPerChannel<4u, false, false>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
+}
 			}
 			break;
 		}
