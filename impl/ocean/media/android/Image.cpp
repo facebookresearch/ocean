@@ -28,7 +28,7 @@ namespace Android
 
 #if defined(__ANDROID_API__) && __ANDROID_API__ >= 30
 
-Frame Image::decodeImage(const void* buffer, const size_t size, const std::string& imageBufferTypeIn, std::string* imageBufferTypeOut)
+Frame Image::decodeImage(const void* buffer, const size_t size, const std::string& /*imageBufferTypeIn*/, std::string* imageBufferTypeOut)
 {
 	ocean_assert(buffer != nullptr && size != 0);
 
@@ -40,7 +40,14 @@ Frame Image::decodeImage(const void* buffer, const size_t size, const std::strin
 	ScopedAImageDecoder aImageDecoder;
 	if (AImageDecoder_createFromBuffer(buffer, size, &aImageDecoder.resetObject()) == ANDROID_IMAGE_DECODER_SUCCESS)
 	{
-		return decodeImage(*aImageDecoder);
+		Frame result = decodeImage(*aImageDecoder);
+
+		if (result.isValid() && imageBufferTypeOut != nullptr)
+		{
+			*imageBufferTypeOut = determineImageType(buffer, size);
+		}
+
+		return result;
 	}
 
 	return Frame();
@@ -84,6 +91,41 @@ Frame Image::readImage(const std::string& filename)
 #endif // __ANDROID_API__
 
 	return Frame();
+}
+
+std::string Image::determineImageType(const void* buffer, const size_t size)
+{
+	ocean_assert(buffer != nullptr && size != 0);
+
+	const uint8_t* data = (const uint8_t*)(buffer);
+
+	if (size >= 4)
+	{
+		if (data[0] == 0x89 && data[1] == 0x50 && data[2] == 0x4E && data[3] == 0x47)
+		{
+			return "png";
+		}
+
+		if (data[0] == 0x47 && data[1] == 0x49 && data[2] == 0x46 && data[3] == 0x38)
+		{
+			return "gif";
+		}
+	}
+
+	if (size >= 2)
+	{
+		if (data[0] == 0xFF && data[1] == 0xD8)
+		{
+			return "jpg";
+		}
+
+		if (data[0] == 0x42 && data[1] == 0x4D)
+		{
+			return "bmp";
+		}
+	}
+
+	return std::string();
 }
 
 #if defined(__ANDROID_API__) && __ANDROID_API__ >= 30

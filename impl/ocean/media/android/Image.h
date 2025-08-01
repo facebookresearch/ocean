@@ -73,6 +73,14 @@ class Image
 
 	protected:
 
+		/**
+		 * Returns the image type of a given buffer.
+		 * @param buffer The buffer from which the image type will be determined, must be valid
+		 * @param size The size of the given buffer in bytes, with range [1, infinity)
+		 * @return The image type, an empty string if the type could not be determined, e.g., "jpg", "png", "bmp", "tiff", etc.
+		 */
+		static std::string determineImageType(const void* buffer, const size_t size);
+
 #if defined(__ANDROID_API__) && __ANDROID_API__ >= 30
 
 		/**
