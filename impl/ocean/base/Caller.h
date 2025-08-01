@@ -644,7 +644,7 @@ class ParameterizedFunctionBase
 		 * @param value New parameter value
 		 */
 		virtual void setParameter(const unsigned int index, const void* value) = 0;
-	
+
 #ifdef OCEAN_SUPPORT_RTTI
 
 		/**
@@ -653,7 +653,7 @@ class ParameterizedFunctionBase
 		 * @return Type information
 		 */
 		virtual const std::type_info& type(const unsigned int index) const = 0;
-	
+
 #endif
 };
 
@@ -745,7 +745,7 @@ class ParameterizedFunction : public ParameterizedFunctionBase<RT>
 		 * @param value New parameter value
 		 */
 		virtual void setParameter(const unsigned int index, const void* value);
-	
+
 #ifdef OCEAN_SUPPORT_RTTI
 
 		/**
@@ -754,7 +754,7 @@ class ParameterizedFunction : public ParameterizedFunctionBase<RT>
 		 * @return Type information
 		 */
 		virtual const std::type_info& type(const unsigned int index) const;
-	
+
 #endif
 
 	protected:
@@ -1085,10 +1085,11 @@ const std::type_info& ParameterizedFunction<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT
 
 		case 19:
 			return typeid(PT19);
-	}
 
-	ocean_assert(false && "Invalid index!");
-	return typeid(PT0);
+		default:
+			ocean_assert(false && "Invalid index!");
+			return typeid(PT0);
+	}
 }
 
 #endif // OCEAN_SUPPORT_RTTI
@@ -3335,7 +3336,7 @@ template <typename T>
 T Caller<RT>::parameter(const unsigned int index)
 {
 	ocean_assert(callerFunction != nullptr);
-	
+
 #ifdef OCEAN_SUPPORT_RTTI
 	ocean_assert(callerFunction->type(index) == typeid(T) && "The parameter has a different type.");
 #endif
@@ -3348,7 +3349,7 @@ template <typename T>
 void Caller<RT>::setParameter(const unsigned int index, const T& value)
 {
 	ocean_assert(callerFunction != nullptr);
-	
+
 #ifdef OCEAN_SUPPORT_RTTI
 	ocean_assert(callerFunction->type(index) == typeid(T) && "The parameter has a different type.");
 #endif

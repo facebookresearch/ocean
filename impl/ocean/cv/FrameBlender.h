@@ -721,6 +721,9 @@ bool FrameBlender::blend(const Frame& sourceWithAlpha, Frame& target, const unsi
 
 				return true;
 			}
+
+			default:
+				break;
 		}
 	}
 
@@ -754,6 +757,9 @@ bool FrameBlender::blend(const Frame& source, Frame& target, const uint8_t alpha
 			case 4u:
 				blend8BitPerChannel<4u, tTransparentIs0xFF>(source.constdata<uint8_t>(), target.data<uint8_t>(), alphaValue, source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
 				return true;
+
+			default:
+				break;
 		}
 	}
 

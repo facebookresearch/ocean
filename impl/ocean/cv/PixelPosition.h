@@ -538,11 +538,10 @@ CV::PixelPositionT<T> PixelPositionT<T>::neighbor(const CV::PixelDirection pixel
 			return CV::PixelPositionT<T>(x_ + 1, y_ - 1);
 
 		case PD_INVALID:
-			break;
+		default:
+			ocean_assert(false && "Invalid pixel direction!");
+			return *this;
 	}
-
-	ocean_assert(false && "Invalid pixel direction!");
-	return *this;
 }
 
 template <typename T>
