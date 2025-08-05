@@ -101,20 +101,23 @@ using namespace Ocean;
 
 		const std::string file(String::trim(String::toAString(argv[1]), '\"'));
 
-		if (!file.empty())
+		if (!file.empty()) {
 			mediaFilename = file;
+}
 	}
 
 	if (argc >= 3)
 	{
 		const std::string file(String::trim(String::toAString(argv[2])));
 
-		if (!file.empty())
+		if (!file.empty()) {
 			outputFilename = file;
+}
 	}
 
-	if (argc >= 4)
+	if (argc >= 4) {
 		libraryList = String::trim(String::toAString(argv[3]));
+}
 
 	if (argc >= 5)
 	{
@@ -123,14 +126,15 @@ using namespace Ocean;
 		if (!duration.empty())
 		{
 			const double value = atof(duration.c_str());
-			if (value > 0)
+			if (value > 0) {
 				testDuration = value;
+}
 		}
 	}
 
-	if (outputFilename.empty() || outputFilename == "STANDARD")
+	if (outputFilename.empty() || outputFilename == "STANDARD") {
 		Messenger::get().setOutputType(Messenger::OUTPUT_STANDARD);
-	else
+	} else
 	{
 		Messenger::get().setOutputType(Messenger::OUTPUT_FILE);
 		Messenger::get().setFileOutput(outputFilename);
