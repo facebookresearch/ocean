@@ -145,8 +145,9 @@ void Correspondences::determineCandidates(const ORBFeatures& interestFeatures, c
 	candidates.clear();
 	candidates.reserve(candidateSet.size());
 
-	for (CandidateSet::const_iterator i = candidateSet.begin(); i != candidateSet.end(); ++i)
+	for (CandidateSet::const_iterator i = candidateSet.begin(); i != candidateSet.end(); ++i) {
 		candidates.push_back(*i);
+}
 }
 
 }
