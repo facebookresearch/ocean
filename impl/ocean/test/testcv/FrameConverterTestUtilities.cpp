@@ -123,6 +123,13 @@ FrameConverterTestUtilities::FunctionWrapper::FunctionWrapper(const TwoSourcesOn
 	// nothing to do here
 }
 
+FrameConverterTestUtilities::FunctionWrapper::FunctionWrapper(const TwoSourcesTwoTargetConversionFunction<uint8_t, uint8_t> function) :
+	function_((const void*)(function)),
+	functionType_(FT_2_UINT8_TO_2_UINT8)
+{
+	// nothing to do here
+}
+
 FrameConverterTestUtilities::FunctionWrapper::FunctionWrapper(const ThreeSourcesOneTargetConversionFunction<uint8_t, uint8_t> function) :
 	function_((const void*)(function)),
 	functionType_(FT_3_UINT8_TO_1_UINT8)
@@ -222,6 +229,10 @@ bool FrameConverterTestUtilities::FunctionWrapper::invoke(const Frame& source, F
 
 		case FT_2_UINT8_TO_1_UINT8:
 			((TwoSourcesOneTargetConversionFunction<uint8_t, uint8_t>)(function_))(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), source.width(), source.height(), conversionFlag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), worker);
+			return true;
+
+		case FT_2_UINT8_TO_2_UINT8:
+			((TwoSourcesTwoTargetConversionFunction<uint8_t, uint8_t>)(function_))(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), source.width(), source.height(), conversionFlag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), target.paddingElements(1u), worker);
 			return true;
 
 		case FT_2_UINT8_TO_3_UINT8:

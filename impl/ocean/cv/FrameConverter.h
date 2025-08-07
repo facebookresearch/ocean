@@ -254,6 +254,8 @@ class OCEAN_CV_EXPORT FrameConverter
 					FT_2_UINT8_TO_1_UINT8,
 					/// 2-plane uint8 to 1-plane uint8 with constant alpha channel conversion function.
 					FT_2_UINT8_TO_1_UINT8_ALPHA,
+					/// 2-plane uint8 to 2-plane uint8 conversion function.
+					FT_2_UINT8_TO_2_UINT8,
 					/// 2-plane uint8 to 3-plane uint8 conversion function.
 					FT_2_UINT8_TO_3_UINT8,
 					/// 3-plane uint8 to 1-plane uint8 conversion function.
@@ -311,6 +313,12 @@ class OCEAN_CV_EXPORT FrameConverter
 				 */
 				template <typename TSource, typename TTarget>
 				using TwoSourcesOneTargetAlphaConversionFunction = void(*)(const TSource* source0, const TSource* source1, TTarget* target, const uint32_t width, const uint32_t height, const ConversionFlag conversionFlag, const uint32_t source0PaddingElements, const uint32_t source1PaddingElements, const uint32_t targetPaddingElements, const uint8_t alphaValue, Worker* worker);
+
+				/**
+				 * Definition of a function pointer to a conversion function with two source planes and two target plane.
+				 */
+				template <typename TSource, typename TTarget>
+				using TwoSourcesTwoTargetConversionFunction = void(*)(const TSource* source0, const TSource* source1, TTarget* target0, TTarget* target1, const uint32_t width, const uint32_t height, const ConversionFlag conversionFlag, const uint32_t source0PaddingElements, const uint32_t source1PaddingElements, const uint32_t target0PaddingElements, const uint32_t target1PaddingElements, Worker* worker);
 
 				/**
 				 * Definition of a function pointer to a conversion function with two source planes and three target planes.
@@ -479,6 +487,12 @@ class OCEAN_CV_EXPORT FrameConverter
 						 * @param function The pointer to the conversion function, must be valid
 						 */
 						FunctionWrapper(const TwoSourcesOneTargetAlphaConversionFunction<uint8_t, uint8_t> function);
+
+						/**
+						 * Creates a new wrapper object and stores a function pointer to a FT_2_UINT8_TO_2_UINT8 function.
+						 * @param function The pointer to the conversion function, must be valid
+						 */
+						FunctionWrapper(const TwoSourcesTwoTargetConversionFunction<uint8_t, uint8_t> function);
 
 						/**
 						 * Creates a new wrapper object and stores a function pointer to a FT_2_UINT8_TO_3_UINT8 function.

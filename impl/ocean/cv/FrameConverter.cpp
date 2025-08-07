@@ -137,6 +137,13 @@ FrameConverter::ConversionFunctionMap::FunctionWrapper::FunctionWrapper(const Tw
 	// nothing to do here
 }
 
+FrameConverter::ConversionFunctionMap::FunctionWrapper::FunctionWrapper(const TwoSourcesTwoTargetConversionFunction<uint8_t, uint8_t> function) :
+	function_((const void*)(function)),
+	functionType_(FT_2_UINT8_TO_2_UINT8)
+{
+	// nothing to do here
+}
+
 FrameConverter::ConversionFunctionMap::FunctionWrapper::FunctionWrapper(const TwoSourcesThreeTargetConversionFunction<uint8_t, uint8_t> function) :
 	function_((const void*)(function)),
 	functionType_(FT_2_UINT8_TO_3_UINT8)
@@ -631,6 +638,15 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), options.alphaChannelTargetValue(), worker);
+				break;
+			}
+
+			case ConversionFunctionMap::FT_2_UINT8_TO_2_UINT8:
+			{
+				typedef ConversionFunctionMap::TwoSourcesTwoTargetConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), target.paddingElements(1u), worker);
 				break;
 			}
 
