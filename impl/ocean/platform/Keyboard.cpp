@@ -17,17 +17,15 @@ bool Keyboard::allKeysDown(const Key keys, const bool synchron)
 {
 	static_assert(KEY_LAST_UNIQUE_VALUE <= 0x40000000, "Invalid KEY_LAST_UNIQUE_VALUE value");
 
-	if (keys == KEY_NONE) {
+	if (keys == KEY_NONE)
 		return true;
-}
 
 	Key value = Key(1);
 
 	while (value <= KEY_LAST_UNIQUE_VALUE)
 	{
-		if ((keys & value) != 0 && !isKeyDown(value, synchron)) {
+		if ((keys & value) != 0 && !isKeyDown(value, synchron))
 			return false;
-}
 
 		value = Key(value << 1);
 	}
@@ -39,17 +37,15 @@ bool Keyboard::oneKeyDown(const Key keys, const bool synchron)
 {
 	static_assert(KEY_LAST_UNIQUE_VALUE <= 0x40000000, "Invalid KEY_LAST_UNIQUE_VALUE value");
 
-	if (keys == KEY_NONE) {
+	if (keys == KEY_NONE)
 		return true;
-}
 
 	Key value = Key(1);
 
 	while (value <= KEY_LAST_UNIQUE_VALUE)
 	{
-		if ((keys & value) != 0 && isKeyDown(value, synchron)) {
+		if ((keys & value) != 0 && isKeyDown(value, synchron))
 			return true;
-}
 
 		value = Key(value << 1);
 	}
@@ -135,21 +131,17 @@ Keyboard::Key Keyboard::currentKeyState(const bool synchron)
 {
 	Key key = KEY_NONE;
 
-	if (oneKeyDown(KEY_SHIFT, synchron)) {
+	if (oneKeyDown(KEY_SHIFT, synchron))
 		key = Key(key | KEY_SHIFT);
-}
 
-	if (oneKeyDown(KEY_CONTROL, synchron)) {
+	if (oneKeyDown(KEY_CONTROL, synchron))
 		key = Key(key | KEY_CONTROL);
-}
 
-	if (oneKeyDown(KEY_MENU, synchron)) {
+	if (oneKeyDown(KEY_MENU, synchron))
 		key = Key(key | KEY_MENU);
-}
 
-	if (oneKeyDown(KEY_SPACE, synchron)) {
+	if (oneKeyDown(KEY_SPACE, synchron))
 		key = Key(key | KEY_SPACE);
-}
 
 	return key;
 }

@@ -238,11 +238,10 @@ bool Streaming::setResponseTimeout(const double timeout)
 bool Streaming::parse(const unsigned char* data, const size_t size, bool& isResponse, std::string& message, std::string& optionalValue, SessionId& sessionId)
 {
 	std::string value;
-	if (data[size - 1] == '\0') {
+	if (data[size - 1] == '\0')
 		value = std::string((char*)data);
-	} else {
+	else
 		value = std::string((char*)data, size);
-}
 
 	if (value.find("response:") == 0)
 	{

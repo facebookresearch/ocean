@@ -26,17 +26,15 @@ bool Mouse::allButtonsDown(const Button buttons, const bool synchron)
 {
 	static_assert(BUTTON_LAST_UNIQUE_VALUE <= 0x40000000, "Invalid BUTTON_LAST_UNIQUE_VALUE value");
 
-	if (buttons == BUTTON_NONE) {
+	if (buttons == BUTTON_NONE)
 		return true;
-}
 
 	Button value = Button(1);
 
 	while (value <= BUTTON_LAST_UNIQUE_VALUE)
 	{
-		if ((buttons & value) != 0 && !isButtonDown(value, synchron)) {
+		if ((buttons & value) != 0 && !isButtonDown(value, synchron))
 			return false;
-}
 
 		value = Button(value << 1);
 	}
@@ -48,17 +46,15 @@ bool Mouse::oneButtonDown(const Button buttons, const bool synchron)
 {
 	static_assert(BUTTON_LAST_UNIQUE_VALUE <= 0x40000000, "Invalid BUTTON_LAST_UNIQUE_VALUE value");
 
-	if (buttons == BUTTON_NONE) {
+	if (buttons == BUTTON_NONE)
 		return true;
-}
 
 	Button value = Button(1);
 
 	while (value <= BUTTON_LAST_UNIQUE_VALUE)
 	{
-		if ((buttons & value) != 0 && isButtonDown(value, synchron)) {
+		if ((buttons & value) != 0 && isButtonDown(value, synchron))
 			return true;
-}
 
 		value = Button(value << 1);
 	}
@@ -95,17 +91,14 @@ Mouse::Button Mouse::currentMouseButtonState(const bool synchron)
 {
 	Button button = BUTTON_NONE;
 
-	if (isButtonDown(BUTTON_LEFT, synchron)) {
+	if (isButtonDown(BUTTON_LEFT, synchron))
 		button = Button(button | BUTTON_LEFT);
-}
 
-	if (isButtonDown(BUTTON_MIDDLE, synchron)) {
+	if (isButtonDown(BUTTON_MIDDLE, synchron))
 		button = Button(button | BUTTON_MIDDLE);
-}
 
-	if (isButtonDown(BUTTON_RIGHT, synchron)) {
+	if (isButtonDown(BUTTON_RIGHT, synchron))
 		button = Button(button | BUTTON_RIGHT);
-}
 
 	return button;
 }

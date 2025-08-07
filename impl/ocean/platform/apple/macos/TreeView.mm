@@ -79,9 +79,9 @@ using namespace Ocean::Platform::Apple::MacOS;
 
 -(void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	if (cellImage == nil) {
+	if (cellImage == nil)
 		[super drawWithFrame:cellFrame inView:controlView];
-	} else
+	else
 	{
 		NSSize imageSize = [cellImage size];
 		const double factor = (cellImageScaleFactor != 0.0) ? (1.0 / cellImageScaleFactor) : 1.0;
@@ -141,9 +141,8 @@ using namespace Ocean::Platform::Apple::MacOS;
 
 			[self addTableColumn:column];
 
-			if (n == 0u) {
+			if (n == 0u)
 				[self setOutlineTableColumn:column];
-}
 		}
 
 		[self setColumnAutoresizingStyle:NSTableViewSequentialColumnAutoresizingStyle];
@@ -346,9 +345,8 @@ using namespace Ocean::Platform::Apple::MacOS;
 {
 	[super setFrame:frame];
 
-	if (viewOwner) {
+	if (viewOwner)
 		viewOwner->onResize(frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-}
 }
 
 -(void)dealloc
@@ -1205,9 +1203,8 @@ void TreeView::setItemSortMap(TreeItemResortingMap&& unsorted2SortedItemMap)
 
 	sorted2UnsortedItemMap_.clear();
 
-	for (TreeItemResortingMap::const_iterator i = unsorted2SortedItemMap_.cbegin(); i != unsorted2SortedItemMap_.cend(); ++i) {
+	for (TreeItemResortingMap::const_iterator i = unsorted2SortedItemMap_.cbegin(); i != unsorted2SortedItemMap_.cend(); ++i)
 		sorted2UnsortedItemMap_.insert(std::make_pair(i->second, i->first));
-}
 
 	ocean_assert(unsorted2SortedItemMap_.size() == sorted2UnsortedItemMap_.size());
 }

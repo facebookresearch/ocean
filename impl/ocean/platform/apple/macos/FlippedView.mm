@@ -172,9 +172,8 @@ void FlippedView::setEnabled(const bool enable)
 		return;
 	}
 
-	if (enabled_ == enable) {
+	if (enabled_ == enable)
 		return;
-}
 
 	if (enable)
 	{
