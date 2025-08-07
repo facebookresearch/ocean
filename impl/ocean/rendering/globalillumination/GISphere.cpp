@@ -43,11 +43,13 @@ Scalar GISphere::radius() const
 
 bool GISphere::setRadius(const Scalar radius)
 {
-	if (sphereRadius <= 0)
+	if (sphereRadius <= 0) {
 		return false;
+}
 
-	if (sphereRadius == radius)
+	if (sphereRadius == radius) {
 		return true;
+}
 
 	sphereRadius = radius;
 	rebuildPrimitives();

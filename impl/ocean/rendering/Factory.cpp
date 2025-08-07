@@ -230,78 +230,114 @@ ObjectRef Factory::createVertexSet() const
 
 ObjectRef Factory::createObject(const std::string& type) const
 {
-	if (type == "AttributeSet")
+	if (type == "AttributeSet") {
 		return createAttributeSet();
-	if (type == "Billboard")
+}
+	if (type == "Billboard") {
 		return createBillboard();
-	if (type == "BlendAttribute")
+}
+	if (type == "BlendAttribute") {
 		return createBlendAttribute();
-	if (type == "Box")
+}
+	if (type == "Box") {
 		return createBox();
-	if (type == "Cone")
+}
+	if (type == "Cone") {
 		return createCone();
-	if (type == "Cylinder")
+}
+	if (type == "Cylinder") {
 		return createCylinder();
-	if (type == "DepthAttribute")
+}
+	if (type == "DepthAttribute") {
 		return createDepthAttribute();
-	if (type == "DirectionalLight")
+}
+	if (type == "DirectionalLight") {
 		return createDirectionalLight();
-	if (type == "Geometry")
+}
+	if (type == "Geometry") {
 		return createGeometry();
-	if (type == "Group")
+}
+	if (type == "Group") {
 		return createGroup();
-	if (type == "Lines")
+}
+	if (type == "Lines") {
 		return createLines();
-	if (type == "LineStrips")
+}
+	if (type == "LineStrips") {
 		return createLineStrips();
-	if (type == "LOD")
+}
+	if (type == "LOD") {
 		return createLOD();
-	if (type == "Material")
+}
+	if (type == "Material") {
 		return createMaterial();
-	if (type == "ParallelView")
+}
+	if (type == "ParallelView") {
 		return createParallelView();
-	if (type == "PerspectiveView")
+}
+	if (type == "PerspectiveView") {
 		return createPerspectiveView();
-	if (type == "PhantomAttribute")
+}
+	if (type == "PhantomAttribute") {
 		return createPhantomAttribute();
-	if (type == "PointLight")
+}
+	if (type == "PointLight") {
 		return createPointLight();
-	if (type == "PrimitiveAttribute")
+}
+	if (type == "PrimitiveAttribute") {
 		return createPrimitiveAttribute();
-	if (type == "Quads")
+}
+	if (type == "Quads") {
 		return createQuads();
-	if (type == "QuadStrips")
+}
+	if (type == "QuadStrips") {
 		return createQuadStrips();
-	if (type == "Scene")
+}
+	if (type == "Scene") {
 		return createScene();
-	if (type == "ShaderProgram")
+}
+	if (type == "ShaderProgram") {
 		return createShaderProgram();
-	if (type == "SkyBackground")
+}
+	if (type == "SkyBackground") {
 		return createSkyBackground();
-	if (type == "Sphere")
+}
+	if (type == "Sphere") {
 		return createSphere();
-	if (type == "SpotLight")
+}
+	if (type == "SpotLight") {
 		return createSpotLight();
-	if (type == "StereoView")
+}
+	if (type == "StereoView") {
 		return createStereoView();
-	if (type == "Switch")
+}
+	if (type == "Switch") {
 		return createSwitch();
-	if (type == "MediaTexture2D")
+}
+	if (type == "MediaTexture2D") {
 		return createMediaTexture2D();
-	if (type == "Textures")
+}
+	if (type == "Textures") {
 		return createTextures();
-	if (type == "Transform")
+}
+	if (type == "Transform") {
 		return createTransform();
-	if (type == "Triangles")
+}
+	if (type == "Triangles") {
 		return createTriangles();
-	if (type == "TriangleFans")
+}
+	if (type == "TriangleFans") {
 		return createTriangleFans();
-	if (type == "TriangleStrips")
+}
+	if (type == "TriangleStrips") {
 		return createTriangleStrips();
-	if (type == "UndistortedBackground")
+}
+	if (type == "UndistortedBackground") {
 		return createUndistortedBackground();
-	if (type == "VertexSet")
+}
+	if (type == "VertexSet") {
 		return createVertexSet();
+}
 
 	return ObjectRef();
 }

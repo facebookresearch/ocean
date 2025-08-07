@@ -41,8 +41,9 @@ CV::PixelPositionI Screen::suitableWindowPositionApple(const unsigned int window
 	ocean_assert(screenBoundingBox.isValid() && resultBoundingBox.isValid());
 
 	// ensure that at least 50% of the window is visible inside the bounding box of the virtual screen
-	if ((screenBoundingBox && resultBoundingBox).size() >= resultBoundingBox.size() / 2u)
+	if ((screenBoundingBox && resultBoundingBox).size() >= resultBoundingBox.size() / 2u) {
 		return resultBoundingBox.topLeft();
+}
 
 	// we try again to adjust the position due to the parent window
 	if (parent)
@@ -82,8 +83,9 @@ CV::PixelPositionI Screen::suitableWindowPositionApple(const unsigned int window
 	}
 
 	// ensure that at least 50% of the window is visible inside the bounding box of the virtual screen
-	if ((screenBoundingBox && resultBoundingBox).size() >= resultBoundingBox.size() / 2u)
+	if ((screenBoundingBox && resultBoundingBox).size() >= resultBoundingBox.size() / 2u) {
 		return resultBoundingBox.topLeft();
+}
 
 	return CV::PixelPositionI(screenBoundingBox.left() + int(screenBoundingBox.width() / 2u) - int(windowWidth / 2u), screenBoundingBox.top() + int(screenBoundingBox.height() / 2u) - int(windowHeight / 2u));
 }
@@ -92,9 +94,9 @@ double Screen::scaleFactorApple(const wxWindow* window)
 {
 	double factor = 1.0;
 
-	if (window)
+	if (window) {
 		factor = window->GetContentScaleFactor();
-	else
+	} else
 	{
 		NSScreen* mainScreen = [NSScreen mainScreen];
 		ocean_assert(mainScreen);

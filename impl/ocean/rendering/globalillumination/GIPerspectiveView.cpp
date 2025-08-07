@@ -36,11 +36,13 @@ Scalar GIPerspectiveView::fovX() const
 
 bool GIPerspectiveView::setFovX(const Scalar fovx)
 {
-	if (fovx <= 0 || fovx >= Numeric::pi())
+	if (fovx <= 0 || fovx >= Numeric::pi()) {
 		return false;
+}
 
-	if (fovx == viewFovX)
+	if (fovx == viewFovX) {
 		return true;
+}
 
 	viewFovX = fovx;
 	calculateProjectionMatrix();
@@ -57,8 +59,9 @@ Line3 GIPerspectiveView::viewingRay(const Scalar x, const Scalar y, const unsign
 {
 	ocean_assert(width != 0u && height != 0u);
 
-	if (width == 0u || height == 0u)
+	if (width == 0u || height == 0u) {
 		throw OceanException("Invalid parameters.");
+}
 
 	const Scalar width2 = Scalar(width) * Scalar(0.5);
 	const Scalar height2 = Scalar(height) * Scalar(0.5);

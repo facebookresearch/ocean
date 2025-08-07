@@ -31,8 +31,9 @@ ImageList::ImageList(const Frame& frame, const double scaleFactor)
 		const unsigned int imageSize = (unsigned int)bitmap.GetHeight();
 
 		ocean_assert(imageSize * images == (unsigned int)bitmap.GetWidth());
-		if(imageSize * images != (unsigned int)bitmap.GetWidth())
+		if(imageSize * images != (unsigned int)bitmap.GetWidth()) {
 			return;
+}
 
 		Create(int(imageSize), int(imageSize), frame.hasAlphaChannel(), int(images));
 

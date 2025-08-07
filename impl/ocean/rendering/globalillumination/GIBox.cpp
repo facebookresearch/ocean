@@ -42,11 +42,13 @@ Vector3 GIBox::size() const
 
 bool GIBox::setSize(const Vector3& size)
 {
-	if (size.x() < 0 || size.y() < 0 || size.z() < 0)
+	if (size.x() < 0 || size.y() < 0 || size.z() < 0) {
 		return false;
+}
 
-	if (size == boxSize)
+	if (size == boxSize) {
 		return true;
+}
 
 	boxSize = size;
 	boxDiagonal = boxSize.length();
