@@ -24,6 +24,16 @@ Recorder::~Recorder()
 	// nothing to do here
 }
 
+bool Recorder::setPreferredBitrate(const unsigned int preferredBitrate)
+{
+	if (preferredBitrate == 0u)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 }
 
 }

@@ -118,7 +118,7 @@ class OCEAN_MEDIA_EXPORT FrameRecorder : virtual public Recorder
 	protected:
 
 		/**
-		 * Creats a new frame recorder.
+		 * Creates a new frame recorder.
 		 */
 		FrameRecorder();
 

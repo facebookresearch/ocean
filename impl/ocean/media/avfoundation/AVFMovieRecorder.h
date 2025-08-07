@@ -41,6 +41,12 @@ class AVFMovieRecorder : virtual public MovieRecorder
 		bool setFilename(const std::string& filename) override;
 
 		/**
+		 * Sets the preferred bit rate when recording the data.
+		 * @see Recorder::setPreferredBitrate().
+		 */
+		bool setPreferredBitrate(const unsigned int preferredBitrate) override;
+
+		/**
 		 * Sets the recorder.
 		 * @see ExplicitRecorder::start().
 		 */
@@ -160,6 +166,9 @@ class AVFMovieRecorder : virtual public MovieRecorder
 
 		/// True, if this recorder is stopped.
 		bool isStopped_ = true;
+
+		/// The preferred bit rate, in bits per seconds, with range (0, infinity).
+		unsigned int preferredBitrate_ = 0u;
 };
 
 inline CMTime AVFMovieRecorder::time(const double timestamp)

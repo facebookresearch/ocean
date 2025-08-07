@@ -39,8 +39,8 @@ class OCEAN_MEDIA_A_EXPORT AMovieRecorder : virtual public MovieRecorder
 
 	protected:
 
-		/// Bitrate at which videos are saved.
-		static constexpr int DEFAULT_BITRATE = 2000000; // 2 Mbps
+		/// The default bitrate of the recorder, in bits per second.
+		static constexpr int defaultBitrate_ = 2000000; // 2 Mbps
 
 		/// Frequency at which I-frames are saved to the output.
 		static constexpr int DEFAULT_IFRAME_INTERVAL_SECONDS = 1;
@@ -64,6 +64,12 @@ class OCEAN_MEDIA_A_EXPORT AMovieRecorder : virtual public MovieRecorder
 		 * @see FrameRecorder::setPreferredFrameType().
 		 */
 		bool setPreferredFrameType(const FrameType& type) override;
+
+		/**
+		 * Sets the preferred bit rate when recording the data.
+		 * @see Recorder::setPreferredBitrate().
+		 */
+		bool setPreferredBitrate(const unsigned int preferredBitrate) override;
 
 		/**
 		 * Sets the recorder.
@@ -167,6 +173,9 @@ class OCEAN_MEDIA_A_EXPORT AMovieRecorder : virtual public MovieRecorder
 
 		/// True, if this recorder is stopped.
 		bool isStopped_ = false;
+
+		/// The preferred bitrate of the recorder, in bits per second.
+		unsigned int preferredBitrate_ = defaultBitrate_;
 };
 
 #endif // defined(__ANDROID_API__) && __ANDROID_API__ >= 21

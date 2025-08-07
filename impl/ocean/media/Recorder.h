@@ -88,6 +88,13 @@ class OCEAN_MEDIA_EXPORT Recorder
 		virtual bool isRecording() const = 0;
 
 		/**
+		 * Sets the preferred bit rate when recording the data.
+		 * @param preferredBitrate Preferred bit rate, in bits per seconds, with range (0, infinity); 0 to use the default bit rate
+		 * @return True, if succeeded
+		 */
+		virtual bool setPreferredBitrate(const unsigned int preferredBitrate);
+
+		/**
 		 * Returns the type of this recorder.
 		 * @return Recorder type
 		 */

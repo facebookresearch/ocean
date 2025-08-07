@@ -37,7 +37,12 @@ class OCEAN_MEDIA_MF_EXPORT MFMovieRecorder : public virtual MovieRecorder
 		 * Definition of a scoped object holding a IMFSinkWriter object.
 		 * The wrapped IMFSinkWriter object will be released automatically once the scoped object does not exist anymore.
 		 */
-		typedef ScopedMediaFoundationObject<IMFSinkWriter> ScopedIMFSinkWriter;
+		using ScopedIMFSinkWriter = ScopedMediaFoundationObject<IMFSinkWriter>;
+
+	protected:
+
+		/// The default bit rate of the recorder, in bits per second.
+		static constexpr unsigned int defaultBitrate_ = 10000000u; // 10 Mbps
 
 	public:
 
@@ -53,6 +58,12 @@ class OCEAN_MEDIA_MF_EXPORT MFMovieRecorder : public virtual MovieRecorder
 		 * @see MovieRecorder::setPreferredFrameType().
 		 */
 		bool setPreferredFrameType(const FrameType& type) override;
+
+		/**
+		 * Sets the preferred bit rate when recording the data.
+		 * @see Recorder::setPreferredBitrate().
+		 */
+		bool setPreferredBitrate(const unsigned int preferredBitrate) override;
 
 		/**
 		 * Sets the recorder.
@@ -137,6 +148,9 @@ class OCEAN_MEDIA_MF_EXPORT MFMovieRecorder : public virtual MovieRecorder
 
 		/// True, if the recorder is currently actively recording.
 		bool isRecording_ = false;
+
+		/// The preferred bitrate of the recorder, in bits per second.
+		unsigned int preferredBitrate_ = defaultBitrate_;
 };
 
 }

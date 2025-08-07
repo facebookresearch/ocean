@@ -82,6 +82,27 @@ bool AMovieRecorder::setPreferredFrameType(const FrameType& type)
 	return true;
 }
 
+bool AMovieRecorder::setPreferredBitrate(const unsigned int preferredBitrate)
+{
+	const ScopedLock scopedLock(recorderLock);
+
+	if (mediaCodec_ != nullptr || isRecording_)
+	{
+		return false;
+	}
+
+	if (preferredBitrate == 0u)
+	{
+		preferredBitrate_ = defaultBitrate_;
+	}
+	else
+	{
+		preferredBitrate_ = preferredBitrate;
+	}
+
+	return true;
+}
+
 bool AMovieRecorder::start()
 {
 	if (!NativeMediaLibrary::get().isInitialized())
@@ -359,11 +380,15 @@ bool AMovieRecorder::createNewMediaCodec()
 	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_WIDTH, recorderFrameType.width());
 	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_HEIGHT, recorderFrameType.height());
 	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_SLICE_HEIGHT, recorderFrameType.height());
-	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_BIT_RATE, DEFAULT_BITRATE);
 	NativeMediaLibrary::get().AMediaFormat_setFloat(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_CAPTURE_RATE, recorderFrameFrequency);
 	NativeMediaLibrary::get().AMediaFormat_setFloat(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_FRAME_RATE, recorderFrameFrequency);
 	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_I_FRAME_INTERVAL, DEFAULT_IFRAME_INTERVAL_SECONDS);
 	NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_COLOR_FORMAT, int32_t(colorFormat));
+
+	if (preferredBitrate_ > 0u)
+	{
+		NativeMediaLibrary::get().AMediaFormat_setInt32(mediaFormat_, NativeMediaLibrary::AMEDIAFORMAT_KEY_BIT_RATE, int(preferredBitrate_));
+	}
 
 	if (colorRange != PixelFormats::AndroidMediaFormatColorRange::UNKNOWN)
 	{

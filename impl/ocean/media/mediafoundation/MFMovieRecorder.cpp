@@ -70,6 +70,28 @@ bool MFMovieRecorder::setPreferredFrameType(const FrameType& type)
 	return MovieRecorder::setPreferredFrameType(type);
 }
 
+bool MFMovieRecorder::setPreferredBitrate(const unsigned int preferredBitrate)
+{
+	const ScopedLock scopedLock(recorderLock);
+
+	if (sinkWriter_.isValid())
+	{
+		Log::error() << "The preferred bitrate cannot be changed after recording has started.";
+		return false;
+	}
+
+	if (preferredBitrate == 0u)
+	{
+		preferredBitrate_ = defaultBitrate_;
+	}
+	else
+	{
+		preferredBitrate_ = preferredBitrate;
+	}
+
+	return true;
+}
+
 bool MFMovieRecorder::start()
 {
 	const ScopedLock scopedLock(recorderLock);
@@ -312,30 +334,40 @@ bool MFMovieRecorder::createSinkWriter()
 	{
 		noError = false;
 	}
+
 	if (noError && S_OK != mediaTypeOutput->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video))
 	{
 		noError = false;
 	}
+
 	if (noError && S_OK != mediaTypeOutput->SetGUID(MF_MT_SUBTYPE, videoFormat))
 	{
 		noError = false;
 	}
+
 	if (noError && S_OK != mediaTypeOutput->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive))
 	{
 		noError = false;
 	}
-	if (noError && S_OK != mediaTypeOutput->SetUINT32(MF_MT_AVG_BITRATE, 10000000u))
+
+	if (preferredBitrate_ != 0u)
 	{
-		noError = false;
+		if (noError && S_OK != mediaTypeOutput->SetUINT32(MF_MT_AVG_BITRATE, preferredBitrate_))
+		{
+			noError = false;
+		}
 	}
+
 	if (noError && S_OK != MFSetAttributeSize(*mediaTypeOutput, MF_MT_FRAME_SIZE, recorderFrameType.width(), recorderFrameType.height()))
 	{
 		noError = false;
 	}
+
 	if (noError && S_OK != MFSetAttributeRatio(*mediaTypeOutput, MF_MT_FRAME_RATE, frameRateNumerator, frameRateDenominator))
 	{
 		noError = false;
 	}
+
 	if (noError && S_OK != MFSetAttributeRatio(*mediaTypeOutput, MF_MT_PIXEL_ASPECT_RATIO, 1, 1))
 	{
 		noError = false;
@@ -353,18 +385,22 @@ bool MFMovieRecorder::createSinkWriter()
 	{
 		noError = false;
 	}
+
 	if (noError && S_OK != mediaTypeInput->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video))
 	{
 		noError = false;
 	}
+
 	if (noError && S_OK != mediaTypeInput->SetGUID(MF_MT_SUBTYPE, videoInput))
 	{
 		noError = false;
 	}
+
 	if (noError && S_OK != mediaTypeInput->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive))
 	{
 		noError = false;
 	}
+
 	if (noError && S_OK != MFSetAttributeSize(*mediaTypeInput, MF_MT_FRAME_SIZE, recorderFrameType.width(), recorderFrameType.height()))
 	{
 		noError = false;
@@ -385,10 +421,12 @@ bool MFMovieRecorder::createSinkWriter()
 	{
 		noError = false;
 	}
+
 	if (noError && S_OK != MFSetAttributeRatio(*mediaTypeInput, MF_MT_FRAME_RATE, frameRateNumerator, frameRateDenominator))
 	{
 		noError = false;
 	}
+
 	if (noError && S_OK != MFSetAttributeRatio(*mediaTypeInput, MF_MT_PIXEL_ASPECT_RATIO, 1, 1))
 	{
 		noError = false;

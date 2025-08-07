@@ -45,6 +45,8 @@ AVFMovieRecorder::~AVFMovieRecorder()
 
 bool AVFMovieRecorder::setFilename(const std::string& filename)
 {
+	const ScopedLock scopedLock(recorderLock);
+
 	if (assetWriter_ != nullptr)
 	{
 		Log::error() << "The filename cannot be changed after recording has started.";
@@ -52,6 +54,21 @@ bool AVFMovieRecorder::setFilename(const std::string& filename)
 	}
 
 	return MovieRecorder::setFilename(filename);
+}
+
+bool AVFMovieRecorder::setPreferredBitrate(const unsigned int preferredBitrate)
+{
+	const ScopedLock scopedLock(recorderLock);
+
+	if (assetWriter_ != nullptr)
+	{
+		Log::error() << "The preferred bitrate cannot be changed after recording has started.";
+		return false;
+	}
+
+	preferredBitrate_ = preferredBitrate;
+
+	return true;
 }
 
 bool AVFMovieRecorder::start()
@@ -335,11 +352,18 @@ bool AVFMovieRecorder::createNewAssetWriter()
 		return false;
 	}
 
-	NSDictionary* outputSettings = @{
+	NSMutableDictionary* outputSettings = [@{
 		AVVideoCodecKey:avVideoCodecType,
 		AVVideoWidthKey:@(int(recorderFrameType.width())),
 		AVVideoHeightKey:@(int(recorderFrameType.height()))
-	};
+	} mutableCopy];
+
+	if (preferredBitrate_ != 0u)
+	{
+		outputSettings[AVVideoCompressionPropertiesKey] = @{
+        	AVVideoAverageBitRateKey: @(int(preferredBitrate_))
+    	};
+	}
 
 	assetWriterInput_ = [[AVAssetWriterInput alloc] initWithMediaType:AVMediaTypeVideo outputSettings:outputSettings];
 
