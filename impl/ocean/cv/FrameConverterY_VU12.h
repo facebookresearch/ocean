@@ -156,6 +156,23 @@ class OCEAN_CV_EXPORT FrameConverterY_VU12 : public FrameConverter
 		static inline void convertY_VU12ToYVU24(const uint8_t* ySource, const uint8_t* vuSource, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int vuSourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
+		 * Converts a Y_VU12 frame to a Y_UV12 frame into a second image buffer.
+		 * @param ySource The y source frame buffer, with (width + yPaddingElements) * height elements, must be valid
+		 * @param vuSource The vu source frame buffer, with (2 * width/2 + vuPaddingElements) * height/2 elements, must be valid
+		 * @param yTarget The target frame buffer, with (width + yTargetPaddingElements) * height elements, must be valid
+		 * @param uvTarget The target frame buffer, with (2 * width/2 + uvTargetPaddingElements) * height/2 elements, must be valid
+		 * @param width The width of the frame in pixel, with range [2, infinity), must be a multiple of 2
+		 * @param height The height of the frame in pixel, with range [2, infinity), must be a multiple of 2
+		 * @param flag Determining the type of conversion
+		 * @param ySourcePaddingElements The number of padding elements at the end of each y-source row, in (uint8_t) elements, with range [0, infinity)
+		 * @param vuSourcePaddingElements The number of padding elements at the end of each vu-source row, in (uint8_t) elements, with range [0, infinity)
+		 * @param yTargetPaddingElements The number of padding elements at the end of each y-target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param uvTargetPaddingElements The number of padding elements at the end of each uv-target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computational to several CPU cores
+		 */
+		static inline void convertY_VU12ToY_UV12(const uint8_t* ySource, const uint8_t* vuSource, uint8_t* yTarget, uint8_t* uvTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int vuSourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uvTargetPaddingElements, Worker* worker = nullptr);
+
+		/**
 		 * Converts a Y_VU12 frame to a Y_U_V12 frame into a second image buffer.
 		 * @param ySource The y source frame buffer, with (width + yPaddingElements) * height elements, must be valid
 		 * @param vuSource The vu source frame buffer, with (2 * width/2 + vuPaddingElements) * height/2 elements, must be valid
@@ -511,9 +528,9 @@ inline void FrameConverterY_VU12::convertY_VU12ToYVU24(const uint8_t* ySource, c
 	FrameConverter::convertArbitraryPixelFormat(sources, (void**)(&target), width, height, flag, 2u, FrameConverter::mapTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x2_To_1Plane3Channels_8BitPerChannel<0u, 1u, 2u>, options, worker);
 }
 
-inline void FrameConverterY_VU12::convertY_VU12ToY_U_V12(const uint8_t* ySource, const uint8_t* vuSource, uint8_t* yTarget, uint8_t* uTarget, uint8_t* vTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int vuSourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uTargetPaddingElements, const unsigned int vTargetPaddingElements, Worker* worker)
+inline void FrameConverterY_VU12::convertY_VU12ToY_UV12(const uint8_t* ySource, const uint8_t* vuSource, uint8_t* yTarget, uint8_t* uvTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int vuSourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uvTargetPaddingElements, Worker* worker)
 {
-	ocean_assert(ySource != nullptr && vuSource != nullptr && yTarget != nullptr && yTarget != nullptr && vTarget != nullptr);
+	ocean_assert(ySource != nullptr && vuSource != nullptr && yTarget != nullptr && uvTarget != nullptr);
 
 	ocean_assert(width >= 2u && width % 2u == 0u);
 	ocean_assert(height >= 2u && height % 2u == 0u);
@@ -526,7 +543,27 @@ inline void FrameConverterY_VU12::convertY_VU12ToY_U_V12(const uint8_t* ySource,
 	// first, we handle the y-plane
 	FrameChannels::transformGeneric<uint8_t, 1u>(ySource, yTarget, width, height, flag, ySourcePaddingElements, yTargetPaddingElements, worker);
 
-	// now we handle the uv-plane
+	// now we handle the vu-plane
+
+	FrameChannels::reverseChannelOrder<uint8_t, 2u>(vuSource, uvTarget, width / 2u, height / 2u, flag, vuSourcePaddingElements, uvTargetPaddingElements, worker);
+}
+
+inline void FrameConverterY_VU12::convertY_VU12ToY_U_V12(const uint8_t* ySource, const uint8_t* vuSource, uint8_t* yTarget, uint8_t* uTarget, uint8_t* vTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int vuSourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uTargetPaddingElements, const unsigned int vTargetPaddingElements, Worker* worker)
+{
+	ocean_assert(ySource != nullptr && vuSource != nullptr && yTarget != nullptr && uTarget != nullptr && vTarget != nullptr);
+
+	ocean_assert(width >= 2u && width % 2u == 0u);
+	ocean_assert(height >= 2u && height % 2u == 0u);
+
+	if (width < 2u || height < 2u || width % 2u != 0u || height % 2u != 0u)
+	{
+		return;
+	}
+
+	// first, we handle the y-plane
+	FrameChannels::transformGeneric<uint8_t, 1u>(ySource, yTarget, width, height, flag, ySourcePaddingElements, yTargetPaddingElements, worker);
+
+	// now we handle the vu-plane
 
 	const unsigned int options[3] = {vuSourcePaddingElements, vTargetPaddingElements, uTargetPaddingElements};
 
