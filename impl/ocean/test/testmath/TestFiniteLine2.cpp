@@ -278,8 +278,9 @@ bool TestFiniteLine2::testDistance(const double testDuration)
 			const Vector2 point0(Random::vector2(-100, 100));
 			Vector2 point1(Random::vector2(-100, 100));
 
-			while (point0 == point1)
+			while (point0 == point1) {
 				point1 = Random::vector2(-100, 100);
+}
 
 			const FiniteLine2 line(point0, point1);
 
@@ -294,13 +295,15 @@ bool TestFiniteLine2::testDistance(const double testDuration)
 
 			Scalar test = Numeric::maxValue();
 
-			if (line.isOnLine(pointOnInfiniteLine))
+			if (line.isOnLine(pointOnInfiniteLine)) {
 				test = pointOnInfiniteLine.distance(point);
-			else
+			} else {
 				test = min(point.distance(point0), point.distance(point1));
+}
 
-			if (Numeric::isEqual(test, result, std::is_same<float, Scalar>::value ? Numeric::eps() * 100 : Numeric::eps()))
+			if (Numeric::isEqual(test, result, std::is_same<float, Scalar>::value ? Numeric::eps() * 100 : Numeric::eps())) {
 				validIterations++;
+}
 
 			iterations++;
 		}
@@ -337,15 +340,17 @@ bool TestFiniteLine2::testIsLeftOfLine(const double testDuration)
 			const Vector2 point0 = Vector2(Random::scalar(-range, range), Random::scalar(-range, range));
 			const Vector2 point1 = Vector2(Random::scalar(-range, range), Random::scalar(-range, range));
 
-			if ((point0 - point1).length() < Numeric::eps())
+			if ((point0 - point1).length() < Numeric::eps()) {
 				continue;
+}
 
 			const FiniteLine2 finiteLine(point0, point1);
 			const Line2 line(finiteLine.point0(), finiteLine.direction());
 			const Vector2 testPoint = Vector2(Random::scalar(-range, range), Random::scalar(-range, range));
 
-			if (finiteLine.isLeftOfLine(testPoint) == line.isLeftOfLine(testPoint))
+			if (finiteLine.isLeftOfLine(testPoint) == line.isLeftOfLine(testPoint)) {
 				validIterations++;
+}
 
 			iterations++;
 		}
@@ -382,8 +387,9 @@ bool TestFiniteLine2::testIsCollinear(const double testDuration)
 			const Vector2 point0 = Vector2(Random::scalar(-range, range), Random::scalar(-range, range));
 			const Vector2 point1 = Vector2(Random::scalar(-range, range), Random::scalar(-range, range));
 
-			if ((point0 - point1).length() < distanceEpsilon)
+			if ((point0 - point1).length() < distanceEpsilon) {
 				continue;
+}
 
 			const FiniteLine2 randomLine(point0, point1);
 
@@ -409,8 +415,9 @@ bool TestFiniteLine2::testIsCollinear(const double testDuration)
 				const Vector2 endpoint0 = point0 + randomLine.direction() * Random::scalar(-range, range) + Vector2(Random::scalar(-distanceOffset, distanceOffset), Random::scalar(-distanceOffset, distanceOffset));
 				const Vector2 endpoint1 = point1 + randomLine.direction() * Random::scalar(-range, range) + Vector2(Random::scalar(-distanceOffset, distanceOffset), Random::scalar(-distanceOffset, distanceOffset));
 
-				if ((endpoint0 - endpoint1).length() < Numeric::eps())
+				if ((endpoint0 - endpoint1).length() < Numeric::eps()) {
 					continue;
+}
 
 				const FiniteLine2 currentLine(endpoint0, endpoint1);
 				const Scalar distanceCurrentLineToRandomLine = std::max(randomLine.distance(currentLine.point0()), randomLine.distance(currentLine.point1()));
@@ -439,8 +446,9 @@ bool TestFiniteLine2::testIsCollinear(const double testDuration)
 				const Vector2 endpoint0 = crossPoint + randomLine.normal() * Random::scalar(Scalar(0), Scalar(0.499));
 				const Vector2 endpoint1 = crossPoint - randomLine.normal() * Random::scalar(Scalar(0), Scalar(0.499));
 
-				if ((endpoint0 - endpoint1).length() < Numeric::eps())
+				if ((endpoint0 - endpoint1).length() < Numeric::eps()) {
 					continue;
+}
 
 				const FiniteLine2 currentLine(endpoint0, endpoint1);
 				const Scalar distanceCurrentLineToRandomLine = std::max(randomLine.distance(currentLine.point0()), randomLine.distance(currentLine.point1()));
@@ -492,8 +500,9 @@ bool TestFiniteLine2::testNormal(const double testDuration)
 			const Vector2 point0(Random::vector2(-100, 100));
 			Vector2 point1(Random::vector2(-100, 100));
 
-			while ((point0 - point1).isNull())
+			while ((point0 - point1).isNull()) {
 				point1 = Random::vector2(-100, 100);
+}
 
 			const FiniteLine2 line(point0, point1);
 
@@ -502,8 +511,9 @@ bool TestFiniteLine2::testNormal(const double testDuration)
 			const Scalar dotProduct = direction * normal;
 			const Scalar crossProduct = normal.cross(direction);
 
-			if (Numeric::isEqual(normal.length(), Scalar(1)) && Numeric::isEqual(crossProduct, Scalar(1)) && Numeric::isEqualEps(dotProduct))
+			if (Numeric::isEqual(normal.length(), Scalar(1)) && Numeric::isEqual(crossProduct, Scalar(1)) && Numeric::isEqualEps(dotProduct)) {
 				validIterations++;
+}
 
 			iterations++;
 		}

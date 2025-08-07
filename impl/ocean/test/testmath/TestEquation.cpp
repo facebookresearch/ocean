@@ -47,10 +47,11 @@ bool TestEquation::test(const double testDuration)
 
 	Log::info() << " ";
 
-	if (result)
+	if (result) {
 		Log::info() << "Equation test succeeded.";
-	else
+	} else {
 		Log::info() << "Equation test FAILED!";
+}
 
 	return result;
 }
@@ -91,8 +92,9 @@ bool TestEquation::testLinearEquation(const double testDuration)
 	{
 		a[n] = Random::scalar(-1000, 1000);
 
-		while (Numeric::isEqualEps(a[n]))
+		while (Numeric::isEqualEps(a[n])) {
 			a[n] = Random::scalar(-1000, 1000);
+}
 
 		b[n] = Random::scalar(-1000, 1000);
 	}
@@ -105,26 +107,29 @@ bool TestEquation::testLinearEquation(const double testDuration)
 
 	do
 	{
-		for (unsigned int n = 0u; n < constIterations; ++n)
+		for (unsigned int n = 0u; n < constIterations; ++n) {
 			value += Equation::solveLinear(a[n], b[n], x);
+}
 
 		++iterations;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (value % 2u == 0u)
+	if (value % 2u == 0u) {
 		Log::info() << "Performance: " << timer.yseconds() / double(constIterations * iterations) << "mys";
-	else
+	} else {
 		Log::info() << "Performance: " << timer.yseconds() / double(constIterations * iterations) << "mys";
+}
 
 	const double validPercent = validateLinearEquation(testDuration);
 
 	Log::info() << "Validation: " << String::toAString(validPercent * 100.0, 1u) << "% succeeded.";
 
-	if (std::is_same<Scalar, float>::value)
+	if (std::is_same<Scalar, float>::value) {
 		return validPercent >= 0.98;
-	else
+	} else {
 		return validPercent >= 0.99;
+}
 }
 
 bool TestEquation::testQuadraticEquation(const double testDuration)
@@ -144,8 +149,9 @@ bool TestEquation::testQuadraticEquation(const double testDuration)
 	{
 		a[n] = Random::scalar(-1000, 1000);
 
-		while (Numeric::isEqualEps(a[n]))
+		while (Numeric::isEqualEps(a[n])) {
 			a[n] = Random::scalar(-1000, 1000);
+}
 
 		b[n] = Random::scalar(-1000, 1000);
 		c[n] = Random::scalar(-1000, 1000);
@@ -159,26 +165,29 @@ bool TestEquation::testQuadraticEquation(const double testDuration)
 
 	do
 	{
-		for (unsigned int n = 0u; n < constIterations; ++n)
+		for (unsigned int n = 0u; n < constIterations; ++n) {
 			value += Equation::solveQuadratic(a[n], b[n], c[n], x1, x2);
+}
 
 		++iterations;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (value % 2u == 0u)
+	if (value % 2u == 0u) {
 		Log::info() << "Performance: " << timer.yseconds() / double(constIterations * iterations) << "mys";
-	else
+	} else {
 		Log::info() << "Performance: " << timer.yseconds() / double(constIterations * iterations) << "mys";
+}
 
 	const double validPercent = validateQuadraticEquation(testDuration);
 
 	Log::info() << "Validation: " << String::toAString(validPercent * 100.0, 1u) << "% succeeded.";
 
-	if (std::is_same<Scalar, float>::value)
+	if (std::is_same<Scalar, float>::value) {
 		return validPercent >= 0.95;
-	else
+	} else {
 		return validPercent >= 0.99;
+}
 }
 
 bool TestEquation::testCubicEquation(const double testDuration)
@@ -199,8 +208,9 @@ bool TestEquation::testCubicEquation(const double testDuration)
 	{
 		a[n] = Random::scalar(-1000, 1000);
 
-		while (Numeric::isEqualEps(a[n]))
+		while (Numeric::isEqualEps(a[n])) {
 			a[n] = Random::scalar(-1000, 1000);
+}
 
 		b[n] = Random::scalar(-1000, 1000);
 		c[n] = Random::scalar(-1000, 1000);
@@ -215,26 +225,29 @@ bool TestEquation::testCubicEquation(const double testDuration)
 
 	do
 	{
-		for (unsigned int n = 0u; n < constIterations; ++n)
+		for (unsigned int n = 0u; n < constIterations; ++n) {
 			value += Equation::solveCubic(a[n], b[n], c[n], d[n], x1, x2, x3);
+}
 
 		++iterations;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (value % 2u == 0u)
+	if (value % 2u == 0u) {
 		Log::info() << "Performance: " << timer.yseconds() / double(constIterations * iterations) << "mys";
-	else
+	} else {
 		Log::info() << "Performance: " << timer.yseconds() / double(constIterations * iterations) << "mys";
+}
 
 	const double validPercent = validateCubicEquation(testDuration);
 
 	Log::info() << "Validation: " << String::toAString(validPercent * 100.0, 1u) << "% succeeded.";
 
-	if (std::is_same<Scalar, float>::value)
+	if (std::is_same<Scalar, float>::value) {
 		return validPercent >= 0.85;
-	else
+	} else {
 		return validPercent >= 0.99;
+}
 }
 
 bool TestEquation::testQuarticEquation(const double testDuration)
@@ -256,8 +269,9 @@ bool TestEquation::testQuarticEquation(const double testDuration)
 	{
 		a[n] = Random::scalar(-1000, 1000);
 
-		while (Numeric::isEqualEps(a[n]))
+		while (Numeric::isEqualEps(a[n])) {
 			a[n] = Random::scalar(-1000, 1000);
+}
 
 		b[n] = Random::scalar(-1000, 1000);
 		c[n] = Random::scalar(-1000, 1000);
@@ -273,26 +287,29 @@ bool TestEquation::testQuarticEquation(const double testDuration)
 
 	do
 	{
-		for (unsigned int n = 0u; n < constIterations; ++n)
+		for (unsigned int n = 0u; n < constIterations; ++n) {
 			value += Equation::solveQuartic(a[n], b[n], c[n], d[n], e[n], x);
+}
 
 		++iterations;
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (value % 2u == 0u)
+	if (value % 2u == 0u) {
 		Log::info() << "Performance: " << timer.yseconds() / double(constIterations * iterations) << "mys";
-	else
+	} else {
 		Log::info() << "Performance: " << timer.yseconds() / double(constIterations * iterations) << "mys";
+}
 
 	const double validPercent = validateQuarticEquation(testDuration);
 
 	Log::info() << "Validation: " << String::toAString(validPercent * 100.0, 1u) << "% succeeded.";
 
-	if (std::is_same<Scalar, float>::value)
+	if (std::is_same<Scalar, float>::value) {
 		return validPercent >= 0.90;
-	else
+	} else {
 		return validPercent >= 0.99;
+}
 }
 
 double TestEquation::validateLinearEquation(const double testDuration)
@@ -313,8 +330,9 @@ double TestEquation::validateLinearEquation(const double testDuration)
 		{
 			Scalar a = Random::scalar(-1000, 1000);
 
-			while (Numeric::isEqualEps(a))
+			while (Numeric::isEqualEps(a)) {
 				a = Random::scalar(-1000, 1000);
+}
 
 			const Scalar b = Random::scalar(-1000, 1000);
 
@@ -322,8 +340,9 @@ double TestEquation::validateLinearEquation(const double testDuration)
 
 			if (Equation::solveLinear(a, b, x))
 			{
-				if (Numeric::isNotWeakEqualEps(a * x + b))
+				if (Numeric::isNotWeakEqualEps(a * x + b)) {
 					++invalidIterations;
+}
 			}
 
 			++iterations;
@@ -353,8 +372,9 @@ double TestEquation::validateQuadraticEquation(const double testDuration)
 		{
 			Scalar a = Random::scalar(-1000, 1000);
 
-			while (Numeric::isEqualEps(a))
+			while (Numeric::isEqualEps(a)) {
 				a = Random::scalar(-1000, 1000);
+}
 
 			const Scalar b = Random::scalar(-1000, 1000);
 			const Scalar c = Random::scalar(-1000, 1000);
@@ -363,8 +383,9 @@ double TestEquation::validateQuadraticEquation(const double testDuration)
 
 			if (Equation::solveQuadratic(a, b, c, x1, x2))
 			{
-				if (Numeric::isNotWeakEqualEps(a * x1 * x1 + b * x1 + c) || Numeric::isNotWeakEqualEps(a * x2 * x2 + b * x2 + c))
+				if (Numeric::isNotWeakEqualEps(a * x1 * x1 + b * x1 + c) || Numeric::isNotWeakEqualEps(a * x2 * x2 + b * x2 + c)) {
 					++invalidIterations;
+}
 			}
 
 			++iterations;
@@ -394,8 +415,9 @@ double TestEquation::validateCubicEquation(const double testDuration)
 		{
 			Scalar a = Random::scalar(-1000, 1000);
 
-			while (Numeric::isEqualEps(a))
+			while (Numeric::isEqualEps(a)) {
 				a = Random::scalar(-1000, 1000);
+}
 
 			const Scalar b = Random::scalar(-1000, 1000);
 			const Scalar c = Random::scalar(-1000, 1000);
@@ -407,21 +429,24 @@ double TestEquation::validateCubicEquation(const double testDuration)
 
 			if (solutions == 1u)
 			{
-				if (Numeric::isWeakEqualEps(a * x1 * x1 * x1 + b * x1 * x1 + c * x1 + d))
+				if (Numeric::isWeakEqualEps(a * x1 * x1 * x1 + b * x1 * x1 + c * x1 + d)) {
 					++validIterations;
+}
 			}
 			else if (solutions == 2u)
 			{
 				if (Numeric::isWeakEqualEps(a * x1 * x1 * x1 + b * x1 * x1 + c * x1 + d)
-							&& Numeric::isWeakEqualEps(a * x2 * x2 * x2 + b * x2 * x2 + c * x2 + d))
+							&& Numeric::isWeakEqualEps(a * x2 * x2 * x2 + b * x2 * x2 + c * x2 + d)) {
 					++validIterations;
+}
 			}
 			else if (solutions == 3u)
 			{
 				if (Numeric::isWeakEqualEps(a * x1 * x1 * x1 + b * x1 * x1 + c * x1 + d)
 							&& Numeric::isWeakEqualEps(a * x2 * x2 * x2 + b * x2 * x2 + c * x2 + d)
-							&& Numeric::isWeakEqualEps(a * x3 * x3 * x3 + b * x3 * x3 + c * x3 + d))
+							&& Numeric::isWeakEqualEps(a * x3 * x3 * x3 + b * x3 * x3 + c * x3 + d)) {
 					++validIterations;
+}
 			}
 
 			++iterations;
@@ -451,8 +476,9 @@ double TestEquation::validateQuarticEquation(const double testDuration)
 		{
 			Scalar a = Random::scalar(-1000, 1000);
 
-			while (Numeric::isEqualEps(a))
+			while (Numeric::isEqualEps(a)) {
 				a = Random::scalar(-1000, 1000);
+}
 
 			const Scalar b = Random::scalar(-1000, 1000);
 			const Scalar c = Random::scalar(-1000, 1000);
@@ -465,29 +491,33 @@ double TestEquation::validateQuarticEquation(const double testDuration)
 
 			if (solutions == 1u)
 			{
-				if (Numeric::isNotWeakEqualEps(a * x[0] * x[0] * x[0] * x[0] + b * x[0] * x[0] * x[0] + c * x[0] * x[0] + d * x[0] + e))
+				if (Numeric::isNotWeakEqualEps(a * x[0] * x[0] * x[0] * x[0] + b * x[0] * x[0] * x[0] + c * x[0] * x[0] + d * x[0] + e)) {
 					++invalidIterations;
+}
 			}
 			else if (solutions == 2u)
 			{
 				if (Numeric::isNotWeakEqualEps(a * x[0] * x[0] * x[0] * x[0] + b * x[0] * x[0] * x[0] + c * x[0] * x[0] + d * x[0] + e)
-							|| Numeric::isNotWeakEqualEps(a * x[1] * x[1] * x[1] * x[1] + b * x[1] * x[1] * x[1] + c * x[1] * x[1] + d * x[1] + e))
+							|| Numeric::isNotWeakEqualEps(a * x[1] * x[1] * x[1] * x[1] + b * x[1] * x[1] * x[1] + c * x[1] * x[1] + d * x[1] + e)) {
 					++invalidIterations;
+}
 			}
 			else if (solutions == 3u)
 			{
 				if (Numeric::isNotWeakEqualEps(a * x[0] * x[0] * x[0] * x[0] + b * x[0] * x[0] * x[0] + c * x[0] * x[0] + d * x[0] + e)
 							|| Numeric::isNotWeakEqualEps(a * x[1] * x[1] * x[1] * x[1] + b * x[1] * x[1] * x[1] + c * x[1] * x[1] + d * x[1] + e)
-							|| Numeric::isNotWeakEqualEps(a * x[2] * x[2] * x[2] * x[2] + b * x[2] * x[2] * x[2] + c * x[2] * x[2] + d * x[2] + e))
+							|| Numeric::isNotWeakEqualEps(a * x[2] * x[2] * x[2] * x[2] + b * x[2] * x[2] * x[2] + c * x[2] * x[2] + d * x[2] + e)) {
 					++invalidIterations;
+}
 			}
 			else if (solutions == 4u)
 			{
 				if (Numeric::isNotWeakEqualEps(a * x[0] * x[0] * x[0] * x[0] + b * x[0] * x[0] * x[0] + c * x[0] * x[0] + d * x[0] + e)
 							|| Numeric::isNotWeakEqualEps(a * x[1] * x[1] * x[1] * x[1] + b * x[1] * x[1] * x[1] + c * x[1] * x[1] + d * x[1] + e)
 							|| Numeric::isNotWeakEqualEps(a * x[2] * x[2] * x[2] * x[2] + b * x[2] * x[2] * x[2] + c * x[2] * x[2] + d * x[2] + e)
-							|| Numeric::isNotWeakEqualEps(a * x[3] * x[3] * x[3] * x[3] + b * x[3] * x[3] * x[3] + c * x[3] * x[3] + d * x[3] + e))
+							|| Numeric::isNotWeakEqualEps(a * x[3] * x[3] * x[3] * x[3] + b * x[3] * x[3] * x[3] + c * x[3] * x[3] + d * x[3] + e)) {
 					++invalidIterations;
+}
 			}
 
 			++iterations;

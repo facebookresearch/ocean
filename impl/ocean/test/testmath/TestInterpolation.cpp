@@ -212,8 +212,9 @@ bool TestInterpolation::testBilinear(const double testDuration)
 
 			const Scalar test = v00 * tx_ * ty_ + v01 * tx * ty_ + v10 * tx_ * ty + v11 * tx * ty;
 
-			if (Numeric::isEqual(result, test, epsilon))
+			if (Numeric::isEqual(result, test, epsilon)) {
 				validIterations++;
+}
 
 			iterations++;
 		}
@@ -262,8 +263,9 @@ bool TestInterpolation::testBilinearSubset(const double testDuration)
 			const bool b10 = RandomI::random(1u) == 0u ? true : false;
 			const bool b11 = RandomI::random(1u) == 0u ? true : false;
 
-			if (!b00 && !b01 && !b10 && !b11)
+			if (!b00 && !b01 && !b10 && !b11) {
 				b00 = true;
+}
 
 			const Scalar result = Interpolation::bilinear(v00, v01, v10, v11, b00, b01, b10, b11, tx, ty);
 
@@ -279,8 +281,9 @@ bool TestInterpolation::testBilinearSubset(const double testDuration)
 
 				const Scalar test = v00 * t_ + v11 * t;
 
-				if (Numeric::isEqual(result, test, epsilon))
+				if (Numeric::isEqual(result, test, epsilon)) {
 					validIterations++;
+}
 			}
 			else if (!b00 && !b11 && b01 && b10)
 			{
@@ -297,8 +300,9 @@ bool TestInterpolation::testBilinearSubset(const double testDuration)
 
 				const Scalar test = v10 * t_ + v01 * t;
 
-				if (Numeric::isEqual(result, test, epsilon))
+				if (Numeric::isEqual(result, test, epsilon)) {
 					validIterations++;
+}
 			}
 			else
 			{
@@ -310,29 +314,33 @@ bool TestInterpolation::testBilinearSubset(const double testDuration)
 
 				Scalar top = 0, bottom = 0, test = 0;
 
-				if (b00 && b01)
+				if (b00 && b01) {
 					top = v00 * tx_ + v01 * tx;
-				else if (b00)
+				} else if (b00) {
 					top = v00;
-				else if (b01)
+				} else if (b01) {
 					top = v01;
+}
 
-				if (b10 && b11)
+				if (b10 && b11) {
 					bottom = v10 * tx_ + v11 * tx;
-				else if (b10)
+				} else if (b10) {
 					bottom = v10;
-				else if (b11)
+				} else if (b11) {
 					bottom = v11;
+}
 
-				if ((b00 || b01) && (b10 || b11))
+				if ((b00 || b01) && (b10 || b11)) {
 					test = top * ty_ + bottom * ty;
-				else if (b00 || b01)
+				} else if (b00 || b01) {
 					test = top;
-				else if (b10 || b11)
+				} else if (b10 || b11) {
 					test = bottom;
+}
 
-				if (Numeric::isEqual(result, test, epsilon))
+				if (Numeric::isEqual(result, test, epsilon)) {
 					validIterations++;
+}
 			}
 
 			iterations++;

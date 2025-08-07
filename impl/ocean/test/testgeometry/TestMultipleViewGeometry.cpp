@@ -218,10 +218,11 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 {
 	ocean_assert(testDuration > 0.0);
 
-	if (addGaussianNoise)
+	if (addGaussianNoise) {
 		Log::info() << "Projective reconstruction with 6 Gaussian noised point correspondences from three views (is expected to fail):";
-	else
+	} else {
 		Log::info() << "Projective reconstruction with 6 faultless point correspondences from three views:";
+}
 
 	const size_t points = 6u;
 
@@ -243,8 +244,9 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 
 		const PinholeCamera pinholeCamera(Random::random(600, 800), Random::random(600, 800), Numeric::deg2rad(Random::scalar(30, 70)));
 
-		if (!generatedImagePointGroups(pinholeCamera, points, 3u, imagePointsPerPose, sigma, &centerObjectPoints))
+		if (!generatedImagePointGroups(pinholeCamera, points, 3u, imagePointsPerPose, sigma, &centerObjectPoints)) {
 			continue;
+}
 
 		HomogenousMatrix4 projectiveMatrix0, projectiveMatrix1, projectiveMatrix2;
 		HomogenousMatrices4 projectionIF;
@@ -267,8 +269,9 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 
 			SquareMatrix3 intrinsic;
 			HomogenousMatrices4 posesIF(3);
-			if (!Geometry::MultipleViewGeometry::calibrateFromProjectionsMatricesIF(ConstArrayAccessor<HomogenousMatrix4>(transformationIFs), pinholeCamera.width(), pinholeCamera.height(), intrinsic, posesIF.data()))
+			if (!Geometry::MultipleViewGeometry::calibrateFromProjectionsMatricesIF(ConstArrayAccessor<HomogenousMatrix4>(transformationIFs), pinholeCamera.width(), pinholeCamera.height(), intrinsic, posesIF.data())) {
 				continue;
+}
 
 			++validIterations;
 
@@ -277,8 +280,9 @@ bool TestMultipleViewGeometry::testProjectiveReconstructionFrom3Views(bool addGa
 			Scalar maxSquaredMetricError = evaluateReprojectionError(imagePointsPerPose, calibratedCamera, posesIF);
 			maxProjectionErrorsMetric.push_back(Numeric::sqrt(maxSquaredMetricError));
 
-			if (maxSquaredMetricError > (addGaussianNoise ? (2.5 * 2.5) : (1.5 * 1.5)))
+			if (maxSquaredMetricError > (addGaussianNoise ? (2.5 * 2.5) : (1.5 * 1.5))) {
 				++failedMetric;
+}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
@@ -305,10 +309,11 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(views > 2);
 
-	if (addGaussianNoise)
+	if (addGaussianNoise) {
 		Log::info() << "Projective reconstruction with 6 Gaussian noised point correspondences from " << views << " views: (is expected to fail)";
-	else
+	} else {
 		Log::info() << "Projective reconstruction with 6 faultless point correspondences from " << views << " views:";
+}
 
 	const size_t points = 6u;
 
@@ -330,8 +335,9 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 
 		const PinholeCamera pinholeCamera(Random::random(600, 800), Random::random(600, 800), Numeric::deg2rad(Random::scalar(30, 70)));
 
-		if (!generatedImagePointGroups(pinholeCamera, points, views, imagePointsPerPose, sigma, &centerObjectPoints))
+		if (!generatedImagePointGroups(pinholeCamera, points, views, imagePointsPerPose, sigma, &centerObjectPoints)) {
 			continue;
+}
 
 		HomogenousMatrices4 projectionIF(views);
 		NonconstArrayAccessor<HomogenousMatrix4> projAccessor(projectionIF, views);
@@ -346,8 +352,9 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 		{
 			SquareMatrix3 intrinsic;
 			HomogenousMatrices4 posesIF(views);
-			if (!Geometry::MultipleViewGeometry::calibrateFromProjectionsMatricesIF(ConstArrayAccessor<HomogenousMatrix4>(projectionIF), pinholeCamera.width(), pinholeCamera.height(), intrinsic, posesIF.data()))
+			if (!Geometry::MultipleViewGeometry::calibrateFromProjectionsMatricesIF(ConstArrayAccessor<HomogenousMatrix4>(projectionIF), pinholeCamera.width(), pinholeCamera.height(), intrinsic, posesIF.data())) {
 				continue;
+}
 
 			++validIterations;
 
@@ -356,8 +363,9 @@ bool TestMultipleViewGeometry::testProjectiveReconstruction(const unsigned int v
 			Scalar maxSquaredMetricError = evaluateReprojectionError(imagePointsPerPose, calibratedCamera, posesIF);
 			maxProjectionErrorsMetric.push_back(Numeric::sqrt(maxSquaredMetricError));
 
-			if (maxSquaredMetricError > (addGaussianNoise ? (2.5 * 2.5) : (1.5 * 1.5)))
+			if (maxSquaredMetricError > (addGaussianNoise ? (2.5 * 2.5) : (1.5 * 1.5))) {
 				++failedMetric;
+}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
@@ -408,8 +416,9 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 
 			const PinholeCamera pinholeCamera(Random::random(600, 800), Random::random(600, 800), Numeric::deg2rad(Random::scalar(30, 70)));
 
-			if (!generatedImagePointGroups(pinholeCamera, points, views, imagePointsPerPose, 0, &centerObjectPoints))
+			if (!generatedImagePointGroups(pinholeCamera, points, views, imagePointsPerPose, 0, &centerObjectPoints)) {
 				continue;
+}
 
 			// randomly select some image points to disturb
 			std::vector<Geometry::ImagePoints> distortedImagePointsPerPose(views);
@@ -455,8 +464,9 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 				// valid only with undistorted image points
 				SquareMatrix3 intrinsic;
 				HomogenousMatrices4 posesIF(views);
-				if (!Geometry::MultipleViewGeometry::calibrateFromProjectionsMatricesIF(ConstArrayAccessor<HomogenousMatrix4>(projectionIF), pinholeCamera.width(), pinholeCamera.height(), intrinsic, posesIF.data()))
+				if (!Geometry::MultipleViewGeometry::calibrateFromProjectionsMatricesIF(ConstArrayAccessor<HomogenousMatrix4>(projectionIF), pinholeCamera.width(), pinholeCamera.height(), intrinsic, posesIF.data())) {
 					continue;
+}
 
 				++validIterations;
 				const PinholeCamera calibratedCamera(intrinsic, pinholeCamera.width(), pinholeCamera.height());
@@ -464,8 +474,9 @@ bool TestMultipleViewGeometry::testFaultyProjectiveReconstruction(const unsigned
 				Scalar maxSquaredMetricError = evaluateReprojectionError(imagePointsPerPose, calibratedCamera, posesIF);
 				maxProjectionErrorsMetric.push_back(Numeric::sqrt(maxSquaredMetricError));
 
-				if (maxSquaredMetricError > (1.5 * 1.5))
+				if (maxSquaredMetricError > (1.5 * 1.5)) {
 					++failedMetric;
+}
 			}
 		}
 		while (startTimestamp + testDuration > Timestamp(true));
@@ -596,8 +607,9 @@ bool TestMultipleViewGeometry::generatedImagePointGroups(const PinholeCamera& pi
 		}
 	}
 
-	if (objectPoints)
+	if (objectPoints) {
 		*objectPoints = centerObjectPoints;
+}
 
 #endif
 
@@ -630,8 +642,9 @@ Scalar TestMultipleViewGeometry::evaluateReprojectionError(const std::vector<Vec
 {
 	const size_t views = imagePointsPerPose.size();
 
-	if (views == 0)
+	if (views == 0) {
 		return Numeric::maxValue();
+}
 
 	const size_t points = imagePointsPerPose[0].size();
 
