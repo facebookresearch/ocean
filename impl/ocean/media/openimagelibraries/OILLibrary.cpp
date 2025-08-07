@@ -59,14 +59,17 @@ MediumRef OILLibrary::newMedium(const std::string& url, const Medium::Type type,
 {
 	const ScopedLock scopedLock(lock);
 
-	if (type == Medium::BUFFER_IMAGE)
+	if (type == Medium::BUFFER_IMAGE) {
 		return newBufferImage(url, useExclusive);
+}
 
-	if (type == Medium::IMAGE_SEQUENCE)
+	if (type == Medium::IMAGE_SEQUENCE) {
 		return newImageSequence(url, useExclusive);
+}
 
-	if (type == Medium::IMAGE || type == Medium::FRAME_MEDIUM)
+	if (type == Medium::IMAGE || type == Medium::FRAME_MEDIUM) {
 		return newImage(url, useExclusive);
+}
 
 	return MediumRef();
 }

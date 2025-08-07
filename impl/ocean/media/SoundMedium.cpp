@@ -36,10 +36,12 @@ bool SoundMedium::SortableSoundType::operator<(const SortableSoundType& right) c
 		int leftDifference = abs(int(preferableSoundType.channels()) - int(actualSoundType.channels()));
 		int rightDifference = abs(int(preferableSoundType.channels()) - int(right.actualSoundType.channels()));
 
-		if (leftDifference < rightDifference)
+		if (leftDifference < rightDifference) {
 			return true;
-		if (rightDifference < leftDifference)
+}
+		if (rightDifference < leftDifference) {
 			return false;
+}
 	}
 
 	if (preferableSoundType.frequency() != 0)
@@ -47,10 +49,12 @@ bool SoundMedium::SortableSoundType::operator<(const SortableSoundType& right) c
 		SoundFrequency leftDifference = NumericT<SoundFrequency>::abs(preferableSoundType.frequency() - actualSoundType.frequency());
 		SoundFrequency rightDifference = NumericT<SoundFrequency>::abs(preferableSoundType.frequency() - right.actualSoundType.frequency());
 
-		if (leftDifference < rightDifference)
+		if (leftDifference < rightDifference) {
 			return true;
-		if (rightDifference < leftDifference)
+}
+		if (rightDifference < leftDifference) {
 			return false;
+}
 	}
 
 	return false;
@@ -74,8 +78,9 @@ bool SoundMedium::setPreferredSoundChannels(const unsigned int channels)
 
 bool SoundMedium::setPreferredSoundFrequency(const SoundFrequency frequency)
 {
-	if (frequency < 0 || frequency > 1000000)
+	if (frequency < 0 || frequency > 1000000) {
 		return false;
+}
 
 	mediumPreferredSoundType.setFrequency(frequency);
 	return true;

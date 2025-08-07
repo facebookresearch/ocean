@@ -138,8 +138,9 @@ std::string MessageQueue::pop(const Id id, const double timeout)
 {
 	std::string message, value;
 
-	if (front(id, timeout, message, value))
+	if (front(id, timeout, message, value)) {
 		pop(id);
+}
 
 	return message;
 }

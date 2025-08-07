@@ -249,8 +249,9 @@ bool HTTPClient::invokeGetRequest(const std::string& uri, Buffer& data, const do
 
 			if (!buffer.empty())
 			{
-				if (appendData(responseHeader, responseBuffer, responseBufferPosition, (char*)buffer.data(), buffer.size(), responsePendingChunkSize))
+				if (appendData(responseHeader, responseBuffer, responseBufferPosition, (char*)buffer.data(), buffer.size(), responsePendingChunkSize)) {
 					break;
+}
 
 				startTimestamp.toNow();
 			}
@@ -286,8 +287,9 @@ bool HTTPClient::invokeGetRequest(const std::string& uri, Buffer& data, const do
 
 				if (buffer.size() > responseHeader.length())
 				{
-					if (appendData(responseHeader, responseBuffer, responseBufferPosition, (char*)buffer.data() + responseHeader.length(), buffer.size() - responseHeader.length(), responsePendingChunkSize))
+					if (appendData(responseHeader, responseBuffer, responseBufferPosition, (char*)buffer.data() + responseHeader.length(), buffer.size() - responseHeader.length(), responsePendingChunkSize)) {
 						break;
+}
 				}
 
 				startTimestamp.toNow();
@@ -505,8 +507,9 @@ bool HTTPClient::appendData(const HTTPHeader& header, Buffer& buffer, size_t& bu
 	ocean_assert(bufferPosition <= buffer.size());
 	ocean_assert(header.transferEncodingChunked() || pendingChunkSize == 0);
 
-	if (buffer.empty() && header.contentLength() != 0)
+	if (buffer.empty() && header.contentLength() != 0) {
 		buffer.resize(header.contentLength());
+}
 
 	size_t iterationSize = 0;
 

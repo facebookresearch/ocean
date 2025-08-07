@@ -208,10 +208,11 @@ void BitmapWindow::onPaint(wxPaintEvent& event)
 
 		case DM_SHRINK_TO_SCREEN:
 		{
-			if (bitmapWidth <= clientWidth && bitmapHeight <= clientHeight)
+			if (bitmapWidth <= clientWidth && bitmapHeight <= clientHeight) {
 				paintCenter(dc, clientWidth, clientHeight, bitmapWidth, bitmapHeight);
-			else
+			} else {
 				paintFit2Client(dc, clientWidth, clientHeight);
+}
 
 			break;
 		}
@@ -281,8 +282,9 @@ void BitmapWindow::onMouseWheel(wxMouseEvent& event)
 
 	TemporaryScopedLock scopedLock(bitmapLock_);
 
-	if (!bitmap_.IsOk())
+	if (!bitmap_.IsOk()) {
 		return;
+}
 
 	const int bitmapWidth = bitmap_.GetWidth();
 	const int bitmapHeight = bitmap_.GetHeight();
