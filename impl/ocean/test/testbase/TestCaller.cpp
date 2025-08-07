@@ -343,10 +343,11 @@ bool TestCaller::test()
 
 	Log::info() << " ";
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Caller test succeeded.";
-	else
+	} else {
 		Log::info() << "Caller test FAILED!";
+}
 
 	return allSucceeded;
 }
@@ -492,10 +493,11 @@ bool TestCaller::testCallerMembers()
 	const bool allSucceeded = result0 == 0 && result1 == 1 && result2 == 2 && result3 == 3 && result4 == 4 && result5 == 5 && result6 == 6 && result7 == 7 && result8 == 8 && result9 == 9
 								&& result10 == 10 && result11 == 11 && result12 == 12 && result13 == 13 && result14 == 14 && result15 == 15 && result16 == 16 && result17 == 17 && result18 == 18 && result19 == 19 && result20 == 20;
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Validation: succeeded.";
-	else
+	} else {
 		Log::info() << "Validation: FAILED.";
+}
 
 	return allSucceeded;
 }
@@ -622,10 +624,11 @@ bool TestCaller::testCallerStatics()
 	const bool allSucceeded = result0 == 0 && result1 == 1 && result2 == 2 && result3 == 3 && result4 == 4 && result5 == 5 && result6 == 6 && result7 == 7 && result8 == 8 && result9 == 9
 									&& result10 == 10 && result11 == 11 && result12 == 12 && result13 == 13 && result14 == 14 && result15 == 15 && result16 == 16 && result17 == 17 && result18 == 18 && result19 == 19 && result20 == 20;
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Validation: succeeded.";
-	else
+	} else {
 		Log::info() << "Validation: FAILED.";
+}
 
 	return allSucceeded;
 }
@@ -650,19 +653,24 @@ bool TestCaller::testCallerParameters()
 		mixedCallerStatic0.setParameter<std::string>(3u, "abcd");
 		mixedCallerStatic0();
 
-		if (parameter0 != 7)
+		if (parameter0 != 7) {
 			allSucceeded = false;
-		if (parameter1 != false)
+}
+		if (parameter1 != false) {
 			allSucceeded = false;
-		if (parameter2 != 15.5f)
+}
+		if (parameter2 != 15.5f) {
 			allSucceeded = false;
-		if (parameter3 != "test") // the (outside) parameter has not chaned
+}
+		if (parameter3 != "test") { // the (outside) parameter has not chaned
 			allSucceeded = false;
+}
 
 		const std::string parameter3_determined = mixedCallerStatic0.parameter<std::string>(3u);
 
-		if (parameter3_determined != "abcd")
+		if (parameter3_determined != "abcd") {
 			allSucceeded = false;
+}
 	}
 
 	{
@@ -679,18 +687,24 @@ bool TestCaller::testCallerParameters()
 		MixedCaller mixedCallerStatic1 = MixedCaller::createStatic<int, bool*, float*, double&, std::string, std::string&, const Object&>(&functionIndividualParameters1, parameter0, &parameter1, &parameter2, parameter3, parameter4, parameter5, parameter6);
 		mixedCallerStatic1();
 
-		if (parameter0 != 7)
+		if (parameter0 != 7) {
 			allSucceeded = false;
-		if (parameter1 != false)
+}
+		if (parameter1 != false) {
 			allSucceeded = false;
-		if (parameter2 != 25.2f)
+}
+		if (parameter2 != 25.2f) {
 			allSucceeded = false;
-		if (parameter3 != 27.4)
+}
+		if (parameter3 != 27.4) {
 			allSucceeded = false;
-		if (parameter4 != "test")
+}
+		if (parameter4 != "test") {
 			allSucceeded = false;
-		if (parameter5 != "tset")
+}
+		if (parameter5 != "tset") {
 			allSucceeded = false;
+}
 	}
 
 	{
@@ -706,19 +720,24 @@ bool TestCaller::testCallerParameters()
 		mixedCallerStatic0.setParameter<std::string>(3u, "abcd");
 		mixedCallerStatic0();
 
-		if (parameter0 != 7)
+		if (parameter0 != 7) {
 			allSucceeded = false;
-		if (parameter1 != false)
+}
+		if (parameter1 != false) {
 			allSucceeded = false;
-		if (parameter2 != 15.5f)
+}
+		if (parameter2 != 15.5f) {
 			allSucceeded = false;
-		if (parameter3 != "test") // the (outside) parameter has not chaned
+}
+		if (parameter3 != "test") { // the (outside) parameter has not chaned
 			allSucceeded = false;
+}
 
 		const std::string parameter3_determined = mixedCallerStatic0.parameter<std::string>(3u);
 
-		if (parameter3_determined != "abcd")
+		if (parameter3_determined != "abcd") {
 			allSucceeded = false;
+}
 	}
 
 	{
@@ -736,18 +755,24 @@ bool TestCaller::testCallerParameters()
 		MixedCaller mixedCallerStatic1 = MixedCaller::create<Object, int, bool*, float*, double&, std::string, std::string&, const Object&>(object, &Object::nonConstantFunctionIndividualParameters1, parameter0, &parameter1, &parameter2, parameter3, parameter4, parameter5, parameter6);
 		mixedCallerStatic1();
 
-		if (parameter0 != 7)
+		if (parameter0 != 7) {
 			allSucceeded = false;
-		if (parameter1 != false)
+}
+		if (parameter1 != false) {
 			allSucceeded = false;
-		if (parameter2 != 25.2f)
+}
+		if (parameter2 != 25.2f) {
 			allSucceeded = false;
-		if (parameter3 != 27.4)
+}
+		if (parameter3 != 27.4) {
 			allSucceeded = false;
-		if (parameter4 != "test")
+}
+		if (parameter4 != "test") {
 			allSucceeded = false;
-		if (parameter5 != "tset")
+}
+		if (parameter5 != "tset") {
 			allSucceeded = false;
+}
 	}
 
 	{
@@ -763,19 +788,24 @@ bool TestCaller::testCallerParameters()
 		mixedCallerStatic0.setParameter<std::string>(3u, "abcd");
 		mixedCallerStatic0();
 
-		if (parameter0 != 7)
+		if (parameter0 != 7) {
 			allSucceeded = false;
-		if (parameter1 != false)
+}
+		if (parameter1 != false) {
 			allSucceeded = false;
-		if (parameter2 != 15.5f)
+}
+		if (parameter2 != 15.5f) {
 			allSucceeded = false;
-		if (parameter3 != "test") // the (outside) parameter has not chaned
+}
+		if (parameter3 != "test") { // the (outside) parameter has not chaned
 			allSucceeded = false;
+}
 
 		const std::string parameter3_determined = mixedCallerStatic0.parameter<std::string>(3u);
 
-		if (parameter3_determined != "abcd")
+		if (parameter3_determined != "abcd") {
 			allSucceeded = false;
+}
 	}
 
 	{
@@ -793,24 +823,31 @@ bool TestCaller::testCallerParameters()
 		MixedCaller mixedCallerStatic1 = MixedCaller::create<Object, int, bool*, float*, double&, std::string, std::string&, const Object&>(object, &Object::constantFunctionIndividualParameters1, parameter0, &parameter1, &parameter2, parameter3, parameter4, parameter5, parameter6);
 		mixedCallerStatic1();
 
-		if (parameter0 != 7)
+		if (parameter0 != 7) {
 			allSucceeded = false;
-		if (parameter1 != false)
+}
+		if (parameter1 != false) {
 			allSucceeded = false;
-		if (parameter2 != 25.2f)
+}
+		if (parameter2 != 25.2f) {
 			allSucceeded = false;
-		if (parameter3 != 27.4)
+}
+		if (parameter3 != 27.4) {
 			allSucceeded = false;
-		if (parameter4 != "test")
+}
+		if (parameter4 != "test") {
 			allSucceeded = false;
-		if (parameter5 != "tset")
+}
+		if (parameter5 != "tset") {
 			allSucceeded = false;
+}
 	}
 
-	if (allSucceeded)
+	if (allSucceeded) {
 		Log::info() << "Validation: succeeded.";
-	else
+	} else {
 		Log::info() << "Validation: FAILED!";
+}
 
 	return allSucceeded;
 }

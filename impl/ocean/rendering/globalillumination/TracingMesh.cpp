@@ -205,8 +205,9 @@ bool TracingMesh::Octree::hasIntersection(const Line3& ray, const HomogenousMatr
 
 TracingMesh::Octree::~Octree()
 {
-	for (unsigned int n = 0u; n < 8u; ++n)
+	for (unsigned int n = 0u; n < 8u; ++n) {
 		delete octreeChildren[n];
+}
 }
 
 TracingMesh::TracingMesh() :
@@ -231,8 +232,9 @@ void TracingMesh::setTriangles(const Vertices& vertices, const Normals& normals,
 	tracingTriangles.reserve(faces.size());
 	tracingNormals.reserve(faces.size() * 3);
 
-	if (!textureCoordinates.empty())
+	if (!textureCoordinates.empty()) {
 		tracingTextureCoordinates.reserve(tracingNormals.size());
+}
 
 	if (normals.empty())
 	{
@@ -489,8 +491,9 @@ void TracingMesh::setTriangleStrips(const Vertices& vertices, const Normals& nor
 					tracingTextureCoordinates.push_back(textureCoordinates[index2]);
 				}
 
-				if (n + 1 >= i->size())
+				if (n + 1 >= i->size()) {
 					break;
+}
 
 				take0 = n + 1;
 				take1 = n + 0;
