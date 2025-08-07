@@ -634,8 +634,9 @@ bool Grid::image2grid(const PinholeCamera& pinholeCamera, const HomogenousMatrix
 	ocean_assert(pinholeCamera.isValid() && pose.isValid());
 
 	Vector3 planeCoordinate;
-	if (!image2plane(pinholeCamera, pose, imageCoordinate, planeCoordinate))
+	if (!image2plane(pinholeCamera, pose, imageCoordinate, planeCoordinate)) {
 		return false;
+}
 
 	gridCoordinate = plane2grid<tVirtual>(planeCoordinate);
 
@@ -741,10 +742,11 @@ inline Vector3 Grid::grid2plane(const Vector2& gridCoordinate) const
 {
 	ocean_assert(isValid());
 
-	if constexpr (tVirtual)
+	if constexpr (tVirtual) {
 		return planeTvirtualGrid * Vector3(gridCoordinate, 0);
-	else
+	} else {
 		return planeTgrid * Vector3(gridCoordinate, 0);
+}
 }
 
 inline bool Grid::operator==(const Grid& grid) const

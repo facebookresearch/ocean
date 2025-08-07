@@ -1563,17 +1563,19 @@ bool Homography::homographyMatrixPlaneXY(const ImagePoint* objectPoints, const I
 	}
 
 	Matrix u, w, v;
-	if (!matrix.singularValueDecomposition(u, w, v))
+	if (!matrix.singularValueDecomposition(u, w, v)) {
 		return false;
+}
 
 	unsigned int lowestSingularValueIndex = (unsigned int)(-1);
 
-	for (unsigned int n = 0; n < w.rows(); ++n)
+	for (unsigned int n = 0; n < w.rows(); ++n) {
 		if (Numeric::isEqualEps(w(n)))
 		{
 			lowestSingularValueIndex = n;
 			break;
 		}
+}
 
 	lowestSingularValueIndex = min(lowestSingularValueIndex, (unsigned int)v.columns() - 1u);
 
@@ -1625,8 +1627,9 @@ bool Homography::isHomographyPlausible(unsigned int leftImageWidth, unsigned int
 	ocean_assert(!homography.isSingular());
 
 	SquareMatrix3 invHomography;
-	if (!homography.invert(invHomography))
+	if (!homography.invert(invHomography)) {
 		return false;
+}
 
 	// rightPoint = H * leftPoint
 	// leftPoint = (H^-1) * rightPoint
@@ -1639,8 +1642,9 @@ bool Homography::isHomographyPlausible(unsigned int leftImageWidth, unsigned int
 		homography * Vector2(Scalar(leftImageWidth), 0)
 	};
 
-	if (!Geometry::Utilities::isPolygonConvex(leftTransformedPoints, 4))
+	if (!Geometry::Utilities::isPolygonConvex(leftTransformedPoints, 4)) {
 		return false;
+}
 
 	const Vector2 rightTransformedPoints[4] =
 	{
@@ -1650,8 +1654,9 @@ bool Homography::isHomographyPlausible(unsigned int leftImageWidth, unsigned int
 		invHomography * Vector2(Scalar(rightImageWidth), 0)
 	};
 
-	if (!Utilities::isPolygonConvex(rightTransformedPoints, 4))
+	if (!Utilities::isPolygonConvex(rightTransformedPoints, 4)) {
 		return false;
+}
 
 	return true;
 }
@@ -1854,16 +1859,18 @@ bool Homography::extrinsicMatrix(const SquareMatrix3& intrinsic, const SquareMat
 bool Homography::distortionParameters(const ConstIndexedAccessor<HomogenousMatrix4>& extrinsics, const SquareMatrix3& intrinsic, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, Scalar& distortion2, Scalar& distortion4)
 {
 	ocean_assert(extrinsics.size() == objectPointGroups.size() && extrinsics.size() == imagePointGroups.size());
-	if (extrinsics.size() != objectPointGroups.size() || extrinsics.size() != imagePointGroups.size())
+	if (extrinsics.size() != objectPointGroups.size() || extrinsics.size() != imagePointGroups.size()) {
 		return false;
+}
 
 	const Scalar principalPointX = intrinsic(0, 2);
 	const Scalar principalPointY = intrinsic(1, 2);
 	const SquareMatrix3 invIntrinsic(intrinsic.inverted());
 
 	size_t totalPoints = 0;
-	for (size_t n = 0; n < objectPointGroups.size(); ++n)
+	for (size_t n = 0; n < objectPointGroups.size(); ++n) {
 		totalPoints += objectPointGroups[n].size();
+}
 
 	Matrix matrix(2 * totalPoints, 2);
 	Matrix result(2 * totalPoints, 1);
@@ -1879,8 +1886,9 @@ bool Homography::distortionParameters(const ConstIndexedAccessor<HomogenousMatri
 		const ImagePoints& iPoints = imagePointGroups[n];
 
 		ocean_assert(oPoints.size() == iPoints.size());
-		if (oPoints.size() != iPoints.size())
+		if (oPoints.size() != iPoints.size()) {
 			return false;
+}
 
 		const SquareMatrix3 combinedRotation(intrinsic * fcTw.rotationMatrix());
 		const Vector3 combinedTranslation(intrinsic * fcTw.translation());

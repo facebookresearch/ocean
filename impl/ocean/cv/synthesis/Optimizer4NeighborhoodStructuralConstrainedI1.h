@@ -297,8 +297,9 @@ void Optimizer4NeighborhoodStructuralConstrainedI1<tWeightFactor, tBorderFactor,
 						// the test position must lie inside the
 						if ((testPositionX == newPositionX && testPositionY == newPositionY)
 								|| testPositionX >= layerWidth || testPositionY >= layerHeight
-								|| layerMaskData[testPositionY * layerMaskStrideElements + testPositionX] != 0xFF)
+								|| layerMaskData[testPositionY * layerMaskStrideElements + testPositionX] != 0xFF) {
 							continue;
+}
 
 						const uint64_t testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, maxSpatialCost);
 						const uint64_t testColorCost = layerMapping.appearanceCost5x5<tChannels, tBorderFactor>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, layerFramePaddingElements, layerMaskPaddingElements);
@@ -454,8 +455,9 @@ void Optimizer4NeighborhoodStructuralConstrainedI1<tWeightFactor, tBorderFactor,
 
 						if ((testPositionX == newPositionX && testPositionY == newPositionY)
 								|| testPositionX >= layerWidth || testPositionY >= layerHeight
-								|| layerMaskData[testPositionY * layerMaskStrideElements + testPositionX] != 0xFF)
+								|| layerMaskData[testPositionY * layerMaskStrideElements + testPositionX] != 0xFF) {
 							continue;
+}
 
 						const uint64_t testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, maxSpatialCost);
 						const uint64_t testColorCost = layerMapping.appearanceCost5x5<tChannels, tBorderFactor>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, layerFramePaddingElements, layerMaskPaddingElements);

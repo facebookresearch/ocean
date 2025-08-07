@@ -189,8 +189,9 @@ class NonLinearOptimizationPlane::OnePoseOnePlaneData
 			bool frontObjectPoint;
 			const Vector2 projectedPoint(projectObjectPoint(externalModel, index, &frontObjectPoint));
 
-			if (onlyFrontObjectPoints_ && !frontObjectPoint)
+			if (onlyFrontObjectPoints_ && !frontObjectPoint) {
 				return false;
+}
 
 			const Vector2& measurementImagePoint = imagePointsSecond_[index];
 			const Vector2 error(projectedPoint - measurementImagePoint);

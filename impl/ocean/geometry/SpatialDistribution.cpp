@@ -506,8 +506,9 @@ Scalar SpatialDistribution::determineMinimalSqrDistance(const ImagePoint* imageP
 				{
 					const Scalar distance = point.sqrDistance(imagePoints[*i]);
 
-					if (distance < minDistance)
+					if (distance < minDistance) {
 						minDistance = distance;
+}
 				}
 			}
 		}
@@ -557,8 +558,9 @@ void SpatialDistribution::determineMinimalSqrDistances(const ImagePoint* imagePo
 					{
 						const Scalar distance = point.sqrDistance(imagePoints[*i]);
 
-						if (distance < minDistance)
+						if (distance < minDistance) {
 							minDistance = distance;
+}
 					}
 				}
 			}
@@ -689,8 +691,9 @@ void SpatialDistribution::determineMinimalSqrDistances(const ImagePoint* imagePo
 					{
 						const Scalar distance = point.sqrDistance(imagePoints[neighborIndex]);
 
-						if (distance < minDistance)
+						if (distance < minDistance) {
 							minDistance = distance;
+}
 					}
 				}
 			}

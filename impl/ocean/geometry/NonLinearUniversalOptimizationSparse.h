@@ -1088,18 +1088,21 @@ inline bool NonLinearUniversalOptimizationSparse::IndividualModelsIndividualMode
 		switch (tSecondModelSize)
 		{
 			case 1u:
-				if (!D.invertDiagonal())
+				if (!D.invertDiagonal()) {
 					return false;
+}
 				break;
 
 			case 3u:
-				if (!D.invertBlockDiagonal3())
+				if (!D.invertBlockDiagonal3()) {
 					return false;
+}
 				break;
 
 			default:
-				if (!D.invertBlockDiagonal(tSecondModelSize))
+				if (!D.invertBlockDiagonal(tSecondModelSize)) {
 					return false;
+}
 				break;
 		}
 
@@ -1130,18 +1133,21 @@ inline bool NonLinearUniversalOptimizationSparse::IndividualModelsIndividualMode
 		switch (tFirstModelSize)
 		{
 			case 1u:
-				if (!A.invertDiagonal())
+				if (!A.invertDiagonal()) {
 					return false;
+}
 				break;
 
 			case 3u:
-				if (!A.invertBlockDiagonal3())
+				if (!A.invertBlockDiagonal3()) {
 					return false;
+}
 				break;
 
 			default:
-				if (!A.invertBlockDiagonal(tFirstModelSize))
+				if (!A.invertBlockDiagonal(tFirstModelSize)) {
 					return false;
+}
 				break;
 		}
 

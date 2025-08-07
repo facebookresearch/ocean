@@ -111,17 +111,21 @@ std::string Device::translateMajorType(const MajorType majorType)
 
 Device::MajorType Device::translateMajorType(const std::string& majorType)
 {
-	if (majorType == "DEVICE_INVALID")
+	if (majorType == "DEVICE_INVALID") {
 		return DEVICE_INVALID;
+}
 
-	if (majorType == "DEVICE_MEASUREMENT")
+	if (majorType == "DEVICE_MEASUREMENT") {
 		return DEVICE_MEASUREMENT;
+}
 
-	if (majorType == "DEVICE_SENSOR")
+	if (majorType == "DEVICE_SENSOR") {
 		return DEVICE_SENSOR;
+}
 
-	if (majorType == "DEVICE_TRACKER")
+	if (majorType == "DEVICE_TRACKER") {
 		return DEVICE_TRACKER;
+}
 
 	ocean_assert(false && "Unknown major type!");
 	return DEVICE_INVALID;

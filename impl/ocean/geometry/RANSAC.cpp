@@ -487,8 +487,9 @@ bool RANSAC::plane(const ConstIndexedAccessor<ObjectPoint>& objectPoints, Random
 	ocean_assert(objectPoints.size() >= 3);
 	ocean_assert(iterations >= 1u);
 
-	if (objectPoints.size() < 3)
+	if (objectPoints.size() < 3) {
 		return false;
+}
 
 	Scalar maximalDistance = Numeric::maxValue();
 
@@ -497,8 +498,9 @@ bool RANSAC::plane(const ConstIndexedAccessor<ObjectPoint>& objectPoints, Random
 		const Vector3 medianObjectPoint = Utilities::medianObjectPoint(objectPoints);
 
 		Scalars sqrDistancesToMedian(objectPoints.size());
-		for (size_t n = 0; n < objectPoints.size(); ++n)
+		for (size_t n = 0; n < objectPoints.size(); ++n) {
 			sqrDistancesToMedian[n] = medianObjectPoint.sqrDistance(objectPoints[n]);
+}
 
 		const Scalar medianDistance = Numeric::sqrt(Median::median(sqrDistancesToMedian.data(), sqrDistancesToMedian.size()));
 
@@ -1553,8 +1555,9 @@ bool RANSAC::projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<Im
 		Lock lock;
 		worker->executeFunction(Worker::Function::createStatic(&projectiveReconstructionFrom6PointsIFSubset, &imagePointsPerPose, imagePointsPerPose.size(), &randomGenerator, posesIF, squarePixelErrorThreshold, objectPointsIF, &indices, &minSquareErrors, (Lock*)&lock, 0u, 0u), 0u, iterations, 9u, 10u, 5u);
 	}
-	else
+	else {
 		projectiveReconstructionFrom6PointsIFSubset(&imagePointsPerPose, imagePointsPerPose.size(), &randomGenerator, posesIF, squarePixelErrorThreshold, objectPointsIF, &indices, &minSquareErrors, nullptr, 0u, iterations);
+}
 
 	if (usedIndices != nullptr)
 	{
@@ -2468,8 +2471,9 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 			for (unsigned int c = 0; c < correspondences; ++c)
 			{
 				// we accept only object points lying in front of the camera
-				if ((poseIF * objectPoints[c]).z() > Numeric::eps() && imagePoints[c].sqrDistance(pinholeCamera.projectToImageIF<true>(poseIF, objectPoints[c], useDistortionParameters, zoom)) <= sqrPixelErrorThreshold)
+				if ((poseIF * objectPoints[c]).z() > Numeric::eps() && imagePoints[c].sqrDistance(pinholeCamera.projectToImageIF<true>(poseIF, objectPoints[c], useDistortionParameters, zoom)) <= sqrPixelErrorThreshold) {
 					bestIndices.push_back(c);
+}
 			}
 
 			ocean_assert(invertedCovariances.elements() == 0 || weights);
@@ -2897,8 +2901,9 @@ void RANSAC::projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAcces
 			{
 				maxCountInliers = indices.size();
 				*minSquareErrors = squareErrors;
-				for (size_t n = 0; n < posesIF->size(); ++n)
+				for (size_t n = 0; n < posesIF->size(); ++n) {
 					(*posesIF)[n] = std::move(candidateModels[n]);
+}
 
 				if (usedIndices != nullptr)
 				{

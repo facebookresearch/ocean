@@ -1047,8 +1047,9 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 							UniversalOptimization::SharedModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTH>::transformSharedModel),
 							UniversalOptimization::IndividualModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTH>::transformIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTH>::acceptModel),
-							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;
@@ -1072,8 +1073,9 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 							UniversalOptimization::SharedModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTHS>::transformSharedModel),
 							UniversalOptimization::IndividualModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTHS>::transformIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTHS>::acceptModel),
-							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;
@@ -1097,8 +1099,9 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 							UniversalOptimization::SharedModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_INTRINSIC_PARAMETERS>::transformSharedModel),
 							UniversalOptimization::IndividualModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_INTRINSIC_PARAMETERS>::transformIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_INTRINSIC_PARAMETERS>::acceptModel),
-							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;
@@ -1122,8 +1125,9 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 							UniversalOptimization::SharedModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION>::transformSharedModel),
 							UniversalOptimization::IndividualModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION>::transformIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION>::acceptModel),
-							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;
@@ -1147,8 +1151,9 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 							UniversalOptimization::SharedModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS>::transformSharedModel),
 							UniversalOptimization::IndividualModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS>::transformIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS>::acceptModel),
-							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;
@@ -1172,8 +1177,9 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 							UniversalOptimization::SharedModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS>::transformSharedModel),
 							UniversalOptimization::IndividualModelTransformationCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS>::transformIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback::create(data, &CameraOrientationsData<PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS>::acceptModel),
-							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;
@@ -1707,8 +1713,9 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 							UniversalOptimization::FirstIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_FOCAL_LENGTH>::transformFirstIndividualModel),
 							UniversalOptimization::SecondIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_FOCAL_LENGTH>::transformSecondIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback(),
-							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;
@@ -1733,8 +1740,9 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 							UniversalOptimization::FirstIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_FOCAL_LENGTHS>::transformFirstIndividualModel),
 							UniversalOptimization::SecondIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_FOCAL_LENGTHS>::transformSecondIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback(),
-							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;
@@ -1759,8 +1767,9 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 							UniversalOptimization::FirstIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_INTRINSIC_PARAMETERS>::transformFirstIndividualModel),
 							UniversalOptimization::SecondIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_INTRINSIC_PARAMETERS>::transformSecondIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback(),
-							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;
@@ -1785,8 +1794,9 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 							UniversalOptimization::FirstIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION>::transformFirstIndividualModel),
 							UniversalOptimization::SecondIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION>::transformSecondIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback(),
-							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;
@@ -1811,8 +1821,9 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 							UniversalOptimization::FirstIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS>::transformFirstIndividualModel),
 							UniversalOptimization::SecondIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS>::transformSecondIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback(),
-							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;
@@ -1837,8 +1848,9 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 							UniversalOptimization::FirstIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS>::transformFirstIndividualModel),
 							UniversalOptimization::SecondIndividualModelTransformationCallback::create(data, &CameraObjectPointsPosesData<PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS>::transformSecondIndividualModel),
 							UniversalOptimization::ModelAcceptedCallback(),
-							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
+							optimizedSharedModel, optimizedFirstIndividualModels, optimizedSecondIndividualModels, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateErrors)) {
 				return false;
+}
 
 			optimizedCamera = data.model2profile(optimizedSharedModel);
 			break;

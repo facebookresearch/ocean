@@ -268,8 +268,9 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 						// the test position must lie inside the
 						if ((testPositionX == newPositionX && testPositionY == newPositionY) || testPositionX < Scalar(2) || testPositionX >= Scalar(layerWidth - 3u)
 								|| testPositionY < Scalar(2) || testPositionY >= Scalar(layerHeight - 3u)
-								|| layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] != 0xFF)
+								|| layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] != 0xFF) {
 							continue;
+}
 
 						const Scalar testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, Scalar(maxSpatialCost));
 						const unsigned int testColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, referenceData, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);
@@ -388,8 +389,9 @@ void Optimizer4NeighborhoodReferenceFrameF1<tWeightFactor, tBorderFactor, tUpdat
 
 						if ((testPositionX == newPositionX && testPositionY == newPositionY) || testPositionX < Scalar(2) || testPositionX >= Scalar(layerWidth - 3u)
 								|| testPositionY < Scalar(2) || testPositionY >= Scalar(layerHeight - 3u)
-								|| layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] != 0xFF)
+								|| layerMaskData[Numeric::round32(testPositionY) * layerMaskStrideElements + Numeric::round32(testPositionX)] != 0xFF) {
 							continue;
+}
 
 						const Scalar testSpatialCost = layerMapping.spatialCost4Neighborhood<tChannels>(x, y, testPositionX, testPositionY, layerMaskData, layerMaskPaddingElements, Scalar(maxSpatialCost));
 						const unsigned int testColorCost = layerMapping.appearanceReferenceCost5x5<tChannels>(x, y, testPositionX, testPositionY, layerFrameData, layerMaskData, referenceData, layerFramePaddingElements, layerMaskPaddingElements, referencePaddingElements, tBorderFactor);

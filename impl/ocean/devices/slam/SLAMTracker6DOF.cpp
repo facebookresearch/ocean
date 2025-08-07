@@ -145,10 +145,11 @@ void SLAMTracker6DOF::threadRun()
 				IO::CameraCalibrationManager::Quality quality;
 				camera_ = IO::CameraCalibrationManager::get().camera(frameMedium->url(), frame->width(), frame->height(), &quality);
 
-				if (quality == IO::CameraCalibrationManager::QUALITY_DEFAULT)
+				if (quality == IO::CameraCalibrationManager::QUALITY_DEFAULT) {
 					Log::warning() << "No valid camera calibration has been found for \"" << frameMedium->url() << "\" a default calibration with 45 degree FOVX is used instead.";
-				else if (quality == IO::CameraCalibrationManager::QUALITY_INTERPOLATED)
+				} else if (quality == IO::CameraCalibrationManager::QUALITY_INTERPOLATED) {
 					Log::info() << "No exact camera calibration has been found for \"" << frameMedium->url() << "\" with resolution " << frame->width() << "x" << frame->height() << " an interpolated calibration is used instead.";
+}
 			}
 
 			const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
@@ -189,8 +190,9 @@ void SLAMTracker6DOF::threadRun()
 
 					ocean_assert(initializationImagePointsDetermined_ == 0);
 
-					if (initializationTimestamp_.isInvalid())
+					if (initializationTimestamp_.isInvalid()) {
 						initializationTimestamp_ = Timestamp(true) + 1.0;
+}
 
 					if (frameTimestamp_ >= initializationTimestamp_)
 					{
@@ -245,8 +247,9 @@ void SLAMTracker6DOF::threadRun()
 						{
 							Scalars positionOffsets(initializationFirstImagePoints_.size());
 
-							for (size_t n = 0; n < initializationFirstImagePoints_.size(); ++n)
+							for (size_t n = 0; n < initializationFirstImagePoints_.size(); ++n) {
 								positionOffsets[n] = initializationFirstImagePoints_[n].sqrDistance(initializationRecentImagePoints_[n]);
+}
 
 							const Scalar medianOffset = Numeric::sqrt(Median::median(positionOffsets.data(), positionOffsets.size()));
 
@@ -377,11 +380,13 @@ void SLAMTracker6DOF::threadRun()
 
 				performance.stop();
 
-				if (performancePointTracking.measurements() % 50u == 0u)
+				if (performancePointTracking.measurements() % 50u == 0u) {
 					Log::info() << "Point Tracking: " << performancePointTracking.averageMseconds();
+}
 
-				if (performance.measurements() % 50u == 0u)
+				if (performance.measurements() % 50u == 0u) {
 					Log::info() << "Tracker performance: " << performance.averageMseconds();
+}
 			}
 
 			std::swap(currentFramePyramid_, previousFramePyramid_);
@@ -452,8 +457,9 @@ bool SLAMTracker6DOF::trackPoints(const CV::FramePyramid& previousFramePyramid, 
 	const unsigned int subPixelIterations = 4u;
 #endif
 
-	if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackPointsBidirectionalSubPixelMirroredBorder<tSize>(previousFramePyramid, currentFramePyramid, 2u, previousPointsCopy, currentImagePoints, maximalSqrError, worker, &validIndices, subPixelIterations))
+	if (!CV::Advanced::AdvancedMotionZeroMeanSSD::trackPointsBidirectionalSubPixelMirroredBorder<tSize>(previousFramePyramid, currentFramePyramid, 2u, previousPointsCopy, currentImagePoints, maximalSqrError, worker, &validIndices, subPixelIterations)) {
 		return false;
+}
 
 	return true;
 }
@@ -468,8 +474,9 @@ bool SLAMTracker6DOF::determineInitialObjectPoints(const PinholeCamera& pinholeC
 	RandomGenerator randomGenerator;
 
 	HomogenousMatrix4 world_T_camera;
-	if (!Geometry::StereoscopicGeometry::cameraPose(pinholeCamera, ConstArrayAccessor<Vector2>(firstImagePoints), ConstArrayAccessor<Vector2>(secondImagePoints), randomGenerator, world_T_camera, &objectPoints, &validImagePoints))
+	if (!Geometry::StereoscopicGeometry::cameraPose(pinholeCamera, ConstArrayAccessor<Vector2>(firstImagePoints), ConstArrayAccessor<Vector2>(secondImagePoints), randomGenerator, world_T_camera, &objectPoints, &validImagePoints)) {
 		return false;
+}
 
 	if (world_T_camera.translation().isNull())
 	{
@@ -477,36 +484,42 @@ bool SLAMTracker6DOF::determineInitialObjectPoints(const PinholeCamera& pinholeC
 		return false;
 	}
 
-	if (objectPoints.size() < 5)
+	if (objectPoints.size() < 5) {
 		return false;
+}
 
 	// we determine the most prominent 3D plane from the determined 3D object point locations
 
 	Plane3 plane;
-	if (!Geometry::RANSAC::plane(ConstArrayAccessor<Vector3>(objectPoints), randomGenerator, plane))
+	if (!Geometry::RANSAC::plane(ConstArrayAccessor<Vector3>(objectPoints), randomGenerator, plane)) {
 		return false;
+}
 
 	// now we need to determine the reference coordinate system lying in/on the 3D plane
 
 	const Line3 rayPrincipalPoint(pinholeCamera.ray(Vector2(Scalar(pinholeCamera.width()), Scalar(pinholeCamera.height())) * Scalar(0.5), world_T_camera));
 
 	Vector3 planePrincipalObjectPoint;
-	if (!plane.intersection(rayPrincipalPoint, planePrincipalObjectPoint) || !pinholeCamera.isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), planePrincipalObjectPoint))
+	if (!plane.intersection(rayPrincipalPoint, planePrincipalObjectPoint) || !pinholeCamera.isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), planePrincipalObjectPoint)) {
 		return false;
+}
 
 	const Line3 rayRightPoint(pinholeCamera.ray(Vector2(Scalar(pinholeCamera.width()), Scalar(pinholeCamera.height()) * Scalar(0.5)), world_T_camera));
 
 	Vector3 planeRightObjectPoint;
-	if (!plane.intersection(rayRightPoint, planeRightObjectPoint) || !pinholeCamera.isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), planeRightObjectPoint))
+	if (!plane.intersection(rayRightPoint, planeRightObjectPoint) || !pinholeCamera.isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), planeRightObjectPoint)) {
 		return false;
+}
 
 	Vector3 xAxis = planeRightObjectPoint - planePrincipalObjectPoint;
-	if (!xAxis.normalize())
+	if (!xAxis.normalize()) {
 		return false;
+}
 
 	Vector3 yAxis = plane.normal();
-	if (yAxis * (world_T_camera.translation() - planePrincipalObjectPoint) < 0)
+	if (yAxis * (world_T_camera.translation() - planePrincipalObjectPoint) < 0) {
 		yAxis = -yAxis;
+}
 
 	const Vector3 zAxis = xAxis.cross(yAxis);
 	ocean_assert(Numeric::isEqual(zAxis.length(), 1));
@@ -515,8 +528,9 @@ bool SLAMTracker6DOF::determineInitialObjectPoints(const PinholeCamera& pinholeC
 	ocean_assert(worldTplane.rotationMatrix().isOrthonormal(Numeric::weakEps()));
 	const HomogenousMatrix4 planeTworld(worldTplane.inverted());
 
-	for (size_t n = 0; n < objectPoints.size(); ++n)
+	for (size_t n = 0; n < objectPoints.size(); ++n) {
 		objectPoints[n] = planeTworld * objectPoints[n];
+}
 
 	pose = planeTworld * world_T_camera;
 
@@ -546,8 +560,9 @@ Indices32 SLAMTracker6DOF::extractLocatedImagePointIndices(const size_t numberLo
 
 	for (Indices32::const_iterator i = validIndices.cbegin(); i != validIndices.cend(); ++i)
 	{
-		if (*i >= (unsigned int)numberLocatedPreviousImagePoints)
+		if (*i >= (unsigned int)numberLocatedPreviousImagePoints) {
 			break;
+}
 
 		result.push_back(*i);
 	}
@@ -570,7 +585,7 @@ void SLAMTracker6DOF::extractUnlocatedImagePoints(const Vectors2& combinedImageP
 	ObservationGroups tempObservationGroups;
 	tempObservationGroups.reserve(observationGroups.size() * 50 / 100);
 
-	for (Indices32::const_iterator i = validIndices.cbegin(); i != validIndices.cend(); ++i)
+	for (Indices32::const_iterator i = validIndices.cbegin(); i != validIndices.cend(); ++i) {
 		if (*i >= (unsigned int)numberLocatedPreviousImagePoints)
 		{
 			// now all indices belong to our observation groups or even will produce a new observation group
@@ -589,6 +604,7 @@ void SLAMTracker6DOF::extractUnlocatedImagePoints(const Vectors2& combinedImageP
 				tempObservationGroups.push_back(Observations(1, Observation(pose, imagePoint)));
 			}
 		}
+}
 
 	observationGroups = std::move(tempObservationGroups);
 }
@@ -674,8 +690,9 @@ Scalar SLAMTracker6DOF::medianObservationAngle(const PinholeCamera& pinholeCamer
 
 	Scalars angles(observations.size());
 
-	for (size_t n = 0; n < observations.size(); ++n)
+	for (size_t n = 0; n < observations.size(); ++n) {
 		angles[n] = meanDirection * rays[n].direction();
+}
 
 	return Numeric::acos(Median::median(angles.data(), angles.size()));
 }
