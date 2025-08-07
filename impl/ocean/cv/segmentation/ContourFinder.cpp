@@ -400,8 +400,9 @@ bool ContourFinder::findBorderLandmarks8BitPerChannel(const uint8_t* frame, cons
 
 bool ContourFinder::adjustContourWithLandmarks(const Vectors2& contour, const Vectors2& landmarks, Vectors2& adjustedContour, const bool aggressive)
 {
-	if (landmarks.size() < 2)
+	if (landmarks.size() < 2) {
 		return false;
+}
 
 	ocean_assert(adjustedContour.empty());
 	adjustedContour.reserve(contour.size());
