@@ -3958,10 +3958,11 @@ void FrameChannels::applyPixelModifier(const T* source, T* target, const unsigne
 	ocean_assert(source && target);
 	ocean_assert(width != 0u && height != 0u);
 
-	if (worker)
+	if (worker) {
 		worker->executeFunction(Worker::Function::createStatic(&FrameChannels::applyPixelModifierSubset<T, tChannels, tPixelFunction>, source, target, width, height, conversionFlag, 0u, 0u), 0u, height);
-	else
+	} else {
 		applyPixelModifierSubset<T, tChannels, tPixelFunction>(source, target, width, height, conversionFlag, 0u, height);
+}
 }
 
 template <typename TSource, typename TTarget, unsigned int tSourceChannels, unsigned int tTargetChannels, void (*tPixelFunction)(const TSource*, TTarget*)>

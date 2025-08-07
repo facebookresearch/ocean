@@ -95,8 +95,9 @@ void SharedLock::lock()
 
 		localCounter_ = 1u;
 	}
-	else
+	else {
 		++localCounter_;
+}
 }
 
 bool SharedLock::tryLock()

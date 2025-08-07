@@ -713,8 +713,9 @@ void FrameMean::addToFrameIndividuallyZipped8BitPerChannelSubset(const uint8_t* 
 	{
 		ocean_assert(source < sourceEnd);
 
-		for (unsigned int n = 0u; n < tChannels; ++n)
+		for (unsigned int n = 0u; n < tChannels; ++n) {
 			*targetWithDenominator++ += *source++;
+}
 
 		(*targetWithDenominator++)++;
 	}

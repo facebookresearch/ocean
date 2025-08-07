@@ -497,8 +497,9 @@ inline Maintenance::Maintenance() :
 	maintenanceActive(false),
 	maintenanceId(RandomI::random64())
 {
-	while (maintenanceId == 0ull)
+	while (maintenanceId == 0ull) {
 		maintenanceId = RandomI::random64();
+}
 }
 
 inline bool Maintenance::isActive() const

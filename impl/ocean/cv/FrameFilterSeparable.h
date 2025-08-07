@@ -3672,8 +3672,9 @@ void FrameFilterSeparable::filterUniversalHorizontalSubset(const T* source, TInt
 			{
 				TIntermediate response = TIntermediate(source[channels * mirroredBorderLocationLeft(-int(filterSize_2) + int(x)) + n]) * filter[0];
 
-				for (unsigned int s = 1u; s < filterSize; ++s)
+				for (unsigned int s = 1u; s < filterSize; ++s) {
 					response += TIntermediate(source[channels * mirroredBorderLocationLeft(-int(filterSize_2) + int(x + s)) + n]) * filter[s];
+}
 
 				target[n] = response;
 			}
@@ -3690,8 +3691,9 @@ void FrameFilterSeparable::filterUniversalHorizontalSubset(const T* source, TInt
 			{
 				TIntermediate response = TIntermediate(source[channels * 0u + n]) * filter[0];
 
-				for (unsigned int s = 1u; s < filterSize; ++s)
+				for (unsigned int s = 1u; s < filterSize; ++s) {
 					response += TIntermediate(source[channels * s + n]) * filter[s];
+}
 
 				target[n] = response;
 			}
@@ -3708,8 +3710,9 @@ void FrameFilterSeparable::filterUniversalHorizontalSubset(const T* source, TInt
 			{
 				TIntermediate response = TIntermediate(source[channels * mirroredBorderLocationRight(x, filterSize_2 * 2u) + n]) * filter[0];
 
-				for (unsigned int s = 1u; s < filterSize; ++s)
+				for (unsigned int s = 1u; s < filterSize; ++s) {
 					response += TIntermediate(source[channels * mirroredBorderLocationRight(x + s, filterSize_2 * 2u) + n]) * filter[s];
+}
 
 				target[n] = response;
 			}
@@ -3774,8 +3777,9 @@ void FrameFilterSeparable::filterUniversalVerticalSubset(const TIntermediate* so
 			{
 				TIntermediate response = TIntermediate(source[sourceStrideElements * mirroredBorderLocationLeft(-int(filterSize_2) + int(y)) + n]) * filter[0];
 
-				for (unsigned int s = 1u; s < filterSize; ++s)
+				for (unsigned int s = 1u; s < filterSize; ++s) {
 					response += TIntermediate(source[sourceStrideElements * mirroredBorderLocationLeft(-int(filterSize_2) + int(y + s)) + n]) * filter[s];
+}
 
 				target[n] = T(response);
 			}
@@ -3803,8 +3807,9 @@ void FrameFilterSeparable::filterUniversalVerticalSubset(const TIntermediate* so
 			{
 				TIntermediate response = TIntermediate(source[channels * 0u + c]) * filter[0];
 
-				for (unsigned int s = 1u; s < filterSize; ++s)
+				for (unsigned int s = 1u; s < filterSize; ++s) {
 					response += TIntermediate(source[sourceStrideElements * s + c]) * filter[s];
+}
 
 				target[c] = T(response);
 			}

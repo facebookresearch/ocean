@@ -861,10 +861,11 @@ void FrameInterpolatorNearestPixel::affine8BitPerChannelSubset(const uint8_t* in
 			const unsigned int inputX = Numeric::round32(inputPosition.x());
 			const unsigned int inputY = Numeric::round32(inputPosition.y());
 
-			if (inputX < inputWidth && inputY < inputHeight)
+			if (inputX < inputWidth && inputY < inputHeight) {
 				*outputData = *(PixelType*)(input + inputY * (inputWidth * tChannels + inputPaddingElements) + inputX * tChannels);
-			else
+			} else {
 				*outputData = *bColor;
+}
 
 			outputData++;
 		}

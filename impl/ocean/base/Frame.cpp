@@ -1082,41 +1082,53 @@ FrameType::DataType FrameType::translateDataType(const std::string& dataType)
 {
 	const std::string upperValue = String::toUpper(dataType);
 
-	if (upperValue == "UNDEFINED")
+	if (upperValue == "UNDEFINED") {
 		return DT_UNDEFINED;
+}
 
-	if (upperValue == "UNSIGNED_INTEGER_8")
+	if (upperValue == "UNSIGNED_INTEGER_8") {
 		return DT_UNSIGNED_INTEGER_8;
+}
 
-	if (upperValue == "SIGNED_INTEGER_8")
+	if (upperValue == "SIGNED_INTEGER_8") {
 		return DT_SIGNED_INTEGER_8;
+}
 
-	if (upperValue == "UNSIGNED_INTEGER_16")
+	if (upperValue == "UNSIGNED_INTEGER_16") {
 		return DT_UNSIGNED_INTEGER_16;
+}
 
-	if (upperValue == "SIGNED_INTEGER_16")
+	if (upperValue == "SIGNED_INTEGER_16") {
 		return DT_SIGNED_INTEGER_16;
+}
 
-	if (upperValue == "UNSIGNED_INTEGER_32")
+	if (upperValue == "UNSIGNED_INTEGER_32") {
 		return DT_UNSIGNED_INTEGER_32;
+}
 
-	if (upperValue == "SIGNED_INTEGER_32")
+	if (upperValue == "SIGNED_INTEGER_32") {
 		return DT_SIGNED_INTEGER_32;
+}
 
-	if (upperValue == "UNSIGNED_INTEGER_64")
+	if (upperValue == "UNSIGNED_INTEGER_64") {
 		return DT_UNSIGNED_INTEGER_64;
+}
 
-	if (upperValue == "SIGNED_INTEGER_64")
+	if (upperValue == "SIGNED_INTEGER_64") {
 		return DT_SIGNED_INTEGER_64;
+}
 
-	if (upperValue == "SIGNED_FLOAT_16")
+	if (upperValue == "SIGNED_FLOAT_16") {
 		return DT_SIGNED_FLOAT_16;
+}
 
-	if (upperValue == "SIGNED_FLOAT_32")
+	if (upperValue == "SIGNED_FLOAT_32") {
 		return DT_SIGNED_FLOAT_32;
+}
 
-	if (upperValue == "SIGNED_FLOAT_64")
+	if (upperValue == "SIGNED_FLOAT_64") {
 		return DT_SIGNED_FLOAT_64;
+}
 
 	ocean_assert(false && "Invalid input!");
 	return DT_UNDEFINED;
@@ -1126,173 +1138,229 @@ FrameType::PixelFormat FrameType::translatePixelFormat(const std::string& pixelF
 {
 	const std::string upperValue = String::toUpper(pixelFormat);
 
-	if (upperValue == "UNDEFINED")
+	if (upperValue == "UNDEFINED") {
 		return FORMAT_UNDEFINED;
+}
 
-	if (upperValue == "ABGR32")
+	if (upperValue == "ABGR32") {
 		return FORMAT_ABGR32;
+}
 
-	if (upperValue == "ARGB32")
+	if (upperValue == "ARGB32") {
 		return FORMAT_ARGB32;
+}
 
-	if (upperValue == "BGR24")
+	if (upperValue == "BGR24") {
 		return FORMAT_BGR24;
+}
 
-	if (upperValue == "BGR32")
+	if (upperValue == "BGR32") {
 		return FORMAT_BGR32;
+}
 
-	if (upperValue == "BGR4444")
+	if (upperValue == "BGR4444") {
 		return FORMAT_BGR4444;
+}
 
-	if (upperValue == "BGR5551")
+	if (upperValue == "BGR5551") {
 		return FORMAT_BGR5551;
+}
 
-	if (upperValue == "BGR565")
+	if (upperValue == "BGR565") {
 		return FORMAT_BGR565;
+}
 
-	if (upperValue == "BGRA32")
+	if (upperValue == "BGRA32") {
 		return FORMAT_BGRA32;
+}
 
-	if (upperValue == "BGRA4444")
+	if (upperValue == "BGRA4444") {
 		return FORMAT_BGRA4444;
+}
 
-	if (upperValue == "BGGR10_PACKED")
+	if (upperValue == "BGGR10_PACKED") {
 		return FORMAT_BGGR10_PACKED;
+}
 
-	if (upperValue == "RGB24")
+	if (upperValue == "RGB24") {
 		return FORMAT_RGB24;
+}
 
-	if (upperValue == "RGB32")
+	if (upperValue == "RGB32") {
 		return FORMAT_RGB32;
+}
 
-	if (upperValue == "RGB4444")
+	if (upperValue == "RGB4444") {
 		return FORMAT_RGB4444;
+}
 
-	if (upperValue == "RGB5551")
+	if (upperValue == "RGB5551") {
 		return FORMAT_RGB5551;
+}
 
-	if (upperValue == "RGB565")
+	if (upperValue == "RGB565") {
 		return FORMAT_RGB565;
+}
 
-	if (upperValue == "RGBA32")
+	if (upperValue == "RGBA32") {
 		return FORMAT_RGBA32;
+}
 
-	if (upperValue == "RGB48")
+	if (upperValue == "RGB48") {
 		return FORMAT_RGB48;
+}
 
-	if (upperValue == "RGBA64")
+	if (upperValue == "RGBA64") {
 		return FORMAT_RGBA64;
+}
 
-	if (upperValue == "RGBT32")
+	if (upperValue == "RGBT32") {
 		return FORMAT_RGBT32;
+}
 
-	if (upperValue == "RGBA4444")
+	if (upperValue == "RGBA4444") {
 		return FORMAT_RGBA4444;
+}
 
-	if (upperValue == "RGGB10_PACKED")
+	if (upperValue == "RGGB10_PACKED") {
 		return FORMAT_RGGB10_PACKED;
+}
 
-	if (upperValue == "Y_U_V12")
+	if (upperValue == "Y_U_V12") {
 		return FORMAT_Y_U_V12;
+}
 
-	if (upperValue == "FORMAT_Y_U_V12_LIMITED_RANGE")
+	if (upperValue == "FORMAT_Y_U_V12_LIMITED_RANGE") {
 		return FORMAT_Y_U_V12_LIMITED_RANGE;
+}
 
-	if (upperValue == "FORMAT_Y_U_V12_FULL_RANGE")
+	if (upperValue == "FORMAT_Y_U_V12_FULL_RANGE") {
 		return FORMAT_Y_U_V12_FULL_RANGE;
+}
 
-	if (upperValue == "Y_U_V24")
+	if (upperValue == "Y_U_V24") {
 		return FORMAT_Y_U_V24;
+}
 
-	if (upperValue == "FORMAT_Y_U_V24_LIMITED_RANGE")
+	if (upperValue == "FORMAT_Y_U_V24_LIMITED_RANGE") {
 		return FORMAT_Y_U_V24_LIMITED_RANGE;
+}
 
-	if (upperValue == "FORMAT_Y_U_V24_FULL_RANGE")
+	if (upperValue == "FORMAT_Y_U_V24_FULL_RANGE") {
 		return FORMAT_Y_U_V24_FULL_RANGE;
+}
 
-	if (upperValue == "YUV24")
+	if (upperValue == "YUV24") {
 		return FORMAT_YUV24;
+}
 
-	if (upperValue == "YUVA32")
+	if (upperValue == "YUVA32") {
 		return FORMAT_YUVA32;
+}
 
-	if (upperValue == "YUVT32")
+	if (upperValue == "YUVT32") {
 		return FORMAT_YUVT32;
+}
 
-	if (upperValue == "Y_V_U12")
+	if (upperValue == "Y_V_U12") {
 		return FORMAT_Y_V_U12;
+}
 
-	if (upperValue == "FORMAT_Y_V_U12_LIMITED_RANGE")
+	if (upperValue == "FORMAT_Y_V_U12_LIMITED_RANGE") {
 		return FORMAT_Y_V_U12_LIMITED_RANGE;
+}
 
-	if (upperValue == "FORMAT_Y_V_U12_FULL_RANGE")
+	if (upperValue == "FORMAT_Y_V_U12_FULL_RANGE") {
 		return FORMAT_Y_V_U12_FULL_RANGE;
+}
 
-	if (upperValue == "YVU24")
+	if (upperValue == "YVU24") {
 		return FORMAT_YVU24;
+}
 
-	if (upperValue == "Y_UV12")
+	if (upperValue == "Y_UV12") {
 		return FORMAT_Y_UV12;
+}
 
-	if (upperValue == "FORMAT_Y_UV12_LIMITED_RANGE")
+	if (upperValue == "FORMAT_Y_UV12_LIMITED_RANGE") {
 		return FORMAT_Y_UV12_LIMITED_RANGE;
+}
 
-	if (upperValue == "FORMAT_Y_UV12_FULL_RANGE")
+	if (upperValue == "FORMAT_Y_UV12_FULL_RANGE") {
 		return FORMAT_Y_UV12_FULL_RANGE;
+}
 
-	if (upperValue == "Y_VU12")
+	if (upperValue == "Y_VU12") {
 		return FORMAT_Y_VU12;
+}
 
-	if (upperValue == "FORMAT_Y_VU12_LIMITED_RANGE")
+	if (upperValue == "FORMAT_Y_VU12_LIMITED_RANGE") {
 		return FORMAT_Y_VU12_LIMITED_RANGE;
+}
 
-	if (upperValue == "FORMAT_Y_VU12_FULL_RANGE")
+	if (upperValue == "FORMAT_Y_VU12_FULL_RANGE") {
 		return FORMAT_Y_VU12_FULL_RANGE;
+}
 
-	if (upperValue == "UYVY16")
+	if (upperValue == "UYVY16") {
 		return FORMAT_UYVY16;
+}
 
-	if (upperValue == "YUYV16")
+	if (upperValue == "YUYV16") {
 		return FORMAT_YUYV16;
+}
 
-	if (upperValue == "Y8")
+	if (upperValue == "Y8") {
 		return FORMAT_Y8;
+}
 
-	if (upperValue == "FORMAT_Y8_LIMITED_RANGE")
+	if (upperValue == "FORMAT_Y8_LIMITED_RANGE") {
 		return FORMAT_Y8_LIMITED_RANGE;
+}
 
-	if (upperValue == "FORMAT_Y8_FULL_RANGE")
+	if (upperValue == "FORMAT_Y8_FULL_RANGE") {
 		return FORMAT_Y8_FULL_RANGE;
+}
 
-	if (upperValue == "Y10")
+	if (upperValue == "Y10") {
 		return FORMAT_Y10;
+}
 
-	if (upperValue == "Y10_PACKED")
+	if (upperValue == "Y10_PACKED") {
 		return FORMAT_Y10_PACKED;
+}
 
-	if (upperValue == "Y16")
+	if (upperValue == "Y16") {
 		return FORMAT_Y16;
+}
 
-	if (upperValue == "Y32")
+	if (upperValue == "Y32") {
 		return FORMAT_Y32;
+}
 
-	if (upperValue == "Y64")
+	if (upperValue == "Y64") {
 		return FORMAT_Y64;
+}
 
-	if (upperValue == "YA16")
+	if (upperValue == "YA16") {
 		return FORMAT_YA16;
+}
 
-	if (upperValue == "F32")
+	if (upperValue == "F32") {
 		return FORMAT_F32;
+}
 
-	if (upperValue == "F64")
+	if (upperValue == "F64") {
 		return FORMAT_F64;
+}
 
-	if (upperValue == "R_G_B24")
+	if (upperValue == "R_G_B24") {
 		return FORMAT_R_G_B24;
+}
 
-	if (upperValue == "B_G_R24")
+	if (upperValue == "B_G_R24") {
 		return FORMAT_B_G_R24;
+}
 
 	ocean_assert(false && "Invalid input!");
 	return FORMAT_UNDEFINED;
@@ -1302,14 +1370,17 @@ FrameType::PixelOrigin FrameType::translatePixelOrigin(const std::string& pixelO
 {
 	const std::string upperValue = String::toUpper(pixelOrigin);
 
-	if (upperValue == "INVALID")
+	if (upperValue == "INVALID") {
 		return ORIGIN_INVALID;
+}
 
-	if (upperValue == "UPPER_LEFT")
+	if (upperValue == "UPPER_LEFT") {
 		return ORIGIN_UPPER_LEFT;
+}
 
-	if (upperValue == "LOWER_LEFT")
+	if (upperValue == "LOWER_LEFT") {
 		return ORIGIN_LOWER_LEFT;
+}
 
 	ocean_assert(false && "Invalid input!");
 	return ORIGIN_INVALID;

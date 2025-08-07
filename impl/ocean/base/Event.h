@@ -400,10 +400,11 @@ inline ScopedEvent<T>::ScopedEvent(const T& enterEvent, T& breakEvent, T& leaveE
 template <typename T>
 inline ScopedEvent<T>::~ScopedEvent()
 {
-	if (scopedEventLeave)
+	if (scopedEventLeave) {
 		scopedCallbacks(scopedLeaveEvent);
-	else
+	} else {
 		scopedCallbacks(scopedBreakEvent);
+}
 }
 
 template <typename T>

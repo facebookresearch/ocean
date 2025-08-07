@@ -330,8 +330,9 @@ bool Bresenham::borderIntersection(const Line2& line, const int leftBorder, cons
 			x1 = Numeric::round32(topX);
 			y1 = topBorder;
 
-			if (x0 != x1 || y0 != y1)
+			if (x0 != x1 || y0 != y1) {
 				return true;
+}
 		}
 
 		// determine end position with bottom border
@@ -541,8 +542,9 @@ bool Bresenham::borderIntersection(const Line2& line, const Scalar leftBorder, c
 			x1 = topX;
 			y1 = topBorder;
 
-			if (Numeric::isNotEqual(x0, x1) || Numeric::isNotEqual(y0, y1))
+			if (Numeric::isNotEqual(x0, x1) || Numeric::isNotEqual(y0, y1)) {
 				return true;
+}
 		}
 
 		// determine end position with bottom border

@@ -28,8 +28,9 @@ ApplicationInterface::EventIds ApplicationInterface::addContent(const StringVect
 
 	scopedLock.release();
 
-	if (contentAddCallback)
+	if (contentAddCallback) {
 		return contentAddCallback(content);
+}
 
 	Log::warning() << "The application does not support content adding!";
 	return EventIds();
@@ -43,8 +44,9 @@ ApplicationInterface::EventIds ApplicationInterface::removeContent(const StringV
 
 	scopedLock.release();
 
-	if (callback)
+	if (callback) {
 		return callback(content);
+}
 
 	Log::warning() << "The application does not support content removing!";
 	return EventIds();
