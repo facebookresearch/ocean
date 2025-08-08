@@ -647,17 +647,18 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * The jacobian is determined for the focal length, the principal point, the radial distortion parameters, and the tangential distortion parameters.<br>
 		 * The resulting jacobian has the following form:
 		 * <pre>
-		 * | dfx / dk3, dfx / dk5, dfx / dk7, dfx / dk9, dfx / dk11, dfx / dk13, dfx / dp1, dfx / dp2, dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy |
-		 * | dfy / dk3, dfy / dk5, dfy / dk7, dfy / dk9, dfy / dk11, dfy / dk13, dfy / dp1, dfy / dp2, dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy |
+		 * Jacobian Camera (parameter order as in PC_12_PARAMETERS):
+		 * | dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dk3, dfx / dk5, dfx / dk7, dfx / dk9, dfx / dk11, dfx / dk13, dfx / dp1, dfx / dp2 |
+		 * | dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dk3, dfy / dk5, dfy / dk7, dfy / dk9, dfy / dk11, dfy / dk13, dfy / dp1, dfy / dp2 |
 		 * </pre>
-		 * @param jx First row of the jacobian, with 12 column entries
-		 * @param jy Second row of the jacobian, with 12 column entries
 		 * @param fisheyeCamera The fisheye camera to determine the jacobian values for
-		 * @param normalizedImagePoint The normalized 2D image point for which the Jacobian will be determined
+		 * @param normalizedUndistortedImagePoint The normalized 2D image point for which the Jacobian will be determined
+		 * @param jx The resulting first row of the jacobian, with 12 column entries
+		 * @param jy The resulting second row of the jacobian, with 12 column entries
 		 * @tparam T The scalar data type, either 'float' or 'double'
 		 */
 		template <typename T>
-		static void calculateCameraJacobian2x12(T* jx, T* jy, const FisheyeCameraT<T>& fisheyeCamera, const VectorT2<T>& normalizedImagePoint);
+		static void calculateCameraJacobian2x12(const FisheyeCameraT<T>& fisheyeCamera, const VectorT2<T>& normalizedUndistortedImagePoint, T* jx, T* jy);
 
 		/**
 		 * Calculates the two jacobian rows for a given (orientational pose) and a camera and a static object point.

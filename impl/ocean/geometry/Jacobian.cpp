@@ -2689,16 +2689,17 @@ void Jacobian::calculateCameraJacobian2x8(const PinholeCameraT<T>& pinholeCamera
 	jy[7] = 2 * Fy * x * y;
 }
 
-template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x8(const PinholeCameraT<float>& pinholeCamera, const VectorT2<float>& normalizedImagePoint, float* jx, float* jy);
-template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x8(const PinholeCameraT<double>& pinholeCamera, const VectorT2<double>& normalizedImagePoint, double* jx, double* jy);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x8(const PinholeCameraT<float>& pinholeCamera, const VectorT2<float>& normalizedUndistortedImagePoint, float* jx, float* jy);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x8(const PinholeCameraT<double>& pinholeCamera, const VectorT2<double>& normalizedUndistortedImagePoint, double* jx, double* jy);
 
 template <typename T>
-void Jacobian::calculateCameraJacobian2x12(T* jx, T* jy, const FisheyeCameraT<T>& fisheyeCamera, const VectorT2<T>& normalizedImagePoint)
+void Jacobian::calculateCameraJacobian2x12(const FisheyeCameraT<T>& fisheyeCamera, const VectorT2<T>& normalizedUndistortedImagePoint, T* jx, T* jy)
 {
+	ocean_assert(fisheyeCamera.isValid());
 	ocean_assert(jx != nullptr && jy != nullptr);
 
-	const T& x = normalizedImagePoint.x();
-	const T& y = normalizedImagePoint.y();
+	const T& x = normalizedUndistortedImagePoint.x();
+	const T& y = normalizedUndistortedImagePoint.y();
 
 	const T& Fx = fisheyeCamera.focalLengthX();
 	const T& Fy = fisheyeCamera.focalLengthY();
@@ -2744,24 +2745,24 @@ void Jacobian::calculateCameraJacobian2x12(T* jx, T* jy, const FisheyeCameraT<T>
 
 	if (NumericT<T>::isEqualEps(r))
 	{
+		jx[0] = x;
+		jy[0] = T(0);
+
+		jx[1] = T(0);
+		jy[1] = y;
+
+		jx[2] = T(1);
+		jy[2] = T(0);
+
+		jx[3] = T(0);
+		jy[3] = 1;
+
 		// we are close to zero, the distortion parameters do not have any effect
-		for (unsigned int n = 0u; n < 8u; ++n)
+		for (unsigned int n = 4u; n < 12u; ++n)
 		{
 			jx[n] = T(0);
 			jy[n] = T(0);
 		}
-
-		jx[8] = x;
-		jy[8] = T(0);
-
-		jx[9] = T(0);
-		jy[9] = y;
-
-		jx[10] = T(1);
-		jy[10] = T(0);
-
-		jx[11] = T(0);
-		jy[11] = 1;
 
 		return;
 	}
@@ -2786,94 +2787,94 @@ void Jacobian::calculateCameraJacobian2x12(T* jx, T* jy, const FisheyeCameraT<T>
 	const T radius_r2 = x_r * x_r + y_r * y_r;
 
 	/**
+	 * dfui_xy / dFx
+	 */
+	jx[0] = x_r + p1 * (2 * x_r * x_r + radius_r2) + p2 * 2 * x_r * y_r;
+	jy[0] = 0;
+
+	/**
+	 * dfui_xy / dFy
+	 */
+	jx[1] = 0;
+	jy[1] = y_r + p2 * (2 * y_r * y_r + radius_r2) + p1 * 2 * x_r * y_r;
+
+	/**
+	 * dfui_xy / dmx
+	 */
+	jx[2] = 1;
+	jy[2] = 0;
+
+	/**
+	 * dfui_xy / dmy
+	 */
+	jx[3] = 0;
+	jy[3] = 1;
+
+	/**
 	 * dfui_xy / dk3
 	 * Fx * (x * theta3 / r + p1 * (6 * x_r * x * theta3 / r + 2 * y_r * y * theta3 / r) + 2 * p2 * (x_r * y * theta3 / r + y_r * x * theta3 / r));
 	 * Fy * (y * theta3 / r + p2 * (6 * y_r * y * theta3 / r + 2 * x_r * x * theta3 / r) + 2 * p1 * (x_r * y * theta3 / r + y_r * x * theta3 / r));
 	 */
 	const T x_theta3_r = x * theta3 / r;
 	const T y_theta3_r = y * theta3 / r;
-	jx[0] = Fx * (x_theta3_r + p1 * (6 * x_r * x_theta3_r + 2 * y_r * y_theta3_r) + 2 * p2 * (x_r * y_theta3_r + y_r * x_theta3_r));
-	jy[0] = Fy * (y_theta3_r + p2 * (6 * y_r * y_theta3_r + 2 * x_r * x_theta3_r) + 2 * p1 * (x_r * y_theta3_r + y_r * x_theta3_r));
+	jx[4] = Fx * (x_theta3_r + p1 * (6 * x_r * x_theta3_r + 2 * y_r * y_theta3_r) + 2 * p2 * (x_r * y_theta3_r + y_r * x_theta3_r));
+	jy[4] = Fy * (y_theta3_r + p2 * (6 * y_r * y_theta3_r + 2 * x_r * x_theta3_r) + 2 * p1 * (x_r * y_theta3_r + y_r * x_theta3_r));
 
 	/**
 	 * dfui_xy / dk5
 	 */
 	const T x_theta5_r = x * theta5 / r;
 	const T y_theta5_r = y * theta5 / r;
-	jx[1] = Fx * (x_theta5_r + p1 * (6 * x_r * x_theta5_r + 2 * y_r * y_theta5_r) + 2 * p2 * (x_r * y_theta5_r + y_r * x_theta5_r));
-	jy[1] = Fy * (y_theta5_r + p2 * (6 * y_r * y_theta5_r + 2 * x_r * x_theta5_r) + 2 * p1 * (x_r * y_theta5_r + y_r * x_theta5_r));
+	jx[5] = Fx * (x_theta5_r + p1 * (6 * x_r * x_theta5_r + 2 * y_r * y_theta5_r) + 2 * p2 * (x_r * y_theta5_r + y_r * x_theta5_r));
+	jy[5] = Fy * (y_theta5_r + p2 * (6 * y_r * y_theta5_r + 2 * x_r * x_theta5_r) + 2 * p1 * (x_r * y_theta5_r + y_r * x_theta5_r));
 
 	/**
 	 * dfui_xy / dk7
 	 */
 	const T x_theta7_r = x * theta7 / r;
 	const T y_theta7_r = y * theta7 / r;
-	jx[2] = Fx * (x_theta7_r + p1 * (6 * x_r * x_theta7_r + 2 * y_r * y_theta7_r) + 2 * p2 * (x_r * y_theta7_r + y_r * x_theta7_r));
-	jy[2] = Fy * (y_theta7_r + p2 * (6 * y_r * y_theta7_r + 2 * x_r * x_theta7_r) + 2 * p1 * (x_r * y_theta7_r + y_r * x_theta7_r));
+	jx[6] = Fx * (x_theta7_r + p1 * (6 * x_r * x_theta7_r + 2 * y_r * y_theta7_r) + 2 * p2 * (x_r * y_theta7_r + y_r * x_theta7_r));
+	jy[6] = Fy * (y_theta7_r + p2 * (6 * y_r * y_theta7_r + 2 * x_r * x_theta7_r) + 2 * p1 * (x_r * y_theta7_r + y_r * x_theta7_r));
 
 	/**
 	 * dfui_xy / dk9
 	 */
 	const T x_theta9_r = x * theta9 / r;
 	const T y_theta9_r = y * theta9 / r;
-	jx[3] = Fx * (x_theta9_r + p1 * (6 * x_r * x_theta9_r + 2 * y_r * y_theta9_r) + 2 * p2 * (x_r * y_theta9_r + y_r * x_theta9_r));
-	jy[3] = Fy * (y_theta9_r + p2 * (6 * y_r * y_theta9_r + 2 * x_r * x_theta9_r) + 2 * p1 * (x_r * y_theta9_r + y_r * x_theta9_r));
+	jx[7] = Fx * (x_theta9_r + p1 * (6 * x_r * x_theta9_r + 2 * y_r * y_theta9_r) + 2 * p2 * (x_r * y_theta9_r + y_r * x_theta9_r));
+	jy[7] = Fy * (y_theta9_r + p2 * (6 * y_r * y_theta9_r + 2 * x_r * x_theta9_r) + 2 * p1 * (x_r * y_theta9_r + y_r * x_theta9_r));
 
 	/**
 	 * dfui_xy / dk11
 	 */
 	const T x_theta11_r = x * theta11 / r;
 	const T y_theta11_r = y * theta11 / r;
-	jx[4] = Fx * (x_theta11_r + p1 * (6 * x_r * x_theta11_r + 2 * y_r * y_theta11_r) + 2 * p2 * (x_r * y_theta11_r + y_r * x_theta11_r));
-	jy[4] = Fy * (y_theta11_r + p2 * (6 * y_r * y_theta11_r + 2 * x_r * x_theta11_r) + 2 * p1 * (x_r * y_theta11_r + y_r * x_theta11_r));
+	jx[8] = Fx * (x_theta11_r + p1 * (6 * x_r * x_theta11_r + 2 * y_r * y_theta11_r) + 2 * p2 * (x_r * y_theta11_r + y_r * x_theta11_r));
+	jy[8] = Fy * (y_theta11_r + p2 * (6 * y_r * y_theta11_r + 2 * x_r * x_theta11_r) + 2 * p1 * (x_r * y_theta11_r + y_r * x_theta11_r));
 
 	/**
 	 * dfui_xy / dk13
 	 */
 	const T x_theta13_r = x * theta13 / r;
 	const T y_theta13_r = y * theta13 / r;
-	jx[5] = Fx * (x_theta13_r + p1 * (6 * x_r * x_theta13_r + 2 * y_r * y_theta13_r) + 2 * p2 * (x_r * y_theta13_r + y_r * x_theta13_r));
-	jy[5] = Fy * (y_theta13_r + p2 * (6 * y_r * y_theta13_r + 2 * x_r * x_theta13_r) + 2 * p1 * (x_r * y_theta13_r + y_r * x_theta13_r));
+	jx[9] = Fx * (x_theta13_r + p1 * (6 * x_r * x_theta13_r + 2 * y_r * y_theta13_r) + 2 * p2 * (x_r * y_theta13_r + y_r * x_theta13_r));
+	jy[9] = Fy * (y_theta13_r + p2 * (6 * y_r * y_theta13_r + 2 * x_r * x_theta13_r) + 2 * p1 * (x_r * y_theta13_r + y_r * x_theta13_r));
 
 	/**
 	 * dfui_xy / dp1
 	 */
-	jx[6] = Fx * (3 * x_r * x_r + y_r * y_r);
-	jy[6] = Fy * (2 * x_r * y_r);
+	jx[10] = Fx * (3 * x_r * x_r + y_r * y_r);
+	jy[10] = Fy * (2 * x_r * y_r);
 
 	/**
 	 * dfui_xy / dp2
 	 */
-	jx[7] = Fx * (2 * x_r * y_r);
-	jy[7] = Fy * (3 * y_r * y_r + x_r * x_r);
-
-	/**
-	 * dfui_xy / dFx
-	 */
-	jx[8] = x_r + p1 * (2 * x_r * x_r + radius_r2) + p2 * 2 * x_r * y_r;
-	jy[8] = 0;
-
-	/**
-	 * dfui_xy / dFy
-	 */
-	jx[9] = 0;
-	jy[9] = y_r + p2 * (2 * y_r * y_r + radius_r2) + p1 * 2 * x_r * y_r;
-
-	/**
-	 * dfui_xy / dmx
-	 */
-	jx[10] = 1;
-	jy[10] = 0;
-
-	/**
-	 * dfui_xy / dmy
-	 */
-	jx[11] = 0;
-	jy[11] = 1;
+	jx[11] = Fx * (2 * x_r * y_r);
+	jy[11] = Fy * (3 * y_r * y_r + x_r * x_r);
 }
 
-template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x12(float* jx, float* jy, const FisheyeCameraT<float>& fisheyeCamera, const VectorT2<float>& normalizedImagePoint);
-template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x12(double* jx, double* jy, const FisheyeCameraT<double>& fisheyeCamera, const VectorT2<double>& normalizedImagePoint);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x12(const FisheyeCameraT<float>& fisheyeCamera, const VectorT2<float>& normalizedUndistortedImagePoint, float* jx, float* jy);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x12(const FisheyeCameraT<double>& fisheyeCamera, const VectorT2<double>& normalizedUndistortedImagePoint, double* jx, double* jy);
 
 void Jacobian::calculateJacobianCameraPoseRodrigues2x12(Scalar* jacobianX, Scalar* jacobianY, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& objectPoint)
 {

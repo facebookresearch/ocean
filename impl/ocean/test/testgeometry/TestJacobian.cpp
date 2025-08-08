@@ -5423,8 +5423,8 @@ bool TestJacobian::testFisheyeCameraJacobian2x12(const double testDuration)
 		const FisheyeCameraT<T> fisheyeCamera(width, height, FisheyeCameraT<T>::PC_12_PARAMETERS, parameters.data());
 
 		/**
-		 * jacobian x: | dfx / dk3, dfx / dk5, dfx / dk7, dfx / dk9, dfx / dk11, dfx / dk13, dfx / dp1, dfx / dp2, dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy |
-		 * jacobian y: | dfy / dk3, dfy / dk5, dfy / dk7, dfy / dk9, dfy / dk11, dfy / dk13, dfy / dp1, dfy / dp2, dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy |
+		 * jacobian x: | dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dk3, dfx / dk5, dfx / dk7, dfx / dk9, dfx / dk11, dfx / dk13, dfx / dp1, dfx / dp2 |
+		 * jacobian y: | dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dk3, dfy / dk5, dfy / dk7, dfy / dk9, dfy / dk11, dfy / dk13, dfy / dp1, dfy / dp2 |
 		 */
 		T jacobianX[12];
 		T jacobianY[12];
@@ -5439,26 +5439,24 @@ bool TestJacobian::testFisheyeCameraJacobian2x12(const double testDuration)
 
 			const VectorT2<T> normalizedUndistortedImagePoint = VectorT2<T>(objectPoint.x() / objectPoint.z(), objectPoint.y() / objectPoint.z());
 
-			Geometry::Jacobian::calculateCameraJacobian2x12(jacobianX, jacobianY, fisheyeCamera, normalizedUndistortedImagePoint);
+			Geometry::Jacobian::calculateCameraJacobian2x12(fisheyeCamera, normalizedUndistortedImagePoint, jacobianX, jacobianY);
 
 			const VectorT2<T> imagePoint(fisheyeCamera.projectToImageIF(objectPoint));
 
-			for (size_t indexJacobian = 0; indexJacobian < 12; ++indexJacobian)
+			for (size_t nParameter = 0; nParameter < 12; ++nParameter)
 			{
-				const size_t indexParameter = (indexJacobian + 4) % 12; // Fx, Fy, mx, my, | k3, k5, k7, k9, k11, k13, p1, p2
-
 				bool localAccuracy = false;
 
 				for (const T epsilon : epsilons)
 				{
 					std::vector<T> deltaParameters(parameters);
-					deltaParameters[indexParameter] += epsilon;
+					deltaParameters[nParameter] += epsilon;
 
 					const FisheyeCameraT<T> deltaFisheyeCamera(width, height, FisheyeCameraT<T>::PC_12_PARAMETERS, deltaParameters.data());
 
 					const VectorT2<T> deltaImagePoint = deltaFisheyeCamera.projectToImageIF(objectPoint);
 
-					if (checkAccuracy(imagePoint, deltaImagePoint, epsilon, jacobianX[indexJacobian], jacobianY[indexJacobian]))
+					if (checkAccuracy(imagePoint, deltaImagePoint, epsilon, jacobianX[nParameter], jacobianY[nParameter]))
 					{
 						localAccuracy = true;
 						break;
