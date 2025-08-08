@@ -488,11 +488,10 @@ bool SLAMTracker::applyFrameTracking(const FrameType& frameType)
 	{
 		ocean_assert(optimizeCamera_);
 
-		if (cameraFieldOfView_ > 0 && cameraFieldOfView_ < Numeric::pi()) {
+		if (cameraFieldOfView_ > 0 && cameraFieldOfView_ < Numeric::pi())
 			camera_ = PinholeCamera(frameType.width(), frameType.height(), cameraFieldOfView_);
-		} else {
+		else
 			camera_ = PinholeCamera(frameType.width(), frameType.height(), Numeric::deg2rad(60));
-}
 	}
 
 	if (frameRangeNumber == 1u)
@@ -507,14 +506,12 @@ bool SLAMTracker::applyFrameTracking(const FrameType& frameType)
 
 		Plane3 plane;
 		Vector3 pointOnPlane;
-		if (!Tracking::Solver3::determinePerpendicularPlane(camera_, HomogenousMatrix4(true), regionOfInterest_.boundingBox().center(), 1, plane, camera_.hasDistortionParameters(), &pointOnPlane)) {
+		if (!Tracking::Solver3::determinePerpendicularPlane(camera_, HomogenousMatrix4(true), regionOfInterest_.boundingBox().center(), 1, plane, camera_.hasDistortionParameters(), &pointOnPlane))
 			return false;
-}
 
 		HomogenousMatrix4 planeTransformation;
-		if (!plane.transformation(pointOnPlane, Vector3(0, 1, 0), planeTransformation)) {
+		if (!plane.transformation(pointOnPlane, Vector3(0, 1, 0), planeTransformation))
 			return false;
-}
 
 		// the plane is a suggestion - so that the user has the chance to adjust the plane by application of the virtual plane, which is simpler than using the base plane
 		eventCallbacks_(TrackerTransformationStateEvent(id_, planeTransformation, true));
@@ -538,15 +535,13 @@ bool SLAMTracker::applyFrameTracking(const FrameType& frameType)
 		if (useRegionOfInterest)
 		{
 			ocean_assert(startFrameIndex_ != (unsigned int)(-1));
-			if (!PointPaths::determineAutomaticTrackingConfiguration(*frameProviderInterface_, FrameType::ORIGIN_UPPER_LEFT, motionSpeed_, startFrameIndex_, regionOfInterest_, soleRegionOfInterestApplication_ ? nullptr : &frameTrackingConfiguration, &regionOfInterestTrackingConfiguration, WorkerPool::get().scopedWorker()(), &shouldStop_)) {
+			if (!PointPaths::determineAutomaticTrackingConfiguration(*frameProviderInterface_, FrameType::ORIGIN_UPPER_LEFT, motionSpeed_, startFrameIndex_, regionOfInterest_, soleRegionOfInterestApplication_ ? nullptr : &frameTrackingConfiguration, &regionOfInterestTrackingConfiguration, WorkerPool::get().scopedWorker()(), &shouldStop_))
 				return false;
-}
 		}
 		else
 		{
-			if (!PointPaths::determineAutomaticTrackingConfiguration(*frameProviderInterface_, FrameType::ORIGIN_UPPER_LEFT, motionSpeed_, lowerFrameIndex_, upperFrameIndex_, frameTrackingConfiguration, 5u, WorkerPool::get().scopedWorker()(), &shouldStop_)) {
+			if (!PointPaths::determineAutomaticTrackingConfiguration(*frameProviderInterface_, FrameType::ORIGIN_UPPER_LEFT, motionSpeed_, lowerFrameIndex_, upperFrameIndex_, frameTrackingConfiguration, 5u, WorkerPool::get().scopedWorker()(), &shouldStop_))
 				return false;
-}
 		}
 	}
 	else
@@ -554,15 +549,13 @@ bool SLAMTracker::applyFrameTracking(const FrameType& frameType)
 		if (useRegionOfInterest)
 		{
 			ocean_assert(startFrameIndex_ != (unsigned int)(-1));
-			if (!PointPaths::determineTrackingConfiguration(*frameProviderInterface_, regionOfInterest_, trackingQuality_, motionSpeed_, soleRegionOfInterestApplication_ ? nullptr : &frameTrackingConfiguration, &regionOfInterestTrackingConfiguration, &shouldStop_)) {
+			if (!PointPaths::determineTrackingConfiguration(*frameProviderInterface_, regionOfInterest_, trackingQuality_, motionSpeed_, soleRegionOfInterestApplication_ ? nullptr : &frameTrackingConfiguration, &regionOfInterestTrackingConfiguration, &shouldStop_))
 				return false;
-}
 		}
 		else
 		{
-			if (!PointPaths::determineTrackingConfiguration(*frameProviderInterface_, CV::SubRegion(), trackingQuality_, motionSpeed_, &frameTrackingConfiguration, nullptr, &shouldStop_)) {
+			if (!PointPaths::determineTrackingConfiguration(*frameProviderInterface_, CV::SubRegion(), trackingQuality_, motionSpeed_, &frameTrackingConfiguration, nullptr, &shouldStop_))
 				return false;
-}
 		}
 	}
 
@@ -612,13 +605,11 @@ bool SLAMTracker::applyFrameTracking(const FrameType& frameType)
 
 				Log::info() << "We tracked " << maximalPointCorrespondences << " points in the region of interest towards one neighboring frames, we are happy with 30.";
 
-				if (maximalPointCorrespondences >= 30u) {
+				if (maximalPointCorrespondences >= 30u)
 					break;
-}
 
-				if (!regionOfInterestTrackingConfiguration.weakenConfiguration()) {
+				if (!regionOfInterestTrackingConfiguration.weakenConfiguration())
 					break;
-}
 
 				Log::info() << "We weaken the tracker configuration";
 			}
@@ -844,9 +835,8 @@ bool SLAMTracker::applyFrameTracking(const FrameType& frameType)
 	Log::info() << "Determine final poses for entire set of 3D object points";
 
 	OfflinePoses offlinePoses;
-	if (!extractPoses(lowerFrameIndex_, upperFrameIndex_, offlinePoses, 5u, Geometry::Estimator::ET_SQUARE, Scalar(1.0), Scalar(3.5 * 3.5), Scalar(10 * 10), nullptr, WorkerPool::get().scopedWorker()(), &shouldStop_)) {
+	if (!extractPoses(lowerFrameIndex_, upperFrameIndex_, offlinePoses, 5u, Geometry::Estimator::ET_SQUARE, Scalar(1.0), Scalar(3.5 * 3.5), Scalar(10 * 10), nullptr, WorkerPool::get().scopedWorker()(), &shouldStop_))
 		return false;
-}
 
 	ocean_assert(!regionOfInterest_.isEmpty() && startFrameIndex_ != (unsigned int)(-1));
 
@@ -1709,9 +1699,8 @@ bool SLAMTracker::addUnknownObjectPointsInRegionOfInterest(const PinholeCamera& 
 
 	Vectors3 newObjectPoints;
 	Indices32 newObjectPointIds;
-	if (!Solver3::determineUnknownObjectPoints(database, AnyCameraPinhole(pinholeCamera), cameraMotion, objectPointIds, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort)) {
+	if (!Solver3::determineUnknownObjectPoints(database, AnyCameraPinhole(pinholeCamera), cameraMotion, objectPointIds, newObjectPoints, newObjectPointIds, randomGenerator, nullptr, 2u, true, Geometry::Estimator::ET_SQUARE, Scalar(3.5 * 3.5), Scalar(3.5 * 3.5), Numeric::maxValue(), WorkerPool::get().scopedWorker()(), abort))
 		return false;
-}
 
 	// we determine the minimal number of correspondences before we add the new object point locations
 
@@ -1750,9 +1739,8 @@ bool SLAMTracker::addUnknownObjectPointsInPlanarRegionOfInterest(const PinholeCa
 		return false;
 	}
 
-	if (!addUnknownObjectPointsInRegionOfInterest(pinholeCamera, database, randomGenerator, lowerFrame, regionOfInterestFrame, upperFrame, regionOfInterest, cameraMotion, minimalObservations, abort)) {
+	if (!addUnknownObjectPointsInRegionOfInterest(pinholeCamera, database, randomGenerator, lowerFrame, regionOfInterestFrame, upperFrame, regionOfInterest, cameraMotion, minimalObservations, abort))
 		return false;
-}
 
 	// now we determine the plane which is covered by the region of interest
 
@@ -2552,9 +2540,8 @@ bool SLAMTracker::extendStableObjectPointsPartially(const PinholeCamera& pinhole
 		ocean_assert(cameraMotion == Solver3::CM_STATIC || cameraMotion == Solver3::CM_ROTATIONAL || cameraMotion == Solver3::CM_ROTATIONAL_TINY
 					|| cameraMotion == Solver3::CM_ROTATIONAL_MODERATE || cameraMotion == Solver3::CM_ROTATIONAL_SIGNIFICANT);
 
-		if (extendStableObjectPointsPartiallyRotational(pinholeCamera, database, lowerFrame, upperFrame, correspondenceThreshold, finalLowerValidPoseRange, finalUpperValidPoseRange, abort, progress)) {
+		if (extendStableObjectPointsPartiallyRotational(pinholeCamera, database, lowerFrame, upperFrame, correspondenceThreshold, finalLowerValidPoseRange, finalUpperValidPoseRange, abort, progress))
 			return true;
-}
 
 		// if the extension of the database for rotational camera motion failes we apply the extension for the translation camera motion as backup
 		Log::info() << "Extension for rotational camera motion failed, thus we try a translational camera motion as backup.";
