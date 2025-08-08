@@ -181,7 +181,9 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 * Tests the Jacobian for the intrinsic, radial and tangential distortion of pinhole camera parameters.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T the data type of the scalar to be used, either 'float' or 'double'
 		 */
+		template <typename T>
 		static bool testPinholeCameraJacobian2x8(const double testDuration);
 
 		/**

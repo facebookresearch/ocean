@@ -629,15 +629,18 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * The jacobian is determined for the focal length, the principal point and the radial and tangential distortion parameters.<br>
 		 * The resulting jacobian has the following form:
 		 * <pre>
-		 * | dfx / dk1, dfx / dk2, dfx / dp1, dfx / dp2, dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy |
-		 * | dfy / dk1, dfy / dk2, dfy / dp1, dfy / dp2, dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy |
+		  * Jacobian Camera (parameter order as in PC_8_PARAMETERS):
+		 * | dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dk1, dfx / dk2, dfx / dp1, dfx / dp2 |
+		 * | dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dk1, dfy / dk2, dfy / dp1, dfy / dp2 |
 		 * </pre>
-		 * @param jx First row of the jacobian, with 8 column entries
-		 * @param jy Second row of the jacobian, with 8 column entries
 		 * @param pinholeCamera The pinhole camera to determine the jacobian values for
-		 * @param normalizedImagePoint Normalized 2D image point to determine the jacobian for
+		 * @param normalizedUndistortedImagePoint Normalized 2D image point to determine the jacobian for
+		 * @param jx The resulting first row of the jacobian, with 8 column entries
+		 * @param jy The resulting second row of the jacobian, with 8 column entries
+		 * @tparam T The scalar data type, either 'float' or 'double'
 		 */
-		static void calculateCameraJacobian2x8(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const Vector2& normalizedImagePoint);
+		template <typename T>
+		static void calculateCameraJacobian2x8(const PinholeCameraT<T>& pinholeCamera, const VectorT2<T>& normalizedUndistortedImagePoint, T* jx, T* jy);
 
 		/**
 		 * Calculates the two jacobian rows for the intrinsics of a given fisheye camera and image point.

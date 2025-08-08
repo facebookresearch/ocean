@@ -2570,21 +2570,23 @@ void Jacobian::calculateCameraJacobian2x7(Scalar* jx, Scalar* jy, const PinholeC
 	jy[6] = 1;
 }
 
-void Jacobian::calculateCameraJacobian2x8(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const Vector2& normalizedImagePoint)
+template <typename T>
+void Jacobian::calculateCameraJacobian2x8(const PinholeCameraT<T>& pinholeCamera, const VectorT2<T>& normalizedUndistortedImagePoint, T* jx, T* jy)
 {
-	ocean_assert(jx && jy);
+	ocean_assert(pinholeCamera.isValid());
+	ocean_assert(jx != nullptr && jy != nullptr);
 
-	const Scalar& x = normalizedImagePoint.x();
-	const Scalar& y = normalizedImagePoint.y();
+	const T& x = normalizedUndistortedImagePoint.x();
+	const T& y = normalizedUndistortedImagePoint.y();
 
-	const Scalar& Fx = pinholeCamera.focalLengthX();
-	const Scalar& Fy = pinholeCamera.focalLengthY();
+	const T& Fx = pinholeCamera.focalLengthX();
+	const T& Fy = pinholeCamera.focalLengthY();
 
-	const Scalar& k1 = pinholeCamera.radialDistortion().first;
-	const Scalar& k2 = pinholeCamera.radialDistortion().second;
+	const T& k1 = pinholeCamera.radialDistortion().first;
+	const T& k2 = pinholeCamera.radialDistortion().second;
 
-	const Scalar& p1 = pinholeCamera.tangentialDistortion().first;
-	const Scalar& p2 = pinholeCamera.tangentialDistortion().second;
+	const T& p1 = pinholeCamera.tangentialDistortion().first;
+	const T& p2 = pinholeCamera.tangentialDistortion().second;
 
 	/**
 	 * fundistort_intrinsic_xy(k1, k2, p1, p2, Fx, Fy, mx, my) = (u, v)
@@ -2598,51 +2600,7 @@ void Jacobian::calculateCameraJacobian2x8(Scalar* jx, Scalar* jy, const PinholeC
 	 *
 	 */
 
-	const Scalar xy2 = x * x + y * y;
-
-	/**
-	 * dfui_xy / dk1
-	 *
-	 * | Fx x (x^2 + y^2) |
-	 * | Fy y (x^2 + y^2) |
-	 *
-	 */
-	jx[0] = Fx * x * xy2;
-	jy[0] = Fy * y * xy2;
-
-
-	/**
-	 * dfui_xy / dk2
-	 *
-	 * | Fx x (x^2 + y^2)^2 |
-	 * | Fy y (x^2 + y^2)^2 |
-	 *
-	 */
-	jx[1] = Fx * x * Numeric::sqr(xy2);
-	jy[1] = Fy * y * Numeric::sqr(xy2);
-
-
-	/**
-	 * dfui_xy / dp1
-	 *
-	 * |    2 Fx x y    |
-	 * | Fy (x^2+3 y^2) |
-	 *
-	 */
-	jx[2] = 2 * Fx * x * y;
-	jy[2] = Fy * (xy2 + 2 * y * y);
-
-
-	/**
-	 * dfui_xy / dp2
-	 *
-	 * | Fx (3 x^2+y^2) |
-	 * |    2 Fy x y    |
-	 *
-	 */
-	jx[3] = Fx * (xy2 + 2 * x * x);
-	jy[3] = 2 * Fy * x * y;
-
+	const T xy2 = x * x + y * y;
 
 	/**
 	 * dfui_xy / dFx
@@ -2651,8 +2609,8 @@ void Jacobian::calculateCameraJacobian2x8(Scalar* jx, Scalar* jy, const PinholeC
 	 * |                                      0                                  |
 	 *
 	 */
-	jx[4] = 2 * p1 * x * y + p2 * (2 * x * x + xy2) + x * (1 + xy2 * (k1 + k2 * xy2));
-	jy[4] = 0;
+	jx[0] = 2 * p1 * x * y + p2 * (2 * x * x + xy2) + x * (1 + xy2 * (k1 + k2 * xy2));
+	jy[0] = 0;
 
 
 	/**
@@ -2662,8 +2620,8 @@ void Jacobian::calculateCameraJacobian2x8(Scalar* jx, Scalar* jy, const PinholeC
 	 * | y + 2 p2 x y + p1 (x^2 + 3 y^2) + y (x^2 + y^2) (k1 + k2 (x^2 + y^2)) |
 	 *
 	 */
-	jx[5] = 0;
-	jy[5] = y + 2 * p2 * x * y + p1 * (xy2 + 2 * y * y) + y * xy2* (k1 + k2 * xy2);
+	jx[1] = 0;
+	jy[1] = y + 2 * p2 * x * y + p1 * (xy2 + 2 * y * y) + y * xy2* (k1 + k2 * xy2);
 
 
 	/**
@@ -2673,8 +2631,8 @@ void Jacobian::calculateCameraJacobian2x8(Scalar* jx, Scalar* jy, const PinholeC
 	 * | 0 |
 	 *
 	 */
-	jx[6] = 1;
-	jy[6] = 0;
+	jx[2] = 1;
+	jy[2] = 0;
 
 
 	/**
@@ -2684,9 +2642,55 @@ void Jacobian::calculateCameraJacobian2x8(Scalar* jx, Scalar* jy, const PinholeC
 	 * | 1 |
 	 *
 	 */
-	jx[7] = 0;
-	jy[7] = 1;
+	jx[3] = 0;
+	jy[3] = 1;
+
+	/**
+	 * dfui_xy / dk1
+	 *
+	 * | Fx x (x^2 + y^2) |
+	 * | Fy y (x^2 + y^2) |
+	 *
+	 */
+	jx[4] = Fx * x * xy2;
+	jy[4] = Fy * y * xy2;
+
+
+	/**
+	 * dfui_xy / dk2
+	 *
+	 * | Fx x (x^2 + y^2)^2 |
+	 * | Fy y (x^2 + y^2)^2 |
+	 *
+	 */
+	jx[5] = Fx * x * NumericT<T>::sqr(xy2);
+	jy[5] = Fy * y * NumericT<T>::sqr(xy2);
+
+
+	/**
+	 * dfui_xy / dp1
+	 *
+	 * |    2 Fx x y    |
+	 * | Fy (x^2+3 y^2) |
+	 *
+	 */
+	jx[6] = 2 * Fx * x * y;
+	jy[6] = Fy * (xy2 + 2 * y * y);
+
+
+	/**
+	 * dfui_xy / dp2
+	 *
+	 * | Fx (3 x^2+y^2) |
+	 * |    2 Fy x y    |
+	 *
+	 */
+	jx[7] = Fx * (xy2 + 2 * x * x);
+	jy[7] = 2 * Fy * x * y;
 }
+
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x8(const PinholeCameraT<float>& pinholeCamera, const VectorT2<float>& normalizedImagePoint, float* jx, float* jy);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateCameraJacobian2x8(const PinholeCameraT<double>& pinholeCamera, const VectorT2<double>& normalizedImagePoint, double* jx, double* jy);
 
 template <typename T>
 void Jacobian::calculateCameraJacobian2x12(T* jx, T* jy, const FisheyeCameraT<T>& fisheyeCamera, const VectorT2<T>& normalizedImagePoint)

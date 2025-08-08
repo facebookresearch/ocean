@@ -153,7 +153,9 @@ bool TestJacobian::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testPinholeCameraJacobian2x8(testDuration) && allSucceeded;
+	allSucceeded = testPinholeCameraJacobian2x8<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testPinholeCameraJacobian2x8<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -351,9 +353,14 @@ TEST(TestJacobian, PinholeCameraJacobian2x7)
 	EXPECT_TRUE(TestJacobian::testPinholeCameraJacobian2x7(GTEST_TEST_DURATION));
 }
 
-TEST(TestJacobian, PinholeCameraJacobian2x8)
+TEST(TestJacobian, PinholeCameraJacobian2x8_float)
 {
-	EXPECT_TRUE(TestJacobian::testPinholeCameraJacobian2x8(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestJacobian::testPinholeCameraJacobian2x8<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestJacobian, PinholeCameraJacobian2x8_double)
+{
+	EXPECT_TRUE(TestJacobian::testPinholeCameraJacobian2x8<double>(GTEST_TEST_DURATION));
 }
 
 TEST(TestJacobian, FisheyeCameraJacobian2x12_float)
@@ -5250,285 +5257,116 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 	return allSucceeded;
 }
 
+template <typename T>
 bool TestJacobian::testPinholeCameraJacobian2x8(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing pinhole camera jacobian 2x8:";
+	Log::info() << "Testing pinhole camera jacobian 2x8, with " << TypeNamer::name<T>() << ":";
 
-	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
+	const std::vector<double> epsilons = {NumericD::weakEps(), NumericD::weakEps() / 10.0, NumericD::weakEps() * 10.0, NumericD::weakEps() / 100.0, NumericD::weakEps() * 100.0};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	constexpr size_t numberPoints = 100;
+
+	RandomGenerator randomGenerator;
+
+	constexpr double threshold = std::is_same<float, T>::value ? 0.90 : 0.99;
+
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		bool accurate = true;
+		const unsigned int width = 1000u;
+		const unsigned int height = 1000u;
 
-		const unsigned int width = 640u;
-		const unsigned int height = 480u;
+		const T width_2 = T(width) * T(0.5);
+		const T height_2 = T(height) * T(0.5);
 
-		const Scalar width2 = Scalar(width) * Scalar(0.5);
-		const Scalar height2 = Scalar(height) * Scalar(0.5);
+		const T fovX = RandomT<T>::scalar(randomGenerator, NumericT<T>::deg2rad(40), NumericT<T>::deg2rad(70));
 
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
+		const T principalX = RandomT<T>::scalar(randomGenerator, width_2 - T(50), width_2 + T(50));
+		const T principalY = RandomT<T>::scalar(randomGenerator, height_2 - T(50), height_2 + T(50));
 
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
+		const T k1 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
+		const T k2 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
 
-		const Scalar k1 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-		const Scalar k2 = Random::scalar(Scalar(-0.5), Scalar(0.5));
+		const T p1 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
+		const T p2 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
 
-		const Scalar p1 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-		const Scalar p2 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-
-		PinholeCamera camera(width, height, fovX, principalX, principalY);
-		camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
-		camera.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2));
+		PinholeCameraT<T> camera(width, height, fovX, principalX, principalY);
+		camera.setRadialDistortion(typename PinholeCameraT<T>::DistortionPair(k1, k2));
+		camera.setTangentialDistortion(typename PinholeCameraT<T>::DistortionPair(p1, p2));
 
 		/**
-		 * jacobian x: | dfx / dk1, dfx / dk2, dfx / dp1, dfx / dp2, dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy |
-		 * jacobian y: | dfy / dk1, dfy / dk2, dfy / dp1, dfy / dp2, dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy |
+		 * jacobian x: | dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dk1, dfx / dk2, dfx / dp1, dfx / dp2 |
+		 * jacobian y: | dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dk1, dfy / dk2, dfy / dp1, dfy / dp2 |
 		 */
-		Scalar jacobianX[8];
-		Scalar jacobianY[8];
+		T jacobianX[8];
+		T jacobianY[8];
 
-		const Vector2 lower(camera.imagePoint2normalizedImagePoint<true>(Vector2(0, 0), false));
-		const Vector2 higher(camera.imagePoint2normalizedImagePoint<true>(Vector2(Scalar(width), Scalar(height)), false));
+		const PinholeCameraD cameraD(camera);
 
-		const Vector2 normalizedImagePoint(Random::scalar(lower.x(), higher.x()), Random::scalar(lower.y(), higher.y()));
-		Geometry::Jacobian::calculateCameraJacobian2x8(jacobianX, jacobianY, camera, normalizedImagePoint);
+		unsigned int cameraWidth = 0u;
+		unsigned int cameraHeight = 0u;
+		std::vector<double> cameraParametersD;
+		PinholeCameraD::ParameterConfiguration cameraParameterConfiguration = PinholeCameraD::PC_UNKNOWN;
+		cameraD.copyParameters(cameraWidth, cameraHeight, cameraParametersD, cameraParameterConfiguration);
 
-		const Vector2 imagePoint(camera.projectToImageIF<true>(normalizedImagePoint, true));
+		ocean_assert(cameraWidth == width && cameraHeight == height);
+		ocean_assert(cameraParametersD.size() == 8 && cameraParameterConfiguration == PinholeCameraD::PC_8_PARAMETERS);
 
+		for (size_t n = 0; n < numberPoints; ++n)
 		{
-			bool localAccuracy = false;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			for (const Scalar epsilon : epsilons)
+			const VectorT2<T> distortedImagePoint = RandomT<T>::vector2(randomGenerator, T(0), T(width), T(0), T(height));
+			const VectorT3<T> objectPoint = camera.vectorIF(distortedImagePoint);
+			ocean_assert(objectPoint.z() > NumericT<T>::eps());
+
+			const VectorT2<T> normalizedUndistortedImagePoint = VectorT2<T>(objectPoint.x() / objectPoint.z(), objectPoint.y() / objectPoint.z());
+
+			Geometry::Jacobian::calculateCameraJacobian2x8<T>(camera, normalizedUndistortedImagePoint, jacobianX, jacobianY);
+
+			const VectorD3 objectPointD(objectPoint);
+			const VectorD2 normalizedUndistortedImagePointD = VectorD2(objectPointD.x() / objectPointD.z(), objectPointD.y() / objectPointD.z());
+
+			const VectorD2 imagePointD(cameraD.projectToImageIF<true>(normalizedUndistortedImagePointD, true));
+
+			for (unsigned int nParameter = 0u; nParameter < 8u; ++nParameter)
 			{
-				// df / dk1
-				PinholeCamera cameraK1(camera);
-				cameraK1.setRadialDistortion(PinholeCamera::DistortionPair(k1 + epsilon, k2));
+				std::vector<double> deltaCameraParametersD(cameraParametersD);
 
-				const Vector2 imagePointK1(cameraK1.projectToImageIF<true>(normalizedImagePoint, true));
+				bool localAccuracy = false;
 
-				if (checkAccuracy(imagePoint, imagePointK1, epsilon, jacobianX[0], jacobianY[0]))
+				for (const double epsilon : epsilons)
 				{
-					localAccuracy = true;
-					break;
+					deltaCameraParametersD[nParameter] += epsilon;
+
+					const PinholeCameraD deltaCameraD(cameraWidth, cameraHeight, cameraParameterConfiguration, deltaCameraParametersD.data());
+
+					const VectorD2 deltaImagePoint(deltaCameraD.projectToImageIF<true>(normalizedUndistortedImagePointD, true));
+
+					if (checkAccuracy(imagePointD, deltaImagePoint, epsilon, jacobianX[nParameter], jacobianY[nParameter]))
+					{
+						localAccuracy = true;
+						break;
+					}
+				}
+
+				if (!localAccuracy)
+				{
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (!localAccuracy)
-			{
-				accurate = false;
-			}
-		}
-
-		{
-			bool localAccuracy = false;
-
-			for (const Scalar epsilon : epsilons)
-			{
-				// df / dk2
-				PinholeCamera cameraK2(camera);
-				cameraK2.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2 + epsilon));
-
-				const Vector2 imagePointK2(cameraK2.projectToImageIF<true>(normalizedImagePoint, true));
-
-				if (checkAccuracy(imagePoint, imagePointK2, epsilon, jacobianX[1], jacobianY[1]))
-				{
-					localAccuracy = true;
-					break;
-				}
-			}
-
-			if (!localAccuracy)
-			{
-				accurate = false;
-			}
-		}
-
-		{
-			bool localAccuracy = false;
-
-			for (const Scalar epsilon : epsilons)
-			{
-				// df / dp1
-				PinholeCamera cameraP1(camera);
-				cameraP1.setTangentialDistortion(PinholeCamera::DistortionPair(p1 + epsilon, p2));
-
-				const Vector2 imagePointP1(cameraP1.projectToImageIF<true>(normalizedImagePoint, true));
-
-				if (checkAccuracy(imagePoint, imagePointP1, epsilon, jacobianX[2], jacobianY[2]))
-				{
-					localAccuracy = true;
-					break;
-				}
-			}
-
-			if (!localAccuracy)
-			{
-				accurate = false;
-			}
-		}
-
-		{
-			bool localAccuracy = false;
-
-			for (const Scalar epsilon : epsilons)
-			{
-				// df / dp2
-				PinholeCamera cameraP2(camera);
-				cameraP2.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2 + epsilon));
-
-				const Vector2 imagePointP2(cameraP2.projectToImageIF<true>(normalizedImagePoint, true));
-
-				if (checkAccuracy(imagePoint, imagePointP2, epsilon, jacobianX[3], jacobianY[3]))
-				{
-					localAccuracy = true;
-					break;
-				}
-			}
-
-			if (!localAccuracy)
-			{
-				accurate = false;
-			}
-		}
-
-		{
-			bool localAccuracy = false;
-
-			for (const Scalar epsilon : epsilons)
-			{
-				// df / dFx
-				PinholeCamera cameraFx(camera);
-				SquareMatrix3 intrinsicFx(camera.intrinsic());
-				intrinsicFx(0, 0) += epsilon;
-				cameraFx.setIntrinsic(intrinsicFx);
-
-				const Vector2 imagePointFx(cameraFx.projectToImageIF<true>(normalizedImagePoint, true));
-
-				if (checkAccuracy(imagePoint, imagePointFx, epsilon, jacobianX[4], jacobianY[4]))
-				{
-					localAccuracy = true;
-					break;
-				}
-			}
-
-			if (!localAccuracy)
-			{
-				accurate = false;
-			}
-		}
-
-		{
-			bool localAccuracy = false;
-
-			for (const Scalar epsilon : epsilons)
-			{
-				// df / dFy
-				PinholeCamera cameraFy(camera);
-				SquareMatrix3 intrinsicFy(camera.intrinsic());
-				intrinsicFy(1, 1) += epsilon;
-				cameraFy.setIntrinsic(intrinsicFy);
-
-				const Vector2 imagePointFy(cameraFy.projectToImageIF<true>(normalizedImagePoint, true));
-
-				if (checkAccuracy(imagePoint, imagePointFy, epsilon, jacobianX[5], jacobianY[5]))
-				{
-					localAccuracy = true;
-					break;
-				}
-			}
-
-			if (!localAccuracy)
-			{
-				accurate = false;
-			}
-		}
-
-		{
-			bool localAccuracy = false;
-
-			for (const Scalar epsilon : epsilons)
-			{
-				// df / dmx
-				PinholeCamera cameraMx(camera);
-				SquareMatrix3 intrinsicMx(camera.intrinsic());
-				intrinsicMx(0, 2) += epsilon;
-				cameraMx.setIntrinsic(intrinsicMx);
-
-				const Vector2 imagePointMx(cameraMx.projectToImageIF<true>(normalizedImagePoint, true));
-
-				if (checkAccuracy(imagePoint, imagePointMx, epsilon, jacobianX[6], jacobianY[6]))
-				{
-					localAccuracy = true;
-					break;
-				}
-			}
-
-			if (!localAccuracy)
-			{
-				accurate = false;
-			}
-		}
-
-		{
-			bool localAccuracy = false;
-
-			for (const Scalar epsilon : epsilons)
-			{
-				// df / dmy
-				PinholeCamera cameraMy(camera);
-				SquareMatrix3 intrinsicMy(camera.intrinsic());
-				intrinsicMy(1, 2) += epsilon;
-				cameraMy.setIntrinsic(intrinsicMy);
-
-				const Vector2 imagePointMy(cameraMy.projectToImageIF<true>(normalizedImagePoint, true));
-
-				if (checkAccuracy(imagePoint, imagePointMy, epsilon, jacobianX[7], jacobianY[7]))
-				{
-					localAccuracy = true;
-					break;
-				}
-			}
-
-			if (!localAccuracy)
-			{
-				accurate = false;
-			}
-		}
-
-		if (accurate)
-		{
-			++succeeded;
-		}
-
-		++iterations;
-	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
-
-	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
 		}
 	}
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	return allSucceeded;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -5597,7 +5435,7 @@ bool TestJacobian::testFisheyeCameraJacobian2x12(const double testDuration)
 
 			const VectorT2<T> distortedImagePoint = RandomT<T>::vector2(randomGenerator, T(0), T(width), T(0), T(height));
 			const VectorT3<T> objectPoint = fisheyeCamera.vectorIF(distortedImagePoint);
-			ocean_assert(objectPoint.z() > Numeric::eps());
+			ocean_assert(objectPoint.z() > NumericT<T>::eps());
 
 			const VectorT2<T> normalizedUndistortedImagePoint = VectorT2<T>(objectPoint.x() / objectPoint.z(), objectPoint.y() / objectPoint.z());
 

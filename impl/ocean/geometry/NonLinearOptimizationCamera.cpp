@@ -764,9 +764,38 @@ inline void NonLinearOptimizationCamera::CameraProvider<PinholeCamera::OS_INTRIN
 {
 	jacobian.resize(2 * numberObservations_, 8);
 
+	Scalar jacobianX[8];
+	Scalar jacobianY[8];
+
 	for (unsigned int n = 0; n < numberObservations_; ++n)
 	{
-		Jacobian::calculateCameraJacobian2x8(jacobian[2 * n + 0], jacobian[2 * n + 1], camera_, normalizedObjectPoints_[n]);
+		Scalar* jx = jacobian[2 * n + 0];
+		Scalar* jy = jacobian[2 * n + 1];
+
+		Jacobian::calculateCameraJacobian2x8(camera_, normalizedObjectPoints_[n], jacobianX, jacobianY);
+
+		// source order: fx, fy, mx, my, k1, k2, p1, p2
+		// target order: k1, k2, p1, p2, fx, fy, mx, my
+
+		jx[0] = jacobianX[4];
+		jx[1] = jacobianX[5];
+		jx[2] = jacobianX[6];
+		jx[3] = jacobianX[7];
+
+		jx[4] = jacobianX[0];
+		jx[5] = jacobianX[1];
+		jx[6] = jacobianX[2];
+		jx[7] = jacobianX[3];
+
+		jy[0] = jacobianY[4];
+		jy[1] = jacobianY[5];
+		jy[2] = jacobianY[6];
+		jy[3] = jacobianY[7];
+
+		jy[4] = jacobianY[0];
+		jy[5] = jacobianY[1];
+		jy[6] = jacobianY[2];
+		jy[7] = jacobianY[3];
 	}
 }
 
