@@ -1265,7 +1265,11 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 			SparseMatrix::Entries jacobianEntries;
 			jacobianEntries.reserve(observations_ * 2 * 14); // in each row are at most 14 non-zero elements
 
-			Scalar jacobianX[14], jacobianY[14];
+			Scalar jacobianCameraX[8];
+			Scalar jacobianCameraY[8];
+			Scalar jacobianPoseX[6];
+			Scalar jacobianPoseY[6];
+
 			size_t row = 0;
 
 			for (size_t p = 0; p < flippedCameras_T_world_.size(); ++p)
@@ -1280,22 +1284,18 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 
 				for (size_t i = 0; i < objectPoints.size(); ++i)
 				{
-					Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(jacobianX, jacobianY, camera_, flippedCamera_T_world, objectPoints[i], Rwx, Rwy, Rwz);
+					Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(camera_, flippedCamera_T_world, objectPoints[i], Rwx, Rwy, Rwz, jacobianCameraX, jacobianCameraY, jacobianPoseX, jacobianPoseY);
 
 					for (size_t e = 0u; e < 8u; ++e)
 					{
-						// .insert(row + 0, 0, jacobianX, 8);
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 0, e, jacobianX[e]));
-						// .insert(row + 1, 0, jacobianY, 8);
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 1, e, jacobianY[e]));
+						jacobianEntries.push_back(SparseMatrix::Entry(row + 0, e, jacobianCameraX[e]));
+						jacobianEntries.push_back(SparseMatrix::Entry(row + 1, e, jacobianCameraY[e]));
 					}
 
 					for (size_t e = 0u; e < 6; ++e)
 					{
-						// .insert(row + 0, 8 + p * 6, jacobianX + 8, 6);
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 0, 8 + p * 6 + e, jacobianX[8 + e]));
-						// .insert(row + 1, 8 + p * 6, jacobianY + 8, 6);
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 1, 8 + p * 6 + e, jacobianY[8 + e]));
+						jacobianEntries.push_back(SparseMatrix::Entry(row + 0, 8 + p * 6 + e, jacobianPoseX[e]));
+						jacobianEntries.push_back(SparseMatrix::Entry(row + 1, 8 + p * 6 + e, jacobianPoseY[e]));
 					}
 
 					row += 2;
@@ -1314,23 +1314,23 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 		 */
 		inline void applyCorrection(const Matrix& deltas)
 		{
-			const Scalar& deltaK1 = deltas(0);
-			const Scalar& deltaK2 = deltas(1);
-			const Scalar& deltaP1 = deltas(2);
-			const Scalar& deltaP2 = deltas(3);
-			const Scalar& deltaFx = deltas(4);
-			const Scalar& deltaFy = deltas(5);
-			const Scalar& deltaMx = deltas(6);
-			const Scalar& deltaMy = deltas(7);
+			const Scalar& deltaFx = deltas(0);
+			const Scalar& deltaFy = deltas(1);
+			const Scalar& deltaMx = deltas(2);
+			const Scalar& deltaMy = deltas(3);
+			const Scalar& deltaK1 = deltas(4);
+			const Scalar& deltaK2 = deltas(5);
+			const Scalar& deltaP1 = deltas(6);
+			const Scalar& deltaP2 = deltas(7);
 
-			const Scalar newK1 = camera_.radialDistortion().first - deltaK1;
-			const Scalar newK2 = camera_.radialDistortion().second - deltaK2;
-			const Scalar newP1 = camera_.tangentialDistortion().first - deltaP1;
-			const Scalar newP2 = camera_.tangentialDistortion().second - deltaP2;
 			const Scalar newFx = camera_.focalLengthX() - deltaFx;
 			const Scalar newFy = camera_.focalLengthY() - deltaFy;
 			const Scalar newMx = camera_.principalPointX() - deltaMx;
 			const Scalar newMy = camera_.principalPointY() - deltaMy;
+			const Scalar newK1 = camera_.radialDistortion().first - deltaK1;
+			const Scalar newK2 = camera_.radialDistortion().second - deltaK2;
+			const Scalar newP1 = camera_.tangentialDistortion().first - deltaP1;
+			const Scalar newP2 = camera_.tangentialDistortion().second - deltaP2;
 
 			candidateCamera_ = PinholeCamera(SquareMatrix3(newFx, 0, 0, 0, newFy, 0, newMx, newMy, 1), camera_.width(), camera_.height(), PinholeCamera::DistortionPair(newK1, newK2), PinholeCamera::DistortionPair(newP1, newP2));
 
@@ -1338,7 +1338,7 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 			{
 				const Pose pose(flippedCameras_T_world_[n]);
 
-				const Pose deltaPose(deltas(8 + n * 6 + 3), deltas(8 + n * 6 + 4), deltas(8 + n * 6 + 5), deltas(8 + n * 6 + 0), deltas(8 + n * 6 + 1), deltas(8 + n * 6 + 2));
+				const Pose deltaPose(deltas(8 + n * 6 + 0), deltas(8 + n * 6 + 1), deltas(8 + n * 6 + 2), deltas(8 + n * 6 + 3), deltas(8 + n * 6 + 4), deltas(8 + n * 6 + 5));
 				const Pose newPose(pose - deltaPose);
 
 				candidateFlippedCameras_T_world_[n] = newPose.transformation();

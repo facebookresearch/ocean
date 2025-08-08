@@ -6710,6 +6710,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 		Vectors3 objectPoints;
 		objectPoints.reserve(numberPoints);
+
 		while (objectPoints.size() < numberPoints)
 		{
 			const Vector2 imagePoint = Random::vector2(Scalar(40), Scalar(width - 40u), Scalar(40), Scalar(height - 40u));
@@ -6723,14 +6724,14 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 		calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
 
 		/**
-		 * | dfx / dk1, dfx / dk2, dfx / dp1, dfx / dp2, dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dwx, dfx / dwy, dfx / dwz, dfx / dtx, dfx / dty, dfx / dtz |
-		 * | dfy / dk1, dfy / dk2, dfy / dp1, dfy / dp2, dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dwx, dfy / dwy, dfy / dwz, dfy / dtx, dfy / dty, dfy / dtz |
+		 * | dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dk1, dfx / dk2, dfx / dp1, dfx / dp2,          dfx / dtx, dfx / dty, dfx / dtz,   dfx / dwx, dfx / dwy, dfx / dwz |
+		 * | dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dk1, dfy / dk2, dfy / dp1, dfy / dp2,          dfy / dtx, dfy / dty, dfy / dtz,   dfy / dwx, dfy / dwy, dfy / dwz |
 		 */
 
 		Matrix jacobian(2 * objectPoints.size(), 14);
 
 		performance.start();
-			Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2nx14IF(jacobian.data(), camera, flippedCamera_T_world, ConstArrayAccessor<Vector3>(objectPoints), Rwx, Rwy, Rwz);
+			Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2nx14IF(camera, flippedCamera_T_world, ConstArrayAccessor<Vector3>(objectPoints), Rwx, Rwy, Rwz, jacobian.data());
 		performance.stop();
 
 		{
@@ -6747,63 +6748,29 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 				{
 					Pose poseDelta(flippedCamera_T_world);
 
-					SquareMatrix3 intrinsicDelta(camera.intrinsic());
-					PinholeCamera::DistortionPair radialDistortionDelta(camera.radialDistortion());
-					PinholeCamera::DistortionPair tangentialDistortionDelta(camera.tangentialDistortion());
+					unsigned int cameraWidth = 0u;
+					unsigned int cameraHeight = 0u;
 
-					if (i >= 8u && i < 8u + 6u)
+					Scalars deltaParameters;
+					PinholeCamera::ParameterConfiguration parameterConfiguration = PinholeCamera::PC_UNKNOWN;
+					camera.copyParameters(cameraWidth, cameraHeight, deltaParameters, parameterConfiguration);
+
+					ocean_assert(width == cameraWidth && height == cameraHeight);
+					ocean_assert(deltaParameters.size() == 8 && parameterConfiguration == PinholeCamera::PC_8_PARAMETERS);
+
+					if (i < 8u)
 					{
-						if (i < 8u + 3u)
-						{
-							poseDelta[i - 8u + 3u] += Numeric::weakEps();
-						}
-						else
-						{
-							poseDelta[i - 8u - 3u] += Numeric::weakEps();
-						}
+						deltaParameters[i] += Numeric::weakEps();
 					}
 					else
 					{
-						switch (i)
-						{
-							case 0u:
-								radialDistortionDelta.first += Numeric::weakEps();
-								break;
+						const unsigned int ip = i - 8u;
+						ocean_assert(ip < 6u);
 
-							case 1u:
-								radialDistortionDelta.second += Numeric::weakEps();
-								break;
-
-							case 2u:
-								tangentialDistortionDelta.first += Numeric::weakEps();
-								break;
-
-							case 3u:
-								tangentialDistortionDelta.second += Numeric::weakEps();
-								break;
-
-							case 4u:
-								intrinsicDelta(0, 0) += Numeric::weakEps();
-								break;
-
-							case 5u:
-								intrinsicDelta(1, 1) += Numeric::weakEps();
-								break;
-
-							case 6u:
-								intrinsicDelta(2, 0) += Numeric::weakEps();
-								break;
-
-							case 7u:
-								intrinsicDelta(2, 1) += Numeric::weakEps();
-								break;
-
-							default:
-								ocean_assert(false && "This should never happen!");
-						}
+						poseDelta[ip] += Numeric::weakEps();
 					}
 
-					const PinholeCamera cameraDelta(intrinsicDelta, camera.width(), camera.height(), radialDistortionDelta, tangentialDistortionDelta);
+					const PinholeCamera cameraDelta(cameraWidth, cameraHeight, PinholeCamera::PC_8_PARAMETERS, deltaParameters.data());
 
 					const Vector2 imagePointDelta(cameraDelta.projectToImageIF<false>(poseDelta.transformation(), objectPoint, camera.hasDistortionParameters()));
 					const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
@@ -6825,115 +6792,39 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 			{
 				// we also test the implementation for one object point
 
-				Scalar singleJacobianX[14];
-				Scalar singleJacobianY[14];
-				Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(singleJacobianX, singleJacobianY, camera, flippedCamera_T_world, objectPoint, Rwx, Rwy, Rwz);
+				Scalar singleJacobianCameraX[8];
+				Scalar singleJacobianCameraY[8];
 
-				for (unsigned int i = 0u; i < 14u; ++i)
+				Scalar singleJacobianPoseX[6];
+				Scalar singleJacobianPoseY[6];
+				Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(camera, flippedCamera_T_world, objectPoint, Rwx, Rwy, Rwz, singleJacobianCameraX, singleJacobianCameraY, singleJacobianPoseX, singleJacobianPoseY);
+
+				for (unsigned int i = 0u; i < 8u; ++i)
 				{
-					ocean_assert((std::is_same<Scalar, float>::value) || Numeric::isWeakEqual(jacobianX[i], singleJacobianX[i]));
-					ocean_assert((std::is_same<Scalar, float>::value) || Numeric::isWeakEqual(jacobianY[i], singleJacobianY[i]));
+					if constexpr (!std::is_same<Scalar, float>::value)
+					{
+						ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianCameraX[i]));
+						ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianCameraY[i]));
+					}
 
-					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
+					if (Numeric::isNotEqual(jacobianX[i], singleJacobianCameraX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianCameraY[i], Numeric::eps() * 100))
 					{
 						accurate = false;
 					}
 				}
-			}
 
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
+				for (unsigned int i = 0u; i < 6u; ++i)
 				{
-					// df / dk1
-					PinholeCamera cameraK1(camera);
-					cameraK1.setRadialDistortion(PinholeCamera::DistortionPair(k1 + epsilon, k2));
-
-					const Vector2 imagePointK1(cameraK1.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointK1, epsilon, jacobianX[0], jacobianY[0]))
+					if constexpr (!std::is_same<Scalar, float>::value)
 					{
-						localAccuracy = true;
-						break;
+						ocean_assert(Numeric::isWeakEqual(jacobianX[8 + i], singleJacobianPoseX[i]));
+						ocean_assert(Numeric::isWeakEqual(jacobianY[8 + i], singleJacobianPoseY[i]));
 					}
-				}
 
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dk2
-					PinholeCamera cameraK2(camera);
-					cameraK2.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2 + epsilon));
-
-					const Vector2 imagePointK2(cameraK2.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointK2, epsilon, jacobianX[1], jacobianY[1]))
+					if (Numeric::isNotEqual(jacobianX[8 + i], singleJacobianPoseX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[8 + i], singleJacobianPoseY[i], Numeric::eps() * 100))
 					{
-						localAccuracy = true;
-						break;
+						accurate = false;
 					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dp1
-					PinholeCamera cameraP1(camera);
-					cameraP1.setTangentialDistortion(PinholeCamera::DistortionPair(p1 + epsilon, p2));
-
-					const Vector2 imagePointP1(cameraP1.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointP1, epsilon, jacobianX[2], jacobianY[2]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dp2
-					PinholeCamera cameraP2(camera);
-					cameraP2.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2 + epsilon));
-
-					const Vector2 imagePointP2(cameraP2.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointP2, epsilon, jacobianX[3], jacobianY[3]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
 				}
 			}
 
@@ -6950,7 +6841,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 					const Vector2 imagePointFx(cameraFx.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
-					if (checkAccuracy(imagePoint, imagePointFx, epsilon, jacobianX[4], jacobianY[4]))
+					if (checkAccuracy(imagePoint, imagePointFx, epsilon, jacobianX[0], jacobianY[0]))
 					{
 						localAccuracy = true;
 						break;
@@ -6976,7 +6867,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 					const Vector2 imagePointFy(cameraFy.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
-					if (checkAccuracy(imagePoint, imagePointFy, epsilon, jacobianX[5], jacobianY[5]))
+					if (checkAccuracy(imagePoint, imagePointFy, epsilon, jacobianX[1], jacobianY[1]))
 					{
 						localAccuracy = true;
 						break;
@@ -7002,7 +6893,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 					const Vector2 imagePointMx(cameraMx.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
-					if (checkAccuracy(imagePoint, imagePointMx, epsilon, jacobianX[6], jacobianY[6]))
+					if (checkAccuracy(imagePoint, imagePointMx, epsilon, jacobianX[2], jacobianY[2]))
 					{
 						localAccuracy = true;
 						break;
@@ -7028,7 +6919,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 					const Vector2 imagePointMy(cameraMy.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
-					if (checkAccuracy(imagePoint, imagePointMy, epsilon, jacobianX[7], jacobianY[7]))
+					if (checkAccuracy(imagePoint, imagePointMy, epsilon, jacobianX[3], jacobianY[3]))
 					{
 						localAccuracy = true;
 						break;
@@ -7046,13 +6937,13 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 				for (const Scalar epsilon : epsilons)
 				{
-					// df / dwx
-					Pose poseWx(flippedCamera_P_world);
-					poseWx.rx() += epsilon;
+					// df / dk1
+					PinholeCamera cameraK1(camera);
+					cameraK1.setRadialDistortion(PinholeCamera::DistortionPair(k1 + epsilon, k2));
 
-					const Vector2 imagePointWx(camera.projectToImageIF<false>(poseWx.transformation(), objectPoint, camera.hasDistortionParameters()));
+					const Vector2 imagePointK1(cameraK1.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
-					if (checkAccuracy(imagePoint, imagePointWx, epsilon, jacobianX[8], jacobianY[8]))
+					if (checkAccuracy(imagePoint, imagePointK1, epsilon, jacobianX[4], jacobianY[4]))
 					{
 						localAccuracy = true;
 						break;
@@ -7070,13 +6961,13 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 				for (const Scalar epsilon : epsilons)
 				{
-					// df / dwy
-					Pose poseWy(flippedCamera_P_world);
-					poseWy.ry() += epsilon;
+					// df / dk2
+					PinholeCamera cameraK2(camera);
+					cameraK2.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2 + epsilon));
 
-					const Vector2 imagePointWy(camera.projectToImageIF<false>(poseWy.transformation(), objectPoint, camera.hasDistortionParameters()));
+					const Vector2 imagePointK2(cameraK2.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
-					if (checkAccuracy(imagePoint, imagePointWy, epsilon, jacobianX[9], jacobianY[9]))
+					if (checkAccuracy(imagePoint, imagePointK2, epsilon, jacobianX[5], jacobianY[5]))
 					{
 						localAccuracy = true;
 						break;
@@ -7094,13 +6985,13 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 				for (const Scalar epsilon : epsilons)
 				{
-					// df / dwz
-					Pose poseWz(flippedCamera_P_world);
-					poseWz.rz() += epsilon;
+					// df / dp1
+					PinholeCamera cameraP1(camera);
+					cameraP1.setTangentialDistortion(PinholeCamera::DistortionPair(p1 + epsilon, p2));
 
-					const Vector2 imagePointWz(camera.projectToImageIF<false>(poseWz.transformation(), objectPoint, camera.hasDistortionParameters()));
+					const Vector2 imagePointP1(cameraP1.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
-					if (checkAccuracy(imagePoint, imagePointWz, epsilon, jacobianX[10], jacobianY[10]))
+					if (checkAccuracy(imagePoint, imagePointP1, epsilon, jacobianX[6], jacobianY[6]))
 					{
 						localAccuracy = true;
 						break;
@@ -7112,6 +7003,31 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 					accurate = false;
 				}
 			}
+
+			{
+				bool localAccuracy = false;
+
+				for (const Scalar epsilon : epsilons)
+				{
+					// df / dp2
+					PinholeCamera cameraP2(camera);
+					cameraP2.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2 + epsilon));
+
+					const Vector2 imagePointP2(cameraP2.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
+
+					if (checkAccuracy(imagePoint, imagePointP2, epsilon, jacobianX[7], jacobianY[7]))
+					{
+						localAccuracy = true;
+						break;
+					}
+				}
+
+				if (!localAccuracy)
+				{
+					accurate = false;
+				}
+			}
+
 
 			{
 				bool localAccuracy = false;
@@ -7124,7 +7040,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 					const Vector2 imagePointTx(camera.projectToImageIF<false>(poseTx.transformation(), objectPoint, camera.hasDistortionParameters()));
 
-					if (checkAccuracy(imagePoint, imagePointTx, epsilon, jacobianX[11], jacobianY[11]))
+					if (checkAccuracy(imagePoint, imagePointTx, epsilon, jacobianX[8], jacobianY[8]))
 					{
 						localAccuracy = true;
 						break;
@@ -7148,7 +7064,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 					const Vector2 imagePointTy(camera.projectToImageIF<false>(poseTy.transformation(), objectPoint, camera.hasDistortionParameters()));
 
-					if (checkAccuracy(imagePoint, imagePointTy, epsilon, jacobianX[12], jacobianY[12]))
+					if (checkAccuracy(imagePoint, imagePointTy, epsilon, jacobianX[9], jacobianY[9]))
 					{
 						localAccuracy = true;
 						break;
@@ -7172,7 +7088,81 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 					const Vector2 imagePointTz(camera.projectToImageIF<false>(poseTz.transformation(), objectPoint, camera.hasDistortionParameters()));
 
-					if (checkAccuracy(imagePoint, imagePointTz, epsilon, jacobianX[13], jacobianY[13]))
+					if (checkAccuracy(imagePoint, imagePointTz, epsilon, jacobianX[10], jacobianY[10]))
+					{
+						localAccuracy = true;
+						break;
+					}
+				}
+
+				if (!localAccuracy)
+				{
+					accurate = false;
+				}
+			}
+
+
+
+			{
+				bool localAccuracy = false;
+
+				for (const Scalar epsilon : epsilons)
+				{
+					// df / dwx
+					Pose poseWx(flippedCamera_P_world);
+					poseWx.rx() += epsilon;
+
+					const Vector2 imagePointWx(camera.projectToImageIF<false>(poseWx.transformation(), objectPoint, camera.hasDistortionParameters()));
+
+					if (checkAccuracy(imagePoint, imagePointWx, epsilon, jacobianX[11], jacobianY[11]))
+					{
+						localAccuracy = true;
+						break;
+					}
+				}
+
+				if (!localAccuracy)
+				{
+					accurate = false;
+				}
+			}
+
+			{
+				bool localAccuracy = false;
+
+				for (const Scalar epsilon : epsilons)
+				{
+					// df / dwy
+					Pose poseWy(flippedCamera_P_world);
+					poseWy.ry() += epsilon;
+
+					const Vector2 imagePointWy(camera.projectToImageIF<false>(poseWy.transformation(), objectPoint, camera.hasDistortionParameters()));
+
+					if (checkAccuracy(imagePoint, imagePointWy, epsilon, jacobianX[12], jacobianY[12]))
+					{
+						localAccuracy = true;
+						break;
+					}
+				}
+
+				if (!localAccuracy)
+				{
+					accurate = false;
+				}
+			}
+
+			{
+				bool localAccuracy = false;
+
+				for (const Scalar epsilon : epsilons)
+				{
+					// df / dwz
+					Pose poseWz(flippedCamera_P_world);
+					poseWz.rz() += epsilon;
+
+					const Vector2 imagePointWz(camera.projectToImageIF<false>(poseWz.transformation(), objectPoint, camera.hasDistortionParameters()));
+
+					if (checkAccuracy(imagePoint, imagePointWz, epsilon, jacobianX[13], jacobianY[13]))
 					{
 						localAccuracy = true;
 						break;
