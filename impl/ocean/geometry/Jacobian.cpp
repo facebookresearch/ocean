@@ -2968,53 +2968,20 @@ void Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(const PinholeCameraT<T
 	ocean_assert(jacobianCameraX != nullptr && jacobianCameraY != nullptr);
 	ocean_assert(jacobianPoseX != nullptr && jacobianPoseY != nullptr);
 
-	const T& k1 = pinholeCamera.radialDistortion().first;
-	const T& k2 = pinholeCamera.radialDistortion().second;
-	const T& p1 = pinholeCamera.tangentialDistortion().first;
-	const T& p2 = pinholeCamera.tangentialDistortion().second;
-
 	const VectorT3<T> transformedObjectPoint = flippedCamera_T_world * objectPoint;
 
 	ocean_assert(NumericT<T>::isNotEqualEps(transformedObjectPoint.z()));
 	const T scaleFactor = T(1) / transformedObjectPoint.z();
 
-	const T u = transformedObjectPoint.x() * scaleFactor;
-	const T v = transformedObjectPoint.y() * scaleFactor;
+	const VectorT2<T> normalizedUndistortedImagePoint(transformedObjectPoint.x() * scaleFactor, transformedObjectPoint.y() * scaleFactor);
 
-	const T uv2 = u * u + v * v;
+	calculateCameraJacobian2x8(pinholeCamera, normalizedUndistortedImagePoint, jacobianCameraX, jacobianCameraY);
 
-	const T dist1_k1 = u * uv2;
-	const T dist1_k2 = u * uv2 * uv2;
-	const T dist1_p1_2_p2 = 2 * u * v;
-	const T dist1_p2 = 3 * u * u + v * v;
-
-	const T dist2_k1 = v * uv2;
-	const T dist2_k2 = v * uv2 * uv2;
-	const T dist2_p1 = u * u + 3 * v * v;
+	pinholeCamera.template pointJacobian2x3IF<T, true>(transformedObjectPoint, jacobianPoseX, jacobianPoseY);
 
 	const VectorT3<T> dwxObject(dwx * objectPoint);
 	const VectorT3<T> dwyObject(dwy * objectPoint);
 	const VectorT3<T> dwzObject(dwz * objectPoint);
-
-	jacobianCameraX[0] = u + u * (k1 * uv2 + k2 * uv2 * uv2) + p1 * 2 * u * v + p2 * (uv2 + 2 * u * u);
-	jacobianCameraX[1] = 0;
-	jacobianCameraX[2] = 1;
-	jacobianCameraX[3] = 0;
-	jacobianCameraX[4] = pinholeCamera.focalLengthX() * dist1_k1;
-	jacobianCameraX[5] = pinholeCamera.focalLengthX() * dist1_k2;
-	jacobianCameraX[6] = pinholeCamera.focalLengthX() * dist1_p1_2_p2;
-	jacobianCameraX[7] = pinholeCamera.focalLengthX() * dist1_p2;
-
-	jacobianCameraY[0] = 0;
-	jacobianCameraY[1] = v + v * (k1 * uv2 + k2 * uv2 * uv2) + 2 * p2 * u * v + p1 * (uv2 + 2 * v * v);
-	jacobianCameraY[2] = 0;
-	jacobianCameraY[3] = 1;
-	jacobianCameraY[4] = pinholeCamera.focalLengthY() * dist2_k1;
-	jacobianCameraY[5] = pinholeCamera.focalLengthY() * dist2_k2;
-	jacobianCameraY[6] = pinholeCamera.focalLengthY() * dist2_p1;
-	jacobianCameraY[7] = pinholeCamera.focalLengthY() * dist1_p1_2_p2;
-
-	pinholeCamera.template pointJacobian2x3IF<T, true>(transformedObjectPoint, jacobianPoseX, jacobianPoseY);
 
 	// jacobianPoseX[0, 1, 2] already set
 	jacobianPoseX[3] = jacobianPoseX[0] * dwxObject[0] + jacobianPoseX[1] * dwxObject[1] + jacobianPoseX[2] * dwxObject[2];
