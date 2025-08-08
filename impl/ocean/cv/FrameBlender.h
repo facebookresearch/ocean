@@ -500,110 +500,105 @@ bool FrameBlender::blend(const Frame& sourceWithAlpha, Frame& target, Worker* wo
 		return false;
 	}
 
-	const bool sourceHasCorrectInfo = (sourceWithAlpha.numberPlanes() == 1u && sourceWithAlpha.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
-	if (!sourceHasCorrectInfo)
+	if (sourceWithAlpha.numberPlanes() == 1u && sourceWithAlpha.dataType() == FrameType::DT_UNSIGNED_INTEGER_8)
 	{
-		ocean_assert(false && "Invalid pixel format!");
-		return false;
+		bool alphaIsLastChannel = false;
+
+		const bool sourceHasAlpha = FrameType::formatHasAlphaChannel(sourceWithAlpha.pixelFormat(), &alphaIsLastChannel);
+		ocean_assert_and_suppress_unused(sourceHasAlpha, sourceHasAlpha);
+
+		const bool targetHasAlpha = sourceWithAlpha.pixelFormat() == target.pixelFormat();
+
+		switch (sourceWithAlpha.channels())
+		{
+			case 2u:
+			{
+				if (alphaIsLastChannel)
+				{
+					if (targetHasAlpha)
+					{
+						blend8BitPerChannel<2u, false, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
+					}
+					else
+					{
+						blend8BitPerChannel<2u, false, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
+					}
+				}
+				else
+				{
+					if (targetHasAlpha)
+					{
+						blend8BitPerChannel<2u, true, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
+					}
+					else
+					{
+						blend8BitPerChannel<2u, true, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
+					}
+				}
+
+				return true;
+			}
+
+			case 3u:
+			{
+				if (alphaIsLastChannel)
+				{
+					if (targetHasAlpha)
+					{
+						blend8BitPerChannel<3u, false, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
+					}
+					else
+					{
+						blend8BitPerChannel<3u, false, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
+					}
+				}
+				else
+				{
+					if (targetHasAlpha)
+					{
+						blend8BitPerChannel<3u, true, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
+					}
+					else
+					{
+						blend8BitPerChannel<3u, true, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
+					}
+				}
+
+				return true;
+			}
+
+			case 4u:
+			{
+				if (alphaIsLastChannel)
+				{
+					if (targetHasAlpha)
+					{
+						blend8BitPerChannel<4u, false, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
+					}
+					else
+					{
+						blend8BitPerChannel<4u, false, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(),sourceWithAlpha.paddingElements(), target.paddingElements(),  worker);
+					}
+				}
+				else
+				{
+					if (targetHasAlpha)
+					{
+						blend8BitPerChannel<4u, true, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
+					}
+					else
+					{
+						blend8BitPerChannel<4u, true, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
+					}
+				}
+
+				return true;
+			}
+		}
 	}
 
-	bool alphaIsLastChannel = false;
-
-	const bool sourceHasAlpha = FrameType::formatHasAlphaChannel(sourceWithAlpha.pixelFormat(), &alphaIsLastChannel);
-	ocean_assert_and_suppress_unused(sourceHasAlpha, sourceHasAlpha);
-
-	const bool targetHasAlpha = sourceWithAlpha.pixelFormat() == target.pixelFormat();
-
-	switch (sourceWithAlpha.channels())
-	{
-		case 2u:
-		{
-			if (alphaIsLastChannel)
-			{
-				if (targetHasAlpha)
-				{
-					blend8BitPerChannel<2u, false, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
-				}
-				else
-				{
-					blend8BitPerChannel<2u, false, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
-				}
-			}
-			else
-			{
-				if (targetHasAlpha)
-				{
-					blend8BitPerChannel<2u, true, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
-				}
-				else
-				{
-					blend8BitPerChannel<2u, true, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
-				}
-			}
-
-			return true;
-		}
-
-		case 3u:
-		{
-			if (alphaIsLastChannel)
-			{
-				if (targetHasAlpha)
-				{
-					blend8BitPerChannel<3u, false, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
-				}
-				else
-				{
-					blend8BitPerChannel<3u, false, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
-				}
-			}
-			else
-			{
-				if (targetHasAlpha)
-				{
-					blend8BitPerChannel<3u, true, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
-				}
-				else
-				{
-					blend8BitPerChannel<3u, true, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
-				}
-			}
-
-			return true;
-		}
-
-		case 4u:
-		{
-			if (alphaIsLastChannel)
-			{
-				if (targetHasAlpha)
-				{
-					blend8BitPerChannel<4u, false, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
-				}
-				else
-				{
-					blend8BitPerChannel<4u, false, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(),sourceWithAlpha.paddingElements(), target.paddingElements(),  worker);
-				}
-			}
-			else
-			{
-				if (targetHasAlpha)
-				{
-					blend8BitPerChannel<4u, true, true, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
-				}
-				else
-				{
-					blend8BitPerChannel<4u, true, false, tTransparentIs0xFF, tAlphaTargetModulation>(sourceWithAlpha.constdata<uint8_t>(), target.data<uint8_t>(), sourceWithAlpha.width(), sourceWithAlpha.height(), sourceWithAlpha.paddingElements(), target.paddingElements(), worker);
-				}
-			}
-
-			return true;
-		}
-		default: {
-			ocean_assert(false && "Invalid pixel format!");
-			return false;
-		}
-	}
+	ocean_assert(false && "Invalid pixel format!");
+	return false;
 }
 
 template <bool tTransparentIs0xFF, FrameBlender::AlphaTargetModulation tAlphaTargetModulation>

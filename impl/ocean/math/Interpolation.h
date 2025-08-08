@@ -617,9 +617,6 @@ inline T Interpolation::bilinear(const T& v00, const T& v01, const T& v10, const
 		// 0 1
 		case 0x01000000:
 			return v11;
-
-		default:
-			break;
 	}
 
 	ocean_assert(false && "Invalid interpolation statement!");

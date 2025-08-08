@@ -500,10 +500,6 @@ RotationT<T>::RotationT(const SquareMatrixT3<T>& matrix)
 					axis(1) = matrix(1, 2) * factor;
 					break;
 				}
-
-				default:
-					ocean_assert(false);
-					break;
 			}
 
 			values_[3] = NumericT<T>::pi();
@@ -591,10 +587,6 @@ RotationT<T>::RotationT(const HomogenousMatrixT4<T>& transformation)
 					axis(1) = matrix(1, 2) * factor;
 					break;
 				}
-
-				default:
-					ocean_assert(false);
-					break;
 			}
 
 			values_[3] = NumericT<T>::pi();
