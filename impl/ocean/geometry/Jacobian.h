@@ -735,8 +735,7 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * @param jx First row of the jacobian, with 14 column entries
 		 * @param jy Second row of the jacobian, with 14 column entries
 		 * @param pinholeCamera The pinhole camera to determine the jacobian values for
-		 * @param flippedCamera_T_world Inverted and flipped pose (rotation and translation) to determine the jacobian for
-		 * @param flippedCamera_P_world Inverted and flipped pose identical to 'flippedCamera_T_world'
+		 * @param flippedCamera_T_world Transformation between world and flipped camera, with flipped camera pointing towards the positive z-space with y-axis down
 		 * @param objectPoint 3D object point to determine the jacobian for
 		 * @param dwx Rotation matrix derived to wx, as determined by calculateRotationRodriguesDerivative()
 		 * @param dwy Rotation matrix derived to wy, as determined by calculateRotationRodriguesDerivative()
@@ -756,10 +755,16 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * </pre>
 		 * @param jacobian First element in the first row of the entire row aligned jacobian matrix, with 2 * numberObjectPoints rows and 14 columns
 		 * @param pinholeCamera The pinhole camera to determine the jacobian values for
-		 * @param flippedCamera_P_world Inverted and flipped pose (rotation and translation) to determine the jacobian for
+		 * @param flippedCamera_T_world Transformation between world and flipped camera, with flipped camera pointing towards the positive z-space with y-axis down
 		 * @param objectPoints The accessor providing the 3D object points to determine the jacobian for
+		 * @param dwx Rotation matrix derived to wx, as determined by calculateRotationRodriguesDerivative()
+		 * @param dwy Rotation matrix derived to wy, as determined by calculateRotationRodriguesDerivative()
+		 * @param dwz Rotation matrix derived to wz, as determined by calculateRotationRodriguesDerivative()
+		 * @see calculateRotationRodriguesDerivative().
+		 * @tparam T The scalar data type, either 'float' or 'double'
 		 */
-		static void calculateJacobianCameraPoseRodrigues2nx14(Scalar* jacobian, const PinholeCamera& pinholeCamera, const Pose& flippedCamera_P_world, const ConstIndexedAccessor<Vector3>& objectPoints);
+		template <typename T>
+		static void calculateJacobianCameraPoseRodrigues2nx14IF(T* jacobian, const PinholeCameraT<T>& pinholeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const ConstIndexedAccessor<VectorT3<T>>& objectPoints, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz);
 
 		/**
 		 * Determines the 2x8 Jacobian of a homography function that transforms a 2D coordinate (interpreted as a 3D vector with homogeneous extension) to a 2D coordinate (the de-homogenization is included).
@@ -1001,6 +1006,22 @@ OCEAN_FORCE_INLINE void Jacobian::calculatePointJacobian2x3IF(const AnyCameraT<T
 	jy[0] = pointJacobian2x3[3] * flippedCamera_T_world[0] + pointJacobian2x3[4] * flippedCamera_T_world[1] + pointJacobian2x3[5] * flippedCamera_T_world[2];
 	jy[1] = pointJacobian2x3[3] * flippedCamera_T_world[4] + pointJacobian2x3[4] * flippedCamera_T_world[5] + pointJacobian2x3[5] * flippedCamera_T_world[6];
 	jy[2] = pointJacobian2x3[3] * flippedCamera_T_world[8] + pointJacobian2x3[4] * flippedCamera_T_world[9] + pointJacobian2x3[5] * flippedCamera_T_world[10];
+}
+
+template <typename T>
+void Jacobian::calculateJacobianCameraPoseRodrigues2nx14IF(T* jacobian, const PinholeCameraT<T>& pinholeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const ConstIndexedAccessor<VectorT3<T>>& objectPoints, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz)
+{
+	ocean_assert(jacobian != nullptr && pinholeCamera.isValid());
+	ocean_assert(flippedCamera_T_world.isValid());
+
+	for (size_t n = 0u; n < objectPoints.size(); ++n)
+	{
+		const VectorT3<T>& objectPoint = objectPoints[n];
+
+		calculateJacobianCameraPoseRodrigues2x14IF<T>(jacobian + 0, jacobian + 14, pinholeCamera, flippedCamera_T_world, objectPoint, dwx, dwy, dwz);
+
+		jacobian += 28;
+	}
 }
 
 template <typename T>

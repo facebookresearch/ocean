@@ -6719,15 +6719,18 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 			objectPoints.emplace_back(ray.point(Random::scalar(1, 10)));
 		}
 
+		SquareMatrix3 Rwx, Rwy, Rwz;
+		calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
+
 		/**
-		 * | dfx / dk1, dfx / dk2, dfx / dp1, dfx / dp2, dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dwx, dfx / dwy, dfx / dwz, dfx / dtx, dfx / dty, dfx / dtz |<br>
-		 * | dfy / dk1, dfy / dk2, dfy / dp1, dfy / dp2, dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dwx, dfy / dwy, dfy / dwz, dfy / dtx, dfy / dty, dfy / dtz |<br>
+		 * | dfx / dk1, dfx / dk2, dfx / dp1, dfx / dp2, dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dwx, dfx / dwy, dfx / dwz, dfx / dtx, dfx / dty, dfx / dtz |
+		 * | dfy / dk1, dfy / dk2, dfy / dp1, dfy / dp2, dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dwx, dfy / dwy, dfy / dwz, dfy / dtx, dfy / dty, dfy / dtz |
 		 */
 
 		Matrix jacobian(2 * objectPoints.size(), 14);
 
 		performance.start();
-			Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2nx14(jacobian.data(), camera, flippedCamera_P_world, ConstArrayAccessor<Vector3>(objectPoints));
+			Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2nx14IF(jacobian.data(), camera, flippedCamera_T_world, ConstArrayAccessor<Vector3>(objectPoints), Rwx, Rwy, Rwz);
 		performance.stop();
 
 		{
@@ -6821,9 +6824,6 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 			{
 				// we also test the implementation for one object point
-
-				SquareMatrix3 Rwx, Rwy, Rwz;
-				calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
 
 				Scalar singleJacobianX[14];
 				Scalar singleJacobianY[14];
