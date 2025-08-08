@@ -410,13 +410,13 @@ class NonLinearOptimizationCamera::CameraOrientationsFovData : public CameraOrie
 		const bool onlyFrontObjectPoints_;
 };
 
-bool NonLinearOptimizationCamera::findInitialFieldOfView(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& orientations, const PoseGroupsAccessor& correspondenceGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<SquareMatrix3>* optimizedOrientations, const Scalar lowerFovX, const Scalar upperFovX, const unsigned int steps, const unsigned int recursiveIterations, const bool onlyFrontObjectPoints, bool* significantResult, Scalar* finalError, Worker* worker, bool* abort)
+bool NonLinearOptimizationCamera::findInitialFieldOfView(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const PoseGroupsAccessor& correspondenceGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<SquareMatrix3>* world_R_optimizedOrientations, const Scalar lowerFovX, const Scalar upperFovX, const unsigned int steps, const unsigned int recursiveIterations, const bool onlyFrontObjectPoints, bool* significantResult, Scalar* finalError, Worker* worker, bool* abort)
 {
 	ocean_assert(pinholeCamera.isValid());
-	ocean_assert(orientations.size() == correspondenceGroups.groups());
-	ocean_assert(orientations.size() >= 1);
+	ocean_assert(world_R_cameras.size() == correspondenceGroups.groups());
+	ocean_assert(world_R_cameras.size() >= 1);
 
-	ocean_assert(optimizedOrientations == nullptr || optimizedOrientations->size() == orientations.size());
+	ocean_assert(world_R_optimizedOrientations == nullptr || world_R_optimizedOrientations->size() == world_R_cameras.size());
 
 	ocean_assert(steps >= 4u);
 	ocean_assert(recursiveIterations >= 1u);
@@ -449,11 +449,11 @@ bool NonLinearOptimizationCamera::findInitialFieldOfView(const PinholeCamera& pi
 		if (worker)
 		{
 			Lock lock;
-			worker->executeFunction(Worker::Function::createStatic(&findInitialFieldOfViewSubset, &pinholeCamera, &orientations, &correspondenceGroups, &optimizedCamera, (optimizedOrientations && finestLayer) ? &localOptimizedOrientations : nullptr, recLowerFovX, recUpperFovX, steps, onlyFrontObjectPoints, &bestError, &allErrors, &lock, abort, 0u, 0u), 0u, steps);
+			worker->executeFunction(Worker::Function::createStatic(&findInitialFieldOfViewSubset, &pinholeCamera, &world_R_cameras, &correspondenceGroups, &optimizedCamera, (world_R_optimizedOrientations && finestLayer) ? &localOptimizedOrientations : nullptr, recLowerFovX, recUpperFovX, steps, onlyFrontObjectPoints, &bestError, &allErrors, &lock, abort, 0u, 0u), 0u, steps);
 		}
 		else
 		{
-			findInitialFieldOfViewSubset(&pinholeCamera, &orientations, &correspondenceGroups, &optimizedCamera, (optimizedOrientations && finestLayer) ? &localOptimizedOrientations : nullptr, recLowerFovX, recUpperFovX, steps, onlyFrontObjectPoints, &bestError, &allErrors, nullptr, abort, 0u, steps);
+			findInitialFieldOfViewSubset(&pinholeCamera, &world_R_cameras, &correspondenceGroups, &optimizedCamera, (world_R_optimizedOrientations && finestLayer) ? &localOptimizedOrientations : nullptr, recLowerFovX, recUpperFovX, steps, onlyFrontObjectPoints, &bestError, &allErrors, nullptr, abort, 0u, steps);
 		}
 
 		bestFovX = optimizedCamera.fovX();
@@ -470,17 +470,17 @@ bool NonLinearOptimizationCamera::findInitialFieldOfView(const PinholeCamera& pi
 
 	ocean_assert(bestFovX != -1);
 
-	if (finalError)
+	if (finalError != nullptr)
 	{
 		*finalError = bestError;
 	}
 
-	if (optimizedOrientations)
+	if (world_R_optimizedOrientations != nullptr)
 	{
-		ocean_assert(optimizedOrientations->size() == localOptimizedOrientations.size());
+		ocean_assert(world_R_optimizedOrientations->size() == localOptimizedOrientations.size());
 		for (size_t i = 0; i < localOptimizedOrientations.size(); ++i)
 		{
-			(*optimizedOrientations)[i] = localOptimizedOrientations[i];
+			(*world_R_optimizedOrientations)[i] = localOptimizedOrientations[i];
 		}
 	}
 
@@ -508,14 +508,14 @@ bool NonLinearOptimizationCamera::findInitialFieldOfView(const PinholeCamera& pi
 	return (!abort || !*abort) && bestError != Numeric::maxValue();
 }
 
-bool NonLinearOptimizationCamera::findInitialFieldOfView(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& poses, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* optimizedPoses, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const Scalar lowerFovX, const Scalar upperFovX, const unsigned int steps, const unsigned int recursiveIterations, const bool onlyFrontObjectPoints, bool* significantResult, Scalar* finalError, Worker* worker, bool* abort)
+bool NonLinearOptimizationCamera::findInitialFieldOfView(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const Scalar lowerFovX, const Scalar upperFovX, const unsigned int steps, const unsigned int recursiveIterations, const bool onlyFrontObjectPoints, bool* significantResult, Scalar* finalError, Worker* worker, bool* abort)
 {
 	ocean_assert(pinholeCamera.isValid());
-	ocean_assert(poses.size() >= 1);
+	ocean_assert(world_T_cameras.size() >= 1);
 	ocean_assert(objectPoints.size() == correspondenceGroups.groups());
 	ocean_assert(objectPoints.size() >= 1);
 
-	ocean_assert(optimizedPoses == nullptr || optimizedPoses->size() == poses.size());
+	ocean_assert(world_T_optimizedCameras == nullptr || world_T_optimizedCameras->size() == world_T_cameras.size());
 	ocean_assert(optimizedObjectPoints == nullptr || optimizedObjectPoints->size() == objectPoints.size());
 
 	ocean_assert(steps >= 4u);
@@ -550,16 +550,16 @@ bool NonLinearOptimizationCamera::findInitialFieldOfView(const PinholeCamera& pi
 		if (worker)
 		{
 			Lock lock;
-			worker->executeFunction(Worker::Function::createStatic(&findInitialFieldOfViewSubset, &pinholeCamera, &poses, &objectPoints, &correspondenceGroups, &optimizedCamera, (optimizedPoses && finestLayer) ? &localOptimizedPoses : nullptr, (optimizedObjectPoints && finestLayer) ? &localOptimizedObjectPoints : nullptr, recLowerFovX, recUpperFovX, steps, onlyFrontObjectPoints, &bestError, &allErrors, &lock, abort, 0u, 0u), 0u, steps);
+			worker->executeFunction(Worker::Function::createStatic(&findInitialFieldOfViewSubset, &pinholeCamera, &world_T_cameras, &objectPoints, &correspondenceGroups, &optimizedCamera, (world_T_optimizedCameras && finestLayer) ? &localOptimizedPoses : nullptr, (optimizedObjectPoints && finestLayer) ? &localOptimizedObjectPoints : nullptr, recLowerFovX, recUpperFovX, steps, onlyFrontObjectPoints, &bestError, &allErrors, &lock, abort, 0u, 0u), 0u, steps);
 		}
 		else
 		{
-			findInitialFieldOfViewSubset(&pinholeCamera, &poses, &objectPoints, &correspondenceGroups, &optimizedCamera, (optimizedPoses && finestLayer) ? &localOptimizedPoses : nullptr, (optimizedObjectPoints && finestLayer) ? &localOptimizedObjectPoints : nullptr, recLowerFovX, recUpperFovX, steps, onlyFrontObjectPoints, &bestError, &allErrors, nullptr, abort, 0u, steps);
+			findInitialFieldOfViewSubset(&pinholeCamera, &world_T_cameras, &objectPoints, &correspondenceGroups, &optimizedCamera, (world_T_optimizedCameras && finestLayer) ? &localOptimizedPoses : nullptr, (optimizedObjectPoints && finestLayer) ? &localOptimizedObjectPoints : nullptr, recLowerFovX, recUpperFovX, steps, onlyFrontObjectPoints, &bestError, &allErrors, nullptr, abort, 0u, steps);
 		}
 
 		bestFovX = optimizedCamera.fovX();
 
-		// we set the boundary for the next recursive iteration to the nect left and next right step
+		// we set the boundary for the next recursive iteration to the next left and next right step
 		globalLowerFovX = max(lowerFovX, bestFovX - (recUpperFovX - recLowerFovX) / Scalar(steps - 1u));
 		globalUpperFovX = min(bestFovX + (recUpperFovX - recLowerFovX) / Scalar(steps - 1u), upperFovX);
 	}
@@ -571,21 +571,21 @@ bool NonLinearOptimizationCamera::findInitialFieldOfView(const PinholeCamera& pi
 
 	ocean_assert(bestFovX != -1);
 
-	if (finalError)
+	if (finalError != nullptr)
 	{
 		*finalError = bestError;
 	}
 
-	if (optimizedPoses)
+	if (world_T_optimizedCameras != nullptr)
 	{
-		ocean_assert(optimizedPoses->size() == localOptimizedPoses.size());
+		ocean_assert(world_T_optimizedCameras->size() == localOptimizedPoses.size());
 		for (size_t n = 0; n < localOptimizedPoses.size(); ++n)
 		{
-			(*optimizedPoses)[n] = localOptimizedPoses[n];
+			(*world_T_optimizedCameras)[n] = localOptimizedPoses[n];
 		}
 	}
 
-	if (optimizedObjectPoints)
+	if (optimizedObjectPoints != nullptr)
 	{
 		ocean_assert(optimizedObjectPoints->size() == localOptimizedObjectPoints.size());
 		for (size_t n = 0; n < localOptimizedObjectPoints.size(); ++n)
@@ -997,13 +997,13 @@ class NonLinearOptimizationCamera::CameraOrientationsData :
 		const bool onlyFrontObjectPoints_;
 };
 
-bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& orientations, const PoseGroupsAccessor& correspondenceGroups, const PinholeCamera::OptimizationStrategy optimizationStrategy, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<SquareMatrix3>* optimizedOrientations, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const PoseGroupsAccessor& correspondenceGroups, const PinholeCamera::OptimizationStrategy optimizationStrategy, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<SquareMatrix3>* world_R_optimizedCameras, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
 	ocean_assert(pinholeCamera.isValid());
-	ocean_assert(orientations.size() == correspondenceGroups.groups());
-	ocean_assert(orientations.size() >= 1);
+	ocean_assert(world_R_cameras.size() == correspondenceGroups.groups());
+	ocean_assert(world_R_cameras.size() >= 1);
 
-	ocean_assert(optimizedOrientations == nullptr || optimizedOrientations->size() == orientations.size());
+	ocean_assert(world_R_optimizedCameras == nullptr || world_R_optimizedCameras->size() == world_R_cameras.size());
 
 	// shared model: camera profile with 4, 6 or 8 scalar parameters
 	// individual model: camera orientation with 3 scalar parameters for each orientation
@@ -1012,9 +1012,9 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 	typedef std::vector<IndividualModel> IndividualModels;
 
 	IndividualModels individualModels, optimizedIndividualModels;
-	for (size_t n = 0; n < orientations.size(); ++n)
+	for (size_t n = 0; n < world_R_cameras.size(); ++n)
 	{
-		const ExponentialMap exponentialMap(orientations[n]);
+		const ExponentialMap exponentialMap(world_R_cameras[n]);
 		individualModels.push_back(IndividualModel(exponentialMap.data()));
 	}
 
@@ -1190,16 +1190,16 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 			return false;
 	}
 
-	if (optimizedOrientations)
+	if (world_R_optimizedCameras != nullptr)
 	{
-		ocean_assert(optimizedOrientations->size() == orientations.size());
+		ocean_assert(world_R_optimizedCameras->size() == world_R_cameras.size());
 
 		for (size_t i = 0; i < optimizedIndividualModels.size(); ++i)
 		{
 			const IndividualModel& individualModel = optimizedIndividualModels[i];
 
 			const ExponentialMap exponentialMap(individualModel[0], individualModel[1], individualModel[2]);
-			(*optimizedOrientations)[i] = SquareMatrix3(exponentialMap.rotation());
+			(*world_R_optimizedCameras)[i] = SquareMatrix3(exponentialMap.rotation());
 		}
 	}
 
@@ -1466,36 +1466,34 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 		size_t observations_ = 0;
 };
 
-bool NonLinearOptimizationCamera::optimizeCameraPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& poses, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* optimizedPoses, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationCamera::optimizeCameraPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
-	const ScopedConstMemoryAccessor<HomogenousMatrix4> scopedPoses(poses);
-
-	HomogenousMatrices4 posesIF(scopedPoses.size());
-	for (size_t n = 0; n < posesIF.size(); ++n)
+	HomogenousMatrices4 flippedCameras_T_world(world_T_cameras.size());
+	for (size_t n = 0; n < world_T_cameras.size(); ++n)
 	{
-		posesIF[n] = PinholeCamera::standard2InvertedFlipped(scopedPoses[n]);
+		flippedCameras_T_world[n] = Camera::standard2InvertedFlipped(world_T_cameras[n]);
 	}
 
-	HomogenousMatrices4 optimizedPosesIF;
-	NonconstArrayAccessor<HomogenousMatrix4> optimizedPosesAccessorIF(optimizedPosesIF, optimizedPoses ? poses.size() : 0);
+	HomogenousMatrices4 optimizedFlippedCameras_T_world;
+	NonconstArrayAccessor<HomogenousMatrix4> accessor_optimizedFlippedCameras_T_world(optimizedFlippedCameras_T_world, world_T_optimizedCameras != nullptr ? world_T_cameras.size() : 0);
 
-	if (!optimizeCameraPosesIF(pinholeCamera, ConstArrayAccessor<HomogenousMatrix4>(posesIF), objectPointGroups, imagePointGroups, optimizedCamera, optimizedPosesAccessorIF.pointer(), iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors))
+	if (!optimizeCameraPosesIF(pinholeCamera, ConstArrayAccessor<HomogenousMatrix4>(flippedCameras_T_world), objectPointGroups, imagePointGroups, optimizedCamera, accessor_optimizedFlippedCameras_T_world.pointer(), iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors))
 	{
 		return false;
 	}
 
-	if (optimizedPoses)
+	if (world_T_optimizedCameras != nullptr)
 	{
-		for (size_t n = 0; n < optimizedPosesIF.size(); ++n)
+		for (size_t n = 0; n < optimizedFlippedCameras_T_world.size(); ++n)
 		{
-			(*optimizedPoses)[n] = PinholeCamera::invertedFlipped2Standard(optimizedPosesIF[n]);
+			(*world_T_optimizedCameras)[n] = Camera::invertedFlipped2Standard(optimizedFlippedCameras_T_world[n]);
 		}
 	}
 
 	return true;
 }
 
-bool NonLinearOptimizationCamera::optimizeCameraPosesIF(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& posesIF, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* optimizedPosesIF, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationCamera::optimizeCameraPosesIF(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
 	ocean_assert(&pinholeCamera != &optimizedCamera);
 	ocean_assert(objectPointGroups.size() == imagePointGroups.size());
@@ -1503,18 +1501,17 @@ bool NonLinearOptimizationCamera::optimizeCameraPosesIF(const PinholeCamera& pin
 	optimizedCamera = pinholeCamera;
 
 	// we need enough buffer for the optimized poses, we take them from the provided parameter or create them temporary in this scope
-	ScopedNonconstMemoryAccessor<HomogenousMatrix4> scopedOptimizedPosesIF(optimizedPosesIF, posesIF.size());
-	ocean_assert(scopedOptimizedPosesIF.size() == posesIF.size());
+	ScopedNonconstMemoryAccessor<HomogenousMatrix4> scoped_flippedOptimizedCameras_T_world(flippedOptimizedCameras_T_world, flippedCameras_T_world.size());
+	ocean_assert(scoped_flippedOptimizedCameras_T_world.size() == flippedCameras_T_world.size());
 
-	const ScopedConstMemoryAccessor<HomogenousMatrix4> scopedPosesIF(posesIF);
-	for (size_t n = 0; n < posesIF.size(); ++n)
+	for (size_t n = 0; n < flippedCameras_T_world.size(); ++n)
 	{
-		scopedOptimizedPosesIF[n] = scopedPosesIF[n];
+		scoped_flippedOptimizedCameras_T_world[n] = flippedCameras_T_world[n];
 	}
 
-	NonconstTemplateArrayAccessor<HomogenousMatrix4> posesIFAccessor(scopedOptimizedPosesIF.data(), scopedOptimizedPosesIF.size());
+	NonconstTemplateArrayAccessor<HomogenousMatrix4> accessor_flippedOptimizedCameras_T_world(scoped_flippedOptimizedCameras_T_world.data(), scoped_flippedOptimizedCameras_T_world.size());
 
-	CameraPosesOptimizationProvider provider(optimizedCamera, posesIFAccessor, objectPointGroups, imagePointGroups, onlyFrontObjectPoints);
+	CameraPosesOptimizationProvider provider(optimizedCamera, accessor_flippedOptimizedCameras_T_world, objectPointGroups, imagePointGroups, onlyFrontObjectPoints);
 	return sparseOptimization<CameraPosesOptimizationProvider>(provider, iterations, estimator, lambda, lambdaFactor, initialError, finalError, nullptr, intermediateErrors);
 }
 
@@ -1652,13 +1649,13 @@ class NonLinearOptimizationCamera::CameraObjectPointsPosesData : public CameraPr
 		const bool onlyFrontObjectPoints_;
 };
 
-bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& poses, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, const PinholeCamera::OptimizationStrategy optimizationStrategy, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* optimizedPoses, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, const PinholeCamera::OptimizationStrategy optimizationStrategy, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
 	ocean_assert(pinholeCamera.isValid());
 	ocean_assert(objectPoints.size() == correspondenceGroups.groups());
 	ocean_assert(objectPoints.size() >= 1);
 
-	ocean_assert(optimizedPoses == nullptr || optimizedPoses->size() == poses.size());
+	ocean_assert(world_T_optimizedCameras == nullptr || world_T_optimizedCameras->size() == world_T_cameras.size());
 	ocean_assert(optimizedObjectPoints == nullptr || optimizedObjectPoints->size() == objectPoints.size());
 
 	// shared model: camera profile with 4, 6 or 8 scalar parameters
@@ -1668,9 +1665,9 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 	typedef std::vector<FirstIndividualModel> FirstIndividualModels;
 
 	FirstIndividualModels firstIndividualModels, optimizedFirstIndividualModels;
-	for (size_t n = 0; n < poses.size(); ++n)
+	for (size_t n = 0; n < world_T_cameras.size(); ++n)
 	{
-		const Pose pose(poses[n]);
+		const Pose pose(world_T_cameras[n]);
 		firstIndividualModels.push_back(FirstIndividualModel(pose.data()));
 	}
 
@@ -1861,16 +1858,16 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 			return false;
 	}
 
-	if (optimizedPoses)
+	if (world_T_optimizedCameras != nullptr)
 	{
-		ocean_assert(optimizedPoses->size() == poses.size());
+		ocean_assert(world_T_optimizedCameras->size() == world_T_cameras.size());
 
 		for (size_t i = 0; i < optimizedFirstIndividualModels.size(); ++i)
 		{
 			const FirstIndividualModel& firstIndividualModel = optimizedFirstIndividualModels[i];
 
 			const Pose pose(firstIndividualModel.data());
-			(*optimizedPoses)[i] = pose.transformation();
+			(*world_T_optimizedCameras)[i] = pose.transformation();
 		}
 	}
 

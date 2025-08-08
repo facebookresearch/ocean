@@ -77,12 +77,12 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		/**
 		 * Determines the initial field of view for a set of camera frames with known orientations and groups of correspondences of ids of 3D object points and 2D image point locations from the individual frames.
 		 * The number of correspondences may vary between the individual frames (groups).<br>
-		 * Each group may address individual object points, however the larger the intersection of sets between the individual 3D object points in the individual frames the better the optimization result.<br>
+		 * Each group may address individual object points, however the larger the intersection of sets between the individual 3D object points in the individual frames the better the optimization result.
 		 * @param pinholeCamera The pinhole camera profile for which the better field of view will be determined, must be valid
-		 * @param orientations The accessor for the known orientations of the individual camera frames
+		 * @param world_R_cameras The accessor for the known orientations of the individual camera frames
 		 * @param correspondenceGroups The accessor for the individual groups of point correspondences, one group for each orientation
 		 * @param optimizedCamera The resulting camera profile with best matching field of view
-		 * @param optimizedOrientations Optional accessor for the optimized camera orientations matching with the new camera profile
+		 * @param world_R_optimizedOrientations Optional accessor for the optimized camera orientations matching with the new camera profile
 		 * @param lowerFovX The lower bound of the possible horizontal field of view in radian, with range (0, upperFovX]
 		 * @param upperFovX The upper bound of the possible horizontal field of view in radian, with range [lowerFovX, PI)
 		 * @param steps The number of steps in which the defined angle range is subdivided, with range [4, infinity)
@@ -94,18 +94,18 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @return True, if succeeded and the execution has not been aborted
 		 */
-		static bool findInitialFieldOfView(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& orientations, const PoseGroupsAccessor& correspondenceGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<SquareMatrix3>* optimizedOrientations, const Scalar lowerFovX = Numeric::deg2rad(40), const Scalar upperFovX = Numeric::deg2rad(90), const unsigned int steps = 10u, const unsigned int recursiveIterations = 3u, const bool onlyFrontObjectPoints = true, bool* significantResult = nullptr, Scalar* finalError = nullptr, Worker* worker = nullptr, bool* abort = nullptr);
+		static bool findInitialFieldOfView(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const PoseGroupsAccessor& correspondenceGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<SquareMatrix3>* world_R_optimizedOrientations, const Scalar lowerFovX = Numeric::deg2rad(40), const Scalar upperFovX = Numeric::deg2rad(90), const unsigned int steps = 10u, const unsigned int recursiveIterations = 3u, const bool onlyFrontObjectPoints = true, bool* significantResult = nullptr, Scalar* finalError = nullptr, Worker* worker = nullptr, bool* abort = nullptr);
 
 		/**
 		 * Determines the initial field of view for a set of camera frames with known poses and groups of correspondences between pose indices and 2D image points locations within the pose frames while also the provided object points are optimized.
 		 * The number of correspondences may vary between the individual frames (groups).<br>
-		 * Each group may address individual object points, however the larger the intersection of sets between the individual 3D object points in the individual frames the better the optimization result.<br>
+		 * Each group may address individual object points, however the larger the intersection of sets between the individual 3D object points in the individual frames the better the optimization result.
 		 * @param pinholeCamera The pinhole camera profile for which the better field of view will be determined, must be valid
-		 * @param poses The accessor for the known poses of the individual camera frames
+		 * @param world_T_cameras The accessor for the known poses of the individual camera frames
 		 * @param objectPoints The accessor for the individual 3D object points
 		 * @param correspondenceGroups The accessor for the individual groups of correspondences between pose ids and image point location, one group for each object point
 		 * @param optimizedCamera The resulting camera profile with best matching field of view
-		 * @param optimizedPoses Optional accessor for the resulting optimized camera poses matching with the new camera profile
+		 * @param world_T_optimizedCameras Optional accessor for the resulting optimized camera poses matching with the new camera profile
 		 * @param optimizedObjectPoints Optional accessor for the resulting optimized object point locations
 		 * @param lowerFovX The lower bound of the possible horizontal field of view in radian, with range (0, upperFovX]
 		 * @param upperFovX The upper bound of the possible horizontal field of view in radian, with range [lowerFovX, PI)
@@ -118,7 +118,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @return True, if succeeded and the execution has not been aborted
 		 */
-		static bool findInitialFieldOfView(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& poses, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* optimizedPoses, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const Scalar lowerFovX = Numeric::deg2rad(40), const Scalar upperFovX = Numeric::deg2rad(90), const unsigned int steps = 10u, const unsigned int recursiveIterations = 3u, const bool onlyFrontObjectPoints = true, bool* significantResult = nullptr, Scalar* finalError = nullptr, Worker* worker = nullptr, bool* abort = nullptr);
+		static bool findInitialFieldOfView(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const Scalar lowerFovX = Numeric::deg2rad(40), const Scalar upperFovX = Numeric::deg2rad(90), const unsigned int steps = 10u, const unsigned int recursiveIterations = 3u, const bool onlyFrontObjectPoints = true, bool* significantResult = nullptr, Scalar* finalError = nullptr, Worker* worker = nullptr, bool* abort = nullptr);
 
 		/**
 		 * Optimizes the individual parameters of a camera profile by minimizing the pixel error between normalized image points (projected 3D object points) and their corresponding 2D image point observations.
@@ -141,13 +141,13 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		/**
 		 * Optimizes the camera parameters of a given camera profile for a set of camera frames with known orientation and groups of 2D/3D point correspondences from individual frames.
 		 * The number of points correspondences may vary between the individual frames (groups).<br>
-		 * Each group may address individual object points.<br>
+		 * Each group may address individual object points.
 		 * @param pinholeCamera The pinhole camera profile to optimized
-		 * @param orientations The accessor for the known orientations of the individual camera frames
+		 * @param world_R_cameras The accessor for the known orientations of the individual camera frames
 		 * @param correspondenceGroups The accessor for the individual groups of point correspondences, one group for each orientation
 		 * @param optimizationStrategy The optimization strategy
 		 * @param optimizedCamera The resulting camera profile with ideal field of view
-		 * @param optimizedOrientations Optional accessor for the optimized camera orientations matching with the new camera profile
+		 * @param world_R_optimizedCameras Optional accessor for the optimized camera orientations matching with the new camera profile
 		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached
 		 * @param estimator Robust error estimator to be used
 		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
@@ -158,18 +158,17 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		 * @param intermediateErrors Optional resulting intermediate averaged pixel errors for the individual optimization steps, in relation to the defined estimator
 		 * @return True, if succeeded
 		 */
-		static bool optimizeCameraOrientations(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& orientations, const PoseGroupsAccessor& correspondenceGroups, const PinholeCamera::OptimizationStrategy optimizationStrategy, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<SquareMatrix3>* optimizedOrientations, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeCameraOrientations(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const PoseGroupsAccessor& correspondenceGroups, const PinholeCamera::OptimizationStrategy optimizationStrategy, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<SquareMatrix3>* world_R_optimizedCameras, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Minimizes the projection error between the projections of static 3D object points and their corresponding image points in several 6DOF camera poses.
 		 * The camera profile as well as the camera poses are optimized concurrently.
-		 * The given poses are equivalent to extrinsic camera matrices and thus define a transformation from the camera coordinate system into the world coordinate system.<br>
-		 * @param pinholeCamera The pinhole camera holding intrinsic and distortion parameters to minimize the projection error for
-		 * @param poses The individual camera poses, one pose for each pair of groups of object points and image points
+		 * @param pinholeCamera The pinhole camera holding intrinsic and distortion parameters to minimize the projection error for.
+		 * @param world_T_cameras The individual camera poses, one pose for each pair of groups of object points and image points
 		 * @param objectPointGroups The accessor for the individual groups of 3D object points, one group for each camera pose with at least one object point
 		 * @param imagePointGroups The accessor for the individual groups of 2D image points, one group for each camera pose and one image point for each corresponding object point
 		 * @param optimizedCamera The resulting optimized camera profile
-		 * @param optimizedPoses Optional accessor for the resulting optimized camera poses, matching with the new camera profile
+		 * @param world_T_optimizedCameras Optional accessor for the resulting optimized camera poses, matching with the new camera profile
 		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached
 		 * @param estimator Robust error estimator to be used
 		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
@@ -181,28 +180,27 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		 * @return True, if succeeded
 		 * @see optimizeCameraPoseIF().
 		 */
-		static bool optimizeCameraPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& poses, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* optimizedPoses, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeCameraPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Minimizes the projection error between the projections of static 3D object points and their corresponding image points in several 6DOF camera poses.
-		 * Beware: The given poses are not equivalent to extrinsic camera matrices.<br>
 		 * The given poses must be inverted and flipped around the new x axis by 180 degree.<br>
 		 * @see optimizeCameraPose().
 		 */
-		static bool optimizeCameraPosesIF(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& posesIF, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* optimizedPosesIF, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeCameraPosesIF(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Optimizes the camera parameters of a given camera profile for a set of given camera poses and a set of given 3D object points by minimizing the projection error between the 3D object points and the corresponding 2D image points.
 		 * This function also optimized the camera poses and the locations of the 3D object point while the camera profile is optimized.<br>
 		 * The number of 2D/3D point correspondences may vary between the individual frames (groups).<br>
-		 * Each group may address individual object points, however the larger the intersection of sets between the individual 3D object points in the individual frames the better the optimization result.<br>
+		 * Each group may address individual object points, however the larger the intersection of sets between the individual 3D object points in the individual frames the better the optimization result.
 		 * @param pinholeCamera The pinhole camera profile to optimized
-		 * @param poses The accessor for the known poses of the individual camera frames
+		 * @param world_T_cameras The accessor for the known poses of the individual camera frames
 		 * @param objectPoints The accessor for the known 3D object points locations
 		 * @param correspondenceGroups The accessor for the individual groups of correspondences between pose indices and image points, one group for each object point
 		 * @param optimizationStrategy The optimization strategy for the camera profile
 		 * @param optimizedCamera The resulting optimized camera profile
-		 * @param optimizedPoses Optional accessor for the resulting optimized camera poses, matching with the new camera profile
+		 * @param world_T_optimizedCameras Optional accessor for the resulting optimized camera poses, matching with the new camera profile
 		 * @param optimizedObjectPoints Optional accessor for the resulting optimized 3D object point locations, matching with the new camera profile
 		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached
 		 * @param estimator Robust error estimator to be used
@@ -214,7 +212,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		 * @param intermediateErrors Optional resulting intermediate averaged pixel errors for the individual optimization steps, in relation to the defined estimator
 		 * @return True, if succeeded
 		 */
-		static bool optimizeCameraObjectPointsPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& poses, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, const PinholeCamera::OptimizationStrategy optimizationStrategy, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* optimizedPoses, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeCameraObjectPointsPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, const PinholeCamera::OptimizationStrategy optimizationStrategy, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 	protected:
 
@@ -243,7 +241,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		/**
 		 * Determines the initial field of view for a set of camera frames with known poses and groups of correspondences between pose indices and 2D image points locations within the pose frames.
 		 * The number of correspondences may vary between the individual frames (groups).<br>
-		 * Each group may address individual object points, however the larger the intersection of sets between the individual 3D object points in the individual frames the better the optimization result.<br>
+		 * Each group may address individual object points, however the larger the intersection of sets between the individual 3D object points in the individual frames the better the optimization result.
 		 * @param pinholeCamera The pinhole camera profile for which the better field of view will be determined, must be valid
 		 * @param poses The accessor for the known poses of the individual camera frames
 		 * @param objectPoints The accessor for the individual 3D object points
@@ -257,7 +255,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		 * @param onlyFrontObjectPoints True, to avoid that the optimized 3D position lies behind any camera
 		 * @param bestError Resulting averaged square pixel error for the camera profile with the best matching field of view
 		 * @param allErrors Optional vector of all errors that have been determined (can be used to decide whether a resulting best camera profile is significantly different from all other camera profiles)
-		 * @param lock Lock object, must be defined if this function is executed in parallel on individual threads, nullptr otherwise
+		 * @param lock The lock object, must be defined if this function is executed in parallel on individual threads, nullptr otherwise
 		 * @param abort Optional abort statement allowing to stop the execution; True, if the execution has to stop
 		 * @param firstStep The first step to be handled, with range [0, overallSteps)
 		 * @param steps The number of steps which will be handled (from the entire number of overall steps), with range [1, overallSteps]
