@@ -26,7 +26,7 @@ bool Utilities::determineInitialObjectPoint(const Line3* rays, const size_t numb
 	unsigned int firstIndex = (unsigned int)(-1);
 	unsigned int secondIndex = (unsigned int)(-1);
 
-	for (size_t a = 0u; a < numberRays - 1; ++a) {
+	for (size_t a = 0u; a < numberRays - 1; ++a)
 		for (size_t b = a + 1u; b < numberRays; ++b)
 		{
 			ocean_assert(rays[a].hasUnitDirection());
@@ -41,14 +41,12 @@ bool Utilities::determineInitialObjectPoint(const Line3* rays, const size_t numb
 				secondIndex = (unsigned int)b;
 			}
 		}
-}
 
 	ocean_assert(firstIndex != (unsigned int)(-1));
 	ocean_assert(secondIndex != (unsigned int)(-1));
 
-	if (minCosValue >= Scalar(0.99999390765779)) { // Numeric::cos(Numeric::deg2rad(0.2)))
+	if (minCosValue >= Scalar(0.99999390765779)) // Numeric::cos(Numeric::deg2rad(0.2)))
 		return false;
-}
 
 	const bool result = rays[firstIndex].nearestPoint(rays[secondIndex], objectPoint);
 	ocean_assert_and_suppress_unused(result, result);
@@ -60,9 +58,8 @@ bool Utilities::determineInitialObjectPoint(const Line3* rays, const size_t numb
 		{
 			const Vector3 pointDirection(objectPoint - rays[n].point());
 
-			if (rays[n].direction() * pointDirection < Numeric::eps()) {
+			if (rays[n].direction() * pointDirection < Numeric::eps())
 				return false;
-}
 		}
 	}
 
