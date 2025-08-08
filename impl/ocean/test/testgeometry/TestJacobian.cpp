@@ -179,9 +179,11 @@ bool TestJacobian::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testPoseCameraJacobian2x14(testDuration) && allSucceeded;
-
+	allSucceeded = testPoseCameraJacobian2x14<float>(testDuration) && allSucceeded;
 	Log::info() << " ";
+	allSucceeded = testPoseCameraJacobian2x14<double>(testDuration) && allSucceeded;
+
+ Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
@@ -372,6 +374,16 @@ TEST(TestJacobian, OrientationCameraJacobian2x11)
 TEST(TestJacobian, PoseCameraJacobian2x12)
 {
 	EXPECT_TRUE(TestJacobian::testPoseCameraJacobian2x12(GTEST_TEST_DURATION));
+}
+
+TEST(TestJacobian, PoseCameraJacobian2x14_float)
+{
+	EXPECT_TRUE(TestJacobian::testPoseCameraJacobian2x14<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestJacobian, PoseCameraJacobian2x14_double)
+{
+	EXPECT_TRUE(TestJacobian::testPoseCameraJacobian2x14<double>(GTEST_TEST_DURATION));
 }
 
 TEST(TestJacobian, Homography2x8)
@@ -644,7 +656,7 @@ bool TestJacobian::testOrientationalJacobian2x3(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance optimized: " << performanceOptimized.averageMseconds() << "ms";
@@ -869,7 +881,7 @@ bool TestJacobian::testOrientationJacobian2nx3(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance optimized: " << performanceOptimized.averageMseconds() << "ms";
@@ -1191,7 +1203,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -1458,7 +1470,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -1732,7 +1744,7 @@ bool TestJacobian::testAnyCameraPoseJacobian2nx6(const double testDuration)
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
@@ -2021,7 +2033,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -2366,7 +2378,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -2682,7 +2694,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -2947,7 +2959,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -3183,7 +3195,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -3389,7 +3401,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -3606,7 +3618,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 				++iterations;
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		ocean_assert(iterations != 0ull);
 		const double percent = double(succeeded) / double(iterations);
@@ -4259,7 +4271,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -4400,7 +4412,7 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -4567,7 +4579,7 @@ bool TestJacobian::testSphericalObjectPointOrientation2x3IF(const double testDur
 				}
 			}
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Validation: " << validation;
 
@@ -4736,7 +4748,7 @@ bool TestJacobian::testCameraDistortionJacobian2x4(const double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -4967,7 +4979,7 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -5217,7 +5229,7 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -5498,7 +5510,7 @@ bool TestJacobian::testPinholeCameraJacobian2x8(const double testDuration)
 
 		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -5540,8 +5552,6 @@ bool TestJacobian::testFisheyeCameraJacobian2x12(const double testDuration)
 
 	do
 	{
-		//const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(0u);
-
 		const unsigned int width = 1000u;
 		const unsigned int height = 1000u;
 
@@ -5624,7 +5634,7 @@ bool TestJacobian::testFisheyeCameraJacobian2x12(const double testDuration)
 			}
 		}
 	}
-	while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
@@ -6098,7 +6108,7 @@ bool TestJacobian::testOrientationCameraJacobian2x11(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -6618,7 +6628,7 @@ bool TestJacobian::testPoseCameraJacobian2x12(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -6641,569 +6651,283 @@ bool TestJacobian::testPoseCameraJacobian2x12(const double testDuration)
 	return allSucceeded;
 }
 
+template <typename T>
 bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	const unsigned int numberPoints = 50u;
+	constexpr size_t numberPoints = 50;
 
-	Log::info() << "Testing camera pose jacobian 2x14 for " << numberPoints << " points:";
+	Log::info() << "Testing camera pose jacobian 2x14 for " << numberPoints << " points with " << sizeof(T) * 8 << "-bit precision:";
 
-	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
+	const std::vector<double> epsilons = {NumericD::weakEps(), NumericD::weakEps() / 10.0, NumericD::weakEps() * 10.0, NumericD::weakEps() / 100.0, NumericD::weakEps() * 100.0};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	constexpr double threshold = std::is_same<float, T>::value ? 0.95 : 0.99;
+
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
 
-	const Timestamp startTimestamp(true);
+	constexpr T cameraBorder = Scalar(50);
 
-	unsigned int distortionIteration = 0u;
+	enum DistortionType : uint32_t
+	{
+		DT_NO_DISTORTION = 0u,
+		DT_RADIAL_DISTORTION = 1u << 0u | DT_NO_DISTORTION,
+		DT_FULL_DISTORTION = (1u << 1u) | DT_RADIAL_DISTORTION
+	};
+
+	const Timestamp startTimestamp(true);
 
 	do
 	{
-		bool accurate = true;
-
-		const unsigned int width = 640u;
-		const unsigned int height = 480u;
-
-		const Scalar width2 = Scalar(width) * Scalar(0.5);
-		const Scalar height2 = Scalar(height) * Scalar(0.5);
-
-		const Scalar fovX = Random::scalar(Numeric::deg2rad(40), Numeric::deg2rad(70));
-
-		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
-		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
-
-		const Vector3 translation = Random::vector3(-1, 1);
-		const Quaternion quaternion = Random::quaternion();
-
-		const HomogenousMatrix4 world_T_camera(translation, quaternion);
-		const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
-
-		const Pose flippedCamera_P_world(flippedCamera_T_world);
-
-		PinholeCamera camera(width, height, fovX, principalX, principalY);
-
-		if (distortionIteration % 3u == 1u || distortionIteration % 3u == 2u)
+		for (const DistortionType distortionType : {DT_NO_DISTORTION, DT_RADIAL_DISTORTION, DT_FULL_DISTORTION})
 		{
-			const Scalar k1 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-			const Scalar k2 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-			camera.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2));
-		}
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-		if (distortionIteration % 3u == 2u)
-		{
-			const Scalar p1 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-			const Scalar p2 = Random::scalar(Scalar(-0.5), Scalar(0.5));
-			camera.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2));
-		}
+			constexpr unsigned int width = 1280u;
+			constexpr unsigned int height = 720u;
 
-		const Scalar k1 = camera.radialDistortion().first;
-		const Scalar k2 = camera.radialDistortion().second;
+			const T width2 = T(width) * T(0.5);
+			const T height2 = T(height) * T(0.5);
 
-		const Scalar p1 = camera.tangentialDistortion().first;
-		const Scalar p2 = camera.tangentialDistortion().second;
+			const T fovX = RandomT<T>::scalar(randomGenerator, NumericT<T>::deg2rad(40), NumericT<T>::deg2rad(70));
 
-		distortionIteration++;
+			const T principalX = RandomT<T>::scalar(randomGenerator, width2 - T(50), width2 + T(50));
+			const T principalY = RandomT<T>::scalar(randomGenerator, height2 - T(50), height2 + T(50));
 
-		Vectors3 objectPoints;
-		objectPoints.reserve(numberPoints);
+			const VectorT3<T> translation = RandomT<T>::vector3(randomGenerator, -1, 1);
+			const QuaternionT<T> quaternion = RandomT<T>::quaternion(randomGenerator);
 
-		while (objectPoints.size() < numberPoints)
-		{
-			const Vector2 imagePoint = Random::vector2(Scalar(40), Scalar(width - 40u), Scalar(40), Scalar(height - 40u));
+			const HomogenousMatrixT4<T> world_T_camera(translation, quaternion);
+			const HomogenousMatrixT4<T> flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
 
-			const Line3 ray = camera.ray(imagePoint, world_T_camera);
+			const PoseT<T> flippedCamera_P_world(flippedCamera_T_world);
 
-			objectPoints.emplace_back(ray.point(Random::scalar(1, 10)));
-		}
+			PinholeCameraT<T> camera(width, height, fovX, principalX, principalY);
 
-		SquareMatrix3 Rwx, Rwy, Rwz;
-		calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
+			if ((distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION)
+			{
+				const T k1 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
+				const T k2 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
 
-		/**
-		 * | dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dk1, dfx / dk2, dfx / dp1, dfx / dp2,          dfx / dtx, dfx / dty, dfx / dtz,   dfx / dwx, dfx / dwy, dfx / dwz |
-		 * | dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dk1, dfy / dk2, dfy / dp1, dfy / dp2,          dfy / dtx, dfy / dty, dfy / dtz,   dfy / dwx, dfy / dwy, dfy / dwz |
-		 */
+				camera.setRadialDistortion(typename PinholeCameraT<T>::DistortionPair(k1, k2));
+			}
 
-		Matrix jacobian(2 * objectPoints.size(), 14);
+			if ((distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION)
+			{
+				const T p1 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
+				const T p2 = RandomT<T>::scalar(randomGenerator, T(-0.5), T(0.5));
 
-		performance.start();
-			Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2nx14IF(camera, flippedCamera_T_world, ConstArrayAccessor<Vector3>(objectPoints), Rwx, Rwy, Rwz, jacobian.data());
-		performance.stop();
+				camera.setTangentialDistortion(typename PinholeCameraT<T>::DistortionPair(p1, p2));
+			}
 
-		{
-			Matrix naiveJacobian(2 * objectPoints.size(), 14);
+			VectorsT3<T> objectPoints;
+			objectPoints.reserve(numberPoints);
 
-			const HighPerformanceStatistic::ScopedStatistic scope(performanceNaive);
+			while (objectPoints.size() < numberPoints)
+			{
+				const VectorT2<T> imagePoint = RandomT<T>::vector2(randomGenerator, T(cameraBorder), T(width - cameraBorder), T(cameraBorder), T(height - cameraBorder));
+
+				const LineT3<T> ray = camera.ray(imagePoint, world_T_camera);
+
+				objectPoints.emplace_back(ray.point(RandomT<T>::scalar(randomGenerator, 1, 10)));
+			}
+
+			SquareMatrixT3<T> Rwx, Rwy, Rwz;
+			calculateRotationRodriguesDerivative(ExponentialMapT<T>(VectorT3(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
+
+			/**
+			 * | dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dk1, dfx / dk2, dfx / dp1, dfx / dp2,          dfx / dtx, dfx / dty, dfx / dtz,   dfx / dwx, dfx / dwy, dfx / dwz |
+			 * | dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dk1, dfy / dk2, dfy / dp1, dfy / dp2,          dfy / dtx, dfy / dty, dfy / dtz,   dfy / dwx, dfy / dwy, dfy / dwz |
+			 */
+
+			MatrixT<T> jacobian(2 * objectPoints.size(), 14);
+
+			performance.start();
+				Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2nx14IF(camera, flippedCamera_T_world, ConstArrayAccessor<VectorT3<T>>(objectPoints), Rwx, Rwy, Rwz, jacobian.data());
+			performance.stop();
+
+			{
+				MatrixT<T> naiveJacobian(2 * objectPoints.size(), 14);
+
+				const HighPerformanceStatistic::ScopedStatistic scope(performanceNaive);
+
+				for (size_t n = 0; n < objectPoints.size(); ++n)
+				{
+					const VectorT3<T> objectPoint = objectPoints[n];
+					const VectorT2<T> imagePoint(camera.template projectToImageIF<false>(flippedCamera_T_world, objectPoint, camera.hasDistortionParameters()));
+
+					for (unsigned int i = 0u; i < 14u; ++i)
+					{
+						PoseT<T> poseDelta(flippedCamera_T_world);
+
+						unsigned int cameraWidth = 0u;
+						unsigned int cameraHeight = 0u;
+
+						std::vector<T> deltaParameters;
+						typename PinholeCameraT<T>::ParameterConfiguration parameterConfiguration = PinholeCameraT<T>::PC_UNKNOWN;
+						camera.copyParameters(cameraWidth, cameraHeight, deltaParameters, parameterConfiguration);
+
+						ocean_assert(width == cameraWidth && height == cameraHeight);
+						ocean_assert(deltaParameters.size() == 8 && parameterConfiguration == PinholeCameraT<T>::PC_8_PARAMETERS);
+
+						if (i < 8u)
+						{
+							deltaParameters[i] += NumericT<T>::weakEps();
+						}
+						else
+						{
+							const unsigned int ip = i - 8u;
+							ocean_assert(ip < 6u);
+
+							poseDelta[ip] += NumericT<T>::weakEps();
+						}
+
+						const PinholeCameraT<T> cameraDelta(cameraWidth, cameraHeight, PinholeCameraT<T>::PC_8_PARAMETERS, deltaParameters.data());
+
+						const VectorT2<T> imagePointDelta(cameraDelta.template projectToImageIF<false>(poseDelta.transformation(), objectPoint, camera.hasDistortionParameters()));
+						const VectorT2<T> derivative = (imagePointDelta - imagePoint) / NumericT<T>::weakEps();
+
+						naiveJacobian[n * 2u + 0u][i] = derivative.x();
+						naiveJacobian[n * 2u + 1u][i] = derivative.y();
+					}
+				}
+			}
+
+			const PoseD flippedCamera_P_worldD(flippedCamera_P_world);
+			const HomogenousMatrixD4 flippedCamera_T_worldD(flippedCamera_P_worldD.transformation());
+
+			const PinholeCameraD cameraD(camera);
+
+			unsigned int cameraWidth = 0u;
+			unsigned int cameraHeight = 0u;
+			std::vector<double> cameraParametersD;
+			PinholeCameraD::ParameterConfiguration cameraParameterConfiguration = PinholeCameraD::PC_UNKNOWN;
+			cameraD.copyParameters(cameraWidth, cameraHeight, cameraParametersD, cameraParameterConfiguration);
+
+			ocean_assert(width == cameraWidth && height == cameraHeight);
+			ocean_assert(cameraParametersD.size() == 8 && cameraParameterConfiguration == PinholeCameraD::PC_8_PARAMETERS);
 
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
-				const Vector3 objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<false>(flippedCamera_T_world, objectPoint, camera.hasDistortionParameters()));
+				const VectorT3<T>& objectPoint = objectPoints[n];
 
-				for (unsigned int i = 0u; i < 14u; ++i)
+				const T* jacobianX = jacobian[2u * n + 0u];
+				const T* jacobianY = jacobian[2u * n + 1u];
+
 				{
-					Pose poseDelta(flippedCamera_T_world);
+					// we also test the implementation for one object point
 
-					unsigned int cameraWidth = 0u;
-					unsigned int cameraHeight = 0u;
+					T singleJacobianCameraX[8];
+					T singleJacobianCameraY[8];
 
-					Scalars deltaParameters;
-					PinholeCamera::ParameterConfiguration parameterConfiguration = PinholeCamera::PC_UNKNOWN;
-					camera.copyParameters(cameraWidth, cameraHeight, deltaParameters, parameterConfiguration);
+					T singleJacobianPoseX[6];
+					T singleJacobianPoseY[6];
+					Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(camera, flippedCamera_T_world, objectPoint, Rwx, Rwy, Rwz, singleJacobianCameraX, singleJacobianCameraY, singleJacobianPoseX, singleJacobianPoseY);
 
-					ocean_assert(width == cameraWidth && height == cameraHeight);
-					ocean_assert(deltaParameters.size() == 8 && parameterConfiguration == PinholeCamera::PC_8_PARAMETERS);
-
-					if (i < 8u)
+					for (unsigned int i = 0u; i < 8u; ++i)
 					{
-						deltaParameters[i] += Numeric::weakEps();
+						if constexpr (!std::is_same<T, float>::value)
+						{
+							ocean_assert(NumericT<T>::isWeakEqual(jacobianX[i], singleJacobianCameraX[i]));
+							ocean_assert(NumericT<T>::isWeakEqual(jacobianY[i], singleJacobianCameraY[i]));
+						}
+
+						if (NumericT<T>::isNotEqual(jacobianX[i], singleJacobianCameraX[i], NumericT<T>::eps() * 100) || NumericT<T>::isNotEqual(jacobianY[i], singleJacobianCameraY[i], NumericT<T>::eps() * 100))
+						{
+							scopedIteration.setInaccurate();
+						}
 					}
-					else
+
+					for (unsigned int i = 0u; i < 6u; ++i)
 					{
-						const unsigned int ip = i - 8u;
-						ocean_assert(ip < 6u);
+						if constexpr (!std::is_same<T, float>::value)
+						{
+							ocean_assert(NumericT<T>::isWeakEqual(jacobianX[8 + i], singleJacobianPoseX[i]));
+							ocean_assert(NumericT<T>::isWeakEqual(jacobianY[8 + i], singleJacobianPoseY[i]));
+						}
 
-						poseDelta[ip] += Numeric::weakEps();
+						if (NumericT<T>::isNotEqual(jacobianX[8 + i], singleJacobianPoseX[i], NumericT<T>::eps() * 100) || NumericT<T>::isNotEqual(jacobianY[8 + i], singleJacobianPoseY[i], NumericT<T>::eps() * 100))
+						{
+							scopedIteration.setInaccurate();
+						}
+					}
+				}
+
+				const VectorD3 objectPointD = VectorD3(objectPoints[n]);
+
+				const VectorD2 imagePointD(cameraD.projectToImageIF<false>(flippedCamera_T_worldD, objectPointD, true));
+
+
+				// let's test the 8 camera parameters
+
+				for (unsigned int nParameter = 0u; nParameter < 8u; ++nParameter)
+				{
+					bool localAccuracy = false;
+
+					for (const double epsilon : epsilons)
+					{
+						std::vector<double> deltaParameters(cameraParametersD);
+						deltaParameters[nParameter] += epsilon;
+
+						const PinholeCameraD cameraFx(cameraWidth, cameraHeight, cameraParameterConfiguration, deltaParameters.data());
+
+						const VectorD2 imagePointFx(cameraFx.projectToImageIF<false>(flippedCamera_T_worldD, objectPointD, true));
+
+						if (checkAccuracy(imagePointD, imagePointFx, epsilon, double(jacobianX[nParameter]), double(jacobianY[nParameter])))
+						{
+							localAccuracy = true;
+							break;
+						}
 					}
 
-					const PinholeCamera cameraDelta(cameraWidth, cameraHeight, PinholeCamera::PC_8_PARAMETERS, deltaParameters.data());
+					if (!localAccuracy)
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
 
-					const Vector2 imagePointDelta(cameraDelta.projectToImageIF<false>(poseDelta.transformation(), objectPoint, camera.hasDistortionParameters()));
-					const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
 
-					naiveJacobian[n * 2u + 0u][i] = derivative.x();
-					naiveJacobian[n * 2u + 1u][i] = derivative.y();
+				// now let's test the 6 pose parameters
+
+				for (unsigned int nPose = 0u; nPose < 6u; ++nPose)
+				{
+					bool localAccuracy = false;
+
+					for (const double epsilon : epsilons)
+					{
+						PoseD deltaPose(flippedCamera_P_worldD);
+
+						deltaPose[nPose] += epsilon;
+
+						const VectorD2 imagePointTx(cameraD.projectToImageIF<false>(deltaPose.transformation(), objectPointD, cameraD.hasDistortionParameters()));
+
+						if (checkAccuracy(imagePointD, imagePointTx, epsilon, double(jacobianX[8 + nPose]), double(jacobianY[8 + nPose])))
+						{
+							localAccuracy = true;
+							break;
+						}
+					}
+
+					if (!localAccuracy)
+					{
+						scopedIteration.setInaccurate();
+					}
 				}
 			}
-		}
-
-		for (size_t n = 0; n < objectPoints.size(); ++n)
-		{
-			const Vector3& objectPoint = objectPoints[n];
-			const Vector2 imagePoint(camera.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-			const Scalar* jacobianX = jacobian[2u * n + 0u];
-			const Scalar* jacobianY = jacobian[2u * n + 1u];
-
-			{
-				// we also test the implementation for one object point
-
-				Scalar singleJacobianCameraX[8];
-				Scalar singleJacobianCameraY[8];
-
-				Scalar singleJacobianPoseX[6];
-				Scalar singleJacobianPoseY[6];
-				Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(camera, flippedCamera_T_world, objectPoint, Rwx, Rwy, Rwz, singleJacobianCameraX, singleJacobianCameraY, singleJacobianPoseX, singleJacobianPoseY);
-
-				for (unsigned int i = 0u; i < 8u; ++i)
-				{
-					if constexpr (!std::is_same<Scalar, float>::value)
-					{
-						ocean_assert(Numeric::isWeakEqual(jacobianX[i], singleJacobianCameraX[i]));
-						ocean_assert(Numeric::isWeakEqual(jacobianY[i], singleJacobianCameraY[i]));
-					}
-
-					if (Numeric::isNotEqual(jacobianX[i], singleJacobianCameraX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianCameraY[i], Numeric::eps() * 100))
-					{
-						accurate = false;
-					}
-				}
-
-				for (unsigned int i = 0u; i < 6u; ++i)
-				{
-					if constexpr (!std::is_same<Scalar, float>::value)
-					{
-						ocean_assert(Numeric::isWeakEqual(jacobianX[8 + i], singleJacobianPoseX[i]));
-						ocean_assert(Numeric::isWeakEqual(jacobianY[8 + i], singleJacobianPoseY[i]));
-					}
-
-					if (Numeric::isNotEqual(jacobianX[8 + i], singleJacobianPoseX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[8 + i], singleJacobianPoseY[i], Numeric::eps() * 100))
-					{
-						accurate = false;
-					}
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dFx
-					PinholeCamera cameraFx(camera);
-					SquareMatrix3 intrinsicFx(camera.intrinsic());
-					intrinsicFx(0, 0) += epsilon;
-					cameraFx.setIntrinsic(intrinsicFx);
-
-					const Vector2 imagePointFx(cameraFx.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointFx, epsilon, jacobianX[0], jacobianY[0]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dFy
-					PinholeCamera cameraFy(camera);
-					SquareMatrix3 intrinsicFy(camera.intrinsic());
-					intrinsicFy(1, 1) += epsilon;
-					cameraFy.setIntrinsic(intrinsicFy);
-
-					const Vector2 imagePointFy(cameraFy.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointFy, epsilon, jacobianX[1], jacobianY[1]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dmx
-					PinholeCamera cameraMx(camera);
-					SquareMatrix3 intrinsicMx(camera.intrinsic());
-					intrinsicMx(0, 2) += epsilon;
-					cameraMx.setIntrinsic(intrinsicMx);
-
-					const Vector2 imagePointMx(cameraMx.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointMx, epsilon, jacobianX[2], jacobianY[2]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dmy
-					PinholeCamera cameraMy(camera);
-					SquareMatrix3 intrinsicMy(camera.intrinsic());
-					intrinsicMy(1, 2) += epsilon;
-					cameraMy.setIntrinsic(intrinsicMy);
-
-					const Vector2 imagePointMy(cameraMy.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointMy, epsilon, jacobianX[3], jacobianY[3]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dk1
-					PinholeCamera cameraK1(camera);
-					cameraK1.setRadialDistortion(PinholeCamera::DistortionPair(k1 + epsilon, k2));
-
-					const Vector2 imagePointK1(cameraK1.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointK1, epsilon, jacobianX[4], jacobianY[4]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dk2
-					PinholeCamera cameraK2(camera);
-					cameraK2.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2 + epsilon));
-
-					const Vector2 imagePointK2(cameraK2.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointK2, epsilon, jacobianX[5], jacobianY[5]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dp1
-					PinholeCamera cameraP1(camera);
-					cameraP1.setTangentialDistortion(PinholeCamera::DistortionPair(p1 + epsilon, p2));
-
-					const Vector2 imagePointP1(cameraP1.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointP1, epsilon, jacobianX[6], jacobianY[6]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dp2
-					PinholeCamera cameraP2(camera);
-					cameraP2.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2 + epsilon));
-
-					const Vector2 imagePointP2(cameraP2.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
-
-					if (checkAccuracy(imagePoint, imagePointP2, epsilon, jacobianX[7], jacobianY[7]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dtx
-					Pose poseTx(flippedCamera_P_world);
-					poseTx.x() += epsilon;
-
-					const Vector2 imagePointTx(camera.projectToImageIF<false>(poseTx.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					if (checkAccuracy(imagePoint, imagePointTx, epsilon, jacobianX[8], jacobianY[8]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dty
-					Pose poseTy(flippedCamera_P_world);
-					poseTy.y() += epsilon;
-
-					const Vector2 imagePointTy(camera.projectToImageIF<false>(poseTy.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					if (checkAccuracy(imagePoint, imagePointTy, epsilon, jacobianX[9], jacobianY[9]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dtz
-					Pose poseTz(flippedCamera_P_world);
-					poseTz.z() += epsilon;
-
-					const Vector2 imagePointTz(camera.projectToImageIF<false>(poseTz.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					if (checkAccuracy(imagePoint, imagePointTz, epsilon, jacobianX[10], jacobianY[10]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dwx
-					Pose poseWx(flippedCamera_P_world);
-					poseWx.rx() += epsilon;
-
-					const Vector2 imagePointWx(camera.projectToImageIF<false>(poseWx.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					if (checkAccuracy(imagePoint, imagePointWx, epsilon, jacobianX[11], jacobianY[11]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dwy
-					Pose poseWy(flippedCamera_P_world);
-					poseWy.ry() += epsilon;
-
-					const Vector2 imagePointWy(camera.projectToImageIF<false>(poseWy.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					if (checkAccuracy(imagePoint, imagePointWy, epsilon, jacobianX[12], jacobianY[12]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			{
-				bool localAccuracy = false;
-
-				for (const Scalar epsilon : epsilons)
-				{
-					// df / dwz
-					Pose poseWz(flippedCamera_P_world);
-					poseWz.rz() += epsilon;
-
-					const Vector2 imagePointWz(camera.projectToImageIF<false>(poseWz.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					if (checkAccuracy(imagePoint, imagePointWz, epsilon, jacobianX[13], jacobianY[13]))
-					{
-						localAccuracy = true;
-						break;
-					}
-				}
-
-				if (!localAccuracy)
-				{
-					accurate = false;
-				}
-			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testHomography2x8(const double testDuration)
@@ -7327,7 +7051,7 @@ bool TestJacobian::testHomography2x8(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -7471,7 +7195,7 @@ bool TestJacobian::testHomography2x9(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -7603,7 +7327,7 @@ bool TestJacobian::testIdentityHomography2x8(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -7735,7 +7459,7 @@ bool TestJacobian::testIdentityHomography2x9(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -7919,7 +7643,7 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 			++iterations;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	ocean_assert(iterations != 0ull);
 	const double percent = double(succeeded) / double(iterations);
@@ -8060,7 +7784,7 @@ bool TestJacobian::testCalculateFisheyeDistortNormalized2x2(const double testDur
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
