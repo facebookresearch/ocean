@@ -42,11 +42,10 @@ bool TestRotation::test(const double testDuration)
 
 	Log::info() << " ";
 
-	if (allSucceeded) {
+	if (allSucceeded)
 		Log::info() << "Rotation test succeeded.";
-	} else {
+	else
 		Log::info() << "Rotation test FAILED!";
-}
 
 	return allSucceeded;
 }
@@ -88,15 +87,13 @@ bool TestRotation::testConversionToQuaterion(const double testDuration)
 
 	do
 	{
-		for (unsigned int n = 0u; n < constIterations; ++n) {
+		for (unsigned int n = 0u; n < constIterations; ++n)
 			rotations[n] = Random::rotation();
-}
 
 		performance.start();
 
-		for (unsigned int n = 0u; n < constIterations; ++n) {
+		for (unsigned int n = 0u; n < constIterations; ++n)
 			quaternions[n] = Quaternion(rotations[n]);
-}
 
 		performance.stop();
 
@@ -111,9 +108,8 @@ bool TestRotation::testConversionToQuaterion(const double testDuration)
 			const Scalar angleY = Numeric::rad2deg((matrix * Vector3(0, 1, 0)).angle(quaternion * Vector3(0, 1, 0)));
 			const Scalar angleZ = Numeric::rad2deg((matrix * Vector3(0, 0, 1)).angle(quaternion * Vector3(0, 0, 1)));
 
-			if (Numeric::isEqual(angleX, 0, epsilon) && Numeric::isEqual(angleY, 0, epsilon) && Numeric::isEqual(angleZ, 0, epsilon)) {
+			if (Numeric::isEqual(angleX, 0, epsilon) && Numeric::isEqual(angleY, 0, epsilon) && Numeric::isEqual(angleZ, 0, epsilon))
 				validIterations++;
-}
 		}
 
 		iterations += constIterations;
@@ -151,15 +147,13 @@ bool TestRotation::testConversionToHomogenousMatrix(const double testDuration)
 
 	do
 	{
-		for (unsigned int n = 0u; n < constIterations; ++n) {
+		for (unsigned int n = 0u; n < constIterations; ++n)
 			rotations[n] = Random::rotation();
-}
 
 		performance.start();
 
-		for (unsigned int n = 0u; n < constIterations; ++n) {
+		for (unsigned int n = 0u; n < constIterations; ++n)
 			matrices[n] = HomogenousMatrix4(rotations[n]);
-}
 
 		performance.stop();
 
@@ -172,9 +166,8 @@ bool TestRotation::testConversionToHomogenousMatrix(const double testDuration)
 			const Scalar angleY = Numeric::rad2deg((matrix * Vector3(0, 1, 0)).angle(rotation * Vector3(0, 1, 0)));
 			const Scalar angleZ = Numeric::rad2deg((matrix * Vector3(0, 0, 1)).angle(rotation * Vector3(0, 0, 1)));
 
-			if (Numeric::isEqual(angleX, 0, epsilon) && Numeric::isEqual(angleY, 0, epsilon) && Numeric::isEqual(angleZ, 0, epsilon)) {
+			if (Numeric::isEqual(angleX, 0, epsilon) && Numeric::isEqual(angleY, 0, epsilon) && Numeric::isEqual(angleZ, 0, epsilon))
 				validIterations++;
-}
 		}
 
 		iterations += constIterations;
@@ -208,63 +201,50 @@ bool TestRotation::testReferenceOffsetConstructor(const double testDuration)
 			const Vector3 offset(Random::vector3());
 
 			// identity test
-			if (Rotation(Vector3(1, 0, 0), Vector3(1, 0, 0)) * reference != reference) {
+			if (Rotation(Vector3(1, 0, 0), Vector3(1, 0, 0)) * reference != reference)
 				allSucceeded = false;
-}
-			if (Rotation(Vector3(0, 1, 0), Vector3(0, 1, 0)) * reference != reference) {
+			if (Rotation(Vector3(0, 1, 0), Vector3(0, 1, 0)) * reference != reference)
 				allSucceeded = false;
-}
-			if (Rotation(Vector3(0, 0, 1), Vector3(0, 0, 1)) * reference != reference) {
+			if (Rotation(Vector3(0, 0, 1), Vector3(0, 0, 1)) * reference != reference)
 				allSucceeded = false;
-}
-			if (Rotation(offset, offset) * reference != reference) {
+			if (Rotation(offset, offset) * reference != reference)
 				allSucceeded = false;
-}
 
 			// 180 degrees test (a)
-			if (Rotation(Vector3(1, 0, 0), Vector3(-1, 0, 0)) * Vector3(1, 0, 0) != Vector3(-1, 0, 0)) {
+			if (Rotation(Vector3(1, 0, 0), Vector3(-1, 0, 0)) * Vector3(1, 0, 0) != Vector3(-1, 0, 0))
 				allSucceeded = false;
-}
-			if (Rotation(Vector3(0, 1, 0), Vector3(0, -1, 0)) * Vector3(0, 1, 0) != Vector3(0, -1, 0)) {
+			if (Rotation(Vector3(0, 1, 0), Vector3(0, -1, 0)) * Vector3(0, 1, 0) != Vector3(0, -1, 0))
 				allSucceeded = false;
-}
-			if (Rotation(Vector3(0, 0, 1), Vector3(0, 0, -1)) * Vector3(0, 0, 1) != Vector3(0, 0, -1)) {
+			if (Rotation(Vector3(0, 0, 1), Vector3(0, 0, -1)) * Vector3(0, 0, 1) != Vector3(0, 0, -1))
 				allSucceeded = false;
-}
 
 			// 180 degrees test (b)
-			if (Rotation(Vector3(-1, 0, 0), Vector3(1, 0, 0)) * Vector3(1, 0, 0) != Vector3(-1, 0, 0)) {
+			if (Rotation(Vector3(-1, 0, 0), Vector3(1, 0, 0)) * Vector3(1, 0, 0) != Vector3(-1, 0, 0))
 				allSucceeded = false;
-}
-			if (Rotation(Vector3(0, -1, 0), Vector3(0, 1, 0)) * Vector3(0, 1, 0) != Vector3(0, -1, 0)) {
+			if (Rotation(Vector3(0, -1, 0), Vector3(0, 1, 0)) * Vector3(0, 1, 0) != Vector3(0, -1, 0))
 				allSucceeded = false;
-}
-			if (Rotation(Vector3(0, 0, -1), Vector3(0, 0, 1)) * Vector3(0, 0, 1) != Vector3(0, 0, -1)) {
+			if (Rotation(Vector3(0, 0, -1), Vector3(0, 0, 1)) * Vector3(0, 0, 1) != Vector3(0, 0, -1))
 				allSucceeded = false;
-}
 
 			const Rotation rotation0(reference, offset);
 			const Vector3 test0 = rotation0 * reference;
 
-			if (!offset.isEqual(test0, Numeric::weakEps()) || offset.angle(test0) >= Numeric::deg2rad(Scalar(0.1))) {
+			if (!offset.isEqual(test0, Numeric::weakEps()) || offset.angle(test0) >= Numeric::deg2rad(Scalar(0.1)))
 				allSucceeded = false;
-}
 
 			const Rotation rotation1(reference, -reference);
 			const Vector3 test1 = rotation1 * reference;
 
-			if (!reference.isEqual(-test1, Numeric::weakEps()) || reference.angle(test1) <= Numeric::deg2rad(Scalar(179.9))) {
+			if (!reference.isEqual(-test1, Numeric::weakEps()) || reference.angle(test1) <= Numeric::deg2rad(Scalar(179.9)))
 				allSucceeded = false;
-}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded) {
+	if (allSucceeded)
 		Log::info() << "Validation: succeeded.";
-	} else {
+	else
 		Log::info() << "Validation: FAILED!";
-}
 
 	return allSucceeded;
 }

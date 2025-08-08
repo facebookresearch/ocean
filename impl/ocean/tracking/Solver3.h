@@ -1864,17 +1864,15 @@ inline bool Solver3::RelativeThreshold::hasValidThreshold(const unsigned int val
 {
 	const unsigned int result = min(minmax<unsigned int>(thresholdLowerBoundary, (unsigned int)Numeric::round32(Scalar(value) * thresholdFactor), thresholdUpperBoundary), value);
 
-	if (value < thresholdLowerBoundary) {
+	if (value < thresholdLowerBoundary)
 		return false;
-}
 
 	ocean_assert(result <= value);
 	ocean_assert(result >= thresholdLowerBoundary);
 	ocean_assert(result <= thresholdUpperBoundary);
 
-	if (threshold) {
+	if (threshold)
 		*threshold = result;
-}
 
 	return true;
 }
@@ -1884,17 +1882,15 @@ inline bool Solver3::RelativeThreshold::hasValidThreshold(const unsigned int val
 {
 	const unsigned int result = min(minmax<unsigned int>(max(thresholdLowerBoundary, tLowerBoundary), (unsigned int)Numeric::round32(Scalar(value) * thresholdFactor), thresholdUpperBoundary), value);
 
-	if (value < tLowerBoundary || value < thresholdLowerBoundary) {
+	if (value < tLowerBoundary || value < thresholdLowerBoundary)
 		return false;
-}
 
 	ocean_assert(result <= value);
 	ocean_assert(result >= thresholdLowerBoundary);
 	ocean_assert(result <= thresholdUpperBoundary);
 
-	if (threshold) {
+	if (threshold)
 		*threshold = result;
-}
 
 	return true;
 }

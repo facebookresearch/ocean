@@ -64,11 +64,10 @@ bool TestRandom::test(const double testDuration)
 
 	Log::info() << " ";
 
-	if (allSucceeded) {
+	if (allSucceeded)
 		Log::info() << "Random test succeeded.";
-	} else {
+	else
 		Log::info() << "Random test FAILED!";
-}
 
 	return allSucceeded;
 }
@@ -258,9 +257,8 @@ bool TestRandom::testStandardRandomTriple(const double testDuration)
 
 	do
 	{
-		for (unsigned int n = 0u; n < constIterations; ++n) {
+		for (unsigned int n = 0u; n < constIterations; ++n)
 			Random::random(2000, a, b, c);
-}
 
 		++iterations;
 	}
@@ -292,9 +290,8 @@ bool TestRandom::testOceanRandomTriple(const double testDuration)
 
 	do
 	{
-		for (unsigned int n = 0u; n < constIterations; ++n) {
+		for (unsigned int n = 0u; n < constIterations; ++n)
 			Random::random(randomGenerator, 2000, a, b, c);
-}
 
 		++iterations;
 	}
@@ -327,9 +324,8 @@ bool TestRandom::testStandardRandomVector3(const double testDuration)
 			const Vector3 range(Random::scalar(0, 1000), Random::scalar(0, 1000), Random::scalar(0, 1000));
 			const Vector3 vector = Random::vector3(range);
 
-			if (vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z()) {
+			if (vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z())
 				succeeded++;
-}
 
 			iterations++;
 		}
@@ -365,9 +361,8 @@ bool TestRandom::testOceanRandomVector3(const double testDuration)
 			const Vector3 range(Random::scalar(randomGenerator, 0, 1000), Random::scalar(randomGenerator, 0, 1000), Random::scalar(randomGenerator, 0, 1000));
 			const Vector3 vector = Random::vector3(randomGenerator, range);
 
-			if (vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z()) {
+			if (vector.x() >= -range.x() && vector.x() <= range.x() && vector.y() >= -range.y() && vector.y() <= range.y() && vector.z() >= -range.z() && vector.z() <= range.z())
 				succeeded++;
-}
 
 			iterations++;
 		}
@@ -401,9 +396,8 @@ bool TestRandom::testStandardRandomEuler(const double testDuration)
 			const Scalar range = Random::scalar(0, Numeric::pi_2() - Numeric::eps());
 			const Euler euler = Random::euler(range);
 
-			if (euler.yaw() >= -range && euler.yaw() <= range && euler.pitch() >= -range && euler.pitch() <= range && euler.roll() >= -range && euler.roll() <= range) {
+			if (euler.yaw() >= -range && euler.yaw() <= range && euler.pitch() >= -range && euler.pitch() <= range && euler.roll() >= -range && euler.roll() <= range)
 				succeeded++;
-}
 
 			iterations++;
 		}
@@ -439,9 +433,8 @@ bool TestRandom::testOceanRandomEuler(const double testDuration)
 			const Scalar range = Random::scalar(randomGenerator, 0, Numeric::pi_2() - Numeric::eps());
 			const Euler euler = Random::euler(randomGenerator, range);
 
-			if (euler.yaw() >= -range && euler.yaw() <= range && euler.pitch() >= -range && euler.pitch() <= range && euler.roll() >= -range && euler.roll() <= range) {
+			if (euler.yaw() >= -range && euler.yaw() <= range && euler.pitch() >= -range && euler.pitch() <= range && euler.roll() >= -range && euler.roll() <= range)
 				succeeded++;
-}
 
 			iterations++;
 		}
