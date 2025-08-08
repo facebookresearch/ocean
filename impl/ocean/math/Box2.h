@@ -744,6 +744,9 @@ inline VectorT2<T> BoxT2<T>::corner(const unsigned int index) const
 
 		case 3u:
 			return VectorT2<T>(right(), top());
+
+		default:
+			break;
 	}
 
 	ocean_assert(index == 0u);

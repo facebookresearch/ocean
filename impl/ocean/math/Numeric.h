@@ -1947,6 +1947,9 @@ constexpr inline unsigned int NumericT<unsigned int>::factorial(const unsigned i
 
 		case 12u:
 			return 479001600u;
+
+		default:
+			break;
 	}
 
 	ocean_assert(false && "Invalid factorial value!");

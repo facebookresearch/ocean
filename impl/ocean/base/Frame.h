@@ -4099,6 +4099,9 @@ bool Frame::setValue(const T* planePixelValue, const size_t planePixelValueSize,
 
 			return setValue<T, 4u>(value, planeIndex);
 		}
+
+		default:
+			break;
 	}
 
 	ocean_assert(false && "The number of channels is not supported");
