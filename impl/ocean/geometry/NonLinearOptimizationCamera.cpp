@@ -1280,7 +1280,7 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 
 				for (size_t i = 0; i < objectPoints.size(); ++i)
 				{
-					Jacobian::calculateJacobianCameraPoseRodrigues2x14(jacobianX, jacobianY, camera_, flippedCamera_T_world, flippedCamera_P_world, objectPoints[i], Rwx, Rwy, Rwz);
+					Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(jacobianX, jacobianY, camera_, flippedCamera_T_world, objectPoints[i], Rwx, Rwy, Rwz);
 
 					for (size_t e = 0u; e < 8u; ++e)
 					{

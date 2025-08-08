@@ -736,29 +736,16 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 * @param jy Second row of the jacobian, with 14 column entries
 		 * @param pinholeCamera The pinhole camera to determine the jacobian values for
 		 * @param flippedCamera_T_world Inverted and flipped pose (rotation and translation) to determine the jacobian for
-		 * @param objectPoint 3D object point to determine the jacobian for
-		 */
-		static void calculateJacobianCameraPoseRodrigues2x14(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& objectPoint);
-
-		/**
-		 * Calculates the entire jacobian matrix for an object point to image point transformation covering a flexible 6-DOF camera pose, the four intrinsic camera parameters and four parameters for radial and tangential distortion.
-		 * The resulting jacobian has the following form:
-		 * <pre>
-		 * | dfx / dk1, dfx / dk2, dfx / dp1, dfx / dp2, dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dwx, dfx / dwy, dfx / dwz, dfx / dtx, dfx / dty, dfx / dtz |
-		 * | dfy / dk1, dfy / dk2, dfy / dp1, dfy / dp2, dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dwx, dfy / dwy, dfy / dwz, dfy / dtx, dfy / dty, dfy / dtz |
-		 * </pre>
-		 * @param jx First row of the jacobian, with 14 column entries
-		 * @param jy Second row of the jacobian, with 14 column entries
-		 * @param pinholeCamera The pinhole camera to determine the jacobian values for
-		 * @param flippedCamera_T_world Inverted and flipped pose (rotation and translation) to determine the jacobian for
 		 * @param flippedCamera_P_world Inverted and flipped pose identical to 'flippedCamera_T_world'
 		 * @param objectPoint 3D object point to determine the jacobian for
 		 * @param dwx Rotation matrix derived to wx, as determined by calculateRotationRodriguesDerivative()
 		 * @param dwy Rotation matrix derived to wy, as determined by calculateRotationRodriguesDerivative()
 		 * @param dwz Rotation matrix derived to wz, as determined by calculateRotationRodriguesDerivative()
 		 * @see calculateRotationRodriguesDerivative().
+		 * @tparam T The scalar data type, either 'float' or 'double'
 		 */
-		static void calculateJacobianCameraPoseRodrigues2x14(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Pose& flippedCamera_P_world, const Vector3& objectPoint, const SquareMatrix3& dwx, const SquareMatrix3& dwy, const SquareMatrix3& dwz);
+		template <typename T>
+		static void calculateJacobianCameraPoseRodrigues2x14IF(T* jx, T* jy, const PinholeCameraT<T>& pinholeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz);
 
 		/**
 		 * Calculates the two jacobian rows for a given (6-DOF pose) and a camera and a set of static object points.

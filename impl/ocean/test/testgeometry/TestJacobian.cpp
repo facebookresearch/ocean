@@ -6272,7 +6272,7 @@ bool TestJacobian::testPoseCameraJacobian2x12(const double testDuration)
 								break;
 
 							default:
-								ocean_assert(false && "This should never happend!");
+								ocean_assert(false && "This should never happen!");
 						}
 					}
 
@@ -6679,8 +6679,10 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 		const Vector3 translation = Random::vector3(-1, 1);
 		const Quaternion quaternion = Random::quaternion();
 
-		const HomogenousMatrix4 extrinsicIF(translation, quaternion);
-		const Pose poseIF(extrinsicIF);
+		const HomogenousMatrix4 world_T_camera(translation, quaternion);
+		const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
+
+		const Pose flippedCamera_P_world(flippedCamera_T_world);
 
 		PinholeCamera camera(width, height, fovX, principalX, principalY);
 
@@ -6710,7 +6712,11 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			objectPoints.push_back(camera.ray(Vector2(Random::scalar(40u, width - 40u), Random::scalar(40u, height - 40u)), PinholeCamera::invertedFlipped2Standard(extrinsicIF)).point(Random::scalar(1, 10)));
+			const Vector2 imagePoint = Random::vector2(Scalar(40), Scalar(width - 40u), Scalar(40), Scalar(height - 40u));
+
+			const Line3 ray = camera.ray(imagePoint, world_T_camera);
+
+			objectPoints.emplace_back(ray.point(Random::scalar(1, 10)));
 		}
 
 		/**
@@ -6721,7 +6727,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 		Matrix jacobian(2 * objectPoints.size(), 14);
 
 		performance.start();
-		Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2nx14(jacobian.data(), camera, poseIF, ConstArrayAccessor<Vector3>(objectPoints));
+			Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2nx14(jacobian.data(), camera, flippedCamera_P_world, ConstArrayAccessor<Vector3>(objectPoints));
 		performance.stop();
 
 		{
@@ -6729,16 +6735,14 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 
 			const HighPerformanceStatistic::ScopedStatistic scope(performanceNaive);
 
-			const HomogenousMatrix4 transformationIF(poseIF.transformation());
-
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
 				const Vector3 objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<false>(transformationIF, objectPoint, camera.hasDistortionParameters()));
+				const Vector2 imagePoint(camera.projectToImageIF<false>(flippedCamera_T_world, objectPoint, camera.hasDistortionParameters()));
 
 				for (unsigned int i = 0u; i < 14u; ++i)
 				{
-					Pose poseDelta(poseIF);
+					Pose poseDelta(flippedCamera_T_world);
 
 					SquareMatrix3 intrinsicDelta(camera.intrinsic());
 					PinholeCamera::DistortionPair radialDistortionDelta(camera.radialDistortion());
@@ -6792,7 +6796,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 								break;
 
 							default:
-								ocean_assert(false && "This should never happend!");
+								ocean_assert(false && "This should never happen!");
 						}
 					}
 
@@ -6810,7 +6814,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 		for (size_t n = 0; n < objectPoints.size(); ++n)
 		{
 			const Vector3& objectPoint = objectPoints[n];
-			const Vector2 imagePoint(camera.projectToImageIF<false>(extrinsicIF, objectPoint, true));
+			const Vector2 imagePoint(camera.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
 			const Scalar* jacobianX = jacobian[2u * n + 0u];
 			const Scalar* jacobianY = jacobian[2u * n + 1u];
@@ -6818,9 +6822,12 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 			{
 				// we also test the implementation for one object point
 
+				SquareMatrix3 Rwx, Rwy, Rwz;
+				calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
+
 				Scalar singleJacobianX[14];
 				Scalar singleJacobianY[14];
-				Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2x14(singleJacobianX, singleJacobianY, camera, extrinsicIF, objectPoint);
+				Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(singleJacobianX, singleJacobianY, camera, flippedCamera_T_world, objectPoint, Rwx, Rwy, Rwz);
 
 				for (unsigned int i = 0u; i < 14u; ++i)
 				{
@@ -6843,7 +6850,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 					PinholeCamera cameraK1(camera);
 					cameraK1.setRadialDistortion(PinholeCamera::DistortionPair(k1 + epsilon, k2));
 
-					const Vector2 imagePointK1(cameraK1.projectToImageIF<false>(extrinsicIF, objectPoint, true));
+					const Vector2 imagePointK1(cameraK1.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
 					if (checkAccuracy(imagePoint, imagePointK1, epsilon, jacobianX[0], jacobianY[0]))
 					{
@@ -6867,7 +6874,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 					PinholeCamera cameraK2(camera);
 					cameraK2.setRadialDistortion(PinholeCamera::DistortionPair(k1, k2 + epsilon));
 
-					const Vector2 imagePointK2(cameraK2.projectToImageIF<false>(extrinsicIF, objectPoint, true));
+					const Vector2 imagePointK2(cameraK2.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
 					if (checkAccuracy(imagePoint, imagePointK2, epsilon, jacobianX[1], jacobianY[1]))
 					{
@@ -6891,7 +6898,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 					PinholeCamera cameraP1(camera);
 					cameraP1.setTangentialDistortion(PinholeCamera::DistortionPair(p1 + epsilon, p2));
 
-					const Vector2 imagePointP1(cameraP1.projectToImageIF<false>(extrinsicIF, objectPoint, true));
+					const Vector2 imagePointP1(cameraP1.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
 					if (checkAccuracy(imagePoint, imagePointP1, epsilon, jacobianX[2], jacobianY[2]))
 					{
@@ -6915,7 +6922,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 					PinholeCamera cameraP2(camera);
 					cameraP2.setTangentialDistortion(PinholeCamera::DistortionPair(p1, p2 + epsilon));
 
-					const Vector2 imagePointP2(cameraP2.projectToImageIF<false>(extrinsicIF, objectPoint, true));
+					const Vector2 imagePointP2(cameraP2.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
 					if (checkAccuracy(imagePoint, imagePointP2, epsilon, jacobianX[3], jacobianY[3]))
 					{
@@ -6941,7 +6948,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 					intrinsicFx(0, 0) += epsilon;
 					cameraFx.setIntrinsic(intrinsicFx);
 
-					const Vector2 imagePointFx(cameraFx.projectToImageIF<false>(extrinsicIF, objectPoint, true));
+					const Vector2 imagePointFx(cameraFx.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
 					if (checkAccuracy(imagePoint, imagePointFx, epsilon, jacobianX[4], jacobianY[4]))
 					{
@@ -6967,7 +6974,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 					intrinsicFy(1, 1) += epsilon;
 					cameraFy.setIntrinsic(intrinsicFy);
 
-					const Vector2 imagePointFy(cameraFy.projectToImageIF<false>(extrinsicIF, objectPoint, true));
+					const Vector2 imagePointFy(cameraFy.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
 					if (checkAccuracy(imagePoint, imagePointFy, epsilon, jacobianX[5], jacobianY[5]))
 					{
@@ -6993,7 +7000,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 					intrinsicMx(0, 2) += epsilon;
 					cameraMx.setIntrinsic(intrinsicMx);
 
-					const Vector2 imagePointMx(cameraMx.projectToImageIF<false>(extrinsicIF, objectPoint, true));
+					const Vector2 imagePointMx(cameraMx.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
 					if (checkAccuracy(imagePoint, imagePointMx, epsilon, jacobianX[6], jacobianY[6]))
 					{
@@ -7019,7 +7026,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 					intrinsicMy(1, 2) += epsilon;
 					cameraMy.setIntrinsic(intrinsicMy);
 
-					const Vector2 imagePointMy(cameraMy.projectToImageIF<false>(extrinsicIF, objectPoint, true));
+					const Vector2 imagePointMy(cameraMy.projectToImageIF<false>(flippedCamera_T_world, objectPoint, true));
 
 					if (checkAccuracy(imagePoint, imagePointMy, epsilon, jacobianX[7], jacobianY[7]))
 					{
@@ -7040,7 +7047,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 				for (const Scalar epsilon : epsilons)
 				{
 					// df / dwx
-					Pose poseWx(poseIF);
+					Pose poseWx(flippedCamera_P_world);
 					poseWx.rx() += epsilon;
 
 					const Vector2 imagePointWx(camera.projectToImageIF<false>(poseWx.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -7064,7 +7071,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 				for (const Scalar epsilon : epsilons)
 				{
 					// df / dwy
-					Pose poseWy(poseIF);
+					Pose poseWy(flippedCamera_P_world);
 					poseWy.ry() += epsilon;
 
 					const Vector2 imagePointWy(camera.projectToImageIF<false>(poseWy.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -7088,7 +7095,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 				for (const Scalar epsilon : epsilons)
 				{
 					// df / dwz
-					Pose poseWz(poseIF);
+					Pose poseWz(flippedCamera_P_world);
 					poseWz.rz() += epsilon;
 
 					const Vector2 imagePointWz(camera.projectToImageIF<false>(poseWz.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -7112,7 +7119,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 				for (const Scalar epsilon : epsilons)
 				{
 					// df / dtx
-					Pose poseTx(poseIF);
+					Pose poseTx(flippedCamera_P_world);
 					poseTx.x() += epsilon;
 
 					const Vector2 imagePointTx(camera.projectToImageIF<false>(poseTx.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -7136,7 +7143,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 				for (const Scalar epsilon : epsilons)
 				{
 					// df / dty
-					Pose poseTy(poseIF);
+					Pose poseTy(flippedCamera_P_world);
 					poseTy.y() += epsilon;
 
 					const Vector2 imagePointTy(camera.projectToImageIF<false>(poseTy.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -7160,7 +7167,7 @@ bool TestJacobian::testPoseCameraJacobian2x14(const double testDuration)
 				for (const Scalar epsilon : epsilons)
 				{
 					// df / dtz
-					Pose poseTz(poseIF);
+					Pose poseTz(flippedCamera_P_world);
 					poseTz.z() += epsilon;
 
 					const Vector2 imagePointTz(camera.projectToImageIF<false>(poseTz.transformation(), objectPoint, camera.hasDistortionParameters()));
