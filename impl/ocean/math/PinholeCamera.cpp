@@ -53,10 +53,10 @@ PinholeCameraT<T>::DistortionLookup::DistortionLookup(const PinholeCameraT<T>& c
 
 template <typename T>
 PinholeCameraT<T>::PinholeCameraT(const unsigned int width, const unsigned int height, const PinholeCameraT<T>& camera) :
-	intrinsics_(false),
-	invertedIntrinsics_(false),
 	width_(width),
 	height_(height),
+	intrinsics_(false),
+	invertedIntrinsics_(false),
 	radialDistortion_(camera.radialDistortion_),
 	tangentialDistortion_(camera.tangentialDistortion_)
 {
@@ -82,10 +82,10 @@ PinholeCameraT<T>::PinholeCameraT(const unsigned int width, const unsigned int h
 
 template <typename T>
 PinholeCameraT<T>::PinholeCameraT(const T subFrameLeft, const T subFrameTop, const unsigned int subFrameWidth, const unsigned int subFrameHeight, const PinholeCameraT<T>& camera) :
-	intrinsics_(camera.intrinsics_),
-	invertedIntrinsics_(false),
 	width_(subFrameWidth),
 	height_(subFrameHeight),
+	intrinsics_(camera.intrinsics_),
+	invertedIntrinsics_(false),
 	radialDistortion_(camera.radialDistortion_),
 	tangentialDistortion_(camera.tangentialDistortion_)
 {
@@ -99,10 +99,10 @@ PinholeCameraT<T>::PinholeCameraT(const T subFrameLeft, const T subFrameTop, con
 
 template <typename T>
 PinholeCameraT<T>::PinholeCameraT(const unsigned int width, const unsigned int height, const T focalX, const T focalY, const T principalX, const T principalY) :
-	intrinsics_(false),
-	invertedIntrinsics_(false),
 	width_(width),
 	height_(height),
+	intrinsics_(false),
+	invertedIntrinsics_(false),
 	radialDistortion_(DistortionPair(T(0), T(0))),
 	tangentialDistortion_(DistortionPair(T(0), T(0)))
 {
@@ -117,10 +117,10 @@ PinholeCameraT<T>::PinholeCameraT(const unsigned int width, const unsigned int h
 
 template <typename T>
 PinholeCameraT<T>::PinholeCameraT(unsigned int width, unsigned int height, T focalX, T focalY, T principalX, T principalY, const DistortionPair& radial, const DistortionPair& tangential) :
-	intrinsics_(false),
-	invertedIntrinsics_(false),
 	width_(width),
 	height_(height),
+	intrinsics_(false),
+	invertedIntrinsics_(false),
 	radialDistortion_(radial),
 	tangentialDistortion_(tangential)
 {
@@ -135,10 +135,10 @@ PinholeCameraT<T>::PinholeCameraT(unsigned int width, unsigned int height, T foc
 
 template <typename T>
 PinholeCameraT<T>::PinholeCameraT(const unsigned int width, const unsigned int height, const T* parameters, const bool radialDistortion, const bool tangentialDistortion) :
-	intrinsics_(false),
-	invertedIntrinsics_(false),
 	width_(width),
 	height_(height),
+	intrinsics_(false),
+	invertedIntrinsics_(false),	
 	radialDistortion_(radialDistortion ? DistortionPair(parameters[4], parameters[5]) : DistortionPair(T(0), T(0))),
 	tangentialDistortion_(tangentialDistortion ? DistortionPair(parameters[6], parameters[7]) : DistortionPair(T(0), T(0)))
 {
@@ -153,10 +153,10 @@ PinholeCameraT<T>::PinholeCameraT(const unsigned int width, const unsigned int h
 
 template <typename T>
 PinholeCameraT<T>::PinholeCameraT(const SquareMatrixT3<T>& intrinsic) :
+	width_(0u),
+	height_(0u),
 	intrinsics_(intrinsic),
-	invertedIntrinsics_(false),
-	width_(0),
-	height_(0),
+	invertedIntrinsics_(false),	
 	radialDistortion_(DistortionPair(T(0), T(0))),
 	tangentialDistortion_(DistortionPair(T(0), T(0)))
 {
@@ -165,10 +165,10 @@ PinholeCameraT<T>::PinholeCameraT(const SquareMatrixT3<T>& intrinsic) :
 
 template <typename T>
 PinholeCameraT<T>::PinholeCameraT(const SquareMatrixT3<T>& intrinsic, unsigned int width, unsigned int height) :
-	intrinsics_(intrinsic),
-	invertedIntrinsics_(false),
 	width_(width),
 	height_(height),
+	intrinsics_(intrinsic),
+	invertedIntrinsics_(false),	
 	radialDistortion_(DistortionPair(T(0), T(0))),
 	tangentialDistortion_(DistortionPair(T(0), T(0)))
 {
@@ -177,10 +177,10 @@ PinholeCameraT<T>::PinholeCameraT(const SquareMatrixT3<T>& intrinsic, unsigned i
 
 template <typename T>
 PinholeCameraT<T>::PinholeCameraT(const SquareMatrixT3<T>& intrinsic, unsigned int width, unsigned int height, const DistortionPair& radial, const DistortionPair& tangential) :
-	intrinsics_(intrinsic),
-	invertedIntrinsics_(false),
 	width_(width),
 	height_(height),
+	intrinsics_(intrinsic),
+	invertedIntrinsics_(false),	
 	radialDistortion_(radial),
 	tangentialDistortion_(tangential)
 {
@@ -189,10 +189,10 @@ PinholeCameraT<T>::PinholeCameraT(const SquareMatrixT3<T>& intrinsic, unsigned i
 
 template <typename T>
 PinholeCameraT<T>::PinholeCameraT(unsigned int width, unsigned int height, T fovX) :
-	intrinsics_(false),
-	invertedIntrinsics_(false),
 	width_(width),
 	height_(height),
+	intrinsics_(false),
+	invertedIntrinsics_(false),
 	radialDistortion_(DistortionPair(T(0), T(0))),
 	tangentialDistortion_(DistortionPair(T(0), T(0)))
 {
@@ -228,10 +228,10 @@ PinholeCameraT<T>::PinholeCameraT(unsigned int width, unsigned int height, T fov
 
 template <typename T>
 PinholeCameraT<T>::PinholeCameraT(unsigned int width, unsigned int height, T fovX, const T principalX, const T principalY) :
-	intrinsics_(false),
-	invertedIntrinsics_(false),
 	width_(width),
 	height_(height),
+	intrinsics_(false),
+	invertedIntrinsics_(false),
 	radialDistortion_(DistortionPair(T(0), T(0))),
 	tangentialDistortion_(DistortionPair(T(0), T(0)))
 {

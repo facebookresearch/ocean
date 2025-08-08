@@ -117,10 +117,59 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 	public:
 
 		/// The scalar data type of this object.
-		typedef T TScalar;
+		using TScalar = T;
 
 		/// Definition of a pair of distortion values.
-		typedef std::pair<T, T> DistortionPair;
+		using DistortionPair = std::pair<T, T>;
+
+		/**
+		 * Definition of individual parameter configurations.
+		 */
+		enum ParameterConfiguration : uint32_t
+		{
+			/**
+			 * An unknown parameter configuration.
+			 */
+			PC_UNKNOWN = 0u,
+
+			/**
+			 * 3 parameters with order:
+			 * focal length (one identical value for horizontal and vertical direction),
+			 * horizontal principal point,
+			 * vertical principal point
+			 */
+			PC_3_PARAMETERS_ONE_FOCAL_LENGTH,
+
+			/**
+			 * 4 parameters with order:
+			 * horizontal focal length,
+			 * vertical focal length,
+			 * horizontal principal point,
+			 * vertical principal point
+			 */
+			PC_4_PARAMETERS,
+
+			/**
+			 * 7 parameters with order:
+			 * focal length (one identical value for horizontal and vertical direction),
+			 * horizontal principal point,
+			 * vertical principal point,
+			 * two radial distortion parameters k1, k2
+			 * two tangential distortion parameters p1, p2
+			 */
+			PC_7_PARAMETERS_ONE_FOCAL_LENGTH,
+
+			/**
+			 * 8 parameters with order:
+			 * horizontal focal length,
+			 * vertical focal length,
+			 * horizontal principal point,
+			 * vertical principal point,
+			 * two radial distortion parameters k1, k2
+			 * two tangential distortion parameters p1, p2
+			 */
+			PC_8_PARAMETERS
+		};
 
 		/**
 		 * Definition of individual optimization strategies for camera parameters.
@@ -324,6 +373,17 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		explicit inline PinholeCameraT(const PinholeCameraT<U>& pinholeCamera, const bool copyDistortionParameters = true);
 
 		/**
+		 * Creates a new camera object with parameters with specific configuration.
+		 * @param width The width of the camera image (in pixel), with range [1, infinity)
+		 * @param height The height of the camera image (in pixel), with range [1, infinity)
+		 * @param parameterConfiguration The configuration of the given parameter, must be valid
+		 * @param parameters The parameters matching with the specific configuration, must be valid
+		 * @tparam TParameter The scalar data type in which the intrinsic camera parameters are provided, will be converted to 'T' internally, 'float' or 'double'
+		 */
+		template <typename TParameter>
+		inline PinholeCameraT(const unsigned int width, const unsigned int height, const ParameterConfiguration parameterConfiguration, const TParameter* parameters);
+
+		/**
 		 * Returns the intrinsic camera matrix.
 		 * @return The intrinsic camera matrix
 		 */
@@ -452,6 +512,16 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		T fovDiagonal() const;
 
 		/**
+		 * Copies the parameters of this camera.
+		 * @param width The resulting width of the camera, in pixel, with range [0, infinity)
+		 * @param height The resulting height of the camera, in pixel, with range [0, infinity)
+		 * @param parameters The resulting parameters of the camera
+		 * @param parameterConfiguration The resulting configuration of the resulting parameters
+		 */
+		template <typename TParameter>
+		void copyParameters(unsigned int& width, unsigned int& height, std::vector<TParameter>& parameters, ParameterConfiguration& parameterConfiguration) const;
+
+		/**
 		 * Gets two rotation parameters of the viewing ray for a given undistorted 2D position in the camera image.
 		 * @param undistortedPosition The undistorted 2D position [in pixel]
 		 * @param angleX The horizontal angle for the viewing ray [in radian]
@@ -490,7 +560,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 
 		/**
 		 * Applies a given (relative) zoom factor which mainly multiplies the focal length parameters by the given factor.
-		 * @param relativeZoom The (realtive) zoom factor to apply, with range (0, infinity)
+		 * @param relativeZoom The (relative) zoom factor to apply, with range (0, infinity)
 		 */
 		void applyZoomFactor(const T relativeZoom);
 
@@ -1068,7 +1138,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		SquareMatrixT4<T> frustumMatrix(const T nearDistance, const T farDistance) const;
 
 		/**
-		 * Returns a 4x4 homogenous transformation matrix (corresponding to a 3x4 matrix) that covers an extrinsic (inverted and flipped) camera matrix and the intrinsic projection matrix of this camera object.
+		 * Returns a 4x4 homogeneous transformation matrix (corresponding to a 3x4 matrix) that covers an extrinsic (inverted and flipped) camera matrix and the intrinsic projection matrix of this camera object.
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
 		 * @param iFlippedExtrinsic The inverted and flipped extrinsic camera matrix
 		 * @param zoom The zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
@@ -1198,19 +1268,19 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 */
 		VectorT2<T> dampedNormalized(const VectorT2<T>& normalized, const T dampingFactor, const T leftNormalizedBorder, const T rightNormalizedBorder, const T topNormalizedBorder, const T bottomNormalizedBorder) const;
 
-	private:
+	protected:
+
+		/// Width of the camera image, in pixels.
+		unsigned int width_ = 0u;
+
+		/// Height of the camera image, in pixels.
+		unsigned int height_ = 0u;
 
 		/// Intrinsic camera matrix.
 		SquareMatrixT3<T> intrinsics_ = SquareMatrixT3<T>(false);
 
 		/// Inverted intrinsic camera matrix.
 		SquareMatrixT3<T> invertedIntrinsics_ = SquareMatrixT3<T>(false);
-
-		/// Width of the camera image (in pixels).
-		unsigned int width_ = 0u;
-
-		/// Height of the camera image (in pixels).
-		unsigned int height_ = 0u;
 
 		/// Pair of radial distortion parameters for r^2 and r^4.
 		DistortionPair radialDistortion_ = DistortionPair(T(0), T(0));
@@ -1287,6 +1357,88 @@ inline PinholeCameraT<T>::PinholeCameraT(const PinholeCameraT<U>& pinholeCamera,
 		radialDistortion_ = DistortionPair(T(pinholeCamera.radialDistortion_.first), T(pinholeCamera.radialDistortion_.second));
 		tangentialDistortion_ = DistortionPair(T(pinholeCamera.tangentialDistortion_.first), T(pinholeCamera.tangentialDistortion_.second));
 	}
+}
+
+template <typename T>
+template <typename TParameter>
+inline PinholeCameraT<T>::PinholeCameraT(const unsigned int width, const unsigned int height, const ParameterConfiguration parameterConfiguration, const TParameter* parameters)
+{
+	static_assert((std::is_same<TParameter, float>::value) || (std::is_same<TParameter, double>::value), "Invalid TParameter, must be 'float' or 'double'!");
+
+	ocean_assert(width != 0u && height != 0u);
+	ocean_assert(parameters != nullptr);
+
+	switch (parameterConfiguration)
+	{
+		case PC_3_PARAMETERS_ONE_FOCAL_LENGTH:
+		{
+			const T focalLength = T(parameters[0]);
+
+			const T principalPointX = T(parameters[1]);
+			const T principalPointY = T(parameters[2]);
+
+			constexpr T radialDistortion = T(0);
+			constexpr T tangentialDistortion = T(0);
+
+			*this = PinholeCameraT<T>(width, height, focalLength, focalLength, principalPointX, principalPointY, DistortionPair(radialDistortion, radialDistortion), DistortionPair(tangentialDistortion, tangentialDistortion));
+			return;
+		}
+
+		case PC_4_PARAMETERS:
+		{
+			const T focalLengthX = T(parameters[0]);
+			const T focalLengthY = T(parameters[1]);
+
+			const T principalPointX = T(parameters[2]);
+			const T principalPointY = T(parameters[3]);
+
+			constexpr T radialDistortion = T(0);
+			constexpr T tangentialDistortion = T(0);
+
+			*this = PinholeCameraT<T>(width, height, focalLengthX, focalLengthY, principalPointX, principalPointY, DistortionPair(radialDistortion, radialDistortion), DistortionPair(tangentialDistortion, tangentialDistortion));
+			return;
+		}
+
+		case PC_7_PARAMETERS_ONE_FOCAL_LENGTH:
+		{
+			const T focalLength = T(parameters[0]);
+
+			const T principalPointX = T(parameters[1]);
+			const T principalPointY = T(parameters[2]);
+
+			const T radialDistortion0 = T(parameters[3]);
+			const T radialDistortion1 = T(parameters[4]);
+
+			const T tangentialDistortion0 = T(parameters[5]);
+			const T tangentialDistortion1 = T(parameters[6]);
+
+			*this = PinholeCameraT<T>(width, height, focalLength, focalLength, principalPointX, principalPointY, DistortionPair(radialDistortion0, radialDistortion1), DistortionPair(tangentialDistortion0, tangentialDistortion1));
+			return;
+		}
+
+		case PC_8_PARAMETERS:
+		{
+			const T focalLengthX = T(parameters[0]);
+			const T focalLengthY = T(parameters[1]);
+
+			const T principalPointX = T(parameters[2]);
+			const T principalPointY = T(parameters[3]);
+
+			const T radialDistortion0 = T(parameters[4]);
+			const T radialDistortion1 = T(parameters[5]);
+
+			const T tangentialDistortion0 = T(parameters[6]);
+			const T tangentialDistortion1 = T(parameters[7]);
+
+			*this = PinholeCameraT<T>(width, height, focalLengthX, focalLengthY, principalPointX, principalPointY, DistortionPair(radialDistortion0, radialDistortion1), DistortionPair(tangentialDistortion0, tangentialDistortion1));
+			return;
+		}
+
+		case PC_UNKNOWN:
+			break;
+	}
+
+	ocean_assert(false && "Invalid parameter configuration!");
 }
 
 template <typename T>
@@ -1462,6 +1614,44 @@ VectorT2<T> PinholeCameraT<T>::distort(const VectorT2<T>& undistorted) const
 	else
 	{
 		return undistorted;
+	}
+}
+
+template <typename T>
+template <typename TParameter>
+void PinholeCameraT<T>::copyParameters(unsigned int& width, unsigned int& height, std::vector<TParameter>& parameters, ParameterConfiguration& parameterConfiguration) const
+{
+	if (isValid())
+	{
+		width = width_;
+		height = height_;
+
+		parameters =
+		{
+			TParameter(focalLengthX()),
+			TParameter(focalLengthY()),
+
+			TParameter(principalPointX()),
+			TParameter(principalPointY()),
+
+			TParameter(radialDistortion_.first),
+			TParameter(radialDistortion_.second),
+			TParameter(tangentialDistortion_.first),
+			TParameter(tangentialDistortion_.second),
+		};
+
+		ocean_assert(parameters.size() == 8);
+
+		parameterConfiguration = PC_8_PARAMETERS;
+	}
+	else
+	{
+		width = 0u;
+		height = 0u;
+
+		parameters.clear();
+
+		parameterConfiguration = PC_UNKNOWN;
 	}
 }
 

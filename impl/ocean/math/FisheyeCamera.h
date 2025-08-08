@@ -111,17 +111,17 @@ class FisheyeCameraT : public CameraT<T>
 		/**
 		 * Definition of the used data type.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * Definition of individual parameter configurations.
 		 */
-		enum ParameterConfiguration
+		enum ParameterConfiguration : uint32_t
 		{
 			/**
 			 * An unknown parameter configuration.
 			 */
-			PC_UNKNOWN,
+			PC_UNKNOWN = 0u,
 
 			/**
 			 * 3 parameters with order:
@@ -542,10 +542,10 @@ class FisheyeCameraT : public CameraT<T>
 	protected:
 
 		/// Width of the camera image, in pixel.
-		unsigned int cameraWidth_ = 0u;
+		unsigned int width_ = 0u;
 
 		/// Height of the camera image, in pixel.
-		unsigned int cameraHeight_ = 0u;
+		unsigned int height_ = 0u;
 
 		/// The horizontal focal length of the camera, with range (0, infinity)
 		T focalLengthX_ = T(0);
@@ -578,8 +578,8 @@ class FisheyeCameraT : public CameraT<T>
 template <typename T>
 template <typename U>
 inline FisheyeCameraT<T>::FisheyeCameraT(const FisheyeCameraT<U>& fisheyeCamera) :
-	cameraWidth_(fisheyeCamera.cameraWidth_),
-	cameraHeight_(fisheyeCamera.cameraHeight_),
+	width_(fisheyeCamera.width_),
+	height_(fisheyeCamera.height_),
 	focalLengthX_(T(fisheyeCamera.focalLengthX_)),
 	focalLengthY_(T(fisheyeCamera.focalLengthY_)),
 	principalPointX_(T(fisheyeCamera.principalPointX_)),
@@ -603,8 +603,8 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const FisheyeCameraT<U>& fisheyeCamera)
 
 template <typename T>
 inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigned int height, const T fovX) :
-	cameraWidth_(width),
-	cameraHeight_(height),
+	width_(width),
+	height_(height),
 	focalLengthX_(0),
 	focalLengthY_(0),
 	invFocalLengthX_(0),
@@ -613,11 +613,11 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 	principalPointY_(0),
 	hasDistortionParameters_(false)
 {
-	ocean_assert(cameraWidth_ != 0u && cameraHeight_ != 0u);
+	ocean_assert(width_ != 0u && height_ != 0u);
 	ocean_assert(fovX > NumericT<T>::eps() && fovX <= NumericT<T>::pi());
 
-	const T principalX = T(cameraWidth_) * T(0.5);
-	const T principalY = T(cameraHeight_) * T(0.5);
+	const T principalX = T(width_) * T(0.5);
+	const T principalY = T(height_) * T(0.5);
 
 	const T focalLength = principalX / NumericT<T>::tan(fovX * T(0.5));
 
@@ -643,8 +643,8 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 
 template <typename T>
 inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigned int height, const T focalX, const T focalY, const T principalX, const T principalY) :
-	cameraWidth_(width),
-	cameraHeight_(height),
+	width_(width),
+	height_(height),
 	focalLengthX_(focalX),
 	focalLengthY_(focalY),
 	invFocalLengthX_(0),
@@ -653,7 +653,7 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 	principalPointY_(principalY),
 	hasDistortionParameters_(false)
 {
-	ocean_assert(cameraWidth_ != 0u && cameraHeight_ != 0u);
+	ocean_assert(width_ != 0u && height_ != 0u);
 
 	ocean_assert(NumericT<T>::isNotEqualEps(focalLengthX_) && NumericT<T>::isNotEqualEps(focalLengthY_));
 	invFocalLengthX_ = T(1) / focalLengthX_;
@@ -672,8 +672,8 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 template <typename T>
 template <typename TParameter>
 inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigned int height, const TParameter focalX, const TParameter focalY, const TParameter principalX, const TParameter principalY, const TParameter* radialDistortion, const TParameter* tangentialDistortion) :
-	cameraWidth_(width),
-	cameraHeight_(height),
+	width_(width),
+	height_(height),
 	focalLengthX_(T(focalX)),
 	focalLengthY_(T(focalY)),
 	invFocalLengthX_(0),
@@ -684,7 +684,7 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 {
 	static_assert((std::is_same<TParameter, float>::value) || (std::is_same<TParameter, double>::value), "Invalid TParameter, must be 'float' or 'double'!");
 
-	ocean_assert(cameraWidth_ != 0u && cameraHeight_ != 0u);
+	ocean_assert(width_ != 0u && height_ != 0u);
 	ocean_assert(NumericT<T>::isNotEqualEps(focalLengthX_) && NumericT<T>::isNotEqualEps(focalLengthY_));
 	invFocalLengthX_ = T(1) / focalLengthX_;
 	invFocalLengthY_ = T(1) / focalLengthY_;
@@ -701,8 +701,8 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 template <typename T>
 template <typename TParameter>
 inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigned int height, const ParameterConfiguration parameterConfiguration, const TParameter* parameters) :
-	cameraWidth_(width),
-	cameraHeight_(height),
+	width_(width),
+	height_(height),
 	focalLengthX_(0),
 	focalLengthY_(0),
 	invFocalLengthX_(0),
@@ -713,7 +713,7 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const unsigned int width, const unsigne
 {
 	static_assert((std::is_same<TParameter, float>::value) || (std::is_same<TParameter, double>::value), "Invalid TParameter, must be 'float' or 'double'!");
 
-	ocean_assert(cameraWidth_ != 0u && cameraHeight_ != 0u);
+	ocean_assert(width_ != 0u && height_ != 0u);
 	ocean_assert(parameters != nullptr);
 
 	switch (parameterConfiguration)
@@ -809,13 +809,13 @@ inline bool FisheyeCameraT<T>::hasDistortionParameters() const
 template <typename T>
 inline unsigned int FisheyeCameraT<T>::width() const
 {
-	return cameraWidth_;
+	return width_;
 }
 
 template <typename T>
 inline unsigned int FisheyeCameraT<T>::height() const
 {
-	return cameraHeight_;
+	return height_;
 }
 
 template <typename T>
@@ -890,13 +890,13 @@ T FisheyeCameraT<T>::fovX() const
 
 	const T leftAngle = NumericT<T>::abs(NumericT<T>::atan(-principalPointX() * invFocalLengthX_));
 
-	if (T(cameraWidth_) <= principalPointX())
+	if (T(width_) <= principalPointX())
 	{
 		ocean_assert(false && "Invalid principal point");
 		return T(2) * leftAngle;
 	}
 
-	const T rightAngle = NumericT<T>::atan((T(cameraWidth_) - principalPointX()) * invFocalLengthX_);
+	const T rightAngle = NumericT<T>::atan((T(width_) - principalPointX()) * invFocalLengthX_);
 
 	return leftAngle + rightAngle;
 }
@@ -919,13 +919,13 @@ T FisheyeCameraT<T>::fovY() const
 
 	const T topAngle = NumericT<T>::abs(NumericT<T>::atan(-principalPointY() * invFocalLengthY_));
 
-	if (T(cameraHeight_) <= principalPointY())
+	if (T(height_) <= principalPointY())
 	{
 		ocean_assert(false && "Invalid principal point");
 		return T(2) * topAngle;
 	}
 
-	const T bottomAngle = NumericT<T>::atan((T(cameraHeight_) - principalPointY()) * invFocalLengthY_);
+	const T bottomAngle = NumericT<T>::atan((T(height_) - principalPointY()) * invFocalLengthY_);
 
 	return topAngle + bottomAngle;
 }
@@ -950,8 +950,8 @@ void FisheyeCameraT<T>::copyParameters(unsigned int& width, unsigned int& height
 {
 	if (isValid())
 	{
-		width = cameraWidth_;
-		height = cameraHeight_;
+		width = width_;
+		height = height_;
 
 		parameters =
 		{
@@ -991,10 +991,10 @@ template <typename T>
 inline bool FisheyeCameraT<T>::isInside(const VectorT2<T>& imagePoint, const T signedBorder) const
 {
 	ocean_assert(isValid());
-	ocean_assert(signedBorder < T(std::min(cameraWidth_ / 2u, cameraHeight_ / 2u)));
+	ocean_assert(signedBorder < T(std::min(width_ / 2u, height_ / 2u)));
 
 	return imagePoint.x() >= signedBorder && imagePoint.y() >= signedBorder
-			&& imagePoint.x() < T(cameraWidth_) - signedBorder && imagePoint.y() < T(cameraHeight_) - signedBorder;
+			&& imagePoint.x() < T(width_) - signedBorder && imagePoint.y() < T(height_) - signedBorder;
 }
 
 template <typename T>
@@ -1340,7 +1340,7 @@ inline void FisheyeCameraT<T>::pointJacobian2x3IF(const VectorT3<T>& flippedCame
 template <typename T>
 bool FisheyeCameraT<T>::isEqual(const FisheyeCameraT<T>& fisheyeCamera, const T eps) const
 {
-	return cameraWidth_ == fisheyeCamera.cameraWidth_ && cameraHeight_ == fisheyeCamera.cameraHeight_ && hasDistortionParameters_ == fisheyeCamera.hasDistortionParameters_
+	return width_ == fisheyeCamera.width_ && height_ == fisheyeCamera.height_ && hasDistortionParameters_ == fisheyeCamera.hasDistortionParameters_
 				&& NumericT<T>::isEqual(focalLengthX_, fisheyeCamera.focalLengthX_, eps) && NumericT<T>::isEqual(focalLengthY_, fisheyeCamera.focalLengthY_, eps)
 				&& NumericT<T>::isEqual(principalPointX_, fisheyeCamera.principalPointX_, eps) && NumericT<T>::isEqual(principalPointY_, fisheyeCamera.principalPointY_, eps)
 				&& NumericT<T>::isEqual(radialDistortion_[0], fisheyeCamera.radialDistortion_[0], eps) && NumericT<T>::isEqual(radialDistortion_[1], fisheyeCamera.radialDistortion_[1], eps)
@@ -1355,13 +1355,13 @@ inline bool FisheyeCameraT<T>::isValid() const
 	ocean_assert(NumericT<T>::isEqualEps(focalLengthX_) || NumericT<T>::isEqual(T(1) / focalLengthX_, invFocalLengthX_));
 	ocean_assert(NumericT<T>::isEqualEps(focalLengthY_) || NumericT<T>::isEqual(T(1) / focalLengthY_, invFocalLengthY_));
 
-	return cameraWidth_ != 0u && cameraHeight_ != 0u;
+	return width_ != 0u && height_ != 0u;
 }
 
 template <typename T>
 bool FisheyeCameraT<T>::operator==(const FisheyeCameraT<T>& fisheyeCamera) const
 {
-	return cameraWidth_ == fisheyeCamera.cameraWidth_ && cameraHeight_ == fisheyeCamera.cameraHeight_
+	return width_ == fisheyeCamera.width_ && height_ == fisheyeCamera.height_
 				&& focalLengthX_ == fisheyeCamera.focalLengthX_ && focalLengthY_ == fisheyeCamera.focalLengthY_
 				&& invFocalLengthX_ == fisheyeCamera.invFocalLengthX_ && invFocalLengthY_ == fisheyeCamera.invFocalLengthY_
 				&& principalPointX_ == fisheyeCamera.principalPointX_ && principalPointY_ == fisheyeCamera.principalPointY_
