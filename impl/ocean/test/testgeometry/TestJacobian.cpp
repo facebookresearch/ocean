@@ -5336,19 +5336,18 @@ bool TestJacobian::testPinholeCameraJacobian2x8(const double testDuration)
 
 			for (unsigned int nParameter = 0u; nParameter < 8u; ++nParameter)
 			{
-				std::vector<double> deltaCameraParametersD(cameraParametersD);
-
 				bool localAccuracy = false;
 
 				for (const double epsilon : epsilons)
 				{
+					std::vector<double> deltaCameraParametersD(cameraParametersD);
 					deltaCameraParametersD[nParameter] += epsilon;
 
 					const PinholeCameraD deltaCameraD(cameraWidth, cameraHeight, cameraParameterConfiguration, deltaCameraParametersD.data());
 
 					const VectorD2 deltaImagePoint(deltaCameraD.projectToImageIF<true>(normalizedUndistortedImagePointD, true));
 
-					if (checkAccuracy(imagePointD, deltaImagePoint, epsilon, jacobianX[nParameter], jacobianY[nParameter]))
+					if (checkAccuracy(imagePointD, deltaImagePoint, epsilon, double(jacobianX[nParameter]), double(jacobianY[nParameter])))
 					{
 						localAccuracy = true;
 						break;
@@ -5376,13 +5375,13 @@ bool TestJacobian::testFisheyeCameraJacobian2x12(const double testDuration)
 
 	Log::info() << "Testing fisheye camera jacobian 2x12, with " << TypeNamer::name<T>() << ":";
 
-	const std::vector<T> epsilons = {NumericT<T>::weakEps(), NumericT<T>::weakEps() / T(10), NumericT<T>::weakEps() * T(10), NumericT<T>::weakEps() / T(100), NumericT<T>::weakEps() * T(100)};
+	const std::vector<double> epsilons = {NumericD::weakEps(), NumericD::weakEps() / 10.0, NumericD::weakEps() * 10.0, NumericD::weakEps() / 100.0, NumericD::weakEps() * 100.0};
 
 	constexpr size_t numberPoints = 100;
 
 	RandomGenerator randomGenerator;
 
-	constexpr double threshold = std::is_same<float, T>::value ? 0.65 : 0.99;
+	constexpr double threshold = std::is_same<float, T>::value ? 0.95 : 0.99;
 
 	ValidationPrecision validation(threshold, randomGenerator);
 
@@ -5429,6 +5428,17 @@ bool TestJacobian::testFisheyeCameraJacobian2x12(const double testDuration)
 		T jacobianX[12];
 		T jacobianY[12];
 
+		const FisheyeCameraD fisheyeCameraD(fisheyeCamera);
+
+		unsigned int cameraWidth = 0u;
+		unsigned int cameraHeight = 0u;
+		std::vector<double> cameraParametersD;
+		FisheyeCameraD::ParameterConfiguration cameraParameterConfiguration = FisheyeCameraD::PC_UNKNOWN;
+		fisheyeCameraD.copyParameters(cameraWidth, cameraHeight, cameraParametersD, cameraParameterConfiguration);
+
+		ocean_assert(cameraWidth == width && cameraHeight == height);
+		ocean_assert(cameraParametersD.size() == 12 && cameraParameterConfiguration == FisheyeCameraD::PC_12_PARAMETERS);
+
 		for (size_t n = 0; n < numberPoints; ++n)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
@@ -5441,22 +5451,24 @@ bool TestJacobian::testFisheyeCameraJacobian2x12(const double testDuration)
 
 			Geometry::Jacobian::calculateCameraJacobian2x12(fisheyeCamera, normalizedUndistortedImagePoint, jacobianX, jacobianY);
 
-			const VectorT2<T> imagePoint(fisheyeCamera.projectToImageIF(objectPoint));
+			const VectorD3 objectPointD(objectPoint);
+
+			const VectorD2 imagePointD(fisheyeCameraD.projectToImageIF(objectPointD));
 
 			for (size_t nParameter = 0; nParameter < 12; ++nParameter)
 			{
 				bool localAccuracy = false;
 
-				for (const T epsilon : epsilons)
+				for (const double epsilon : epsilons)
 				{
-					std::vector<T> deltaParameters(parameters);
-					deltaParameters[nParameter] += epsilon;
+					std::vector<double> deltaCameraParametersD(cameraParametersD);
+					deltaCameraParametersD[nParameter] += epsilon;
 
-					const FisheyeCameraT<T> deltaFisheyeCamera(width, height, FisheyeCameraT<T>::PC_12_PARAMETERS, deltaParameters.data());
+					const FisheyeCameraD deltaFisheyeCameraD(width, height, FisheyeCameraD::PC_12_PARAMETERS, deltaCameraParametersD.data());
 
-					const VectorT2<T> deltaImagePoint = deltaFisheyeCamera.projectToImageIF(objectPoint);
+					const VectorD2 deltaImagePointD = deltaFisheyeCameraD.projectToImageIF(objectPointD);
 
-					if (checkAccuracy(imagePoint, deltaImagePoint, epsilon, jacobianX[nParameter], jacobianY[nParameter]))
+					if (checkAccuracy(imagePointD, deltaImagePointD, epsilon, double(jacobianX[nParameter]), double(jacobianY[nParameter])))
 					{
 						localAccuracy = true;
 						break;
