@@ -1956,9 +1956,8 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const Pi
 	const ScopedConstMemoryAccessor<Vector2> scopedFirstImagePoints(firstImagePoints);
 	const ScopedConstMemoryAccessor<Vector2> scopedSecondImagePoints(secondImagePoints);
 
-	for (size_t n = 0; n < objectPoints.size(); ++n) {
+	for (size_t n = 0; n < objectPoints.size(); ++n)
 		scopedOptimizedObjectPoints[n] = objectPoints[n];
-}
 
 	switch (estimator)
 	{
@@ -2019,9 +2018,8 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const Pi
 		}
 	}
 
-	if (optimizedSecondPoseIF) {
+	if (optimizedSecondPoseIF)
 		*optimizedSecondPoseIF = internalOptimizedSecondPoseIF;
-}
 
 	return true;
 }
@@ -2122,9 +2120,8 @@ class NonLinearOptimizationObjectPoint::ObjectPointsTwoPosesProvider : public No
 			const Matrix eb(sizeB, 1, jErrors.data() + sizeA);
 
 			Matrix da;
-			if (!(A - B * (D * C)).solve(ea - B * (D * eb), da)) {
+			if (!(A - B * (D * C)).solve(ea - B * (D * eb), da))
 				return false;
-}
 
 			const Matrix db = D * (eb - C * da);
 

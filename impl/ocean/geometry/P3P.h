@@ -134,9 +134,8 @@ inline bool P3P::constructClosestPointToCPOnObjectPlane(const VectorT3<T>& objec
 	VectorT3<T> d01 = objectPlaneNormal.cross(objectDirection01);
 	VectorT3<T> d02 = objectPlaneNormal.cross(objectDirection02);
 
-	if (!d01.normalize() || !d02.normalize()) {
+	if (!d01.normalize() || !d02.normalize())
 		return false;
-}
 
 	ocean_assert_accuracy(NumericT<T>::isWeakEqualEps(d01 * objectPlaneNormal.normalizedOrZero()));
 	ocean_assert_accuracy(NumericT<T>::isWeakEqualEps(d02 * objectPlaneNormal.normalizedOrZero()));
@@ -168,9 +167,8 @@ inline bool P3P::constructClosestPointToCPOnObjectPlane(const VectorT3<T>& objec
 
 	VectorT3<T> first, second;
 
-	if (!line01.nearestPoints(line02, first, second)) {
+	if (!line01.nearestPoints(line02, first, second))
 		return false;
-}
 
 	point = (first + second) * T(0.5);
 	return true;

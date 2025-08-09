@@ -1090,9 +1090,8 @@ Scalar Error::uniqueAveragedRobustErrorInPointCloud(const Vector2* imagePoints, 
 	ocean_assert(numberImagePoints <= numberCandidatePoints);
 	ocean_assert(validImagePoints <= numberImagePoints);
 
-	if (numberImagePoints > numberCandidatePoints) {
+	if (numberImagePoints > numberCandidatePoints)
 		return Numeric::maxValue();
-}
 
 	ErrorElements errorElements;
 	errorElements.reserve(numberImagePoints * numberCandidatePoints);
@@ -1186,9 +1185,8 @@ Scalar Error::uniqueAveragedRobustErrorInPointCloud(const Vector2* imagePoints, 
 template <Estimator::EstimatorType tEstimator>
 Scalar Error::approximatedAveragedRobustErrorInPointCloud(const Vector2* imagePoints, const size_t numberImagePoints, const size_t validImagePoints, const Vector2* candidatePoints, const size_t numberCandidatePoints, IndexPairs32* correspondences)
 {
-	if (validImagePoints == 0) {
+	if (validImagePoints == 0)
 		return 0;
-}
 
 	ocean_assert(imagePoints && candidatePoints);
 	ocean_assert(numberImagePoints <= numberCandidatePoints);

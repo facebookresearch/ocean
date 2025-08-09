@@ -2057,9 +2057,8 @@ void Jacobian::calculatePoseJacobianRodrigues2x5(Scalar* jx, Scalar* jy, const P
 
 void Jacobian::calculatePoseJacobianRodrigues2nx5(Scalar* jacobian, const PinholeCamera& pinholeCamera, const ExponentialMap& rotation, const Vector2& translation, const Vector3* objectPoints, const size_t numberObjectPoints)
 {
-	for (size_t n = 0; n < numberObjectPoints; ++n) {
+	for (size_t n = 0; n < numberObjectPoints; ++n)
 		calculatePoseJacobianRodrigues2x5(jacobian + (2 * n + 0) * 5, jacobian + (2 * n + 1) * 5, pinholeCamera, rotation, translation, objectPoints[n]);
-}
 }
 
 void Jacobian::calculatePointJacobian2x3(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_P_world, const Vector3& objectPoint, const bool distortImagePoint)

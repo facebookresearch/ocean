@@ -94,9 +94,8 @@ bool StereoscopicGeometry::determineValidCorrespondencesIF(const PinholeCamera& 
 	for (size_t n = 0u; n < imagePoints0.size(); ++n)
 	{
 		//  stop if we cannot reach a specified number of valid correspondences anymore
-		if (minimalValidCorrespondences != 0 && imagePoints0.size() + validIndices.size() - n < minimalValidCorrespondences) {
+		if (minimalValidCorrespondences != 0 && imagePoints0.size() + validIndices.size() - n < minimalValidCorrespondences)
 			return false;
-}
 
 		if (onlyFrontObjectPoints)
 		{

@@ -41,9 +41,8 @@ bool IOSGyroSensor3DOF::start()
 {
 	const ScopedLock scopedLock(deviceLock);
 
-	if (sensorIsStarted) {
+	if (sensorIsStarted)
 		return true;
-}
 
 	if (deviceType.minorType() == Sensor::SENSOR_GYRO_UNBIASED_3DOF)
 	{
