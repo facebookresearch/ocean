@@ -11,6 +11,7 @@
 #include "ocean/geometry/Geometry.h"
 #include "ocean/geometry/NonLinearOptimization.h"
 
+#include "ocean/math/AnyCamera.h"
 #include "ocean/math/PinholeCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
 #include "ocean/math/SquareMatrix3.h"
@@ -27,6 +28,27 @@ namespace Geometry
  */
 class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOptimization
 {
+	public:
+
+		/**
+		 * Definition of individual optimization strategies for how the camera parameters can be optimized.
+		 */
+		enum OptimizationStrategy : uint32_t
+		{
+			/// An invalid optimization strategy.
+			OS_INVALID = 0u,
+			/// One stage optimization: Only the focal length parameter(s) of the camera profile will be optimized (at once).
+			OS_ONLY_FOCAL_LENGTH,
+			/// Two stage optimization: First the focal length parameter(s) will be optimized in a first stage, followed by the principal point.
+			OS_UP_TO_PRINCIPAL_POINT_AFTER_ANOTHER,
+			/// Multi-stage optimization: First the focal length parameter(s) will be optimized in a first stage, followed by the principal point, followed by the major distortion parameters (one after another).
+			OS_UP_TO_MAJOR_DISTORTION_AFTER_ANOTHER,
+			/// Single stage optimization: All parameters of the camera profile will be optimized at once.
+			OS_ALL_PARAMETERS_AT_ONCE,
+			/// Multi-stage optimization: First the focal length parameter(s) will be optimized in a first stage, followed by the principal point, followed by all distortion parameters (one after another), this strategy will create the most accurate camera profile.
+			OS_ALL_PARAMETERS_AFTER_ANOTHER,
+		};
+
 	protected:
 
 		/**
@@ -163,6 +185,38 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		/**
 		 * Minimizes the projection error between the projections of static 3D object points and their corresponding image points in several 6DOF camera poses.
 		 * The camera profile as well as the camera poses are optimized concurrently.
+		 * @param camera The camera profile to optimize, must be valid
+		 * @param world_T_cameras The individual camera poses, one pose for each pair of groups of object points and image points
+		 * @param objectPointGroups The accessor for the individual groups of 3D object points, one group for each camera pose with at least one object point
+		 * @param imagePointGroups The accessor for the individual groups of 2D image points, one group for each camera pose and one image point for each corresponding object point
+		 * @param optimizedCamera The resulting optimized camera profile
+		 * @param world_T_optimizedCameras Optional accessor for the resulting optimized camera poses, matching with the new camera profile
+		 * @param iterations The maximal number of iterations to be applied per optimization stage (depending on the optimizationStrategy), if no convergence can be reached
+		 * @param optimizationStrategy The optimization strategy to be used
+		 * @param estimator Robust error estimator to be used
+		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
+		 * @param lambdaFactor Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity)
+		 * @param onlyFrontObjectPoints True, to avoid that the optimized 3D position lies behind any camera
+		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator
+		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
+		 * @param intermediateErrors Optional resulting intermediate averaged pixel errors for the individual optimization steps, in relation to the defined estimator
+		 * @return True, if succeeded
+		 * @see optimizeCameraPoseIF().
+		 */
+		static bool optimizeCameraPoses(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, const unsigned int iterations, const OptimizationStrategy optimizationStrategy = OS_ALL_PARAMETERS_AFTER_ANOTHER, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+
+		/**
+		 * Minimizes the projection error between the projections of static 3D object points and their corresponding image points in several 6DOF camera poses.
+		 * The given poses must be inverted and flipped around the new x axis by 180 degree.<br>
+		 * @see optimizeCameraPose().
+		 */
+		static bool optimizeCameraPosesIF(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, const unsigned int iterations, const OptimizationStrategy optimizationStrategy = OS_ALL_PARAMETERS_AFTER_ANOTHER, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+
+		/**
+		 * Deprecated.
+		 *
+		 * Minimizes the projection error between the projections of static 3D object points and their corresponding image points in several 6DOF camera poses.
+		 * The camera profile as well as the camera poses are optimized concurrently.
 		 * @param pinholeCamera The pinhole camera holding intrinsic and distortion parameters to minimize the projection error for.
 		 * @param world_T_cameras The individual camera poses, one pose for each pair of groups of object points and image points
 		 * @param objectPointGroups The accessor for the individual groups of 3D object points, one group for each camera pose with at least one object point
@@ -183,6 +237,8 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		static bool optimizeCameraPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
+		 * Deprecated.
+		 *
 		 * Minimizes the projection error between the projections of static 3D object points and their corresponding image points in several 6DOF camera poses.
 		 * The given poses must be inverted and flipped around the new x axis by 180 degree.<br>
 		 * @see optimizeCameraPose().
@@ -213,6 +269,14 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationCamera : protected NonLinearOpt
 		 * @return True, if succeeded
 		 */
 		static bool optimizeCameraObjectPointsPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, const PinholeCamera::OptimizationStrategy optimizationStrategy, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+
+		/**
+		 * Returns the number of camera parameters which should be optimized during individual optimization stages.
+		 * @param camera The camera profile for which the number of parameters will be returned, must be valid
+		 * @param optimizationStrategy The optimization strategy for which the number of parameter will be returned, one for each optimization stage
+		 * @return The number of parameters for each optimization stage
+		 */
+		static std::vector<size_t> cameraParametersPerOptimizationStage(const AnyCamera& camera, const OptimizationStrategy optimizationStrategy);
 
 	protected:
 

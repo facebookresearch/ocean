@@ -1252,9 +1252,9 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 		 * @param imagePointGroups Groups of 2D observation image points
 		 * @param onlyFrontObjectPoints True, to allow only object points in front of the camera
 		 */
-		inline CameraPosesOptimizationProvider(PinholeCamera& pinholeCamera, NonconstTemplateArrayAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, const bool onlyFrontObjectPoints) :
-			camera_(pinholeCamera),
-			candidateCamera_(pinholeCamera),
+		inline CameraPosesOptimizationProvider(SharedAnyCamera& camera, NonconstTemplateArrayAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, const bool onlyFrontObjectPoints, const size_t numberActualCameraParameters) :
+			camera_(camera),
+			candidateCamera_(camera),
 			flippedCameras_T_world_(flippedCameras_T_world),
 			objectPointGroups_(objectPointGroups),
 			candidateFlippedCameras_T_world_(Accessor::accessor2elements(flippedCameras_T_world)),
@@ -1269,6 +1269,23 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 				ocean_assert(objectPointGroups_[n].size() == imagePointGroups_[n].size());
 				observations_ += objectPointGroups_[n].size();
 			}
+
+			ocean_assert(camera_->name() == AnyCameraFisheye::WrappedCamera::name() || camera_->name() == AnyCameraPinhole::WrappedCamera::name());
+			isFisheyeCamera_ = camera_->name() == AnyCameraFisheye::WrappedCamera::name();
+
+			if (isFisheyeCamera_)
+			{
+				// FisheyeCamera::PC_12_PARAMETERS: 2 focal length, 2 principal point, 6 radial distortion, 2 tangential distortion
+				numberMaximalCameraParameters_ = 12;
+			}
+			else
+			{
+				// PinholeCamera::PC_8_PARAMETERS: 2 focal length, 2 principal point, 2 radial distortion, 2 tangential distortion
+				numberMaximalCameraParameters_ = 8;
+			}
+
+			ocean_assert(numberActualCameraParameters_ <= numberMaximalCameraParameters_);
+			numberActualCameraParameters_ = std::min(numberActualCameraParameters, numberMaximalCameraParameters_);
 		};
 
 		/**
@@ -1291,13 +1308,18 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 		{
 			ocean_assert(observations_ != 0);
 
-			SparseMatrix::Entries jacobianEntries;
-			jacobianEntries.reserve(observations_ * 2 * 14); // in each row are at most 14 non-zero elements
+			constexpr size_t numberPoseParameters = 6;
 
-			Scalar jacobianCameraX[8];
-			Scalar jacobianCameraY[8];
-			Scalar jacobianPoseX[6];
-			Scalar jacobianPoseY[6];
+			const size_t jacobianColumns = numberPoseParameters + numberActualCameraParameters_;
+
+			SparseMatrix::Entries jacobianEntries;
+			jacobianEntries.reserve(observations_ * 2 * jacobianColumns);
+
+			Scalars jacobianCameraX(numberMaximalCameraParameters_);
+			Scalars jacobianCameraY(numberMaximalCameraParameters_);
+
+			Scalar jacobianPoseX[numberPoseParameters];
+			Scalar jacobianPoseY[numberPoseParameters];
 
 			size_t row = 0;
 
@@ -1311,29 +1333,63 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 				SquareMatrix3 Rwx, Rwy, Rwz;
 				Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world.rx(), flippedCamera_P_world.ry(), flippedCamera_P_world.rz())), Rwx, Rwy, Rwz);
 
-				for (size_t i = 0; i < objectPoints.size(); ++i)
+				if (isFisheyeCamera_)
 				{
-					Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(camera_, flippedCamera_T_world, objectPoints[i], Rwx, Rwy, Rwz, jacobianCameraX, jacobianCameraY, jacobianPoseX, jacobianPoseY);
+					ocean_assert(camera_->name() == AnyCameraFisheye::WrappedCamera::name());
 
-					for (size_t e = 0u; e < 8u; ++e)
+					const AnyCameraFisheye& anyCameraFisheye = (const AnyCameraFisheye&)(*camera_);
+					const FisheyeCamera& fisheyeCamera = anyCameraFisheye.actualCamera();
+
+					for (size_t i = 0; i < objectPoints.size(); ++i)
 					{
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 0, e, jacobianCameraX[e]));
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 1, e, jacobianCameraY[e]));
-					}
+						Jacobian::calculateJacobianCameraPoseRodrigues2x18IF(fisheyeCamera, flippedCamera_T_world, objectPoints[i], Rwx, Rwy, Rwz, jacobianCameraX.data(), jacobianCameraY.data(), jacobianPoseX, jacobianPoseY);
 
-					for (size_t e = 0u; e < 6; ++e)
+						for (size_t e = 0; e < numberActualCameraParameters_; ++e)
+						{
+							jacobianEntries.emplace_back(row + 0, e, jacobianCameraX[e]);
+							jacobianEntries.emplace_back(row + 1, e, jacobianCameraY[e]);
+						}
+
+						for (size_t e = 0u; e < 6; ++e)
+						{
+							jacobianEntries.emplace_back(row + 0, numberActualCameraParameters_ + p * 6 + e, jacobianPoseX[e]);
+							jacobianEntries.emplace_back(row + 1, numberActualCameraParameters_ + p * 6 + e, jacobianPoseY[e]);
+						}
+
+						row += 2;
+					}
+				}
+				else
+				{
+					ocean_assert(camera_->name() == AnyCameraPinhole::WrappedCamera::name());
+
+					const AnyCameraPinhole& anyCameraPinhole = (const AnyCameraPinhole&)(*camera_);
+					const PinholeCamera& pinholeCamera = anyCameraPinhole.actualCamera();
+
+					for (size_t i = 0; i < objectPoints.size(); ++i)
 					{
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 0, 8 + p * 6 + e, jacobianPoseX[e]));
-						jacobianEntries.push_back(SparseMatrix::Entry(row + 1, 8 + p * 6 + e, jacobianPoseY[e]));
-					}
+						Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(pinholeCamera, flippedCamera_T_world, objectPoints[i], Rwx, Rwy, Rwz, jacobianCameraX.data(), jacobianCameraY.data(), jacobianPoseX, jacobianPoseY);
 
-					row += 2;
+						for (size_t e = 0; e < numberActualCameraParameters_; ++e)
+						{
+							jacobianEntries.emplace_back(row + 0, e, jacobianCameraX[e]);
+							jacobianEntries.emplace_back(row + 1, e, jacobianCameraY[e]);
+						}
+
+						for (size_t e = 0u; e < 6; ++e)
+						{
+							jacobianEntries.emplace_back(row + 0, numberActualCameraParameters_ + p * 6 + e, jacobianPoseX[e]);
+							jacobianEntries.emplace_back(row + 1, numberActualCameraParameters_ + p * 6 + e, jacobianPoseY[e]);
+						}
+
+						row += 2;
+					}
 				}
 			}
 
 			ocean_assert(row == observations_ * 2);
 
-			jacobian = SparseMatrix(2 * observations_, 8 + flippedCameras_T_world_.size() * 6, jacobianEntries);
+			jacobian = SparseMatrix(2 * observations_, numberActualCameraParameters_ + flippedCameras_T_world_.size() * 6, jacobianEntries);
 			ocean_assert(SparseMatrix::Entry::hasOneEntry(jacobian.rows(), jacobian.columns(), jacobianEntries));
 		}
 
@@ -1343,34 +1399,24 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 		 */
 		inline void applyCorrection(const Matrix& deltas)
 		{
-			const Scalar& deltaFx = deltas(0);
-			const Scalar& deltaFy = deltas(1);
-			const Scalar& deltaMx = deltas(2);
-			const Scalar& deltaMy = deltas(3);
-			const Scalar& deltaK1 = deltas(4);
-			const Scalar& deltaK2 = deltas(5);
-			const Scalar& deltaP1 = deltas(6);
-			const Scalar& deltaP2 = deltas(7);
+			ocean_assert(deltas.columns() == 1 && deltas.rows() == numberActualCameraParameters_ + flippedCameras_T_world_.size() * 6);
 
-			const Scalar newFx = camera_.focalLengthX() - deltaFx;
-			const Scalar newFy = camera_.focalLengthY() - deltaFy;
-			const Scalar newMx = camera_.principalPointX() - deltaMx;
-			const Scalar newMy = camera_.principalPointY() - deltaMy;
-			const Scalar newK1 = camera_.radialDistortion().first - deltaK1;
-			const Scalar newK2 = camera_.radialDistortion().second - deltaK2;
-			const Scalar newP1 = camera_.tangentialDistortion().first - deltaP1;
-			const Scalar newP2 = camera_.tangentialDistortion().second - deltaP2;
+			const Scalar* data = deltas.data();
 
-			candidateCamera_ = PinholeCamera(SquareMatrix3(newFx, 0, 0, 0, newFy, 0, newMx, newMy, 1), camera_.width(), camera_.height(), PinholeCamera::DistortionPair(newK1, newK2), PinholeCamera::DistortionPair(newP1, newP2));
+			candidateCamera_ = modifyCamera(data, numberActualCameraParameters_);
+
+			data += numberActualCameraParameters_;
 
 			for (size_t n = 0; n < flippedCameras_T_world_.size(); ++n)
 			{
 				const Pose pose(flippedCameras_T_world_[n]);
 
-				const Pose deltaPose(deltas(8 + n * 6 + 0), deltas(8 + n * 6 + 1), deltas(8 + n * 6 + 2), deltas(8 + n * 6 + 3), deltas(8 + n * 6 + 4), deltas(8 + n * 6 + 5));
+				const Pose deltaPose(data);
 				const Pose newPose(pose - deltaPose);
 
 				candidateFlippedCameras_T_world_[n] = newPose.transformation();
+
+				data += 6;
 			}
 		}
 
@@ -1417,7 +1463,7 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 						return Numeric::maxValue();
 					}
 
-					const Vector2 error = Error::determinePoseErrorIF(candidateFlippedCamera_T_world, candidateCamera_, objectPoint, imagePoints[i], true);
+					const Vector2 error = Error::determinePoseErrorIF(candidateFlippedCamera_T_world, *candidateCamera_, objectPoint, imagePoints[i]);
 					weightedErrors[row++] = error;
 
 					if constexpr (Estimator::isStandardEstimator<tEstimator>())
@@ -1468,13 +1514,61 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 			}
 		}
 
+		SharedAnyCamera modifyCamera(const Scalar* deltas, const size_t size) const
+		{
+			ocean_assert(deltas != nullptr && size <= numberActualCameraParameters_);
+
+			unsigned int width = 0u;
+			unsigned int height = 0u;
+			Scalars cameraParameters;
+
+			if (isFisheyeCamera_)
+			{
+				ocean_assert(camera_->name() == AnyCameraFisheye::CameraWrapper::name());
+
+				const AnyCameraFisheye& anyCameraFisheye = (const AnyCameraFisheye&)(*camera_);
+				const FisheyeCamera& fisheyeCamera = anyCameraFisheye.actualCamera();
+
+				FisheyeCamera::ParameterConfiguration parameterConfiguration = FisheyeCamera::PC_UNKNOWN;
+				fisheyeCamera.copyParameters(width, height, cameraParameters, parameterConfiguration);
+
+				ocean_assert(width == camera_->width() && height == camera_->height() && size <= cameraParameters.size() && parameterConfiguration == FisheyeCamera::PC_12_PARAMETERS);
+
+				for (unsigned int nParameter = 0u; nParameter < size; ++nParameter)
+				{
+					cameraParameters[nParameter] -= deltas[nParameter];
+				}
+
+				return std::make_shared<AnyCameraFisheye>(FisheyeCamera(width, height, parameterConfiguration, cameraParameters.data()));
+			}
+			else
+			{
+				ocean_assert(camera_->name() == AnyCameraPinhole::CameraWrapper::name());
+
+				const AnyCameraPinhole& anyCameraPinhole = (const AnyCameraPinhole&)(*camera_);
+				const PinholeCamera& pinholeCamera = anyCameraPinhole.actualCamera();
+
+				PinholeCamera::ParameterConfiguration parameterConfiguration = PinholeCamera::PC_UNKNOWN;
+				pinholeCamera.copyParameters(width, height, cameraParameters, parameterConfiguration);
+
+				ocean_assert(width == camera_->width() && height == camera_->height() && size <= cameraParameters.size() && parameterConfiguration == PinholeCamera::PC_8_PARAMETERS);
+
+				for (unsigned int nParameter = 0u; nParameter < size; ++nParameter)
+				{
+					cameraParameters[nParameter] -= deltas[nParameter];
+				}
+
+				return std::make_shared<AnyCameraPinhole>(PinholeCamera(width, height, parameterConfiguration, cameraParameters.data()));
+			}
+		}
+
 	protected:
 
 		/// The camera object that will be optimized.
-		PinholeCamera& camera_;
+		SharedAnyCamera& camera_;
 
 		/// The camera object that stores the most recent optimization result as candidate.
-		PinholeCamera candidateCamera_;
+		SharedAnyCamera candidateCamera_;
 
 		/// The accessor for all camera poses.
 		NonconstTemplateArrayAccessor<HomogenousMatrix4>& flippedCameras_T_world_;
@@ -1493,10 +1587,138 @@ class NonLinearOptimizationCamera::CameraPosesOptimizationProvider : public NonL
 
 		// The entire number of observations.
 		size_t observations_ = 0;
+
+		/// True, if the camera is a FisheyeCamera; False, if the camera is a PinholeCamera.
+		bool isFisheyeCamera_ = false;
+
+		/// The number of maximal camera parameters, either 8 or 12.
+		size_t numberMaximalCameraParameters_ = 0;
+
+		/// The actual number of camera parameters which will be optimized.
+		size_t numberActualCameraParameters_ = 0;
 };
+
+bool NonLinearOptimizationCamera::optimizeCameraPoses(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, const unsigned int iterations, const OptimizationStrategy optimizationStrategy, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+{
+	ocean_assert(camera.isValid());
+
+	HomogenousMatrices4 flippedCameras_T_world(world_T_cameras.size());
+	for (size_t n = 0; n < world_T_cameras.size(); ++n)
+	{
+		flippedCameras_T_world[n] = Camera::standard2InvertedFlipped(world_T_cameras[n]);
+	}
+
+	HomogenousMatrices4 optimizedFlippedCameras_T_world;
+	NonconstArrayAccessor<HomogenousMatrix4> accessor_optimizedFlippedCameras_T_world(optimizedFlippedCameras_T_world, world_T_optimizedCameras != nullptr ? world_T_cameras.size() : 0);
+
+	if (!optimizeCameraPosesIF(camera, ConstArrayAccessor<HomogenousMatrix4>(flippedCameras_T_world), objectPointGroups, imagePointGroups, optimizedCamera, accessor_optimizedFlippedCameras_T_world.pointer(), iterations, optimizationStrategy, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors))
+	{
+		return false;
+	}
+
+	if (world_T_optimizedCameras != nullptr)
+	{
+		for (size_t n = 0; n < optimizedFlippedCameras_T_world.size(); ++n)
+		{
+			(*world_T_optimizedCameras)[n] = Camera::invertedFlipped2Standard(optimizedFlippedCameras_T_world[n]);
+		}
+	}
+
+	return true;
+}
+
+bool NonLinearOptimizationCamera::optimizeCameraPosesIF(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, SharedAnyCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, const unsigned int iterations, const OptimizationStrategy optimizationStrategy, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+{
+	ocean_assert(camera.isValid());
+	ocean_assert(objectPointGroups.size() == imagePointGroups.size());
+
+	optimizedCamera = camera.clone();
+
+	// we need enough buffer for the optimized poses, we take them from the provided parameter or create them temporary in this scope
+	ScopedNonconstMemoryAccessor<HomogenousMatrix4> scoped_flippedOptimizedCameras_T_world(flippedOptimizedCameras_T_world, flippedCameras_T_world.size());
+	ocean_assert(scoped_flippedOptimizedCameras_T_world.size() == flippedCameras_T_world.size());
+
+	for (size_t n = 0; n < flippedCameras_T_world.size(); ++n)
+	{
+		scoped_flippedOptimizedCameras_T_world[n] = flippedCameras_T_world[n];
+	}
+
+	NonconstTemplateArrayAccessor<HomogenousMatrix4> accessor_flippedOptimizedCameras_T_world(scoped_flippedOptimizedCameras_T_world.data(), scoped_flippedOptimizedCameras_T_world.size());
+
+	if (intermediateErrors != nullptr)
+	{
+		intermediateErrors->clear();
+	}
+
+	const std::vector<size_t> optimizationStages = cameraParametersPerOptimizationStage(camera, optimizationStrategy);
+
+	if (optimizationStages.empty())
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
+
+	Scalar iterationInitialError;
+	Scalar iterationFinalError;
+	Scalars iterationIntermedidateErrors;
+
+	for (size_t nStage = 0; nStage < optimizationStages.size(); ++nStage)
+	{
+		const size_t numberActualCameraParameters = optimizationStages[nStage];
+
+		iterationIntermedidateErrors.clear();
+
+		CameraPosesOptimizationProvider provider(optimizedCamera, accessor_flippedOptimizedCameras_T_world, objectPointGroups, imagePointGroups, onlyFrontObjectPoints, numberActualCameraParameters);
+		if (!sparseOptimization<CameraPosesOptimizationProvider>(provider, iterations, estimator, lambda, lambdaFactor, &iterationInitialError, &iterationFinalError, nullptr, &iterationIntermedidateErrors))
+		{
+			return false;
+		}
+
+		Log::info() << "ITERATION: " << int(numberActualCameraParameters) << ": " << iterationInitialError << " -> " << iterationFinalError; // TOOD
+
+		if (nStage == 0 && initialError != nullptr)
+		{
+			*initialError = iterationInitialError;
+		}
+
+		if (nStage == optimizationStages.size() - 1 && finalError != nullptr)
+		{
+			*finalError = iterationFinalError;
+		}
+
+		if (intermediateErrors != nullptr)
+		{
+			intermediateErrors->insert(intermediateErrors->end(), iterationIntermedidateErrors.cbegin(), iterationIntermedidateErrors.cend());
+		}
+
+
+		if (optimizedCamera->name() == AnyCameraFisheye::WrappedCamera::name())
+		{
+			const AnyCameraFisheye& anyFisheyeCamera = (const AnyCameraFisheye&)(*optimizedCamera);
+			const FisheyeCamera& fisheyeCamera = anyFisheyeCamera.actualCamera();
+
+			unsigned int w;
+			unsigned int h;
+			FisheyeCamera::ParameterConfiguration pc;
+			Scalars parameters;
+			fisheyeCamera.copyParameters(w, h, parameters, pc);
+
+			Log::info() << w << "x" << h;
+
+			for (const Scalar s : parameters)
+			{
+				Log::info() << s;
+			}
+		}
+	}
+
+	return true;
+}
 
 bool NonLinearOptimizationCamera::optimizeCameraPoses(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
+	ocean_assert(pinholeCamera.isValid());
+
 	HomogenousMatrices4 flippedCameras_T_world(world_T_cameras.size());
 	for (size_t n = 0; n < world_T_cameras.size(); ++n)
 	{
@@ -1525,23 +1747,21 @@ bool NonLinearOptimizationCamera::optimizeCameraPoses(const PinholeCamera& pinho
 bool NonLinearOptimizationCamera::optimizeCameraPosesIF(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vectors3>& objectPointGroups, const ConstIndexedAccessor<Vectors2>& imagePointGroups, PinholeCamera& optimizedCamera, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
 	ocean_assert(&pinholeCamera != &optimizedCamera);
-	ocean_assert(objectPointGroups.size() == imagePointGroups.size());
 
-	optimizedCamera = pinholeCamera;
-
-	// we need enough buffer for the optimized poses, we take them from the provided parameter or create them temporary in this scope
-	ScopedNonconstMemoryAccessor<HomogenousMatrix4> scoped_flippedOptimizedCameras_T_world(flippedOptimizedCameras_T_world, flippedCameras_T_world.size());
-	ocean_assert(scoped_flippedOptimizedCameras_T_world.size() == flippedCameras_T_world.size());
-
-	for (size_t n = 0; n < flippedCameras_T_world.size(); ++n)
+	SharedAnyCamera optmizedAnyCamera;
+	if (!optimizeCameraPosesIF(AnyCameraPinhole(pinholeCamera), flippedCameras_T_world, objectPointGroups, imagePointGroups, optmizedAnyCamera, flippedOptimizedCameras_T_world, iterations, OS_ALL_PARAMETERS_AT_ONCE, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors))
 	{
-		scoped_flippedOptimizedCameras_T_world[n] = flippedCameras_T_world[n];
+		return false;
 	}
 
-	NonconstTemplateArrayAccessor<HomogenousMatrix4> accessor_flippedOptimizedCameras_T_world(scoped_flippedOptimizedCameras_T_world.data(), scoped_flippedOptimizedCameras_T_world.size());
+	ocean_assert(optmizedAnyCamera != nullptr);
+	ocean_assert(optmizedAnyCamera->name() == AnyCameraPinhole::WrappedCamera::name());
 
-	CameraPosesOptimizationProvider provider(optimizedCamera, accessor_flippedOptimizedCameras_T_world, objectPointGroups, imagePointGroups, onlyFrontObjectPoints);
-	return sparseOptimization<CameraPosesOptimizationProvider>(provider, iterations, estimator, lambda, lambdaFactor, initialError, finalError, nullptr, intermediateErrors);
+	const AnyCameraPinhole& anyCameraPinhole = (const AnyCameraPinhole&)(*optmizedAnyCamera);
+
+	optimizedCamera = anyCameraPinhole.actualCamera();
+
+	return true;
 }
 
 /**
@@ -1912,6 +2132,67 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 	}
 
 	return true;
+}
+
+std::vector<size_t> NonLinearOptimizationCamera::cameraParametersPerOptimizationStage(const AnyCamera& camera, const OptimizationStrategy optimizationStrategy)
+{
+	std::vector<size_t> parametersPerStage;
+
+	if (camera.name() == AnyCameraPinhole::WrappedCamera::name())
+	{
+		switch (optimizationStrategy)
+		{
+			// order of parameters as in PinholeCamera::PC_8_PARAMETERS: Fx, Fy, mx, my, k1, k2, p1, p2
+
+			case OS_ONLY_FOCAL_LENGTH:
+				return {2};
+
+			case OS_UP_TO_PRINCIPAL_POINT_AFTER_ANOTHER:
+				return {2, 4};
+
+			case OS_UP_TO_MAJOR_DISTORTION_AFTER_ANOTHER:
+				return {2, 4, 5, 6};
+
+			case OS_ALL_PARAMETERS_AT_ONCE:
+				return {8};
+
+			case OS_ALL_PARAMETERS_AFTER_ANOTHER:
+				return {2, 4, 5, 6, 7, 8};
+
+			case OS_INVALID:
+				ocean_assert(false && "This should never happen!");
+				return {8};
+		}
+	}
+	else if (camera.name() == AnyCameraFisheye::WrappedCamera::name())
+	{
+		switch (optimizationStrategy)
+		{
+			// order of parameters as in FisheyeCamera::PC_12_PARAMETERS: Fx, Fy, mx, my, k1, k3, k5, k7, k9, k11, p1, p2
+
+			case OS_ONLY_FOCAL_LENGTH:
+				return {2};
+
+			case OS_UP_TO_PRINCIPAL_POINT_AFTER_ANOTHER:
+				return {2, 4};
+
+			case OS_UP_TO_MAJOR_DISTORTION_AFTER_ANOTHER:
+				return {2, 4, 5, 6};
+
+			case OS_ALL_PARAMETERS_AT_ONCE:
+				return {12};
+
+			case OS_ALL_PARAMETERS_AFTER_ANOTHER:
+				return {2, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+
+			case OS_INVALID:
+				ocean_assert(false && "This should never happen!");
+				return {12};
+		}
+	}
+
+	ocean_assert(false && "Invalid camera type!");
+	return std::vector<size_t>();
 }
 
 void NonLinearOptimizationCamera::findInitialFieldOfViewSubset(const PinholeCamera* pinholeCamera, const ConstIndexedAccessor<SquareMatrix3>* orientations, const PoseGroupsAccessor* correspondenceGroups, PinholeCamera* optimizedCamera, SquareMatrices3* optimizedOrientations, const Scalar lowerFovX, const Scalar upperFovX, const unsigned int overallSteps, const bool onlyFrontObjectPoints, Scalar* bestError, Scalars* allErrors, Lock* lock, bool* abort, const unsigned int firstStep, const unsigned int steps)
