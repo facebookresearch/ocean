@@ -2978,11 +2978,11 @@ void Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(const PinholeCameraT<T
 
 	calculateCameraJacobian2x8(pinholeCamera, normalizedUndistortedImagePoint, jacobianCameraX, jacobianCameraY);
 
-	pinholeCamera.template pointJacobian2x3IF<T, true>(transformedObjectPoint, jacobianPoseX, jacobianPoseY);
-
 	const VectorT3<T> dwxObject(dwx * objectPoint);
 	const VectorT3<T> dwyObject(dwy * objectPoint);
 	const VectorT3<T> dwzObject(dwz * objectPoint);
+
+	pinholeCamera.template pointJacobian2x3IF<T, true>(transformedObjectPoint, jacobianPoseX, jacobianPoseY);
 
 	// jacobianPoseX[0, 1, 2] already set
 	jacobianPoseX[3] = jacobianPoseX[0] * dwxObject[0] + jacobianPoseX[1] * dwxObject[1] + jacobianPoseX[2] * dwxObject[2];
@@ -2997,6 +2997,44 @@ void Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(const PinholeCameraT<T
 
 template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(const PinholeCameraT<float>& pinholeCamera, const HomogenousMatrixT4<float>& flippedCamera_T_world, const VectorT3<float>& objectPoint, const SquareMatrixT3<float>& dwx, const SquareMatrixT3<float>& dwy, const SquareMatrixT3<float>& dwz, float* jacobianCameraX, float* jacobianCameraY, float* jacobianPoseX, float* jacobianPoseY);
 template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateJacobianCameraPoseRodrigues2x14IF(const PinholeCameraT<double>& pinholeCamera, const HomogenousMatrixT4<double>& flippedCamera_T_world, const VectorT3<double>& objectPoint, const SquareMatrixT3<double>& dwx, const SquareMatrixT3<double>& dwy, const SquareMatrixT3<double>& dwz, double* jacobianCameraX, double* jacobianCameraY, double* jacobianPoseX, double* jacobianPoseY);
+
+template <typename T>
+void Jacobian::calculateJacobianCameraPoseRodrigues2x18IF(const FisheyeCameraT<T>& fisheyeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz, T* jacobianCameraX, T* jacobianCameraY, T* jacobianPoseX, T* jacobianPoseY)
+{
+	ocean_assert(fisheyeCamera.isValid());
+	ocean_assert(flippedCamera_T_world.isValid());
+
+	ocean_assert(jacobianCameraX != nullptr && jacobianCameraY != nullptr);
+	ocean_assert(jacobianPoseX != nullptr && jacobianPoseY != nullptr);
+
+	const VectorT3<T> transformedObjectPoint = flippedCamera_T_world * objectPoint;
+
+	ocean_assert(NumericT<T>::isNotEqualEps(transformedObjectPoint.z()));
+	const T scaleFactor = T(1) / transformedObjectPoint.z();
+
+	const VectorT2<T> normalizedUndistortedImagePoint(transformedObjectPoint.x() * scaleFactor, transformedObjectPoint.y() * scaleFactor);
+
+	calculateCameraJacobian2x12(fisheyeCamera, normalizedUndistortedImagePoint, jacobianCameraX, jacobianCameraY);
+
+	const VectorT3<T> dwxObject(dwx * objectPoint);
+	const VectorT3<T> dwyObject(dwy * objectPoint);
+	const VectorT3<T> dwzObject(dwz * objectPoint);
+
+	fisheyeCamera.template pointJacobian2x3IF<true>(transformedObjectPoint, jacobianPoseX, jacobianPoseY);
+
+	// jacobianPoseX[0, 1, 2] already set
+	jacobianPoseX[3] = jacobianPoseX[0] * dwxObject[0] + jacobianPoseX[1] * dwxObject[1] + jacobianPoseX[2] * dwxObject[2];
+	jacobianPoseX[4] = jacobianPoseX[0] * dwyObject[0] + jacobianPoseX[1] * dwyObject[1] + jacobianPoseX[2] * dwyObject[2];
+	jacobianPoseX[5] = jacobianPoseX[0] * dwzObject[0] + jacobianPoseX[1] * dwzObject[1] + jacobianPoseX[2] * dwzObject[2];
+
+	// jacobianPoseY[0, 1, 2] already set
+	jacobianPoseY[3] = jacobianPoseY[0] * dwxObject[0] + jacobianPoseY[1] * dwxObject[1] + jacobianPoseY[2] * dwxObject[2];
+	jacobianPoseY[4] = jacobianPoseY[0] * dwyObject[0] + jacobianPoseY[1] * dwyObject[1] + jacobianPoseY[2] * dwyObject[2];
+	jacobianPoseY[5] = jacobianPoseY[0] * dwzObject[0] + jacobianPoseY[1] * dwzObject[1] + jacobianPoseY[2] * dwzObject[2];
+}
+
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateJacobianCameraPoseRodrigues2x18IF(const FisheyeCameraT<float>& fisheyeCamera, const HomogenousMatrixT4<float>& flippedCamera_T_world, const VectorT3<float>& objectPoint, const SquareMatrixT3<float>& dwx, const SquareMatrixT3<float>& dwy, const SquareMatrixT3<float>& dwz, float* jacobianCameraX, float* jacobianCameraY, float* jacobianPoseX, float* jacobianPoseY);
+template void OCEAN_GEOMETRY_EXPORT Jacobian::calculateJacobianCameraPoseRodrigues2x18IF(const FisheyeCameraT<double>& fisheyeCamera, const HomogenousMatrixT4<double>& flippedCamera_T_world, const VectorT3<double>& objectPoint, const SquareMatrixT3<double>& dwx, const SquareMatrixT3<double>& dwy, const SquareMatrixT3<double>& dwz, double* jacobianCameraX, double* jacobianCameraY, double* jacobianPoseX, double* jacobianPoseY);
 
 void Jacobian::calculateHomographyJacobian2x8(Scalar* jx, Scalar* jy, const Scalar x, const Scalar y, const SquareMatrix3& homography)
 {

@@ -730,7 +730,7 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		static void calculateJacobianCameraPoseRodrigues2x12(Scalar* jx, Scalar* jy, const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Pose& flippedCamera_P_world, const Vector3& objectPoint, const SquareMatrix3& dwx, const SquareMatrix3& dwy, const SquareMatrix3& dwz);
 
 		/**
-		 * Calculates the entire jacobian matrix for an object point to image point transformation covering a flexible 6-DOF camera pose, the four intrinsic camera parameters and four parameters for radial and tangential distortion.
+		 * Calculates the entire jacobian matrix for an object point to image point transformation covering a flexible 6-DOF camera pose and a pinhole camera.
 		 * The resulting jacobian has the following form:
 		 * <pre>
 		 * Jacobian Camera (parameter order as in PC_8_PARAMETERS):
@@ -777,6 +777,34 @@ class OCEAN_GEOMETRY_EXPORT Jacobian
 		 */
 		template <typename T>
 		static void calculateJacobianCameraPoseRodrigues2nx14IF(const PinholeCameraT<T>& pinholeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const ConstIndexedAccessor<VectorT3<T>>& objectPoints, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz, T* jacobian);
+
+		/**
+		 * Calculates the entire jacobian matrix for an object point to image point transformation covering a flexible 6-DOF camera pose and a fisheye camera.
+		 * The resulting jacobian has the following form:
+		 * <pre>
+		 * Jacobian Camera (parameter order as in PC_12_PARAMETERS):
+		 * | dfx / dFx, dfx / dFy, dfx / dmx, dfx / dmy, dfx / dk3, dfx / dk5, dfx / dk7, dfx / dk9, dfx / dk11, dfx / dk13, dfx / dp1, dfx / dp2 |
+		 * | dfy / dFx, dfy / dFy, dfy / dmx, dfy / dmy, dfy / dk3, dfy / dk5, dfy / dk7, dfy / dk9, dfy / dk11, dfy / dk13, dfy / dp1, dfy / dp2 |
+		 *
+		 * Jacobian Pose (parameters order as in Pose):
+		 * | dfx / dtx, dfx / dty, dfx / dtz,   dfx / dwx, dfx / dwy, dfx / dwz |
+		 * | dfy / dtx, dfy / dty, dfy / dtz,   dfy / dwx, dfy / dwy, dfy / dwz |
+		 * </pre>
+		 * @param pinholeCamera The pinhole camera to determine the jacobian values for
+		 * @param flippedCamera_T_world Transformation between world and flipped camera, with flipped camera pointing towards the positive z-space with y-axis down
+		 * @param objectPoint 3D object point to determine the jacobian for
+		 * @param dwx Rotation matrix derived to wx, as determined by calculateRotationRodriguesDerivative()
+		 * @param dwy Rotation matrix derived to wy, as determined by calculateRotationRodriguesDerivative()
+		 * @param dwz Rotation matrix derived to wz, as determined by calculateRotationRodriguesDerivative()
+		 * @param jacobianCameraX The resulting first row of the 2x12 Jacobian matrix for the camera parameters, must be valid
+		 * @param jacobianCameraY The resulting second row of the 2x12 Jacobian matrix for the camera parameters, must be valid
+		 * @param jacobianPoseX The resulting first 2x6 Jacobian matrix for the pose parameters, must be valid
+		 * @param jacobianPoseY The resulting second 2x6 Jacobian matrix for the pose parameters, must be valid
+		 * @see calculateRotationRodriguesDerivative().
+		 * @tparam T The scalar data type, either 'float' or 'double'
+		 */
+		template <typename T>
+		static void calculateJacobianCameraPoseRodrigues2x18IF(const FisheyeCameraT<T>& fisheyeCamera, const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, const SquareMatrixT3<T>& dwx, const SquareMatrixT3<T>& dwy, const SquareMatrixT3<T>& dwz, T* jacobianCameraX, T* jacobianCameraY, T* jacobianPoseX, T* jacobianPoseY);
 
 		/**
 		 * Determines the 2x8 Jacobian of a homography function that transforms a 2D coordinate (interpreted as a 3D vector with homogeneous extension) to a 2D coordinate (the de-homogenization is included).

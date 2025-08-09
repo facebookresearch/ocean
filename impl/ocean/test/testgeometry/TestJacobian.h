@@ -161,7 +161,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testCameraDistortionJacobian2x4(const double testDuration);
+		static bool testPinholeCameraDistortionJacobian2x4(const double testDuration);
 
 		/**
 		 * Tests the Jacobian for the intrinsic and radial distortion of pinhole camera parameters.
@@ -200,23 +200,31 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testOrientationCameraJacobian2x11(const double testDuration);
+		static bool testOrientationPinholeCameraJacobian2x11(const double testDuration);
 
 		/**
-		 * Tests the Jacobian for the extrinsic, intrinsic and radial  camera parameters.
+		 * Tests the Jacobian for the extrinsic, intrinsic and radial camera parameters for a pinhole camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testPoseCameraJacobian2x12(const double testDuration);
+		static bool testPosePinholeCameraJacobian2x12(const double testDuration);
 
 		/**
-		 * Tests the Jacobian for the extrinsic, intrinsic and radial and tangential distortion camera parameters.
+		 * Tests the Jacobian for the extrinsic, intrinsic and radial and tangential distortion camera parameters for a pinhole camera.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 * @tparam T the data type of the scalar to be used, either 'float' or 'double'
 		 */
 		template <typename T>
-		static bool testPoseCameraJacobian2x14(const double testDuration);
+		static bool testPosePinholeCameraJacobian2x14(const double testDuration);
+
+		/**
+		 * Tests the Jacobian for the extrinsic, intrinsic and radial camera parameters and distortion parameters for a fisheye camera.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		template <typename T>
+		static bool testPoseFisheyeCameraJacobian2x18(const double testDuration);
 
 		/**
 		 * Tests the 2x8 Jacobian for the homography.
