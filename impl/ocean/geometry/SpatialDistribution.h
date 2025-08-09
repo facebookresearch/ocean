@@ -460,10 +460,9 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 
 				/**
 				 * Adds an image point and returns whether the corresponding bin was not occupied before (was free before).
-				 * If the point lies outside the array False is returned.<br>
-				 * The bin (if valid) which belongs to the given point is occupied after the function returns.
+				 * If the point lies outside the array, False is returned.
 				 * @param point The point to be added, with range (-infinity, infinity)x(-infinity, infinity)
-				 * @return True, if so
+				 * @return True, if the point was added to an empty bin; False, if the bin was already occupied or the point was outside the array
 				 */
 				inline bool addPoint(const Vector2& point);
 
@@ -648,7 +647,7 @@ class OCEAN_GEOMETRY_EXPORT SpatialDistribution
 		/**
 		 * Definition of a vector holding distance elements.
 		 */
-		typedef std::vector<DistanceElement> DistanceElements;
+		using DistanceElements = std::vector<DistanceElement>;
 
 	public:
 

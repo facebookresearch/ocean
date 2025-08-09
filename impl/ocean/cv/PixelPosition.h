@@ -15,8 +15,6 @@
 #include "ocean/math/Numeric.h"
 #include "ocean/math/Vector2.h"
 
-#include <limits>
-
 namespace Ocean
 {
 
@@ -31,28 +29,28 @@ template <typename T> class PixelPositionT;
  * @see PixelPositionT
  * @ingroup cv
  */
-typedef PixelPositionT<unsigned int> PixelPosition;
+using PixelPosition = PixelPositionT<unsigned int>;
 
 /**
  * Definition of a PixelPosition object with a data type allowing positive and negative coordinate values.
  * @see PixelPositionT
  * @ingroup cv
  */
-typedef PixelPositionT<int> PixelPositionI;
+using PixelPositionI = PixelPositionT<int>;
 
 /**
  * Definition of a vector holding pixel positions (with positive coordinate values).
  * @see PixelPosition
  * @ingroup cv
  */
-typedef std::vector<PixelPosition> PixelPositions;
+using PixelPositions = std::vector<PixelPosition>;
 
 /**
  * Definition of a vector holding pixel positions (with positive and negative coordinate values).
  * @see PixelPositionI
  * @ingroup cv
  */
-typedef std::vector<PixelPositionI> PixelPositionsI;
+using PixelPositionsI = std::vector<PixelPositionI>;
 
 /**
  * This class implements a 2D pixel position with pixel precision.
@@ -68,10 +66,10 @@ class PixelPositionT
 		/**
 		 * Definition of individual rough directions.
 		 */
-		enum RoughPixelDirection
+		enum RoughPixelDirection : uint32_t
 		{
 			/// Invalid direction.
-			RPD_INVALID,
+			RPD_INVALID = 0u,
 			/// Vertical direction.
 			RPD_VERTICAL,
 			/// Horizontal direction.
@@ -351,7 +349,7 @@ class PixelPositionT
 		 * Returns the pixel direction of two successive pixels in a dense contour.
 		 * @param pixel0 First pixel
 		 * @param pixel1 Following pixel
-		 * @return Resulting pixel direction
+		 * @return Resulting pixel direction, pixel0 + direction == pixel1
 		 */
 		static inline PixelDirection direction(const PixelPositionT<T>& pixel0, const PixelPositionT<T>& pixel1);
 

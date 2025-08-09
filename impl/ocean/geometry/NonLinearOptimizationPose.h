@@ -196,7 +196,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		 * @param flippedCamera_T_world 6DOF pose to minimized the projection error for (inverted and flipped), must be valid
 		 * @param objectPoints 3D object points to be projected into the camera plane
 		 * @param imagePoints 2D image points corresponding to the object points, the image points may be distorted or undistorted depending on the usage of the distortImagePoints state
-		 * @param optimizedPose_flippedCamera_T_world Resulting optimized 6DOF pose (inverted and flipped)
+		 * @param optimizedFlippedCamera_T_world Resulting optimized 6DOF pose (inverted and flipped)
 		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached, with range [1, infinity)
 		 * @param estimator Robust error estimator to be used
 		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
@@ -206,7 +206,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		 * @return True, if succeeded
 		 * @see optimizePose().
 		 */
-		static bool optimizePoseIF(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& optimizedPose_flippedCamera_T_world, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
+		static bool optimizePoseIF(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& optimizedFlippedCamera_T_world, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
 
 		/**
 		 * Minimizes the projection error of a given 6-DOF camera pose.
