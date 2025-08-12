@@ -623,6 +623,8 @@ QuaternionT<T>::QuaternionT(const EulerT<T>& euler)
 template <typename T>
 QuaternionT<T>::QuaternionT(const SquareMatrixT3<T>& matrix)
 {
+	ocean_assert(!matrix.isSingular());
+
 	ocean_assert_accuracy(NumericT<T>::isWeakEqual(matrix.determinant(), T(1.0)));
 	const T trace = matrix.trace() + T(1.0);
 
