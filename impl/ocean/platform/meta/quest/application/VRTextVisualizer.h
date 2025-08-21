@@ -12,6 +12,7 @@
 #include "ocean/platform/meta/quest/application/VRVisualizer.h"
 
 #include "ocean/base/Timestamp.h"
+#include "ocean/math/RGBAColor.h"
 
 namespace Ocean
 {
@@ -83,9 +84,10 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTextVisualizer : public VRV
 		 * @param objectSize The size of the visualized image in virtual space (in object space), an invalid object to remove the visualization
 		 * @param workaroundTimestamp Current workaround: Timestamp of the rendering engine
 		 * @param fontName The name of the font to be used to render the text
+		 * @param backgroundColor The background color with alpha, default is opaque gray (0.25, 0.25, 0.25, 1.0)
 		 * @see visualizeTextnView().
 		 */
-		inline void visualizeTextInWorld(const unsigned int id, const HomogenousMatrix4& world_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& workaroundTimestamp = Timestamp(false), const std::string& fontName = "Roboto");
+		inline void visualizeTextInWorld(const unsigned int id, const HomogenousMatrix4& world_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& workaroundTimestamp = Timestamp(false), const std::string& fontName = "Roboto", const RGBAColor& backgroundColor = RGBAColor(0.25f, 0.25f, 0.25f, 1.0f));
 
 		/**
 		 * Visualizes a text at a specific location in the virtual environment (defined in relation to the view).
@@ -97,9 +99,10 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTextVisualizer : public VRV
 		 * @param objectSize The size of the visualized image in virtual space (in object space), an invalid object to remove the visualization
 		 * @param workaroundTimestamp Current workaround: Timestamp of the rendering engine
 		 * @param fontName The name of the font to be used to render the text
+		 * @param backgroundColor The background color with alpha, default is opaque gray (0.25, 0.25, 0.25, 1.0)
 		 * @see visualizeTextInWorld().
 		 */
-		inline void visualizeTextInView(const unsigned int id, const HomogenousMatrix4& view_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& workaroundTimestamp = Timestamp(false), const std::string& fontName = "Roboto");
+		inline void visualizeTextInView(const unsigned int id, const HomogenousMatrix4& view_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& workaroundTimestamp = Timestamp(false), const std::string& fontName = "Roboto", const RGBAColor& backgroundColor = RGBAColor(0.25f, 0.25f, 0.25f, 1.0f));
 
 		/**
 		 * Visualizes a text at a specific location in the virtual environment (defined in relation to the world or to the view).
@@ -112,8 +115,9 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTextVisualizer : public VRV
 		 * @param workaroundTimestamp Current workaround: Timestamp of the rendering engine
 		 * @param referenceIsWorld True, if reference is world; False, if reference is view
 		 * @param fontName The name of the font to be used to render the text
+		 * @param backgroundColor The background color with alpha, default is opaque gray (0.25, 0.25, 0.25, 1.0)
 		 */
-		void visualizeText(const unsigned int id, const HomogenousMatrix4& reference_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& workaroundTimestamp = Timestamp(false), const bool referenceIsWorld = true, const std::string& fontName = "Roboto");
+		void visualizeText(const unsigned int id, const HomogenousMatrix4& reference_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& workaroundTimestamp = Timestamp(false), const bool referenceIsWorld = true, const std::string& fontName = "Roboto", const RGBAColor& backgroundColor = RGBAColor(0.25f, 0.25f, 0.25f, 1.0f));
 };
 
 inline VRTextVisualizer::VRTextVisualizer()
@@ -127,14 +131,14 @@ inline VRTextVisualizer::VRTextVisualizer(const Rendering::EngineRef& engine, co
 	// nothing to do here
 }
 
-inline void VRTextVisualizer::visualizeTextInWorld(const unsigned int id, const HomogenousMatrix4& world_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& workaroundTimestamp, const std::string& fontName)
+inline void VRTextVisualizer::visualizeTextInWorld(const unsigned int id, const HomogenousMatrix4& world_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& workaroundTimestamp, const std::string& fontName, const RGBAColor& backgroundColor)
 {
-	return visualizeText(id, world_T_text, text, objectSize, workaroundTimestamp, true, fontName);
+	return visualizeText(id, world_T_text, text, objectSize, workaroundTimestamp, true, fontName, backgroundColor);
 }
 
-inline void VRTextVisualizer::visualizeTextInView(const unsigned int id, const HomogenousMatrix4& world_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& workaroundTimestamp, const std::string& fontName)
+inline void VRTextVisualizer::visualizeTextInView(const unsigned int id, const HomogenousMatrix4& world_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& workaroundTimestamp, const std::string& fontName, const RGBAColor& backgroundColor)
 {
-	return visualizeText(id, world_T_text, text, objectSize, workaroundTimestamp, false, fontName);
+	return visualizeText(id, world_T_text, text, objectSize, workaroundTimestamp, false, fontName, backgroundColor);
 }
 
 }

@@ -35,7 +35,7 @@ namespace Quest
 namespace Application
 {
 
-void VRTextVisualizer::visualizeText(const unsigned int id, const HomogenousMatrix4& reference_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& /*workaroundTimestamp*/, const bool referenceIsWorld, const std::string& fontName)
+void VRTextVisualizer::visualizeText(const unsigned int id, const HomogenousMatrix4& reference_T_text, const std::string& text, const ObjectSize& objectSize, const Timestamp& /*workaroundTimestamp*/, const bool referenceIsWorld, const std::string& fontName, const RGBAColor& backgroundColor)
 {
 	ocean_assert(engine_ && framebuffer_);
 	if (!engine_ && !framebuffer_)
@@ -170,10 +170,17 @@ void VRTextVisualizer::visualizeText(const unsigned int id, const HomogenousMatr
 
 	ocean_assert(validInput);
 
-	const FrameType::PixelFormat pixelFormat = FrameType::FORMAT_RGB24;
+	const FrameType::PixelFormat pixelFormat = FrameType::FORMAT_RGBA32;
 
 	Frame frame(FrameType(textWidth, textHeight, pixelFormat, FrameType::ORIGIN_UPPER_LEFT));
-	frame.setValue(0x40);
+	
+	const uint8_t r = uint8_t(std::clamp(backgroundColor.red() * 255.0f, 0.0f, 255.0f));
+	const uint8_t g = uint8_t(std::clamp(backgroundColor.green() * 255.0f, 0.0f, 255.0f));
+	const uint8_t b = uint8_t(std::clamp(backgroundColor.blue() * 255.0f, 0.0f, 255.0f));
+	const uint8_t a = uint8_t(std::clamp(backgroundColor.alpha() * 255.0f, 0.0f, 255.0f));
+	
+	const Frame::PixelType<uint8_t, 4u> rgbaPixel({r, g, b, a});
+	frame.setValue<uint8_t, 4u>(rgbaPixel);
 
 	if (font)
 	{
