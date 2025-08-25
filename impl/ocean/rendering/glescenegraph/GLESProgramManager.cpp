@@ -74,7 +74,7 @@ const char* GLESProgramManager::partTwoTexturesLookupY_UV12ToRGBA32_ =
 		const OCEAN_LOWP mat3 colorTransform = mat3(1, 1, 1, 0, -0.39465, 2.03211, 1.13983, -0.58060, 0);
 		const OCEAN_LOWP vec3 colorCorrection = vec3(0.0625, 0.5, 0.5);
 
-		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransform * (vec3(texture(TEXTURE_PRIMARY, vTextureCoordinate).r, texture(TEXTURE_SECONDARY, vTextureCoordinate).OCEAN_TEXTURE_TWO_CHANNELS_FIRST, texture(TEXTURE_SECONDARY, vTextureCoordinate).OCEAN_TEXTURE_TWO_CHANNELS_SECOND) - colorCorrection), 1.0)
+		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransform * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_FIRST, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_SECOND) - colorCorrection), 1.0)
 	)SHADER";
 
 const char* GLESProgramManager::partTwoTexturesLookupY_VU12ToRGBA32_ =
@@ -82,7 +82,7 @@ const char* GLESProgramManager::partTwoTexturesLookupY_VU12ToRGBA32_ =
 		const OCEAN_LOWP mat3 colorTransform = mat3(1, 1, 1, 0, -0.39465, 2.03211, 1.13983, -0.58060, 0);
 		const OCEAN_LOWP vec3 colorCorrection = vec3(0.0625, 0.5, 0.5);
 
-		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransform * (vec3(texture(TEXTURE_PRIMARY, vTextureCoordinate).r, texture(TEXTURE_SECONDARY, vTextureCoordinate).OCEAN_TEXTURE_TWO_CHANNELS_SECOND, texture(TEXTURE_SECONDARY, vTextureCoordinate).OCEAN_TEXTURE_TWO_CHANNELS_FIRST) - colorCorrection), 1.0)
+		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransform * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_SECOND, texture(TEXTURE_SECONDARY, TEXTURE_COORDINATE).OCEAN_TEXTURE_TWO_CHANNELS_FIRST) - colorCorrection), 1.0)
 	)SHADER";
 
 const char* GLESProgramManager::partTwoTexturesLookupY_U_V12ToRGBA32_ =
@@ -90,7 +90,7 @@ const char* GLESProgramManager::partTwoTexturesLookupY_U_V12ToRGBA32_ =
 		const OCEAN_LOWP mat3 colorTransform = mat3(1, 1, 1, 0, -0.39465, 2.03211, 1.13983, -0.58060, 0);
 		const OCEAN_LOWP vec3 colorCorrection = vec3(0.0625, 0.5, 0.5);
 
-		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransform * (vec3(texture(TEXTURE_PRIMARY, vTextureCoordinate).r, texture(TEXTURE_SECONDARY, vec2(vTextureCoordinate.x, vTextureCoordinate.y * 0.5)).OCEAN_TEXTURE_TWO_CHANNELS_FIRST, texture(TEXTURE_SECONDARY, vec2(vTextureCoordinate.x, vTextureCoordinate.y * 0.5 + 0.5)).OCEAN_TEXTURE_TWO_CHANNELS_FIRST) - colorCorrection), 1.0)
+		#define OCEAN_TWO_TEXTURES_LOOKUP_TO_RGBA(TEXTURE_PRIMARY, TEXTURE_SECONDARY, TEXTURE_COORDINATE) vec4(colorTransform * (vec3(texture(TEXTURE_PRIMARY, TEXTURE_COORDINATE).r, texture(TEXTURE_SECONDARY, vec2(TEXTURE_COORDINATE.x, TEXTURE_COORDINATE.y * 0.5)).OCEAN_TEXTURE_TWO_CHANNELS_FIRST, texture(TEXTURE_SECONDARY, vec2(TEXTURE_COORDINATE.x, TEXTURE_COORDINATE.y * 0.5 + 0.5)).OCEAN_TEXTURE_TWO_CHANNELS_FIRST) - colorCorrection), 1.0)
 	)SHADER";
 
 
