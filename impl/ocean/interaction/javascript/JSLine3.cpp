@@ -64,19 +64,19 @@ void JSBase::constructor<Line3>(Line3& thisValue, const v8::FunctionCallbackInfo
 }
 
 template <>
-void JSBase::propertyGetter<Line3, JSLine3::AI_POINT>(Line3& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Line3, JSLine3::AI_POINT>(Line3& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(createObject<JSVector3>(thisValue.point(), JSContext::currentContext()));
 }
 
 template <>
-void JSBase::propertyGetter<Line3, JSLine3::AI_DIRECTION>(Line3& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Line3, JSLine3::AI_DIRECTION>(Line3& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(createObject<JSVector3>(thisValue.direction(), JSContext::currentContext()));
 }
 
 template <>
-void JSBase::propertySetter<Line3, JSLine3::AI_POINT>(Line3& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Line3, JSLine3::AI_POINT>(Line3& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Vector3 vectorValue;
 	if (isValue(value, vectorValue))
@@ -90,7 +90,7 @@ void JSBase::propertySetter<Line3, JSLine3::AI_POINT>(Line3& thisValue, v8::Loca
 }
 
 template <>
-void JSBase::propertySetter<Line3, JSLine3::AI_DIRECTION>(Line3& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Line3, JSLine3::AI_DIRECTION>(Line3& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Vector3 vectorValue;
 	if (isValue(value, vectorValue))

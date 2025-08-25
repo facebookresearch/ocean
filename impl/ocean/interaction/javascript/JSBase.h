@@ -186,7 +186,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSBase
 		 * @tparam tGetterId The unique id of the getter, unique in combination with `T`
 		 */
 		template <typename T, unsigned int tGetterId>
-		static inline void propertyGetter(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info);
+		static inline void propertyGetter(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info);
 
 		/**
 		 * The specialized callback function for all JavaScript getters of wrapped C++ objects.
@@ -198,7 +198,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSBase
 		 * @tparam tGetterId The unique id of the getter
 		 */
 		template <typename TNative, unsigned int tGetterId>
-		static void propertyGetter(TNative& thisValue, v8::Local<v8::String>& property, const v8::PropertyCallbackInfo<v8::Value>& info);
+		static void propertyGetter(TNative& thisValue, v8::Local<v8::Name>& property, const v8::PropertyCallbackInfo<v8::Value>& info);
 
 		/**
 		 * The callback function for all JavaScript setters of wrapped C++ objects.
@@ -209,7 +209,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSBase
 		 * @tparam tSetterId The unique id of the setter, unique in combination with `T`
 		 */
 		template <typename T, unsigned int tSetterId>
-		static inline void propertySetter(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
+		static inline void propertySetter(v8::Local<v8::Name> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
 
 		/**
 		 * The specialized callback function for all JavaScript setters of wrapped C++ objects.
@@ -222,7 +222,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSBase
 		 * @tparam tSetterId The unique id of the setter
 		 */
 		template <typename TNative, unsigned int tSetterId>
-		static void propertySetter(TNative& thisValue, v8::Local<v8::String>& property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
+		static void propertySetter(TNative& thisValue, v8::Local<v8::Name>& property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info);
 
 		/**
 		 * The callback function for all JavaScript functions of wrapped C++ objects.
@@ -456,10 +456,12 @@ inline void JSBase::constructor(const v8::FunctionCallbackInfo<v8::Value>& info)
 }
 
 template <typename T, unsigned int tFunctionId>
-inline void JSBase::propertyGetter(v8::Local<v8::String> property, const v8::PropertyCallbackInfo<v8::Value>& info)
+inline void JSBase::propertyGetter(v8::Local<v8::Name> property, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	ocean_assert(info.Holder()->InternalFieldCount() == 1);
-	const v8::Local<v8::External> thisWrapper(v8::Local<v8::External>::Cast(info.Holder()->GetInternalField(0)));
+	v8::Local<v8::Data> internalField = info.Holder()->GetInternalField(0);
+	v8::Local<v8::Value> valueField = v8::Local<v8::Value>::Cast(internalField);
+	const v8::Local<v8::External> thisWrapper = v8::Local<v8::External>::Cast(valueField);
 
 	JSExternal* thisExternal = static_cast<JSExternal*>(thisWrapper->Value());
 	ocean_assert(thisExternal->type() == JSExternal::type<T>());
@@ -468,12 +470,14 @@ inline void JSBase::propertyGetter(v8::Local<v8::String> property, const v8::Pro
 }
 
 template <typename T, unsigned int tFunctionId>
-inline void JSBase::propertySetter(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info)
+inline void JSBase::propertySetter(v8::Local<v8::Name> property, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& info)
 {
 	ocean_assert(value.IsEmpty() == false);
 	ocean_assert(info.Holder()->InternalFieldCount() == 1);
 
-	const v8::Local<v8::External> thisWrapper(v8::Local<v8::External>::Cast(info.Holder()->GetInternalField(0)));
+	v8::Local<v8::Data> internalField = info.Holder()->GetInternalField(0);
+	v8::Local<v8::Value> valueField = v8::Local<v8::Value>::Cast(internalField);
+	const v8::Local<v8::External> thisWrapper = v8::Local<v8::External>::Cast(valueField);
 
 	JSExternal* thisExternal = static_cast<JSExternal*>(thisWrapper->Value());
 	ocean_assert(thisExternal->type() == JSExternal::type<T>());
@@ -485,7 +489,9 @@ template <typename T, unsigned int tFunctionId>
 inline void JSBase::function(const v8::FunctionCallbackInfo<v8::Value>& info)
 {
 	ocean_assert(info.This()->InternalFieldCount() == 1);
-	v8::Local<v8::External> thisWrapper(v8::Local<v8::External>::Cast(info.This()->GetInternalField(0)));
+	v8::Local<v8::Data> internalField = info.This()->GetInternalField(0);
+	v8::Local<v8::Value> valueField = v8::Local<v8::Value>::Cast(internalField);
+	v8::Local<v8::External> thisWrapper = v8::Local<v8::External>::Cast(valueField);
 
 	JSExternal* thisExternal = static_cast<JSExternal*>(thisWrapper->Value());
 	ocean_assert(thisExternal->type() == JSExternal::type<T>());

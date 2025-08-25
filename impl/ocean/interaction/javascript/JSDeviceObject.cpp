@@ -216,7 +216,7 @@ void JSBase::constructor<JSDevice>(JSDevice& /*thisValue*/, const v8::FunctionCa
 }
 
 template <>
-void JSBase::propertyGetter<JSDevice, JSDeviceObject::AI_NAME>(JSDevice& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<JSDevice, JSDeviceObject::AI_NAME>(JSDevice& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	if (thisValue.device().isNull())
 	{
@@ -229,7 +229,7 @@ void JSBase::propertyGetter<JSDevice, JSDeviceObject::AI_NAME>(JSDevice& thisVal
 }
 
 template <>
-void JSBase::propertyGetter<JSDevice, JSDeviceObject::AI_LIBRARY>(JSDevice& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<JSDevice, JSDeviceObject::AI_LIBRARY>(JSDevice& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	if (thisValue.device().isNull())
 	{

@@ -59,7 +59,7 @@ void JSBase::constructor<Rendering::EngineRef>(Rendering::EngineRef& thisValue, 
 }
 
 template <>
-void JSBase::propertyGetter<Rendering::EngineRef, JSRenderingEngine::AI_NAME>(Rendering::EngineRef& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Rendering::EngineRef, JSRenderingEngine::AI_NAME>(Rendering::EngineRef& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	if (thisValue.isNull())
 	{

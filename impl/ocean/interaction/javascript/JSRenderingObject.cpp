@@ -201,7 +201,7 @@ void JSBase::constructor<Rendering::ObjectRef>(Rendering::ObjectRef& thisValue, 
 }
 
 template <>
-void JSBase::propertyGetter<Rendering::ObjectRef, JSRenderingObject::AI_NAME>(Rendering::ObjectRef& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Rendering::ObjectRef, JSRenderingObject::AI_NAME>(Rendering::ObjectRef& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	if (thisValue.isNull())
 	{
@@ -214,7 +214,7 @@ void JSBase::propertyGetter<Rendering::ObjectRef, JSRenderingObject::AI_NAME>(Re
 }
 
 template <>
-void JSBase::propertyGetter<Rendering::ObjectRef, JSRenderingObject::AI_TYPE>(Rendering::ObjectRef& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Rendering::ObjectRef, JSRenderingObject::AI_TYPE>(Rendering::ObjectRef& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	if (thisValue.isNull())
 	{
@@ -471,7 +471,7 @@ void JSBase::propertyGetter<Rendering::ObjectRef, JSRenderingObject::AI_TYPE>(Re
 }
 
 template <>
-void JSBase::propertySetter<Rendering::ObjectRef, JSRenderingObject::AI_NAME>(Rendering::ObjectRef& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Rendering::ObjectRef, JSRenderingObject::AI_NAME>(Rendering::ObjectRef& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	if (thisValue.isNull())
 	{

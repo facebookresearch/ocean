@@ -66,7 +66,7 @@ void JSBase::constructor<Devices::Measurement::SampleRef>(Devices::Measurement::
 }
 
 template <>
-void JSBase::propertyGetter<Devices::Measurement::SampleRef, JSDeviceSample::AI_TIMESTAMP>(Devices::Measurement::SampleRef& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Devices::Measurement::SampleRef, JSDeviceSample::AI_TIMESTAMP>(Devices::Measurement::SampleRef& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	if (thisValue)
 	{
@@ -79,7 +79,7 @@ void JSBase::propertyGetter<Devices::Measurement::SampleRef, JSDeviceSample::AI_
 }
 
 template <>
-void JSBase::propertyGetter<Devices::Measurement::SampleRef, JSDeviceSample::AI_SIZE>(Devices::Measurement::SampleRef& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Devices::Measurement::SampleRef, JSDeviceSample::AI_SIZE>(Devices::Measurement::SampleRef& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	if (thisValue)
 	{

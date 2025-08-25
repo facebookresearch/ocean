@@ -45,7 +45,8 @@ JSExternal* JSExternal::external(const v8::Local<v8::Value>& value)
 		return nullptr;
 	}
 
-	const v8::Local<v8::Value> internalField(object->GetInternalField(0));
+	const v8::Local<v8::Data> internalFieldData(object->GetInternalField(0));
+	const v8::Local<v8::Value> internalField = v8::Local<v8::Value>::Cast(internalFieldData);
 	if (internalField->IsObject() == false)
 	{
 		return nullptr;
@@ -68,7 +69,8 @@ JSExternal* JSExternal::external(const v8::Local<v8::Object>& object)
 		return nullptr;
 	}
 
-	const v8::Local<v8::Value> internalField(object->GetInternalField(0));
+	const v8::Local<v8::Data> internalFieldData(object->GetInternalField(0));
+	const v8::Local<v8::Value> internalField = v8::Local<v8::Value>::Cast(internalFieldData);
 	if (internalField->IsObject() == false)
 	{
 		return nullptr;

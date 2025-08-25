@@ -128,31 +128,31 @@ void JSBase::constructor<Quaternion>(Quaternion& thisValue, const v8::FunctionCa
 }
 
 template <>
-void JSBase::propertyGetter<Quaternion, JSQuaternion::AI_X>(Quaternion& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Quaternion, JSQuaternion::AI_X>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.x()));
 }
 
 template <>
-void JSBase::propertyGetter<Quaternion, JSQuaternion::AI_Y>(Quaternion& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Quaternion, JSQuaternion::AI_Y>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.y()));
 }
 
 template <>
-void JSBase::propertyGetter<Quaternion, JSQuaternion::AI_Z>(Quaternion& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Quaternion, JSQuaternion::AI_Z>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.z()));
 }
 
 template <>
-void JSBase::propertyGetter<Quaternion, JSQuaternion::AI_W>(Quaternion& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Quaternion, JSQuaternion::AI_W>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.w()));
 }
 
 template <>
-void JSBase::propertySetter<Quaternion, JSQuaternion::AI_X>(Quaternion& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Quaternion, JSQuaternion::AI_X>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
@@ -166,7 +166,7 @@ void JSBase::propertySetter<Quaternion, JSQuaternion::AI_X>(Quaternion& thisValu
 }
 
 template <>
-void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Y>(Quaternion& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Y>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
@@ -180,7 +180,7 @@ void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Y>(Quaternion& thisValu
 }
 
 template <>
-void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Z>(Quaternion& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Z>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
@@ -194,7 +194,7 @@ void JSBase::propertySetter<Quaternion, JSQuaternion::AI_Z>(Quaternion& thisValu
 }
 
 template <>
-void JSBase::propertySetter<Quaternion, JSQuaternion::AI_W>(Quaternion& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Quaternion, JSQuaternion::AI_W>(Quaternion& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))

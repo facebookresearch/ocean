@@ -92,7 +92,7 @@ void JSMediaObject::createFunctionTemplate()
 }
 
 template <>
-void JSBase::propertyGetter<Media::MediumRef, JSMediaObject::AI_URL>(Media::MediumRef& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Media::MediumRef, JSMediaObject::AI_URL>(Media::MediumRef& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	if (thisValue)
 	{

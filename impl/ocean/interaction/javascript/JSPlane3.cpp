@@ -95,19 +95,19 @@ void JSBase::constructor<Plane3>(Plane3& thisValue, const v8::FunctionCallbackIn
 }
 
 template <>
-void JSBase::propertyGetter<Plane3, JSPlane3::AI_NORMAL>(Plane3& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Plane3, JSPlane3::AI_NORMAL>(Plane3& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(createObject<JSVector3>(thisValue.normal(), JSContext::currentContext()));
 }
 
 template <>
-void JSBase::propertyGetter<Plane3, JSPlane3::AI_DISTANCE>(Plane3& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Plane3, JSPlane3::AI_DISTANCE>(Plane3& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.distance()));
 }
 
 template <>
-void JSBase::propertySetter<Plane3, JSPlane3::AI_NORMAL>(Plane3& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Plane3, JSPlane3::AI_NORMAL>(Plane3& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Vector3 vectorValue;
 	if (isValue(value, vectorValue))
@@ -118,7 +118,7 @@ void JSBase::propertySetter<Plane3, JSPlane3::AI_NORMAL>(Plane3& thisValue, v8::
 		}
 		else
 		{
-			Log::error() << "Plane3::normal property accepts unit vectors only.";
+			Log::error() << "The normal property of a Plane3 object accepts unit vectors only.";
 		}
 	}
 	else
@@ -128,7 +128,7 @@ void JSBase::propertySetter<Plane3, JSPlane3::AI_NORMAL>(Plane3& thisValue, v8::
 }
 
 template <>
-void JSBase::propertySetter<Plane3, JSPlane3::AI_DISTANCE>(Plane3& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Plane3, JSPlane3::AI_DISTANCE>(Plane3& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Scalar scalarValue;
 	if (isValue(value, scalarValue))

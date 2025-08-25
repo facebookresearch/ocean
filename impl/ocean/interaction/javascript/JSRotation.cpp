@@ -129,37 +129,37 @@ void JSBase::constructor<Rotation>(Rotation& thisValue, const v8::FunctionCallba
 }
 
 template <>
-void JSBase::propertyGetter<Rotation, JSRotation::AI_X>(Rotation& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Rotation, JSRotation::AI_X>(Rotation& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.axis().x()));
 }
 
 template <>
-void JSBase::propertyGetter<Rotation, JSRotation::AI_Y>(Rotation& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Rotation, JSRotation::AI_Y>(Rotation& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.axis().y()));
 }
 
 template <>
-void JSBase::propertyGetter<Rotation, JSRotation::AI_Z>(Rotation& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Rotation, JSRotation::AI_Z>(Rotation& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.axis().z()));
 }
 
 template <>
-void JSBase::propertyGetter<Rotation, JSRotation::AI_AXIS>(Rotation& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Rotation, JSRotation::AI_AXIS>(Rotation& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(createObject<JSVector3>(thisValue.axis(), JSContext::currentContext()));
 }
 
 template <>
-void JSBase::propertyGetter<Rotation, JSRotation::AI_A>(Rotation& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Rotation, JSRotation::AI_A>(Rotation& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.angle()));
 }
 
 template <>
-void JSBase::propertyGetter<Rotation, JSRotation::AI_ANGLE>(Rotation& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Rotation, JSRotation::AI_ANGLE>(Rotation& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.angle()));
 }

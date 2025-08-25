@@ -118,25 +118,25 @@ void JSBase::constructor<Euler>(Euler& thisValue, const v8::FunctionCallbackInfo
 }
 
 template <>
-void JSBase::propertyGetter<Euler, JSEuler::AI_YAW>(Euler& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Euler, JSEuler::AI_YAW>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.yaw()));
 }
 
 template <>
-void JSBase::propertyGetter<Euler, JSEuler::AI_PITCH>(Euler& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Euler, JSEuler::AI_PITCH>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.pitch()));
 }
 
 template <>
-void JSBase::propertyGetter<Euler, JSEuler::AI_ROLL>(Euler& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Euler, JSEuler::AI_ROLL>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.roll()));
 }
 
 template <>
-void JSBase::propertySetter<Euler, JSEuler::AI_YAW>(Euler& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Euler, JSEuler::AI_YAW>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
@@ -150,7 +150,7 @@ void JSBase::propertySetter<Euler, JSEuler::AI_YAW>(Euler& thisValue, v8::Local<
 }
 
 template <>
-void JSBase::propertySetter<Euler, JSEuler::AI_PITCH>(Euler& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Euler, JSEuler::AI_PITCH>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
@@ -164,7 +164,7 @@ void JSBase::propertySetter<Euler, JSEuler::AI_PITCH>(Euler& thisValue, v8::Loca
 }
 
 template <>
-void JSBase::propertySetter<Euler, JSEuler::AI_ROLL>(Euler& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Euler, JSEuler::AI_ROLL>(Euler& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))

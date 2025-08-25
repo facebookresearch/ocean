@@ -60,19 +60,19 @@ void JSBase::constructor<Vector2>(Vector2& thisValue, const v8::FunctionCallback
 }
 
 template <>
-void JSBase::propertyGetter<Vector2, JSVector2::AI_X>(Vector2& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Vector2, JSVector2::AI_X>(Vector2& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.x()));
 }
 
 template <>
-void JSBase::propertyGetter<Vector2, JSVector2::AI_Y>(Vector2& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<Vector2, JSVector2::AI_Y>(Vector2& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	info.GetReturnValue().Set(double(thisValue.y()));
 }
 
 template <>
-void JSBase::propertySetter<Vector2, JSVector2::AI_X>(Vector2& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Vector2, JSVector2::AI_X>(Vector2& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))
@@ -86,7 +86,7 @@ void JSBase::propertySetter<Vector2, JSVector2::AI_X>(Vector2& thisValue, v8::Lo
 }
 
 template <>
-void JSBase::propertySetter<Vector2, JSVector2::AI_Y>(Vector2& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<Vector2, JSVector2::AI_Y>(Vector2& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	Scalar numberValue;
 	if (isValue(value, numberValue))

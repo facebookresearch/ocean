@@ -77,7 +77,7 @@ void JSBase::constructor<SceneDescription::NodeRef>(SceneDescription::NodeRef& t
 }
 
 template <>
-void JSBase::propertyGetter<SceneDescription::NodeRef, JSSceneDescriptionNode::AI_NAME>(SceneDescription::NodeRef& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<SceneDescription::NodeRef, JSSceneDescriptionNode::AI_NAME>(SceneDescription::NodeRef& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	if (thisValue)
 	{
@@ -89,7 +89,7 @@ void JSBase::propertyGetter<SceneDescription::NodeRef, JSSceneDescriptionNode::A
 }
 
 template <>
-void JSBase::propertyGetter<SceneDescription::NodeRef, JSSceneDescriptionNode::AI_TYPE>(SceneDescription::NodeRef& thisValue, v8::Local<v8::String>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
+void JSBase::propertyGetter<SceneDescription::NodeRef, JSSceneDescriptionNode::AI_TYPE>(SceneDescription::NodeRef& thisValue, v8::Local<v8::Name>& /*property*/, const v8::PropertyCallbackInfo<v8::Value>& info)
 {
 	if (thisValue)
 	{
@@ -102,7 +102,7 @@ void JSBase::propertyGetter<SceneDescription::NodeRef, JSSceneDescriptionNode::A
 }
 
 template <>
-void JSBase::propertySetter<SceneDescription::NodeRef, JSSceneDescriptionNode::AI_NAME>(SceneDescription::NodeRef& thisValue, v8::Local<v8::String>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
+void JSBase::propertySetter<SceneDescription::NodeRef, JSSceneDescriptionNode::AI_NAME>(SceneDescription::NodeRef& thisValue, v8::Local<v8::Name>& /*property*/, v8::Local<v8::Value> value, const v8::PropertyCallbackInfo<void>& /*info*/)
 {
 	if (thisValue)
 	{
