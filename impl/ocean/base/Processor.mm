@@ -17,16 +17,6 @@
 namespace Ocean
 {
 
-unsigned int Processor::realCoresApple()
-{
-	const NSInteger cores = [[NSProcessInfo processInfo] processorCount];
-
-	static_assert(sizeof(NSInteger) >= sizeof(unsigned int), "Invalid data type!");
-	ocean_assert(cores > 0 && cores < (NSInteger)std::numeric_limits<unsigned int>::max());
-
-	return (unsigned int)cores;
-}
-
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE==1
 
 std::string Processor::deviceModelAppleIOS()
