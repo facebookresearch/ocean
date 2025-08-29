@@ -47,17 +47,17 @@ class OCEAN_DEVICES_SLAM_EXPORT SLAMTracker6DOF :
 		/**
 		 * Definition of a pair holding a camera pose and image point.
 		 */
-		typedef std::pair<HomogenousMatrix4, Vector2> Observation;
+		using Observation = std::pair<HomogenousMatrix4, Vector2>;
 
 		/**
 		 * Definition of a vector holding observations.
 		 */
-		typedef std::vector<Observation> Observations;
+		using Observations = std::vector<Observation>;
 
 		/**
 		 * Definition of a vector holding observation groups.
 		 */
-		typedef std::vector<Observations> ObservationGroups;
+		using ObservationGroups = std::vector<Observations>;
 
 	public:
 
@@ -117,10 +117,10 @@ class OCEAN_DEVICES_SLAM_EXPORT SLAMTracker6DOF :
 
 		/**
 		 * Posts a new camera pose.
-		 * @param pose The camera pose to post
+		 * @param world_T_camera The camera pose to post, must be valid
 		 * @param timestamp The timestamp of the frame to which the pose belongs
 		 */
-		void postPose(const HomogenousMatrix4& pose, const Timestamp& timestamp);
+		void postPose(const HomogenousMatrix4& world_T_camera, const Timestamp& timestamp);
 
 		/**
 		 * Determines feature points in a given camera frame, scatters the feature points into individual bins while (optional) skips bins in which points are located already.
@@ -152,12 +152,12 @@ class OCEAN_DEVICES_SLAM_EXPORT SLAMTracker6DOF :
 		 * @param pinholeCamera The camera profile defining the projection
 		 * @param firstImagePoints The first set of image points, at least 5
 		 * @param secondImagePoints The second set of image points, one image point for each image point in the first set
-		 * @param pose The resulting camera pose of the frame in which the second image points are located (the camera pose of the first frame is expected to be the identity pose)
+		 * @param world_T_camera The resulting camera pose of the frame in which the second image points are located (the camera pose of the first frame is expected to be the identity pose)
 		 * @param objectPoints The resulting object point locations for the image points
 		 * @param validImagePoints The indices of all valid image point correspondences, one index for each resulting object point
 		 * @return True, if succeeded
 		 */
-		static bool determineInitialObjectPoints(const PinholeCamera& pinholeCamera, const Vectors2& firstImagePoints, const Vectors2& secondImagePoints, HomogenousMatrix4& pose, Vectors3& objectPoints, Indices32& validImagePoints);
+		static bool determineInitialObjectPoints(const PinholeCamera& pinholeCamera, const Vectors2& firstImagePoints, const Vectors2& secondImagePoints, HomogenousMatrix4& world_T_camera, Vectors3& objectPoints, Indices32& validImagePoints);
 
 		/**
 		 * Combines three groups of image points to one large set of image points.
@@ -195,7 +195,7 @@ class OCEAN_DEVICES_SLAM_EXPORT SLAMTracker6DOF :
 		 * @param pose The most recent camera pose, must be valid
 		 * @param observationGroups The groups of observations which provide candidates for new 3D object points
 		 */
-		static void extractUnlocatedImagePoints(const Vectors2& combinedImagePoints, const size_t numberLocatedPreviousImagePoints, const Indices32& validIndices, const HomogenousMatrix4& pose, ObservationGroups& observationGroups);
+		static void extractUnlocatedImagePoints(const Vectors2& combinedImagePoints, const size_t numberLocatedPreviousImagePoints, const Indices32& validIndices, const HomogenousMatrix4& world_T_camera, ObservationGroups& observationGroups);
 
 		/**
 		 * Extends the tracking database by determining the locations of 3D object points based on the observations in several individual camera frames.
@@ -255,7 +255,7 @@ class OCEAN_DEVICES_SLAM_EXPORT SLAMTracker6DOF :
 		CV::FramePyramid previousFramePyramid_;
 
 		/// The recent camera pose.
-		HomogenousMatrix4 previousPose_ = HomogenousMatrix4(false);
+		HomogenousMatrix4 world_T_previousCamera_ = HomogenousMatrix4(false);
 
 		/// The observation groups of feature point candidates.
 		ObservationGroups observationGroups_;
