@@ -4725,10 +4725,10 @@ bool Solver3::updateDatabaseToRotationalMotion(Database& database, const Pinhole
 					ocean_assert(false && "This should never happen - however, we take the default rotation");
 				}
 
-				SquareMatrix3 optimizedOrientation(false);
-				if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, orientation, relocatedObjectPoints, relocatedImagePoints, optimizedOrientation, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5)))
+				Quaternion optimizedOrientation(false);
+				if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, Quaternion(orientation), relocatedObjectPoints, relocatedImagePoints, optimizedOrientation, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5)))
 				{
-					ocean_assert(!optimizedOrientation.isSingular());
+					ocean_assert(optimizedOrientation.isValid());
 
 					database.setPose<false>(frameIndex, HomogenousMatrix4(optimizedOrientation));
 

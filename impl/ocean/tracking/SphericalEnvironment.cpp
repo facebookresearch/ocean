@@ -473,29 +473,31 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 		ocean_assert(!previousOrientation_.isSingular());
 		Vectors3 previousObjectPoints(Geometry::Utilities::createObjectPoints(previousCamera_, HomogenousMatrix4(previousOrientation_), ConstArrayAccessor<Vector2>(previousImagePoints), previousCamera_.hasDistortionParameters(), 10));
 
-		SquareMatrix3 optimizedOrientation;
+		Quaternion optimizedOrientation(false);
 
 		// determine orientation for the current frame (and optional optimize the camera profile
 		if (optimizeCamera)
 		{
 			PinholeCamera internalOptimizedCamera;
-			if (!Geometry::NonLinearOptimizationOrientation::optimizeCameraOrientation(currentCamera, previousOrientation_, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), true, optimizedOrientation, internalOptimizedCamera, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
+			SquareMatrix3 internalOptimizedOrientation;
+			if (!Geometry::NonLinearOptimizationOrientation::optimizeCameraOrientation(currentCamera, previousOrientation_, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), true, internalOptimizedOrientation, internalOptimizedCamera, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
 			{
 				return false;
 			}
 
 			currentCamera = internalOptimizedCamera;
+			optimizedOrientation = Quaternion(internalOptimizedOrientation);
 		}
 		else
 		{
-			if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(AnyCameraPinhole(currentCamera), previousOrientation_, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), optimizedOrientation, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
+			if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(AnyCameraPinhole(currentCamera), Quaternion(previousOrientation_), ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), optimizedOrientation, 20u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
 			{
 				return false;
 			}
 		}
 
 		// now we have a valid orientation for the current frame
-		SquareMatrix3 currentOrientation = optimizedOrientation;
+		SquareMatrix3 currentOrientation = SquareMatrix3(optimizedOrientation);
 
 		Frame correspondingPanoramaFrame(frame.frameType());
 		Frame correspondingPanoramaMask(FrameType(frame, FrameType::FORMAT_Y8));
@@ -525,23 +527,25 @@ bool SphericalEnvironment::extendEnvironment(const PinholeCamera& pinholeCamera,
 		if (optimizeCamera)
 		{
 			PinholeCamera internalOptimizedCamera;
-			if (!Geometry::NonLinearOptimizationOrientation::optimizeCameraOrientation(currentCamera, currentOrientation, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), true, optimizedOrientation, internalOptimizedCamera, 50u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
+			SquareMatrix3 internalOptimizedOrientation;
+			if (!Geometry::NonLinearOptimizationOrientation::optimizeCameraOrientation(currentCamera, currentOrientation, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), true, internalOptimizedOrientation, internalOptimizedCamera, 50u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
 			{
 				return false;
 			}
 
 			currentCamera = internalOptimizedCamera;
+			optimizedOrientation = Quaternion(internalOptimizedOrientation);
 		}
 		else
 		{
-			if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(AnyCameraPinhole(currentCamera), currentOrientation, ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), optimizedOrientation, 50u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
+			if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(AnyCameraPinhole(currentCamera), Quaternion(currentOrientation), ConstArrayAccessor<Vector3>(previousObjectPoints), ConstArrayAccessor<Vector2>(currentImagePoints), optimizedOrientation, 50u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(10)))
 			{
 				return false;
 			}
 		}
 
 		// now we have the highly optimized frame orientation
-		currentOrientation = optimizedOrientation;
+		currentOrientation = SquareMatrix3(optimizedOrientation);
 
 		Frame currentMask;
 		if (frameCallback && !frameCallback(previousFramePyramid_, currentFramePyramid, previousCamera_, currentCamera, previousOrientation_, currentOrientation, maskValue(), currentMask, worker))
@@ -661,10 +665,13 @@ bool SphericalEnvironment::optimizeOrientation(const PinholeCamera& pinholeCamer
 	}
 	else
 	{
-		if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(AnyCameraPinhole(pinholeCamera), orientation, ConstArrayAccessor<Vector3>(referenceObjectPoints), ConstArrayAccessor<Vector2>(frameImagePoints), optimizedOrientation, 20u, estimator, Scalar(0.001), Scalar(10)))
+		Quaternion internalOptimizedOrientation(false);
+		if (!Geometry::NonLinearOptimizationOrientation::optimizeOrientation(AnyCameraPinhole(pinholeCamera), Quaternion(orientation), ConstArrayAccessor<Vector3>(referenceObjectPoints), ConstArrayAccessor<Vector2>(frameImagePoints), internalOptimizedOrientation, 20u, estimator, Scalar(0.001), Scalar(10)))
 		{
 			return false;
 		}
+
+		optimizedOrientation = SquareMatrix3(internalOptimizedOrientation);
 	}
 
 	// if a fine adjustment lookup table is requested

@@ -27,12 +27,12 @@ class NonLinearOptimizationOrientation::OrientationOptimizationProvider : public
 
 		/**
 		 * Creates a new optimization provider object.
-		 * @param camera The camera profile defining the projection, must be valid
+		 * @param camera The camera profile to be used
 		 * @param flippedCamera_R_world Initial inverted and flipped orientation that has to be optimized
 		 * @param objectPoints 3D object points that are projected into the camera frame
 		 * @param imagePoints 2D observation image points, each point corresponds to one object point
 		 */
-		inline OrientationOptimizationProvider(const AnyCamera& camera, SquareMatrix3& flippedCamera_R_world, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints) :
+		inline OrientationOptimizationProvider(const AnyCamera& camera, Quaternion& flippedCamera_R_world, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints) :
 			camera_(camera),
 			flippedCamera_R_world_(flippedCamera_R_world),
 			candidateFlippedCamera_R_world_(flippedCamera_R_world),
@@ -91,12 +91,12 @@ class NonLinearOptimizationOrientation::OrientationOptimizationProvider : public
 		{
 			ocean_assert(deltas.rows() == 3 && deltas.columns() == 1);
 
-			const Pose pose = Pose(Rotation(flippedCamera_R_world_));
+			const ExponentialMap rotation = ExponentialMap(flippedCamera_R_world_);
 
-			const Pose deltaPose(0, 0, 0, deltas(0), deltas(1), deltas(2));
-			const Pose newPose(pose - deltaPose);
+			const ExponentialMap deltaRotation(deltas(0), deltas(1), deltas(2));
+			const ExponentialMap newRotation(rotation - deltaRotation);
 
-			candidateFlippedCamera_R_world_ = newPose.transformation().rotationMatrix();
+			candidateFlippedCamera_R_world_ = newRotation.quaternion();
 		}
 
 		/**
@@ -142,7 +142,7 @@ class NonLinearOptimizationOrientation::OrientationOptimizationProvider : public
 				weightVector.resize(2 * objectPoints_.size(), 1);
 
 				Scalars sqrErrors(objectPoints_.size());
-				Error::determinePoseErrorIF<ConstIndexedAccessor<ObjectPoint>, ConstIndexedAccessor<ImagePoint>, true, true>(HomogenousMatrix4(candidateFlippedCamera_R_world_), camera_, objectPoints_, imagePoints_, weightedErrors, sqrErrors.data());
+				Error::determinePoseErrorIF<ConstIndexedAccessor<ObjectPoint>, ConstIndexedAccessor<ImagePoint>, true, true>(HomogenousMatrix4(candidateFlippedCamera_R_world_), camera_, objectPoints_, imagePoints_,  weightedErrors, sqrErrors.data());
 				return sqrErrors2robustErrors2<tEstimator>(sqrErrors, 3, weightedErrors, (Vector2*)weightVector.data(), transposedInvertedCovariances);
 			}
 		}
@@ -161,10 +161,10 @@ class NonLinearOptimizationOrientation::OrientationOptimizationProvider : public
 		const AnyCamera& camera_;
 
 		/// Inverted and flipped pose that will be optimized.
-		SquareMatrix3& flippedCamera_R_world_;
+		Quaternion& flippedCamera_R_world_;
 
 		/// Intermediate inverted and flipped pose that stores the most recent optimization result as candidate.
-		SquareMatrix3 candidateFlippedCamera_R_world_;
+		Quaternion candidateFlippedCamera_R_world_;
 
 		/// The 3D object points that are used for the optimization.
 		const ConstIndexedAccessor<ObjectPoint>& objectPoints_;
@@ -173,16 +173,14 @@ class NonLinearOptimizationOrientation::OrientationOptimizationProvider : public
 		const ConstIndexedAccessor<ImagePoint>& imagePoints_;
 };
 
-bool NonLinearOptimizationOrientation::optimizeOrientationIF(const AnyCamera& camera, const SquareMatrix3& flippedCamera_R_world, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, SquareMatrix3& optimizedFlippedCamera_R_world, const unsigned int iterations, const Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances, Scalars* intermediateErrors)
+bool NonLinearOptimizationOrientation::optimizeOrientationIF(const AnyCamera& camera, const Quaternion& flippedCamera_R_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, Quaternion& optimizedFlippedCamera_R_world, const unsigned int iterations, const Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances, Scalars* intermediateErrors)
 {
-	ocean_assert(camera.isValid());
-	ocean_assert(!flippedCamera_R_world.isSingular());
+	ocean_assert(camera.isValid() && flippedCamera_R_world.isValid());
 	ocean_assert(&flippedCamera_R_world != &optimizedFlippedCamera_R_world);
 
 	optimizedFlippedCamera_R_world = flippedCamera_R_world;
 
 	OrientationOptimizationProvider provider(camera, optimizedFlippedCamera_R_world, objectPoints, imagePoints);
-
 	return denseOptimization<OrientationOptimizationProvider>(provider, iterations, estimator, lambda, lambdaFactor, initialError, finalError, invertedCovariances, intermediateErrors);
 }
 

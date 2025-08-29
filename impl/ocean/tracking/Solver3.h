@@ -2308,12 +2308,12 @@ inline SquareMatrix3 Solver3::determineOrientation(const AnyCamera& camera, Rand
 		return SquareMatrix3(false);
 	}
 
-	SquareMatrix3 currentOrientation(false);
+	Quaternion currentOrientation(false);
 	if (!previousOrientation.isNull())
 	{
 		if (minimalValidCorrespondenceRatio < 1)
 		{
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, ConstIndexedAccessorSubsetAccessor<Vector3, unsigned int>(objectPoints, internalValidIndices), ConstIndexedAccessorSubsetAccessor<Vector2, unsigned int>(imagePoints, internalValidIndices), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, Quaternion(previousOrientation), ConstIndexedAccessorSubsetAccessor<Vector3, unsigned int>(objectPoints, internalValidIndices), ConstIndexedAccessorSubsetAccessor<Vector2, unsigned int>(imagePoints, internalValidIndices), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
 
 			if (validIndices != nullptr)
 			{
@@ -2322,7 +2322,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const AnyCamera& camera, Rand
 		}
 		else
 		{
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, objectPoints, imagePoints, currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, Quaternion(previousOrientation), objectPoints, imagePoints, currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError);
 
 			if (validIndices != nullptr)
 			{
@@ -2331,7 +2331,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const AnyCamera& camera, Rand
 		}
 	}
 
-	return currentOrientation;
+	return SquareMatrix3(currentOrientation);
 }
 
 inline SquareMatrix3 Solver3::determineOrientation(const AnyCamera& camera, RandomGenerator& randomGenerator, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const size_t priorityCorrespondences, const SquareMatrix3& roughOrientation, const Geometry::Estimator::EstimatorType estimator, const Scalar minimalValidCorrespondenceRatio, const Scalar maximalSqrError, Scalar* finalRobustError)
@@ -2366,7 +2366,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const AnyCamera& camera, Rand
 	ocean_assert(priorityInvertedCovariance == Geometry::Utilities::covarianceMatrix(Vector2(1, 0), 1, Vector2(0, 1), 1).inverted());
 	ocean_assert(remainingInvertedCovariance == Geometry::Utilities::covarianceMatrix(Vector2(1, 0), sigmaRemaining, Vector2(0, 1), sigmaRemaining).inverted());
 
-	SquareMatrix3 currentOrientation(false);
+	Quaternion currentOrientation(false);
 	if (!previousOrientation.isNull())
 	{
 		if (minimalValidCorrespondenceRatio < 1)
@@ -2396,7 +2396,7 @@ inline SquareMatrix3 Solver3::determineOrientation(const AnyCamera& camera, Rand
 				subsetImagePoints.push_back(imagePoints[index]);
 			}
 
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, ConstArrayAccessor<Vector3>(subsetObjectPoints), ConstArrayAccessor<Vector2>(subsetImagePoints), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, Quaternion(previousOrientation), ConstArrayAccessor<Vector3>(subsetObjectPoints), ConstArrayAccessor<Vector2>(subsetImagePoints), currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
 		}
 		else
 		{
@@ -2412,11 +2412,11 @@ inline SquareMatrix3 Solver3::determineOrientation(const AnyCamera& camera, Rand
 				remainingInvertedCovariance.copyElements(invertedCovariances[2 * n], false);
 			}
 
-			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, previousOrientation, objectPoints, imagePoints, currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
+			Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, Quaternion(previousOrientation), objectPoints, imagePoints, currentOrientation, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
 		}
 	}
 
-	return currentOrientation;
+	return SquareMatrix3(currentOrientation);
 }
 
 inline bool Solver3::determinePlane(const ConstIndexedAccessor<Vector3>& objectPoints, RandomGenerator& randomGenerator, Plane3& plane, const RelativeThreshold& minimalValidObjectPoints, const Geometry::Estimator::EstimatorType estimator, Scalar* finalError, Indices32* validIndices)

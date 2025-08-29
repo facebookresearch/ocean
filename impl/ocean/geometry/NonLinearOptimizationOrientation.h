@@ -43,17 +43,16 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationOrientation : protected NonLine
 	public:
 
 		/**
-		 * Minimizes the projection error of a given 3DOF orientation.
-		 * The given 3DOF orientation is the rotational part of a standard extrinsic camera matrix.<br>
-		 * @param camera  The camera profile defining the projection, must be valid
-		 * @param world_R_camera 3DOF pose to minimize the projection error for
+		 * Minimizes the projection error of a given (pure rotational) 3-DOF camera pose.
+		 * @param camera The camera profile defining the projection between 3D object points and 2D image points, must be valid
+		 * @param world_R_camera The 3-DOF camera pose to optimize, with default camera pointing towards the negative z-space, with y-axis upwards, must be valid
 		 * @param objectPoints The accessor providing the 3D object points to be projected into the camera plane
 		 * @param imagePoints The accessor providing the 2D image points corresponding to the object points, the image points may be distorted or undistorted depending on the usage of the distortImagePoints state
-		 * @param world_R_optimizedCamera Resulting optimized 3DOF orientation
-		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached
-		 * @param estimator Robust error estimator to be used
-		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
-		 * @param lambdaFactor Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity)
+		 * @param world_R_optimizedCamera The resulting optimized 3-DOF camera pose, with default camera pointing towards the negative z-space, with y-axis upwards
+		 * @param iterations The number of iterations to be applied at most, if no convergence can be reached, with range [1, infinity)
+		 * @param estimator The robust error estimator to be used
+		 * @param lambda The initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
+		 * @param lambdaFactor The Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity)
 		 * @param initialError Optional resulting averaged robust pixel error for the given initial parameters depending on the selected estimator
 		 * @param finalError Optional resulting averaged robust pixel error for the final optimized parameters depending on the selected estimator
 		 * @param invertedCovariances Optional set of 2x2 inverted covariance matrices that represent the uncertainties of the image points (a 2*n x 2 matrix)
@@ -61,16 +60,16 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationOrientation : protected NonLine
 		 * @return True, if the optimization succeeded
 		 * @see optimizeOrientationIF().
 		 */
-		static inline bool optimizeOrientation(const AnyCamera& camera, const SquareMatrix3& world_R_camera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, SquareMatrix3& world_R_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr, Scalars* intermediateErrors = nullptr);
+		static inline bool optimizeOrientation(const AnyCamera& camera, const Quaternion& world_R_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, Quaternion& world_R_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
-		 * Minimizes the projection error of a given inverted and flipped 3DOF orientation.
-		 * Beware: The given inverted and flipped 3DOF orientation is not equivalent to the rotational part of a standard extrinsic camera matrix.<br>
-		 * @param camera  The camera profile defining the projection, must be valid
-		 * @param flippedCamera_R_world 3DOF orientation to minimize the projection error for (inverted and flipped)
+		 * Minimizes the projection error of a given (pure rotational) 3-DOF camera pose.
+		 * @param camera The camera profile defining the projection between 3D object points and 2D image points, must be valid
+		 * @param flippedCamera_R_world The inverted and flipped 3-DOF camera pose to optimize, with flipped camera pointing towards the positive z-space, with y-axis downwards, must be valid
 		 * @param objectPoints The accessor providing the 3D object points to be projected into the camera plane
 		 * @param imagePoints The accessor providing the 2D image points corresponding to the object points, the image points may be distorted or undistorted depending on the usage of the distortImagePoints state
-		 * @param optimizedFlippedCamera_R_world Resulting optimized 3DOF orientation (inverted and flipped)
+		 * @param distortImagePoints True, to force the usage of the distortion parameters of the given camera object to distort the projected 2D image points before error determination
+		 * @param optimizedFlippedCamera_R_world The resulting optimized flipped and inverted 3-DOF camera pose, with flipped camera pointing towards the positive z-space, with y-axis downwards
 		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached
 		 * @param estimator Robust error estimator to be used
 		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
@@ -82,7 +81,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationOrientation : protected NonLine
 		 * @return True, if succeeded
 		 * @see optimizeOrientation().
 		 */
-		static bool optimizeOrientationIF(const AnyCamera& camera, const SquareMatrix3& flippedCamera_R_world, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, SquareMatrix3& optimizedFlippedCamera_R_world, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeOrientationIF(const AnyCamera& camera, const Quaternion& flippedCamera_R_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, Quaternion& optimizedFlippedCamera_R_world, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Minimizes the projection error of a given 3DOF orientation and the entire camera parameters (intrinsic and distortion).
@@ -131,19 +130,19 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationOrientation : protected NonLine
 		static bool optimizeCameraOrientationIF(const PinholeCamera& pinholeCamera, const SquareMatrix3& flippedCamera_R_world, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, const bool distortImagePoints, SquareMatrix3& optimizedFlippedCamera_R_world, PinholeCamera& optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), Scalar* initialError = nullptr, Scalar* finalError = nullptr, const Matrix* invertedCovariances = nullptr, Scalars* intermediateErrors = nullptr);
 };
 
-inline bool NonLinearOptimizationOrientation::optimizeOrientation(const AnyCamera& camera, const SquareMatrix3& world_R_camera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, SquareMatrix3& world_R_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances, Scalars* intermediateErrors)
+inline bool NonLinearOptimizationOrientation::optimizeOrientation(const AnyCamera& camera, const Quaternion& world_R_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, Quaternion& world_R_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances, Scalars* intermediateErrors)
 {
 	ocean_assert(objectPoints.size() >= 3u && objectPoints.size() >= imagePoints.size());
 
-	const SquareMatrix3 flippedCamera_R_world(PinholeCamera::standard2InvertedFlipped(world_R_camera));
+	const Quaternion flippedCamera_R_world(AnyCamera::standard2InvertedFlipped(world_R_camera));
 
-	SquareMatrix3 optimizedFlippedCamera_R_world;
+	Quaternion optimizedFlippedCamera_R_world(false);
 	if (!optimizeOrientationIF(camera, flippedCamera_R_world, objectPoints, imagePoints, optimizedFlippedCamera_R_world, iterations, estimator, lambda, lambdaFactor, initialError, finalError, invertedCovariances, intermediateErrors))
 	{
 		return false;
 	}
 
-	world_R_optimizedCamera = PinholeCamera::invertedFlipped2Standard(optimizedFlippedCamera_R_world);
+	world_R_optimizedCamera = AnyCamera::invertedFlipped2Standard(optimizedFlippedCamera_R_world);
 
 	return true;
 }
