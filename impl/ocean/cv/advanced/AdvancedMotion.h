@@ -48,14 +48,14 @@ template <typename TMetricInteger, typename TMetricFloat> class AdvancedMotion;
  * @see AdvancedMotionZeroMeanSSD, AdvancedMotion.
  * @ingroup cvadvanced
  */
-typedef AdvancedMotion<SumSquareDifferences, AdvancedSumSquareDifferences> AdvancedMotionSSD;
+using AdvancedMotionSSD = AdvancedMotion<SumSquareDifferences, AdvancedSumSquareDifferences>;
 
 /**
  * Definition of an AdvancedMotion class that applies zero-mean sum square difference calculations as metric.
  * @see AdvancedMotionSSD, AdvancedMotion.
  * @ingroup cvadvanced
  */
-typedef AdvancedMotion<ZeroMeanSumSquareDifferences, AdvancedZeroMeanSumSquareDifferences> AdvancedMotionZeroMeanSSD;
+using AdvancedMotionZeroMeanSSD = AdvancedMotion<ZeroMeanSumSquareDifferences, AdvancedZeroMeanSumSquareDifferences>;
 
 /**
  * This class implements advanced motion techniques (mainly with sub-pixel accuracy or binary masks) allowing to determine the motion (movement) of individual image points between two frames.
@@ -72,7 +72,7 @@ class AdvancedMotion
 		/**
 		 * Definition of a vector holding metric results.
 		 */
-		typedef std::vector<uint32_t> MetricResults;
+		using MetricResults = std::vector<uint32_t>;
 
 	public:
 
@@ -264,6 +264,7 @@ class AdvancedMotion
 		 * @param subPixelIterations Number of sub-pixel iterations that will be applied, each iteration doubles the sub-pixel accuracy, with range [1, infinity)
 		 * @return True, if succeeded
 		 * @tparam tSize Size of the image patch that is used to determine the motion, must be odd
+		 * @tparam TIndex The data type of the optional valid indices, either 'uint32_t' or 'uint8_t'
 		 * @see trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations().
 		 */
 		template <unsigned int tSize>
@@ -287,10 +288,55 @@ class AdvancedMotion
 		 * @return True, if succeeded
 		 * @tparam tChannels The number of channels both frame pyramids have, with range [1, 4]
 		 * @tparam tSize Size of the image patch that is used to determine the motion, must be odd
+		 * @tparam TIndex The data type of the optional valid indices, either 'uint32_t' or 'uint8_t'
 		 * @see trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations().
 		 */
 		template <unsigned int tChannels, unsigned int tSize>
 		static bool trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError = Scalar(0.9 * 0.9), Worker* worker = nullptr, Indices32* validIndices = nullptr, const unsigned int subPixelIterations = 4u);
+
+		/**
+		 * Tracks a set of given points between two frame pyramids with sub-pixel accuracy.
+		 * The points are tracked bidirectional, thus the points are tracked from the previous pyramid to the next pyramid and from the next pyramid back to the previous pyramid.<br>
+		 * If a point is near the frame border, a mirrored image patch is applied.
+		 * @param previousPyramid The previous frame pyramid, must be valid
+		 * @param nextPyramid The next frame pyramid, with same pixel format and pixel origin as the previous pyramid, must be valid
+		 * @param coarsestLayerRadius The search radius on the coarsest layer, with range [2, infinity)
+		 * @param previousImagePoints The image points located in the previous frame
+		 * @param nextImagePoints The resulting points in the next frame, each point corresponds to one previous point
+		 * @param validCorrespondences Resulting binary mask for all provided correspondences (0x00 = invalid, 0x01 = valid)
+		 * @param maximalSqrError Maximal square distance between forward and backward tracking for a valid point
+		 * @param worker Optional worker object to distribute the computation
+		 * @param subPixelIterations Number of sub-pixel iterations that will be applied, each iteration doubles the sub-pixel accuracy, with range [1, infinity)
+		 * @return True, if succeeded
+		 * @tparam tSize Size of the image patch that is used to determine the motion, must be odd
+		 * @tparam TIndex The data type of the optional valid indices, either 'uint32_t' or 'uint8_t'
+		 * @see trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations().
+		 */
+		template <unsigned int tSize>
+		static bool trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, const Vectors2& previousImagePoints, Vectors2& nextImagePoints, std::vector<uint8_t>& validCorrespondences, const Scalar maximalSqrError = Scalar(0.9 * 0.9), Worker* worker = nullptr, const unsigned int subPixelIterations = 4u);
+
+		/**
+		 * Tracks a set of given points between two frame pyramids with sub-pixel accuracy.
+		 * The points are tracked bidirectional, thus the points are tracked from the previous to the current and from the current to the previous frame.<br>
+		 * If a point is near the frame border, a mirrored image patch is applied.<br>
+		 * This function has two template parameters: a) the number of frame channels and b) the patch size, both known at compile time.
+		 * @param previousPyramid Previous frame pyramid with pixel format matching with the number of frame channels 'tChannels', must be valid
+		 * @param nextPyramid Next frame pyramid, with same frame type as the previous frame, with same frame type as the previous pyramid
+		 * @param coarsestLayerRadius The search radius on the coarsest layer, with range [2, infinity)
+		 * @param previousImagePoints The image points located in the previous frame
+		 * @param nextImagePoints The resulting points in the next frame, each point corresponds to one previous point
+		 * @param validCorrespondences Resulting binary mask for all provided correspondences (0x00 = invalid, 0x01 = valid)
+		 * @param maximalSqrError Maximal square distance between forward and backward tracking for a valid point
+		 * @param worker Optional worker object to distribute the computation
+		 * @param subPixelIterations Number of sub-pixel iterations that will be applied, each iteration doubles the sub-pixel accuracy, with range [1, infinity)
+		 * @return True, if succeeded
+		 * @tparam tChannels The number of channels both frame pyramids have, with range [1, 4]
+		 * @tparam tSize Size of the image patch that is used to determine the motion, must be odd
+		 * @tparam TIndex The data type of the optional valid indices, either 'uint32_t' or 'uint8_t'
+		 * @see trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations().
+		 */
+		template <unsigned int tChannels, unsigned int tSize>
+		static bool trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, const Vectors2& previousImagePoints, Vectors2& nextImagePoints, std::vector<uint8_t>& validCorrespondences, const Scalar maximalSqrError = Scalar(0.9 * 0.9), Worker* worker = nullptr, const unsigned int subPixelIterations = 4u);
 
 		/**
 		 * Tracks a set of given points between two frame pyramids with sub-pixel accuracy.
@@ -849,9 +895,10 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 			nextImagePoints.push_back(nextImagePoint);
 
 			// identify point pairs with almost identical point motion
+
 			if (sqrDistance <= maximalSqrError && nextImagePoint.x() >= 0 && nextImagePoint.y() >= 0 && nextImagePoint.x() < Scalar(nextPyramid.finestWidth()) && nextImagePoint.y() < Scalar(nextPyramid.finestHeight()))
 			{
-				validIndices->emplace_back(Index32(n));
+				validIndices->push_back(Index32(n));
 			}
 		}
 	}
@@ -927,7 +974,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 	nextImagePoints.clear();
 	nextImagePoints.reserve(previousPointCandidates.size());
 
-	if (validIndices)
+	if (validIndices != nullptr)
 	{
 		validIndices->clear();
 		validIndices->reserve(previousPointCandidates.size());
@@ -943,7 +990,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 			// identify point pairs with almost identical point motion
 			if (sqrDistance <= maximalSqrError && nextImagePoint.x() >= 0 && nextImagePoint.y() >= 0 && nextImagePoint.x() < Scalar(nextPyramid.finestWidth()) && nextImagePoint.y() < Scalar(nextPyramid.finestHeight()))
 			{
-				validIndices->push_back((unsigned int)(n));
+				validIndices->push_back(Index32(n));
 			}
 		}
 	}
@@ -963,6 +1010,127 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 					previousImagePoints.push_back(previousPointCandidates[n]);
 					nextImagePoints.push_back(nextImagePoint);
 				}
+			}
+		}
+	}
+
+	ocean_assert(previousImagePoints.size() == nextImagePoints.size());
+
+	return true;
+}
+
+template <typename TMetricInteger, typename TMetricFloat>
+template <unsigned int tSize>
+bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, const Vectors2& previousImagePoints, Vectors2& nextImagePoints, std::vector<uint8_t>& validCorrespondences, const Scalar maximalSqrError, Worker* worker, const unsigned int subPixelIterations)
+{
+	ocean_assert(previousPyramid && nextPyramid);
+
+	ocean_assert(!previousImagePoints.empty() && nextImagePoints.empty());
+
+	if (previousImagePoints.empty())
+	{
+		return true;
+	}
+
+	if (!previousPyramid || !previousPyramid.frameType().isPixelFormatCompatible(nextPyramid.frameType().pixelFormat()) || previousPyramid.frameType().pixelOrigin() != nextPyramid.frameType().pixelOrigin())
+	{
+		return false;
+	}
+
+	// forward point motion
+	if (!trackPointsSubPixelMirroredBorder<tSize>(previousPyramid, nextPyramid, previousImagePoints, previousImagePoints, nextImagePoints, coarsestLayerRadius, subPixelIterations, worker))
+	{
+		return false;
+	}
+
+	// backward point motion
+	Vectors2 backwardsPreviousImagePoints(previousImagePoints.size());
+	if (!trackPointsSubPixelMirroredBorder<tSize>(nextPyramid, previousPyramid, nextImagePoints, nextImagePoints, backwardsPreviousImagePoints, coarsestLayerRadius, subPixelIterations, worker))
+	{
+		return false;
+	}
+
+	validCorrespondences.assign(previousImagePoints.size(), uint8_t(0));
+
+	for (size_t n = 0; n < previousImagePoints.size(); ++n)
+	{
+		const Vector2 forwardBackwardOffset = previousImagePoints[n] - backwardsPreviousImagePoints[n];
+
+		const Scalar sqrDistance = forwardBackwardOffset.sqr();
+
+		// let's check whether forward and backward motion is almost identical
+
+		if (sqrDistance <= maximalSqrError)
+		{
+			const Vector2 nextImagePoint(nextImagePoints[n] + forwardBackwardOffset * Scalar(0.5));
+
+			if (nextImagePoint.x() >= 0 && nextImagePoint.y() >= 0 && nextImagePoint.x() < Scalar(nextPyramid.finestWidth()) && nextImagePoint.y() < Scalar(nextPyramid.finestHeight()))
+			{
+				nextImagePoints[n] = nextImagePoint;
+
+				validCorrespondences[n] = uint8_t(1);
+			}
+		}
+	}
+
+	ocean_assert(previousImagePoints.size() == nextImagePoints.size());
+
+	return true;
+}
+
+template <typename TMetricInteger, typename TMetricFloat>
+template <unsigned int tChannels, unsigned int tSize>
+bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, const Vectors2& previousImagePoints, Vectors2& nextImagePoints, std::vector<uint8_t>& validCorrespondences, const Scalar maximalSqrError, Worker* worker, const unsigned int subPixelIterations)
+{
+	ocean_assert(previousPyramid && nextPyramid);
+	ocean_assert(previousPyramid.frameType().channels() == tChannels);
+	ocean_assert(nextPyramid.frameType().channels() == tChannels);
+
+	ocean_assert(!previousImagePoints.empty() && nextImagePoints.empty());
+
+	if (previousImagePoints.empty())
+	{
+		return true;
+	}
+
+	if (!previousPyramid || previousPyramid.frameType() != nextPyramid.frameType())
+	{
+		return false;
+	}
+
+	// forward point motion
+	nextImagePoints.reserve(previousImagePoints.size());
+	if (!trackPointsSubPixelMirroredBorder<tChannels, tSize>(previousPyramid, nextPyramid, previousImagePoints, previousImagePoints, nextImagePoints, coarsestLayerRadius, subPixelIterations, worker))
+	{
+		return false;
+	}
+
+	// backward point previousImagePoints
+	Vectors2 backwardsPreviousImagePoints(previousImagePoints.size());
+	if (!trackPointsSubPixelMirroredBorder<tChannels, tSize>(nextPyramid, previousPyramid, nextImagePoints, nextImagePoints, backwardsPreviousImagePoints, coarsestLayerRadius, subPixelIterations, worker))
+	{
+		return false;
+	}
+
+	validCorrespondences.assign(previousImagePoints.size(), uint8_t(0));
+
+	for (size_t n = 0; n < previousImagePoints.size(); ++n)
+	{
+		const Vector2 forwardBackwardOffset = previousImagePoints[n] - backwardsPreviousImagePoints[n];
+
+		const Scalar sqrDistance = forwardBackwardOffset.sqr();
+
+		// let's check whether forward and backward motion is almost identical
+
+		if (sqrDistance <= maximalSqrError)
+		{
+			const Vector2 nextImagePoint(nextImagePoints[n] + forwardBackwardOffset * Scalar(0.5));
+
+			if (nextImagePoint.x() >= 0 && nextImagePoint.y() >= 0 && nextImagePoint.x() < Scalar(nextPyramid.finestWidth()) && nextImagePoint.y() < Scalar(nextPyramid.finestHeight()))
+			{
+				nextImagePoints[n] = nextImagePoint;
+
+				validCorrespondences[n] = uint8_t(1);
 			}
 		}
 	}
