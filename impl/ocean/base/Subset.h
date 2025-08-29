@@ -274,6 +274,32 @@ class Subset
 		static inline std::vector<T> subset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices);
 
 		/**
+		 * Applies a subset to a vector of objects.
+		 * @param objects The entire set of objects on which the subset will be applied
+		 * @param begin Iterator to the first element of the subset
+		 * @param end Iterator to the end of the subset
+		 */
+		template <typename TIndexIterator, typename T>
+		static void applySubset(std::vector<T>& objects, const TIndexIterator& begin, const TIndexIterator& end);
+
+		/**
+		 * Applies a subset to a vector of objects.
+		 * @param objects The entire set of objects on which the subset will be applied
+		 * @param indices The indices of the subset to be applied
+		 */
+		template <typename TIndex, typename T>
+		static inline void applySubset(std::vector<T>& objects, const std::vector<TIndex>& indices);
+
+		/**
+		 * Applies a subset to a vector of objects.
+		 * @param objects The entire set of objects on which the subset will be applied
+		 * @param indices The indices of the subset to be applied, can be nullptr if numberIndices is 0
+		 * @param numberIndices The number of indices, with range [0, infinity)
+		 */
+		template <typename TIndex, typename T>
+		static inline void applySubset(std::vector<T>& objects, const TIndex* indices, const size_t numberIndices);
+
+		/**
 		 * Extracts the indices that are not given within a set indices.
 		 * @param indices The set of given indices, the resulting indices will not contain any of these indices, can contain indices with range [0, maximalIndex]
 		 * @param numberElements The number of possible elements defining the entire range of possible indices: [0, numberElements)
@@ -885,6 +911,39 @@ template <typename TIndex, typename T>
 inline std::vector<T> Subset::subset(const T* objects, const size_t numberObjects, const std::set<TIndex>& indices)
 {
 	return InternalSubset<TIndex>::template subset<T>(objects, numberObjects, indices);
+}
+
+template <typename TIndexIterator, typename T>
+void Subset::applySubset(std::vector<T>& objects, const TIndexIterator& begin, const TIndexIterator& end)
+{
+	if (begin == end)
+	{
+		objects.clear();
+		return;
+	}
+
+	size_t nIndex = 0;
+
+	for (TIndexIterator iterator = begin; iterator < end; ++iterator)
+	{
+		objects[nIndex] = std::move(objects[*iterator]);
+
+		++nIndex;
+	}
+
+	objects.resize(nIndex);
+}
+
+template <typename TIndex, typename T>
+void Subset::applySubset(std::vector<T>& objects, const std::vector<TIndex>& sortedIndices)
+{
+	applySubset(objects, sortedIndices.cbegin(), sortedIndices.cend());
+}
+
+template <typename TIndex, typename T>
+void Subset::applySubset(std::vector<T>& objects, const TIndex* sortedIndices, const size_t numberSortedIndices)
+{
+	applySubset(objects, sortedIndices, sortedIndices + numberSortedIndices);
 }
 
 template <typename TIndex, typename T>
