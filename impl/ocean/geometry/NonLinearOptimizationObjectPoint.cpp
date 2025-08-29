@@ -1184,27 +1184,25 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 
 		/**
 		 * Creates a new provider object.
-		 * @param pinholeCamera The pinhole camera profile defining the projection
-		 * @param firstPoseIF The inverted and flipped camera pose of the first frame
-		 * @param secondPoseIF The inverted and flipped camera pose of the second frame
+		 * @param camera The camera profile defining the projection
+		 * @param firstFlippedCamera_T_world The inverted and flipped camera pose of the first frame
+		 * @param secondFlippedCamera_T_world The inverted and flipped camera pose of the second frame
 		 * @param objectPoints The 3D object point locations which will be optimized
 		 * @param firstImagePoints The (static) image points visible in the first camera frame
 		 * @param secondImagePoints The (static) image points visible in the second camera frame
 		 * @param correspondences The number of points correspondences, with range [5, infinity)
-		 * @param useDistortionParameters True, to use the distortion parameters of the camera profile
 		 * @param onlyFrontObjectPoints True, to ensure that all 3D object point locations will lie in front of both cameras
 		 */
-		inline ObjectPointsOnePoseProvider(const PinholeCamera& camera, const HomogenousMatrix4& firstPoseIF, HomogenousMatrix4& secondPoseIF, Vector3* objectPoints, const Vector2* firstImagePoints, const Vector2* secondImagePoints, const size_t correspondences, const bool useDistortionParameters, const bool onlyFrontObjectPoints) :
+		inline ObjectPointsOnePoseProvider(const AnyCamera& camera, const HomogenousMatrix4& firstFlippedCamera_T_world, HomogenousMatrix4& secondFlippedCamera_T_world, Vector3* objectPoints, const Vector2* firstImagePoints, const Vector2* secondImagePoints, const size_t correspondences, const bool onlyFrontObjectPoints) :
 			camera_(camera),
-			firstFlippedCamera_T_world_(firstPoseIF),
-			secondFlippedCamera_T_world_(secondPoseIF),
-			secondCandidateFlippedCamera_T_world_(secondPoseIF),
+			firstFlippedCamera_T_world_(firstFlippedCamera_T_world),
+			secondFlippedCamera_T_world_(secondFlippedCamera_T_world),
+			candidateSecondFlippedCamera_T_world_(secondFlippedCamera_T_world),
 			objectPoints_(objectPoints),
 			objectPointCandidates_(correspondences),
 			firstImagePoints_(firstImagePoints),
 			secondImagePoints_(secondImagePoints),
 			correspondences_(correspondences),
-			useDistortionParameters_(useDistortionParameters),
 			onlyFrontObjectPoints_(onlyFrontObjectPoints),
 			matrixB_(correspondences),
 			matrixD_(correspondences),
@@ -1233,13 +1231,13 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 			{
 				const Vector3& objectPoint = objectPointCandidates_[n];
 
-				if (onlyFrontObjectPoints_ && (!PinholeCamera::isObjectPointInFrontIF(firstFlippedCamera_T_world_, objectPoint) || !PinholeCamera::isObjectPointInFrontIF(secondCandidateFlippedCamera_T_world_, objectPoint)))
+				if (onlyFrontObjectPoints_ && (!PinholeCamera::isObjectPointInFrontIF(firstFlippedCamera_T_world_, objectPoint) || !PinholeCamera::isObjectPointInFrontIF(candidateSecondFlippedCamera_T_world_, objectPoint)))
 				{
 					return Numeric::maxValue();
 				}
 
-				const Scalar firstSqrError = Error::determinePoseErrorIF(firstFlippedCamera_T_world_, camera_, objectPoint, firstImagePoints_[n], useDistortionParameters_).sqr();
-				const Scalar secondSqrError = Error::determinePoseErrorIF(secondCandidateFlippedCamera_T_world_, camera_, objectPoint, secondImagePoints_[n], useDistortionParameters_).sqr();
+				const Scalar firstSqrError = Error::determinePoseErrorIF(firstFlippedCamera_T_world_, camera_, objectPoint, firstImagePoints_[n]).sqr();
+				const Scalar secondSqrError = Error::determinePoseErrorIF(candidateSecondFlippedCamera_T_world_, camera_, objectPoint, secondImagePoints_[n]).sqr();
 
 				if constexpr (Estimator::isStandardEstimator<tEstimator>())
 				{
@@ -1299,8 +1297,8 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 			{
 				const Vector3& objectPoint = objectPoints_[n];
 
-				intermediateErrors_[2 * n + 0] = Error::determinePoseErrorIF(firstFlippedCamera_T_world_, camera_, objectPoint, firstImagePoints_[n], useDistortionParameters_);
-				intermediateErrors_[2 * n + 1] = Error::determinePoseErrorIF(secondFlippedCamera_T_world_, camera_, objectPoint, secondImagePoints_[n], useDistortionParameters_);
+				intermediateErrors_[2 * n + 0] = Error::determinePoseErrorIF(firstFlippedCamera_T_world_, camera_, objectPoint, firstImagePoints_[n]);
+				intermediateErrors_[2 * n + 1] = Error::determinePoseErrorIF(secondFlippedCamera_T_world_, camera_, objectPoint, secondImagePoints_[n]);
 
 				if constexpr (!Estimator::isStandardEstimator<tEstimator>())
 				{
@@ -1325,9 +1323,9 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 			{
 				const Vector3& objectPoint = objectPoints_[n];
 
-				Jacobian::calculatePoseJacobianRodrigues2x6(poseJacobianSecondPoseX, poseJacobianSecondPoseY, camera_, secondFlippedCamera_T_world_, objectPoint, useDistortionParameters_, dwx, dwy, dwz);
-				Jacobian::calculatePointJacobian2x3(pointJacobianFirstPoseX, pointJacobianFirstPoseY, camera_, firstFlippedCamera_T_world_, objectPoint, useDistortionParameters_);
-				Jacobian::calculatePointJacobian2x3(pointJacobianSecondPoseX, pointJacobianSecondPoseY, camera_, secondFlippedCamera_T_world_, objectPoint, useDistortionParameters_);
+				Jacobian::calculatePoseJacobianRodrigues2x6IF(camera_, secondFlippedCamera_T_world_, objectPoint, dwx, dwy, dwz, poseJacobianSecondPoseX, poseJacobianSecondPoseY);
+				Jacobian::calculatePointJacobian2x3IF(camera_, firstFlippedCamera_T_world_, objectPoint, pointJacobianFirstPoseX, pointJacobianFirstPoseY);
+				Jacobian::calculatePointJacobian2x3IF(camera_, secondFlippedCamera_T_world_, objectPoint, pointJacobianSecondPoseX, pointJacobianSecondPoseY);
 
 				SquareMatrix3& subMatrixD = matrixD_[n];
 				StaticMatrix6x3& subMatrixB = matrixB_[n];
@@ -1402,8 +1400,8 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 
 				ocean_assert(!subMatrixD.isNull());
 
-				ocean_assert(intermediateErrors_[2 * n + 0] == Error::determinePoseErrorIF(firstFlippedCamera_T_world_, camera_, objectPoint, firstImagePoints_[n], useDistortionParameters_));
-				ocean_assert(intermediateErrors_[2 * n + 1] == Error::determinePoseErrorIF(secondFlippedCamera_T_world_, camera_, objectPoint, secondImagePoints_[n], useDistortionParameters_));
+				ocean_assert(intermediateErrors_[2 * n + 0] == Error::determinePoseErrorIF(firstFlippedCamera_T_world_, camera_, objectPoint, firstImagePoints_[n]));
+				ocean_assert(intermediateErrors_[2 * n + 1] == Error::determinePoseErrorIF(secondFlippedCamera_T_world_, camera_, objectPoint, secondImagePoints_[n]));
 
 				if constexpr (Estimator::isStandardEstimator<tEstimator>())
 				{
@@ -1469,7 +1467,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 				{
 					const Vector3& objectPoint = objectPoints_[n];
 
-					Jacobian::calculatePoseJacobianRodrigues2x6(poseJacobianBuffer, poseJacobianBuffer + 6, camera_, secondFlippedCamera_T_world_, objectPoint, useDistortionParameters_, dwx, dwy, dwz);
+					Jacobian::calculatePoseJacobianRodrigues2x6IF(camera_, secondFlippedCamera_T_world_, objectPoint, dwx, dwy, dwz, poseJacobianBuffer, poseJacobianBuffer + 6);
 
 					for (size_t e = 0; e < 6; ++e)
 					{
@@ -1477,7 +1475,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 						jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 3, e, poseJacobianBuffer[6 + e]));
 					}
 
-					Jacobian::calculatePointJacobian2x3(pointJacobianBuffer, pointJacobianBuffer + 3, camera_, firstFlippedCamera_T_world_, objectPoint, useDistortionParameters_);
+					Jacobian::calculatePointJacobian2x3IF(camera_, firstFlippedCamera_T_world_, objectPoint, pointJacobianBuffer, pointJacobianBuffer + 3);
 
 					for (size_t e = 0; e < 3; ++e)
 					{
@@ -1485,7 +1483,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 						jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 1, 6 + 3 * n + e, pointJacobianBuffer[3 + e]));
 					}
 
-					Jacobian::calculatePointJacobian2x3(pointJacobianBuffer, pointJacobianBuffer + 3, camera_, secondFlippedCamera_T_world_, objectPoint, useDistortionParameters_);
+					Jacobian::calculatePointJacobian2x3IF(camera_, secondFlippedCamera_T_world_, objectPoint, pointJacobianBuffer, pointJacobianBuffer + 3);
 
 					for (size_t e = 0; e < 3; ++e)
 					{
@@ -1566,8 +1564,8 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 				{
 					const Vector3& objectPoint = objectPoints_[n];
 
-					const Vector2 firstError = Error::determinePoseErrorIF(firstFlippedCamera_T_world_, camera_, objectPoint, firstImagePoints_[n], useDistortionParameters_);
-					const Vector2 secondError = Error::determinePoseErrorIF(secondFlippedCamera_T_world_, camera_, objectPoint, secondImagePoints_[n], useDistortionParameters_);
+					const Vector2 firstError = Error::determinePoseErrorIF(firstFlippedCamera_T_world_, camera_, objectPoint, firstImagePoints_[n]);
+					const Vector2 secondError = Error::determinePoseErrorIF(secondFlippedCamera_T_world_, camera_, objectPoint, secondImagePoints_[n]);
 
 					debugJacobianError_(4 * n + 0, 0) = firstError.x();
 					debugJacobianError_(4 * n + 1, 0) = firstError.y();
@@ -1600,7 +1598,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 			const Pose deltaPose(deltas(3), deltas(4), deltas(5), deltas(0), deltas(1), deltas(2));
 			const Pose newPose(oldPose - deltaPose);
 
-			secondCandidateFlippedCamera_T_world_ = newPose.transformation();
+			candidateSecondFlippedCamera_T_world_ = newPose.transformation();
 
 			for (size_t n = 0; n < correspondences_; ++n)
 			{
@@ -1614,7 +1612,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 		 */
 		inline void acceptCorrection()
 		{
-			secondFlippedCamera_T_world_ = secondCandidateFlippedCamera_T_world_;
+			secondFlippedCamera_T_world_ = candidateSecondFlippedCamera_T_world_;
 
 			ocean_assert(objectPointCandidates_.size() == correspondences_);
 			memcpy(objectPoints_, objectPointCandidates_.data(), sizeof(Vector3) * correspondences_);
@@ -1866,7 +1864,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 	protected:
 
 		/// The camera profile defining the projection.
-		const PinholeCamera& camera_;
+		const AnyCamera& camera_;
 
 		/// The first (static) camera pose.
 		const HomogenousMatrix4& firstFlippedCamera_T_world_;
@@ -1875,7 +1873,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 		HomogenousMatrix4& secondFlippedCamera_T_world_;
 
 		/// The candidate of the second camera pose, may be rejected if the error is larger than for the previous pose/model.
-		HomogenousMatrix4 secondCandidateFlippedCamera_T_world_;
+		HomogenousMatrix4 candidateSecondFlippedCamera_T_world_;
 
 		/// The locations of the 3D object points of the most recent succeeded optimization step.
 		Vector3* objectPoints_;
@@ -1891,9 +1889,6 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 
 		/// The number of point correspondences (e.g., the number of object points).
 		const size_t correspondences_;
-
-		/// True, if the distortion parameters of the camera model will be used.
-		const bool useDistortionParameters_;
 
 		/// True, if all 3D object points (before and after optimization) must lie in front of both cameras.
 		const bool onlyFrontObjectPoints_;
@@ -1940,15 +1935,16 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 #endif
 };
 
-bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const PinholeCamera& camera, const HomogenousMatrix4& firstPoseIF, const HomogenousMatrix4& secondPoseIF, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, const bool useDistortionParameters, HomogenousMatrix4* optimizedSecondPoseIF, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const AnyCamera& camera, const HomogenousMatrix4& firstFlippedCamera_T_world, const HomogenousMatrix4& secondFlippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* optimizedSecondFlippedCamera_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
-	ocean_assert(camera.isValid() && firstPoseIF.isValid() && secondPoseIF.isValid());
+	ocean_assert(camera.isValid());
+	ocean_assert(firstFlippedCamera_T_world.isValid() && secondFlippedCamera_T_world.isValid());
 	ocean_assert(objectPoints.size() == firstImagePoints.size());
 	ocean_assert(objectPoints.size() == secondImagePoints.size());
 
 	ocean_assert(optimizedObjectPoints == nullptr || optimizedObjectPoints->size() == objectPoints.size());
 
-	HomogenousMatrix4 internalOptimizedSecondPoseIF(secondPoseIF);
+	HomogenousMatrix4 internalSecondFlippedCamera_T_world(secondFlippedCamera_T_world);
 
 	ScopedNonconstMemoryAccessor<Vector3> scopedOptimizedObjectPoints(optimizedObjectPoints, objectPoints.size());
 	ocean_assert(scopedOptimizedObjectPoints.size() == objectPoints.size());
@@ -1957,13 +1953,15 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const Pi
 	const ScopedConstMemoryAccessor<Vector2> scopedSecondImagePoints(secondImagePoints);
 
 	for (size_t n = 0; n < objectPoints.size(); ++n)
+	{
 		scopedOptimizedObjectPoints[n] = objectPoints[n];
+	}
 
 	switch (estimator)
 	{
 		case Estimator::ET_LINEAR:
 		{
-			ObjectPointsOnePoseProvider<Estimator::ET_LINEAR> provider(camera, firstPoseIF, internalOptimizedSecondPoseIF, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), useDistortionParameters, onlyFrontObjectPoints);
+			ObjectPointsOnePoseProvider<Estimator::ET_LINEAR> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints);
 			if (!advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 			{
 				return false;
@@ -1974,7 +1972,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const Pi
 
 		case Estimator::ET_HUBER:
 		{
-			ObjectPointsOnePoseProvider<Estimator::ET_HUBER> provider(camera, firstPoseIF, internalOptimizedSecondPoseIF, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), useDistortionParameters, onlyFrontObjectPoints);
+			ObjectPointsOnePoseProvider<Estimator::ET_HUBER> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints);
 			if (!advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 			{
 				return false;
@@ -1985,7 +1983,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const Pi
 
 		case Estimator::ET_TUKEY:
 		{
-			ObjectPointsOnePoseProvider<Estimator::ET_TUKEY> provider(camera, firstPoseIF, internalOptimizedSecondPoseIF, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), useDistortionParameters, onlyFrontObjectPoints);
+			ObjectPointsOnePoseProvider<Estimator::ET_TUKEY> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints);
 			if (!advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 			{
 				return false;
@@ -1996,7 +1994,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const Pi
 
 		case Estimator::ET_CAUCHY:
 		{
-			ObjectPointsOnePoseProvider<Estimator::ET_CAUCHY> provider(camera, firstPoseIF, internalOptimizedSecondPoseIF, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), useDistortionParameters, onlyFrontObjectPoints);
+			ObjectPointsOnePoseProvider<Estimator::ET_CAUCHY> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints);
 			if (!advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 			{
 				return false;
@@ -2008,7 +2006,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const Pi
 		default:
 		{
 			ocean_assert(estimator == Estimator::ET_SQUARE);
-			ObjectPointsOnePoseProvider<Estimator::ET_SQUARE> provider(camera, firstPoseIF, internalOptimizedSecondPoseIF, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), useDistortionParameters, onlyFrontObjectPoints);
+			ObjectPointsOnePoseProvider<Estimator::ET_SQUARE> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints);
 			if (!advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 			{
 				return false;
@@ -2018,8 +2016,10 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const Pi
 		}
 	}
 
-	if (optimizedSecondPoseIF)
-		*optimizedSecondPoseIF = internalOptimizedSecondPoseIF;
+	if (optimizedSecondFlippedCamera_T_world != nullptr)
+	{
+		*optimizedSecondFlippedCamera_T_world = internalSecondFlippedCamera_T_world;
+	}
 
 	return true;
 }
@@ -2138,7 +2138,6 @@ class NonLinearOptimizationObjectPoint::ObjectPointsTwoPosesProvider : public No
 			const Matrix debugJErrors(JTJ * deltas);
 			Scalars difference(jErrors.rows());
 
-			bool allWeakEps = true;
 			Scalar averageDifference = 0;
 			for (unsigned int n = 0u; n < jErrors.rows(); ++n)
 			{
@@ -2798,11 +2797,11 @@ class NonLinearOptimizationObjectPoint::ObjectPointsPosesProvider : public NonLi
 
 			if (std::is_same<Scalar, double>::value)
 			{
-				SquareMatrices3 rotationRodriguesDerivatives(flippedCameras_T_world_.size() * 3);
+				SquareMatrices3 debugRotationRodriguesDerivatives(flippedCameras_T_world_.size() * 3);
 				for (size_t n = 0; n < flippedCameras_T_world_.size(); ++n)
 				{
 					const Pose pose(flippedCameras_T_world_[n]);
-					Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(pose.rx(), pose.ry(), pose.rz()), rotationRodriguesDerivatives[n * 3 + 0], rotationRodriguesDerivatives[n * 3 + 1], rotationRodriguesDerivatives[n * 3 + 2]);
+					Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(pose.rx(), pose.ry(), pose.rz()), debugRotationRodriguesDerivatives[n * 3 + 0], debugRotationRodriguesDerivatives[n * 3 + 1], debugRotationRodriguesDerivatives[n * 3 + 2]);
 				}
 
 				Scalar pointJacobianBuffer[6];
@@ -2810,7 +2809,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsPosesProvider : public NonLi
 
 				SparseMatrix::Entries jacobianEntries;
 
-				size_t row = 0;
+				size_t debugRow = 0;
 
 				for (size_t o = 0; o < correspondenceGroups_.groups(); ++o)
 				{
@@ -2823,27 +2822,27 @@ class NonLinearOptimizationObjectPoint::ObjectPointsPosesProvider : public NonLi
 						const HomogenousMatrix4& poseIF = candidateFlippedCameras_T_world_[poseId];
 						const AnyCamera& camera = *cameras_[poseId];
 
-						Jacobian::calculatePoseJacobianRodrigues2x6IF(camera, poseIF, objectPoint, rotationRodriguesDerivatives[poseId * 3 + 0], rotationRodriguesDerivatives[poseId * 3 + 1], rotationRodriguesDerivatives[poseId * 3 + 2], poseJacobianBuffer, poseJacobianBuffer + 6);
+						Jacobian::calculatePoseJacobianRodrigues2x6IF(camera, poseIF, objectPoint, debugRotationRodriguesDerivatives[poseId * 3 + 0], debugRotationRodriguesDerivatives[poseId * 3 + 1], debugRotationRodriguesDerivatives[poseId * 3 + 2], poseJacobianBuffer, poseJacobianBuffer + 6);
 
 						for (size_t e = 0; e < 6; ++e)
 						{
-							jacobianEntries.push_back(SparseMatrix::Entry(row + 0, poseId * 6 + e, poseJacobianBuffer[0 + e]));
-							jacobianEntries.push_back(SparseMatrix::Entry(row + 1, poseId * 6 + e, poseJacobianBuffer[6 + e]));
+							jacobianEntries.push_back(SparseMatrix::Entry(debugRow + 0, poseId * 6 + e, poseJacobianBuffer[0 + e]));
+							jacobianEntries.push_back(SparseMatrix::Entry(debugRow + 1, poseId * 6 + e, poseJacobianBuffer[6 + e]));
 						}
 
 						Jacobian::calculatePointJacobian2x3IF(camera, poseIF, objectPoint, pointJacobianBuffer, pointJacobianBuffer + 3);
 
 						for (size_t e = 0; e < 3; ++e)
 						{
-							jacobianEntries.push_back(SparseMatrix::Entry(row + 0, candidateFlippedCameras_T_world_.size() * 6 + 3 * o + e, pointJacobianBuffer[0 + e]));
-							jacobianEntries.push_back(SparseMatrix::Entry(row + 1, candidateFlippedCameras_T_world_.size() * 6 + 3 * o + e, pointJacobianBuffer[3 + e]));
+							jacobianEntries.push_back(SparseMatrix::Entry(debugRow + 0, candidateFlippedCameras_T_world_.size() * 6 + 3 * o + e, pointJacobianBuffer[0 + e]));
+							jacobianEntries.push_back(SparseMatrix::Entry(debugRow + 1, candidateFlippedCameras_T_world_.size() * 6 + 3 * o + e, pointJacobianBuffer[3 + e]));
 						}
 
-						row += 2;
+						debugRow += 2;
 					}
 				}
 
-				ocean_assert(row == jacobianRows_);
+				ocean_assert(debugRow == jacobianRows_);
 				debugJacobian_ = SparseMatrix(jacobianRows_, candidateFlippedCameras_T_world_.size() * 6 + correspondenceGroups_.groups() * 3, jacobianEntries);
 
 				const Scalar debugSqrSigma = Estimator::needSigma<tEstimator>() ? Numeric::sqr(Estimator::determineSigmaSquare<tEstimator>(intermediateSqrErrors_.data(), intermediateSqrErrors_.size(), candidateFlippedCameras_T_world_.size() * 6 + correspondenceGroups_.groups() * 3)) : 0;
@@ -2932,7 +2931,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsPosesProvider : public NonLi
 
 				debugJacobianError_.resize(jacobianRows_, 1);
 
-				row = 0;
+				debugRow = 0;
 
 				for (size_t o = 0; o < correspondenceGroups_.groups(); ++o)
 				{
@@ -2947,12 +2946,12 @@ class NonLinearOptimizationObjectPoint::ObjectPointsPosesProvider : public NonLi
 
 						const Vector2 error = Error::determinePoseErrorIF(candidateFlippedCamera_T_world, camera, objectPoint, imagePoint);
 
-						debugJacobianError_(row++, 0) = error[0];
-						debugJacobianError_(row++, 0) = error[1];
+						debugJacobianError_(debugRow++, 0) = error[0];
+						debugJacobianError_(debugRow++, 0) = error[1];
 					}
 				}
 
-				ocean_assert(row == jacobianRows_);
+				ocean_assert(debugRow == jacobianRows_);
 
 				debugJacobianError_ = debugJacobian_.transposed() * debugWeight * debugJacobianError_;
 				ocean_assert(debugJacobianError_.rows() == jacobianErrorVector_.size());
@@ -3896,11 +3895,11 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOrientationalPosesProvider :
 
 			if constexpr (std::is_same<Scalar, double>::value)
 			{
-				SquareMatrices3 rotationRodriguesDerivatives(flippedCameras_T_world_.size() * 3);
+				SquareMatrices3 debugRotationRodriguesDerivatives(flippedCameras_T_world_.size() * 3);
 				for (size_t n = 0; n < flippedCameras_T_world_.size(); ++n)
 				{
 					const Pose pose(flippedCameras_T_world_[n]);
-					Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(pose.rx(), pose.ry(), pose.rz()), rotationRodriguesDerivatives[n * 3 + 0], rotationRodriguesDerivatives[n * 3 + 1], rotationRodriguesDerivatives[n * 3 + 2]);
+					Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(pose.rx(), pose.ry(), pose.rz()), debugRotationRodriguesDerivatives[n * 3 + 0], debugRotationRodriguesDerivatives[n * 3 + 1], debugRotationRodriguesDerivatives[n * 3 + 2]);
 				}
 
 				Scalar pointJacobianBuffer[6];
@@ -3909,7 +3908,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOrientationalPosesProvider :
 				SparseMatrix::Entries jacobianEntries;
 				jacobianEntries.reserve(jacobianRows_ * 12);
 
-				size_t row = 0;
+				size_t debugRow = 0;
 
 				for (size_t o = 0; o < correspondenceGroups_.groups(); ++o)
 				{
@@ -3922,27 +3921,27 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOrientationalPosesProvider :
 						const HomogenousMatrix4& candidateFlippedCamera_T_world = candidateFlippedCameras_T_world_[poseId];
 						const AnyCamera& camera = *cameras_[poseId];
 
-						Jacobian::calculateOrientationalJacobianRodrigues2x3IF(camera, candidateFlippedCamera_T_world.rotationMatrix(), translations_T_world_[poseId], objectPoint, rotationRodriguesDerivatives[poseId * 3 + 0], rotationRodriguesDerivatives[poseId * 3 + 1], rotationRodriguesDerivatives[poseId * 3 + 2], poseJacobianBuffer, poseJacobianBuffer + 3);
+						Jacobian::calculateOrientationalJacobianRodrigues2x3IF(camera, candidateFlippedCamera_T_world.rotationMatrix(), translations_T_world_[poseId], objectPoint, debugRotationRodriguesDerivatives[poseId * 3 + 0], debugRotationRodriguesDerivatives[poseId * 3 + 1], debugRotationRodriguesDerivatives[poseId * 3 + 2], poseJacobianBuffer, poseJacobianBuffer + 3);
 
 						for (size_t e = 0; e < 3; ++e)
 						{
-							jacobianEntries.emplace_back(row + 0, poseId * 3 + e, poseJacobianBuffer[0 + e]);
-							jacobianEntries.emplace_back(row + 1, poseId * 3 + e, poseJacobianBuffer[3 + e]);
+							jacobianEntries.emplace_back(debugRow + 0, poseId * 3 + e, poseJacobianBuffer[0 + e]);
+							jacobianEntries.emplace_back(debugRow + 1, poseId * 3 + e, poseJacobianBuffer[3 + e]);
 						}
 
 						Jacobian::calculatePointJacobian2x3IF(camera, candidateFlippedCamera_T_world, objectPoint, pointJacobianBuffer, pointJacobianBuffer + 3);
 
 						for (size_t e = 0; e < 3; ++e)
 						{
-							jacobianEntries.emplace_back(row + 0, candidateFlippedCameras_T_world_.size() * 3 + 3 * o + e, pointJacobianBuffer[0 + e]);
-							jacobianEntries.emplace_back(row + 1, candidateFlippedCameras_T_world_.size() * 3 + 3 * o + e, pointJacobianBuffer[3 + e]);
+							jacobianEntries.emplace_back(debugRow + 0, candidateFlippedCameras_T_world_.size() * 3 + 3 * o + e, pointJacobianBuffer[0 + e]);
+							jacobianEntries.emplace_back(debugRow + 1, candidateFlippedCameras_T_world_.size() * 3 + 3 * o + e, pointJacobianBuffer[3 + e]);
 						}
 
-						row += 2;
+						debugRow += 2;
 					}
 				}
 
-				ocean_assert(row == jacobianRows_);
+				ocean_assert(debugRow == jacobianRows_);
 				debugJacobian_ = SparseMatrix(jacobianRows_, candidateFlippedCameras_T_world_.size() * 3 + correspondenceGroups_.groups() * 3, jacobianEntries);
 
 				const Scalar debugSqrSigma = Estimator::needSigma<tEstimator>() ? Numeric::sqr(Estimator::determineSigmaSquare<tEstimator>(intermediateSqrErrors_.data(), intermediateSqrErrors_.size(), candidateFlippedCameras_T_world_.size() * 3 + correspondenceGroups_.groups() * 3)) : 0;
@@ -4034,7 +4033,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOrientationalPosesProvider :
 
 				debugJacobianError_.resize(jacobianRows_, 1);
 
-				row = 0;
+				debugRow = 0;
 
 				for (size_t o = 0; o < correspondenceGroups_.groups(); ++o)
 				{
@@ -4049,12 +4048,12 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOrientationalPosesProvider :
 
 						const Vector2 error = Error::determinePoseErrorIF(candidateFlippedCamera_T_world, camera, objectPoint, imagePoint);
 
-						debugJacobianError_(row++, 0) = error[0];
-						debugJacobianError_(row++, 0) = error[1];
+						debugJacobianError_(debugRow++, 0) = error[0];
+						debugJacobianError_(debugRow++, 0) = error[1];
 					}
 				}
 
-				ocean_assert(row == jacobianRows_);
+				ocean_assert(debugRow == jacobianRows_);
 
 				debugJacobianError_ = debugJacobian_.transposed() * debugWeight * debugJacobianError_;
 				ocean_assert(debugJacobianError_.rows() == jacobianErrorVector_.size());

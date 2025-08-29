@@ -35,37 +35,37 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 		/**
 		 * Definition of a 3x3 matrix.
 		 */
-		typedef StaticMatrix<Scalar, 3, 3> StaticMatrix3x3;
+		using StaticMatrix3x3 = StaticMatrix<Scalar, 3, 3>;
 
 		/**
 		 * Definition of a 3x6 matrix.
 		 */
-		typedef StaticMatrix<Scalar, 3, 6> StaticMatrix3x6;
+		using StaticMatrix3x6 = StaticMatrix<Scalar, 3, 6>;
 
 		/**
 		 * Definition of a 6x3 matrix.
 		 */
-		typedef StaticMatrix<Scalar, 6, 3> StaticMatrix6x3;
+		using StaticMatrix6x3 = StaticMatrix<Scalar, 6, 3>;
 
 		/**
 		 * Definition of a 6x6 matrix.
 		 */
-		typedef StaticMatrix<Scalar, 6, 6> StaticMatrix6x6;
+		using StaticMatrix6x6 = StaticMatrix<Scalar, 6, 6>;
 
 		/**
 		 * Definition of a vector holding 3x3 matrices.
 		 */
-		typedef std::vector<StaticMatrix3x3> StaticMatrices3x3;
+		using StaticMatrices3x3 = std::vector<StaticMatrix3x3>;
 
 		/**
 		 * Definition of a vector holding 6x3 matrices.
 		 */
-		typedef std::vector<StaticMatrix6x3> StaticMatrices6x3;
+		using StaticMatrices6x3 = std::vector<StaticMatrix6x3>;
 
 		/**
 		 * Definition of a vector holding 6x6 matrices.
 		 */
-		typedef std::vector<StaticMatrix6x6> StaticMatrices6x6;
+		using StaticMatrices6x6 = std::vector<StaticMatrix6x6>;
 
 		/**
 		 * Forward declaration of a provider object allowing to optimize one object point location for (6DOF) camera poses with any camera.
@@ -373,17 +373,16 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 
 		/**
 		 * Optimizes the locations of 3D object points visible in two individual camera poses by minimizing the projection error between the 3D object points and the 2D image points.
-		 * The first pose is static while the second pose and the 3D point positions are dynamic so that they will be optimized.<br>
+		 * The first pose is fixed while the second pose and the 3D point positions are dynamic so that they will be optimized.<br>
 		 * The object points are visible in both frames.
-		 * @param pinholeCamera The pinhole camera profile defining the projection
-		 * @param firstPose The first (static and precise) pose, must be valid
-		 * @param secondPose The second (dynamic and rough) pose, must be valid
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param world_T_firstCamera The first static (and precise) camera pose, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
+		 * @param world_T_secondCamera The second (rough) camera pose to optimize, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
 		 * @param objectPoints The accessor for the known (but rough) locations of the 3D object points
 		 * @param firstImagePoints The accessor for the image points visible in the first frame, one image point for each object point (and with same order)
 		 * @param secondImagePoints The accessor for the image points visible in the second frame, one image point for each object point (and with the same order)
-		 * @param useDistortionParameters True, to force the usage of the distortion parameters of the given camera object to distort the projected 2D image points before error determination
-		 * @param optimizedSecondPose Optional resulting optimized camera pose for the second frame, nullptr otherwise
-		 * @param optimizedObjectPoints Optional accessor for the resulting optimized 3D object points locations, nullptr otherwise
+		 * @param world_T_optimizedSecondCamera Optional resulting optimized camera pose for the second frame, nullptr if not of interest
+		 * @param optimizedObjectPoints Optional accessor for the resulting optimized 3D object points locations, nullptr if not of interest
 		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached, with range [1, infinity)
 		 * @param estimator Robust error estimator to be used to measure the pixel errors
 		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
@@ -395,21 +394,20 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 		 * @return True, if succeeded
 		 * @see optimizeObjectPointsAndOnePoseIF().
 		 */
-		static inline bool optimizeObjectPointsAndOnePose(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& firstPose, const HomogenousMatrix4& secondPose, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, const bool useDistortionParameters, HomogenousMatrix4* optimizedSecondPose, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static inline bool optimizeObjectPointsAndOnePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_firstCamera, const HomogenousMatrix4& world_T_secondCamera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* world_T_optimizedSecondCamera, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Optimizes the locations of 3D object points visible in two individual (inverted and flipped) camera poses by minimizing the projection error between the 3D object points and the 2D image points.
 		 * The first pose is static while the second pose and the 3D point positions are dynamic so that they will be optimized.<br>
 		 * The object points are visible in both frames.
-		 * @param pinholeCamera The pinhole camera profile defining the projection
-		 * @param firstPoseIF The first (static and precise) inverted and flipped pose, must be valid
-		 * @param secondPoseIF The second (dynamic and rough) inverted and flipped pose, must be valid
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param firstFlippedCamera_T_world The first static (and precise) flipped and inverted camera pose, with default camera pointing towards the positive z-space with y-axis downwards, must be valid
+		 * @param secondFlippedCamera_T_world The second (rough) flipped and inverted camera pose to optimize, with default camera pointing towards the positive z-space with y-axis downwards, must be valid
 		 * @param objectPoints The accessor for the known (but rough) locations of the 3D object points
 		 * @param firstImagePoints The accessor for the image points visible in the first frame, one image point for each object point (and with same order)
 		 * @param secondImagePoints The accessor for the image points visible in the second frame, one image point for each object point (and with the same order)
-		 * @param useDistortionParameters True, to force the usage of the distortion parameters of the given camera object to distort the projected 2D image points before error determination
-		 * @param optimizedSecondPoseIF Optional resulting optimized (inverted and flipped) camera pose for the second frame, nullptr otherwise
-		 * @param optimizedObjectPoints Optional accessor for the resulting optimized 3D object points locations, nullptr otherwise
+		 * @param optimizedSecondFlippedCamera_T_world Optional resulting optimized (inverted and flipped) camera pose for the second frame, nullptr if not of interest
+		 * @param optimizedObjectPoints Optional accessor for the resulting optimized 3D object points locations, nullptr if not of interest
 		 * @param iterations Number of iterations to be applied at most, if no convergence can be reached, with range [1, infinity)
 		 * @param estimator Robust error estimator to be used to measure the pixel errors
 		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity)
@@ -421,7 +419,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 		 * @return True, if succeeded
 		 * @see optimizeObjectPointsAndOnePose().
 		 */
-		static bool optimizeObjectPointsAndOnePoseIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& firstPoseIF, const HomogenousMatrix4& secondPoseIF, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, const bool useDistortionParameters, HomogenousMatrix4* optimizedSecondPoseIF, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeObjectPointsAndOnePoseIF(const AnyCamera& camera, const HomogenousMatrix4& firstFlippedCamera_T_world, const HomogenousMatrix4& secondFlippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* optimizedSecondFlippedCamera_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
 
 		/**
 		 * Optimizes the locations of 3D object points visible in two individual camera poses by minimizing the projection error between the 3D object points and the 2D image points.
@@ -810,19 +808,19 @@ inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrienta
 	return optimizeObjectPointForFixedOrientationsIF(camera, ConstArrayAccessor<SquareMatrix3>(flippedCameras_R_world), imagePoints, objectPoint, objectPointDistance, optimizedObjectPoint, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoint, initialError, finalError, intermediateErrors);
 }
 
-inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& firstPose, const HomogenousMatrix4& secondPose, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, const bool useDistortionParameters, HomogenousMatrix4* optimizedSecondPose, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_firstCamera, const HomogenousMatrix4& world_T_secondCamera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* world_T_optimizedSecondCamera, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
 {
-	const HomogenousMatrix4 firstPoseIF(PinholeCamera::standard2InvertedFlipped(firstPose));
-	const HomogenousMatrix4 secondPoseIF(PinholeCamera::standard2InvertedFlipped(secondPose));
+	const HomogenousMatrix4 firstFlippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_firstCamera));
+	const HomogenousMatrix4 secondFlippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_secondCamera));
 
-	if (!optimizeObjectPointsAndOnePoseIF(pinholeCamera, firstPoseIF, secondPoseIF, objectPoints, firstImagePoints, secondImagePoints, useDistortionParameters, optimizedSecondPose, optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors))
+	if (!optimizeObjectPointsAndOnePoseIF(camera, firstFlippedCamera_T_world, secondFlippedCamera_T_world, objectPoints, firstImagePoints, secondImagePoints, world_T_optimizedSecondCamera, optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors))
 	{
 		return false;
 	}
 
-	if (optimizedSecondPose)
+	if (world_T_optimizedSecondCamera != nullptr)
 	{
-		*optimizedSecondPose = PinholeCamera::invertedFlipped2Standard(*optimizedSecondPose);
+		*world_T_optimizedSecondCamera = PinholeCamera::invertedFlipped2Standard(*world_T_optimizedSecondCamera);
 	}
 
 	return true;

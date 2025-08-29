@@ -1718,15 +1718,6 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 
 	const Box3 objectPointsArea(Vector3(-1, -1, -1), Vector3(1, 1, 1));
 
-	const PinholeCamera templateCamera(640, 480, Numeric::deg2rad(58));
-
-	enum DistortionType : uint32_t
-	{
-		DT_NO_DISTORTION = 0u,
-		DT_RADIAL_DISTORTION = 1u << 0u | DT_NO_DISTORTION,
-		DT_FULL_DISTORTION = (1u << 1u) | DT_RADIAL_DISTORTION
-	};
-
 	RandomGenerator randomGenerator;
 
 	ValidationPrecision validation(0.99, randomGenerator);
@@ -1735,211 +1726,235 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 
 	do
 	{
-		for (const DistortionType distortionType : {DT_NO_DISTORTION, DT_RADIAL_DISTORTION, DT_FULL_DISTORTION})
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		const AnyCameraType anyCameraType = RandomI::random(randomGenerator, {AnyCameraType::PINHOLE, AnyCameraType::FISHEYE});
+		const unsigned int cameraIndex = RandomI::random(randomGenerator, 1u);
+
+		const SharedAnyCamera camera = Utilities::realisticAnyCamera(anyCameraType, cameraIndex);
+
+		const Quaternion world_R_camera0(Random::quaternion(randomGenerator));
+		const Vector3 viewDirection0(world_R_camera0 * Vector3(0, 0, -1));
+
+		const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
+
+		const Quaternion offsetRotation(Random::euler(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(35)));
+		const Quaternion world_R_camera1(world_R_camera0 * offsetRotation);
+		const Vector3 viewDirection1(world_R_camera1 * Vector3(0, 0, -1));
+		const Scalar angle(Numeric::rad2deg(viewDirection0.angle(viewDirection1)));
+		ocean_assert_and_suppress_unused(Numeric::isInsideRange(5, angle, 85), angle);
+
+		Box3 objectVolume(perfectObjectPoints);
+		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.05);
+
+		Vectors3 objectPoints;
+
+		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(randomGenerator, -objectDimension, objectDimension));
 
-			const PinholeCamera camera(Utilities::distortedCamera(templateCamera, true, (distortionType & DT_RADIAL_DISTORTION) == DT_RADIAL_DISTORTION, (distortionType & DT_FULL_DISTORTION) == DT_FULL_DISTORTION));
+			objectPoints.push_back(randomObjectPoint);
+		}
 
-			const Quaternion world_R_camera0(Random::quaternion(randomGenerator));
-			const Vector3 viewDirection0(world_R_camera0 * Vector3(0, 0, -1));
+		Vectors3 allVisibleObjectPoints(perfectObjectPoints);
+		allVisibleObjectPoints.insert(allVisibleObjectPoints.end(), objectPoints.begin(), objectPoints.end());
 
-			const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
-
-			const Quaternion offsetRotation(Random::euler(randomGenerator, Numeric::deg2rad(5), Numeric::deg2rad(35)));
-			const Quaternion world_R_camera1(world_R_camera0 * offsetRotation);
-			const Vector3 viewDirection1(world_R_camera1 * Vector3(0, 0, -1));
-			const Scalar angle(Numeric::rad2deg(viewDirection0.angle(viewDirection1)));
-			ocean_assert_and_suppress_unused(Numeric::isInsideRange(5, angle, 85), angle);
-
-			Box3 objectVolume(perfectObjectPoints);
-			const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.05);
-
-			Vectors3 objectPoints;
-
-			for (const Vector3& perfectObjectPoint : perfectObjectPoints)
-			{
-				const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(randomGenerator, -objectDimension, objectDimension));
-
-				objectPoints.push_back(randomObjectPoint);
-			}
-
-			Vectors3 allVisibleObjectPoints(perfectObjectPoints);
-			allVisibleObjectPoints.insert(allVisibleObjectPoints.end(), objectPoints.begin(), objectPoints.end());
-
-			const HomogenousMatrix4 world_T_camera0(Utilities::viewPosition(camera, allVisibleObjectPoints, viewDirection0, true));
-			const HomogenousMatrix4 world_T_camera1(Utilities::viewPosition(camera, allVisibleObjectPoints, viewDirection1, true));
+		const HomogenousMatrix4 world_T_camera0(Utilities::viewPosition(*camera, allVisibleObjectPoints, viewDirection0, true));
+		const HomogenousMatrix4 world_T_camera1(Utilities::viewPosition(*camera, allVisibleObjectPoints, viewDirection1, true));
 
 #ifdef OCEAN_DEBUG
-			{
-				const HomogenousMatrix4 flippedCamera0_T_world(Camera::standard2InvertedFlipped(world_T_camera0));
-				const HomogenousMatrix4 flippedCamera1_T_world(Camera::standard2InvertedFlipped(world_T_camera1));
+		{
+			const HomogenousMatrix4 flippedCamera0_T_world(Camera::standard2InvertedFlipped(world_T_camera0));
+			const HomogenousMatrix4 flippedCamera1_T_world(Camera::standard2InvertedFlipped(world_T_camera1));
 
-				for (const Vector3& objectPoint : allVisibleObjectPoints)
-				{
-					ocean_assert(Camera::isObjectPointInFrontIF(flippedCamera0_T_world, objectPoint));
-					ocean_assert(Camera::isObjectPointInFrontIF(flippedCamera1_T_world, objectPoint));
-				}
+			for (const Vector3& objectPoint : allVisibleObjectPoints)
+			{
+				ocean_assert(Camera::isObjectPointInFrontIF(flippedCamera0_T_world, objectPoint));
+				ocean_assert(Camera::isObjectPointInFrontIF(flippedCamera1_T_world, objectPoint));
 			}
+		}
 #endif // OCEAN_DEBUG
 
-			Vectors2 imagePoints0;
-			Vectors2 imagePoints1;
+		Vectors2 imagePoints0;
+		Vectors2 imagePoints1;
 
-			Vectors2 perfectImagePoints0;
-			Vectors2 perfectImagePoints1;
+		Vectors2 perfectImagePoints0;
+		Vectors2 perfectImagePoints1;
 
-			Matrix invertedCovariances0(numberObjectPoints * 2u, 2u);
-			Matrix invertedCovariances1(numberObjectPoints * 2u, 2u);
+		Matrix invertedCovariances0(numberObjectPoints * 2u, 2u);
+		Matrix invertedCovariances1(numberObjectPoints * 2u, 2u);
 
-			for (unsigned int n = 0; n < numberObjectPoints; ++n)
+		for (unsigned int n = 0; n < numberObjectPoints; ++n)
+		{
+			const Vector2 imagePoint(camera->projectToImage(world_T_camera0, perfectObjectPoints[n]));
+
+			Vector2 imagePointNoise(0, 0);
+
+			if (standardDeviation > 0)
 			{
-				const Vector2 imagePoint(camera.projectToImage<true>(world_T_camera0, perfectObjectPoints[n], camera.hasDistortionParameters()));
+				imagePointNoise = Random::gaussianNoiseVector2(randomGenerator, standardDeviation, standardDeviation);
 
-				Vector2 imagePointNoise(0, 0);
-
-				if (standardDeviation > 0)
+				if (useCovariances)
 				{
-					imagePointNoise = Random::gaussianNoiseVector2(randomGenerator, standardDeviation, standardDeviation);
+					const SquareMatrix2 covariance(Geometry::Utilities::covarianceMatrix(imagePointNoise, standardDeviation));
+					const SquareMatrix2 invertedCovariance(covariance.inverted());
 
-					if (useCovariances)
-					{
-						const SquareMatrix2 covariance(Geometry::Utilities::covarianceMatrix(imagePointNoise, standardDeviation));
-						const SquareMatrix2 invertedCovariance(covariance.inverted());
-
-						invertedCovariance.copyElements(invertedCovariances0[2u * n], false);
-					}
+					invertedCovariance.copyElements(invertedCovariances0[2u * n], false);
 				}
-				else if (useCovariances)
-				{
-					SquareMatrix2(true).copyElements(invertedCovariances0[2u * n], false);
-				}
-
-				perfectImagePoints0.push_back(imagePoint);
-				imagePoints0.emplace_back(imagePoint + imagePointNoise);
+			}
+			else if (useCovariances)
+			{
+				SquareMatrix2(true).copyElements(invertedCovariances0[2u * n], false);
 			}
 
-			for (unsigned int n = 0u; n < numberObjectPoints; ++n)
+			perfectImagePoints0.push_back(imagePoint);
+			imagePoints0.emplace_back(imagePoint + imagePointNoise);
+		}
+
+		for (unsigned int n = 0u; n < numberObjectPoints; ++n)
+		{
+			const Vector2 imagePoint(camera->projectToImage(world_T_camera1, perfectObjectPoints[n]));
+
+			Vector2 imagePointNoise(0, 0);
+
+			if (standardDeviation > 0)
 			{
-				const Vector2 imagePoint(camera.projectToImage<true>(world_T_camera1, perfectObjectPoints[n], camera.hasDistortionParameters()));
+				imagePointNoise = Random::gaussianNoiseVector2(randomGenerator, standardDeviation, standardDeviation);
 
-				Vector2 imagePointNoise(0, 0);
-
-				if (standardDeviation > 0)
+				if (useCovariances)
 				{
-					imagePointNoise = Random::gaussianNoiseVector2(randomGenerator, standardDeviation, standardDeviation);
+					const SquareMatrix2 covariance(Geometry::Utilities::covarianceMatrix(imagePointNoise, standardDeviation));
+					const SquareMatrix2 invertedCovariance(covariance.inverted());
 
-					if (useCovariances)
-					{
-						const SquareMatrix2 covariance(Geometry::Utilities::covarianceMatrix(imagePointNoise, standardDeviation));
-						const SquareMatrix2 invertedCovariance(covariance.inverted());
-
-						invertedCovariance.copyElements(invertedCovariances1[2u * n], false);
-					}
+					invertedCovariance.copyElements(invertedCovariances1[2u * n], false);
 				}
-				else if (useCovariances)
-				{
-					SquareMatrix2(true).copyElements(invertedCovariances1[2u * n], false);
-				}
-
-				perfectImagePoints1.push_back(imagePoint);
-				imagePoints1.emplace_back(imagePoint + imagePointNoise);
+			}
+			else if (useCovariances)
+			{
+				SquareMatrix2(true).copyElements(invertedCovariances1[2u * n], false);
 			}
 
-			const Vector3 errorTranslation1(Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1)));
-			const Euler errorEuler1(Random::euler(randomGenerator, Numeric::deg2rad(10)));
-			const Quaternion errorRotation1(errorEuler1);
-			const Vector3 faultyTranslation1(world_T_camera1.translation() + errorTranslation1);
-			const Quaternion faultyRotation1(world_T_camera1.rotation() * errorRotation1);
+			perfectImagePoints1.push_back(imagePoint);
+			imagePoints1.emplace_back(imagePoint + imagePointNoise);
+		}
 
-			const HomogenousMatrix4 world_T_faultyCamera1(faultyTranslation1, faultyRotation1);
+		const Vector3 errorTranslation1(Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1)));
+		const Euler errorEuler1(Random::euler(randomGenerator, Numeric::deg2rad(10)));
+		const Quaternion errorRotation1(errorEuler1);
+		const Vector3 faultyTranslation1(world_T_camera1.translation() + errorTranslation1);
+		const Quaternion faultyRotation1(world_T_camera1.rotation() * errorRotation1);
 
-			ocean_assert(objectPoints.size() == perfectObjectPoints.size());
+		const HomogenousMatrix4 world_T_faultyCamera1(faultyTranslation1, faultyRotation1);
 
-			const IndexSet32 outlierSet(Utilities::randomIndices(numberObjectPoints, numberOutliers));
+		ocean_assert(objectPoints.size() == perfectObjectPoints.size());
 
-			for (const Index32 outlierIndex : outlierSet)
+		const IndexSet32 outlierSet(Utilities::randomIndices(numberObjectPoints, numberOutliers));
+
+		for (const Index32 outlierIndex : outlierSet)
+		{
+			imagePoints0[outlierIndex] += Random::gaussianNoiseVector2(randomGenerator, 100, 100);
+			imagePoints1[outlierIndex] += Random::gaussianNoiseVector2(randomGenerator, 100, 100);
+		}
+
+		Vectors3 optimizedObjectPoints(objectPoints.size());
+		HomogenousMatrix4 world_T_optimizedCamera1(false);
+
+		performance.start();
+
+			NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(optimizedObjectPoints);
+			const bool result = Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(*camera, world_T_camera0, world_T_faultyCamera1, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 50u, estimatorType, Scalar(0.001), Scalar(5), true);
+			ocean_assert(result);
+
+		performance.stop();
+
+		if (result)
+		{
+			Scalar sqrAveragePixelErrorInitial = 0;
+			Scalar sqrMinimalPixelErrorInitial = 0;
+			Scalar sqrMaximalPixelErrorInitial = 0;
+
+			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMinimalPixelErrorInitial);
+			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMaximalPixelErrorInitial);
+
 			{
-				imagePoints0[outlierIndex] += Random::gaussianNoiseVector2(randomGenerator, 100, 100);
-				imagePoints1[outlierIndex] += Random::gaussianNoiseVector2(randomGenerator, 100, 100);
-			}
+				Scalar sqrAveragePixelError = 0, sqrMinimalPixelError = 0, sqrMaximalPixelError = 0;
 
-			Vectors3 optimizedObjectPoints(objectPoints.size());
-			HomogenousMatrix4 world_T_optimizedCamera1(false);
-
-			performance.start();
-
-				NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(optimizedObjectPoints);
-				const bool result = Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_faultyCamera1, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), camera.hasDistortionParameters(), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 50u, estimatorType, Scalar(0.001), Scalar(5), true);
-				ocean_assert(result);
-
-			performance.stop();
-
-			if (result)
-			{
-				Scalar sqrAveragePixelErrorInitial = 0;
-				Scalar sqrMinimalPixelErrorInitial = 0;
-				Scalar sqrMaximalPixelErrorInitial = 0;
-
-				OCEAN_SUPPRESS_UNUSED_WARNING(sqrMinimalPixelErrorInitial);
-				OCEAN_SUPPRESS_UNUSED_WARNING(sqrMaximalPixelErrorInitial);
-
+				if (Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(world_T_camera0, *camera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints0), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError))
 				{
-					Scalar sqrAveragePixelError = 0, sqrMinimalPixelError = 0, sqrMaximalPixelError = 0;
-
-					Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(world_T_camera0, camera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints0), camera.hasDistortionParameters(), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
-					sqrAveragePixelErrorInitial += sqrAveragePixelError;
-					sqrMinimalPixelErrorInitial += sqrMinimalPixelError;
-					sqrMaximalPixelErrorInitial += sqrMaximalPixelError;
-
-					Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(world_T_camera1, camera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints1), camera.hasDistortionParameters(), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
 					sqrAveragePixelErrorInitial += sqrAveragePixelError;
 					sqrMinimalPixelErrorInitial += sqrMinimalPixelError;
 					sqrMaximalPixelErrorInitial += sqrMaximalPixelError;
 				}
-
-				const Scalar sqrAverageObjectPointErrorInitial = Geometry::Error::determineAverageError(objectPoints, optimizedObjectPoints);
-				OCEAN_SUPPRESS_UNUSED_WARNING(sqrAverageObjectPointErrorInitial);
-
-				Scalar sqrAveragePixelErrorOptimized = 0;
-				Scalar sqrMinimalPixelErrorOptimized = 0;
-				Scalar sqrMaximalPixelErrorOptimized = 0;
-
-				OCEAN_SUPPRESS_UNUSED_WARNING(sqrMinimalPixelErrorOptimized);
-				OCEAN_SUPPRESS_UNUSED_WARNING(sqrMaximalPixelErrorOptimized);
-
-				const Vectors2 outlierFreeImagePoints0(Subset::invertedSubset(perfectImagePoints0, outlierSet));
-				const Vectors2 outlierFreeImagePoints1(Subset::invertedSubset(perfectImagePoints1, outlierSet));
-				const Vectors3 outlierFreeObjectPoints(Subset::invertedSubset(perfectObjectPoints, outlierSet));
-				const Vectors3 outlierFreeOptimizedObjectPoints(Subset::invertedSubset(optimizedObjectPoints, outlierSet));
-
+				else
 				{
-					Scalar sqrAveragePixelError = 0, sqrMinimalPixelError = 0, sqrMaximalPixelError = 0;
+					scopedIteration.setInaccurate();
+				}
 
-					Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(world_T_camera0, camera, ConstTemplateArrayAccessor<Vector3>(outlierFreeOptimizedObjectPoints), ConstTemplateArrayAccessor<Vector2>(outlierFreeImagePoints0), camera.hasDistortionParameters(), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
-					sqrAveragePixelErrorOptimized += sqrAveragePixelError;
-					sqrMinimalPixelErrorOptimized += sqrMinimalPixelError;
-					sqrMaximalPixelErrorOptimized += sqrMaximalPixelError;
+				if (!Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(world_T_camera1, *camera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints1), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError))
+				{
+					sqrAveragePixelErrorInitial += sqrAveragePixelError;
+					sqrMinimalPixelErrorInitial += sqrMinimalPixelError;
+					sqrMaximalPixelErrorInitial += sqrMaximalPixelError;
+				}
+				else
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
 
-					Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(world_T_optimizedCamera1, camera, ConstTemplateArrayAccessor<Vector3>(outlierFreeOptimizedObjectPoints), ConstTemplateArrayAccessor<Vector2>(outlierFreeImagePoints1), camera.hasDistortionParameters(), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
+			const Scalar sqrAverageObjectPointErrorInitial = Geometry::Error::determineAverageError(objectPoints, optimizedObjectPoints);
+			OCEAN_SUPPRESS_UNUSED_WARNING(sqrAverageObjectPointErrorInitial);
+
+			Scalar sqrAveragePixelErrorOptimized = 0;
+			Scalar sqrMinimalPixelErrorOptimized = 0;
+			Scalar sqrMaximalPixelErrorOptimized = 0;
+
+			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMinimalPixelErrorOptimized);
+			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMaximalPixelErrorOptimized);
+
+			const Vectors2 outlierFreeImagePoints0(Subset::invertedSubset(perfectImagePoints0, outlierSet));
+			const Vectors2 outlierFreeImagePoints1(Subset::invertedSubset(perfectImagePoints1, outlierSet));
+			const Vectors3 outlierFreeObjectPoints(Subset::invertedSubset(perfectObjectPoints, outlierSet));
+			const Vectors3 outlierFreeOptimizedObjectPoints(Subset::invertedSubset(optimizedObjectPoints, outlierSet));
+
+			{
+				Scalar sqrAveragePixelError = 0, sqrMinimalPixelError = 0, sqrMaximalPixelError = 0;
+
+				if (Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(world_T_camera0, *camera, ConstTemplateArrayAccessor<Vector3>(outlierFreeOptimizedObjectPoints), ConstTemplateArrayAccessor<Vector2>(outlierFreeImagePoints0), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError))
+				{
 					sqrAveragePixelErrorOptimized += sqrAveragePixelError;
 					sqrMinimalPixelErrorOptimized += sqrMinimalPixelError;
 					sqrMaximalPixelErrorOptimized += sqrMaximalPixelError;
 				}
+				else
+				{
+					scopedIteration.setInaccurate();
+				}
 
-				const Scalar sqrAverageObjectPointError = Geometry::Error::determineAverageError(outlierFreeObjectPoints, outlierFreeOptimizedObjectPoints);
-				OCEAN_SUPPRESS_UNUSED_WARNING(sqrAverageObjectPointError);
-
-				averageInitialSqrError += sqrAveragePixelErrorInitial;
-				averageOptimizedSqrError += sqrAveragePixelErrorOptimized;
-
-				medianPixelErrors.push_back(sqrAveragePixelErrorInitial);
-				medianOptimizedPixelErrors.push_back(sqrAveragePixelErrorOptimized);
+				if (Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(world_T_optimizedCamera1, *camera, ConstTemplateArrayAccessor<Vector3>(outlierFreeOptimizedObjectPoints), ConstTemplateArrayAccessor<Vector2>(outlierFreeImagePoints1), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError))
+				{
+					sqrAveragePixelErrorOptimized += sqrAveragePixelError;
+					sqrMinimalPixelErrorOptimized += sqrMinimalPixelError;
+					sqrMaximalPixelErrorOptimized += sqrMaximalPixelError;
+				}
+				else
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
-			else
-			{
-				scopedIteration.setInaccurate();
-			}
+
+			const Scalar sqrAverageObjectPointError = Geometry::Error::determineAverageError(outlierFreeObjectPoints, outlierFreeOptimizedObjectPoints);
+			OCEAN_SUPPRESS_UNUSED_WARNING(sqrAverageObjectPointError);
+
+			averageInitialSqrError += sqrAveragePixelErrorInitial;
+			averageOptimizedSqrError += sqrAveragePixelErrorOptimized;
+
+			medianPixelErrors.push_back(sqrAveragePixelErrorInitial);
+			medianOptimizedPixelErrors.push_back(sqrAveragePixelErrorOptimized);
+		}
+		else
+		{
+			scopedIteration.setInaccurate();
 		}
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));

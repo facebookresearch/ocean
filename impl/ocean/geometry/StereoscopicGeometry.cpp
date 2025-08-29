@@ -190,7 +190,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 		NonconstArrayAccessor<Vector3> subsetOptimizedObjectPointsAccessor(reusableOptimizedObjectPoints);
 
 		HomogenousMatrix4 world_T_optimizedCamera1(false);
-		if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(pinholeCamera, world_T_camera0, world_T_roughCamera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableIndicesSubset), pinholeCamera.hasDistortionParameters(), &world_T_optimizedCamera1, &subsetOptimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true))
+		if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(AnyCameraPinhole(pinholeCamera), world_T_camera0, world_T_roughCamera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableIndicesSubset), &world_T_optimizedCamera1, &subsetOptimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true))
 		{
 			// now we determine the 3D object point locations for each point pair by triangulation, accept any 3D object point as long as the point is in front of the camera
 
@@ -205,7 +205,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 				NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(reusableOptimizedObjectPoints, reusableTriangulatedObjectPoints.size());
 				const HomogenousMatrix4 world_T_intermediateCamera1 = world_T_optimizedCamera1;
 
-				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(pinholeCamera, world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints0.data(), imagePoints0.size()), ConstArrayAccessor<Vector2>(imagePoints1.data(), imagePoints1.size()), pinholeCamera.hasDistortionParameters(), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
+				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(AnyCameraPinhole(pinholeCamera), world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints0.data(), imagePoints0.size()), ConstArrayAccessor<Vector2>(imagePoints1.data(), imagePoints1.size()), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
 				{
 					// now we check which 3D object point is valid for the given image point correspondences
 
@@ -252,7 +252,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 				NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(reusableOptimizedObjectPoints, reusableTriangulatedObjectPoints.size());
 
 				const HomogenousMatrix4 world_T_intermediateCamera1 = world_T_optimizedCamera1;
-				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(pinholeCamera, world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableValidTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableValidTriangulatedObjectPoints), pinholeCamera.hasDistortionParameters(), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
+				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(AnyCameraPinhole(pinholeCamera), world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableValidTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableValidTriangulatedObjectPoints), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
 				{
 					// now we check which 3D object point is valid for the given image point correspondences
 
@@ -313,14 +313,14 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 		NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(bestObjectPoints, initialBadObjectPoints.size());
 
 		HomogenousMatrix4 world_T_optimizedCamera1;
-		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(pinholeCamera, world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints0, accessorImagePoints1, pinholeCamera.hasDistortionParameters(), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true))
+		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(AnyCameraPinhole(pinholeCamera), world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints0, accessorImagePoints1, &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true))
 		{
 			return false;
 		}
 
 		world_T_roughCamera1 = world_T_optimizedCamera1;
 		const Vectors3 initialObjectPoints = bestObjectPoints;
-		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(pinholeCamera, world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialObjectPoints), accessorImagePoints0, accessorImagePoints1, pinholeCamera.hasDistortionParameters(), &world_T_camera1, &optimizedObjectPointsAccessor, 5u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
+		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(AnyCameraPinhole(pinholeCamera), world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialObjectPoints), accessorImagePoints0, accessorImagePoints1, &world_T_camera1, &optimizedObjectPointsAccessor, 5u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
 		{
 			return false;
 		}
