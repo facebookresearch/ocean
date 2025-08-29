@@ -166,7 +166,6 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationObjectPoint : protecte
 
 		/**
 		 * Tests the non linear optimization function for one static and one dynamic camera pose and several dynamic object points.
-		 * @param pinholeCamera The pinhole camera to test
 		 * @param numberObjectPoints Number of object points
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param type Estimator type to be used
@@ -175,7 +174,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationObjectPoint : protecte
 		 * @param useCovariances True, to create and use perfect covariance matrices
 		 * @return True, if succeeded
 		 */
-		static bool testNonLinearOptimizationOnePoseObjectPoints(const PinholeCamera& pinholeCamera, const unsigned int numberObjectPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation = 0, const unsigned int outliers = 0, const bool useCovariances = false);
+		static bool testNonLinearOptimizationOnePoseObjectPoints(const unsigned int numberObjectPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation = 0, const unsigned int outliers = 0u, const bool useCovariances = false);
 
 		/**
 		 * Tests the non linear optimization function for one static and one dynamic 6DOF poses and several dynamic 3D object points.
@@ -195,7 +194,7 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationObjectPoint : protecte
 		 * @param useCovariances True, to create and use perfect covariance matrices
 		 * @return True, if succeeded
 		 */
-		static bool testNonLinearOptimizationTwoPosesObjectPoints(const PinholeCamera& pinholeCamera, const unsigned int numberObjectPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation = 0, const unsigned int outliers = 0, const bool useCovariances = false);
+		static bool testNonLinearOptimizationTwoPosesObjectPoints(const PinholeCamera& pinholeCamera, const unsigned int numberObjectPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar standardDeviation = 0, const unsigned int outliers = 0u, const bool useCovariances = false);
 
 		/**
 		 * Tests the non linear optimization function for several 6DOF poses and several 3D object points.
