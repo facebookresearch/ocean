@@ -126,7 +126,7 @@ void SLAMTracker6DOF::threadRun()
 
 	while (shouldThreadStop() == false)
 	{
-		const FrameRef frame = frameMedium->frame();
+		const FrameRef frame = frameMedium->frame(&camera_);
 
 		if (frame.isNull() || !frame->isValid() || frame->timestamp() <= frameTimestamp_)
 		{
@@ -134,24 +134,14 @@ void SLAMTracker6DOF::threadRun()
 			continue;
 		}
 
-		frameTimestamp_ = frame->timestamp();
-
-		if (*frame != recentFrameType_)
+		if (!camera_ || !camera_->isValid())
 		{
-			recentFrameType_ = *frame;
-
-			IO::CameraCalibrationManager::Quality quality;
-			camera_ = IO::CameraCalibrationManager::get().camera(frameMedium->url(), frame->width(), frame->height(), &quality);
-
-			if (quality == IO::CameraCalibrationManager::QUALITY_DEFAULT)
-			{
-				Log::warning() << "No valid camera calibration has been found for \"" << frameMedium->url() << "\" a default calibration with 45 degree FOVX is used instead.";
-			}
-			else if (quality == IO::CameraCalibrationManager::QUALITY_INTERPOLATED)
-			{
-				Log::info() << "No exact camera calibration has been found for \"" << frameMedium->url() << "\" with resolution " << frame->width() << "x" << frame->height() << " an interpolated calibration is used instead.";
-			}
+			ocean_assert(false && "This should never happen!");
+			sleep(1u);
+			continue;
 		}
+
+		frameTimestamp_ = frame->timestamp();
 
 		const WorkerPool::ScopedWorker scopedWorker(WorkerPool::get().scopedWorker());
 
@@ -269,7 +259,7 @@ void SLAMTracker6DOF::threadRun()
 						Vectors3 objectPoints;
 						validIndices.clear();
 
-						if (determineInitialObjectPoints(camera_, initializationFirstImagePoints_, initializationRecentImagePoints_, world_T_camera, objectPoints, validIndices))
+						if (determineInitialObjectPoints(*camera_, initializationFirstImagePoints_, initializationRecentImagePoints_, world_T_camera, objectPoints, validIndices))
 						{
 							// we accept the initialization result only if we have enough valid object points, otherwise we result the initialization process
 
@@ -335,7 +325,7 @@ void SLAMTracker6DOF::threadRun()
 
 				HomogenousMatrix4 world_T_camera(false);
 
-				if (Geometry::NonLinearOptimizationPose::optimizePose(camera_, world_T_previousCamera_, ConstArrayAccessor<Vector3>(objectPoints_), ConstArrayAccessor<Vector2>(imagePoints_), camera_.hasDistortionParameters(), world_T_camera, 20u, Geometry::Estimator::ET_HUBER))
+				if (Geometry::NonLinearOptimizationPose::optimizePose(*camera_, world_T_previousCamera_, ConstArrayAccessor<Vector3>(objectPoints_), ConstArrayAccessor<Vector2>(imagePoints_), world_T_camera, 20u, Geometry::Estimator::ET_HUBER))
 				{
 					// first we post the tracking result so that the connected components have this information as early as possible
 
@@ -345,7 +335,7 @@ void SLAMTracker6DOF::threadRun()
 					// now we extend our database for new feature points
 					extractUnlocatedImagePoints(combinedCurrentImagePoints, numberLocatedPreviousImagePoints, validIndices, world_T_camera, observationGroups_);
 
-					extendTrackingDatabase(camera_, observationGroups_, objectPoints_, imagePoints_, 20u);
+					extendTrackingDatabase(*camera_, observationGroups_, objectPoints_, imagePoints_, 20u);
 
 #ifdef OCEAN_DEBUG_ON_WINDOWS
 					{
@@ -461,7 +451,7 @@ bool SLAMTracker6DOF::trackPoints(const CV::FramePyramid& previousFramePyramid, 
 	return true;
 }
 
-bool SLAMTracker6DOF::determineInitialObjectPoints(const PinholeCamera& pinholeCamera, const Vectors2& firstImagePoints, const Vectors2& secondImagePoints, HomogenousMatrix4& plane_T_camera, Vectors3& objectPoints, Indices32& validImagePoints)
+bool SLAMTracker6DOF::determineInitialObjectPoints(const AnyCamera& camera, const Vectors2& firstImagePoints, const Vectors2& secondImagePoints, HomogenousMatrix4& plane_T_camera, Vectors3& objectPoints, Indices32& validImagePoints)
 {
 	ocean_assert(firstImagePoints.size() == secondImagePoints.size());
 	ocean_assert(firstImagePoints.size() >= 5);
@@ -471,7 +461,7 @@ bool SLAMTracker6DOF::determineInitialObjectPoints(const PinholeCamera& pinholeC
 	RandomGenerator randomGenerator;
 
 	HomogenousMatrix4 world_T_camera;
-	if (!Geometry::StereoscopicGeometry::cameraPose(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector2>(firstImagePoints), ConstArrayAccessor<Vector2>(secondImagePoints), randomGenerator, world_T_camera, &objectPoints, &validImagePoints))
+	if (!Geometry::StereoscopicGeometry::cameraPose(camera, ConstArrayAccessor<Vector2>(firstImagePoints), ConstArrayAccessor<Vector2>(secondImagePoints), randomGenerator, world_T_camera, &objectPoints, &validImagePoints))
 	{
 		return false;
 	}
@@ -497,18 +487,18 @@ bool SLAMTracker6DOF::determineInitialObjectPoints(const PinholeCamera& pinholeC
 
 	// now we need to determine the reference coordinate system lying in/on the 3D plane
 
-	const Line3 rayPrincipalPoint(pinholeCamera.ray(Vector2(Scalar(pinholeCamera.width()), Scalar(pinholeCamera.height())) * Scalar(0.5), world_T_camera));
+	const Line3 rayPrincipalPoint(camera.ray(Vector2(Scalar(camera.width()), Scalar(camera.height())) * Scalar(0.5), world_T_camera));
 
 	Vector3 planePrincipalObjectPoint;
-	if (!plane.intersection(rayPrincipalPoint, planePrincipalObjectPoint) || !pinholeCamera.isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), planePrincipalObjectPoint))
+	if (!plane.intersection(rayPrincipalPoint, planePrincipalObjectPoint) || !Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(world_T_camera), planePrincipalObjectPoint))
 	{
 		return false;
 	}
 
-	const Line3 rayRightPoint(pinholeCamera.ray(Vector2(Scalar(pinholeCamera.width()), Scalar(pinholeCamera.height()) * Scalar(0.5)), world_T_camera));
+	const Line3 rayRightPoint(camera.ray(Vector2(Scalar(camera.width()), Scalar(camera.height()) * Scalar(0.5)), world_T_camera));
 
 	Vector3 planeRightObjectPoint;
-	if (!plane.intersection(rayRightPoint, planeRightObjectPoint) || !pinholeCamera.isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(world_T_camera), planeRightObjectPoint))
+	if (!plane.intersection(rayRightPoint, planeRightObjectPoint) || !Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(world_T_camera), planeRightObjectPoint))
 	{
 		return false;
 	}
@@ -616,7 +606,7 @@ void SLAMTracker6DOF::extractUnlocatedImagePoints(const Vectors2& combinedImageP
 	observationGroups = std::move(tempObservationGroups);
 }
 
-void SLAMTracker6DOF::extendTrackingDatabase(const PinholeCamera& pinholeCamera, ObservationGroups& observationGroups, Vectors3& objectPoints, Vectors2& imagePoints, const unsigned int minimalObservations)
+void SLAMTracker6DOF::extendTrackingDatabase(const AnyCamera& camera, ObservationGroups& observationGroups, Vectors3& objectPoints, Vectors2& imagePoints, const unsigned int minimalObservations)
 {
 	ObservationGroups tempObservationGroups;
 	tempObservationGroups.reserve(observationGroups.size());
@@ -635,7 +625,7 @@ void SLAMTracker6DOF::extendTrackingDatabase(const PinholeCamera& pinholeCamera,
 
 			// we first check whether the object point has been seen from several different viewing angles
 
-			const Scalar angle = medianObservationAngle(pinholeCamera, observations);
+			const Scalar angle = medianObservationAngle(camera, observations);
 
 			if (angle >= Numeric::deg2rad(3))
 			{
@@ -653,7 +643,7 @@ void SLAMTracker6DOF::extendTrackingDatabase(const PinholeCamera& pinholeCamera,
 				}
 
 				Vector3 objectPoint;
-				if (Geometry::RANSAC::objectPoint(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<HomogenousMatrix4>(observationPoses), ConstArrayAccessor<Vector2>(observationImagePoints), localRandomGenerator, objectPoint, 20u, Scalar(3 * 3), 5u, true, Geometry::Estimator::ET_SQUARE, nullptr, &usedIndices) && usedIndices.size() == observationPoses.size())
+				if (Geometry::RANSAC::objectPoint(camera, ConstArrayAccessor<HomogenousMatrix4>(observationPoses), ConstArrayAccessor<Vector2>(observationImagePoints), localRandomGenerator, objectPoint, 20u, Scalar(3 * 3), 5u, true, Geometry::Estimator::ET_SQUARE, nullptr, &usedIndices) && usedIndices.size() == observationPoses.size())
 				{
 					// we have a new 3D object point
 
@@ -679,9 +669,9 @@ void SLAMTracker6DOF::extendTrackingDatabase(const PinholeCamera& pinholeCamera,
 	observationGroups = std::move(tempObservationGroups);
 }
 
-Scalar SLAMTracker6DOF::medianObservationAngle(const PinholeCamera& pinholeCamera, const Observations& observations)
+Scalar SLAMTracker6DOF::medianObservationAngle(const AnyCamera& camera, const Observations& observations)
 {
-	ocean_assert(pinholeCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(!observations.empty());
 
 	Lines3 rays(observations.size());
@@ -689,7 +679,7 @@ Scalar SLAMTracker6DOF::medianObservationAngle(const PinholeCamera& pinholeCamer
 
 	for (size_t n = 0; n < observations.size(); ++n)
 	{
-		rays[n] = pinholeCamera.ray(pinholeCamera.undistortDamped(observations[n].second), observations[n].first);
+		rays[n] = camera.ray(observations[n].second, observations[n].first);
 		meanDirection += rays[n].direction();
 	}
 

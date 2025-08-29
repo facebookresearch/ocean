@@ -18,8 +18,8 @@
 #include "ocean/devices/Tracker6DOF.h"
 #include "ocean/devices/VisualTracker.h"
 
+#include "ocean/math/AnyCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
-#include "ocean/math/PinholeCamera.h"
 
 namespace Ocean
 {
@@ -149,7 +149,7 @@ class OCEAN_DEVICES_SLAM_EXPORT SLAMTracker6DOF :
 		/**
 		 * Determines the locations of initial 3D object points from two sets of corresponding image points from individual (stereo) frames.
 		 * The origin of the world coordinate system will be located onto the dominant 3D plane where the principal point's viewing ray is intersecting the plane.
-		 * @param pinholeCamera The camera profile defining the projection
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param firstImagePoints The first set of image points, at least 5
 		 * @param secondImagePoints The second set of image points, one image point for each image point in the first set
 		 * @param world_T_camera The resulting camera pose of the frame in which the second image points are located (the camera pose of the first frame is expected to be the identity pose)
@@ -157,7 +157,7 @@ class OCEAN_DEVICES_SLAM_EXPORT SLAMTracker6DOF :
 		 * @param validImagePoints The indices of all valid image point correspondences, one index for each resulting object point
 		 * @return True, if succeeded
 		 */
-		static bool determineInitialObjectPoints(const PinholeCamera& pinholeCamera, const Vectors2& firstImagePoints, const Vectors2& secondImagePoints, HomogenousMatrix4& world_T_camera, Vectors3& objectPoints, Indices32& validImagePoints);
+		static bool determineInitialObjectPoints(const AnyCamera& camera, const Vectors2& firstImagePoints, const Vectors2& secondImagePoints, HomogenousMatrix4& world_T_camera, Vectors3& objectPoints, Indices32& validImagePoints);
 
 		/**
 		 * Combines three groups of image points to one large set of image points.
@@ -200,35 +200,32 @@ class OCEAN_DEVICES_SLAM_EXPORT SLAMTracker6DOF :
 		/**
 		 * Extends the tracking database by determining the locations of 3D object points based on the observations in several individual camera frames.
 		 * Observations for which a 3D object point could be determined will be removed from the set of candidates.
-		 * @param pinholeCamera The camera profile defining the projection
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param observationGroups The groups of observations which provide candidates for new 3D object points
 		 * @param objectPoints The already known object points currently used for tracking, this set will be extended by new 3D object point locations
 		 * @param imagePoints The image points currently used for tracking, one image point for each object point, this set will be extended by new image points locations
 		 * @param minimalObservations The minimal number of observations an object point must have to so that the 3D object point will be determined
 		 */
-		static void extendTrackingDatabase(const PinholeCamera& pinholeCamera, ObservationGroups& observationGroups, Vectors3& objectPoints, Vectors2& imagePoints, const unsigned int minimalObservations = 20u);
+		static void extendTrackingDatabase(const AnyCamera& camera, ObservationGroups& observationGroups, Vectors3& objectPoints, Vectors2& imagePoints, const unsigned int minimalObservations = 20u);
 
 		/**
 		 * Determines the median angle between the mean viewing ray and all individual viewing rays of an object points (and the corresponding image points respectively).
-		 * @param pinholeCamera The camera profile defining the projection
+		 * @param camera The camera profile defining the projection, must be valid
 		 * @param observations The observations of the object point
 		 * @return The median angle, in radian
 		 */
-		static Scalar medianObservationAngle(const PinholeCamera& pinholeCamera, const Observations& observations);
+		static Scalar medianObservationAngle(const AnyCamera& camera, const Observations& observations);
 
 	private:
 
 		/// Frame timestamp.
 		Timestamp frameTimestamp_;
 
-		/// Frame recent type.
-		FrameType recentFrameType_;
-
 		/// Most recent sample timestamp.
 		Timestamp recentFrameTimestamp_;
 
-		/// The camera calibration object.
-		PinholeCamera camera_;
+		/// The camera profile defining the projection.
+		SharedAnyCamera camera_;
 
 		/// The 2D image points located in the first stereo vision frame which will be used for initialization.
 		Vectors2 initializationFirstImagePoints_;
