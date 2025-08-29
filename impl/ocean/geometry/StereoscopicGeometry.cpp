@@ -50,12 +50,12 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 
 	HomogenousMatrix4 world_T_roughCamera1 = world_T_camera0;
 
-	SquareMatrix3 world_R_camera1(false);
+	Quaternion world_R_camera1(false);
 	Indices32 usedIndices;
 	if (Geometry::RANSAC::orientation(camera, ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints1, randomGenerator, world_R_camera1, 5u, 100u, Scalar(4) * maxRotationalSqrError, nullptr, &usedIndices) // we take a slightly larger maxSqrError as the RANSAC does not apply any optimization
 			&& Scalar(usedIndices.size()) >= Scalar(initialBadObjectPoints.size()) * rotationalMotionMinimalValidCorrespondencesPercent)
 	{
-		ocean_assert(!world_R_camera1.isSingular());
+		ocean_assert(world_R_camera1.isValid());
 
 		// now as we seem to have a pure rotational motion we need to optimized the rotation further
 
@@ -64,7 +64,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 
 		Scalar sqrAverageError = Numeric::maxValue();
 		Quaternion world_R_optimizedCamera1_(false);
-		if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, Quaternion(world_R_camera1), ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), usedIndices), world_R_optimizedCamera1_, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &sqrAverageError))
+		if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, world_R_camera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), usedIndices), world_R_optimizedCamera1_, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &sqrAverageError))
 		{
 			ocean_assert(world_R_optimizedCamera1_.isValid());
 

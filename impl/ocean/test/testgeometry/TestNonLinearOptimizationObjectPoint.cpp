@@ -2333,7 +2333,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 		const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
 
 		Box3 objectVolume(perfectObjectPoints);
-		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);		
+		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);
 		Vectors3 faultyObjectPoints;
 		faultyObjectPoints.reserve(perfectObjectPoints.size());
 

@@ -271,14 +271,14 @@ bool TestNonLinearOptimizationOrientation::testOptimizeOrientation(const unsigne
 			}
 			else
 			{
-				SquareMatrix3 world_T_ransacCamera(false);
+				Quaternion world_T_ransacCamera(false);
 
 				performance.start();
 
 					Indices32 usedIndices;
 					if (Geometry::RANSAC::orientation(camera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, world_T_ransacCamera, 3u, 50u, Scalar(5 * 5), nullptr, &usedIndices))
 					{
-						localResult = Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, Quaternion(world_T_ransacCamera), ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError, nullptr, &intermediateErrors);
+						localResult = Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, world_T_ransacCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints, usedIndices), optimizedOrientation, 20u, type, Scalar(0.001), Scalar(5), &initialError, &finalError, nullptr, &intermediateErrors);
 					}
 
 				performance.stop();

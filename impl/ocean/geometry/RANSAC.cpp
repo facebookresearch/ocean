@@ -1113,7 +1113,7 @@ bool RANSAC::translation(const ConstIndexedAccessor<Vector2>& translations, Rand
 	return true;
 }
 
-bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, SquareMatrix3& orientation, const unsigned int minValidCorrespondences, const unsigned int iterations, const Scalar maxSqrError, Scalar* finalError, Indices32* usedIndices)
+bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, RandomGenerator& randomGenerator, Quaternion& world_R_camera, const unsigned int minValidCorrespondences, const unsigned int iterations, const Scalar maxSqrError, Scalar* finalError, Indices32* usedIndices)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(objectPoints.size() && imagePoints.size());
@@ -1146,26 +1146,23 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Obj
 			continue;
 		}
 
-		const Vector2 imagePoint0(imagePoints[index0]);
-		const Vector2 imagePoint1(imagePoints[index1]);
-
-		const Vector3 imageRay0(camera.vector(imagePoint0, true));
-		const Vector3 imageRay1(camera.vector(imagePoint1, true));
+		const Vector3 imageRay0 = camera.vector(imagePoints[index0], true /*makeUnitVector*/);
+		const Vector3 imageRay1 = camera.vector(imagePoints[index1], true);
 
 		ocean_assert(targetVector0.isUnit() && targetVector1.isUnit());
 		ocean_assert(imageRay0.isUnit() && imageRay1.isUnit());
 
 		// we calculate the first rotation which rotates the first reference vector to the first target vector
-		const Rotation rotation0(imageRay0, targetVector0);
+		const Quaternion rotation0(imageRay0, targetVector0);
 		ocean_assert((rotation0 * imageRay0).angle(targetVector0) < Numeric::rad2deg(Scalar(0.001)));
 
 		// now we need to find the second rotation around the first rotated reference vector (= target vector) so that also the second reference vector corresponds with the second target vector
-		const Vector3 rotatedImageRay1(rotation0 * imageRay1);
+		const Vector3 rotatedReferenceVector1(rotation0 * imageRay1);
 
 		const Vector3 directionA = targetVector1 - targetVector0 * (targetVector0 * targetVector1);
-		const Vector3 directionB = rotatedImageRay1 - targetVector0 * (rotatedImageRay1 * targetVector0);
+		const Vector3 directionB = rotatedReferenceVector1 - targetVector0 * (rotatedReferenceVector1 * targetVector0);
 
-		Rotation rotation(rotation0);
+		Quaternion candidateOrientation(rotation0);
 
 		if (!directionA.isNull() && !directionB.isNull())
 		{
@@ -1179,12 +1176,11 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Obj
 				angle = -angle;
 			}
 
-			const Rotation rotation1(targetVector0, angle);
-			rotation = Rotation(rotation1 * rotation0);
+			const Quaternion rotation1(targetVector0, angle);
+			candidateOrientation = Quaternion(rotation1 * rotation0);
 		}
 
-		const HomogenousMatrix4 world_T_camera(rotation);
-		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
+		const HomogenousMatrix4 flippedCamera_T_world(AnyCamera::standard2InvertedFlipped(HomogenousMatrix4(candidateOrientation)));
 
 		Scalar error = 0;
 		unsigned int validCorrespondences = 0u;
@@ -1199,7 +1195,8 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Obj
 			{
 				error += sqrDistance;
 				validCorrespondences++;
-				indices.push_back((unsigned int)n);
+
+				indices.emplace_back((unsigned int)(n));
 			}
 		}
 
@@ -1208,7 +1205,7 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Obj
 			bestValidCorrespondences = validCorrespondences;
 			bestError = error;
 
-			orientation = SquareMatrix3(rotation);
+			world_R_camera = candidateOrientation;
 
 			ocean_assert(validCorrespondences >= 1u);
 

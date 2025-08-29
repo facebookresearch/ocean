@@ -252,7 +252,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param objectPoints The accessor providing the given 3D object points, at least 2
 		 * @param imagePoints The accessor providing the given 2D image points, one image point for each 3D object point
 		 * @param randomGenerator Random generator object to be used for creating random numbers
-		 * @param world_R_camera The resulting camera orientation, transforming camera to world, with default camera pointing towards the negative z-space with y-axis upwards
+		 * @param world_R_camera The resulting camera pose, with default camera pointing towards the negative z-space with y-axis upwards
 		 * @param minValidCorrespondences The minimal number of valid correspondences which are necessary for a valid orientation
 		 * @param iterations The number of RANSAC iterations, with range [1, infinity)
 		 * @param maxSqrError The maximal square pixel error between a projected 3D object point and a 2D image point to count as valid correspondence, with range (0, infinity)
@@ -260,7 +260,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param usedIndices Optional resulting indices of all used point correspondences
 		 * @return True, if succeeded
 		 */
-		static bool orientation(const AnyCamera& camera, const ConstIndexedAccessor<ObjectPoint>& objectPoints, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, SquareMatrix3& world_R_camera, const unsigned int minValidCorrespondences = 5u, const unsigned int iterations = 20u, const Scalar maxSqrError = Scalar(5 * 5), Scalar* finalError = nullptr, Indices32* usedIndices = nullptr);
+		static bool orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, RandomGenerator& randomGenerator, Quaternion& world_R_camera, const unsigned int minValidCorrespondences = 5u, const unsigned int iterations = 20u, const Scalar maxSqrError = Scalar(5 * 5), Scalar* finalError = nullptr, Indices32* usedIndices = nullptr);
 
 		/**
 		 * Determines the 3D object point for a set of image points observing the same object point under individual camera poses (with rotational and translational camera motion).

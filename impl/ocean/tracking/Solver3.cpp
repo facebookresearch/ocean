@@ -4719,14 +4719,14 @@ bool Solver3::updateDatabaseToRotationalMotion(Database& database, const Pinhole
 				const ConstArraySubsetAccessor<Vector3, unsigned int> relocatedObjectPoints(objectPoints, relocatedIndices);
 				const ConstArraySubsetAccessor<Vector2, unsigned int> relocatedImagePoints(imagePoints, relocatedIndices);
 
-				SquareMatrix3 orientation(true);
+				Quaternion orientation(true);
 				if (!Geometry::RANSAC::orientation(anyCamera, relocatedObjectPoints, relocatedImagePoints, randomGenerator, orientation, 3u, 50u, Scalar(10 * 10)))
 				{
 					ocean_assert(false && "This should never happen - however, we take the default rotation");
 				}
 
 				Quaternion optimizedOrientation(false);
-				if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, Quaternion(orientation), relocatedObjectPoints, relocatedImagePoints, optimizedOrientation, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5)))
+				if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(anyCamera, orientation, relocatedObjectPoints, relocatedImagePoints, optimizedOrientation, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5)))
 				{
 					ocean_assert(optimizedOrientation.isValid());
 
