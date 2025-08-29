@@ -962,7 +962,7 @@ bool Solver3::determineInitialObjectPointsFromSparseKeyFrames(const PinholeCamer
 	HomogenousMatrix4 secondPose(false);
 	Vectors3 validObjectPoints;
 	Indices32 validCorrespondenceIndices;
-	if (!Geometry::StereoscopicGeometry::cameraPose(pinholeCamera, ConstArrayAccessor<Vector2>(points0), ConstArrayAccessor<Vector2>(points1), randomGenerator, secondPose, &validObjectPoints, &validCorrespondenceIndices, Scalar(1.5 * 1.5), Scalar(3.5 * 3.5), 10u, Scalar(0.9)))
+	if (!Geometry::StereoscopicGeometry::cameraPose(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector2>(points0), ConstArrayAccessor<Vector2>(points1), randomGenerator, secondPose, &validObjectPoints, &validCorrespondenceIndices, Scalar(1.5 * 1.5), Scalar(3.5 * 3.5), 10u, Scalar(0.9)))
 	{
 		return false;
 	}
@@ -1171,7 +1171,7 @@ bool Solver3::determineInitialObjectPointsFromDenseFrames(const PinholeCamera& p
 	}
 
 	HomogenousMatrix4 secondPose(false);
-	if (!Geometry::StereoscopicGeometry::cameraPose(pinholeCamera, ConstArrayAccessor<Vector2>(points0), ConstArrayAccessor<Vector2>(points1), randomGenerator, secondPose, &objectPoints, &validObjectPointIndices, Scalar(1.5 * 1.5), Scalar(3.5 * 3.5), 100u, Scalar(0.9)))
+	if (!Geometry::StereoscopicGeometry::cameraPose(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector2>(points0), ConstArrayAccessor<Vector2>(points1), randomGenerator, secondPose, &objectPoints, &validObjectPointIndices, Scalar(1.5 * 1.5), Scalar(3.5 * 3.5), 100u, Scalar(0.9)))
 	{
 		return false;
 	}

@@ -468,7 +468,7 @@ bool SLAMTracker6DOF::determineInitialObjectPoints(const PinholeCamera& pinholeC
 	RandomGenerator randomGenerator;
 
 	HomogenousMatrix4 world_T_camera;
-	if (!Geometry::StereoscopicGeometry::cameraPose(pinholeCamera, ConstArrayAccessor<Vector2>(firstImagePoints), ConstArrayAccessor<Vector2>(secondImagePoints), randomGenerator, world_T_camera, &objectPoints, &validImagePoints))
+	if (!Geometry::StereoscopicGeometry::cameraPose(AnyCameraPinhole(pinholeCamera), ConstArrayAccessor<Vector2>(firstImagePoints), ConstArrayAccessor<Vector2>(secondImagePoints), randomGenerator, world_T_camera, &objectPoints, &validImagePoints))
 		return false;
 
 	if (world_T_camera.translation().isNull())

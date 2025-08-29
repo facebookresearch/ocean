@@ -21,26 +21,24 @@ namespace Ocean
 namespace Geometry
 {
 
-bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector2>& accessorImagePoints0, const ConstIndexedAccessor<Vector2>& accessorImagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera1, Vectors3* objectPoints, Indices32* validIndices, const Scalar maxRotationalSqrError, const Scalar maxArbitrarySqrError, const unsigned int iterations, const Scalar rotationalMotionMinimalValidCorrespondencesPercent)
+bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexedAccessor<Vector2>& accessorImagePoints0, const ConstIndexedAccessor<Vector2>& accessorImagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera1, Vectors3* objectPoints, Indices32* validIndices, const Scalar maxRotationalSqrError, const Scalar maxArbitrarySqrError, const unsigned int iterations, const Scalar rotationalMotionMinimalValidCorrespondencesPercent)
 {
-	ocean_assert(pinholeCamera.isValid());
+	ocean_assert(camera.isValid());
 	ocean_assert(accessorImagePoints0.size() >= 5);
 	ocean_assert(accessorImagePoints0.size() == accessorImagePoints1.size());
 	ocean_assert(rotationalMotionMinimalValidCorrespondencesPercent >= Scalar(0) && rotationalMotionMinimalValidCorrespondencesPercent <= Scalar(1));
 
-	if (!pinholeCamera.isValid() || accessorImagePoints0.size() != accessorImagePoints1.size() || accessorImagePoints0.size() < 5)
+	if (!camera.isValid() || accessorImagePoints0.size() != accessorImagePoints1.size() || accessorImagePoints0.size() < 5)
 	{
 		return false;
 	}
 
-	const AnyCameraPinhole camera(pinholeCamera);
-
 	// we define that the first camera pose is located at the origin and pointing towards the negative z-space with y-axis upwards
 	const HomogenousMatrix4 world_T_camera0(true);
-	const HomogenousMatrix4 flippedCamera0_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera0));
+	const HomogenousMatrix4 flippedCamera0_T_world(AnyCamera::standard2InvertedFlipped(world_T_camera0));
 
 	// we guess the initial locations of the object points simply by back-projecting the image points from the first frame
-	Vectors3 initialBadObjectPoints(Geometry::Utilities::createObjectPoints(pinholeCamera, world_T_camera0, accessorImagePoints0, pinholeCamera.hasDistortionParameters(), 1));
+	Vectors3 initialBadObjectPoints(Geometry::Utilities::createObjectPoints(camera, world_T_camera0, accessorImagePoints0, 1));
 
 	const ScopedConstMemoryAccessor<Vector2> imagePoints0(accessorImagePoints0);
 	const ScopedConstMemoryAccessor<Vector2> imagePoints1(accessorImagePoints1);
@@ -79,8 +77,8 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 				{
 					usedIndices.clear();
 
-					const HomogenousMatrix4 flippedCamera1_T_world = PinholeCamera::standard2InvertedFlipped(world_T_camera1);
-					const bool debugResult = determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(pinholeCamera, flippedCamera0_T_world, flippedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints0, accessorImagePoints1, usedIndices, pinholeCamera.hasDistortionParameters(), maxRotationalSqrError, true);
+					const HomogenousMatrix4 flippedCamera1_T_world = AnyCamera::standard2InvertedFlipped(world_T_camera1);
+					const bool debugResult = determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(camera, flippedCamera0_T_world, flippedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints0, accessorImagePoints1, usedIndices, maxRotationalSqrError, true);
 					ocean_assert_and_suppress_unused(debugResult, debugResult);
 
 					if (objectPoints != nullptr)
@@ -190,7 +188,7 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 		NonconstArrayAccessor<Vector3> subsetOptimizedObjectPointsAccessor(reusableOptimizedObjectPoints);
 
 		HomogenousMatrix4 world_T_optimizedCamera1(false);
-		if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(AnyCameraPinhole(pinholeCamera), world_T_camera0, world_T_roughCamera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableIndicesSubset), &world_T_optimizedCamera1, &subsetOptimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true))
+		if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_roughCamera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableIndicesSubset), &world_T_optimizedCamera1, &subsetOptimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true))
 		{
 			// now we determine the 3D object point locations for each point pair by triangulation, accept any 3D object point as long as the point is in front of the camera
 
@@ -205,18 +203,18 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 				NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(reusableOptimizedObjectPoints, reusableTriangulatedObjectPoints.size());
 				const HomogenousMatrix4 world_T_intermediateCamera1 = world_T_optimizedCamera1;
 
-				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(AnyCameraPinhole(pinholeCamera), world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints0.data(), imagePoints0.size()), ConstArrayAccessor<Vector2>(imagePoints1.data(), imagePoints1.size()), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
+				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints0.data(), imagePoints0.size()), ConstArrayAccessor<Vector2>(imagePoints1.data(), imagePoints1.size()), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
 				{
 					// now we check which 3D object point is valid for the given image point correspondences
 
 					ocean_assert(world_T_optimizedCamera1.isValid());
 					ocean_assert(reusableOptimizedObjectPoints.size() == imagePoints0.size());
 
-					const HomogenousMatrix4 flippedCamera1_T_world(PinholeCamera::standard2InvertedFlipped(world_T_optimizedCamera1));
+					const HomogenousMatrix4 flippedCamera1_T_world(AnyCamera::standard2InvertedFlipped(world_T_optimizedCamera1));
 
 					reusableValidIndices.clear();
 					Scalar iterationValidError = 0;
-					if (determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(pinholeCamera, flippedCamera0_T_world, flippedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(reusableOptimizedObjectPoints), accessorImagePoints0, accessorImagePoints1, reusableValidIndices, pinholeCamera.hasDistortionParameters(), maxArbitrarySqrError, true, &iterationValidError, bestIndices.size()))
+					if (determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(camera, flippedCamera0_T_world, flippedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(reusableOptimizedObjectPoints), accessorImagePoints0, accessorImagePoints1, reusableValidIndices, maxArbitrarySqrError, true, &iterationValidError, bestIndices.size()))
 					{
 						if (reusableValidIndices.size() > bestIndices.size() || (reusableValidIndices.size() == bestIndices.size() && iterationValidError < bestError))
 						{
@@ -252,18 +250,18 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 				NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(reusableOptimizedObjectPoints, reusableTriangulatedObjectPoints.size());
 
 				const HomogenousMatrix4 world_T_intermediateCamera1 = world_T_optimizedCamera1;
-				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(AnyCameraPinhole(pinholeCamera), world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableValidTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableValidTriangulatedObjectPoints), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
+				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableValidTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableValidTriangulatedObjectPoints), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
 				{
 					// now we check which 3D object point is valid for the given image point correspondences
 
 					ocean_assert(world_T_optimizedCamera1.isValid());
 					ocean_assert(reusableOptimizedObjectPoints.size() == reusableValidTriangulatedObjectPoints.size());
 
-					const HomogenousMatrix4 optimizedCamera1_T_world(PinholeCamera::standard2InvertedFlipped(world_T_optimizedCamera1));
+					const HomogenousMatrix4 optimizedCamera1_T_world(AnyCamera::standard2InvertedFlipped(world_T_optimizedCamera1));
 
 					reusableValidIndices.clear();
 					Scalar iterationValidError = 0;
-					if (determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(pinholeCamera, flippedCamera0_T_world, optimizedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(reusableOptimizedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableValidTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableValidTriangulatedObjectPoints), reusableValidIndices, pinholeCamera.hasDistortionParameters(), maxArbitrarySqrError, true, &iterationValidError, bestIndices.size()))
+					if (determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(camera, flippedCamera0_T_world, optimizedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(reusableOptimizedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableValidTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableValidTriangulatedObjectPoints), reusableValidIndices, maxArbitrarySqrError, true, &iterationValidError, bestIndices.size()))
 					{
 						if (reusableValidIndices.size() > bestIndices.size() || (reusableValidIndices.size() == bestIndices.size() && iterationValidError < bestError))
 						{
@@ -313,19 +311,19 @@ bool StereoscopicGeometry::cameraPose(const PinholeCamera& pinholeCamera, const 
 		NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(bestObjectPoints, initialBadObjectPoints.size());
 
 		HomogenousMatrix4 world_T_optimizedCamera1;
-		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(AnyCameraPinhole(pinholeCamera), world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints0, accessorImagePoints1, &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true))
+		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints0, accessorImagePoints1, &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true))
 		{
 			return false;
 		}
 
 		world_T_roughCamera1 = world_T_optimizedCamera1;
 		const Vectors3 initialObjectPoints = bestObjectPoints;
-		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(AnyCameraPinhole(pinholeCamera), world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialObjectPoints), accessorImagePoints0, accessorImagePoints1, &world_T_camera1, &optimizedObjectPointsAccessor, 5u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
+		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialObjectPoints), accessorImagePoints0, accessorImagePoints1, &world_T_camera1, &optimizedObjectPointsAccessor, 5u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
 		{
 			return false;
 		}
 
-		const bool debugResult = determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(pinholeCamera, flippedCamera0_T_world, PinholeCamera::standard2InvertedFlipped(world_T_camera1), ConstTemplateArrayAccessor<Vector3>(bestObjectPoints), accessorImagePoints0, accessorImagePoints1, bestIndices, pinholeCamera.hasDistortionParameters(), maxArbitrarySqrError, true);
+		const bool debugResult = determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(camera, flippedCamera0_T_world, AnyCamera::standard2InvertedFlipped(world_T_camera1), ConstTemplateArrayAccessor<Vector3>(bestObjectPoints), accessorImagePoints0, accessorImagePoints1, bestIndices, maxArbitrarySqrError, true);
 		ocean_assert_and_suppress_unused(debugResult, debugResult);
 	}
 

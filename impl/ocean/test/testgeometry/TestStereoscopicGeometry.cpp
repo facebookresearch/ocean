@@ -185,14 +185,17 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 
 		const Scalar boxDimension = Random::scalar(randomGenerator, 1, 10);
 
-		const PinholeCamera camera = Utilities::realisticPinholeCamera(RandomI::random(randomGenerator, 1u));
+		const AnyCameraType anyCameraType = RandomI::random(randomGenerator, {AnyCameraType::PINHOLE, AnyCameraType::FISHEYE});
+		const unsigned int cameraIndex = RandomI::random(randomGenerator, 1u);
+
+		const SharedAnyCamera camera = Utilities::realisticAnyCamera(anyCameraType, cameraIndex);
 		ocean_assert(camera);
 
 		const Vectors3 objectPoints = Utilities::objectPoints(Box3(Vector3(0, 0, 0), boxDimension, boxDimension, boxDimension), size_t(numberCorrespondences), &randomGenerator);
 
 		const Vector3 viewingDirection0 = Random::vector3(randomGenerator);
 
-		const HomogenousMatrix4 world_T_camera0 = Utilities::viewPosition(camera, objectPoints, viewingDirection0, true);
+		const HomogenousMatrix4 world_T_camera0 = Utilities::viewPosition(*camera, objectPoints, viewingDirection0, true);
 
 		HomogenousMatrix4 world_T_camera1(false);
 
@@ -234,12 +237,12 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 
 			for (const Vector3& objectPoint : objectPoints)
 			{
-				const Vector2 imagePoint0 = camera.projectToImage<false>(world_T_camera0, objectPoint, true);
-				const Vector2 imagePoint1 = camera.projectToImage<false>(world_T_camera1, objectPoint, true);
+				const Vector2 imagePoint0 = camera->projectToImage(world_T_camera0, objectPoint);
+				const Vector2 imagePoint1 = camera->projectToImage(world_T_camera1, objectPoint);
 
-				ocean_assert(camera.isInside(imagePoint0));
+				ocean_assert(camera->isInside(imagePoint0));
 
-				if (!camera.isInside(imagePoint1))
+				if (!camera->isInside(imagePoint1))
 				{
 					allPointsInsideCamera = false;
 					break;
@@ -270,7 +273,7 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 		constexpr Scalar rotationalMotionMinimalValidCorrespondencesPercent = tPureRotation ? Scalar(0.99) : Scalar(0.9);
 
 		performance.start();
-			const bool localSuccess = Geometry::StereoscopicGeometry::cameraPose(camera, ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), randomGenerator, determinedCamera0_T_determinedCamera1, &determinedObjectPoints, &validIndices, Numeric::sqr(maxRotationalError), Numeric::sqr(maxArbitraryError), 100u /*iterations*/, rotationalMotionMinimalValidCorrespondencesPercent);
+			const bool localSuccess = Geometry::StereoscopicGeometry::cameraPose(*camera, ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), randomGenerator, determinedCamera0_T_determinedCamera1, &determinedObjectPoints, &validIndices, Numeric::sqr(maxRotationalError), Numeric::sqr(maxArbitraryError), 100u /*iterations*/, rotationalMotionMinimalValidCorrespondencesPercent);
 		performance.stop();
 
 		if (localSuccess)
@@ -295,7 +298,7 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 
 				const HomogenousMatrix4 world_T_determinedCamera0(true); // the first camera is located in the origin
 
-				bool allObjectPointsInFront = Geometry::Error::determinePoseError<ConstArrayAccessor<Vector3>, ConstArrayAccessor<Vector2>, true>(world_T_determinedCamera0, AnyCameraPinhole(camera), ConstArrayAccessor<Vector3>(determinedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints0), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
+				bool allObjectPointsInFront = Geometry::Error::determinePoseError<ConstArrayAccessor<Vector3>, ConstArrayAccessor<Vector2>, true>(world_T_determinedCamera0, *camera, ConstArrayAccessor<Vector3>(determinedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints0), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
 
 				if (!allObjectPointsInFront || sqrAveragePixelError > Scalar(2 * 2) || sqrMaximalPixelError > Scalar(10 * 10))
 				{
@@ -308,7 +311,7 @@ bool TestStereoscopicGeometry::testCameraPose(const unsigned int numberCorrespon
 
 				const HomogenousMatrix4 world_T_determinedCamera1 = world_T_determinedCamera0 * determinedCamera0_T_determinedCamera1;
 
-				allObjectPointsInFront = Geometry::Error::determinePoseError<ConstArrayAccessor<Vector3>, ConstArrayAccessor<Vector2>, true>(world_T_determinedCamera1, AnyCameraPinhole(camera), ConstArrayAccessor<Vector3>(determinedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints1), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
+				allObjectPointsInFront = Geometry::Error::determinePoseError<ConstArrayAccessor<Vector3>, ConstArrayAccessor<Vector2>, true>(world_T_determinedCamera1, *camera, ConstArrayAccessor<Vector3>(determinedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints1), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
 
 				if (!allObjectPointsInFront || sqrAveragePixelError > Scalar(2 * 2) || sqrMaximalPixelError > Scalar(10 * 10))
 				{
