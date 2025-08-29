@@ -202,7 +202,7 @@ unsigned int EquationT<T>::solveCubic(const T a, const T b, const T c, const T d
 	// q3 = q^3
 	const T q3 = q * q * q;
 
-	if (r2 <= q3 + Numeric::eps() && q > NumericT<T>::eps())
+	if (r2 <= q3 + NumericT<T>::eps() && q > NumericT<T>::eps())
 	{
 		const T sqrtQ = NumericT<T>::sqrt(q);
 
@@ -233,16 +233,16 @@ unsigned int EquationT<T>::solveCubic(const T a, const T b, const T c, const T d
 		// the accuracy for 32 bit float values may be very poor so that we cannot define any assert
 		if (!std::is_same<T, float>::value)
 		{
-			ocean_assert(NumericT<T>::isEqual(value1, T(0), T(1e-3)));
-			ocean_assert(NumericT<T>::isEqual(value2, T(0), T(1e-3)));
-			ocean_assert(NumericT<T>::isEqual(value3, T(0), T(1e-3)));
+			ocean_assert_accuracy(NumericT<T>::isEqual(value1, T(0), T(1e-3)));
+			ocean_assert_accuracy(NumericT<T>::isEqual(value2, T(0), T(1e-3)));
+			ocean_assert_accuracy(NumericT<T>::isEqual(value3, T(0), T(1e-3)));
 		}
 #endif
 
 		return 3u;
 	}
 
-	ocean_assert(r2 - q3 >= -Numeric::eps());
+	ocean_assert(r2 - q3 >= -NumericT<T>::eps());
 
 	// m = -sign(r) * [abs(r) + sqrt(r^2 - q^3)]^(1/3)
 	const T m = -NumericT<T>::copySign(pow(NumericT<T>::abs(r) + NumericT<T>::sqrt(std::max(T(0), r2 - q3)), T(0.33333333333333333333333333333333)), r);
