@@ -69,7 +69,7 @@ class System
 		/**
 		 * Explicitly runs the main loop for a specified time interval.
 		 * This function can be used to force event handling which is done in the main loop e.g., in a console application in macOS.
-		 * @param interval The time interval the main loop will be executed, in seconds, with range (0, infinity)
+		 * @param interval The time interval the main loop will be executed, in seconds, with range [0, infinity)
 		 */
 		static void runMainLoop(const double interval);
 
