@@ -1712,7 +1712,7 @@ ALiveVideo::Devices ALiveVideo::selectableDevices()
 
 			const std::string readableLenseFacing = Device::readableLensFacing(lensFacing);
 
-			unsigned int counter = typeCounterMap[readableLenseFacing];
+			unsigned int& counter = typeCounterMap[readableLenseFacing];
 
 			name = readableLenseFacing + " Camera " + String::toAString(counter);
 
