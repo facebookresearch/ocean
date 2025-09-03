@@ -1668,8 +1668,6 @@ bool NonLinearOptimizationCamera::optimizeCameraPosesIF(const AnyCamera& camera,
 			return false;
 		}
 
-		Log::info() << "ITERATION: " << int(numberActualCameraParameters) << ": " << iterationInitialError << " -> " << iterationFinalError; // TOOD
-
 		if (nStage == 0 && initialError != nullptr)
 		{
 			*initialError = iterationInitialError;
@@ -1683,26 +1681,6 @@ bool NonLinearOptimizationCamera::optimizeCameraPosesIF(const AnyCamera& camera,
 		if (intermediateErrors != nullptr)
 		{
 			intermediateErrors->insert(intermediateErrors->end(), iterationIntermedidateErrors.cbegin(), iterationIntermedidateErrors.cend());
-		}
-
-
-		if (optimizedCamera->name() == AnyCameraFisheye::WrappedCamera::name())
-		{
-			const AnyCameraFisheye& anyFisheyeCamera = (const AnyCameraFisheye&)(*optimizedCamera);
-			const FisheyeCamera& fisheyeCamera = anyFisheyeCamera.actualCamera();
-
-			unsigned int w;
-			unsigned int h;
-			FisheyeCamera::ParameterConfiguration pc;
-			Scalars parameters;
-			fisheyeCamera.copyParameters(w, h, parameters, pc);
-
-			Log::info() << w << "x" << h;
-
-			for (const Scalar s : parameters)
-			{
-				Log::info() << s;
-			}
 		}
 	}
 
