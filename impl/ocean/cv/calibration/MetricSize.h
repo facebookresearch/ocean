@@ -443,7 +443,7 @@ inline double MetricSize::convert<MetricSize::UT_INCH>(const double sourceValue,
 }
 
 template <MetricSize::UnitType TSourceUnit>
-inline  double MetricSize::convert(const double sourceValue, const UnitType targetUnit)
+inline  double MetricSize::convert(const double sourceValue, const UnitType /*targetUnit*/)
 {
 	static_assert(oceanFalse<TSourceUnit>(), "Missing specialization");
 

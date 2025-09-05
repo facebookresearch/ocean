@@ -127,7 +127,7 @@ Marker::LayoutManager::Layouts Marker::LayoutManager::determineUniqueLayouts()
 				continue;
 			}
 
-			if (abs(int(yOuter) - int(yInner)) <= 1 && abs(int(xOuter) - int(xInner)) <= 1)
+			if (std::abs(int(yOuter) - int(yInner)) <= 1 && std::abs(int(xOuter) - int(xInner)) <= 1)
 			{
 				// let's aways that two bits are neighbors
 				continue;
