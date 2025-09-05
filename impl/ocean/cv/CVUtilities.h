@@ -130,6 +130,9 @@ class OCEAN_CV_EXPORT CVUtilities
 		static inline void copyPixel(uint8_t* const target, const uint8_t* const source, const unsigned int xTarget, const unsigned int yTarget, const unsigned int xSource, const unsigned int ySource, const unsigned int targetWidth, const unsigned int sourceWidth, const unsigned int targetPaddingElements, const unsigned int sourcePaddingElements);
 
 		/**
+		 * Deprecated.
+		 * Use CV::Calibration::Utilities::visualizeDistortion() instead.
+		 *
 		 * Visualizes the distortion of a camera.
 		 * @param pinholeCamera The pinhole camera profile for which the distortion/undistortion is visualized
 		 * @param undistort True, to visualize the undistorted frame, otherwise the distorted frame is visualized
