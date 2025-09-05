@@ -131,7 +131,7 @@ class AnyCameraT : public CameraT<T>
 	public:
 
 		/// The scalar data type of this object.
-		typedef T TScalar;
+		using TScalar = T;
 
 	public:
 
@@ -480,6 +480,109 @@ class AnyCameraT : public CameraT<T>
 		AnyCameraT& operator=(AnyCameraT&&) = delete;
 };
 
+// Forward declaration.
+template <typename T> class CameraProjectionCheckerT;
+
+/**
+ * Definition of an ProjectionChecker object with Scalar precision.
+ * @see CameraProjectionCheckerT
+ * @ingroup math
+ */
+using CameraProjectionChecker = CameraProjectionCheckerT<Scalar>;
+
+/**
+ * Definition of an ProjectionChecker object with double precision.
+ * @see CameraProjectionCheckerT
+ * @ingroup math
+ */
+using CameraProjectionCheckerD = CameraProjectionCheckerT<double>;
+
+/**
+ * Definition of an ProjectionChecker object with float precision.
+ * @see CameraProjectionCheckerT
+ * @ingroup math
+ */
+using CameraProjectionCheckerF = CameraProjectionCheckerT<float>;
+
+/**
+ * This class implements a helper class allowing to check whether a 3D object point projects into the camera image.
+ * The checker uses normalized coordinates when verifying the projection behavior to avoid numerical issues when object points project far outside the image area.<br>
+ * In contrast to AnyCamera::ptojectToImageIF() + AnyCamera::isInside(), the checker is more precise but also more expensive.
+ * @tparam T The data type of a scalar, 'float' or 'double'
+ * @ingroup math
+ */
+template <typename T>
+class CameraProjectionCheckerT
+{
+	public:
+
+		/**
+		 * Default constructor creating an invalid object.
+		 */
+		CameraProjectionCheckerT() = default;
+
+		/**
+		 * Creates a new checker object for a specified camera model.
+		 * @param camera The camera model defining the projection, must be valid
+		 * @param segmentSteps The number of segments to be used to determine the camera boundary, with range [2, infinity)
+		 */
+		explicit CameraProjectionCheckerT(const SharedAnyCameraT<T>& camera, const size_t segmentSteps = 10);
+
+		/**
+		 * Returns whether a 3D object point is located in front of the camera and projects into the camera image.
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
+		 * @param objectPoint The 3D object point to be checked, defined in world
+		 * @param imagePoint Optional resulting 2D projected image point inside the camera image, nullptr if not of interest
+		 * @return True, if the object point projects into the camera image; False, if the object point is behind the camera or projects outside the camera image
+		 */
+		bool projectToImageIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, VectorT2<T>* imagePoint = nullptr) const;
+
+		/**
+		 * Returns the camera model of this checker.
+		 * @return The checker's camera model, nullptr if no camera model has been set
+		 */
+		const SharedAnyCameraT<T>& camera() const;
+
+		/**
+		 * Returns the 2D line segments defined in the camera's normalized image plane defining the camera's boundary.
+		 * @return The camera boundary segments
+		 */
+		const FiniteLinesT2<T>& cameraBoundarySegments() const;
+
+		/**
+		 * Returns whether this checker holds a valid camera model and is ready to be used.
+		 * @return True, if so
+		 */
+		bool isValid() const;
+
+	protected:
+
+		/**
+		 * Determines the camera boundary of a given camera model in normalized image coordinates.
+		 * @param camera The camera model for which the boundary will be determined, must be valid
+		 * @param cameraBoundarySegments The resulting 2D line segments defining the camera's boundary
+		 * @param segmentSteps The number of segments to be used to determine the camera boundary, with range [1, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool determineCameraBoundary(const AnyCameraT<T>& camera, FiniteLinesT2<T>& cameraBoundarySegments, const size_t segmentSteps);
+
+		/**
+		 * Returns whether a given normalized image point lies inside the camera's boundary.
+		 * @param cameraBoundarySegments The 2D line segments defining the camera's boundary, at least three
+		 * @param imagePoint The normalized image point to be checked
+		 * @return True, if if so
+		 */
+		static bool isInside(const FiniteLinesT2<T>& cameraBoundarySegments, const VectorT2<T>& imagePoint);
+
+	protected:
+
+		/// The actual camera model this checker is based on.
+		SharedAnyCameraT<T> camera_;
+
+		/// The 2D line segments defined in the camera's normalized image plane defining the camera's boundary.
+		FiniteLinesT2<T> cameraBoundarySegments_;
+};
+
 /**
  * This class implements a specialized AnyCamera object wrapping the actual camera model.
  * The class is a helper class to simplify the implementation of specialized AnyCamera objects.
@@ -495,13 +598,13 @@ class AnyCameraWrappingT final :
 	public:
 
 		/// The scalar data type of this object.
-		typedef T TScalar;
+		using TScalar = T;
 
 		/// The class which is actually wrapping the camera object.
-		typedef TCameraWrapper CameraWrapper;
+		using CameraWrapper = TCameraWrapper;
 
 		/// The actual camera object wrapped by this class.
-		typedef typename TCameraWrapper::ActualCamera ActualCamera;
+		using ActualCamera = typename TCameraWrapper::ActualCamera;
 
 	public:
 
@@ -937,7 +1040,7 @@ class CameraWrapperBasePinholeT
 		/**
 		 * Definition of the actual camera object wrapped by this class.
 		 */
-		typedef PinholeCameraT<T> ActualCamera;
+		using ActualCamera = PinholeCameraT<T>;
 
 		/**
 		 * Definition of the parent WrappedCamera class using this base class.
@@ -1106,7 +1209,7 @@ class CameraWrapperBaseFisheyeT
 		/**
 		 * Definition of the actual camera object wrapped by this class.
 		 */
-		typedef FisheyeCameraT<T> ActualCamera;
+		using ActualCamera = FisheyeCameraT<T>;
 
 		/**
 		 * Definition of the parent WrappedCamera class using this base class.
@@ -1299,21 +1402,21 @@ class InvalidCameraT
  * @see AnyCameraT, AnyCameraInvalidT.
  * @ingroup math
  */
-typedef InvalidCameraT<Scalar> InvalidCamera;
+using InvalidCamera = InvalidCameraT<Scalar>;
 
 /**
  * Definition of an invalid camera object based with element precision 'double'.
  * @see AnyCameraT, AnyCameraInvalidT.
  * @ingroup math
  */
-typedef InvalidCameraT<double> InvalidCameraD;
+using InvalidCameraD = InvalidCameraT<double>;
 
 /**
  * Definition of an invalid camera object based with element precision 'float'.
  * @see AnyCameraT, AnyCameraInvalidT.
  * @ingroup math
  */
-typedef InvalidCameraT<float> InvalidCameraF;
+using InvalidCameraF = InvalidCameraT<float>;
 
 /**
  * This class implements the base wrapper around an invalid camera profile.
@@ -1329,7 +1432,7 @@ class CameraWrapperBaseInvalidT
 		/**
 		 * Definition of the actual camera object wrapped by this class.
 		 */
-		typedef InvalidCameraT<T> ActualCamera;
+		using ActualCamera = InvalidCameraT<T>;
 
 		/**
 		 * Definition of the parent WrappedCamera class using this base class.
@@ -1503,21 +1606,21 @@ using AnyCameraPinholeT = AnyCameraWrappingT<T, CameraWrapperT<T, CameraWrapperB
  * @see AnyCameraT, AnyCameraPinholeT.
  * @ingroup math
  */
-typedef AnyCameraPinholeT<Scalar> AnyCameraPinhole;
+using AnyCameraPinhole = AnyCameraPinholeT<Scalar>;
 
 /**
  * Definition of an AnyCamera object based on Ocean's pinhole camera class with element precision 'double'.
  * @see AnyCameraT, AnyCameraPinholeT.
  * @ingroup math
  */
-typedef AnyCameraPinholeT<double> AnyCameraPinholeD;
+using AnyCameraPinholeD = AnyCameraPinholeT<double>;
 
 /**
  * Definition of an AnyCamera object based on Ocean's pinhole camera class with element precision 'float'.
  * @see AnyCameraT, AnyCameraPinholeT.
  * @ingroup math
  */
-typedef AnyCameraPinholeT<float> AnyCameraPinholeF;
+using AnyCameraPinholeF = AnyCameraPinholeT<float>;
 
 /**
  * Definition of an AnyCamera object based on Ocean's fisheye camera class with template parameter to define the element precision.
@@ -1533,21 +1636,21 @@ using AnyCameraFisheyeT = AnyCameraWrappingT<T, CameraWrapperT<T, CameraWrapperB
  * @see AnyCameraT, AnyCameraFisheyeT.
  * @ingroup math
  */
-typedef AnyCameraFisheyeT<Scalar> AnyCameraFisheye;
+using AnyCameraFisheye = AnyCameraFisheyeT<Scalar>;
 
 /**
  * Definition of an AnyCamera object based on Ocean's fisheye camera class with element precision 'double'.
  * @see AnyCameraT, AnyCameraFisheyeT.
  * @ingroup math
  */
-typedef AnyCameraFisheyeT<double> AnyCameraFisheyeD;
+using AnyCameraFisheyeD = AnyCameraFisheyeT<double>;
 
 /**
  * Definition of an AnyCamera object based on Ocean's fisheye camera class with element precision 'float'.
  * @see AnyCameraT, AnyCameraFisheyeT.
  * @ingroup math
  */
-typedef AnyCameraFisheyeT<float> AnyCameraFisheyeF;
+using AnyCameraFisheyeF = AnyCameraFisheyeT<float>;
 
 /**
  * Definition of an AnyCamera object based on an invalid (by design) camera with template parameter to define the element precision.
@@ -1563,21 +1666,202 @@ using AnyCameraInvalidT = AnyCameraWrappingT<T, CameraWrapperT<T, CameraWrapperB
  * @see AnyCameraT, AnyCameraInvalidT.
  * @ingroup math
  */
-typedef AnyCameraInvalidT<Scalar> AnyCameraInvalid;
+using AnyCameraInvalid = AnyCameraInvalidT<Scalar>;
 
 /**
  * Definition of an AnyCamera object based on an invalid (by design) camera with element precision 'double'.
  * @see AnyCameraT, AnyCameraInvalidT.
  * @ingroup math
  */
-typedef AnyCameraInvalidT<double> AnyCameraInvalidD;
+using AnyCameraInvalidD = AnyCameraInvalidT<double>;
 
 /**
  * Definition of an AnyCamera object based on an invalid (by design) camera with element precision 'float'.
  * @see AnyCameraT, AnyCameraInvalidT.
  * @ingroup math
  */
-typedef AnyCameraInvalidT<float> AnyCameraInvalidF;
+using AnyCameraInvalidF = AnyCameraInvalidT<float>;
+
+template <typename T>
+CameraProjectionCheckerT<T>::CameraProjectionCheckerT(const SharedAnyCameraT<T>& camera, const size_t segmentSteps)
+{
+	ocean_assert(camera != nullptr && camera->isValid() && segmentSteps >= 1);
+
+	if (camera != nullptr && camera->isValid() && segmentSteps >= 1)
+	{
+		FiniteLinesT2<T> cameraBoundarySegments;
+
+		if (determineCameraBoundary(*camera, cameraBoundarySegments, segmentSteps))
+		{
+			camera_ = camera;
+			cameraBoundarySegments_ = std::move(cameraBoundarySegments);
+		}
+	}
+}
+
+template <typename T>
+bool CameraProjectionCheckerT<T>::projectToImageIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, VectorT2<T>* imagePoint) const
+{
+	ocean_assert(camera_ != nullptr);
+	ocean_assert(camera_->isValid());
+	ocean_assert(flippedCamera_T_world.isValid());
+
+	const VectorT3<T> cameraObjectPointIF = flippedCamera_T_world * objectPoint;
+
+	if (cameraObjectPointIF.z() <= NumericT<T>::eps())
+	{
+		return false;
+	}
+
+	const T invZ = T(1) / cameraObjectPointIF.z();
+
+	const VectorT2<T> normalizedImagePoint(cameraObjectPointIF.x() * invZ, cameraObjectPointIF.y() * invZ);
+
+	if (!isInside(cameraBoundarySegments_, normalizedImagePoint))
+	{
+		return false;
+	}
+
+	if (imagePoint != nullptr)
+	{
+		*imagePoint = camera_->projectToImageIF(cameraObjectPointIF);
+
+		ocean_assert_accuracy(camera_->isInside(*imagePoint, T(std::max(camera_->width(), camera_->height())) * T(-0.1)));
+	}
+
+	return true;
+}
+
+template <typename T>
+const SharedAnyCameraT<T>& CameraProjectionCheckerT<T>::camera() const
+{
+	return camera_;
+}
+
+template <typename T>
+const FiniteLinesT2<T>& CameraProjectionCheckerT<T>::cameraBoundarySegments() const
+{
+	return cameraBoundarySegments_;
+}
+
+template <typename T>
+bool CameraProjectionCheckerT<T>::isValid() const
+{
+	ocean_assert(camera_ == nullptr || !cameraBoundarySegments_.empty());
+
+	return camera_ != nullptr;
+}
+
+template <typename T>
+bool CameraProjectionCheckerT<T>::determineCameraBoundary(const AnyCameraT<T>& camera, FiniteLinesT2<T>& cameraBoundarySegments, const size_t segmentSteps)
+{
+	ocean_assert(camera.isValid());
+	if (!camera.isValid())
+	{
+		return false;
+	}
+
+	ocean_assert(segmentSteps >= 1);
+	if (segmentSteps < 1)
+	{
+		return false;
+	}
+
+	const std::array<VectorT2<T>, 4> corners =
+	{
+		VectorT2<T>(T(0), T(0)),
+		VectorT2<T>(T(0), T(camera.height() - 1u)),
+		VectorT2<T>(T(camera.width() - 1u), T(camera.height() - 1u)),
+		VectorT2<T>(T(camera.width() - 1u), T(0))
+	};
+
+	VectorsT2<T> normalizedImagePoints;
+	normalizedImagePoints.reserve(corners.size() * segmentSteps);
+
+	for (size_t nCorner = 0; nCorner < corners.size(); ++nCorner)
+	{
+		const VectorT2<T>& corner0 = corners[nCorner];
+		const VectorT2<T>& corner1 = corners[(nCorner + 1u) % corners.size()];
+
+		for (size_t nStep = 0; nStep < segmentSteps; ++nStep)
+		{
+			const T factor = T(nStep) / T(segmentSteps);
+
+			const VectorT2<T> distortedImagePoint = corner0 * (T(1) - factor) + corner1 * factor;
+
+			VectorT3<T> objectPoint = camera.vectorIF(distortedImagePoint);
+			ocean_assert(objectPoint.z() >= NumericT<T>::eps());
+
+			const VectorT2<T> normalizedImagePoint  = objectPoint.xy() / objectPoint.z();
+
+			normalizedImagePoints.emplace_back(normalizedImagePoint.x(), normalizedImagePoint.y());
+		}
+	}
+
+	ocean_assert(normalizedImagePoints.size() >= 3);
+	ocean_assert(normalizedImagePoints.size() == segmentSteps * corners.size());
+
+	ocean_assert(cameraBoundarySegments.empty());
+	cameraBoundarySegments.clear();
+
+	cameraBoundarySegments.reserve(normalizedImagePoints.size());
+
+	for (size_t n = 1; n < normalizedImagePoints.size(); ++n)
+	{
+		cameraBoundarySegments.emplace_back(normalizedImagePoints[n - 1], normalizedImagePoints[n]);
+	}
+
+	cameraBoundarySegments.emplace_back(normalizedImagePoints.back(), normalizedImagePoints.front());
+
+	return true;
+}
+
+template <typename T>
+bool CameraProjectionCheckerT<T>::isInside(const FiniteLinesT2<T>& cameraBoundarySegments, const VectorT2<T>& imagePoint)
+{
+	ocean_assert(cameraBoundarySegments.size() >= 3);
+
+	size_t counter = 0;
+
+	for (const FiniteLineT2<T>& cameraBoundarySegment : cameraBoundarySegments)
+	{
+		// let's check whether the point is above or below the line segment
+
+		const bool segmentTopDown = cameraBoundarySegment.point0().y() < cameraBoundarySegment.point1().y();
+
+		if (segmentTopDown)
+		{
+			if (cameraBoundarySegment.point1().y() < imagePoint.y() || imagePoint.y() < cameraBoundarySegment.point0().y())
+			{
+				continue;
+			}
+		}
+		else
+		{
+			if (cameraBoundarySegment.point0().y() < imagePoint.y() || imagePoint.y() < cameraBoundarySegment.point1().y())
+			{
+				continue;
+			}
+		}
+
+		if (cameraBoundarySegment.isOnLine(imagePoint))
+		{
+			// the point is on the line segment, so we know the point is inside the camera boundary
+
+			return true;
+		}
+
+		if (cameraBoundarySegment.isLeftOfLine(imagePoint) == segmentTopDown)
+		{
+			// the point is on the left side of the line segment, we only count points on the right side
+			continue;
+		}
+
+		++counter;
+	}
+
+	return counter % 2 == 1;
+}
 
 template <>
 template <>
