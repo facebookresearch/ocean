@@ -130,6 +130,12 @@ bool MetricCalibrationBoard::determineCameraPose(const AnyCamera& camera, const 
 	{
 		const MarkerCandidate& markerCandidate = markerCandidates[n];
 
+		ocean_assert(markerCandidate.hasMarkerCoordinate());
+		if (!markerCandidate.hasMarkerCoordinate())
+		{
+			return false;
+		}
+
 		const CalibrationBoard::BoardMarker& boardMarker = marker(markerCandidate.markerCoordinate());
 
 		const Vector3 markerPosition = markerCenterPosition(markerCandidate.markerCoordinate());

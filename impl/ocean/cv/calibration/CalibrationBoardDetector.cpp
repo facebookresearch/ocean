@@ -710,8 +710,10 @@ bool CalibrationBoardDetector::detectCalibrationBoard(const AnyCamera& camera, c
 	markerCandidatesWithCoordinates.reserve(markerCandidates.size());
 
 
-	for (size_t markerCandidateIndex = 0; markerCandidateIndex < markerCandidates.size(); ++markerCandidateIndex)
+	for (size_t markerCandidateIndex = 0; markerCandidateIndex < markerCandidates.size(); /*noop*/)
 	{
+		bool keepMarkerCandidate = false;
+
 		CV::Calibration::MarkerCandidate& markerCandidate = markerCandidates[markerCandidateIndex];
 
 		if (markerCandidate.hasMarkerId())
@@ -730,9 +732,20 @@ bool CalibrationBoardDetector::detectCalibrationBoard(const AnyCamera& camera, c
 						markerCandidate.setMarkerCoordinate(markerCoordinate);
 
 						markerCandidatesWithCoordinates.emplace_back(Index32(markerCandidateIndex));
+
+						keepMarkerCandidate = true;
 					}
 				}
 			}
+		}
+
+		if (keepMarkerCandidate)
+		{
+			++markerCandidateIndex;
+		}
+		else
+		{
+			MarkerCandidate::removeMarkerCandidate(markerCandidates, markerCandidateIndex);
 		}
 	}
 
