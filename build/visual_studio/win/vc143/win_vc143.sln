@@ -2523,6 +2523,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvcalibrationoffline", 
 		{E1C7E10F-0FFE-470F-B85C-FBE427FC5371} = {E1C7E10F-0FFE-470F-B85C-FBE427FC5371}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvcalibrationcreator", "application\ocean\demo\cv\calibration\creator\win\creator.vcxproj", "{7DB46310-9FED-437C-84DD-4B7A734D89FE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1E355C9E-F8E4-496A-8EF8-EF20E2945E76} = {1E355C9E-F8E4-496A-8EF8-EF20E2945E76}
+		{62B07B61-578F-4E96-AB3B-D725D99BA918} = {62B07B61-578F-4E96-AB3B-D725D99BA918}
+		{64AC6979-B5A6-4921-A61C-C4F688C48140} = {64AC6979-B5A6-4921-A61C-C4F688C48140}
+		{7EF9186B-5F2C-47B0-8077-5D60AF030B68} = {7EF9186B-5F2C-47B0-8077-5D60AF030B68}
+		{9B549DCC-743A-4019-B2D7-E9FFC53FD2BF} = {9B549DCC-743A-4019-B2D7-E9FFC53FD2BF}
+		{E1C7E10F-0FFE-470F-B85C-FBE427FC5371} = {E1C7E10F-0FFE-470F-B85C-FBE427FC5371}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Shared Debug|Win32 = Shared Debug|Win32
@@ -6977,6 +6987,30 @@ Global
 		{469C7396-C879-4CDE-B16F-08E308E450F2}.Static Release|Win32.Build.0 = Static Release|Win32
 		{469C7396-C879-4CDE-B16F-08E308E450F2}.Static Release|x64.ActiveCfg = Static Release|x64
 		{469C7396-C879-4CDE-B16F-08E308E450F2}.Static Release|x64.Build.0 = Static Release|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Debug|Win32.ActiveCfg = Shared Debug|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Debug|Win32.Build.0 = Shared Debug|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Profile|Win32.ActiveCfg = Shared Profile|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Profile|Win32.Build.0 = Shared Profile|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Profile|x64.ActiveCfg = Shared Profile|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Profile|x64.Build.0 = Shared Profile|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Release|Win32.ActiveCfg = Shared Release|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Release|Win32.Build.0 = Shared Release|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Shared Release|x64.Build.0 = Shared Release|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Debug|x64.Build.0 = Static Debug|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Profile|Win32.ActiveCfg = Static Profile|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Profile|Win32.Build.0 = Static Profile|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Profile|x64.ActiveCfg = Static Profile|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Profile|x64.Build.0 = Static Profile|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Release|Win32.Build.0 = Static Release|Win32
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Release|x64.ActiveCfg = Static Release|x64
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE}.Static Release|x64.Build.0 = Static Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -7205,6 +7239,7 @@ Global
 		{9B549DCC-743A-4019-B2D7-E9FFC53FD2BF} = {1F742B1E-D6E7-43B2-BBFB-A0528FE64731}
 		{B1D5ACF0-37A3-4A8E-AD6A-8D08A4581797} = {79B55C4B-BA8F-48EE-B6F9-1019B251B4A7}
 		{469C7396-C879-4CDE-B16F-08E308E450F2} = {B1D5ACF0-37A3-4A8E-AD6A-8D08A4581797}
+		{7DB46310-9FED-437C-84DD-4B7A734D89FE} = {B1D5ACF0-37A3-4A8E-AD6A-8D08A4581797}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {798E790F-BB0E-45DA-9197-307224184B0A}

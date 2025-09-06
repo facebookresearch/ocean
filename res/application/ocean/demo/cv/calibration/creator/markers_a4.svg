@@ -1,0 +1,2006 @@
+<svg width="210.0000mm" height="297.0000mm" version="1.1" xmlns="http://www.w3.org/2000/svg">
+	<!-- Marker Image, created by Ocean https://facebookresearch.github.io/ocean/ -->
+
+	<!-- Marker id 0 -->
+	<circle cx="14.1370mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<rect x="11.4247mm" y="11.4247mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="14.1370mm" r="0.2500mm" fill="white" />
+	<circle cx="19.5616mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<circle cx="24.9863mm" cy="14.1370mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="14.1370mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="19.5616mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="24.9863mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<text x="7.0000mm" y="10.0685mm" font-size="4.0685mm" fill="black">
+		0
+	</text>
+	<line x1="6.0000mm" y1="6.0000mm" x2="6.0000mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="6.0000mm" y1="33.1233mm" x2="33.1233mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="33.1233mm" x2="33.1233mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="6.0000mm" x2="6.0000mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 1 -->
+	<circle cx="42.6164mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<circle cx="42.6164mm" cy="14.1370mm" r="0.2500mm" fill="black" />
+	<rect x="45.3288mm" y="11.4247mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="48.0411mm" cy="14.1370mm" r="0.5000mm" fill="white" />
+	<circle cx="53.4658mm" cy="14.1370mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="42.6164mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="48.0411mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="53.4658mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<text x="35.4795mm" y="10.0685mm" font-size="4.0685mm" fill="black">
+		1
+	</text>
+	<line x1="34.4795mm" y1="6.0000mm" x2="34.4795mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="34.4795mm" y1="33.1233mm" x2="61.6027mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="33.1233mm" x2="61.6027mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="6.0000mm" x2="34.4795mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 2 -->
+	<circle cx="71.0959mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<rect x="68.3836mm" y="11.4247mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="14.1370mm" r="0.2500mm" fill="white" />
+	<circle cx="76.5205mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<rect x="79.2329mm" y="11.4247mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="81.9452mm" cy="14.1370mm" r="0.2500mm" fill="white" />
+	<circle cx="87.3699mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="71.0959mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="76.5205mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="81.9452mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="87.3699mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<text x="63.9589mm" y="10.0685mm" font-size="4.0685mm" fill="black">
+		2
+	</text>
+	<line x1="62.9589mm" y1="6.0000mm" x2="62.9589mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="62.9589mm" y1="33.1233mm" x2="90.0822mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="33.1233mm" x2="90.0822mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="6.0000mm" x2="62.9589mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 3 -->
+	<circle cx="99.5753mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<rect x="96.8630mm" y="11.4247mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="14.1370mm" r="0.2500mm" fill="white" />
+	<circle cx="105.0000mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<circle cx="110.4247mm" cy="14.1370mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="99.5753mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<rect x="107.7123mm" y="16.8493mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="110.4247mm" cy="19.5616mm" r="0.5000mm" fill="white" />
+	<circle cx="115.8493mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="99.5753mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="105.0000mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="110.4247mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="99.5753mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<text x="92.4384mm" y="10.0685mm" font-size="4.0685mm" fill="black">
+		3
+	</text>
+	<line x1="91.4384mm" y1="6.0000mm" x2="91.4384mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="91.4384mm" y1="33.1233mm" x2="118.5616mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="33.1233mm" x2="118.5616mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="6.0000mm" x2="91.4384mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 4 -->
+	<circle cx="128.0548mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<rect x="125.3425mm" y="11.4247mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="14.1370mm" r="0.2500mm" fill="white" />
+	<circle cx="133.4795mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<circle cx="138.9041mm" cy="14.1370mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="128.0548mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<rect x="130.7671mm" y="22.2740mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="133.4795mm" cy="24.9863mm" r="0.5000mm" fill="white" />
+	<circle cx="138.9041mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<text x="120.9178mm" y="10.0685mm" font-size="4.0685mm" fill="black">
+		4
+	</text>
+	<line x1="119.9178mm" y1="6.0000mm" x2="119.9178mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="119.9178mm" y1="33.1233mm" x2="147.0411mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="33.1233mm" x2="147.0411mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="6.0000mm" x2="119.9178mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 5 -->
+	<circle cx="156.5342mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<rect x="153.8219mm" y="11.4247mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="14.1370mm" r="0.2500mm" fill="white" />
+	<rect x="159.2466mm" y="11.4247mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="161.9589mm" cy="14.1370mm" r="0.5000mm" fill="white" />
+	<rect x="164.6712mm" y="11.4247mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="167.3836mm" cy="14.1370mm" r="0.2500mm" fill="white" />
+	<circle cx="172.8082mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="156.5342mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="161.9589mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="167.3836mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="172.8082mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<text x="149.3973mm" y="10.0685mm" font-size="4.0685mm" fill="black">
+		5
+	</text>
+	<line x1="148.3973mm" y1="6.0000mm" x2="148.3973mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="148.3973mm" y1="33.1233mm" x2="175.5205mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="33.1233mm" x2="175.5205mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="6.0000mm" x2="148.3973mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 6 -->
+	<circle cx="185.0137mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="8.7123mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="8.7123mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<rect x="182.3014mm" y="11.4247mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="185.0137mm" cy="14.1370mm" r="0.2500mm" fill="white" />
+	<rect x="187.7260mm" y="11.4247mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="190.4384mm" cy="14.1370mm" r="0.5000mm" fill="white" />
+	<circle cx="195.8630mm" cy="14.1370mm" r="0.2500mm" fill="black" />
+	<circle cx="201.2877mm" cy="14.1370mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<rect x="182.3014mm" y="16.8493mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="185.0137mm" cy="19.5616mm" r="0.5000mm" fill="white" />
+	<circle cx="190.4384mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="19.5616mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="19.5616mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="185.0137mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="190.4384mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="195.8630mm" cy="24.9863mm" r="0.2500mm" fill="black" />
+	<circle cx="201.2877mm" cy="24.9863mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="30.4110mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="30.4110mm" r="0.2500mm" fill="black" />
+	<text x="177.8767mm" y="10.0685mm" font-size="4.0685mm" fill="black">
+		6
+	</text>
+	<line x1="176.8767mm" y1="6.0000mm" x2="176.8767mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="176.8767mm" y1="33.1233mm" x2="204.0000mm" y2="33.1233mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="33.1233mm" x2="204.0000mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="6.0000mm" x2="176.8767mm" y2="6.0000mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 7 -->
+	<circle cx="14.1370mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<rect x="11.4247mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="50.9765mm" r="0.2500mm" fill="white" />
+	<rect x="16.8493mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="19.5616mm" cy="50.9765mm" r="0.5000mm" fill="white" />
+	<circle cx="24.9863mm" cy="50.9765mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<rect x="16.8493mm" y="53.6888mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="19.5616mm" cy="56.4012mm" r="0.2500mm" fill="white" />
+	<circle cx="24.9863mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="14.1370mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<circle cx="19.5616mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="24.9863mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<text x="7.0000mm" y="46.9080mm" font-size="4.0685mm" fill="black">
+		7
+	</text>
+	<line x1="6.0000mm" y1="42.8395mm" x2="6.0000mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="6.0000mm" y1="69.9628mm" x2="33.1233mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="69.9628mm" x2="33.1233mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="42.8395mm" x2="6.0000mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 8 -->
+	<circle cx="42.6164mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<rect x="39.9041mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="42.6164mm" cy="50.9765mm" r="0.2500mm" fill="white" />
+	<rect x="45.3288mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="48.0411mm" cy="50.9765mm" r="0.5000mm" fill="white" />
+	<circle cx="53.4658mm" cy="50.9765mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<rect x="50.7534mm" y="53.6888mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="53.4658mm" cy="56.4012mm" r="0.5000mm" fill="white" />
+	<circle cx="58.8904mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="42.6164mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<circle cx="48.0411mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="53.4658mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<text x="35.4795mm" y="46.9080mm" font-size="4.0685mm" fill="black">
+		8
+	</text>
+	<line x1="34.4795mm" y1="42.8395mm" x2="34.4795mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="34.4795mm" y1="69.9628mm" x2="61.6027mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="69.9628mm" x2="61.6027mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="42.8395mm" x2="34.4795mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 9 -->
+	<circle cx="71.0959mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<rect x="68.3836mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="50.9765mm" r="0.2500mm" fill="white" />
+	<rect x="73.8082mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="76.5205mm" cy="50.9765mm" r="0.5000mm" fill="white" />
+	<circle cx="81.9452mm" cy="50.9765mm" r="0.2500mm" fill="black" />
+	<circle cx="87.3699mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<rect x="68.3836mm" y="59.1135mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="61.8258mm" r="0.2500mm" fill="white" />
+	<circle cx="76.5205mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="81.9452mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<circle cx="87.3699mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<text x="63.9589mm" y="46.9080mm" font-size="4.0685mm" fill="black">
+		9
+	</text>
+	<line x1="62.9589mm" y1="42.8395mm" x2="62.9589mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="62.9589mm" y1="69.9628mm" x2="90.0822mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="69.9628mm" x2="90.0822mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="42.8395mm" x2="62.9589mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 10 -->
+	<circle cx="99.5753mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<rect x="96.8630mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="50.9765mm" r="0.2500mm" fill="white" />
+	<rect x="102.2877mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="105.0000mm" cy="50.9765mm" r="0.5000mm" fill="white" />
+	<circle cx="110.4247mm" cy="50.9765mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="99.5753mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="99.5753mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<rect x="102.2877mm" y="59.1135mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="105.0000mm" cy="61.8258mm" r="0.5000mm" fill="white" />
+	<circle cx="110.4247mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="99.5753mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<text x="92.4384mm" y="46.9080mm" font-size="4.0685mm" fill="black">
+		10
+	</text>
+	<line x1="91.4384mm" y1="42.8395mm" x2="91.4384mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="91.4384mm" y1="69.9628mm" x2="118.5616mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="69.9628mm" x2="118.5616mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="42.8395mm" x2="91.4384mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 11 -->
+	<circle cx="128.0548mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<rect x="125.3425mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="50.9765mm" r="0.2500mm" fill="white" />
+	<rect x="130.7671mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="133.4795mm" cy="50.9765mm" r="0.5000mm" fill="white" />
+	<circle cx="138.9041mm" cy="50.9765mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="128.0548mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<circle cx="133.4795mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<rect x="136.1918mm" y="59.1135mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="138.9041mm" cy="61.8258mm" r="0.2500mm" fill="white" />
+	<circle cx="144.3288mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<text x="120.9178mm" y="46.9080mm" font-size="4.0685mm" fill="black">
+		11
+	</text>
+	<line x1="119.9178mm" y1="42.8395mm" x2="119.9178mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="119.9178mm" y1="69.9628mm" x2="147.0411mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="69.9628mm" x2="147.0411mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="42.8395mm" x2="119.9178mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 12 -->
+	<circle cx="156.5342mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<rect x="153.8219mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="50.9765mm" r="0.2500mm" fill="white" />
+	<circle cx="161.9589mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<rect x="164.6712mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="167.3836mm" cy="50.9765mm" r="0.2500mm" fill="white" />
+	<circle cx="172.8082mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<rect x="153.8219mm" y="53.6888mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="56.4012mm" r="0.5000mm" fill="white" />
+	<circle cx="161.9589mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="156.5342mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<circle cx="161.9589mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="167.3836mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<circle cx="172.8082mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<text x="149.3973mm" y="46.9080mm" font-size="4.0685mm" fill="black">
+		12
+	</text>
+	<line x1="148.3973mm" y1="42.8395mm" x2="148.3973mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="148.3973mm" y1="69.9628mm" x2="175.5205mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="69.9628mm" x2="175.5205mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="42.8395mm" x2="148.3973mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 13 -->
+	<circle cx="185.0137mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="45.5519mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="45.5519mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<rect x="182.3014mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="185.0137mm" cy="50.9765mm" r="0.2500mm" fill="white" />
+	<circle cx="190.4384mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<rect x="193.1507mm" y="48.2642mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="195.8630mm" cy="50.9765mm" r="0.2500mm" fill="white" />
+	<circle cx="201.2877mm" cy="50.9765mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<rect x="187.7260mm" y="53.6888mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="190.4384mm" cy="56.4012mm" r="0.2500mm" fill="white" />
+	<circle cx="195.8630mm" cy="56.4012mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="56.4012mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="185.0137mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<circle cx="190.4384mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="195.8630mm" cy="61.8258mm" r="0.2500mm" fill="black" />
+	<circle cx="201.2877mm" cy="61.8258mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="67.2505mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="67.2505mm" r="0.2500mm" fill="black" />
+	<text x="177.8767mm" y="46.9080mm" font-size="4.0685mm" fill="black">
+		13
+	</text>
+	<line x1="176.8767mm" y1="42.8395mm" x2="176.8767mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="176.8767mm" y1="69.9628mm" x2="204.0000mm" y2="69.9628mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="69.9628mm" x2="204.0000mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="42.8395mm" x2="176.8767mm" y2="42.8395mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 14 -->
+	<circle cx="14.1370mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<rect x="11.4247mm" y="85.1037mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="87.8160mm" r="0.2500mm" fill="white" />
+	<circle cx="19.5616mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<rect x="22.2740mm" y="85.1037mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="24.9863mm" cy="87.8160mm" r="0.2500mm" fill="white" />
+	<circle cx="30.4110mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="93.2407mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="93.2407mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<rect x="11.4247mm" y="95.9530mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="98.6654mm" r="0.2500mm" fill="white" />
+	<circle cx="19.5616mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="24.9863mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<text x="7.0000mm" y="83.7476mm" font-size="4.0685mm" fill="black">
+		14
+	</text>
+	<line x1="6.0000mm" y1="79.6791mm" x2="6.0000mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="6.0000mm" y1="106.8023mm" x2="33.1233mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="106.8023mm" x2="33.1233mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="79.6791mm" x2="6.0000mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 15 -->
+	<circle cx="42.6164mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<rect x="39.9041mm" y="85.1037mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="42.6164mm" cy="87.8160mm" r="0.2500mm" fill="white" />
+	<circle cx="48.0411mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<rect x="50.7534mm" y="85.1037mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="53.4658mm" cy="87.8160mm" r="0.2500mm" fill="white" />
+	<circle cx="58.8904mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="93.2407mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="93.2407mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="42.6164mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<rect x="45.3288mm" y="95.9530mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="48.0411mm" cy="98.6654mm" r="0.5000mm" fill="white" />
+	<circle cx="53.4658mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<text x="35.4795mm" y="83.7476mm" font-size="4.0685mm" fill="black">
+		15
+	</text>
+	<line x1="34.4795mm" y1="79.6791mm" x2="34.4795mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="34.4795mm" y1="106.8023mm" x2="61.6027mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="106.8023mm" x2="61.6027mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="79.6791mm" x2="34.4795mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 16 -->
+	<circle cx="71.0959mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<rect x="68.3836mm" y="85.1037mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="87.8160mm" r="0.2500mm" fill="white" />
+	<circle cx="76.5205mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="81.9452mm" cy="87.8160mm" r="0.2500mm" fill="black" />
+	<circle cx="87.3699mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<rect x="68.3836mm" y="90.5284mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="93.2407mm" r="0.5000mm" fill="white" />
+	<rect x="73.8082mm" y="90.5284mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="76.5205mm" cy="93.2407mm" r="0.2500mm" fill="white" />
+	<circle cx="81.9452mm" cy="93.2407mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="71.0959mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<circle cx="76.5205mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="81.9452mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<circle cx="87.3699mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<text x="63.9589mm" y="83.7476mm" font-size="4.0685mm" fill="black">
+		16
+	</text>
+	<line x1="62.9589mm" y1="79.6791mm" x2="62.9589mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="62.9589mm" y1="106.8023mm" x2="90.0822mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="106.8023mm" x2="90.0822mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="79.6791mm" x2="62.9589mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 17 -->
+	<circle cx="99.5753mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<rect x="96.8630mm" y="85.1037mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="87.8160mm" r="0.2500mm" fill="white" />
+	<circle cx="105.0000mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="110.4247mm" cy="87.8160mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<rect x="96.8630mm" y="90.5284mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="93.2407mm" r="0.5000mm" fill="white" />
+	<circle cx="105.0000mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<rect x="107.7123mm" y="90.5284mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="110.4247mm" cy="93.2407mm" r="0.5000mm" fill="white" />
+	<circle cx="115.8493mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="99.5753mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<circle cx="105.0000mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="110.4247mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="99.5753mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<text x="92.4384mm" y="83.7476mm" font-size="4.0685mm" fill="black">
+		17
+	</text>
+	<line x1="91.4384mm" y1="79.6791mm" x2="91.4384mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="91.4384mm" y1="106.8023mm" x2="118.5616mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="106.8023mm" x2="118.5616mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="79.6791mm" x2="91.4384mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 18 -->
+	<circle cx="128.0548mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<rect x="125.3425mm" y="85.1037mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="87.8160mm" r="0.2500mm" fill="white" />
+	<circle cx="133.4795mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="138.9041mm" cy="87.8160mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<rect x="125.3425mm" y="90.5284mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="93.2407mm" r="0.5000mm" fill="white" />
+	<circle cx="133.4795mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="93.2407mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="128.0548mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<rect x="130.7671mm" y="95.9530mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="133.4795mm" cy="98.6654mm" r="0.5000mm" fill="white" />
+	<circle cx="138.9041mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<text x="120.9178mm" y="83.7476mm" font-size="4.0685mm" fill="black">
+		18
+	</text>
+	<line x1="119.9178mm" y1="79.6791mm" x2="119.9178mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="119.9178mm" y1="106.8023mm" x2="147.0411mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="106.8023mm" x2="147.0411mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="79.6791mm" x2="119.9178mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 19 -->
+	<circle cx="156.5342mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<rect x="153.8219mm" y="85.1037mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="87.8160mm" r="0.2500mm" fill="white" />
+	<circle cx="161.9589mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="167.3836mm" cy="87.8160mm" r="0.2500mm" fill="black" />
+	<circle cx="172.8082mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<rect x="153.8219mm" y="90.5284mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="93.2407mm" r="0.5000mm" fill="white" />
+	<circle cx="161.9589mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="93.2407mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="156.5342mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<circle cx="161.9589mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<rect x="164.6712mm" y="95.9530mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="167.3836mm" cy="98.6654mm" r="0.2500mm" fill="white" />
+	<circle cx="172.8082mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<text x="149.3973mm" y="83.7476mm" font-size="4.0685mm" fill="black">
+		19
+	</text>
+	<line x1="148.3973mm" y1="79.6791mm" x2="148.3973mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="148.3973mm" y1="106.8023mm" x2="175.5205mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="106.8023mm" x2="175.5205mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="79.6791mm" x2="148.3973mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 20 -->
+	<circle cx="185.0137mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="82.3914mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="82.3914mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<rect x="182.3014mm" y="85.1037mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="185.0137mm" cy="87.8160mm" r="0.2500mm" fill="white" />
+	<circle cx="190.4384mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="195.8630mm" cy="87.8160mm" r="0.2500mm" fill="black" />
+	<circle cx="201.2877mm" cy="87.8160mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="93.2407mm" r="0.5000mm" fill="black" />
+	<rect x="187.7260mm" y="90.5284mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="190.4384mm" cy="93.2407mm" r="0.2500mm" fill="white" />
+	<rect x="193.1507mm" y="90.5284mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="195.8630mm" cy="93.2407mm" r="0.5000mm" fill="white" />
+	<circle cx="201.2877mm" cy="93.2407mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="185.0137mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<circle cx="190.4384mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="195.8630mm" cy="98.6654mm" r="0.2500mm" fill="black" />
+	<circle cx="201.2877mm" cy="98.6654mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="104.0900mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="104.0900mm" r="0.2500mm" fill="black" />
+	<text x="177.8767mm" y="83.7476mm" font-size="4.0685mm" fill="black">
+		20
+	</text>
+	<line x1="176.8767mm" y1="79.6791mm" x2="176.8767mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="176.8767mm" y1="106.8023mm" x2="204.0000mm" y2="106.8023mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="106.8023mm" x2="204.0000mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="79.6791mm" x2="176.8767mm" y2="79.6791mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 21 -->
+	<circle cx="14.1370mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<rect x="11.4247mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="124.6556mm" r="0.2500mm" fill="white" />
+	<circle cx="19.5616mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<circle cx="24.9863mm" cy="124.6556mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="130.0802mm" r="0.5000mm" fill="black" />
+	<rect x="16.8493mm" y="127.3679mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="19.5616mm" cy="130.0802mm" r="0.2500mm" fill="white" />
+	<circle cx="24.9863mm" cy="130.0802mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="14.1370mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<rect x="16.8493mm" y="132.7926mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="19.5616mm" cy="135.5049mm" r="0.5000mm" fill="white" />
+	<circle cx="24.9863mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<text x="7.0000mm" y="120.5871mm" font-size="4.0685mm" fill="black">
+		21
+	</text>
+	<line x1="6.0000mm" y1="116.5186mm" x2="6.0000mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="6.0000mm" y1="143.6419mm" x2="33.1233mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="143.6419mm" x2="33.1233mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="116.5186mm" x2="6.0000mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 22 -->
+	<circle cx="42.6164mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<rect x="39.9041mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="42.6164mm" cy="124.6556mm" r="0.2500mm" fill="white" />
+	<circle cx="48.0411mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<circle cx="53.4658mm" cy="124.6556mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="130.0802mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<rect x="50.7534mm" y="127.3679mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="53.4658mm" cy="130.0802mm" r="0.5000mm" fill="white" />
+	<circle cx="58.8904mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="42.6164mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<rect x="45.3288mm" y="132.7926mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="48.0411mm" cy="135.5049mm" r="0.5000mm" fill="white" />
+	<circle cx="53.4658mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<text x="35.4795mm" y="120.5871mm" font-size="4.0685mm" fill="black">
+		22
+	</text>
+	<line x1="34.4795mm" y1="116.5186mm" x2="34.4795mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="34.4795mm" y1="143.6419mm" x2="61.6027mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="143.6419mm" x2="61.6027mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="116.5186mm" x2="34.4795mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 23 -->
+	<circle cx="71.0959mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<circle cx="71.0959mm" cy="124.6556mm" r="0.2500mm" fill="black" />
+	<rect x="73.8082mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="76.5205mm" cy="124.6556mm" r="0.5000mm" fill="white" />
+	<circle cx="81.9452mm" cy="124.6556mm" r="0.2500mm" fill="black" />
+	<circle cx="87.3699mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<rect x="68.3836mm" y="127.3679mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="130.0802mm" r="0.5000mm" fill="white" />
+	<rect x="73.8082mm" y="127.3679mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="76.5205mm" cy="130.0802mm" r="0.2500mm" fill="white" />
+	<circle cx="81.9452mm" cy="130.0802mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="71.0959mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="76.5205mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="81.9452mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="87.3699mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<text x="63.9589mm" y="120.5871mm" font-size="4.0685mm" fill="black">
+		23
+	</text>
+	<line x1="62.9589mm" y1="116.5186mm" x2="62.9589mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="62.9589mm" y1="143.6419mm" x2="90.0822mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="143.6419mm" x2="90.0822mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="116.5186mm" x2="62.9589mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 24 -->
+	<circle cx="99.5753mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<circle cx="99.5753mm" cy="124.6556mm" r="0.2500mm" fill="black" />
+	<rect x="102.2877mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="105.0000mm" cy="124.6556mm" r="0.5000mm" fill="white" />
+	<circle cx="110.4247mm" cy="124.6556mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<rect x="96.8630mm" y="127.3679mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="130.0802mm" r="0.5000mm" fill="white" />
+	<circle cx="105.0000mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<rect x="107.7123mm" y="127.3679mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="110.4247mm" cy="130.0802mm" r="0.5000mm" fill="white" />
+	<circle cx="115.8493mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="99.5753mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="105.0000mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="110.4247mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="99.5753mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<text x="92.4384mm" y="120.5871mm" font-size="4.0685mm" fill="black">
+		24
+	</text>
+	<line x1="91.4384mm" y1="116.5186mm" x2="91.4384mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="91.4384mm" y1="143.6419mm" x2="118.5616mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="143.6419mm" x2="118.5616mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="116.5186mm" x2="91.4384mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 25 -->
+	<circle cx="128.0548mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<rect x="125.3425mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="124.6556mm" r="0.2500mm" fill="white" />
+	<rect x="130.7671mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="133.4795mm" cy="124.6556mm" r="0.5000mm" fill="white" />
+	<rect x="136.1918mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="138.9041mm" cy="124.6556mm" r="0.2500mm" fill="white" />
+	<circle cx="144.3288mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<rect x="125.3425mm" y="127.3679mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="130.0802mm" r="0.5000mm" fill="white" />
+	<circle cx="133.4795mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="130.0802mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="128.0548mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="133.4795mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="138.9041mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<text x="120.9178mm" y="120.5871mm" font-size="4.0685mm" fill="black">
+		25
+	</text>
+	<line x1="119.9178mm" y1="116.5186mm" x2="119.9178mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="119.9178mm" y1="143.6419mm" x2="147.0411mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="143.6419mm" x2="147.0411mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="116.5186mm" x2="119.9178mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 26 -->
+	<circle cx="156.5342mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<rect x="153.8219mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="124.6556mm" r="0.2500mm" fill="white" />
+	<rect x="159.2466mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="161.9589mm" cy="124.6556mm" r="0.5000mm" fill="white" />
+	<rect x="164.6712mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="167.3836mm" cy="124.6556mm" r="0.2500mm" fill="white" />
+	<circle cx="172.8082mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="130.0802mm" r="0.5000mm" fill="black" />
+	<rect x="159.2466mm" y="127.3679mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="161.9589mm" cy="130.0802mm" r="0.2500mm" fill="white" />
+	<circle cx="167.3836mm" cy="130.0802mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="156.5342mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="161.9589mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="167.3836mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="172.8082mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<text x="149.3973mm" y="120.5871mm" font-size="4.0685mm" fill="black">
+		26
+	</text>
+	<line x1="148.3973mm" y1="116.5186mm" x2="148.3973mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="148.3973mm" y1="143.6419mm" x2="175.5205mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="143.6419mm" x2="175.5205mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="116.5186mm" x2="148.3973mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 27 -->
+	<circle cx="185.0137mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="119.2309mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="119.2309mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<rect x="182.3014mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="185.0137mm" cy="124.6556mm" r="0.2500mm" fill="white" />
+	<rect x="187.7260mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="190.4384mm" cy="124.6556mm" r="0.5000mm" fill="white" />
+	<rect x="193.1507mm" y="121.9432mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="195.8630mm" cy="124.6556mm" r="0.2500mm" fill="white" />
+	<circle cx="201.2877mm" cy="124.6556mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="130.0802mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<rect x="193.1507mm" y="127.3679mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="195.8630mm" cy="130.0802mm" r="0.5000mm" fill="white" />
+	<circle cx="201.2877mm" cy="130.0802mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="185.0137mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="190.4384mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="195.8630mm" cy="135.5049mm" r="0.2500mm" fill="black" />
+	<circle cx="201.2877mm" cy="135.5049mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="140.9295mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="140.9295mm" r="0.2500mm" fill="black" />
+	<text x="177.8767mm" y="120.5871mm" font-size="4.0685mm" fill="black">
+		27
+	</text>
+	<line x1="176.8767mm" y1="116.5186mm" x2="176.8767mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="176.8767mm" y1="143.6419mm" x2="204.0000mm" y2="143.6419mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="143.6419mm" x2="204.0000mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="116.5186mm" x2="176.8767mm" y2="116.5186mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 28 -->
+	<circle cx="14.1370mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<rect x="11.4247mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="161.4951mm" r="0.2500mm" fill="white" />
+	<rect x="16.8493mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="19.5616mm" cy="161.4951mm" r="0.5000mm" fill="white" />
+	<rect x="22.2740mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="24.9863mm" cy="161.4951mm" r="0.2500mm" fill="white" />
+	<circle cx="30.4110mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="166.9198mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="166.9198mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<rect x="11.4247mm" y="169.6321mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="172.3444mm" r="0.2500mm" fill="white" />
+	<circle cx="19.5616mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="24.9863mm" cy="172.3444mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<text x="7.0000mm" y="157.4266mm" font-size="4.0685mm" fill="black">
+		28
+	</text>
+	<line x1="6.0000mm" y1="153.3581mm" x2="6.0000mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="6.0000mm" y1="180.4814mm" x2="33.1233mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="180.4814mm" x2="33.1233mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="153.3581mm" x2="6.0000mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 29 -->
+	<circle cx="42.6164mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<rect x="39.9041mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="42.6164mm" cy="161.4951mm" r="0.2500mm" fill="white" />
+	<rect x="45.3288mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="48.0411mm" cy="161.4951mm" r="0.5000mm" fill="white" />
+	<rect x="50.7534mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="53.4658mm" cy="161.4951mm" r="0.2500mm" fill="white" />
+	<circle cx="58.8904mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="166.9198mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="166.9198mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="42.6164mm" cy="172.3444mm" r="0.2500mm" fill="black" />
+	<rect x="45.3288mm" y="169.6321mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="48.0411mm" cy="172.3444mm" r="0.5000mm" fill="white" />
+	<circle cx="53.4658mm" cy="172.3444mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<text x="35.4795mm" y="157.4266mm" font-size="4.0685mm" fill="black">
+		29
+	</text>
+	<line x1="34.4795mm" y1="153.3581mm" x2="34.4795mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="34.4795mm" y1="180.4814mm" x2="61.6027mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="180.4814mm" x2="61.6027mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="153.3581mm" x2="34.4795mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 30 -->
+	<circle cx="71.0959mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<rect x="68.3836mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="161.4951mm" r="0.2500mm" fill="white" />
+	<rect x="73.8082mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="76.5205mm" cy="161.4951mm" r="0.5000mm" fill="white" />
+	<rect x="79.2329mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="81.9452mm" cy="161.4951mm" r="0.2500mm" fill="white" />
+	<circle cx="87.3699mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="166.9198mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="166.9198mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="71.0959mm" cy="172.3444mm" r="0.2500mm" fill="black" />
+	<circle cx="76.5205mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<rect x="79.2329mm" y="169.6321mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="81.9452mm" cy="172.3444mm" r="0.2500mm" fill="white" />
+	<circle cx="87.3699mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<text x="63.9589mm" y="157.4266mm" font-size="4.0685mm" fill="black">
+		30
+	</text>
+	<line x1="62.9589mm" y1="153.3581mm" x2="62.9589mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="62.9589mm" y1="180.4814mm" x2="90.0822mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="180.4814mm" x2="90.0822mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="153.3581mm" x2="62.9589mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 31 -->
+	<circle cx="99.5753mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<rect x="96.8630mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="161.4951mm" r="0.2500mm" fill="white" />
+	<rect x="102.2877mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="105.0000mm" cy="161.4951mm" r="0.5000mm" fill="white" />
+	<circle cx="110.4247mm" cy="161.4951mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<rect x="96.8630mm" y="164.2074mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="166.9198mm" r="0.5000mm" fill="white" />
+	<rect x="102.2877mm" y="164.2074mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="105.0000mm" cy="166.9198mm" r="0.2500mm" fill="white" />
+	<circle cx="110.4247mm" cy="166.9198mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="99.5753mm" cy="172.3444mm" r="0.2500mm" fill="black" />
+	<circle cx="105.0000mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="110.4247mm" cy="172.3444mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="99.5753mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<text x="92.4384mm" y="157.4266mm" font-size="4.0685mm" fill="black">
+		31
+	</text>
+	<line x1="91.4384mm" y1="153.3581mm" x2="91.4384mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="91.4384mm" y1="180.4814mm" x2="118.5616mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="180.4814mm" x2="118.5616mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="153.3581mm" x2="91.4384mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 32 -->
+	<circle cx="128.0548mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<rect x="125.3425mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="161.4951mm" r="0.2500mm" fill="white" />
+	<rect x="130.7671mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="133.4795mm" cy="161.4951mm" r="0.5000mm" fill="white" />
+	<circle cx="138.9041mm" cy="161.4951mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<rect x="125.3425mm" y="164.2074mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="166.9198mm" r="0.5000mm" fill="white" />
+	<circle cx="133.4795mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<rect x="136.1918mm" y="164.2074mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="138.9041mm" cy="166.9198mm" r="0.5000mm" fill="white" />
+	<circle cx="144.3288mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="128.0548mm" cy="172.3444mm" r="0.2500mm" fill="black" />
+	<circle cx="133.4795mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="138.9041mm" cy="172.3444mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<text x="120.9178mm" y="157.4266mm" font-size="4.0685mm" fill="black">
+		32
+	</text>
+	<line x1="119.9178mm" y1="153.3581mm" x2="119.9178mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="119.9178mm" y1="180.4814mm" x2="147.0411mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="180.4814mm" x2="147.0411mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="153.3581mm" x2="119.9178mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 33 -->
+	<circle cx="156.5342mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<rect x="153.8219mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="161.4951mm" r="0.2500mm" fill="white" />
+	<rect x="159.2466mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="161.9589mm" cy="161.4951mm" r="0.5000mm" fill="white" />
+	<circle cx="167.3836mm" cy="161.4951mm" r="0.2500mm" fill="black" />
+	<circle cx="172.8082mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<rect x="153.8219mm" y="164.2074mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="166.9198mm" r="0.5000mm" fill="white" />
+	<circle cx="161.9589mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="166.9198mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="156.5342mm" cy="172.3444mm" r="0.2500mm" fill="black" />
+	<rect x="159.2466mm" y="169.6321mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="161.9589mm" cy="172.3444mm" r="0.5000mm" fill="white" />
+	<circle cx="167.3836mm" cy="172.3444mm" r="0.2500mm" fill="black" />
+	<circle cx="172.8082mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<text x="149.3973mm" y="157.4266mm" font-size="4.0685mm" fill="black">
+		33
+	</text>
+	<line x1="148.3973mm" y1="153.3581mm" x2="148.3973mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="148.3973mm" y1="180.4814mm" x2="175.5205mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="180.4814mm" x2="175.5205mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="153.3581mm" x2="148.3973mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 34 -->
+	<circle cx="185.0137mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="156.0705mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="156.0705mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<rect x="182.3014mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="185.0137mm" cy="161.4951mm" r="0.2500mm" fill="white" />
+	<rect x="187.7260mm" y="158.7828mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="190.4384mm" cy="161.4951mm" r="0.5000mm" fill="white" />
+	<circle cx="195.8630mm" cy="161.4951mm" r="0.2500mm" fill="black" />
+	<circle cx="201.2877mm" cy="161.4951mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<rect x="182.3014mm" y="164.2074mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="185.0137mm" cy="166.9198mm" r="0.5000mm" fill="white" />
+	<circle cx="190.4384mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="166.9198mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="166.9198mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="185.0137mm" cy="172.3444mm" r="0.2500mm" fill="black" />
+	<circle cx="190.4384mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<rect x="193.1507mm" y="169.6321mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="195.8630mm" cy="172.3444mm" r="0.2500mm" fill="white" />
+	<circle cx="201.2877mm" cy="172.3444mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="177.7691mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="177.7691mm" r="0.2500mm" fill="black" />
+	<text x="177.8767mm" y="157.4266mm" font-size="4.0685mm" fill="black">
+		34
+	</text>
+	<line x1="176.8767mm" y1="153.3581mm" x2="176.8767mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="176.8767mm" y1="180.4814mm" x2="204.0000mm" y2="180.4814mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="180.4814mm" x2="204.0000mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="153.3581mm" x2="176.8767mm" y2="153.3581mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 35 -->
+	<circle cx="14.1370mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<rect x="11.4247mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="198.3346mm" r="0.2500mm" fill="white" />
+	<rect x="16.8493mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="19.5616mm" cy="198.3346mm" r="0.5000mm" fill="white" />
+	<circle cx="24.9863mm" cy="198.3346mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="203.7593mm" r="0.5000mm" fill="black" />
+	<rect x="16.8493mm" y="201.0470mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="19.5616mm" cy="203.7593mm" r="0.2500mm" fill="white" />
+	<rect x="22.2740mm" y="201.0470mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="24.9863mm" cy="203.7593mm" r="0.5000mm" fill="white" />
+	<circle cx="30.4110mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="14.1370mm" cy="209.1840mm" r="0.2500mm" fill="black" />
+	<circle cx="19.5616mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="24.9863mm" cy="209.1840mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<text x="7.0000mm" y="194.2661mm" font-size="4.0685mm" fill="black">
+		35
+	</text>
+	<line x1="6.0000mm" y1="190.1977mm" x2="6.0000mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="6.0000mm" y1="217.3209mm" x2="33.1233mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="217.3209mm" x2="33.1233mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="190.1977mm" x2="6.0000mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 36 -->
+	<circle cx="42.6164mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<rect x="39.9041mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="42.6164mm" cy="198.3346mm" r="0.2500mm" fill="white" />
+	<rect x="45.3288mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="48.0411mm" cy="198.3346mm" r="0.5000mm" fill="white" />
+	<circle cx="53.4658mm" cy="198.3346mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="203.7593mm" r="0.5000mm" fill="black" />
+	<rect x="45.3288mm" y="201.0470mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="48.0411mm" cy="203.7593mm" r="0.2500mm" fill="white" />
+	<circle cx="53.4658mm" cy="203.7593mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<rect x="39.9041mm" y="206.4716mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="42.6164mm" cy="209.1840mm" r="0.2500mm" fill="white" />
+	<circle cx="48.0411mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="53.4658mm" cy="209.1840mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<text x="35.4795mm" y="194.2661mm" font-size="4.0685mm" fill="black">
+		36
+	</text>
+	<line x1="34.4795mm" y1="190.1977mm" x2="34.4795mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="34.4795mm" y1="217.3209mm" x2="61.6027mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="217.3209mm" x2="61.6027mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="190.1977mm" x2="34.4795mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 37 -->
+	<circle cx="71.0959mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<rect x="68.3836mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="198.3346mm" r="0.2500mm" fill="white" />
+	<rect x="73.8082mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="76.5205mm" cy="198.3346mm" r="0.5000mm" fill="white" />
+	<circle cx="81.9452mm" cy="198.3346mm" r="0.2500mm" fill="black" />
+	<circle cx="87.3699mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="203.7593mm" r="0.5000mm" fill="black" />
+	<rect x="73.8082mm" y="201.0470mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="76.5205mm" cy="203.7593mm" r="0.2500mm" fill="white" />
+	<circle cx="81.9452mm" cy="203.7593mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="71.0959mm" cy="209.1840mm" r="0.2500mm" fill="black" />
+	<rect x="73.8082mm" y="206.4716mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="76.5205mm" cy="209.1840mm" r="0.5000mm" fill="white" />
+	<circle cx="81.9452mm" cy="209.1840mm" r="0.2500mm" fill="black" />
+	<circle cx="87.3699mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<text x="63.9589mm" y="194.2661mm" font-size="4.0685mm" fill="black">
+		37
+	</text>
+	<line x1="62.9589mm" y1="190.1977mm" x2="62.9589mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="62.9589mm" y1="217.3209mm" x2="90.0822mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="217.3209mm" x2="90.0822mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="190.1977mm" x2="62.9589mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 38 -->
+	<circle cx="99.5753mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<rect x="96.8630mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="198.3346mm" r="0.2500mm" fill="white" />
+	<rect x="102.2877mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="105.0000mm" cy="198.3346mm" r="0.5000mm" fill="white" />
+	<circle cx="110.4247mm" cy="198.3346mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="99.5753mm" cy="203.7593mm" r="0.5000mm" fill="black" />
+	<rect x="102.2877mm" y="201.0470mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="105.0000mm" cy="203.7593mm" r="0.2500mm" fill="white" />
+	<circle cx="110.4247mm" cy="203.7593mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="99.5753mm" cy="209.1840mm" r="0.2500mm" fill="black" />
+	<circle cx="105.0000mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<rect x="107.7123mm" y="206.4716mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="110.4247mm" cy="209.1840mm" r="0.2500mm" fill="white" />
+	<circle cx="115.8493mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="99.5753mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<text x="92.4384mm" y="194.2661mm" font-size="4.0685mm" fill="black">
+		38
+	</text>
+	<line x1="91.4384mm" y1="190.1977mm" x2="91.4384mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="91.4384mm" y1="217.3209mm" x2="118.5616mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="217.3209mm" x2="118.5616mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="190.1977mm" x2="91.4384mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 39 -->
+	<circle cx="128.0548mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<rect x="125.3425mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="198.3346mm" r="0.2500mm" fill="white" />
+	<rect x="130.7671mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="133.4795mm" cy="198.3346mm" r="0.5000mm" fill="white" />
+	<circle cx="138.9041mm" cy="198.3346mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="203.7593mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<rect x="136.1918mm" y="201.0470mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="138.9041mm" cy="203.7593mm" r="0.5000mm" fill="white" />
+	<circle cx="144.3288mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<rect x="125.3425mm" y="206.4716mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="209.1840mm" r="0.2500mm" fill="white" />
+	<circle cx="133.4795mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="138.9041mm" cy="209.1840mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<text x="120.9178mm" y="194.2661mm" font-size="4.0685mm" fill="black">
+		39
+	</text>
+	<line x1="119.9178mm" y1="190.1977mm" x2="119.9178mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="119.9178mm" y1="217.3209mm" x2="147.0411mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="217.3209mm" x2="147.0411mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="190.1977mm" x2="119.9178mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 40 -->
+	<circle cx="156.5342mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<rect x="153.8219mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="198.3346mm" r="0.2500mm" fill="white" />
+	<rect x="159.2466mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="161.9589mm" cy="198.3346mm" r="0.5000mm" fill="white" />
+	<circle cx="167.3836mm" cy="198.3346mm" r="0.2500mm" fill="black" />
+	<circle cx="172.8082mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="203.7593mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<rect x="164.6712mm" y="201.0470mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="167.3836mm" cy="203.7593mm" r="0.5000mm" fill="white" />
+	<circle cx="172.8082mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="156.5342mm" cy="209.1840mm" r="0.2500mm" fill="black" />
+	<rect x="159.2466mm" y="206.4716mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="161.9589mm" cy="209.1840mm" r="0.5000mm" fill="white" />
+	<circle cx="167.3836mm" cy="209.1840mm" r="0.2500mm" fill="black" />
+	<circle cx="172.8082mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<text x="149.3973mm" y="194.2661mm" font-size="4.0685mm" fill="black">
+		40
+	</text>
+	<line x1="148.3973mm" y1="190.1977mm" x2="148.3973mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="148.3973mm" y1="217.3209mm" x2="175.5205mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="217.3209mm" x2="175.5205mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="190.1977mm" x2="148.3973mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 41 -->
+	<circle cx="185.0137mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="192.9100mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="192.9100mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<rect x="182.3014mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="185.0137mm" cy="198.3346mm" r="0.2500mm" fill="white" />
+	<rect x="187.7260mm" y="195.6223mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="190.4384mm" cy="198.3346mm" r="0.5000mm" fill="white" />
+	<circle cx="195.8630mm" cy="198.3346mm" r="0.2500mm" fill="black" />
+	<circle cx="201.2877mm" cy="198.3346mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="203.7593mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<rect x="193.1507mm" y="201.0470mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="195.8630mm" cy="203.7593mm" r="0.5000mm" fill="white" />
+	<circle cx="201.2877mm" cy="203.7593mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="185.0137mm" cy="209.1840mm" r="0.2500mm" fill="black" />
+	<circle cx="190.4384mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<rect x="193.1507mm" y="206.4716mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="195.8630mm" cy="209.1840mm" r="0.2500mm" fill="white" />
+	<circle cx="201.2877mm" cy="209.1840mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="214.6086mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="214.6086mm" r="0.2500mm" fill="black" />
+	<text x="177.8767mm" y="194.2661mm" font-size="4.0685mm" fill="black">
+		41
+	</text>
+	<line x1="176.8767mm" y1="190.1977mm" x2="176.8767mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="176.8767mm" y1="217.3209mm" x2="204.0000mm" y2="217.3209mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="217.3209mm" x2="204.0000mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="190.1977mm" x2="176.8767mm" y2="190.1977mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 42 -->
+	<circle cx="14.1370mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="11.4247mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<rect x="16.8493mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="19.5616mm" cy="235.1742mm" r="0.5000mm" fill="white" />
+	<circle cx="24.9863mm" cy="235.1742mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="240.5988mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="240.5988mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<rect x="11.4247mm" y="243.3112mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="246.0235mm" r="0.2500mm" fill="white" />
+	<rect x="16.8493mm" y="243.3112mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="19.5616mm" cy="246.0235mm" r="0.5000mm" fill="white" />
+	<circle cx="24.9863mm" cy="246.0235mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<text x="7.0000mm" y="231.1057mm" font-size="4.0685mm" fill="black">
+		42
+	</text>
+	<line x1="6.0000mm" y1="227.0372mm" x2="6.0000mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="6.0000mm" y1="254.1605mm" x2="33.1233mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="254.1605mm" x2="33.1233mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="227.0372mm" x2="6.0000mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 43 -->
+	<circle cx="42.6164mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="39.9041mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="42.6164mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<rect x="45.3288mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="48.0411mm" cy="235.1742mm" r="0.5000mm" fill="white" />
+	<circle cx="53.4658mm" cy="235.1742mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="240.5988mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="240.5988mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<rect x="39.9041mm" y="243.3112mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="42.6164mm" cy="246.0235mm" r="0.2500mm" fill="white" />
+	<circle cx="48.0411mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<rect x="50.7534mm" y="243.3112mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="53.4658mm" cy="246.0235mm" r="0.2500mm" fill="white" />
+	<circle cx="58.8904mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<text x="35.4795mm" y="231.1057mm" font-size="4.0685mm" fill="black">
+		43
+	</text>
+	<line x1="34.4795mm" y1="227.0372mm" x2="34.4795mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="34.4795mm" y1="254.1605mm" x2="61.6027mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="254.1605mm" x2="61.6027mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="227.0372mm" x2="34.4795mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 44 -->
+	<circle cx="71.0959mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="68.3836mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<circle cx="76.5205mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="79.2329mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="81.9452mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<circle cx="87.3699mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<rect x="68.3836mm" y="237.8865mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="240.5988mm" r="0.5000mm" fill="white" />
+	<rect x="73.8082mm" y="237.8865mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="76.5205mm" cy="240.5988mm" r="0.2500mm" fill="white" />
+	<circle cx="81.9452mm" cy="240.5988mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="71.0959mm" cy="246.0235mm" r="0.2500mm" fill="black" />
+	<circle cx="76.5205mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="81.9452mm" cy="246.0235mm" r="0.2500mm" fill="black" />
+	<circle cx="87.3699mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<text x="63.9589mm" y="231.1057mm" font-size="4.0685mm" fill="black">
+		44
+	</text>
+	<line x1="62.9589mm" y1="227.0372mm" x2="62.9589mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="62.9589mm" y1="254.1605mm" x2="90.0822mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="254.1605mm" x2="90.0822mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="227.0372mm" x2="62.9589mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 45 -->
+	<circle cx="99.5753mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="96.8630mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<circle cx="105.0000mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="107.7123mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="110.4247mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<circle cx="115.8493mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<rect x="96.8630mm" y="237.8865mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="240.5988mm" r="0.5000mm" fill="white" />
+	<circle cx="105.0000mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="240.5988mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="99.5753mm" cy="246.0235mm" r="0.2500mm" fill="black" />
+	<rect x="102.2877mm" y="243.3112mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="105.0000mm" cy="246.0235mm" r="0.5000mm" fill="white" />
+	<circle cx="110.4247mm" cy="246.0235mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="99.5753mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<text x="92.4384mm" y="231.1057mm" font-size="4.0685mm" fill="black">
+		45
+	</text>
+	<line x1="91.4384mm" y1="227.0372mm" x2="91.4384mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="91.4384mm" y1="254.1605mm" x2="118.5616mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="254.1605mm" x2="118.5616mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="227.0372mm" x2="91.4384mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 46 -->
+	<circle cx="128.0548mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="125.3425mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<circle cx="133.4795mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="136.1918mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="138.9041mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<circle cx="144.3288mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<rect x="125.3425mm" y="237.8865mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="240.5988mm" r="0.5000mm" fill="white" />
+	<circle cx="133.4795mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="240.5988mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="128.0548mm" cy="246.0235mm" r="0.2500mm" fill="black" />
+	<circle cx="133.4795mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<rect x="136.1918mm" y="243.3112mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="138.9041mm" cy="246.0235mm" r="0.2500mm" fill="white" />
+	<circle cx="144.3288mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<text x="120.9178mm" y="231.1057mm" font-size="4.0685mm" fill="black">
+		46
+	</text>
+	<line x1="119.9178mm" y1="227.0372mm" x2="119.9178mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="119.9178mm" y1="254.1605mm" x2="147.0411mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="254.1605mm" x2="147.0411mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="227.0372mm" x2="119.9178mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 47 -->
+	<circle cx="156.5342mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="153.8219mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<circle cx="161.9589mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="164.6712mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="167.3836mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<circle cx="172.8082mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="240.5988mm" r="0.5000mm" fill="black" />
+	<rect x="159.2466mm" y="237.8865mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="161.9589mm" cy="240.5988mm" r="0.2500mm" fill="white" />
+	<circle cx="167.3836mm" cy="240.5988mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<rect x="153.8219mm" y="243.3112mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="246.0235mm" r="0.2500mm" fill="white" />
+	<circle cx="161.9589mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="167.3836mm" cy="246.0235mm" r="0.2500mm" fill="black" />
+	<circle cx="172.8082mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<text x="149.3973mm" y="231.1057mm" font-size="4.0685mm" fill="black">
+		47
+	</text>
+	<line x1="148.3973mm" y1="227.0372mm" x2="148.3973mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="148.3973mm" y1="254.1605mm" x2="175.5205mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="254.1605mm" x2="175.5205mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="227.0372mm" x2="148.3973mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 48 -->
+	<circle cx="185.0137mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="229.7495mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="229.7495mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="182.3014mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="185.0137mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<circle cx="190.4384mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<rect x="193.1507mm" y="232.4618mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="195.8630mm" cy="235.1742mm" r="0.2500mm" fill="white" />
+	<circle cx="201.2877mm" cy="235.1742mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="240.5988mm" r="0.5000mm" fill="black" />
+	<rect x="187.7260mm" y="237.8865mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="190.4384mm" cy="240.5988mm" r="0.2500mm" fill="white" />
+	<circle cx="195.8630mm" cy="240.5988mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="240.5988mm" r="0.2500mm" fill="black" />
+	<circle cx="179.5890mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="185.0137mm" cy="246.0235mm" r="0.2500mm" fill="black" />
+	<rect x="187.7260mm" y="243.3112mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="190.4384mm" cy="246.0235mm" r="0.5000mm" fill="white" />
+	<circle cx="195.8630mm" cy="246.0235mm" r="0.2500mm" fill="black" />
+	<circle cx="201.2877mm" cy="246.0235mm" r="0.5000mm" fill="black" />
+	<circle cx="179.5890mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="185.0137mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="190.4384mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<circle cx="195.8630mm" cy="251.4481mm" r="0.5000mm" fill="black" />
+	<circle cx="201.2877mm" cy="251.4481mm" r="0.2500mm" fill="black" />
+	<text x="177.8767mm" y="231.1057mm" font-size="4.0685mm" fill="black">
+		48
+	</text>
+	<line x1="176.8767mm" y1="227.0372mm" x2="176.8767mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="176.8767mm" y1="254.1605mm" x2="204.0000mm" y2="254.1605mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="254.1605mm" x2="204.0000mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="204.0000mm" y1="227.0372mm" x2="176.8767mm" y2="227.0372mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 49 -->
+	<circle cx="14.1370mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<rect x="11.4247mm" y="269.3014mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="272.0137mm" r="0.2500mm" fill="white" />
+	<circle cx="19.5616mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="24.9863mm" cy="272.0137mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<rect x="11.4247mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="14.1370mm" cy="277.4384mm" r="0.5000mm" fill="white" />
+	<rect x="16.8493mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="19.5616mm" cy="277.4384mm" r="0.2500mm" fill="white" />
+	<rect x="22.2740mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="24.9863mm" cy="277.4384mm" r="0.5000mm" fill="white" />
+	<circle cx="30.4110mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<circle cx="8.7123mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="14.1370mm" cy="282.8630mm" r="0.2500mm" fill="black" />
+	<circle cx="19.5616mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="24.9863mm" cy="282.8630mm" r="0.2500mm" fill="black" />
+	<circle cx="30.4110mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="8.7123mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="14.1370mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="19.5616mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="24.9863mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="30.4110mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<text x="7.0000mm" y="267.9452mm" font-size="4.0685mm" fill="black">
+		49
+	</text>
+	<line x1="6.0000mm" y1="263.8767mm" x2="6.0000mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="6.0000mm" y1="291.0000mm" x2="33.1233mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="291.0000mm" x2="33.1233mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="33.1233mm" y1="263.8767mm" x2="6.0000mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 50 -->
+	<circle cx="42.6164mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<rect x="39.9041mm" y="269.3014mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="42.6164mm" cy="272.0137mm" r="0.2500mm" fill="white" />
+	<circle cx="48.0411mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="53.4658mm" cy="272.0137mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<rect x="39.9041mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="42.6164mm" cy="277.4384mm" r="0.5000mm" fill="white" />
+	<rect x="45.3288mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="48.0411mm" cy="277.4384mm" r="0.2500mm" fill="white" />
+	<circle cx="53.4658mm" cy="277.4384mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<circle cx="37.1918mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="42.6164mm" cy="282.8630mm" r="0.2500mm" fill="black" />
+	<rect x="45.3288mm" y="280.1507mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="48.0411mm" cy="282.8630mm" r="0.5000mm" fill="white" />
+	<circle cx="53.4658mm" cy="282.8630mm" r="0.2500mm" fill="black" />
+	<circle cx="58.8904mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="37.1918mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="42.6164mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="48.0411mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="53.4658mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="58.8904mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<text x="35.4795mm" y="267.9452mm" font-size="4.0685mm" fill="black">
+		50
+	</text>
+	<line x1="34.4795mm" y1="263.8767mm" x2="34.4795mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="34.4795mm" y1="291.0000mm" x2="61.6027mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="291.0000mm" x2="61.6027mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="61.6027mm" y1="263.8767mm" x2="34.4795mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 51 -->
+	<circle cx="71.0959mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<rect x="68.3836mm" y="269.3014mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="272.0137mm" r="0.2500mm" fill="white" />
+	<circle cx="76.5205mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="81.9452mm" cy="272.0137mm" r="0.2500mm" fill="black" />
+	<circle cx="87.3699mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<rect x="68.3836mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="71.0959mm" cy="277.4384mm" r="0.5000mm" fill="white" />
+	<rect x="73.8082mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="76.5205mm" cy="277.4384mm" r="0.2500mm" fill="white" />
+	<circle cx="81.9452mm" cy="277.4384mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<circle cx="65.6712mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="71.0959mm" cy="282.8630mm" r="0.2500mm" fill="black" />
+	<circle cx="76.5205mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<rect x="79.2329mm" y="280.1507mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="81.9452mm" cy="282.8630mm" r="0.2500mm" fill="white" />
+	<circle cx="87.3699mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="65.6712mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="71.0959mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="76.5205mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="81.9452mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="87.3699mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<text x="63.9589mm" y="267.9452mm" font-size="4.0685mm" fill="black">
+		51
+	</text>
+	<line x1="62.9589mm" y1="263.8767mm" x2="62.9589mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="62.9589mm" y1="291.0000mm" x2="90.0822mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="291.0000mm" x2="90.0822mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="90.0822mm" y1="263.8767mm" x2="62.9589mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 52 -->
+	<circle cx="99.5753mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<rect x="96.8630mm" y="269.3014mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="272.0137mm" r="0.2500mm" fill="white" />
+	<circle cx="105.0000mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="110.4247mm" cy="272.0137mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<rect x="96.8630mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="99.5753mm" cy="277.4384mm" r="0.5000mm" fill="white" />
+	<circle cx="105.0000mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<rect x="107.7123mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="110.4247mm" cy="277.4384mm" r="0.5000mm" fill="white" />
+	<circle cx="115.8493mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<circle cx="94.1507mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="99.5753mm" cy="282.8630mm" r="0.2500mm" fill="black" />
+	<rect x="102.2877mm" y="280.1507mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="105.0000mm" cy="282.8630mm" r="0.5000mm" fill="white" />
+	<circle cx="110.4247mm" cy="282.8630mm" r="0.2500mm" fill="black" />
+	<circle cx="115.8493mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="94.1507mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="99.5753mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="105.0000mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="110.4247mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="115.8493mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<text x="92.4384mm" y="267.9452mm" font-size="4.0685mm" fill="black">
+		52
+	</text>
+	<line x1="91.4384mm" y1="263.8767mm" x2="91.4384mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="91.4384mm" y1="291.0000mm" x2="118.5616mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="291.0000mm" x2="118.5616mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="118.5616mm" y1="263.8767mm" x2="91.4384mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 53 -->
+	<circle cx="128.0548mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<rect x="125.3425mm" y="269.3014mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="128.0548mm" cy="272.0137mm" r="0.2500mm" fill="white" />
+	<circle cx="133.4795mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="138.9041mm" cy="272.0137mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="277.4384mm" r="0.5000mm" fill="black" />
+	<rect x="130.7671mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="133.4795mm" cy="277.4384mm" r="0.2500mm" fill="white" />
+	<rect x="136.1918mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="138.9041mm" cy="277.4384mm" r="0.5000mm" fill="white" />
+	<circle cx="144.3288mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<circle cx="122.6301mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="128.0548mm" cy="282.8630mm" r="0.2500mm" fill="black" />
+	<rect x="130.7671mm" y="280.1507mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="133.4795mm" cy="282.8630mm" r="0.5000mm" fill="white" />
+	<circle cx="138.9041mm" cy="282.8630mm" r="0.2500mm" fill="black" />
+	<circle cx="144.3288mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="122.6301mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="128.0548mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="133.4795mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="138.9041mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="144.3288mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<text x="120.9178mm" y="267.9452mm" font-size="4.0685mm" fill="black">
+		53
+	</text>
+	<line x1="119.9178mm" y1="263.8767mm" x2="119.9178mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="119.9178mm" y1="291.0000mm" x2="147.0411mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="291.0000mm" x2="147.0411mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="147.0411mm" y1="263.8767mm" x2="119.9178mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+
+	<!-- Marker id 54 -->
+	<circle cx="156.5342mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="266.5890mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="266.5890mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="156.5342mm" cy="272.0137mm" r="0.2500mm" fill="black" />
+	<rect x="159.2466mm" y="269.3014mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="161.9589mm" cy="272.0137mm" r="0.5000mm" fill="white" />
+	<circle cx="167.3836mm" cy="272.0137mm" r="0.2500mm" fill="black" />
+	<circle cx="172.8082mm" cy="272.0137mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<rect x="153.8219mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="156.5342mm" cy="277.4384mm" r="0.5000mm" fill="white" />
+	<rect x="159.2466mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="161.9589mm" cy="277.4384mm" r="0.2500mm" fill="white" />
+	<rect x="164.6712mm" y="274.7260mm" width="5.4247mm" height="5.4247mm" fill="black" />
+	<circle cx="167.3836mm" cy="277.4384mm" r="0.5000mm" fill="white" />
+	<circle cx="172.8082mm" cy="277.4384mm" r="0.2500mm" fill="black" />
+	<circle cx="151.1096mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="156.5342mm" cy="282.8630mm" r="0.2500mm" fill="black" />
+	<circle cx="161.9589mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="167.3836mm" cy="282.8630mm" r="0.2500mm" fill="black" />
+	<circle cx="172.8082mm" cy="282.8630mm" r="0.5000mm" fill="black" />
+	<circle cx="151.1096mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="156.5342mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="161.9589mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<circle cx="167.3836mm" cy="288.2877mm" r="0.5000mm" fill="black" />
+	<circle cx="172.8082mm" cy="288.2877mm" r="0.2500mm" fill="black" />
+	<text x="149.3973mm" y="267.9452mm" font-size="4.0685mm" fill="black">
+		54
+	</text>
+	<line x1="148.3973mm" y1="263.8767mm" x2="148.3973mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="148.3973mm" y1="291.0000mm" x2="175.5205mm" y2="291.0000mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="291.0000mm" x2="175.5205mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+	<line x1="175.5205mm" y1="263.8767mm" x2="148.3973mm" y2="263.8767mm" stroke="black" stroke-width="0.2500mm" />
+</svg>
