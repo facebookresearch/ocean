@@ -49,8 +49,6 @@
 	#endif
 #endif
 
-using namespace Ocean;
-
 FeatureTrackerWrapper::FeatureTrackerWrapper()
 {
 	// nothing to do here
@@ -88,28 +86,28 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)
-	Media::DirectShow::registerDirectShowLibrary();
-	Media::MediaFoundation::registerMediaFoundationLibrary();
-	Media::WIC::registerWICLibrary();
+		Media::DirectShow::registerDirectShowLibrary();
+		Media::MediaFoundation::registerMediaFoundationLibrary();
+		Media::WIC::registerWICLibrary();
 	#elif defined(__APPLE__)
-	Media::AVFoundation::registerAVFLibrary();
-	Media::ImageIO::registerImageIOLibrary();
+		Media::AVFoundation::registerAVFLibrary();
+		Media::ImageIO::registerImageIOLibrary();
 
 		#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
-	Devices::IOS::registerIOSLibrary();
+			Devices::IOS::registerIOSLibrary();
 		#endif
 	#elif defined(_ANDROID)
-	Media::OpenImageLibraries::registerOpenImageLibrariesLibrary();
-	Devices::Android::registerAndroidLibrary();
+		Media::OpenImageLibraries::registerOpenImageLibrariesLibrary();
+		Devices::Android::registerAndroidLibrary();
 	#endif
 #else
 
 	// we collect all plugins located in the resource path of the application
 
 	#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
-	PluginManager::get().collectPlugins(StringOSX::toUTF8([[NSBundle mainBundle] resourcePath])); // ]] <- DEBUG VSCode thinks the closing brackets are missing; messes up syntax high-lighting
+		PluginManager::get().collectPlugins(StringOSX::toUTF8([[NSBundle mainBundle] resourcePath])); // ]] <- DEBUG VSCode thinks the closing brackets are missing; messes up syntax high-lighting
 	#else
-	PluginManager::get().collectPlugins(frameworkPath + std::string("/bin/plugins/") + Build::buildString());
+		PluginManager::get().collectPlugins(frameworkPath + std::string("/bin/plugins/") + Build::buildString());
 	#endif
 
 	// Although we could use the tracking capabilities via the devices interface we invoke the trackers directly to simplify the application
@@ -365,19 +363,19 @@ void FeatureTrackerWrapper::release()
 
 #ifdef OCEAN_RUNTIME_STATIC
 	#if defined(_WINDOWS)
-	Media::DirectShow::unregisterDirectShowLibrary();
-	Media::MediaFoundation::unregisterMediaFoundationLibrary();
-	Media::WIC::unregisterWICLibrary();
+		Media::DirectShow::unregisterDirectShowLibrary();
+		Media::MediaFoundation::unregisterMediaFoundationLibrary();
+		Media::WIC::unregisterWICLibrary();
 	#elif defined(__APPLE__)
 		#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
-	Devices::IOS::unregisterIOSLibrary();
+			Devices::IOS::unregisterIOSLibrary();
 		#endif
 
-	Media::AVFoundation::unregisterAVFLibrary();
-	Media::ImageIO::unregisterImageIOLibrary();
+		Media::AVFoundation::unregisterAVFLibrary();
+		Media::ImageIO::unregisterImageIOLibrary();
 	#elif defined(_ANDROID)
-	Devices::Android::unregisterAndroidLibrary();
-	Media::OpenImageLibraries::unregisterOpenImageLibrariesLibrary();
+		Devices::Android::unregisterAndroidLibrary();
+		Media::OpenImageLibraries::unregisterOpenImageLibrariesLibrary();
 	#endif
 #else
 	PluginManager::get().release();
@@ -470,8 +468,8 @@ bool FeatureTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 
 	performance_.start();
 
-	const Frames frames = {frame};
-	const SharedAnyCameras anyCameras = {anyCamera_};
+	const Frames frames = { frame };
+	const SharedAnyCameras anyCameras = { anyCamera_ };
 
 	Tracking::VisualTracker::TransformationSamples resultingTransformationSamples;
 	if (visualTracker_->determinePoses(frames, anyCameras, resultingTransformationSamples, world_Q_camera, WorkerPool::get().scopedWorker()()) && !resultingTransformationSamples.empty())

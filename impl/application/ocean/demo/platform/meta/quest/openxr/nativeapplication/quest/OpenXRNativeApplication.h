@@ -14,12 +14,14 @@
 
 #include <android_native_app_glue.h>
 
+using namespace Ocean;
+
 /**
  * This application shows how to implement a custom native application which a custom OpenXR session and rendering engine.
  * The relevant functions to be implemented are createOpenXRSession(), releaseOpenXRSession(), onIdle().
  * @ingroup applicationdemoplatformmetaquestopenxr
  */
-class OpenXRNativeApplication : public Ocean::Platform::Meta::Quest::OpenXR::Application::NativeApplication
+class OpenXRNativeApplication : public Platform::Meta::Quest::OpenXR::Application::NativeApplication
 {
 	public:
 

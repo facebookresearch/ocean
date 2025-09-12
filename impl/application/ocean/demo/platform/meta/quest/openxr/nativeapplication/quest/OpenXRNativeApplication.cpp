@@ -7,8 +7,6 @@
 
 #include "application/ocean/demo/platform/meta/quest/openxr/nativeapplication/quest/OpenXRNativeApplication.h"
 
-using namespace Ocean;
-
 OpenXRNativeApplication::OpenXRNativeApplication(struct android_app* androidApp) :
 	NativeApplication(androidApp)
 {

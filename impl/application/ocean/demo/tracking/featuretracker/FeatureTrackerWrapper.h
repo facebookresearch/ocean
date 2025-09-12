@@ -38,6 +38,8 @@ using namespace Ocean;
  * @}
  */
 
+using namespace Ocean;
+
 /**
  * This class implements the platform independent feature tracker functionality which will be used/shared by/across platform specific applications.
  * @ingroup applicationdemotrackingfeaturetracker
@@ -80,13 +82,13 @@ class FeatureTrackerWrapper
 		 * @param time The time the tracker needed to process the frame, averaged over 20 iterations, in seconds, with range [0, infinity), negative if the pattern has not been detected yet
 		 * @return True, if succeeded
 		 */
-		bool trackNewFrame(Ocean::Frame& resultFrame, double& time);
+		bool trackNewFrame(Frame& resultFrame, double& time);
 
 		/**
 		 * Returns the input medium which is used.
 		 * @return The tracker's input medium
 		 */
-		inline Ocean::Media::FrameMediumRef inputMedium() const;
+		inline Media::FrameMediumRef inputMedium() const;
 
 		/**
 		 * Move operator.
@@ -98,28 +100,28 @@ class FeatureTrackerWrapper
 	protected:
 
 		/// The frame medium providing the visual input information for this feature tracker.
-		Ocean::Media::FrameMediumRef inputMedium_;
+		Media::FrameMediumRef inputMedium_;
 
 		/// The bounding box  of the tracking pattern defined in the world coordinate system, with range (0, infinity)x(0, infinity)
-		Ocean::Box3 objectDimension_;
+		Box3 objectDimension_;
 
 		/// The actual tracker to be used for feature tracking.
-		Ocean::Tracking::VisualTrackerRef visualTracker_;
+		Tracking::VisualTrackerRef visualTracker_;
 
 		/// The camera profile defining the project and the camera distortion.
-		Ocean::SharedAnyCamera anyCamera_;
+		SharedAnyCamera anyCamera_;
 
 		/// The timestamp of the last frame that has been handled.
-		Ocean::Timestamp lastHandledFrameTimestamp_;
+		Timestamp lastHandledFrameTimestamp_;
 
 		/// The performance measurement object.
-		Ocean::HighPerformanceStatistic performance_;
+		HighPerformanceStatistic performance_;
 
 		/// The 3DOF orientation tracker which is used to support the tracker.
-		Ocean::Devices::OrientationTracker3DOFRef orientationTracker3DOF_;
+		Devices::OrientationTracker3DOFRef orientationTracker3DOF_;
 
 		/// The device player which may be used to replay a recording.
-		Ocean::Devices::SharedDevicePlayer devicePlayer_;
+		Devices::SharedDevicePlayer devicePlayer_;
 };
 
 inline FeatureTrackerWrapper::FeatureTrackerWrapper(FeatureTrackerWrapper&& featureTrackerWrapper) noexcept
@@ -127,7 +129,7 @@ inline FeatureTrackerWrapper::FeatureTrackerWrapper(FeatureTrackerWrapper&& feat
 	*this = std::move(featureTrackerWrapper);
 }
 
-inline Ocean::Media::FrameMediumRef FeatureTrackerWrapper::inputMedium() const
+inline Media::FrameMediumRef FeatureTrackerWrapper::inputMedium() const
 {
 	return inputMedium_;
 }
