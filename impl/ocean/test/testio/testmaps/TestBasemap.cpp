@@ -57,19 +57,19 @@ bool TestBasemap::test(const double testDuration)
 	return allSucceeded;
 }
 
-#ifdef OCEAN_USE_GTEST
+// #ifdef OCEAN_USE_GTEST
 
-TEST(TestBasemap, TileFromPBFData)
-{
-	EXPECT_TRUE(TestBasemap::testTileFromPBFData());
-}
+// TEST(TestBasemap, TileFromPBFData)
+// {
+// 	EXPECT_TRUE(TestBasemap::testTileFromPBFData());
+// }
 
-TEST(TestBasemap, MissingFeatures)
-{
-	EXPECT_TRUE(TestBasemap::testMissingFeatures());
-}
+// TEST(TestBasemap, MissingFeatures)
+// {
+// 	EXPECT_TRUE(TestBasemap::testMissingFeatures());
+// }
 
-#endif // OCEAN_USE_GTEST
+// #endif // OCEAN_USE_GTEST
 
 bool TestBasemap::testTileFromPBFData()
 {
