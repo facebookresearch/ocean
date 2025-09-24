@@ -709,7 +709,7 @@ bool PointDetector::detectPoints(const Frame& yFrame, const PointPatterns& point
 		}
 
 		ocean_assert(minDifference <= 32u);
-		if (minDifference >= 32u)
+		if (minDifference > 32u)
 		{
 			return false;
 		}
