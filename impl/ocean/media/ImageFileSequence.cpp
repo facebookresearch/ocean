@@ -127,7 +127,7 @@ bool ImageFileSequence::start()
 			return false;
 		}
 
-		deliverNewFrame(std::move(mediumNextFrame));
+		deliverNewFrame(std::move(mediumNextFrame), SharedAnyCamera(camera_));
 
 		mediumStartTimestamp.toNow();
 		mediumPauseTimestamp.toInvalid();
@@ -233,8 +233,19 @@ bool ImageFileSequence::setSpeed(const float speed)
 	return setPreferredFrameFrequency(double(speed));
 }
 
+bool ImageFileSequence::setCamera(SharedAnyCamera&& camera)
+{
+	const ScopedLock scopedLock(lock_);
+
+	camera_ = std::move(camera);
+
+	return true;
+}
+
 bool ImageFileSequence::forceNextFrame()
 {
+	const ScopedLock scopedLock(lock_);
+
 	if (mediumSequenceMode != SM_EXPLICIT)
 	{
 		return false;
@@ -273,7 +284,7 @@ bool ImageFileSequence::forceNextFrame()
 		return false;
 	}
 
-	return deliverNewFrame(std::move(mediumNextFrame));
+	return deliverNewFrame(std::move(mediumNextFrame), SharedAnyCamera(camera_));
 }
 
 void ImageFileSequence::threadRun()
@@ -314,7 +325,7 @@ void ImageFileSequence::threadRun()
 		// use already loaded frame or load the next frame explicitly
 		if (mediumNextFrame)
 		{
-			deliverNewFrame(std::move(mediumNextFrame));
+			deliverNewFrame(std::move(mediumNextFrame), SharedAnyCamera(camera_));
 		}
 		else
 		{

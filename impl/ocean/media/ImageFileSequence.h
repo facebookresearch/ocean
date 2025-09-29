@@ -13,6 +13,8 @@
 
 #include "ocean/base/Thread.h"
 
+#include "ocean/math/AnyCamera.h"
+
 namespace Ocean
 {
 
@@ -110,7 +112,7 @@ class OCEAN_MEDIA_EXPORT ImageFileSequence :
 		Timestamp stopTimestamp() const override;
 
 		/**
-		 * Sets the recent position of the finit medium.
+		 * Sets the recent position of the finite medium.
 		 * @see FiniteMedium::setPosition().
 		 */
 		bool setPosition(const double position) override;
@@ -122,6 +124,12 @@ class OCEAN_MEDIA_EXPORT ImageFileSequence :
 		 * @see setPreferredFrameFrequency().
 		 */
 		bool setSpeed(const float speed) override;
+
+		/**
+		 * Sets the known camera profile of this frame medium.
+		 * @see FrameMedium::setCamera().
+		 */
+		bool setCamera(SharedAnyCamera&& camera) override;
 
 		/**
 		 * Forces the loading of the next image in the sequence.
@@ -156,14 +164,14 @@ class OCEAN_MEDIA_EXPORT ImageFileSequence :
 
 		/**
 		 * Returns the filename of a specific sequence image.
-		 * @param index Index of the sequence image to create the filename for
+		 * @param index The index of the sequence image to create the filename for
 		 * @return Sequence image filename
 		 */
 		std::string imageFilename(const unsigned int index) const;
 
 		/**
 		 * Loads a new image specified by the filename.
-		 * @param filename Filename of the image to be loaded
+		 * @param filename The filename of the image to be loaded
 		 * @param timestamp Frame timestamp to be used
 		 * @param frame Optional frame receiving the image data, otherwise the frame will be added to the frame container
 		 * @return True, if succeeded
@@ -189,6 +197,9 @@ class OCEAN_MEDIA_EXPORT ImageFileSequence :
 
 		/// Next frame in the sequence.
 		Frame mediumNextFrame;
+
+		/// The camera profile for all images.
+		SharedAnyCamera camera_;
 };
 
 }
