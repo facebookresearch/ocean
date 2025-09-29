@@ -994,11 +994,11 @@ bool TestSquareMatrix3::testSolve(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestSquareMatrix3::testSolve(const bool containsSignular, const double testDuration)
+bool TestSquareMatrix3::testSolve(const bool containsSingular, const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	if (containsSignular)
+	if (containsSingular)
 		Log::info() << "... with singular matrices:";
 	else
 		Log::info() << "... without singular matrices:";
@@ -1034,7 +1034,7 @@ bool TestSquareMatrix3::testSolve(const bool containsSignular, const double test
 			for (unsigned int i = 0u; i < matrices[n].elements(); ++i)
 				matrices[n][i] = Random::scalar(randomGenerator, -valueRange, valueRange);
 
-			if (containsSignular && (n % 50) == 0)
+			if (containsSingular && (n % 50) == 0)
 			{
 				// we make some matrices singular: yAxis = a * xAxis + b * zAxis
 				(Vector3&)*(matrices[n]() + 3) = matrices[n].xAxis() * Random::scalar(randomGenerator, -valueRange, valueRange) + matrices[n].zAxis() * Random::scalar(randomGenerator, -valueRange, valueRange);
@@ -1085,7 +1085,7 @@ bool TestSquareMatrix3::testSolve(const bool containsSignular, const double test
 	Log::info() << "Not solved non-singular: " << String::toAString(double(invalidNonSingularIterations) / double(iterations) * 100.0, 1u) << "%";
 	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
 
-	if (containsSignular)
+	if (containsSingular)
 		return percent >= 0.90;
 	else
 		return percent >= 0.99;

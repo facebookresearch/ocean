@@ -101,9 +101,9 @@ class OCEAN_TEST_MATH_EXPORT TestSquareMatrix3
 		 * @return True, if the test was successful
 		 */
 		static bool testSolve(const double testDuration);
-	
+
 	protected:
-	
+
 		/**
 		 * Standard implementation of a multiplication between a 4x4 matrix and a 4x1 vector.
 		 * @param matrix The matrix to be used for multiplication
@@ -116,11 +116,11 @@ class OCEAN_TEST_MATH_EXPORT TestSquareMatrix3
 
 		/**
 		 * Test for solver of linear systems of equations.
-		 * @param containsSignular True, to create test data containing singular matrices
+		 * @param containsSingular True, to create test data containing singular matrices
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if the test was successful
 		 */
-		static bool testSolve(const bool containsSignular, const double testDuration);
+		static bool testSolve(const bool containsSingular, const double testDuration);
 
 		/**
 		 * Gauss algorithm for 3x3 systems of linear equations, Ax = b.
