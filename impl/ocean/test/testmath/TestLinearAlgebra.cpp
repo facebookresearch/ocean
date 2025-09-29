@@ -18,6 +18,8 @@
 #include "ocean/math/Rotation.h"
 #include "ocean/math/SquareMatrix3.h"
 
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -170,7 +172,10 @@ bool TestLinearAlgebra::testEigenSystemSquareMatrix3(const double testDuration)
 
 	Log::info() << "Eigen system of a SquareMatrix3 matrix, with '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
+	constexpr double threshold = std::is_same<T, float>::value ? 0.95 : 0.99;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	{
 		// |  7   0  -3 |
@@ -185,7 +190,7 @@ bool TestLinearAlgebra::testEigenSystemSquareMatrix3(const double testDuration)
 
 		if (!validateEigenSystem(matrix, expectedEigenValues))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -202,7 +207,7 @@ bool TestLinearAlgebra::testEigenSystemSquareMatrix3(const double testDuration)
 
 		if (!validateEigenSystem(matrix, expectedEigenValues))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 
@@ -219,14 +224,9 @@ bool TestLinearAlgebra::testEigenSystemSquareMatrix3(const double testDuration)
 
 		if (!validateEigenSystem(matrix, expectedEigenValues))
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
-
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
-
-	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performance;
 
@@ -234,6 +234,8 @@ bool TestLinearAlgebra::testEigenSystemSquareMatrix3(const double testDuration)
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const VectorT3<T> xAxis(1, 0, 0);
 		const VectorT3<T> yAxis(0, 1, 0);
 		const VectorT3<T> zAxis(0, 0, 1);
@@ -244,61 +246,40 @@ bool TestLinearAlgebra::testEigenSystemSquareMatrix3(const double testDuration)
 
 		const SquareMatrixT3<T> matrix(xAxis * xLength, yAxis * yLength, zAxis * zLength);
 
-		T values[3] = {RandomT<T>::scalar(-100, 100), RandomT<T>::scalar(-100, 100), RandomT<T>::scalar(-100, 100)};
+		T values[3] = {NumericT<T>::minValue(), NumericT<T>::minValue(), NumericT<T>::minValue()};
+
 		VectorT3<T> vectors[3];
 
 		performance.start();
-			bool localResult = matrix.eigenSystem(values, vectors);
+			if (!matrix.eigenSystem(values, vectors))
+			{
+				scopedIteration.setInaccurate();
+			}
 		performance.stop();
 
 		Utilities::sortHighestToFront3(xLength, yLength, zLength);
 
 		if (NumericT<T>::isNotWeakEqual(xLength, values[0]))
 		{
-			localResult = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (NumericT<T>::isNotWeakEqual(yLength, values[1]))
 		{
-			localResult = false;
+			scopedIteration.setInaccurate();
 		}
 
 		if (NumericT<T>::isNotWeakEqual(zLength, values[2]))
 		{
-			localResult = false;
+			scopedIteration.setInaccurate();
 		}
-
-		if (localResult)
-		{
-			++validIterations;
-		}
-
-		++iterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance.averageMseconds() * 1000.0 << "mys";
+	Log::info() << "Validation: " << validation;
 
-	constexpr double threshold = std::is_same<T, float>::value ? 0.95 : 0.99;
-
-	if (percent < threshold)
-	{
-		allSucceeded = false;
-	}
-
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
