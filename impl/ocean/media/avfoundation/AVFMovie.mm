@@ -305,9 +305,11 @@ void AVFMovie::threadRun()
 						ocean_assert(currentTime.timescale != 0);
 						const double unixtime = double([[NSDate date] timeIntervalSince1970]);
 
+						SharedAnyCamera camera(camera_);
+
 						temporaryScopedLock.release();
 
-						onNewSample(pixelBuffer.object(), SharedAnyCamera(), unixtime, double(currentTime.value) / double(currentTime.timescale));
+						onNewSample(pixelBuffer.object(), std::move(camera), unixtime, double(currentTime.value) / double(currentTime.timescale));
 					}
 				}
 			}
@@ -356,9 +358,11 @@ void AVFMovie::threadRun()
 							ocean_assert(presentationTime.timescale != 0);
 							const double unixtime = double([[NSDate date] timeIntervalSince1970]);
 
+							SharedAnyCamera camera(camera_);
+
 							temporaryScopedLock.release();
 
-							onNewSample(pixelBuffer.object(), SharedAnyCamera(), unixtime, double(presentationTime.value) / double(presentationTime.timescale));
+							onNewSample(pixelBuffer.object(), std::move(camera), unixtime, double(presentationTime.value) / double(presentationTime.timescale));
 						}
 
 						CMSampleBufferInvalidate(sampleBuffer.object());
@@ -526,6 +530,15 @@ bool AVFMovie::setSpeed(const float speed)
 	}
 
 	speed_ = speed;
+
+	return true;
+}
+
+bool AVFMovie::setCamera(SharedAnyCamera&& camera)
+{
+	const ScopedLock scopedLock(lock_);
+
+	camera_ = std::move(camera);
 
 	return true;
 }

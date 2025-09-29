@@ -41,7 +41,7 @@ class AVFMovie :
 		/**
 		 * Definition of a callback function for finished playing.
 		 */
-		typedef Callback<void> FinishedPlayingCallback;
+		using FinishedPlayingCallback = Callback<void>;
 
 	public:
 
@@ -116,6 +116,12 @@ class AVFMovie :
 		 * @see Movie::setUseSound()
 		 */
 		bool setUseSound(const bool state) override;
+
+		/**
+		 * Sets the known camera profile of this frame medium.
+		 * @see FrameMedium::setCamera()
+		 */
+		bool setCamera(SharedAnyCamera&& camera) override;
 
 	protected:
 
@@ -203,6 +209,8 @@ class AVFMovie :
 		/// The player observer
 		NSObject* observer_ = nullptr;
 
+		/// The camera profile for all images.
+		SharedAnyCamera camera_;
 };
 
 }
