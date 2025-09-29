@@ -118,6 +118,15 @@ bool MFFrameMedium::setPreferredFrameFrequency(const FrameFrequency frequency)
 	return true;
 }
 
+bool MFFrameMedium::setCamera(SharedAnyCamera&& camera)
+{
+	const ScopedLock scopedLock(lock_);
+
+	camera_ = std::move(camera);
+
+	return true;
+}
+
 bool MFFrameMedium::extractStreamType(IMFMediaType* mediaType, LiveVideo::StreamType& streamType, LiveVideo::CodecType* codecType)
 {
 	ocean_assert(mediaType);
@@ -332,6 +341,8 @@ void MFFrameMedium::onNewSample(const GUID& /*guidMajorMediaType*/, const unsign
 		return;
 	}
 
+	TemporaryScopedLock scopedLock(lock_);
+
 	// the event for a changed frame type is not synchronous with the sample event
 	// therefore the event for a changed frame type is too late for this sample
 	// here we use a workaround: for the very first frame we check the frame type again
@@ -341,76 +352,82 @@ void MFFrameMedium::onNewSample(const GUID& /*guidMajorMediaType*/, const unsign
 		waitingForFirstFrame_ = false;
 	}
 
-	if (recentFrameType_.isValid())
+	if (!recentFrameType_.isValid())
 	{
-		if (pSampleBuffer == nullptr)
-		{
-			MFFiniteMedium* finiteMedium = dynamic_cast<MFFiniteMedium*>(this);
+		return;
+	}
 
-			if (finiteMedium)
-			{
-				finiteMedium->mediumHasStopped();
-			}
+	if (pSampleBuffer == nullptr)
+	{
+		MFFiniteMedium* finiteMedium = dynamic_cast<MFFiniteMedium*>(this);
+
+		if (finiteMedium)
+		{
+			finiteMedium->mediumHasStopped();
+		}
+
+		return;
+	}
+
+	const Timestamp timestamp(true);
+
+	Frame::PlaneInitializers<void> planeInitializers;
+	planeInitializers.reserve(internalRecentFrameType_.numberPlanes());
+
+	unsigned int memoryOffset = 0u;
+
+	for (unsigned int planeIndex = 0u; planeIndex < internalRecentFrameType_.numberPlanes(); ++planeIndex)
+	{
+		unsigned int planeWidth = 0u;
+		unsigned int planeHeight = 0u;
+		unsigned int planeChannels = 0u;
+
+		if (FrameType::planeLayout(internalRecentFrameType_, planeIndex, planeWidth, planeHeight, planeChannels))
+		{
+			const void* planePointer = (const void*)((const uint8_t*)(pSampleBuffer) + memoryOffset);
+
+			constexpr unsigned int planePaddingElements = 0u;
+			planeInitializers.emplace_back(planePointer, Frame::CM_USE_KEEP_LAYOUT, planePaddingElements);
+
+			const unsigned int planeSizeBytes = planeWidth * planeChannels * planeHeight * internalRecentFrameType_.bytesPerDataType();
+			memoryOffset += planeSizeBytes;
 		}
 		else
 		{
-			const Timestamp timestamp(true);
-
-			Frame::PlaneInitializers<void> planeInitializers;
-			planeInitializers.reserve(internalRecentFrameType_.numberPlanes());
-
-			unsigned int memoryOffset = 0u;
-
-			for (unsigned int planeIndex = 0u; planeIndex < internalRecentFrameType_.numberPlanes(); ++planeIndex)
-			{
-				unsigned int planeWidth = 0u;
-				unsigned int planeHeight = 0u;
-				unsigned int planeChannels = 0u;
-
-				if (FrameType::planeLayout(internalRecentFrameType_, planeIndex, planeWidth, planeHeight, planeChannels))
-				{
-					const void* planePointer = (const void*)((const uint8_t*)(pSampleBuffer) + memoryOffset);
-
-					constexpr unsigned int planePaddingElements = 0u;
-					planeInitializers.emplace_back(planePointer, Frame::CM_USE_KEEP_LAYOUT, planePaddingElements);
-
-					const unsigned int planeSizeBytes = planeWidth * planeChannels * planeHeight * internalRecentFrameType_.bytesPerDataType();
-					memoryOffset += planeSizeBytes;
-				}
-				else
-				{
-					ocean_assert(false && "This should never happen!");
-					return;
-				}
-			}
-
-			Frame internalFrame(internalRecentFrameType_, planeInitializers, timestamp);
-
-			if (recentFrameType_ != internalRecentFrameType_)
-			{
-				ocean_assert(croppingWidth_ != 0u);
-				ocean_assert(croppingHeight_ != 0u);
-
-				Frame externalFrame(internalFrame.subFrame(croppingLeft_, croppingTop_, croppingWidth_, croppingHeight_, Frame::CM_COPY_REMOVE_PADDING_LAYOUT));
-
-				internalFrame = std::move(externalFrame);
-			}
-			else
-			{
-				ocean_assert(croppingWidth_ == 0u);
-				ocean_assert(croppingHeight_ == 0u);
-
-				internalFrame.makeOwner();
-			}
-
-			const double relativeTimestamp(double(llSampleTime) / 1.0e+7);
-			internalFrame.setRelativeTimestamp(Timestamp(relativeTimestamp));
-
-			ocean_assert(internalFrame.isOwner());
-
-			deliverNewFrame(std::move(internalFrame));
+			ocean_assert(false && "This should never happen!");
+			return;
 		}
 	}
+
+	Frame internalFrame(internalRecentFrameType_, planeInitializers, timestamp);
+
+	if (recentFrameType_ != internalRecentFrameType_)
+	{
+		ocean_assert(croppingWidth_ != 0u);
+		ocean_assert(croppingHeight_ != 0u);
+
+		Frame externalFrame(internalFrame.subFrame(croppingLeft_, croppingTop_, croppingWidth_, croppingHeight_, Frame::CM_COPY_REMOVE_PADDING_LAYOUT));
+
+		internalFrame = std::move(externalFrame);
+	}
+	else
+	{
+		ocean_assert(croppingWidth_ == 0u);
+		ocean_assert(croppingHeight_ == 0u);
+
+		internalFrame.makeOwner();
+	}
+
+	const double relativeTimestamp(double(llSampleTime) / 1.0e+7);
+	internalFrame.setRelativeTimestamp(Timestamp(relativeTimestamp));
+
+	ocean_assert(internalFrame.isOwner());
+
+	SharedAnyCamera camera(camera_);
+
+	scopedLock.release();
+
+	deliverNewFrame(std::move(internalFrame), std::move(camera));
 }
 
 void MFFrameMedium::onTopologySet(IMFTopology* topology)
@@ -422,8 +439,8 @@ void MFFrameMedium::onTopologySet(IMFTopology* topology)
 	MediaFrameType mediaFrameType;
 	if (determineMediaType(topology, mediaFrameType))
 	{
-		recentFrameType_ = mediaFrameType;
-		internalRecentFrameType_ = mediaFrameType;
+		recentFrameType_ = FrameType(mediaFrameType);
+		internalRecentFrameType_ = FrameType(mediaFrameType);
 
 		recentFrameFrequency_ = mediaFrameType.frequency();
 
@@ -450,8 +467,8 @@ void MFFrameMedium::onFormatTypeChanged(const TOPOID nodeId)
 		MediaFrameType mediaFrameType;
 		if (determineMediaType(*topologyNode, mediaFrameType))
 		{
-			recentFrameType_ = mediaFrameType;
-			internalRecentFrameType_ = mediaFrameType;
+			recentFrameType_ = FrameType(mediaFrameType);
+			internalRecentFrameType_ = FrameType(mediaFrameType);
 
 			recentFrameFrequency_ = mediaFrameType.frequency();
 

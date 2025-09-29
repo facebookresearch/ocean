@@ -53,6 +53,12 @@ class OCEAN_MEDIA_MF_EXPORT MFFrameMedium :
 		bool setPreferredFrameFrequency(const FrameFrequency frequency) override;
 
 		/**
+		 * Sets the known camera profile of this frame medium.
+		 * @see FrameMedium::setCamera()
+		 */
+		bool setCamera(SharedAnyCamera&& camera) override;
+
+		/**
 		 * Extracts the video stream type of a given Media Foundation media type.
 		 * @param mediaType Media Foundation media type, must be valid
 		 * @param streamType Resulting stream type
@@ -196,6 +202,9 @@ class OCEAN_MEDIA_MF_EXPORT MFFrameMedium :
 
 		/// True, if the medium waits for the first frame after the topology has been changed.
 		bool waitingForFirstFrame_ = true;
+
+		/// The camera profile for all images.
+		SharedAnyCamera camera_;
 };
 
 }
