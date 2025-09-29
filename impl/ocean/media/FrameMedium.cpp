@@ -124,45 +124,73 @@ void FrameMedium::FrameReceiver::onFrame(const Frame& frame, const SharedAnyCame
 	}
 }
 
-bool FrameMedium::FrameReceiver::latestFrame(Frame& frame, SharedAnyCamera* camera)
+bool FrameMedium::FrameReceiver::latestFrame(Frame& frame, SharedAnyCamera* camera, const unsigned int timeout)
 {
-	const ScopedLock scopedLock(lock_);
+	const Timestamp startTimestamp(true);
 
-	if (frame_.isValid())
+	while (true)
 	{
-		frame = Frame(frame_, Frame::ACM_USE_KEEP_LAYOUT);
+		TemporaryScopedLock scopedLock(lock_);
 
-		if (camera != nullptr)
+		if (frame_.isValid())
 		{
-			*camera = camera_;
+			frame = Frame(frame_, Frame::ACM_USE_KEEP_LAYOUT);
+
+			if (camera != nullptr)
+			{
+				*camera = camera_;
+			}
+
+			return true;
 		}
 
-		return true;
+		if (startTimestamp.hasTimePassed(double(timeout) * 0.001))
+		{
+			break;
+		}
+
+		scopedLock.release();
+
+		Thread::sleep(1u);
 	}
 
 	return false;
 }
 
-bool FrameMedium::FrameReceiver::latestFrameAndReset(Frame& frame, SharedAnyCamera* camera)
+bool FrameMedium::FrameReceiver::latestFrameAndReset(Frame& frame, SharedAnyCamera* camera, const unsigned int timeout)
 {
-	const ScopedLock scopedLock(lock_);
+	const Timestamp startTimestamp(true);
 
-	if (frame_.isValid())
+	while (true)
 	{
-		frame = Frame(frame_, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+		TemporaryScopedLock scopedLock(lock_);
 
-		if (camera != nullptr)
+		if (frame_.isValid())
 		{
-			*camera = camera_;
+			frame = std::move(frame_);
+			frame_.release();
+
+			if (camera != nullptr)
+			{
+				*camera = std::move(camera_);
+			}
+
+			camera_ = nullptr;
+
+			return true;
 		}
 
-		reset();
+		if (startTimestamp.hasTimePassed(double(timeout) * 0.001))
+		{
+			break;
+		}
 
-		return true;
+		scopedLock.release();
+
+		Thread::sleep(1u);
 	}
 
 	return false;
-
 }
 
 void FrameMedium::FrameReceiver::reset()

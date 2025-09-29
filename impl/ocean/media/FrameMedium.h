@@ -36,14 +36,14 @@ class FrameMedium;
  * @see SmartMediumRef, FrameMedium.
  * @ingroup media
  */
-typedef SmartMediumRef<FrameMedium> FrameMediumRef;
+using FrameMediumRef =SmartMediumRef<FrameMedium>;
 
 /**
  * Definition of a vector holding frame medium reference objects.
  * @see FrameMediumRef.
  * @ingroup media
  */
-typedef std::vector<FrameMediumRef> FrameMediumRefs;
+using FrameMediumRefs = std::vector<FrameMediumRef>;
 
 /**
  * This is the base class for all frame mediums.
@@ -56,7 +56,7 @@ class OCEAN_MEDIA_EXPORT FrameMedium : virtual public Medium
 		/**
 		 * Definition of a frame frequency defined in Hz.
 		 */
-		typedef double FrameFrequency;
+		using FrameFrequency = double;
 
 		/**
 		 * Definition of a media frame type composed by the frame dimension, pixel format, pixel origin and a frame frequency.
@@ -178,12 +178,12 @@ class OCEAN_MEDIA_EXPORT FrameMedium : virtual public Medium
 		 * @param frame The event's frame, will be valid
 		 * @param camera The camera profile associated with the frame, invalid if unknown
 		 */
-		typedef std::function<void(const Frame& frame, const SharedAnyCamera& camera)> FrameCallbackFunction;
+		using FrameCallbackFunction = std::function<void(const Frame& frame, const SharedAnyCamera& camera)>;
 
 		/**
 		 * Definition of a subscription object for frame callback events.
 		 */
-		typedef ScopedSubscriptionHandler::ScopedSubscriptionType FrameCallbackScopedSubscription;
+		using FrameCallbackScopedSubscription = ScopedSubscriptionHandler::ScopedSubscriptionType;
 
 		/**
 		 * This class implements a simpler receiver for frames which can be used with the frame callback functionality of FrameMedium.
@@ -255,10 +255,11 @@ class OCEAN_MEDIA_EXPORT FrameMedium : virtual public Medium
 				 * The same latest frame will be provided until reset() is called.
 				 * @param frame The resulting frame, not owning the memory
 				 * @param camera Optional resulting camera
+				 * @param timeout The timeout in milliseconds to wait for a new frame, with range [0, infinity)
 				 * @return True, if a latest frame exists
 				 * @see reset(), latestFrameAndReset().
 				 */
-				bool latestFrame(Frame& frame, SharedAnyCamera* camera = nullptr);
+				bool latestFrame(Frame& frame, SharedAnyCamera* camera = nullptr, const unsigned int timeout = 100u);
 
 				/**
 				 * Returns the latest frame and camera profile and resets the receiver.
@@ -266,9 +267,10 @@ class OCEAN_MEDIA_EXPORT FrameMedium : virtual public Medium
 				 * The receive will be reset so that the object can receive a new frame.
 				 * @param frame The resulting frame, not owning the memory
 				 * @param camera Optional resulting camera
+				 * @param timeout The timeout in milliseconds to wait for a new frame, with range [0, infinity)
 				 * @return True, if a latest frame exists
 				 */
-				bool latestFrameAndReset(Frame& frame, SharedAnyCamera* camera = nullptr);
+				bool latestFrameAndReset(Frame& frame, SharedAnyCamera* camera = nullptr, const unsigned int timeout = 100u);
 
 				/**
 				 * Resets the receiver so that a new frame can be received.
@@ -292,14 +294,14 @@ class OCEAN_MEDIA_EXPORT FrameMedium : virtual public Medium
 		/**
 		 * Definition of a thread-safe subscription handler for frame callback functions.
 		 */
-		typedef ScopedSubscriptionCallbackHandlerT<FrameCallbackFunction, FrameMedium, true> FrameCallbackHandler;
+		using FrameCallbackHandler = ScopedSubscriptionCallbackHandlerT<FrameCallbackFunction, FrameMedium, true>;
 
 	protected:
 
 		/**
 		 * Definition of a vector holding frame types.
 		 */
-		typedef std::vector<MediaFrameType> FrameTypes;
+		using FrameTypes = std::vector<MediaFrameType>;
 
 		/**
 		 * Class allowing the sorting of several frame media types according their popularity.
