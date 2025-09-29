@@ -515,7 +515,7 @@ class SquareMatrixT2
 	protected:
 
 		/// The four values of the matrix.
-		T values[4];
+		T values_[4];
 };
 
 template <typename T>
@@ -528,10 +528,10 @@ template <typename T>
 template <typename U>
 inline SquareMatrixT2<T>::SquareMatrixT2(const SquareMatrixT2<U>& matrix)
 {
-	values[0] = T(matrix.values[0]);
-	values[1] = T(matrix.values[1]);
-	values[2] = T(matrix.values[2]);
-	values[3] = T(matrix.values[3]);
+	values_[0] = T(matrix.values_[0]);
+	values_[1] = T(matrix.values_[1]);
+	values_[2] = T(matrix.values_[2]);
+	values_[3] = T(matrix.values_[3]);
 }
 
 template <typename T>
@@ -539,27 +539,27 @@ inline SquareMatrixT2<T>::SquareMatrixT2(const bool setToIdentity)
 {
 	if (setToIdentity)
 	{
-		values[0] = T(1.0);
-		values[1] = T(0.0);
-		values[2] = T(0.0);
-		values[3] = T(1.0);
+		values_[0] = T(1.0);
+		values_[1] = T(0.0);
+		values_[2] = T(0.0);
+		values_[3] = T(1.0);
 	}
 	else
 	{
-		values[0] = T(0.0);
-		values[1] = T(0.0);
-		values[2] = T(0.0);
-		values[3] = T(0.0);
+		values_[0] = T(0.0);
+		values_[1] = T(0.0);
+		values_[2] = T(0.0);
+		values_[3] = T(0.0);
 	}
 }
 
 template <typename T>
 inline SquareMatrixT2<T>::SquareMatrixT2(const VectorT2<T>& diagonal)
 {
-	values[0] = diagonal[0];
-	values[1] = T(0.0);
-	values[2] = T(0.0);
-	values[3] = diagonal[1];
+	values_[0] = diagonal[0];
+	values_[1] = T(0.0);
+	values_[2] = T(0.0);
+	values_[3] = diagonal[1];
 }
 
 template <typename T>
@@ -570,7 +570,7 @@ SquareMatrixT2<T>::SquareMatrixT2(const U* arrayValues)
 
 	for (unsigned int n = 0u; n < 4u; ++n)
 	{
-		values[n] = T(arrayValues[n]);
+		values_[n] = T(arrayValues[n]);
 	}
 }
 
@@ -578,7 +578,7 @@ template <typename T>
 SquareMatrixT2<T>::SquareMatrixT2(const T* arrayValues)
 {
 	ocean_assert(arrayValues);
-	memcpy(values, arrayValues, sizeof(T) * 4);
+	memcpy(values_, arrayValues, sizeof(T) * 4);
 }
 
 template <typename T>
@@ -589,16 +589,18 @@ SquareMatrixT2<T>::SquareMatrixT2(const U* arrayValues, const bool valuesRowAlig
 
 	if (valuesRowAligned)
 	{
-		values[0] = T(arrayValues[0]);
-		values[1] = T(arrayValues[2]);
-		values[2] = T(arrayValues[1]);
-		values[3] = T(arrayValues[3]);
+		values_[0] = T(arrayValues[0]);
+		values_[1] = T(arrayValues[2]);
+		values_[2] = T(arrayValues[1]);
+		values_[3] = T(arrayValues[3]);
 
 	}
 	else
 	{
 		for (unsigned int n = 0u; n < 4u; ++n)
-			values[n] = T(arrayValues[n]);
+		{
+			values_[n] = T(arrayValues[n]);
+		}
 	}
 }
 
@@ -609,25 +611,25 @@ SquareMatrixT2<T>::SquareMatrixT2(const T* arrayValues, const bool valuesRowAlig
 
 	if (valuesRowAligned)
 	{
-		values[0] = arrayValues[0];
-		values[1] = arrayValues[2];
-		values[2] = arrayValues[1];
-		values[3] = arrayValues[3];
+		values_[0] = arrayValues[0];
+		values_[1] = arrayValues[2];
+		values_[2] = arrayValues[1];
+		values_[3] = arrayValues[3];
 	}
 	else
 	{
-		memcpy(values, arrayValues, sizeof(T) * 4);
+		memcpy(values_, arrayValues, sizeof(T) * 4);
 	}
 }
 
 template <typename T>
 inline SquareMatrixT2<T>::SquareMatrixT2(const T& m00, const T& m10, const T& m01, const T& m11)
 {
-	values[0] = m00;
-	values[1] = m10;
+	values_[0] = m00;
+	values_[1] = m10;
 
-	values[2] = m01;
-	values[3] = m11;
+	values_[2] = m01;
+	values_[3] = m11;
 }
 
 template <typename T>
@@ -639,10 +641,10 @@ SquareMatrixT2<T>::SquareMatrixT2(const T eigenValue0, const T eigenValue1, cons
 	const T det = eigenVector0.x() * eigenVector1.y() - eigenVector1.x() * eigenVector0.y();
 	ocean_assert(NumericT<T>::isNotEqualEps(det));
 
-	values[0] = (eigenVector0.x() * eigenValue0 * eigenVector1.y() - eigenVector0.y() * eigenValue1 * eigenVector1.x()) / det;
-	values[1] = (eigenValue0 - eigenValue1) * eigenVector0.y() * eigenVector1.y() / det;
-	values[2] = (eigenValue1 - eigenValue0) * eigenVector0.x() * eigenVector1.x() / det;
-	values[3] = (eigenVector0.x() * eigenValue1 * eigenVector1.y() - eigenVector0.y() * eigenValue0 * eigenVector1.x()) / det;
+	values_[0] = (eigenVector0.x() * eigenValue0 * eigenVector1.y() - eigenVector0.y() * eigenValue1 * eigenVector1.x()) / det;
+	values_[1] = (eigenValue0 - eigenValue1) * eigenVector0.y() * eigenVector1.y() / det;
+	values_[2] = (eigenValue1 - eigenValue0) * eigenVector0.x() * eigenVector1.x() / det;
+	values_[3] = (eigenVector0.x() * eigenValue1 * eigenVector1.y() - eigenVector0.y() * eigenValue0 * eigenVector1.x()) / det;
 
 #ifdef OCEAN_DEBUG
 	if (!std::is_same<Scalar, float>::value)
@@ -662,15 +664,15 @@ SquareMatrixT2<T>::SquareMatrixT2(const T eigenValue0, const T eigenValue1, cons
 template <typename T>
 inline SquareMatrixT2<T> SquareMatrixT2<T>::transposed() const
 {
-	return SquareMatrixT2<T>(values[0], values[2], values[1], values[3]);
+	return SquareMatrixT2<T>(values_[0], values_[2], values_[1], values_[3]);
 }
 
 template <typename T>
 inline void SquareMatrixT2<T>::transpose()
 {
-	const T tmp = values[1];
-	values[1] = values[2];
-	values[2] = tmp;
+	const T tmp = values_[1];
+	values_[1] = values_[2];
+	values_[2] = tmp;
 }
 
 template <typename T>
@@ -698,7 +700,7 @@ inline bool SquareMatrixT2<T>::invert()
 
 	const T factor = T(1.0) / det;
 
-	*this = SquareMatrixT2<T>(values[3] * factor, -values[1] * factor, -values[2] * factor, values[0] * factor);
+	*this = SquareMatrixT2<T>(values_[3] * factor, -values_[1] * factor, -values_[2] * factor, values_[0] * factor);
 
 	return true;
 }
@@ -714,7 +716,7 @@ inline bool SquareMatrixT2<T>::invert(SquareMatrixT2<T>& invertedMatrix) const
 
 	const T factor = T(1.0) / det;
 
-	invertedMatrix = SquareMatrixT2<T>(values[3] * factor, -values[1] * factor, -values[2] * factor, values[0] * factor);
+	invertedMatrix = SquareMatrixT2<T>(values_[3] * factor, -values_[1] * factor, -values_[2] * factor, values_[0] * factor);
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	if (!std::is_same<T, float>::value)
@@ -724,20 +726,27 @@ inline bool SquareMatrixT2<T>::invert(SquareMatrixT2<T>& invertedMatrix) const
 
 		T sqrDistance = T(0);
 		for (unsigned int n = 0; n < 4u; ++n)
+		{
 			sqrDistance += NumericT<T>::sqr(test[n] - entity[n]);
+		}
+
 		const T distance = NumericT<T>::sqrt(sqrDistance * T(0.25));
 
 		if (NumericT<T>::isWeakEqualEps(distance) == false)
 		{
 			T absolusteAverageEnergy = 0;
 			for (unsigned int n = 0u; n < 4u; ++n)
-				absolusteAverageEnergy += NumericT<T>::abs(values[n]);
+			{
+				absolusteAverageEnergy += NumericT<T>::abs(values_[n]);
+			}
 			absolusteAverageEnergy *= T(0.25);
 
 			// we expect/accept for each magnitude (larger than 1) a zero-inaccuracy of one magnitude (and we again comare it with the weak eps)
 
 			if (absolusteAverageEnergy <= 1)
+			{
 				ocean_assert_accuracy(!"This should never happen!");
+			}
 			else
 			{
 				const T adjustedDistance = distance / absolusteAverageEnergy;
@@ -753,38 +762,24 @@ inline bool SquareMatrixT2<T>::invert(SquareMatrixT2<T>& invertedMatrix) const
 template <typename T>
 inline T SquareMatrixT2<T>::determinant() const
 {
-	return values[0] * values[3] - values[1] * values[2];
+	return values_[0] * values_[3] - values_[1] * values_[2];
 }
 
 template <typename T>
 inline T SquareMatrixT2<T>::trace() const
 {
-	return values[0] + values[3];
+	return values_[0] + values_[3];
 }
 
 template <typename T>
 inline bool SquareMatrixT2<T>::solve(const VectorT2<T>& b, VectorT2<T>& x) const
 {
-	// Solve this system of linear equations using the good ol' Gauss elimination
-	//
-	// Step 0:
-	// |a0 a2|   |x0|   |b0|
-	// |a1 a3| x |x1| = |b1|
-	//
-	//
-	// Step 1:
-	// |a0 a2|   |x0|   |b0|
-	// |0  u0| x |x1| = |v0|  <- (row1 * a0) - (row0 * a1)
-	//
-	const T u0 = (values[0] * values[3]) - (values[1] * values[2]);
-	const T v0 = (values[0] * b[1]) - (values[1] * b[0]);
+	const T determinant = (values_[0] * values_[3]) - (values_[1] * values_[2]);
 
-	// x1 = v0 / u0
-
-	if (NumericT<T>::isNotEqualEps(u0) && NumericT<T>::isNotEqualEps(values[0]))
+	if (NumericT<T>::isNotEqualEps(determinant))
 	{
-		x[1] = v0 / u0;
-		x[0] = (b[0] - (values[2] * x[1])) / values[0];
+		x[0] = (values_[3] * b[0] - values_[2] * b[1]) / determinant;
+		x[1] = (values_[0] * b[1] - values_[1] * b[0]) / determinant;
 
 		return true;
 	}
@@ -795,55 +790,55 @@ inline bool SquareMatrixT2<T>::solve(const VectorT2<T>& b, VectorT2<T>& x) const
 template <typename T>
 inline void SquareMatrixT2<T>::toIdentity()
 {
-	values[0] = T(1.0);
-	values[1] = T(0.0);
-	values[2] = T(0.0);
-	values[3] = T(1.0);
+	values_[0] = T(1.0);
+	values_[1] = T(0.0);
+	values_[2] = T(0.0);
+	values_[3] = T(1.0);
 }
 
 template <typename T>
 inline void SquareMatrixT2<T>::toNull()
 {
-	values[0] = T(0.0);
-	values[1] = T(0.0);
-	values[2] = T(0.0);
-	values[3] = T(0.0);
+	values_[0] = T(0.0);
+	values_[1] = T(0.0);
+	values_[2] = T(0.0);
+	values_[3] = T(0.0);
 }
 
 template <typename T>
 inline VectorT2<T> SquareMatrixT2<T>::xAxis() const
 {
-	return VectorT2<T>(values[0], values[1]);
+	return VectorT2<T>(values_[0], values_[1]);
 }
 
 template <typename T>
 inline VectorT2<T> SquareMatrixT2<T>::yAxis() const
 {
-	return VectorT2<T>(values[2], values[3]);
+	return VectorT2<T>(values_[2], values_[3]);
 }
 
 template <typename T>
 inline VectorT2<T> SquareMatrixT2<T>::diagonal() const
 {
-	return VectorT2<T>(values[0], values[3]);
+	return VectorT2<T>(values_[0], values_[3]);
 }
 
 template <typename T>
 inline T SquareMatrixT2<T>::norm() const
 {
-	return NumericT<T>::abs(values[0]) + NumericT<T>::abs(values[1]) + NumericT<T>::abs(values[2]) + NumericT<T>::abs(values[3]);
+	return NumericT<T>::abs(values_[0]) + NumericT<T>::abs(values_[1]) + NumericT<T>::abs(values_[2]) + NumericT<T>::abs(values_[3]);
 }
 
 template <typename T>
 inline bool SquareMatrixT2<T>::isNull() const
 {
-	return NumericT<T>::isEqualEps(values[0]) && NumericT<T>::isEqualEps(values[1]) && NumericT<T>::isEqualEps(values[2]) && NumericT<T>::isEqualEps(values[3]);
+	return NumericT<T>::isEqualEps(values_[0]) && NumericT<T>::isEqualEps(values_[1]) && NumericT<T>::isEqualEps(values_[2]) && NumericT<T>::isEqualEps(values_[3]);
 }
 
 template <typename T>
 inline bool SquareMatrixT2<T>::isIdentity() const
 {
-	return NumericT<T>::isEqual(values[0], 1) && NumericT<T>::isEqualEps(values[1]) && NumericT<T>::isEqualEps(values[2]) && NumericT<T>::isEqual(values[3], 1);
+	return NumericT<T>::isEqual(values_[0], 1) && NumericT<T>::isEqualEps(values_[1]) && NumericT<T>::isEqualEps(values_[2]) && NumericT<T>::isEqual(values_[3], 1);
 }
 
 template <typename T>
@@ -857,26 +852,26 @@ inline bool SquareMatrixT2<T>::isSymmetric(const T epsilon) const
 {
 	ocean_assert(epsilon >= T(0));
 
-	return NumericT<T>::isEqual(values[1], values[2], epsilon);
+	return NumericT<T>::isEqual(values_[1], values_[2], epsilon);
 }
 
 template <typename T>
 inline bool SquareMatrixT2<T>::isEqual(const SquareMatrixT2<T>& matrix, const T eps) const
 {
-	return NumericT<T>::isEqual(values[0], matrix.values[0], eps) && NumericT<T>::isEqual(values[1], matrix.values[1], eps)
-			&& NumericT<T>::isEqual(values[2], matrix.values[2], eps) && NumericT<T>::isEqual(values[3], matrix.values[3], eps);
+	return NumericT<T>::isEqual(values_[0], matrix.values_[0], eps) && NumericT<T>::isEqual(values_[1], matrix.values_[1], eps)
+			&& NumericT<T>::isEqual(values_[2], matrix.values_[2], eps) && NumericT<T>::isEqual(values_[3], matrix.values_[3], eps);
 }
 
 template <typename T>
 inline const T* SquareMatrixT2<T>::data() const
 {
-	return values;
+	return values_;
 }
 
 template <typename T>
 inline T* SquareMatrixT2<T>::data()
 {
-	return values;
+	return values_;
 }
 
 template <typename T>
@@ -887,17 +882,17 @@ inline void SquareMatrixT2<T>::copyElements(U* arrayValues, const bool columnAli
 
 	if (columnAligned)
 	{
-		arrayValues[0] = U(values[0]);
-		arrayValues[1] = U(values[1]);
-		arrayValues[2] = U(values[2]);
-		arrayValues[3] = U(values[3]);
+		arrayValues[0] = U(values_[0]);
+		arrayValues[1] = U(values_[1]);
+		arrayValues[2] = U(values_[2]);
+		arrayValues[3] = U(values_[3]);
 	}
 	else
 	{
-		arrayValues[0] = U(values[0]);
-		arrayValues[1] = U(values[2]);
-		arrayValues[2] = U(values[1]);
-		arrayValues[3] = U(values[3]);
+		arrayValues[0] = U(values_[0]);
+		arrayValues[1] = U(values_[2]);
+		arrayValues[2] = U(values_[1]);
+		arrayValues[3] = U(values_[3]);
 	}
 }
 
@@ -908,17 +903,17 @@ inline void SquareMatrixT2<T>::copyElements(T* arrayValues, const bool columnAli
 
 	if (columnAligned)
 	{
-		arrayValues[0] = values[0];
-		arrayValues[1] = values[1];
-		arrayValues[2] = values[2];
-		arrayValues[3] = values[3];
+		arrayValues[0] = values_[0];
+		arrayValues[1] = values_[1];
+		arrayValues[2] = values_[2];
+		arrayValues[3] = values_[3];
 	}
 	else
 	{
-		arrayValues[0] = values[0];
-		arrayValues[1] = values[2];
-		arrayValues[2] = values[1];
-		arrayValues[3] = values[3];
+		arrayValues[0] = values_[0];
+		arrayValues[1] = values_[2];
+		arrayValues[2] = values_[1];
+		arrayValues[3] = values_[3];
 	}
 }
 
@@ -937,16 +932,16 @@ inline bool SquareMatrixT2<T>::operator!=(const SquareMatrixT2<T>& matrix) const
 template <typename T>
 inline SquareMatrixT2<T> SquareMatrixT2<T>::operator+(const SquareMatrixT2<T>& matrix) const
 {
-	return SquareMatrixT2<T>(values[0] + matrix.values[0], values[1] + matrix.values[1], values[2] + matrix.values[2], values[3] + matrix.values[3]);
+	return SquareMatrixT2<T>(values_[0] + matrix.values_[0], values_[1] + matrix.values_[1], values_[2] + matrix.values_[2], values_[3] + matrix.values_[3]);
 }
 
 template <typename T>
 inline SquareMatrixT2<T>& SquareMatrixT2<T>::operator+=(const SquareMatrixT2<T>& matrix)
 {
-	values[0] += matrix.values[0];
-	values[1] += matrix.values[1];
-	values[2] += matrix.values[2];
-	values[3] += matrix.values[3];
+	values_[0] += matrix.values_[0];
+	values_[1] += matrix.values_[1];
+	values_[2] += matrix.values_[2];
+	values_[3] += matrix.values_[3];
 
 	return *this;
 }
@@ -954,16 +949,16 @@ inline SquareMatrixT2<T>& SquareMatrixT2<T>::operator+=(const SquareMatrixT2<T>&
 template <typename T>
 inline SquareMatrixT2<T> SquareMatrixT2<T>::operator-(const SquareMatrixT2<T>& matrix) const
 {
-	return SquareMatrixT2<T>(values[0] - matrix.values[0], values[1] - matrix.values[1], values[2] - matrix.values[2], values[3] - matrix.values[3]);
+	return SquareMatrixT2<T>(values_[0] - matrix.values_[0], values_[1] - matrix.values_[1], values_[2] - matrix.values_[2], values_[3] - matrix.values_[3]);
 }
 
 template <typename T>
 inline SquareMatrixT2<T>& SquareMatrixT2<T>::operator-=(const SquareMatrixT2<T>& matrix)
 {
-	values[0] -= matrix.values[0];
-	values[1] -= matrix.values[1];
-	values[2] -= matrix.values[2];
-	values[3] -= matrix.values[3];
+	values_[0] -= matrix.values_[0];
+	values_[1] -= matrix.values_[1];
+	values_[2] -= matrix.values_[2];
+	values_[3] -= matrix.values_[3];
 
 	return *this;
 }
@@ -973,10 +968,10 @@ inline SquareMatrixT2<T> SquareMatrixT2<T>::operator-() const
 {
 	SquareMatrixT2<T> result;
 
-	result.values[ 0] = -values[ 0];
-	result.values[ 1] = -values[ 1];
-	result.values[ 2] = -values[ 2];
-	result.values[ 3] = -values[ 3];
+	result.values_[ 0] = -values_[ 0];
+	result.values_[ 1] = -values_[ 1];
+	result.values_[ 2] = -values_[ 2];
+	result.values_[ 3] = -values_[ 3];
 
 	return result;
 }
@@ -984,10 +979,10 @@ inline SquareMatrixT2<T> SquareMatrixT2<T>::operator-() const
 template <typename T>
 inline SquareMatrixT2<T> SquareMatrixT2<T>::operator*(const SquareMatrixT2<T>& matrix) const
 {
-	return SquareMatrixT2<T>(values[0] * matrix.values[0] + values[2] * matrix.values[1],
-							values[1] * matrix.values[0] + values[3] * matrix.values[1],
-							values[0] * matrix.values[2] + values[2] * matrix.values[3],
-							values[1] * matrix.values[2] + values[3] * matrix.values[3]);
+	return SquareMatrixT2<T>(values_[0] * matrix.values_[0] + values_[2] * matrix.values_[1],
+							values_[1] * matrix.values_[0] + values_[3] * matrix.values_[1],
+							values_[0] * matrix.values_[2] + values_[2] * matrix.values_[3],
+							values_[1] * matrix.values_[2] + values_[3] * matrix.values_[3]);
 }
 
 template <typename T>
@@ -1000,23 +995,23 @@ inline SquareMatrixT2<T>& SquareMatrixT2<T>::operator*=(const SquareMatrixT2<T>&
 template <typename T>
 inline VectorT2<T> SquareMatrixT2<T>::operator*(const VectorT2<T>& vector) const
 {
-	return VectorT2<T>(values[0] * vector[0] + values[2] * vector[1],
-						values[1] * vector[0] + values[3] * vector[1]);
+	return VectorT2<T>(values_[0] * vector[0] + values_[2] * vector[1],
+						values_[1] * vector[0] + values_[3] * vector[1]);
 }
 
 template <typename T>
 inline SquareMatrixT2<T> SquareMatrixT2<T>::operator*(const T value) const
 {
-	return SquareMatrixT2<T>(values[0] * value, values[1] * value, values[2] * value, values[3] * value);
+	return SquareMatrixT2<T>(values_[0] * value, values_[1] * value, values_[2] * value, values_[3] * value);
 }
 
 template <typename T>
 inline SquareMatrixT2<T>& SquareMatrixT2<T>::operator*=(const T value)
 {
-	values[0] *= value;
-	values[1] *= value;
-	values[2] *= value;
-	values[3] *= value;
+	values_[0] *= value;
+	values_[1] *= value;
+	values_[2] *= value;
+	values_[3] *= value;
 
 	return *this;
 }
@@ -1025,64 +1020,64 @@ template <typename T>
 inline T SquareMatrixT2<T>::operator[](const unsigned int index) const
 {
 	ocean_assert(index < 4u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline T& SquareMatrixT2<T>::operator[](const unsigned int index)
 {
 	ocean_assert(index < 4u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline T SquareMatrixT2<T>::operator()(const unsigned int row, const unsigned int column) const
 {
 	ocean_assert(row < 2u && column < 2u);
-	return values[column * 2u + row];
+	return values_[column * 2u + row];
 }
 
 template <typename T>
 inline T& SquareMatrixT2<T>::operator()(const unsigned int row, const unsigned int column)
 {
 	ocean_assert(row < 2u && column < 2u);
-	return values[column * 2u + row];
+	return values_[column * 2u + row];
 }
 
 template <typename T>
 inline T SquareMatrixT2<T>::operator()(const unsigned int index) const
 {
 	ocean_assert(index < 4u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline T& SquareMatrixT2<T>::operator()(const unsigned int index)
 {
 	ocean_assert(index < 4u);
-	return values[index];
+	return values_[index];
 }
 
 template <typename T>
 inline const T* SquareMatrixT2<T>::operator()() const
 {
-	return values;
+	return values_;
 }
 
 template <typename T>
 inline T* SquareMatrixT2<T>::operator()()
 {
-	return values;
+	return values_;
 }
 
 template <typename T>
 inline size_t SquareMatrixT2<T>::operator()(const SquareMatrixT2<T>& matrix) const
 {
-	size_t seed = std::hash<T>{}(matrix.values[0]);
+	size_t seed = std::hash<T>{}(matrix.values_[0]);
 
 	for (unsigned int n = 1u; n < 4u; ++n)
 	{
-		seed ^= std::hash<T>{}(matrix.values[n]) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+		seed ^= std::hash<T>{}(matrix.values_[n]) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 	}
 
 	return seed;
@@ -1115,50 +1110,50 @@ bool SquareMatrixT2<T>::eigenSystem(T& eigenValue0, T& eigenValue1, VectorT2<T>&
 		std::swap(eigenValue0, eigenValue1);
 	}
 
-	if (NumericT<T>::isNotEqualEps(values[2]))
+	if (NumericT<T>::isNotEqualEps(values_[2]))
 	{
-		const T factor = T(1.0) / values[2];
-		eigenVector0 = VectorT2<T>(1, (eigenValue0 - values[0]) * factor);
-		eigenVector1 = VectorT2<T>(1, (eigenValue1 - values[0]) * factor);
+		const T factor = T(1.0) / values_[2];
+		eigenVector0 = VectorT2<T>(1, (eigenValue0 - values_[0]) * factor);
+		eigenVector1 = VectorT2<T>(1, (eigenValue1 - values_[0]) * factor);
 	}
-	else if (NumericT<T>::isNotEqualEps(values[1]))
+	else if (NumericT<T>::isNotEqualEps(values_[1]))
 	{
-		const T factor = T(1.0) / values[1];
+		const T factor = T(1.0) / values_[1];
 
-		eigenVector0 = VectorT2<T>((eigenValue0 - values[3]) * factor, T(1.0));
-		eigenVector1 = VectorT2<T>((eigenValue1 - values[3]) * factor, T(1.0));
+		eigenVector0 = VectorT2<T>((eigenValue0 - values_[3]) * factor, T(1.0));
+		eigenVector1 = VectorT2<T>((eigenValue1 - values_[3]) * factor, T(1.0));
 	}
 	else
 	{
-		if (NumericT<T>::isNotEqual(eigenValue0, values[3]))
+		if (NumericT<T>::isNotEqual(eigenValue0, values_[3]))
 		{
-			eigenVector0 = VectorT2<T>(1, values[1] / (eigenValue0 - values[3]));
+			eigenVector0 = VectorT2<T>(1, values_[1] / (eigenValue0 - values_[3]));
 		}
 		else
 		{
-			if (NumericT<T>::isEqual(eigenValue0, values[0]))
+			if (NumericT<T>::isEqual(eigenValue0, values_[0]))
 			{
 				eigenVector0 = VectorT2<T>(1, 0);
 			}
 			else
 			{
-				eigenVector0 = VectorT2<T>(values[2] / (eigenValue0 - values[0]), T(1.0));
+				eigenVector0 = VectorT2<T>(values_[2] / (eigenValue0 - values_[0]), T(1.0));
 			}
 		}
 
-		if (NumericT<T>::isNotEqual(values[3], eigenValue1))
+		if (NumericT<T>::isNotEqual(values_[3], eigenValue1))
 		{
-			eigenVector1 = VectorT2<T>(1, values[1] / (eigenValue1 - values[3]));
+			eigenVector1 = VectorT2<T>(1, values_[1] / (eigenValue1 - values_[3]));
 		}
 		else
 		{
-			if (NumericT<T>::isEqual(eigenValue1, values[0]))
+			if (NumericT<T>::isEqual(eigenValue1, values_[0]))
 			{
 				eigenVector1 = VectorT2<T>(0, 1);
 			}
 			else
 			{
-				eigenVector1 = VectorT2<T>(values[2] / (eigenValue1 - values[0]), T(1.0));
+				eigenVector1 = VectorT2<T>(values_[2] / (eigenValue1 - values_[0]), T(1.0));
 			}
 		}
 	}
