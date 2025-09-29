@@ -235,7 +235,7 @@ FrameRef FrameMedium::frameTimeout(const double timeout, SharedAnyCamera* anyCam
 
 	const Timestamp startTimestamp(true);
 
-	while (startTimestamp + timeout > Timestamp(true))
+	while (!startTimestamp.hasTimePassed(timeout))
 	{
 		frameRef = frame(anyCamera);
 
@@ -244,7 +244,7 @@ FrameRef FrameMedium::frameTimeout(const double timeout, SharedAnyCamera* anyCam
 			return frameRef;
 		}
 
-		Thread::sleep(1);
+		Thread::sleep(1u);
 	}
 
 	return FrameRef();
@@ -286,6 +286,11 @@ bool FrameMedium::setPreferredFrameFrequency(const FrameFrequency frequency)
 bool FrameMedium::setCapacity(const size_t capacity)
 {
 	return frameCollection_.setCapacity(capacity);
+}
+
+bool FrameMedium::setCamera(SharedAnyCamera&& /*camera*/)
+{
+	return false;
 }
 
 size_t FrameMedium::capacity() const

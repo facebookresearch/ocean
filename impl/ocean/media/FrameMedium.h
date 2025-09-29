@@ -398,14 +398,14 @@ class OCEAN_MEDIA_EXPORT FrameMedium : virtual public Medium
 		/**
 		 * Returns the preferred width of the frame in pixel.
 		 * @return Preferred frame width
-		 * @see setPreferredFrameDiminsion(), preferredFrameHeight().
+		 * @see setPreferredFrameDimension(), preferredFrameHeight().
 		 */
 		inline unsigned int preferredFrameWidth() const;
 
 		/**
 		 * Returns the preferred height of the frame in pixel.
 		 * @return Preferred frame height
-		 * @see setPreferredFrameDiminsion(), preferredFrameWidth().
+		 * @see setPreferredFrameDimension(), preferredFrameWidth().
 		 */
 		inline unsigned int preferredFrameHeight() const;
 
@@ -432,7 +432,7 @@ class OCEAN_MEDIA_EXPORT FrameMedium : virtual public Medium
 		 * <pre>
 		 *          device top
 		 * ...........................
-		 * .                         .                          camera
+		 * .                         .                                camera
 		 * .         ^               .                   ---------------------------------
 		 * .       Y |               .                  |               ^                 |
 		 * .         |               .                  |             Y |                 |
@@ -490,6 +490,15 @@ class OCEAN_MEDIA_EXPORT FrameMedium : virtual public Medium
 		 * @return True, if succeeded
 		 */
 		bool setCapacity(const size_t capacity);
+
+		/**
+		 * Sets the known camera profile of this frame medium.
+		 * This function allows to set a mainly static camera profile which does not change too often over time.<br>
+		 * In case the camera profile is changing on a per-frame basis, the camera profile should be provided internally with a custom mechanism in a derived class.
+		 * @param camera The camera profile to set, invalid to remove an existing camera profile
+		 * @return True, if succeeded
+		 */
+		virtual bool setCamera(SharedAnyCamera&& camera);
 
 		/**
 		 * Adds a callback function which is called whenever a new frame arrives.
