@@ -10,6 +10,7 @@
 
 #include "ocean/math/Math.h"
 #include "ocean/math/Equation.h"
+#include "ocean/math/SquareMatrix2.h"
 #include "ocean/math/Vector2.h"
 #include "ocean/math/Vector3.h"
 
@@ -39,21 +40,21 @@ template <typename T> class SquareMatrixT3;
  * @see SquareMatrixT3
  * @ingroup math
  */
-typedef SquareMatrixT3<Scalar> SquareMatrix3;
+using SquareMatrix3 = SquareMatrixT3<Scalar>;
 
 /**
  * Instantiation of the SquareMatrixT3 template class using a double precision float data type.
  * @see SquareMatrixT3
  * @ingroup math
  */
-typedef SquareMatrixT3<double> SquareMatrixD3;
+using SquareMatrixD3 = SquareMatrixT3<double>;
 
 /**
  * Instantiation of the SquareMatrixT3 template class using a single precision float data type.
  * @see SquareMatrixT3
  * @ingroup math
  */
-typedef SquareMatrixT3<float> SquareMatrixF3;
+using SquareMatrixF3 = SquareMatrixT3<float>;
 
 /**
  * Definition of a typename alias for vectors with SquareMatrixT3 objects.
@@ -68,7 +69,7 @@ using SquareMatricesT3 = std::vector<SquareMatrixT3<T>>;
  * @see SquareMatrix3
  * @ingroup math
  */
-typedef std::vector<SquareMatrix3> SquareMatrices3;
+using SquareMatrices3 = std::vector<SquareMatrix3>;
 
 /**
  * This class implements a 3x3 square matrix.
@@ -93,7 +94,7 @@ class SquareMatrixT3
 		/**
 		 * Definition of the used data type.
 		 */
-		typedef T Type;
+		using Type = T;
 
 	public:
 
@@ -115,7 +116,7 @@ class SquareMatrixT3
 		 * @tparam U The element data type of the second matrix
 		 */
 		template <typename U>
-		inline explicit SquareMatrixT3(const SquareMatrixT3<U>& matrix);
+		explicit inline SquareMatrixT3(const SquareMatrixT3<U>& matrix);
 
 		/**
 		 * Creates a new SquareMatrixT3 object.
@@ -1253,23 +1254,23 @@ bool SquareMatrixT3<T>::invert(SquareMatrixT3<T>& invertedMatrix) const
 
 		if (NumericT<T>::isWeakEqualEps(distance) == false)
 		{
-			T absolusteAverageEnergy = 0;
+			T absoluteAverageEnergy = 0;
 			for (unsigned int n = 0u; n < 9u; ++n)
 			{
 				absolusteAverageEnergy += NumericT<T>::abs(values[n]);
 			}
 
-			absolusteAverageEnergy *= T(0.111111111111111111); // 1 / 9
+			absoluteAverageEnergy *= T(0.111111111111111111); // 1 / 9
 
 			// we expect/accept for each magnitude (larger than 1) a zero-inaccuracy of one magnitude (and we again comare it with the weak eps)
 
-			if (absolusteAverageEnergy <= 1)
+			if (absoluteAverageEnergy <= 1)
 			{
 				ocean_assert_accuracy(!"This should never happen!");
 			}
 			else
 			{
-				const T adjustedDistance = distance / absolusteAverageEnergy;
+				const T adjustedDistance = distance / absoluteAverageEnergy;
 				ocean_assert_accuracy(NumericT<T>::isWeakEqualEps(adjustedDistance));
 			}
 		}
@@ -1564,17 +1565,16 @@ bool SquareMatrixT3<T>::eigenSystem(T* eigenValues, VectorT3<T>* eigenVectors) c
 		return false;
 	}
 
+	Utilities::sortHighestToFront3(eigenValues[0], eigenValues[1], eigenValues[2]);
+
 	/**
 	 * <pre>
 	 * Determination of the eigen vectors (vx, vy, vz):
 	 *             [ a-x   b    c  ]   [ vx ]
 	 * A - x * E = [  d   e-x   f  ] * [ vy ] = 0
 	 *             [  g    h   i-x ]   [ vz ]
-	 * We can apply the cross product to find a vector that is perpendicular to the two top rows of the matrix A - x * E
 	 * </pre>
 	 */
-
-	Utilities::sortHighestToFront3(eigenValues[0], eigenValues[1], eigenValues[2]);
 
 	for (unsigned int n = 0u; n < 3u; ++n)
 	{
