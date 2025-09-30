@@ -60,12 +60,12 @@ class OCEAN_CV_CALIBRATION_EXPORT Utilities
 
 		/**
 		 * Visualizes the distortion of a camera with a grid.
-		 * @param camera The camera profile for which the distortion/undistortion is visualized, must be valid
+		 * @param camera The camera profile for which the distortion/un-distortion is visualized, must be valid
 		 * @param horizontalBins Number of horizontal bins, with range [1, camera.width() / 2u)
 		 * @param verticalBins Number of vertical bins, with range [1, camera.height() / 2u)
 		 * @param undistort True, to visualize the undistorted frame, otherwise the distorted frame is visualized
 		 * @param worker Optional worker object to distribute the computation
-		 * @return Resulting frame with visualized distortion/undistortion
+		 * @return Resulting frame with visualized distortion/un-distortion
 		 */
 		static Frame visualizeDistortionGrid(const AnyCamera& camera, const unsigned int horizontalBins, const unsigned int verticalBins, const bool undistort, Worker* worker = nullptr);
 

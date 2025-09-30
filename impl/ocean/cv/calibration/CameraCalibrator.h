@@ -211,8 +211,8 @@ class OCEAN_CV_CALIBRATION_EXPORT CameraCalibrator
 		bool determineInitialPoseWithValidMarkerCandidates(const AnyCamera& camera, const Points& points, HomogenousMatrix4& board_T_camera, Indices32& usedMarkerCandidateIndices) const;
 
 		/**
-		 * Optimizes the camera pose using known valid marker candidates with known marker coordinates and iteratively adds addtional correspondences from neighboring marker candidates.
-		 * The area around the valid marker candidates is iteratively growing until no additonal marker candidates can be added.<br>
+		 * Optimizes the camera pose using known valid marker candidates with known marker coordinates and iteratively adds additional correspondences from neighboring marker candidates.
+		 * The area around the valid marker candidates is iteratively growing until no additional marker candidates can be added.<br>
 		 * The growing strategy helps with handling fisheye cameras.
 		 * @param camera The camera profile defining the projection, must be valid
 		 * @param board_T_camera The initial camera pose to improve, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
