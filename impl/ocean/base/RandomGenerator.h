@@ -65,7 +65,7 @@ class OCEAN_BASE_EXPORT RandomGenerator
 		 * Move constructor.
 		 * @param randomGenerator The random generator object to be moved
 		 */
-		inline RandomGenerator(RandomGenerator&& randomGenerator);
+		inline RandomGenerator(RandomGenerator&& randomGenerator) noexcept;
 
 		/**
 		 * Creates a new random generator and initializes the internal parameter by the given value.
@@ -153,7 +153,7 @@ inline RandomGenerator::RandomGenerator(const unsigned int seed) :
 	seed_ = initialSeed_;
 }
 
-inline RandomGenerator::RandomGenerator(RandomGenerator&& randomGenerator)
+inline RandomGenerator::RandomGenerator(RandomGenerator&& randomGenerator) noexcept
 {
 	*this = std::move(randomGenerator);
 }
