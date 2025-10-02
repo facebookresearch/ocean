@@ -17,7 +17,7 @@ using namespace Platform::Meta::Quest;
 
 static std::string getUsbCameraPermissionName(struct android_app* androidApp)
 {
-	if (androidApp->activity->sdkVersion >= 34) 
+	if (androidApp->activity->sdkVersion >= 34)
 	{
 		return "horizonos.permission.USB_CAMERA";
 	}
@@ -280,7 +280,7 @@ void ExternalCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime
 				renderingTransformCamera_->setVisible(true);
 			}
 
-			rateCalculator_.addOccurance(Timestamp(true));
+			rateCalculator_.addOccurence(Timestamp(true));
 
 			renderingTextCamera_->setText(" Video resolution: " + String::toAString(frame->width()) + "x" + String::toAString(frame->height()) + " \n " + String::toAString(rateCalculator_.rate(Timestamp(true)), 1u) + " fps ");
 

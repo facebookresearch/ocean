@@ -28,7 +28,7 @@ class OCEAN_MATH_EXPORT RateCalculator
 		/**
 		 * Definition of an ordered map mapping timestamps to quantities.
 		 */
-		typedef std::map<Timestamp, double> TimestampMap;
+		using TimestampMap = std::map<Timestamp, double>;
 
 	public:
 
@@ -43,7 +43,7 @@ class OCEAN_MATH_EXPORT RateCalculator
 		 * @param timestamp The timestamp at which the occurrence happened, must be valid
 		 * @param quantity The quantity of the current occurrence
 		 */
-		void addOccurance(const Timestamp& timestamp, const double quantity = 1.0);
+		void addOccurence(const Timestamp& timestamp, const double quantity = 1.0);
 
 		/**
 		 * Returns the current rate.

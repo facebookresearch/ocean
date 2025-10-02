@@ -12,7 +12,7 @@
 namespace Ocean
 {
 
-void RateCalculator::addOccurance(const Timestamp& timestamp, const double quantity)
+void RateCalculator::addOccurence(const Timestamp& timestamp, const double quantity)
 {
 	ocean_assert(timestamp.isValid());
 

@@ -81,7 +81,7 @@ bool TestRateCalculator::testRate(const double testDuration)
 			const Timestamp currentTimestamp(referenceTimestamp + double(n) / frequency + RandomD::scalar(randomGenerator, -0.0001, 0.0001));
 			const double quantity = RandomD::scalar(randomGenerator, 0.1, 10.0);
 
-			rateCalculator.addOccurance(currentTimestamp, quantity);
+			rateCalculator.addOccurence(currentTimestamp, quantity);
 
 			timestampPairs.emplace_back(currentTimestamp, quantity);
 

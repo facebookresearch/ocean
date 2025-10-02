@@ -270,7 +270,7 @@ void QuestCameraApplication::onPreRender(const XrTime& xrPredictedDisplayTime, c
 				renderingTransformCamera_->setVisible(true);
 			}
 
-			rateCalculator_.addOccurance(Timestamp(true));
+			rateCalculator_.addOccurence(Timestamp(true));
 
 			renderingTextCamera_->setText(" Video resolution: " + String::toAString(frame->width()) + "x" + String::toAString(frame->height()) + " \n " + String::toAString(rateCalculator_.rate(Timestamp(true)), 1u) + " fps ");
 
