@@ -10,17 +10,14 @@
 
 #include "ocean/cv/detector/Detector.h"
 
-#include "ocean/base/Memory.h"
+#include "ocean/base/Frame.h"
+#include "ocean/base/Worker.h"
 
-#include "ocean/cv/FrameInverter.h"
-
-#include "ocean/math/Box2.h"
 #include "ocean/math/SquareMatrix3.h"
 #include "ocean/math/Vector2.h"
 
 #include <array>
 #include <bitset>
-#include <unordered_set>
 
 namespace Ocean
 {
@@ -49,22 +46,22 @@ class OCEAN_CV_DETECTOR_EXPORT MessengerCodeDetector
 		/**
 		 * Definition of a bitset containing the information of a Messenger Code
 		 */
-		typedef std::bitset<numberCodeBits> CodeBits;
+		using CodeBits = std::bitset<numberCodeBits>;
 
 		/**
 		 * Definition of a vector holding codes.
 		 */
-		typedef std::vector<CodeBits> Codes;
+		using Codes = std::vector<CodeBits>;
 
 		/**
 		 * Definition of an index quartet (an array with exactly four indices).
 		 */
-		typedef std::array<unsigned int, 4> IndexQuartet;
+		using IndexQuartet = std::array<unsigned int, 4>;
 
 		/**
 		 * Definition of a vector holding index quartets
 		 */
-		typedef std::vector<IndexQuartet> IndexQuartets;
+		using IndexQuartets = std::vector<IndexQuartet>;
 
 		/**
 		 * Definition of a class holding a bullseye composed of a location and a radius.
@@ -119,7 +116,7 @@ class OCEAN_CV_DETECTOR_EXPORT MessengerCodeDetector
 		/**
 		 * Definition of a vector holding bullseyes.
 		 */
-		typedef std::vector<Bullseye> Bullseyes;
+		using Bullseyes = std::vector<Bullseye>;
 
 		/**
 		 * Data storing debug information.
@@ -146,7 +143,7 @@ class OCEAN_CV_DETECTOR_EXPORT MessengerCodeDetector
 				/**
 				 * Definition of a vector holding DetectedCode object.
 				 */
-				typedef std::vector<DetectedCode> DetectedCodes;
+				using DetectedCodes = std::vector<DetectedCode>;
 
 			public:
 

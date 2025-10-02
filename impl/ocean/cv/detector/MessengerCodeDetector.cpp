@@ -7,10 +7,13 @@
 
 #include "ocean/cv/detector/MessengerCodeDetector.h"
 
+#include "ocean/base/Memory.h"
 #include "ocean/base/StaticVector.h"
 
 #include "ocean/cv/Canvas.h"
+#include "ocean/cv/FrameInverter.h"
 
+#include "ocean/math/Box2.h"
 #include "ocean/math/HomogenousMatrix4.h"
 
 #include "ocean/geometry/Homography.h"
