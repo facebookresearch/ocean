@@ -507,7 +507,7 @@ using CameraProjectionCheckerF = CameraProjectionCheckerT<float>;
 /**
  * This class implements a helper class allowing to check whether a 3D object point projects into the camera image.
  * The checker uses normalized coordinates when verifying the projection behavior to avoid numerical issues when object points project far outside the image area.<br>
- * In contrast to AnyCamera::ptojectToImageIF() + AnyCamera::isInside(), the checker is more precise but also more expensive.
+ * In contrast to AnyCamera::projectToImageIF() + AnyCamera::isInside(), the checker is more precise but also more expensive.
  * @tparam T The data type of a scalar, 'float' or 'double'
  * @ingroup math
  */
