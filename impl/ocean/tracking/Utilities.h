@@ -459,7 +459,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param anyCamera The camera profile defining the projection, must be valid
 		 * @param triangle The triangle that will be painted
 		 * @param color The color to be used to paint the triangle edges, nullptr to use black
-		 * @tparam tSize The thickness of the triangle edges in pixels, must be odd with range [1, infinity)
+		 * @tparam tSize The thickness of the triangle outline in pixels, must be odd with range [1, infinity)
 		 */
 		template <unsigned int tSize = 1u>
 		static inline void paintTriangleIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const AnyCamera& anyCamera, const Triangle3& triangle, const uint8_t* color = nullptr);
@@ -473,10 +473,24 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param numberTriangles Number of triangles that will be painted, with range [0, infinity)
 		 * @param color The color to be used to paint the triangle edges, nullptr to use black
 		 * @param worker Optional worker to distribute the computation
-		 * @tparam tSize The thickness of the triangle edges in pixels, must be odd with range [1, infinity)
+		 * @tparam tSize The thickness of the triangle outline in pixels, must be odd with range [1, infinity)
 		 */
 		template <unsigned int tSize = 1u>
 		static void paintTrianglesIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const AnyCamera& anyCamera, const Triangle3* triangles, const size_t numberTriangles, const uint8_t* color = nullptr, Worker* worker = nullptr);
+
+		/**
+		 * Paints a projected 3D triangle into a given frame.
+		 * This function is using a triangle projection checker allowing to avoid re-projection issues when drawing triangles with camera profiles with strong distortions.
+		 * @param frame The frame in which the triangles will be painted, must be valid
+		 * @param flippedCamera_T_world The transformation transforming world to the flipped camera, the flipped camera points towards the positive z-space with y-axis down, must be valid
+		 * @param cameraProjectionChecker The camera projection checker to be used to project the 3D triangle, must be valid
+		 * @param triangle The 3D triangle to point, must be valid
+		 * @param segments The number of segments each triangle edge will be composed of, with range [1, infinity)
+		 * @param color The color to be used to paint the triangle edges, nullptr to use black
+		 * @tparam tSize The thickness of the triangle outline in pixels, must be odd with range [1, infinity)
+		 */
+		template <unsigned int tSize = 1u>
+		static void paintTriangleIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const CameraProjectionChecker& cameraProjectionChecker, const Triangle3& triangle, const size_t segments = 3, const uint8_t* color = nullptr);
 
 		/**
 		 * Paints a (projected) 3D line into a given frame.
@@ -1124,6 +1138,47 @@ void Utilities::paintTrianglesIF(Frame& frame, const HomogenousMatrix4& flippedC
 	else
 	{
 		paintTrianglesIFSubset<tSize>(&frame, &flippedCamera_T_world, &anyCamera, triangles, color, 0u, (unsigned int)(numberTriangles));
+	}
+}
+
+template <unsigned int tSize>
+void Utilities::paintTriangleIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const CameraProjectionChecker& cameraProjectionChecker, const Triangle3& triangle, const size_t segments, const uint8_t* color)
+{
+	ocean_assert(frame.isValid());
+	ocean_assert(flippedCamera_T_world.isValid());
+	ocean_assert(cameraProjectionChecker.isValid());
+	ocean_assert(triangle.isValid());
+	ocean_assert(segments >= 1);
+
+	for (unsigned int nSide = 0u; nSide < 3u; ++nSide)
+	{
+		const Vector3& point0 = triangle[nSide];
+		const Vector3& point1 = triangle[(nSide + 1u) % 3u];
+
+		Vector2 previousImagePoint = Vector2::minValue();
+
+		if (!cameraProjectionChecker.projectToImageIF(flippedCamera_T_world, point0, &previousImagePoint))
+		{
+			ocean_assert(previousImagePoint == Vector2::minValue());
+		}
+
+		for (size_t nSegment = 0; nSegment < segments; ++nSegment)
+		{
+			const Scalar factor = Scalar(nSegment + 1) / Scalar(segments);
+
+			const Vector3 currentPoint = point0 * (Scalar(1) - factor) + point1 * factor;
+
+			Vector2 currentImagePoint = Vector2::minValue();
+			if (cameraProjectionChecker.projectToImageIF(flippedCamera_T_world, currentPoint, &currentImagePoint))
+			{
+				if (previousImagePoint != Vector2::minValue())
+				{
+					CV::Canvas::line<tSize>(frame, previousImagePoint, currentImagePoint, color);
+				}
+			}
+
+			previousImagePoint = currentImagePoint;
+		}
 	}
 }
 
