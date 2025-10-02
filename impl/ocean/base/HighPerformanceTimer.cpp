@@ -302,12 +302,12 @@ std::string HighPerformanceStatistic::toString(const unsigned int precision) con
 	double unitFactor = 1.0;
 	std::string unit = "s";
 
-	if (performanceBest < 0.0001) // using microseconds when < 0.1ms
+	if (performanceMedian < 0.0001) // using microseconds when < 0.1ms
 	{
 		unitFactor = 1000000.0;
 		unit = "ys";
 	}
-	else if (performanceBest < 10.0) // using milliseconds when < 10s
+	else if (performanceMedian < 10.0) // using milliseconds when < 10s
 	{
 		unitFactor = 1000.0;
 		unit = "ms";
