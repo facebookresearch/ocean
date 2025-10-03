@@ -10,7 +10,6 @@
 
 #include "ocean/cv/CV.h"
 
-#include "ocean/base/Callback.h"
 #include "ocean/base/Frame.h"
 #include "ocean/base/Memory.h"
 #include "ocean/base/Worker.h"
@@ -25,6 +24,16 @@ namespace Ocean
 
 namespace CV
 {
+
+// Forward declaration.
+class FramePyramid;
+
+/**
+ * Definition of a vector holding frame pyramid objects.
+ * @see FramePyramid
+ * @ingroup cv
+ */
+using FramePyramids = std::vector<FramePyramid>;
 
 /**
  * This class implements a frame pyramid.<br>
