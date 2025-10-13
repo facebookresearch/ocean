@@ -112,22 +112,48 @@ DeviceRef Factory::device(const Device::DeviceType type, const bool useExclusive
 		}
 	}
 
+	const DeviceDescriptor* useDeviceDescriptor = nullptr;
+
 	// create the first device with perfect matching device type
 	for (const DeviceDescriptor& deviceDescriptor : deviceDescriptors_)
 	{
 		if (deviceDescriptor.type_ == type)
 		{
-			return createDevice(deviceDescriptor, useExclusive);
+			if (useDeviceDescriptor != nullptr)
+			{
+				if (deviceDescriptor.priority_ <= useDeviceDescriptor->priority_)
+				{
+					continue;
+				}
+			}
+
+			useDeviceDescriptor = &deviceDescriptor;
 		}
 	}
 
-	// create the first device with best matching device type
-	for (const DeviceDescriptor& deviceDescriptor : deviceDescriptors_)
+	if (useDeviceDescriptor == nullptr)
 	{
-		if (deviceDescriptor.type_ >= type)
+		// create the first device with best matching device type
+		for (const DeviceDescriptor& deviceDescriptor : deviceDescriptors_)
 		{
-			return createDevice(deviceDescriptor, useExclusive);
+			if (deviceDescriptor.type_ >= type)
+			{
+				if (useDeviceDescriptor != nullptr)
+				{
+					if (deviceDescriptor.priority_ <= useDeviceDescriptor->priority_)
+					{
+						continue;
+					}
+				}
+
+				useDeviceDescriptor = &deviceDescriptor;
+			}
 		}
+	}
+
+	if (useDeviceDescriptor != nullptr)
+	{
+		return createDevice(*useDeviceDescriptor, useExclusive);
 	}
 
 	return DeviceRef();
@@ -148,7 +174,7 @@ DeviceRef Factory::adapterDevice(const Device::DeviceType /*type*/, const std::s
 	return DeviceRef();
 }
 
-bool Factory::registerDevice(const std::string& deviceName, const Device::DeviceType deviceType, const InstanceFunction& deviceInstanceFunction)
+bool Factory::registerDevice(const std::string& deviceName, const Device::DeviceType deviceType, const InstanceFunction& deviceInstanceFunction, const unsigned int priority)
 {
 	ocean_assert(!deviceName.empty());
 	ocean_assert(deviceType);
@@ -165,7 +191,7 @@ bool Factory::registerDevice(const std::string& deviceName, const Device::Device
 		}
 	}
 
-	deviceDescriptors_.emplace_back(deviceName, deviceType, deviceInstanceFunction);
+	deviceDescriptors_.emplace_back(deviceName, deviceType, deviceInstanceFunction, priority);
 
 	return true;
 }

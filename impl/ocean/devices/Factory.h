@@ -34,7 +34,7 @@ class OCEAN_DEVICES_EXPORT Factory
 		/**
 		 * Definition of a callback function creating a specific device.
 		 */
-		typedef Callback<Device*, const std::string&, const Device::DeviceType&> InstanceFunction;
+		using InstanceFunction = Callback<Device*, const std::string&, const Device::DeviceType&>;
 
 		/**
 		 * This class stores information to describe and to creator a device.
@@ -53,8 +53,9 @@ class OCEAN_DEVICES_EXPORT Factory
 				 * @param name The name of the device
 				 * @param type The type of the device
 				 * @param instanceFunction The callback function to create the new device, must be valid
+				 * @param priority The priority of the device, in case two devices are equivalent, the device with the higher priority will be used
 				 */
-				inline DeviceDescriptor(const std::string& name, const Device::DeviceType type, const InstanceFunction& instanceFunction);
+				inline DeviceDescriptor(const std::string& name, const Device::DeviceType type, const InstanceFunction& instanceFunction, const unsigned int priority);
 
 			public:
 
@@ -66,12 +67,15 @@ class OCEAN_DEVICES_EXPORT Factory
 
 				/// Device instance function.
 				InstanceFunction instanceFunction_;
+
+				/// The device priority.
+				unsigned int priority_ = 0u;
 		};
 
 		/**
 		 * Definition of a vector holding device descriptor objects.
 		 */
-		typedef std::vector<DeviceDescriptor> DeviceDescriptors;
+		using DeviceDescriptors = std::vector<DeviceDescriptor>;
 
 	public:
 
@@ -171,9 +175,10 @@ class OCEAN_DEVICES_EXPORT Factory
 		 * @param deviceName Unique name of the device to register
 		 * @param deviceType Type of the device
 		 * @param deviceInstanceFunction Function creating an instance of the device
+		 * @param priority The priority of the device, in case two devices are equivalent, the device with the higher priority will be used
 		 * @see unregisterDevice().
 		 */
-		bool registerDevice(const std::string& deviceName, const Device::DeviceType deviceType, const InstanceFunction& deviceInstanceFunction);
+		bool registerDevice(const std::string& deviceName, const Device::DeviceType deviceType, const InstanceFunction& deviceInstanceFunction, const unsigned int priority = 100u);
 
 		/**
 		 * Unregisters a previously registered device from this factory.
@@ -218,10 +223,11 @@ inline Factory::DeviceDescriptor::DeviceDescriptor() :
 	// nothing to do here
 }
 
-inline Factory::DeviceDescriptor::DeviceDescriptor(const std::string& name, const Device::DeviceType type, const InstanceFunction& instanceFunction) :
+inline Factory::DeviceDescriptor::DeviceDescriptor(const std::string& name, const Device::DeviceType type, const InstanceFunction& instanceFunction, const unsigned int priority) :
 	name_(name),
 	type_(type),
-	instanceFunction_(instanceFunction)
+	instanceFunction_(instanceFunction),
+	priority_(priority)
 {
 	// nothing to do here
 }
