@@ -436,13 +436,6 @@ bool ALiveVideo::setFocus(const float position)
 		return false;
 	}
 
-	const bool needsRestart = startTimestamp_.isValid();
-
-	if (needsRestart)
-	{
-		stop();
-	}
-
 	if (position >= 0.0f && position <= 1.0f)
 	{
 		if (focusPositionMin_ == -1.0f)
@@ -473,7 +466,7 @@ bool ALiveVideo::setFocus(const float position)
 		}
 	}
 
-	return !needsRestart || start();
+	return setRepeatingRequest();
 }
 
 void ALiveVideo::feedNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera, const ControlMode exposureMode, const double exposureDuration, const ControlMode isoMode, const float iso, const ControlMode focusMode, const float focusValue)
@@ -538,17 +531,7 @@ bool ALiveVideo::forceRestart()
 		return false;
 	}
 
-	ACameraCaptureSession_captureCallbacks captureCallbacks;
-	captureCallbacks.context = this;
-	captureCallbacks.onCaptureStarted = onCaptureStartedStatic;
-	captureCallbacks.onCaptureProgressed = nullptr;
-	captureCallbacks.onCaptureCompleted = onCaptureCompletedStatic;
-	captureCallbacks.onCaptureFailed = onCaptureFailedStatic;
-	captureCallbacks.onCaptureSequenceCompleted = onCaptureSequenceCompletedStatic;
-	captureCallbacks.onCaptureSequenceAborted = onCaptureSequenceAbortedStatic;
-	captureCallbacks.onCaptureBufferLost = nullptr;
-
-	if (NativeCameraLibrary::get().ACameraCaptureSession_setRepeatingRequest(captureSession_, &captureCallbacks, 1, &captureRequest_, nullptr) != ACAMERA_OK)
+	if (!setRepeatingRequest())
 	{
 		Log::error() << "ALiveVideo: Failed to restart capture session";
 		return false;
@@ -579,17 +562,7 @@ bool ALiveVideo::start()
 		return true;
 	}
 
-	ACameraCaptureSession_captureCallbacks captureCallbacks;
-	captureCallbacks.context = this;
-	captureCallbacks.onCaptureStarted = onCaptureStartedStatic;
-	captureCallbacks.onCaptureProgressed = nullptr;
-	captureCallbacks.onCaptureCompleted = onCaptureCompletedStatic;
-	captureCallbacks.onCaptureFailed = onCaptureFailedStatic;
-	captureCallbacks.onCaptureSequenceCompleted = onCaptureSequenceCompletedStatic;
-	captureCallbacks.onCaptureSequenceAborted = onCaptureSequenceAbortedStatic;
-	captureCallbacks.onCaptureBufferLost = nullptr;
-
-	return NativeCameraLibrary::get().ACameraCaptureSession_setRepeatingRequest(captureSession_, &captureCallbacks, 1, &captureRequest_, nullptr) == ACAMERA_OK;
+	return setRepeatingRequest();
 }
 
 bool ALiveVideo::pause()
@@ -850,6 +823,32 @@ bool ALiveVideo::createCaptureSession()
 	{
 		// we do not know which of the previous iterations succeeded, so we release the entire capture session (which can handle this situation)
 		releaseCaptureSession();
+		return false;
+	}
+
+	return true;
+}
+
+bool ALiveVideo::setRepeatingRequest()
+{
+	if (captureSession_ == nullptr || captureRequest_ == nullptr)
+	{
+		return false;
+	}
+
+	ACameraCaptureSession_captureCallbacks captureCallbacks;
+	captureCallbacks.context = this;
+	captureCallbacks.onCaptureStarted = onCaptureStartedStatic;
+	captureCallbacks.onCaptureProgressed = nullptr;
+	captureCallbacks.onCaptureCompleted = onCaptureCompletedStatic;
+	captureCallbacks.onCaptureFailed = onCaptureFailedStatic;
+	captureCallbacks.onCaptureSequenceCompleted = onCaptureSequenceCompletedStatic;
+	captureCallbacks.onCaptureSequenceAborted = onCaptureSequenceAbortedStatic;
+	captureCallbacks.onCaptureBufferLost = nullptr;
+
+	if (NativeCameraLibrary::get().ACameraCaptureSession_setRepeatingRequest(captureSession_, &captureCallbacks, 1, &captureRequest_, nullptr) != ACAMERA_OK)
+	{
+		Log::error() << "ALiveVideo: Failed to set/update repeating capture request";
 		return false;
 	}
 
@@ -1820,7 +1819,7 @@ std::string ALiveVideo::cameraIdForMedium(ACameraManager* cameraManager, const s
 
 	StreamConfigurations availableStreamConfigurations = determineAvailableStreamConfigurations(*cameraMetadata);
 
-	Log::debug() << "Supported streams: " <<  availableStreamConfigurations.size();
+	Log::debug() << "Camera " << cameraId << " supports " <<  availableStreamConfigurations.size() << " streams:";
 
 	for (const StreamConfiguration& availableStreamConfiguration : availableStreamConfigurations)
 	{

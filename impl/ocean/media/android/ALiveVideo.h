@@ -340,6 +340,11 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		bool createCaptureSession();
 
 		/**
+		 * Sets or update a repeating capture request.
+		 */
+		bool setRepeatingRequest();
+
+		/**
 		 * Releases the capture session.
 		 */
 		void releaseCaptureSession();
