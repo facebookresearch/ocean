@@ -33,9 +33,11 @@ public class OceanAppCompatActivity extends AppCompatActivity
 		super.onCreate(savedInstanceState);
 		android.os.Process.setThreadPriority(-20);
 
-		BaseJni.initializeWithMessageOutput(messageOutput_, messageOutputFile_);
+		BaseJni.initializeWithMessageOutput(messageOutput_, messageOutputFile_);		
 		BaseJni.information("Device name: " + android.os.Build.DEVICE);
 		BaseJni.setWorkerPoolCapacity(2);
+
+		BaseJni.setCurrentActivity(this);
 	}
 
 	public void requestPermission(String permission)

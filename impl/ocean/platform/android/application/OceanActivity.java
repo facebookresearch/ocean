@@ -35,6 +35,8 @@ public class OceanActivity extends Activity
 		BaseJni.initializeWithMessageOutput(messageOutput_, messageOutputFile_);
 		BaseJni.information("Device name: " + android.os.Build.DEVICE);
 		BaseJni.setWorkerPoolCapacity(2);
+
+		BaseJni.setCurrentActivity(this);
 	}
 
 	public void requestPermission(String permission)
