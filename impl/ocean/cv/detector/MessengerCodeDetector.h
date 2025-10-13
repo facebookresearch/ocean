@@ -101,16 +101,22 @@ class OCEAN_CV_DETECTOR_EXPORT MessengerCodeDetector
 				 */
 				inline unsigned int grayThreshold() const;
 
+				/**
+				 * Returns whether this bullseye is valid.
+				 * @return True, if so
+				 */
+				inline bool isValid() const;
+
 			protected:
 
 				/// The (center) position of the bullseye within the camera frame.
-				Vector2 position_;
+				Vector2 position_ = Vector2(-1, -1);
 
 				/// The radius of the bullseye in pixels, with range (0, infinity).
-				Scalar radius_;
+				Scalar radius_ = 0;
 
 				/// The threshold that was used during the detection of this bullseye
-				unsigned int grayThreshold_;
+				unsigned int grayThreshold_ = (unsigned int)(-1);
 		};
 
 		/**
@@ -548,6 +554,11 @@ inline Scalar MessengerCodeDetector::Bullseye::radius() const
 inline unsigned int MessengerCodeDetector::Bullseye::grayThreshold() const
 {
 	return grayThreshold_;
+}
+
+inline bool MessengerCodeDetector::Bullseye::isValid() const
+{
+	return position_.x() >= 0 && position_.y() >= 0 && radius_ > 0 && grayThreshold_ != 0u && grayThreshold_ < 256u;
 }
 
 inline MessengerCodeDetector::TransitionHistory::TransitionHistory() :
