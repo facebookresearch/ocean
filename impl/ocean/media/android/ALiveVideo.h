@@ -13,6 +13,7 @@
 #include "ocean/media/android/NativeCameraLibrary.h"
 #include "ocean/media/android/NativeMediaLibrary.h"
 
+#include "ocean/base/Timestamp.h"
 #include "ocean/base/Value.h"
 
 #include "ocean/math/AnyCamera.h"
@@ -480,9 +481,10 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		 * Extracts the next frame from an Android image object.
 		 * @param image The Android image object from which the next frame will be extracted
 		 * @param frame The resulting frame containing the extracted image
+		 * @param timestampNs The resulting timestamp of the frame, as provided by AImage_getTimestamp(), in nanoseconds
 		 * @return True, if succeeded
 		 */
-		static bool frameFromImage(AImage* image, Frame& frame);
+		static bool frameFromImage(AImage* image, Frame& frame, int64_t& timestampNs);
 
 		/**
 		 * Returns the transformation between camera and device (device_T_camera).
@@ -650,6 +652,9 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 
 		/// The transformation between camera and device, with default camera pointing towards the negative z-space with y-axis up.
 		HomogenousMatrixD4 device_T_camera_ = HomogenousMatrixD4(false);
+
+		/// The timestamp converter to convert timestamps from the camera to unix timestamps.
+		Timestamp::TimestampConverter timestampConverter_ = Timestamp::TimestampConverter(Timestamp::TimestampConverter::TD_BOOTTIME);
 
 		/// The current exposure mode of this device.
 		ControlMode exposureMode_ = CM_INVALID;
