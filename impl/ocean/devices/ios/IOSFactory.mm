@@ -50,13 +50,6 @@ void IOSFactory::registerDevices()
 		const Sensor::SensorType sensorType = Sensor::SENSOR_ACCELERATION_3DOF;
 
 		registerDevice(IOSAccelerationSensor3DOF::deviceNameIOSAccelerationSensor3DOF(sensorType), IOSAccelerationSensor3DOF::deviceTypeIOSAccelerationSensor3DOF(sensorType), InstanceFunction::createStatic(createIOSAccelerationSensor3DOF));
-
-		registerDevice(IOSGravityTracker3DOF::deviceNameIOSGravityTracker3DOF(), IOSGravityTracker3DOF::deviceTypeOrientationTracker3DOF(), InstanceFunction::createStatic(createIOSGravityTracker3DOF));
-
-		if ([CMMotionManager availableAttitudeReferenceFrames] & CMAttitudeReferenceFrameXMagneticNorthZVertical)
-		{
-			registerDevice(IOSHeadingTracker3DOF::deviceNameIOSHeadingTracker3DOF(), IOSHeadingTracker3DOF::deviceTypeOrientationTracker3DOF(), InstanceFunction::createStatic(createIOSHeadingTracker3DOF));
-		}
 	}
 
 	if (motionManager.gyroAvailable)
@@ -84,6 +77,15 @@ void IOSFactory::registerDevices()
 		registerDevice(IOSGyroSensor3DOF::deviceNameIOSGyroSensor3DOF(gyroSensorType), IOSGyroSensor3DOF::deviceTypeIOSGyroSensor3DOF(gyroSensorType), InstanceFunction::createStatic(createIOSGyroUnbiasedSensor3DOF));
 
 		registerDevice(IOSOrientationTracker3DOF::deviceNameIOSOrientationTracker3DOF(), IOSOrientationTracker3DOF::deviceTypeOrientationTracker3DOF(), InstanceFunction::createStatic(createIOSOrientationTracker3DOF));
+
+		constexpr unsigned int gravityTrackerPriority = 50u; // orientation and gravity share the same device type, so using a lower priority for the gravity sensor
+
+		registerDevice(IOSGravityTracker3DOF::deviceNameIOSGravityTracker3DOF(), IOSGravityTracker3DOF::deviceTypeOrientationTracker3DOF(), InstanceFunction::createStatic(createIOSGravityTracker3DOF), gravityTrackerPriority);
+
+		if ([CMMotionManager availableAttitudeReferenceFrames] & CMAttitudeReferenceFrameXMagneticNorthZVertical)
+		{
+			registerDevice(IOSHeadingTracker3DOF::deviceNameIOSHeadingTracker3DOF(), IOSHeadingTracker3DOF::deviceTypeOrientationTracker3DOF(), InstanceFunction::createStatic(createIOSHeadingTracker3DOF));
+		}
 	}
 
 	registerDevice(IOSGPSTracker::deviceNameIOSGPSTracker(), IOSGPSTracker::deviceTypeIOSGPSTracker(), InstanceFunction::createStatic(createIOSGPSTracker));
