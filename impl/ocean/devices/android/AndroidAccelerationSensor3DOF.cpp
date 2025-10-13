@@ -48,31 +48,31 @@ AndroidAccelerationSensor3DOF::~AndroidAccelerationSensor3DOF()
 
 int AndroidAccelerationSensor3DOF::onEventFunction()
 {
-	const ScopedLock scopedLock(deviceLock);
+	TemporaryScopedLock scopedLock(deviceLock);
 
 	ASensorEvent sensorEvent;
 
 	while (ASensorEventQueue_getEvents(eventQueue_, &sensorEvent, 1) > 0)
 	{
+		scopedLock.release();
+
 		ocean_assert(sensorEvent.type == AST_ACCELEROMETER || sensorEvent.type == AST_LINEAR_ACCELERATION);
 
-		if (firstUnixEventTimestamp_.isInvalid())
-		{
-			// pairing both timestamp may not be ideal but it seems to be the best solution as the Android timestamp seem to be arbitrary for individual sensors
-			// **NOTE** perhaps the timestamp of the Android event may restart/change after waking up - this may result in wrong timestamps
-
-			firstUnixEventTimestamp_.toNow();
-			firstAndroidEventTimestamp_ = sensorEvent.timestamp;
-		}
-
-		const Timestamp timestamp(firstUnixEventTimestamp_ + double(sensorEvent.timestamp - firstAndroidEventTimestamp_) / 1000000000.0);
+		Timestamp relativeTimestamp;
+		Timestamp timestamp;
+		convertTimestamp(sensorEvent, relativeTimestamp, timestamp);
 
 		const ASensorVector& acceleration = sensorEvent.acceleration;
 
 		const ObjectIds objectIds(1, sensorObjectId_);
 		const Acceleration3DOFSample::Measurements measurements(1, Vector3(Scalar(acceleration.x), Scalar(acceleration.y), Scalar(acceleration.z)));
 
-		postNewSample(SampleRef(new Acceleration3DOFSample(timestamp, objectIds, measurements)));
+		SampleRef sample(new Acceleration3DOFSample(timestamp, objectIds, measurements));
+		sample->setRelativeTimestamp(relativeTimestamp);
+
+		postNewSample(sample);
+
+		scopedLock.relock(deviceLock);
 	}
 
 	return 1;

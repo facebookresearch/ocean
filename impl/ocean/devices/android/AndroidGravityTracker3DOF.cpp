@@ -53,37 +53,27 @@ int AndroidGravityTracker3DOF::onEventFunction()
 {
 	TemporaryScopedLock scopedLock(deviceLock);
 
-	bool firstSample = false;
 	ASensorEvent sensorEvent;
 
 	while (ASensorEventQueue_getEvents(eventQueue_, &sensorEvent, 1) > 0)
 	{
+		scopedLock.release();
+
 		ocean_assert(sensorEvent.type == AST_GRAVITY);
 
-		if (firstUnixEventTimestamp_.isInvalid())
-		{
-			// pairing both timestamp may not be ideal but it seems to be the best solution as the Android timestamp seem to be arbitrary for individual sensors
-			// **NOTE** perhaps the timestamp of the Android event may restart/change after waking up - this may result in wrong timestamps
-
-			firstUnixEventTimestamp_.toNow();
-			firstAndroidEventTimestamp_ = sensorEvent.timestamp;
-
-			firstSample = true;
-		}
-
-		const Timestamp timestamp(firstUnixEventTimestamp_ + double(sensorEvent.timestamp - firstAndroidEventTimestamp_) / 1000000000.0);
-
-		scopedLock.release();
+		Timestamp relativeTimestamp;
+		Timestamp timestamp;
+		convertTimestamp(sensorEvent, relativeTimestamp, timestamp);
 
 		// We need to negate the gravity direction as Android provides gravity vector ~(0, 9.8, 0) if device is in default position
 		Vector3 gravity(-sensorEvent.acceleration.x, -sensorEvent.acceleration.y, -sensorEvent.acceleration.z);
 
 		if (gravity.normalize())
 		{
-			if (firstSample)
+			if (waitingForFirstSample_)
 			{
 				postFoundTrackerObjects({sensorObjectId_}, timestamp);
-				firstSample = false;
+				waitingForFirstSample_ = false;
 			}
 
 			const Quaternion device_Q_gravity(Vector3(0, -1, 0), gravity); // negative y-axis is uses as default gravity vector
@@ -91,7 +81,10 @@ int AndroidGravityTracker3DOF::onEventFunction()
 			ObjectIds objectIds(1, sensorObjectId_);
 			Quaternions orientations(1, Quaternion(device_Q_gravity));
 
-			postNewSample(SampleRef(new OrientationTracker3DOFSample(timestamp, RS_OBJECT_IN_DEVICE, std::move(objectIds), std::move(orientations))));
+			SampleRef sample(new OrientationTracker3DOFSample(timestamp, RS_OBJECT_IN_DEVICE, std::move(objectIds), std::move(orientations)));
+			sample->setRelativeTimestamp(relativeTimestamp);
+
+			postNewSample(sample);
 		}
 
 		scopedLock.relock(deviceLock);

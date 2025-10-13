@@ -67,14 +67,6 @@ class OCEAN_DEVICES_EXPORT AndroidGyroSensor3DOF :
 		 * @see AndroidDevice::onEventFunction().
 		 */
 		int onEventFunction() override;
-
-	protected:
-
-		/// The Android event timestamp of the first sensor event.
-		int64_t firstAndroidEventTimestamp_ = 0ll;
-
-		/// The Unix event timestamp of the first sensor event.
-		Timestamp firstUnixEventTimestamp_ = Timestamp(false);
 };
 
 inline std::string AndroidGyroSensor3DOF::deviceNameAndroidGyroSensor3DOF(const SensorType sensorType)

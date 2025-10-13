@@ -50,24 +50,19 @@ AndroidGyroSensor3DOF::~AndroidGyroSensor3DOF()
 
 int AndroidGyroSensor3DOF::onEventFunction()
 {
-	const ScopedLock scopedLock(deviceLock);
+	TemporaryScopedLock scopedLock(deviceLock);
 
 	ASensorEvent sensorEvent;
 
 	while (ASensorEventQueue_getEvents(eventQueue_, &sensorEvent, 1) > 0)
 	{
+		scopedLock.release();
+
 		ocean_assert(sensorEvent.type == AST_GYROSCOPE || sensorEvent.type == AST_GYROSCOPE_UNCALIBRATED);
 
-		if (firstUnixEventTimestamp_.isInvalid())
-		{
-			// pairing both timestamp may not be ideal but it seems to be the best solution as the Android timestamp seem to be arbitrary for individual sensors
-			// **NOTE** perhaps the timestamp of the Android event may restart/change after waking up - this may result in wrong timestamps
-
-			firstUnixEventTimestamp_.toNow();
-			firstAndroidEventTimestamp_ = sensorEvent.timestamp;
-		}
-
-		const Timestamp timestamp(firstUnixEventTimestamp_ + double(sensorEvent.timestamp - firstAndroidEventTimestamp_) / 1000000000.0);
+		Timestamp relativeTimestamp;
+		Timestamp timestamp;
+		convertTimestamp(sensorEvent, relativeTimestamp, timestamp);
 
 		const float* sensorData = sensorEvent.data;
 
@@ -75,7 +70,12 @@ int AndroidGyroSensor3DOF::onEventFunction()
 
 		Gyro3DOFSample::Measurements measurements(1, Vector3(Scalar(sensorData[0]), Scalar(sensorData[1]), Scalar(sensorData[2])));
 
-		postNewSample(SampleRef(new Gyro3DOFSample(timestamp, std::move(objectIds), std::move(measurements))));
+		SampleRef sample(new Gyro3DOFSample(timestamp, std::move(objectIds), std::move(measurements)));
+		sample->setRelativeTimestamp(relativeTimestamp);
+
+		postNewSample(sample);
+
+		scopedLock.relock(deviceLock);
 	}
 
 	return 1;

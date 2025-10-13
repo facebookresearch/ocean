@@ -62,11 +62,8 @@ class OCEAN_DEVICES_EXPORT AndroidGravityTracker3DOF :
 
 	protected:
 
-		/// The Android event timestamp of the first sensor event.
-		int64_t firstAndroidEventTimestamp_ = 0ll;
-
-		/// The Unix event timestamp of the first sensor event.
-		Timestamp firstUnixEventTimestamp_ = Timestamp(false);
+		/// True, if the sensor has not yet seen any sample.
+		bool waitingForFirstSample_ = true;
 };
 
 inline std::string AndroidGravityTracker3DOF::deviceNameAndroidGravityTracker3DOF()

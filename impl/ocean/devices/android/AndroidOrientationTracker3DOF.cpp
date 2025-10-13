@@ -53,27 +53,17 @@ int AndroidOrientationTracker3DOF::onEventFunction()
 {
 	TemporaryScopedLock scopedLock(deviceLock);
 
-	bool firstSample = false;
 	ASensorEvent sensorEvent;
 
 	while (ASensorEventQueue_getEvents(eventQueue_, &sensorEvent, 1) > 0)
 	{
+		scopedLock.release();
+
 		ocean_assert(sensorEvent.type == AST_ROTATION_VECTOR || sensorEvent.type == AST_GAME_ROTATION_VECTOR || sensorEvent.type >= AST_END);
 
-		if (firstUnixEventTimestamp_.isInvalid())
-		{
-			// pairing both timestamp may not be ideal but it seems to be the best solution as the Android timestamp seem to be arbitrary for individual sensors
-			// **NOTE** perhaps the timestamp of the Android event may restart/change after waking up - this may result in wrong timestamps
-
-			firstUnixEventTimestamp_.toNow();
-			firstAndroidEventTimestamp_ = sensorEvent.timestamp;
-
-			firstSample = true;
-		}
-
-		const Timestamp timestamp(firstUnixEventTimestamp_ + double(sensorEvent.timestamp - firstAndroidEventTimestamp_) / 1000000000.0);
-
-		scopedLock.release();
+		Timestamp relativeTimestamp;
+		Timestamp timestamp;
+		convertTimestamp(sensorEvent, relativeTimestamp, timestamp);
 
 		const float x = sensorEvent.data[0];
 		const float y = sensorEvent.data[1];
@@ -84,16 +74,18 @@ int AndroidOrientationTracker3DOF::onEventFunction()
 
 		if (quaternion.normalize())
 		{
-			if (firstSample)
+			if (waitingForFirstSample_)
 			{
 				postFoundTrackerObjects({sensorObjectId_}, timestamp);
-				firstSample = false;
+				waitingForFirstSample_ = false;
 			}
-
 			const ObjectIds objectIds(1, sensorObjectId_);
 			const Quaternions quaternions(1, quaternion);
 
-			postNewSample(SampleRef(new OrientationTracker3DOFSample(timestamp, RS_DEVICE_IN_OBJECT, objectIds, quaternions)));
+			SampleRef sample(new OrientationTracker3DOFSample(timestamp, RS_DEVICE_IN_OBJECT, objectIds, quaternions));
+			sample->setRelativeTimestamp(relativeTimestamp);
+
+			postNewSample(sample);
 		}
 
 		scopedLock.relock(deviceLock);
