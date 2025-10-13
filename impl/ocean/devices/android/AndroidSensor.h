@@ -12,6 +12,7 @@
 #include "ocean/devices/android/AndroidDevice.h"
 
 #include "ocean/base/Singleton.h"
+#include "ocean/base/Timestamp.h"
 #include "ocean/base/Thread.h"
 
 #include "ocean/devices/Sensor.h"
@@ -180,6 +181,14 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidSensor :
 		bool registerForEventFunction(ASensorManager* sensorManager);
 
 		/**
+		 * Returns the relative and unix timestamp of an Android sensor event.
+		 * @param sensorEvent The Android sensor event
+		 * @param relativeTimestamp The resulting relative timestamp
+		 * @param unixTimestamp The resulting unix timestamp
+		 */
+		void convertTimestamp(const ASensorEvent& sensorEvent, Timestamp& relativeTimestamp, Timestamp& unixTimestamp);
+
+		/**
 		 * The actual event function of this device.
 		 * @return 1 to receive further events, 0 to stop receiving events
 		 */
@@ -195,6 +204,12 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidSensor :
 		 * @return 1 to receive further events, 0 to stop receiving events
 		 */
 		static inline int onEventFunctionStatic(int fd, int events, void* data);
+
+		/**
+		 * Returns the timestamp converter for all android sensors.
+		 * @return The timestamp converter
+		 */
+		static Timestamp::TimestampConverter& timestampConverter();
 
 	protected:
 
@@ -212,6 +227,9 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidSensor :
 
 		/// True, if this sensor is started.
 		bool isStarted_ = false;
+
+		/// The timestamp converter of this sensor.
+		Timestamp::TimestampConverter& timestampConverter_;
 };
 
 inline int AndroidSensor::onEventFunctionStatic(int fd, int events, void* data)

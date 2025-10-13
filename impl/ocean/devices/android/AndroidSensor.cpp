@@ -50,7 +50,8 @@ AndroidSensor::AndroidSensor(const std::string& name, const DeviceType type) :
 	Device(name, type),
 	AndroidDevice(name, type),
 	Measurement(name, type),
-	Sensor(name, type)
+	Sensor(name, type),
+	timestampConverter_(timestampConverter())
 {
 	static_assert(int(ASENSOR_TYPE_ACCELEROMETER) == int(AST_ACCELEROMETER), "Invalid sensor type!");
 	static_assert(int(ASENSOR_TYPE_MAGNETIC_FIELD) == int(AST_MAGNETIC_FIELD), "Invalid sensor type!");
@@ -166,6 +167,32 @@ bool AndroidSensor::registerForEventFunction(ASensorManager* sensorManager)
 	ocean_assert(eventQueue_);
 
 	return eventQueue_ != nullptr;
+}
+
+Timestamp::TimestampConverter& AndroidSensor::timestampConverter()
+{
+	static Timestamp::TimestampConverter timestampConverter(Timestamp::TimestampConverter::TD_BOOTTIME);
+
+	return timestampConverter;
+}
+
+void AndroidSensor::convertTimestamp(const ASensorEvent& sensorEvent, Timestamp& relativeTimestamp, Timestamp& unixTimestamp)
+{
+	// The time in nanoseconds at which the event happened, and its behavior is identical to SensorEvent::timestamp in Java API.
+	// The time in nanoseconds at which the event happened. For a given sensor, each new sensor event should be monotonically increasing using the same time base as SystemClock.elapsedRealtimeNanos().
+	ocean_assert(timestampConverter_.timeDomain() == Timestamp::TimestampConverter::TD_BOOTTIME);
+
+#ifdef OCEAN_DEBUG
+	double debugDistance;
+	if (!timestampConverter_.isWithinRange(sensorEvent.timestamp, 0.1, &debugDistance))
+	{
+		Log::debug() << "AndroidSensor: Timestamp is not within range of 0.1 seconds, actual distance: " << debugDistance << "s";
+	}
+#endif
+
+	relativeTimestamp = Timestamp(Timestamp::nanoseconds2seconds(sensorEvent.timestamp));
+
+	unixTimestamp = timestampConverter_.toUnix(sensorEvent.timestamp);
 }
 
 }
