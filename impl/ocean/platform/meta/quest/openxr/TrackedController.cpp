@@ -164,9 +164,10 @@ bool TrackedController::update(const XrSpace& baseSpace, const XrTime& xrPredict
 
 		if (actionStateBoolean.isActive)
 		{
-			if (actionStateBoolean.currentState) {
-                buttonsState = ButtonType(buttonsState | buttonType);
-            }
+			if (actionStateBoolean.currentState)
+			{
+				buttonsState = ButtonType(buttonsState | buttonType);
+			}
 
 			if (actionStateBoolean.changedSinceLastSync)
 			{
