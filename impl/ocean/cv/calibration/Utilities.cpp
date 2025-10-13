@@ -53,6 +53,8 @@ bool Utilities::paintCalibrationBoardOutline(Frame& frame, const AnyCamera& came
 		Vector3(xBoardSize_2, 0, -zBoardSize_2),
 	};
 
+	const CameraProjectionChecker cameraProjectionChecker(camera.clone());
+
 	for (size_t n = 0; n < corners.size(); ++n)
 	{
 		const Vector3& cornerA = corners[n];
@@ -60,7 +62,11 @@ bool Utilities::paintCalibrationBoardOutline(Frame& frame, const AnyCamera& came
 
 		constexpr size_t steps = 20;
 
-		Vector2 previousPoint = camera.projectToImageIF(flippedBoard_T_camera, cornerA);
+		Vector2 previousPoint;
+		if (!cameraProjectionChecker.projectToImageIF(flippedBoard_T_camera, cornerA, &previousPoint))
+		{
+			previousPoint = Vector2::minValue();
+		}
 
 		for (size_t s = 0; s < steps; ++s)
 		{
@@ -68,23 +74,30 @@ bool Utilities::paintCalibrationBoardOutline(Frame& frame, const AnyCamera& came
 
 			const Vector3 nextObjectPoint = cornerA * (Scalar(1) - factor) + cornerB * factor;
 
-			const Vector2 nextImagePoint = camera.projectToImageIF(flippedBoard_T_camera, nextObjectPoint);
+			Vector2 nextImagePoint;
+			if (!cameraProjectionChecker.projectToImageIF(flippedBoard_T_camera, nextObjectPoint, &nextImagePoint))
+			{
+				nextImagePoint = Vector2::minValue();
+			}
 
-			if (thickness <= 1u)
+			if (previousPoint != Vector2::minValue() && nextImagePoint != Vector2::minValue())
 			{
-				CV::Canvas::line<1u>(frame, previousPoint, nextImagePoint, color);
-			}
-			else if (thickness <= 3u)
-			{
-				CV::Canvas::line<3u>(frame, previousPoint, nextImagePoint, color);
-			}
-			else if (thickness <= 5u)
-			{
-				CV::Canvas::line<5u>(frame, previousPoint, nextImagePoint, color);
-			}
-			else
-			{
-				CV::Canvas::line<7u>(frame, previousPoint, nextImagePoint, color);
+				if (thickness <= 1u)
+				{
+					CV::Canvas::line<1u>(frame, previousPoint, nextImagePoint, color);
+				}
+				else if (thickness <= 3u)
+				{
+					CV::Canvas::line<3u>(frame, previousPoint, nextImagePoint, color);
+				}
+				else if (thickness <= 5u)
+				{
+					CV::Canvas::line<5u>(frame, previousPoint, nextImagePoint, color);
+				}
+				else
+				{
+					CV::Canvas::line<7u>(frame, previousPoint, nextImagePoint, color);
+				}
 			}
 
 			previousPoint = nextImagePoint;
