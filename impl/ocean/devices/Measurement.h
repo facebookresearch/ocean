@@ -28,7 +28,7 @@ class Measurement;
  * @see Measurement.
  * @ingroup devices
  */
-typedef SmartDeviceRef<Measurement> MeasurementRef;
+using MeasurementRef = SmartDeviceRef<Measurement>;
 
 /**
  * This class implements the base class for all devices providing measurement samples.
@@ -43,22 +43,22 @@ class OCEAN_DEVICES_EXPORT Measurement : virtual public Device
 		/**
 		 * Definition of an object id.
 		 */
-		typedef unsigned int ObjectId;
+		using ObjectId = unsigned int;
 
 		/**
 		 * Definition of a vector holding object ids.
 		 */
-		typedef std::vector<ObjectId> ObjectIds;
+		using ObjectIds = std::vector<ObjectId>;
 
 		/**
 		 * Definition of an unordered set holding object ids.
 		 */
-		typedef std::unordered_set<ObjectId> ObjectIdSet;
+		using ObjectIdSet = std::unordered_set<ObjectId>;
 
 		/**
 		 * Definition of an unordered map mapping keys to values.
 		 */
-		typedef std::unordered_map<std::string, Value> Metadata;
+		using Metadata = std::unordered_map<std::string, Value>;
 
 		/**
 		 * Definition of a sample holding a measurement.
@@ -71,9 +71,15 @@ class OCEAN_DEVICES_EXPORT Measurement : virtual public Device
 
 				/**
 				 * Returns the sample timestamp.
-				 * @return Sample timestamp
+				 * @return The sample's timestamp
 				 */
 				inline const Timestamp& timestamp() const;
+
+				/**
+				 * Returns the relative timestamp of this sample.
+				 * @return The sample's relative timestamp
+				 */
+				inline const Timestamp& relativeTimestamp() const;
 
 				/**
 				 * Returns the sample object ids specifying possible different measurement units.
@@ -86,6 +92,12 @@ class OCEAN_DEVICES_EXPORT Measurement : virtual public Device
 				 * @return The sample's meta data
 				 */
 				inline const Metadata& metadata() const;
+
+				/**
+				 * Sets the relative timestamp of this sample.
+				 * @param relativeTimestamp The sample's relative timestamp to set, must be valid
+				 */
+				inline void setRelativeTimestamp(const Timestamp& relativeTimestamp);
 
 			protected:
 
@@ -112,8 +124,11 @@ class OCEAN_DEVICES_EXPORT Measurement : virtual public Device
 
 			protected:
 
-				/// Sample timestamp
+				/// The sample timestamp.
 				Timestamp timestamp_;
+
+				/// The relative sample timestamp.
+				Timestamp relativeTimestamp_;
 
 				/// Measurement unit object ids.
 				ObjectIds objectIds_;
@@ -125,14 +140,14 @@ class OCEAN_DEVICES_EXPORT Measurement : virtual public Device
 		/**
 		 * Definition of an object reference for samples.
 		 */
-		typedef ObjectRef<Sample> SampleRef;
+		using SampleRef = ObjectRef<Sample>;
 
 		/**
 		 * Definition of a callback function to subscribe for new measurement sample events.
 		 * The first parameter is the Measurement object sending the sample
 		 * The second parameter is the sample
 		 */
-		typedef Callback<void, const Measurement*, const SampleRef&> SampleCallback;
+		using SampleCallback = Callback<void, const Measurement*, const SampleRef&>;
 
 		/**
 		 * Definition of individual interpolation strategies for samples.
@@ -228,7 +243,7 @@ class OCEAN_DEVICES_EXPORT Measurement : virtual public Device
 		/**
 		 * Definition of a map holding the most recent samples
 		 */
-		typedef std::map<Timestamp, SampleRef> SampleMap;
+		using SampleMap = std::map<Timestamp, SampleRef>;
 
 		/**
 		 * This class implements a helper class to simplify the mapping between internal object ids (of the actual tracking implementation) and extern object ids (of the device system).
@@ -242,12 +257,12 @@ class OCEAN_DEVICES_EXPORT Measurement : virtual public Device
 				/**
 				 * Definition of an unordered map mapping internal object ids to external object ids.
 				 */
-				typedef std::unordered_map<TInternalId, ObjectId> InternalObjectIdMap;
+				using InternalObjectIdMap = std::unordered_map<TInternalId, ObjectId>;
 
 				/**
 				 * Definition of an unordered map mapping external object ids to internal object ids.
 				 */
-				typedef std::unordered_map<ObjectId, TInternalId> ExternalObjectIdMap;
+				using ExternalObjectIdMap = std::unordered_map<ObjectId, TInternalId>;
 
 			public:
 
@@ -329,17 +344,17 @@ class OCEAN_DEVICES_EXPORT Measurement : virtual public Device
 		/**
 		 * Definition of an unordered map mapping descriptions to unique object ids.
 		 */
-		typedef std::unordered_map<std::string, ObjectId> ObjectDescriptionToIdMap;
+		using ObjectDescriptionToIdMap = std::unordered_map<std::string, ObjectId>;
 
 		/**
 		 * Definition of an unordered map mapping unique object ids to descriptions.
 		 */
-		typedef std::unordered_map<ObjectId, std::string> ObjectIdToDescriptionMap;
+		using ObjectIdToDescriptionMap = std::unordered_map<ObjectId, std::string>;
 
 		/**
 		 * Definition of a map mapping subscription ids to event sample callback functions.
 		 */
-		typedef std::unordered_map<SubscriptionId, SampleCallback> SampleSubscriptionMap;
+		using SampleSubscriptionMap = std::unordered_map<SubscriptionId, SampleCallback>;
 
 	public:
 
@@ -483,6 +498,11 @@ inline const Timestamp& Measurement::Sample::timestamp() const
 	return timestamp_;
 }
 
+inline const Timestamp& Measurement::Sample::relativeTimestamp() const
+{
+	return relativeTimestamp_;
+}
+
 inline const Measurement::ObjectIds& Measurement::Sample::objectIds() const
 {
 	return objectIds_;
@@ -491,6 +511,12 @@ inline const Measurement::ObjectIds& Measurement::Sample::objectIds() const
 inline const Measurement::Metadata& Measurement::Sample::metadata() const
 {
 	return metadata_;
+}
+
+inline void Measurement::Sample::setRelativeTimestamp(const Timestamp& relativeTimestamp)
+{
+	ocean_assert(!relativeTimestamp_.isValid());
+	relativeTimestamp_ = relativeTimestamp;
 }
 
 template <typename TInternalId>
