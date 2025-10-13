@@ -9,8 +9,15 @@
 #define META_OCEAN_BASE_TIMESTAMP_H
 
 #include "ocean/base/Base.h"
+#include "ocean/base/Lock.h"
 
+#include <atomic>
 #include <cfloat>
+#include <limits>
+
+#if !defined(OCEAN_PLATFORM_BUILD_WINDOWS) && defined(CLOCK_BOOTTIME)
+	#define OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
+#endif
 
 namespace Ocean
 {
@@ -23,7 +30,7 @@ class Timestamp;
  * @see Timestamp
  * @ingroup base
  */
-typedef std::vector<Timestamp> Timestamps;
+using Timestamps = std::vector<Timestamp>;
 
 /**
  * This class implements a timestamp.
@@ -34,6 +41,143 @@ typedef std::vector<Timestamp> Timestamps;
  */
 class OCEAN_BASE_EXPORT Timestamp
 {
+	public:
+
+		/**
+		 * This class is a helper class allowing to converter timestamps defined in a specific time domain to unix timestamps.
+		 */
+		class OCEAN_BASE_EXPORT TimestampConverter
+		{
+			public:
+
+				/**
+				 * Definition of individual time domains.
+				 */
+				enum TimeDomain : uint32_t
+				{
+					/// An invalid time domain.
+					TD_INVALID = 0u,
+					/// The monotonically increasing time domain defined in nanoseconds, not increasing during system sleep.
+					TD_MONOTONIC,
+
+#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
+					/// The monotonically increasing time domain defined in nanoseconds, increasing during system sleep, not available on Windows.
+					TD_BOOTTIME
+#endif
+				};
+
+				/**
+				 * Definition of an invalid value.
+				 */
+				static constexpr int64_t invalidValue_ = std::numeric_limits<int64_t>::lowest();
+
+			public:
+
+				/**
+				 * Creates an invalid converter object.
+				 * @see isValid().
+				 */
+				TimestampConverter() = default;
+
+				/**
+				 * Creates a new converter object for a specific time domain.
+				 * @param timeDomain The time domain for which the converter will be created
+				 * @param necessaryMeasurements The number of measurements necessary to determine the offset between the domain time and the unix time, with range [1, infinity)
+				 */
+				explicit inline TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements = 100);
+
+				/**
+				 * Move constructor.
+				 * @param converter The converter to be moved
+				 */
+				inline TimestampConverter(TimestampConverter&& converter);
+
+				/**
+				 * Converts a timestamp defined in the converter's time domain to a unix timestamp.
+				 * @param domainTimestampNs The timestamp in the converter's time domain, in nanoseconds, with range (-infinity, infinity)
+				 * @return The converted unix timestamp
+				 */
+				Timestamp toUnix(const int64_t domainTimestampNs);
+
+				/**
+				 * Returns whether a given domain timestamp is within a specified range of the current domain timestamp.
+				 * @param domainTimestampNs The domain timestamp to check, in nanoseconds, with range (-infinity, infinity)
+				 * @param maxDistance The maximal distance between the domain timestamp and the current domain timestamp, in seconds, with range [0, infinity)
+				 * @param distance Optional resulting distance between the domain timestamp and the current domain timestamp, in seconds, with range (-infinity, infinity)
+				 * @return True, if so
+				 */
+				bool isWithinRange(const int64_t domainTimestampNs, const double maxDistance = 1.0, double* distance = nullptr);
+
+				/**
+				 * Returns the time domain of this converter.
+				 * @return The converter's time domain
+				 */
+				inline TimeDomain timeDomain() const;
+
+				/**
+				 * Returns whether this converter has been initialized with a valid time domain.
+				 * @return True, if so
+				 */
+				inline bool isValid() const;
+
+				/**
+				 * Returns whether this converter is valid.
+				 * @return True, if so
+				 */
+				inline operator bool() const;
+
+				/**
+				 * Move operator.
+				 * @param converter The converter to be moved
+				 * @return Reference to this object
+				 */
+				TimestampConverter& operator=(TimestampConverter&& converter);
+
+				/**
+				 * Returns the current timestamp in a specified time domain.
+				 * @param timeDomain The time domain for which the current timestamp will be returned
+				 * @return The current timestamp in the specified time domain, in nanoseconds
+				 */
+				static int64_t currentTimestampNs(const TimeDomain timeDomain);
+
+#ifndef OCEAN_PLATFORM_BUILD_WINDOWS
+
+				/**
+				 * Return the current timestamp in a specified POSIX clock id.
+				 * @param posixClockId The POSIX clock id for which the current timestamp will be returned
+				 * @return The current timestamp in the specified POSIX clock id, in nanoseconds
+				 */
+				static int64_t currentTimestampNs(const int posixClockId);
+
+#endif // OCEAN_PLATFORM_BUILD_WINDOWS
+
+			protected:
+
+				/// The time domain of this converter.
+				TimeDomain timeDomain_ = TD_INVALID;
+
+				/// The offset between the domain time and the unix time, in nanoseconds.
+				std::atomic_int64_t domainToUnixOffsetNs_ = invalidValue_;
+
+				/// The initial domain timestamp, in nanoseconds.
+				int64_t initialDomainNs_ = invalidValue_;
+
+				/// The initial unix timestamp, in nanoseconds.
+				int64_t initialUnixNs_ = invalidValue_;
+
+				/// The measured sum of the domain to unix offsets, in nanoseconds.
+				int64_t sumDomainToUnixOffsetNs_ = 0;
+
+				/// The number of measurements.
+				size_t measurements_ = 0;
+
+				/// The number of necessary measurements before the converter keeps the determined offset fixed.
+				size_t necessaryMeasurements_ = 0;
+
+				/// The converter's lock.
+				Lock lock_;
+		};
+
 	public:
 
 		/**
@@ -266,6 +410,33 @@ class OCEAN_BASE_EXPORT Timestamp
 		/// Timestamp value.
 		double value_ = invalidTimestampValue();
 };
+
+inline Timestamp::TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements) :
+	timeDomain_(timeDomain),
+	necessaryMeasurements_(necessaryMeasurements)
+{
+	// nothing to do here
+}
+
+inline Timestamp::TimestampConverter::TimestampConverter(TimestampConverter&& converter)
+{
+	*this = std::move(converter);
+}
+
+inline Timestamp::TimestampConverter::TimeDomain Timestamp::TimestampConverter::timeDomain() const
+{
+	return timeDomain_;
+}
+
+inline bool Timestamp::TimestampConverter::isValid() const
+{
+	return timeDomain_ != TD_INVALID && necessaryMeasurements_ != 0;
+}
+
+inline Timestamp::TimestampConverter::operator bool() const
+{
+	return isValid();
+}
 
 inline Timestamp::Timestamp(const double timestamp) :
 	value_(timestamp)
