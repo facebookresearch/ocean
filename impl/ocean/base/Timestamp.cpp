@@ -217,7 +217,7 @@ int64_t Timestamp::TimestampConverter::currentTimestampNs(const TimeDomain timeD
 {
 #ifdef OCEAN_PLATFORM_BUILD_WINDOWS
 
-	ocean_assert(timeDomain == TD_MONOTONIC);
+	ocean_assert_and_suppress_unused(timeDomain == TD_MONOTONIC, timeDomain);
 
 	const std::chrono::steady_clock::time_point domainTimestampTimePoint = std::chrono::steady_clock::now();
 
