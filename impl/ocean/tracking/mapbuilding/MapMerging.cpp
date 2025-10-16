@@ -372,7 +372,7 @@ size_t MapMerging::mergeObjectPoints(Database& database, FreakMultiDescriptorMap
 
 	IndexSet32 objectPointPoseIds;
 	Vectors2 imagePoints;
-	std::vector<const Indices32*> leafs;
+	std::vector<const Indices32*> leaves;
 
 	Indices32 observationPoseIds;
 	Indices32 observationImagePointIds;
@@ -434,13 +434,13 @@ size_t MapMerging::mergeObjectPoints(Database& database, FreakMultiDescriptorMap
 
 			const Line3 ray = pinholeCamera.ray(imagePoint, world_T_camera);
 
-			leafs.clear();
-			octree.intersectingLeafs(ray, leafs, reusableData);
+			leaves.clear();
+			octree.intersectingLeaves(ray, leaves, reusableData);
 
 			Index32 bestCandidateObjectPointId = Database::invalidId;
 			unsigned int bestDistance = (unsigned int)(-1);
 
-			for (const Indices32* leaf : leafs)
+			for (const Indices32* leaf : leaves)
 			{
 				for (const Index32& candidateObjectPointIndex : *leaf)
 				{

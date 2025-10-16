@@ -824,11 +824,11 @@ bool UnifiedUnguidedMatchingT<TImagePointDescriptor, TObjectPointVocabularyDescr
 
 	if constexpr (std::is_same<TImagePointDescriptor, DescriptorHandling::FreakMultiDescriptor256>::value) // TODO HACK
 	{
-		forestObjectPointDescriptors_.template matchMultiDescriptors<ImagePointDescriptor, DescriptorHandling::multiDescriptorFunction, VocabularyTree::MM_ALL_GOOD_LEAFS_2>(objectPointVocabularyDescriptors_, imagePointDescriptors_, numberImagePoints_, maximalDescriptorDistance.distance<TDistance>(), matches, worker);
+		forestObjectPointDescriptors_.template matchMultiDescriptors<ImagePointDescriptor, DescriptorHandling::multiDescriptorFunction, VocabularyTree::MM_ALL_GOOD_LEAVES_2>(objectPointVocabularyDescriptors_, imagePointDescriptors_, numberImagePoints_, maximalDescriptorDistance.distance<TDistance>(), matches, worker);
 	}
 	else
 	{
-		forestObjectPointDescriptors_.template matchDescriptors<VocabularyTree::MM_ALL_GOOD_LEAFS_2>(objectPointVocabularyDescriptors_, imagePointDescriptors_, numberImagePoints_, maximalDescriptorDistance.distance<TDistance>(), matches, worker);
+		forestObjectPointDescriptors_.template matchDescriptors<VocabularyTree::MM_ALL_GOOD_LEAVES_2>(objectPointVocabularyDescriptors_, imagePointDescriptors_, numberImagePoints_, maximalDescriptorDistance.distance<TDistance>(), matches, worker);
 	}
 
 	if (matches.size() < size_t(minimalNumberCorrespondences))

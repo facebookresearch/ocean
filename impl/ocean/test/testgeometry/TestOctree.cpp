@@ -46,7 +46,7 @@ bool TestOctree::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testIntersectingLeafsForRays(testDuration) && allSucceeded;
+	allSucceeded = testIntersectingLeavesForRays(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -80,9 +80,9 @@ TEST(TestOctree, ClosestPoints)
 	EXPECT_TRUE(TestOctree::testClosestPoints(GTEST_TEST_DURATION));
 }
 
-TEST(TestOctree, IntersectingLeafsForRays)
+TEST(TestOctree, IntersectingLeavesForRays)
 {
-	EXPECT_TRUE(TestOctree::testIntersectingLeafsForRays(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestOctree::testIntersectingLeavesForRays(GTEST_TEST_DURATION));
 }
 
 TEST(TestOctree, EdgeCases)
@@ -354,7 +354,7 @@ bool TestOctree::testClosestPoints(const double testDuration)
 	return validation.succeeded();
 }
 
-bool TestOctree::testIntersectingLeafsForRays(const double testDuration)
+bool TestOctree::testIntersectingLeavesForRays(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -366,7 +366,7 @@ bool TestOctree::testIntersectingLeafsForRays(const double testDuration)
 	constexpr unsigned int benchamrkQueryRaysNumber = 1000u;
 #endif
 
-	Log::info() << "Test intersectingLeafs() for rays with " << benchmarkTreePointNumber << " tree points, and " << benchamrkQueryRaysNumber << " query rays:";
+	Log::info() << "Test intersectingLeaves() for rays with " << benchmarkTreePointNumber << " tree points, and " << benchamrkQueryRaysNumber << " query rays:";
 
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
@@ -450,8 +450,8 @@ bool TestOctree::testIntersectingLeafsForRays(const double testDuration)
 
 				performance.startIf(benchmarkIteration);
 
-					std::vector<const Indices32*> leafs;
-					leafs.reserve(32);
+					std::vector<const Indices32*> leaves;
+					leaves.reserve(32);
 
 					Geometry::Octree::ReusableData reusableData;
 
@@ -459,13 +459,13 @@ bool TestOctree::testIntersectingLeafsForRays(const double testDuration)
 					{
 						const Line3& queryRay = queryRays[nQuery];
 
-						leafs.clear();
-						octree.intersectingLeafs(queryRay, leafs);
+						leaves.clear();
+						octree.intersectingLeaves(queryRay, leaves);
 
 						Index32 bestTreeIndex = Index32(-1);
 						Scalar bestSqrDistance = Numeric::maxValue();
 
-						for (const Indices32* leaf : leafs)
+						for (const Indices32* leaf : leaves)
 						{
 							for (const Index32& treeIndex : *leaf)
 							{

@@ -97,12 +97,12 @@ class OctreeT
 		 * This object can avoid reallocating memory when calling a matching function several times in a row.<br>
 		 * Simply define this object outside of the loop and provide the object as parameter, e.g.,
 		 * @code
-		 * std::vector<const Indices32*> leafs;
+		 * std::vector<const Indices32*> leaves;
 		 * ReusableData reusableData;
 		 * for (const Vector3& point : points)
 		 * {
-		 *     leafs.clear();
-		 *     octree.closestLeafs(point, maximalDistance, leafs, reusableData);
+		 *     leaves.clear();
+		 *     octree.closestLeaves(point, maximalDistance, leaves, reusableData);
 		 *     ...
 		 * }
 		 * @endcode
@@ -179,28 +179,28 @@ class OctreeT
 		 * Returns the closest leaf nodes for a given query point.
 		 * @param queryPoint The query point for which the closest leaf nodes will be returned
 		 * @param maximalDistance The maximal distance between the query point and any potential point in a leaf node, with range [0, infinity)
-		 * @param leafs The resulting leaf nodes, mainly the point indices of the tree points which stored in the closest leaf nodes
+		 * @param leaves The resulting leaf nodes, mainly the point indices of the tree points which stored in the closest leaf nodes
 		 * @param reusableData An reusable object to speedup the search, should be located outside of the function call if several function calls are done after each other
 		 */
-		void closestLeafs(const VectorT3<T>& queryPoint, const T maximalDistance, std::vector<const Indices32*>& leafs, const ReusableData& reusableData = ReusableData()) const;
+		void closestLeaves(const VectorT3<T>& queryPoint, const T maximalDistance, std::vector<const Indices32*>& leaves, const ReusableData& reusableData = ReusableData()) const;
 
 		/**
 		 * Returns the intersecting leaf nodes for a given query ray.
 		 * @param queryRay The query ray for which the intersecting leaf nodes will be returned, the search treats the ray as an infinite ray in space, must be valid
-		 * @param leafs The resulting leaf nodes, mainly the point indices of the tree points which stored in the intersecting leaf nodes
+		 * @param leaves The resulting leaf nodes, mainly the point indices of the tree points which stored in the intersecting leaf nodes
 		 * @param reusableData An reusable object to speedup the search, should be located outside of the function call if several function calls are done after each other
 		 */
-		void intersectingLeafs(const LineT3<T>& queryRay, std::vector<const Indices32*>& leafs, const ReusableData& reusableData = ReusableData()) const;
+		void intersectingLeaves(const LineT3<T>& queryRay, std::vector<const Indices32*>& leaves, const ReusableData& reusableData = ReusableData()) const;
 
 		/**
 		 * Returns the intersecting leaf nodes for a given approximated query cone expressed as a ray with a cone apex angle.
 		 * This function applies an approximation to determine the distance between the cone's apex and leaf nodes.
 		 * @param queryRay The query ray defining the apex and axis of the cone for which the intersecting leaf nodes will be returned, the search treats the ray as an infinite ray in space, must be valid
 		 * @param tanHalfAngle The tangent of the cone's half apex angle, e.g., Numeric::tan(Numeric::deg2rad(1)), with range [0, 1)
-		 * @param leafs The resulting leaf nodes, mainly the point indices of the tree points which stored in the intersecting leaf nodes
+		 * @param leaves The resulting leaf nodes, mainly the point indices of the tree points which stored in the intersecting leaf nodes
 		 * @param reusableData An reusable object to speedup the search, should be located outside of the function call if several function calls are done after each other
 		 */
-		void intersectingLeafs(const LineT3<T>& queryRay, const Scalar tanHalfAngle, std::vector<const Indices32*>& leafs, const ReusableData& reusableData = ReusableData()) const;
+		void intersectingLeaves(const LineT3<T>& queryRay, const Scalar tanHalfAngle, std::vector<const Indices32*>& leaves, const ReusableData& reusableData = ReusableData()) const;
 
 		/**
 		 * Returns the closest tree points for a given query point.
@@ -625,7 +625,7 @@ inline const OctreeT<T>* const * OctreeT<T>::childNodes() const
 }
 
 template <typename T>
-void OctreeT<T>::closestLeafs(const VectorT3<T>& queryPoint, const T maximalDistance, std::vector<const Indices32*>& leafs, const ReusableData& reusableData) const
+void OctreeT<T>::closestLeaves(const VectorT3<T>& queryPoint, const T maximalDistance, std::vector<const Indices32*>& leaves, const ReusableData& reusableData) const
 {
 	if (!isValid())
 	{
@@ -667,16 +667,16 @@ void OctreeT<T>::closestLeafs(const VectorT3<T>& queryPoint, const T maximalDist
 		}
 		else if (!node->pointIndices_.empty())
 		{
-			leafs.emplace_back(&node->pointIndices_);
+			leaves.emplace_back(&node->pointIndices_);
 		}
 	}
 }
 
 template <typename T>
-void OctreeT<T>::intersectingLeafs(const LineT3<T>& queryRay, std::vector<const Indices32*>& leafs, const ReusableData& reusableData) const
+void OctreeT<T>::intersectingLeaves(const LineT3<T>& queryRay, std::vector<const Indices32*>& leaves, const ReusableData& reusableData) const
 {
 	ocean_assert(queryRay.isValid());
-	ocean_assert(leafs.empty());
+	ocean_assert(leaves.empty());
 
 	if (!isValid())
 	{
@@ -716,17 +716,17 @@ void OctreeT<T>::intersectingLeafs(const LineT3<T>& queryRay, std::vector<const 
 		}
 		else if (!node->pointIndices_.empty())
 		{
-			leafs.emplace_back(&node->pointIndices_);
+			leaves.emplace_back(&node->pointIndices_);
 		}
 	}
 }
 
 template <typename T>
-void OctreeT<T>::intersectingLeafs(const LineT3<T>& queryRay, const Scalar tanHalfAngle, std::vector<const Indices32*>& leafs, const ReusableData& reusableData) const
+void OctreeT<T>::intersectingLeaves(const LineT3<T>& queryRay, const Scalar tanHalfAngle, std::vector<const Indices32*>& leaves, const ReusableData& reusableData) const
 {
 	ocean_assert(queryRay.isValid());
 	ocean_assert(tanHalfAngle >= 0 && tanHalfAngle < 1);
-	ocean_assert(leafs.empty());
+	ocean_assert(leaves.empty());
 
 	if (!isValid())
 	{
@@ -768,7 +768,7 @@ void OctreeT<T>::intersectingLeafs(const LineT3<T>& queryRay, const Scalar tanHa
 		}
 		else if (!node->pointIndices_.empty())
 		{
-			leafs.emplace_back(&node->pointIndices_);
+			leaves.emplace_back(&node->pointIndices_);
 		}
 	}
 }

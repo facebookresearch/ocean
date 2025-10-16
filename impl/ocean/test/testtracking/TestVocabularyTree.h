@@ -109,14 +109,14 @@ class OCEAN_TEST_TRACKING_EXPORT TestVocabularyTree
 		static bool testConstructor(const double testDuration, Worker& worker);
 
 		/**
-		 * Tests manual matching accessing the leafs.
+		 * Tests manual matching accessing the leaves.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @param worker The worker object to distribute the computation
 		 * @return True, if succeeded
 		 * @tparam tDescriptorType The descriptor type to be used
 		 */
 		template <DescriptorType tDescriptorType>
-		static bool testMatchingViaLeafs(const double testDuration, Worker& worker);
+		static bool testMatchingViaLeaves(const double testDuration, Worker& worker);
 
 		/**
 		 * Tests descriptor matching.

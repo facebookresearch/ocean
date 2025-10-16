@@ -70,12 +70,12 @@ class VocabularyStructure
 			MM_INVALID = 0u,
 			/// Only descriptor from the first best tree leaf are considered for matching (the second+ leaf with identical best distance is skipped).
 			MM_FIRST_BEST_LEAF,
-			/// All descriptors from all best tree leafs are considered for matching (all leafs with identical best distances are considered).
-			MM_ALL_BEST_LEAFS,
-			/// All descriptors from all tree leafs are considered for matching which are within a 1% distance to the best leaf.
-			MM_ALL_GOOD_LEAFS_1,
-			/// All descriptors from all tree leafs are considered for matching which are within a 2% distance to the best leaf.
-			MM_ALL_GOOD_LEAFS_2
+			/// All descriptors from all best tree leaves are considered for matching (all leaves with identical best distances are considered).
+			MM_ALL_BEST_LEAVES,
+			/// All descriptors from all tree leaves are considered for matching which are within a 1% distance to the best leaf.
+			MM_ALL_GOOD_LEAVES_1,
+			/// All descriptors from all tree leaves are considered for matching which are within a 2% distance to the best leaf.
+			MM_ALL_GOOD_LEAVES_2
 		};
 
 		/**
@@ -369,13 +369,13 @@ class VocabularyTree : public VocabularyStructure
 		const Indices32& determineBestLeaf(const TDescriptor& descriptor) const;
 
 		/**
-		 * Determines the leafs best matching with a given descriptor.
-		 * Actually this function returns the tree's descriptors within the leafs.
-		 * @param descriptor The descriptor for which the best leafs will be determined
-		 * @param leafs The resulting groups of indices of the descriptors within the leafs, must be empty when calling
+		 * Determines the leaves best matching with a given descriptor.
+		 * Actually this function returns the tree's descriptors within the leaves.
+		 * @param descriptor The descriptor for which the best leaves will be determined
+		 * @param leaves The resulting groups of indices of the descriptors within the leaves, must be empty when calling
 		 * @param distanceEpsilon The epsilon distance between the currently best node and node candidates
 		 */
-		void determineBestLeafs(const TDescriptor& descriptor, std::vector<const Indices32*>& leafs, const TDistance distanceEpsilon = TDistance(0)) const;
+		void determineBestLeaves(const TDescriptor& descriptor, std::vector<const Indices32*>& leaves, const TDistance distanceEpsilon = TDistance(0)) const;
 
 		/**
 		 * Matches a query descriptor with all candidate descriptors in this tree.
@@ -1248,9 +1248,9 @@ const Indices32& VocabularyTree<TDescriptor, TDistance, tDistanceFunction>::dete
 }
 
 template <typename TDescriptor, typename TDistance, TDistance(*tDistanceFunction)(const TDescriptor&, const TDescriptor&)>
-void VocabularyTree<TDescriptor, TDistance, tDistanceFunction>::determineBestLeafs(const TDescriptor& descriptor, std::vector<const Indices32*>& leafs, const TDistance distanceEpsilon) const
+void VocabularyTree<TDescriptor, TDistance, tDistanceFunction>::determineBestLeaves(const TDescriptor& descriptor, std::vector<const Indices32*>& leaves, const TDistance distanceEpsilon) const
 {
-	ocean_assert(leafs.empty());
+	ocean_assert(leaves.empty());
 
 	TDistance bestDistance;
 
@@ -1299,7 +1299,7 @@ void VocabularyTree<TDescriptor, TDistance, tDistanceFunction>::determineBestLea
 		{
 			ocean_assert(bestDistance == NumericT<TDistance>::maxValue());
 
-			leafs.emplace_back(&node->descriptorIndices_);
+			leaves.emplace_back(&node->descriptorIndices_);
 		}
 		else
 		{
@@ -1341,11 +1341,11 @@ Index32 VocabularyTree<TDescriptor, TDistance, tDistanceFunction>::matchDescript
 	}
 	else
 	{
-		ocean_assert(tMatchingMode == MM_ALL_BEST_LEAFS || tMatchingMode == MM_ALL_GOOD_LEAFS_1 || tMatchingMode == MM_ALL_GOOD_LEAFS_2);
+		ocean_assert(tMatchingMode == MM_ALL_BEST_LEAVES || tMatchingMode == MM_ALL_GOOD_LEAVES_1 || tMatchingMode == MM_ALL_GOOD_LEAVES_2);
 
 		TDistance distanceEpsilon = TDistance(0);
 
-		if constexpr (tMatchingMode == MM_ALL_GOOD_LEAFS_1)
+		if constexpr (tMatchingMode == MM_ALL_GOOD_LEAVES_1)
 		{
 			if (std::is_floating_point<TDistance>::value)
 			{
@@ -1356,7 +1356,7 @@ Index32 VocabularyTree<TDescriptor, TDistance, tDistanceFunction>::matchDescript
 				distanceEpsilon = TDistance((sizeof(TDescriptor) * 8 * 1 + 50) / 100);
 			}
 		}
-		else if constexpr (tMatchingMode == MM_ALL_GOOD_LEAFS_2)
+		else if constexpr (tMatchingMode == MM_ALL_GOOD_LEAVES_2)
 		{
 			if (std::is_floating_point<TDistance>::value)
 			{
@@ -1370,7 +1370,7 @@ Index32 VocabularyTree<TDescriptor, TDistance, tDistanceFunction>::matchDescript
 
 		reusableData.internalData_.clear();
 
-		determineBestLeafs(queryDescriptor, reusableData.internalData_, distanceEpsilon);
+		determineBestLeaves(queryDescriptor, reusableData.internalData_, distanceEpsilon);
 
 		for (const Indices32* candidateLeaf : reusableData.internalData_)
 		{

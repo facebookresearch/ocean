@@ -51,11 +51,11 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestOctree
 		static bool testClosestPoints(const double testDuration);
 
 		/**
-		 * Tests the intersectingLeafs() function for rays.
+		 * Tests the intersectingLeaves() function for rays.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testIntersectingLeafsForRays(const double testDuration);
+		static bool testIntersectingLeavesForRays(const double testDuration);
 
 		/**
 		 * Tests edge cases.

@@ -31,7 +31,7 @@ bool UnifiedUnguidedMatchingFreakMultiFeatures256Group::determineUnguidedMatchin
 	}
 
 	BinaryVocabularyForest::Matches matches;
-	forestObjectPointDescriptors_.matchMultiDescriptorGroups<ImagePointDescriptorGroup, ImagePointDescriptor, DescriptorHandling::multiDescriptorGroupFunction, DescriptorHandling::multiDescriptorFunction, BinaryVocabularyTree::MM_ALL_GOOD_LEAFS_2>(objectPointDescriptors_, imagePointDescriptorGroups_, numberImagePoints_, maximalDescriptorDistance.binaryDistance(), matches, worker);
+	forestObjectPointDescriptors_.matchMultiDescriptorGroups<ImagePointDescriptorGroup, ImagePointDescriptor, DescriptorHandling::multiDescriptorGroupFunction, DescriptorHandling::multiDescriptorFunction, BinaryVocabularyTree::MM_ALL_GOOD_LEAVES_2>(objectPointDescriptors_, imagePointDescriptorGroups_, numberImagePoints_, maximalDescriptorDistance.binaryDistance(), matches, worker);
 
 	if (matches.size() < size_t(minimalNumberCorrespondences))
 	{

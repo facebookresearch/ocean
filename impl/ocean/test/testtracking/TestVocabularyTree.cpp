@@ -188,13 +188,13 @@ bool TestVocabularyTree::test(const double testDuration, Worker& worker)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = TestVocabularyTree::testMatchingViaLeafs<DT_BINARY>(testDuration, worker) && allSucceeded;
+	allSucceeded = TestVocabularyTree::testMatchingViaLeaves<DT_BINARY>(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = TestVocabularyTree::testMatchingViaLeafs<DT_FLOAT>(testDuration, worker) && allSucceeded;
+	allSucceeded = TestVocabularyTree::testMatchingViaLeaves<DT_FLOAT>(testDuration, worker) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -262,16 +262,16 @@ TEST(TestVocabularyTree, Constructor_Float)
 	EXPECT_TRUE((TestVocabularyTree::testConstructor<TestVocabularyTree::DT_FLOAT>(GTEST_TEST_DURATION, worker)));
 }
 
-TEST(TestVocabularyTree, MatchingViaLeafs_Binary)
+TEST(TestVocabularyTree, MatchingViaLeaves_Binary)
 {
 	Worker worker;
-	EXPECT_TRUE((TestVocabularyTree::testMatchingViaLeafs<TestVocabularyTree::DT_BINARY>(GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestVocabularyTree::testMatchingViaLeaves<TestVocabularyTree::DT_BINARY>(GTEST_TEST_DURATION, worker)));
 }
 
-TEST(TestVocabularyTree, MatchingViaLeafs_Float)
+TEST(TestVocabularyTree, MatchingViaLeaves_Float)
 {
 	Worker worker;
-	EXPECT_TRUE((TestVocabularyTree::testMatchingViaLeafs<TestVocabularyTree::DT_FLOAT>(GTEST_TEST_DURATION, worker)));
+	EXPECT_TRUE((TestVocabularyTree::testMatchingViaLeaves<TestVocabularyTree::DT_FLOAT>(GTEST_TEST_DURATION, worker)));
 }
 
 TEST(TestVocabularyTree, MatchingDescriptors_Binary)
@@ -718,7 +718,7 @@ bool TestVocabularyTree::testConstructor(const double testDuration, Worker& work
 }
 
 template <TestVocabularyTree::DescriptorType tDescriptorType>
-bool TestVocabularyTree::testMatchingViaLeafs(const double testDuration, Worker& worker)
+bool TestVocabularyTree::testMatchingViaLeaves(const double testDuration, Worker& worker)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -732,7 +732,7 @@ bool TestVocabularyTree::testMatchingViaLeafs(const double testDuration, Worker&
 
 	using TypeHelper = TypeHelper<tDescriptorType>;
 
-	Log::info() << "Testing matching via leafs of " << numberDescriptors << " tree features, with a " << TypeHelper::name_ << " Tree, and " << numberQueryDescriptors << " query features:";
+	Log::info() << "Testing matching via leaves of " << numberDescriptors << " tree features, with a " << TypeHelper::name_ << " Tree, and " << numberQueryDescriptors << " query features:";
 
 	using Descriptor = typename TypeHelper::Descriptor;
 	using Descriptors = typename TypeHelper::Descriptors;
@@ -748,17 +748,17 @@ bool TestVocabularyTree::testMatchingViaLeafs(const double testDuration, Worker&
 	const DistanceTypes descriptorEpsilons = TypeHelper::descriptorEpsilons(numberEpsilons);
 
 	unsigned int sumRefindDescriptorBestLeaf = 0u;
-	unsigned int sumRefindDescriptorBestLeafs = 0u;
+	unsigned int sumRefindDescriptorBestLeaves = 0u;
 
 	unsigned int sumQueryDescriptorBestLeaf = 0u;
-	unsigned int sumQueryDescriptorBestLeafs[numberEpsilons] = {0u};
+	unsigned int sumQueryDescriptorBestLeaves[numberEpsilons] = {0u};
 
 	HighPerformanceStatistic performanceRefindBestLeaf;
-	HighPerformanceStatistic performanceRefindBestLeafs;
+	HighPerformanceStatistic performanceRefindBestLeaves;
 
 	HighPerformanceStatistic performanceQueryBruteForce;
 	HighPerformanceStatistic performanceQueryBestLeaf;
-	HighPerformanceStatistic performanceQueryBestLeafs[numberEpsilons];
+	HighPerformanceStatistic performanceQueryBestLeaves[numberEpsilons];
 
 	const Timestamp startTimestamp(true);
 
@@ -799,28 +799,28 @@ bool TestVocabularyTree::testMatchingViaLeafs(const double testDuration, Worker&
 				}
 			}
 
-			std::vector<std::vector<const Indices32*>> bestLeafsResults(numberDescriptors);
-			for (std::vector<const Indices32*>& bestLeafsResult : bestLeafsResults)
+			std::vector<std::vector<const Indices32*>> bestLeavesResults(numberDescriptors);
+			for (std::vector<const Indices32*>& bestLeavesResult : bestLeavesResults)
 			{
-				bestLeafsResult.reserve(4);
+				bestLeavesResult.reserve(4);
 			}
 
-			performanceRefindBestLeafs.start();
+			performanceRefindBestLeaves.start();
 				for (unsigned int nDescriptor = 0u; nDescriptor < numberDescriptors; ++nDescriptor)
 				{
-					vocabularyTree.determineBestLeafs(descriptors[nDescriptor], bestLeafsResults[nDescriptor]);
+					vocabularyTree.determineBestLeaves(descriptors[nDescriptor], bestLeavesResults[nDescriptor]);
 				}
-			performanceRefindBestLeafs.stop();
+			performanceRefindBestLeaves.stop();
 
-			unsigned int localSumBestLeafs = 0u;
+			unsigned int localSumBestLeaves = 0u;
 
 			for (unsigned int nDescriptor = 0u; nDescriptor < numberDescriptors; ++nDescriptor)
 			{
-				std::vector<const Indices32*>& bestLeafs = bestLeafsResults[nDescriptor];
+				std::vector<const Indices32*>& bestLeaves = bestLeavesResults[nDescriptor];
 
 				bool found = false;
 
-				for (const Indices32* bestLeaf : bestLeafs)
+				for (const Indices32* bestLeaf : bestLeaves)
 				{
 					if (hasElement(*bestLeaf, nDescriptor))
 					{
@@ -831,7 +831,7 @@ bool TestVocabularyTree::testMatchingViaLeafs(const double testDuration, Worker&
 
 				if (found)
 				{
-					++localSumBestLeafs;
+					++localSumBestLeaves;
 				}
 			}
 
@@ -841,12 +841,12 @@ bool TestVocabularyTree::testMatchingViaLeafs(const double testDuration, Worker&
 			}
 			sumRefindDescriptorBestLeaf += localSumBestLeaf;
 
-			if (localSumBestLeafs < (unsigned int)(double(numberDescriptors) * 0.999))
+			if (localSumBestLeaves < (unsigned int)(double(numberDescriptors) * 0.999))
 			{
 				// we have the guarantee that we can re-find all descriptors
 				allSucceeded = false;
 			}
-			sumRefindDescriptorBestLeafs += localSumBestLeafs;
+			sumRefindDescriptorBestLeaves += localSumBestLeaves;
 		}
 
 		{
@@ -943,29 +943,29 @@ bool TestVocabularyTree::testMatchingViaLeafs(const double testDuration, Worker&
 			}
 
 			{
-				// testing best leafs
+				// testing best leaves
 
 				for (unsigned int epsIndex = 0u; epsIndex < numberEpsilons; ++epsIndex)
 				{
-					Indices32 bestLeafsResult;
-					bestLeafsResult.reserve(numberQueryDescriptors);
+					Indices32 bestLeavesResult;
+					bestLeavesResult.reserve(numberQueryDescriptors);
 
-					std::vector<const Indices32*> bestLeafs;
+					std::vector<const Indices32*> bestLeaves;
 
 					const DistanceType eps = descriptorEpsilons[epsIndex];
 
-					performanceQueryBestLeafs[epsIndex].start();
+					performanceQueryBestLeaves[epsIndex].start();
 						for (unsigned int nQuery = 0u; nQuery < numberQueryDescriptors; ++nQuery)
 						{
 							const Descriptor& queryDescriptor = queryDescriptors[nQuery];
 
-							bestLeafs.clear();
-							vocabularyTree.determineBestLeafs(queryDescriptor, bestLeafs, eps);
+							bestLeaves.clear();
+							vocabularyTree.determineBestLeaves(queryDescriptor, bestLeaves, eps);
 
 							DistanceType bestDistance = NumericT<DistanceType>::maxValue();
 							unsigned int bestIndex = (unsigned int)(-1);
 
-							for (const Indices32* leaf : bestLeafs)
+							for (const Indices32* leaf : bestLeaves)
 							{
 								for (const Index32& candidateIndex : *leaf)
 								{
@@ -980,15 +980,15 @@ bool TestVocabularyTree::testMatchingViaLeafs(const double testDuration, Worker&
 							}
 
 							ocean_assert(bestIndex != (unsigned int)(-1));
-							bestLeafsResult.emplace_back(bestIndex);
+							bestLeavesResult.emplace_back(bestIndex);
 						}
-					performanceQueryBestLeafs[epsIndex].stop();
+					performanceQueryBestLeaves[epsIndex].stop();
 
 					for (unsigned int nQuery = 0u; nQuery < numberQueryDescriptors; ++nQuery)
 					{
-						if (hasElement(bruteForceResult[nQuery], bestLeafsResult[nQuery]))
+						if (hasElement(bruteForceResult[nQuery], bestLeavesResult[nQuery]))
 						{
-							++sumQueryDescriptorBestLeafs[epsIndex];
+							++sumQueryDescriptorBestLeaves[epsIndex];
 						}
 					}
 				}
@@ -1002,18 +1002,18 @@ bool TestVocabularyTree::testMatchingViaLeafs(const double testDuration, Worker&
 	Log::info() << " ";
 
 	ocean_assert(performanceRefindBestLeaf.measurements() >= 1u);
-	ocean_assert(performanceRefindBestLeafs.measurements() >= 1u);
+	ocean_assert(performanceRefindBestLeaves.measurements() >= 1u);
 	const double refindDescriptorBestLeafPercent = double(sumRefindDescriptorBestLeaf) / double(numberDescriptors * performanceRefindBestLeaf.measurements());
-	const double refindDescriptorBestLeafsPercent = double(sumRefindDescriptorBestLeafs) / double(numberDescriptors * performanceRefindBestLeafs.measurements());
+	const double refindDescriptorBestLeavesPercent = double(sumRefindDescriptorBestLeaves) / double(numberDescriptors * performanceRefindBestLeaves.measurements());
 
-	if (refindDescriptorBestLeafPercent < 0.95 || refindDescriptorBestLeafsPercent < 0.95)
+	if (refindDescriptorBestLeafPercent < 0.95 || refindDescriptorBestLeavesPercent < 0.95)
 	{
 		allSucceeded = false;
 	}
 
 	Log::info() << "Re-find descriptors, best leaf: Found " << String::toAString(refindDescriptorBestLeafPercent * 100.0, 1u) << "% descriptors";
 	Log::info() << "Performance: " << String::toAString(performanceRefindBestLeaf.averageMseconds(), 2u) << "ms";
-	Log::info() << "Re-find descriptors, best leafs: Found " << String::toAString(refindDescriptorBestLeafsPercent * 100.0, 1u) << "% descriptors";
+	Log::info() << "Re-find descriptors, best leaves: Found " << String::toAString(refindDescriptorBestLeavesPercent * 100.0, 1u) << "% descriptors";
 	Log::info() << "Performance: " << String::toAString(performanceRefindBestLeaf.averageMseconds(), 2u) << "ms";
 
 	Log::info() << " ";
@@ -1033,16 +1033,16 @@ bool TestVocabularyTree::testMatchingViaLeafs(const double testDuration, Worker&
 
 	for (unsigned int epsIndex = 0u; epsIndex < numberEpsilons; ++epsIndex)
 	{
-		ocean_assert(performanceQueryBestLeafs[epsIndex].measurements() >= 1u);
-		const double queryDescriptorBestLeafsPercent = double(sumQueryDescriptorBestLeafs[epsIndex]) / double(numberQueryDescriptors * performanceQueryBestLeafs[epsIndex].measurements());
+		ocean_assert(performanceQueryBestLeaves[epsIndex].measurements() >= 1u);
+		const double queryDescriptorBestLeavesPercent = double(sumQueryDescriptorBestLeaves[epsIndex]) / double(numberQueryDescriptors * performanceQueryBestLeaves[epsIndex].measurements());
 
-		if (queryDescriptorBestLeafsPercent < 0.2)
+		if (queryDescriptorBestLeavesPercent < 0.2)
 		{
 			allSucceeded = false;
 		}
 
-		Log::info() << "Find query descriptors, best leafs with epsilon " << descriptorEpsilons[epsIndex] << ": Found " << String::toAString(queryDescriptorBestLeafsPercent * 100.0, 1u) << "% descriptors";
-		Log::info() << "Performance: " << String::toAString(performanceQueryBestLeafs[epsIndex].averageMseconds(), 2u) << "ms";
+		Log::info() << "Find query descriptors, best leaves with epsilon " << descriptorEpsilons[epsIndex] << ": Found " << String::toAString(queryDescriptorBestLeavesPercent * 100.0, 1u) << "% descriptors";
+		Log::info() << "Performance: " << String::toAString(performanceQueryBestLeaves[epsIndex].averageMseconds(), 2u) << "ms";
 	}
 
 	if (allSucceeded)
@@ -1085,11 +1085,11 @@ bool TestVocabularyTree::testMatchingDescriptors(const double testDuration, Work
 	constexpr unsigned int numberStages = 3u;
 
 	unsigned int sumQueryDescriptorBestLeaf = 0u;
-	unsigned int sumQueryDescriptorBestLeafs[numberStages] = {0u};
+	unsigned int sumQueryDescriptorBestLeaves[numberStages] = {0u};
 
 	HighPerformanceStatistic performanceQueryBruteForce;
 	HighPerformanceStatistic performanceQueryBestLeaf;
-	HighPerformanceStatistic performanceQueryBestLeafs[numberStages];
+	HighPerformanceStatistic performanceQueryBestLeaves[numberStages];
 
 	const Timestamp startTimestamp(true);
 
@@ -1172,38 +1172,40 @@ bool TestVocabularyTree::testMatchingDescriptors(const double testDuration, Work
 		}
 
 		{
-			// testing best leafs
+			// testing best leaves
 
 			for (unsigned int stageIndex = 0u; stageIndex < numberStages; ++stageIndex)
 			{
-				performanceQueryBestLeafs[stageIndex].start();
+				performanceQueryBestLeaves[stageIndex].start();
 
 					typename VocabularyTree::Matches matches;
 
 					switch (stageIndex)
 					{
 						case 0u:
-							vocabularyTree.template matchDescriptors<VocabularyTree::MM_ALL_BEST_LEAFS>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
+							vocabularyTree.template matchDescriptors<VocabularyTree::MM_ALL_BEST_LEAVES>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
 							break;
 
 						case 1u:
-							vocabularyTree.template matchDescriptors<VocabularyTree::MM_ALL_GOOD_LEAFS_1>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
+							vocabularyTree.template matchDescriptors<VocabularyTree::MM_ALL_GOOD_LEAVES_1>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
 							break;
 
 						case 2u:
-							vocabularyTree.template matchDescriptors<VocabularyTree::MM_ALL_GOOD_LEAFS_2>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
+							vocabularyTree.template matchDescriptors<VocabularyTree::MM_ALL_GOOD_LEAVES_2>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
 							break;
 
 						default:
 							ocean_assert(false && "Invalid stage index");
+							break;
 					}
-				performanceQueryBestLeafs[stageIndex].stop();
+
+				performanceQueryBestLeaves[stageIndex].stop();
 
 				for (const typename VocabularyTree::Match& match : matches)
 				{
 					if (hasElement(bruteForceResult[match.queryDescriptorIndex()], match.candidateDescriptorIndex()))
 					{
-						++sumQueryDescriptorBestLeafs[stageIndex];
+						++sumQueryDescriptorBestLeaves[stageIndex];
 					}
 				}
 			}
@@ -1229,16 +1231,16 @@ bool TestVocabularyTree::testMatchingDescriptors(const double testDuration, Work
 
 	for (unsigned int stageIndex = 0u; stageIndex < numberStages; ++stageIndex)
 	{
-		ocean_assert(performanceQueryBestLeafs[stageIndex].measurements() >= 1u);
-		const double queryDescriptorBestLeafsPercent = double(sumQueryDescriptorBestLeafs[stageIndex]) / double(numberQueryDescriptors * performanceQueryBestLeafs[stageIndex].measurements());
+		ocean_assert(performanceQueryBestLeaves[stageIndex].measurements() >= 1u);
+		const double queryDescriptorBestLeavesPercent = double(sumQueryDescriptorBestLeaves[stageIndex]) / double(numberQueryDescriptors * performanceQueryBestLeaves[stageIndex].measurements());
 
-		if (queryDescriptorBestLeafsPercent < 0.2)
+		if (queryDescriptorBestLeavesPercent < 0.2)
 		{
 			allSucceeded = false;
 		}
 
-		Log::info() << "Find query descriptors, best leafs in stage " << stageIndex << ": Found " << String::toAString(queryDescriptorBestLeafsPercent * 100.0, 1u) << "% descriptors";
-		Log::info() << "Performance: " << String::toAString(performanceQueryBestLeafs[stageIndex].averageMseconds(), 2u) << "ms";
+		Log::info() << "Find query descriptors, best leaves in stage " << stageIndex << ": Found " << String::toAString(queryDescriptorBestLeavesPercent * 100.0, 1u) << "% descriptors";
+		Log::info() << "Performance: " << String::toAString(performanceQueryBestLeaves[stageIndex].averageMseconds(), 2u) << "ms";
 	}
 
 	if (allSucceeded)
@@ -1283,11 +1285,11 @@ bool TestVocabularyTree::testMatchingDescriptorsWithForest(const double testDura
 	constexpr unsigned int numberStages = 3u;
 
 	unsigned int sumQueryDescriptorBestLeaf = 0u;
-	unsigned int sumQueryDescriptorBestLeafs[numberStages] = {0u};
+	unsigned int sumQueryDescriptorBestLeaves[numberStages] = {0u};
 
 	HighPerformanceStatistic performanceQueryBruteForce;
 	HighPerformanceStatistic performanceQueryBestLeaf;
-	HighPerformanceStatistic performanceQueryBestLeafs[numberStages];
+	HighPerformanceStatistic performanceQueryBestLeaves[numberStages];
 
 	const Timestamp startTimestamp(true);
 
@@ -1370,38 +1372,38 @@ bool TestVocabularyTree::testMatchingDescriptorsWithForest(const double testDura
 		}
 
 		{
-			// testing best leafs
+			// testing best leaves
 
 			for (unsigned int stageIndex = 0u; stageIndex < numberStages; ++stageIndex)
 			{
-				performanceQueryBestLeafs[stageIndex].start();
+				performanceQueryBestLeaves[stageIndex].start();
 
 					typename VocabularyForest::Matches matches;
 
 					switch (stageIndex)
 					{
 						case 0u:
-							vocabularyForest.template matchDescriptors<VocabularyForest::MM_ALL_BEST_LEAFS>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
+							vocabularyForest.template matchDescriptors<VocabularyForest::MM_ALL_BEST_LEAVES>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
 							break;
 
 						case 1u:
-							vocabularyForest.template matchDescriptors<VocabularyForest::MM_ALL_GOOD_LEAFS_1>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
+							vocabularyForest.template matchDescriptors<VocabularyForest::MM_ALL_GOOD_LEAVES_1>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
 							break;
 
 						case 2u:
-							vocabularyForest.template matchDescriptors<VocabularyForest::MM_ALL_GOOD_LEAFS_2>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
+							vocabularyForest.template matchDescriptors<VocabularyForest::MM_ALL_GOOD_LEAVES_2>(descriptors.data(), queryDescriptors.data(), queryDescriptors.size(), NumericT<DistanceType>::maxValue(), matches, &worker);
 							break;
 
 						default:
 							ocean_assert(false && "Invalid stage index");
 					}
-				performanceQueryBestLeafs[stageIndex].stop();
+				performanceQueryBestLeaves[stageIndex].stop();
 
 				for (const typename VocabularyForest::Match& match : matches)
 				{
 					if (hasElement(bruteForceResult[match.queryDescriptorIndex()], match.candidateDescriptorIndex()))
 					{
-						++sumQueryDescriptorBestLeafs[stageIndex];
+						++sumQueryDescriptorBestLeaves[stageIndex];
 					}
 				}
 			}
@@ -1427,16 +1429,16 @@ bool TestVocabularyTree::testMatchingDescriptorsWithForest(const double testDura
 
 	for (unsigned int stageIndex = 0u; stageIndex < numberStages; ++stageIndex)
 	{
-		ocean_assert(performanceQueryBestLeafs[stageIndex].measurements() >= 1u);
-		const double queryDescriptorBestLeafsPercent = double(sumQueryDescriptorBestLeafs[stageIndex]) / double(numberQueryDescriptors * performanceQueryBestLeafs[stageIndex].measurements());
+		ocean_assert(performanceQueryBestLeaves[stageIndex].measurements() >= 1u);
+		const double queryDescriptorBestLeavesPercent = double(sumQueryDescriptorBestLeaves[stageIndex]) / double(numberQueryDescriptors * performanceQueryBestLeaves[stageIndex].measurements());
 
-		if (queryDescriptorBestLeafsPercent < 0.60)
+		if (queryDescriptorBestLeavesPercent < 0.60)
 		{
 			allSucceeded = false;
 		}
 
-		Log::info() << "Find query descriptors, best leafs in stage " << stageIndex << ": Found " << String::toAString(queryDescriptorBestLeafsPercent * 100.0, 1u) << "% descriptors";
-		Log::info() << "Performance: " << String::toAString(performanceQueryBestLeafs[stageIndex].averageMseconds(), 2u) << "ms";
+		Log::info() << "Find query descriptors, best leaves in stage " << stageIndex << ": Found " << String::toAString(queryDescriptorBestLeavesPercent * 100.0, 1u) << "% descriptors";
+		Log::info() << "Performance: " << String::toAString(performanceQueryBestLeaves[stageIndex].averageMseconds(), 2u) << "ms";
 	}
 
 	if (allSucceeded)

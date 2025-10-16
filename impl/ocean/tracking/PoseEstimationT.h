@@ -803,7 +803,7 @@ void PoseEstimationT::determineGuidedMatchingsSubset(const AnyCamera* camera, co
 		const Line3 ray = camera->ray(imagePoint, *world_T_camera);
 
 		leaves.clear();
-		objectPointOctree->intersectingLeafs(ray, tanHalfAngle, leaves, reusableData);
+		objectPointOctree->intersectingLeaves(ray, tanHalfAngle, leaves, reusableData);
 
 		TDescriptorDistance bestDistance = NumericT<TDescriptorDistance>::maxValue();
 		Index32 bestObjectPointIndex = Index32(-1);
