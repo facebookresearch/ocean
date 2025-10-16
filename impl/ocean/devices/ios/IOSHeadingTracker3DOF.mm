@@ -84,17 +84,8 @@ void IOSHeadingTracker3DOF::onDeviceMotion(CMDeviceMotion* deviceMotion)
 {
 	ocean_assert(deviceMotion != nullptr);
 
-	bool firstSample = false;
-
-	if (sensorFirstUnixEventTimestamp.isInvalid())
-	{
-		sensorFirstUnixEventTimestamp.toNow();
-		sensorFirstIOSEventTimestamp = [[NSProcessInfo processInfo] systemUptime];
-
-		firstSample = true;
-	}
-
-	const Timestamp timestamp(sensorFirstUnixEventTimestamp + deviceMotion.timestamp - sensorFirstIOSEventTimestamp);
+	Timestamp relativeTimestamp;
+	const Timestamp unixTimestamp = convertTimestamp(deviceMotion.timestamp, relativeTimestamp);
 
 	ObjectIds objectIds(1, trackerObjectId_);
 
@@ -104,9 +95,10 @@ void IOSHeadingTracker3DOF::onDeviceMotion(CMDeviceMotion* deviceMotion)
 
 	if (object_Q_device.normalize())
 	{
-		if (firstSample)
+		if (waitingForFirstSample_)
 		{
-			postFoundTrackerObjects({trackerObjectId_}, timestamp);
+			postFoundTrackerObjects({trackerObjectId_}, unixTimestamp);
+			waitingForFirstSample_ = false;
 		}
 
 		// attitude's frame is CMAttitudeReferenceFrameXTrueNorthZVertical
@@ -115,7 +107,10 @@ void IOSHeadingTracker3DOF::onDeviceMotion(CMDeviceMotion* deviceMotion)
 
 		Quaternions orientations(1, zSouthySky_Q_xNorthzSky * object_Q_device);
 
-		postNewSample(SampleRef(new OrientationTracker3DOFSample(timestamp, RS_DEVICE_IN_OBJECT, std::move(objectIds), std::move(orientations))));
+		const SampleRef sample(new OrientationTracker3DOFSample(unixTimestamp, RS_DEVICE_IN_OBJECT, std::move(objectIds), std::move(orientations)));
+		sample->setRelativeTimestamp(relativeTimestamp);
+
+		postNewSample(sample);
 	}
 }
 

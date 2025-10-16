@@ -44,16 +44,27 @@ class OCEAN_DEVICES_IOS_EXPORT IOSDevice : virtual public Device
 		 */
 		IOSDevice(const std::string& name, const DeviceType type);
 
+		/**
+		 * Returns the relative and unix timestamp of an Android sensor event.
+		 * @param cmLogItemTimestamp The timestamp of the base class for all motion-related data objects, in seconds since the device booted
+		 * @param relativeTimestamp The resulting relative timestamp
+		 * @return The resulting unix timestamp
+		 */
+		Timestamp convertTimestamp(const double cmLogItemTimestamp, Timestamp& relativeTimestamp);
+
+		/**
+		 * Returns the timestamp converter for all android sensors.
+		 * @return The timestamp converter
+		 */
+		static Timestamp::TimestampConverter& timestampConverter();
+
 	protected:
 
 		/// True, if this sensor is started.
 		bool isStarted_ = false;
 
-		/// The iOS event timestamp of the first sensor event (seconds since the last system boot).
-		double sensorFirstIOSEventTimestamp;
-
-		/// The Unix event timestamp of the first sensor event.
-		Timestamp sensorFirstUnixEventTimestamp;
+		/// The timestamp converter of this sensor.
+		Timestamp::TimestampConverter& timestampConverter_;
 };
 
 }

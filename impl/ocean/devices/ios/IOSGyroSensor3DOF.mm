@@ -59,18 +59,16 @@ bool IOSGyroSensor3DOF::start()
 
 		[motionManager startGyroUpdatesToQueue:[[NSOperationQueue alloc] init] withHandler:^(CMGyroData* gyroData, NSError* nsError)
 			{
-				if (sensorFirstUnixEventTimestamp.isInvalid())
-				{
-					sensorFirstUnixEventTimestamp.toNow();
-					sensorFirstIOSEventTimestamp = [[NSProcessInfo processInfo] systemUptime];
-				}
-
-				const Timestamp timestamp(sensorFirstUnixEventTimestamp + gyroData.timestamp - sensorFirstIOSEventTimestamp);
+				Timestamp relativeTimestamp;
+				const Timestamp unixTimestamp = convertTimestamp(gyroData.timestamp, relativeTimestamp);
 
 				ObjectIds objectIds(1, sensorObjectId_);
 				Gyro3DOFSample::Measurements measurements(1, Vector3(Scalar(gyroData.rotationRate.x), Scalar(gyroData.rotationRate.y), Scalar(gyroData.rotationRate.z)));
 
-				postNewSample(SampleRef(new Gyro3DOFSample(timestamp, std::move(objectIds), std::move(measurements))));
+				const SampleRef sample(new Gyro3DOFSample(unixTimestamp, std::move(objectIds), std::move(measurements)));
+				sample->setRelativeTimestamp(relativeTimestamp);
+
+				postNewSample(sample);
 			}];
 	}
 
@@ -110,18 +108,16 @@ bool IOSGyroSensor3DOF::stop()
 
 void IOSGyroSensor3DOF::onDeviceMotion(CMDeviceMotion* deviceMotion)
 {
-	if (sensorFirstUnixEventTimestamp.isInvalid())
-	{
-		sensorFirstUnixEventTimestamp.toNow();
-		sensorFirstIOSEventTimestamp = [[NSProcessInfo processInfo] systemUptime];
-	}
-
-	const Timestamp timestamp(sensorFirstUnixEventTimestamp + deviceMotion.timestamp - sensorFirstIOSEventTimestamp);
+	Timestamp relativeTimestamp;
+	const Timestamp unixTimestamp = convertTimestamp(deviceMotion.timestamp, relativeTimestamp);
 
 	ObjectIds objectIds(1, sensorObjectId_);
 	Gyro3DOFSample::Measurements measurements(1, Vector3(Scalar(deviceMotion.rotationRate.x), Scalar(deviceMotion.rotationRate.y), Scalar(deviceMotion.rotationRate.z)));
 
-	postNewSample(SampleRef(new Gyro3DOFSample(timestamp, std::move(objectIds), std::move(measurements))));
+	const SampleRef sample(new Gyro3DOFSample(unixTimestamp, std::move(objectIds), std::move(measurements)));
+	sample->setRelativeTimestamp(relativeTimestamp);
+
+	postNewSample(sample);
 }
 
 }

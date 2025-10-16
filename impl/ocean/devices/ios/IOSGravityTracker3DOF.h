@@ -87,6 +87,9 @@ class OCEAN_DEVICES_IOS_EXPORT IOSGravityTracker3DOF :
 
 		/// The object id of this tracker.
 		ObjectId trackerObjectId_ = invalidObjectId();
+
+		/// True, if the sensor has not yet seen any sample.
+		bool waitingForFirstSample_ = true;
 };
 
 inline std::string IOSGravityTracker3DOF::deviceNameIOSGravityTracker3DOF()

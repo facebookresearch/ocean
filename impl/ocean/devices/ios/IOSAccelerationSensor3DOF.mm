@@ -59,18 +59,16 @@ bool IOSAccelerationSensor3DOF::start()
 
 		[motionManager startAccelerometerUpdatesToQueue:[[NSOperationQueue alloc] init] withHandler:^(CMAccelerometerData* accelerometerData, NSError* nsError)
 			{
-				if (sensorFirstUnixEventTimestamp.isInvalid())
-				{
-					sensorFirstUnixEventTimestamp.toNow();
-					sensorFirstIOSEventTimestamp = [[NSProcessInfo processInfo] systemUptime];
-				}
-
-				const Timestamp timestamp(sensorFirstUnixEventTimestamp + accelerometerData.timestamp - sensorFirstIOSEventTimestamp);
+				Timestamp relativeTimestamp;
+				const Timestamp unixTimestamp = convertTimestamp(accelerometerData.timestamp, relativeTimestamp);
 
 				ObjectIds objectIds(1, sensorObjectId_);
 				Acceleration3DOFSample::Measurements measurements(1, Vector3(Scalar(accelerometerData.acceleration.x * 9.81), Scalar(accelerometerData.acceleration.y * 9.81), Scalar(accelerometerData.acceleration.z * 9.81)));
 
-				postNewSample(SampleRef(new Acceleration3DOFSample(timestamp, std::move(objectIds), std::move(measurements), Metadata())));
+				const SampleRef sample(SampleRef(new Acceleration3DOFSample(unixTimestamp, std::move(objectIds), std::move(measurements), Metadata())));
+				sample->setRelativeTimestamp(relativeTimestamp);
+
+				postNewSample(sample);
 			}];
 	}
 
@@ -110,18 +108,16 @@ bool IOSAccelerationSensor3DOF::stop()
 
 void IOSAccelerationSensor3DOF::onDeviceMotion(CMDeviceMotion* deviceMotion)
 {
-	if (sensorFirstUnixEventTimestamp.isInvalid())
-	{
-		sensorFirstUnixEventTimestamp.toNow();
-		sensorFirstIOSEventTimestamp = [[NSProcessInfo processInfo] systemUptime];
-	}
-
-	const Timestamp timestamp(sensorFirstUnixEventTimestamp + deviceMotion.timestamp - sensorFirstIOSEventTimestamp);
+	Timestamp relativeTimestamp;
+	const Timestamp unixTimestamp = convertTimestamp(deviceMotion.timestamp, relativeTimestamp);
 
 	ObjectIds objectIds(1, sensorObjectId_);
 	Acceleration3DOFSample::Measurements measurements(1, Vector3(Scalar(deviceMotion.userAcceleration.x * 9.81), Scalar(deviceMotion.userAcceleration.y * 9.81), Scalar(deviceMotion.userAcceleration.z * 9.81)));
 
-	postNewSample(SampleRef(new Acceleration3DOFSample(timestamp, std::move(objectIds), std::move(measurements), Metadata())));
+	const SampleRef sample(new Acceleration3DOFSample(unixTimestamp, std::move(objectIds), std::move(measurements), Metadata()));
+	sample->setRelativeTimestamp(relativeTimestamp);
+
+	postNewSample(sample);
 }
 
 }
