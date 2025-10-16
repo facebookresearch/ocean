@@ -109,6 +109,13 @@ class OCEAN_BASE_EXPORT Timestamp
 				Timestamp toUnix(const int64_t domainTimestampNs);
 
 				/**
+				 * Converts a timestamp defined in the converter's time domain to a unix timestamp.
+				 * @param domainTimestampSeconds The timestamp in the converter's time domain, in seconds, with range (-infinity, infinity)
+				 * @return The converted unix timestamp
+				 */
+				Timestamp toUnix(const double domainTimestampSeconds);
+
+				/**
 				 * Returns whether a given domain timestamp is within a specified range of the current domain timestamp.
 				 * @param domainTimestampNs The domain timestamp to check, in nanoseconds, with range (-infinity, infinity)
 				 * @param maxDistance The maximal distance between the domain timestamp and the current domain timestamp, in seconds, with range [0, infinity)
@@ -122,6 +129,13 @@ class OCEAN_BASE_EXPORT Timestamp
 				 * @return The converter's time domain
 				 */
 				inline TimeDomain timeDomain() const;
+
+				/**
+				 * Returns the offset between the domain time and the unix time, in nanoseconds.
+				 * Unix time = domain time + domainToUnixOffset
+				 * @return The offset between the domain time and the unix time, in nanoseconds, with range (-infinity, infinity)
+				 */
+				int64_t domainToUnixOffset();
 
 				/**
 				 * Returns whether this converter has been initialized with a valid time domain.
