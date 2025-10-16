@@ -18,13 +18,18 @@
 
 #import <Foundation/Foundation.h>
 
+using namespace Ocean;
+
 /**
  * Definition of a sample buffer delegate object.
  */
 @interface AVFLiveVideoSampleBufferDelegate : NSObject<AVCaptureVideoDataOutputSampleBufferDelegate>
 {
 	/// The callback function for new samples
-	@private Ocean::Media::AVFoundation::AVFLiveVideo::OnNewSampleCallback delegateOnNewSampleCallback;
+	@private Media::AVFoundation::AVFLiveVideo::OnNewSampleCallback delegateOnNewSampleCallback;
+
+	/// The timestamp converter between up-time and unix timestamp
+	Timestamp::TimestampConverter timestampConverter_;
 }
 
 /**
@@ -32,7 +37,7 @@
  * @param onNewSampleCallback Callback function for new samples
  * @return The instance of the delegate object
  */
-- (id) initWithCallback:(Ocean::Media::AVFoundation::AVFLiveVideo::OnNewSampleCallback)onNewSampleCallback;
+- (id) initWithCallback:(Media::AVFoundation::AVFLiveVideo::OnNewSampleCallback)onNewSampleCallback;
 
 /**
  * Event function for new Samples.
@@ -47,11 +52,13 @@
 
 @implementation AVFLiveVideoSampleBufferDelegate
 
-- (id)initWithCallback:(Ocean::Media::AVFoundation::AVFLiveVideo::OnNewSampleCallback)onNewSampleCallback
+- (id)initWithCallback:(Media::AVFoundation::AVFLiveVideo::OnNewSampleCallback)onNewSampleCallback
 {
 	if (self = [super init])
 	{
 		delegateOnNewSampleCallback = onNewSampleCallback;
+
+		timestampConverter_ = Timestamp::TimestampConverter(Timestamp::TimestampConverter::TD_UPTIME_RAW);
   	}
 
 	return self;
@@ -59,27 +66,25 @@
 
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
-	const NSTimeInterval uptime = [NSProcessInfo processInfo].systemUptime;
-	const NSTimeInterval unixTimestamp = [[NSDate date] timeIntervalSince1970];
-
-	if (sampleBuffer)
+	if (!sampleBuffer)
 	{
-		CVPixelBufferRef frameBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-		CVPixelBufferRef pixelBuffer = CVBufferRetain(frameBuffer);
-		CMTime presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+		return;
+	}
 
-		if (pixelBuffer)
-		{
-			ocean_assert(presentationTime.timescale != 0);
-			const double frameUptime = double(presentationTime.value) / double(presentationTime.timescale);
+	CVPixelBufferRef frameBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+	CVPixelBufferRef pixelBuffer = CVBufferRetain(frameBuffer);
 
-			// adusting the unix timestamp by the offset between the current up-time and the sample's up-time
-			const double frameUnixTimestamp = frameUptime - double(uptime) + double(unixTimestamp);
+	if (pixelBuffer)
+	{
+		const CMTime presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
+		ocean_assert(presentationTime.timescale == 1000000000);
 
-			delegateOnNewSampleCallback(pixelBuffer, Ocean::SharedAnyCamera(), frameUnixTimestamp, frameUptime);
+		const Timestamp frameUnixTimestamp = timestampConverter_.toUnix(presentationTime.value);
+		const double frameUptime = Timestamp::nanoseconds2seconds(presentationTime.value);
 
-			CVBufferRelease(pixelBuffer);
-		}
+		delegateOnNewSampleCallback(pixelBuffer, SharedAnyCamera(), double(frameUnixTimestamp), frameUptime);
+
+		CVBufferRelease(pixelBuffer);
 	}
 }
 
