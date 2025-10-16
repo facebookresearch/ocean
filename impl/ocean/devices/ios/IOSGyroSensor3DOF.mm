@@ -41,8 +41,10 @@ bool IOSGyroSensor3DOF::start()
 {
 	const ScopedLock scopedLock(deviceLock);
 
-	if (sensorIsStarted)
+	if (isStarted_)
+	{
 		return true;
+	}
 
 	if (deviceType.minorType() == Sensor::SENSOR_GYRO_UNBIASED_3DOF)
 	{
@@ -72,9 +74,9 @@ bool IOSGyroSensor3DOF::start()
 			}];
 	}
 
-	sensorIsStarted = true;
+	isStarted_ = true;
 
-	return sensorIsStarted;
+	return true;
 }
 
 bool IOSGyroSensor3DOF::pause()
@@ -86,7 +88,7 @@ bool IOSGyroSensor3DOF::stop()
 {
 	const ScopedLock scopedLock(deviceLock);
 
-	if (!sensorIsStarted)
+	if (!isStarted_)
 	{
 		return true;
 	}
@@ -101,7 +103,8 @@ bool IOSGyroSensor3DOF::stop()
 		[MotionManager::get().object() stopGyroUpdates];
 	}
 
-	sensorIsStarted = false;
+	isStarted_ = false;
+
 	return true;
 }
 

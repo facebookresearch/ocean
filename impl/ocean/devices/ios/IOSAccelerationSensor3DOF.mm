@@ -41,7 +41,7 @@ bool IOSAccelerationSensor3DOF::start()
 {
 	const ScopedLock scopedLock(deviceLock);
 
-	if (sensorIsStarted)
+	if (isStarted_)
 	{
 		return true;
 	}
@@ -74,9 +74,9 @@ bool IOSAccelerationSensor3DOF::start()
 			}];
 	}
 
-	sensorIsStarted = true;
+	isStarted_ = true;
 
-	return sensorIsStarted;
+	return true;
 }
 
 bool IOSAccelerationSensor3DOF::pause()
@@ -88,7 +88,7 @@ bool IOSAccelerationSensor3DOF::stop()
 {
 	const ScopedLock scopedLock(deviceLock);
 
-	if (!sensorIsStarted)
+	if (!isStarted_)
 	{
 		return true;
 	}
@@ -103,7 +103,8 @@ bool IOSAccelerationSensor3DOF::stop()
 		[MotionManager::get().object() stopAccelerometerUpdates];
 	}
 
-	sensorIsStarted = false;
+	isStarted_ = false;
+
 	return true;
 }
 

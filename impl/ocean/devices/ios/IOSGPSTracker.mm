@@ -135,7 +135,7 @@ bool IOSGPSTracker::start()
 {
 	const ScopedLock scopedLock(deviceLock);
 
-	if (sensorIsStarted == true)
+	if (isStarted_)
 	{
 		return true;
 	}
@@ -151,7 +151,8 @@ bool IOSGPSTracker::start()
 		return false;
 	}
 
-	sensorIsStarted = true;
+	isStarted_ = true;
+
 	return true;
 }
 
@@ -164,7 +165,7 @@ bool IOSGPSTracker::stop()
 {
 	const ScopedLock scopedLock(deviceLock);
 
-	if (!sensorIsStarted)
+	if (!isStarted_)
 	{
 		return true;
 	}
@@ -177,7 +178,8 @@ bool IOSGPSTracker::stop()
 		}
 	}
 
-	sensorIsStarted = false;
+	isStarted_ = false;
+
 	return true;
 }
 

@@ -47,7 +47,7 @@ class OCEAN_DEVICES_IOS_EXPORT IOSDevice : virtual public Device
 	protected:
 
 		/// True, if this sensor is started.
-		bool sensorIsStarted;
+		bool isStarted_ = false;
 
 		/// The iOS event timestamp of the first sensor event (seconds since the last system boot).
 		double sensorFirstIOSEventTimestamp;

@@ -41,7 +41,7 @@ bool IOSGravityTracker3DOF::start()
 {
 	const ScopedLock scopedLock(deviceLock);
 
-	if (sensorIsStarted)
+	if (isStarted_)
 	{
 		return true;
 	}
@@ -50,9 +50,9 @@ bool IOSGravityTracker3DOF::start()
 
 	deviceMotionListenerId_ = MotionManager::get().addListener(MotionManager::DeviceMotionCallback(*this, &IOSGravityTracker3DOF::onDeviceMotion));
 
-	sensorIsStarted = true;
+	isStarted_ = true;
 
-	return sensorIsStarted;
+	return true;
 }
 
 bool IOSGravityTracker3DOF::pause()
@@ -64,7 +64,7 @@ bool IOSGravityTracker3DOF::stop()
 {
 	const ScopedLock scopedLock(deviceLock);
 
-	if (!sensorIsStarted)
+	if (!isStarted_)
 	{
 		return true;
 	}
@@ -73,7 +73,7 @@ bool IOSGravityTracker3DOF::stop()
 
 	MotionManager::get().removeListener(deviceMotionListenerId_);
 
-	sensorIsStarted = false;
+	isStarted_ = false;
 	return true;
 }
 

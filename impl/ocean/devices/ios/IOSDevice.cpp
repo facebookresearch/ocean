@@ -18,7 +18,6 @@ namespace IOS
 
 IOSDevice::IOSDevice(const std::string& name, const DeviceType type) :
 	Device(name, type),
-	sensorIsStarted(false),
 	sensorFirstIOSEventTimestamp(0),
 	sensorFirstUnixEventTimestamp(false)
 {

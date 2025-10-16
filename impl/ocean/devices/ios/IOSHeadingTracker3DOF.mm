@@ -43,7 +43,7 @@ bool IOSHeadingTracker3DOF::start()
 {
 	const ScopedLock scopedLock(deviceLock);
 
-	if (sensorIsStarted)
+	if (isStarted_)
 	{
 		return true;
 	}
@@ -52,9 +52,9 @@ bool IOSHeadingTracker3DOF::start()
 
 	deviceMotionListenerId_ = MotionManager::get().addListener(MotionManager::DeviceMotionCallback(*this, &IOSHeadingTracker3DOF::onDeviceMotion));
 
-	sensorIsStarted = true;
+	isStarted_ = true;
 
-	return sensorIsStarted;
+	return true;
 }
 
 bool IOSHeadingTracker3DOF::pause()
@@ -66,7 +66,7 @@ bool IOSHeadingTracker3DOF::stop()
 {
 	const ScopedLock scopedLock(deviceLock);
 
-	if (!sensorIsStarted)
+	if (!isStarted_)
 	{
 		return true;
 	}
@@ -75,7 +75,8 @@ bool IOSHeadingTracker3DOF::stop()
 
 	MotionManager::get().removeListener(deviceMotionListenerId_);
 
-	sensorIsStarted = false;
+	isStarted_ = false;
+
 	return true;
 }
 
