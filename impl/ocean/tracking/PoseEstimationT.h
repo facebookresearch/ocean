@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_TRACKING_MAPBUILDING_POSE_ESTIMATION_T_H
-#define META_OCEAN_TRACKING_MAPBUILDING_POSE_ESTIMATION_T_H
+#ifndef META_OCEAN_TRACKING_POSE_ESTIMATION_T_H
+#define META_OCEAN_TRACKING_POSE_ESTIMATION_T_H
 
-#include "ocean/tracking/mapbuilding/MapBuilding.h"
+#include "ocean/tracking/Tracking.h"
 
 #include "ocean/base/Worker.h"
 
@@ -27,14 +27,11 @@ namespace Ocean
 namespace Tracking
 {
 
-namespace MapBuilding
-{
-
 /**
  * This class implements functions to estimate camera poses using template-based data types.
- * @ingroup trackingmapbuilding
+ * @ingroup tracking
  */
-class OCEAN_TRACKING_MAPBUILDING_EXPORT PoseEstimationT
+class OCEAN_TRACKING_EXPORT PoseEstimationT
 {
 	public:
 
@@ -322,8 +319,6 @@ bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vec
 	Indices32 validIndices;
 	if (world_T_roughCamera.isValid() || Geometry::RANSAC::p3p(camera, ConstArrayAccessor<Vector3>(matchedObjectPoints), ConstArrayAccessor<Vector2>(matchedImagePoints), randomGenerator, world_T_camera, 20u, true, unguidedIterations, maximalSqrProjectionError, &validIndices))
 	{
-		Log::info() << "finished RANSAC";
-
 		// now applying guided matching
 
 		if (world_T_roughCamera.isValid())
@@ -791,12 +786,12 @@ void PoseEstimationT::determineGuidedMatchingsSubset(const AnyCamera* camera, co
 
 	const Scalar tanHalfAngle = Numeric::tan(Numeric::deg2rad(Scalar(0.2)));
 
-	std::vector<const Indices32*> leafs;
-	leafs.reserve(32);
+	std::vector<const Indices32*> leaves;
+	leaves.reserve(32);
 
 	constexpr Scalar maximalSqrProjectionError = Scalar(20 * 20);
 
-	Geometry::Octree::ReusableData resuableData;
+	Geometry::Octree::ReusableData reusableData;
 
 	for (unsigned int nImagePoint = firstImagePoint; nImagePoint < firstImagePoint + numberImagePoints; ++nImagePoint)
 	{
@@ -807,13 +802,13 @@ void PoseEstimationT::determineGuidedMatchingsSubset(const AnyCamera* camera, co
 
 		const Line3 ray = camera->ray(imagePoint, *world_T_camera);
 
-		leafs.clear();
-		objectPointOctree->intersectingLeafs(ray, tanHalfAngle, leafs, resuableData);
+		leaves.clear();
+		objectPointOctree->intersectingLeafs(ray, tanHalfAngle, leaves, reusableData);
 
 		TDescriptorDistance bestDistance = NumericT<TDescriptorDistance>::maxValue();
 		Index32 bestObjectPointIndex = Index32(-1);
 
-		for (const Indices32* leaf : leafs)
+		for (const Indices32* leaf : leaves)
 		{
 			for (const Index32& objectPointIndex : *leaf)
 			{
@@ -868,6 +863,4 @@ void PoseEstimationT::determineGuidedMatchingsSubset(const AnyCamera* camera, co
 
 }
 
-}
-
-#endif // META_OCEAN_TRACKING_MAPBUILDING_POSE_ESTIMATION_T_H
+#endif // META_OCEAN_TRACKING_POSE_ESTIMATION_T_H

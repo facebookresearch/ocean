@@ -6,7 +6,6 @@
  */
 
 #include "ocean/tracking/mapbuilding/Unified.h"
-#include "ocean/tracking/mapbuilding/PoseEstimationT.h"
 
 #include "ocean/base/WorkerPool.h"
 

@@ -10,7 +10,6 @@
 
 #include "ocean/tracking/mapbuilding/MapBuilding.h"
 #include "ocean/tracking/mapbuilding/DescriptorHandling.h"
-#include "ocean/tracking/mapbuilding/PoseEstimationT.h"
 #include "ocean/tracking/mapbuilding/UnifiedDescriptor.h"
 #include "ocean/tracking/mapbuilding/UnifiedDescriptorMap.h"
 #include "ocean/tracking/mapbuilding/UnifiedDescriptors.h"
@@ -26,6 +25,7 @@
 #include "ocean/math/Vector3.h"
 
 #include "ocean/tracking/Database.h"
+#include "ocean/tracking/PoseEstimationT.h"
 #include "ocean/tracking/VocabularyTree.h"
 
 namespace Ocean

@@ -210,6 +210,7 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\MultiViewPlaneFinder.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\PointCorrespondences.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\MotionModel.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\PoseEstimationT.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\PoseProjection.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\SmoothedTransformation.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\Solver3.h" />

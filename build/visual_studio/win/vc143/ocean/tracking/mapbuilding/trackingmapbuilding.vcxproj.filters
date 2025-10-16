@@ -26,9 +26,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\PoseEstimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\PoseEstimationT.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\MapMerging.h">
       <Filter>Header Files</Filter>
     </ClInclude>

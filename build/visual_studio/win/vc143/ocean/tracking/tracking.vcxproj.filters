@@ -124,5 +124,8 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\UnidirectionalCorrespondences.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\tracking\PoseEstimationT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

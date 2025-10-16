@@ -6,7 +6,8 @@
  */
 
 #include "ocean/tracking/mapbuilding/UnifiedPoseEstimation.h"
-#include "ocean/tracking/mapbuilding/PoseEstimationT.h"
+
+#include "ocean/tracking/PoseEstimationT.h"
 
 namespace Ocean
 {

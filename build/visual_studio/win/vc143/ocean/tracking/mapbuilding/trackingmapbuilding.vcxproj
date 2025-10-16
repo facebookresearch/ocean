@@ -58,7 +58,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\MultiViewMapCreator.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\PatchTracker.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\PoseEstimation.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\PoseEstimationT.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\Relocalizer.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\RelocalizerMono.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\tracking\mapbuilding\RelocalizerStereo.h" />
