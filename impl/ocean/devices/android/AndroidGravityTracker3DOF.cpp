@@ -62,8 +62,7 @@ int AndroidGravityTracker3DOF::onEventFunction()
 		ocean_assert(sensorEvent.type == AST_GRAVITY);
 
 		Timestamp relativeTimestamp;
-		Timestamp timestamp;
-		convertTimestamp(sensorEvent, relativeTimestamp, timestamp);
+		const Timestamp unixTimestamp = convertTimestamp(sensorEvent, relativeTimestamp);
 
 		// We need to negate the gravity direction as Android provides gravity vector ~(0, 9.8, 0) if device is in default position
 		Vector3 gravity(-sensorEvent.acceleration.x, -sensorEvent.acceleration.y, -sensorEvent.acceleration.z);
@@ -72,7 +71,7 @@ int AndroidGravityTracker3DOF::onEventFunction()
 		{
 			if (waitingForFirstSample_)
 			{
-				postFoundTrackerObjects({sensorObjectId_}, timestamp);
+				postFoundTrackerObjects({sensorObjectId_}, unixTimestamp);
 				waitingForFirstSample_ = false;
 			}
 
@@ -81,7 +80,7 @@ int AndroidGravityTracker3DOF::onEventFunction()
 			ObjectIds objectIds(1, sensorObjectId_);
 			Quaternions orientations(1, Quaternion(device_Q_gravity));
 
-			SampleRef sample(new OrientationTracker3DOFSample(timestamp, RS_OBJECT_IN_DEVICE, std::move(objectIds), std::move(orientations)));
+			SampleRef sample(new OrientationTracker3DOFSample(unixTimestamp, RS_OBJECT_IN_DEVICE, std::move(objectIds), std::move(orientations)));
 			sample->setRelativeTimestamp(relativeTimestamp);
 
 			postNewSample(sample);

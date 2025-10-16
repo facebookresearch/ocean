@@ -61,8 +61,7 @@ int AndroidGyroSensor3DOF::onEventFunction()
 		ocean_assert(sensorEvent.type == AST_GYROSCOPE || sensorEvent.type == AST_GYROSCOPE_UNCALIBRATED);
 
 		Timestamp relativeTimestamp;
-		Timestamp timestamp;
-		convertTimestamp(sensorEvent, relativeTimestamp, timestamp);
+		const Timestamp unixTimestamp = convertTimestamp(sensorEvent, relativeTimestamp);
 
 		const float* sensorData = sensorEvent.data;
 
@@ -70,7 +69,7 @@ int AndroidGyroSensor3DOF::onEventFunction()
 
 		Gyro3DOFSample::Measurements measurements(1, Vector3(Scalar(sensorData[0]), Scalar(sensorData[1]), Scalar(sensorData[2])));
 
-		SampleRef sample(new Gyro3DOFSample(timestamp, std::move(objectIds), std::move(measurements)));
+		SampleRef sample(new Gyro3DOFSample(unixTimestamp, std::move(objectIds), std::move(measurements)));
 		sample->setRelativeTimestamp(relativeTimestamp);
 
 		postNewSample(sample);

@@ -59,15 +59,14 @@ int AndroidAccelerationSensor3DOF::onEventFunction()
 		ocean_assert(sensorEvent.type == AST_ACCELEROMETER || sensorEvent.type == AST_LINEAR_ACCELERATION);
 
 		Timestamp relativeTimestamp;
-		Timestamp timestamp;
-		convertTimestamp(sensorEvent, relativeTimestamp, timestamp);
+		const Timestamp unixTimestamp = convertTimestamp(sensorEvent, relativeTimestamp);
 
 		const ASensorVector& acceleration = sensorEvent.acceleration;
 
 		const ObjectIds objectIds(1, sensorObjectId_);
 		const Acceleration3DOFSample::Measurements measurements(1, Vector3(Scalar(acceleration.x), Scalar(acceleration.y), Scalar(acceleration.z)));
 
-		SampleRef sample(new Acceleration3DOFSample(timestamp, objectIds, measurements));
+		SampleRef sample(new Acceleration3DOFSample(unixTimestamp, objectIds, measurements));
 		sample->setRelativeTimestamp(relativeTimestamp);
 
 		postNewSample(sample);

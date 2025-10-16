@@ -169,14 +169,7 @@ bool AndroidSensor::registerForEventFunction(ASensorManager* sensorManager)
 	return eventQueue_ != nullptr;
 }
 
-Timestamp::TimestampConverter& AndroidSensor::timestampConverter()
-{
-	static Timestamp::TimestampConverter timestampConverter(Timestamp::TimestampConverter::TD_BOOTTIME);
-
-	return timestampConverter;
-}
-
-void AndroidSensor::convertTimestamp(const ASensorEvent& sensorEvent, Timestamp& relativeTimestamp, Timestamp& unixTimestamp)
+Timestamp AndroidSensor::convertTimestamp(const ASensorEvent& sensorEvent, Timestamp& relativeTimestamp)
 {
 	// The time in nanoseconds at which the event happened, and its behavior is identical to SensorEvent::timestamp in Java API.
 	// The time in nanoseconds at which the event happened. For a given sensor, each new sensor event should be monotonically increasing using the same time base as SystemClock.elapsedRealtimeNanos().
@@ -192,7 +185,14 @@ void AndroidSensor::convertTimestamp(const ASensorEvent& sensorEvent, Timestamp&
 
 	relativeTimestamp = Timestamp(Timestamp::nanoseconds2seconds(sensorEvent.timestamp));
 
-	unixTimestamp = timestampConverter_.toUnix(sensorEvent.timestamp);
+	return timestampConverter_.toUnix(sensorEvent.timestamp);
+}
+
+Timestamp::TimestampConverter& AndroidSensor::timestampConverter()
+{
+	static Timestamp::TimestampConverter timestampConverter(Timestamp::TimestampConverter::TD_BOOTTIME);
+
+	return timestampConverter;
 }
 
 }

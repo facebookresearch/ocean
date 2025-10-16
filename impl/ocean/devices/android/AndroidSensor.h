@@ -184,9 +184,9 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidSensor :
 		 * Returns the relative and unix timestamp of an Android sensor event.
 		 * @param sensorEvent The Android sensor event
 		 * @param relativeTimestamp The resulting relative timestamp
-		 * @param unixTimestamp The resulting unix timestamp
+		 * @return The resulting unix timestamp
 		 */
-		void convertTimestamp(const ASensorEvent& sensorEvent, Timestamp& relativeTimestamp, Timestamp& unixTimestamp);
+		Timestamp convertTimestamp(const ASensorEvent& sensorEvent, Timestamp& relativeTimestamp);
 
 		/**
 		 * The actual event function of this device.

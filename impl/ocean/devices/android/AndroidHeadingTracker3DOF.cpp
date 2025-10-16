@@ -62,8 +62,7 @@ int AndroidHeadingTracker3DOF::onEventFunction()
 		ocean_assert(sensorEvent.type == AST_ROTATION_VECTOR || sensorEvent.type >= AST_END);
 
 		Timestamp relativeTimestamp;
-		Timestamp timestamp;
-		convertTimestamp(sensorEvent, relativeTimestamp, timestamp);
+		const Timestamp unixTimestamp = convertTimestamp(sensorEvent, relativeTimestamp);
 
 		const float x = sensorEvent.data[0];
 		const float y = sensorEvent.data[1];
@@ -76,7 +75,7 @@ int AndroidHeadingTracker3DOF::onEventFunction()
 		{
 			if (waitingForFirstSample_)
 			{
-				postFoundTrackerObjects({sensorObjectId_}, timestamp);
+				postFoundTrackerObjects({sensorObjectId_}, unixTimestamp);
 				waitingForFirstSample_ = false;
 			}
 
@@ -89,7 +88,7 @@ int AndroidHeadingTracker3DOF::onEventFunction()
 			const ObjectIds objectIds(1, sensorObjectId_);
 			const Quaternions quaternions(1, zSouthySky_Q_yNorthzSky * object_Q_device);
 
-			SampleRef sample(new OrientationTracker3DOFSample(timestamp, RS_DEVICE_IN_OBJECT, objectIds, quaternions));
+			SampleRef sample(new OrientationTracker3DOFSample(unixTimestamp, RS_DEVICE_IN_OBJECT, objectIds, quaternions));
 			sample->setRelativeTimestamp(relativeTimestamp);
 
 			postNewSample(sample);
