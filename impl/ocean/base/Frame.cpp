@@ -1138,6 +1138,13 @@ FrameType::PixelFormat FrameType::translatePixelFormat(const std::string& pixelF
 {
 	const std::string upperValue = String::toUpper(pixelFormat);
 
+#ifdef OCEAN_DEBUG
+	if (upperValue.starts_with("FORMAT_"))
+	{
+		Log::debug() << "FrameType::translatePixelFormat(), the pixel format '" << pixelFormat << "' starts with 'FORMAT_', which is not intended, and will result in an invalid pixel format";
+	}
+#endif
+
 	if (upperValue == "UNDEFINED") {
 		return FORMAT_UNDEFINED;
 }
@@ -1230,11 +1237,11 @@ FrameType::PixelFormat FrameType::translatePixelFormat(const std::string& pixelF
 		return FORMAT_Y_U_V12;
 }
 
-	if (upperValue == "FORMAT_Y_U_V12_LIMITED_RANGE") {
+	if (upperValue == "Y_U_V12_LIMITED_RANGE") {
 		return FORMAT_Y_U_V12_LIMITED_RANGE;
 }
 
-	if (upperValue == "FORMAT_Y_U_V12_FULL_RANGE") {
+	if (upperValue == "Y_U_V12_FULL_RANGE") {
 		return FORMAT_Y_U_V12_FULL_RANGE;
 }
 
@@ -1242,11 +1249,11 @@ FrameType::PixelFormat FrameType::translatePixelFormat(const std::string& pixelF
 		return FORMAT_Y_U_V24;
 }
 
-	if (upperValue == "FORMAT_Y_U_V24_LIMITED_RANGE") {
+	if (upperValue == "Y_U_V24_LIMITED_RANGE") {
 		return FORMAT_Y_U_V24_LIMITED_RANGE;
 }
 
-	if (upperValue == "FORMAT_Y_U_V24_FULL_RANGE") {
+	if (upperValue == "Y_U_V24_FULL_RANGE") {
 		return FORMAT_Y_U_V24_FULL_RANGE;
 }
 
@@ -1266,11 +1273,11 @@ FrameType::PixelFormat FrameType::translatePixelFormat(const std::string& pixelF
 		return FORMAT_Y_V_U12;
 }
 
-	if (upperValue == "FORMAT_Y_V_U12_LIMITED_RANGE") {
+	if (upperValue == "Y_V_U12_LIMITED_RANGE") {
 		return FORMAT_Y_V_U12_LIMITED_RANGE;
 }
 
-	if (upperValue == "FORMAT_Y_V_U12_FULL_RANGE") {
+	if (upperValue == "Y_V_U12_FULL_RANGE") {
 		return FORMAT_Y_V_U12_FULL_RANGE;
 }
 
@@ -1282,11 +1289,11 @@ FrameType::PixelFormat FrameType::translatePixelFormat(const std::string& pixelF
 		return FORMAT_Y_UV12;
 }
 
-	if (upperValue == "FORMAT_Y_UV12_LIMITED_RANGE") {
+	if (upperValue == "Y_UV12_LIMITED_RANGE") {
 		return FORMAT_Y_UV12_LIMITED_RANGE;
 }
 
-	if (upperValue == "FORMAT_Y_UV12_FULL_RANGE") {
+	if (upperValue == "Y_UV12_FULL_RANGE") {
 		return FORMAT_Y_UV12_FULL_RANGE;
 }
 
@@ -1294,11 +1301,11 @@ FrameType::PixelFormat FrameType::translatePixelFormat(const std::string& pixelF
 		return FORMAT_Y_VU12;
 }
 
-	if (upperValue == "FORMAT_Y_VU12_LIMITED_RANGE") {
+	if (upperValue == "Y_VU12_LIMITED_RANGE") {
 		return FORMAT_Y_VU12_LIMITED_RANGE;
 }
 
-	if (upperValue == "FORMAT_Y_VU12_FULL_RANGE") {
+	if (upperValue == "Y_VU12_FULL_RANGE") {
 		return FORMAT_Y_VU12_FULL_RANGE;
 }
 
@@ -1314,11 +1321,11 @@ FrameType::PixelFormat FrameType::translatePixelFormat(const std::string& pixelF
 		return FORMAT_Y8;
 }
 
-	if (upperValue == "FORMAT_Y8_LIMITED_RANGE") {
+	if (upperValue == "Y8_LIMITED_RANGE") {
 		return FORMAT_Y8_LIMITED_RANGE;
 }
 
-	if (upperValue == "FORMAT_Y8_FULL_RANGE") {
+	if (upperValue == "Y8_FULL_RANGE") {
 		return FORMAT_Y8_FULL_RANGE;
 }
 
@@ -1508,13 +1515,13 @@ std::string FrameType::translatePixelFormat(const PixelFormat pixelFormat)
 			return "Y_U_V12";
 
 		case FORMAT_Y_U_V12_FULL_RANGE:
-			return "FORMAT_Y_U_V12_FULL_RANGE";
+			return "Y_U_V12_FULL_RANGE";
 
 		case FORMAT_Y_U_V24: // FORMAT_Y_U_V24_LIMITED_RANGE
 			return "Y_U_V24";
 
 		case FORMAT_Y_U_V24_FULL_RANGE:
-			return "FORMAT_Y_U_V24_FULL_RANGE";
+			return "Y_U_V24_FULL_RANGE";
 
 		case FORMAT_YUV24:
 			return "YUV24";
@@ -1529,7 +1536,7 @@ std::string FrameType::translatePixelFormat(const PixelFormat pixelFormat)
 			return "Y_V_U12";
 
 		case FORMAT_Y_V_U12_FULL_RANGE:
-			return "FORMAT_Y_V_U12_FULL_RANGE";
+			return "Y_V_U12_FULL_RANGE";
 
 		case FORMAT_YVU24:
 			return "YVU24";
@@ -1538,13 +1545,13 @@ std::string FrameType::translatePixelFormat(const PixelFormat pixelFormat)
 			return "Y_UV12";
 
 		case FORMAT_Y_UV12_FULL_RANGE:
-			return "FORMAT_Y_UV12_FULL_RANGE";
+			return "Y_UV12_FULL_RANGE";
 
 		case FORMAT_Y_VU12: // FORMAT_Y_VU12_LIMITED_RANGE
 			return "Y_VU12";
 
 		case FORMAT_Y_VU12_FULL_RANGE:
-			return "FORMAT_Y_VU12_FULL_RANGE";
+			return "Y_VU12_FULL_RANGE";
 
 		case FORMAT_UYVY16:
 			return "UYVY16";
@@ -1556,7 +1563,7 @@ std::string FrameType::translatePixelFormat(const PixelFormat pixelFormat)
 			return "Y8";
 
 		case FORMAT_Y8_LIMITED_RANGE:
-			return "FORMAT_Y8_LIMITED_RANGE";
+			return "Y8_LIMITED_RANGE";
 
 		case FORMAT_Y10:
 			return "Y10";
