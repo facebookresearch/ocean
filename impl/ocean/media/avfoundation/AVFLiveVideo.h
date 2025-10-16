@@ -37,7 +37,7 @@ class AVFLiveVideo :
 		/**
 		 * Definition of a callback function for new samples.
 		 */
-		typedef Callback<void, CVPixelBufferRef, SharedAnyCamera, double, double> OnNewSampleCallback;
+		using OnNewSampleCallback = Callback<void, CVPixelBufferRef, SharedAnyCamera, double, double>;
 
 	public:
 
@@ -52,6 +52,18 @@ class AVFLiveVideo :
 		 * @see FrameMedium::device_T_camera().
 		 */
 		HomogenousMatrixD4 device_T_camera() const override;
+
+		/**
+		 * Returns the supported stream types.
+		 * @see LiveVideo::supportedStreamTypes().
+		 */
+		StreamTypes supportedStreamTypes() const override;
+
+		/**
+		 * Returns the supported stream configurations for a given stream type.
+		 * @see LiveVideo::supportedStreamConfigurations().
+		 */
+		StreamConfigurations supportedStreamConfigurations(const StreamType streamType = ST_INVALID) const override;
 
 		/**
 		 * Returns the current exposure duration of this device.
@@ -186,6 +198,12 @@ class AVFLiveVideo :
 		 */
 		static double bestMatchingFieldOfView(AVCaptureDevice* device, const unsigned int width, const unsigned int height);
 
+		/**
+		 * Determines the available stream configurations for the capture device.
+		 * @return The resulting stream configurations
+		 */
+		StreamConfigurations determineAvailableStreamConfigurations() const;
+
 	protected:
 
 		/// The capture device object.
@@ -223,6 +241,9 @@ class AVFLiveVideo :
 
 		/// The transformation between camera and device.
 		HomogenousMatrixD4 device_T_camera_ = HomogenousMatrixD4(true);
+
+		/// The stream configurations available for this camera.
+		StreamConfigurations availableStreamConfigurations_;
 };
 
 }

@@ -140,6 +140,41 @@ HomogenousMatrixD4 AVFLiveVideo::device_T_camera() const
 	return device_T_camera_;
 }
 
+AVFLiveVideo::StreamTypes AVFLiveVideo::supportedStreamTypes() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	StreamTypes streamTypes;
+	streamTypes.reserve(1);
+
+	streamTypes.push_back(ST_FRAME);
+
+	return streamTypes;
+}
+
+AVFLiveVideo::StreamConfigurations AVFLiveVideo::supportedStreamConfigurations(const StreamType streamType) const
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (streamType == ST_INVALID)
+	{
+		return availableStreamConfigurations_;
+	}
+
+	StreamConfigurations streamConfigurations;
+	streamConfigurations.reserve(availableStreamConfigurations_.size());
+
+	for (const StreamConfiguration& streamConfiguration : availableStreamConfigurations_)
+	{
+		if (streamConfiguration.streamType_ == streamType)
+		{
+			streamConfigurations.push_back(streamConfiguration);
+		}
+	}
+
+	return streamConfigurations;
+}
+
 double AVFLiveVideo::exposureDuration(double* minDuration, double* maxDuration, ControlMode* exposureMode) const
 {
 	const ScopedLock scopedLock(lock_);
@@ -517,6 +552,20 @@ bool AVFLiveVideo::createCaptureDevice()
 
 	ocean_assert(device_T_camera_.isValid());
 
+	if (captureDevice_ != nullptr)
+	{
+		availableStreamConfigurations_ = determineAvailableStreamConfigurations();
+
+#ifdef OCEAN_DEBUG
+		Log::debug() << "The camera device '" << url() << "' provides the following " << availableStreamConfigurations_.size() << " stream configurations:";
+
+		for (const StreamConfiguration& streamConfiguration : availableStreamConfigurations_)
+		{
+			Log::debug() << streamConfiguration.toString();
+		}
+#endif
+	}
+
 	return captureDevice_ != nullptr;
 }
 
@@ -545,19 +594,19 @@ bool AVFLiveVideo::createCaptureSession()
 	NSArray* availablePixelFormatTypes = [captureVideoDataOutput_ availableVideoCVPixelFormatTypes];
 
 #ifdef OCEAN_DEBUG
-	const unsigned int rgbValue = (unsigned int)kCVPixelFormatType_24RGB; // 24
-	const unsigned int bgrValue = (unsigned int)kCVPixelFormatType_24BGR; // 842285639
+	const unsigned int rgbValue = (unsigned int)(kCVPixelFormatType_24RGB); // 24
+	const unsigned int bgrValue = (unsigned int)(kCVPixelFormatType_24BGR); // 842285639
 
-	const unsigned int rgbaValue = (unsigned int)kCVPixelFormatType_32RGBA; // 1380401729
-	const unsigned int bgraValue = (unsigned int)kCVPixelFormatType_32BGRA; // 1111970369
+	const unsigned int rgbaValue = (unsigned int)(kCVPixelFormatType_32RGBA); // 1380401729
+	const unsigned int bgraValue = (unsigned int)(kCVPixelFormatType_32BGRA); // 1111970369
 
-	const unsigned int argbValue = (unsigned int) kCVPixelFormatType_32ARGB; // 32
+	const unsigned int argbValue = (unsigned int)(kCVPixelFormatType_32ARGB); // 32
 
 	const unsigned int vuy2Value = kCVPixelFormatType_422YpCbCr8; // 846624121
 	const unsigned int yuvsValue = kCVPixelFormatType_422YpCbCr8_yuvs; // 2037741171
 
-	const unsigned int y_uvVideoValue = (unsigned int)kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange; // 875704438
-	const unsigned int y_uvFullValue = (unsigned int)kCVPixelFormatType_420YpCbCr8BiPlanarFullRange; // 875704422
+	const unsigned int y_uvVideoValue = (unsigned int)(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange); // 875704438
+	const unsigned int y_uvFullValue = (unsigned int)(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange); // 875704422
 
 	OCEAN_SUPPRESS_UNUSED_WARNING(rgbValue);
 	OCEAN_SUPPRESS_UNUSED_WARNING(bgrValue);
@@ -996,6 +1045,79 @@ double AVFLiveVideo::bestMatchingFieldOfView(AVCaptureDevice* device, const unsi
 #endif
 
 	return -1.0;
+}
+
+AVFLiveVideo::StreamConfigurations AVFLiveVideo::determineAvailableStreamConfigurations() const
+{
+	StreamConfigurations streamConfigurations;
+
+	if (captureDevice_ == nullptr)
+	{
+		return streamConfigurations;
+	}
+
+	NSArray* availableFormats = [captureDevice_ formats];
+
+	using ConfigurationMap = std::unordered_map<StreamProperty, std::vector<double>, StreamProperty::Hash>;
+	ConfigurationMap configurationMap;
+
+	for (size_t n = 0; n < [availableFormats count]; ++n)
+	{
+		AVCaptureDeviceFormat* format = [availableFormats objectAtIndex:n];
+
+		CMFormatDescriptionRef formatDescription = [format formatDescription];
+		CMVideoDimensions videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDescription);
+
+		const unsigned int width = (unsigned int)(videoDimensions.width);
+		const unsigned int height = (unsigned int)(videoDimensions.height);
+
+		const FourCharCode fourCharCode = CMFormatDescriptionGetMediaSubType(formatDescription);
+
+		const FrameType::PixelFormat pixelFormat = PixelBufferAccessor::translatePixelFormat(fourCharCode);
+
+		if (pixelFormat == FrameType::FORMAT_UNDEFINED)
+		{
+			Log::debug() << "AVFLiveVideo: Unknown pixel format type: " << fourCharCode;
+
+			continue;
+		}
+
+		StreamProperty streamProperty(ST_FRAME, width, height, pixelFormat, CT_INVALID);
+
+		NSArray* frameRateRanges = [format videoSupportedFrameRateRanges];
+
+		for (size_t frameRateIndex = 0; frameRateIndex < [frameRateRanges count]; ++frameRateIndex)
+		{
+			AVFrameRateRange* frameRateRange = [frameRateRanges objectAtIndex:frameRateIndex];
+
+			const double minFrameRate = [frameRateRange minFrameRate];
+			const double maxFrameRate = [frameRateRange maxFrameRate];
+
+			std::vector<double>& frameRates = configurationMap[streamProperty];
+
+			if (std::find(frameRates.begin(), frameRates.end(), minFrameRate) == frameRates.end())
+			{
+				frameRates.push_back(minFrameRate);
+			}
+
+			if (std::find(frameRates.begin(), frameRates.end(), maxFrameRate) == frameRates.end())
+			{
+				frameRates.push_back(maxFrameRate);
+			}
+		}
+	}
+
+	streamConfigurations.reserve(configurationMap.size());
+
+	for (ConfigurationMap::const_iterator i = configurationMap.cbegin(); i != configurationMap.cend(); ++i)
+	{
+		std::vector<double> frameRates = i->second;
+		std::sort(frameRates.begin(), frameRates.end());
+
+		streamConfigurations.emplace_back(i->first, std::move(frameRates));
+	}
+
+	return streamConfigurations;
 }
 
 }
