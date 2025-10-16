@@ -18,6 +18,15 @@
 namespace Ocean
 {
 
+Timestamp::TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements) :
+	timeDomain_(timeDomain),
+	necessaryMeasurements_(necessaryMeasurements)
+{
+#ifndef OCEAN_PLATFORM_BUILD_WINDOWS
+	domainPosixClockId_ = posixClockId(timeDomain_);
+#endif
+}
+
 Timestamp Timestamp::TimestampConverter::toUnix(const int64_t domainTimestampNs)
 {
 	ocean_assert(isValid());
@@ -63,20 +72,14 @@ Timestamp Timestamp::TimestampConverter::toUnix(const int64_t domainTimestampNs)
 
 #else
 
-	#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
-		ocean_assert(timeDomain_ == TD_MONOTONIC || timeDomain_ == TD_BOOTTIME);
-		const clockid_t domainClockId = timeDomain_ == TD_MONOTONIC ? CLOCK_MONOTONIC : CLOCK_BOOTTIME;
-	#else
-		ocean_assert(timeDomain_ == TD_MONOTONIC);
-		constexpr clockid_t domainClockId = CLOCK_MONOTONIC;
-	#endif
+		ocean_assert(domainPosixClockId_ != -1);
 
 		struct timespec domainTimestampSpec;
 		struct timespec unixTimestampSpec;
 
 		if (measurements_ % 2 == 0)
 		{
-			const int resultDomain = clock_gettime(domainClockId, &domainTimestampSpec);
+			const int resultDomain = clock_gettime(clockid_t(domainPosixClockId_), &domainTimestampSpec);
 			const int resultUnix = clock_gettime(CLOCK_REALTIME, &unixTimestampSpec);
 
 			ocean_assert_and_suppress_unused(resultDomain == 0, resultDomain);
@@ -85,7 +88,7 @@ Timestamp Timestamp::TimestampConverter::toUnix(const int64_t domainTimestampNs)
 		else
 		{
 			const int resultUnix = clock_gettime(CLOCK_REALTIME, &unixTimestampSpec);
-			const int resultDomain = clock_gettime(domainClockId, &domainTimestampSpec);
+			const int resultDomain = clock_gettime(clockid_t(domainPosixClockId_), &domainTimestampSpec);
 
 			ocean_assert_and_suppress_unused(resultUnix == 0, resultUnix);
 			ocean_assert_and_suppress_unused(resultDomain == 0, resultDomain);
@@ -208,6 +211,11 @@ Timestamp::TimestampConverter& Timestamp::TimestampConverter::operator=(Timestam
 
 		necessaryMeasurements_ = converter.necessaryMeasurements_;
 		converter.necessaryMeasurements_ = 0;
+
+#ifndef OCEAN_PLATFORM_BUILD_WINDOWS
+		domainPosixClockId_ = converter.domainPosixClockId_;
+		converter.domainPosixClockId_ = -1;
+#endif
 	}
 
 	return *this;
@@ -225,16 +233,11 @@ int64_t Timestamp::TimestampConverter::currentTimestampNs(const TimeDomain timeD
 
 #else
 
-	#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
-		ocean_assert(timeDomain == TD_MONOTONIC || timeDomain == TD_BOOTTIME);
-		const clockid_t domainClockId = timeDomain == TD_MONOTONIC ? CLOCK_MONOTONIC : CLOCK_BOOTTIME;
-	#else
-		ocean_assert(timeDomain == TD_MONOTONIC);
-		constexpr clockid_t domainClockId = CLOCK_MONOTONIC;
-	#endif
+	const int domainClockId = posixClockId(timeDomain);
+	ocean_assert(domainClockId != -1);
 
 	struct timespec timestampSpec;
-	const int result = clock_gettime(domainClockId, &timestampSpec);
+	const int result = clock_gettime(clockid_t(domainClockId), &timestampSpec);
 	ocean_assert_and_suppress_unused(result == 0, result);
 
 	return timestampSpec.tv_sec * 1000000000ll + timestampSpec.tv_nsec;
@@ -253,6 +256,31 @@ int64_t Timestamp::TimestampConverter::currentTimestampNs(const int posixClockId
 	}
 
 	return timestampSpec.tv_sec * 1000000000ll + timestampSpec.tv_nsec;
+}
+
+int Timestamp::TimestampConverter::posixClockId(const TimeDomain timeDomain)
+{
+	switch (timeDomain)
+	{
+		case TD_MONOTONIC:
+			return CLOCK_MONOTONIC;
+
+	#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
+		case TD_BOOTTIME:
+			return CLOCK_BOOTTIME;
+	#endif
+
+	#ifdef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
+		case TD_UPTIME_RAW:
+			return CLOCK_UPTIME_RAW;
+	#endif
+
+		case TD_INVALID:
+			break;
+	}
+
+	ocean_assert(false && "Invalid time domain!");
+	return -1;
 }
 
 #endif // OCEAN_PLATFORM_BUILD_WINDOWS

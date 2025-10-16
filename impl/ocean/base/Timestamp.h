@@ -19,6 +19,10 @@
 	#define OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
 #endif
 
+#if defined(OCEAN_PLATFORM_BUILD_APPLE) && defined(CLOCK_UPTIME_RAW)
+	#define OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
+#endif
+
 namespace Ocean
 {
 
@@ -62,7 +66,12 @@ class OCEAN_BASE_EXPORT Timestamp
 
 #ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
 					/// The monotonically increasing time domain defined in nanoseconds, increasing during system sleep, not available on Windows.
-					TD_BOOTTIME
+					TD_BOOTTIME,
+#endif
+
+#ifdef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
+					/// The monotonically increasing time domain defined in nanoseconds, the time the system has been awake since the last time it was restarted.
+					TD_UPTIME_RAW,
 #endif
 				};
 
@@ -84,7 +93,7 @@ class OCEAN_BASE_EXPORT Timestamp
 				 * @param timeDomain The time domain for which the converter will be created
 				 * @param necessaryMeasurements The number of measurements necessary to determine the offset between the domain time and the unix time, with range [1, infinity)
 				 */
-				explicit inline TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements = 100);
+				explicit TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements = 100);
 
 				/**
 				 * Move constructor.
@@ -149,6 +158,15 @@ class OCEAN_BASE_EXPORT Timestamp
 				 */
 				static int64_t currentTimestampNs(const int posixClockId);
 
+			protected:
+
+				/**
+				 * Returns the POSIX clock id associated with a time domain.
+				 * @param timeDomain The time domain for which the associated POSIX clock id will be returned
+				 * @return The POSIX clock id associated with the specified time domain, -1 if no associated POSIX clock id exists
+				 */
+				static int posixClockId(const TimeDomain timeDomain);
+
 #endif // OCEAN_PLATFORM_BUILD_WINDOWS
 
 			protected:
@@ -176,6 +194,11 @@ class OCEAN_BASE_EXPORT Timestamp
 
 				/// The converter's lock.
 				Lock lock_;
+
+#ifndef OCEAN_PLATFORM_BUILD_WINDOWS
+				/// The POSIX clock id associated with the time domain.
+				int domainPosixClockId_ = -1;
+#endif
 		};
 
 	public:
@@ -410,13 +433,6 @@ class OCEAN_BASE_EXPORT Timestamp
 		/// Timestamp value.
 		double value_ = invalidTimestampValue();
 };
-
-inline Timestamp::TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements) :
-	timeDomain_(timeDomain),
-	necessaryMeasurements_(necessaryMeasurements)
-{
-	// nothing to do here
-}
 
 inline Timestamp::TimestampConverter::TimestampConverter(TimestampConverter&& converter)
 {
