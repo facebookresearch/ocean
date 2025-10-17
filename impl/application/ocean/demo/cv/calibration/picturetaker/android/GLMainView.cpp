@@ -22,6 +22,8 @@
 
 #include "ocean/rendering/PerspectiveView.h"
 
+#include <fstream>
+
 using namespace Ocean;
 
 const bool GLMainView::instanceRegistered_ = GLMainView::registerInstanceFunction(GLMainView::createInstance);
@@ -51,6 +53,8 @@ bool GLMainView::selectCamera(const std::string& cameraName)
 		Log::error() << "Failed to access input medium '" << cameraName << "'";
 		return false;
 	}
+
+	selectedCameraName_ = cameraName;
 
 	return true;
 }
@@ -94,6 +98,8 @@ bool GLMainView::startCamera(const std::string& resolution, const std::string& d
 		return false;
 	}
 
+	selectedResolution_ = resolution;
+
 	return true;
 }
 
@@ -108,6 +114,8 @@ bool GLMainView::setFocus(const float focus)
 	{
 		return false;
 	}
+
+	currentFocus_ = focus;
 
 	return liveVideo_->setFocus(focus);
 }
@@ -131,7 +139,29 @@ bool GLMainView::takePicture()
 		return false;
 	}
 
-	const IO::File filename = directory_ + IO::File("image_" + String::toAString(frame->width()) + "x" + String::toAString(frame->height()) + "_" + String::toAString(pictureCounter_++, 4u) + ".png");
+	// Write settings file on first image capture
+	if (!settingsFileWritten_)
+	{
+		const IO::File settingsFile = directory_ + IO::File("camera_settings.txt");
+
+		std::ofstream settingsStream(settingsFile());
+
+		if (settingsStream.is_open())
+		{
+			settingsStream << "Camera: " << selectedCameraName_ << std::endl;
+			settingsStream << "Resolution: " << selectedResolution_ << std::endl;
+			settingsStream << "Focus: " << currentFocus_ << std::endl;
+
+			Log::info() << "Wrote camera settings to '" << settingsFile() << "'";
+			settingsFileWritten_ = true;
+		}
+		else
+		{
+			Log::error() << "Failed to write camera settings file";
+		}
+	}
+
+	const IO::File filename = directory_ + IO::File("image_" + String::toAString(frame->width()) + "x" + String::toAString(frame->height()) + "_" + String::toAString(pictureCounter_++, 3u) + ".png");
 
 	if (!IO::Image::Comfort::writeImage(*frame, filename(), true))
 	{

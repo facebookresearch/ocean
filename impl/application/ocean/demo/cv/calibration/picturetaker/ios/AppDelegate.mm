@@ -20,16 +20,18 @@
 #include "ocean/io/image/Image.h"
 
 #include "ocean/media/Manager.h"
+
 #include "ocean/media/LiveVideo.h"
 #include "ocean/media/Utilities.h"
 
 #include "ocean/media/avfoundation/AVFoundation.h"
 
 #include "ocean/platform/apple/ios/OpenGLFrameMediumViewController.h"
+#include "ocean/platform/apple/ios/Utilities.h"
 
 #include "ocean/rendering/glescenegraph/apple/Apple.h"
 
-#import <AudioToolbox/AudioToolbox.h>
+#include <fstream>
 
 using namespace Ocean;
 
@@ -101,6 +103,7 @@ using namespace Ocean;
 
 	UIButton* takeImageButton_;
 	UILabel* countdownLabel_;
+	UILabel* imageCounterLabel_;
 
 	// State variables
 	NSArray<NSString*>* availableCameras_;
@@ -111,6 +114,8 @@ using namespace Ocean;
 	BOOL cameraStarted_;
 	NSInteger countdownValue_;
 	float initialFocus_;
+	float currentFocus_;
+	BOOL settingsFileWritten_;
 }
 @end
 
@@ -131,10 +136,12 @@ using namespace Ocean;
 	self.window.rootViewController = viewController_;
 	[self.window makeKeyAndVisible];
 
-	pictureCounter_ = 0;
+	pictureCounter_ = 0u;
 	cameraSelected_ = NO;
 	cameraStarted_ = NO;
 	initialFocus_ = 0.85f;
+	currentFocus_ = 0.85f;
+	settingsFileWritten_ = NO;
 
 	[self setupUI];
 	[self loadAvailableCameras];
@@ -237,15 +244,24 @@ using namespace Ocean;
 	[viewController_.view addSubview:takeImageButton_];
 
 	// Countdown label
-	countdownLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(screenBounds.size.width/2 - 100, screenBounds.size.height/2 - 100, 200, 200)];
+	countdownLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(screenBounds.size.width/2 - 50, screenBounds.size.height/2 - 50, 100, 100)];
 	countdownLabel_.textColor = [UIColor whiteColor];
-	countdownLabel_.font = [UIFont boldSystemFontOfSize:96];
+	countdownLabel_.font = [UIFont boldSystemFontOfSize:64];
 	countdownLabel_.textAlignment = NSTextAlignmentCenter;
 	countdownLabel_.backgroundColor = [[UIColor colorWithRed:0.59 green:0.59 blue:0.59 alpha:0.7] colorWithAlphaComponent:0.7];
 	countdownLabel_.layer.cornerRadius = 20;
 	countdownLabel_.clipsToBounds = YES;
 	countdownLabel_.hidden = YES;
 	[viewController_.view addSubview:countdownLabel_];
+
+	// Image counter label (bottom right corner)
+	imageCounterLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(screenBounds.size.width - 80, screenBounds.size.height - 60, 60, 40)];
+	imageCounterLabel_.textColor = [UIColor whiteColor];
+	imageCounterLabel_.font = [UIFont boldSystemFontOfSize:24];
+	imageCounterLabel_.textAlignment = NSTextAlignmentRight;
+	imageCounterLabel_.backgroundColor = [UIColor clearColor];
+	imageCounterLabel_.hidden = YES;
+	[viewController_.view addSubview:imageCounterLabel_];
 }
 
 - (void)loadAvailableCameras
@@ -274,9 +290,10 @@ using namespace Ocean;
 	for (NSString* cameraName in availableCameras_)
 	{
 		UIAlertAction* action = [UIAlertAction actionWithTitle:cameraName style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull selectedAction) {
-			[self->cameraDropdownButton_ setTitle:cameraName forState:UIControlStateNormal];
-			[self onCameraSelected:cameraName];
-		}];
+				[self->cameraDropdownButton_ setTitle:cameraName forState:UIControlStateNormal];
+				[self onCameraSelected:cameraName];
+			}];
+
 		[alertController addAction:action];
 	}
 
@@ -360,9 +377,10 @@ using namespace Ocean;
 	for (NSString* resolution in availableResolutions_)
 	{
 		UIAlertAction* action = [UIAlertAction actionWithTitle:resolution style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull selectedAction) {
-			[self->resolutionDropdownButton_ setTitle:resolution forState:UIControlStateNormal];
-			[self onResolutionSelected:resolution];
-		}];
+				[self->resolutionDropdownButton_ setTitle:resolution forState:UIControlStateNormal];
+				[self onResolutionSelected:resolution];
+			}];
+
 		[alertController addAction:action];
 	}
 
@@ -453,6 +471,7 @@ using namespace Ocean;
 - (void)focusSliderChanged:(UISlider*)slider
 {
 	float focusValue = slider.value;
+	currentFocus_ = focusValue;
 	focusLabel_.text = [NSString stringWithFormat:@"Focus: %.2f", focusValue];
 	focusLabel_.textColor = [UIColor blackColor];
 
@@ -491,44 +510,69 @@ using namespace Ocean;
 		takeImageButton_.enabled = YES;
 		takeImageButton_.backgroundColor = [UIColor colorWithRed:0.13 green:0.59 blue:0.95 alpha:1.0];
 
-		[self takePicture];
-		[self vibratePhone];
+		if ([self takePicture])
+		{
+			Platform::Apple::IOS::Utilities::triggerVibration();
+
+			// Update image counter
+			imageCounterLabel_.text = [NSString stringWithFormat:@"%u", pictureCounter_];
+			imageCounterLabel_.hidden = NO;
+		}
 	}
 }
 
-- (void)takePicture
+- (bool)takePicture
 {
 	if (!liveVideo_)
 	{
-		return;
+		return false;
 	}
 
 	const FrameRef frame = liveVideo_->frame();
 
 	if (!frame)
 	{
-		return;
+		return false;
 	}
 
 	if (!directory_.isValid())
 	{
-		return;
+		return false;
 	}
 
-	const IO::File filename = directory_ + IO::File("image_" + String::toAString(frame->width()) + "x" + String::toAString(frame->height()) + "_" + String::toAString(pictureCounter_++, 4u) + ".png");
+	// Write settings file on first image capture
+	if (!settingsFileWritten_)
+	{
+		const IO::File settingsFile = directory_ + IO::File("camera_settings.txt");
+
+		std::ofstream settingsStream(settingsFile());
+
+		if (settingsStream.is_open())
+		{
+			settingsStream << "Camera: " << [selectedCamera_ UTF8String] << std::endl;
+			settingsStream << "Resolution: " << [selectedResolution_ UTF8String] << std::endl;
+			settingsStream << "Focus: " << currentFocus_ << std::endl;
+
+			Log::info() << "Wrote camera settings to '" << settingsFile() << "'";
+			settingsFileWritten_ = YES;
+		}
+		else
+		{
+			Log::error() << "Failed to write camera settings file";
+		}
+	}
+
+	const IO::File filename = directory_ + IO::File("image_" + String::toAString(frame->width()) + "x" + String::toAString(frame->height()) + "_" + String::toAString(pictureCounter_++, 3u) + ".png");
 
 	if (!IO::Image::Comfort::writeImage(*frame, filename(), true))
 	{
 		Log::error() << "Failed to write the picture";
-		return;
+		return false;
 	}
 
 	Log::info() << "Wrote picture to '" << filename() << "'";
-}
 
-- (void)vibratePhone
-{
-	AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+	return true;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application

@@ -117,6 +117,18 @@ class GLMainView : public Ocean::Platform::Android::Application::GLFrameView
 		/// The counter for the pictures.
 		unsigned int pictureCounter_ = 0u;
 
+		/// The selected camera name.
+		std::string selectedCameraName_;
+
+		/// The selected resolution.
+		std::string selectedResolution_;
+
+		/// The current focus value.
+		float currentFocus_ = 0.85f;
+
+		/// True, if the settings file has been written.
+		bool settingsFileWritten_ = false;
+
 	private:
 
 		/// Static helper variable ensuring that the instance function will be registered.

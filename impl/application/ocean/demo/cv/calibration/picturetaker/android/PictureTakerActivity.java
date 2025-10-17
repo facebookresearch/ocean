@@ -200,10 +200,7 @@ public class PictureTakerActivity extends GLFrameViewActivity
 		takeImageButton_.setOnClickListener(v -> startCountdown());
 		addContentView(takeImageButton_, buttonParams);
 
-		FrameLayout.LayoutParams countdownParams = new FrameLayout.LayoutParams(
-			ViewGroup.LayoutParams.WRAP_CONTENT,
-			ViewGroup.LayoutParams.WRAP_CONTENT
-		);
+		FrameLayout.LayoutParams countdownParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		countdownParams.gravity = Gravity.CENTER;
 
 		countdownTextView_ = new TextView(this);
@@ -219,6 +216,19 @@ public class PictureTakerActivity extends GLFrameViewActivity
 		countdownTextView_.setPadding(60, 40, 60, 40);
 
 		addContentView(countdownTextView_, countdownParams);
+
+		FrameLayout.LayoutParams imageCounterParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+		imageCounterParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+		imageCounterParams.bottomMargin = 60;
+		imageCounterParams.rightMargin = 20;
+
+		imageCounterTextView_ = new TextView(this);
+		imageCounterTextView_.setTextSize(24);
+		imageCounterTextView_.setTextColor(Color.WHITE);
+		imageCounterTextView_.setLayoutParams(imageCounterParams);
+		imageCounterTextView_.setVisibility(TextView.INVISIBLE);
+
+		addContentView(imageCounterTextView_, imageCounterParams);
 
 		focusContainer_ = new LinearLayout(this);
 		focusContainer_.setOrientation(LinearLayout.VERTICAL);
@@ -253,8 +263,10 @@ public class PictureTakerActivity extends GLFrameViewActivity
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
 			{
-				float focusValue = progress / 100.0f;
+				final float focusValue = progress / 100.0f;
+
 				focusLabel.setText(String.format("Focus: %.2f", focusValue));
+
 				if (fromUser)
 				{
 					setFocus(focusValue);
@@ -264,11 +276,13 @@ public class PictureTakerActivity extends GLFrameViewActivity
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar)
 			{
+				// nothing to do here
 			}
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar)
 			{
+				// nothing to do here
 			}
 		});
 
@@ -374,9 +388,12 @@ public class PictureTakerActivity extends GLFrameViewActivity
 	{
 		takeImageButton_.setEnabled(false);
 		updateButtonState();
+		
 		focusContainer_.setVisibility(View.GONE);
+
 		countdownValue_ = 3;
 		countdownTextView_.setVisibility(TextView.VISIBLE);
+
 		runCountdown();
 	}
 
@@ -396,9 +413,15 @@ public class PictureTakerActivity extends GLFrameViewActivity
 			
 			takeImageButton_.setEnabled(true);
 			updateButtonState();
-			takePicture();
 			
-			vibratePhone();
+			if (takePicture())
+			{
+				imageCounter_++;
+				imageCounterTextView_.setText(String.valueOf(imageCounter_));
+				imageCounterTextView_.setVisibility(TextView.VISIBLE);
+
+				vibratePhone();
+			}
 		}
 	}
 
@@ -407,6 +430,7 @@ public class PictureTakerActivity extends GLFrameViewActivity
 		try
 		{
 			Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
 			if (vibrator != null && vibrator.hasVibrator())
 			{
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -419,9 +443,9 @@ public class PictureTakerActivity extends GLFrameViewActivity
 				}
 			}
 		}
-		catch (Exception e)
+		catch (Exception exception)
 		{
-			Log.e("Ocean", "PictureTakerActivity: Failed to vibrate: " + e.getMessage());
+			Log.e("Ocean", "PictureTakerActivity: Failed to vibrate: " + exception.getMessage());
 		}
 	}
 
@@ -441,8 +465,9 @@ public class PictureTakerActivity extends GLFrameViewActivity
 
 	/**
 	 * Java native interface function to take a picture.
+	 * @return True, if succeeded
 	 */
-	public static native void takePicture();
+	public static native boolean takePicture();
 
 	/**
 	 * Java native interface function to get available cameras.
@@ -472,6 +497,7 @@ public class PictureTakerActivity extends GLFrameViewActivity
 
 	private Button takeImageButton_;
 	private TextView countdownTextView_;
+	private TextView imageCounterTextView_;
 	private Spinner cameraSpinner_;
 	private Spinner resolutionSpinner_;
 	private TextView cameraInstructionText_;
@@ -482,6 +508,7 @@ public class PictureTakerActivity extends GLFrameViewActivity
 	private SeekBar focusSeekBar_;
 	private Handler handler_ = new Handler();
 	private int countdownValue_ = 3;
+	private int imageCounter_ = 0;
 	private String selectedCamera_ = null;
 	private String selectedResolution_ = null;
 	private boolean cameraSelected_ = false;
