@@ -182,7 +182,7 @@ bool GLFrameView::setBackgroundMedium(const Media::FrameMediumRef& frameMedium, 
 		return false;
 	}
 
-	return false;
+	return true;
 }
 
 Media::FrameMediumRef GLFrameView::backgroundMedium() const
