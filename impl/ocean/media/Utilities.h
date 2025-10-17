@@ -109,6 +109,16 @@ class OCEAN_MEDIA_EXPORT Utilities
 		 * @return True, if succeeded
 		 */
 		static inline bool decodeFrame(const Buffer& buffer, Frame& frame);
+
+		/**
+		 * Parses a resolution string and returns the width and height.
+		 * The resolution string must have the following format: '<width>x<height>', e.g., '640x480', or '1280x720', or '1920x1080'.
+		 * @param resolution The resolution string to be parsed
+		 * @param width The resulting width
+		 * @param height The resulting height
+		 * @return True, if succeeded
+		 */
+		static bool parseResolution(const std::string& resolution, unsigned int& width, unsigned int& height);
 };
 
 inline Utilities::Buffer Utilities::encodeFrame(const Frame& frame, const std::string& imageType, const size_t reservedHeaderSize)

@@ -118,12 +118,16 @@ bool Utilities::decodeFrame(const uint8_t*& data, size_t& size, Frame& frame)
 	static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
 
 	if (size < 16)
+	{
 		return false;
+	}
 
 	const size_t bytesType = size_t(((unsigned long long*)data)[0]);
 
 	if (bytesType > size - 16)
+	{
 		return false;
+	}
 
 	std::string frameType((char*)data + 8, bytesType);
 
@@ -138,6 +142,38 @@ bool Utilities::decodeFrame(const uint8_t*& data, size_t& size, Frame& frame)
 
 	data += 8 + bytesType + 8 + bytesData;
 	size -= 8 + bytesType + 8 + bytesData;
+
+	return true;
+}
+
+bool Utilities::parseResolution(const std::string& resolution, unsigned int& width, unsigned int& height)
+{
+	ocean_assert(resolution.size() >= 3);
+	if (resolution.size() < 3)
+	{
+		return false;
+	}
+
+	const std::string::size_type pos = resolution.find('x');
+	if (pos == std::string::npos)
+	{
+		return false;
+	}
+
+	int32_t signedWidth = -1;
+	if (!String::isInteger32(resolution.substr(0, pos), &signedWidth) || signedWidth <= 0)
+	{
+		return false;
+	}
+
+	int32_t signedHeight = -1;
+	if (!String::isInteger32(resolution.substr(pos + 1), &signedHeight) || signedHeight <= 0)
+	{
+		return false;
+	}
+
+	width = (unsigned int)(signedWidth);
+	height = (unsigned int)(signedHeight);
 
 	return true;
 }
