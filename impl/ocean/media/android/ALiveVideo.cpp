@@ -469,6 +469,46 @@ bool ALiveVideo::setFocus(const float position)
 	return setRepeatingRequest();
 }
 
+bool ALiveVideo::videoStabilization() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	return videoStabilizationEnabled_;
+}
+
+bool ALiveVideo::setVideoStabilization(const bool enable)
+{
+	const ScopedLock scopedLock(lock_);
+
+	if (videoStabilizationEnabled_ == enable)
+	{
+		return true;
+	}
+
+	videoStabilizationEnabled_ = enable;
+
+	if (captureRequest_ == nullptr)
+	{
+		// The setting will be applied when the capture session is created
+		return true;
+	}
+
+	// Apply the video stabilization setting to the capture request
+	const uint8_t mode = enable ? ACAMERA_CONTROL_VIDEO_STABILIZATION_MODE_ON : ACAMERA_CONTROL_VIDEO_STABILIZATION_MODE_OFF;
+	if (NativeCameraLibrary::get().ACaptureRequest_setEntry_u8(captureRequest_, ACAMERA_CONTROL_VIDEO_STABILIZATION_MODE, 1, &mode) != ACAMERA_OK)
+	{
+		return false;
+	}
+
+	// Update the repeating request if the capture session is running
+	if (startTimestamp_.isValid())
+	{
+		return setRepeatingRequest();
+	}
+
+	return true;
+}
+
 void ALiveVideo::feedNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera, const ControlMode exposureMode, const double exposureDuration, const ControlMode isoMode, const float iso, const ControlMode focusMode, const float focusValue)
 {
 	// several parameters are unknown in case the camera is fed from an external source
@@ -818,6 +858,17 @@ bool ALiveVideo::createCaptureSession()
 	if (noError && NativeCameraLibrary::get().ACaptureRequest_addTarget(captureRequest_, outputTarget_) != ACAMERA_OK)
 	{
 		noError = false;
+	}
+
+	// Configure video stabilization based on the current setting
+	if (noError)
+	{
+		const uint8_t videoStabilizationMode = videoStabilizationEnabled_ ? ACAMERA_CONTROL_VIDEO_STABILIZATION_MODE_ON : ACAMERA_CONTROL_VIDEO_STABILIZATION_MODE_OFF;
+		if (NativeCameraLibrary::get().ACaptureRequest_setEntry_u8(captureRequest_, ACAMERA_CONTROL_VIDEO_STABILIZATION_MODE, 1, &videoStabilizationMode) != ACAMERA_OK)
+		{
+			Log::warning() << "ALiveVideo: Failed to set video stabilization mode, device may not support this feature";
+			// We don't fail here as not all devices support video stabilization
+		}
 	}
 
 	if (noError == false)

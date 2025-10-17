@@ -237,6 +237,18 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		bool setFocus(const float position) override;
 
 		/**
+		 * Returns whether video stabilization is currently enabled.
+		 * @see videoStabilization().
+		 */
+		bool videoStabilization() const override;
+
+		/**
+		 * Sets whether video stabilization should be enabled.
+		 * @see setVideoStabilization().
+		 */
+		bool setVideoStabilization(const bool enable) override;
+
+		/**
 		 * Explicitly feeds a new external frame this live video.
 		 * This function is intended for situations in which this live video does not receive the frame anymore from the system (e.g., when ARCore is accessing the video stream).<br>
 		 * Do not call this function in case the live video is still receiving pixel buffers from the Android media system.
@@ -689,6 +701,9 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 
 		/// The minimal focus distance (reciprocal of the focus distance in meters), -1 if unknown.
 		float focusPositionMin_ = -1.0f;
+
+		/// Whether video stabilization is enabled (true) or disabled (false).
+		bool videoStabilizationEnabled_ = false;
 
 		/// The stream configurations available for this camera.
 		StreamConfigurations availableStreamConfigurations_;

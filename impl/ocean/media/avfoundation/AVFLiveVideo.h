@@ -102,6 +102,18 @@ class AVFLiveVideo :
 		bool setFocus(const float position) override;
 
 		/**
+		 * Returns whether video stabilization is currently enabled.
+		 * @see videoStabilization().
+		 */
+		bool videoStabilization() const override;
+
+		/**
+		 * Sets whether video stabilization should be enabled.
+		 * @see setVideoStabilization().
+		 */
+		bool setVideoStabilization(const bool enable) override;
+
+		/**
 		 * Explicitly feeds a new external pixel buffer into this live video.
 		 * This function is intended for situations in which this live video does not receive the pixel buffers anymore from the system (e.g., when ARKit is accessing the video stream).<br>
 		 * Do not call this function in case the live video is still receiving pixel buffers from the AVFoundation system.
@@ -226,6 +238,9 @@ class AVFLiveVideo :
 
 		/// The manual ISO of the live video device, -1 if no manual exposure is selected.
 		float iso_ = -1.0f;
+
+		/// Whether video stabilization is enabled (true) or disabled (false).
+		bool videoStabilizationEnabled_ = false;
 
 		/// The number of measurements of ISO and exposure values.
 		unsigned int isoExposureMeasurements_ = 0u;

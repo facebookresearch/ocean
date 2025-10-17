@@ -248,6 +248,13 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		virtual float focus(ControlMode* focusMode = nullptr) const;
 
 		/**
+		 * Returns whether video stabilization is currently enabled.
+		 * Video stabilization applies post-processing to reduce camera shake, which may introduce artificial warping or geometric distortions.
+		 * @return True, if video stabilization is enabled; False, if video stabilization is disabled; depends on platform and device support
+		 */
+		virtual bool videoStabilization() const;
+
+		/**
 		 * Sets the preferred stream type.
 		 * There is no guarantee that the device will use this stream type.
 		 * @param streamType The preferred stream type to be set, must be valid
@@ -290,6 +297,16 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 		 * @see focus().
 		 */
 		virtual bool setFocus(const float position);
+
+		/**
+		 * Sets whether video stabilization should be enabled.
+		 * Video stabilization applies post-processing to reduce camera shake, but may introduce artificial warping or geometric distortions.
+		 * Disabling video stabilization provides raw, unprocessed camera frames.
+		 * @param enable True, to enable video stabilization; False, to disable video stabilization and get raw camera data
+		 * @return True, if succeeded; False, if video stabilization control is not supported on this platform or device
+		 * @see videoStabilization().
+		 */
+		virtual bool setVideoStabilization(const bool enable);
 
 		/**
 		 * Translates a control mode to a string.

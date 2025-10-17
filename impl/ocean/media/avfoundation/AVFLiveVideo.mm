@@ -500,6 +500,44 @@ bool AVFLiveVideo::setFocus(const float position)
 	return result;
 }
 
+bool AVFLiveVideo::videoStabilization() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	return videoStabilizationEnabled_;
+}
+
+bool AVFLiveVideo::setVideoStabilization(const bool enable)
+{
+	const ScopedLock scopedLock(lock_);
+
+	videoStabilizationEnabled_ = enable;
+
+	// If the capture session is already running, we need to update the connection settings
+	if (captureVideoDataOutput_ != nullptr && captureSession_ != nullptr)
+	{
+		AVCaptureConnection* connection = [captureVideoDataOutput_ connectionWithMediaType:AVMediaTypeVideo];
+		if (connection != nullptr)
+		{
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
+			if ([connection isVideoStabilizationSupported])
+			{
+				if (@available(iOS 8.0, *))
+				{
+					connection.preferredVideoStabilizationMode = enable ? AVCaptureVideoStabilizationModeStandard : AVCaptureVideoStabilizationModeOff;
+					return true;
+				}
+			}
+#endif
+		}
+
+		return false;
+	}
+
+	// If the capture session is not yet created, the setting will be applied when it is created
+	return true;
+}
+
 void AVFLiveVideo::feedNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera anyCamera, const double unixTimestamp, const double sampleTime)
 {
 	onNewSample(pixelBuffer, std::move(anyCamera), unixTimestamp, sampleTime);
@@ -707,6 +745,21 @@ bool AVFLiveVideo::createCaptureSession()
 
 	[captureSession_ addInput:captureDeviceInput_];
 	[captureSession_ addOutput:captureVideoDataOutput_];
+
+	// Configure video stabilization based on the current setting
+	AVCaptureConnection* connection = [captureVideoDataOutput_ connectionWithMediaType:AVMediaTypeVideo];
+	if (connection != nullptr)
+	{
+#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
+		if ([connection isVideoStabilizationSupported])
+		{
+			if (@available(iOS 8.0, *))
+			{
+				connection.preferredVideoStabilizationMode = videoStabilizationEnabled_ ? AVCaptureVideoStabilizationModeStandard : AVCaptureVideoStabilizationModeOff;
+			}
+		}
+#endif
+	}
 
 	return true;
 }

@@ -158,6 +158,11 @@ float LiveVideo::focus(ControlMode* focusMode) const
 	return -1.0f;
 }
 
+bool LiveVideo::videoStabilization() const
+{
+	return false;
+}
+
 bool LiveVideo::setPreferredStreamType(const StreamType /*streamType*/)
 {
 	return false;
@@ -179,6 +184,11 @@ bool LiveVideo::setISO(const float /*iso*/)
 }
 
 bool LiveVideo::setFocus(const float /*position*/)
+{
+	return false;
+}
+
+bool LiveVideo::setVideoStabilization(const bool /*enable*/)
 {
 	return false;
 }
