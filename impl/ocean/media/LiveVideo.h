@@ -26,7 +26,7 @@ class LiveVideo;
  * @see SmartMediumRef, LiveVideo.
  * @ingroup media
  */
-typedef SmartMediumRef<LiveVideo> LiveVideoRef;
+using LiveVideoRef = SmartMediumRef<LiveVideo>;
 
 /**
  * This class is the base class for all live videos.
@@ -51,6 +51,11 @@ class OCEAN_MEDIA_EXPORT LiveVideo :
 			/// The control is dynamic (e.g., because auto exposure, ISO, or focus is enabled).
 			CM_DYNAMIC
 		};
+
+		/**
+		 * Definition of a vector holding control modes.
+		 */
+		using ControlModes = std::vector<ControlMode>;
 
 		/**
 		 * Definition of individual stream types.

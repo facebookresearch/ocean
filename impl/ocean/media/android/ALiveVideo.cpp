@@ -655,7 +655,8 @@ bool ALiveVideo::createCamera(FrameType& frameType)
 		Log::debug() << "camera " << cameraId << ", ISO range [" << isoMin_ << ", " << isoMax_ << "]";
 	}
 
-	if (cameraMinFocus(*cameraManager, cameraId, focusPositionMin_))
+	ControlModes availableFocusModes;
+	if (cameraAvailableFocusModes(*cameraManager, cameraId, availableFocusModes, focusPositionMin_))
 	{
 		Log::debug() << "camera " << cameraId << ", Min focus distance value " << focusPositionMin_ << ", which corresponds to a supported closest object in " << NumericF::ratio(1.0f, focusPositionMin_, -1.0f) << "m";
 	}
@@ -1987,29 +1988,51 @@ bool ALiveVideo::cameraISORange(ACameraManager* cameraManager, const std::string
 	return result;
 }
 
-bool ALiveVideo::cameraMinFocus(ACameraManager* cameraManager, const std::string& cameraId, float& minFocusPosition)
+bool ALiveVideo::cameraAvailableFocusModes(ACameraManager* cameraManager, const std::string& cameraId, ControlModes& focusModes, float& minFocusPosition)
 {
 	ocean_assert(cameraManager != nullptr && !cameraId.empty());
 
-	bool result = false;
-
 	const NativeCameraLibrary::ScopedACameraMetadata cameraMetadata(cameraManager, cameraId.c_str());
 
-	if (cameraMetadata.isValid())
+	if (!cameraMetadata.isValid())
 	{
-		// from Android documentation:
-		// ... the focus distance value will still be in the range of [0, ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE], where 0 represents the farthest focus
+		return false;
+	}
 
-		ACameraMetadata_const_entry constEntry = {};
-		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE, &constEntry) == ACAMERA_OK)
+	// from Android documentation:
+	// ... the focus distance value will still be in the range of [0, ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE], where 0 represents the farthest focus
+
+	ACameraMetadata_const_entry constEntry = {};
+	if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_CONTROL_AF_AVAILABLE_MODES, &constEntry) != ACAMERA_OK)
+	{
+		return false;
+	}
+
+	focusModes.clear();
+
+	for (unsigned int n = 0u; n < constEntry.count; ++n)
+	{
+		if (constEntry.data.u8[n] == ACAMERA_CONTROL_AF_MODE_OFF)
 		{
-			minFocusPosition = constEntry.data.f[0];
-
-			result = true;
+			focusModes.push_back(ControlMode::CM_FIXED);
+		}
+		else if (constEntry.data.u8[n] == ACAMERA_CONTROL_AF_MODE_AUTO)
+		{
+			focusModes.push_back(ControlMode::CM_DYNAMIC);
 		}
 	}
 
-	return result;
+	ocean_assert(focusModes.size() <= 2);
+
+	constEntry = {};
+	if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_LENS_INFO_MINIMUM_FOCUS_DISTANCE, &constEntry) != ACAMERA_OK)
+	{
+		return false;
+	}
+
+	minFocusPosition = constEntry.data.f[0];
+
+	return true;
 }
 
 bool ALiveVideo::cameraSensorPysicalSize(ACameraManager* cameraManager, const std::string& cameraId, float& cameraSensorPhysicalSizeX)

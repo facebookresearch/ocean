@@ -451,13 +451,14 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		static bool cameraISORange(ACameraManager* cameraManager, const std::string& cameraId, float& minISO, float& maxISO);
 
 		/**
-		 * Determines the minimal focus distance of the camera sensor.
+		 * Determines the supported focus modes of the camera sensor.
 		 * @param cameraManager The camera manager, must be valid
 		 * @param cameraId The id of the camera, must be valid
+		 * @param focusModes The resulting available focus modes
 		 * @param minFocusPosition The minimal focus distance, which is the reciprocal of the focus distance in meters
 		 * @return True, if succeeded
 		 */
-		static bool cameraMinFocus(ACameraManager* cameraManager, const std::string& cameraId, float& minFocusPosition);
+		static bool cameraAvailableFocusModes(ACameraManager* cameraManager, const std::string& cameraId, ControlModes& focusModes, float& minFocusPosition);
 
 		/**
 		 * Determines the physical size of the camera sensor.
