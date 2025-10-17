@@ -15,6 +15,11 @@
 
 #include "ocean/media/FrameMedium.h"
 
+#include "ocean/rendering/Engine.h"
+#include "ocean/rendering/Framebuffer.h"
+#include "ocean/rendering/PerspectiveView.h"
+#include "ocean/rendering/UndistortedBackground.h"
+
 #ifndef __OBJC__
 	#error Platform::Apple::IOS::OpenGLFrameMediumViewController.h needs to be included from an ObjectiveC++ file
 #endif
@@ -53,6 +58,30 @@
  * @return The corresponding 2D location within the image frame of the medium, a negative coordinate (-1, -1), in case no valid mapping exists
  */
 -(CGPoint)view2medium:(CGPoint)viewPoint;
+
+/**
+ * Updates the rendering engine.
+ */
+-(void)update;
+
+@end
+
+@interface OpenGLFrameMediumViewController ()
+{
+	@protected
+
+		/// The rendering engine to be used.
+		Ocean::Rendering::EngineRef renderingEngine_;
+
+		/// The framebuffer in which the result will be rendered.
+		Ocean::Rendering::FramebufferRef renderingFramebuffer_;
+
+		/// The rendering view.
+		Ocean::Rendering::PerspectiveViewRef renderingView_;
+
+		/// The undistorted background.
+		Ocean::Rendering::UndistortedBackgroundRef renderingUndistortedBackground_;
+}
 
 @end
 

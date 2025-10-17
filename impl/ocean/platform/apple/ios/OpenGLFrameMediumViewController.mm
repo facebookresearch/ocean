@@ -11,32 +11,11 @@
 
 #include "ocean/media/Manager.h"
 
-#include "ocean/rendering/Engine.h"
-#include "ocean/rendering/Framebuffer.h"
 #include "ocean/rendering/Manager.h"
-#include "ocean/rendering/PerspectiveView.h"
-#include "ocean/rendering/UndistortedBackground.h"
 
 #import <UIKit/UIKit.h>
 
 using namespace Ocean;
-
-@interface OpenGLFrameMediumViewController ()
-{
-	/// The rendering engine to be used.
-	Rendering::EngineRef renderingEngine_;
-
-	/// The framebuffer in which the result will be rendered.
-	Rendering::FramebufferRef renderingFramebuffer_;
-
-	/// The rendering view.
-	Rendering::PerspectiveViewRef renderingView_;
-
-	/// The undistorted background.
-	Rendering::UndistortedBackgroundRef renderingUndistortedBackground_;
-}
-
-@end
 
 @implementation OpenGLFrameMediumViewController
 
