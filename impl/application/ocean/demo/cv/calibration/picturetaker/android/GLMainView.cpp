@@ -85,6 +85,8 @@ bool GLMainView::startCamera(const std::string& resolution, const std::string& d
 		return false;
 	}
 
+	videoStabilization_ = liveVideo_->videoStabilization() ? 1 : 0;
+
 	if (!setBackgroundMedium(liveVideo_, false /*adjustFov=*/))
 	{
 		Log::error() << "Failed to set the background medium";
@@ -120,6 +122,28 @@ bool GLMainView::setFocus(const float focus)
 	return liveVideo_->setFocus(focus);
 }
 
+bool GLMainView::setVideoStabilization(const bool enabled)
+{
+	if (!liveVideo_)
+	{
+		return false;
+	}
+
+	if (!liveVideo_->setVideoStabilization(enabled))
+	{
+		return false;
+	}
+
+	videoStabilization_ = enabled ? 1 : 0;
+
+	return true;
+}
+
+bool GLMainView::videoStabilization() const
+{
+	return videoStabilization_ == 1;
+}
+
 bool GLMainView::takePicture()
 {
 	if (!liveVideo_)
@@ -151,6 +175,19 @@ bool GLMainView::takePicture()
 			settingsStream << "Camera: " << selectedCameraName_ << std::endl;
 			settingsStream << "Resolution: " << selectedResolution_ << std::endl;
 			settingsStream << "Focus: " << currentFocus_ << std::endl;
+
+			if (videoStabilization_ == 1)
+			{
+				settingsStream << "Video Stabilization: Enabled" << std::endl;
+			}
+			else if (videoStabilization_ == 0)
+			{
+				settingsStream << "Video Stabilization: Disabled" << std::endl;
+			}
+			else if (videoStabilization_ == -1)
+			{
+				settingsStream << "Video Stabilization: Unknown" << std::endl;
+			}
 
 			Log::info() << "Wrote camera settings to '" << settingsFile() << "'";
 			settingsFileWritten_ = true;
@@ -318,4 +355,14 @@ jobjectArray Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_Pi
 jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_setFocus(JNIEnv* env, jobject javaThis, jfloat focus)
 {
 	return GLMainView::get<GLMainView>().setFocus(float(focus));
+}
+
+jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_setVideoStabilization(JNIEnv* env, jobject javaThis, jboolean enabled)
+{
+	return GLMainView::get<GLMainView>().setVideoStabilization(bool(enabled));
+}
+
+jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_videoStabilization(JNIEnv* env, jobject javaThis)
+{
+	return GLMainView::get<GLMainView>().videoStabilization();
 }

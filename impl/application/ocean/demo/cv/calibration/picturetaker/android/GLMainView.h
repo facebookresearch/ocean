@@ -58,6 +58,19 @@ class GLMainView : public Ocean::Platform::Android::Application::GLFrameView
 		bool setFocus(const float focus);
 
 		/**
+		 * Sets or changes the video stabilization mode.
+		 * @param enabled True to enable stabilization, false to disable
+		 * @return True, if succeeded
+		 */
+		bool setVideoStabilization(const bool enabled);
+
+		/**
+		 * Returns the current video stabilization status.
+		 * @return True if stabilization is enabled
+		 */
+		bool videoStabilization() const;
+
+		/**
 		 * Takes a picture.
 		 * @return True, if succeeded
 		 */
@@ -126,6 +139,9 @@ class GLMainView : public Ocean::Platform::Android::Application::GLFrameView
 		/// The current focus value.
 		float currentFocus_ = 0.85f;
 
+		/// The current video stabilization state, 0 if disabled, 1 if enabled, -1 if unknown.
+		int videoStabilization_ = -1;
+
 		/// True, if the settings file has been written.
 		bool settingsFileWritten_ = false;
 
@@ -191,5 +207,22 @@ extern "C" jobjectArray Java_com_meta_ocean_app_demo_cv_calibration_picturetaker
  * @return True, if succeeded
  */
 extern "C" jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_setFocus(JNIEnv* env, jobject javaThis, jfloat focus);
+
+/**
+ * Java native interface function to set video stabilization.
+ * @param env JNI environment
+ * @param javaThis JNI object
+ * @param enabled True to enable stabilization, false to disable
+ * @return True, if succeeded
+ */
+extern "C" jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_setVideoStabilization(JNIEnv* env, jobject javaThis, jboolean enabled);
+
+/**
+ * Java native interface function to get current video stabilization status.
+ * @param env JNI environment
+ * @param javaThis JNI object
+ * @return True if stabilization is enabled
+ */
+extern "C" jboolean Java_com_meta_ocean_app_demo_cv_calibration_picturetaker_android_PictureTakerActivity_videoStabilization(JNIEnv* env, jobject javaThis);
 
 #endif // FACEBOOK_APPLICATION_OCEAN_DEMO_CV_CALIBRATION_PICTURETAKER_ANDROID_GL_MAIN_VIEW_H

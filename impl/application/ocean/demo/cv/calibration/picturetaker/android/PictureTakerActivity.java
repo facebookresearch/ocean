@@ -30,6 +30,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -289,6 +290,19 @@ public class PictureTakerActivity extends GLFrameViewActivity
 		focusContainer_.addView(focusLabel);
 		focusContainer_.addView(focusSeekBar_);
 
+		stabilizationCheckBox_ = new CheckBox(this);
+		stabilizationCheckBox_.setText("Video Stabilization");
+		stabilizationCheckBox_.setTextColor(Color.WHITE);
+		stabilizationCheckBox_.setTextSize(16);
+		stabilizationCheckBox_.setPadding(20, 10, 20, 0);
+		stabilizationCheckBox_.setChecked(false);
+
+		stabilizationCheckBox_.setOnCheckedChangeListener((buttonView, isChecked) -> {
+				setVideoStabilization(isChecked);
+			});
+
+		focusContainer_.addView(stabilizationCheckBox_);
+
 		addContentView(focusContainer_, focusContainerParams);
 	}
 
@@ -361,6 +375,8 @@ public class PictureTakerActivity extends GLFrameViewActivity
 			if (success)
 			{
 				cameraStarted_ = true;
+
+				stabilizationCheckBox_.setChecked(videoStabilization());
 				
 				runOnUiThread(() -> {
 					cameraSelectionContainer_.setVisibility(View.GONE);
@@ -495,6 +511,19 @@ public class PictureTakerActivity extends GLFrameViewActivity
 	 */
 	public static native boolean setFocus(float focus);
 
+	/**
+	 * Java native interface function to set video stabilization.
+	 * @param enabled True to enable stabilization, false to disable
+	 * @return True, if succeeded
+	 */
+	public static native boolean setVideoStabilization(boolean enabled);
+
+	/**
+	 * Java native interface function to get current video stabilization status.
+	 * @return True if stabilization is enabled
+	 */
+	public static native boolean videoStabilization();
+
 	private Button takeImageButton_;
 	private TextView countdownTextView_;
 	private TextView imageCounterTextView_;
@@ -506,6 +535,7 @@ public class PictureTakerActivity extends GLFrameViewActivity
 	private LinearLayout resolutionSelectionContainer_;
 	private LinearLayout focusContainer_;
 	private SeekBar focusSeekBar_;
+	private CheckBox stabilizationCheckBox_;
 	private Handler handler_ = new Handler();
 	private int countdownValue_ = 3;
 	private int imageCounter_ = 0;

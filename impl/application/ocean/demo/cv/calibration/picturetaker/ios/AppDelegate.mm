@@ -100,6 +100,8 @@ using namespace Ocean;
 	UIView* focusContainer_;
 	UILabel* focusLabel_;
 	UISlider* focusSlider_;
+	UISwitch* stabilizationSwitch_;
+	UILabel* stabilizationLabel_;
 
 	UIButton* takeImageButton_;
 	UILabel* countdownLabel_;
@@ -115,6 +117,7 @@ using namespace Ocean;
 	NSInteger countdownValue_;
 	float initialFocus_;
 	float currentFocus_;
+	BOOL videoStabilizationEnabled_;
 	BOOL settingsFileWritten_;
 }
 @end
@@ -141,6 +144,7 @@ using namespace Ocean;
 	cameraStarted_ = NO;
 	initialFocus_ = 0.85f;
 	currentFocus_ = 0.85f;
+	videoStabilizationEnabled_ = NO;
 	settingsFileWritten_ = NO;
 
 	[self setupUI];
@@ -209,7 +213,7 @@ using namespace Ocean;
 	[viewController_.view addSubview:resolutionSelectionContainer_];
 
 	// Focus container
-	focusContainer_ = [[UIView alloc] initWithFrame:CGRectMake(25, 50, screenBounds.size.width - 50, 100)];
+	focusContainer_ = [[UIView alloc] initWithFrame:CGRectMake(25, 50, screenBounds.size.width - 50, 140)];
 	focusContainer_.backgroundColor = [[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.95] colorWithAlphaComponent:0.95];
 	focusContainer_.layer.cornerRadius = 12;
 	focusContainer_.hidden = YES;
@@ -227,6 +231,18 @@ using namespace Ocean;
 	focusSlider_.value = initialFocus_;
 	[focusSlider_ addTarget:self action:@selector(focusSliderChanged:) forControlEvents:UIControlEventValueChanged];
 	[focusContainer_ addSubview:focusSlider_];
+
+	stabilizationLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(20, 90, focusContainer_.frame.size.width - 80, 30)];
+	stabilizationLabel_.text = @"Video Stabilization";
+	stabilizationLabel_.textColor = [UIColor blackColor];
+	stabilizationLabel_.font = [UIFont systemFontOfSize:16];
+	stabilizationLabel_.textAlignment = NSTextAlignmentLeft;
+	[focusContainer_ addSubview:stabilizationLabel_];
+
+	stabilizationSwitch_ = [[UISwitch alloc] initWithFrame:CGRectMake(focusContainer_.frame.size.width - 70, 85, 51, 31)];
+	stabilizationSwitch_.on = NO;
+	[stabilizationSwitch_ addTarget:self action:@selector(stabilizationSwitchChanged:) forControlEvents:UIControlEventValueChanged];
+	[focusContainer_ addSubview:stabilizationSwitch_];
 
 	[viewController_.view addSubview:focusContainer_];
 
@@ -430,6 +446,10 @@ using namespace Ocean;
 		return;
 	}
 
+	videoStabilizationEnabled_ = liveVideo_->videoStabilization();
+
+	stabilizationSwitch_.on = videoStabilizationEnabled_;
+
 	[viewController_ setFrameMedium:liveVideo_ andAdjustFov:false];
 
 	// Create directory for pictures
@@ -478,6 +498,16 @@ using namespace Ocean;
 	if (liveVideo_)
 	{
 		liveVideo_->setFocus(focusValue);
+	}
+}
+
+- (void)stabilizationSwitchChanged:(UISwitch*)sender
+{
+	videoStabilizationEnabled_ = sender.on;
+
+	if (liveVideo_)
+	{
+		liveVideo_->setVideoStabilization(videoStabilizationEnabled_);
 	}
 }
 
@@ -552,6 +582,7 @@ using namespace Ocean;
 			settingsStream << "Camera: " << [selectedCamera_ UTF8String] << std::endl;
 			settingsStream << "Resolution: " << [selectedResolution_ UTF8String] << std::endl;
 			settingsStream << "Focus: " << currentFocus_ << std::endl;
+			settingsStream << "Video Stabilization: " << (videoStabilizationEnabled_ ? "Enabled" : "Disabled") << std::endl;
 
 			Log::info() << "Wrote camera settings to '" << settingsFile() << "'";
 			settingsFileWritten_ = YES;
