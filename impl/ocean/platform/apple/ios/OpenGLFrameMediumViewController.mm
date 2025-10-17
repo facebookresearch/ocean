@@ -23,6 +23,8 @@ using namespace Ocean;
 {
     [super viewDidLoad];
 
+	adjustFovXToBackground_ = true;
+
 	// we aquire any existing rendering engine using OpenGL ES (use individual param for other graphics API)
 	renderingEngine_ = Rendering::Manager::get().engine("", Rendering::Engine::API_OPENGLES);
 
@@ -68,10 +70,20 @@ using namespace Ocean;
 
 -(void)setFrameMedium:(const Media::FrameMediumRef&)frameMedium
 {
-	[self setFrameMedium:frameMedium withRotation:Quaternion(false)];
+	[self setFrameMedium:frameMedium withRotation:Quaternion(false) andAdjustFov:true];
+}
+
+-(void)setFrameMedium:(const Media::FrameMediumRef&)frameMedium andAdjustFov:(bool)adjustFov
+{
+	[self setFrameMedium:frameMedium withRotation:Quaternion(false) andAdjustFov:adjustFov];
 }
 
 -(void)setFrameMedium:(const Media::FrameMediumRef&)frameMedium withRotation:(const Quaternion&)display_R_medium
+{
+	[self setFrameMedium:frameMedium withRotation:display_R_medium andAdjustFov:true];
+}
+
+-(void)setFrameMedium:(const Media::FrameMediumRef&)frameMedium withRotation:(const Quaternion&)display_R_medium andAdjustFov:(bool)adjustFov
 {
 	if (renderingUndistortedBackground_.isNull())
 	{
@@ -116,6 +128,11 @@ using namespace Ocean;
 
 		renderingView_->addBackground(renderingUndistortedBackground_);
 	}
+
+	if (adjustFov)
+	{
+		adjustFovXToBackground_ = adjustFov;
+	}
 }
 
 -(Ocean::Media::FrameMediumRef)frameMedium
@@ -159,13 +176,18 @@ using namespace Ocean;
 	renderingFramebuffer_->setViewport(0u, 0u, (unsigned int)(widthPixels), (unsigned int)(heightPixels));
 	renderingView_->setAspectRatio(Scalar(widthPixels) / Scalar(heightPixels));
 
-	// now we determine the ideal field of view for our device (the field of view that will be rendered should be slightly smaller than the field of view of the camera)
-	const Scalar idealFovX = renderingView_->idealFovX();
-
-	if (idealFovX != renderingView_->fovX())
+	if (adjustFovXToBackground_)
 	{
-		renderingView_->setFovX(idealFovX);
-		Log::info() << "The field of view has been adjusted to " << Numeric::rad2deg(idealFovX) << " degree.";
+		// now we determine the ideal field of view for our device (the field of view that will be rendered should be slightly smaller than the field of view of the camera)
+		const Scalar idealFovX = renderingView_->idealFovX();
+
+		if (idealFovX != renderingView_->fovX())
+		{
+			renderingView_->setFovX(idealFovX);
+			adjustFovXToBackground_ = false;
+
+			Log::info() << "The field of view has been adjusted to " << Numeric::rad2deg(idealFovX) << " degree.";
+		}
 	}
 
 	// we simply invoke the rendering of the framebuffer

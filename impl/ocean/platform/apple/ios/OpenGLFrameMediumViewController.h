@@ -42,9 +42,24 @@
 /**
  * Sets or changes the frame medium to be displayed.
  * @param frameMedium The frame medium to be displayed, must be valid
+ * @param adjustFov True, to adjust the view's field of view to the medium's field of view; False, to keep the view's field of view as is
+ */
+-(void)setFrameMedium:(const Ocean::Media::FrameMediumRef&)frameMedium andAdjustFov:(bool)adjustFov;
+
+/**
+ * Sets or changes the frame medium to be displayed.
+ * @param frameMedium The frame medium to be displayed, must be valid
  * @param display_R_medium Explicit rotation between medium and display, and invalid rotation to use the medium's and framebuffer's transformations to determine the rotation
  */
 -(void)setFrameMedium:(const Ocean::Media::FrameMediumRef&)frameMedium withRotation:(const Ocean::Quaternion&)display_R_medium;
+
+/**
+ * Sets or changes the frame medium to be displayed.
+ * @param frameMedium The frame medium to be displayed, must be valid
+ * @param display_R_medium Explicit rotation between medium and display, and invalid rotation to use the medium's and framebuffer's transformations to determine the rotation
+ * @param adjustFov True, to adjust the view's field of view to the medium's field of view; False, to keep the view's field of view as is
+ */
+-(void)setFrameMedium:(const Ocean::Media::FrameMediumRef&)frameMedium withRotation:(const Ocean::Quaternion&)display_R_medium andAdjustFov:(bool)adjustFov;
 
 /**
  * Returns the current frame medium.
@@ -81,6 +96,9 @@
 
 		/// The undistorted background.
 		Ocean::Rendering::UndistortedBackgroundRef renderingUndistortedBackground_;
+
+		/// State determining that the view's field of view has to be adjusted to the background's field of view.
+		bool adjustFovXToBackground_;
 }
 
 @end
