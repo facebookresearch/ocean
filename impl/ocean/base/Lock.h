@@ -97,7 +97,12 @@ class OCEAN_BASE_EXPORT Lock
 template <bool tActive>
 class TemplatedLock : public Lock
 {
-	// nothing to do here
+	public:
+
+		/**
+		 * Creates a new lock object.
+		 */
+		TemplatedLock() = default;
 };
 
 /**
@@ -108,6 +113,13 @@ class TemplatedLock : public Lock
 template <>
 class TemplatedLock<false>
 {
+	public:
+
+		/**
+		 * Creates a new lock object.
+		 */
+		TemplatedLock() = default;
+
 	protected:
 
 		/**
