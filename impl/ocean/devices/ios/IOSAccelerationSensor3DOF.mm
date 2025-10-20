@@ -62,8 +62,14 @@ bool IOSAccelerationSensor3DOF::start()
 				Timestamp relativeTimestamp;
 				const Timestamp unixTimestamp = convertTimestamp(accelerometerData.timestamp, relativeTimestamp);
 
+				// X, Y, Z-axis acceleration in G’s (gravitational force).
+				const Vector3 iosAcceleration = Vector3(Scalar(accelerometerData.acceleration.x), Scalar(accelerometerData.acceleration.y), Scalar(accelerometerData.acceleration.z)) * standardGravity_;
+
+				// on iOS, the acceleration sensor returns [0, 0, -9.81], gravity is negative, however the phone is accelerated towards the earth, so it must be positive
+				const Vector3 acceleration = -iosAcceleration;
+
 				ObjectIds objectIds(1, sensorObjectId_);
-				Acceleration3DOFSample::Measurements measurements(1, Vector3(Scalar(accelerometerData.acceleration.x * 9.81), Scalar(accelerometerData.acceleration.y * 9.81), Scalar(accelerometerData.acceleration.z * 9.81)));
+				Acceleration3DOFSample::Measurements measurements(1, acceleration);
 
 				const SampleRef sample(SampleRef(new Acceleration3DOFSample(unixTimestamp, std::move(objectIds), std::move(measurements), Metadata())));
 				sample->setRelativeTimestamp(relativeTimestamp);
@@ -111,8 +117,14 @@ void IOSAccelerationSensor3DOF::onDeviceMotion(CMDeviceMotion* deviceMotion)
 	Timestamp relativeTimestamp;
 	const Timestamp unixTimestamp = convertTimestamp(deviceMotion.timestamp, relativeTimestamp);
 
+	// X, Y, Z-axis acceleration in G’s (gravitational force).
+	const Vector3 iosAcceleration = Vector3(Scalar(deviceMotion.userAcceleration.x), Scalar(deviceMotion.userAcceleration.y), Scalar(deviceMotion.userAcceleration.z)) * standardGravity_;
+
+	// on iOS, the acceleration sensor returns [0, 0, -9.81], gravity is negative, however the phone is accelerated towards the earth, so it must be positive
+	const Vector3 acceleration = -iosAcceleration;
+
 	ObjectIds objectIds(1, sensorObjectId_);
-	Acceleration3DOFSample::Measurements measurements(1, Vector3(Scalar(deviceMotion.userAcceleration.x * 9.81), Scalar(deviceMotion.userAcceleration.y * 9.81), Scalar(deviceMotion.userAcceleration.z * 9.81)));
+	Acceleration3DOFSample::Measurements measurements(1, acceleration);
 
 	const SampleRef sample(new Acceleration3DOFSample(unixTimestamp, std::move(objectIds), std::move(measurements), Metadata()));
 	sample->setRelativeTimestamp(relativeTimestamp);

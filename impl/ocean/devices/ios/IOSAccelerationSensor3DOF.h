@@ -92,6 +92,9 @@ class OCEAN_DEVICES_IOS_EXPORT IOSAccelerationSensor3DOF :
 
 		// Callback id when using SENSOR_LINEAR_ACCELERATION_3DOF.
 		MotionManager::ListenerId deviceMotionListenerId_ = MotionManager::invalidListenerId();
+
+		/// Definition of the standard gravity, in m/s^2
+		static constexpr Scalar standardGravity_ = Scalar(9.81);
 };
 
 inline std::string IOSAccelerationSensor3DOF::deviceNameIOSAccelerationSensor3DOF(const SensorType sensorType)
