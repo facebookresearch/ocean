@@ -12,6 +12,7 @@
 #include "ocean/base/DataType.h"
 #include "ocean/base/Lock.h"
 
+#include <optional>
 #include <list>
 
 namespace Ocean
@@ -37,12 +38,17 @@ class RingMapT
 		/**
 		 * The data type of the objects that are stored in this container.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * The data type of the keys that are used to address the data objects.
 		 */
-		typedef TKey TypeKey;
+		using TypeKey = TKey;
+
+		/**
+		 * Definition of a pair combining a key with an element.
+		 */
+		using KeyElementPair = std::pair<TKey, T>;
 
 		/**
 		 * Definition of individual element access modes.
@@ -72,7 +78,7 @@ class RingMapT
 		/**
 		 * Definition of a map that maps keys to value pairs.
 		 */
-		typedef typename MapTyper<tOrderedKeys>::template TMap<TKey, ValuePair> KeyMap;
+		using KeyMap = typename MapTyper<tOrderedKeys>::template TMap<TKey, ValuePair>;
 
 	public:
 
@@ -146,6 +152,15 @@ class RingMapT
 		 */
 		template <AccessMode tAccessMode = AM_MATCH>
 		bool element(const TKey& key, T& element) const;
+
+		/**
+		 * Returns either the specified element if it exists or the two elements neighboring to the specified element.
+		 * @param key The key of the element to be returned
+		 * @param lowerElement Resulting neighboring element with key lower than the specified key, std::nullopt if no such element exists or the exact element is returned
+		 * @param higherElement Resulting neighboring element with key higher than the specified key, std::nullopt if no such element exists or the exact element is returned
+		 * @return The resulting element with exact key, if it exists
+		 */
+		std::optional<T> elements(const TKey& key, std::optional<KeyElementPair>& lowerElement, std::optional<KeyElementPair>& higherElement) const;
 
 		/**
 		 * Returns the element with highest key.
@@ -261,7 +276,7 @@ class RingMapT
 		size_t storageCapacity_ = 0;
 
 		/// The container lock.
-		mutable Lock lock_;
+		mutable TemplatedLock<tThreadsafe> lock_;
 };
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
@@ -434,6 +449,56 @@ bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::element(const TKey& key, T& e
 
 	ocean_assert(isValid());
 	return true;
+}
+
+template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
+std::optional<T> RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::elements(const TKey& key, std::optional<KeyElementPair>& lowerElement, std::optional<KeyElementPair>& higherElement) const
+{
+	if constexpr (!tOrderedKeys)
+	{
+		return std::nullopt;
+	}
+
+	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
+	ocean_assert(isValid());
+
+	if (storageCapacity_ == 0 || keyMap_.empty())
+	{
+		return std::nullopt;
+	}
+
+	lowerElement = std::nullopt;
+	higherElement = std::nullopt;
+
+	typename KeyMap::const_iterator iMap = keyMap_.find(key);
+
+	if (iMap != keyMap_.end())
+	{
+		// we found an exact match
+
+		return iMap->second.first;
+	}
+
+	// no exact match found, let's find the next higher element
+
+	iMap = keyMap_.lower_bound(key);
+
+	if (iMap != keyMap_.end())
+	{
+		higherElement = KeyElementPair(iMap->first, iMap->second.first);
+	}
+
+	if (iMap != keyMap_.begin())
+	{
+		typename KeyMap::const_iterator iLower = iMap;
+
+		--iLower;
+		lowerElement = KeyElementPair(iLower->first, iLower->second.first);
+	}
+
+	ocean_assert(lowerElement.has_value() || higherElement.has_value());
+
+	return std::nullopt;
 }
 
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
