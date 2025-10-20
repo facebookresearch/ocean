@@ -262,18 +262,24 @@ HomogenousMatrixD4 FrameMedium::device_T_camera() const
 
 bool FrameMedium::setPreferredFrameDimension(const unsigned int width, const unsigned int height)
 {
+	const ScopedLock scopedLock(lock_);
+
 	preferredFrameType_ = MediaFrameType(preferredFrameType_, width, height);
 	return true;
 }
 
 bool FrameMedium::setPreferredFramePixelFormat(const FrameType::PixelFormat format)
 {
+	const ScopedLock scopedLock(lock_);
+
 	preferredFrameType_ = MediaFrameType(preferredFrameType_, format);
 	return true;
 }
 
 bool FrameMedium::setPreferredFrameFrequency(const FrameFrequency frequency)
 {
+	const ScopedLock scopedLock(lock_);
+
 	if (frequency < FrameFrequency(0) || frequency > FrameFrequency(10000))
 	{
 		return false;

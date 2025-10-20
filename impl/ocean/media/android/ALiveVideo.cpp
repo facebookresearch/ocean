@@ -285,6 +285,8 @@ bool ALiveVideo::setPreferredStreamConfiguration(const StreamConfiguration& stre
 		return false;
 	}
 
+	const ScopedLock scopedLock(lock_);
+
 	return setPreferredFrameDimension(streamConfiguration.width_, streamConfiguration.height_) && setPreferredFramePixelFormat(streamConfiguration.framePixelFormat_);
 }
 
