@@ -329,6 +329,24 @@ float AVFLiveVideo::focus(ControlMode* focusMode) const
 	return result;
 }
 
+bool AVFLiveVideo::setPreferredStreamType(const StreamType streamType)
+{
+	return false;
+}
+
+bool AVFLiveVideo::setPreferredStreamConfiguration(const StreamConfiguration& streamConfiguration)
+{
+	ocean_assert(streamConfiguration.isValid());
+	if (!streamConfiguration.isValid())
+	{
+		return false;
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	return setPreferredFrameDimension(streamConfiguration.width_, streamConfiguration.height_) && setPreferredFramePixelFormat(streamConfiguration.framePixelFormat_);
+}
+
 bool AVFLiveVideo::setExposureDuration(const double duration, const bool allowShorterExposure)
 {
 	bool result = false;
@@ -629,80 +647,6 @@ bool AVFLiveVideo::createCaptureSession()
 	dispatch_queue_t frameQueue = dispatch_queue_create("liveVideoFrameQueue", nullptr);
 	[captureVideoDataOutput_ setSampleBufferDelegate:sampleBufferDelegate_ queue:frameQueue];
 
-	NSArray* availablePixelFormatTypes = [captureVideoDataOutput_ availableVideoCVPixelFormatTypes];
-
-#ifdef OCEAN_DEBUG
-	const unsigned int rgbValue = (unsigned int)(kCVPixelFormatType_24RGB); // 24
-	const unsigned int bgrValue = (unsigned int)(kCVPixelFormatType_24BGR); // 842285639
-
-	const unsigned int rgbaValue = (unsigned int)(kCVPixelFormatType_32RGBA); // 1380401729
-	const unsigned int bgraValue = (unsigned int)(kCVPixelFormatType_32BGRA); // 1111970369
-
-	const unsigned int argbValue = (unsigned int)(kCVPixelFormatType_32ARGB); // 32
-
-	const unsigned int vuy2Value = kCVPixelFormatType_422YpCbCr8; // 846624121
-	const unsigned int yuvsValue = kCVPixelFormatType_422YpCbCr8_yuvs; // 2037741171
-
-	const unsigned int y_uvVideoValue = (unsigned int)(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange); // 875704438
-	const unsigned int y_uvFullValue = (unsigned int)(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange); // 875704422
-
-	OCEAN_SUPPRESS_UNUSED_WARNING(rgbValue);
-	OCEAN_SUPPRESS_UNUSED_WARNING(bgrValue);
-	OCEAN_SUPPRESS_UNUSED_WARNING(rgbaValue);
-	OCEAN_SUPPRESS_UNUSED_WARNING(bgraValue);
-	OCEAN_SUPPRESS_UNUSED_WARNING(argbValue);
-	OCEAN_SUPPRESS_UNUSED_WARNING(vuy2Value);
-	OCEAN_SUPPRESS_UNUSED_WARNING(yuvsValue);
-	OCEAN_SUPPRESS_UNUSED_WARNING(y_uvVideoValue);
-	OCEAN_SUPPRESS_UNUSED_WARNING(y_uvFullValue);
-#endif
-
-	// now we selected the most suitable pixel format type from the list of available formats
-
-	NSNumber* pixelFormatType = nullptr;
-
-	if (preferredFrameType_.pixelFormat() != FrameType::FORMAT_UNDEFINED)
-	{
-		for (size_t i = 0; pixelFormatType == nullptr && i < [availablePixelFormatTypes count]; ++i)
-		{
-			OSType availablePixelFormatType = [[availablePixelFormatTypes objectAtIndex:i] intValue];
-
-			if (PixelBufferAccessor::translatePixelFormat(availablePixelFormatType) == preferredFrameType_.pixelFormat())
-			{
-				pixelFormatType = [NSNumber numberWithUnsignedInt:availablePixelFormatType];
-			}
-		}
-	}
-
-	if (pixelFormatType == nullptr)
-	{
-#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
-		for (const FrameType::PixelFormat& ourPreferredPixelFormat : {FrameType::FORMAT_Y_UV12, FrameType::FORMAT_RGB24, FrameType::FORMAT_BGR24, FrameType::FORMAT_RGBA32, FrameType::FORMAT_BGRA32})
-#else
-		for (const FrameType::PixelFormat& ourPreferredPixelFormat : {FrameType::FORMAT_RGB24, FrameType::FORMAT_BGR24, FrameType::FORMAT_RGBA32, FrameType::FORMAT_BGRA32, FrameType::FORMAT_Y_UV12})
-#endif
-		{
-			for (size_t i = 0; pixelFormatType == nullptr && i < [availablePixelFormatTypes count]; ++i)
-			{
-				OSType availablePixelFormatType = [[availablePixelFormatTypes objectAtIndex:i] intValue];
-
-				if (PixelBufferAccessor::translatePixelFormat(availablePixelFormatType) == ourPreferredPixelFormat)
-				{
-					pixelFormatType = [NSNumber numberWithUnsignedInt:availablePixelFormatType];
-				}
-			}
-		}
-	}
-
-	if (pixelFormatType == nullptr)
-	{
-		pixelFormatType = [NSNumber numberWithUnsignedInt:kCVPixelFormatType_24RGB];
-	}
-
-	NSDictionary* videoSettings = [NSDictionary dictionaryWithObject:pixelFormatType forKey:(NSString*)kCVPixelBufferPixelFormatTypeKey];
-
-	[captureVideoDataOutput_ setVideoSettings:videoSettings];
-
 	captureSession_ = [[AVCaptureSession alloc] init];
 
 	if (![captureSession_ canAddInput:captureDeviceInput_] || ![captureSession_ canAddOutput:captureVideoDataOutput_])
@@ -710,40 +654,35 @@ bool AVFLiveVideo::createCaptureSession()
 		return false;
 	}
 
-	// now we check whether we can set a preferred frame dimension
-
-	NSString* sessionPreset = nullptr;
-	unsigned int sessionPresetWidth = 0u;
-	unsigned int sessionPresetHeight = 0u;
-
-	if (preferredFrameType_.width() != 0u && preferredFrameType_.height() != 0u)
-	{
-		// we first check whether our device is able to provide the exact dimension
-		sessionPreset = determineExactPreset(preferredFrameType_.width(), preferredFrameType_.height(), sessionPresetWidth, sessionPresetHeight);
-
-		if (sessionPreset == nullptr)
-		{
-			sessionPreset = determineNextLargerPreset(preferredFrameType_.width(), preferredFrameType_.height(), sessionPresetWidth, sessionPresetHeight);
-		}
-	}
-
-	if (sessionPreset == nullptr)
-	{
-#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
-		sessionPreset = AVCaptureSessionPreset640x480;
-		sessionPresetWidth = 640u;
-		sessionPresetHeight = 480u;
-#else
-		sessionPreset = AVCaptureSessionPresetHigh;
-		sessionPresetWidth = 1920u;
-		sessionPresetHeight = 1080u;
-#endif
-	}
-
-	ocean_assert(sessionPreset != nullptr);
-	[captureSession_ setSessionPreset:sessionPreset];
-
 	[captureSession_ addInput:captureDeviceInput_];
+
+	double explicitFrameRate = -1.0;
+	AVCaptureDeviceFormat* captureDeviceFormat = bestMatchingCaptureDeviceFormat(captureDevice_, preferredFrameType_.width(), preferredFrameType_.height(), preferredFrameType_.frequency(), preferredFrameType_.pixelFormat(), explicitFrameRate);
+
+	if (captureDeviceFormat == nullptr)
+	{
+		return false;
+	}
+
+	if ([captureDevice_ lockForConfiguration:nullptr])
+	{
+		[captureDevice_ setActiveFormat:captureDeviceFormat];
+
+		if (explicitFrameRate > 0.0)
+		{
+			const int frameRate = NumericD::round32(explicitFrameRate);
+			[captureDevice_ setActiveVideoMinFrameDuration:CMTimeMake(1, frameRate)];
+			[captureDevice_ setActiveVideoMaxFrameDuration:CMTimeMake(1, frameRate)];
+		}
+
+		[captureDevice_ unlockForConfiguration];
+	}
+	else
+	{
+		Log::error() << "AVFLiveVideo: Failed to lock device for configuration";
+		return false;
+	}
+
 	[captureSession_ addOutput:captureVideoDataOutput_];
 
 	// Configure video stabilization based on the current setting
@@ -878,157 +817,140 @@ void AVFLiveVideo::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera any
 	AVFFrameMedium::onNewSample(pixelBuffer, anyCamera ? std::move(anyCamera) : approximatedAnyCamera_, unixTimestamp, frameTime);
 }
 
-NSString* AVFLiveVideo::determineExactPreset(const unsigned int width, const unsigned int height, unsigned int& presetWidth, unsigned int& presetHeight)
+AVCaptureDeviceFormat* AVFLiveVideo::bestMatchingCaptureDeviceFormat(AVCaptureDevice* captureDevice, const unsigned int preferredWidth, const unsigned int preferredHeight, const double preferredFrameFrequency, const FrameType::PixelFormat preferredPixelFormat, double& explicitFrameRate)
 {
-	ocean_assert(width != 0u && height != 0u);
-
-	presetWidth = 0u;
-	presetHeight = 0u;
-
-	if (width == 352u && height == 288u)
+	ocean_assert(captureDevice != nullptr);
+	if (captureDevice == nullptr)
 	{
-		presetWidth = width;
-		presetHeight = height;
-		return AVCaptureSessionPreset352x288;
+		return nullptr;
 	}
 
-	if (width == 640u && height == 480u)
+	unsigned int targetWidth = preferredWidth;
+	unsigned int targetHeight = preferredHeight;
+
+	if (targetWidth == 0u && targetHeight == 0u)
 	{
-		presetWidth = width;
-		presetHeight = height;
-		return AVCaptureSessionPreset640x480;
+		targetWidth = 1280u;
+		targetHeight = 720u;
 	}
 
-	if (width == 1280u && height == 720u)
+	double targetFrameFrequency = preferredFrameFrequency;
+	FrameType::PixelFormat targetPixelFormat = preferredPixelFormat;
+
+	NSArray* availableFormats = [captureDevice formats];
+
+	if ([availableFormats count] == 0)
 	{
-		presetWidth = width;
-		presetHeight = height;
-		return AVCaptureSessionPreset1280x720;
+		return nullptr;
 	}
 
-#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
-	if (width == 1920u && height == 1080u)
+	constexpr unsigned int maxIterations = 4u;
+
+	for (unsigned int iteration = 0u; iteration < maxIterations; ++iteration)
 	{
-		presetWidth = width;
-		presetHeight = height;
-		return AVCaptureSessionPreset1920x1080;
-	}
-#endif
-
-#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1 && defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 90000
-	if (width == 3840u && height == 2160u)
-	{
-		presetWidth = width;
-		presetHeight = height;
-		return AVCaptureSessionPreset3840x2160;
-	}
-#endif
-
-#if !defined(TARGET_OS_IPHONE) || TARGET_OS_IPHONE == 0
-	if (width == 320u && height == 240u)
-	{
-		presetWidth = width;
-		presetHeight = height;
-		return AVCaptureSessionPreset320x240;
-	}
-
-	if (width == 960u && height == 540u)
-	{
-		presetWidth = width;
-		presetHeight = height;
-		return AVCaptureSessionPreset960x540;
-	}
-#endif
-
-	return nullptr;
-}
-
-NSString* AVFLiveVideo::determineNextLargerPreset(const unsigned int width, const unsigned int height, unsigned int& presetWidth, unsigned int& presetHeight)
-{
-	ocean_assert(width != 0u && height != 0u);
-
-	const unsigned int pixels = width * height;
-
-#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
-
-	#if defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 90000
-		if (pixels > 1920u * 1080u)
+		if (iteration == 0u)
 		{
-			presetWidth = 3840u;
-			presetHeight = 2160u;
-			return AVCaptureSessionPreset3840x2160;
+			// we are looking for the exact match
 		}
-	#endif
+		else if (iteration == 1u)
+		{
+			// we need to relax the target pixel format
+			if (targetPixelFormat == FrameType::FORMAT_UNDEFINED)
+			{
+				continue;
+			}
 
-	if (pixels > 1280u * 720u)
-	{
-		presetWidth = 1920u;
-		presetHeight = 1080u;
-		return AVCaptureSessionPreset1920x1080;
+			targetPixelFormat = FrameType::FORMAT_UNDEFINED;
+		}
+		else if (iteration == 2u)
+		{
+			// we need to relax the target frame rate
+			if (targetFrameFrequency <= 0.0)
+			{
+				continue;
+			}
+
+			targetFrameFrequency = -1.0;
+		}
+		else if (iteration == 3u)
+		{
+			if (targetWidth == 0u && targetHeight == 0u)
+			{
+				continue;
+			}
+
+			targetWidth = 1280u;
+			targetHeight = 720u;
+		}
+		else
+		{
+			ocean_assert(false && "This should never happen!");
+			break;
+		}
+
+		for (size_t nFormat = 0; nFormat < [availableFormats count]; ++nFormat)
+		{
+			AVCaptureDeviceFormat* format = [availableFormats objectAtIndex:nFormat];
+
+			CMFormatDescriptionRef formatDescription = [format formatDescription];
+			CMVideoDimensions videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDescription);
+
+			const unsigned int width = (unsigned int)(videoDimensions.width);
+			const unsigned int height = (unsigned int)(videoDimensions.height);
+
+			if (targetWidth != 0u && targetWidth != width)
+			{
+				continue;
+			}
+
+			if (targetHeight != 0u && targetHeight != height)
+			{
+				continue;
+			}
+
+			const FourCharCode fourCharCode = CMFormatDescriptionGetMediaSubType(formatDescription);
+
+			const FrameType::PixelFormat pixelFormat = PixelBufferAccessor::translatePixelFormat(fourCharCode);
+
+			if (pixelFormat == FrameType::FORMAT_UNDEFINED)
+			{
+				continue;
+			}
+
+			if (targetPixelFormat != FrameType::FORMAT_UNDEFINED && targetPixelFormat != pixelFormat)
+			{
+				continue;
+			}
+
+			if (targetFrameFrequency > 0.0)
+			{
+				NSArray* frameRateRanges = [format videoSupportedFrameRateRanges];
+
+				for (size_t frameRateIndex = 0; frameRateIndex < [frameRateRanges count]; ++frameRateIndex)
+				{
+					AVFrameRateRange* frameRateRange = [frameRateRanges objectAtIndex:frameRateIndex];
+
+					const double minFrameRate = [frameRateRange minFrameRate];
+					const double maxFrameRate = [frameRateRange maxFrameRate];
+
+					if (minFrameRate <= targetFrameFrequency && targetFrameFrequency <= maxFrameRate)
+					{
+						explicitFrameRate = targetFrameFrequency;
+						break;
+					}
+				}
+			}
+
+			Log::debug() << "AVFLiveVideo: Best matching capture device format with index " << nFormat << ": " << width << "x" << height << ", " << FrameType::translatePixelFormat(pixelFormat);
+
+			return format;
+		}
 	}
 
-	if (pixels > 640u * 480u)
-	{
-		presetWidth = 1280u;
-		presetHeight = 720u;
-		return AVCaptureSessionPreset1280x720;
-	}
+	Log::debug() << "AVFLiveVideo: No matching format found, using first format";
 
-	if (pixels > 352u * 288u)
-	{
-		presetWidth = 640u;
-		presetHeight = 480u;
-		return AVCaptureSessionPreset640x480;
-	}
-
-	presetWidth = 352u;
-	presetHeight = 288u;
-	return AVCaptureSessionPreset352x288;
-
-#else
-
-	if (pixels >= 1920u * 1080u)
-	{
-		// we do not know whether 1920x1080 is the correct dimension matching to 'PresetHigh'; however, we do not have any better choice
-		presetWidth = 1920u;
-		presetHeight = 1080u;
-		return AVCaptureSessionPresetHigh;
-	}
-
-	if (pixels > 960u * 540u)
-	{
-		presetWidth = 1280u;
-		presetHeight = 720u;
-		return AVCaptureSessionPreset1280x720;
-	}
-
-	if (pixels > 640u * 480u)
-	{
-		presetWidth = 960u;
-		presetHeight = 540u;
-		return AVCaptureSessionPreset960x540;
-	}
-
-	if (pixels > 352u * 288u)
-	{
-		presetWidth = 640u;
-		presetHeight = 480u;
-		return AVCaptureSessionPreset640x480;
-	}
-
-	if (pixels > 320u * 240u)
-	{
-		presetWidth = 352u;
-		presetHeight = 288u;
-		return AVCaptureSessionPreset352x288;
-	}
-
-	presetWidth = 320u;
-	presetHeight = 240u;
-	return AVCaptureSessionPreset320x240;
-
-#endif
-
+	explicitFrameRate = -1.0;
+	return [availableFormats objectAtIndex:0];
 }
 
 double AVFLiveVideo::bestMatchingFieldOfView(AVCaptureDevice* device, const unsigned int width, const unsigned int height)
@@ -1114,9 +1036,9 @@ AVFLiveVideo::StreamConfigurations AVFLiveVideo::determineAvailableStreamConfigu
 	using ConfigurationMap = std::unordered_map<StreamProperty, std::vector<double>, StreamProperty::Hash>;
 	ConfigurationMap configurationMap;
 
-	for (size_t n = 0; n < [availableFormats count]; ++n)
+	for (size_t nFormat = 0; nFormat < [availableFormats count]; ++nFormat)
 	{
-		AVCaptureDeviceFormat* format = [availableFormats objectAtIndex:n];
+		AVCaptureDeviceFormat* format = [availableFormats objectAtIndex:nFormat];
 
 		CMFormatDescriptionRef formatDescription = [format formatDescription];
 		CMVideoDimensions videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDescription);

@@ -84,6 +84,18 @@ class AVFLiveVideo :
 		float focus(ControlMode* focusMode = nullptr) const override;
 
 		/**
+		 * Sets the preferred stream type.
+		 * @see LiveVideo::setPreferredStreamConfiguration().
+		 */
+		bool setPreferredStreamType(const StreamType streamType) override;
+
+		/**
+		 * Sets the preferred stream configuration.
+		 * @see LiveVideo::setPreferredStreamConfiguration().
+		 */
+		bool setPreferredStreamConfiguration(const StreamConfiguration& streamConfiguration) override;
+
+		/**
 		 * Sets the exposure duriation of this device.
 		 * @see setExposureDuration().
 		 */
@@ -180,24 +192,16 @@ class AVFLiveVideo :
 		void onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera anyCamera, const double unixTimestamp, const double sampleTime) override;
 
 		/**
-		 * Determines the exact session preset for a specified frame dimension.
-		 * @param width The width of the frame in pixel, with range (0, infinity)
-		 * @param height The height of the frame in pixel, with range (0, infinity)
-		 * @param presetWidth The width of the frame matching to the resulting preset, with range (0, infinity), 0 if no valid preset exists
-		 * @param presetHeight The height of the frame matching to the resulting preset, with range (0, infinity), 0 if no valid preset exists
-		 * @return The preset matching to the specified frame dimension, nullptr if no exact preset exists
+		 * Returns the best matching capture device format for a specified frame dimension, pixel format and frame frequency.
+		 * @param captureDevice The capture device for which the best matching format will be determined, must be valid
+		 * @param preferredWidth The preferred width of the frame in pixel, with range [0, infinity), 0 to use any width
+		 * @param preferredHeight The preferred height of the frame in pixel, with range [0, infinity), 0 to use any height
+		 * @param preferredFrameFrequency The preferred frame frequency of the frame, with range (0, infinity), 0 to use any frame frequency
+		 * @param preferredPixelFormat The preferred pixel format of the frame, FrameType::FORMAT_UNDEFINED to use any pixel format
+		 * @param explicitFrameRate The resulting explicit frame rate of the best matching format, with range (0, infinity)
+		 * @return The best matching capture device format, nullptr if no matching format could be found
 		 */
-		static NSString* determineExactPreset(const unsigned int width, const unsigned int height, unsigned int& presetWidth, unsigned int& presetHeight);
-
-		/**
-		 * Determines the best matching or next larger preset for a specified frame dimension.
-		 * @param width The width of the frame in pixel, with range (0, infinity)
-		 * @param height The height of the frame in pixel, with range (0, infinity)
-		 * @param presetWidth The width of the frame matching to the resulting preset, with range (0, infinity)
-		 * @param presetHeight The height of the frame matching to the resulting preset, with range (0, infinity)
-		 * @return The best preset better or equal to the specified frame dimension
-		 */
-		static NSString* determineNextLargerPreset(const unsigned int width, const unsigned int height, unsigned int& presetWidth, unsigned int& presetHeight);
+		static AVCaptureDeviceFormat* bestMatchingCaptureDeviceFormat(AVCaptureDevice* captureDevice, const unsigned int preferredWidth, const unsigned int preferredHeight, const double preferredFrameFrequency, const FrameType::PixelFormat preferredPixelFormat, double& explicitFrameRate);
 
 		/**
 		 * Returns the best matching (horizontal) field of view for a specified frame dimension.
