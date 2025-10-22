@@ -579,8 +579,8 @@ using namespace Ocean;
 
 		if (settingsStream.is_open())
 		{
-			settingsStream << "Camera: " << [selectedCamera_ UTF8String] << std::endl;
-			settingsStream << "Resolution: " << [selectedResolution_ UTF8String] << std::endl;
+			settingsStream << "Camera: " << liveVideo_->url() << std::endl;
+			settingsStream << "Resolution: " << frame->width() << "x" << frame->height() << std::endl;
 			settingsStream << "Focus: " << currentFocus_ << std::endl;
 			settingsStream << "Video Stabilization: " << (videoStabilizationEnabled_ ? "Enabled" : "Disabled") << std::endl;
 

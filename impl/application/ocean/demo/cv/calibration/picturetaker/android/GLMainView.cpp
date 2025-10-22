@@ -172,8 +172,8 @@ bool GLMainView::takePicture()
 
 		if (settingsStream.is_open())
 		{
-			settingsStream << "Camera: " << selectedCameraName_ << std::endl;
-			settingsStream << "Resolution: " << selectedResolution_ << std::endl;
+			settingsStream << "Camera: " << liveVideo_->url() << std::endl;
+			settingsStream << "Resolution: " << frame->width() << "x" << frame->height() << std::endl;
 			settingsStream << "Focus: " << currentFocus_ << std::endl;
 
 			if (videoStabilization_ == 1)
