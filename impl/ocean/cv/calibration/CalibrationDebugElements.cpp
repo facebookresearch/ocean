@@ -618,7 +618,7 @@ void CalibrationDebugElements::updateCameraCalibratorProjectionError(const Calib
 
 			for (unsigned int x = 0u; x < horizontalBins; ++x)
 			{
-				const float factor = float(error[x] / maxError);
+				const float factor = error[x] < Scalar(0) ? 1.0f : float(error[x] / maxError);
 
 				for (unsigned int nChannel = 0u; nChannel < 3u; ++nChannel)
 				{
