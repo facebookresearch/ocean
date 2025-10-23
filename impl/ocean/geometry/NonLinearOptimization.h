@@ -13,7 +13,6 @@
 
 #include "ocean/base/Accessor.h"
 #include "ocean/base/StaticBuffer.h"
-#include "ocean/base/Worker.h"
 
 #include "ocean/math/Matrix.h"
 #include "ocean/math/SparseMatrix.h"
@@ -50,17 +49,17 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimization
 				/**
 				 * Definition of a pair combining an object point id with an image point.
 				 */
-				typedef std::pair<Index32, Vector2> Element;
+				using Element = std::pair<Index32, Vector2>;
 
 				/**
 				 * Definition of a vector holding elements.
 				 */
-				typedef std::vector<Element> Elements;
+				using Elements = std::vector<Element>;
 
 				/**
 				 * Definition of a vector holding a group of elements.
 				 */
-				typedef std::vector<Elements> ElementGroups;
+				using ElementGroups = std::vector<Elements>;
 
 			public:
 
@@ -207,7 +206,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimization
 		 * This class implements a group accessor providing access to pairs of poses and image points.
 		 * The groups of pairs have the following structure, each object point can have an arbitrary number of pairs:
 		 * <pre>
-		 * objectpoint_0 -> (pose_0, imagePoint_0)
+		 * objectPoint_0 -> (pose_0, imagePoint_0)
 		 *               -> (pose_1, imagePoint_4)
 		 *               -> (pose_5, imagePoint_9)
 		 *
@@ -522,7 +521,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimization
 		 * The optimization can use a Levenberg-Marquardt approach or a Gauss-Newton approach.
 		 * @param advancedDenseProvider The advanced dense optimization provider that is used during the optimization
 		 * @param iterations Number of optimization iterations
-		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity), 0 to apply a Gauss-Netwton optimization approach
+		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity), 0 to apply a Gauss-Newton optimization approach
 		 * @param lambdaFactor Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity), 1 to apply a Gauss-Newton optimization approach
 		 * @param initialError Optional resulting averaged robust (depending on estimator) pixel error for the given initial parameters
 		 * @param finalError Optional resulting averaged robust (depending on estimator) pixel error for the final optimized parameters
@@ -538,7 +537,7 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimization
 		 * The optimization can use a Levenberg-Marquardt approach or a Gauss-Newton approach.
 		 * @param advancedSparseProvider The advanced sparse optimization provider that is used during the optimization
 		 * @param iterations Number of optimization iterations
-		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity), 0 to apply a Gauss-Netwton optimization approach
+		 * @param lambda Initial Levenberg-Marquardt damping value which may be changed after each iteration using the damping factor, with range [0, infinity), 0 to apply a Gauss-Newton optimization approach
 		 * @param lambdaFactor Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity), 1 to apply a Gauss-Newton optimization approach
 		 * @param initialError Optional resulting averaged robust (depending on estimator) pixel error for the given initial parameters
 		 * @param finalError Optional resulting averaged robust (depending on estimator) pixel error for the final optimized parameters
@@ -1095,7 +1094,7 @@ bool NonLinearOptimization::denseOptimization(T& provider, const unsigned int it
 			}
 
 			// JTJ * deltas = -J^T * error
-			// however, we determine JTJ * deltas = J^T * error and thus receive negative deltas (which then need to be subracted from the current model/parameter configuration)
+			// however, we determine JTJ * deltas = J^T * error and thus receive negative deltas (which then need to be subtracted from the current model/parameter configuration)
 
 			bool solved = false;
 
@@ -1334,7 +1333,7 @@ bool NonLinearOptimization::sparseOptimization(T& provider, const unsigned int i
 			}
 
 			// JTJ * deltas = -J^T * error
-			// however, we determine JTJ * deltas = J^T * error and thus receive negative deltas (which then need to be subracted from the current model/parameter configuration)
+			// however, we determine JTJ * deltas = J^T * error and thus receive negative deltas (which then need to be subtracted from the current model/parameter configuration)
 
 			bool solved = false;
 
@@ -1740,7 +1739,7 @@ Scalar NonLinearOptimization::sqrErrors2robustErrors2(const Scalars& sqrErrors, 
 	{
 		ocean_assert(Numeric::isEqual(weightedErrors[n].sqr(), sqrErrors[n]));
 
-		// determine the weight for each individual image point, however as e.g., the tukey estimator may return a weight of 0 we have to clamp the weight to ensure that we still can solve the equation
+		// determine the weight for each individual image point, however as e.g., the Tukey estimator may return a weight of 0 we have to clamp the weight to ensure that we still can solve the equation
 		// **NOTE** the much better way would be to remove the entry from the equation and to solve it
 		const Scalar weight = max(Numeric::weakEps(), Estimator::robustWeightSquare<tEstimator>(sqrErrors[n], sqrSigma));
 
@@ -1766,7 +1765,7 @@ Scalar NonLinearOptimization::sqrErrors2robustErrors2(const Scalars& sqrErrors, 
 template <Estimator::EstimatorType tEstimator, size_t tDimension>
 Scalar NonLinearOptimization::sqrErrors2robustErrors(const Scalars& sqrErrors, const size_t modelParameters, StaticBuffer<Scalar, tDimension>* weightedErrors, StaticBuffer<Scalar, tDimension>* weightVectors, const Matrix* transposedInvertedCovariances)
 {
-	ocean_assert(transposedInvertedCovariances == nullptr && "Currently not implemenated");
+	ocean_assert(transposedInvertedCovariances == nullptr && "Currently not implemented");
 	OCEAN_SUPPRESS_UNUSED_WARNING(transposedInvertedCovariances);
 
 	// determine the sigma ideal for the square errors
@@ -1802,7 +1801,7 @@ Scalar NonLinearOptimization::sqrErrors2robustErrors(const Scalars& sqrErrors, c
 template <Estimator::EstimatorType tEstimator>
 Scalar NonLinearOptimization::sqrErrors2robustErrors_i(const Scalars& sqrErrors, const size_t modelParameters, const size_t dimension, Scalar* weightedErrors_i, Scalar* weightVectors_i, const Matrix* transposedInvertedCovariances_i)
 {
-	ocean_assert(transposedInvertedCovariances_i == nullptr && "Currently not implemenated");
+	ocean_assert(transposedInvertedCovariances_i == nullptr && "Currently not implemented");
 	OCEAN_SUPPRESS_UNUSED_WARNING(transposedInvertedCovariances_i);
 
 	// determine the sigma ideal for the square errors
