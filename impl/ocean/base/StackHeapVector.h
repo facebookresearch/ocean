@@ -160,6 +160,24 @@ class StackHeapVector
 		StackHeapVector(const size_t size, const T& element);
 
 		/**
+		 * Creates a new vector object and moves the elements to this vector.
+		 * @param elements The elements to be moved
+		 */
+		StackHeapVector(std::vector<T>&& elements);
+
+		/**
+		 * Creates a new vector object and copies the elements to this vector.
+		 * @param elements The elements to be copied
+		 */
+		StackHeapVector(const std::vector<T>& elements);
+
+		/**
+		 * Creates a new vector object and copies the elements to this vector.
+		 * @param elements The elements to be copied
+		 */
+		StackHeapVector(const std::initializer_list<T> elements);
+
+		/**
 		 * Pushes a new element to the end of this vector.
 		 * @param element The new element to be pushed
 		 */
@@ -411,6 +429,39 @@ StackHeapVector<T, tStackCapacity>::StackHeapVector(const size_t size, const T& 
 	setCapacity(size);
 
 	for (size_t n = 0; n < size; ++n)
+	{
+		pushBack(element);
+	}
+}
+
+template <typename T, size_t tStackCapacity>
+StackHeapVector<T, tStackCapacity>::StackHeapVector(std::vector<T>&& elements)
+{
+	setCapacity(elements.size());
+
+	for (T& element : elements)
+	{
+		pushBack(std::move(element));
+	}
+}
+
+template <typename T, size_t tStackCapacity>
+StackHeapVector<T, tStackCapacity>::StackHeapVector(const std::vector<T>& elements)
+{
+	setCapacity(elements.size());
+
+	for (const T& element : elements)
+	{
+		pushBack(element);
+	}
+}
+
+template <typename T, size_t tStackCapacity>
+StackHeapVector<T, tStackCapacity>::StackHeapVector(const std::initializer_list<T> elements)
+{
+	setCapacity(elements.size());
+
+	for (const T& element : elements)
 	{
 		pushBack(element);
 	}

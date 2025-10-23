@@ -262,7 +262,7 @@ bool TestStackHeapVector::testPerformance(const double testDuration)
 	return allSucceeded;
 }
 
-template <size_t tStackSize>
+template <size_t tStackCapacity>
 bool TestStackHeapVector::testConstructor(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
@@ -277,7 +277,7 @@ bool TestStackHeapVector::testConstructor(const double testDuration)
 		{
 			// default constructor
 
-			const StackHeapVector<uint64_t, tStackSize> defaultVector;
+			const StackHeapVector<uint64_t, tStackCapacity> defaultVector;
 
 			OCEAN_EXPECT_TRUE(validation, defaultVector.isEmpty());
 			OCEAN_EXPECT_EQUAL(validation, defaultVector.size(), size_t(0));
@@ -286,7 +286,7 @@ bool TestStackHeapVector::testConstructor(const double testDuration)
 		{
 			// default constructor
 
-			const StackHeapVector<Frame, tStackSize> defaultVector;
+			const StackHeapVector<Frame, tStackCapacity> defaultVector;
 
 			OCEAN_EXPECT_TRUE(validation, defaultVector.isEmpty());
 			OCEAN_EXPECT_EQUAL(validation, defaultVector.size(), size_t(0));
@@ -295,7 +295,7 @@ bool TestStackHeapVector::testConstructor(const double testDuration)
 		{
 			// default constructor
 
-			const StackHeapVector<std::string, tStackSize> defaultVector;
+			const StackHeapVector<std::string, tStackCapacity> defaultVector;
 
 			OCEAN_EXPECT_TRUE(validation, defaultVector.isEmpty());
 			OCEAN_EXPECT_EQUAL(validation, defaultVector.size(), size_t(0));
@@ -311,7 +311,7 @@ bool TestStackHeapVector::testConstructor(const double testDuration)
 				value = String::toAString(RandomI::random64(randomGenerator));
 			}
 
-			const StackHeapVector<std::string, tStackSize> stackHeapVector(numberElements, value);
+			const StackHeapVector<std::string, tStackCapacity> stackHeapVector(numberElements, value);
 
 			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), numberElements);
 			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.isEmpty(), numberElements == 0);
@@ -337,7 +337,7 @@ bool TestStackHeapVector::testConstructor(const double testDuration)
 
 			counter = 0;
 
-			StackHeapVector<std::string, tStackSize> copyStackHeapVector(stackHeapVector);
+			StackHeapVector<std::string, tStackCapacity> copyStackHeapVector(stackHeapVector);
 
 			for (std::string& element : copyStackHeapVector)
 			{
@@ -353,13 +353,72 @@ bool TestStackHeapVector::testConstructor(const double testDuration)
 			OCEAN_EXPECT_TRUE(validation, copyStackHeapVector.isEmpty());
 			OCEAN_EXPECT_EQUAL(validation, copyStackHeapVector.size(), size_t(0));
 		}
+
+		{
+			// move constructor
+
+			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
+
+			std::vector<TestElement> vector;
+			vector.reserve(numberElements);
+
+			for (size_t nElement = 0; nElement < numberElements; ++nElement)
+			{
+				vector.emplace_back(nElement);
+			}
+
+			const StackHeapVector<TestElement, tStackCapacity> stackHeapVector(std::move(vector));
+
+			for (size_t nElement = 0; nElement < numberElements; ++nElement)
+			{
+				const size_t value = stackHeapVector[nElement].value();
+
+				OCEAN_EXPECT_EQUAL(validation, value, nElement + 1000);
+			}
+		}
+
+		{
+			// copy constructor
+
+			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
+
+			std::vector<TestElement> vector;
+			vector.reserve(numberElements);
+
+			for (size_t nElement = 0; nElement < numberElements; ++nElement)
+			{
+				vector.emplace_back(nElement);
+			}
+
+			const StackHeapVector<TestElement, tStackCapacity> stackHeapVector(vector);
+
+			for (size_t nElement = 0; nElement < numberElements; ++nElement)
+			{
+				const size_t value = stackHeapVector[nElement].value();
+
+				OCEAN_EXPECT_EQUAL(validation, value, nElement + 2000);
+			}
+		}
+
+		{
+			// initializer list constructor
+
+			const StackHeapVector<TestElement, tStackCapacity> stackHeapVector({TestElement(0), TestElement(1), TestElement(2), TestElement(3), TestElement(4), TestElement(5), TestElement(6), TestElement(7), TestElement(8), TestElement(9)});
+
+			for (size_t nElement = 0; nElement < 10; ++nElement)
+			{
+				const size_t value = stackHeapVector[nElement].value();
+
+				OCEAN_EXPECT_EQUAL(validation, value, nElement + 2000);
+			}
+		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
 	return validation.succeeded();
 }
 
-template <size_t tStackSize>
+template <size_t tStackCapacity>
 bool TestStackHeapVector::testAssign(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
@@ -371,14 +430,14 @@ bool TestStackHeapVector::testAssign(const double testDuration)
 
 	do
 	{
-		StackHeapVector<uint64_t, tStackSize> stackHeapVector;
+		StackHeapVector<uint64_t, tStackCapacity> stackHeapVector;
 
 		{
 			const size_t capacity = size_t(RandomI::random(randomGenerator, 100u));
 
 			stackHeapVector.setCapacity(capacity);
 
-			const size_t expectedCapacity = std::max(tStackSize, capacity);
+			const size_t expectedCapacity = std::max(tStackCapacity, capacity);
 
 			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.capacity(), expectedCapacity);
 
@@ -404,7 +463,7 @@ bool TestStackHeapVector::testAssign(const double testDuration)
 		{
 			const size_t capacity = size_t(RandomI::random(randomGenerator, 100u));
 
-			const size_t expectedCapacity = std::max(std::max(tStackSize, capacity), std::max(stackHeapVector.size(), stackHeapVector.capacity()));
+			const size_t expectedCapacity = std::max(std::max(tStackCapacity, capacity), std::max(stackHeapVector.size(), stackHeapVector.capacity()));
 
 			stackHeapVector.setCapacity(capacity);
 
@@ -434,7 +493,7 @@ bool TestStackHeapVector::testAssign(const double testDuration)
 	return validation.succeeded();
 }
 
-template <size_t tStackSize>
+template <size_t tStackCapacity>
 bool TestStackHeapVector::testPushBack(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
@@ -446,7 +505,7 @@ bool TestStackHeapVector::testPushBack(const double testDuration)
 
 	do
 	{
-		StackHeapVector<std::string, tStackSize> stackHeapVector;
+		StackHeapVector<std::string, tStackCapacity> stackHeapVector;
 
 		const size_t insertSize = size_t(RandomI::random(randomGenerator, 10));
 
@@ -498,7 +557,7 @@ bool TestStackHeapVector::testPushBack(const double testDuration)
 	return validation.succeeded();
 }
 
-template <size_t tStackSize>
+template <size_t tStackCapacity>
 bool TestStackHeapVector::testResize(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
@@ -512,7 +571,7 @@ bool TestStackHeapVector::testResize(const double testDuration)
 	{
 		const size_t initialSize = size_t(RandomI::random(randomGenerator, 10));
 
-		StackHeapVector<std::string, tStackSize> stackHeapVector(initialSize, std::string("i"));
+		StackHeapVector<std::string, tStackCapacity> stackHeapVector(initialSize, std::string("i"));
 
 		OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), initialSize);
 
@@ -562,14 +621,14 @@ bool TestStackHeapVector::testResize(const double testDuration)
 	return validation.succeeded();
 }
 
-template <size_t tStackSize>
+template <size_t tStackCapacity>
 bool TestStackHeapVector::testPerformance(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	constexpr size_t iterations = 1000;
 
-	Log::info() << "... with stack size " << tStackSize << ":";
+	Log::info() << "... with stack size " << tStackCapacity << ":";
 
 	RandomGenerator randomGenerator;
 
@@ -591,14 +650,14 @@ bool TestStackHeapVector::testPerformance(const double testDuration)
 
 		do
 		{
-			const size_t size = stayBelowStackSize ? RandomI::random(randomGenerator, 1u, (unsigned int)(tStackSize)) : RandomI::random(randomGenerator, (unsigned int)(tStackSize + 1u), (unsigned int)(tStackSize * 2u));
+			const size_t size = stayBelowStackSize ? RandomI::random(randomGenerator, 1u, (unsigned int)(tStackCapacity)) : RandomI::random(randomGenerator, (unsigned int)(tStackCapacity + 1u), (unsigned int)(tStackCapacity * 2u));
 			const bool emplace = RandomI::boolean(randomGenerator);
 
 			performanceStackHeap.start();
 
 			for (size_t i = 0; i < iterations; ++i)
 			{
-				StackHeapVector<Frame::Plane, tStackSize> stackHeapVector;
+				StackHeapVector<Frame::Plane, tStackCapacity> stackHeapVector;
 
 				if (emplace)
 				{
