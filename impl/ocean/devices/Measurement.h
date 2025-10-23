@@ -478,7 +478,7 @@ class OCEAN_DEVICES_EXPORT Measurement : virtual public Device
 		SampleMap sampleMap_;
 
 		/// The maximal number of samples this measurement object can hold.
-		size_t sampleCapacity_;
+		size_t sampleCapacity_ = 200;
 
 		/// Map holding all sample event subscriptions.
 		SampleSubscriptionMap sampleSubscriptionMap_;

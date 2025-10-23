@@ -81,8 +81,7 @@ Measurement::SampleEventSubscription& Measurement::SampleEventSubscription::oper
 }
 
 Measurement::Measurement(const std::string& name, const DeviceType type) :
-	Device(name, type),
-	sampleCapacity_(30)
+	Device(name, type)
 {
 	ocean_assert((type.majorType() & DEVICE_MEASUREMENT) == DEVICE_MEASUREMENT);
 }
