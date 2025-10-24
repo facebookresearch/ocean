@@ -160,7 +160,7 @@ using namespace Ocean;
 		return;
 	}
 
-	const float scale = [UIScreen mainScreen].scale;
+	const float scale = view.window.windowScene.screen.scale;
 
 	const float widthPixels = rect.size.width * scale;
 	const float heightPixels = rect.size.height * scale;
