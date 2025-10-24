@@ -68,7 +68,7 @@ class OCEAN_DEVICES_IOS_EXPORT MotionManager : public Singleton<MotionManager>
 		 * Sets the instance of the CMMotionManager object explicitly as the application holds the instance already.
 		 * Do not call this function twice.
 		 * @param object The CMMotionManager object to be set explicitly, must be valid
-		 * @return True, if this singleton does not hold an own object already and if the provided object is valids
+		 * @return True, if this singleton does not hold an own object already and if the provided object is valid
 		 */
 		bool setObject(CMMotionManager* object);
 

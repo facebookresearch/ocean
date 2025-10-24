@@ -5,7 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
- 
 #include "ocean/devices/ios/MotionManager.h"
 
 namespace Ocean
@@ -16,36 +15,36 @@ namespace Devices
 
 namespace IOS
 {
-	
+
 CMMotionManager* MotionManager::object()
 {
 	const ScopedLock scopedLock(lock_);
-	
+
 	if (motionManager_ != nullptr)
 	{
 		return motionManager_;
 	}
-	
+
 	motionManager_ = [[CMMotionManager alloc] init];
-	
+
 	ocean_assert(motionManager_);
 	return motionManager_;
 }
-	
+
 bool MotionManager::setObject(CMMotionManager* object)
 {
 	if (object == nullptr)
 	{
 		return false;
 	}
-	
+
 	const ScopedLock scopedLock(lock_);
 
 	if (motionManager_ != nullptr)
 	{
 		return false;
 	}
-	
+
 	motionManager_ = object;
 	return true;
 }
@@ -121,7 +120,7 @@ void MotionManager::start()
 			}
 		}];
 }
-	
+
 }
 
 }

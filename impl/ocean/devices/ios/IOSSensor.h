@@ -28,7 +28,7 @@ namespace IOS
  * The x-axis is horizontal and pointing to the right of the device (if the device is held in default orientation).<br>
  * The y-axis is vertical and pointing to the top of the device.<br>
  * The z-axis is perpendicular to the screen plane and pointing towards the user (a right handed coordinate system).
- * @ingroup deviceios
+ * @ingroup devicesios
  */
 class OCEAN_DEVICES_IOS_EXPORT IOSSensor :
 	virtual public IOSDevice,

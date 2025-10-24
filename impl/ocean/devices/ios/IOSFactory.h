@@ -39,7 +39,7 @@ class OCEAN_DEVICES_IOS_EXPORT IOSFactory : public Factory
 		/**
 		 * Unregisters this factory at the manger.
 		 * This unregistration should be done after all created devices have been released.
-		 * @return True, if this factory chould be unregistered
+		 * @return True, if this factory could be unregistered
 		 */
 		static bool unregisterFactory();
 

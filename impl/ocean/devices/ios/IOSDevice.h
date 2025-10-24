@@ -23,7 +23,7 @@ namespace IOS
 
 /**
  * This class implements a device for the IOS library.
- * @ingroup deviceios
+ * @ingroup devicesios
  */
 class OCEAN_DEVICES_IOS_EXPORT IOSDevice : virtual public Device
 {
