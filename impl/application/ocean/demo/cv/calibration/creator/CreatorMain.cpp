@@ -11,6 +11,8 @@
 #include "ocean/cv/calibration/SVGImage.h"
 #include "ocean/cv/calibration/Utilities.h"
 
+#include "ocean/io/File.h"
+
 using namespace Ocean;
 using namespace Ocean::CV::Calibration;
 
@@ -38,7 +40,7 @@ using namespace Ocean::CV::Calibration;
 	commandArguments.registerParameter("paper", "p", "The paper size for the SVG image, either 'a3', 'a4', 'letter', or 'tabloid'", Value("a4"));
 	commandArguments.registerParameter("boardDimension", "bd", "The explicit marker dimension of the calibration board to create, \n\te.g., '6x9' to create a board with 6 horizontal markers and 9 vertical markers,\n\tOnly for used for image types 'board' or 'board_with_dot'");
 	commandArguments.registerParameter("output", "o", "The optional explicit output file for created image");
-	commandArguments.registerParameter("imageType", "it", "The type of the image to create, possible values are:\n\t'board' for a calibration board;\n\t'markers' for an image with all possible markers;\n\t'points' for an image with different sized points;\n'\t'board_with_dot' for a calibration board with center dot", Value("board"));
+	commandArguments.registerParameter("imageType", "it", "The type of the image to create, possible values are:\n\t'board' for a calibration board;\n\t'markers' for an image with all possible markers;\n\t'points' for two images with different sized points (black dots and white dots);\n'\t'board_with_dot' for a calibration board with center dot", Value("board"));
 	commandArguments.registerParameter("debugInformation", "di", "If defined, the resulting image will contain additional debug information");
 	commandArguments.registerParameter("help", "h", "Show this help output");
 
@@ -94,16 +96,42 @@ using namespace Ocean::CV::Calibration;
 			output = "markers_" + paperTypeString + ".svg";
 		}
 
-		SVGImage::writeMarkerTestImage(output, paperWidth, paperHeight, true);
+		if (!SVGImage::writeMarkerTestImage(output, paperWidth, paperHeight, true))
+		{
+			Log::error() << "Failed to write SVG image '" << output << "'";
+			return 1;
+		}
 	}
 	else if (imageType == "points")
 	{
-		if (output.empty())
+		for (const bool blackDots : {true, false})
 		{
-			output = "points_" + paperTypeString + ".svg";
-		}
+			IO::File outputFile;
 
-		SVGImage::writePointTestImage(output, paperWidth, paperHeight);
+			if (!output.empty())
+			{
+				outputFile = IO::File(output);
+			}
+			else
+			{
+				outputFile = IO::File("points_" + paperTypeString + ".svg");
+			}
+
+			if (blackDots)
+			{
+				outputFile = IO::File(outputFile.base() + "_blackDots." + outputFile.extension());
+			}
+			else
+			{
+				outputFile = IO::File(outputFile.base() + "_whiteDots." + outputFile.extension());
+			}
+
+			if (!SVGImage::writePointTestImage(outputFile(), paperWidth, paperHeight, blackDots))
+			{
+				Log::error() << "Failed to write SVG image '" << output << "'";
+				return 1;
+			}
+		}
 	}
 	else
 	{

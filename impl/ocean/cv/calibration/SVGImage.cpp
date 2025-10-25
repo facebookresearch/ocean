@@ -294,7 +294,7 @@ bool SVGImage::writeMarkerTestImage(const std::string& filename, const MetricSiz
 	return true;
 }
 
-bool SVGImage::writePointTestImage(const std::string& filename, const MetricSize& width, const MetricSize& height, const MetricSize::UnitType unitType, const unsigned int precision)
+bool SVGImage::writePointTestImage(const std::string& filename, const MetricSize& width, const MetricSize& height, const bool blackDots, const MetricSize::UnitType unitType, const unsigned int precision)
 {
 	ocean_assert(!filename.empty());
 	ocean_assert(width.isValid() && height.isValid());
@@ -314,7 +314,7 @@ bool SVGImage::writePointTestImage(const std::string& filename, const MetricSize
 	const MetricSize contentHeight = height - margin * 2.0;
 
 	const MetricSize minDotRadius(0.1, MetricSize::UT_MILLIMETER);
-	const MetricSize maxDotRadius(2.0, MetricSize::UT_MILLIMETER);
+	const MetricSize maxDotRadius(2.5, MetricSize::UT_MILLIMETER);
 
 	stream << "<svg ";
 
@@ -336,6 +336,17 @@ bool SVGImage::writePointTestImage(const std::string& filename, const MetricSize
 	{
 		return false;
 	}
+
+	if (!blackDots)
+	{
+		stream << "\n";
+		if (!writeRectangle(stream, "\t", MetricSize(0.0, MetricSize::UT_MILLIMETER), MetricSize(0.0, MetricSize::UT_MILLIMETER), width, height, "black", unitType, precision))
+		{
+			return false;
+		}
+	}
+
+	const std::string dotColor = blackDots ? "black" : "white";
 
 	constexpr double minSpacingBetweenDotsFactor = 4.0;
 
@@ -371,7 +382,7 @@ bool SVGImage::writePointTestImage(const std::string& filename, const MetricSize
 
 			const MetricSize dotRadius = minDotRadius + (maxDotRadius - minDotRadius) * double(dotIndex++) / double(numberDots - 1);
 
-			writeCircle(stream, "\t", xDot, yDot, dotRadius, "black", unitType, precision);
+			writeCircle(stream, "\t", xDot, yDot, dotRadius, dotColor, unitType, precision);
 		}
 	}
 

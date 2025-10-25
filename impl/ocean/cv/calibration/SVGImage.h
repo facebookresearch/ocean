@@ -62,11 +62,12 @@ class OCEAN_CV_CALIBRATION_EXPORT SVGImage
 		 * @param filename The filename of the SVG image to be written, must be valid
 		 * @param width The width of the image (or the paper the image is printed on), must be valid
 		 * @param height The height of the image (or the paper the image is printed on), must be valid
+		 * @param blackDots True, to create an image with black dots (and white background); False, to create an image with white dots (and black background)
 		 * @param unitType The unit type which will be used in the resulting SVG image, must be valid
 		 * @param precision The number of decimal places to use, with range [0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool writePointTestImage(const std::string& filename, const MetricSize& width, const MetricSize& height, const MetricSize::UnitType unitType = MetricSize::UT_MILLIMETER, const unsigned int precision = 4u);
+		static bool writePointTestImage(const std::string& filename, const MetricSize& width, const MetricSize& height, const bool blackDots, const MetricSize::UnitType unitType = MetricSize::UT_MILLIMETER, const unsigned int precision = 4u);
 
 	protected:
 
