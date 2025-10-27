@@ -299,106 +299,128 @@ bool TestEquation::testCubicEquation(const double testDuration)
 	constexpr double successThreshold = std::is_same<T, float>::value ? 0.95 : 0.99;
 	constexpr T valueRange = std::is_same<float, T>::value ? T(10) : T(1000);
 
+	bool allSucceeded = true;
+
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold, randomGenerator);
 
-	size_t overallExecutions = 0;
-	size_t executionsWithRealRoots = 0;
-
-	double sumResidual = 0.0;
-
-	HighPerformanceStatistic performance;
-
-	const Timestamp startTimestamp(true);
-
-	do
+	for (const bool refine : {false, true})
 	{
-		std::vector<T> aValues(iterations);
-		std::vector<T> bValues(iterations);
-		std::vector<T> cValues(iterations);
-		std::vector<T> dValues(iterations);
-		std::vector<T> x1Values(iterations, NumericT<T>::minValue());
-		std::vector<T> x2Values(iterations, NumericT<T>::minValue());
-		std::vector<T> x3Values(iterations, NumericT<T>::minValue());
-		std::vector<unsigned int> solutionsCount(iterations, 0u);
-
-		for (size_t n = 0; n < iterations; ++n)
+		if (refine)
 		{
-			aValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			Log::info() << "... with refinement";
+		}
+		else
+		{
+			Log::info() << "... without refinement";
+		}
 
-			while (NumericT<T>::isEqualEps(aValues[n]))
+		const std::string indentation = "  ";
+
+		ValidationPrecision validation(successThreshold, randomGenerator);
+
+		size_t overallExecutions = 0;
+		size_t executionsWithRealRoots = 0;
+
+		double sumResidual = 0.0;
+
+		HighPerformanceStatistic performance;
+
+		const Timestamp startTimestamp(true);
+
+		do
+		{
+			std::vector<T> aValues(iterations);
+			std::vector<T> bValues(iterations);
+			std::vector<T> cValues(iterations);
+			std::vector<T> dValues(iterations);
+			std::vector<T> x1Values(iterations, NumericT<T>::minValue());
+			std::vector<T> x2Values(iterations, NumericT<T>::minValue());
+			std::vector<T> x3Values(iterations, NumericT<T>::minValue());
+			std::vector<unsigned int> solutionsCount(iterations, 0u);
+
+			for (size_t n = 0; n < iterations; ++n)
 			{
 				aValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
-			}
 
-			bValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
-			cValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
-			dValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
-		}
-
-		performance.start();
-			for (unsigned int n = 0u; n < iterations; ++n)
-			{
-				solutionsCount[n] = EquationT<T>::solveCubic(aValues[n], bValues[n], cValues[n], dValues[n], x1Values[n], x2Values[n], x3Values[n]);
-			}
-		performance.stop();
-
-		for (unsigned int n = 0u; n < iterations; ++n)
-		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-			const T& a = aValues[n];
-			const T& b = bValues[n];
-			const T& c = cValues[n];
-			const T& d = dValues[n];
-
-			const unsigned int solutions = solutionsCount[n];
-
-			++overallExecutions;
-
-			if (solutions == 0u)
-			{
-				scopedIteration.setInaccurate();
-			}
-			else
-			{
-				const std::array<T, 3> xValues = {x1Values[n], x2Values[n], x3Values[n]};
-
-				T maxResidual = T(0);
-
-				for (unsigned int nSolution = 0u; nSolution < solutions; ++nSolution)
+				while (NumericT<T>::isEqualEps(aValues[n]))
 				{
-					const T& x = xValues[nSolution];
-
-					const T result = a * x * x * x + b * x * x + c * x + d;
-
-					if (NumericT<T>::isNotWeakEqualEps(result))
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					maxResidual = std::max(maxResidual, NumericT<T>::abs(result));
+					aValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
 				}
 
-				sumResidual += maxResidual;
+				bValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+				cValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+				dValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			}
 
-				++executionsWithRealRoots;
+			performance.start();
+				for (unsigned int n = 0u; n < iterations; ++n)
+				{
+					solutionsCount[n] = EquationT<T>::solveCubic(aValues[n], bValues[n], cValues[n], dValues[n], x1Values[n], x2Values[n], x3Values[n], refine);
+				}
+			performance.stop();
+
+			for (unsigned int n = 0u; n < iterations; ++n)
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				const T& a = aValues[n];
+				const T& b = bValues[n];
+				const T& c = cValues[n];
+				const T& d = dValues[n];
+
+				const unsigned int solutions = solutionsCount[n];
+
+				++overallExecutions;
+
+				if (solutions == 0u)
+				{
+					scopedIteration.setInaccurate();
+				}
+				else
+				{
+					const std::array<T, 3> xValues = {x1Values[n], x2Values[n], x3Values[n]};
+
+					T maxResidual = T(0);
+
+					for (unsigned int nSolution = 0u; nSolution < solutions; ++nSolution)
+					{
+						const T& x = xValues[nSolution];
+
+						const T result = a * x * x * x + b * x * x + c * x + d;
+
+						if (NumericT<T>::isNotWeakEqualEps(result))
+						{
+							scopedIteration.setInaccurate();
+						}
+
+						maxResidual = std::max(maxResidual, NumericT<T>::abs(result));
+					}
+
+					sumResidual += maxResidual;
+
+					++executionsWithRealRoots;
+				}
 			}
 		}
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+		ocean_assert(overallExecutions != 0);
+		const double percentRealRoots = double(executionsWithRealRoots) * 100.0 / double(overallExecutions);
+
+		const double averageResidual = sumResidual / double(executionsWithRealRoots);
+
+		Log::info() << "Performance for " << iterations << " iterations: " << performance;
+		Log::info() << "Average residual: " << String::toAString(averageResidual, 12u);
+		Log::info() << "Iterations with real roots: " << String::toAString(percentRealRoots, 1u) << "%";
+		Log::info() << "Validation: " << validation;
+
+		if (!validation.succeeded())
+		{
+			allSucceeded = false;
+		}
 	}
-	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(overallExecutions != 0);
-	const double percentRealRoots = double(executionsWithRealRoots) * 100.0 / double(overallExecutions);
-
-	const double averageResidual = sumResidual / double(executionsWithRealRoots);
-
-	Log::info() << "Performance for " << iterations << " iterations: " << performance;
-	Log::info() << "Average residual: " << String::toAString(averageResidual, 12u);
-	Log::info() << "Iterations with real roots: " << String::toAString(percentRealRoots, 1u) << "%";
-	Log::info() << "Validation: " << validation;
-
-	return validation.succeeded();
+	return allSucceeded;
 }
 
 template <typename T>
@@ -413,103 +435,125 @@ bool TestEquation::testQuarticEquation(const double testDuration)
 	constexpr double successThreshold = std::is_same<T, float>::value ? 0.90 : 0.99;
 	constexpr T valueRange = std::is_same<float, T>::value ? T(10) : T(1000);
 
+	bool allSucceeded = true;
+
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(successThreshold, randomGenerator);
 
-	size_t overallExecutions = 0;
-	size_t executionsWithRealRoots = 0;
-
-	double sumResidual = 0.0;
-
-	HighPerformanceStatistic performance;
-
-	const Timestamp startTimestamp(true);
-
-	do
+	for (const bool refine : {false, true})
 	{
-		std::vector<T> aValues(iterations);
-		std::vector<T> bValues(iterations);
-		std::vector<T> cValues(iterations);
-		std::vector<T> dValues(iterations);
-		std::vector<T> eValues(iterations);
-		std::vector<std::array<T, 4>> xValues(iterations);
-		std::vector<unsigned int> solutionsCount(iterations, 0u);
-
-		for (size_t n = 0; n < iterations; ++n)
+		if (refine)
 		{
-			aValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+			Log::info() << "... with refinement";
+		}
+		else
+		{
+			Log::info() << "... without refinement";
+		}
 
-			while (NumericT<T>::isEqualEps(aValues[n]))
+		const std::string indentation = "  ";
+
+		ValidationPrecision validation(successThreshold, randomGenerator);
+
+		size_t overallExecutions = 0;
+		size_t executionsWithRealRoots = 0;
+
+		double sumResidual = 0.0;
+
+		HighPerformanceStatistic performance;
+
+		const Timestamp startTimestamp(true);
+
+		do
+		{
+			std::vector<T> aValues(iterations);
+			std::vector<T> bValues(iterations);
+			std::vector<T> cValues(iterations);
+			std::vector<T> dValues(iterations);
+			std::vector<T> eValues(iterations);
+			std::vector<std::array<T, 4>> xValues(iterations);
+			std::vector<unsigned int> solutionsCount(iterations, 0u);
+
+			for (size_t n = 0; n < iterations; ++n)
 			{
 				aValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
-			}
 
-			bValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
-			cValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
-			dValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
-			eValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
-
-			xValues[n].fill(NumericT<T>::minValue());
-		}
-
-		performance.start();
-			for (unsigned int n = 0u; n < iterations; ++n)
-			{
-				solutionsCount[n] = EquationT<T>::solveQuartic(aValues[n], bValues[n], cValues[n], dValues[n], eValues[n], xValues[n].data());
-			}
-		performance.stop();
-
-		overallExecutions += iterations;
-
-		for (unsigned int n = 0u; n < iterations; ++n)
-		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-			const T& a = aValues[n];
-			const T& b = bValues[n];
-			const T& c = cValues[n];
-			const T& d = dValues[n];
-			const T& e = eValues[n];
-			const std::array<T, 4>& xIteration = xValues[n];
-			const unsigned int solutions = solutionsCount[n];
-
-			if (solutions != 0u)
-			{
-				T maxResidual = T(0);
-
-				for (unsigned int i = 0u; i < solutions; ++i)
+				while (NumericT<T>::isEqualEps(aValues[n]))
 				{
-					const T& x = xIteration[i];
-
-					const T result = a * x * x * x * x + b * x * x * x + c * x * x + d * x + e;
-
-					if (NumericT<T>::isNotWeakEqualEps(result))
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					maxResidual = std::max(maxResidual, NumericT<T>::abs(result));
+					aValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
 				}
 
-				sumResidual += maxResidual;
+				bValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+				cValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+				dValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
+				eValues[n] = RandomT<T>::scalar(randomGenerator, -valueRange, valueRange);
 
-				++executionsWithRealRoots;
+				xValues[n].fill(NumericT<T>::minValue());
+			}
+
+			performance.start();
+				for (unsigned int n = 0u; n < iterations; ++n)
+				{
+					solutionsCount[n] = EquationT<T>::solveQuartic(aValues[n], bValues[n], cValues[n], dValues[n], eValues[n], xValues[n].data(), refine);
+				}
+			performance.stop();
+
+			overallExecutions += iterations;
+
+			for (unsigned int n = 0u; n < iterations; ++n)
+			{
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+				const T& a = aValues[n];
+				const T& b = bValues[n];
+				const T& c = cValues[n];
+				const T& d = dValues[n];
+				const T& e = eValues[n];
+				const std::array<T, 4>& xIteration = xValues[n];
+				const unsigned int solutions = solutionsCount[n];
+
+				if (solutions != 0u)
+				{
+					T maxResidual = T(0);
+
+					for (unsigned int i = 0u; i < solutions; ++i)
+					{
+						const T& x = xIteration[i];
+
+						const T result = a * x * x * x * x + b * x * x * x + c * x * x + d * x + e;
+
+						if (NumericT<T>::isNotWeakEqualEps(result))
+						{
+							scopedIteration.setInaccurate();
+						}
+
+						maxResidual = std::max(maxResidual, NumericT<T>::abs(result));
+					}
+
+					sumResidual += maxResidual;
+
+					++executionsWithRealRoots;
+				}
 			}
 		}
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+		ocean_assert(overallExecutions != 0);
+		const double percentRealRoots = double(executionsWithRealRoots) * 100.0 / double(overallExecutions);
+
+		const double averageResidual = sumResidual / double(executionsWithRealRoots);
+
+		Log::info() << indentation << "Performance for " << iterations << " iterations: " << performance;
+		Log::info() << indentation << "Average residual: " << String::toAString(averageResidual, 12u);
+		Log::info() << indentation << "Iterations with real roots: " << String::toAString(percentRealRoots, 1u) << "%";
+		Log::info() << indentation << "Validation: " << validation;
+
+		if (!validation.succeeded())
+		{
+			allSucceeded = false;
+		}
 	}
-	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(overallExecutions != 0);
-	const double percentRealRoots = double(executionsWithRealRoots) * 100.0 / double(overallExecutions);
-
-	const double averageResidual = sumResidual / double(executionsWithRealRoots);
-
-	Log::info() << "Performance for " << iterations << " iterations: " << performance;
-	Log::info() << "Average residual: " << String::toAString(averageResidual, 12u);
-	Log::info() << "Iterations with real roots: " << String::toAString(percentRealRoots, 1u) << "%";
-	Log::info() << "Validation: " << validation;
-
-	return validation.succeeded();
+	return allSucceeded;
 }
 
 

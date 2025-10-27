@@ -26,21 +26,21 @@ template <typename T> class EquationT;
  * @see EquationT
  * @ingroup math
  */
-typedef EquationT<Scalar> Equation;
+using Equation = EquationT<Scalar>;
 
 /**
  * Definition of the Equation class using double values
  * @see EquationT
  * @ingroup math
  */
-typedef EquationT<double> EquationD;
+using EquationD = EquationT<double>;
 
 /**
  * Definition of the Equation class using float values
  * @see EquationT
  * @ingroup math
  */
-typedef EquationT<float> EquationF;
+using EquationF = EquationT<float>;
 
 /**
  * This class provides several functions to solve equations with different degree using floating point values with the precission specified by type T.
@@ -54,8 +54,10 @@ class EquationT
 	public:
 
 		/**
-		 * Solves a linear eqation with the form:<br>
+		 * Solves a linear eqation with the form:
+		 * <pre>
 		 * ax + b = 0
+		 * </pre>
 		 * @param a A parameter, with range (-infinity, infinity) \ {0}, (must not be 0)
 		 * @param b B parameter, with range (-infinity, infinity)
 		 * @param x Resulting solution
@@ -64,8 +66,10 @@ class EquationT
 		static bool solveLinear(const T a, const T b, T& x);
 
 		/**
-		 * Solves an quadratic equation with the form:<br>
+		 * Solves an quadratic equation with the form:
+		 * <pre>
 		 * ax^2 + bx + c = 0
+		 * </pre>
 		 * @param a A parameter, with range (-infinity, infinity) \ {0}, (must not be 0)
 		 * @param b B parameter, with range (-infinity, infinity)
 		 * @param c C parameter, with range (-infinity, infinity)
@@ -76,8 +80,10 @@ class EquationT
 		static bool solveQuadratic(const T a, const T b, const T c, T& x1, T& x2);
 
 		/**
-		 * Solves a cubic equation with the from:<br>
+		 * Solves a cubic equation with the from:
+		 * <pre>
 		 * ax^3 + bx^2 + cx + d = 0
+		 * </pre>
 		 * @param a A parameter, with range (-infinity, infinity) \ {0}, (must not be 0)
 		 * @param b B parameter, with range (-infinity, infinity)
 		 * @param c C parameter, with range (-infinity, infinity)
@@ -85,22 +91,61 @@ class EquationT
 		 * @param x1 First resulting solution, with range (-infinity, infinity)
 		 * @param x2 Second resulting solution, with range (-infinity, infinity)
 		 * @param x3 Third resulting solution, with range (-infinity, infinity)
-		 * @return Number of solutions
+		 * @param refine True, to refine the calculated solutions with an iterative algorithm; False, to use the roots as calculated
+		 * @return The number of solutions, with range [0, 3]
 		 */
-		static unsigned int solveCubic(const T a, const T b, const T c, const T d, T& x1, T& x2, T& x3);
+		static unsigned int solveCubic(const T a, const T b, const T c, const T d, T& x1, T& x2, T& x3, const bool refine = true);
 
 		/**
-		 * Solves a quartic equation with the form:<br>
+		 * Solves a quartic equation with the form:
+		 * <pre>
 		 * ax^4 + bx^3 + cx^2 + dx + e = 0
+		 * </pre>
 		 * @param a A parameter, with range (-infinity, infinity) \ {0}, (must not be 0)
 		 * @param b B parameter, with range (-infinity, infinity)
 		 * @param c C parameter, with range (-infinity, infinity)
 		 * @param d D parameter, with range (-infinity, infinity)
 		 * @param e E parameter, with range (-infinity, infinity)
 		 * @param x Array with at least four scalar values receiving the (at most) four solutions
-		 * @return Number of solutions
+		 * @param refine True, to refine the calculated solutions with an iterative algorithm; False, to use the roots as calculated
+		 * @return The number of solutions, with range [0, 4]
 		 */
-		static unsigned int solveQuartic(const T a, const T b, const T c, const T d, const T e, T* x);
+		static unsigned int solveQuartic(const T a, const T b, const T c, const T d, const T e, T* x, const bool refine = true);
+
+		/**
+		 * Optimizes a root of a cubic equation using Newton-Raphson iterations.
+		 * The function optimizes a known x for the following equation:
+		 * <pre>
+		 * ax^3 + bx^2 + cx + d = 0
+		 * </pre>
+		 * @param a A parameter, with range (-infinity, infinity) \ {0}, (must not be 0)
+		 * @param b B parameter, with range (-infinity, infinity)
+		 * @param c C parameter, with range (-infinity, infinity)
+		 * @param d D parameter, with range (-infinity, infinity)
+		 * @param x The known root to optimize, with range (-infinity, infinity)
+		 * @param maxIterations The maximum number of Newton-Raphson iterations, with range [1, infinity)
+		 * @param updateFactor The update factor for the Newton-Raphson iterations, with range (0, 2]
+		 * @return The number of applied iterations, with range [0, maxIterations], 0 if the root could not be optimized
+		 */
+		static unsigned int optimizeCubic(const T a, const T b, const T c, const T d, T& x, const unsigned int maxIterations = 10u, const T updateFactor = T(1.0));
+
+		/**
+		 * Optimizes a root of a quartic equation using Newton-Raphson iterations.
+		 * The function optimizes a known x for the following equation:
+		 * <pre>
+		 * ax^4 + bx^3 + cx^2 + dx + e = 0
+		 * </pre>
+		 * @param a A parameter, with range (-infinity, infinity) \ {0}, (must not be 0)
+		 * @param b B parameter, with range (-infinity, infinity)
+		 * @param c C parameter, with range (-infinity, infinity)
+		 * @param d D parameter, with range (-infinity, infinity)
+		 * @param e E parameter, with range (-infinity, infinity)
+		 * @param x The known root to optimize, with range (-infinity, infinity)
+		 * @param maxIterations The maximum number of Newton-Raphson iterations, with range [1, infinity)
+		 * @param updateFactor The update factor for the Newton-Raphson iterations, with range (0, 2]
+		 * @return The number of applied iterations, with range [0, maxIterations], 0 if the root could not be optimized
+		 */
+		static unsigned int optimizeQuartic(const T a, const T b, const T c, const T d, const T e, T& x, const unsigned int maxIterations = 10u, const T updateFactor = T(1.0));
 };
 
 template <typename T>
@@ -125,20 +170,33 @@ bool EquationT<T>::solveQuadratic(const T a, const T b, const T c, T& x1, T& x2)
 	ocean_assert(NumericT<T>::isNotEqualEps(a));
 
 	// ax^2 + bx + c = 0
+
 	// see Numerical Recipes in C++
+	// x = (-b ± sqrt(b^2 - 4ac)) / 2a
 
 	if (NumericT<T>::isEqualEps(a))
 	{
 		return false;
 	}
 
-	const T value = b * b - 4 * a * c;
-	if (!NumericT<T>::isAbove(value, 0))
+	const T value = b * b - T(4) * a * c;
+
+	if (value < T(0))
 	{
 		return false;
 	}
 
-	const T q = T(-0.5) * (b + ((value > T(0)) ? NumericT<T>::copySign(NumericT<T>::sqrt(value), b) : T(0)));
+	if (NumericT<T>::isEqualEps(value))
+	{
+		// x = (-b ± sqrt(0)) / 2a
+
+		x1 = -b / (T(2) * a);
+		x2 = x1;
+
+		return true;
+	}
+
+	const T q = T(-0.5) * (b + NumericT<T>::copySign(NumericT<T>::sqrt(value), b));
 
 	if (NumericT<T>::isEqualEps(q))
 	{
@@ -168,7 +226,7 @@ bool EquationT<T>::solveQuadratic(const T a, const T b, const T c, T& x1, T& x2)
 }
 
 template <typename T>
-unsigned int EquationT<T>::solveCubic(const T a, const T b, const T c, const T d, T& x1, T& x2, T& x3)
+unsigned int EquationT<T>::solveCubic(const T a, const T b, const T c, const T d, T& x1, T& x2, T& x3, const bool refine)
 {
 	ocean_assert(NumericT<T>::isNotEqualEps(a));
 
@@ -190,11 +248,11 @@ unsigned int EquationT<T>::solveCubic(const T a, const T b, const T c, const T d
 	// alpha2 = alpha^2
 	const T alpha2 = alpha * alpha;
 
-	// q = (alpha^2 - 3b) / 9
-	const T q = (alpha2 - 3 * beta) * T(0.11111111111111111111111111111111);
+	// q = (alpha^2 - 3*beta) / 9
+	const T q = (alpha2 - T(3) * beta) * T(0.11111111111111111111111111111111);
 
-	// r = (2 alpha^3 - 9 alpha beta + 27gamma) / 54
-	const T r = (2 * alpha2 * alpha - 9 * alpha * beta + 27 * gamma) * T(0.018518518518518518518518518518519);
+	// r = (2*alpha^3 - 9*alpha*beta + 27*gamma) / 54
+	const T r = (T(2) * alpha2 * alpha - T(9) * alpha * beta + T(27) * gamma) * T(0.018518518518518518518518518518519);
 
 	// r2 = r^2
 	const T r2 = r * r;
@@ -213,7 +271,7 @@ unsigned int EquationT<T>::solveCubic(const T a, const T b, const T c, const T d
 		// alpha_3 = alpha / 3
 		const T alpha_3 = alpha * T(0.33333333333333333333333333333333);
 
-		const T factor = -2 * sqrtQ;
+		const T factor = T(-2) * sqrtQ;
 
 		// x1 = -2 sqrt(q) * cos(angle / 3) - alpha / 3
 		x1 = factor * NumericT<T>::cos(angle_3) - alpha_3;
@@ -238,6 +296,13 @@ unsigned int EquationT<T>::solveCubic(const T a, const T b, const T c, const T d
 			ocean_assert_accuracy(NumericT<T>::isEqual(value3, T(0), T(1e-3)));
 		}
 #endif
+
+		if (refine)
+		{
+			optimizeCubic(a, b, c, d, x1);
+			optimizeCubic(a, b, c, d, x2);
+			optimizeCubic(a, b, c, d, x3);
+		}
 
 		return 3u;
 	}
@@ -266,11 +331,16 @@ unsigned int EquationT<T>::solveCubic(const T a, const T b, const T c, const T d
 
 #endif
 
+	if (refine)
+	{
+		optimizeCubic(a, b, c, d, x1);
+	}
+
 	return 1u;
 }
 
 template <typename T>
-unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T d, const T e, T* x)
+unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T d, const T e, T* x, const bool refine)
 {
 	ocean_assert(NumericT<T>::isNotEqualEps(a));
 	ocean_assert(x != nullptr);
@@ -314,6 +384,8 @@ unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T
 
 	// y^4 + alpha y^2 + beta y + gamma = 0
 
+	unsigned int solutions = 0u;
+
 	if (NumericT<T>::isEqualEps(beta))
 	{
 		const std::complex<T> cx1 = std::complex<T>(T(-0.25)) * std::complex<T>(b / a) + NumericT<T>::sqrt(std::complex<T>(T(0.5)) * (std::complex<T>(-alpha) + NumericT<T>::sqrt(std::complex<T>(alpha * alpha - 4 * gamma))));
@@ -326,11 +398,9 @@ unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T
 		ocean_assert((std::is_same<T, float>::value) || NumericT<T>::isWeakEqualEps(cx3 * cx3 * cx3 * cx3 * a + cx3 * cx3 * cx3 * b + cx3 * cx3 * c + cx3 * d + e));
 		ocean_assert((std::is_same<T, float>::value) || NumericT<T>::isWeakEqualEps(cx4 * cx4 * cx4 * cx4 * a + cx4 * cx4 * cx4 * b + cx4 * cx4 * c + cx4 * d + e));
 
-		unsigned int solutions = 0u;
-
 		if (NumericT<T>::isEqualEps(cx1.imag()))
 		{
-			const T solution = cx1.real();
+			T solution = cx1.real();
 			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
 			{
 				x[solutions++] = solution;
@@ -339,7 +409,7 @@ unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T
 
 		if (NumericT<T>::isEqualEps(cx2.imag()))
 		{
-			const T solution = cx2.real();
+			T solution = cx2.real();
 			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
 			{
 				x[solutions++] = solution;
@@ -348,7 +418,7 @@ unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T
 
 		if (NumericT<T>::isEqualEps(cx3.imag()))
 		{
-			const T solution = cx3.real();
+			T solution = cx3.real();
 			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
 			{
 				x[solutions++] = solution;
@@ -357,108 +427,220 @@ unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T
 
 		if (NumericT<T>::isEqualEps(cx4.imag()))
 		{
-			const T solution = cx4.real();
+			T solution = cx4.real();
+			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
+			{
+				x[solutions++] = solution;
+			}
+		}
+	}
+	else
+	{
+		//const std::complex<T> p(-(alpha * alpha) / T(12.0) - gamma);
+		const std::complex<T> p(T(-0.08333333333333333333333333333333) * alpha * alpha - gamma);
+
+		//const std::complex<T> q(-(alpha * alpha * alpha) / T(108.0) + (alpha * gamma) / T(3.0) - (beta * beta) / T(8.0));
+		const std::complex<T> q(T(-0.00925925925925925925925925925926) * alpha * alpha * alpha + T(0.33333333333333333333333333333333) * alpha * gamma - T(0.125) * beta * beta);
+
+		const std::complex<T> qqSqr = NumericT<T>::sqrt(std::complex<T>(T(0.25)) * q * q + std::complex<T>(T(0.03703703703703703703703703703704)) * p * p * p);
+
+		const std::complex<T> r(std::complex<T>(T(-0.5)) * q + qqSqr);
+		if (NumericT<T>::isNan(r) || NumericT<T>::isInf(r))
+		{
+			return 0u;
+		}
+
+		const std::complex<T> u = NumericT<T>::pow(std::complex<T>(r), T(0.33333333333333333333333333333333));
+
+		if (NumericT<T>::isNan(u) || NumericT<T>::isInf(u))
+		{
+			return 0u;
+		}
+
+		std::complex<T> y;
+		if (NumericT<T>::isEqualEps(u.real()) && NumericT<T>::isEqualEps(u.imag()))
+		{
+			y = std::complex<T>(T(-0.83333333333333333333333333333333) * alpha) + u - NumericT<T>::pow(std::complex<T>(q), T(0.33333333333333333333333333333333));
+		}
+		else
+		{
+			y = std::complex<T>(T(-0.83333333333333333333333333333333) * alpha) + u - p / (std::complex<T>(3) * u);
+		}
+
+		const std::complex<T> w(NumericT<T>::sqrt(std::complex<T>(alpha) + std::complex<T>(T(2)) * y));
+
+		//const std::complex<T> cx1 = std::complex<T>(T(-0.25)) * std::complex<T>(b / a) + std::complex<T>(T(0.5)) * (w + NumericT<T>::sqrt(std::complex<T>(-1) * (std::complex<T>(3) * std::complex<T>(alpha) + std::complex<T>(2) * y + std::complex<T>(2) * std::complex<T>(beta) / w)));
+
+		if (NumericT<T>::isEqualEps(w))
+		{
+			return 0u;
+		}
+
+		const std::complex<T> beta2_w(std::complex<T>(T(2) * beta) / w);
+		const std::complex<T> alpha3y2 = std::complex<T>(T(3) * alpha) + std::complex<T>(T(2)) * y;
+		const std::complex<T> b_a4(T(-0.25) * b_a);
+
+		const std::complex<T> sqrtPositive(NumericT<T>::sqrt(-alpha3y2 - beta2_w));
+		const std::complex<T> sqrtNegative(NumericT<T>::sqrt(-alpha3y2 + beta2_w));
+
+		const std::complex<T> cx1 = b_a4 + std::complex<T>(T(0.5)) * (w + sqrtPositive);
+		const std::complex<T> cx2 = b_a4 + std::complex<T>(T(0.5)) * (w - sqrtPositive);
+		const std::complex<T> cx3 = b_a4 + std::complex<T>(T(0.5)) * (-w + sqrtNegative);
+		const std::complex<T> cx4 = b_a4 + std::complex<T>(T(0.5)) * (-w - sqrtNegative);
+
+		if (NumericT<T>::isEqualEps(cx1.imag()))
+		{
+			T solution = cx1.real();
 			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
 			{
 				x[solutions++] = solution;
 			}
 		}
 
-		return solutions;
-	}
-
-	//const std::complex<T> p(-(alpha * alpha) / T(12.0) - gamma);
-	const std::complex<T> p(T(-0.08333333333333333333333333333333) * alpha * alpha - gamma);
-
-	//const std::complex<T> q(-(alpha * alpha * alpha) / T(108.0) + (alpha * gamma) / T(3.0) - (beta * beta) / T(8.0));
-	const std::complex<T> q(T(-0.00925925925925925925925925925926) * alpha * alpha * alpha + T(0.33333333333333333333333333333333) * alpha * gamma - T(0.125) * beta * beta);
-
-	const std::complex<T> qqSqr = NumericT<T>::sqrt(std::complex<T>(T(0.25)) * q * q + std::complex<T>(T(0.03703703703703703703703703703704)) * p * p * p);
-
-	const std::complex<T> r(std::complex<T>(T(-0.5)) * q + qqSqr);
-	if (NumericT<T>::isNan(r) || NumericT<T>::isInf(r))
-	{
-		return 0u;
-	}
-
-	const std::complex<T> u = NumericT<T>::pow(std::complex<T>(r), T(0.33333333333333333333333333333333));
-
-	if (NumericT<T>::isNan(u) || NumericT<T>::isInf(u))
-	{
-		return 0u;
-	}
-
-	std::complex<T> y;
-	if (NumericT<T>::isEqualEps(u.real()) && NumericT<T>::isEqualEps(u.imag()))
-	{
-		y = std::complex<T>(T(-0.83333333333333333333333333333333) * alpha) + u - NumericT<T>::pow(std::complex<T>(q), T(0.33333333333333333333333333333333));
-	}
-	else
-	{
-		y = std::complex<T>(T(-0.83333333333333333333333333333333) * alpha) + u - p / (std::complex<T>(3) * u);
-	}
-
-	//const std::complex<T> w_(NumericT<T>::sqrt(std::complex<T>(alpha) + std::complex<T>(2) * y));
-	const std::complex<T> w(NumericT<T>::sqrt(std::complex<T>(T(0.25) * alpha) + std::complex<T>(T(0.5)) * y));
-
-	//const std::complex<T> cx1 = std::complex<T>(T(-0.25)) * std::complex<T>(b / a) + std::complex<T>(T(0.5)) * (w + NumericT<T>::sqrt(std::complex<T>(-1) * (std::complex<T>(3) * std::complex<T>(alpha) + std::complex<T>(2) * y + std::complex<T>(2) * std::complex<T>(beta) / w)));
-
-	if (NumericT<T>::isEqualEps(w))
-	{
-		return 0u;
-	}
-
-	const std::complex<T> beta2_w(std::complex<T>(T(-0.25) * beta) / w);
-	const std::complex<T> alpha3y2 = std::complex<T>(T(-0.75) * alpha) - std::complex<T>(T(0.5)) * y;
-	const std::complex<T> b_a4(T(-0.25) * b_a);
-
-	const std::complex<T> sqrtPositive(NumericT<T>::sqrt(alpha3y2 + beta2_w));
-	const std::complex<T> sqrtNegative(NumericT<T>::sqrt(alpha3y2 - beta2_w));
-
-	const std::complex<T> cx1 = b_a4 + w + sqrtPositive;
-	const std::complex<T> cx2 = b_a4 + w - sqrtPositive;
-	const std::complex<T> cx3 = b_a4 - w + sqrtNegative;
-	const std::complex<T> cx4 = b_a4 - w - sqrtNegative;
-
-	unsigned int solutions = 0u;
-
-	if (NumericT<T>::isEqualEps(cx1.imag()))
-	{
-		const T solution = cx1.real();
-		if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
+		if (NumericT<T>::isEqualEps(cx2.imag()))
 		{
-			x[solutions++] = solution;
+			T solution = cx2.real();
+			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
+			{
+				x[solutions++] = solution;
+			}
+		}
+
+		if (NumericT<T>::isEqualEps(cx3.imag()))
+		{
+			T solution = cx3.real();
+			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
+			{
+				x[solutions++] = solution;
+			}
+		}
+
+		if (NumericT<T>::isEqualEps(cx4.imag()))
+		{
+			T solution = cx4.real();
+			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
+			{
+				x[solutions++] = solution;
+			}
 		}
 	}
 
-	if (NumericT<T>::isEqualEps(cx2.imag()))
+	if (refine)
 	{
-		const T solution = cx2.real();
-		if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
+		for (unsigned int n = 0u; n < solutions; ++n)
 		{
-			x[solutions++] = solution;
-		}
-	}
-
-	if (NumericT<T>::isEqualEps(cx3.imag()))
-	{
-		const T solution = cx3.real();
-		if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
-		{
-			x[solutions++] = solution;
-		}
-	}
-
-	if (NumericT<T>::isEqualEps(cx4.imag()))
-	{
-		const T solution = cx4.real();
-		if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
-		{
-			x[solutions++] = solution;
+			optimizeQuartic(a, b, c, d, e, x[n]);
 		}
 	}
 
 	return solutions;
+}
+
+template <typename T>
+unsigned int EquationT<T>::optimizeCubic(const T a, const T b, const T c, const T d, T& root, const unsigned int maxIterations, const T updateFactor)
+{
+	ocean_assert(maxIterations >= 1u);
+	ocean_assert(updateFactor > T(0) && updateFactor <= T(2));
+
+	// Newton-Raphson iteration: xNew = xOld - f(xOld) / f'(xOld)
+
+	// where f(x) = ax^3 + bx^2 + cx + d
+	// and f'(x) = 3ax^2 + 2bx + c
+
+	for (unsigned int nIteration = 0u; nIteration < maxIterations; ++nIteration)
+	{
+		const T x = root;
+
+		const T fx = a * x * x * x + b * x * x + c * x + d;
+
+		if (NumericT<T>::isEqualEps(fx))
+		{
+			return nIteration;
+		}
+
+		const T fdx = T(3) * a * x * x + T(2) * b * x + c;
+
+		if (NumericT<T>::isEqualEps(fdx))
+		{
+			return nIteration;
+		}
+
+		const T delta = fx / fdx;
+		const T newX = x - delta * updateFactor;
+
+		const T newFx = a * newX * newX * newX + b * newX * newX + c * newX + d;
+
+		if (NumericT<T>::abs(fx) < NumericT<T>::abs(newFx))
+		{
+			// the optimization failed
+			return nIteration;
+		}
+
+		root = newX;
+
+		// we have converged
+		if (NumericT<T>::isEqualEps(delta))
+		{
+			return nIteration + 1u;
+		}
+	}
+
+	return maxIterations;
+}
+
+template <typename T>
+unsigned int EquationT<T>::optimizeQuartic(const T a, const T b, const T c, const T d, const T e, T& root, const unsigned int maxIterations, const T updateFactor)
+{
+	ocean_assert(maxIterations >= 1u);
+	ocean_assert(updateFactor > T(0) && updateFactor <= T(2));
+
+	// Newton-Raphson iteration: xNew = xOld - f(xOld) / f'(xOld)
+
+	// where f(x) = ax^4 + bx^3 + cx^2 + dx + e
+	// and f'(x) = 4ax^3 + 3bx^2 + 2cx + d
+
+	for (unsigned int nIteration = 0u; nIteration < maxIterations; ++nIteration)
+	{
+		const T x = root;
+		const T x2 = x * x;
+		const T x3 = x2 * x;
+		const T x4 = x3 * x;
+
+		const T fx = a * x4 + b * x3 + c * x2 + d * x + e;
+
+		if (NumericT<T>::isEqualEps(fx))
+		{
+			return nIteration;
+		}
+
+		const T fdx = T(4) * a * x3 + T(3) * b * x2 + T(2) * c * x + d;
+
+		if (NumericT<T>::isEqualEps(fdx))
+		{
+			return nIteration;
+		}
+
+		const T delta = fx / fdx;
+		const T newX = x - delta * updateFactor;
+
+		const T newFx = a * newX * newX * newX * newX + b * newX * newX * newX + c * newX * newX + d * x + e;
+
+		if (NumericT<T>::abs(fx) < NumericT<T>::abs(newFx))
+		{
+			// the optimization failed
+			return nIteration;
+		}
+
+		root = newX;
+
+		// we have converged
+		if (NumericT<T>::isEqualEps(delta))
+		{
+			return nIteration + 1u;
+		}
+	}
+
+	return maxIterations;
 }
 
 }
