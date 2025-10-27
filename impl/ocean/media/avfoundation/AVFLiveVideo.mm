@@ -571,7 +571,7 @@ bool AVFLiveVideo::createCaptureDevice()
 
 	for (size_t n = 0; n < devices.size(); ++n)
 	{
-		if (devices[n].friendlyName() == String::toWString(url_))
+		if (StringApple::toAString(devices[n].friendlyName()) == url_)
 		{
 			uniqueDeviceId = devices[n].uniqueId();
 			break;

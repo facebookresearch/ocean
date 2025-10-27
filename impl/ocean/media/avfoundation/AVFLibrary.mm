@@ -15,6 +15,7 @@
 #include "ocean/media/avfoundation/AVFMovieRecorder.h"
 
 #include "ocean/base/String.h"
+#include "ocean/base/StringApple.h"
 
 #include "ocean/platform/apple/System.h"
 
@@ -285,7 +286,7 @@ MediumRef AVFLibrary::newLiveVideo(const std::string& url, bool useExclusive)
 				return MediumRef();
 			}
 
-			newUrl = String::toAString(devices[size_t(index)].friendlyName());
+			newUrl = StringApple::toAString(devices[size_t(index)].friendlyName());
 		}
 	}
 
