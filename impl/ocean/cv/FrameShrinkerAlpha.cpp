@@ -33,44 +33,56 @@ bool FrameShrinkerAlpha::Comfort::divideByTwo(const Frame& source, Frame& target
 		{
 			case 1u:
 			{
-				if (alphaIsLastChannel) {
+				if (alphaIsLastChannel)
+				{
 					divideByTwo8BitPerChannel<1u, false, tTransparentIs0xFF>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				} else {
+				}
+				else
+				{
 					divideByTwo8BitPerChannel<1u, true, tTransparentIs0xFF>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-}
+				}
 
 				return true;
 			}
 
 			case 2u:
 			{
-				if (alphaIsLastChannel) {
+				if (alphaIsLastChannel)
+				{
 					divideByTwo8BitPerChannel<2u, false, tTransparentIs0xFF>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				} else {
+				}
+				else
+				{
 					divideByTwo8BitPerChannel<2u, true, tTransparentIs0xFF>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-}
+				}
 
 				return true;
 			}
 
 			case 3u:
 			{
-				if (alphaIsLastChannel) {
+				if (alphaIsLastChannel)
+				{
 					divideByTwo8BitPerChannel<3u, false, tTransparentIs0xFF>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				} else {
+				}
+				else
+				{
 					divideByTwo8BitPerChannel<3u, true, tTransparentIs0xFF>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-}
+				}
 
 				return true;
 			}
 
 			case 4u:
 			{
-				if (alphaIsLastChannel) {
+				if (alphaIsLastChannel)
+				{
 					divideByTwo8BitPerChannel<4u, false, tTransparentIs0xFF>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-				} else {
+				}
+				else
+				{
 					divideByTwo8BitPerChannel<4u, true, tTransparentIs0xFF>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), source.paddingElements(), target.paddingElements(), worker);
-}
+				}
 
 				return true;
 			}

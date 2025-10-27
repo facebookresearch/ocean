@@ -812,7 +812,10 @@ bool LegacyQRCodeDetector2D::computeRefinedHomography(const uint8_t* const yFram
 	const unsigned int maximumSearchDistance = (unsigned int)((topLeft.moduleSize() + bottomLeft.moduleSize() + topRight.moduleSize()) * Scalar(2) / Scalar(9) + Scalar(0.5));
 
 	const VectorsI2 alignmentPatterns = QRCodeEncoder::computeAlignmentPatternPositions(version);
-	ocean_assert(std::is_sorted(alignmentPatterns.begin(), alignmentPatterns.end(), [](const VectorI2& a, const VectorI2& b) { return a.y() < b.y() || (a.y() == b.y() && a.x() < b.x()); }));
+	ocean_assert(std::is_sorted(alignmentPatterns.begin(), alignmentPatterns.end(), [](const VectorI2& a, const VectorI2& b)
+	{
+		return a.y() < b.y() || (a.y() == b.y() && a.x() < b.x());
+	}));
 
 	// Define the initial set of point correspondences. Here, use the four corners of the three finder patterns
 	// (top-left, bottom-left, and top-right):

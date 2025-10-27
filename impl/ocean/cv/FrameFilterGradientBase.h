@@ -333,9 +333,10 @@ void FrameFilterGradientBase::applyPixelModifierSubset(const TSource* source, TT
 		{
 			ocean_assert(source < sourceRowEnd);
 
-			for (unsigned int n = 0u; n < tChannels; ++n) {
+			for (unsigned int n = 0u; n < tChannels; ++n)
+			{
 				*target++ = TTarget(0);
-}
+			}
 
 			source += tChannels;
 		}
@@ -345,9 +346,10 @@ void FrameFilterGradientBase::applyPixelModifierSubset(const TSource* source, TT
 	{
 		ocean_assert(source < sourceEnd);
 
-		for (unsigned int n = 0u; n < tChannels; ++n) {
+		for (unsigned int n = 0u; n < tChannels; ++n)
+		{
 			*target++ = TTarget(0);
-}
+		}
 
 		source += tChannels;
 
@@ -392,9 +394,10 @@ void FrameFilterGradientBase::applyPixelModifierSubset(const TSource* source, TT
 			}
 		}
 
-		for (unsigned int n = 0u; n < tChannels; ++n) {
+		for (unsigned int n = 0u; n < tChannels; ++n)
+		{
 			*target++ = TTarget(0);
-}
+		}
 
 		source += tChannels;
 	}
@@ -407,9 +410,10 @@ void FrameFilterGradientBase::applyPixelModifierSubset(const TSource* source, TT
 		{
 			ocean_assert(source < sourceRowEnd);
 
-			for (unsigned int n = 0u; n < tChannels; ++n) {
+			for (unsigned int n = 0u; n < tChannels; ++n)
+			{
 				*target++ = TTarget(0);
-}
+			}
 
 			source += tChannels;
 		}

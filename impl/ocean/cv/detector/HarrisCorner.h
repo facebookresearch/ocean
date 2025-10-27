@@ -112,9 +112,10 @@ inline Geometry::ImagePoints HarrisCorner::corners2imagePoints(const HarrisCorne
 	Geometry::ImagePoints result;
 	result.reserve(corners.size());
 
-	for (HarrisCorners::const_iterator i = corners.begin(); i != corners.end(); ++i) {
+	for (HarrisCorners::const_iterator i = corners.begin(); i != corners.end(); ++i)
+	{
 		result.push_back(i->observation());
-}
+	}
 
 	return result;
 }
@@ -127,9 +128,10 @@ inline Geometry::ImagePoints HarrisCorner::corners2imagePoints(const HarrisCorne
 	Geometry::ImagePoints result;
 	result.reserve(realNumber);
 
-	for (size_t n = 0; n < realNumber; ++n) {
+	for (size_t n = 0; n < realNumber; ++n)
+	{
 		result.push_back(corners[n].observation());
-}
+	}
 
 	return result;
 }
@@ -139,9 +141,10 @@ inline PointFeatures HarrisCorner::corners2pointFeatures(const HarrisCorners& co
 	PointFeatures result;
 	result.reserve(corners.size());
 
-	for (HarrisCorners::const_iterator i = corners.begin(); i != corners.end(); ++i) {
+	for (HarrisCorners::const_iterator i = corners.begin(); i != corners.end(); ++i)
+	{
 		result.push_back(*i);
-}
+	}
 
 	return result;
 }
@@ -154,9 +157,10 @@ inline PointFeatures HarrisCorner::corners2pointFeatures(const HarrisCorners& co
 	PointFeatures result;
 	result.reserve(realNumber);
 
-	for (size_t n = 0; n < realNumber; ++n) {
+	for (size_t n = 0; n < realNumber; ++n)
+	{
 		result.push_back(corners[n]);
-}
+	}
 
 	return result;
 }

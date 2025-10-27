@@ -282,9 +282,10 @@ void MaskCreator::inclusiveMaskOffsets2inclusiveMask(IndexGroups32& offsetGroups
 			// the offsets need to be ordered
 			if (row.size() == 2)
 			{
-				if (row[0] > row[1]) {
+				if (row[0] > row[1])
+				{
 					std::swap(row[0], row[1]);
-}
+				}
 			}
 			else
 			{

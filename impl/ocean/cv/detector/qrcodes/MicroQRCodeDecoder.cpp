@@ -809,7 +809,8 @@ static uint16_t readFormatBits(const std::vector<uint8_t>& modules, const unsign
 	static_assert(xs.size() == ys.size());
 	static_assert(xs.size() < 8u * sizeof(format));
 
-	for (size_t i = xs.size() - 1u; i < xs.size(); i--) {
+	for (size_t i = xs.size() - 1u; i < xs.size(); i--)
+	{
 		format = (format << 1) | (modules[xs[i] + ys[i] * modulesPerSide] == 0u ? 0u : 1u);
 	}
 
@@ -831,7 +832,8 @@ static bool decodeFormatBits(const uint16_t formatBits, uint32_t& version, Micro
 
 	symbolNumber = fdata >> 2;
 
-	switch(symbolNumber) {
+	switch(symbolNumber)
+	{
 		case 0u:
 			version = 1u;
 			errorCorrectionCapacity = MicroQRCode::ECC_DETECTION_ONLY;
@@ -919,12 +921,14 @@ static void getCodewords(const std::vector<uint8_t>& modules, const unsigned int
 				ocean_assert(index < size * size);
 
 				// Skip timing patterns
-				if (x == 0 || y == 0) {
+				if (x == 0 || y == 0)
+				{
 					continue;
 				}
 
 				// Skip finder pattern
-				if (x <= 8 && y <= 8) {
+				if (x <= 8 && y <= 8)
+				{
 					continue;
 				}
 

@@ -315,9 +315,10 @@ bool CalibrationPatternDetector::detectCalibrationPatternWithoutKnowledge(const 
 			{
 				const Scalar sqrDistance = iL->sqrDistance(iC->observation());
 
-				if (sqrDistance <= maxCornerDistanceSqr) {
+				if (sqrDistance <= maxCornerDistanceSqr)
+				{
 					++nearCorners;
-}
+				}
 			}
 
 			if (nearCorners >= verticalEdges_)

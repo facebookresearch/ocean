@@ -113,9 +113,10 @@ Vectors2 FeatureDetector::determineHarrisPoints(const uint8_t* yFrame, const uns
 	ocean_assert(windowHeight >= 1u && windowHeight <= height);
 
 	Detector::HarrisCorners corners;
-	if (!Detector::HarrisCornerDetector::detectCorners(yFrame, width, height, yFramePaddingElements, windowLeft, windowTop, windowWidth, windowHeight, strength, true, corners, true, worker)) {
+	if (!Detector::HarrisCornerDetector::detectCorners(yFrame, width, height, yFramePaddingElements, windowLeft, windowTop, windowWidth, windowHeight, strength, true, corners, true, worker))
+	{
 		return Vectors2();
-}
+	}
 
 	// If first run went bad, we try again with lowered expectations:
 	if (corners.size() < 50)

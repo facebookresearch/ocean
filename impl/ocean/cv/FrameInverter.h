@@ -357,9 +357,10 @@ void FrameInverter::invert8BitChannelsSubset(uint8_t* frame, const unsigned int 
 	{
 		ocean_assert(frame < frameEnd);
 
-		for (unsigned int n = 0u; n < tChannelLast - tChannelFirst + 1u; ++n) {
+		for (unsigned int n = 0u; n < tChannelLast - tChannelFirst + 1u; ++n)
+		{
 			frame[n] = 0xFF - frame[n];
-}
+		}
 
 		frame += tChannels;
 	}
@@ -385,9 +386,10 @@ void FrameInverter::invert8BitChannelsSubset(const uint8_t* source, uint8_t* tar
 	{
 		ocean_assert(source < sourceEnd);
 
-		for (unsigned int n = 0u; n < tChannelLast - tChannelFirst + 1u; ++n) {
+		for (unsigned int n = 0u; n < tChannelLast - tChannelFirst + 1u; ++n)
+		{
 			target[n] = 0xFF - source[n];
-}
+		}
 
 		source += tChannels;
 		target += tChannels;

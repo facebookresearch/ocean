@@ -170,12 +170,13 @@ void FrameShrinkerAlpha::divideByTwo8BitPerChannelSubset(const uint8_t* source, 
 				const unsigned int denominator_2 = denominator / 2u;
 
 				// data channel
-				for (unsigned int n = FrameBlender::SourceOffset<tAlphaAtFront>::data(); n < tChannels + FrameBlender::SourceOffset<tAlphaAtFront>::data() - 1u; ++n) {
+				for (unsigned int n = FrameBlender::SourceOffset<tAlphaAtFront>::data(); n < tChannels + FrameBlender::SourceOffset<tAlphaAtFront>::data() - 1u; ++n)
+				{
 					target[n] = uint8_t((sourceFirst[n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceFirst[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()])
 									+ sourceFirst[tChannels + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceFirst[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels])
 									+ sourceSecond[n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceSecond[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()])
 									+ sourceSecond[tChannels + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceSecond[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels]) + denominator_2) / denominator);
-}
+				}
 
 				// alpha channel
 				target[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()] = uint8_t((sourceFirst[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()]
@@ -215,14 +216,15 @@ void FrameShrinkerAlpha::divideByTwo8BitPerChannelSubset(const uint8_t* source, 
 				const unsigned int denominator_2 = denominator / 2u;
 
 				// data channel
-				for (unsigned int n = FrameBlender::SourceOffset<tAlphaAtFront>::data(); n < tChannels + FrameBlender::SourceOffset<tAlphaAtFront>::data() - 1u; ++n) {
+				for (unsigned int n = FrameBlender::SourceOffset<tAlphaAtFront>::data(); n < tChannels + FrameBlender::SourceOffset<tAlphaAtFront>::data() - 1u; ++n)
+				{
 					target[n] = uint8_t((sourceFirst[n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceFirst[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()])
 									+ sourceFirst[tChannels + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceFirst[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels]) * 2u
 									+ sourceFirst[tChannels * 2u + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceFirst[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels * 2u])
 									+ sourceSecond[n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceSecond[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()])
 									+ sourceSecond[tChannels + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceSecond[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels]) * 2u
 									+ sourceSecond[tChannels * 2u + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceSecond[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels * 2u]) + denominator_2) / denominator);
-}
+				}
 
 				// alpha channel
 				target[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()] =
@@ -274,14 +276,15 @@ void FrameShrinkerAlpha::divideByTwo8BitPerChannelSubset(const uint8_t* source, 
 				const unsigned int denominator_2 = denominator / 2u;
 
 				// data channel
-				for (unsigned int n = FrameBlender::SourceOffset<tAlphaAtFront>::data(); n < tChannels + FrameBlender::SourceOffset<tAlphaAtFront>::data() - 1u; ++n) {
+				for (unsigned int n = FrameBlender::SourceOffset<tAlphaAtFront>::data(); n < tChannels + FrameBlender::SourceOffset<tAlphaAtFront>::data() - 1u; ++n)
+				{
 					target[n] = uint8_t((sourceFirst[n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceFirst[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()])
 									+ sourceFirst[tChannels + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceFirst[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels])
 									+ sourceSecond[n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceSecond[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()]) * 2u
 									+ sourceSecond[tChannels + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceSecond[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels]) * 2u
 									+ sourceThird[n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceThird[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()])
 									+ sourceThird[tChannels + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceThird[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels]) + denominator_2) / denominator);
-}
+				}
 
 				// alpha channel
 				target[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()] =
@@ -332,7 +335,8 @@ void FrameShrinkerAlpha::divideByTwo8BitPerChannelSubset(const uint8_t* source, 
 				const unsigned int denominator_2 = denominator / 2u;
 
 				// data channel
-				for (unsigned int n = FrameBlender::SourceOffset<tAlphaAtFront>::data(); n < tChannels + FrameBlender::SourceOffset<tAlphaAtFront>::data() - 1u; ++n) {
+				for (unsigned int n = FrameBlender::SourceOffset<tAlphaAtFront>::data(); n < tChannels + FrameBlender::SourceOffset<tAlphaAtFront>::data() - 1u; ++n)
+				{
 					target[n] = uint8_t((sourceFirst[n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceFirst[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()])
 									+ sourceFirst[tChannels + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceFirst[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels]) * 2u
 									+ sourceFirst[tChannels * 2u + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceFirst[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels * 2u])
@@ -342,7 +346,7 @@ void FrameShrinkerAlpha::divideByTwo8BitPerChannelSubset(const uint8_t* source, 
 									+ sourceThird[n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceThird[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()])
 									+ sourceThird[tChannels + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceThird[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels]) * 2u
 									+ sourceThird[tChannels * 2u + n] * FrameBlender::alpha8BitToOpaqueIs0xFF<tTransparentIs0xFF>(sourceThird[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>() + tChannels * 2u]) + denominator_2) / denominator);
-}
+				}
 
 				// alpha channel
 				target[FrameBlender::SourceOffset<tAlphaAtFront>::template alpha<tChannels>()] =
@@ -358,11 +362,12 @@ void FrameShrinkerAlpha::divideByTwo8BitPerChannelSubset(const uint8_t* source, 
 			}
 			else
 			{
-				for (unsigned int n = 0u; n < tChannels; ++n) {
+				for (unsigned int n = 0u; n < tChannels; ++n)
+				{
 					target[n] = uint8_t((sourceFirst[n] + sourceFirst[tChannels + n] * 2u + sourceFirst[tChannels * 2u + n]
 									+ sourceSecond[n] * 2u + sourceSecond[tChannels + n] * 4u + sourceSecond[tChannels * 2u + n] * 2u
 									+ sourceThird[n] + sourceThird[tChannels + n] * 2u + sourceThird[tChannels * 2u + n] + 4u) / 8u);
-}
+				}
 			}
 		}
 	}

@@ -140,7 +140,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT SynthesisPyramid
 		/**
 		 * Virtual Destructor
 		 */
-		virtual ~SynthesisPyramid() {}
+		virtual ~SynthesisPyramid() = default;
 
 		/**
 		 * Determines the mask bounding boxes for all pyramid layers.

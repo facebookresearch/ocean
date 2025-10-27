@@ -1297,9 +1297,10 @@ void FrameColorAdjustment::adjustFrameMaskBilinearAdvanced8BitPerChannelSubset(u
 		{
 			if (*mask == maskValue && lookupTable->bilinearValue(Scalar(x), Scalar(y), object))
 			{
-				for (unsigned int n = 0u; n < tChannels; ++n) {
+				for (unsigned int n = 0u; n < tChannels; ++n)
+				{
 					frame[n] = minmax<int>(0, Numeric::round32(Scalar(frame[n]) + object[n]), 255);
-}
+				}
 			}
 
 			frame += tChannels;
@@ -1331,9 +1332,10 @@ void FrameColorAdjustment::adjustFrameMaskBilinearAdvanced8BitPerChannelSubset(u
 			{
 				if (lookupTableA->bilinearValue(Scalar(x), Scalar(y), object))
 				{
-					for (unsigned int n = 0u; n < tChannels; ++n) {
+					for (unsigned int n = 0u; n < tChannels; ++n)
+					{
 						frame[n] = minmax<int>(0, Numeric::round32(Scalar(frame[n]) + object[n]), 255);
-}
+					}
 				}
 			}
 			else
@@ -1342,9 +1344,10 @@ void FrameColorAdjustment::adjustFrameMaskBilinearAdvanced8BitPerChannelSubset(u
 
 				if (lookupTableB->bilinearValue(Scalar(x), Scalar(y), object))
 				{
-					for (unsigned int n = 0u; n < tChannels; ++n) {
+					for (unsigned int n = 0u; n < tChannels; ++n)
+					{
 						frame[n] = minmax<int>(0, Numeric::round32(Scalar(frame[n]) + object[n]), 255);
-}
+					}
 				}
 			}
 
@@ -1628,17 +1631,19 @@ inline void FrameColorAdjustment::determineMeanFrameMaskAdvanced8BitPerChannelSu
 					{
 						if (separationMask[y * width + x] == separationMaskValue)
 						{
-							for (unsigned int n = 0u; n < tChannels; ++n) {
+							for (unsigned int n = 0u; n < tChannels; ++n)
+							{
 								valueA[n] += Scalar(frame[tChannels * (y * width + x) + n]);
-}
+							}
 
 							samplesA++;
 						}
 						else
 						{
-							for (unsigned int n = 0u; n < tChannels; ++n) {
+							for (unsigned int n = 0u; n < tChannels; ++n)
+							{
 								valueB[n] += Scalar(frame[tChannels * (y * width + x) + n]);
-}
+							}
 
 							samplesB++;
 						}

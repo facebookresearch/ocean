@@ -451,9 +451,10 @@ void LineDetectorHough::Accumulator::detectPeaks(InfiniteLines& lines, const uns
 		Lock lock;
 		worker->executeFunction(Worker::Function::create(*this, &LineDetectorHough::Accumulator::detectPeaksSubset, voteThreshold, determineExactPeakMaximum, &lock, &lines, 0u, 0u), 0u, angleBinsCore(), 4u, 5u, 20u);
 	}
-	else {
+	else
+	{
 		detectPeaksSubset(voteThreshold, determineExactPeakMaximum, nullptr, &lines, 0u, angleBinsCore());
-}
+	}
 }
 
 void LineDetectorHough::Accumulator::detectAdaptivePeaks(InfiniteLines& lines, const Scalar adaptiveVoteThresholdFactor, const unsigned int border, const bool determineExactPeakMaximum, Worker* worker, const bool smoothAccumulator)
@@ -1612,7 +1613,8 @@ void LineDetectorHough::detectFiniteLines(const InfiniteLine& infiniteLine, cons
 										|| int(lookupBinDiagonal) <= lowBorderBin || int(lookupBinDiagonal) >= highBorderBin);
 
 				// test direct neighbors if the response matches not to the line
-				if (!matchingResponse) {
+				if (!matchingResponse)
+				{
 					switch (bresenham.orientation())
 					{
 						case CV::Bresenham::ORIENTATION_0:
