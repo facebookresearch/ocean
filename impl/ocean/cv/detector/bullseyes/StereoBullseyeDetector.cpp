@@ -7,6 +7,8 @@
 
 #include "ocean/cv/detector/bullseyes/StereoBullseyeDetector.h"
 
+#include "ocean/cv/detector/bullseyes/AssignmentSolver.h"
+
 namespace Ocean
 {
 
@@ -139,24 +141,120 @@ bool StereoBullseyeDetector::matchBullseyes(const SharedAnyCameras& cameras, con
 	ocean_assert(device_T_cameras.size() == 2);
 	ocean_assert(device_T_cameras[0].isValid() && device_T_cameras[1].isValid());
 	ocean_assert(epipolarGeometry.isValid());
+	ocean_assert(maxDistanceToEpipolarLine >= 0);
 
-#if 0
-	// TODO Implement this function properly.
-	return false;
-#else
-	// Naive implementation for now.
-	const Bullseyes& bullseyesA = bullseyeGroup[0];
-	const Bullseyes& bullseyesB = bullseyeGroup[1];
+	bullseyePairs.clear();
 
-	if (bullseyesA.size() != 1 || bullseyesB.size() != 1)
+	if (bullseyeGroup[0].empty() || bullseyeGroup[1].empty())
+	{
+		// No matches possible.
+		return true;
+	}
+
+	// Handle different image scales - for future implementation if cameras have different resolutions
+	// const Scalar scaleFactorA = Scalar(1.0);
+	// const Scalar scaleFactorB = Scalar(1.0);
+	// Note: Scale factors would be computed based on different camera resolutions if needed
+	// For now, assuming cameras have compatible resolutions
+
+	const Scalar maxSqrDistanceToEpipolarLine = maxDistanceToEpipolarLine * maxDistanceToEpipolarLine;
+
+	// Special case: only one bullseye in each camera. Check if they are close enough to each other.
+	if (bullseyeGroup[0].size() == 1 && bullseyeGroup[1].size() == 1)
+	{
+		if (computeBullseyeMatchingCost(bullseyeGroup[0][0], bullseyeGroup[1][0], epipolarGeometry, maxSqrDistanceToEpipolarLine) != invalidMatchingCost())
+		{
+			bullseyePairs = {{bullseyeGroup[0][0], bullseyeGroup[1][0]}};
+		}
+
+		return true;
+	}
+
+	Matrix costMatrix;
+	if (!computeBullseyeMatchingCostMatrix(bullseyeGroup[0], bullseyeGroup[1], epipolarGeometry, maxSqrDistanceToEpipolarLine, costMatrix))
 	{
 		return false;
 	}
 
-	bullseyePairs = {{bullseyesA[0], bullseyesB[0]}};
+	AssignmentSolver::Assignments assignments;
+	if (!AssignmentSolver::solve(std::move(costMatrix), assignments))
+	{
+		return false;
+	}
+
+	// Convert assignments to bullseye pairs
+	const Bullseyes& bullseyesA = bullseyeGroup[0];
+	const Bullseyes& bullseyesB = bullseyeGroup[1];
+
+	bullseyePairs.reserve(assignments.size());
+	for (const AssignmentSolver::Assignment& assignment : assignments)
+	{
+		const Index32 indexA = assignment.first;
+		const Index32 indexB = assignment.second;
+
+		ocean_assert(indexA < bullseyesA.size());
+		ocean_assert(indexB < bullseyesB.size());
+		if (indexA >= bullseyesA.size() || indexB >= bullseyesB.size())
+		{
+			return false;
+		}
+
+		bullseyePairs.emplace_back(bullseyesA[indexA], bullseyesB[indexB]);
+	}
 
 	return true;
-#endif
+}
+
+Scalar StereoBullseyeDetector::computeBullseyeMatchingCost(const Bullseye& bullseyeA, const Bullseye& bullseyeB, const EpipolarGeometry& epipolarGeometry, Scalar maxSqrDistanceToEpipolarLine)
+{
+	ocean_assert(bullseyeA.isValid() && bullseyeB.isValid());
+	ocean_assert(epipolarGeometry.isValid());
+	ocean_assert(maxSqrDistanceToEpipolarLine >= 0);
+
+	const Scalar sqrDistanceAtoB = epipolarGeometry.squareDistanceToEpipolarLine(EpipolarGeometry::CI_CAMERA0, bullseyeA.position(), bullseyeB.position());
+	const Scalar sqrDistanceBtoA = epipolarGeometry.squareDistanceToEpipolarLine(EpipolarGeometry::CI_CAMERA1, bullseyeB.position(), bullseyeA.position());
+	ocean_assert(sqrDistanceAtoB >= 0 && sqrDistanceBtoA >= 0);
+
+	const Scalar maxSqrEpipolarDistance = std::max(sqrDistanceAtoB, sqrDistanceBtoA);
+
+	if (maxSqrEpipolarDistance > maxSqrDistanceToEpipolarLine)
+	{
+		return invalidMatchingCost();
+	}
+
+	const Scalar epipolarCost = maxSqrEpipolarDistance;
+
+	const Scalar totalCost = epipolarCost;
+
+	return totalCost;
+}
+
+bool StereoBullseyeDetector::computeBullseyeMatchingCostMatrix(const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const EpipolarGeometry& epipolarGeometry, Scalar maxSqrDistanceToEpipolarLine, Matrix& costMatrix)
+{
+	ocean_assert(!bullseyesA.empty() && !bullseyesB.empty());
+	ocean_assert(epipolarGeometry.isValid());
+	ocean_assert(maxSqrDistanceToEpipolarLine >= 0);
+
+	const size_t numBullseyesA = bullseyesA.size();
+	const size_t numBullseyesB = bullseyesB.size();
+
+	costMatrix = Matrix(numBullseyesA, numBullseyesB, invalidMatchingCost());
+
+	for (size_t a = 0; a < numBullseyesA; ++a)
+	{
+		const Bullseye& bullseyeA = bullseyesA[a];
+		ocean_assert(bullseyesA[a].isValid());
+
+		for (size_t b = 0; b < numBullseyesB; ++b)
+		{
+			const Bullseye& bullseyeB = bullseyesB[b];
+			ocean_assert(bullseyesB[b].isValid());
+
+			costMatrix(a, b) = computeBullseyeMatchingCost(bullseyeA, bullseyeB, epipolarGeometry, maxSqrDistanceToEpipolarLine);
+		}
+	}
+
+	return true;
 }
 
 bool StereoBullseyeDetector::triangulateBullseyes(const SharedAnyCameras& cameras, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const EpipolarGeometry& epipolarGeometry, const BullseyePairs& candidates, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, Scalars& reprojectionErrorsA, Scalars& reprojectionErrorsB)

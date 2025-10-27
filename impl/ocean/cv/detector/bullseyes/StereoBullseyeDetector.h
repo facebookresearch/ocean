@@ -19,6 +19,7 @@
 #include "ocean/geometry/FisheyeEpipolarGeometry.h"
 
 #include "ocean/math/AnyCamera.h"
+#include "ocean/math/Matrix.h"
 #include "ocean/math/Vector3.h"
 
 namespace Ocean
@@ -108,6 +109,16 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		 */
 		static bool matchBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const EpipolarGeometry& epipolarGeometry, const BullseyeGroup& bullseyeGroup, const Scalar maxDistanceToEpipolarLine, BullseyePairs& bullseyePairs);
 
+		constexpr static Scalar invalidMatchingCost();
+
+		static Scalar computeBullseyeMatchingCost(const Bullseye& bullseyeA, const Bullseye& bullseyeB, const EpipolarGeometry& epipolarGeometry, Scalar maxSqrDistanceToEpipolarLine);
+
+		/**
+		 * Compute matching costs between all bullseyes in A and B.
+		 */
+		static bool computeBullseyeMatchingCostMatrix(const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const EpipolarGeometry& epipolarGeometry, Scalar maxSqrDistanceToEpipolarLine, Matrix& costMatrix);
+
+
 		/**
 		 * Triangulates matched bullseye pairs to compute their 3D positions.
 		 * @param cameras The camera profiles for the stereo pair, must contain exactly 2 valid cameras
@@ -123,6 +134,11 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		 */
 		static bool triangulateBullseyes(const SharedAnyCameras& cameras, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const EpipolarGeometry& epipolarGeometry, const BullseyePairs& candidates, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, Scalars& reprojectionErrorsA, Scalars& reprojectionErrorsB);
 };
+
+constexpr Scalar StereoBullseyeDetector::invalidMatchingCost()
+{
+	return Numeric::maxValue();
+}
 
 } // namespace Bullseyes
 
