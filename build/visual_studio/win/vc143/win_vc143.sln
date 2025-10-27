@@ -2531,6 +2531,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "democvcalibrationdetector",
 		{E1C7E10F-0FFE-470F-B85C-FBE427FC5371} = {E1C7E10F-0FFE-470F-B85C-FBE427FC5371}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cvdetectorbullseyes", "ocean\cv\detector\bullseyes\cvdetectorbullseyes.vcxproj", "{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Shared Debug|Win32 = Shared Debug|Win32
@@ -7015,6 +7017,30 @@ Global
 		{0092645E-9963-4075-9ADC-5A5EADF220BC}.Static Release|Win32.Build.0 = Static Release|Win32
 		{0092645E-9963-4075-9ADC-5A5EADF220BC}.Static Release|x64.ActiveCfg = Static Release|x64
 		{0092645E-9963-4075-9ADC-5A5EADF220BC}.Static Release|x64.Build.0 = Static Release|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Debug|Win32.ActiveCfg = Shared Debug|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Debug|Win32.Build.0 = Shared Debug|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Debug|x64.ActiveCfg = Shared Debug|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Debug|x64.Build.0 = Shared Debug|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Profile|Win32.ActiveCfg = Shared Profile|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Profile|Win32.Build.0 = Shared Profile|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Profile|x64.ActiveCfg = Shared Profile|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Profile|x64.Build.0 = Shared Profile|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Release|Win32.ActiveCfg = Shared Release|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Release|Win32.Build.0 = Shared Release|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Release|x64.ActiveCfg = Shared Release|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Shared Release|x64.Build.0 = Shared Release|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Debug|Win32.ActiveCfg = Static Debug|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Debug|Win32.Build.0 = Static Debug|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Debug|x64.ActiveCfg = Static Debug|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Debug|x64.Build.0 = Static Debug|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Profile|Win32.ActiveCfg = Static Profile|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Profile|Win32.Build.0 = Static Profile|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Profile|x64.ActiveCfg = Static Profile|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Profile|x64.Build.0 = Static Profile|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Release|Win32.ActiveCfg = Static Release|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Release|Win32.Build.0 = Static Release|Win32
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Release|x64.ActiveCfg = Static Release|x64
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}.Static Release|x64.Build.0 = Static Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -7244,6 +7270,7 @@ Global
 		{469C7396-C879-4CDE-B16F-08E308E450F2} = {B1D5ACF0-37A3-4A8E-AD6A-8D08A4581797}
 		{7DB46310-9FED-437C-84DD-4B7A734D89FE} = {B1D5ACF0-37A3-4A8E-AD6A-8D08A4581797}
 		{0092645E-9963-4075-9ADC-5A5EADF220BC} = {B1D5ACF0-37A3-4A8E-AD6A-8D08A4581797}
+		{6F51D017-C56A-4F42-B53C-7D8B334EDF8F} = {1F742B1E-D6E7-43B2-BBFB-A0528FE64731}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {798E790F-BB0E-45DA-9197-307224184B0A}
