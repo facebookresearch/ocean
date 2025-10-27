@@ -296,6 +296,9 @@
          location = "group:ocean/cv/detector/barcodes/cvdetectorbarcodes.xcodeproj">
       </FileRef>
       <FileRef
+         location = "group:ocean/cv/detector/bullseyes/cvdetectorbullseyes.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:ocean/cv/detector/qrcodes/cvdetectorqrcodes.xcodeproj">
       </FileRef>
       <FileRef
