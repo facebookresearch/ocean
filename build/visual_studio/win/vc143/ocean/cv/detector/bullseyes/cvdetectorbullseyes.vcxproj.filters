@@ -14,5 +14,13 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\Bullseyes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\Bullseye.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\Bullseye.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,6 +7,8 @@
 
 #include "ocean/test/testcv/testdetector/testbullseyes/TestCVDetectorBullseyes.h"
 
+#include "ocean/test/testcv/testdetector/testbullseyes/TestBullseye.h"
+
 #include "ocean/base/Build.h"
 #include "ocean/base/CommandArguments.h"
 #include "ocean/base/DateTime.h"
@@ -112,7 +114,14 @@ bool testCVDetectorBullseyes(const double testDuration, Worker& worker, const st
 	std::vector<std::string> tests(Ocean::Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
 	const std::set<std::string> testSet(tests.begin(), tests.end());
 
-	Log::info() << "No tests to run yet.";
+	if (testSet.empty() || testSet.find("bullseye") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		allSucceeded = TestBullseye::test(testDuration) && allSucceeded;
+	}
 
 	Log::info() << " ";
 	Log::info() << " ";

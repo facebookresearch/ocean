@@ -51,7 +51,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\Bullseye.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\Bullseyes.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\Bullseye.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6F51D017-C56A-4F42-B53C-7D8B334EDF8F}</ProjectGuid>

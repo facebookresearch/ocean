@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		509D72E52E9DBB6E0005EC30 /* Bullseye.h in Headers */ = {isa = PBXBuildFile; fileRef = 509D72E42E9DBB6E0005EC30 /* Bullseye.h */; };
+		509D72E62E9DBB6E0005EC30 /* Bullseye.h in Headers */ = {isa = PBXBuildFile; fileRef = 509D72E42E9DBB6E0005EC30 /* Bullseye.h */; };
+		509D72E72E9DBB6E0005EC30 /* Bullseye.h in Headers */ = {isa = PBXBuildFile; fileRef = 509D72E42E9DBB6E0005EC30 /* Bullseye.h */; };
+		509D72E82E9DBB6E0005EC30 /* Bullseye.h in Headers */ = {isa = PBXBuildFile; fileRef = 509D72E42E9DBB6E0005EC30 /* Bullseye.h */; };
+		509D72EA2E9DBB950005EC30 /* Bullseye.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 509D72E92E9DBB950005EC30 /* Bullseye.cpp */; };
+		509D72EB2E9DBB950005EC30 /* Bullseye.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 509D72E92E9DBB950005EC30 /* Bullseye.cpp */; };
+		509D72EC2E9DBB950005EC30 /* Bullseye.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 509D72E92E9DBB950005EC30 /* Bullseye.cpp */; };
+		509D72ED2E9DBB950005EC30 /* Bullseye.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 509D72E92E9DBB950005EC30 /* Bullseye.cpp */; };
 		509E2DA629809C5D00E0DD7E /* Bullseyes.h in Headers */ = {isa = PBXBuildFile; fileRef = 509E2DA529809C5D00E0DD7E /* Bullseyes.h */; };
 		509E2DA729809C5D00E0DD7E /* Bullseyes.h in Headers */ = {isa = PBXBuildFile; fileRef = 509E2DA529809C5D00E0DD7E /* Bullseyes.h */; };
 		509E2DA829809C5D00E0DD7E /* Bullseyes.h in Headers */ = {isa = PBXBuildFile; fileRef = 509E2DA529809C5D00E0DD7E /* Bullseyes.h */; };
@@ -14,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		509D72E42E9DBB6E0005EC30 /* Bullseye.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bullseye.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/Bullseye.h; sourceTree = "<group>"; };
+		509D72E92E9DBB950005EC30 /* Bullseye.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Bullseye.cpp; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/Bullseye.cpp; sourceTree = "<group>"; };
 		509E2DA529809C5D00E0DD7E /* Bullseyes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bullseyes.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/Bullseyes.h; sourceTree = "<group>"; };
 		5D222C741BB18C2E00298788 /* libOceanCVDetectorBullseyesD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorBullseyesD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D98611B1D8B549400DEDB00 /* libOceanCVDetectorBullseyesD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanCVDetectorBullseyesD.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,6 +66,7 @@
 		5D222C651BB18C1400298788 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
+				509D72E42E9DBB6E0005EC30 /* Bullseye.h */,
 				509E2DA529809C5D00E0DD7E /* Bullseyes.h */,
 			);
 			name = "Header Files";
@@ -84,6 +95,7 @@
 		5DCE0D441BAABFC1002E9E7D /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
+				509D72E92E9DBB950005EC30 /* Bullseye.cpp */,
 			);
 			name = "Source Files";
 			sourceTree = "<group>";
@@ -96,6 +108,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				509E2DA729809C5D00E0DD7E /* Bullseyes.h in Headers */,
+				509D72E62E9DBB6E0005EC30 /* Bullseye.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				509E2DA829809C5D00E0DD7E /* Bullseyes.h in Headers */,
+				509D72E82E9DBB6E0005EC30 /* Bullseye.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +126,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				509E2DA629809C5D00E0DD7E /* Bullseyes.h in Headers */,
+				509D72E52E9DBB6E0005EC30 /* Bullseye.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +135,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				509E2DA929809C5D00E0DD7E /* Bullseyes.h in Headers */,
+				509D72E72E9DBB6E0005EC30 /* Bullseye.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +297,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				509D72EC2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +305,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				509D72EA2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,6 +313,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				509D72ED2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +321,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				509D72EB2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

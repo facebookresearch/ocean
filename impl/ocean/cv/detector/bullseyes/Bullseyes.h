@@ -17,7 +17,7 @@ namespace CV
 namespace Detector
 {
 
-namespace Bulleyes
+namespace Bullseyes
 {
 
 /**
