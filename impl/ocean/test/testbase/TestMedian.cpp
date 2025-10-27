@@ -181,17 +181,21 @@ bool TestMedian::testMedian2(const double testDuration)
 
 		std::sort(values.begin(), values.end());
 
-		if (values[0] != median) {
+		if (values[0] != median)
+		{
 			result = false;
-}
+		}
 	}
 	while (Timestamp(true) < startTimestamp + testDuration);
 
-	if (result) {
+	if (result)
+	{
 		Log::info() << "Validation: succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Validation: FAILED!";
-}
+	}
 
 	return result;
 }
@@ -221,17 +225,21 @@ bool TestMedian::testMedian3(const double testDuration)
 
 		std::sort(values.begin(), values.end());
 
-		if (values[1] != median) {
+		if (values[1] != median)
+		{
 			result = false;
-}
+		}
 	}
 	while (Timestamp(true) < startTimestamp + testDuration);
 
-	if (result) {
+	if (result)
+	{
 		Log::info() << "Validation: succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Validation: FAILED!";
-}
+	}
 
 	return result;
 }
@@ -262,17 +270,21 @@ bool TestMedian::testMedian4(const double testDuration)
 
 		std::sort(values.begin(), values.end());
 
-		if (values[1] != median) {
+		if (values[1] != median)
+		{
 			result = false;
-}
+		}
 	}
 	while (Timestamp(true) < startTimestamp + testDuration);
 
-	if (result) {
+	if (result)
+	{
 		Log::info() << "Validation: succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Validation: FAILED!";
-}
+	}
 
 	return result;
 }
@@ -304,17 +316,21 @@ bool TestMedian::testMedian5(const double testDuration)
 
 		std::sort(values.begin(), values.end());
 
-		if (values[2] != median) {
+		if (values[2] != median)
+		{
 			result = false;
-}
+		}
 	}
 	while (Timestamp(true) < startTimestamp + testDuration);
 
-	if (result) {
+	if (result)
+	{
 		Log::info() << "Validation: succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Validation: FAILED!";
-}
+	}
 
 	return result;
 }

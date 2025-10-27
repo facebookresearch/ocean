@@ -52,28 +52,36 @@ bool TestKdTree::test(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Kd tree test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Kd tree test FAILED!";
+	}
 
 	return allSucceeded;
 }
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestKdTree, NearestNeighborInteger_Double) {
+TEST(TestKdTree, NearestNeighborInteger_Double)
+{
 	EXPECT_TRUE(TestKdTree::testNearestNeighborInteger<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestKdTree, NearestNeighborInteger_Float) {
+TEST(TestKdTree, NearestNeighborInteger_Float)
+{
 	EXPECT_TRUE(TestKdTree::testNearestNeighborInteger<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestKdTree, RadiusSearchInteger_Double) {
+TEST(TestKdTree, RadiusSearchInteger_Double)
+{
 	EXPECT_TRUE(TestKdTree::testRadiusSearchInteger<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestKdTree, RadiusSearchInteger_Float) {
+TEST(TestKdTree, RadiusSearchInteger_Float)
+{
 	EXPECT_TRUE(TestKdTree::testRadiusSearchInteger<float>(GTEST_TEST_DURATION));
 }
 
@@ -116,9 +124,13 @@ bool TestKdTree::testNearestNeighborInteger(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -140,12 +152,16 @@ bool TestKdTree::testNearestNeighborInteger(const unsigned int number, const uns
 	for (unsigned int n = 0u; n < number; ++n)
 	{
 		for (unsigned int d = 0u; d < dimension; ++d)
+		{
 			elements.push_back(RandomT<T>::scalar(randomGenerator, T(-1.0), T(1.0)));
+		}
 	}
 
 	std::vector<const T*> pointers;
 	for (unsigned int n = 0u; n < number; ++n)
+	{
 		pointers.push_back(elements.data() + n * dimension);
+	}
 
 	bool allSucceeded = true;
 	std::vector<std::vector<T>> randomsSet(iterations, std::vector<T>(dimension));
@@ -372,9 +388,13 @@ bool TestKdTree::testRadiusSearchInteger(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
+	}
 	else
+	{
 		Log::info() << "Validation: FAILED!";
+	}
 
 	return allSucceeded;
 }
@@ -396,12 +416,16 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 	for (unsigned int n = 0u; n < number; ++n)
 	{
 		for (unsigned int d = 0u; d < dimension; ++d)
+		{
 			elements.push_back(RandomT<T>::scalar(randomGenerator, T(-1.0), T(1.0)));
+		}
 	}
 
 	std::vector<const T*> pointers;
 	for (unsigned int n = 0u; n < number; ++n)
+	{
 		pointers.push_back(elements.data() + n * dimension);
+	}
 
 	bool allSucceeded = true;
 	std::vector<std::vector<T>> randomsSet(iterations, std::vector<T>(dimension));
@@ -422,8 +446,12 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 		performance.stop();
 
 		for (size_t i = 0; i < randomsSet.size(); ++i)
+		{
 			for (unsigned int n = 0u; n < dimension; ++n)
+			{
 				randomsSet[i][n] = RandomT<T>::scalar(randomGenerator, T(-1.0), T(1.0));
+			}
+		}
 
 		// Performance boost is greater when fewer items returned, so use small radius
 		const T radius = T(0.01);
@@ -449,10 +477,14 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 				T ssd = 0;
 
 				for (unsigned int d = 0u; d < dimension; ++d)
+				{
 					ssd += sqr(pointers[n][d] - randomsSet[i][d]);
+				}
 
 				if (ssd <= radius)
+				{
 					neighbors[foundNeighbors ++] = pointers[n];
+				}
 			}
 
 			dummyValue += T(0.01f) * T(foundNeighbors);
@@ -481,21 +513,27 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 			size_t foundNeighbors = kdTree.radiusSearch(value, typename SquareValueTyper<T>::Type(0.01), neighbors.data(), neighbors.size());
 
 			bool foundSelf = false;
-			for (unsigned int i = 0u; i < foundNeighbors; ++i) {
-				if (neighbors[i] == value) {
+			for (unsigned int i = 0u; i < foundNeighbors; ++i)
+			{
+				if (neighbors[i] == value)
+				{
 					foundSelf = true;
 					break;
 				}
 			}
 			if (!foundSelf)
+			{
 				allSucceeded = false;
+			}
 		}
 
 		// then we validate that resulting neighborhoods are complete
 		for (unsigned int i = 0u; i < 1000u; ++i)
 		{
 			for (unsigned int d = 0u; d < dimension; ++d)
+			{
 				randoms[d] = RandomT<T>::scalar(randomGenerator, T(-1.0), T(1.0));
+			}
 
 			const T* value = randoms.data();
 
@@ -503,7 +541,9 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 
 			T radius = 0.0;
 			for (unsigned int d = 0u; d < dimension; ++d)
+			{
 				radius += sqr(value[d] - randomValue[d]);
+			}
 
 			const size_t foundNeighbors = kdTree.radiusSearch(value, radius, neighbors.data(), neighbors.size());
 			std::unordered_set<const T *> seenNeighbors;
@@ -515,19 +555,29 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 
 				// make sure all pointers are valid
 				if (neighborValue < elements.data() || neighborValue >= elements.data() + number * dimension || ((neighborValue - elements.data()) % dimension) != 0)
+				{
 					allSucceeded = false;
+				}
 
 				// make sure no pointer is returned twice
 				if (seenNeighbors.find(neighborValue) == seenNeighbors.end())
+				{
 					seenNeighbors.insert(neighborValue);
+				}
 				else
+				{
 					allSucceeded = false;
+				}
 
 				T ssd = 0;
 				for (unsigned int d = 0u; d < dimension; ++d)
+				{
 					ssd += sqr(neighborValue[d] - value[d]);
+				}
 				if (!NumericT<T>::isBelow(ssd, radius))
+				{
 					allSucceeded = false;
+				}
 			}
 
 			// check for false negatives
@@ -536,13 +586,19 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 				const T* neighborValue = pointers[n];
 
 				if (seenNeighbors.find(neighborValue) != seenNeighbors.end())
+				{
 					continue;
+				}
 
 				T ssd = 0;
 				for (unsigned int d = 0u; d < dimension; ++d)
+				{
 					ssd += sqr(neighborValue[d] - value[d]);
+				}
 				if (!NumericT<T>::isAbove(ssd, radius))
+				{
 					allSucceeded = false;
+				}
 			}
 		}
 
@@ -550,7 +606,9 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 		for (unsigned int i = 0u; i < 1000u; ++i)
 		{
 			for (unsigned int d = 0u; d < dimension; ++d)
+			{
 				randoms[d] = RandomT<T>::scalar(randomGenerator, T(-1.0), T(1.0));
+			}
 
 			const T* value = randoms.data();
 
@@ -558,13 +616,17 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 
 			T radius = 0.0;
 			for (unsigned int d = 0u; d < dimension; ++d)
+			{
 				radius += sqr(value[d] - randomValue[d]);
+			}
 
 			const size_t maxNeighbors = RandomI::random((unsigned int)(neighbors.size()) - 1u);
 			const size_t foundNeighbors = kdTree.radiusSearch(value, radius, neighbors.data(), maxNeighbors);
 
 			if (foundNeighbors > maxNeighbors)
+			{
 				allSucceeded = false;
+			}
 
 			for (unsigned int n = 0u; n < foundNeighbors; ++n)
 			{
@@ -572,13 +634,19 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 
 				// make sure all pointers are valid
 				if (neighborValue < elements.data() || neighborValue >= elements.data() + number * dimension || ((neighborValue - elements.data()) % dimension) != 0)
+				{
 					allSucceeded = false;
+				}
 
 				T ssd = 0;
 				for (unsigned int d = 0u; d < dimension; ++d)
+				{
 					ssd += sqr(neighborValue[d] - value[d]);
+				}
 				if (!NumericT<T>::isBelow(ssd, radius))
+				{
 					allSucceeded = false;
+				}
 			}
 		}
 	}
@@ -588,7 +656,9 @@ bool TestKdTree::testRadiusSearchInteger(const unsigned int number, const unsign
 	Log::info() << "Brute Force performance: Best: " << ssdPerformanceRadiusSearch.bestMseconds() << "ms, worst: " << ssdPerformanceRadiusSearch.worstMseconds() << "ms, average: " << ssdPerformanceRadiusSearch.averageMseconds() << "ms";
 
 	if (performanceRadiusSearch.averageMseconds() > 0)
+	{
 		Log::info() << "KD boost factor: Average: " << String::toAString(ssdPerformanceRadiusSearch.averageMseconds() / performanceRadiusSearch.averageMseconds(), 2u) << "x";
+	}
 
 	return allSucceeded;
 }

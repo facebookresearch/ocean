@@ -5020,40 +5020,42 @@ bool TestFrame::testStrideBytes2paddingElements(const double testDuration)
 
 	const Timestamp startTimestamp(true);
 
-	for (const FrameType::PixelFormat& pixelFormat : pixelFormats)
+	do
 	{
-		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
-
-		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * FrameType::widthMultiple(pixelFormat);
-		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u) * FrameType::heightMultiple(pixelFormat);
-
-		Indices32 paddingElementsPerPlane(FrameType::numberPlanes(pixelFormat));
-
-		for (unsigned int& paddingElements : paddingElementsPerPlane)
+		for (const FrameType::PixelFormat& pixelFormat : pixelFormats)
 		{
-			paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
-		}
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
 
-		const Frame frame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElementsPerPlane);
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u) * FrameType::widthMultiple(pixelFormat);
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u) * FrameType::heightMultiple(pixelFormat);
 
-		ocean_assert(frame.numberPlanes() >= 1u);
-		if (frame.numberPlanes() == 0u)
-		{
-			allSucceeded = false;
-		}
+			Indices32 paddingElementsPerPlane(FrameType::numberPlanes(pixelFormat));
 
-		for (unsigned int planeIndex = 0u; planeIndex < frame.numberPlanes(); ++planeIndex)
-		{
-			unsigned int planePaddingElements = (unsigned int)(-1);
+			for (unsigned int& paddingElements : paddingElementsPerPlane)
+			{
+				paddingElements = RandomI::random(randomGenerator, 1u, 100u) * RandomI::random(randomGenerator, 1u);
+			}
 
-			if (!Frame::strideBytes2paddingElements(frame.pixelFormat(), frame.width(), frame.strideBytes(planeIndex), planePaddingElements, planeIndex) || planePaddingElements != paddingElementsPerPlane[planeIndex])
+			const Frame frame(FrameType(width, height, pixelFormat, pixelOrigin), paddingElementsPerPlane);
+
+			ocean_assert(frame.numberPlanes() >= 1u);
+			if (frame.numberPlanes() == 0u)
 			{
 				allSucceeded = false;
 			}
+
+			for (unsigned int planeIndex = 0u; planeIndex < frame.numberPlanes(); ++planeIndex)
+			{
+				unsigned int planePaddingElements = (unsigned int)(-1);
+
+				if (!Frame::strideBytes2paddingElements(frame.pixelFormat(), frame.width(), frame.strideBytes(planeIndex), planePaddingElements, planeIndex) || planePaddingElements != paddingElementsPerPlane[planeIndex])
+				{
+					allSucceeded = false;
+				}
+			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true)) {;
-}
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{

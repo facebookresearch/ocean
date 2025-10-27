@@ -446,130 +446,161 @@ bool TestString::testIsBoolean()
 
 	bool value = false;
 
-	if (!String::isBoolean("true")) {
+	if (!String::isBoolean("true"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isBoolean("false")) {
+	if (!String::isBoolean("false"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean("TRUE")) {
+	if (String::isBoolean("TRUE"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean("FALSE")) {
+	if (String::isBoolean("FALSE"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean(" true")) {
+	if (String::isBoolean(" true"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean("false ")) {
+	if (String::isBoolean("false "))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean("trUe")) {
+	if (String::isBoolean("trUe"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean("1")) {
+	if (String::isBoolean("1"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean("0")) {
+	if (String::isBoolean("0"))
+	{
 		allSucceeded = false;
-}
+	}
 
 
-	if (!String::isBoolean("TRUE", false)) {
+	if (!String::isBoolean("TRUE", false))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isBoolean("FALsE", false)) {
+	if (!String::isBoolean("FALsE", false))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isBoolean("true", false)) {
+	if (!String::isBoolean("true", false))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isBoolean("false", false)) {
+	if (!String::isBoolean("false", false))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isBoolean("TrUe", false)) {
+	if (!String::isBoolean("TrUe", false))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean("TrUe_", false)) {
+	if (String::isBoolean("TrUe_", false))
+	{
 		allSucceeded = false;
-}
+	}
 
 
-	if (!String::isBoolean("true", true, true)) {
+	if (!String::isBoolean("true", true, true))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isBoolean("false", true, true)) {
+	if (!String::isBoolean("false", true, true))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean("TRUE", true, true)) {
+	if (String::isBoolean("TRUE", true, true))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isBoolean("TRUE", false, true)) {
+	if (!String::isBoolean("TRUE", false, true))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isBoolean("1", true, true)) {
+	if (!String::isBoolean("1", true, true))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isBoolean("0", true, true)) {
+	if (!String::isBoolean("0", true, true))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean("5", true, true)) {
+	if (String::isBoolean("5", true, true))
+	{
 		allSucceeded = false;
-}
+	}
 
 
 	value = false;
-	if (!String::isBoolean("true", true, false, &value) || value != true) {
+	if (!String::isBoolean("true", true, false, &value) || value != true)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = true;
-	if (!String::isBoolean("false", true, false, &value) || value != false) {
+	if (!String::isBoolean("false", true, false, &value) || value != false)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = false;
-	if (!String::isBoolean("1", true, true, &value) || value != true) {
+	if (!String::isBoolean("1", true, true, &value) || value != true)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = true;
-	if (!String::isBoolean("0", true, true, &value) || value != false) {
+	if (!String::isBoolean("0", true, true, &value) || value != false)
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean("TEST", true, true, &value)) {
+	if (String::isBoolean("TEST", true, true, &value))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isBoolean("truE", true, true, &value)) {
+	if (String::isBoolean("truE", true, true, &value))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (allSucceeded) {
+	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Validation: FAILED!";
-}
+	}
 
 	return allSucceeded;
 }
@@ -580,126 +611,155 @@ bool TestString::testIsInteger32()
 
 	bool allSucceeded = true;
 
-	if (!String::isInteger32("123")) {
+	if (!String::isInteger32("123"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isInteger32("0")) {
+	if (!String::isInteger32("0"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isInteger32("-133")) {
+	if (!String::isInteger32("-133"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isInteger32("-0")) {
+	if (!String::isInteger32("-0"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isInteger32("+123")) {
+	if (!String::isInteger32("+123"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isInteger32("+9")) {
+	if (!String::isInteger32("+9"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32("+")) {
+	if (String::isInteger32("+"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32("-")) {
+	if (String::isInteger32("-"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32("123+")) {
+	if (String::isInteger32("123+"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32("-123+4")) {
+	if (String::isInteger32("-123+4"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32("++123")) {
+	if (String::isInteger32("++123"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32("--0")) {
+	if (String::isInteger32("--0"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32("123.")) {
+	if (String::isInteger32("123."))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32("123.3")) {
+	if (String::isInteger32("123.3"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32(".2")) {
+	if (String::isInteger32(".2"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isInteger32("123")) {
+	if (!String::isInteger32("123"))
+	{
 		allSucceeded = false;
-}
+	}
 
 
-	if (!String::isInteger32("2147483647")) {
+	if (!String::isInteger32("2147483647"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isInteger32("+2147483647")) {
+	if (!String::isInteger32("+2147483647"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isInteger32("+2147483644")) {
+	if (!String::isInteger32("+2147483644"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isInteger32("1147483647")) {
+	if (!String::isInteger32("1147483647"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32("2147483648")) {
+	if (String::isInteger32("2147483648"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isInteger32("-2147483647")) {
+	if (!String::isInteger32("-2147483647"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isInteger32("-2147483648")) {
+	if (!String::isInteger32("-2147483648"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32("-2147483649")) {
+	if (String::isInteger32("-2147483649"))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isInteger32("-4147483649")) {
+	if (String::isInteger32("-4147483649"))
+	{
 		allSucceeded = false;
-}
+	}
 
 	int value = 0;
-	if (!String::isInteger32("123", &value) || value != 123) {
+	if (!String::isInteger32("123", &value) || value != 123)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0;
-	if (!String::isInteger32("-99", &value) || value != -99) {
+	if (!String::isInteger32("-99", &value) || value != -99)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0;
-	if (!String::isInteger32("2147483647", &value) || value != 2147483647) {
+	if (!String::isInteger32("2147483647", &value) || value != 2147483647)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0;
-	if (!String::isInteger32("-2147483648", &value) || value != -2147483647 - 1) {
+	if (!String::isInteger32("-2147483648", &value) || value != -2147483647 - 1)
+	{
 		allSucceeded = false;
-}
+	}
 
 	if (allSucceeded)
 	{
@@ -944,111 +1004,136 @@ bool TestString::testIsHexValue64()
 
 	bool allSucceeded = true;
 
-	if (!String::isHexValue64("123", 3)) {
+	if (!String::isHexValue64("123", 3))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isHexValue64("0", 1)) {
+	if (!String::isHexValue64("0", 1))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isHexValue64("0x123", 5)) {
+	if (!String::isHexValue64("0x123", 5))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isHexValue64("0x0", 3)) {
+	if (!String::isHexValue64("0x0", 3))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isHexValue64("0000000000000001", 16)) {
+	if (!String::isHexValue64("0000000000000001", 16))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isHexValue64("0x0000000000000001", 18)) {
+	if (!String::isHexValue64("0x0000000000000001", 18))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isHexValue64("abCdef0700feDcbA", 16)) {
+	if (!String::isHexValue64("abCdef0700feDcbA", 16))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isHexValue64("0xaBcdef0700fEdcbA", 18)) {
+	if (!String::isHexValue64("0xaBcdef0700fEdcbA", 18))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (String::isHexValue64("2347", 4, true)) {
+	if (String::isHexValue64("2347", 4, true))
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (!String::isHexValue64("0x2347", 6, true)) {
+	if (!String::isHexValue64("0x2347", 6, true))
+	{
 		allSucceeded = false;
-}
+	}
 
 	unsigned long long value = 0ull;
-	if (!String::isHexValue64("123", 3, false, &value) || value != 291ull) {
+	if (!String::isHexValue64("123", 3, false, &value) || value != 291ull)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0ull;
-	if (!String::isHexValue64("0x123", 5, false, &value) || value != 291ull) {
+	if (!String::isHexValue64("0x123", 5, false, &value) || value != 291ull)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0ull;
-	if (String::isHexValue64("123", 3, true, &value)) {
+	if (String::isHexValue64("123", 3, true, &value))
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0ull;
-	if (!String::isHexValue64("0x123", 5, true, &value) || value != 291ull) {
+	if (!String::isHexValue64("0x123", 5, true, &value) || value != 291ull)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0ull;
-	if (!String::isHexValue64("12373bcff00abcde", 16, false, &value) || value != 1312583580673293534ull) {
+	if (!String::isHexValue64("12373bcff00abcde", 16, false, &value) || value != 1312583580673293534ull)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0ull;
-	if (!String::isHexValue64("12373Bcff00abCDE", 16, false, &value) || value != 1312583580673293534ull) {
+	if (!String::isHexValue64("12373Bcff00abCDE", 16, false, &value) || value != 1312583580673293534ull)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0ull;
-	if (!String::isHexValue64("0x12373bcff00abcde", 18, false, &value) || value != 1312583580673293534ull) {
+	if (!String::isHexValue64("0x12373bcff00abcde", 18, false, &value) || value != 1312583580673293534ull)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0ull;
-	if (String::isHexValue64("12373bcff00abcde", 16, true, &value)) {
+	if (String::isHexValue64("12373bcff00abcde", 16, true, &value))
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0ull;
-	if (!String::isHexValue64("1234567890", 10, false, &value) || value != 78187493520ull) {
+	if (!String::isHexValue64("1234567890", 10, false, &value) || value != 78187493520ull)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0ull;
-	if (String::isHexValue64("1234567890", 10, true, &value)) {
+	if (String::isHexValue64("1234567890", 10, true, &value))
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0ull;
-	if (!String::isHexValue64("0x1234567890", 12, false, &value) || value != 78187493520ull) {
+	if (!String::isHexValue64("0x1234567890", 12, false, &value) || value != 78187493520ull)
+	{
 		allSucceeded = false;
-}
+	}
 
 	value = 0ull;
-	if (!String::isHexValue64("0x1234567890", 12, true, &value) || value != 78187493520ull) {
+	if (!String::isHexValue64("0x1234567890", 12, true, &value) || value != 78187493520ull)
+	{
 		allSucceeded = false;
-}
+	}
 
-	if (allSucceeded) {
+	if (allSucceeded)
+	{
 		Log::info() << "Validation: succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Validation: FAILED!";
-}
+	}
 
 	return allSucceeded;
 }

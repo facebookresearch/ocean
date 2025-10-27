@@ -52,39 +52,49 @@ bool TestUtilities::test(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Utilities test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Utilities test FAILED!";
+	}
 
 	return allSucceeded;
 }
-	
+
 #ifdef OCEAN_USE_GTEST
-	
-TEST(TestUtilities, Minmax) {
+
+TEST(TestUtilities, Minmax)
+{
 	EXPECT_TRUE(TestUtilities::testMinmax(GTEST_TEST_DURATION));
 }
-	
-TEST(TestUtilities, Modulo) {
+
+TEST(TestUtilities, Modulo)
+{
 	EXPECT_TRUE(TestUtilities::testModulo(GTEST_TEST_DURATION));
 }
 
-TEST(TestUtilities, RingDistance) {
+TEST(TestUtilities, RingDistance)
+{
 	EXPECT_TRUE(TestUtilities::testRingDistance(GTEST_TEST_DURATION));
 }
 
-TEST(TestUtilities, MirrorValue) {
+TEST(TestUtilities, MirrorValue)
+{
 	EXPECT_TRUE(TestUtilities::testMirrorValue(GTEST_TEST_DURATION));
 }
 
-TEST(TestUtilities, DivisionBy2) {
+TEST(TestUtilities, DivisionBy2)
+{
 	EXPECT_TRUE(TestUtilities::testDivisionBy2(GTEST_TEST_DURATION));
 }
 
-TEST(TestUtilities, IsPowerOfTwo) {
+TEST(TestUtilities, IsPowerOfTwo)
+{
 	EXPECT_TRUE(TestUtilities::testIsPowerOfTwo(GTEST_TEST_DURATION));
 }
-	
+
 #endif // OCEAN_USE_GTEST
 
 bool TestUtilities::testMinmax(const double testDuration)
@@ -597,7 +607,7 @@ bool TestUtilities::testIsPowerOfTwo(const double testDuration)
 
 				testValue >>= 1u;
 			}
-		
+
 			const bool result = Utilities::isPowerOfTwo(value);
 			const bool testResult = testBits == 1u;
 

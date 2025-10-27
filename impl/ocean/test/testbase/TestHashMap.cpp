@@ -40,22 +40,27 @@ bool TestHashMap::test(const double testDuration)
 
 	Log::info() << " ";
 
-	if (allSucceeded) {
+	if (allSucceeded)
+	{
 		Log::info() << "Hash map test succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Hash map test FAILED!";
-}
+	}
 
 	return allSucceeded;
 }
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestHashMap, SingleIntegers) {
+TEST(TestHashMap, SingleIntegers)
+{
 	EXPECT_TRUE(TestHashMap::testSingleIntegers(GTEST_TEST_DURATION));
 }
 
-TEST(TestHashMap, MultipleIntegers) {
+TEST(TestHashMap, MultipleIntegers)
+{
 	EXPECT_TRUE(TestHashMap::testMultipleIntegers(GTEST_TEST_DURATION));
 }
 
@@ -176,13 +181,15 @@ bool TestHashMap::testPerformanceSingleIntegers(const unsigned int number, const
 
 			ElementMap elementMap;
 
-			for (Elements::const_iterator i = addElements.begin(); i != addElements.end(); ++i) {
+			for (Elements::const_iterator i = addElements.begin(); i != addElements.end(); ++i)
+			{
 				elementMap.insert(*i);
-}
+			}
 
-			for (Elements::const_iterator i = removeElements.begin(); i != removeElements.end(); ++i) {
+			for (Elements::const_iterator i = removeElements.begin(); i != removeElements.end(); ++i)
+			{
 				elementMap.erase(i->first);
-}
+			}
 		}
 
 		{
@@ -190,13 +197,15 @@ bool TestHashMap::testPerformanceSingleIntegers(const unsigned int number, const
 
 			Table table(number);
 
-			for (Elements::const_iterator i = addElements.begin(); i != addElements.end(); ++i) {
+			for (Elements::const_iterator i = addElements.begin(); i != addElements.end(); ++i)
+			{
 				table.insert(i->first, i->second);
-}
+			}
 
-			for (Elements::const_iterator i = removeElements.begin(); i != removeElements.end(); ++i) {
+			for (Elements::const_iterator i = removeElements.begin(); i != removeElements.end(); ++i)
+			{
 				table.remove(i->first);
-}
+			}
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
@@ -259,9 +268,10 @@ bool TestHashMap::validationStaticCapacitySingleIntegers(const unsigned int numb
 
 			const unsigned int randomValue = RandomI::random(10000u);
 
-			if (elementMap.find(randomValue) != elementMap.end()) {
+			if (elementMap.find(randomValue) != elementMap.end())
+			{
 				continue;
-}
+			}
 
 			const double randomParameter = double(RandomI::random(-500, 500)) + 0.5;
 
@@ -276,13 +286,14 @@ bool TestHashMap::validationStaticCapacitySingleIntegers(const unsigned int numb
 			elements.push_back(std::make_pair(randomValue, randomParameter));
 
 			const double* checkValue;
-			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i) {
+			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
+			{
 				if (!table.find(i->first, checkValue) || i->second != *checkValue)
 				{
 					succeeded = false;
 					break;
 				}
-}
+			}
 
 			++tableSize;
 		}
@@ -332,13 +343,14 @@ bool TestHashMap::validationStaticCapacitySingleIntegers(const unsigned int numb
 			elementMap.erase(randomValue);
 			elements.erase(elements.begin() + randomIndex);
 
-			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i) {
+			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
+			{
 				if (!table.find(i->first, checkValue) || i->second != *checkValue)
 				{
 					succeeded = false;
 					break;
 				}
-}
+			}
 
 			ocean_assert(tableSize > 0u);
 			--tableSize;
@@ -346,11 +358,14 @@ bool TestHashMap::validationStaticCapacitySingleIntegers(const unsigned int numb
 	}
 	while (succeeded && startTimestamp + testDuration > Timestamp(true));
 
-	if (succeeded) {
+	if (succeeded)
+	{
 		Log::info() << "Validation: succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Validation: FAILED!";
-}
+	}
 
 	return succeeded;
 }
@@ -396,9 +411,10 @@ bool TestHashMap::validationDynamicCapacitySingleIntegers(const unsigned int num
 
 			const unsigned int randomValue = RandomI::random(10000u);
 
-			if (elementMap.find(randomValue) != elementMap.end()) {
+			if (elementMap.find(randomValue) != elementMap.end())
+			{
 				continue;
-}
+			}
 
 			const double randomParameter = double(RandomI::random(-500, 500)) + 0.5;
 
@@ -413,13 +429,14 @@ bool TestHashMap::validationDynamicCapacitySingleIntegers(const unsigned int num
 			elements.push_back(std::make_pair(randomValue, randomParameter));
 
 			const double* checkValue;
-			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i) {
+			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
+			{
 				if (!table.find(i->first, checkValue) || i->second != *checkValue)
 				{
 					succeeded = false;
 					break;
 				}
-}
+			}
 
 			++tableSize;
 		}
@@ -463,13 +480,14 @@ bool TestHashMap::validationDynamicCapacitySingleIntegers(const unsigned int num
 			elementMap.erase(randomValue);
 			elements.erase(elements.begin() + randomIndex);
 
-			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i) {
+			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
+			{
 				if (!table.find(i->first, checkValue) || i->second != *checkValue)
 				{
 					succeeded = false;
 					break;
 				}
-}
+			}
 
 			ocean_assert(tableSize > 0u);
 			--tableSize;
@@ -477,11 +495,14 @@ bool TestHashMap::validationDynamicCapacitySingleIntegers(const unsigned int num
 	}
 	while (succeeded && startTimestamp + testDuration > Timestamp(true));
 
-	if (succeeded) {
+	if (succeeded)
+	{
 		Log::info() << "Validation: succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Validation: FAILED!";
-}
+	}
 
 	return succeeded;
 }
@@ -544,13 +565,14 @@ bool TestHashMap::validationMultipleIntegers(const unsigned int number, const un
 			elementMap.insert(std::make_pair(randomValue, randomParameter));
 			elements.push_back(std::make_pair(randomValue, randomParameter));
 
-			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i) {
+			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
+			{
 				if (!table.find(i->first))
 				{
 					succeeded = false;
 					break;
 				}
-}
+			}
 
 			++tableSize;
 		}
@@ -598,13 +620,14 @@ bool TestHashMap::validationMultipleIntegers(const unsigned int number, const un
 				break;
 			}
 
-			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i) {
+			for (Elements::const_iterator i = elements.begin(); i != elements.end(); ++i)
+			{
 				if (!table.find(i->first))
 				{
 					succeeded = false;
 					break;
 				}
-}
+			}
 
 			ocean_assert(tableSize > 0u);
 			--tableSize;
@@ -612,11 +635,14 @@ bool TestHashMap::validationMultipleIntegers(const unsigned int number, const un
 	}
 	while (succeeded && startTimestamp + testDuration > Timestamp(true));
 
-	if (succeeded) {
+	if (succeeded)
+	{
 		Log::info() << "Validation: succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Validation: FAILED!";
-}
+	}
 
 	return succeeded;
 }
