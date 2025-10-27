@@ -66,10 +66,33 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 			public:
 
 				/**
+				 * Creates a new parameter object with default parameters.
+				 */
+				Parameters() = default;
+
+				/**
 				 * Returns the default parameters for the stereo detector.
 				 * @return The default parameters
 				 */
 				static Parameters defaultParameters();
+
+				/**
+				 * Returns the maximum allowed distance from a point to the epipolar line.
+				 * @return The maximum distance in pixels, with range [0, infinity)
+				 */
+				Scalar maxDistanceToEpipolarLine() const;
+
+				/**
+				 * Sets the maximum allowed distance from a point to the epipolar line.
+				 * @param distance The maximum distance in pixels, with range [0, infinity)
+				 * @return True if the value was valid and set successfully, otherwise false
+				 */
+				bool setMaxDistanceToEpipolarLine(const Scalar distance);
+
+			protected:
+
+				/// When matching points, this defines the maximum allowed distance from a point to the epipolar line of the other point, in pixels, with range [0, infinity)
+				Scalar maxDistanceToEpipolarLine_ = Scalar(5);
 		};
 
 	protected:
@@ -91,7 +114,7 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		 * @param worker Optional worker to distribute the computation
 		 * @return True, if succeeded
 		 */
-		static bool detectBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, const MonoBullseyeDetector::Parameters& parameters = MonoBullseyeDetector::Parameters::defaultParameters(), Worker* worker = nullptr);
+		static bool detectBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, const Parameters& parameters = Parameters::defaultParameters(), Worker* worker = nullptr);
 
 	protected:
 
@@ -109,15 +132,58 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		 */
 		static bool matchBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const EpipolarGeometry& epipolarGeometry, const BullseyeGroup& bullseyeGroup, const Scalar maxDistanceToEpipolarLine, BullseyePairs& bullseyePairs);
 
+		/**
+		 * Returns an invalid (arbitrarily large) matching cost value used to indicate that two bullseyes cannot be matched.
+		 * This value is large enough to prevent matching but not so large as to cause numerical issues.
+		 * @return The invalid matching cost value
+		 */
 		constexpr static Scalar invalidMatchingCost();
 
-		static Scalar computeBullseyeMatchingCost(const Bullseye& bullseyeA, const Bullseye& bullseyeB, const EpipolarGeometry& epipolarGeometry, Scalar maxSqrDistanceToEpipolarLine);
+		/**
+		 * Computes the matching cost between two bullseyes from different stereo cameras.
+		 * The cost is based on epipolar geometry constraints and radius similarity, with both components
+		 * transformed using a sigmoid function to produce smooth, bounded costs in the range [0, 1].
+		 * Lower costs indicate better matches.
+		 * @param bullseyeA The bullseye from the first camera, must be valid
+		 * @param bullseyeB The bullseye from the second camera, must be valid
+		 * @param epipolarGeometry The epipolar geometry describing the relationship between the two cameras, must be valid
+		 * @param maxSqrDistance The squared maximum allowed distance from a point to its matching epipolar line, in pixels squared, with range (0, infinity)
+		 * @param cameraB_s_cameraA The scale factor relating measurements in camera B to camera A (e.g., width_B / width_A), with range (0, infinity)
+		 * @return The matching cost value, with range [0, 1], where lower values indicate better matches
+		 */
+		static Scalar computeBullseyeMatchingCost(const Bullseye& bullseyeA, const Bullseye& bullseyeB, const EpipolarGeometry& epipolarGeometry, const Scalar maxSqrDistance, const Scalar cameraB_s_cameraA);
 
 		/**
-		 * Compute matching costs between all bullseyes in A and B.
+		 * Computes a cost matrix containing matching costs between all pairs of bullseyes from two cameras.
+		 * Each element (i, j) in the matrix represents the matching cost between bullseye i from camera A and bullseye j from camera B.
+		 * The cost matrix can be used with an assignment solver to find optimal bullseye correspondences.
+		 * @param bullseyesA The bullseyes detected in the first camera, must not be empty
+		 * @param bullseyesB The bullseyes detected in the second camera, must not be empty
+		 * @param epipolarGeometry The epipolar geometry describing the relationship between the two cameras, must be valid
+		 * @param maxSqrDistanceToEpipolarLine The squared maximum allowed distance from a point to its epipolar line, in pixels squared, with range (0, infinity)
+		 * @param cameraB_s_cameraA The scale factor relating measurements in camera B to camera A (e.g., width_B / width_A), with range (0, infinity)
+		 * @param costMatrix The resulting cost matrix with dimensions [bullseyesA.size() x bullseyesB.size()]
+		 * @return True if the cost matrix was successfully computed
 		 */
-		static bool computeBullseyeMatchingCostMatrix(const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const EpipolarGeometry& epipolarGeometry, Scalar maxSqrDistanceToEpipolarLine, Matrix& costMatrix);
+		static bool computeBullseyeMatchingCostMatrix(const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const EpipolarGeometry& epipolarGeometry, const Scalar maxSqrDistanceToEpipolarLine, const Scalar cameraB_s_cameraA, Matrix& costMatrix);
 
+		/**
+		 * Triangulates a single matched bullseye pair to compute its 3D position in world coordinates.
+		 * This function casts rays from both camera centers through the bullseye positions and finds their nearest point
+		 * to determine the 3D location. It also computes reprojection errors to assess triangulation quality.
+		 * @param cameraA The camera profile for the first camera, must be valid
+		 * @param cameraB The camera profile for the second camera, must be valid
+		 * @param world_T_cameraA The transformation from camera A coordinate system to world coordinate system, must be valid
+		 * @param world_T_cameraB The transformation from camera B coordinate system to world coordinate system, must be valid
+		 * @param epipolarGeometry The epipolar geometry describing the relationship between the two cameras, must be valid
+		 * @param bullseyeA The bullseye from camera A, must be valid and within camera A's field of view
+		 * @param bullseyeB The bullseye from camera B, must be valid and within camera B's field of view
+		 * @param bullseyeCenter The resulting 3D position of the bullseye center in world coordinates
+		 * @param reprojectionErrorA The resulting reprojection error for camera A, in pixels
+		 * @param reprojectionErrorB The resulting reprojection error for camera B, in pixels
+		 * @return True if triangulation succeeded and the 3D point is in front of both cameras, otherwise false
+		 */
+		static bool triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const EpipolarGeometry& epipolarGeometry, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB);
 
 		/**
 		 * Triangulates matched bullseye pairs to compute their 3D positions.
@@ -137,7 +203,8 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 
 constexpr Scalar StereoBullseyeDetector::invalidMatchingCost()
 {
-	return Numeric::maxValue();
+	// Arbitrarily large value that doesn't cause numerical issues.
+	return Scalar(1000);
 }
 
 } // namespace Bullseyes

@@ -26,7 +26,24 @@ StereoBullseyeDetector::Parameters StereoBullseyeDetector::Parameters::defaultPa
 	return Parameters();
 }
 
-bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, const MonoBullseyeDetector::Parameters& parameters, Worker* worker)
+Scalar StereoBullseyeDetector::Parameters::maxDistanceToEpipolarLine() const
+{
+	return maxDistanceToEpipolarLine_;
+}
+
+bool StereoBullseyeDetector::Parameters::setMaxDistanceToEpipolarLine(const Scalar distance)
+{
+	ocean_assert(distance >= 0);
+	if (distance < Scalar(0))
+	{
+		return false;
+	}
+
+	maxDistanceToEpipolarLine_ = distance;
+	return true;
+}
+
+bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, const Parameters& parameters, Worker* worker)
 {
 	ocean_assert(cameras.size() == 2 && yFrames.size() == 2);
 	if (cameras.size() != 2 || yFrames.size() != 2)
@@ -97,8 +114,6 @@ bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, co
 	}
 #endif
 
-	constexpr Scalar maxDistanceToEpipolarLine = Scalar(3.0);
-
 	const HomogenousMatrix4 camera0_T_camera1 = device_T_cameras[0].inverted() * device_T_cameras[1];
 	const EpipolarGeometry epipolarGeometry(cameras[0], cameras[1], camera0_T_camera1);
 
@@ -109,7 +124,7 @@ bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, co
 	}
 
 	BullseyePairs candidates;
-	if (!matchBullseyes(cameras, yFrames, world_T_device, device_T_cameras, epipolarGeometry, bullseyeGroup, maxDistanceToEpipolarLine, candidates))
+	if (!matchBullseyes(cameras, yFrames, world_T_device, device_T_cameras, epipolarGeometry, bullseyeGroup, parameters.maxDistanceToEpipolarLine(), candidates))
 	{
 		return false;
 	}
@@ -151,27 +166,23 @@ bool StereoBullseyeDetector::matchBullseyes(const SharedAnyCameras& cameras, con
 		return true;
 	}
 
-	// Handle different image scales - for future implementation if cameras have different resolutions
-	// const Scalar scaleFactorA = Scalar(1.0);
-	// const Scalar scaleFactorB = Scalar(1.0);
-	// Note: Scale factors would be computed based on different camera resolutions if needed
-	// For now, assuming cameras have compatible resolutions
+	const Scalar maxSqrDistance = maxDistanceToEpipolarLine * maxDistanceToEpipolarLine;
 
-	const Scalar maxSqrDistanceToEpipolarLine = maxDistanceToEpipolarLine * maxDistanceToEpipolarLine;
+	// The camera resolutions can be different. To compare similarity
+	// of bullseyes using something like their radii, their size has to be
+	// normalized to the same scale.
+	const Scalar cameraB_s_cameraA = Scalar(cameras[1]->width()) / Scalar(cameras[0]->width());
 
 	// Special case: only one bullseye in each camera. Check if they are close enough to each other.
 	if (bullseyeGroup[0].size() == 1 && bullseyeGroup[1].size() == 1)
 	{
-		if (computeBullseyeMatchingCost(bullseyeGroup[0][0], bullseyeGroup[1][0], epipolarGeometry, maxSqrDistanceToEpipolarLine) != invalidMatchingCost())
-		{
-			bullseyePairs = {{bullseyeGroup[0][0], bullseyeGroup[1][0]}};
-		}
+		bullseyePairs = {{bullseyeGroup[0][0], bullseyeGroup[1][0]}};
 
 		return true;
 	}
 
 	Matrix costMatrix;
-	if (!computeBullseyeMatchingCostMatrix(bullseyeGroup[0], bullseyeGroup[1], epipolarGeometry, maxSqrDistanceToEpipolarLine, costMatrix))
+	if (!computeBullseyeMatchingCostMatrix(bullseyeGroup[0], bullseyeGroup[1], epipolarGeometry, maxSqrDistance, cameraB_s_cameraA, costMatrix))
 	{
 		return false;
 	}
@@ -205,35 +216,45 @@ bool StereoBullseyeDetector::matchBullseyes(const SharedAnyCameras& cameras, con
 	return true;
 }
 
-Scalar StereoBullseyeDetector::computeBullseyeMatchingCost(const Bullseye& bullseyeA, const Bullseye& bullseyeB, const EpipolarGeometry& epipolarGeometry, Scalar maxSqrDistanceToEpipolarLine)
+Scalar StereoBullseyeDetector::computeBullseyeMatchingCost(const Bullseye& bullseyeA, const Bullseye& bullseyeB, const EpipolarGeometry& epipolarGeometry, const Scalar maxSqrDistance, const Scalar cameraB_s_cameraA)
 {
 	ocean_assert(bullseyeA.isValid() && bullseyeB.isValid());
 	ocean_assert(epipolarGeometry.isValid());
-	ocean_assert(maxSqrDistanceToEpipolarLine >= 0);
+	ocean_assert(maxSqrDistance >= 0);
+	ocean_assert(cameraB_s_cameraA > 0);
 
+	// Distance to epipolar lines
 	const Scalar sqrDistanceAtoB = epipolarGeometry.squareDistanceToEpipolarLine(EpipolarGeometry::CI_CAMERA0, bullseyeA.position(), bullseyeB.position());
 	const Scalar sqrDistanceBtoA = epipolarGeometry.squareDistanceToEpipolarLine(EpipolarGeometry::CI_CAMERA1, bullseyeB.position(), bullseyeA.position());
 	ocean_assert(sqrDistanceAtoB >= 0 && sqrDistanceBtoA >= 0);
 
-	const Scalar maxSqrEpipolarDistance = std::max(sqrDistanceAtoB, sqrDistanceBtoA);
+	const Scalar epipolarCostLinear = std::max(sqrDistanceAtoB, sqrDistanceBtoA);
 
-	if (maxSqrEpipolarDistance > maxSqrDistanceToEpipolarLine)
-	{
-		return invalidMatchingCost();
-	}
+	const Scalar epipolarOffset = maxSqrDistance;
+	const Scalar epipolarCost = Scalar(1) / (Scalar(1) + Numeric::exp(epipolarOffset - epipolarCostLinear));
+	ocean_assert(epipolarCost >= 0 && epipolarCost <= 1);
 
-	const Scalar epipolarCost = maxSqrEpipolarDistance;
+	// Radius
+	const Scalar radiusAScaled = cameraB_s_cameraA * bullseyeA.radius();
+	const Scalar radiusB = bullseyeB.radius();
 
-	const Scalar totalCost = epipolarCost;
+	const Scalar radiusCostLinear = std::abs(radiusAScaled - radiusB);
+
+	const Scalar radiusOffset = Scalar(0.25) * std::min(radiusAScaled, radiusB);
+	const Scalar radiusCost = Scalar(1) / (Scalar(1) + Numeric::exp(radiusOffset - radiusCostLinear));
+	ocean_assert(radiusCost >= 0 && radiusCost <= 1);
+
+	const Scalar totalCost = Scalar(0.5) * epipolarCost + Scalar(0.5) * radiusCost;
+	ocean_assert(totalCost >= 0 && totalCost <= 1);
 
 	return totalCost;
 }
 
-bool StereoBullseyeDetector::computeBullseyeMatchingCostMatrix(const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const EpipolarGeometry& epipolarGeometry, Scalar maxSqrDistanceToEpipolarLine, Matrix& costMatrix)
+bool StereoBullseyeDetector::computeBullseyeMatchingCostMatrix(const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const EpipolarGeometry& epipolarGeometry, const Scalar maxSqrDistance, const Scalar cameraB_s_cameraA, Matrix& costMatrix)
 {
 	ocean_assert(!bullseyesA.empty() && !bullseyesB.empty());
 	ocean_assert(epipolarGeometry.isValid());
-	ocean_assert(maxSqrDistanceToEpipolarLine >= 0);
+	ocean_assert(maxSqrDistance >= 0);
 
 	const size_t numBullseyesA = bullseyesA.size();
 	const size_t numBullseyesB = bullseyesB.size();
@@ -250,11 +271,47 @@ bool StereoBullseyeDetector::computeBullseyeMatchingCostMatrix(const Bullseyes& 
 			const Bullseye& bullseyeB = bullseyesB[b];
 			ocean_assert(bullseyesB[b].isValid());
 
-			costMatrix(a, b) = computeBullseyeMatchingCost(bullseyeA, bullseyeB, epipolarGeometry, maxSqrDistanceToEpipolarLine);
+			costMatrix(a, b) = computeBullseyeMatchingCost(bullseyeA, bullseyeB, epipolarGeometry, maxSqrDistance, cameraB_s_cameraA);
 		}
 	}
 
 	return true;
+}
+
+bool StereoBullseyeDetector::triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const EpipolarGeometry& epipolarGeometry, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB)
+{
+	ocean_assert(cameraA.isValid() && cameraB.isValid());
+	ocean_assert(world_T_cameraA.isValid() && world_T_cameraA.isValid());
+	ocean_assert(epipolarGeometry.isValid());
+	ocean_assert(bullseyeA.isValid() && bullseyeB.isValid());
+
+	ocean_assert(cameraA.isInside(bullseyeA.position()));
+	ocean_assert(cameraB.isInside(bullseyeB.position()));
+
+	const Line3 rayA = cameraA.ray(bullseyeA.position(), world_T_cameraA);
+	const Line3 rayB = cameraB.ray(bullseyeB.position(), world_T_cameraB);
+
+	Vector3 objectPoint;
+	if (rayA.nearestPoint(rayB, objectPoint))
+	{
+		if (AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_cameraA), objectPoint)
+			&& AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_cameraB), objectPoint))
+		{
+			const Vector2 projectedObjectPointA = cameraA.projectToImage(world_T_cameraA, objectPoint);
+			const Scalar projectionErrorA = projectedObjectPointA.distance(bullseyeA.position());
+
+			const Vector2 projectedObjectPointB = cameraB.projectToImage(world_T_cameraB, objectPoint);
+			const Scalar projectionErrorB = projectedObjectPointB.distance(bullseyeB.position());
+
+			bullseyeCenter = objectPoint;
+			reprojectionErrorA = projectionErrorA;
+			reprojectionErrorB = projectionErrorB;
+
+			return true;
+		}
+	}
+
+	return false;
 }
 
 bool StereoBullseyeDetector::triangulateBullseyes(const SharedAnyCameras& cameras, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const EpipolarGeometry& epipolarGeometry, const BullseyePairs& candidates, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, Scalars& reprojectionErrorsA, Scalars& reprojectionErrorsB)
@@ -282,47 +339,33 @@ bool StereoBullseyeDetector::triangulateBullseyes(const SharedAnyCameras& camera
 	return false;
 #else
 	// Naive implementation for now.
-	if (candidates.size() != 1)
-	{
-		return false;
-	}
 
 	const AnyCamera& cameraA = *cameras[0];
 	const AnyCamera& cameraB = *cameras[1];
 
-	const HomogenousMatrix4& device_T_cameraA = device_T_cameras[0];
-	const HomogenousMatrix4& device_T_cameraB = device_T_cameras[1];
+	const HomogenousMatrix4 world_T_cameraA = world_T_device * device_T_cameras[0];
+	const HomogenousMatrix4 world_T_cameraB = world_T_device * device_T_cameras[1];
 
-	const Bullseye& bullseyeA = candidates[0].first;
-	const Bullseye& bullseyeB = candidates[0].second;
-
-	ocean_assert(cameraA.isInside(bullseyeA.position()));
-	ocean_assert(cameraB.isInside(bullseyeB.position()));
-
-	const HomogenousMatrix4 world_T_cameraA = world_T_device * device_T_cameraA;
-	const HomogenousMatrix4 world_T_cameraB = world_T_device * device_T_cameraB;
-
-	const Line3 rayA = cameraA.ray(bullseyeA.position(), world_T_cameraA);
-	const Line3 rayB = cameraB.ray(bullseyeB.position(), world_T_cameraB);
-
-	Vector3 objectPoint;
-	if (rayA.nearestPoint(rayB, objectPoint))
+	for (const BullseyePair& candidate : candidates)
 	{
-		if (AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_cameraA), objectPoint)
-			&& AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_cameraB), objectPoint))
+		const Bullseye& bullseyeA = candidate.first;
+		const Bullseye& bullseyeB = candidate.second;
+
+		Vector3 bullseyeCenter;
+		Scalar reprojectionErrorA;
+		Scalar reprojectionErrorB;
+		if (triangulateBullseye(cameraA, cameraB, world_T_cameraA, world_T_cameraB, epipolarGeometry, bullseyeA, bullseyeB, bullseyeCenter, reprojectionErrorA, reprojectionErrorB))
 		{
-			const Vector2 projectedObjectPointA = cameraA.projectToImage(world_T_cameraA, objectPoint);
-			const Scalar projectionErrorA = projectedObjectPointA.distance(bullseyeA.position());
-
-			const Vector2 projectedObjectPointB = cameraB.projectToImage(world_T_cameraB, objectPoint);
-			const Scalar projectionErrorB = projectedObjectPointB.distance(bullseyeB.position());
-
-			bullseyePairs = {{bullseyeA, bullseyeB}};
-			bullseyeCenters = {objectPoint};
-			reprojectionErrorsA = {projectionErrorA};
-			reprojectionErrorsB = {projectionErrorB};
+			bullseyePairs.emplace_back(bullseyeA, bullseyeB);
+			bullseyeCenters.emplace_back(bullseyeCenter);
+			reprojectionErrorsA.emplace_back(reprojectionErrorA);
+			reprojectionErrorsB.emplace_back(reprojectionErrorB);
 		}
 	}
+
+	ocean_assert(bullseyePairs.size() == bullseyeCenters.size());
+	ocean_assert(bullseyePairs.size() == reprojectionErrorsA.size());
+	ocean_assert(bullseyePairs.size() == reprojectionErrorsB.size());
 
 	return true;
 #endif
