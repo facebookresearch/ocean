@@ -15,6 +15,14 @@
 		50663C462EA0246F00368918 /* TransitionHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50663C442EA0246F00368918 /* TransitionHistory.cpp */; };
 		50663C472EA0246F00368918 /* TransitionHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50663C442EA0246F00368918 /* TransitionHistory.cpp */; };
 		50663C482EA0246F00368918 /* TransitionHistory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50663C442EA0246F00368918 /* TransitionHistory.cpp */; };
+		506C93012EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C93002EABEB53007A28EC /* MonoBullseyeDetector.h */; };
+		506C93022EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C93002EABEB53007A28EC /* MonoBullseyeDetector.h */; };
+		506C93032EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C93002EABEB53007A28EC /* MonoBullseyeDetector.h */; };
+		506C93042EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C93002EABEB53007A28EC /* MonoBullseyeDetector.h */; };
+		506C93062EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C93052EABEBE7007A28EC /* MonoBullseyeDetector.cpp */; };
+		506C93072EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C93052EABEBE7007A28EC /* MonoBullseyeDetector.cpp */; };
+		506C93082EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C93052EABEBE7007A28EC /* MonoBullseyeDetector.cpp */; };
+		506C93092EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C93052EABEBE7007A28EC /* MonoBullseyeDetector.cpp */; };
 		50927F7A2EA00E4A00B6244F /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50927F792EA00E4A00B6244F /* Utilities.h */; };
 		50927F7B2EA00E4A00B6244F /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50927F792EA00E4A00B6244F /* Utilities.h */; };
 		50927F7C2EA00E4A00B6244F /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50927F792EA00E4A00B6244F /* Utilities.h */; };
@@ -40,6 +48,8 @@
 /* Begin PBXFileReference section */
 		50663C3F2EA0240C00368918 /* TransitionHistory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = TransitionHistory.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/TransitionHistory.h; sourceTree = "<group>"; };
 		50663C442EA0246F00368918 /* TransitionHistory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TransitionHistory.cpp; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/TransitionHistory.cpp; sourceTree = "<group>"; };
+		506C93002EABEB53007A28EC /* MonoBullseyeDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MonoBullseyeDetector.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/MonoBullseyeDetector.h; sourceTree = "<group>"; };
+		506C93052EABEBE7007A28EC /* MonoBullseyeDetector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MonoBullseyeDetector.cpp; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/MonoBullseyeDetector.cpp; sourceTree = "<group>"; };
 		50927F792EA00E4A00B6244F /* Utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/Utilities.h; sourceTree = "<group>"; };
 		50927F7E2EA00E6900B6244F /* Utilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/Utilities.cpp; sourceTree = "<group>"; };
 		509D72E42E9DBB6E0005EC30 /* Bullseye.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bullseye.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/Bullseye.h; sourceTree = "<group>"; };
@@ -88,6 +98,7 @@
 			children = (
 				509D72E42E9DBB6E0005EC30 /* Bullseye.h */,
 				509E2DA529809C5D00E0DD7E /* Bullseyes.h */,
+				506C93002EABEB53007A28EC /* MonoBullseyeDetector.h */,
 				50663C3F2EA0240C00368918 /* TransitionHistory.h */,
 				50927F792EA00E4A00B6244F /* Utilities.h */,
 			);
@@ -118,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				509D72E92E9DBB950005EC30 /* Bullseye.cpp */,
+				506C93052EABEBE7007A28EC /* MonoBullseyeDetector.cpp */,
 				50663C442EA0246F00368918 /* TransitionHistory.cpp */,
 				50927F7E2EA00E6900B6244F /* Utilities.cpp */,
 			);
@@ -132,6 +144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50927F7B2EA00E4A00B6244F /* Utilities.h in Headers */,
+				506C93012EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */,
 				509E2DA729809C5D00E0DD7E /* Bullseyes.h in Headers */,
 				50663C412EA0240C00368918 /* TransitionHistory.h in Headers */,
 				509D72E62E9DBB6E0005EC30 /* Bullseye.h in Headers */,
@@ -143,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50927F7C2EA00E4A00B6244F /* Utilities.h in Headers */,
+				506C93042EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */,
 				509E2DA829809C5D00E0DD7E /* Bullseyes.h in Headers */,
 				50663C422EA0240C00368918 /* TransitionHistory.h in Headers */,
 				509D72E82E9DBB6E0005EC30 /* Bullseye.h in Headers */,
@@ -154,6 +168,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50927F7A2EA00E4A00B6244F /* Utilities.h in Headers */,
+				506C93022EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */,
 				509E2DA629809C5D00E0DD7E /* Bullseyes.h in Headers */,
 				50663C432EA0240C00368918 /* TransitionHistory.h in Headers */,
 				509D72E52E9DBB6E0005EC30 /* Bullseye.h in Headers */,
@@ -165,6 +180,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50927F7D2EA00E4A00B6244F /* Utilities.h in Headers */,
+				506C93032EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */,
 				509E2DA929809C5D00E0DD7E /* Bullseyes.h in Headers */,
 				50663C402EA0240C00368918 /* TransitionHistory.h in Headers */,
 				509D72E72E9DBB6E0005EC30 /* Bullseye.h in Headers */,
@@ -330,6 +346,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50663C482EA0246F00368918 /* TransitionHistory.cpp in Sources */,
+				506C93072EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */,
 				50927F812EA00E6900B6244F /* Utilities.cpp in Sources */,
 				509D72EC2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
@@ -340,6 +357,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50663C452EA0246F00368918 /* TransitionHistory.cpp in Sources */,
+				506C93082EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */,
 				50927F822EA00E6900B6244F /* Utilities.cpp in Sources */,
 				509D72EA2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
@@ -350,6 +368,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50663C472EA0246F00368918 /* TransitionHistory.cpp in Sources */,
+				506C93062EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */,
 				50927F802EA00E6900B6244F /* Utilities.cpp in Sources */,
 				509D72ED2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
@@ -360,6 +379,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50663C462EA0246F00368918 /* TransitionHistory.cpp in Sources */,
+				506C93092EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */,
 				50927F7F2EA00E6900B6244F /* Utilities.cpp in Sources */,
 				509D72EB2E9DBB950005EC30 /* Bullseye.cpp in Sources */,
 			);
