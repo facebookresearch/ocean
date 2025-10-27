@@ -78,6 +78,20 @@ class OCEAN_BASE_EXPORT StringApple
 		 * @return The resulting string with 32 bit character encoding
 		 */
 		static std::wstring toWString(CFStringRef object);
+
+		/**
+		 * Converts a value to a string with 8bit character.
+		 * @param value The value to convert
+		 * @return Converted string
+		 */
+		static std::string toAString(const std::wstring& value);
+
+		/**
+		 * Converts a value to a wstring.
+		 * @param value The value to convert
+		 * @return Converted string
+		 */
+		static std::wstring toWString(const std::string& value);
 };
 
 }

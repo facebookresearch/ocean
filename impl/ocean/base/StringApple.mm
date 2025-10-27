@@ -55,7 +55,7 @@ std::string StringApple::toUTF8(NSString* object)
 		return std::string();
 	}
 
-	return std::string(value, stringLength);
+    return std::string(value);
 }
 
 std::wstring StringApple::toWString(NSString* object)
@@ -77,7 +77,7 @@ std::wstring StringApple::toWString(NSString* object)
 		return std::wstring();
 	}
 
-	return std::wstring(value, stringLength);
+	return std::wstring(value);
 }
 
 std::string StringApple::toUTF8(CFStringRef object)
@@ -88,6 +88,16 @@ std::string StringApple::toUTF8(CFStringRef object)
 std::wstring StringApple::toWString(CFStringRef object)
 {
 	return toWString((__bridge NSString*)object);
+}
+
+std::string StringApple::toAString(const std::wstring& value)
+{
+	return toUTF8(toNSString(value));
+}
+
+std::wstring StringApple::toWString(const std::string& value)
+{
+	return toWString(toNSString(value));
 }
 
 } // namespace Ocean
