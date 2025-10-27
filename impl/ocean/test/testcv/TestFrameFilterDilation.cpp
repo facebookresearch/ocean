@@ -370,7 +370,8 @@ bool TestFrameFilterDilation::test8Bit24Neighbor(const unsigned int width, const
 					allSucceeded = false;
 				}
 			}
-		} while (startTimestamp + testDuration > Timestamp(true));
+		}
+		while (startTimestamp + testDuration > Timestamp(true));
 	}
 
 	Log::info() << "Singlecore performance: Best: " << String::toAString(performanceSinglecore.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performanceSinglecore.worstMseconds(), 2u) << "ms, average: " << String::toAString(performanceSinglecore.averageMseconds(), 2u) << "ms";

@@ -473,7 +473,8 @@ bool runTestPnP(const double testDuration, const PinholeCamera& camera, const si
 		}
 
 		iterations++;
-	} while (startTimestamp + testDuration > Timestamp(true));
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	std::sort(projectionErrors.begin(), projectionErrors.end());
 

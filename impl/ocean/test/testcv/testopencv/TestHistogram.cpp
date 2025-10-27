@@ -145,7 +145,8 @@ bool TestHistogram::testCLAHE(const double testDuration)
 			}
 
 			totalIteration++;
-		} while (totalIteration < minIterations || startTimePerformance + testDuration > Timestamp(true));
+		}
+		while (totalIteration < minIterations || startTimePerformance + testDuration > Timestamp(true));
 
 		std::ostringstream oss;
 		oss << performanceSourceImageWidth << " x " << performanceSourceImageHeight << ", ";

@@ -291,7 +291,8 @@ bool TestFeatureDetectors::testHarrisCornerDetector(const cv::Mat& frame, const 
 
 		cv::goodFeaturesToTrack(grayFrame, corners, static_cast<int>(cornersCount), threshold, minDistance, cv::noArray(), 3, true);
 
-	} while (startTimestamp + testDuration > Timestamp(true));
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Actually detected: " << corners.size() << " feature points";
 	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << "ms";
@@ -336,7 +337,8 @@ bool TestFeatureDetectors::testFASTFeatureDectector(const cv::Mat& frame, const 
 		HighPerformanceStatistic::ScopedStatistic scopedPerformance(performance);
 
 		cv::FAST(grayFrame, keypoints, threshold, useNonMaximumSuppression);
-	} while (startTimestamp + testDuration > Timestamp(true));
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Actually detected: " << keypoints.size() << " feature points";
 	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << "ms";

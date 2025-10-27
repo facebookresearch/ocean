@@ -163,9 +163,11 @@ bool TestMicroQRCodeDecoder::testMicroQRCodeDecoding(const double testDuration)
 					break;
 
 				case MicroQRCode::EM_ALPHANUMERIC:
-					do {
+					do
+					{
 						messageString = Utilities::generateRandomAlphanumericString(randomGenerator, messageLength);
-					} while (QRCodeEncoderBase::Segment::isNumericData(messageString));
+					}
+					while (QRCodeEncoderBase::Segment::isNumericData(messageString));
 					qrcodeGenerated = (MicroQRCodeEncoder::encodeText(messageString, params.eccMin, code) == MicroQRCodeEncoder::SC_SUCCESS) && code.isValid();
 					break;
 

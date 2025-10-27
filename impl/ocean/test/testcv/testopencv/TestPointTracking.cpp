@@ -152,7 +152,8 @@ bool TestPointTracking::testSparseOpticalFlow(int width, int height, int window,
 		cv::waitKey();
 		cv::destroyAllWindows();
 #endif
-	} while (startTimestamp + testDuration > Timestamp(true));
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << "ms";
 
@@ -209,7 +210,8 @@ bool TestPointTracking::testSparseOpticalFlow(const cv::Mat & frame, int window,
 			HighPerformanceStatistic::ScopedStatistic scopedPerformance(performance);
 			cv::calcOpticalFlowPyrLK(gray0, gray1, points0, points1, status, error, winSize, maxLevel, criteria, flags, minEigThreshold);
 		}
-	} while (startTimestamp + testDuration > Timestamp(true));
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Performance: " << String::toAString(performance.averageMseconds()) << "ms";
 

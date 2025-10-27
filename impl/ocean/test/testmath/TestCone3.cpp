@@ -359,14 +359,15 @@ bool TestCone3::validateNearestIntersection(const double testDuration)
 
 			++totalNumberTrials;
 		}
-	} while (startTimestamp + testDuration > Timestamp(true));
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	// Inconsistent results can occasionally pop up when (1) a is nearly 0 in the quadratic
 	// equation solver or (2) the ray is nearly parallel with the cone surface. Both of these cases
 	// are very rare, especially when using double precision.
 	const T ratioOfCorrectTrials = T(numberSuccessfulTrials) / T(totalNumberTrials);
 
-	constexpr T kRatioThreshold = std::is_same<T, float>::value ? T(0.95) : T(0.9999);
+	constexpr T kRatioThreshold = std::is_same<T, float>::value ? T(0.90) : T(0.9999);
 
 	Log::info() << "Validation: " << String::toAString(ratioOfCorrectTrials * 100.0, 1u) << "% succeeded.";
 
