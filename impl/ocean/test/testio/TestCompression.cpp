@@ -33,11 +33,14 @@ bool TestCompression::test(const double testDuration)
 
 	Log::info() << " ";
 
-	if (allSucceeded) {
+	if (allSucceeded)
+	{
 		Log::info() << "Entire Compression test succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Compression test FAILED!";
-}
+	}
 
 	return allSucceeded;
 }
