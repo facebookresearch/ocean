@@ -51,6 +51,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\AssignmentSolver.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\Bullseye.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\Bullseyes.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\MonoBullseyeDetector.h" />
@@ -59,6 +60,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\Utilities.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\AssignmentSolver.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\Bullseye.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\MonoBullseyeDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\StereoBullseyeDetector.cpp" />

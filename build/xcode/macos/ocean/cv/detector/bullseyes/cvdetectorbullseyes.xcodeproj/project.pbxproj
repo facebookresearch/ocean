@@ -31,6 +31,14 @@
 		506C93112EABECDA007A28EC /* StereoBullseyeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C930F2EABECDA007A28EC /* StereoBullseyeDetector.cpp */; };
 		506C93122EABECDA007A28EC /* StereoBullseyeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C930F2EABECDA007A28EC /* StereoBullseyeDetector.cpp */; };
 		506C93132EABECDA007A28EC /* StereoBullseyeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C930F2EABECDA007A28EC /* StereoBullseyeDetector.cpp */; };
+		506C93152EABEE4E007A28EC /* AssignmentSolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C93142EABEE4E007A28EC /* AssignmentSolver.h */; };
+		506C93162EABEE4E007A28EC /* AssignmentSolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C93142EABEE4E007A28EC /* AssignmentSolver.h */; };
+		506C93172EABEE4E007A28EC /* AssignmentSolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C93142EABEE4E007A28EC /* AssignmentSolver.h */; };
+		506C93182EABEE4E007A28EC /* AssignmentSolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C93142EABEE4E007A28EC /* AssignmentSolver.h */; };
+		506C931A2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C93192EABEE6D007A28EC /* AssignmentSolver.cpp */; };
+		506C931B2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C93192EABEE6D007A28EC /* AssignmentSolver.cpp */; };
+		506C931C2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C93192EABEE6D007A28EC /* AssignmentSolver.cpp */; };
+		506C931D2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C93192EABEE6D007A28EC /* AssignmentSolver.cpp */; };
 		50927F7A2EA00E4A00B6244F /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50927F792EA00E4A00B6244F /* Utilities.h */; };
 		50927F7B2EA00E4A00B6244F /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50927F792EA00E4A00B6244F /* Utilities.h */; };
 		50927F7C2EA00E4A00B6244F /* Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 50927F792EA00E4A00B6244F /* Utilities.h */; };
@@ -60,6 +68,8 @@
 		506C93052EABEBE7007A28EC /* MonoBullseyeDetector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = MonoBullseyeDetector.cpp; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/MonoBullseyeDetector.cpp; sourceTree = "<group>"; };
 		506C930A2EABECB8007A28EC /* StereoBullseyeDetector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StereoBullseyeDetector.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/StereoBullseyeDetector.h; sourceTree = "<group>"; };
 		506C930F2EABECDA007A28EC /* StereoBullseyeDetector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = StereoBullseyeDetector.cpp; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/StereoBullseyeDetector.cpp; sourceTree = "<group>"; };
+		506C93142EABEE4E007A28EC /* AssignmentSolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AssignmentSolver.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/AssignmentSolver.h; sourceTree = "<group>"; };
+		506C93192EABEE6D007A28EC /* AssignmentSolver.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = AssignmentSolver.cpp; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/AssignmentSolver.cpp; sourceTree = "<group>"; };
 		50927F792EA00E4A00B6244F /* Utilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Utilities.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/Utilities.h; sourceTree = "<group>"; };
 		50927F7E2EA00E6900B6244F /* Utilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Utilities.cpp; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/Utilities.cpp; sourceTree = "<group>"; };
 		509D72E42E9DBB6E0005EC30 /* Bullseye.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bullseye.h; path = ../../../../../../../impl/ocean/cv/detector/bullseyes/Bullseye.h; sourceTree = "<group>"; };
@@ -106,6 +116,7 @@
 		5D222C651BB18C1400298788 /* Header Files */ = {
 			isa = PBXGroup;
 			children = (
+				506C93142EABEE4E007A28EC /* AssignmentSolver.h */,
 				509D72E42E9DBB6E0005EC30 /* Bullseye.h */,
 				509E2DA529809C5D00E0DD7E /* Bullseyes.h */,
 				506C93002EABEB53007A28EC /* MonoBullseyeDetector.h */,
@@ -139,6 +150,7 @@
 		5DCE0D441BAABFC1002E9E7D /* Source Files */ = {
 			isa = PBXGroup;
 			children = (
+				506C93192EABEE6D007A28EC /* AssignmentSolver.cpp */,
 				506C930F2EABECDA007A28EC /* StereoBullseyeDetector.cpp */,
 				509D72E92E9DBB950005EC30 /* Bullseye.cpp */,
 				506C93052EABEBE7007A28EC /* MonoBullseyeDetector.cpp */,
@@ -157,6 +169,7 @@
 			files = (
 				50927F7B2EA00E4A00B6244F /* Utilities.h in Headers */,
 				506C93012EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */,
+				506C93162EABEE4E007A28EC /* AssignmentSolver.h in Headers */,
 				509E2DA729809C5D00E0DD7E /* Bullseyes.h in Headers */,
 				506C930B2EABECB8007A28EC /* StereoBullseyeDetector.h in Headers */,
 				50663C412EA0240C00368918 /* TransitionHistory.h in Headers */,
@@ -170,6 +183,7 @@
 			files = (
 				50927F7C2EA00E4A00B6244F /* Utilities.h in Headers */,
 				506C93042EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */,
+				506C93152EABEE4E007A28EC /* AssignmentSolver.h in Headers */,
 				509E2DA829809C5D00E0DD7E /* Bullseyes.h in Headers */,
 				506C930E2EABECB8007A28EC /* StereoBullseyeDetector.h in Headers */,
 				50663C422EA0240C00368918 /* TransitionHistory.h in Headers */,
@@ -183,6 +197,7 @@
 			files = (
 				50927F7A2EA00E4A00B6244F /* Utilities.h in Headers */,
 				506C93022EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */,
+				506C93172EABEE4E007A28EC /* AssignmentSolver.h in Headers */,
 				509E2DA629809C5D00E0DD7E /* Bullseyes.h in Headers */,
 				506C930C2EABECB8007A28EC /* StereoBullseyeDetector.h in Headers */,
 				50663C432EA0240C00368918 /* TransitionHistory.h in Headers */,
@@ -196,6 +211,7 @@
 			files = (
 				50927F7D2EA00E4A00B6244F /* Utilities.h in Headers */,
 				506C93032EABEB53007A28EC /* MonoBullseyeDetector.h in Headers */,
+				506C93182EABEE4E007A28EC /* AssignmentSolver.h in Headers */,
 				509E2DA929809C5D00E0DD7E /* Bullseyes.h in Headers */,
 				506C930D2EABECB8007A28EC /* StereoBullseyeDetector.h in Headers */,
 				50663C402EA0240C00368918 /* TransitionHistory.h in Headers */,
@@ -362,6 +378,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50663C482EA0246F00368918 /* TransitionHistory.cpp in Sources */,
+				506C931C2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */,
 				506C93072EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */,
 				506C93132EABECDA007A28EC /* StereoBullseyeDetector.cpp in Sources */,
 				50927F812EA00E6900B6244F /* Utilities.cpp in Sources */,
@@ -374,6 +391,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50663C452EA0246F00368918 /* TransitionHistory.cpp in Sources */,
+				506C931A2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */,
 				506C93082EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */,
 				506C93102EABECDA007A28EC /* StereoBullseyeDetector.cpp in Sources */,
 				50927F822EA00E6900B6244F /* Utilities.cpp in Sources */,
@@ -386,6 +404,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50663C472EA0246F00368918 /* TransitionHistory.cpp in Sources */,
+				506C931B2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */,
 				506C93062EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */,
 				506C93122EABECDA007A28EC /* StereoBullseyeDetector.cpp in Sources */,
 				50927F802EA00E6900B6244F /* Utilities.cpp in Sources */,
@@ -398,6 +417,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				50663C462EA0246F00368918 /* TransitionHistory.cpp in Sources */,
+				506C931D2EABEE6D007A28EC /* AssignmentSolver.cpp in Sources */,
 				506C93092EABEBE7007A28EC /* MonoBullseyeDetector.cpp in Sources */,
 				506C93112EABECDA007A28EC /* StereoBullseyeDetector.cpp in Sources */,
 				50927F7F2EA00E6900B6244F /* Utilities.cpp in Sources */,
