@@ -88,13 +88,15 @@ const LightSourceRef& GIView::headlight() const
 
 bool GIView::setAspectRatio(const Scalar aspectRatio)
 {
-	if (aspectRatio <= 0) {
+	if (aspectRatio <= 0)
+	{
 		return false;
-}
+	}
 
-	if (aspectRatio == viewAspectRatio) {
+	if (aspectRatio == viewAspectRatio)
+	{
 		return true;
-}
+	}
 
 	viewAspectRatio = aspectRatio;
 	calculateProjectionMatrix();
@@ -104,13 +106,15 @@ bool GIView::setAspectRatio(const Scalar aspectRatio)
 
 bool GIView::setNearDistance(const Scalar distance)
 {
-	if (viewNearDistance >= viewFarDistance) {
+	if (viewNearDistance >= viewFarDistance)
+	{
 		return false;
-}
+	}
 
-	if (viewNearDistance == distance) {
+	if (viewNearDistance == distance)
+	{
 		return true;
-}
+	}
 
 	viewNearDistance = distance;
 	calculateProjectionMatrix();
@@ -120,13 +124,15 @@ bool GIView::setNearDistance(const Scalar distance)
 
 bool GIView::setFarDistance(const Scalar distance)
 {
-	if (viewFarDistance <= viewNearDistance) {
+	if (viewFarDistance <= viewNearDistance)
+	{
 		return false;
-}
+	}
 
-	if (viewFarDistance == distance) {
+	if (viewFarDistance == distance)
+	{
 		return true;
-}
+	}
 
 	viewFarDistance = distance;
 	calculateProjectionMatrix();
@@ -136,9 +142,10 @@ bool GIView::setFarDistance(const Scalar distance)
 
 bool GIView::setNearFarDistance(const Scalar nearDistance, const Scalar farDistance)
 {
-	if (nearDistance <= 0 || nearDistance > farDistance) {
+	if (nearDistance <= 0 || nearDistance > farDistance)
+	{
 		return false;
-}
+	}
 
 	viewNearDistance = nearDistance;
 	viewFarDistance = farDistance;
@@ -156,9 +163,10 @@ void GIView::setTransformation(const HomogenousMatrix4& transformation)
 
 bool GIView::setBackgroundColor(const RGBAColor& color)
 {
-	if (!color.isValid()) {
+	if (!color.isValid())
+	{
 		return false;
-}
+	}
 
 	viewBackgroundColor = color;
 	return false;

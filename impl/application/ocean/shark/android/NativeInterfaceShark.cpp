@@ -28,9 +28,10 @@ jboolean Java_com_meta_ocean_app_shark_android_NativeInterfaceShark_loadScene(JN
 	{
 		const std::string sceneFilename(filenamePtr);
 
-		if (!sceneFilename.empty()) {
+		if (!sceneFilename.empty())
+		{
 			result = GLMainView::get<GLMainView>().loadScene(sceneFilename, replace);
-}
+		}
 
 		env->ReleaseStringUTFChars(filename, filenamePtr);
 	}

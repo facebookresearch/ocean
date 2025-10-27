@@ -32,9 +32,10 @@ void SDXScene::registerGlobalLight(const Rendering::LightSourceRef& lightSource)
 	const Rendering::GroupRef group(renderingObject());
 	ocean_assert(group);
 
-	if (group) {
+	if (group)
+	{
 		group->registerLight(lightSource);
-}
+	}
 }
 
 void SDXScene::unregisterGlobalLight(const Rendering::LightSourceRef& lightSource)

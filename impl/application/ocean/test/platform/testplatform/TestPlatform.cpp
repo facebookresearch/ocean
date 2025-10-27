@@ -131,9 +131,10 @@ using namespace Ocean;
 
 	try
 	{
-		if (Test::TestPlatform::testPlatform(testDuration, worker, functionList)) {
+		if (Test::TestPlatform::testPlatform(testDuration, worker, functionList))
+		{
 			resultValue = 0;
-}
+		}
 	}
 	catch(...)
 	{

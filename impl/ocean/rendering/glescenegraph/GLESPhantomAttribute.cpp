@@ -181,9 +181,10 @@ GLESAttribute::ProgramType GLESPhantomAttribute::necessaryShader() const
 			return GLESAttribute::PI_DEBUG_GRAY;
 	}
 
-	if (phantomUndistortedBackgroundTexture.isNull()) {
+	if (phantomUndistortedBackgroundTexture.isNull())
+	{
 		return type;
-}
+	}
 
 	switch (phantomUndistortedBackgroundTexture->frameType().pixelFormat())
 	{

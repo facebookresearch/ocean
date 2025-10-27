@@ -57,9 +57,10 @@ void GISpotLight::setDirection(const Vector3& direction)
 
 bool GISpotLight::setConeAngle(const Scalar angle)
 {
-	if (angle < 0 || angle > Numeric::pi_2()) {
+	if (angle < 0 || angle > Numeric::pi_2())
+	{
 		return false;
-}
+	}
 
 	const ScopedLock scopedLock(objectLock);
 	lightConeAngle = angle;
@@ -70,9 +71,10 @@ bool GISpotLight::setConeAngle(const Scalar angle)
 
 bool GISpotLight::setSpotExponent(const Scalar exponent)
 {
-	if (exponent < 0 || exponent > 1) {
+	if (exponent < 0 || exponent > 1)
+	{
 		return false;
-}
+	}
 
 	const ScopedLock scopedLock(objectLock);
 	lightSpotExponent = exponent;

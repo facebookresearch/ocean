@@ -40,9 +40,10 @@ void TracingSphere::findNearestIntersection(const Line3& ray, RayIntersection& i
 {
 	ocean_assert(ray.isValid());
 
-	if (this == excludedObject) {
+	if (this == excludedObject)
+	{
 		return;
-}
+	}
 
 	Vector3 intersectionPoint;
 	Normal normal;

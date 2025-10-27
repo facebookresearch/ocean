@@ -42,13 +42,15 @@ BoundingBox GITriangles::boundingBox() const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (trianglesFaces.empty()) {
+	if (trianglesFaces.empty())
+	{
 		return BoundingBox();
-}
+	}
 
-	if (primitiveVertexSet.isNull()) {
+	if (primitiveVertexSet.isNull())
+	{
 		return BoundingBox();
-}
+	}
 
 	BoundingBox boundingBox;
 	const Vertices vertices(primitiveVertexSet->vertices());

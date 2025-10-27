@@ -44,9 +44,10 @@ GLESBlendAttribute::BlendingFunction GLESBlendAttribute::destinationFunction() c
 
 void GLESBlendAttribute::setSourceFunction(const BlendingFunction function)
 {
-	if (function == attributeSourceBlendingFunction) {
+	if (function == attributeSourceBlendingFunction)
+	{
 		return;
-}
+	}
 
 	attributeSourceBlendingFunction = function;
 	attributeGLESSourceBlendingFunction = translateSourceBlendingFunction(function);
@@ -54,9 +55,10 @@ void GLESBlendAttribute::setSourceFunction(const BlendingFunction function)
 
 void GLESBlendAttribute::setDestinationFunction(const BlendingFunction function)
 {
-	if (function == attributeDestinationBlendingFunction) {
+	if (function == attributeDestinationBlendingFunction)
+	{
 		return;
-}
+	}
 
 	attributeDestinationBlendingFunction = function;
 	attributeGLESDestinationBlendingFunction = translateDestinationBlendingFunction(function);

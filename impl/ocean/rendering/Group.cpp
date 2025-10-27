@@ -26,16 +26,19 @@ Group::~Group()
 
 void Group::addChild(const NodeRef& node)
 {
-	if (node.isNull()) {
+	if (node.isNull())
+	{
 		return;
-}
+	}
 
 	const ScopedLock scopedLock(objectLock);
 
 #ifdef OCEAN_DEBUG
 
 	for (Nodes::iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+	{
 		ocean_assert(node != *i);
+	}
 
 #endif // OCEAN_DEBUG
 
@@ -45,9 +48,10 @@ void Group::addChild(const NodeRef& node)
 
 void Group::registerLight(const LightSourceRef& light)
 {
-	if (light.isNull()) {
+	if (light.isNull())
+	{
 		return;
-}
+	}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -65,37 +69,41 @@ NodeRef Group::child(const unsigned int index) const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (index >= groupNodes.size()) {
+	if (index >= groupNodes.size())
+	{
 		return NodeRef();
-}
+	}
 
 	return groupNodes[index];
 }
 
 void Group::removeChild(const NodeRef& node)
 {
-	if (node.isNull()) {
+	if (node.isNull())
+	{
 		return;
-}
+	}
 
 	const ScopedLock scopedLock(objectLock);
 
-	for (Nodes::iterator i = groupNodes.begin(); i != groupNodes.end(); ++i) {
+	for (Nodes::iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+	{
 		if (node == *i)
 		{
 			groupNodes.erase(i);
 			break;
 		}
-}
+	}
 
 	unregisterThisObjectAsParent(node);
 }
 
 void Group::unregisterLight(const LightSourceRef& light)
 {
-	if (light.isNull()) {
+	if (light.isNull())
+	{
 		return;
-}
+	}
 
 	const ScopedLock scopedLock(objectLock);
 
@@ -108,9 +116,10 @@ void Group::clear()
 {
 	const ScopedLock scopedLock(objectLock);
 
-	for (Nodes::iterator i = groupNodes.begin(); i != groupNodes.end(); ++i) {
+	for (Nodes::iterator i = groupNodes.begin(); i != groupNodes.end(); ++i)
+	{
 		unregisterThisObjectAsParent(*i);
-}
+	}
 
 	groupNodes.clear();
 }

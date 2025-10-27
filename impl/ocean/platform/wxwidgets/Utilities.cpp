@@ -104,9 +104,10 @@ void Utilities::desktopFrameOutput(const int x, const int y, const Frame& frame)
 
 void Utilities::bitmapOutput(wxDC& dc, const int xOutput, const int yOutput, const int widthOutput, const int heightOutput, const int xInput, const int yInput, const int widthInput, const int heightInput, const wxBitmap& bitmap)
 {
-	if (widthOutput <= 0 || heightOutput <= 0 || widthInput <= 0 || heightInput <= 0) {
+	if (widthOutput <= 0 || heightOutput <= 0 || widthInput <= 0 || heightInput <= 0)
+	{
 		return;
-}
+	}
 
 	ocean_assert(dc.IsOk() && bitmap.IsOk());
 

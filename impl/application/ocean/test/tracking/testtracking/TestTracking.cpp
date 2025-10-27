@@ -131,9 +131,10 @@ using namespace Ocean;
 
 	try
 	{
-		if (Test::TestTracking::testTracking(testDuration, worker, functionList)) {
+		if (Test::TestTracking::testTracking(testDuration, worker, functionList))
+		{
 			resultValue = 0;
-}
+		}
 	}
 	catch (...)
 	{

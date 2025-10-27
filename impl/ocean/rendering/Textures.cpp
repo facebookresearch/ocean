@@ -22,18 +22,20 @@ Textures::Textures() :
 
 Textures::~Textures()
 {
-	for (TextureObjects::const_iterator i = textures.begin(); i != textures.end(); ++i) {
+	for (TextureObjects::const_iterator i = textures.begin(); i != textures.end(); ++i)
+	{
 		unregisterThisObjectAsParent(*i);
-}
+	}
 }
 
 TextureRef Textures::texture(const unsigned int layerIndex) const
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (layerIndex < textures.size()) {
+	if (layerIndex < textures.size())
+	{
 		return textures[layerIndex];
-}
+	}
 
 	return TextureRef();
 }
@@ -42,9 +44,10 @@ void Textures::setTexture(const TextureRef& texture, const unsigned int layerInd
 {
 	const ScopedLock scopedLock(objectLock);
 
-	if (layerIndex >= textures.size()) {
+	if (layerIndex >= textures.size())
+	{
 		textures.resize(layerIndex + 1);
-}
+	}
 
 	unregisterThisObjectAsParent(textures[layerIndex]);
 	registerThisObjectAsParent(texture);
@@ -54,9 +57,10 @@ void Textures::setTexture(const TextureRef& texture, const unsigned int layerInd
 
 void Textures::addTexture(const TextureRef& texture)
 {
-	if (texture.isNull()) {
+	if (texture.isNull())
+	{
 		return;
-}
+	}
 
 	const ScopedLock scopedLock(objectLock);
 
