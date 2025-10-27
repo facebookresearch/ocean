@@ -10,6 +10,8 @@
 
 #include "ocean/cv/detector/bullseyes/Bullseyes.h"
 
+#include "ocean/cv/detector/bullseyes/Bullseye.h"
+
 #include "ocean/base/Frame.h"
 
 namespace Ocean
@@ -42,6 +44,23 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Utilities
 		 * @return True, if succeeded
 		 */
 		static bool createBullseyeImage(const unsigned int diameter, const unsigned int quietZone, Frame& rgbFrame, const uint8_t* foregroundColor = nullptr, const uint8_t* backgroundColor = nullptr);
+
+		/**
+		 * Draws the location of a bullseye into a given frame.
+		 * @param frame The frame in which the bullseye will be painted, must be valid and have a pixel format RGB24 (or compatible)
+		 * @param bullseye The bullseye to be painted, must be valid
+		 * @param color Optional color to be used, one value for each frame channel, nullptr to use the default color (red)
+		 */
+		static void drawBullseye(Frame& frame, const Bullseye& bullseye, const uint8_t* color = nullptr);
+
+		/**
+		 * Draws the locations of multiple bullseyes into a given frame.
+		 * @param frame The frame in which the bullseyes will be painted, must be valid and have a pixel format RGB24 (or compatible)
+		 * @param bullseyes The bullseyes to be painted, must be valid
+		 * @param numberBullseyes The number of bullseyes to be painted, with range [0, infinity)
+		 * @param color Optional color to be used, one value for each frame channel, nullptr to use the default color (red)
+		 */
+		static void drawBullseyes(Frame& frame, const Bullseye* bullseyes, const size_t numberBullseyes, const uint8_t* color = nullptr);
 };
 
 } // namespace Bullseyes

@@ -53,6 +53,29 @@ bool Utilities::createBullseyeImage(const unsigned int diameter, const unsigned 
 	return true;
 }
 
+void Utilities::drawBullseye(Frame& frame, const Bullseye& bullseye, const uint8_t* color)
+{
+	ocean_assert(frame.isValid() && FrameType::arePixelFormatsCompatible(frame.pixelFormat(), FrameType::FORMAT_RGB24));
+	ocean_assert(bullseye.isValid());
+
+	const Vector2& center = bullseye.position();
+	const Scalar radius = bullseye.radius();
+
+	CV::Canvas::line<3u>(frame, center.x() - radius, center.y(), center.x() + radius, center.y(), color);
+	CV::Canvas::line<3u>(frame, center.x(), center.y() - radius, center.x(), center.y() + radius, color);
+}
+
+void Utilities::drawBullseyes(Frame& frame, const Bullseye* bullseyes, const size_t numberBullseyes, const uint8_t* color)
+{
+	ocean_assert(frame.isValid() && FrameType::arePixelFormatsCompatible(frame.pixelFormat(), FrameType::FORMAT_RGB24));
+	ocean_assert(bullseyes != nullptr || numberBullseyes == 0);
+
+	for (size_t n = 0; n < numberBullseyes; ++n)
+	{
+		drawBullseye(frame, bullseyes[n], color);
+	}
+}
+
 } // namespace Bullseyes
 
 } // namespace Detector
