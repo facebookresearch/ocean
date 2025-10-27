@@ -158,9 +158,10 @@ bool TestBoundingBox::testPositiveFrontIntersection(const double testDuration)
 
 				ocean_assert(textureCoordinate3.x() >= 0 && textureCoordinate3.x() <= 1 && textureCoordinate3.y() >= 0 && textureCoordinate3.y() <= 1);
 			}
-			else {
+			else
+			{
 				localSucceeded = false;
-}
+			}
 
 			if (localSucceeded)
 			{
@@ -354,9 +355,10 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 
 				ocean_assert(textureCoordinate3.x() >= 0 && textureCoordinate3.x() <= 1 && textureCoordinate3.y() >= 0 && textureCoordinate3.y() <= 1);
 			}
-			else {
+			else
+			{
 				localSucceeded = false;
-}
+			}
 
 			if (localSucceeded)
 			{
@@ -439,9 +441,10 @@ bool TestBoundingBox::testPositiveBackIntersection(const double testDuration)
 
 				ocean_assert(textureCoordinate3.x() >= 0 && textureCoordinate3.x() <= 1 && textureCoordinate3.y() >= 0 && textureCoordinate3.y() <= 1);
 			}
-			else {
+			else
+			{
 				localSucceeded = false;
-}
+			}
 
 			if (localSucceeded)
 			{

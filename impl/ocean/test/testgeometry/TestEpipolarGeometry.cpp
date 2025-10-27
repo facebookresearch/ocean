@@ -507,9 +507,10 @@ bool TestEpipolarGeometry::testFaultyFundamentalMatrix(const double testDuration
 
 						const Scalar scalarProduct = (essential * left) * right;
 
-						if (Numeric::isNotWeakEqualEps(scalarProduct)) {
+						if (Numeric::isNotWeakEqualEps(scalarProduct))
+						{
 							noError = false;
-}
+						}
 					}
 				}
 
