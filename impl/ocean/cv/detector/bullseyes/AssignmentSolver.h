@@ -53,6 +53,9 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT AssignmentSolver
 		/// The type of the cost matrix.
 		using CostMatrix = Matrix;
 
+		/// An alias for an index pair.
+		using Assignment = IndexPair32;
+
 		/// An alias for a vector of index pairs.
 		using Assignments = IndexPairs32;
 
@@ -69,16 +72,6 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT AssignmentSolver
 		static bool solve(CostMatrix&& costMatrix, Assignments& assignments);
 
 	protected:
-
-		/**
-		 * Converts a rectangular cost matrix to a square matrix by padding with a large fill value.
-		 * This is necessary because the Hungarian algorithm requires a square matrix.
-		 * The padding ensures that padded rows/columns won't be selected in the optimal assignment.
-		 * @param costMatrix The original cost matrix, can be rectangular, must be valid
-		 * @param fillValue The value to use for padding, with range (-infinity, infinity); negative values trigger automatic selection of an appropriate large value
-		 * @return The square cost matrix with size max(rows, columns)
-		 */
-		static CostMatrix convertToSquareCostMatrix(const CostMatrix& costMatrix, Scalar fillValue = Scalar(-1));
 
 		/**
 		 * Performs the initial cost reduction by subtracting row and column minima from the cost matrix.
@@ -101,7 +94,7 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT AssignmentSolver
 		 * @param yParents Tracks parent relationships for path reconstruction, will be modified, must have size matrixSize
 		 * @return True if an augmenting path was found and assignments were updated; False otherwise
 		 */
-		static bool findAugmentingPath(const CostMatrix& costMatrix, const unsigned int yStart, Indices32& yAssignments, Indices32& xAssignments, std::vector<bool>& yVisited, std::vector<bool>& xVisited, Indices32& yParents);
+		static bool findAugmentingPath(const CostMatrix& costMatrix, const size_t yStart, Indices32& yAssignments, Indices32& xAssignments, std::vector<bool>& yVisited, std::vector<bool>& xVisited, Indices32& yParents);
 
 		/**
 		 * Reduces the cost matrix when no complete assignment can be found with current zeros.

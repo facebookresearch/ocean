@@ -83,8 +83,8 @@ bool TestAssignmentSolver::testSolve(const double testDuration)
 	do
 	{
 		// Test with various matrix sizes (both square and rectangular)
-		const unsigned int rows = RandomI::random(randomGenerator, 1u, 100u);
-		const unsigned int columns = RandomI::random(randomGenerator, 1u, 100u);
+		const size_t rows = size_t(RandomI::random(randomGenerator, 1u, 100u));
+		const size_t columns = size_t(RandomI::random(randomGenerator, 1u, 100u));
 
 		// Create a random cost matrix
 		CostMatrix costMatrix;
@@ -119,7 +119,7 @@ bool TestAssignmentSolver::testSolve(const double testDuration)
 		if (rows != columns)
 		{
 			// The validation already checks this, but explicitly verify min assignment count
-			const unsigned int expectedAssignments = std::min(rows, columns);
+			const size_t expectedAssignments = std::min(rows, columns);
 			if (assignments.size() != expectedAssignments)
 			{
 				allSucceeded = false;
@@ -143,15 +143,15 @@ bool TestAssignmentSolver::testSolve(const double testDuration)
 
 bool TestAssignmentSolver::validateSolve(const CostMatrix& costMatrix, const Assignments& assignments)
 {
-	const unsigned int rows = costMatrix.rows();
-	const unsigned int columns = costMatrix.columns();
+	const size_t rows = costMatrix.rows();
+	const size_t columns = costMatrix.columns();
 
-	if (rows == 0u || columns == 0u)
+	if (rows == 0 || columns == 0)
 	{
 		return false;
 	}
 
-	const unsigned int expectedAssignments = std::min(rows, columns);
+	const size_t expectedAssignments = std::min(rows, columns);
 
 	// Check number of assignments
 	if (assignments.size() != expectedAssignments)
@@ -194,10 +194,10 @@ bool TestAssignmentSolver::validateSolve(const CostMatrix& costMatrix, const Ass
 	return true;
 }
 
-bool TestAssignmentSolver::createRandomValidCostMatrix(RandomGenerator& randomGenerator, const unsigned int rows, const unsigned int columns, const Scalar minimumCost, const Scalar maximumCost, CostMatrix& costMatrix)
+bool TestAssignmentSolver::createRandomValidCostMatrix(RandomGenerator& randomGenerator, const size_t rows, const size_t columns, const Scalar minimumCost, const Scalar maximumCost, CostMatrix& costMatrix)
 {
-	ocean_assert(rows != 0u && columns != 0u);
-	if (rows == 0u || columns == 0u)
+	ocean_assert(rows != 0 && columns != 0);
+	if (rows == 0 || columns == 0)
 	{
 		return false;
 	}
@@ -216,9 +216,9 @@ bool TestAssignmentSolver::createRandomValidCostMatrix(RandomGenerator& randomGe
 
 	costMatrix.resize(rows, columns);
 
-	for (unsigned int row = 0u; row < rows; ++row)
+	for (size_t row = 0; row < rows; ++row)
 	{
-		for (unsigned int column = 0u; column < columns; ++column)
+		for (size_t column = 0; column < columns; ++column)
 		{
 			costMatrix(row, column) = Random::scalar(randomGenerator, minimumCost, maximumCost);
 		}

@@ -64,7 +64,6 @@ class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestAssignmentSolver : protected C
 		 */
 		static bool validateSolve(const CostMatrix& costMatrix, const Assignments& assignments);
 
-
 		/**
 		 * Creates a random valid cost matrix with specified dimensions and cost range.
 		 * All generated costs will be non-negative values within the specified range.
@@ -76,7 +75,7 @@ class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestAssignmentSolver : protected C
 		 * @param costMatrix The resulting cost matrix, will be resized and filled with random values
 		 * @return True if the cost matrix was created successfully, False otherwise
 		 */
-		static bool createRandomValidCostMatrix(RandomGenerator& randomGenerator, const unsigned int rows, const unsigned int columns, const Scalar minimumCost, const Scalar maximumCost, CostMatrix& costMatrix);
+		static bool createRandomValidCostMatrix(RandomGenerator& randomGenerator, const size_t rows, const size_t columns, const Scalar minimumCost, const Scalar maximumCost, CostMatrix& costMatrix);
 	};
 
 } // namespace TestBullseyes
