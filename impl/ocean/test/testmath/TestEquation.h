@@ -38,59 +38,37 @@ class OCEAN_TEST_MATH_EXPORT TestEquation
 		 * Tests the linear equation.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the elements, e.g., 'float', 'double'
 		 */
+		template <typename T>
 		static bool testLinearEquation(const double testDuration);
 
 		/**
 		 * Tests the quadratic equation.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the elements, e.g., 'float', 'double'
 		 */
+		template <typename T>
 		static bool testQuadraticEquation(const double testDuration);
 
 		/**
 		 * Tests the qubic equation.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the elements, e.g., 'float', 'double'
 		 */
+		template <typename T>
 		static bool testCubicEquation(const double testDuration);
 
 		/**
 		 * Tests the quartic equation.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the elements, e.g., 'float', 'double'
 		 */
+		template <typename T>
 		static bool testQuarticEquation(const double testDuration);
-	
-	private:
-
-		/**
-		 * Validates the linear equation.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return Percent of valid root calculations, with range [0, 1]
-		 */
-		static double validateLinearEquation(const double testDuration);
-
-		/**
-		 * Validates the quadratic equation.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return Percent of valid root calculations, with range [0, 1]
-		 */
-		static double validateQuadraticEquation(const double testDuration);
-
-		/**
-		 * Validates the cubic equation.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return Percent of valid root calculations, with range [0, 1]
-		 */
-		static double validateCubicEquation(const double testDuration);
-
-		/**
-		 * Validates the quartic equation.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return Percent of valid root calculations, with range [0, 1]
-		 */
-		static double validateQuarticEquation(const double testDuration);
 };
 
 }
