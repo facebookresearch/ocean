@@ -76,6 +76,31 @@ void Utilities::drawBullseyes(Frame& frame, const Bullseye* bullseyes, const siz
 	}
 }
 
+void Utilities::drawEpipolarLine(Frame& rgbFrame, const Geometry::FisheyeEpipolarGeometry::EpipolarLine& epipolarLine, const uint8_t* color)
+{
+    ocean_assert(rgbFrame.isValid() && FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24));
+    ocean_assert(color != nullptr);
+
+    for (size_t iSegment = 1; iSegment < epipolarLine.size(); ++iSegment)
+    {
+        const Vector2& segmentStart = epipolarLine[iSegment - 1];
+        const Vector2& segmentEnd = epipolarLine[iSegment];
+
+        CV::Canvas::line<3u>(rgbFrame, segmentStart, segmentEnd, color);
+    }
+}
+
+void Utilities::drawEpipolarLines(Frame& rgbFrame, const Geometry::FisheyeEpipolarGeometry::EpipolarLines& epipolarLines, const uint8_t* color)
+{
+    ocean_assert(rgbFrame.isValid() && FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24));
+    ocean_assert(color != nullptr);
+
+    for (const Geometry::FisheyeEpipolarGeometry::EpipolarLine& epipolarLine : epipolarLines)
+    {
+        drawEpipolarLine(rgbFrame, epipolarLine, color);
+    }
+}
+
 } // namespace Bullseyes
 
 } // namespace Detector
