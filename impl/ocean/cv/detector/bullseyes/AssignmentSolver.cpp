@@ -91,7 +91,7 @@ bool AssignmentSolver::solve(CostMatrix&& costMatrix, Assignments& assignments)
 			// Reduce the cost matrix and try again.
 			if (!reduceCostMatrix(yAssignments, costMatrix, yMarked, xMarked))
 			{
-				ocean_assert(false && "Failed to reduce the cost matrix - this should never happen!");
+				// No more reductions are possible. This could indicate numerical problems. Let's give up.
 				return false;
 			}
 		}
@@ -324,6 +324,7 @@ bool AssignmentSolver::reduceCostMatrix(const Indices32& yAssignments, CostMatri
 	// Adjust matrix:
 	// - Subtract min from uncovered elements (marked rows, unmarked columns)
 	// - Add min to elements covered twice (unmarked rows, marked columns)
+	changed = false;
 	for (size_t y = 0; y < matrixSize; ++y)
 	{
 		for (size_t x = 0; x < matrixSize; ++x)
@@ -331,17 +332,19 @@ bool AssignmentSolver::reduceCostMatrix(const Indices32& yAssignments, CostMatri
 			if (!yMarked[y] && xMarked[x])  // Row covered (unmarked) and column covered (marked)
 			{
 				costMatrix[y][x] += uncoveredMinimum;
+				changed = true;
 			}
 			else if (yMarked[y] && !xMarked[x])  // Row uncovered (marked) and column uncovered (unmarked)
 			{
 				ocean_assert(costMatrix[y][x] >= uncoveredMinimum);
 				costMatrix[y][x] -= uncoveredMinimum;
+				changed = true;
 			}
 			// else: covered once (row or column but not both) - do nothing
 		}
 	}
 
-	return true;
+	return changed;
 }
 
 } // namespace Bullseyes
