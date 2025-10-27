@@ -74,43 +74,53 @@ bool TestRandom::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestRandom, StandardRandomSingleThreaded) {
+TEST(TestRandom, StandardRandomSingleThreaded)
+{
 	EXPECT_TRUE(TestRandom::testStandardRandomSingleThreaded(GTEST_TEST_DURATION));
 }
 
-TEST(TestRandom, OceanRandomSingleThreaded) {
+TEST(TestRandom, OceanRandomSingleThreaded)
+{
 	EXPECT_TRUE(TestRandom::testOceanRandomSingleThreaded(GTEST_TEST_DURATION));
 }
 
-TEST(TestRandom, StandardRandomMultiThreaded) {
+TEST(TestRandom, StandardRandomMultiThreaded)
+{
 	EXPECT_TRUE(TestRandom::testStandardRandomMultiThreaded(GTEST_TEST_DURATION));
 }
 
-TEST(TestRandom, OceanRandomMultiThreaded) {
+TEST(TestRandom, OceanRandomMultiThreaded)
+{
 	EXPECT_TRUE(TestRandom::testOceanRandomMultiThreaded(GTEST_TEST_DURATION));
 }
 
-TEST(TestRandom, StandardRandomTriple) {
+TEST(TestRandom, StandardRandomTriple)
+{
 	EXPECT_TRUE(TestRandom::testStandardRandomTriple(GTEST_TEST_DURATION));
 }
 
-TEST(TestRandom, OceanRandomTriple) {
+TEST(TestRandom, OceanRandomTriple)
+{
 	EXPECT_TRUE(TestRandom::testOceanRandomTriple(GTEST_TEST_DURATION));
 }
 
-TEST(TestRandom, StandardRandomVector3) {
+TEST(TestRandom, StandardRandomVector3)
+{
 	EXPECT_TRUE(TestRandom::testStandardRandomVector3(GTEST_TEST_DURATION));
 }
 
-TEST(TestRandom, OceanRandomVector3) {
+TEST(TestRandom, OceanRandomVector3)
+{
 	EXPECT_TRUE(TestRandom::testOceanRandomVector3(GTEST_TEST_DURATION));
 }
 
-TEST(TestRandom, StandardRandomEuler) {
+TEST(TestRandom, StandardRandomEuler)
+{
 	EXPECT_TRUE(TestRandom::testStandardRandomEuler(GTEST_TEST_DURATION));
 }
 
-TEST(TestRandom, OceanRandomEuler) {
+TEST(TestRandom, OceanRandomEuler)
+{
 	EXPECT_TRUE(TestRandom::testOceanRandomEuler(GTEST_TEST_DURATION));
 }
 

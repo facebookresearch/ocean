@@ -52,15 +52,18 @@ bool TestRotation::test(const double testDuration)
 	
 #ifdef OCEAN_USE_GTEST
 	
-TEST(TestRotation, ConversionToQuaterion) {
+TEST(TestRotation, ConversionToQuaterion)
+{
 	EXPECT_TRUE(TestRotation::testConversionToQuaterion(GTEST_TEST_DURATION));
 }
 
-TEST(TestRotation, ConversionToHomogenousMatrix) {
+TEST(TestRotation, ConversionToHomogenousMatrix)
+{
 	EXPECT_TRUE(TestRotation::testConversionToHomogenousMatrix(GTEST_TEST_DURATION));
 }
 
-TEST(TestRotation, ReferenceOffsetConstructor) {
+TEST(TestRotation, ReferenceOffsetConstructor)
+{
 	EXPECT_TRUE(TestRotation::testReferenceOffsetConstructor(GTEST_TEST_DURATION));
 }
 	

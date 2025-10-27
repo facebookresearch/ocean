@@ -51,11 +51,13 @@ bool TestSparseMatrix::test(const double testDuration)
 	
 #ifdef OCEAN_USE_GTEST
 	
-TEST(TestSparseMatrix, Rank) {
+TEST(TestSparseMatrix, Rank)
+{
 	EXPECT_TRUE(TestSparseMatrix::testRank());
 }
 
-TEST(TestSparseMatrix, NonNegativeMatrixFactorization) {
+TEST(TestSparseMatrix, NonNegativeMatrixFactorization)
+{
 	EXPECT_TRUE(TestSparseMatrix::testNonNegativeMatrixFactorization(GTEST_TEST_DURATION));
 }
 	

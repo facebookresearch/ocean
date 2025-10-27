@@ -144,7 +144,8 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 			const T minSignedDistanceAlongAxis = RandomT<T>::scalar(randomGenerator, -10., 10.); // before scaling
 			const T maxSignedDistanceAlongAxis = minSignedDistanceAlongAxis + RandomT<T>::scalar(randomGenerator, 1., 10.); // before scaling
 
-			const auto transform = [&](VectorT3<T>& v) {
+			const auto transform = [&](VectorT3<T>& v)
+			{
 				v = (rotation * v) * scale + translation;
 			};
 
