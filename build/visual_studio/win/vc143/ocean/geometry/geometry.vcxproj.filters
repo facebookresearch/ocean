@@ -101,6 +101,9 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Estimator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\FisheyeEpipolarGeometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\AbsoluteTransformation.h">
@@ -206,6 +209,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Octree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\FisheyeEpipolarGeometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
