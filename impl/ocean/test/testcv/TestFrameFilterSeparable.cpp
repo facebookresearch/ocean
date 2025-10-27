@@ -986,11 +986,14 @@ bool TestFrameFilterSeparable::testSeparableFilterUniversal(const double testDur
 		Log::info() << " ";
 	}
 
-	if (allSucceeded) {
+	if (allSucceeded)
+	{
 		Log::info() << "Universal separable filter test succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << "Universal separable filter test FAILED!";
-}
+	}
 
 	return allSucceeded;
 }

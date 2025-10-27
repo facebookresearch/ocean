@@ -3896,21 +3896,24 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels7BitPrecision(
 
 			if (n == 6u)
 			{
-				if (abs(factors[0] + factors[3] + factors[6]) >= 128) {
+				if (abs(factors[0] + factors[3] + factors[6]) >= 128)
+				{
 					--n;
-}
+				}
 			}
 			else if (n == 7u)
 			{
-				if (abs(factors[1] + factors[4] + factors[7]) >= 128) {
+				if (abs(factors[1] + factors[4] + factors[7]) >= 128)
+				{
 					--n;
-}
+				}
 			}
 			if (n == 8u)
 			{
-				if (abs(factors[2] + factors[5] + factors[8]) >= 128) {
+				if (abs(factors[2] + factors[5] + factors[8]) >= 128)
+				{
 					--n;
-}
+				}
 			}
 		}
 
@@ -4374,21 +4377,24 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo3Channels(const double 
 
 			if (n == 9u)
 			{
-				if (abs(factors[0] + factors[3] + factors[6] + factors[9]) >= 128) {
+				if (abs(factors[0] + factors[3] + factors[6] + factors[9]) >= 128)
+				{
 					n -= 4;
-}
+				}
 			}
 			else if (n == 10u)
 			{
-				if (abs(factors[1] + factors[4] + factors[7] + factors[10]) >= 128) {
+				if (abs(factors[1] + factors[4] + factors[7] + factors[10]) >= 128)
+				{
 					n -= 4;
-}
+				}
 			}
 			if (n == 11u)
 			{
-				if (abs(factors[2] + factors[5] + factors[8] + factors[11]) >= 128) {
+				if (abs(factors[2] + factors[5] + factors[8] + factors[11]) >= 128)
+				{
 					n -= 4;
-}
+				}
 			}
 		}
 

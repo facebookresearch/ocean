@@ -1391,9 +1391,10 @@ unsigned int TestHistogram::validateTileLookupTables(const unsigned char* source
 				tileHist[t1 >> shift]++;
 			}
 
-			for (; x < tileROIWidth; ++x) {
+			for (; x < tileROIWidth; ++x)
+			{
 				tileHist[ptr[x] >> shift]++;
-}
+			}
 		}
 
 		// clip histogram
@@ -1414,13 +1415,15 @@ unsigned int TestHistogram::validateTileLookupTables(const unsigned char* source
 			int redistBatch = clipped / histSize;
 			int residual = clipped - redistBatch * histSize;
 
-			for (int i = 0; i < histSize; ++i) {
+			for (int i = 0; i < histSize; ++i)
+			{
 				tileHist[i] += redistBatch;
-}
+			}
 
-			for (int i = 0; i < residual; ++i) {
+			for (int i = 0; i < residual; ++i)
+			{
 				tileHist[i]++;
-}
+			}
 		}
 
 		// calc Lut
