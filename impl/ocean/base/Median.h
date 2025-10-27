@@ -119,11 +119,14 @@ inline T Median::median3(const T& v0, const T& v1, const T& v2)
 		{
 			// [ v0 < v1,v2 ]
 
-			if (v1 < v2) {
+			if (v1 < v2)
+			{
 				return v1;
-			} else {
+			}
+			else
+			{
 				return v2;
-}
+			}
 		}
 	}
 	else // v0 >= v1
@@ -140,9 +143,12 @@ inline T Median::median3(const T& v0, const T& v1, const T& v2)
 		{
 			// [ v1 < v0,v2 ]
 
-			if (v0 < v2) {
+			if (v0 < v2)
+			{
 				return v0;
-			} else {
+			}
+			else
+			{
 				return v2;
 }
 		}
@@ -1156,33 +1162,38 @@ T Median::median(T* values, const size_t number)
 	while (true)
 	{
 		// only one element
-		if (high <= low) {
+		if (high <= low)
+		{
 			return values[median];
-}
+		}
 
 		// only two elements
 		if (high == low + 1)
 		{
-			if (values[low] > values[high]) {
+			if (values[low] > values[high])
+			{
 				std::swap(values[low], values[high]);
-}
+			}
 
 			return values[median];
 		}
 
 		middle = (low + high) / 2;
 
-		if (values[middle] > values[high]) {
+		if (values[middle] > values[high])
+		{
 			std::swap(values[middle], values[high]);
-}
+		}
 
-		if (values[low] > values[high]) {
+		if (values[low] > values[high])
+		{
 			std::swap(values[low], values[high]);
-}
+		}
 
-		if (values[middle] > values[low]) {
+		if (values[middle] > values[low])
+		{
 			std::swap(values[middle], values[low]);
-}
+		}
 
 		std::swap(values[middle], values[low + 1]);
 
@@ -1191,28 +1202,35 @@ T Median::median(T* values, const size_t number)
 
 		while (true)
 		{
-			while (ll < number && values[low] > values[++ll]) {; // we need the explicit out-of-range check for not-a-number (nan) elements
-}
-			
-			while (hh > 0 && values[--hh] > values[low]) {;
-}
+			while (ll < number && values[low] > values[++ll])
+			{
+				; // we need the explicit out-of-range check for not-a-number (nan) elements
+			}
 
-			if (hh < ll) {
+			while (hh > 0 && values[--hh] > values[low])
+			{
+				;
+			}
+
+			if (hh < ll)
+			{
 				break;
-}
+			}
 
 			std::swap(values[ll], values[hh]);
 		}
 
 		std::swap(values[low], values[hh]);
 
-		if (hh <= median) {
+		if (hh <= median)
+		{
 			low = ll;
-}
+		}
 
-		if (hh >= median) {
+		if (hh >= median)
+		{
 			high = hh - 1;
-}
+		}
 	}
 }
 
@@ -1221,9 +1239,10 @@ T Median::constMedian(const T* values, const size_t number)
 {
 	ocean_assert(values != nullptr && number > 0);
 
-	if (number == 0) {
+	if (number == 0)
+	{
 		return 1;
-}
+	}
 
 	Memory memory = Memory::create<T>(number);
 

@@ -27,7 +27,7 @@ class Event;
  * @see Event.
  * @ingroup base
  */
-typedef ObjectRef<Event> EventRef;
+using EventRef = ObjectRef<Event>;
 
 /**
  * This class implements the base class for all event classes.
@@ -108,12 +108,12 @@ class ScopedEvent
 		/**
 		 * Definition of a callback function providing the event as single parameter.
 		 */
-		typedef Callback<void, const T&> EventCallback;
+		using EventCallback = Callback<void, const T&>;
 
 		/**
 		 * Definition of a list of callback functions.
 		 */
-		typedef Callbacks<EventCallback> EventCallbacks;
+		using EventCallbacks = Callbacks<EventCallback>;
 
 	public:
 
@@ -193,19 +193,19 @@ class EventManager :
 		/**
 		 * Definition of a callback function for events.
 		 */
-		typedef Callback<void, const EventRef&> EventCallback;
+		using EventCallback = Callback<void, const EventRef&>;
 
 	protected:
 
 		/**
 		 * Definition of a set of callback functions.
 		 */
-		typedef Callbacks<EventCallback> EventCallbacks;
+		using EventCallbacks = Callbacks<EventCallback>;
 
 		/**
 		 * Definition of a map mapping event types to callback functions.
 		 */
-		typedef std::map<unsigned int, EventCallbacks> EventCallbacksMap;
+		using EventCallbacksMap = std::map<unsigned int, EventCallbacks>;
 
 		/**
 		 * Definition of a class encapsulating a registration request.
@@ -265,12 +265,12 @@ class EventManager :
 		/**
 		 * Definition of a vector holding registration requests.
 		 */
-		typedef std::vector<RegistrationRequest> RegistrationRequests;
+		using RegistrationRequests = std::vector<RegistrationRequest>;
 
 		/**
 		 * Definition of a queue holding events.
 		 */
-		typedef std::queue<EventRef> EventQueue;
+		using EventQueue = std::queue<EventRef>;
 
 	public:
 
@@ -400,11 +400,14 @@ inline ScopedEvent<T>::ScopedEvent(const T& enterEvent, T& breakEvent, T& leaveE
 template <typename T>
 inline ScopedEvent<T>::~ScopedEvent()
 {
-	if (scopedEventLeave) {
+	if (scopedEventLeave)
+	{
 		scopedCallbacks(scopedLeaveEvent);
-	} else {
+	}
+	else
+	{
 		scopedCallbacks(scopedBreakEvent);
-}
+	}
 }
 
 template <typename T>

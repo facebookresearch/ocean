@@ -89,9 +89,10 @@ std::string DateTime::string(const double timestamp, const bool addMilliseconds)
 	unsigned int year = 0u, month = 0u, day = 0u, hour = 0u, minute = 0u, second = 0u, millisecond = 0u;
 	timestamp2date(timestamp, year, month, day, hour, minute, second, &millisecond);
 
-	if (year == 0u) {
+	if (year == 0u)
+	{
 		return std::string();
-}
+	}
 
 	if (addMilliseconds)
 	{
@@ -149,9 +150,10 @@ std::string DateTime::stringDate(const double timestamp, const bool nameMonths)
 	unsigned int year = 0u, month = 0u, day = 0u, hour = 0u, minute = 0u, second = 0u;
 	timestamp2date(timestamp, year, month, day, hour, minute, second);
 
-	if (year == 0u) {
+	if (year == 0u)
+	{
 		return std::string();
-}
+	}
 
 	if (nameMonths)
 	{
@@ -350,16 +352,19 @@ double DateTime::date2timestamp(const unsigned int year, const unsigned int mont
 
 	long long time;
 	if (SystemTimeToFileTime(&systemTime, (FILETIME*)&time) == FALSE)
+	{
 		return -1;
+	}
 
 	// Set 0.0 to 00:00:00 1970.01.01
 	return double(time) * 0.0000001 - 11644473600.0;
 
 #else
 
-	if (!isDateValid(year, month, day)) {
+	if (!isDateValid(year, month, day))
+	{
 		return -1;
-}
+	}
 
 	tm time;
 	memset(&time, 0, sizeof(tm));

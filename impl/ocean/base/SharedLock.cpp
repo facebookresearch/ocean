@@ -95,9 +95,10 @@ void SharedLock::lock()
 
 		localCounter_ = 1u;
 	}
-	else {
+	else
+	{
 		++localCounter_;
-}
+	}
 }
 
 bool SharedLock::tryLock()
@@ -248,7 +249,7 @@ bool SharedLock::createSemaphore()
 		}
 	}
 
-	handle_ = (void*)size_t(semaphoreId);
+	handle_ = (void*)(size_t(semaphoreId));
 
 	return handle_ != nullptr;
 }

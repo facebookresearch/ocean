@@ -80,9 +80,10 @@ bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t 
 	static_assert(sizeof(unsigned char) == 1, "Invalid data type!");
 	static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
 
-	if (encodedBufferSize < 8 + 8 + 8 + 8 + 8) {
+	if (encodedBufferSize < 8 + 8 + 8 + 8 + 8)
+	{
 		return false;
-}
+	}
 
 	const unsigned char* data = (unsigned char*)encodedBuffer;
 	const unsigned char* const dataEnd = data + encodedBufferSize;
@@ -92,51 +93,58 @@ bool Maintenance::Connector::decodeData(const void* encodedBuffer, const size_t 
 	timestamp = *((Timestamp*)data);
 	data += 8;
 
-	if (data + 8 > dataEnd) {
+	if (data + 8 > dataEnd)
+	{
 		return false;
-}
+	}
 
 	size = *((unsigned long long*)data);
 	data += 8;
 
-	if (data + size > dataEnd || size > encodedBufferSize) {
+	if (data + size > dataEnd || size > encodedBufferSize)
+	{
 		return false;
-}
+	}
 
 	name = std::string((const char*)data, size_t(size));
 	data += size;
 
-	if (data + 8 > dataEnd) {
+	if (data + 8 > dataEnd)
+	{
 		return false;
-}
+	}
 
 	id = *((unsigned long long*)data);
 	data += 8;
 
-	if (data + 8 > dataEnd) {
+	if (data + 8 > dataEnd)
+	{
 		return false;
-}
+	}
 
 	size = *((unsigned long long*)data);
 	data += 8;
 
-	if (data + size > dataEnd || size > encodedBufferSize) {
+	if (data + size > dataEnd || size > encodedBufferSize)
+	{
 		return false;
-}
+	}
 
 	tag = std::string((const char*)data, size_t(size));
 	data += size;
 
-	if (data + 8 > dataEnd) {
+	if (data + 8 > dataEnd)
+	{
 		return false;
-}
+	}
 
 	size = *((unsigned long long*)data);
 	data += 8;
 
-	if (data + size > dataEnd || size > encodedBufferSize) {
+	if (data + size > dataEnd || size > encodedBufferSize)
+	{
 		return false;
-}
+	}
 
 	buffer.resize(size_t(size));
 	memcpy(buffer.data(), data, size_t(size));
@@ -151,9 +159,10 @@ bool Maintenance::send(const std::string& tag, const void* data, const size_t si
 
 	const ScopedLock scopedLock(maintenanceLock);
 
-	if (!maintenanceActive || data == nullptr || size == 0) {
+	if (!maintenanceActive || data == nullptr || size == 0)
+	{
 		return false;
-}
+	}
 
 	Buffer buffer(size);
 	memcpy(buffer.data(), data, size);
@@ -166,9 +175,10 @@ bool Maintenance::send(const std::string& tag, const Buffer& buffer, const Times
 {
 	const ScopedLock scopedLock(maintenanceLock);
 
-	if (!maintenanceActive || buffer.empty()) {
+	if (!maintenanceActive || buffer.empty())
+	{
 		return false;
-}
+	}
 
 	maintenanceElementQueue.push(Element(maintenanceName, maintenanceId, timestamp, tag, buffer));
 	return true;
@@ -178,9 +188,10 @@ bool Maintenance::send(const std::string& tag, Buffer&& buffer, const Timestamp 
 {
 	const ScopedLock scopedLock(maintenanceLock);
 
-	if (!maintenanceActive || buffer.empty()) {
+	if (!maintenanceActive || buffer.empty())
+	{
 		return false;
-}
+	}
 
 	maintenanceElementQueue.push(Element(maintenanceName, maintenanceId, timestamp, tag, std::move(buffer)));
 	return true;
@@ -190,9 +201,10 @@ bool Maintenance::place(const std::string& name, const unsigned long long id, co
 {
 	const ScopedLock scopedLock(maintenanceLock);
 
-	if (buffer.empty()) {
+	if (buffer.empty())
+	{
 		return false;
-}
+	}
 
 	maintenanceElementQueue.push(Element(name, id, timestamp, tag, std::move(buffer)));
 	return true;
@@ -202,9 +214,10 @@ bool Maintenance::receive(std::string& name, unsigned long long& id, std::string
 {
 	const ScopedLock scopedLock(maintenanceLock);
 
-	if (maintenanceElementQueue.empty()) {
+	if (maintenanceElementQueue.empty())
+	{
 		return false;
-}
+	}
 
 	Element& element = maintenanceElementQueue.front();
 

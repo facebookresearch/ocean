@@ -350,9 +350,10 @@ Worker::StartIndices Worker::separation(const unsigned int first, const unsigned
 
 		unsigned int elements = max(1u, min(pendingElements, max(pendingElements / availableWorkers, minimalIterations)));
 
-		if (availableWorkers == 1u) {
+		if (availableWorkers == 1u)
+		{
 			elements = pendingElements;
-}
+		}
 
 		ocean_assert(elements > 0u);
 

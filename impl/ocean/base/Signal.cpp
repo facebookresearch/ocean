@@ -198,8 +198,11 @@ bool Signal::reset()
 	ocean_assert(semaphoreObjectState);
 	ocean_assert(!semaphoreObjectReleased);
 
-	while (sem_trywait(&semaphoreObject) == 0) {;
-}
+	while (sem_trywait(&semaphoreObject) == 0)
+	{
+		// nothing to do here
+	}
+
 #if !defined(__linux__)
 	ocean_assert(semaphoreObject.count == 0);
 #endif

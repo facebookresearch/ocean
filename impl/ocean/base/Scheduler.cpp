@@ -29,9 +29,10 @@ void Scheduler::registerFunction(const Callback& callback)
 
 	callbacks.addCallback(callback);
 
-	if (!isThreadInvokedToStart()) {
+	if (!isThreadInvokedToStart())
+	{
 		startThread();
-}
+	}
 }
 
 void Scheduler::unregisterFunction(const Callback& callback)

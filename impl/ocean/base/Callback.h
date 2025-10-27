@@ -11,8 +11,6 @@
 #include "ocean/base/Base.h"
 #include "ocean/base/Lock.h"
 
-#include <vector>
-
 namespace Ocean
 {
 
@@ -21,7 +19,7 @@ namespace Ocean
  * This class can do nothing, but can be used as default class types.
  * @ingroup base
  */
-typedef class {} NullClass;
+using NullClass = class {};
 
 // Forward declaration.
 template <typename RT, typename PT0, typename PT1, typename PT2, typename PT3, typename PT4, typename PT5, typename PT6, typename PT7, typename PT8, typename PT9, typename PT10, typename PT11, typename PT12, typename PT13, typename PT14, typename PT15, typename PT16, typename PT17, typename PT18, typename PT19> class Callback;
@@ -3763,9 +3761,10 @@ inline Callback<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11
 template <typename RT, typename PT0, typename PT1, typename PT2, typename PT3, typename PT4, typename PT5, typename PT6, typename PT7, typename PT8, typename PT9, typename PT10, typename PT11, typename PT12, typename PT13, typename PT14, typename PT15, typename PT16, typename PT17, typename PT18, typename PT19>
 inline bool Callback<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::operator==(const Callback& callback) const
 {
-	if (callbackFunction == nullptr && callback.callbackFunction == nullptr) {
+	if (callbackFunction == nullptr && callback.callbackFunction == nullptr)
+	{
 		return true;
-}
+	}
 
 	if (callbackFunction == nullptr || callback.callbackFunction == nullptr)
 	{
@@ -4052,13 +4051,14 @@ void Callbacks<T>::removeCallback(const T& callback)
 {
 	const ScopedLock scopedLock(callbackLock);
 
-	for (typename CallbackObjects::iterator i = callbackObjects.begin(); i != callbackObjects.end(); ++i) {
+	for (typename CallbackObjects::iterator i = callbackObjects.begin(); i != callbackObjects.end(); ++i)
+	{
 		if (*i == callback)
 		{
 			callbackObjects.erase(i);
 			return;
 		}
-}
+	}
 
 	ocean_assert(false && "Unknown callback!");
 }

@@ -16,25 +16,30 @@ Thread::ThreadPriority Thread::threadPriority()
 {
 	const double priority = [NSThread threadPriority];
 
-	if (priority >= 0.95) {
+	if (priority >= 0.95)
+	{
 		return PRIORTY_REALTIME;
-}
+	}
 
-	if (priority >= 0.75) {
+	if (priority >= 0.75)
+	{
 		return PRIORTY_HIGH;
-}
+	}
 
-	if (priority >= 0.6) {
+	if (priority >= 0.6)
+	{
 		return PRIORTY_ABOVE_NORMAL;
-}
+	}
 
-	if (priority >= 0.5) {
+	if (priority >= 0.5)
+	{
 		return PRIORTY_NORMAL;
-}
+	}
 
-	if (priority >= 0.25) {
+	if (priority >= 0.25)
+	{
 		return PRIORTY_BELOW_NORMAL;
-}
+	}
 
 	return PRIORITY_IDLE;
 }
