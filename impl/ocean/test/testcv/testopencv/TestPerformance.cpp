@@ -56,11 +56,14 @@ bool TestPerformance::test(const double testDuration)
 		}
 	}
 
-	if (allSucceeded) {
+	if (allSucceeded)
+	{
 		Log::info() << testName << " succeeded.";
-	} else {
+	}
+	else
+	{
 		Log::info() << testName << " FAILED!";
-}
+	}
 
 	return allSucceeded;
 

@@ -237,13 +237,16 @@ bool TestPointTracking::testSparseOpticalFlow(const cv::Mat & frame, int window,
 	Log::info() << "matchRatio = " << matchRatio;
 
 #ifdef OCEAN_DEBUG
-	for (size_t p = 0; p < P; ++p) {
+	for (size_t p = 0; p < P; ++p)
+	{
 		cv::circle(frame1, points2[p], 3, cv::Scalar(255, 0, 0), -1);
-		if (matches[p]) {
+		if (matches[p])
+		{
 			cv::circle(frame0, points0[p], 3, cv::Scalar(0, 255, 0), -1);
 			cv::circle(frame1, points1[p], 3, cv::Scalar(0, 255, 0), -1);
 		}
-		else {
+		else
+		{
 			cv::circle(frame0, points0[p], 3, cv::Scalar(0, 0, 255), -1);
 			cv::circle(frame1, points1[p], 3, cv::Scalar(0, 0, 255), -1);
 		}
@@ -255,11 +258,14 @@ bool TestPointTracking::testSparseOpticalFlow(const cv::Mat & frame, int window,
 	cv::destroyAllWindows();
 #endif
 
-	if (matchRatio == 1.0) {
+	if (matchRatio == 1.0)
+	{
 		return true;
-	} else {
+	}
+	else
+	{
 		return false;
-}
+	}
 }
 
 bool TestPointTracking::testTemplateMatching(const cv::Mat & frame)
