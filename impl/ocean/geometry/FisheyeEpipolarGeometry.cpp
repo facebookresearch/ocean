@@ -192,6 +192,33 @@ bool FisheyeEpipolarGeometry::isOnEpipolarLine(const CameraIdentifier sourceCame
 	return sqrDistance <= maxDistance * maxDistance;
 }
 
+Scalar FisheyeEpipolarGeometry::squareDistanceToEpipolarLine(const CameraIdentifier sourceCameraIdentifier, const Vector2& sourcePointFisheye, const Vector2& targetPointFisheye) const
+{
+	ocean_assert(sourceCameraIdentifier == CI_CAMERA0 || sourceCameraIdentifier == CI_CAMERA1);
+
+	if (!isValid())
+	{
+		ocean_assert(false && "This function must only be called on epipolar geometry instances that are initialized - this should never happen!");
+		return Scalar(-1);
+	}
+
+	Line2 targetEpipolarLinePinhole;
+	if (!epipolarLine(sourceCameraIdentifier, sourcePointFisheye, targetEpipolarLinePinhole))
+	{
+		return Scalar(-1);
+	}
+
+	ocean_assert(targetEpipolarLinePinhole.isValid());
+
+	const AnyCamera& targetCameraFisheye = sourceCameraIdentifier == CI_CAMERA0 ? *fisheyeCamera1_ : *fisheyeCamera0_;
+	const AnyCamera& targetCameraPinhole = sourceCameraIdentifier == CI_CAMERA0 ? *pinholeCamera1_ : *pinholeCamera0_;
+
+	const Vector2 targetPointPinhole = reprojectPoint(targetCameraFisheye, targetCameraPinhole, targetPointFisheye);
+	const Scalar sqrDistance = targetEpipolarLinePinhole.sqrDistance(targetPointPinhole);
+
+	return sqrDistance;
+}
+
 Vector2 FisheyeEpipolarGeometry::reprojectPoint(const AnyCamera& sourceCamera, const AnyCamera& targetCamera, const Vector2& sourcePoint) const
 {
 	ocean_assert(sourceCamera.isValid() && targetCamera.isValid());

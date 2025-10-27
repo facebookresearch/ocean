@@ -101,6 +101,15 @@ class OCEAN_GEOMETRY_EXPORT FisheyeEpipolarGeometry
 		 */
 		bool isOnEpipolarLine(const CameraIdentifier sourceCameraIdentifier, const Vector2& sourcePointFisheye, const Vector2& targetPointFisheye, const Scalar maxDistance = Scalar(2)) const;
 
+		/**
+		 * Computes the squared distance from a target point to the epipolar line corresponding to a source point.
+		 * @param sourceCameraIdentifier The identifier of the source camera, either CI_CAMERA0 or CI_CAMERA1
+		 * @param sourcePointFisheye The point in the source camera, with range [0, sourceCamera.width())x[0, sourceCamera.height())
+		 * @param targetPointFisheye The point in the target camera, with range [0, targetCamera.width())x[0, targetCamera.height())
+		 * @return The squared distance from the target point to the epipolar line, in pixels^2, with range [0, infinity), or -1 if the computation fails
+		 */
+		Scalar squareDistanceToEpipolarLine(const CameraIdentifier sourceCameraIdentifier, const Vector2& sourcePointFisheye, const Vector2& targetPointFisheye) const;
+
 	protected:
 
 		/**
