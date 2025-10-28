@@ -161,8 +161,8 @@ int64_t Timestamp::TimestampConverter::domainToUnixOffset()
 		ocean_assert_and_suppress_unused(resultDomain == 0, resultDomain);
 	}
 
-	const int64_t domainNs = domainTimestampSpec.tv_sec * 1000000000ll + domainTimestampSpec.tv_nsec;
-	const int64_t unixNs = unixTimestampSpec.tv_sec * 1000000000ll + unixTimestampSpec.tv_nsec;
+	const int64_t domainNs = domainTimestampSpec.tv_sec * nanosecondsPerSecond_ + domainTimestampSpec.tv_nsec;
+	const int64_t unixNs = unixTimestampSpec.tv_sec * nanosecondsPerSecond_ + unixTimestampSpec.tv_nsec;
 
 #endif // OCEAN_PLATFORM_BUILD_WINDOWS
 
@@ -283,9 +283,38 @@ int64_t Timestamp::TimestampConverter::currentTimestampNs(const TimeDomain timeD
 	const int result = clock_gettime(clockid_t(domainClockId), &timestampSpec);
 	ocean_assert_and_suppress_unused(result == 0, result);
 
-	return timestampSpec.tv_sec * 1000000000ll + timestampSpec.tv_nsec;
+	return timestampSpec.tv_sec * nanosecondsPerSecond_ + timestampSpec.tv_nsec;
 
 #endif // OCEAN_PLATFORM_BUILD_WINDOWS
+}
+
+int64_t Timestamp::TimestampConverter::timestampInNs(const int64_t timeValue, const int64_t timeDenominator)
+{
+	ocean_assert(timeDenominator != 0);
+
+	if (timeDenominator == nanosecondsPerSecond_)
+	{
+		return timeValue;
+	}
+
+	const int64_t seconds = timeValue / timeDenominator;
+	const int64_t remainingInTimeScale = timeValue % timeDenominator;
+
+	const int64_t adjustedSeconds = seconds * nanosecondsPerSecond_;
+	const int64_t adjustedRemainingInTimeScale = (remainingInTimeScale * nanosecondsPerSecond_) / timeDenominator;
+
+	const int64_t timeValueNs = adjustedSeconds + adjustedRemainingInTimeScale;
+
+#ifdef OCEAN_DEBUG
+	{
+		const double input = double(timeValue) / double(timeDenominator);
+		const double output = double(timeValueNs) / double(nanosecondsPerSecond_);
+		const double difference = std::abs(input - output);
+		ocean_assert(difference < 0.0001);
+	}
+#endif // OCEAN_DEBUG
+
+	return timeValueNs;
 }
 
 #ifndef OCEAN_PLATFORM_BUILD_WINDOWS
@@ -298,7 +327,7 @@ int64_t Timestamp::TimestampConverter::currentTimestampNs(const int posixClockId
 		return invalidValue_;
 	}
 
-	return timestampSpec.tv_sec * 1000000000ll + timestampSpec.tv_nsec;
+	return timestampSpec.tv_sec * nanosecondsPerSecond_ + timestampSpec.tv_nsec;
 }
 
 int Timestamp::TimestampConverter::posixClockId(const TimeDomain timeDomain)

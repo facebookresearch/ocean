@@ -47,6 +47,15 @@ class OCEAN_BASE_EXPORT Timestamp
 {
 	public:
 
+		/// Definition of the number of milliseconds in one second.
+		static constexpr int64_t millisecondsPerSecond_ = 1000;
+
+		/// Definition of the number of microseconds in one second.
+		static constexpr int64_t microsecondsPerSecond_ = millisecondsPerSecond_ * 1000;
+
+		/// Definition of the number of nanoseconds in one second.
+		static constexpr int64_t nanosecondsPerSecond_ = microsecondsPerSecond_ * 1000;
+
 		/**
 		 * This class is a helper class allowing to converter timestamps defined in a specific time domain to unix timestamps.
 		 */
@@ -162,6 +171,16 @@ class OCEAN_BASE_EXPORT Timestamp
 				 * @return The current timestamp in the specified time domain, in nanoseconds
 				 */
 				static int64_t currentTimestampNs(const TimeDomain timeDomain);
+
+				/**
+				 * Converts a timestamp which is defined in seconds to a timestamp which is defined in nanoseconds.
+				 * The timestamp is defined by (timeValue / timeDenominator) * 1s.<br>
+				 * The resulting timestamp will be (newTimeValue / 1000000000) * 1s.
+				 * @param timeValue The time value, in seconds, with range (-infinity, infinity)
+				 * @param timeDenominator The denominator corresponding to the time value (sometimes call time scale), with range [1, infinity)
+				 * @return The resulting timestamp in nanoseconds, with range (-infinity, infinity)
+				 */
+				static int64_t timestampInNs(const int64_t timeValue, const int64_t timeDenominator);
 
 #ifndef OCEAN_PLATFORM_BUILD_WINDOWS
 
@@ -612,11 +631,11 @@ constexpr int64_t Timestamp::seconds2milliseconds(const double seconds)
 
 	if (seconds >= 0.0)
 	{
-		return int64_t(seconds * 1.0e3 + 0.5);
+		return int64_t(seconds * double(millisecondsPerSecond_) + 0.5);
 	}
 	else
 	{
-		return int64_t(seconds * 1.0e3 - 0.5);
+		return int64_t(seconds * double(millisecondsPerSecond_) - 0.5);
 	}
 }
 
@@ -627,11 +646,11 @@ constexpr int64_t Timestamp::seconds2microseconds(const double seconds)
 
 	if (seconds >= 0.0)
 	{
-		return int64_t(seconds * 1.0e6 + 0.5);
+		return int64_t(seconds * double(microsecondsPerSecond_) + 0.5);
 	}
 	else
 	{
-		return int64_t(seconds * 1.0e6 - 0.5);
+		return int64_t(seconds * double(microsecondsPerSecond_) - 0.5);
 	}
 }
 
@@ -643,27 +662,27 @@ constexpr int64_t Timestamp::seconds2nanoseconds(const double seconds)
 
 	if (seconds >= 0.0)
 	{
-		return int64_t(seconds * 1.0e9 + 0.5);
+		return int64_t(seconds * double(nanosecondsPerSecond_) + 0.5);
 	}
 	else
 	{
-		return int64_t(seconds * 1.0e9 - 0.5);
+		return int64_t(seconds * double(nanosecondsPerSecond_) - 0.5);
 	}
 }
 
 constexpr double Timestamp::milliseconds2seconds(const int64_t milliseconds)
 {
-	return double(milliseconds) / 1.0e3;
+	return double(milliseconds) / double(millisecondsPerSecond_);
 }
 
 constexpr double Timestamp::microseconds2seconds(const int64_t microseconds)
 {
-	return double(microseconds) / 1.0e6;
+	return double(microseconds) / double(microsecondsPerSecond_);
 }
 
 constexpr double Timestamp::nanoseconds2seconds(const int64_t nanoseconds)
 {
-	return double(nanoseconds) / 1.0e9;
+	return double(nanoseconds) / double(nanosecondsPerSecond_);
 }
 
 constexpr double Timestamp::invalidTimestampValue()
