@@ -89,12 +89,11 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT AssignmentSolver
 		 * @param yStart The row index to start searching from, with range [0, matrixSize)
 		 * @param yAssignments Row-to-column assignment mapping, will be updated if an augmenting path is found, with invalidIndex() for unassigned rows
 		 * @param xAssignments Column-to-row assignment mapping, will be updated if an augmenting path is found, with invalidIndex() for unassigned columns
-		 * @param yVisited Tracks visited rows during the search, will be modified, must have size matrixSize
-		 * @param xVisited Tracks visited columns during the search, will be modified, must have size matrixSize
+		 * @param yVisited Tracks visited rows during the search, will be modified, must have size matrixSize, 0 for unvisited, >= 1 for visited
+		 * @param xVisited Tracks visited columns during the search, will be modified, must have size matrixSize, 0 for unvisited, >= 1 for visited
 		 * @param yParents Tracks parent relationships for path reconstruction, will be modified, must have size matrixSize
-		 * @return True if an augmenting path was found and assignments were updated; False otherwise
 		 */
-		static bool findAugmentingPath(const CostMatrix& costMatrix, const size_t yStart, Indices32& yAssignments, Indices32& xAssignments, std::vector<bool>& yVisited, std::vector<bool>& xVisited, Indices32& yParents);
+		static void findAugmentingPath(const CostMatrix& costMatrix, const size_t yStart, Indices32& yAssignments, Indices32& xAssignments, std::vector<uint8_t>& yVisited, std::vector<uint8_t>& xVisited, Indices32& yParents);
 
 		/**
 		 * Reduces the cost matrix when no complete assignment can be found with current zeros.
@@ -103,11 +102,11 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT AssignmentSolver
 		 * in positions that may lead to a better assignment in the next iteration.
 		 * @param yAssignments Current row-to-column assignment mapping, with invalidIndex() for unassigned rows
 		 * @param costMatrix The square cost matrix to be reduced, will be modified in-place
-		 * @param yMarked Working array for row marking, will be reinitialized and modified, must have size matrixSize
-		 * @param xMarked Working array for column marking, will be reinitialized and modified, must have size matrixSize
+		 * @param yMarked Working array for row marking, will be reinitialized and modified, must have size matrixSize, 0 for unmarked, >= 1 for marked
+		 * @param xMarked Working array for column marking, will be reinitialized and modified, must have size matrixSize, 0 for unmarked, >= 1 for marked
 		 * @return True on success; False if reduction fails (which should never happen for valid inputs)
 		 */
-		static bool reduceCostMatrix(const Indices32& yAssignments, CostMatrix& costMatrix, std::vector<bool>& yMarked, std::vector<bool>& xMarked);
+		static bool reduceCostMatrix(const Indices32& yAssignments, CostMatrix& costMatrix, std::vector<uint8_t>& yMarked, std::vector<uint8_t>& xMarked);
 
 		/**
 		 * Returns an invalid index value used as a sentinel for unassigned rows/columns.

@@ -58,11 +58,11 @@ bool AssignmentSolver::solve(CostMatrix&& costMatrix, Assignments& assignments)
 	Indices32 xAssignments;
 
 	// Helper variables for the algorithm
-	std::vector<bool> yMarked;
-	std::vector<bool> xMarked;
+	std::vector<uint8_t> yMarked;
+	std::vector<uint8_t> xMarked;
 
-	std::vector<bool> yVisited;
-	std::vector<bool> xVisited;
+	std::vector<uint8_t> yVisited;
+	std::vector<uint8_t> xVisited;
 	Indices32 yParents;
 
 	while (true)
@@ -108,7 +108,7 @@ bool AssignmentSolver::solve(CostMatrix&& costMatrix, Assignments& assignments)
 
 		if (x != invalidIndex() && size_t(x) < originalColumns)
 		{
-			ocean_assert(y <= size_t(NumericT<Index32>::maxValue()));
+			ocean_assert(NumericT<Index32>::isInsideValueRange(y));
 			assignments.emplace_back(Index32(y), x);
 		}
 	}
@@ -153,7 +153,7 @@ void AssignmentSolver::subtractRowAndColumnMinima(CostMatrix& costMatrix)
 	}
 }
 
-bool AssignmentSolver::findAugmentingPath(const CostMatrix& costMatrix, const size_t yStart, Indices32& yAssignments, Indices32& xAssignments, std::vector<bool>& yVisited, std::vector<bool>& xVisited, Indices32& yParents)
+void AssignmentSolver::findAugmentingPath(const CostMatrix& costMatrix, const size_t yStart, Indices32& yAssignments, Indices32& xAssignments, std::vector<uint8_t>& yVisited, std::vector<uint8_t>& xVisited, Indices32& yParents)
 {
 	ocean_assert(costMatrix.elements() != 0);
 	ocean_assert(costMatrix.rows() == costMatrix.columns());
@@ -165,12 +165,15 @@ bool AssignmentSolver::findAugmentingPath(const CostMatrix& costMatrix, const si
 	// This allows us to reconstruct and update the augmenting path
 	yParents.assign(matrixSize, invalidIndex());
 
-	yVisited.assign(matrixSize, false);
-	xVisited.assign(matrixSize, false);
+	constexpr uint8_t unvisited = 0u;
+	constexpr uint8_t visited = 1u;
 
-	yVisited[yStart] = true;
+	yVisited.assign(matrixSize, unvisited);
+	xVisited.assign(matrixSize, unvisited);
 
-	ocean_assert(yStart <= size_t(NumericT<Index32>::maxValue()));
+	yVisited[yStart] = visited;
+
+	ocean_assert(NumericT<Index32>::isInsideValueRange(yStart));
 	Indices32 rowQueue{Index32(yStart)};
 	Index32 xAssignmentNew = invalidIndex();
 	while (!rowQueue.empty() && xAssignmentNew == invalidIndex())
@@ -181,27 +184,27 @@ bool AssignmentSolver::findAugmentingPath(const CostMatrix& costMatrix, const si
 		// Try all columns with zero cost
 		for (size_t x = 0; x < matrixSize; ++x)
 		{
-			if (xVisited[x] || costMatrix[yCurrent][x] > Numeric::weakEps())
+			if (xVisited[x] == visited || costMatrix[yCurrent][x] > Numeric::weakEps())
 			{
 				continue;
 			}
 
-			xVisited[x] = true;
+			xVisited[x] = visited;
 			yParents[x] = yCurrent;
 
 			// Found an unassigned column - we have an augmenting path!
 			if (xAssignments[x] == invalidIndex())
 			{
-				ocean_assert(x <= size_t(NumericT<Index32>::maxValue()));
+				ocean_assert(NumericT<Index32>::isInsideValueRange(x));
 				xAssignmentNew = Index32(x);
 				break;
 			}
 
 			// This column is assigned to another row - continue search from that row
 			const Index32 yPrevious = xAssignments[x];
-			if (!yVisited[yPrevious])
+			if (yVisited[yPrevious] == unvisited)
 			{
-				yVisited[yPrevious] = true;
+				yVisited[yPrevious] = visited;
 				rowQueue.push_back(yPrevious);
 			}
 		}
@@ -209,7 +212,7 @@ bool AssignmentSolver::findAugmentingPath(const CostMatrix& costMatrix, const si
 
 	if (xAssignmentNew == invalidIndex())
 	{
-		return false;
+		return;
 	}
 
 	// Found an augmenting path, update assignments along the path
@@ -224,11 +227,9 @@ bool AssignmentSolver::findAugmentingPath(const CostMatrix& costMatrix, const si
 
 		x = xPrevious;
 	}
-
-	return true;
 }
 
-bool AssignmentSolver::reduceCostMatrix(const Indices32& yAssignments, CostMatrix& costMatrix, std::vector<bool>& yMarked, std::vector<bool>& xMarked)
+bool AssignmentSolver::reduceCostMatrix(const Indices32& yAssignments, CostMatrix& costMatrix, std::vector<uint8_t>& yMarked, std::vector<uint8_t>& xMarked)
 {
 	ocean_assert(yAssignments.size() == costMatrix.rows());
 	ocean_assert(costMatrix.elements() != 0);
@@ -239,14 +240,17 @@ bool AssignmentSolver::reduceCostMatrix(const Indices32& yAssignments, CostMatri
 	// Cover all zero elements in the cost matrix with a minimum number of lines
 
 	// Mark unassigned rows
-	yMarked.assign(matrixSize, false);
-	xMarked.assign(matrixSize, false);
+	constexpr uint8_t unmarked = 0u;
+	constexpr uint8_t marked = 1u;
+
+	yMarked.assign(matrixSize, unmarked);
+	xMarked.assign(matrixSize, unmarked);
 
 	for (size_t row = 0; row < matrixSize; ++row)
 	{
 		if (yAssignments[row] == invalidIndex())
 		{
-			yMarked[row] = true;
+			yMarked[row] = marked;
 		}
 	}
 
@@ -259,16 +263,16 @@ bool AssignmentSolver::reduceCostMatrix(const Indices32& yAssignments, CostMatri
 		// Mark columns with zeros in marked rows
 		for (size_t y = 0; y < matrixSize; ++y)
 		{
-			if (!yMarked[y])
+			if (yMarked[y] == unmarked)
 			{
 				continue;
 			}
 
 			for (size_t x = 0; x < matrixSize; ++x)
 			{
-				if (!xMarked[x] && costMatrix[y][x] < Numeric::weakEps())
+				if (xMarked[x] == unmarked && costMatrix[y][x] < Numeric::weakEps())
 				{
-					xMarked[x] = true;
+					xMarked[x] = marked;
 					changed = true;
 				}
 			}
@@ -277,16 +281,16 @@ bool AssignmentSolver::reduceCostMatrix(const Indices32& yAssignments, CostMatri
 		// Mark rows with assignments in marked columns
 		for (size_t x = 0; x < matrixSize; ++x)
 		{
-			if (!xMarked[x])
+			if (xMarked[x] == unmarked)
 			{
 				continue;
 			}
 
 			for (size_t y = 0; y < matrixSize; ++y)
 			{
-				if (!yMarked[y] && yAssignments[y] == static_cast<int>(x))
+				if (yMarked[y] == unmarked && yAssignments[y] == static_cast<int>(x))
 				{
-					yMarked[y] = true;
+					yMarked[y] = marked;
 					changed = true;
 				}
 			}
@@ -303,7 +307,7 @@ bool AssignmentSolver::reduceCostMatrix(const Indices32& yAssignments, CostMatri
 
 	for (size_t y = 0; y < matrixSize; ++y)
 	{
-		if (!yMarked[y])
+		if (yMarked[y] == unmarked)
 		{
 			// Ignore covered rows (unmarked rows are covered)
 			continue;
@@ -311,7 +315,7 @@ bool AssignmentSolver::reduceCostMatrix(const Indices32& yAssignments, CostMatri
 
 		for (size_t x = 0; x < matrixSize; ++x)
 		{
-			if (xMarked[x])
+			if (xMarked[x] == marked)
 			{
 				// Ignore covered columns (marked columns are covered)
 				continue;
@@ -329,12 +333,12 @@ bool AssignmentSolver::reduceCostMatrix(const Indices32& yAssignments, CostMatri
 	{
 		for (size_t x = 0; x < matrixSize; ++x)
 		{
-			if (!yMarked[y] && xMarked[x])  // Row covered (unmarked) and column covered (marked)
+			if (yMarked[y] == unmarked && xMarked[x] == marked)  // Row covered (unmarked) and column covered (marked)
 			{
 				costMatrix[y][x] += uncoveredMinimum;
 				changed = true;
 			}
-			else if (yMarked[y] && !xMarked[x])  // Row uncovered (marked) and column uncovered (unmarked)
+			else if (yMarked[y] == marked && xMarked[x] == unmarked)  // Row uncovered (marked) and column uncovered (unmarked)
 			{
 				ocean_assert(costMatrix[y][x] >= uncoveredMinimum);
 				costMatrix[y][x] -= uncoveredMinimum;
