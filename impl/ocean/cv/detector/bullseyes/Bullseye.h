@@ -41,7 +41,7 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Bullseye
 		 * Creates a new bullseye object by a given position and radius.
 		 * @param position The (center) position of the bullseye within the camera frame
 		 * @param radius The radius of the bullseye in pixels, with range (0, infinity)
-		 * @param grayThreshold Threshold that was used during the detection, range [0, 255]
+		 * @param grayThreshold Threshold that was used during the detection, range [1, 255]
 		 */
 		Bullseye(const Vector2& position, const Scalar& radius, const unsigned int grayThreshold);
 
@@ -104,7 +104,7 @@ using Bullseyes = std::vector<Bullseye>;
 
 constexpr Scalar Bullseye::invalidRadius()
 {
-	return Scalar(0);
+	return Scalar(-1);
 }
 
 constexpr unsigned int Bullseye::invalidGrayThreshold()
