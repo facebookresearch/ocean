@@ -21,7 +21,7 @@ namespace Ocean
 namespace Geometry
 {
 
-bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexedAccessor<Vector2>& accessorImagePoints0, const ConstIndexedAccessor<Vector2>& accessorImagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera1, Vectors3* objectPoints, Indices32* validIndices, const Scalar maxRotationalSqrError, const Scalar maxArbitrarySqrError, const unsigned int iterations, const Scalar rotationalMotionMinimalValidCorrespondencesPercent)
+bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexedAccessor<Vector2>& accessorImagePoints0, const ConstIndexedAccessor<Vector2>& accessorImagePoints1, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera0, HomogenousMatrix4& world_T_camera1, const GravityConstraints* gravityConstraints, Vectors3* objectPoints, Indices32* validIndices, const Scalar maxRotationalSqrError, const Scalar maxArbitrarySqrError, const unsigned int iterations, const Scalar rotationalMotionMinimalValidCorrespondencesPercent)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(accessorImagePoints0.size() >= 5);
@@ -33,12 +33,33 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 		return false;
 	}
 
-	// we define that the first camera pose is located at the origin and pointing towards the negative z-space with y-axis upwards
-	const HomogenousMatrix4 world_T_camera0(true);
+	if (!world_T_camera0.isValid())
+	{
+		world_T_camera0.toIdentity();
+	}
+
+	HomogenousMatrix4 world_T_roughCamera1 = world_T_camera0;
+
+	if (gravityConstraints != nullptr)
+	{
+		ocean_assert(gravityConstraints->isValid());
+
+		ocean_assert(gravityConstraints->numberCameras() == 2);
+		if (gravityConstraints->numberCameras() != 2)
+		{
+			return false;
+		}
+
+		world_T_camera0 = gravityConstraints->alignCameraWithGravity(world_T_camera0, 0);
+		world_T_roughCamera1 = gravityConstraints->alignCameraWithGravity(world_T_roughCamera1, 1);
+	}
+
+	const GravityConstraints orientationGravityConstraints(gravityConstraints, 1);
+
 	const HomogenousMatrix4 flippedCamera0_T_world(AnyCamera::standard2InvertedFlipped(world_T_camera0));
 
 	// we guess the initial locations of the object points simply by back-projecting the image points from the first frame
-	Vectors3 initialBadObjectPoints(Geometry::Utilities::createObjectPoints(camera, world_T_camera0, accessorImagePoints0, 1));
+	Vectors3 initialBadObjectPoints(Utilities::createObjectPoints(camera, world_T_camera0, accessorImagePoints0, 1));
 
 	const ScopedConstMemoryAccessor<Vector2> imagePoints0(accessorImagePoints0);
 	const ScopedConstMemoryAccessor<Vector2> imagePoints1(accessorImagePoints1);
@@ -46,11 +67,10 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 	// we first expect/check whether we have a sole rotational motion between both frames
 	// so we try to determine the second pose without optimizing the 3D object points as a rotational camera movement cannot determine the depth information reliably, thus it would be better to avoid a depth determination
 
-	HomogenousMatrix4 world_T_roughCamera1 = world_T_camera0;
-
 	Quaternion world_R_camera1(false);
 	Indices32 usedIndices;
-	if (Geometry::RANSAC::orientation(camera, ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints1, randomGenerator, world_R_camera1, 5u, 100u, Scalar(4) * maxRotationalSqrError, nullptr, &usedIndices) // we take a slightly larger maxSqrError as the RANSAC does not apply any optimization
+
+	if (RANSAC::orientation(camera, ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints1, randomGenerator, world_R_camera1, 5u, 100u, Scalar(4) * maxRotationalSqrError, nullptr, &usedIndices, orientationGravityConstraints.conditionalPointer()) // we take a slightly larger maxSqrError as the RANSAC does not apply any optimization
 			&& Scalar(usedIndices.size()) >= Scalar(initialBadObjectPoints.size()) * rotationalMotionMinimalValidCorrespondencesPercent)
 	{
 		ocean_assert(world_R_camera1.isValid());
@@ -62,7 +82,7 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 
 		Scalar sqrAverageError = Numeric::maxValue();
 		Quaternion world_R_optimizedCamera1_(false);
-		if (Geometry::NonLinearOptimizationOrientation::optimizeOrientation(camera, world_R_camera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), usedIndices), world_R_optimizedCamera1_, 10u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &sqrAverageError))
+		if (NonLinearOptimizationOrientation::optimizeOrientation(camera, world_R_camera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), usedIndices), world_R_optimizedCamera1_, 10u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &sqrAverageError))
 		{
 			ocean_assert(world_R_optimizedCamera1_.isValid());
 
@@ -107,6 +127,12 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 
 	world_T_camera1 = world_T_roughCamera1;
 
+	if (gravityConstraints != nullptr)
+	{
+		ocean_assert(gravityConstraints->isCameraAlignedWithGravity(world_T_camera0, 0, Numeric::deg2rad(1)));
+		ocean_assert(gravityConstraints->isCameraAlignedWithGravity(world_T_camera1, 1, Numeric::deg2rad(1)));
+	}
+
 	// we do not have a pure rotational camera motion, so we need to determine the precise depths of the 3D object points and the corresponding camera pose of the second frame concurrently
 	// we do not use a fundamental matrix but a bundle-adjustment instead this is more robust especially if the translational part between the two frames is too small
 
@@ -131,8 +157,8 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 	Indices32 reusableIndicesSubset;
 	reusableIndicesSubset.reserve(subsetSize);
 
-	UnorderedIndexSet32 reusabledIndexSet;
-	reusabledIndexSet.reserve(subsetSize);
+	UnorderedIndexSet32 reusableIndexSet;
+	reusableIndexSet.reserve(subsetSize);
 
 	for (unsigned int n = 0u; n < iterations; ++n)
 	{
@@ -164,13 +190,13 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 			}
 			else
 			{
-				reusabledIndexSet.clear();
+				reusableIndexSet.clear();
 
 				while (reusableIndicesSubset.size() < subsetSize)
 				{
 					const Index32 index = RandomI::random(randomGenerator, (unsigned int)(imagePoints0.size()) - 1u);
 
-					if (reusabledIndexSet.emplace(index).second)
+					if (reusableIndexSet.emplace(index).second)
 					{
 						reusableIndicesSubset.emplace_back(index);
 					}
@@ -188,13 +214,13 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 		NonconstArrayAccessor<Vector3> subsetOptimizedObjectPointsAccessor(reusableOptimizedObjectPoints);
 
 		HomogenousMatrix4 world_T_optimizedCamera1(false);
-		if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_roughCamera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableIndicesSubset), &world_T_optimizedCamera1, &subsetOptimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true))
+		if (NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_roughCamera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableIndicesSubset), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableIndicesSubset), &world_T_optimizedCamera1, &subsetOptimizedObjectPointsAccessor, 30u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, nullptr, nullptr, nullptr, gravityConstraints))
 		{
 			// now we determine the 3D object point locations for each point pair by triangulation, accept any 3D object point as long as the point is in front of the camera
 
 			reusableTriangulatedObjectPoints.clear();
 			reusableValidTriangulatedObjectPoints.clear();
-			Geometry::Utilities::triangulateObjectPoints(camera, camera, world_T_camera0, world_T_optimizedCamera1, ConstArrayAccessor<Vector2>(imagePoints0.data(), imagePoints0.size()), ConstArrayAccessor<Vector2>(imagePoints1.data(), imagePoints1.size()), reusableTriangulatedObjectPoints, reusableValidTriangulatedObjectPoints, true, Scalar(-1));
+			Utilities::triangulateObjectPoints(camera, camera, world_T_camera0, world_T_optimizedCamera1, ConstArrayAccessor<Vector2>(imagePoints0.data(), imagePoints0.size()), ConstArrayAccessor<Vector2>(imagePoints1.data(), imagePoints1.size()), reusableTriangulatedObjectPoints, reusableValidTriangulatedObjectPoints, true, Scalar(-1));
 
 			if (reusableValidTriangulatedObjectPoints.size() == imagePoints0.size())
 			{
@@ -203,7 +229,7 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 				NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(reusableOptimizedObjectPoints, reusableTriangulatedObjectPoints.size());
 				const HomogenousMatrix4 world_T_intermediateCamera1 = world_T_optimizedCamera1;
 
-				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints0.data(), imagePoints0.size()), ConstArrayAccessor<Vector2>(imagePoints1.data(), imagePoints1.size()), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
+				if (NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArrayAccessor<Vector2>(imagePoints0.data(), imagePoints0.size()), ConstArrayAccessor<Vector2>(imagePoints1.data(), imagePoints1.size()), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true, nullptr, nullptr, nullptr, gravityConstraints))
 				{
 					// now we check which 3D object point is valid for the given image point correspondences
 
@@ -250,7 +276,7 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 				NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(reusableOptimizedObjectPoints, reusableTriangulatedObjectPoints.size());
 
 				const HomogenousMatrix4 world_T_intermediateCamera1 = world_T_optimizedCamera1;
-				if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableValidTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableValidTriangulatedObjectPoints), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
+				if (NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_intermediateCamera1, ConstArrayAccessor<Vector3>(reusableTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableValidTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableValidTriangulatedObjectPoints), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true, nullptr, nullptr, nullptr, gravityConstraints))
 				{
 					// now we check which 3D object point is valid for the given image point correspondences
 
@@ -311,14 +337,14 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 		NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(bestObjectPoints, initialBadObjectPoints.size());
 
 		HomogenousMatrix4 world_T_optimizedCamera1;
-		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints0, accessorImagePoints1, &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Geometry::Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true))
+		if (!NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints0, accessorImagePoints1, &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 30u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), true, nullptr, nullptr, nullptr, gravityConstraints))
 		{
 			return false;
 		}
 
 		world_T_roughCamera1 = world_T_optimizedCamera1;
 		const Vectors3 initialObjectPoints = bestObjectPoints;
-		if (!Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialObjectPoints), accessorImagePoints0, accessorImagePoints1, &world_T_camera1, &optimizedObjectPointsAccessor, 5u, Geometry::Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true))
+		if (!NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(camera, world_T_camera0, world_T_roughCamera1, ConstArrayAccessor<Vector3>(initialObjectPoints), accessorImagePoints0, accessorImagePoints1, &world_T_camera1, &optimizedObjectPointsAccessor, 5u, Estimator::ET_HUBER, Scalar(0.001), Scalar(5), true, nullptr, nullptr, nullptr, gravityConstraints))
 		{
 			return false;
 		}
