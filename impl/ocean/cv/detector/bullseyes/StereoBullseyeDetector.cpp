@@ -88,31 +88,24 @@ bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, co
 	bullseyePairs.clear();
 	bullseyeCenters.clear();
 
+	// Monocular detection of bullseyes
 	// If the cameras have different resolutions, start the monocular detection on the camera with lower resolution.
-	const size_t cameraIndex0 = (cameras[0]->width() * cameras[0]->height() <= cameras[1]->width() * cameras[1]->height()) ? 0 : 1;
-	const size_t cameraIndex1 = 1 - cameraIndex0;
-
 	BullseyeGroup bullseyeGroup;
 
-	if (!MonoBullseyeDetector::detectBullseyes(*cameras[cameraIndex0], yFrames[cameraIndex0], bullseyeGroup[cameraIndex0], parameters, worker))
+	const size_t lowerResolutionCameraIndex = (cameras[0]->width() * cameras[0]->height() <= cameras[1]->width() * cameras[1]->height()) ? 0 : 1;
+	for (const size_t cameraIndex : {lowerResolutionCameraIndex, 1 - lowerResolutionCameraIndex})
 	{
-		return false;
-	}
+		if (!MonoBullseyeDetector::detectBullseyes(*cameras[cameraIndex], yFrames[cameraIndex], bullseyeGroup[cameraIndex], parameters, worker))
+		{
+			return false;
+		}
 
-	if (bullseyeGroup[cameraIndex0].empty())
-	{
-		// Nothing found in the first camera, so no need to even try the second camera.
-		return true;
+		if (bullseyeGroup[cameraIndex].empty())
+		{
+			// Nothing found in this camera, so no need to continue.
+			return true;
+		}
 	}
-
-#if 0
-	// TODO Based on the results from the first camera above, try to narrow the search space in the second camera.
-#else
-	if (!MonoBullseyeDetector::detectBullseyes(*cameras[cameraIndex1], yFrames[cameraIndex1], bullseyeGroup[cameraIndex1], parameters, worker))
-	{
-		return false;
-	}
-#endif
 
 	const HomogenousMatrix4 camera0_T_camera1 = device_T_cameras[0].inverted() * device_T_cameras[1];
 	const EpipolarGeometry epipolarGeometry(cameras[0], cameras[1], camera0_T_camera1);
@@ -278,11 +271,11 @@ bool StereoBullseyeDetector::computeBullseyeMatchingCostMatrix(const Bullseyes& 
 	return true;
 }
 
-bool StereoBullseyeDetector::triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const EpipolarGeometry& epipolarGeometry, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB)
+bool StereoBullseyeDetector::triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const EpipolarGeometry& /*epipolarGeometry*/, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB)
 {
 	ocean_assert(cameraA.isValid() && cameraB.isValid());
 	ocean_assert(world_T_cameraA.isValid() && world_T_cameraA.isValid());
-	ocean_assert(epipolarGeometry.isValid());
+	// ocean_assert(epipolarGeometry.isValid());
 	ocean_assert(bullseyeA.isValid() && bullseyeB.isValid());
 
 	ocean_assert(cameraA.isInside(bullseyeA.position()));
