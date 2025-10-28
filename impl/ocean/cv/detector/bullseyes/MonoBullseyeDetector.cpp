@@ -7,7 +7,7 @@
 
 #include "ocean/cv/detector/bullseyes/MonoBullseyeDetector.h"
 
-#include <ocean/cv/FramePyramid.h>
+#include "ocean/cv/FramePyramid.h"
 
 namespace Ocean
 {
@@ -472,13 +472,13 @@ inline bool MonoBullseyeDetector::isTransitionToBlack(const uint8_t* pixel, Tran
 
 	bool result = false;
 
-	if (currentDelta < -deltaThreshold)
+	if (currentDelta < -deltaThreshold_)
 	{
 		result = true;
 	}
-	else if ((currentDelta + history.history1() < -(deltaThreshold * 5 / 4))
-		|| (currentDelta + history.history2() < -(deltaThreshold * 3 / 2))
-		|| (currentDelta + history.history3() < -(deltaThreshold * 3 / 2)))
+	else if ((currentDelta + history.history1() < -(deltaThreshold_ * 5 / 4))
+		|| (currentDelta + history.history2() < -(deltaThreshold_ * 3 / 2))
+		|| (currentDelta + history.history3() < -(deltaThreshold_ * 3 / 2)))
 	{
 		result = true;
 	}
@@ -494,13 +494,13 @@ inline bool MonoBullseyeDetector::isTransitionToWhite(const uint8_t* pixel, Tran
 
 	bool result = false;
 
-	if (currentDelta > deltaThreshold)
+	if (currentDelta > deltaThreshold_)
 	{
 		result = true;
 	}
-	else if ((currentDelta + history.history1() > (deltaThreshold * 5 / 4))
-		|| (currentDelta + history.history2() > (deltaThreshold * 3 / 2))
-		|| (currentDelta + history.history3() > (deltaThreshold * 3 / 2)))
+	else if ((currentDelta + history.history1() > (deltaThreshold_ * 5 / 4))
+		|| (currentDelta + history.history2() > (deltaThreshold_ * 3 / 2))
+		|| (currentDelta + history.history3() > (deltaThreshold_ * 3 / 2)))
 	{
 		result = true;
 	}

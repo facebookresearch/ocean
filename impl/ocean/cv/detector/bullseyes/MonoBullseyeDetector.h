@@ -13,11 +13,11 @@
 #include "ocean/cv/detector/bullseyes/Bullseye.h"
 #include "ocean/cv/detector/bullseyes/TransitionHistory.h"
 
-#include <ocean/base/Frame.h>
-#include <ocean/base/Lock.h>
-#include <ocean/base/Worker.h>
+#include "ocean/base/Frame.h"
+#include "ocean/base/Lock.h"
+#include "ocean/base/Worker.h"
 
-#include <ocean/math/AnyCamera.h>
+#include "ocean/math/AnyCamera.h"
 
 namespace Ocean
 {
@@ -112,7 +112,7 @@ class MonoBullseyeDetector
 		 * @param worker Optional worker to distribute the computation
 		 * @return True, if succeeded
 		 */
-		static bool detectBullseyes(const Ocean::AnyCamera& camera, const Ocean::Frame& yFrame, Bullseyes& bullseyes, const Parameters& parameters = Parameters::defaultParameters(), Ocean::Worker* worker = nullptr);
+		static bool detectBullseyes(const AnyCamera& camera, const Frame& yFrame, Bullseyes& bullseyes, const Parameters& parameters = Parameters::defaultParameters(), Worker* worker = nullptr);
 
 	protected:
 
@@ -126,7 +126,7 @@ class MonoBullseyeDetector
 		 * @param firstRow The first row to be handled, with range [0, yFrame.height())
 		 * @param numberRows The number of rows to be handled, with range [1, yFrame.height() - firstRow]
 		 */
-		static void detectBullseyesSubset(const Ocean::AnyCamera* camera, const Ocean::Frame* yFrame, Bullseyes* bullseyes, Ocean::Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int firstRow, const unsigned int numberRows);
+		static void detectBullseyesSubset(const AnyCamera* camera, const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int firstRow, const unsigned int numberRows);
 
 		/**
 		 * Detects bullseyes in a row of a grayscale image.
@@ -135,7 +135,7 @@ class MonoBullseyeDetector
 		 * @param y The index of the row in which the bullseyes will be detected, with range [0, yFrame.height())
 		 * @param bullseyes The resulting detected bullseyes, will be added to the end of the vector
 		 */
-		static void detectBullseyesInRow(const Ocean::AnyCamera& camera, const Ocean::Frame& yFrame, const unsigned int y, Bullseyes& bullseyes);
+		static void detectBullseyesInRow(const AnyCamera& camera, const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes);
 
 		/**
 		 * Checks whether the given pixel is a transition-to-black pixel (whether the direct left neighbor is a bright pixel).
@@ -165,7 +165,7 @@ class MonoBullseyeDetector
 		 * @tparam tFindBlackPixel True, to find the next black pixel; False, to find the next white pixel
 		 */
 		template <bool tFindBlackPixel>
-		static bool findNextUpperPixel(const Ocean::Frame& yFrame, const unsigned int x, const unsigned int y, const unsigned int maximalRows, const unsigned int threshold, unsigned int& rows);
+		static bool findNextUpperPixel(const Frame& yFrame, const unsigned int x, const unsigned int y, const unsigned int maximalRows, const unsigned int threshold, unsigned int& rows);
 
 		/**
 		 * Finds either the next black or the next white pixel towards positive y direction (downwards in an image).
@@ -179,7 +179,7 @@ class MonoBullseyeDetector
 		 * @tparam tFindBlackPixel True, to find the next black pixel; False, to find the next white pixel
 		 */
 		template <bool tFindBlackPixel>
-		static bool findNextLowerPixel(const Ocean::Frame& yFrame, const unsigned int x, const unsigned int y, const unsigned int maximalRows, const unsigned int threshold, unsigned int& rows);
+		static bool findNextLowerPixel(const Frame& yFrame, const unsigned int x, const unsigned int y, const unsigned int maximalRows, const unsigned int threshold, unsigned int& rows);
 
 		/**
 		 * Determines the gray threshold separating bright pixels from dark pixels.
@@ -211,7 +211,7 @@ class MonoBullseyeDetector
 		 * @param dotSegmentMax The maximal size (thickness) of the black dot, in pixels, with range [dotSegmentMin, infinity)
 		 * @return True, if the column contains a bullseye at the specified location
 		 */
-		static bool checkBullseyeInColumn(const Ocean::Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int blackRingSegmentMin, const unsigned int blackRingSegmentMax, const unsigned int whiteRingSegmentMin, const unsigned int whiteRingSegmentMax, const unsigned int dotSegmentMin, const unsigned int dotSegmentMax);
+		static bool checkBullseyeInColumn(const Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int blackRingSegmentMin, const unsigned int blackRingSegmentMax, const unsigned int whiteRingSegmentMin, const unsigned int whiteRingSegmentMax, const unsigned int dotSegmentMin, const unsigned int dotSegmentMax);
 
 		/**
 		 * Checks whether the direct neighborhood contains a bullseye at a specified location.
@@ -225,7 +225,7 @@ class MonoBullseyeDetector
 		 * @param whiteBorderRadius The radius of the white border (the outer area around the black ring), in pixels, with range [blackRingRadius + 1, infinity)
 		 * @return True, if the neighborhood contains a bullseye at the specified location
 		 */
-		static bool checkBullseyeInNeighborhood(const Ocean::Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float whiteRingRadius, const float blackRingRadius, const float whiteBorderRadius);
+		static bool checkBullseyeInNeighborhood(const Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float whiteRingRadius, const float blackRingRadius, const float whiteBorderRadius);
 
 		/**
 		 * Determines the sub-pixel location of the center dot of a known bullseye.
@@ -236,12 +236,12 @@ class MonoBullseyeDetector
 		 * @param location The resulting sub-pixel location of the center of the bullseye
 		 * @return True, if the sub-pixel location could be determined
 		 */
-		static bool determineAccurateBullseyeLocation(const Ocean::Frame& yFrame, const unsigned int xBullseye, const unsigned int yBullseye, const unsigned int threshold, Ocean::Vector2& location);
+		static bool determineAccurateBullseyeLocation(const Frame& yFrame, const unsigned int xBullseye, const unsigned int yBullseye, const unsigned int threshold, Vector2& location);
 
 	protected:
 
 		/// The intensity threshold between two successive pixels to count as a transition from black to white (or vice versa).
-		static constexpr int deltaThreshold = 20;
+		static constexpr int deltaThreshold_ = 20;
 };
 
 } // namespace Bullseyes
