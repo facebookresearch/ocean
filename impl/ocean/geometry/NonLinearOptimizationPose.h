@@ -9,6 +9,7 @@
 #define META_OCEAN_GEOMETRY_NON_LINEAR_OPTIMIZATION_POSE_H
 
 #include "ocean/geometry/Geometry.h"
+#include "ocean/geometry/GravityConstraints.h"
 #include "ocean/geometry/NonLinearOptimization.h"
 
 #include "ocean/math/AnyCamera.h"
@@ -90,10 +91,12 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		 * @param lambdaFactor Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity)
 		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
+		 * @param intermediateRobustErrors Optional resulting averaged robust pixel errors for intermediate optimization iterations
+		 * @param gravityConstraints Optional gravity constraints to force the optimization to create a camera pose aligned with gravity, nullptr to avoid any gravity alignment
 		 * @return True, if the optimization succeeded
 		 * @see optimizePoseIF().
 		 */
-		static inline bool optimizePose(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
+		static inline bool optimizePose(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateRobustErrors = nullptr, const GravityConstraints* gravityConstraints = nullptr);
 
 		/**
 		 * Minimizes the projection error of a given 6-DOF camera pose.
@@ -110,11 +113,13 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		 * @param lambdaFactor Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity)
 		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator, nullptr to avoid the usage of the return value
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator, nullptr to avoid the usage of the return value
+		 * @param intermediateRobustErrors Optional resulting averaged robust pixel errors for intermediate optimization iterations
 		 * @param invertedCovariances Optional 2x2 inverted covariance matrices which represent the uncertainties of the image points, one for each image point (a (2*n)x2 matrix)
+		 * @param gravityConstraints Optional gravity constraint to force the optimization to create a camera pose aligned with gravity, nullptr to avoid any gravity alignment
 		 * @return True, if the optimization succeeded
 		 * @see optimizePoseIF().
 		 */
-		static inline bool optimizePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances);
+		static inline bool optimizePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateRobustErrors, const Matrix* invertedCovariances, const GravityConstraints* gravityConstraints);
 
 		/**
 		 * Deprecated.
@@ -203,10 +208,12 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		 * @param lambdaFactor Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity)
 		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
+		 * @param intermediateRobustErrors Optional resulting averaged robust pixel errors for intermediate optimization iterations
+		 * @param gravityConstraints Optional gravity constraints to force the optimization to create a camera pose aligned with gravity, nullptr to avoid any gravity alignment
 		 * @return True, if succeeded
 		 * @see optimizePose().
 		 */
-		static bool optimizePoseIF(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& optimizedFlippedCamera_T_world, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr);
+		static bool optimizePoseIF(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& optimizedFlippedCamera_T_world, const unsigned int iterations = 20u, const Estimator::EstimatorType estimator = Estimator::ET_SQUARE, Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = 10, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateRobustErrors = nullptr, const GravityConstraints* gravityConstraints = nullptr);
 
 		/**
 		 * Minimizes the projection error of a given 6-DOF camera pose.
@@ -223,12 +230,13 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPose : protected NonLinearOptim
 		 * @param lambdaFactor Levenberg-Marquardt damping factor to be applied to the damping value, with range [1, infinity)
 		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator, nullptr to avoid the usage of the return value
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator, nullptr to avoid the usage of the return value
+		 * @param intermediateRobustErrors Optional resulting averaged robust pixel errors for intermediate optimization iterations
 		 * @param invertedCovariances Optional 2x2 inverted covariance matrices which represent the uncertainties of the image points, one for each image point (a (2*n)x2 matrix)
+		 * @param gravityConstraints Optional gravity constraints to force the optimization to create a camera pose aligned with gravity, nullptr to avoid any gravity alignment
 		 * @return True, if the optimization succeeded
 		 * @see optimizePose().
 		 */
-		static bool optimizePoseIF(const AnyCamera& camera, const HomogenousMatrix4& flippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& optimizedFlippedCamera_T_world, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances);
-
+		static bool optimizePoseIF(const AnyCamera& camera, const HomogenousMatrix4& flippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& optimizedFlippedCamera_T_world, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateRobustErrors, const Matrix* invertedCovariances, const GravityConstraints* gravityConstraints);
 
 		/**
 		 * Deprecated.
@@ -298,26 +306,26 @@ inline bool NonLinearOptimizationPose::optimizePose(const PinholeCamera& pinhole
 	return true;
 }
 
-inline bool NonLinearOptimizationPose::optimizePose(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError)
+inline bool NonLinearOptimizationPose::optimizePose(const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateRobustErrors, const GravityConstraints* gravityConstraints)
 {
 	ocean_assert(anyCamera.isValid());
 	ocean_assert(world_T_camera.isValid());
 	ocean_assert(objectPoints.size() >= 3);
 	ocean_assert(objectPoints.size() == imagePoints.size());
 
-	const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
+	const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
 
 	HomogenousMatrix4 optimizedFlippedCamera_T_world;
-	if (!optimizePoseIF(anyCamera, flippedCamera_T_world, objectPoints, imagePoints, optimizedFlippedCamera_T_world, iterations, estimator, lambda, lambdaFactor, initialError, finalError))
+	if (!optimizePoseIF(anyCamera, flippedCamera_T_world, objectPoints, imagePoints, optimizedFlippedCamera_T_world, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateRobustErrors, gravityConstraints))
 	{
 		return false;
 	}
 
-	world_T_optimizedCamera = PinholeCamera::invertedFlipped2Standard(optimizedFlippedCamera_T_world);
+	world_T_optimizedCamera = Camera::invertedFlipped2Standard(optimizedFlippedCamera_T_world);
 	return true;
 }
 
-inline bool NonLinearOptimizationPose::optimizePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances)
+inline bool NonLinearOptimizationPose::optimizePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, HomogenousMatrix4& world_T_optimizedCamera, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, Scalars* intermediateRobustErrors, const Matrix* invertedCovariances, const GravityConstraints* gravityConstraints)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(world_T_camera.isValid());
@@ -328,7 +336,7 @@ inline bool NonLinearOptimizationPose::optimizePose(const AnyCamera& camera, con
 	const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
 
 	HomogenousMatrix4 optimizedFlippedCamera_T_world(false);
-	if (!optimizePoseIF(camera, flippedCamera_T_world, objectPoints, imagePoints, optimizedFlippedCamera_T_world, iterations, estimator, lambda, lambdaFactor, initialError, finalError, invertedCovariances))
+	if (!optimizePoseIF(camera, flippedCamera_T_world, objectPoints, imagePoints, optimizedFlippedCamera_T_world, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateRobustErrors, invertedCovariances, gravityConstraints))
 	{
 		return false;
 	}
@@ -341,7 +349,10 @@ inline bool NonLinearOptimizationPose::optimizePose(const PinholeCamera& pinhole
 {
 	const AnyCameraPinhole anyCamera(PinholeCamera(pinholeCamera, distortImagePoints));
 
-	return optimizePose(anyCamera, world_T_camera, objectPoints, imagePoints, world_T_optimizedCamera, iterations, estimator, lambda, lambdaFactor, initialError, finalError, invertedCovariances);
+	constexpr Scalars* intermediateRobustErrors = nullptr;
+	constexpr const GravityConstraints* gravityConstraints = nullptr;
+
+	return optimizePose(anyCamera, world_T_camera, objectPoints, imagePoints, world_T_optimizedCamera, iterations, estimator, lambda, lambdaFactor, initialError, finalError, intermediateRobustErrors, invertedCovariances, gravityConstraints);
 }
 
 inline bool NonLinearOptimizationPose::optimizePoseZoom(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& world_T_camera, const Scalar zoom, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, const bool distortImagePoints, HomogenousMatrix4& world_T_optimizedCamera, Scalar& optimizedZoom, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, Scalar* initialError, Scalar* finalError, const Matrix* invertedCovariances)

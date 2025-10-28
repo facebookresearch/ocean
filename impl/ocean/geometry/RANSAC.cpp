@@ -2214,7 +2214,7 @@ bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& 
 
 		world_T_bestCamera = world_T_camera;
 
-		if (!NonLinearOptimizationPose::optimizePose(camera, world_T_bestCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), world_T_camera, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy, invertedCovariances ? &invertedCovariances : nullptr))
+		if (!NonLinearOptimizationPose::optimizePose(camera, world_T_bestCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), world_T_camera, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy, nullptr, invertedCovariances ? &invertedCovariances : nullptr, nullptr))
 		{
 			return false;
 		}
@@ -2258,7 +2258,7 @@ bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& 
 
 			world_T_bestCamera = world_T_camera;
 
-			if (!NonLinearOptimizationPose::optimizePose(camera, world_T_bestCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), world_T_camera, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy, invertedCovariances ? &invertedCovariances : nullptr))
+			if (!NonLinearOptimizationPose::optimizePose(camera, world_T_bestCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), world_T_camera, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy, nullptr, invertedCovariances ? &invertedCovariances : nullptr, nullptr))
 			{
 				return false;
 			}

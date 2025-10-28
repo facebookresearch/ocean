@@ -542,7 +542,7 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 
 		performance.start();
 
-		if (Geometry::NonLinearOptimizationPose::optimizePoseIF(anyCamera, faultyPoseIF, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(distortedNoisedImagePoints), optimizedPoseIF, 20u, type, Scalar(0.001), Scalar(5.0), nullptr, nullptr, useCovariances ? &invertedCovariances : nullptr))
+		if (Geometry::NonLinearOptimizationPose::optimizePoseIF(anyCamera, faultyPoseIF, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(distortedNoisedImagePoints), optimizedPoseIF, 20u, type, Scalar(0.001), Scalar(5.0), nullptr, nullptr, nullptr, useCovariances ? &invertedCovariances : nullptr, nullptr))
 		{
 			performance.stop();
 

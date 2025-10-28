@@ -2183,7 +2183,7 @@ inline HomogenousMatrix4 Solver3::determinePose(const AnyCamera& camera, RandomG
 				}
 			}
 
-			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, ConstIndexedAccessorSubsetAccessor<Vector3, Index32>(objectPoints, validIndices), ConstIndexedAccessorSubsetAccessor<Vector2, Index32>(imagePoints, validIndices), currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
+			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, ConstIndexedAccessorSubsetAccessor<Vector3, Index32>(objectPoints, validIndices), ConstIndexedAccessorSubsetAccessor<Vector2, Index32>(imagePoints, validIndices), currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, nullptr, &invertedCovariances, nullptr);
 		}
 		else
 		{
@@ -2199,7 +2199,7 @@ inline HomogenousMatrix4 Solver3::determinePose(const AnyCamera& camera, RandomG
 				remainingInvertedCovariance.copyElements(invertedCovariances[2 * n], false);
 			}
 
-			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, objectPoints, imagePoints, currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, &invertedCovariances);
+			Geometry::NonLinearOptimizationPose::optimizePose(camera, previousPose, objectPoints, imagePoints, currentPose, 20u, estimator, Scalar(0.001), Scalar(5), nullptr, finalRobustError, nullptr, &invertedCovariances, nullptr);
 		}
 	}
 

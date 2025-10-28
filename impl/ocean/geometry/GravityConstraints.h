@@ -583,7 +583,7 @@ inline VectorT3<T> GravityConstraintsT<T>::cameraGravityInWorld(const Homogenous
 }
 
 template <typename T>
-inline const GravityConstraintsT<T>::Gravities& GravityConstraintsT<T>::cameraGravitiesInCamera() const
+inline const typename GravityConstraintsT<T>::Gravities& GravityConstraintsT<T>::cameraGravitiesInCamera() const
 {
 	ocean_assert(isValid());
 
