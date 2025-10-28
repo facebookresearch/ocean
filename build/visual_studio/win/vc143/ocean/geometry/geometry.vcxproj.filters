@@ -214,5 +214,8 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\FisheyeEpipolarGeometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\GravityConstraints.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

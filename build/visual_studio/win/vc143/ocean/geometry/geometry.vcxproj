@@ -222,6 +222,7 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Estimator.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\FisheyeEpipolarGeometry.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Geometry.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\GravityConstraints.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Grid.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Homography.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Jacobian.h" />
