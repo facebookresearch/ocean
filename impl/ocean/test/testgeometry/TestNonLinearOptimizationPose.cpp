@@ -439,190 +439,235 @@ bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseAnyCamera(const
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= correspondences);
 
-	std::vector<Scalar> pixelErrors;
-	std::vector<Scalar> optimizedPixelErrors;
+	bool allSucceeded = true;
 
-	std::vector<Scalar> translationErrors;
-	std::vector<Scalar> optimizedTranslationErrors;
-
-	std::vector<Scalar> angleErrors;
-	std::vector<Scalar> optimizedAngleErrors;
-
-	HighPerformanceStatistic performance;
-
-	RandomGenerator randomGenerator;
-
-	ValidationPrecision validation(0.95, randomGenerator);
-
-	const Timestamp startTimestamp(true);
-
-	do
+	for (const bool useGravityConstraints : {false, true})
 	{
-		ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-		const Vector3 translation(Random::vector3(randomGenerator, -5, 5));
-		const Quaternion rotation(Random::quaternion(randomGenerator));
-
-		const HomogenousMatrix4 world_T_camera(translation, rotation);
-		const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
-
-		Vectors2 imagePoints;
-		Vectors2 noisyImagePoints;
-		Vectors3 objectPoints;
-
-		Matrix invertedCovariances;
-
-		if (useCovariances)
+		if (useGravityConstraints)
 		{
-			invertedCovariances = Matrix(correspondences * 2u, 2u);
+			if (useCovariances)
+			{
+				// currently gravity constraints are not supported for covariances
+				continue;
+			}
+
+			Log::info() << "With gravity constraints:";
+		}
+		else
+		{
+			Log::info() << "No gravity constraints:";
 		}
 
-		for (unsigned int n = 0; n < correspondences; ++n)
+		const std::string indentation = "  ";
+
+		std::vector<Scalar> pixelErrors;
+		std::vector<Scalar> optimizedPixelErrors;
+
+		std::vector<Scalar> translationErrors;
+		std::vector<Scalar> optimizedTranslationErrors;
+
+		std::vector<Scalar> angleErrors;
+		std::vector<Scalar> optimizedAngleErrors;
+
+		std::vector<Scalar> gravityErrors;
+		std::vector<size_t> optimizationIterations;
+
+		HighPerformanceStatistic performance;
+
+		RandomGenerator randomGenerator;
+
+		ValidationPrecision validation(0.95, randomGenerator);
+
+		const Timestamp startTimestamp(true);
+
+		do
 		{
-			const Vector2 imagePoint(Random::vector2(randomGenerator, 50, Scalar(anyCamera.width() - 50u), 50, Scalar(anyCamera.height() - 50u)));
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Line3 ray(anyCamera.ray(imagePoint, world_T_camera));
-			const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, Scalar(0.5), Scalar(5.0))));
+			const Vector3 translation(Random::vector3(randomGenerator, -5, 5));
+			const Quaternion rotation(Random::quaternion(randomGenerator));
 
-			ocean_assert_and_suppress_unused(imagePoint.sqrDistance(anyCamera.projectToImageIF(flippedCamera_T_world, objectPoint)) < Scalar(1 * 1), flippedCamera_T_world);
+			const HomogenousMatrix4 world_T_camera(translation, rotation);
+			const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
 
-			Vector2 imagePointNoise(0, 0);
-			if (standardDeviation > 0)
+			Vectors2 imagePoints;
+			Vectors2 noisyImagePoints;
+			Vectors3 objectPoints;
+
+			Matrix invertedCovariances;
+
+			if (useCovariances)
 			{
-				imagePointNoise = Random::gaussianNoiseVector2(randomGenerator, standardDeviation, standardDeviation);
+				invertedCovariances = Matrix(correspondences * 2u, 2u);
+			}
 
-				if (useCovariances)
+			for (unsigned int n = 0; n < correspondences; ++n)
+			{
+				const Vector2 imagePoint(Random::vector2(randomGenerator, 50, Scalar(anyCamera.width() - 50u), 50, Scalar(anyCamera.height() - 50u)));
+
+				const Line3 ray(anyCamera.ray(imagePoint, world_T_camera));
+				const Vector3 objectPoint(ray.point(Random::scalar(randomGenerator, Scalar(0.5), Scalar(5.0))));
+
+				ocean_assert_and_suppress_unused(imagePoint.sqrDistance(anyCamera.projectToImageIF(flippedCamera_T_world, objectPoint)) < Scalar(1 * 1), flippedCamera_T_world);
+
+				Vector2 imagePointNoise(0, 0);
+				if (standardDeviation > 0)
 				{
-					const SquareMatrix2 covariance(Geometry::Utilities::covarianceMatrix(imagePointNoise, standardDeviation));
-					const SquareMatrix2 invertedCovariance(covariance.inverted());
+					imagePointNoise = Random::gaussianNoiseVector2(randomGenerator, standardDeviation, standardDeviation);
 
-					invertedCovariance.copyElements(invertedCovariances[2u * n + 0u], false);
+					if (useCovariances)
+					{
+						const SquareMatrix2 covariance(Geometry::Utilities::covarianceMatrix(imagePointNoise, standardDeviation));
+						const SquareMatrix2 invertedCovariance(covariance.inverted());
+
+						invertedCovariance.copyElements(invertedCovariances[2u * n + 0u], false);
+					}
 				}
+				else if (useCovariances)
+				{
+					SquareMatrix2(true).copyElements(invertedCovariances[2u * n + 0u], false);
+				}
+
+				imagePoints.push_back(imagePoint);
+				noisyImagePoints.push_back(imagePoint + imagePointNoise);
+				objectPoints.push_back(objectPoint);
 			}
-			else if (useCovariances)
+
+			const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1u, numberOutliers, &randomGenerator));
+			for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
 			{
-				SquareMatrix2(true).copyElements(invertedCovariances[2u * n + 0u], false);
+				noisyImagePoints[*i] = Random::vector2(randomGenerator, 50, Scalar(anyCamera.width() - 50u), 50, Scalar(anyCamera.height() - 50u));
 			}
 
-			imagePoints.push_back(imagePoint);
-			noisyImagePoints.push_back(imagePoint + imagePointNoise);
-			objectPoints.push_back(objectPoint);
-		}
+			const Vector3 errorTranslation(Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1)));
+			const Euler errorEuler(Random::euler(randomGenerator, Numeric::deg2rad(10)));
+			const Quaternion errorRotation(errorEuler);
 
-		const IndexSet32 outlierSet(Utilities::randomIndices(correspondences - 1u, numberOutliers, &randomGenerator));
-		for (IndexSet32::const_iterator i = outlierSet.begin(); i != outlierSet.end(); ++i)
-		{
-			noisyImagePoints[*i] = Random::vector2(randomGenerator, 50, Scalar(anyCamera.width() - 50u), 50, Scalar(anyCamera.height() - 50u));
-		}
+			const Vector3 faultyTranslation(translation + errorTranslation);
+			const Quaternion faultyRotation(rotation * errorRotation);
 
-		const Vector3 errorTranslation(Random::vector3(randomGenerator, Scalar(-0.1), Scalar(0.1)));
-		const Euler errorEuler(Random::euler(randomGenerator, Numeric::deg2rad(10)));
-		const Quaternion errorRotation(errorEuler);
+			translationErrors.push_back((translation - faultyTranslation).length());
+			angleErrors.push_back(Numeric::rad2deg(rotation.smallestAngle(faultyRotation)));
 
-		const Vector3 faultyTranslation(translation + errorTranslation);
-		const Quaternion faultyRotation(rotation * errorRotation);
+			const HomogenousMatrix4 world_T_faultyCamera(faultyTranslation, faultyRotation);
+			HomogenousMatrix4 flippedFaultyCamera_T_world(Camera::standard2InvertedFlipped(world_T_faultyCamera));
 
-		translationErrors.push_back((translation - faultyTranslation).length());
-		angleErrors.push_back(Numeric::rad2deg(rotation.smallestAngle(faultyRotation)));
-
-		const HomogenousMatrix4 world_T_faultyCamera(faultyTranslation, faultyRotation);
-		HomogenousMatrix4 flippedFaultyCamera_T_world(Camera::standard2InvertedFlipped(world_T_faultyCamera));
-
-		Scalar totalError = 0;
-		for (unsigned int n = 0; n < correspondences; ++n)
-		{
-			if (outlierSet.find(n) == outlierSet.end())
-			{
-				const Vector2& distortedNoisedImagePoint = noisyImagePoints[n];
-				const Vector3& objectPoint = objectPoints[n];
-
-				const Vector2 projectedPoint = anyCamera.projectToImageIF(flippedFaultyCamera_T_world, objectPoint);
-				const Scalar error = (distortedNoisedImagePoint - projectedPoint).sqr();
-				totalError += error;
-			}
-		}
-
-		pixelErrors.push_back(totalError / Scalar(correspondences - outlierSet.size()));
-
-		HomogenousMatrix4 flippedOptimizedCamera_T_world(false);
-
-		performance.start();
-			const bool result = Geometry::NonLinearOptimizationPose::optimizePoseIF(anyCamera, flippedFaultyCamera_T_world, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(noisyImagePoints), flippedOptimizedCamera_T_world, 20u, type, Scalar(0.001), Scalar(5.0), nullptr, nullptr, nullptr, useCovariances ? &invertedCovariances : nullptr, nullptr);
-		performance.stop();
-
-		if (result)
-		{
-			const HomogenousMatrix4 world_T_optimizedCamera(PinholeCamera::invertedFlipped2Standard(flippedOptimizedCamera_T_world));
-
-			const Vector3 optimizedTranslation(world_T_optimizedCamera.translation());
-			const Quaternion optimizedRotation(world_T_optimizedCamera.rotation());
-
-			optimizedTranslationErrors.push_back((translation - optimizedTranslation).length());
-			optimizedAngleErrors.push_back(Numeric::rad2deg(rotation.smallestAngle(optimizedRotation)));
-
-			Scalar totalOptimizedError = 0;
+			Scalar totalError = 0;
 			for (unsigned int n = 0; n < correspondences; ++n)
 			{
 				if (outlierSet.find(n) == outlierSet.end())
 				{
-					const Vector2& imagePoint = imagePoints[n];
+					const Vector2& distortedNoisedImagePoint = noisyImagePoints[n];
 					const Vector3& objectPoint = objectPoints[n];
 
-					const Vector2 projectedPoint = anyCamera.projectToImageIF(flippedOptimizedCamera_T_world, objectPoint);
-					const Scalar error = (imagePoint - projectedPoint).sqr();
-					totalOptimizedError += error;
+					const Vector2 projectedPoint = anyCamera.projectToImageIF(flippedFaultyCamera_T_world, objectPoint);
+					const Scalar error = (distortedNoisedImagePoint - projectedPoint).sqr();
+					totalError += error;
 				}
 			}
 
-			optimizedPixelErrors.push_back(totalOptimizedError / Scalar(correspondences - outlierSet.size()));
+			pixelErrors.push_back(totalError / Scalar(correspondences - outlierSet.size()));
 
-			const Vector3 translationDifference(translation - optimizedTranslation);
-			const Scalar angleDifference = Numeric::rad2deg(rotation.smallestAngle(optimizedRotation));
+			const Vector3 worldGravityInWorld(0, -1, 0); // this is how we defined gravity in the world
 
-			if (translationDifference.length() > 0.1 || angleDifference > 5)
+			const Geometry::GravityConstraints gravityConstraints(world_T_camera, worldGravityInWorld);
+
+			HomogenousMatrix4 flippedOptimizedCamera_T_world(false);
+			Scalars intermediateErrors;
+
+			performance.start();
+				const bool result = Geometry::NonLinearOptimizationPose::optimizePoseIF(anyCamera, flippedFaultyCamera_T_world, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(noisyImagePoints), flippedOptimizedCamera_T_world, 20u, type, Scalar(0.001), Scalar(5.0), nullptr, nullptr, &intermediateErrors, useCovariances ? &invertedCovariances : nullptr, gravityConstraints.conditionalPointer(useGravityConstraints));
+			performance.stop();
+
+			if (result)
+			{
+				const HomogenousMatrix4 world_T_optimizedCamera(PinholeCamera::invertedFlipped2Standard(flippedOptimizedCamera_T_world));
+
+				const Vector3 optimizedTranslation(world_T_optimizedCamera.translation());
+				const Quaternion optimizedRotation(world_T_optimizedCamera.rotation());
+
+				optimizedTranslationErrors.push_back((translation - optimizedTranslation).length());
+				optimizedAngleErrors.push_back(Numeric::rad2deg(rotation.smallestAngle(optimizedRotation)));
+
+				Scalar totalOptimizedError = 0;
+				for (unsigned int n = 0; n < correspondences; ++n)
+				{
+					if (outlierSet.find(n) == outlierSet.end())
+					{
+						const Vector2& imagePoint = imagePoints[n];
+						const Vector3& objectPoint = objectPoints[n];
+
+						const Vector2 projectedPoint = anyCamera.projectToImageIF(flippedOptimizedCamera_T_world, objectPoint);
+						const Scalar error = (imagePoint - projectedPoint).sqr();
+						totalOptimizedError += error;
+					}
+				}
+
+				optimizedPixelErrors.push_back(totalOptimizedError / Scalar(correspondences - outlierSet.size()));
+
+				gravityErrors.push_back(Numeric::rad2deg(gravityConstraints.alignmentAngle(world_T_optimizedCamera)));
+
+				optimizationIterations.push_back(intermediateErrors.size());
+
+				const Vector3 translationDifference(translation - optimizedTranslation);
+				const Scalar angleDifference = Numeric::rad2deg(rotation.smallestAngle(optimizedRotation));
+
+				if (translationDifference.length() > 0.1 || angleDifference > 5)
+				{
+					scopedIteration.setInaccurate();
+				}
+			}
+			else
 			{
 				scopedIteration.setInaccurate();
 			}
 		}
-		else
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+		ocean_assert(!translationErrors.empty());
+
+		std::sort(translationErrors.begin(), translationErrors.end());
+		std::sort(angleErrors.begin(), angleErrors.end());
+		std::sort(pixelErrors.begin(), pixelErrors.end());
+
+		std::sort(optimizedTranslationErrors.begin(), optimizedTranslationErrors.end());
+		std::sort(optimizedAngleErrors.begin(), optimizedAngleErrors.end());
+		std::sort(optimizedPixelErrors.begin(), optimizedPixelErrors.end());
+
+		std::sort(gravityErrors.begin(), gravityErrors.end());
+		std::sort(optimizationIterations.begin(), optimizationIterations.end());
+
+		const Scalar translationErrorP95 = translationErrors[translationErrors.size() * 95 / 100];
+		const Scalar angleErrorP95 = angleErrors[angleErrors.size() * 95 / 100];
+		const Scalar pixelErrorP95 = pixelErrors[pixelErrors.size() * 95 / 100];
+
+		const Scalar optimizedTranslationErrorP95 = optimizedTranslationErrors[optimizedTranslationErrors.size() * 95 / 100];
+		const Scalar optimizedAngleErrorP95 = optimizedAngleErrors[optimizedAngleErrors.size() * 95 / 100];
+		const Scalar optimizedPixelErrorP95 = optimizedPixelErrors[optimizedPixelErrors.size() * 95 / 100];
+
+		const Scalar gravityErrorP95 = gravityErrors[gravityErrors.size() * 95 / 100];
+		const size_t optimizationIterationP95 = optimizationIterations[optimizationIterations.size() * 95 / 100];
+
+		Log::info() << indentation << "P95 translation error: " << String::toAString(translationErrorP95, 2u) << " -> " << String::toAString(optimizedTranslationErrorP95, 2u);
+		Log::info() << indentation << "P95 angle error: " << String::toAString(angleErrorP95, 1u) << "deg -> " << String::toAString(optimizedAngleErrorP95, 1u) << "deg";
+		Log::info() << indentation << "P95 sqr pixel error: " << String::toAString(pixelErrorP95, 1u) << "px -> " << String::toAString(optimizedPixelErrorP95, 1u) << "px";
+		Log::info() << indentation << "P95 gravity error: " << String::toAString(gravityErrorP95, 1u) << "deg";
+		Log::info() << indentation << "P95 iterations: " << optimizationIterationP95;
+		Log::info() << indentation << "Performance: " << performance;
+		Log::info() << indentation << "Validation: " << String::toAString(validation.accuracy() * 100.0, 1u) << "% succeeded.";
+
+		const bool succeeded = validation.succeeded();
+
+		if (std::is_same<double, Scalar>::value && standardDeviation == 0 && numberOutliers == 0u)
 		{
-			scopedIteration.setInaccurate();
+			if (!succeeded)
+			{
+				allSucceeded = false;
+			}
 		}
 	}
-	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(!translationErrors.empty());
-
-	std::sort(translationErrors.begin(), translationErrors.end());
-	std::sort(angleErrors.begin(), angleErrors.end());
-	std::sort(pixelErrors.begin(), pixelErrors.end());
-
-	std::sort(optimizedTranslationErrors.begin(), optimizedTranslationErrors.end());
-	std::sort(optimizedAngleErrors.begin(), optimizedAngleErrors.end());
-	std::sort(optimizedPixelErrors.begin(), optimizedPixelErrors.end());
-
-	const Scalar translationErrorP95 = translationErrors[translationErrors.size() * 95 / 100];
-	const Scalar angleErrorP95 = angleErrors[angleErrors.size() * 95 / 100];
-	const Scalar pixelErrorP95 = pixelErrors[pixelErrors.size() * 95 / 100];
-
-	const Scalar optimizedTranslationErrorP95 = optimizedTranslationErrors[optimizedTranslationErrors.size() * 95 / 100];
-	const Scalar optimizedAngleErrorP95 = optimizedAngleErrors[optimizedAngleErrors.size() * 95 / 100];
-	const Scalar optimizedPixelErrorP95 = optimizedPixelErrors[optimizedPixelErrors.size() * 95 / 100];
-
-	Log::info() << "P95 translation error: " << String::toAString(translationErrorP95, 2u) << " -> " << String::toAString(optimizedTranslationErrorP95, 2u);
-	Log::info() << "P95 angle error: " << String::toAString(angleErrorP95, 1u) << "deg -> " << String::toAString(optimizedAngleErrorP95, 1u) << "deg";
-	Log::info() << "P95 sqr pixel error: " << String::toAString(pixelErrorP95, 1u) << "px -> " << String::toAString(optimizedPixelErrorP95, 1u) << "px";
-	Log::info() << "Performance: " << performance;
-	Log::info() << "Validation: " << String::toAString(validation.accuracy() * 100.0, 1u) << "% succeeded.";
-
-	const bool succeeded = validation.succeeded();
-
-	if (std::is_same<double, Scalar>::value && standardDeviation == 0 && numberOutliers == 0u)
-	{
-		return succeeded;
-	}
-
-	return true;
+	return allSucceeded;
 }
 
 bool TestNonLinearOptimizationPose::testNonLinearOptimizationPoseZoom(const double testDuration)
