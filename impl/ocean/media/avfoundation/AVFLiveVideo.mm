@@ -639,18 +639,9 @@ bool AVFLiveVideo::createCaptureSession()
 		return false;
 	}
 
-	captureVideoDataOutput_ = [[AVCaptureVideoDataOutput alloc] init];
-	captureVideoDataOutput_.alwaysDiscardsLateVideoFrames = YES;
-
-	OnNewSampleCallback callback(*this, &AVFLiveVideo::onNewSample);
-	sampleBufferDelegate_ = [[AVFLiveVideoSampleBufferDelegate alloc] initWithCallback:callback];
-
-	dispatch_queue_t frameQueue = dispatch_queue_create("liveVideoFrameQueue", nullptr);
-	[captureVideoDataOutput_ setSampleBufferDelegate:sampleBufferDelegate_ queue:frameQueue];
-
 	captureSession_ = [[AVCaptureSession alloc] init];
 
-	if (![captureSession_ canAddInput:captureDeviceInput_] || ![captureSession_ canAddOutput:captureVideoDataOutput_])
+	if (![captureSession_ canAddInput:captureDeviceInput_])
 	{
 		return false;
 	}
@@ -684,6 +675,43 @@ bool AVFLiveVideo::createCaptureSession()
 		return false;
 	}
 
+	AVCaptureDeviceFormat* activeFormat = [captureDevice_ activeFormat];
+
+	CMFormatDescriptionRef activeFormatDescription = [activeFormat formatDescription];
+
+#ifdef OCEAN_DEBUG
+	{
+		CMVideoDimensions videoDimensions = CMVideoFormatDescriptionGetDimensions(activeFormatDescription);
+
+		const unsigned int width = (unsigned int)(videoDimensions.width);
+		const unsigned int height = (unsigned int)(videoDimensions.height);
+
+		const FourCharCode fourCharCode = CMFormatDescriptionGetMediaSubType(activeFormatDescription);
+		const FrameType::PixelFormat pixelFormat = PixelBufferAccessor::translatePixelFormat(fourCharCode);
+
+		Log::debug() << "AVFLiveVideo: Active format: " << width << "x" << height << ", " << FrameType::translatePixelFormat(pixelFormat) << ", " << [captureDevice_ activeVideoMinFrameDuration].timescale << " fps";
+	}
+#endif // OCEAN_DEBUG
+
+	captureVideoDataOutput_ = [[AVCaptureVideoDataOutput alloc] init];
+	captureVideoDataOutput_.alwaysDiscardsLateVideoFrames = YES;
+
+	NSString* key = (NSString*)kCVPixelBufferPixelFormatTypeKey;
+	NSNumber* value = [NSNumber numberWithUnsignedInt:CMFormatDescriptionGetMediaSubType(activeFormatDescription)];
+	NSDictionary* videoSettings = [NSDictionary dictionaryWithObject:value forKey:key];
+	[captureVideoDataOutput_ setVideoSettings:videoSettings];
+
+	OnNewSampleCallback callback(*this, &AVFLiveVideo::onNewSample);
+	sampleBufferDelegate_ = [[AVFLiveVideoSampleBufferDelegate alloc] initWithCallback:callback];
+
+	dispatch_queue_t frameQueue = dispatch_queue_create("liveVideoFrameQueue", nullptr);
+	[captureVideoDataOutput_ setSampleBufferDelegate:sampleBufferDelegate_ queue:frameQueue];
+
+	if (![captureSession_ canAddOutput:captureVideoDataOutput_])
+	{
+		return false;
+	}
+
 	[captureSession_ addOutput:captureVideoDataOutput_];
 
 	// Configure video stabilization based on the current setting
@@ -701,6 +729,23 @@ bool AVFLiveVideo::createCaptureSession()
 #endif
 	}
 
+#ifdef OCEAN_DEBUG
+	{
+		AVCaptureDeviceFormat* format = [captureDevice_ activeFormat];
+
+		CMFormatDescriptionRef formatDescription = [format formatDescription];
+		CMVideoDimensions videoDimensions = CMVideoFormatDescriptionGetDimensions(formatDescription);
+
+		const unsigned int width = (unsigned int)(videoDimensions.width);
+		const unsigned int height = (unsigned int)(videoDimensions.height);
+
+		const FourCharCode fourCharCode = CMFormatDescriptionGetMediaSubType(formatDescription);
+		const FrameType::PixelFormat pixelFormat = PixelBufferAccessor::translatePixelFormat(fourCharCode);
+
+		Log::debug() << "AVFLiveVideo: Active format after output connection: " << width << "x" << height << ", " << FrameType::translatePixelFormat(pixelFormat) << ", " << [captureDevice_ activeVideoMinFrameDuration].timescale << " fps";
+	}
+#endif // OCEAN_DEBUG
+
 	return true;
 }
 
@@ -713,7 +758,7 @@ void AVFLiveVideo::releaseCaptureSession()
 			[captureSession_ removeInput:captureDeviceInput_];
 		}
 
-		if (captureDeviceInput_)
+		if (captureVideoDataOutput_)
 		{
 			[captureSession_ removeOutput:captureVideoDataOutput_];
 		}
