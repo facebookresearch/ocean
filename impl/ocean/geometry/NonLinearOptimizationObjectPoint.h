@@ -501,10 +501,11 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
 		 * @param intermediateErrors Optional resulting intermediate (improving) errors
+		 * @param gravityConstraints Optional gravity constraints to force the optimization to create camera poses aligned with gravity, with one gravity vector for each camera pose, nullptr to avoid any gravity alignment
 		 * @return True, if succeeded
 		 * @see optimizeObjectPointsAndPosesIF(), NonLinearOptimization::ObjectPointToPoseIndexImagePointCorrespondenceAccessor.
 		 */
-		static inline bool optimizeObjectPointsAndPoses(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static inline bool optimizeObjectPointsAndPoses(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr, const GravityConstraints* gravityConstraints = nullptr);
 
 		/**
 		 * Optimizes the locations of 3D object points visible in individual (inverted and flipped) camera poses by minimizing the projection error between the 3D object points and the 2D image points.
@@ -525,10 +526,11 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
 		 * @param intermediateErrors Optional resulting intermediate (improving) errors
+		 * @param gravityConstraints Optional gravity constraints to force the optimization to create camera poses aligned with gravity, with one gravity vector for each camera pose, nullptr to avoid any gravity alignment
 		 * @return True, if succeeded
 		 * @see optimizeObjectPointsAndPoses(), NonLinearOptimization::ObjectPointToPoseIndexImagePointCorrespondenceAccessor.
 		 */
-		static inline bool optimizeObjectPointsAndPosesIF(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static inline bool optimizeObjectPointsAndPosesIF(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr, const GravityConstraints* gravityConstraints = nullptr);
 
 		/**
 		 * Optimizes the locations of 3D object points visible in individual camera poses by minimizing the projection error between the 3D object points and the 2D image points.
@@ -573,10 +575,11 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
 		 * @param intermediateErrors Optional resulting intermediate (improving) errors
+		 * @param gravityConstraints Optional gravity constraints to force the optimization to create camera poses aligned with gravity, with one gravity vector for each camera pose, nullptr to avoid any gravity alignment
 		 * @return True, if succeeded
 		 * @see optimizeObjectPointsAndPoses(), optimizeObjectPointsAndOrientationalPosesIF(), NonLinearOptimization::ObjectPointToPoseIndexImagePointCorrespondenceAccessor.
 		 */
-		static bool optimizeObjectPointsAndPosesIF(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeObjectPointsAndPosesIF(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr, const GravityConstraints* gravityConstraints = nullptr);
 
 		/**
 		 * Optimizes the locations of 3D object points visible in individual camera poses by minimizing the projection error between the 3D object points and the 2D image points.
@@ -852,7 +855,7 @@ inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndTwoPoses(co
 	return true;
 }
 
-inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* world_T_optimizedCameras, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors, const GravityConstraints* gravityConstraints)
 {
 #if 1
 	// creating local pointer to avoid Clang compiler bug
@@ -867,7 +870,7 @@ inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(const
 	HomogenousMatrices4 flippedOptimizedCameras_T_world;
 	NonconstArrayAccessor<HomogenousMatrix4> accessor_flippedOptimizedCameras_T_world(flippedOptimizedCameras_T_world, world_T_optimizedCameras ? world_T_cameras.size() : 0);
 
-	if (!optimizeObjectPointsAndPosesIF(cameraAccessor, ConstArrayAccessor<HomogenousMatrix4>(flippedCameras_T_world), objectPoints, correspondenceGroups, accessor_flippedOptimizedCameras_T_world.pointer(), optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors))
+	if (!optimizeObjectPointsAndPosesIF(cameraAccessor, ConstArrayAccessor<HomogenousMatrix4>(flippedCameras_T_world), objectPoints, correspondenceGroups, accessor_flippedOptimizedCameras_T_world.pointer(), optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors, gravityConstraints))
 	{
 		return false;
 	}
@@ -883,7 +886,7 @@ inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(const
 	return true;
 }
 
-inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPosesIF(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPosesIF(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& flippedCameras_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, NonconstIndexedAccessor<HomogenousMatrix4>* flippedOptimizedCameras_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors, const GravityConstraints* gravityConstraints)
 {
 #if 1
 	// creating local pointer to avoid Clang compiler bug
@@ -893,7 +896,7 @@ inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPosesIF(con
 	const ConstElementAccessor<const AnyCamera*> cameraAccessor(flippedCameras_T_world.size(), &camera);
 #endif
 
-	return optimizeObjectPointsAndPosesIF(cameraAccessor, flippedCameras_T_world, objectPoints, correspondenceGroups, flippedOptimizedCameras_T_world, optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors);
+	return optimizeObjectPointsAndPosesIF(cameraAccessor, flippedCameras_T_world, objectPoints, correspondenceGroups, flippedOptimizedCameras_T_world, optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors, gravityConstraints);
 }
 
 inline bool NonLinearOptimizationObjectPoint::slowOptimizeObjectPointsAndPoses(const PinholeCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& poses, const ConstIndexedAccessor<Vector3>& objectPoints, const ObjectPointGroupsAccessor& correspondenceGroups, const bool useDistortionParameters, NonconstIndexedAccessor<HomogenousMatrix4>* optimizedPoses, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
