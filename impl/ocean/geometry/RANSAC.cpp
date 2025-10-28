@@ -497,7 +497,9 @@ bool RANSAC::plane(const ConstIndexedAccessor<ObjectPoint>& objectPoints, Random
 	ocean_assert(iterations >= 1u);
 
 	if (objectPoints.size() < 3)
+	{
 		return false;
+	}
 
 	Scalar maximalDistance = Numeric::maxValue();
 
@@ -507,7 +509,9 @@ bool RANSAC::plane(const ConstIndexedAccessor<ObjectPoint>& objectPoints, Random
 
 		Scalars sqrDistancesToMedian(objectPoints.size());
 		for (size_t n = 0; n < objectPoints.size(); ++n)
+		{
 			sqrDistancesToMedian[n] = medianObjectPoint.sqrDistance(objectPoints[n]);
+		}
 
 		const Scalar medianDistance = Numeric::sqrt(Median::median(sqrDistancesToMedian.data(), sqrDistancesToMedian.size()));
 
@@ -1122,11 +1126,12 @@ bool RANSAC::translation(const ConstIndexedAccessor<Vector2>& translations, Rand
 	return true;
 }
 
-bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, RandomGenerator& randomGenerator, Quaternion& world_R_camera, const unsigned int minValidCorrespondences, const unsigned int iterations, const Scalar maxSqrError, Scalar* finalError, Indices32* usedIndices)
+bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, RandomGenerator& randomGenerator, Quaternion& world_R_camera, const unsigned int minValidCorrespondences, const unsigned int iterations, const Scalar maxSqrError, Scalar* finalError, Indices32* usedIndices, const GravityConstraints* gravityConstraints)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(objectPoints.size() && imagePoints.size());
 	ocean_assert(objectPoints.size() >= 2);
+	ocean_assert(gravityConstraints == nullptr || (gravityConstraints->isValid() && gravityConstraints->numberCameras() == 1));
 
 	unsigned int bestValidCorrespondences = max(2u, minValidCorrespondences);
 	Scalar bestError = Numeric::maxValue();
@@ -1137,8 +1142,6 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vec
 
 	for (unsigned int i = 0u; i < iterations; ++i)
 	{
-		indices.clear();
-
 		RandomI::random(randomGenerator, (unsigned int)(objectPoints.size()) - 1u, index0, index1);
 
 		// the determination of the orientation is based on two point correspondences
@@ -1171,7 +1174,7 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vec
 		const Vector3 directionA = targetVector1 - targetVector0 * (targetVector0 * targetVector1);
 		const Vector3 directionB = rotatedReferenceVector1 - targetVector0 * (rotatedReferenceVector1 * targetVector0);
 
-		Quaternion candidateOrientation(rotation0);
+		Quaternion world_R_candidateCamera(rotation0);
 
 		if (!directionA.isNull() && !directionB.isNull())
 		{
@@ -1186,17 +1189,27 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vec
 			}
 
 			const Quaternion rotation1(targetVector0, angle);
-			candidateOrientation = Quaternion(rotation1 * rotation0);
+			world_R_candidateCamera = Quaternion(rotation1 * rotation0);
 		}
 
-		const HomogenousMatrix4 flippedCamera_T_world(AnyCamera::standard2InvertedFlipped(HomogenousMatrix4(candidateOrientation)));
+		if (gravityConstraints != nullptr)
+		{
+			if (!gravityConstraints->isCameraAlignedWithGravity(world_R_candidateCamera))
+			{
+				continue;
+			}
+		}
+
+		indices.clear();
+
+		const HomogenousMatrix4 flippedCandidateCamera_T_world(AnyCamera::standard2InvertedFlipped(HomogenousMatrix4(world_R_candidateCamera)));
 
 		Scalar error = 0;
 		unsigned int validCorrespondences = 0u;
 
 		for (size_t n = 0; n < objectPoints.size(); ++n)
 		{
-			const Vector2 projectedObjectPoint(camera.projectToImageIF(flippedCamera_T_world, objectPoints[n]));
+			const Vector2 projectedObjectPoint(camera.projectToImageIF(flippedCandidateCamera_T_world, objectPoints[n]));
 
 			const Scalar sqrDistance = imagePoints[n].sqrDistance(projectedObjectPoint);
 
@@ -1205,7 +1218,7 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vec
 				error += sqrDistance;
 				validCorrespondences++;
 
-				indices.emplace_back((unsigned int)(n));
+				indices.emplace_back(Index32(n));
 			}
 		}
 
@@ -1214,7 +1227,7 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vec
 			bestValidCorrespondences = validCorrespondences;
 			bestError = error;
 
-			world_R_camera = candidateOrientation;
+			world_R_camera = world_R_candidateCamera;
 
 			ocean_assert(validCorrespondences >= 1u);
 
@@ -2475,7 +2488,9 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 			{
 				// we accept only object points lying in front of the camera
 				if ((poseIF * objectPoints[c]).z() > Numeric::eps() && imagePoints[c].sqrDistance(pinholeCamera.projectToImageIF<true>(poseIF, objectPoints[c], useDistortionParameters, zoom)) <= sqrPixelErrorThreshold)
+				{
 					bestIndices.push_back(c);
+				}
 			}
 
 			ocean_assert(invertedCovariances.elements() == 0 || weights);
@@ -2903,8 +2918,11 @@ void RANSAC::projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAcces
 			{
 				maxCountInliers = indices.size();
 				*minSquareErrors = squareErrors;
+
 				for (size_t n = 0; n < posesIF->size(); ++n)
+				{
 					(*posesIF)[n] = std::move(candidateModels[n]);
+				}
 
 				if (usedIndices != nullptr)
 				{

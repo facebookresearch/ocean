@@ -259,10 +259,11 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param iterations The number of RANSAC iterations, with range [1, infinity)
 		 * @param maxSqrError The maximal square pixel error between a projected 3D object point and a 2D image point to count as valid correspondence, with range (0, infinity)
 		 * @param finalError Optional resulting final average square pixel error between all valid point correspondences for the resulting orientation
-		 * @param usedIndices Optional resulting indices of all used point correspondences
+		 * @param usedIndices Optional resulting indices of all used point correspondences, nullptr if not of interest
+		 * @param gravityConstraints Optional gravity constraints to guide the pose estimation, nullptr otherwise
 		 * @return True, if succeeded
 		 */
-		static bool orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, RandomGenerator& randomGenerator, Quaternion& world_R_camera, const unsigned int minValidCorrespondences = 5u, const unsigned int iterations = 20u, const Scalar maxSqrError = Scalar(5 * 5), Scalar* finalError = nullptr, Indices32* usedIndices = nullptr);
+		static bool orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& imagePoints, RandomGenerator& randomGenerator, Quaternion& world_R_camera, const unsigned int minValidCorrespondences = 5u, const unsigned int iterations = 20u, const Scalar maxSqrError = Scalar(5 * 5), Scalar* finalError = nullptr, Indices32* usedIndices = nullptr, const GravityConstraints* gravityConstraints = nullptr);
 
 		/**
 		 * Determines the 3D object point for a set of image points observing the same object point under individual camera poses (with rotational and translational camera motion).
