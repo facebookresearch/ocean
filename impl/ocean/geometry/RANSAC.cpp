@@ -100,7 +100,7 @@ unsigned int RANSAC::iterations(const unsigned int model, const Scalar successPr
 	return std::max(1u, (unsigned int)(Numeric::ceil(expectedIterations)));
 }
 
-bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy)
+bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const GravityConstraints* gravityConstraints)
 {
 	ocean_assert(anyCamera.isValid());
 	ocean_assert(minimalValidCorrespondences >= 4u);
@@ -108,6 +108,7 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 	ocean_assert(objectPointAccessor.size() == imagePointAccessor.size());
 	ocean_assert(objectPointAccessor.size() >= minimalValidCorrespondences);
 	ocean_assert(iterations >= 1u);
+	ocean_assert(gravityConstraints == nullptr || (gravityConstraints->isValid() && gravityConstraints->numberCameras() == 1));
 
 	if (objectPointAccessor.size() < 4 || objectPointAccessor.size() != imagePointAccessor.size() || objectPointAccessor.size() < minimalValidCorrespondences)
 	{
@@ -136,9 +137,9 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 	// due to numerical stability, we ensure that we always apply at least 4 iterations
 	const unsigned int minimalAdaptiveIterations = std::min(4u, iterations);
 
-	unsigned int adpativeIterations = iterations;
+	unsigned int adaptiveIterations = iterations;
 
-	for (unsigned int i = 0u; i < adpativeIterations; ++i)
+	for (unsigned int i = 0u; i < adaptiveIterations; ++i)
 	{
 		unsigned int index0, index1, index2;
 		Random::random(randomGenerator, correspondences - 1u, index0, index1, index2);
@@ -163,9 +164,17 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 		// test which of the (at most four) poses is valid for most remaining point correspondences
 		for (unsigned int n = 0u; n < numberPoses; ++n)
 		{
-			indices.clear();
-
 			const HomogenousMatrix4& world_T_candidateCamera = world_T_candidateCameras[n];
+
+			if (gravityConstraints != nullptr)
+			{
+				if (!gravityConstraints->isCameraAlignedWithGravity(world_T_candidateCamera))
+				{
+					continue;
+				}
+			}
+
+			indices.clear();
 
 			Scalar sqrErrors = 0;
 
@@ -208,7 +217,7 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 
 					const unsigned int expectedIterationsForFoundCorrespondences = RANSAC::iterations(3u, successProbability, faultyRate);
 
-					adpativeIterations = minmax(minimalAdaptiveIterations, expectedIterationsForFoundCorrespondences, adpativeIterations);
+					adaptiveIterations = minmax(minimalAdaptiveIterations, expectedIterationsForFoundCorrespondences, adaptiveIterations);
 				}
 			}
 		}
@@ -231,7 +240,7 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 	{
 		const size_t bestIndicesUsedForOptimization = bestIndices.size();
 
-		if (!NonLinearOptimizationPose::optimizePose(anyCamera, world_T_bestCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), world_T_camera, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy))
+		if (!NonLinearOptimizationPose::optimizePose(anyCamera, world_T_bestCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), world_T_camera, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy, nullptr, gravityConstraints))
 		{
 			return false;
 		}
@@ -265,7 +274,7 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 
 				world_T_bestCamera = world_T_camera;
 
-				if (!NonLinearOptimizationPose::optimizePose(anyCamera, world_T_bestCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), world_T_camera, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy))
+				if (!NonLinearOptimizationPose::optimizePose(anyCamera, world_T_bestCamera, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), world_T_camera, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy, nullptr, gravityConstraints))
 				{
 					return false;
 				}

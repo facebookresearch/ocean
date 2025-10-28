@@ -11,6 +11,7 @@
 #include "ocean/geometry/Geometry.h"
 #include "ocean/geometry/CameraCalibration.h"
 #include "ocean/geometry/Error.h"
+#include "ocean/geometry/GravityConstraints.h"
 #include "ocean/geometry/Homography.h"
 #include "ocean/geometry/NonLinearOptimizationHomography.h"
 
@@ -48,7 +49,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * Parameter3: Resulting transformation
 		 * Return parameter: True, if succeeded
 		 */
-		typedef bool (*GeometricTransformFunction)(const ImagePoint*, const ImagePoint*, const size_t, SquareMatrix3&);
+		using GeometricTransformFunction = bool(*)(const ImagePoint*, const ImagePoint*, const size_t, SquareMatrix3&);
 
 	public:
 
@@ -76,9 +77,10 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param sqrPixelErrorThreshold Square pixel error threshold for valid RANSAC candidates, with range (0, infinity)
 		 * @param usedIndices Optional vector receiving the indices of all valid correspondences
 		 * @param sqrAccuracy Optional resulting average square pixel error
+		 * @param gravityConstraints Optional gravity constraints to guide the pose estimation, nullptr otherwise
 		 * @return True, if succeeded
 		 */
-		static bool p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const unsigned int minimalValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr);
+		static bool p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const unsigned int minimalValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr, const GravityConstraints* gravityConstraints = nullptr);
 
 		/**
 		 * Deprecated.

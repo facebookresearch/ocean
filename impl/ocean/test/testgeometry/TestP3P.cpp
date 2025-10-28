@@ -203,7 +203,7 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 			if (numberPoses != 0u)
 			{
 				// one of the resulting poses must match our random pose
-				bool onePoseIsAccuate = false;
+				bool onePoseIsAccurate = false;
 
 				for (unsigned int n = 0u; n < numberPoses; ++n)
 				{
@@ -244,14 +244,14 @@ bool TestP3P::testP3PWithPoints(const double testDuration)
 
 						if (translationError <= T(0.005) && absYawDeg <= T(0.01) && absPitchDeg <= T(0.01) && absRollDeg <= T(0.01))
 						{
-							onePoseIsAccuate = true;
+							onePoseIsAccurate = true;
 						}
 					}
 				}
 
 				if (std::is_same<T, double>::value)
 				{
-					if (!onePoseIsAccuate)
+					if (!onePoseIsAccurate)
 					{
 						scopedIteration.setInaccurate();
 					}

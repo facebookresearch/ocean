@@ -8,7 +8,6 @@
 #include "ocean/geometry/P3P.h"
 
 #include "ocean/math/Equation.h"
-#include "ocean/math/Line2.h"
 #include "ocean/math/SquareMatrix3.h"
 
 namespace Ocean
