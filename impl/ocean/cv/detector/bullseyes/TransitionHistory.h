@@ -31,38 +31,38 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT TransitionHistory
 		public:
 
 			/**
-				* Creates a new history object.
-				*/
+			 * Creates a new history object.
+			 */
 			TransitionHistory() = default;
 
 			/**
-				* Returns the history with window size 1.
-				* @return The previous delta
-				*/
+			 * Returns the history with window size 1.
+			 * @return The previous delta
+			 */
 			int history1();
 
 			/**
-				* Returns the history with window size 2.
-				* @return The sum of the previous two deltas
-				*/
+			 * Returns the history with window size 2.
+			 * @return The sum of the previous two deltas
+			 */
 			int history2();
 
 			/**
-				* Returns the history with window size 3.
-				* @return The sum of the previous three deltas
-				*/
+			 * Returns the history with window size 3.
+			 * @return The sum of the previous three deltas
+			 */
 			int history3();
 
 			/**
-				* Adds a new delta object as most recent history.
-				* Existing history objects will be moved by one pixel.
-				* @param newDelta The new delta object to be added
-				*/
+			 * Adds a new delta object as most recent history.
+			 * Existing history objects will be moved by one pixel.
+			 * @param newDelta The new delta object to be added
+			 */
 			void push(const int newDelta);
 
 			/**
-				* Resets the history object.
-				*/
+			 * Resets the history object.
+			 */
 			void reset();
 
 		protected:
