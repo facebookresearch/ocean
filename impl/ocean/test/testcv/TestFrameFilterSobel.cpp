@@ -14,6 +14,8 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/FrameFilterSobel.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -295,24 +297,29 @@ bool TestFrameFilterSobel::testHorizontalVertical3Squared1Channel8BitRow(const d
 
 	Log::info() << "Testing Ixx, Iyy, Ixy filter for single row:";
 
-	bool allSucceeded = true;
-
 	const unsigned int minimalWidth = 10u;
 	const unsigned int maximalWidth = 1920u;
 
-	Timestamp startTimestamp(true);
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
-	RandomI::initialize(1);
+	Timestamp startTimestamp(true);
 
 	do
 	{
-		const unsigned int width = RandomI::random(minimalWidth, maximalWidth);
-		const unsigned int elements = RandomI::random(8u, width - 2u);
+		const unsigned int width = RandomI::random(randomGenerator, minimalWidth, maximalWidth);
 
-		const unsigned int framePaddingElements = RandomI::random(1u, 100u) * RandomI::random(1u);
+		unsigned int paddingElements = 0u;
 
-		Frame frame(FrameType(width, 3u, FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), framePaddingElements);
-		CV::CVUtilities::randomizeFrame(frame, false);
+		if (RandomI::boolean(randomGenerator))
+		{
+			paddingElements = RandomI::random(randomGenerator, 1u, 100u);
+		}
+
+		Frame frame(FrameType(width, 3u, FrameType::genericPixelFormat<uint8_t, 1u>(), FrameType::ORIGIN_UPPER_LEFT), paddingElements);
+		CV::CVUtilities::randomizeFrame(frame, false, &randomGenerator);
+
+		const unsigned int elements = RandomI::random(randomGenerator, 8u, width - 2u);
 
 		Memory memoryResponsesXX = Memory::create<int16_t>(elements);
 		Memory memoryResponsesYY = Memory::create<int16_t>(elements);
@@ -324,19 +331,28 @@ bool TestFrameFilterSobel::testHorizontalVertical3Squared1Channel8BitRow(const d
 
 		CV::FrameFilterSobel::filterHorizontalVertical3Squared1Channel8BitRow(frame.constrow<uint8_t>(1u), width, elements, frame.paddingElements(), responsesXX, responsesYY, responsesXY);
 
-		const uint8_t* row0 = frame.constpixel<uint8_t>(1u, 0u); // +1 to get the center pixel of the filter
-		const uint8_t* row1 = frame.constpixel<uint8_t>(1u, 1u);
-		const uint8_t* row2 = frame.constpixel<uint8_t>(1u, 2u);
-
 		for (unsigned int n = 0u; n < elements; ++n)
 		{
+			const uint8_t pixelTop_0 = frame.constpixel<uint8_t>(n + 0u, 0u)[0];
+			const uint8_t pixelTop_1 = frame.constpixel<uint8_t>(n + 1u, 0u)[0]; // the response is actually provided for this center pixel, not for the pixel to the left
+			const uint8_t pixelTop_2 = frame.constpixel<uint8_t>(n + 2u, 0u)[0];
+
+			const uint8_t pixelMiddle_0 = frame.constpixel<uint8_t>(n + 0u, 1u)[0];
+			const uint8_t pixelMiddle_2 = frame.constpixel<uint8_t>(n + 2u, 1u)[0];
+
+			const uint8_t pixelBottom_0 = frame.constpixel<uint8_t>(n + 0u, 2u)[0];
+			const uint8_t pixelBottom_1 = frame.constpixel<uint8_t>(n + 1u, 2u)[0];
+			const uint8_t pixelBottom_2 = frame.constpixel<uint8_t>(n + 2u, 2u)[0];
+
 			// horizontal filter response (X)
 			//      0 1 2
 			// A | -1 0 1 |
 			// B | -2 0 2 |
 			// C | -1 0 1 |
 
-			const int horizontalResponse = int(*(row0 + 1)) + int(*(row1 + 1)) * 2 + int(*(row2 + 1)) - (int(*(row0 - 1)) + int(*(row1 - 1)) * 2 + int(*(row2 - 1)));
+			const int32_t horizontalResponse = -int32_t(pixelTop_0) + int32_t(pixelTop_2)
+												- int32_t(pixelMiddle_0) * 2 + int32_t(pixelMiddle_2) * 2
+												- int32_t(pixelBottom_0) + int32_t(pixelBottom_2);
 
 			// vertical filter response (Y)
 			//      0  1  2
@@ -344,65 +360,64 @@ bool TestFrameFilterSobel::testHorizontalVertical3Squared1Channel8BitRow(const d
 			// B |  0  0  0 |
 			// C |  1  2  1 |
 
-			const int verticalResponse = int(*(row2 - 1)) + int(*(row2 + 0)) * 2 + int(*(row2 + 1)) - (int(*(row0 - 1)) + int(*(row0 + 0)) * 2 + int(*(row0 + 1)));
+			const int32_t verticalResponse = -int32_t(pixelTop_0) - int32_t(pixelTop_1) * 2 - int32_t(pixelTop_2)
+												+ int32_t(pixelBottom_0) + int32_t(pixelBottom_1) * 2 + int32_t(pixelBottom_2);
 
-			// we allow a rounding error of +/- 1
 
-			const int Ix = horizontalResponse / 8;
-			const int Iy = verticalResponse / 8;
+			int32_t Ix = 0;
+			int32_t Iy = 0;
 
-			int IxxMin = (Ix - 1) * (Ix - 1);
-			int IxxMiddle = (Ix + 0) * (Ix + 0);
-			int IxxMax = (Ix + 1) * (Ix + 1);
-			Utilities::sortLowestToFront3(IxxMin, IxxMiddle, IxxMax);
-
-			int IyyMin = (Iy - 1) * (Iy - 1);
-			int IyyMiddle = (Iy + 0) * (Iy + 0);
-			int IyyMax = (Iy + 1) * (Iy + 1);
-			Utilities::sortLowestToFront3(IyyMin, IyyMiddle, IyyMax);
-
-			std::vector<int> Ixys =
+			if (horizontalResponse >= 0)
 			{
-				(Ix - 1) * (Iy - 1),
-				(Ix - 1) * (Iy + 1),
-				(Ix + 1) * (Iy - 1),
-				(Ix + 1) * (Iy + 1)
-			};
-
-			std::sort(Ixys.begin(), Ixys.end());
-
-			if (int(responsesXX[n]) < IxxMin || int(responsesXX[n]) > IxxMax)
+				Ix = (horizontalResponse + 4) / 8;
+			}
+			else
 			{
-				allSucceeded = false;
+				Ix = (horizontalResponse - 4) / 8;
 			}
 
-			if (int(responsesYY[n]) < IyyMin || int(responsesYY[n]) > IyyMax)
+			if (verticalResponse >= 0)
 			{
-				allSucceeded = false;
+				Iy = (verticalResponse + 4) / 8;
+			}
+			else
+			{
+				Iy = (verticalResponse - 4) / 8;
 			}
 
-			if (int(responsesXY[n]) < Ixys.front() || int(responsesXY[n]) > Ixys.back())
-			{
-				allSucceeded = false;
-			}
+			// currently, the responses can contain a rounding error of +/-1
 
-			row0++;
-			row1++;
-			row2++;
+			const int32_t Ixx_min = std::min({sqr(Ix - 1), sqr(Ix), sqr(Ix + 1)});
+			const int32_t Ixx_max = std::max({sqr(Ix - 1), sqr(Ix), sqr(Ix + 1)});
+
+			const int32_t Ixy_min = std::min({(Ix - 1) * (Iy - 1), (Ix - 1) * (Iy + 1), (Ix + 1) * (Iy - 1), (Ix + 1) * (Iy + 1)});
+			const int32_t Ixy_max = std::max({(Ix - 1) * (Iy - 1), (Ix - 1) * (Iy + 1), (Ix + 1) * (Iy - 1), (Ix + 1) * (Iy + 1)});
+
+			const int32_t Iyy_min = std::min({sqr(Iy - 1), sqr(Iy), sqr(Iy + 1)});
+			const int32_t Iyy_max = std::max({sqr(Iy - 1), sqr(Iy), sqr(Iy + 1)});
+
+			OCEAN_EXPECT_INSIDE_RANGE(validation, Ixx_min, int32_t(responsesXX[n]), Ixx_max);
+			OCEAN_EXPECT_INSIDE_RANGE(validation, Ixy_min, int32_t(responsesXY[n]), Ixy_max);
+			OCEAN_EXPECT_INSIDE_RANGE(validation, Iyy_min, int32_t(responsesYY[n]), Iyy_max);
+
+#if 0
+			// perfect match currently not possible
+
+			/*const int32_t Ixx = Ix * Ix;
+			const int32_t Ixy = Ix * Iy;
+			const int32_t Iyy = Iy * Iy;
+
+			OCEAN_EXPECT_EQUAL(validation, Ixx, int32_t(responsesXX[n]));
+			OCEAN_EXPECT_EQUAL(validation, Ixy, int32_t(responsesXY[n]));
+			OCEAN_EXPECT_EQUAL(validation, Iyy, int32_t(responsesYY[n]));*/
+#endif
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename TTarget>
