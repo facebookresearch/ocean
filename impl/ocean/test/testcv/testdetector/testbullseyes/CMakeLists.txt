@@ -43,24 +43,10 @@ if (MACOS OR ANDROID OR IOS OR LINUX OR WIN32)
         PRIVATE
             ocean_cv
             ocean_io
-            ocean_io_image
             ocean_math
-            ocean_media
             ocean_platform
             ocean_system
     )
-
-    if (ANDROID)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_platform_android ocean_media_openimagelibraries)
-    endif()
-
-    if (MACOS OR IOS)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_media_imageio)
-    endif()
-
-    if (WIN32)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_media_wic)
-    endif()
 
     # Installation
     install(TARGETS ${OCEAN_TARGET_NAME}
@@ -119,17 +105,11 @@ if (ANDROID OR IOS OR LINUX OR MACOS OR WIN32)
             ocean_cv_detector
             ocean_cv_detector_bullseyes
             ocean_io
-            ocean_io_image
             ocean_media
-            ocean_media_openimagelibraries
             ocean_system
             ocean_test_testcv
             ocean_test_testcv_testdetector
     )
-
-    if (MACOS OR IOS)
-        target_link_libraries(${OCEAN_TARGET_NAME} PUBLIC ocean_media_imageio)
-    endif()
 
     include(GoogleTest)
     gtest_add_tests(TARGET ${OCEAN_TARGET_NAME} WORKING_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin)

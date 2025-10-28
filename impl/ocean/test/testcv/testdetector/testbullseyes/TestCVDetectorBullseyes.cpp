@@ -11,36 +11,14 @@
 #include "ocean/test/testcv/testdetector/testbullseyes/TestBullseye.h"
 
 #include "ocean/base/Build.h"
-#include "ocean/base/CommandArguments.h"
 #include "ocean/base/DateTime.h"
-#include "ocean/base/Frame.h"
-#include "ocean/base/PluginManager.h"
 #include "ocean/base/Processor.h"
 #include "ocean/base/RandomI.h"
 #include "ocean/base/String.h"
 #include "ocean/base/TaskQueue.h"
 #include "ocean/base/Utilities.h"
 
-#include "ocean/cv/CVUtilities.h"
-#include "ocean/cv/FrameConverterRGB24.h"
-
-#include "ocean/media/FrameMedium.h"
-#include "ocean/media/Manager.h"
-#include "ocean/media/Utilities.h"
-
-#include "ocean/platform/System.h"
-
 #include "ocean/system/Process.h"
-
-#ifdef OCEAN_RUNTIME_STATIC
-	#if defined(__APPLE__)
-		#include "ocean/media/imageio/ImageIO.h"
-	#elif defined(_ANDROID)
-			#include "ocean/media/openimagelibraries/OpenImageLibraries.h"
-	#elif defined(_WINDOWS)
-		#include "ocean/media/wic/WIC.h"
-	#endif
-#endif
 
 #ifdef _ANDROID
 	#include "ocean/platform/android/Battery.h"
@@ -95,23 +73,6 @@ bool testCVDetectorBullseyes(const double testDuration, Worker& worker, const st
 
 	Log::info() << " ";
 
-#ifdef OCEAN_RUNTIME_STATIC
-	OCEAN_APPLY_IF_APPLE(Media::ImageIO::registerImageIOLibrary());
-	OCEAN_APPLY_IF_ANDROID(Media::OpenImageLibraries::registerOpenImageLibrariesLibrary());
-	OCEAN_APPLY_IF_WINDOWS(Media::WIC::registerWICLibrary());
-#else
-	const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
-
-	if (PluginManager::get().collectPlugins(frameworkPath + std::string("/bin/plugins/") + Build::buildString()) == 0)
-	{
-		PluginManager::get().collectPlugins("plugins");
-	}
-
-	PluginManager::get().loadPlugins(Ocean::PluginManager::TYPE_MEDIA);
-#endif
-
-	Log::info() << " ";
-
 	std::vector<std::string> tests(Ocean::Utilities::separateValues(String::toLower(testFunctions), ',', true, true));
 	const std::set<std::string> testSet(tests.begin(), tests.end());
 
@@ -146,14 +107,6 @@ bool testCVDetectorBullseyes(const double testDuration, Worker& worker, const st
 	{
 		Log::info() << (testSet.empty() ? "Entire" : "Partial") << " Computer Vision Detector Bullseyes library test FAILED!";
 	}
-
-#ifdef OCEAN_RUNTIME_STATIC
-		OCEAN_APPLY_IF_WINDOWS(Media::WIC::unregisterWICLibrary());
-		OCEAN_APPLY_IF_ANDROID(Media::OpenImageLibraries::unregisterOpenImageLibrariesLibrary());
-		OCEAN_APPLY_IF_APPLE(Media::ImageIO::unregisterImageIOLibrary());
-#else
-		PluginManager::get().release();
-#endif
 
 	return allSucceeded;
 }
