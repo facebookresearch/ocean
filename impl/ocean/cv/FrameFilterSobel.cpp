@@ -7,6 +7,7 @@
 
 #include "ocean/cv/FrameFilterSobel.h"
 #include "ocean/cv/NEON.h"
+#include "ocean/cv/SSE.h"
 
 namespace Ocean
 {
@@ -259,6 +260,79 @@ void FrameFilterSobel::filterHorizontalVertical3Squared1Channel8BitRow(const uin
 		// horizontal * vertical
 		vst1q_s16(responsesXY, vmull_s8(horizontal_s_8x8, vertical_s_8x8));
 
+
+		row += 8;
+		responsesXX += 8;
+		responsesYY += 8;
+		responsesXY += 8;
+	}
+
+#elif defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+	const unsigned int strideElements = width + paddingElements;
+
+	for (unsigned int x = 0u; x < elements; x += 8u)
+	{
+		if (x + 8u > elements)
+		{
+			// the last iteration will not fit into the output frame,
+			// so we simply shift x left by some pixels (at most 7) and we will calculate some pixels again
+
+			ocean_assert(x >= 8u && elements > 8u);
+			const unsigned int newX = elements - 8u;
+
+			ocean_assert(x > newX);
+			const unsigned int offset = x - newX;
+			ocean_assert(offset < 8u);
+
+			row -= offset;
+			responsesXX -= offset;
+			responsesYY -= offset;
+			responsesXY -= offset;
+
+			// the for loop will stop after this iteration
+			ocean_assert(!(x + 8u < elements));
+		}
+
+		// Load 8 pixels from each row
+		const __m128i A0_s_16x8 = _mm_cvtepu8_epi16(_mm_loadu_si64((const __m128i*)(row - strideElements + 0)));
+		const __m128i A1_s_16x8 = _mm_cvtepu8_epi16(_mm_loadu_si64((const __m128i*)(row - strideElements + 1)));
+		const __m128i A2_s_16x8 = _mm_cvtepu8_epi16(_mm_loadu_si64((const __m128i*)(row - strideElements + 2)));
+
+		const __m128i B0_s_16x8 = _mm_cvtepu8_epi16(_mm_loadu_si64((const __m128i*)(row + 0)));
+		const __m128i B2_s_16x8 = _mm_cvtepu8_epi16(_mm_loadu_si64((const __m128i*)(row + 2)));
+
+		const __m128i C0_s_16x8 = _mm_cvtepu8_epi16(_mm_loadu_si64((const __m128i*)(row + strideElements + 0)));
+		const __m128i C1_s_16x8 = _mm_cvtepu8_epi16(_mm_loadu_si64((const __m128i*)(row + strideElements + 1)));
+		const __m128i C2_s_16x8 = _mm_cvtepu8_epi16(_mm_loadu_si64((const __m128i*)(row + strideElements + 2)));
+
+		// Horizontal Sobel filter: A2 - A0 + 2*(B2 - B0) + C2 - C0
+		__m128i horizontal_s_16x8 = _mm_sub_epi16(A2_s_16x8, A0_s_16x8);
+		const __m128i B_diff_16x8 = _mm_sub_epi16(B2_s_16x8, B0_s_16x8);
+		horizontal_s_16x8 = _mm_add_epi16(horizontal_s_16x8, _mm_slli_epi16(B_diff_16x8, 1)); // multiply by 2
+		horizontal_s_16x8 = _mm_add_epi16(horizontal_s_16x8, _mm_sub_epi16(C2_s_16x8, C0_s_16x8));
+
+		// Divide by 8 using right shift
+		horizontal_s_16x8 = SSE::divideByRightShiftSigned16Bit(horizontal_s_16x8, 3);
+
+		// Vertical Sobel filter: C0 - A0 + 2*(C1 - A1) + C2 - A2
+		__m128i vertical_s_16x8 = _mm_sub_epi16(C0_s_16x8, A0_s_16x8);
+		const __m128i C1_A1_diff_16x8 = _mm_sub_epi16(C1_s_16x8, A1_s_16x8);
+		vertical_s_16x8 = _mm_add_epi16(vertical_s_16x8, _mm_slli_epi16(C1_A1_diff_16x8, 1)); // multiply by 2
+		vertical_s_16x8 = _mm_add_epi16(vertical_s_16x8, _mm_sub_epi16(C2_s_16x8, A2_s_16x8));
+
+		// Divide by 8 using right shift
+		vertical_s_16x8 = SSE::divideByRightShiftSigned16Bit(vertical_s_16x8, 3);
+
+		// Compute squared products: horizontal * horizontal, vertical * vertical, horizontal * vertical
+		const __m128i horizontalSquared_s_16x8 = _mm_mullo_epi16(horizontal_s_16x8, horizontal_s_16x8);
+		const __m128i verticalSquared_s_16x8 = _mm_mullo_epi16(vertical_s_16x8, vertical_s_16x8);
+		const __m128i horizontalVertical_s_16x8 = _mm_mullo_epi16(horizontal_s_16x8, vertical_s_16x8);
+
+		// Store results
+		_mm_storeu_si128((__m128i*)responsesXX, horizontalSquared_s_16x8);
+		_mm_storeu_si128((__m128i*)responsesYY, verticalSquared_s_16x8);
+		_mm_storeu_si128((__m128i*)responsesXY, horizontalVertical_s_16x8);
 
 		row += 8;
 		responsesXX += 8;
