@@ -77,10 +77,11 @@ using namespace Ocean;
 	if (pixelBuffer)
 	{
 		const CMTime presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
-		ocean_assert(presentationTime.timescale == 1000000000);
 
-		const Timestamp frameUnixTimestamp = timestampConverter_.toUnix(presentationTime.value);
-		const double frameUptime = Timestamp::nanoseconds2seconds(presentationTime.value);
+		const int64_t presentationTimeNs = Timestamp::TimestampConverter::timestampInNs(presentationTime.value, presentationTime.timescale);
+
+		const Timestamp frameUnixTimestamp = timestampConverter_.toUnix(presentationTimeNs);
+		const double frameUptime = Timestamp::nanoseconds2seconds(presentationTimeNs);
 
 		delegateOnNewSampleCallback(pixelBuffer, SharedAnyCamera(), double(frameUnixTimestamp), frameUptime);
 
