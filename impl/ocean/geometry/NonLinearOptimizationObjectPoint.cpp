@@ -360,7 +360,7 @@ class NonLinearOptimizationObjectPoint::CamerasObjectPointProvider : public NonL
 		{
 			for (size_t n = 0; n < flippedCameras_T_world_.size(); ++n)
 			{
-				if (!PinholeCamera::isObjectPointInFrontIF(flippedCameras_T_world_[n], candidateObjectPoint_))
+				if (!Camera::isObjectPointInFrontIF(flippedCameras_T_world_[n], candidateObjectPoint_))
 				{
 					return false;
 				}
@@ -599,7 +599,7 @@ class NonLinearOptimizationObjectPoint::StereoCameraObjectPointProvider : public
 		{
 			for (size_t n = 0; n < flippedCamerasA_T_world_.size(); ++n)
 			{
-				if (!PinholeCamera::isObjectPointInFrontIF(flippedCamerasA_T_world_[n], candidateObjectPoint_))
+				if (!Camera::isObjectPointInFrontIF(flippedCamerasA_T_world_[n], candidateObjectPoint_))
 				{
 					return false;
 				}
@@ -607,7 +607,7 @@ class NonLinearOptimizationObjectPoint::StereoCameraObjectPointProvider : public
 
 			for (size_t n = 0; n < flippedCamerasB_T_world_.size(); ++n)
 			{
-				if (!PinholeCamera::isObjectPointInFrontIF(flippedCamerasB_T_world_[n], candidateObjectPoint_))
+				if (!Camera::isObjectPointInFrontIF(flippedCamerasB_T_world_[n], candidateObjectPoint_))
 				{
 					return false;
 				}
@@ -822,7 +822,7 @@ class NonLinearOptimizationObjectPoint::SphericalObjectPointProvider : public No
 
 			for (size_t n = 0; n < flippedCamera_R_world_.size(); ++n)
 			{
-				if (!PinholeCamera::isObjectPointInFrontIF(flippedCamera_R_world_[n], candidateObjectPoint))
+				if (!Camera::isObjectPointInFrontIF(flippedCamera_R_world_[n], candidateObjectPoint))
 				{
 					return false;
 				}
@@ -1192,8 +1192,9 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 		 * @param secondImagePoints The (static) image points visible in the second camera frame
 		 * @param correspondences The number of points correspondences, with range [5, infinity)
 		 * @param onlyFrontObjectPoints True, to ensure that all 3D object point locations will lie in front of both cameras
+		 * @param gravityConstraints Optional gravity constraints to force the optimization to create a camera pose aligned with gravity, nullptr to avoid any gravity alignment
 		 */
-		inline ObjectPointsOnePoseProvider(const AnyCamera& camera, const HomogenousMatrix4& firstFlippedCamera_T_world, HomogenousMatrix4& secondFlippedCamera_T_world, Vector3* objectPoints, const Vector2* firstImagePoints, const Vector2* secondImagePoints, const size_t correspondences, const bool onlyFrontObjectPoints) :
+		inline ObjectPointsOnePoseProvider(const AnyCamera& camera, const HomogenousMatrix4& firstFlippedCamera_T_world, HomogenousMatrix4& secondFlippedCamera_T_world, Vector3* objectPoints, const Vector2* firstImagePoints, const Vector2* secondImagePoints, const size_t correspondences, const bool onlyFrontObjectPoints, const GravityConstraints* gravityConstraints) :
 			camera_(camera),
 			firstFlippedCamera_T_world_(firstFlippedCamera_T_world),
 			secondFlippedCamera_T_world_(secondFlippedCamera_T_world),
@@ -1208,10 +1209,18 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 			matrixD_(correspondences),
 			matrixInvertedD_(correspondences),
 			jacobianErrorVector_(6 + correspondences * 3),
-			diagonalMatrixD_(correspondences * 3)
+			diagonalMatrixD_(correspondences * 3),
+			gravityConstraints_(gravityConstraints)
 		{
 			ocean_assert(correspondences >= 5);
 			memcpy(objectPointCandidates_.data(), objectPoints, sizeof(Vector3) * correspondences);
+
+			if (gravityConstraints_ != nullptr)
+			{
+				constexpr Scalar fixedFactor = Scalar(1000); // fixed factor to balance projection error and gravity error
+
+				gravityWeight_ = Numeric::sqrt(Scalar(correspondences_ * 2)) * fixedFactor * gravityConstraints_->weightFactor();
+			}
 		}
 
 		/**
@@ -1231,9 +1240,12 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 			{
 				const Vector3& objectPoint = objectPointCandidates_[n];
 
-				if (onlyFrontObjectPoints_ && (!PinholeCamera::isObjectPointInFrontIF(firstFlippedCamera_T_world_, objectPoint) || !PinholeCamera::isObjectPointInFrontIF(candidateSecondFlippedCamera_T_world_, objectPoint)))
+				if (onlyFrontObjectPoints_)
 				{
-					return Numeric::maxValue();
+					if (!Camera::isObjectPointInFrontIF(firstFlippedCamera_T_world_, objectPoint) || !Camera::isObjectPointInFrontIF(candidateSecondFlippedCamera_T_world_, objectPoint))
+					{
+						return Numeric::maxValue();
+					}
 				}
 
 				const Scalar firstSqrError = Error::determinePoseErrorIF(firstFlippedCamera_T_world_, camera_, objectPoint, firstImagePoints_[n]).sqr();
@@ -1250,16 +1262,39 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 				}
 			}
 
+			Scalar averageRobustError = Numeric::maxValue();
+
 			if constexpr (Estimator::isStandardEstimator<tEstimator>())
 			{
 				ocean_assert(correspondences_ != 0);
-				return sqrError / Scalar(correspondences_ * 2);
+				averageRobustError = sqrError / Scalar(correspondences_ * 2);
 			}
 			else
 			{
 				ocean_assert(!intermediateSqrErrors_.empty());
-				return Estimator::determineRobustError<tEstimator>(intermediateSqrErrors_.data(), intermediateSqrErrors_.size(), 6 + correspondences_ * 3);
+				averageRobustError = Estimator::determineRobustError<tEstimator>(intermediateSqrErrors_.data(), intermediateSqrErrors_.size(), 6 + correspondences_ * 3);
 			}
+
+			if (gravityConstraints_ != nullptr)
+			{
+				const Vector3 worldGravityInSecondFlippedCamera = gravityConstraints_->worldGravityInFlippedCameraIF(candidateSecondFlippedCamera_T_world_);
+				const Vector3 cameraGravityInSecondFlippedCamera = gravityConstraints_->cameraGravityInFlippedCamera(1);
+
+				const Vector3 gravityError = worldGravityInSecondFlippedCamera - cameraGravityInSecondFlippedCamera;
+
+				weightedErrorGravity_ = gravityError * gravityWeight_;
+
+				const Scalar gravitySqrError = Numeric::sqr(gravityError.length() * gravityWeight_);
+
+				// averageRobustError is already normalized wrt to number of correspondences (it's the average sqr pixel error for a square estimator), so we first have to de-normalize this error
+				const Scalar sumRobustError = averageRobustError * Scalar(correspondences_ * 2);
+
+				// we do not apply a robust error estimation for the gravity error, the weight factor is supposed to apply some kind of robustness
+
+				averageRobustError = (sumRobustError + gravitySqrError) / Scalar(correspondences_ * 2 + 1);
+			}
+
+			return averageRobustError;
 		}
 
 		/**
@@ -1313,7 +1348,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 
 				for (size_t n = 0; n < 2 * correspondences_; ++n)
 				{
-					// we determine the weights, however as e.g., the tukey estimator may return a weight of 0 we have to clamp the weight to ensure that we still can solve the equation
+					// we determine the weights, however as e.g., the Tukey estimator may return a weight of 0 we have to clamp the weight to ensure that we still can solve the equation
 					// **NOTE** the much better way would be to remove the entry from the equation and to solve it
 					intermediateWeights_[n] = max(Numeric::weakEps(), Estimator::robustWeightSquare<tEstimator>(intermediateSqrErrors_[n], sqrSigma));
 				}
@@ -1435,6 +1470,53 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 				}
 			}
 
+			if (gravityConstraints_ != nullptr)
+			{
+				// the gravity error Jacobian with respect to rotation is:
+				// d(R * g_world) / dwi = Rwi * g_world
+				const Vector3 dRotGravity_dwx = dwx * gravityConstraints_->worldGravityInWorld();
+				const Vector3 dRotGravity_dwy = dwy * gravityConstraints_->worldGravityInWorld();
+				const Vector3 dRotGravity_dwz = dwz * gravityConstraints_->worldGravityInWorld();
+
+				const Vector3 jacobianX = dRotGravity_dwx * gravityWeight_;
+				const Vector3 jacobianY = dRotGravity_dwy * gravityWeight_;
+				const Vector3 jacobianZ = dRotGravity_dwz * gravityWeight_;
+
+				// Gravity constraints are not weighted by the robust estimator (weight is always 1)
+				// so we compute: J^T * J and J^T * error with weighted J but weight = 1 for the multiplication
+
+				matrixA_(0, 0) += jacobianX[0] * jacobianX[0] + jacobianX[1] * jacobianX[1] + jacobianX[2] * jacobianX[2];
+				matrixA_(0, 1) += jacobianX[0] * jacobianY[0] + jacobianX[1] * jacobianY[1] + jacobianX[2] * jacobianY[2];
+				matrixA_(0, 2) += jacobianX[0] * jacobianZ[0] + jacobianX[1] * jacobianZ[1] + jacobianX[2] * jacobianZ[2];
+				// matrixA_(0, 3) += 0
+				// matrixA_(0, 4) += 0
+				// matrixA_(0, 5) += 0
+
+				matrixA_(1, 1) += jacobianY[0] * jacobianY[0] + jacobianY[1] * jacobianY[1] + jacobianY[2] * jacobianY[2];
+				matrixA_(1, 2) += jacobianY[0] * jacobianZ[0] + jacobianY[1] * jacobianZ[1] + jacobianY[2] * jacobianZ[2];
+				// matrixA_(1, 3) += 0
+				// matrixA_(1, 4) += 0
+				// matrixA_(1, 5) += 0
+
+				matrixA_(2, 2) += jacobianZ[0] * jacobianZ[0] + jacobianZ[1] * jacobianZ[1] + jacobianZ[2] * jacobianZ[2];
+				// matrixA_(2, 3) += 0
+				// matrixA_(2, 4) += 0
+				// matrixA_(2, 5) += 0
+
+				// matrixA_(3, 3) += 0
+				// matrixA_(3, 4) += 0
+				// matrixA_(3, 5) += 0
+
+				// matrixA_(4, 4) += 0
+				// matrixA_(4, 5) += 0
+
+				// matrixA_(5, 5) += 0
+
+				jacobianErrorVector_[0] += jacobianX[0] * weightedErrorGravity_[0] + jacobianX[1] * weightedErrorGravity_[1] + jacobianX[2] * weightedErrorGravity_[2];
+				jacobianErrorVector_[1] += jacobianY[0] * weightedErrorGravity_[0] + jacobianY[1] * weightedErrorGravity_[1] + jacobianY[2] * weightedErrorGravity_[2];
+				jacobianErrorVector_[2] += jacobianZ[0] * weightedErrorGravity_[0] + jacobianZ[1] * weightedErrorGravity_[1] + jacobianZ[2] * weightedErrorGravity_[2];
+			}
+
 			// we copy the lower triangle from the upper triangle
 			for (size_t r = 1; r < 6; ++r)
 			{
@@ -1451,134 +1533,138 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 			}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
-
+			if (gravityConstraints_ == nullptr)
+			{
 	#ifndef OCEAN_DEBUG
-			#error Invalid debug state!
+				#error Invalid debug state!
 	#endif
 
-			if (std::is_same<Scalar, double>::value)
-			{
-				Scalar pointJacobianBuffer[6];
-				Scalar poseJacobianBuffer[12];
-
-				SparseMatrix::Entries jacobianEntries;
-
-				for (size_t n = 0; n < correspondences_; ++n)
+				if (std::is_same<Scalar, double>::value)
 				{
-					const Vector3& objectPoint = objectPoints_[n];
+					Scalar pointJacobianBuffer[6];
+					Scalar poseJacobianBuffer[12];
 
-					Jacobian::calculatePoseJacobianRodrigues2x6IF(camera_, secondFlippedCamera_T_world_, objectPoint, dwx, dwy, dwz, poseJacobianBuffer, poseJacobianBuffer + 6);
+					SparseMatrix::Entries jacobianEntries;
 
-					for (size_t e = 0; e < 6; ++e)
+					for (size_t n = 0; n < correspondences_; ++n)
 					{
-						jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 2, e, poseJacobianBuffer[0 + e]));
-						jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 3, e, poseJacobianBuffer[6 + e]));
-					}
+						const Vector3& objectPoint = objectPoints_[n];
 
-					Jacobian::calculatePointJacobian2x3IF(camera_, firstFlippedCamera_T_world_, objectPoint, pointJacobianBuffer, pointJacobianBuffer + 3);
+						Jacobian::calculatePoseJacobianRodrigues2x6IF(camera_, secondFlippedCamera_T_world_, objectPoint, dwx, dwy, dwz, poseJacobianBuffer, poseJacobianBuffer + 6);
 
-					for (size_t e = 0; e < 3; ++e)
-					{
-						jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 0, 6 + 3 * n + e, pointJacobianBuffer[0 + e]));
-						jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 1, 6 + 3 * n + e, pointJacobianBuffer[3 + e]));
-					}
-
-					Jacobian::calculatePointJacobian2x3IF(camera_, secondFlippedCamera_T_world_, objectPoint, pointJacobianBuffer, pointJacobianBuffer + 3);
-
-					for (size_t e = 0; e < 3; ++e)
-					{
-						jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 2, 6 + 3 * n + e, pointJacobianBuffer[0 + e]));
-						jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 3, 6 + 3 * n + e, pointJacobianBuffer[3 + e]));
-					}
-				}
-
-				debugJacobian_ = SparseMatrix(4 * correspondences_, 6 + 3 * correspondences_, jacobianEntries);
-
-				const Scalar debugSqrSigma = Estimator::needSigma<tEstimator>() ? Numeric::sqr(Estimator::determineSigmaSquare<tEstimator>(intermediateSqrErrors_.data(), intermediateSqrErrors_.size(), 6 + correspondences_ * 3)) : 0;
-
-				SparseMatrix::Entries weightEntries;
-				for (size_t n = 0; n < 4 * correspondences_; ++n)
-				{
-					if constexpr (Estimator::isStandardEstimator<tEstimator>())
-					{
-						weightEntries.push_back(SparseMatrix::Entry(n, n, Scalar(1)));
-					}
-					else
-					{
-						const Scalar weight = max(Numeric::weakEps(), Estimator::robustWeightSquare<tEstimator>(intermediateSqrErrors_[n / 2], debugSqrSigma));
-						weightEntries.push_back(SparseMatrix::Entry(n, n, weight));
-					}
-				}
-
-				SparseMatrix debugWeight(4 * correspondences_, 4 * correspondences_, weightEntries);
-
-				debugHessian_ = debugJacobian_.transposed() * debugWeight * debugJacobian_;
-
-				const SparseMatrix subMatrixA(debugHessian_.submatrix(0, 0, 6, 6));
-				const SparseMatrix subMatrixB(debugHessian_.submatrix(0, 6, 6, 3 * correspondences_));
-				const SparseMatrix subMatrixC(debugHessian_.submatrix(6, 0, 3 * correspondences_, 6));
-				const SparseMatrix subMatrixD(debugHessian_.submatrix(6, 6, 3 * correspondences_, 3 * correspondences_));
-
-				for (size_t r = 0; r < 6; ++r)
-				{
-					for (size_t c = 0; c < 6; ++c)
-					{
-						const Scalar value0 = matrixA_(r, c);
-						const Scalar value1 = subMatrixA(r, c);
-						ocean_assert(Numeric::isWeakEqual(value0, value1));
-					}
-				}
-
-				for (size_t n = 0; n < correspondences_; ++n)
-				{
-					for (unsigned int r = 0u; r < 6u; ++r)
-					{
-						for (unsigned int c = 0u; c < 3u; ++c)
+						for (size_t e = 0; e < 6; ++e)
 						{
-							const Scalar value0 = matrixB_[n](r, c);
-							const Scalar value1 = subMatrixB(r, n * 3 + c);
-							ocean_assert(Numeric::isWeakEqual(value0, value1));
+							jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 2, e, poseJacobianBuffer[0 + e]));
+							jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 3, e, poseJacobianBuffer[6 + e]));
+						}
 
-							const Scalar value2 = subMatrixC(n * 3 + c, r);
-							ocean_assert(Numeric::isWeakEqual(value0, value2));
+						Jacobian::calculatePointJacobian2x3IF(camera_, firstFlippedCamera_T_world_, objectPoint, pointJacobianBuffer, pointJacobianBuffer + 3);
+
+						for (size_t e = 0; e < 3; ++e)
+						{
+							jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 0, 6 + 3 * n + e, pointJacobianBuffer[0 + e]));
+							jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 1, 6 + 3 * n + e, pointJacobianBuffer[3 + e]));
+						}
+
+						Jacobian::calculatePointJacobian2x3IF(camera_, secondFlippedCamera_T_world_, objectPoint, pointJacobianBuffer, pointJacobianBuffer + 3);
+
+						for (size_t e = 0; e < 3; ++e)
+						{
+							jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 2, 6 + 3 * n + e, pointJacobianBuffer[0 + e]));
+							jacobianEntries.push_back(SparseMatrix::Entry(4 * n + 3, 6 + 3 * n + e, pointJacobianBuffer[3 + e]));
 						}
 					}
-				}
 
-				for (size_t n = 0; n < correspondences_; ++n)
-				{
-					for (unsigned int r = 0u; r < 3u; ++r)
+					debugJacobian_ = SparseMatrix(4 * correspondences_, 6 + 3 * correspondences_, jacobianEntries);
+
+					const Scalar debugSqrSigma = Estimator::needSigma<tEstimator>() ? Numeric::sqr(Estimator::determineSigmaSquare<tEstimator>(intermediateSqrErrors_.data(), intermediateSqrErrors_.size(), 6 + correspondences_ * 3)) : 0;
+
+					SparseMatrix::Entries weightEntries;
+					for (size_t n = 0; n < 4 * correspondences_; ++n)
 					{
-						for (unsigned int c = 0u; c < 3u; ++c)
+						if constexpr (Estimator::isStandardEstimator<tEstimator>())
 						{
-							const Scalar value0 = matrixD_[n](r, c);
-							const Scalar value1 = subMatrixD(n * 3 + r, n * 3 + c);
+							weightEntries.push_back(SparseMatrix::Entry(n, n, Scalar(1)));
+						}
+						else
+						{
+							const Scalar weight = max(Numeric::weakEps(), Estimator::robustWeightSquare<tEstimator>(intermediateSqrErrors_[n / 2], debugSqrSigma));
+							weightEntries.push_back(SparseMatrix::Entry(n, n, weight));
+						}
+					}
+
+					SparseMatrix debugWeight(4 * correspondences_, 4 * correspondences_, weightEntries);
+
+					debugHessian_ = debugJacobian_.transposed() * debugWeight * debugJacobian_;
+
+					const SparseMatrix subMatrixA(debugHessian_.submatrix(0, 0, 6, 6));
+					const SparseMatrix subMatrixB(debugHessian_.submatrix(0, 6, 6, 3 * correspondences_));
+					const SparseMatrix subMatrixC(debugHessian_.submatrix(6, 0, 3 * correspondences_, 6));
+					const SparseMatrix subMatrixD(debugHessian_.submatrix(6, 6, 3 * correspondences_, 3 * correspondences_));
+
+					for (size_t r = 0; r < 6; ++r)
+					{
+						for (size_t c = 0; c < 6; ++c)
+						{
+							const Scalar value0 = matrixA_(r, c);
+							const Scalar value1 = subMatrixA(r, c);
 							ocean_assert(Numeric::isWeakEqual(value0, value1));
 						}
 					}
+
+					for (size_t n = 0; n < correspondences_; ++n)
+					{
+						for (unsigned int r = 0u; r < 6u; ++r)
+						{
+							for (unsigned int c = 0u; c < 3u; ++c)
+							{
+								const Scalar value0 = matrixB_[n](r, c);
+								const Scalar value1 = subMatrixB(r, n * 3 + c);
+								ocean_assert(Numeric::isWeakEqual(value0, value1));
+
+								const Scalar value2 = subMatrixC(n * 3 + c, r);
+								ocean_assert(Numeric::isWeakEqual(value0, value2));
+							}
+						}
+					}
+
+					for (size_t n = 0; n < correspondences_; ++n)
+					{
+						for (unsigned int r = 0u; r < 3u; ++r)
+						{
+							for (unsigned int c = 0u; c < 3u; ++c)
+							{
+								const Scalar value0 = matrixD_[n](r, c);
+								const Scalar value1 = subMatrixD(n * 3 + r, n * 3 + c);
+								ocean_assert(Numeric::isWeakEqual(value0, value1));
+							}
+						}
+					}
+
+					debugJacobianError_.resize(4 * correspondences_, 1);
+
+					for (size_t n = 0; n < correspondences_; ++n)
+					{
+						const Vector3& objectPoint = objectPoints_[n];
+
+						const Vector2 firstError = Error::determinePoseErrorIF(firstFlippedCamera_T_world_, camera_, objectPoint, firstImagePoints_[n]);
+						const Vector2 secondError = Error::determinePoseErrorIF(secondFlippedCamera_T_world_, camera_, objectPoint, secondImagePoints_[n]);
+
+						debugJacobianError_(4 * n + 0, 0) = firstError.x();
+						debugJacobianError_(4 * n + 1, 0) = firstError.y();
+						debugJacobianError_(4 * n + 2, 0) = secondError.x();
+						debugJacobianError_(4 * n + 3, 0) = secondError.y();
+					}
+
+					debugJacobianError_ = debugJacobian_.transposed() * debugWeight * debugJacobianError_;
+					ocean_assert(debugJacobianError_.rows() == jacobianErrorVector_.size());
+					ocean_assert(debugJacobianError_.columns() == 1);
+
+					for (size_t n = 0; n < jacobianErrorVector_.size(); ++n)
+					{
+						ocean_assert(Numeric::isWeakEqual(jacobianErrorVector_[n], debugJacobianError_(n, 0)));
+					}
 				}
-
-				debugJacobianError_.resize(4 * correspondences_, 1);
-
-				for (size_t n = 0; n < correspondences_; ++n)
-				{
-					const Vector3& objectPoint = objectPoints_[n];
-
-					const Vector2 firstError = Error::determinePoseErrorIF(firstFlippedCamera_T_world_, camera_, objectPoint, firstImagePoints_[n]);
-					const Vector2 secondError = Error::determinePoseErrorIF(secondFlippedCamera_T_world_, camera_, objectPoint, secondImagePoints_[n]);
-
-					debugJacobianError_(4 * n + 0, 0) = firstError.x();
-					debugJacobianError_(4 * n + 1, 0) = firstError.y();
-					debugJacobianError_(4 * n + 2, 0) = secondError.x();
-					debugJacobianError_(4 * n + 3, 0) = secondError.y();
-				}
-
-				debugJacobianError_ = debugJacobian_.transposed() * debugWeight * debugJacobianError_;
-				ocean_assert(debugJacobianError_.rows() == jacobianErrorVector_.size());
-				ocean_assert(debugJacobianError_.columns() == 1);
-
-				for (size_t n = 0; n < jacobianErrorVector_.size(); ++n)
-					ocean_assert(Numeric::isWeakEqual(jacobianErrorVector_[n], debugJacobianError_(n, 0)));
 			}
 #endif // OCEAN_INTENSIVE_DEBUG
 
@@ -1591,14 +1677,14 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 		 */
 		inline void applyCorrection(const Matrix& deltas)
 		{
-			const Pose oldPose(secondFlippedCamera_T_world_);
+			const Pose secondFlippedCamera_P_world(secondFlippedCamera_T_world_);
 
 			// p_i+1 = p_i + delta_i
 			// p_i+1 = p_i - (-delta_i)
 			const Pose deltaPose(deltas(3), deltas(4), deltas(5), deltas(0), deltas(1), deltas(2));
-			const Pose newPose(oldPose - deltaPose);
+			const Pose newFlippedCamera_P_world(secondFlippedCamera_P_world - deltaPose);
 
-			candidateSecondFlippedCamera_T_world_ = newPose.transformation();
+			candidateSecondFlippedCamera_T_world_ = newFlippedCamera_P_world.transformation();
 
 			for (size_t n = 0; n < correspondences_; ++n)
 			{
@@ -1923,6 +2009,15 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 		/// Intermediate weight values.
 		Scalars intermediateWeights_;
 
+		/// The optional gravity constraints.
+		const GravityConstraints* gravityConstraints_ = nullptr;
+
+		/// The three weights for the gravity error, in case gravity constraints are provided.
+		Vector3 weightedErrorGravity_;
+
+		/// The constant weight factor for the gravity constraints.
+		Scalar gravityWeight_ = Scalar(-1);
+
 #ifdef OCEAN_DEBUG
 		/// The Jacobian matrix.
 		SparseMatrix debugJacobian_;
@@ -1935,7 +2030,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOnePoseProvider : public Non
 #endif
 };
 
-bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const AnyCamera& camera, const HomogenousMatrix4& firstFlippedCamera_T_world, const HomogenousMatrix4& secondFlippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* optimizedSecondFlippedCamera_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const AnyCamera& camera, const HomogenousMatrix4& firstFlippedCamera_T_world, const HomogenousMatrix4& secondFlippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* optimizedSecondFlippedCamera_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors, const GravityConstraints* gravityConstraints)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(firstFlippedCamera_T_world.isValid() && secondFlippedCamera_T_world.isValid());
@@ -1945,6 +2040,15 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const An
 	ocean_assert(optimizedObjectPoints == nullptr || optimizedObjectPoints->size() == objectPoints.size());
 
 	HomogenousMatrix4 internalSecondFlippedCamera_T_world(secondFlippedCamera_T_world);
+
+	if (gravityConstraints != nullptr)
+	{
+		ocean_assert(gravityConstraints->isValid());
+		ocean_assert(gravityConstraints->numberCameras() == 2);
+		ocean_assert(gravityConstraints->isCameraAlignedWithGravityIF(firstFlippedCamera_T_world, 0, Numeric::deg2rad(1)));
+
+		internalSecondFlippedCamera_T_world = gravityConstraints->alignCameraWithGravityIF(internalSecondFlippedCamera_T_world, 1);
+	}
 
 	ScopedNonconstMemoryAccessor<Vector3> scopedOptimizedObjectPoints(optimizedObjectPoints, objectPoints.size());
 	ocean_assert(scopedOptimizedObjectPoints.size() == objectPoints.size());
@@ -1961,7 +2065,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const An
 	{
 		case Estimator::ET_LINEAR:
 		{
-			ObjectPointsOnePoseProvider<Estimator::ET_LINEAR> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints);
+			ObjectPointsOnePoseProvider<Estimator::ET_LINEAR> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints, gravityConstraints);
 			if (!advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 			{
 				return false;
@@ -1972,7 +2076,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const An
 
 		case Estimator::ET_HUBER:
 		{
-			ObjectPointsOnePoseProvider<Estimator::ET_HUBER> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints);
+			ObjectPointsOnePoseProvider<Estimator::ET_HUBER> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints, gravityConstraints);
 			if (!advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 			{
 				return false;
@@ -1983,7 +2087,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const An
 
 		case Estimator::ET_TUKEY:
 		{
-			ObjectPointsOnePoseProvider<Estimator::ET_TUKEY> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints);
+			ObjectPointsOnePoseProvider<Estimator::ET_TUKEY> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints, gravityConstraints);
 			if (!advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 			{
 				return false;
@@ -1994,7 +2098,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const An
 
 		case Estimator::ET_CAUCHY:
 		{
-			ObjectPointsOnePoseProvider<Estimator::ET_CAUCHY> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints);
+			ObjectPointsOnePoseProvider<Estimator::ET_CAUCHY> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints, gravityConstraints);
 			if (!advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 			{
 				return false;
@@ -2006,7 +2110,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePoseIF(const An
 		default:
 		{
 			ocean_assert(estimator == Estimator::ET_SQUARE);
-			ObjectPointsOnePoseProvider<Estimator::ET_SQUARE> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints);
+			ObjectPointsOnePoseProvider<Estimator::ET_SQUARE> provider(camera, firstFlippedCamera_T_world, internalSecondFlippedCamera_T_world, scopedOptimizedObjectPoints.data(), scopedFirstImagePoints.data(), scopedSecondImagePoints.data(), scopedOptimizedObjectPoints.size(), onlyFrontObjectPoints, gravityConstraints);
 			if (!advancedSparseOptimization(provider, iterations, lambda, lambdaFactor, initialError, finalError, intermediateErrors))
 			{
 				return false;
@@ -2272,9 +2376,12 @@ class NonLinearOptimizationObjectPoint::ObjectPointsTwoPosesProvider : public No
 			{
 				const ObjectPoint& objectPoint = objectPointCandidates_[n];
 
-				if (onlyFrontObjectPoints_ && (!PinholeCamera::isObjectPointInFrontIF(providerFirstPoseCandidateIF, objectPoint) || !PinholeCamera::isObjectPointInFrontIF(secondCandidateFlippedCamera_T_world_, objectPoint)))
+				if (onlyFrontObjectPoints_)
 				{
-					return Numeric::maxValue();
+					if (!PinholeCamera::isObjectPointInFrontIF(providerFirstPoseCandidateIF, objectPoint) || !PinholeCamera::isObjectPointInFrontIF(secondCandidateFlippedCamera_T_world_, objectPoint))
+					{
+						return Numeric::maxValue();
+					}
 				}
 
 				const Vector2 firstError = Error::determinePoseErrorIF(providerFirstPoseCandidateIF, camera_, objectPoint, firstImagePoints_[n], useDistortionParameters_);
@@ -2595,7 +2702,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsPosesProvider : public NonLi
 
 				for (size_t n = 0; n < intermediateWeights_.size(); ++n)
 				{
-					// we determine the weights, however as e.g., the tukey estimator may return a weight of 0 we have to clamp the weight to ensure that we still can solve the equation
+					// we determine the weights, however as e.g., the Tukey estimator may return a weight of 0 we have to clamp the weight to ensure that we still can solve the equation
 					// **NOTE** the much better way would be to remove the entry from the equation and to solve it
 					intermediateWeights_[n] = max(Numeric::weakEps(), Estimator::robustWeightSquare<tEstimator>(intermediateSqrErrors_[n], sqrSigma));
 				}
@@ -3689,7 +3796,7 @@ class NonLinearOptimizationObjectPoint::ObjectPointsOrientationalPosesProvider :
 
 				for (size_t n = 0; n < intermediateWeights_.size(); ++n)
 				{
-					// we determine the weights, however as e.g., the tukey estimator may return a weight of 0 we have to clamp the weight to ensure that we still can solve the equation
+					// we determine the weights, however as e.g., the Tukey estimator may return a weight of 0 we have to clamp the weight to ensure that we still can solve the equation
 					// **NOTE** the much better way would be to remove the entry from the equation and to solve it
 					intermediateWeights_[n] = max(Numeric::weakEps(), Estimator::robustWeightSquare<tEstimator>(intermediateSqrErrors_[n], sqrSigma));
 				}

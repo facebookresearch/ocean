@@ -9,6 +9,7 @@
 #define META_OCEAN_GEOMETRY_NON_LINEAR_OPTIMIZATION_OBJECT_POINT_H
 
 #include "ocean/geometry/Geometry.h"
+#include "ocean/geometry/GravityConstraints.h"
 #include "ocean/geometry/NonLinearOptimization.h"
 
 #include "ocean/math/AnyCamera.h"
@@ -391,10 +392,11 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
 		 * @param intermediateErrors Optional resulting intermediate (improving) errors
+		 * @param gravityConstraints Optional gravity constraints to force the optimization to create a camera pose aligned with gravity, nullptr to avoid any gravity alignment
 		 * @return True, if succeeded
 		 * @see optimizeObjectPointsAndOnePoseIF().
 		 */
-		static inline bool optimizeObjectPointsAndOnePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_firstCamera, const HomogenousMatrix4& world_T_secondCamera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* world_T_optimizedSecondCamera, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static inline bool optimizeObjectPointsAndOnePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_firstCamera, const HomogenousMatrix4& world_T_secondCamera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* world_T_optimizedSecondCamera, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr, const GravityConstraints* gravityConstraints = nullptr);
 
 		/**
 		 * Optimizes the locations of 3D object points visible in two individual (inverted and flipped) camera poses by minimizing the projection error between the 3D object points and the 2D image points.
@@ -416,10 +418,11 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationObjectPoint : protected NonLine
 		 * @param initialError Optional resulting averaged pixel error for the given initial parameters, in relation to the defined estimator
 		 * @param finalError Optional resulting averaged pixel error for the final optimized parameters, in relation to the defined estimator
 		 * @param intermediateErrors Optional resulting intermediate (improving) errors
+		 * @param gravityConstraints Optional gravity constraints to force the optimization to create a camera pose aligned with gravity, nullptr to avoid any gravity alignment
 		 * @return True, if succeeded
 		 * @see optimizeObjectPointsAndOnePose().
 		 */
-		static bool optimizeObjectPointsAndOnePoseIF(const AnyCamera& camera, const HomogenousMatrix4& firstFlippedCamera_T_world, const HomogenousMatrix4& secondFlippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* optimizedSecondFlippedCamera_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr);
+		static bool optimizeObjectPointsAndOnePoseIF(const AnyCamera& camera, const HomogenousMatrix4& firstFlippedCamera_T_world, const HomogenousMatrix4& secondFlippedCamera_T_world, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* optimizedSecondFlippedCamera_T_world, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator = Geometry::Estimator::ET_SQUARE, const Scalar lambda = Scalar(0.001), const Scalar lambdaFactor = Scalar(5), const bool onlyFrontObjectPoints = true, Scalar* initialError = nullptr, Scalar* finalError = nullptr, Scalars* intermediateErrors = nullptr, const GravityConstraints* gravityConstraints = nullptr);
 
 		/**
 		 * Optimizes the locations of 3D object points visible in two individual camera poses by minimizing the projection error between the 3D object points and the 2D image points.
@@ -808,19 +811,19 @@ inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrienta
 	return optimizeObjectPointForFixedOrientationsIF(camera, ConstArrayAccessor<SquareMatrix3>(flippedCameras_R_world), imagePoints, objectPoint, objectPointDistance, optimizedObjectPoint, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoint, initialError, finalError, intermediateErrors);
 }
 
-inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_firstCamera, const HomogenousMatrix4& world_T_secondCamera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* world_T_optimizedSecondCamera, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors)
+inline bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(const AnyCamera& camera, const HomogenousMatrix4& world_T_firstCamera, const HomogenousMatrix4& world_T_secondCamera, const ConstIndexedAccessor<Vector3>& objectPoints, const ConstIndexedAccessor<Vector2>& firstImagePoints, const ConstIndexedAccessor<Vector2>& secondImagePoints, HomogenousMatrix4* world_T_optimizedSecondCamera, NonconstIndexedAccessor<Vector3>* optimizedObjectPoints, const unsigned int iterations, const Geometry::Estimator::EstimatorType estimator, const Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError, Scalars* intermediateErrors, const GravityConstraints* gravityConstraints)
 {
-	const HomogenousMatrix4 firstFlippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_firstCamera));
-	const HomogenousMatrix4 secondFlippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_secondCamera));
+	const HomogenousMatrix4 firstFlippedCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_firstCamera));
+	const HomogenousMatrix4 secondFlippedCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_secondCamera));
 
-	if (!optimizeObjectPointsAndOnePoseIF(camera, firstFlippedCamera_T_world, secondFlippedCamera_T_world, objectPoints, firstImagePoints, secondImagePoints, world_T_optimizedSecondCamera, optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors))
+	if (!optimizeObjectPointsAndOnePoseIF(camera, firstFlippedCamera_T_world, secondFlippedCamera_T_world, objectPoints, firstImagePoints, secondImagePoints, world_T_optimizedSecondCamera, optimizedObjectPoints, iterations, estimator, lambda, lambdaFactor, onlyFrontObjectPoints, initialError, finalError, intermediateErrors, gravityConstraints))
 	{
 		return false;
 	}
 
 	if (world_T_optimizedSecondCamera != nullptr)
 	{
-		*world_T_optimizedSecondCamera = PinholeCamera::invertedFlipped2Standard(*world_T_optimizedSecondCamera);
+		*world_T_optimizedSecondCamera = AnyCamera::invertedFlipped2Standard(*world_T_optimizedSecondCamera);
 	}
 
 	return true;
