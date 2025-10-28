@@ -119,6 +119,15 @@ extern "C" void Java_com_meta_ocean_base_BaseJni_error(JNIEnv* env, jobject java
 extern "C" jstring Java_com_meta_ocean_base_BaseJni_popMessages(JNIEnv* env, jobject javaThis);
 
 /**
+ * Java native interface function to check if the native library is compiled in debug mode.
+ * @param env The JNI environment
+ * @param javaThis The JNI object
+ * @return True, if the library is compiled with debug settings (OCEAN_DEBUG is defined)
+ * @ingroup basejni
+ */
+extern "C" jboolean Java_com_meta_ocean_base_BaseJni_isDebug(JNIEnv* env, jobject javaThis);
+
+/**
  * Exits the application by invoking the exit() command.
  * Beware: Commonly Android decides whether an application will be terminated or not so that this function should be a workaround only.
  * @param env The JNI environment

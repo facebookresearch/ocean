@@ -76,6 +76,15 @@ jstring Java_com_meta_ocean_base_BaseJni_popMessages(JNIEnv* env, jobject javaTh
 	return Platform::Android::Utilities::toJavaString(env, JNI::BaseJni::popMessages());
 }
 
+jboolean Java_com_meta_ocean_base_BaseJni_isDebug(JNIEnv* env, jobject javaThis)
+{
+#ifdef OCEAN_DEBUG
+	return true;
+#else
+	return false;
+#endif
+}
+
 void Java_com_meta_ocean_base_BaseJni_exit(JNIEnv* env, jobject javaThis, jint exitValue)
 {
 	std::exit(exitValue);

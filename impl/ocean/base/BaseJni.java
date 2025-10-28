@@ -136,6 +136,12 @@ public class BaseJni
 	public static native String popMessages();
 
 	/**
+	 * Returns whether the native library is compiled in debug mode.
+	 * @return True, if the library is compiled with debug settings (OCEAN_DEBUG is defined)
+	 */
+	public static native boolean isDebug();
+
+	/**
 	 * Exits the application by invoking the _exit() command.
 	 * Beware: Commonly Android decides whether an application will be terminated or not so that this function should be a workaround only.
 	 * @param exitValue The exit value to be used
