@@ -2374,267 +2374,323 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberObjectPoints);
 
+	bool allSucceeded = true;
+
 	RandomGenerator randomGenerator;
 
 	const Box3 objectPointsArea(Vector3(-1, -1, -1), Vector3(1, 1, 1));
 
-	const std::string indentation = "  ";
-
-	std::vector<Scalar> pixelErrors;
-	std::vector<Scalar> optimizedPixelErrors;
-
-	std::vector<size_t> optimizationIterations;
-
-	HighPerformanceStatistic performance;
-
-	ValidationPrecision validation(0.95, randomGenerator);
-
-	const Timestamp startTimestamp(true);
-
-	do
+	for (const bool useGravityConstraints : {false, true})
 	{
-		ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-		const AnyCameraType anyCameraType = RandomI::random(1u) == 0u ? AnyCameraType::PINHOLE : AnyCameraType::FISHEYE;
-
-		const SharedAnyCamera camera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
-
-		const Quaternion orientation0(Random::quaternion());
-		const Vector3 viewDirection0(orientation0 * Vector3(0, 0, -1));
-
-		const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
-
-		Box3 objectVolume(perfectObjectPoints);
-		const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);
-		Vectors3 faultyObjectPoints;
-		faultyObjectPoints.reserve(perfectObjectPoints.size());
-
-		for (const Vector3& perfectObjectPoint : perfectObjectPoints)
+		if (useGravityConstraints)
 		{
-			const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(-objectDimension, objectDimension));
-			faultyObjectPoints.push_back(randomObjectPoint);
-		}
-
-		Vectors3 allVisibleObjectPoints(perfectObjectPoints);
-		allVisibleObjectPoints.insert(allVisibleObjectPoints.end(), faultyObjectPoints.begin(), faultyObjectPoints.end());
-
-		HomogenousMatrices4 world_T_cameras;
-		world_T_cameras.emplace_back(Utilities::viewPosition(*camera, allVisibleObjectPoints, viewDirection0));
-
-		while (world_T_cameras.size() < numberPoses)
-		{
-			const Quaternion offsetRotation(Random::euler(Numeric::deg2rad(5), Numeric::deg2rad(35)));
-
-			const Quaternion newOrientation(orientation0 * offsetRotation);
-			const Vector3 newViewDirection(newOrientation * Vector3(0, 0, -1));
-
-			const Scalar angle(Numeric::rad2deg(viewDirection0.angle(newViewDirection)));
-			ocean_assert_and_suppress_unused(Numeric::isInsideRange(5, angle, 85), angle);
-
-			world_T_cameras.emplace_back(Utilities::viewPosition(*camera, allVisibleObjectPoints, newViewDirection, true));
-		}
-
-		Vectors2 imagePoints;
-		Vectors2 perfectImagePoints;
-
-		for (unsigned int p = 0u; p < numberPoses; ++p)
-		{
-			const HomogenousMatrix4& world_T_camera = world_T_cameras[p];
-
-			for (unsigned int n = 0; n < numberObjectPoints; ++n)
-			{
-				const Vector2 perfectImagePoint(camera->projectToImage(world_T_camera, perfectObjectPoints[n]));
-
-				Vector2 imagePointNoise(0, 0);
-				if (noiseStandardDeviation > 0)
-				{
-					imagePointNoise = Vector2(Random::gaussianNoise(noiseStandardDeviation), Random::gaussianNoise(noiseStandardDeviation));
-				}
-
-				perfectImagePoints.emplace_back(perfectImagePoint);
-				imagePoints.emplace_back(perfectImagePoint + imagePointNoise);
-			}
-		}
-
-		const HomogenousMatrices4 flippedCameras_T_world(PinholeCamera::standard2InvertedFlipped(world_T_cameras));
-
-#ifdef OCEAN_DEBUG
-		for (const HomogenousMatrix4& flippedCamera_T_world : flippedCameras_T_world)
-		{
-			for (const Vector3& objectPoint : allVisibleObjectPoints)
-			{
-				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint));
-				const Vector2 projectedObjectPoint(camera->projectToImageIF(flippedCamera_T_world, objectPoint));
-				ocean_assert(camera->isInside(projectedObjectPoint, -50));
-			}
-		}
-#endif // OCEAN_DEBUG
-
-		HomogenousMatrices4 world_T_faultyCameras(world_T_cameras);
-		for (HomogenousMatrix4& world_T_faultyCamera : world_T_faultyCameras)
-		{
-			world_T_faultyCamera *= HomogenousMatrix4(Random::vector3(-objectDimension, objectDimension) * Scalar(0.1), Random::euler(Numeric::deg2rad(1), Numeric::deg2rad(15)));
-		}
-
-		for (unsigned int poseIndex = 0u; poseIndex < numberPoses; ++poseIndex)
-		{
-			UnorderedIndexSet32 outlierSet;
-			while (outlierSet.size() < numberOutliers)
-			{
-				const unsigned int objectPointIndex = Random::random(numberObjectPoints - 1u);
-
-				if (outlierSet.emplace(objectPointIndex).second)
-				{
-					const Vector2 outlierError = Random::vector2(50, 100, 50, 100) * Random::sign();
-
-					imagePoints[poseIndex * numberObjectPoints + objectPointIndex] += outlierError;
-				}
-			}
-		}
-
-		const Geometry::NonLinearOptimization::ObjectPointToPoseIndexImagePointCorrespondenceAccessor objectPointToPoseIndexImagePointCorrespondenceAccessor(faultyObjectPoints.size(), ConstTemplateArrayAccessor<Vector2>(imagePoints));
-
-#ifdef OCEAN_DEBUG
-		// ensure that the ObjectPointToPoseIndexImagePointCorrespondenceAccessor object holds the correct topology
-		for (size_t g = 0; g < objectPointToPoseIndexImagePointCorrespondenceAccessor.groups(); ++g)
-		{
-			for (size_t p = 0; p < objectPointToPoseIndexImagePointCorrespondenceAccessor.groupElements(g); ++p)
-			{
-				Index32 poseIndex = Index32(-1);
-				Vector2 imagePoint;
-
-				objectPointToPoseIndexImagePointCorrespondenceAccessor.element(g, p, poseIndex, imagePoint);
-				ocean_assert(imagePoints[p * faultyObjectPoints.size() + g] == imagePoint);
-			}
-		}
-#endif
-
-		HomogenousMatrices4 world_T_optimizedCameras(world_T_cameras.size());
-		NonconstArrayAccessor<HomogenousMatrix4> access_world_T_optimizedCameras(world_T_optimizedCameras);
-
-		Vectors3 optimizedObjectPoints(faultyObjectPoints.size());
-		NonconstArrayAccessor<Vector3> optimizedObjectPointAccessor(optimizedObjectPoints);
-
-		Scalars intermediateErros;
-
-		performance.start();
-			const bool result = Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(*camera, ConstArrayAccessor<HomogenousMatrix4>(world_T_faultyCameras), ConstArrayAccessor<Vector3>(faultyObjectPoints), objectPointToPoseIndexImagePointCorrespondenceAccessor, &access_world_T_optimizedCameras, &optimizedObjectPointAccessor, 50u, estimatorType, Scalar(0.001), Scalar(5), true, nullptr, nullptr, &intermediateErros);
-		performance.stop();
-
-		ocean_assert(result);
-
-		if (result)
-		{
-			Scalar sqrAveragePixelErrorInitial = 0;
-			Scalar sqrMinimalPixelErrorInitial = 0;
-			Scalar sqrMaximalPixelErrorInitial = 0;
-
-			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMinimalPixelErrorInitial);
-			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMaximalPixelErrorInitial);
-
-			for (size_t p = 0; p < world_T_cameras.size(); ++p)
-			{
-				Scalar sqrAveragePixelError = 0;
-				Scalar sqrMinimalPixelError = 0;
-				Scalar sqrMaximalPixelError = 0;
-				Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>>(world_T_faultyCameras[p], *camera, ConstTemplateArrayAccessor<Vector3>(faultyObjectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints.data() + p * numberObjectPoints, faultyObjectPoints.size()), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
-
-				sqrAveragePixelErrorInitial += sqrAveragePixelError;
-				sqrMinimalPixelErrorInitial += sqrMinimalPixelError;
-				sqrMaximalPixelErrorInitial += sqrMaximalPixelError;
-			}
-
-			sqrAveragePixelErrorInitial /= Scalar(world_T_cameras.size());
-			sqrMinimalPixelErrorInitial /= Scalar(world_T_cameras.size());
-			sqrMaximalPixelErrorInitial /= Scalar(world_T_cameras.size());
-
-			Scalar sqrAveragePixelErrorOptimized = 0;
-			Scalar sqrMinimalPixelErrorOptimized = 0;
-			Scalar sqrMaximalPixelErrorOptimized = 0;
-
-			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMinimalPixelErrorOptimized);
-			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMaximalPixelErrorOptimized);
-
-			for (size_t p = 0; p < world_T_optimizedCameras.size(); ++p)
-			{
-				Scalar sqrAveragePixelError = 0;
-				Scalar sqrMinimalPixelError = 0;
-				Scalar sqrMaximalPixelError = 0;
-				Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>>(world_T_optimizedCameras[p], *camera, ConstTemplateArrayAccessor<Vector3>(optimizedObjectPoints), ConstTemplateArrayAccessor<Vector2>(perfectImagePoints.data() + p * numberObjectPoints, numberObjectPoints), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
-
-				sqrAveragePixelErrorOptimized += sqrAveragePixelError;
-				sqrMinimalPixelErrorOptimized += sqrMinimalPixelError;
-				sqrMaximalPixelErrorOptimized += sqrMaximalPixelError;
-			}
-
-			sqrAveragePixelErrorOptimized /= Scalar(world_T_cameras.size());
-			sqrMinimalPixelErrorOptimized /= Scalar(world_T_cameras.size());
-			sqrMaximalPixelErrorOptimized /= Scalar(world_T_cameras.size());
-
-			const Scalar sqrAverageObjectPointErrorInitial = Geometry::Error::determineAverageError(faultyObjectPoints, optimizedObjectPoints);
-			const Scalar sqrAverageObjectPointError = Geometry::Error::determineAverageError(perfectObjectPoints, optimizedObjectPoints);
-
-			OCEAN_SUPPRESS_UNUSED_WARNING(sqrAverageObjectPointErrorInitial);
-			OCEAN_SUPPRESS_UNUSED_WARNING(sqrAverageObjectPointError);
-
-			pixelErrors.push_back(sqrAveragePixelErrorInitial);
-			optimizedPixelErrors.push_back(sqrAveragePixelErrorOptimized);
-
-			optimizationIterations.push_back(intermediateErros.size());
+			Log::info() << "With gravity constraints:";
 		}
 		else
 		{
-			scopedIteration.setInaccurate();
+			Log::info() << "No gravity constraints:";
 		}
-	}
-	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	std::sort(pixelErrors.begin(), pixelErrors.end());
-	std::sort(optimizedPixelErrors.begin(), optimizedPixelErrors.end());
+		const std::string indentation = "  ";
 
-	std::sort(optimizationIterations.begin(), optimizationIterations.end());
+		std::vector<Scalar> pixelErrors;
+		std::vector<Scalar> optimizedPixelErrors;
+		std::vector<Scalar> gravityErrors;
+		std::vector<size_t> optimizationIterations;
 
-	const Scalar pixelErrorP95 = pixelErrors[pixelErrors.size() * 95 / 100];
-	const Scalar optimizedPixelErrorP95 = optimizedPixelErrors[optimizedPixelErrors.size() * 95 / 100];
+		HighPerformanceStatistic performance;
 
-	const size_t optimizationIterationP95 = optimizationIterations[optimizationIterations.size() * 95 / 100];
+		ValidationPrecision validation(0.95, randomGenerator);
 
-	Log::info() << indentation << "P95 sqr pixel error: " << String::toAString(pixelErrorP95, 1u) << "px -> " << String::toAString(optimizedPixelErrorP95, 1u) << "px";
-	Log::info() << indentation << "P95 iterations: " << optimizationIterationP95;
-	Log::info() << indentation << "Performance: " << performance;
+		const Timestamp startTimestamp(true);
 
-	bool allSucceeded = validation.succeeded();
-
-	if (optimizedPixelErrorP95 >= pixelErrorP95)
-	{
-		// the optimized solution must be better than the initial solution
-
-		allSucceeded = false;
-	}
-
-	const Scalar optimizedPixelErrorP50 = optimizedPixelErrors[optimizedPixelErrors.size() * 50 / 100];
-
-	if (numberPoses * numberObjectPoints > 1000u) // in case we have enough signals
-	{
-		if (optimizedPixelErrorP50 > 200)
+		do
 		{
-			// we always need a reasonable result
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			allSucceeded = false;
-		}
-	}
+			const AnyCameraType anyCameraType = RandomI::random(1u) == 0u ? AnyCameraType::PINHOLE : AnyCameraType::FISHEYE;
 
-	if (numberPoses >= 50u)
-	{
-		if (noiseStandardDeviation == Scalar(0))
-		{
-			if (numberOutliers == 0u)
+			const SharedAnyCamera camera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
+
+			const Quaternion orientation0(Random::quaternion());
+			const Vector3 viewDirection0(orientation0 * Vector3(0, 0, -1));
+
+			const Vectors3 perfectObjectPoints(Utilities::objectPoints(objectPointsArea, numberObjectPoints));
+
+			Box3 objectVolume(perfectObjectPoints);
+			const Scalar objectDimension = objectVolume.diagonal() * Scalar(0.01);
+			Vectors3 faultyObjectPoints;
+			faultyObjectPoints.reserve(perfectObjectPoints.size());
+
+			for (const Vector3& perfectObjectPoint : perfectObjectPoints)
 			{
-				// we have perfect conditions, so we expect perfect results
+				const Vector3 randomObjectPoint(perfectObjectPoint + Random::vector3(-objectDimension, objectDimension));
+				faultyObjectPoints.push_back(randomObjectPoint);
+			}
 
-				if (optimizedPixelErrorP50 > Scalar(0.1))
+			Vectors3 allVisibleObjectPoints(perfectObjectPoints);
+			allVisibleObjectPoints.insert(allVisibleObjectPoints.end(), faultyObjectPoints.begin(), faultyObjectPoints.end());
+
+			HomogenousMatrices4 world_T_cameras;
+			world_T_cameras.emplace_back(Utilities::viewPosition(*camera, allVisibleObjectPoints, viewDirection0));
+
+			while (world_T_cameras.size() < numberPoses)
+			{
+				const Quaternion offsetRotation(Random::euler(Numeric::deg2rad(5), Numeric::deg2rad(35)));
+
+				const Quaternion newOrientation(orientation0 * offsetRotation);
+				const Vector3 newViewDirection(newOrientation * Vector3(0, 0, -1));
+
+				const Scalar angle(Numeric::rad2deg(viewDirection0.angle(newViewDirection)));
+				ocean_assert_and_suppress_unused(Numeric::isInsideRange(5, angle, 85), angle);
+
+				world_T_cameras.emplace_back(Utilities::viewPosition(*camera, allVisibleObjectPoints, newViewDirection, true));
+			}
+
+			Vectors2 imagePoints;
+			Vectors2 perfectImagePoints;
+
+			for (unsigned int p = 0u; p < numberPoses; ++p)
+			{
+				const HomogenousMatrix4& world_T_camera = world_T_cameras[p];
+
+				for (unsigned int n = 0; n < numberObjectPoints; ++n)
 				{
-					allSucceeded = false;
+					const Vector2 perfectImagePoint(camera->projectToImage(world_T_camera, perfectObjectPoints[n]));
+
+					Vector2 imagePointNoise(0, 0);
+					if (noiseStandardDeviation > 0)
+					{
+						imagePointNoise = Vector2(Random::gaussianNoise(noiseStandardDeviation), Random::gaussianNoise(noiseStandardDeviation));
+					}
+
+					perfectImagePoints.emplace_back(perfectImagePoint);
+					imagePoints.emplace_back(perfectImagePoint + imagePointNoise);
+				}
+			}
+
+			const HomogenousMatrices4 flippedCameras_T_world(PinholeCamera::standard2InvertedFlipped(world_T_cameras));
+
+#ifdef OCEAN_DEBUG
+			for (const HomogenousMatrix4& flippedCamera_T_world : flippedCameras_T_world)
+			{
+				for (const Vector3& objectPoint : allVisibleObjectPoints)
+				{
+					ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint));
+					const Vector2 projectedObjectPoint(camera->projectToImageIF(flippedCamera_T_world, objectPoint));
+					ocean_assert(camera->isInside(projectedObjectPoint, -50));
+				}
+			}
+#endif // OCEAN_DEBUG
+
+			HomogenousMatrices4 world_T_faultyCameras(world_T_cameras);
+			for (HomogenousMatrix4& world_T_faultyCamera : world_T_faultyCameras)
+			{
+				world_T_faultyCamera *= HomogenousMatrix4(Random::vector3(-objectDimension, objectDimension) * Scalar(0.1), Random::euler(Numeric::deg2rad(1), Numeric::deg2rad(15)));
+			}
+
+			for (unsigned int poseIndex = 0u; poseIndex < numberPoses; ++poseIndex)
+			{
+				UnorderedIndexSet32 outlierSet;
+				while (outlierSet.size() < numberOutliers)
+				{
+					const unsigned int objectPointIndex = Random::random(numberObjectPoints - 1u);
+
+					if (outlierSet.emplace(objectPointIndex).second)
+					{
+						const Vector2 outlierError = Random::vector2(50, 100, 50, 100) * Random::sign();
+
+						imagePoints[poseIndex * numberObjectPoints + objectPointIndex] += outlierError;
+					}
+				}
+			}
+
+			const Geometry::NonLinearOptimization::ObjectPointToPoseIndexImagePointCorrespondenceAccessor objectPointToPoseIndexImagePointCorrespondenceAccessor(faultyObjectPoints.size(), ConstTemplateArrayAccessor<Vector2>(imagePoints));
+
+#ifdef OCEAN_DEBUG
+			// ensure that the ObjectPointToPoseIndexImagePointCorrespondenceAccessor object holds the correct topology
+			for (size_t g = 0; g < objectPointToPoseIndexImagePointCorrespondenceAccessor.groups(); ++g)
+			{
+				for (size_t p = 0; p < objectPointToPoseIndexImagePointCorrespondenceAccessor.groupElements(g); ++p)
+				{
+					Index32 poseIndex = Index32(-1);
+					Vector2 imagePoint;
+
+					objectPointToPoseIndexImagePointCorrespondenceAccessor.element(g, p, poseIndex, imagePoint);
+					ocean_assert(imagePoints[p * faultyObjectPoints.size() + g] == imagePoint);
+				}
+			}
+#endif
+
+			const Vector3 worldGravityInWorld(0, -1, 0); // this is how we defined gravity in the world
+
+			const Geometry::GravityConstraints gravityConstraints(world_T_cameras, worldGravityInWorld);
+
+			HomogenousMatrices4 world_T_optimizedCameras(world_T_cameras.size());
+			NonconstArrayAccessor<HomogenousMatrix4> access_world_T_optimizedCameras(world_T_optimizedCameras);
+
+			Vectors3 optimizedObjectPoints(faultyObjectPoints.size());
+			NonconstArrayAccessor<Vector3> optimizedObjectPointAccessor(optimizedObjectPoints);
+
+			Scalars intermediateErrors;
+
+			performance.start();
+				const bool result = Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(*camera, ConstArrayAccessor<HomogenousMatrix4>(world_T_faultyCameras), ConstArrayAccessor<Vector3>(faultyObjectPoints), objectPointToPoseIndexImagePointCorrespondenceAccessor, &access_world_T_optimizedCameras, &optimizedObjectPointAccessor, 50u, estimatorType, Scalar(0.001), Scalar(5), true, nullptr, nullptr, &intermediateErrors, gravityConstraints.conditionalPointer(useGravityConstraints));
+			performance.stop();
+
+			ocean_assert(result);
+
+			if (result)
+			{
+				Scalar sqrAveragePixelErrorInitial = 0;
+				Scalar sqrMinimalPixelErrorInitial = 0;
+				Scalar sqrMaximalPixelErrorInitial = 0;
+
+				OCEAN_SUPPRESS_UNUSED_WARNING(sqrMinimalPixelErrorInitial);
+				OCEAN_SUPPRESS_UNUSED_WARNING(sqrMaximalPixelErrorInitial);
+
+				for (size_t p = 0; p < world_T_cameras.size(); ++p)
+				{
+					Scalar sqrAveragePixelError = 0;
+					Scalar sqrMinimalPixelError = 0;
+					Scalar sqrMaximalPixelError = 0;
+					Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>>(world_T_faultyCameras[p], *camera, ConstTemplateArrayAccessor<Vector3>(faultyObjectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints.data() + p * numberObjectPoints, faultyObjectPoints.size()), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
+
+					sqrAveragePixelErrorInitial += sqrAveragePixelError;
+					sqrMinimalPixelErrorInitial += sqrMinimalPixelError;
+					sqrMaximalPixelErrorInitial += sqrMaximalPixelError;
+				}
+
+				sqrAveragePixelErrorInitial /= Scalar(world_T_cameras.size());
+				sqrMinimalPixelErrorInitial /= Scalar(world_T_cameras.size());
+				sqrMaximalPixelErrorInitial /= Scalar(world_T_cameras.size());
+
+				Scalar sqrAveragePixelErrorOptimized = 0;
+				Scalar sqrMinimalPixelErrorOptimized = 0;
+				Scalar sqrMaximalPixelErrorOptimized = 0;
+
+				OCEAN_SUPPRESS_UNUSED_WARNING(sqrMinimalPixelErrorOptimized);
+				OCEAN_SUPPRESS_UNUSED_WARNING(sqrMaximalPixelErrorOptimized);
+
+				for (size_t p = 0; p < world_T_optimizedCameras.size(); ++p)
+				{
+					Scalar sqrAveragePixelError = 0;
+					Scalar sqrMinimalPixelError = 0;
+					Scalar sqrMaximalPixelError = 0;
+					Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>>(world_T_optimizedCameras[p], *camera, ConstTemplateArrayAccessor<Vector3>(optimizedObjectPoints), ConstTemplateArrayAccessor<Vector2>(perfectImagePoints.data() + p * numberObjectPoints, numberObjectPoints), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError);
+
+					sqrAveragePixelErrorOptimized += sqrAveragePixelError;
+					sqrMinimalPixelErrorOptimized += sqrMinimalPixelError;
+					sqrMaximalPixelErrorOptimized += sqrMaximalPixelError;
+				}
+
+				sqrAveragePixelErrorOptimized /= Scalar(world_T_cameras.size());
+				sqrMinimalPixelErrorOptimized /= Scalar(world_T_cameras.size());
+				sqrMaximalPixelErrorOptimized /= Scalar(world_T_cameras.size());
+
+				const Scalar sqrAverageObjectPointErrorInitial = Geometry::Error::determineAverageError(faultyObjectPoints, optimizedObjectPoints);
+				const Scalar sqrAverageObjectPointError = Geometry::Error::determineAverageError(perfectObjectPoints, optimizedObjectPoints);
+
+				OCEAN_SUPPRESS_UNUSED_WARNING(sqrAverageObjectPointErrorInitial);
+				OCEAN_SUPPRESS_UNUSED_WARNING(sqrAverageObjectPointError);
+
+				pixelErrors.push_back(sqrAveragePixelErrorInitial);
+				optimizedPixelErrors.push_back(sqrAveragePixelErrorOptimized);
+
+				Scalar maxGravityError = 0;
+
+				for (size_t cameraIndex = 0; cameraIndex < world_T_optimizedCameras.size(); ++cameraIndex)
+				{
+					const Scalar alignmentAngle = gravityConstraints.alignmentAngle(world_T_optimizedCameras[cameraIndex], cameraIndex);
+
+					maxGravityError = std::max(maxGravityError, Numeric::rad2deg(alignmentAngle));
+				}
+
+				gravityErrors.push_back(maxGravityError);
+
+				optimizationIterations.push_back(intermediateErrors.size());
+			}
+			else
+			{
+				scopedIteration.setInaccurate();
+			}
+		}
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+		std::sort(pixelErrors.begin(), pixelErrors.end());
+		std::sort(optimizedPixelErrors.begin(), optimizedPixelErrors.end());
+
+		std::sort(gravityErrors.begin(), gravityErrors.end());
+		std::sort(optimizationIterations.begin(), optimizationIterations.end());
+
+		const Scalar pixelErrorP95 = pixelErrors[pixelErrors.size() * 95 / 100];
+		const Scalar optimizedPixelErrorP95 = optimizedPixelErrors[optimizedPixelErrors.size() * 95 / 100];
+
+		const Scalar gravityErrorP95 = gravityErrors[gravityErrors.size() * 95 / 100];
+		const size_t optimizationIterationP95 = optimizationIterations[optimizationIterations.size() * 95 / 100];
+
+		Log::info() << indentation << "P95 sqr pixel error: " << String::toAString(pixelErrorP95, 1u) << "px -> " << String::toAString(optimizedPixelErrorP95, 1u) << "px";
+		Log::info() << indentation << "P95 gravity error: " << String::toAString(gravityErrorP95, 1u) << "deg";
+		Log::info() << indentation << "P95 iterations: " << optimizationIterationP95;
+		Log::info() << indentation << "Performance: " << performance;
+
+		bool iterationAllSucceeded = validation.succeeded();
+
+		if (optimizedPixelErrorP95 >= pixelErrorP95)
+		{
+			// the optimized solution must be better than the initial solution
+
+			iterationAllSucceeded = false;
+		}
+
+		const Scalar optimizedPixelErrorP50 = optimizedPixelErrors[optimizedPixelErrors.size() * 50 / 100];
+
+		if (numberPoses * numberObjectPoints > 1000u) // in case we have enough signals
+		{
+			if (optimizedPixelErrorP50 > 200)
+			{
+				// we always need a reasonable result
+
+				iterationAllSucceeded = false;
+			}
+		}
+
+		if (numberPoses >= 50u)
+		{
+			if (noiseStandardDeviation == Scalar(0))
+			{
+				if (numberOutliers == 0u)
+				{
+					// we have perfect conditions, so we expect perfect results
+
+					if (optimizedPixelErrorP50 > Scalar(0.1))
+					{
+						iterationAllSucceeded = false;
+					}
+				}
+				else
+				{
+					if (numberPoses * numberObjectPoints > 1000u) // in case we have enough signals
+					{
+						if (estimatorType == Geometry::Estimator::ET_LINEAR || estimatorType == Geometry::Estimator::ET_HUBER || estimatorType == Geometry::Estimator::ET_CAUCHY)
+						{
+							// the robust estimators need to handle outliers
+
+							if (optimizedPixelErrorP50 > Scalar(10.0))
+							{
+								iterationAllSucceeded = false;
+							}
+						}
+						else if (estimatorType == Geometry::Estimator::ET_TUKEY)
+						{
+							// Tukey may not find the optimal solution
+
+							if (optimizedPixelErrorP50 > Scalar(30.0))
+							{
+								iterationAllSucceeded = false;
+							}
+						}
+					}
 				}
 			}
 			else
@@ -2643,49 +2699,27 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 				{
 					if (estimatorType == Geometry::Estimator::ET_LINEAR || estimatorType == Geometry::Estimator::ET_HUBER || estimatorType == Geometry::Estimator::ET_CAUCHY)
 					{
-						// the robust estimators need to handle outliers
+						// the robust estimators cannot handle noise, but still need to handle the outliers
 
 						if (optimizedPixelErrorP50 > Scalar(10.0))
 						{
-							allSucceeded = false;
-						}
-					}
-					else if (estimatorType == Geometry::Estimator::ET_TUKEY)
-					{
-						// Tukey may not find the optimal solution
-
-						if (optimizedPixelErrorP50 > Scalar(30.0))
-						{
-							allSucceeded = false;
+							iterationAllSucceeded = false;
 						}
 					}
 				}
 			}
+		}
+
+		if (iterationAllSucceeded)
+		{
+			Log::info() << indentation << "Validation: Accuracy verification succeeded, " << String::toAString(validation.accuracy() * 100.0, 1u) << "% finished";
 		}
 		else
 		{
-			if (numberPoses * numberObjectPoints > 1000u) // in case we have enough signals
-			{
-				if (estimatorType == Geometry::Estimator::ET_LINEAR || estimatorType == Geometry::Estimator::ET_HUBER || estimatorType == Geometry::Estimator::ET_CAUCHY)
-				{
-					// the robust estimators cannot handle noise, but still need to handle the outliers
+			Log::info() << "Validation: Accuracy verification FAILED, " << String::toAString(validation.accuracy() * 100.0, 1u) << "% finished";
 
-					if (optimizedPixelErrorP50 > Scalar(10.0))
-					{
-						allSucceeded = false;
-					}
-				}
-			}
+			allSucceeded = false;
 		}
-	}
-
-	if (allSucceeded)
-	{
-		Log::info() << indentation << "Validation: Accuracy verification succeeded, " << String::toAString(validation.accuracy() * 100.0, 1u) << "% finished";
-	}
-	else
-	{
-		Log::info() << "Validation: Accuracy verification FAILED, " << String::toAString(validation.accuracy() * 100.0, 1u) << "% finished";
 	}
 
 	return allSucceeded;
