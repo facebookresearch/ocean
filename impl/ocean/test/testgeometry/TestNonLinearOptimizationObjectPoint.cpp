@@ -2331,46 +2331,35 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 
 	bool result = true;
 
-	for (const bool slowImplementation : {false, true})
+	for (const unsigned int outliersPercent : {0u, 10u})
 	{
-		if (slowImplementation)
-		{
-			Log::info() << " ";
-			Log::info() << " ";
-			Log::info() << "Now we test the slow implementation for comparison purpose:";
-			Log::info() << " ";
-		}
+		Log::info().newLine(outliersPercent != 0u);
+		Log::info().newLine(outliersPercent != 0u);
 
-		for (const unsigned int outliersPercent : {0u, 10u})
+		for (const Scalar noise : {Scalar(0), Scalar(1)})
 		{
-			Log::info().newLine(outliersPercent != 0u);
-			Log::info().newLine(outliersPercent != 0u);
+			Log::info().newLine(noise != Scalar(0));
+			Log::info().newLine(noise != Scalar(0));
 
-			for (const Scalar noise : {Scalar(0), Scalar(1)})
+			Log::info() << "Samples with Gaussian noise " << String::toAString(noise, 1u) << "px and " << outliersPercent << "% outliers:";
+			Log::info() << " ";
+
+			for (const unsigned int numberPoses : {20u, 50u})
 			{
-				Log::info().newLine(noise != Scalar(0));
-				Log::info().newLine(noise != Scalar(0));
-
-				Log::info() << "Samples with Gaussian noise " << String::toAString(noise, 1u) << "px and " << outliersPercent << "% outliers:";
-				Log::info() << " ";
-
-				for (const unsigned int numberPoses : {20u, 50u})
+				for (const unsigned int numberObjectPoints : {10u, 50u, 100u, 1000u})
 				{
-					for (const unsigned int numberObjectPoints : {10u, 50u, 100u, 1000u})
+					Log::info().newLine(numberObjectPoints != 10u);
+
+					Log::info() << "With " << numberPoses << " poses and " << numberObjectPoints << " object points";
+					Log::info() << " ";
+
+					for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
 					{
-						Log::info().newLine(numberObjectPoints != 10u);
+						Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
 
-						Log::info() << "With " << numberPoses << " poses and " << numberObjectPoints << " object points";
+						result = testNonLinearOptimizationPosesObjectPoints(numberPoses, numberObjectPoints, testDuration, estimatorType, noise, numberObjectPoints * outliersPercent / 100u) && result;
+
 						Log::info() << " ";
-
-						for (const Geometry::Estimator::EstimatorType estimatorType : Geometry::Estimator::estimatorTypes())
-						{
-							Log::info() << "... and " << Geometry::Estimator::translateEstimatorType(estimatorType) << ":";
-
-							result = testNonLinearOptimizationPosesObjectPoints(numberPoses, numberObjectPoints, testDuration, estimatorType, noise, numberObjectPoints * outliersPercent / 100u, slowImplementation) && result;
-
-							Log::info() << " ";
-						}
 					}
 				}
 			}
@@ -2380,28 +2369,32 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 	return result;
 }
 
-bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectPoints(const unsigned int numberPoses, const unsigned int numberObjectPoints, const double testDuration, const Geometry::Estimator::EstimatorType estimatorType, const Scalar noiseStandardDeviation, const unsigned int numberOutliers, const bool slowImplementation)
+bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectPoints(const unsigned int numberPoses, const unsigned int numberObjectPoints, const double testDuration, const Geometry::Estimator::EstimatorType estimatorType, const Scalar noiseStandardDeviation, const unsigned int numberOutliers)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(numberOutliers <= numberObjectPoints);
 
-	uint64_t iterations = 0ull;
-	uint64_t succeeded = 0ull;
+	RandomGenerator randomGenerator;
 
-	Scalar averageInitialSqrError = 0;
-	Scalar averageOptimizedSqrError = 0;
+	const Box3 objectPointsArea(Vector3(-1, -1, -1), Vector3(1, 1, 1));
+
+	const std::string indentation = "  ";
+
+	std::vector<Scalar> pixelErrors;
+	std::vector<Scalar> optimizedPixelErrors;
+
+	std::vector<size_t> optimizationIterations;
 
 	HighPerformanceStatistic performance;
 
-	Scalars medianInitialPixelErrors;
-	Scalars medianOptimizedPixelErrors;
-
-	const Box3 objectPointsArea(Vector3(-1, -1, -1), Vector3(1, 1, 1));
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 		const AnyCameraType anyCameraType = RandomI::random(1u) == 0u ? AnyCameraType::PINHOLE : AnyCameraType::FISHEYE;
 
 		const SharedAnyCamera camera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(1u));
@@ -2522,24 +2515,13 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 		Vectors3 optimizedObjectPoints(faultyObjectPoints.size());
 		NonconstArrayAccessor<Vector3> optimizedObjectPointAccessor(optimizedObjectPoints);
 
-		Scalars intermediate;
+		Scalars intermediateErros;
 
 		performance.start();
-
-		bool result = false;
-
-		if (slowImplementation)
-		{
-			result = Geometry::NonLinearOptimizationObjectPoint::slowOptimizeObjectPointsAndPoses(*camera, ConstArrayAccessor<HomogenousMatrix4>(world_T_faultyCameras), ConstArrayAccessor<Vector3>(faultyObjectPoints), objectPointToPoseIndexImagePointCorrespondenceAccessor, &access_world_T_optimizedCameras, &optimizedObjectPointAccessor, 50u, estimatorType, Scalar(0.001), Scalar(5), true, nullptr, nullptr, &intermediate);
-		}
-		else
-		{
-			result = Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(*camera, ConstArrayAccessor<HomogenousMatrix4>(world_T_faultyCameras), ConstArrayAccessor<Vector3>(faultyObjectPoints), objectPointToPoseIndexImagePointCorrespondenceAccessor, &access_world_T_optimizedCameras, &optimizedObjectPointAccessor, 50u, estimatorType, Scalar(0.001), Scalar(5), true, nullptr, nullptr, &intermediate);
-		}
+			const bool result = Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndPoses(*camera, ConstArrayAccessor<HomogenousMatrix4>(world_T_faultyCameras), ConstArrayAccessor<Vector3>(faultyObjectPoints), objectPointToPoseIndexImagePointCorrespondenceAccessor, &access_world_T_optimizedCameras, &optimizedObjectPointAccessor, 50u, estimatorType, Scalar(0.001), Scalar(5), true, nullptr, nullptr, &intermediateErros);
+		performance.stop();
 
 		ocean_assert(result);
-
-		performance.stop();
 
 		if (result)
 		{
@@ -2595,46 +2577,46 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 			OCEAN_SUPPRESS_UNUSED_WARNING(sqrAverageObjectPointErrorInitial);
 			OCEAN_SUPPRESS_UNUSED_WARNING(sqrAverageObjectPointError);
 
-			averageInitialSqrError += sqrAveragePixelErrorInitial;
-			averageOptimizedSqrError += sqrAveragePixelErrorOptimized;
+			pixelErrors.push_back(sqrAveragePixelErrorInitial);
+			optimizedPixelErrors.push_back(sqrAveragePixelErrorOptimized);
 
-			medianInitialPixelErrors.push_back(sqrAveragePixelErrorInitial);
-			medianOptimizedPixelErrors.push_back(sqrAveragePixelErrorOptimized);
-
-			succeeded++;
+			optimizationIterations.push_back(intermediateErros.size());
 		}
-
-		++iterations;
+		else
+		{
+			scopedIteration.setInaccurate();
+		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	std::sort(pixelErrors.begin(), pixelErrors.end());
+	std::sort(optimizedPixelErrors.begin(), optimizedPixelErrors.end());
 
-	averageInitialSqrError /= Scalar(iterations);
-	averageOptimizedSqrError /= Scalar(iterations);
+	std::sort(optimizationIterations.begin(), optimizationIterations.end());
 
-	Log::info() << "Average pixel error: " << String::toAString(averageInitialSqrError, 1u) << "px -> " << String::toAString(averageOptimizedSqrError, 1u) << "px";
-	Log::info() << "Median sqr pixel error: " << String::toAString(Median::constMedian(medianInitialPixelErrors.data(), medianInitialPixelErrors.size()), 1u) << "px -> " << String::toAString(Median::constMedian(medianOptimizedPixelErrors.data(), medianOptimizedPixelErrors.size()), 1u) << "px";
-	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 1u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 1u) << "ms, average: " << String::toAString(performance.averageMseconds(), 1u) << "ms";
+	const Scalar pixelErrorP95 = pixelErrors[pixelErrors.size() * 95 / 100];
+	const Scalar optimizedPixelErrorP95 = optimizedPixelErrors[optimizedPixelErrors.size() * 95 / 100];
 
-	bool allSucceeded = true;
+	const size_t optimizationIterationP95 = optimizationIterations[optimizationIterations.size() * 95 / 100];
 
-	if (percent < 0.95)
-	{
-		allSucceeded = false;
-	}
+	Log::info() << indentation << "P95 sqr pixel error: " << String::toAString(pixelErrorP95, 1u) << "px -> " << String::toAString(optimizedPixelErrorP95, 1u) << "px";
+	Log::info() << indentation << "P95 iterations: " << optimizationIterationP95;
+	Log::info() << indentation << "Performance: " << performance;
 
-	if (averageOptimizedSqrError >= averageInitialSqrError)
+	bool allSucceeded = validation.succeeded();
+
+	if (optimizedPixelErrorP95 >= pixelErrorP95)
 	{
 		// the optimized solution must be better than the initial solution
 
 		allSucceeded = false;
 	}
 
+	const Scalar optimizedPixelErrorP50 = optimizedPixelErrors[optimizedPixelErrors.size() * 50 / 100];
+
 	if (numberPoses * numberObjectPoints > 1000u) // in case we have enough signals
 	{
-		if (averageOptimizedSqrError > 200)
+		if (optimizedPixelErrorP50 > 200)
 		{
 			// we always need a reasonable result
 
@@ -2650,7 +2632,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 			{
 				// we have perfect conditions, so we expect perfect results
 
-				if (averageOptimizedSqrError > Scalar(0.1))
+				if (optimizedPixelErrorP50 > Scalar(0.1))
 				{
 					allSucceeded = false;
 				}
@@ -2663,7 +2645,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 					{
 						// the robust estimators need to handle outliers
 
-						if (averageOptimizedSqrError > Scalar(10.0))
+						if (optimizedPixelErrorP50 > Scalar(10.0))
 						{
 							allSucceeded = false;
 						}
@@ -2672,7 +2654,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 					{
 						// Tukey may not find the optimal solution
 
-						if (averageOptimizedSqrError > Scalar(30.0))
+						if (optimizedPixelErrorP50 > Scalar(30.0))
 						{
 							allSucceeded = false;
 						}
@@ -2688,7 +2670,7 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 				{
 					// the robust estimators cannot handle noise, but still need to handle the outliers
 
-					if (averageOptimizedSqrError > Scalar(10.0))
+					if (optimizedPixelErrorP50 > Scalar(10.0))
 					{
 						allSucceeded = false;
 					}
@@ -2699,11 +2681,11 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectP
 
 	if (allSucceeded)
 	{
-		Log::info() << "Validation: Accuracy verification succeeded, " << String::toAString(percent * 100.0, 1u) << "% finished";
+		Log::info() << indentation << "Validation: Accuracy verification succeeded, " << String::toAString(validation.accuracy() * 100.0, 1u) << "% finished";
 	}
 	else
 	{
-		Log::info() << "Validation: Accuracy verification FAILED, " << String::toAString(percent * 100.0, 1u) << "% finished";
+		Log::info() << "Validation: Accuracy verification FAILED, " << String::toAString(validation.accuracy() * 100.0, 1u) << "% finished";
 	}
 
 	return allSucceeded;

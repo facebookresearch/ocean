@@ -211,10 +211,9 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestNonLinearOptimizationObjectPoint : protecte
 		 * @param type The estimator type to be used
 		 * @param noiseStandardDeviation The standard deviation of the Gaussian normal distribution for noised image points, with range [0, infinity)
 		 * @param numberOutliers The number of outliers correspondences, with range [0, numberObjectPoints]
-		 * @param slowImplementation True, to test the slow implementation; False, to test the fast (highly optimized) implementation
 		 * @return True, if succeeded
 		 */
-		static bool testNonLinearOptimizationPosesObjectPoints(const unsigned int numberPoses, const unsigned int numberObjectPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar noiseStandardDeviation = Scalar(0), const unsigned int numberOutliers = 0u, const bool slowImplementation = false);
+		static bool testNonLinearOptimizationPosesObjectPoints(const unsigned int numberPoses, const unsigned int numberObjectPoints, const double testDuration, const Geometry::Estimator::EstimatorType type, const Scalar noiseStandardDeviation = Scalar(0), const unsigned int numberOutliers = 0u);
 
 		/**
 		 * Tests the non linear optimization function for several 6DOF poses (with fixed translations) and several 3D object points.
