@@ -22,7 +22,7 @@ namespace Detector
 namespace Bullseyes
 {
 
-bool Utilities::createBullseyeImage(const unsigned int diameter, const unsigned int quietZone, Frame& rgbFrame, const uint8_t* foregroundColor, const uint8_t* backgroundColor)
+bool Utilities::createBullseyeImage(const unsigned int diameter, const unsigned int emptyBorder, Frame& rgbFrame, const uint8_t* foregroundColor, const uint8_t* backgroundColor)
 {
 	ocean_assert(diameter >= 5u && diameter % 5u == 0u);
 	if (diameter < 5u || diameter % 5u != 0u)
@@ -30,7 +30,7 @@ bool Utilities::createBullseyeImage(const unsigned int diameter, const unsigned 
 		return false;
 	}
 
-	const unsigned int imageSize = diameter + 2u * quietZone;
+	const unsigned int imageSize = diameter + 2u * emptyBorder;
 
 	foregroundColor = foregroundColor != nullptr ? foregroundColor : CV::Canvas::black(FrameType::FORMAT_RGB24);
 	backgroundColor = backgroundColor != nullptr ? backgroundColor : CV::Canvas::white(FrameType::FORMAT_RGB24);
