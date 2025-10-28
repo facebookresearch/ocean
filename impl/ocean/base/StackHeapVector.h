@@ -241,11 +241,11 @@ class StackHeapVector
 		void clear();
 
 		/**
-		 * Sets the capacity of this vector to a specified number of elements.
+		 * Reserves a specified capacity for this vector.
 		 * In case the specified capacity is smaller than the current capacity or is smaller than the number of elements in this vector, nothing happens.
-		 * @param capacity The capacity to set, with range [0, infinity)
+		 * @param capacity The capacity to reserve, with range [0, infinity)
 		 */
-		void setCapacity(const size_t capacity);
+		void reserve(const size_t capacity);
 
 		/**
 		 * Returns the first element of this vector.
@@ -426,7 +426,7 @@ StackHeapVector<T, tStackCapacity>::StackHeapVector()
 template <typename T, size_t tStackCapacity>
 StackHeapVector<T, tStackCapacity>::StackHeapVector(const size_t size, const T& element)
 {
-	setCapacity(size);
+	reserve(size);
 
 	for (size_t n = 0; n < size; ++n)
 	{
@@ -437,7 +437,7 @@ StackHeapVector<T, tStackCapacity>::StackHeapVector(const size_t size, const T& 
 template <typename T, size_t tStackCapacity>
 StackHeapVector<T, tStackCapacity>::StackHeapVector(std::vector<T>&& elements)
 {
-	setCapacity(elements.size());
+	reserve(elements.size());
 
 	for (T& element : elements)
 	{
@@ -448,7 +448,7 @@ StackHeapVector<T, tStackCapacity>::StackHeapVector(std::vector<T>&& elements)
 template <typename T, size_t tStackCapacity>
 StackHeapVector<T, tStackCapacity>::StackHeapVector(const std::vector<T>& elements)
 {
-	setCapacity(elements.size());
+	reserve(elements.size());
 
 	for (const T& element : elements)
 	{
@@ -459,7 +459,7 @@ StackHeapVector<T, tStackCapacity>::StackHeapVector(const std::vector<T>& elemen
 template <typename T, size_t tStackCapacity>
 StackHeapVector<T, tStackCapacity>::StackHeapVector(const std::initializer_list<T> elements)
 {
-	setCapacity(elements.size());
+	reserve(elements.size());
 
 	for (const T& element : elements)
 	{
@@ -637,7 +637,7 @@ void StackHeapVector<T, tStackCapacity>::clear()
 }
 
 template <typename T, size_t tStackCapacity>
-void StackHeapVector<T, tStackCapacity>::setCapacity(const size_t capacity)
+void StackHeapVector<T, tStackCapacity>::reserve(const size_t capacity)
 {
 	if (capacity > size_)
 	{

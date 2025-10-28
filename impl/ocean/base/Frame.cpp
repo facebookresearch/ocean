@@ -2429,7 +2429,7 @@ Frame::Frame(const Frame& frame, const AdvancedCopyMode advancedCopyMode) noexce
 
 		ocean_assert(frame.planes_.size() >= 1);
 
-		planes_.setCapacity(frame.planes_.size());
+		planes_.reserve(frame.planes_.size());
 
 		for (size_t n = 0; n < frame.planes_.size(); ++n)
 		{
@@ -2467,7 +2467,7 @@ Frame::Frame(const FrameType& frameType, const PlaneInitializer<void>* planeInit
 
 	const unsigned int bytesPerElement = frameType.bytesPerDataType();
 
-	planes_.setCapacity(frameType.numberPlanes());
+	planes_.reserve(frameType.numberPlanes());
 
 	for (unsigned int planeIndex = 0u; planeIndex < frameType.numberPlanes(); ++planeIndex)
 	{
@@ -2826,7 +2826,7 @@ bool Frame::set(const FrameType& frameType, const bool forceOwner, const bool fo
 		const unsigned int numberPlanes = frameType.numberPlanes();
 
 		planes_.clear();
-		planes_.setCapacity(numberPlanes);
+		planes_.reserve(numberPlanes);
 
 		FrameType::operator=(frameType);
 

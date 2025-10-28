@@ -435,7 +435,7 @@ bool TestStackHeapVector::testAssign(const double testDuration)
 		{
 			const size_t capacity = size_t(RandomI::random(randomGenerator, 100u));
 
-			stackHeapVector.setCapacity(capacity);
+			stackHeapVector.reserve(capacity);
 
 			const size_t expectedCapacity = std::max(tStackCapacity, capacity);
 
@@ -465,7 +465,7 @@ bool TestStackHeapVector::testAssign(const double testDuration)
 
 			const size_t expectedCapacity = std::max(std::max(tStackCapacity, capacity), std::max(stackHeapVector.size(), stackHeapVector.capacity()));
 
-			stackHeapVector.setCapacity(capacity);
+			stackHeapVector.reserve(capacity);
 
 			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.capacity(), expectedCapacity);
 
