@@ -65,7 +65,13 @@ bool AssignmentSolver::solve(CostMatrix&& costMatrix, Assignments& assignments)
 	std::vector<uint8_t> xVisited;
 	Indices32 yParents;
 
-	while (true)
+	// Fail-safe to prevent infinite loops. The Hungarian algorithm should converge
+	// in O(n^3) time, but the main loop typically requires at most O(n^2) iterations.
+	// We use matrixSize^2 as a generous upper bound.
+	const size_t maxIterations = matrixSize * matrixSize;
+	size_t iterations = 0;
+
+	while (iterations < maxIterations)
 	{
 		// Try to find matches using the current zero elements in the cost matrix
 		yAssignments.assign(matrixSize, invalidIndex());
@@ -94,6 +100,8 @@ bool AssignmentSolver::solve(CostMatrix&& costMatrix, Assignments& assignments)
 				// No more reductions are possible. This could indicate numerical problems. Let's give up.
 				return false;
 			}
+
+			++iterations;
 		}
 		else
 		{
@@ -101,6 +109,8 @@ bool AssignmentSolver::solve(CostMatrix&& costMatrix, Assignments& assignments)
 			break;
 		}
 	}
+
+	ocean_assert(iterations <= maxIterations && "AssignmentSolver exceeded maximum iterations");
 
 	for (size_t y = 0; y < originalRows; ++y)
 	{
