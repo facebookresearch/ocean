@@ -98,7 +98,7 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 					usedIndices.clear();
 
 					const HomogenousMatrix4 flippedCamera1_T_world = AnyCamera::standard2InvertedFlipped(world_T_camera1);
-					const bool debugResult = determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(camera, flippedCamera0_T_world, flippedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints0, accessorImagePoints1, usedIndices, maxRotationalSqrError, true);
+					const bool debugResult = determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>>(camera, flippedCamera0_T_world, flippedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(initialBadObjectPoints), accessorImagePoints0, accessorImagePoints1, usedIndices, maxRotationalSqrError, true);
 					ocean_assert_and_suppress_unused(debugResult, debugResult);
 
 					if (objectPoints != nullptr)
@@ -240,7 +240,7 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 
 					reusableValidIndices.clear();
 					Scalar iterationValidError = 0;
-					if (determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(camera, flippedCamera0_T_world, flippedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(reusableOptimizedObjectPoints), accessorImagePoints0, accessorImagePoints1, reusableValidIndices, maxArbitrarySqrError, true, &iterationValidError, bestIndices.size()))
+					if (determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>>(camera, flippedCamera0_T_world, flippedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(reusableOptimizedObjectPoints), accessorImagePoints0, accessorImagePoints1, reusableValidIndices, maxArbitrarySqrError, true, &iterationValidError, bestIndices.size()))
 					{
 						if (reusableValidIndices.size() > bestIndices.size() || (reusableValidIndices.size() == bestIndices.size() && iterationValidError < bestError))
 						{
@@ -287,7 +287,7 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 
 					reusableValidIndices.clear();
 					Scalar iterationValidError = 0;
-					if (determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(camera, flippedCamera0_T_world, optimizedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(reusableOptimizedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableValidTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableValidTriangulatedObjectPoints), reusableValidIndices, maxArbitrarySqrError, true, &iterationValidError, bestIndices.size()))
+					if (determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>>(camera, flippedCamera0_T_world, optimizedCamera1_T_world, ConstTemplateArrayAccessor<Vector3>(reusableOptimizedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints0.data(), reusableValidTriangulatedObjectPoints), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), reusableValidTriangulatedObjectPoints), reusableValidIndices, maxArbitrarySqrError, true, &iterationValidError, bestIndices.size()))
 					{
 						if (reusableValidIndices.size() > bestIndices.size() || (reusableValidIndices.size() == bestIndices.size() && iterationValidError < bestError))
 						{
@@ -349,7 +349,7 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 			return false;
 		}
 
-		const bool debugResult = determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>, true>(camera, flippedCamera0_T_world, AnyCamera::standard2InvertedFlipped(world_T_camera1), ConstTemplateArrayAccessor<Vector3>(bestObjectPoints), accessorImagePoints0, accessorImagePoints1, bestIndices, maxArbitrarySqrError, true);
+		const bool debugResult = determineValidCorrespondencesIF<ConstTemplateArrayAccessor<Vector3>, ConstIndexedAccessor<Vector2>, ConstIndexedAccessor<Vector2>>(camera, flippedCamera0_T_world, AnyCamera::standard2InvertedFlipped(world_T_camera1), ConstTemplateArrayAccessor<Vector3>(bestObjectPoints), accessorImagePoints0, accessorImagePoints1, bestIndices, maxArbitrarySqrError, true);
 		ocean_assert_and_suppress_unused(debugResult, debugResult);
 	}
 

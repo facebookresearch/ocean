@@ -89,13 +89,12 @@ class OCEAN_GEOMETRY_EXPORT StereoscopicGeometry
 		 * @param onlyFrontObjectPoints True, to accept only object points lying in front of both camera frames
 		 * @param totalSqrError Optional resulting sum of all square pixel errors for all valid point correspondences (for both frames)
 		 * @param minimalValidCorrespondences Optional number of valid correspondences that must be reached, otherwise the function stops without providing a useful result, with range [0, objectPoints.size()]
-		 * @return True, if succeeded; False, if the function stops due to the defined minimal number of thresholds
+		 * @return True, if succeeded; False, if the function stops due to the defined minimal number of thresholds, or if no valid correspondence could be found
 		 * @tparam TAccessorObjectPoints The template type of the accessor for the object points
 		 * @tparam TAccessorImagePoints0 The template type of the accessor for the first image points
 		 * @tparam TAccessorImagePoints1 The template type of the accessor for the second image points
-		 * @tparam tUseBorderDistortionIfOutside True, to apply the camera distortion from the nearest point lying on the frame border if the point lies outside the visible camera area; False, to apply the distortion from the given position
 		 */
-		template <typename TAccessorObjectPoints, typename TAccessorImagePoints0, typename TAccessorImagePoints1, bool tUseBorderDistortionIfOutside>
+		template <typename TAccessorObjectPoints, typename TAccessorImagePoints0, typename TAccessorImagePoints1>
 		static bool determineValidCorrespondencesIF(const AnyCamera& camera, const HomogenousMatrix4& flippedCamera0_T_world, const HomogenousMatrix4& flippedCamera1_T_world, const TAccessorObjectPoints& objectPoints, const TAccessorImagePoints0& imagePoints0, const TAccessorImagePoints1& imagePoints1, Indices32& validIndices, const Scalar maxSqrError = Scalar(3.5 * 3.5), const bool onlyFrontObjectPoints = true, Scalar* totalSqrError = nullptr, const size_t minimalValidCorrespondences = 0);
 };
 
@@ -113,7 +112,7 @@ inline bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const Cons
 	return true;
 }
 
-template <typename TAccessorObjectPoints, typename TAccessorImagePoints0, typename TAccessorImagePoints1, bool tUseBorderDistortionIfOutside>
+template <typename TAccessorObjectPoints, typename TAccessorImagePoints0, typename TAccessorImagePoints1>
 bool StereoscopicGeometry::determineValidCorrespondencesIF(const AnyCamera& camera, const HomogenousMatrix4& flippedCamera0_T_world, const HomogenousMatrix4& flippedCamera1_T_world, const TAccessorObjectPoints& objectPoints, const TAccessorImagePoints0& imagePoints0, const TAccessorImagePoints1& imagePoints1, Indices32& validIndices, const Scalar maxSqrError, const bool onlyFrontObjectPoints, Scalar* totalSqrError, const size_t minimalValidCorrespondences)
 {
 	ocean_assert(camera.isValid());
@@ -131,7 +130,9 @@ bool StereoscopicGeometry::determineValidCorrespondencesIF(const AnyCamera& came
 	{
 		//  stop if we cannot reach a specified number of valid correspondences anymore
 		if (minimalValidCorrespondences != 0 && imagePoints0.size() + validIndices.size() - n < minimalValidCorrespondences)
+		{
 			return false;
+		}
 
 		if (onlyFrontObjectPoints)
 		{
@@ -147,7 +148,8 @@ bool StereoscopicGeometry::determineValidCorrespondencesIF(const AnyCamera& came
 
 		if (sqrDistance0 < maxSqrError && sqrDistance1 < maxSqrError)
 		{
-			validIndices.push_back((unsigned int)n);
+			validIndices.push_back(Index32(n));
+
 			error += sqrDistance0 + sqrDistance1;
 		}
 	}
@@ -157,7 +159,7 @@ bool StereoscopicGeometry::determineValidCorrespondencesIF(const AnyCamera& came
 		*totalSqrError = error;
 	}
 
-	return true;
+	return !validIndices.empty();
 }
 
 }
