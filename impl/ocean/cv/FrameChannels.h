@@ -4610,7 +4610,8 @@ void FrameChannels::applyPixelModifierSubset(const T* source, T* target, const u
 			break;
 		}
 
-		// default: this case is not handled
+		default: // this case is not handled
+			break;
 	}
 }
 
@@ -4716,7 +4717,8 @@ void FrameChannels::applyAdvancedPixelModifierSubset(const TSource* source, TTar
 			break;
 		}
 
-		// default: this case is not handled
+		default: // this case is not handled
+			break;
 	}
 }
 
