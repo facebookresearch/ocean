@@ -157,8 +157,8 @@ class OCEAN_GEOMETRY_EXPORT Estimator
 
 		/**
 		 * Returns the robust error of a residual error for a specified estimator.
-		 * @param value Residual error to return the robust error for, with range (-infinity, infinity)
-		 * @param sigma Standard deviation of the expected residual error, with range (0, infinity) if 'needSigma<tEstimator>() == false', otherwise 0
+		 * @param value The residual error to return the robust error for, with range (-infinity, infinity)
+		 * @param sigma The standard deviation of the expected residual error, with range (0, infinity) if 'needSigma<tEstimator>() == true', otherwise 0
 		 * @return The resulting robust error, with range [0, infinity)
 		 * @tparam tEstimator Type of the estimator to use
 		 * @see needSigma().
@@ -168,9 +168,9 @@ class OCEAN_GEOMETRY_EXPORT Estimator
 
 		/**
 		 * Returns the robust error of a given residual error for a specified estimator.
-		 * @param value Residual error to return the robust error for, with range (-infinity, infinity)
-		 * @param sigma Standard deviation of the expected residual error, with range (0, infinity) if 'needSigma(estimator) == false', otherwise 0
-		 * @param estimator Type of the estimator to use
+		 * @param value The residual error to return the robust error for, with range (-infinity, infinity)
+		 * @param sigma The standard deviation of the expected residual error, with range (0, infinity) if 'needSigma(estimator) == true', otherwise 0
+		 * @param estimator The type of the estimator to use
 		 * @return The resulting robust error, with range [0, infinity)
 		 * @see needSigma().
 		 */
@@ -178,8 +178,8 @@ class OCEAN_GEOMETRY_EXPORT Estimator
 
 		/**
 		 * Returns the robust error of a squared residual error for a specified estimator.
-		 * @param sqrValue Squared residual error to return the robust error for, with range [0, infinity)
-		 * @param sqrSigma Standard deviation of the expected residual error, with range (0, infinity) if 'needSigma<tEstimator>() == false', otherwise 0
+		 * @param sqrValue The squared residual error to return the robust error for, with range [0, infinity)
+		 * @param sqrSigma The squared standard deviation (the variance) of the expected residual error, with range (0, infinity) if 'needSigma<tEstimator>() == true', otherwise 0
 		 * @return The resulting robust error, with range [0, infinity)
 		 * @tparam tEstimator Type of the estimator to use
 		 * @see needSigma().
@@ -189,8 +189,8 @@ class OCEAN_GEOMETRY_EXPORT Estimator
 
 		/**
 		 * Returns the robust error of a given squared residual error for a specified estimator.
-		 * @param sqrValue Residual error to return the robust error for, with range [0, infinity)
-		 * @param sqrSigma Standard deviation of the expected residual error, with range (0, infinity) if 'needSigma(estimator) == false', otherwise 0
+		 * @param sqrValue The squared residual error to return the robust error for, with range [0, infinity)
+		 * @param sqrSigma The squared standard deviation (the variance) of the expected residual error, with range (0, infinity) if 'needSigma(estimator) == true', otherwise 0
 		 * @param estimator Type of the estimator to use
 		 * @return The resulting robust error, with range [0, infinity)
 		 * @see needSigma().
@@ -199,8 +199,8 @@ class OCEAN_GEOMETRY_EXPORT Estimator
 
 		/**
 		 * Returns the weight in relation to a error for a given residual error and a specified estimator.
-		 * @param value Residual error to return the weight for
-		 * @param sigma Standard deviation of the expected residual error, beware: provide a valid standard deviation if necessary with range (0, infinity)
+		 * @param value The residual error to return the weight for
+		 * @param sigma The standard deviation of the expected residual error, beware: provide a valid standard deviation if necessary with range (0, infinity)
 		 * @return Resulting weight
 		 * @tparam tEstimator Type of the estimator to use
 		 */
@@ -209,8 +209,8 @@ class OCEAN_GEOMETRY_EXPORT Estimator
 
 		/**
 		 * Returns the weight in relation to a error for a given residual error and a specified estimator.
-		 * @param value Residual error to return the weight for
-		 * @param sigma Standard deviation of the expected residual error
+		 * @param value The residual error to return the weight for
+		 * @param sigma The standard deviation of the expected residual error
 		 * @param estimator Type of the estimator to use
 		 * @return Resulting weight
 		 */
@@ -218,8 +218,8 @@ class OCEAN_GEOMETRY_EXPORT Estimator
 
 		/**
 		 * Returns the weight in relation to a squared error for a given residual error and a specified estimator.
-		 * @param sqrValue Squared residual error to return the weight for
-		 * @param sqrSigma Squared standard deviation of the expected residual error, beware: provide a valid standard deviation if necessary with range (0, infinity)
+		 * @param sqrValue The squared residual error to return the weight for
+		 * @param sqrSigma The squared standard deviation (the variance) of the expected residual error, beware: provide a valid standard deviation if necessary with range (0, infinity)
 		 * @return Resulting weight (not the squared result), with range [0, infinity)
 		 * @tparam tEstimator Type of the estimator to use
 		 */
@@ -228,8 +228,8 @@ class OCEAN_GEOMETRY_EXPORT Estimator
 
 		/**
 		 * Returns the weight in relation to a squared error for a given residual error and a specified estimator.
-		 * @param sqrValue Squared residual error to return the weight for
-		 * @param sqrSigma Squared standard deviation of the expected residual error
+		 * @param sqrValue The squared residual error to return the weight for
+		 * @param sqrSigma The squared standard deviation (the variance) of the expected residual error
 		 * @param estimator Type of the estimator to use
 		 * @return Resulting weight (not the squared result), with range [0, infinity)
 		 */
@@ -373,7 +373,7 @@ class OCEAN_GEOMETRY_EXPORT Estimator
 		 * @return Tuning constant
 		 */
 		template <EstimatorType tEstimator>
-		static inline Scalar sigmaTuningContstant();
+		static inline Scalar sigmaTuningConstant();
 };
 
 template <Estimator::EstimatorType tEstimator>
@@ -816,10 +816,10 @@ inline Scalar Estimator::determineSigma(const Scalar* errors, const size_t numbe
 
 	if (number <= modelParameters)
 	{
-		return max(Numeric::eps(), sigmaTuningContstant<tEstimator>() * Scalar(1.4826) * median);
+		return max(Numeric::eps(), sigmaTuningConstant<tEstimator>() * Scalar(1.4826) * median);
 	}
 
-	return max(Numeric::eps(), sigmaTuningContstant<tEstimator>() * Scalar(1.4826) * (1 + Scalar(5) / Scalar(number - modelParameters)) * median);
+	return max(Numeric::eps(), sigmaTuningConstant<tEstimator>() * Scalar(1.4826) * (1 + Scalar(5) / Scalar(number - modelParameters)) * median);
 }
 
 inline Scalar Estimator::determineSigma(const Scalar* errors, const size_t number, const size_t modelParameters, const EstimatorType estimator)
@@ -866,10 +866,10 @@ inline Scalar Estimator::determineSigma(const Scalar* errors, const unsigned int
 
 	if (numberIndices <= modelParameters)
 	{
-		return max(Numeric::eps(), sigmaTuningContstant<tEstimator>() * Scalar(1.4826) * median);
+		return max(Numeric::eps(), sigmaTuningConstant<tEstimator>() * Scalar(1.4826) * median);
 	}
 
-	return max(Numeric::eps(), sigmaTuningContstant<tEstimator>() * Scalar(1.4826) * (1 + Scalar(5) / Scalar(numberIndices - modelParameters)) * median);
+	return max(Numeric::eps(), sigmaTuningConstant<tEstimator>() * Scalar(1.4826) * (1 + Scalar(5) / Scalar(numberIndices - modelParameters)) * median);
 }
 
 inline Scalar Estimator::determineSigma(const Scalar* errors, const unsigned int* indices, const size_t numberIndices, const size_t modelParameters, const EstimatorType estimator)
@@ -907,10 +907,10 @@ inline Scalar Estimator::determineSigmaSquare(const Scalar* sqrErrors, const siz
 
 	if (number <= modelParameters)
 	{
-		return max(Numeric::eps(), sigmaTuningContstant<tEstimator>() * Scalar(1.4826) * Numeric::sqrt(sqrMedian));
+		return max(Numeric::eps(), sigmaTuningConstant<tEstimator>() * Scalar(1.4826) * Numeric::sqrt(sqrMedian));
 	}
 
-	return max(Numeric::eps(), sigmaTuningContstant<tEstimator>() * Scalar(1.4826) * (1 + Scalar(5) / Scalar(number - modelParameters)) * Numeric::sqrt(sqrMedian));
+	return max(Numeric::eps(), sigmaTuningConstant<tEstimator>() * Scalar(1.4826) * (1 + Scalar(5) / Scalar(number - modelParameters)) * Numeric::sqrt(sqrMedian));
 }
 
 inline Scalar Estimator::determineSigmaSquare(const Scalar* sqrErrors, const size_t number, const size_t modelParameters, const EstimatorType estimator)
@@ -956,10 +956,10 @@ inline Scalar Estimator::determineSigmaSquare(const Scalar* sqrErrors, const uns
 
 	if (numberIndices <= modelParameters)
 	{
-		return max(Numeric::eps(), sigmaTuningContstant<tEstimator>() * Scalar(1.4826) * Numeric::sqrt(sqrMedian));
+		return max(Numeric::eps(), sigmaTuningConstant<tEstimator>() * Scalar(1.4826) * Numeric::sqrt(sqrMedian));
 	}
 
-	return max(Numeric::eps(), sigmaTuningContstant<tEstimator>() * Scalar(1.4826) * (1 + Scalar(5) / Scalar(numberIndices - modelParameters)) * Numeric::sqrt(sqrMedian));
+	return max(Numeric::eps(), sigmaTuningConstant<tEstimator>() * Scalar(1.4826) * (1 + Scalar(5) / Scalar(numberIndices - modelParameters)) * Numeric::sqrt(sqrMedian));
 }
 
 inline Scalar Estimator::determineSigmaSquare(const Scalar* sqrErrors, const unsigned int* indices, const size_t numberIndices, const size_t modelParameters, const EstimatorType estimator)
@@ -1018,26 +1018,26 @@ constexpr Scalar Estimator::invMaximalWeight()
 }
 
 template <Estimator::EstimatorType tEstimator>
-inline Scalar Estimator::sigmaTuningContstant()
+inline Scalar Estimator::sigmaTuningConstant()
 {
 	ocean_assert(false && "Invalid estimator type!");
 	return Scalar(1);
 }
 
 template <>
-inline Scalar Estimator::sigmaTuningContstant<Estimator::ET_HUBER>()
+inline Scalar Estimator::sigmaTuningConstant<Estimator::ET_HUBER>()
 {
 	return Scalar(1.345);
 }
 
 template <>
-inline Scalar Estimator::sigmaTuningContstant<Estimator::ET_TUKEY>()
+inline Scalar Estimator::sigmaTuningConstant<Estimator::ET_TUKEY>()
 {
 	return Scalar(4.6851);
 }
 
 template <>
-inline Scalar Estimator::sigmaTuningContstant<Estimator::ET_CAUCHY>()
+inline Scalar Estimator::sigmaTuningConstant<Estimator::ET_CAUCHY>()
 {
 	return Scalar(2.3849);
 }
@@ -1046,4 +1046,4 @@ inline Scalar Estimator::sigmaTuningContstant<Estimator::ET_CAUCHY>()
 
 }
 
-#endif // META_OCEAN_GEOMETRY_ESTIMATOR_2_H
+#endif // META_OCEAN_GEOMETRY_ESTIMATOR_H
