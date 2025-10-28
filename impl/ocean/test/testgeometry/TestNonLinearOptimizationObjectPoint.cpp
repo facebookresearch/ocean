@@ -1708,17 +1708,17 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 {
 	ocean_assert(testDuration > 0.0);
 
-	Scalar averageInitialSqrError = 0;
-	Scalar averageOptimizedSqrError = 0;
-
-	HighPerformanceStatistic performance;
-
-	Scalars medianPixelErrors;
-	Scalars medianOptimizedPixelErrors;
+	RandomGenerator randomGenerator;
 
 	const Box3 objectPointsArea(Vector3(-1, -1, -1), Vector3(1, 1, 1));
 
-	RandomGenerator randomGenerator;
+	const std::string indentation = "  ";
+
+	std::vector<Scalar> pixelErrors;
+	std::vector<Scalar> optimizedPixelErrors;
+	std::vector<size_t> optimizationIterations;
+
+	HighPerformanceStatistic performance;
 
 	ValidationPrecision validation(0.99, randomGenerator);
 
@@ -1859,10 +1859,12 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 		Vectors3 optimizedObjectPoints(objectPoints.size());
 		HomogenousMatrix4 world_T_optimizedCamera1(false);
 
+		Scalars intermediateErrors;
+
 		performance.start();
 
 			NonconstArrayAccessor<Vector3> optimizedObjectPointsAccessor(optimizedObjectPoints);
-			const bool result = Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(*camera, world_T_camera0, world_T_faultyCamera1, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 50u, estimatorType, Scalar(0.001), Scalar(5), true);
+			const bool result = Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOnePose(*camera, world_T_camera0, world_T_faultyCamera1, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints0), ConstArrayAccessor<Vector2>(imagePoints1), &world_T_optimizedCamera1, &optimizedObjectPointsAccessor, 50u, estimatorType, Scalar(0.001), Scalar(5), true, nullptr, nullptr, &intermediateErrors);
 			ocean_assert(result);
 
 		performance.stop();
@@ -1877,7 +1879,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 			OCEAN_SUPPRESS_UNUSED_WARNING(sqrMaximalPixelErrorInitial);
 
 			{
-				Scalar sqrAveragePixelError = 0, sqrMinimalPixelError = 0, sqrMaximalPixelError = 0;
+				Scalar sqrAveragePixelError = 0;
+				Scalar sqrMinimalPixelError = 0;
+				Scalar sqrMaximalPixelError = 0;
 
 				if (Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(world_T_camera0, *camera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints0), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError))
 				{
@@ -1918,7 +1922,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 			const Vectors3 outlierFreeOptimizedObjectPoints(Subset::invertedSubset(optimizedObjectPoints, outlierSet));
 
 			{
-				Scalar sqrAveragePixelError = 0, sqrMinimalPixelError = 0, sqrMaximalPixelError = 0;
+				Scalar sqrAveragePixelError = 0;
+				Scalar sqrMinimalPixelError = 0;
+				Scalar sqrMaximalPixelError = 0;
 
 				if (Geometry::Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(world_T_camera0, *camera, ConstTemplateArrayAccessor<Vector3>(outlierFreeOptimizedObjectPoints), ConstTemplateArrayAccessor<Vector2>(outlierFreeImagePoints0), sqrAveragePixelError, sqrMinimalPixelError, sqrMaximalPixelError))
 				{
@@ -1946,11 +1952,9 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 			const Scalar sqrAverageObjectPointError = Geometry::Error::determineAverageError(outlierFreeObjectPoints, outlierFreeOptimizedObjectPoints);
 			OCEAN_SUPPRESS_UNUSED_WARNING(sqrAverageObjectPointError);
 
-			averageInitialSqrError += sqrAveragePixelErrorInitial;
-			averageOptimizedSqrError += sqrAveragePixelErrorOptimized;
-
-			medianPixelErrors.push_back(sqrAveragePixelErrorInitial);
-			medianOptimizedPixelErrors.push_back(sqrAveragePixelErrorOptimized);
+			pixelErrors.push_back(sqrAveragePixelErrorInitial);
+			optimizedPixelErrors.push_back(sqrAveragePixelErrorOptimized);
+			optimizationIterations.push_back(intermediateErrors.size());
 		}
 		else
 		{
@@ -1959,15 +1963,18 @@ bool TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOnePoseObjec
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(validation.iterations() != 0);
-	averageInitialSqrError /= Scalar(validation.iterations());
-	averageOptimizedSqrError /= Scalar(validation.iterations());
+	std::sort(pixelErrors.begin(), pixelErrors.end());
+	std::sort(optimizedPixelErrors.begin(), optimizedPixelErrors.end());
+	std::sort(optimizationIterations.begin(), optimizationIterations.end());
 
-	Log::info() << "Average sqr pixel error: " << String::toAString(averageInitialSqrError, 1u) << "px -> " << String::toAString(averageOptimizedSqrError, 1u) << "px";
-	Log::info() << "Median sqr pixel error: " << String::toAString(Median::constMedian(medianPixelErrors.data(), medianPixelErrors.size()), 1u) << "px -> " << String::toAString(Median::constMedian(medianOptimizedPixelErrors.data(), medianOptimizedPixelErrors.size()), 1u) << "px";
-	Log::info() << "Performance: Best: " << String::toAString(performance.bestMseconds(), 2u) << "ms, worst: " << String::toAString(performance.worstMseconds(), 2u) << "ms, average: " << String::toAString(performance.averageMseconds(), 2u) << "ms";
+	const Scalar pixelErrorP95 = pixelErrors[pixelErrors.size() * 95 / 100];
+	const Scalar optimizedPixelErrorP95 = optimizedPixelErrors[optimizedPixelErrors.size() * 95 / 100];
+	const size_t optimizationIterationP95 = optimizationIterations[optimizationIterations.size() * 95 / 100];
 
-	Log::info() << "Validation: " << validation;
+	Log::info() << indentation << "P95 sqr pixel error: " << String::toAString(pixelErrorP95, 1u) << "px -> " << String::toAString(optimizedPixelErrorP95, 1u) << "px";
+	Log::info() << indentation << "P95 iterations: " << optimizationIterationP95;
+	Log::info() << indentation << "Performance: " << performance;
+	Log::info() << indentation << "Validation: " << validation;
 
 	return validation.succeeded();
 }
