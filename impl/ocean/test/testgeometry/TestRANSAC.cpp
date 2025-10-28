@@ -414,170 +414,192 @@ bool TestRANSAC::testP3P(const AnyCameraType anyCameraType, const size_t corresp
 
 	RandomGenerator randomGenerator;
 
-	HighPerformanceStatistic performance;
+	const std::string indentation0 = "  ";
 
-	for (const bool refine : {false, true})
+	for (const bool useGravityConstraints : {false, true})
 	{
-		if (refine)
+		if (useGravityConstraints)
 		{
-			Log::info() << "... with post refinement";
+			Log::info() << indentation0 << "... with gravity constraints:";
 		}
 		else
 		{
-			Log::info() << "... without refinement";
+			Log::info() << indentation0 << "... without gravity constraints:";
 		}
 
-		constexpr double successThreshold = std::is_same<Scalar, float>::value ? 0.85 : 0.99;
+		const std::string indentation1 = indentation0 + " ";
 
-		ValidationPrecision validation(successThreshold, randomGenerator);
-
-		const Timestamp startTimestamp(true);
-
-		do
+		for (const bool refine : {false, true})
 		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
+			HighPerformanceStatistic performance;
 
-			const SharedAnyCamera sharedCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
-			ocean_assert(sharedCamera);
-
-			const AnyCamera& camera = *sharedCamera;
-
-			const HomogenousMatrix4 world_T_camera(Random::vector3(randomGenerator, -10, 10), Random::quaternion(randomGenerator));
-			const HomogenousMatrix4 flippedCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_camera));
-
-			Vectors3 objectPoints;
-			Vectors2 imagePoints;
-
-			constexpr Scalar cameraBorder = Scalar(5);
-
-			for (size_t n = 0; n < correspondences; ++n)
+			if (refine)
 			{
-				const Vector2 imagePoint = Random::vector2(randomGenerator, cameraBorder, Scalar(camera.width()) - cameraBorder, cameraBorder, Scalar(camera.height()) - cameraBorder);
-
-				const Scalar distance = Random::scalar(randomGenerator, Scalar(0.1), Scalar(10));
-				const Vector3 objectPoint = camera.ray(imagePoint, world_T_camera).point(distance);
-
-				ocean_assert_and_suppress_unused(AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint), flippedCamera_T_world);
-
-				imagePoints.push_back(imagePoint);
-				objectPoints.push_back(objectPoint);
+				Log::info() << indentation1 << "... with post refinement";
+			}
+			else
+			{
+				Log::info() << indentation1 << "... without refinement";
 			}
 
-			const size_t faultyCorrespondences = size_t(double(correspondences) * faultyRate);
-			ocean_assert(faultyCorrespondences < correspondences);
+			const std::string indentation2 = indentation1 + " ";
 
-			const size_t validCorrespondences = correspondences - faultyCorrespondences;
+			constexpr double successThreshold = std::is_same<Scalar, float>::value ? 0.85 : 0.99;
 
-			UnorderedIndexSet32 faultyIndices;
+			ValidationPrecision validation(successThreshold, randomGenerator);
 
-			while (faultyIndices.size() < faultyCorrespondences)
+			const Timestamp startTimestamp(true);
+
+			do
 			{
-				const unsigned int index = RandomI::random(randomGenerator, (unsigned int)(correspondences - 1));
+				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-				faultyIndices.emplace(index);
+				const SharedAnyCamera sharedCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
+				ocean_assert(sharedCamera);
 
-				if (RandomI::boolean(randomGenerator))
+				const AnyCamera& camera = *sharedCamera;
+
+				const HomogenousMatrix4 world_T_camera(Random::vector3(randomGenerator, -10, 10), Random::quaternion(randomGenerator));
+				const HomogenousMatrix4 flippedCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_camera));
+
+				Vectors3 objectPoints;
+				Vectors2 imagePoints;
+
+				constexpr Scalar cameraBorder = Scalar(5);
+
+				for (size_t n = 0; n < correspondences; ++n)
 				{
-					imagePoints[index] = Random::vector2(randomGenerator, cameraBorder, Scalar(camera.width()) - cameraBorder, cameraBorder, Scalar(camera.height()) - cameraBorder);
+					const Vector2 imagePoint = Random::vector2(randomGenerator, cameraBorder, Scalar(camera.width()) - cameraBorder, cameraBorder, Scalar(camera.height()) - cameraBorder);
+
+					const Scalar distance = Random::scalar(randomGenerator, Scalar(0.1), Scalar(10));
+					const Vector3 objectPoint = camera.ray(imagePoint, world_T_camera).point(distance);
+
+					ocean_assert_and_suppress_unused(AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint), flippedCamera_T_world);
+
+					imagePoints.push_back(imagePoint);
+					objectPoints.push_back(objectPoint);
 				}
-				else
+
+				const size_t faultyCorrespondences = size_t(double(correspondences) * faultyRate);
+				ocean_assert(faultyCorrespondences < correspondences);
+
+				const size_t validCorrespondences = correspondences - faultyCorrespondences;
+
+				UnorderedIndexSet32 faultyIndices;
+
+				while (faultyIndices.size() < faultyCorrespondences)
 				{
-					objectPoints[index] = Random::vector3(randomGenerator, -10, 10);
-				}
-			}
+					const unsigned int index = RandomI::random(randomGenerator, (unsigned int)(correspondences - 1));
 
-			const unsigned int ransacIterations = std::max(50u, Geometry::RANSAC::iterations(3u, Scalar(0.995), Scalar(faultyRate + 0.05)));
+					faultyIndices.emplace(index);
 
-			constexpr unsigned int minimalValidCorrespondences = 4u;
-			constexpr Scalar sqrPixelErrorThreshold = Scalar(5 * 5);
-
-			Indices32 usedIndices;
-			Scalar sqrAccuracy = Numeric::maxValue();
-
-			const bool determineUseIndices = RandomI::boolean(randomGenerator);
-			const bool determineSqrAccuracy = RandomI::boolean(randomGenerator);
-
-			HomogenousMatrix4 world_T_ransacCamera;
-
-			performance.start();
-				const bool result = Geometry::RANSAC::p3p(camera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, world_T_ransacCamera, minimalValidCorrespondences, refine, ransacIterations, sqrPixelErrorThreshold, determineUseIndices ? &usedIndices : nullptr, determineSqrAccuracy ? &sqrAccuracy : nullptr);
-			performance.stop();
-
-			if (!result)
-			{
-				OCEAN_SET_FAILED(validation);
-
-				continue;
-			}
-
-			Scalar sumSqrDistances = 0;
-			size_t numberPreciseCorrespondences = 0;
-
-			for (size_t n = 0; n < objectPoints.size(); ++n)
-			{
-				const Vector2& imagePoint = imagePoints[n];
-				const Vector3& objectPoint = objectPoints[n];
-
-				const Vector2 projectedObjectPoint = camera.projectToImage(world_T_ransacCamera, objectPoint);
-
-				const Scalar sqrDistance = imagePoint.sqrDistance(projectedObjectPoint);
-
-				if (sqrDistance <= sqrPixelErrorThreshold)
-				{
-					sumSqrDistances += sqrDistance;
-					++numberPreciseCorrespondences;
-				}
-			}
-
-			if (numberPreciseCorrespondences >= validCorrespondences)
-			{
-				ocean_assert(numberPreciseCorrespondences != 0);
-
-				const Scalar averageSqrDistance = sumSqrDistances / Scalar(numberPreciseCorrespondences);
-
-				if (faultyCorrespondences == 0)
-				{
-					// no outliers, we need a perfect result
-
-					constexpr Scalar threshold = std::is_same<float, Scalar>::value ? Scalar(0.5) : Scalar(0.1);
-
-					if (averageSqrDistance > Numeric::sqr(threshold))
+					if (RandomI::boolean(randomGenerator))
 					{
-						scopedIteration.setInaccurate();
+						imagePoints[index] = Random::vector2(randomGenerator, cameraBorder, Scalar(camera.width()) - cameraBorder, cameraBorder, Scalar(camera.height()) - cameraBorder);
+					}
+					else
+					{
+						objectPoints[index] = Random::vector3(randomGenerator, -10, 10);
 					}
 				}
-				else
+
+				const unsigned int ransacIterations = std::max(50u, Geometry::RANSAC::iterations(3u, Scalar(0.995), Scalar(faultyRate + 0.05)));
+
+				constexpr unsigned int minimalValidCorrespondences = 4u;
+				constexpr Scalar sqrPixelErrorThreshold = Scalar(5 * 5);
+
+				Indices32 usedIndices;
+				Scalar sqrAccuracy = Numeric::maxValue();
+
+				const bool determineUseIndices = RandomI::boolean(randomGenerator);
+				const bool determineSqrAccuracy = RandomI::boolean(randomGenerator);
+
+				HomogenousMatrix4 world_T_ransacCamera;
+
+				const Vector3 perfectGravityInWorld(0, -1, 0); // this is how we defined gravity in the world
+
+				const Geometry::GravityConstraints gravityConstraints(world_T_camera, perfectGravityInWorld);
+
+				performance.start();
+					const bool result = Geometry::RANSAC::p3p(camera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, world_T_ransacCamera, minimalValidCorrespondences, refine, ransacIterations, sqrPixelErrorThreshold, determineUseIndices ? &usedIndices : nullptr, determineSqrAccuracy ? &sqrAccuracy : nullptr, gravityConstraints.conditionalPointer(useGravityConstraints));
+				performance.stop();
+
+				if (!result)
 				{
-					if (refine)
+					OCEAN_SET_FAILED(validation);
+
+					continue;
+				}
+
+				Scalar sumSqrDistances = 0;
+				size_t numberPreciseCorrespondences = 0;
+
+				for (size_t n = 0; n < objectPoints.size(); ++n)
+				{
+					const Vector2& imagePoint = imagePoints[n];
+					const Vector3& objectPoint = objectPoints[n];
+
+					const Vector2 projectedObjectPoint = camera.projectToImage(world_T_ransacCamera, objectPoint);
+
+					const Scalar sqrDistance = imagePoint.sqrDistance(projectedObjectPoint);
+
+					if (sqrDistance <= sqrPixelErrorThreshold)
 					{
-						if (averageSqrDistance > Scalar(0.5 * 0.5))
+						sumSqrDistances += sqrDistance;
+						++numberPreciseCorrespondences;
+					}
+				}
+
+				if (numberPreciseCorrespondences >= validCorrespondences)
+				{
+					ocean_assert(numberPreciseCorrespondences != 0);
+
+					const Scalar averageSqrDistance = sumSqrDistances / Scalar(numberPreciseCorrespondences);
+
+					if (faultyCorrespondences == 0)
+					{
+						// no outliers, we need a perfect result
+
+						constexpr Scalar threshold = std::is_same<float, Scalar>::value ? Scalar(0.5) : Scalar(0.1);
+
+						if (averageSqrDistance > Numeric::sqr(threshold))
 						{
 							scopedIteration.setInaccurate();
 						}
 					}
 					else
 					{
-						if (averageSqrDistance > Scalar(1.5 * 1.5))
+						if (refine)
 						{
-							scopedIteration.setInaccurate();
+							if (averageSqrDistance > Scalar(0.5 * 0.5))
+							{
+								scopedIteration.setInaccurate();
+							}
+						}
+						else
+						{
+							if (averageSqrDistance > Scalar(1.5 * 1.5))
+							{
+								scopedIteration.setInaccurate();
+							}
 						}
 					}
 				}
+				else
+				{
+					scopedIteration.setInaccurate();
+				}
 			}
-			else
+			while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
+
+			Log::info() << indentation2 << "Performance: " << performance;
+
+			Log::info() << indentation2 << "Validation: " << validation;
+
+			if (!validation.succeeded())
 			{
-				scopedIteration.setInaccurate();
+				allSucceeded = false;
 			}
-		}
-		while (validation.needMoreIterations() || startTimestamp + testDuration > Timestamp(true));
-
-		Log::info() << "Performance: " << performance;
-
-		Log::info() << "Validation: " << validation;
-
-		if (!validation.succeeded())
-		{
-			allSucceeded = false;
 		}
 	}
 
