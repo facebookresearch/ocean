@@ -553,4 +553,53 @@ std::string Processor::translateInstructions(const ProcessorInstructions instruc
 	return result;
 }
 
+bool Processor::virtualCountRegister(uint64_t& counter)
+{
+#if defined(__aarch64__)
+
+	__asm__ __volatile__("mrs %0, cntvct_el0" : "=r"(counter));
+	return true;
+
+#elif defined(__arm__)
+
+	uint32_t low, high;
+	__asm__ __volatile__("mrrc p15, 1, %0, %1, c14" : "=r"(low), "=r"(high));
+	counter = ((uint64_t)high << 32) | low;
+	return true;
+
+#else
+
+	OCEAN_SUPPRESS_UNUSED_WARNING(counter);
+
+	return false;
+
+#endif
+}
+
+bool Processor::virtualCountFrequency(uint64_t& frequency)
+{
+#if defined(__aarch64__)
+
+	__asm__ __volatile__("mrs %0, cntfrq_el0" : "=r"(frequency));
+
+	ocean_assert(frequency != 0ull);
+	return frequency != 0ull;
+
+#elif defined(__arm__)
+	uint32_t freq;
+	__asm__ __volatile__("mrc p15, 0, %0, c14, c0, 0" : "=r"(freq));
+	frequency = freq;
+
+	ocean_assert(frequency != 0ull);
+	return frequency != 0ull;
+
+#else
+
+	OCEAN_SUPPRESS_UNUSED_WARNING(frequency);
+
+	return false;
+
+#endif
+}
+
 }
