@@ -16,8 +16,6 @@
 #include "ocean/base/Frame.h"
 #include "ocean/base/Worker.h"
 
-#include "ocean/geometry/FisheyeEpipolarGeometry.h"
-
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/Matrix.h"
 #include "ocean/math/Vector3.h"
@@ -75,30 +73,9 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 				 * @return The default parameters
 				 */
 				static Parameters defaultParameters();
-
-				/**
-				 * Returns the maximum allowed distance from a point to the epipolar line.
-				 * @return The maximum distance in pixels, with range [0, infinity)
-				 */
-				Scalar maxDistanceToEpipolarLine() const;
-
-				/**
-				 * Sets the maximum allowed distance from a point to the epipolar line.
-				 * @param distance The maximum distance in pixels, with range [0, infinity)
-				 * @return True if the value was valid and set successfully, otherwise false
-				 */
-				bool setMaxDistanceToEpipolarLine(const Scalar distance);
-
-			protected:
-
-				/// When matching points, this defines the maximum allowed distance from a point to the epipolar line of the other point, in pixels, with range [0, infinity)
-				Scalar maxDistanceToEpipolarLine_ = Scalar(5);
 		};
 
 	protected:
-
-		/// An alias for the fisheye epipolar geometry.
-		using EpipolarGeometry = Geometry::FisheyeEpipolarGeometry;
 
 		/**
 		 * This class represents a candidate bullseye match between two stereo cameras.

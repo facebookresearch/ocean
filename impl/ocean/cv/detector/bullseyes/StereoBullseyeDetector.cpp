@@ -26,23 +26,6 @@ StereoBullseyeDetector::Parameters StereoBullseyeDetector::Parameters::defaultPa
 	return Parameters();
 }
 
-Scalar StereoBullseyeDetector::Parameters::maxDistanceToEpipolarLine() const
-{
-	return maxDistanceToEpipolarLine_;
-}
-
-bool StereoBullseyeDetector::Parameters::setMaxDistanceToEpipolarLine(const Scalar distance)
-{
-	ocean_assert(distance >= 0);
-	if (distance < Scalar(0))
-	{
-		return false;
-	}
-
-	maxDistanceToEpipolarLine_ = distance;
-	return true;
-}
-
 StereoBullseyeDetector::Candidate::Candidate(const Vector3& center, const Scalar reprojectionErrorA, const Scalar reprojectionErrorB) :
 	center_(center), reprojectionErrorA_(reprojectionErrorA), reprojectionErrorB_(reprojectionErrorB)
 {
@@ -144,15 +127,6 @@ bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, co
 			// Nothing found in this camera, so no need to continue.
 			return true;
 		}
-	}
-
-	const HomogenousMatrix4 camera0_T_camera1 = device_T_cameras[0].inverted() * device_T_cameras[1];
-	const EpipolarGeometry epipolarGeometry(cameras[0], cameras[1], camera0_T_camera1);
-
-	ocean_assert(epipolarGeometry.isValid());
-	if (!epipolarGeometry.isValid())
-	{
-		return false;
 	}
 
 	const HomogenousMatrix4 world_T_cameraA = world_T_device * device_T_cameras[0];
