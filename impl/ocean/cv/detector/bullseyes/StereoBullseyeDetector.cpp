@@ -43,6 +43,45 @@ bool StereoBullseyeDetector::Parameters::setMaxDistanceToEpipolarLine(const Scal
 	return true;
 }
 
+StereoBullseyeDetector::Candidate::Candidate(const Vector3& center, const Scalar reprojectionErrorA, const Scalar reprojectionErrorB) :
+	center_(center), reprojectionErrorA_(reprojectionErrorA), reprojectionErrorB_(reprojectionErrorB)
+{
+	ocean_assert(isValid());
+}
+
+bool StereoBullseyeDetector::Candidate::isValid() const
+{
+	return center_ != invalidBullseyeCenter() && reprojectionErrorA_ >= 0 && reprojectionErrorB_ >= 0;
+}
+
+const Vector3& StereoBullseyeDetector::Candidate::center() const
+{
+	return center_;
+}
+
+Scalar StereoBullseyeDetector::Candidate::reprojectionErrorA() const
+{
+	return reprojectionErrorA_;
+}
+
+Scalar StereoBullseyeDetector::Candidate::reprojectionErrorB() const
+{
+	return reprojectionErrorB_;
+}
+
+Vector3 StereoBullseyeDetector::Candidate::invalidBullseyeCenter()
+{
+	return Vector3::minValue();
+}
+
+size_t StereoBullseyeDetector::IndexPairHash32::operator()(const IndexPair32& indexPair) const
+{
+	size_t seed = std::hash<Index32>{}(indexPair.first);
+	seed ^= std::hash<Index32>{}(indexPair.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+
+	return seed;
+}
+
 bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, const Parameters& parameters, Worker* worker)
 {
 	ocean_assert(cameras.size() == 2 && yFrames.size() == 2);
@@ -116,22 +155,12 @@ bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, co
 		return false;
 	}
 
-	BullseyePairs candidates;
-	if (!matchBullseyes(cameras, yFrames, world_T_device, device_T_cameras, epipolarGeometry, bullseyeGroup, parameters.maxDistanceToEpipolarLine(), candidates))
-	{
-		return false;
-	}
+	const HomogenousMatrix4 world_T_cameraA = world_T_device * device_T_cameras[0];
+	const HomogenousMatrix4 world_T_cameraB = world_T_device * device_T_cameras[1];
 
-	if (candidates.empty())
-	{
-		// No matches found, so nothing to triangulate.
-		return true;
-	}
+	const CandidateMap candidateMap = extractBullseyeCandidates(*cameras[0], *cameras[1], world_T_cameraA, world_T_cameraB, bullseyeGroup[0], bullseyeGroup[1]);
 
-	Scalars reprojectionErrorsA;
-	Scalars reprojectionErrorsB;
-
-	if (!triangulateBullseyes(cameras, world_T_device, device_T_cameras, candidates, bullseyePairs, bullseyeCenters, reprojectionErrorsA, reprojectionErrorsB))
+	if (!extractBullseyes(*cameras[0], *cameras[1], bullseyeGroup[0], bullseyeGroup[1], candidateMap, bullseyePairs, bullseyeCenters))
 	{
 		return false;
 	}
@@ -141,41 +170,55 @@ bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, co
 	return true;
 }
 
-bool StereoBullseyeDetector::matchBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const EpipolarGeometry& epipolarGeometry, const BullseyeGroup& bullseyeGroup, const Scalar maxDistanceToEpipolarLine, BullseyePairs& bullseyePairs)
+StereoBullseyeDetector::CandidateMap StereoBullseyeDetector::extractBullseyeCandidates(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB)
 {
-	ocean_assert(cameras.size() == 2);
-	ocean_assert(cameras[0] && cameras[0]->isValid() && cameras[1] && cameras[1]->isValid());
-	ocean_assert(world_T_device.isValid());
-	ocean_assert(device_T_cameras.size() == 2);
-	ocean_assert(device_T_cameras[0].isValid() && device_T_cameras[1].isValid());
-	ocean_assert(epipolarGeometry.isValid());
-	ocean_assert(maxDistanceToEpipolarLine >= 0);
+	ocean_assert(cameraA.isValid() && cameraB.isValid());
+	ocean_assert(world_T_cameraA.isValid() && world_T_cameraB.isValid());
 
-	bullseyePairs.clear();
-
-	if (bullseyeGroup[0].empty() || bullseyeGroup[1].empty())
+	if (bullseyesA.empty() || bullseyesB.empty())
 	{
 		// No matches possible.
-		return true;
+		return CandidateMap();
 	}
 
-	const Scalar maxSqrDistance = maxDistanceToEpipolarLine * maxDistanceToEpipolarLine;
+	// Triangulate all combinations of left and right monocular bullseyes
+	CandidateMap candidateMap;
+	candidateMap.reserve(bullseyesA.size() * bullseyesB.size());
 
-	// The camera resolutions can be different. To compare similarity
-	// of bullseyes using something like their radii, their size has to be
-	// normalized to the same scale.
-	const Scalar cameraB_s_cameraA = Scalar(cameras[1]->width()) / Scalar(cameras[0]->width());
-
-	// Special case: only one bullseye in each camera. Check if they are close enough to each other.
-	if (bullseyeGroup[0].size() == 1 && bullseyeGroup[1].size() == 1)
+	for (size_t a = 0; a < bullseyesA.size(); ++a)
 	{
-		bullseyePairs = {{bullseyeGroup[0][0], bullseyeGroup[1][0]}};
+		for (size_t b = 0; b < bullseyesB.size(); ++b)
+		{
+			Vector3 bullseyeCenter;
+			Scalar reprojectionErrorA;
+			Scalar reprojectionErrorB;
 
-		return true;
+			if (triangulateBullseye(cameraA, cameraB, world_T_cameraA, world_T_cameraB, bullseyesA[a], bullseyesB[b], bullseyeCenter, reprojectionErrorA, reprojectionErrorB))
+			{
+				ocean_assert(NumericT<Index32>::isInsideValueRange(a) && NumericT<Index32>::isInsideValueRange(b));
+				ocean_assert(!candidateMap.contains(IndexPair32{Index32(a), Index32(b)}));
+				candidateMap.emplace(IndexPair32{Index32(a), Index32(b)}, Candidate{bullseyeCenter, reprojectionErrorA, reprojectionErrorB});
+			}
+		}
 	}
+
+	return candidateMap;
+}
+
+bool StereoBullseyeDetector::extractBullseyes(const AnyCamera& cameraA, const AnyCamera& cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const CandidateMap& candidateMap, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters)
+{
+	ocean_assert(cameraA.isValid() && cameraB.isValid());
+
+	if (bullseyesA.empty() || bullseyesB.empty() || candidateMap.empty())
+	{
+		return false;
+	}
+
+	bullseyePairs.clear();
+	bullseyeCenters.clear();
 
 	Matrix costMatrix;
-	if (!computeBullseyeMatchingCostMatrix(bullseyeGroup[0], bullseyeGroup[1], epipolarGeometry, maxSqrDistance, cameraB_s_cameraA, costMatrix))
+	if (!computeCostMatrix(cameraA, cameraB, bullseyesA, bullseyesB, candidateMap, costMatrix))
 	{
 		return false;
 	}
@@ -186,86 +229,90 @@ bool StereoBullseyeDetector::matchBullseyes(const SharedAnyCameras& cameras, con
 		return false;
 	}
 
-	// Convert assignments to bullseye pairs
-	const Bullseyes& bullseyesA = bullseyeGroup[0];
-	const Bullseyes& bullseyesB = bullseyeGroup[1];
-
-	bullseyePairs.reserve(assignments.size());
-	for (const AssignmentSolver::Assignment& assignment : assignments)
+	if (!assignments.empty())
 	{
-		const Index32 indexA = assignment.first;
-		const Index32 indexB = assignment.second;
+		bullseyePairs.reserve(assignments.size());
+		bullseyeCenters.reserve(assignments.size());
 
-		ocean_assert(indexA < bullseyesA.size());
-		ocean_assert(indexB < bullseyesB.size());
-		if (indexA >= bullseyesA.size() || indexB >= bullseyesB.size())
+		for (const AssignmentSolver::Assignment& assignment : assignments)
 		{
-			return false;
-		}
+			const Index32 indexA = assignment.first;
+			const Index32 indexB = assignment.second;
 
-		bullseyePairs.emplace_back(bullseyesA[indexA], bullseyesB[indexB]);
+			const IndexPair32 indexPair(indexA, indexB);
+
+			ocean_assert(candidateMap.contains(indexPair));
+			if (!candidateMap.contains(indexPair))
+			{
+				return false;
+			}
+
+			const Candidate& candidate = candidateMap.at(indexPair);
+
+			ocean_assert(size_t(indexA) < bullseyesA.size() && size_t(indexB) < bullseyesB.size());
+			if (size_t(indexA) >= bullseyesA.size() || size_t(indexB) >= bullseyesB.size())
+			{
+				return false;
+			}
+
+			bullseyeCenters.emplace_back(candidate.center());
+			bullseyePairs.emplace_back(bullseyesA[indexA], bullseyesB[indexB]);
+		}
 	}
 
 	return true;
 }
 
-Scalar StereoBullseyeDetector::computeBullseyeMatchingCost(const Bullseye& bullseyeA, const Bullseye& bullseyeB, const EpipolarGeometry& epipolarGeometry, const Scalar maxSqrDistance, const Scalar cameraB_s_cameraA)
+bool StereoBullseyeDetector::computeCostMatrix(const AnyCamera& cameraA, const AnyCamera& cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const CandidateMap& candidateMap, Matrix& costMatrix)
 {
-	ocean_assert(bullseyeA.isValid() && bullseyeB.isValid());
-	ocean_assert(epipolarGeometry.isValid());
-	ocean_assert(maxSqrDistance >= 0);
+	ocean_assert(cameraA.isValid() && cameraB.isValid());
+
+	if (bullseyesA.empty() || bullseyesB.empty() || candidateMap.empty())
+	{
+		return false;
+	}
+
+	// The camera resolutions can be different. To compare similarity of
+	// bullseyes using something like their radii, their size has to be
+	// normalized to the same scale.
+	ocean_assert(cameraA.width() != 0u && cameraB.width() != 0u);
+	const Scalar cameraB_s_cameraA = Scalar(cameraB.width()) / Scalar(cameraA.width());
 	ocean_assert(cameraB_s_cameraA > 0);
 
-	// Distance to epipolar lines
-	const Scalar sqrDistanceAtoB = epipolarGeometry.squareDistanceToEpipolarLine(EpipolarGeometry::CI_CAMERA0, bullseyeA.position(), bullseyeB.position());
-	const Scalar sqrDistanceBtoA = epipolarGeometry.squareDistanceToEpipolarLine(EpipolarGeometry::CI_CAMERA1, bullseyeB.position(), bullseyeA.position());
-	ocean_assert(sqrDistanceAtoB >= 0 && sqrDistanceBtoA >= 0);
+	costMatrix = Matrix(bullseyesA.size(), bullseyesB.size(), invalidMatchingCost());
 
-	const Scalar epipolarCostLinear = std::max(sqrDistanceAtoB, sqrDistanceBtoA);
-
-	const Scalar epipolarOffset = maxSqrDistance;
-	const Scalar epipolarCost = Scalar(1) / (Scalar(1) + Numeric::exp(epipolarOffset - epipolarCostLinear));
-	ocean_assert(epipolarCost >= 0 && epipolarCost <= 1);
-
-	// Radius
-	const Scalar radiusAScaled = cameraB_s_cameraA * bullseyeA.radius();
-	const Scalar radiusB = bullseyeB.radius();
-
-	const Scalar radiusCostLinear = std::abs(radiusAScaled - radiusB);
-
-	const Scalar radiusOffset = Scalar(0.25) * std::min(radiusAScaled, radiusB);
-	const Scalar radiusCost = Scalar(1) / (Scalar(1) + Numeric::exp(radiusOffset - radiusCostLinear));
-	ocean_assert(radiusCost >= 0 && radiusCost <= 1);
-
-	const Scalar totalCost = Scalar(0.5) * epipolarCost + Scalar(0.5) * radiusCost;
-	ocean_assert(totalCost >= 0 && totalCost <= 1);
-
-	return totalCost;
-}
-
-bool StereoBullseyeDetector::computeBullseyeMatchingCostMatrix(const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const EpipolarGeometry& epipolarGeometry, const Scalar maxSqrDistance, const Scalar cameraB_s_cameraA, Matrix& costMatrix)
-{
-	ocean_assert(!bullseyesA.empty() && !bullseyesB.empty());
-	ocean_assert(epipolarGeometry.isValid());
-	ocean_assert(maxSqrDistance >= 0);
-
-	const size_t numBullseyesA = bullseyesA.size();
-	const size_t numBullseyesB = bullseyesB.size();
-
-	costMatrix = Matrix(numBullseyesA, numBullseyesB, invalidMatchingCost());
-
-	for (size_t a = 0; a < numBullseyesA; ++a)
+	for (const CandidateMap::value_type& iterator : candidateMap)
 	{
-		const Bullseye& bullseyeA = bullseyesA[a];
-		ocean_assert(bullseyesA[a].isValid());
+		const IndexPair32& indexPair = iterator.first;
 
-		for (size_t b = 0; b < numBullseyesB; ++b)
-		{
-			const Bullseye& bullseyeB = bullseyesB[b];
-			ocean_assert(bullseyesB[b].isValid());
+		const size_t indexA = size_t(indexPair.first);
+		const size_t indexB = size_t(indexPair.second);
+		ocean_assert(indexA < bullseyesA.size() && indexB < bullseyesB.size());
 
-			costMatrix(a, b) = computeBullseyeMatchingCost(bullseyeA, bullseyeB, epipolarGeometry, maxSqrDistance, cameraB_s_cameraA);
-		}
+		const Candidate& candidate = iterator.second;
+
+		// Reprojection cost
+		const Scalar maxReprojectionError = std::max(candidate.reprojectionErrorA(), candidate.reprojectionErrorB());
+
+		constexpr Scalar reprojectionCostOffset = 0;
+		const Scalar reprojectionCost = Scalar(1) / (Scalar(1) + Numeric::exp(reprojectionCostOffset - maxReprojectionError));
+		ocean_assert(reprojectionCost >= 0 && reprojectionCost <= 1);
+
+		// Radius cost (similarity)
+
+		const Scalar radiusA = cameraB_s_cameraA * bullseyesA[indexA].radius(); // scaled to match
+		const Scalar radiusB = bullseyesB[indexB].radius();
+
+		const Scalar radiusDifference = std::abs(radiusA - radiusB);
+
+		constexpr Scalar radiusOffset = 0;
+		const Scalar radiusCost = Scalar(1) / (Scalar(1) + Numeric::exp(radiusOffset - radiusDifference));
+		ocean_assert(radiusCost >= 0 && radiusCost <= 1);
+
+		const Scalar totalCost = Scalar(0.5) * reprojectionCost + Scalar(0.5) * radiusCost;
+		ocean_assert(totalCost >= 0 && totalCost <= 1);
+
+		costMatrix(indexA, indexB) = totalCost;
 	}
 
 	return true;
@@ -304,62 +351,6 @@ bool StereoBullseyeDetector::triangulateBullseye(const AnyCamera& cameraA, const
 	}
 
 	return false;
-}
-
-bool StereoBullseyeDetector::triangulateBullseyes(const SharedAnyCameras& cameras, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const BullseyePairs& candidates, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, Scalars& reprojectionErrorsA, Scalars& reprojectionErrorsB)
-{
-	ocean_assert(cameras.size() == 2);
-	ocean_assert(cameras[0] && cameras[0]->isValid() && cameras[1] && cameras[1]->isValid());
-	ocean_assert(world_T_device.isValid());
-	ocean_assert(device_T_cameras.size() == 2);
-	ocean_assert(device_T_cameras[0].isValid() && device_T_cameras[1].isValid());
-
-	ocean_assert(!candidates.empty());
-	if (candidates.empty())
-	{
-		return false;
-	}
-
-	bullseyePairs.clear();
-	bullseyeCenters.clear();
-	reprojectionErrorsA.clear();
-	reprojectionErrorsB.clear();
-
-#if 0
-	// TODO Implement this function properly.
-	return false;
-#else
-	// Naive implementation for now.
-
-	const AnyCamera& cameraA = *cameras[0];
-	const AnyCamera& cameraB = *cameras[1];
-
-	const HomogenousMatrix4 world_T_cameraA = world_T_device * device_T_cameras[0];
-	const HomogenousMatrix4 world_T_cameraB = world_T_device * device_T_cameras[1];
-
-	for (const BullseyePair& candidate : candidates)
-	{
-		const Bullseye& bullseyeA = candidate.first;
-		const Bullseye& bullseyeB = candidate.second;
-
-		Vector3 bullseyeCenter;
-		Scalar reprojectionErrorA;
-		Scalar reprojectionErrorB;
-		if (triangulateBullseye(cameraA, cameraB, world_T_cameraA, world_T_cameraB, bullseyeA, bullseyeB, bullseyeCenter, reprojectionErrorA, reprojectionErrorB))
-		{
-			bullseyePairs.emplace_back(bullseyeA, bullseyeB);
-			bullseyeCenters.emplace_back(bullseyeCenter);
-			reprojectionErrorsA.emplace_back(reprojectionErrorA);
-			reprojectionErrorsB.emplace_back(reprojectionErrorB);
-		}
-	}
-
-	ocean_assert(bullseyePairs.size() == bullseyeCenters.size());
-	ocean_assert(bullseyePairs.size() == reprojectionErrorsA.size());
-	ocean_assert(bullseyePairs.size() == reprojectionErrorsB.size());
-
-	return true;
-#endif
 }
 
 } // namespace Bullseyes

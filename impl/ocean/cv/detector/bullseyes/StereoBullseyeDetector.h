@@ -100,6 +100,103 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		/// An alias for the fisheye epipolar geometry.
 		using EpipolarGeometry = Geometry::FisheyeEpipolarGeometry;
 
+		/**
+		 * This class represents a candidate bullseye match between two stereo cameras.
+		 * A candidate includes the triangulated 3D center position and the reprojection errors for
+		 * both cameras. The indices of the matched bullseyes are stored separately as keys in the
+		 * CandidateMap. Candidates are used during the matching process before final validation and
+		 * selection.
+		 */
+		class Candidate
+		{
+			public:
+
+				/**
+				 * Creates a default (invalid) candidate.
+				 */
+				Candidate() = default;
+
+				/**
+				 * Creates a new candidate with the specified parameters.
+				 * The indices of the matched bullseyes are not stored in the candidate itself,
+				 * but rather as keys in the CandidateMap that holds this candidate.
+				 * @param center The triangulated 3D center position in world coordinates
+				 * @param reprojectionErrorA The reprojection error for camera A, in pixels
+				 * @param reprojectionErrorB The reprojection error for camera B, in pixels
+				 */
+				Candidate(const Vector3& center, const Scalar reprojectionErrorA, const Scalar reprojectionErrorB);
+
+				/**
+				 * Returns whether this candidate is valid.
+				 * @return True if the candidate has valid indices and center position, otherwise false
+				 */
+				bool isValid() const;
+
+				/**
+				 * Returns the triangulated 3D center position.
+				 * @return The 3D center position in world coordinates
+				 */
+				const Vector3& center() const;
+
+				/**
+				 * Returns the reprojection error for camera A.
+				 * @return The reprojection error in pixels
+				 */
+				Scalar reprojectionErrorA() const;
+
+				/**
+				 * Returns the reprojection error for camera B.
+				 * @return The reprojection error in pixels
+				 */
+				Scalar reprojectionErrorB() const;
+
+				/**
+				 * Returns an invalid bullseye center value used as a sentinel for uninitialized positions.
+				 * @return The invalid center position
+				 */
+				static Vector3 invalidBullseyeCenter();
+
+			protected:
+
+				/// The triangulated 3D center position in world coordinates
+				Vector3 center_ = invalidBullseyeCenter();
+
+				/// The reprojection error for camera A, in pixels
+				Scalar reprojectionErrorA_ = Numeric::minValue();
+
+				/// The reprojection error for camera B, in pixels
+				Scalar reprojectionErrorB_ = Numeric::minValue();
+		};
+
+		/**
+		 * Hash function for IndexPair32 to enable its use as a key in unordered_map.
+		 * This provides a consistent hash computation for pairs of 32-bit indices.
+		 */
+		class IndexPairHash32
+		{
+			public:
+
+				/**
+				 * Creates a default hash function object.
+				 */
+				IndexPairHash32() = default;
+
+				/**
+				 * Computes a hash value for an index pair.
+				 * @param indexPair The pair of indices to hash
+				 * @return The computed hash value
+				 */
+				size_t operator()(const IndexPair32& indexPair) const;
+		};
+
+		/**
+		 * Definition of an unordered map holding candidate bullseyes.
+		 * The key is a pair of indices (indexA, indexB) where indexA corresponds to a bullseye in camera A
+		 * and indexB corresponds to a bullseye in camera B. The value is the Candidate object containing
+		 * the triangulated 3D position and reprojection errors for this match.
+		 */
+		using CandidateMap = std::unordered_map<IndexPair32, Candidate, IndexPairHash32>;
+
 	public:
 
 		/**
@@ -119,18 +216,50 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 	protected:
 
 		/**
-		 * Matches bullseyes detected in two stereo frames using epipolar geometry.
-		 * @param cameras The camera profiles for the stereo pair, must contain exactly 2 valid cameras
-		 * @param yFrames The stereo frames in which bullseyes will be detected, must contain exactly 2 valid 8-bit grayscale frames
-		 * @param world_T_device The transformation from the device coordinate system to the world coordinate system, must be valid
-		 * @param device_T_cameras The transformations from each camera coordinate system to the device coordinate system, must contain exactly 2 valid transformations
-		 * @param epipolarGeometry The epipolar geometry describing the relationship between the two stereo cameras, must be valid
-		 * @param bullseyeGroup The bullseyes detected in both frames, bullseyeGroup[0] contains bullseyes from the first frame, bullseyeGroup[1] contains bullseyes from the second frame
-		 * @param maxDistanceToEpipolarLine The maximum allowed distance from a bullseye to its epipolar line, in pixels, with range (0, infinity)
-		 * @param bullseyePairs The resulting matched bullseye pairs
-		 * @return True, if succeeded
+		 * Extracts and validates candidate bullseye matches between two stereo cameras.
+		 * This function triangulates all possible bullseye pairs and returns those that produce valid 3D positions.
+		 * The returned map uses index pairs (indexA, indexB) as keys, where indexA corresponds to a bullseye in camera A
+		 * and indexB corresponds to a bullseye in camera B. The values are Candidate objects containing the triangulated
+		 * 3D positions and reprojection errors for each matched pair.
+		 * @param cameraA The camera profile for the first camera, must be valid
+		 * @param cameraB The camera profile for the second camera, must be valid
+		 * @param world_T_cameraA The transformation from camera A coordinate system to world coordinate system, must be valid
+		 * @param world_T_cameraB The transformation from camera B coordinate system to world coordinate system, must be valid
+		 * @param bullseyesA The bullseyes detected in camera A, may be empty
+		 * @param bullseyesB The bullseyes detected in camera B, may be empty
+		 * @return The map of valid candidate matches; may be empty if no valid matches were found
 		 */
-		static bool matchBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const EpipolarGeometry& epipolarGeometry, const BullseyeGroup& bullseyeGroup, const Scalar maxDistanceToEpipolarLine, BullseyePairs& bullseyePairs);
+		static CandidateMap extractBullseyeCandidates(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB);
+
+		/**
+		 * Extracts the final bullseye pairs and their 3D centers from candidate matches.
+		 * This function uses the candidate map to retrieve the original bullseye objects and their triangulated positions.
+		 * @param cameraA The camera profile for the first camera, must be valid
+		 * @param cameraB The camera profile for the second camera, must be valid
+		 * @param bullseyesA The bullseyes detected in camera A, must not be empty
+		 * @param bullseyesB The bullseyes detected in camera B, must not be empty
+		 * @param candidateMap The map of candidate matches with index pairs as keys and triangulated positions as values, must not be empty
+		 * @param bullseyePairs The resulting validated bullseye pairs
+		 * @param bullseyeCenters The resulting 3D positions of the bullseye centers in world coordinates
+		 * @return True if extraction succeeded, otherwise false
+		 */
+		static bool extractBullseyes(const AnyCamera& cameraA, const AnyCamera& cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const CandidateMap& candidateMap, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters);
+
+		/**
+		 * Computes a cost matrix for matching bullseyes based on candidate triangulation results.
+		 * The cost matrix dimensions are (numBullseyesA x numBullseyesB), where each element (i, j)
+		 * contains the cost of matching bullseye i from camera A with bullseye j from camera B.
+		 * Costs are based on the triangulation quality (reprojection errors) and geometric consistency
+		 * (comparing bullseye radii across cameras using the camera scale factor).
+		 * @param cameraA The camera profile for the first camera, must be valid
+		 * @param cameraB The camera profile for the second camera, must be valid
+		 * @param bullseyesA The bullseyes detected in camera A, must not be empty
+		 * @param bullseyesB The bullseyes detected in camera B, must not be empty
+		 * @param candidateMap The map of candidate matches to evaluate, must not be empty
+		 * @param costMatrix The resulting cost matrix with dimensions (numBullseyesA x numBullseyesB)
+		 * @return True if the cost matrix was successfully computed, otherwise false
+		 */
+		static bool computeCostMatrix(const AnyCamera& cameraA, const AnyCamera& cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const CandidateMap& candidateMap, Matrix& costMatrix);
 
 		/**
 		 * Returns an invalid (arbitrarily large) matching cost value used to indicate that two bullseyes cannot be matched.
@@ -138,34 +267,6 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		 * @return The invalid matching cost value
 		 */
 		constexpr static Scalar invalidMatchingCost();
-
-		/**
-		 * Computes the matching cost between two bullseyes from different stereo cameras.
-		 * The cost is based on epipolar geometry constraints and radius similarity, with both components
-		 * transformed using a sigmoid function to produce smooth, bounded costs in the range [0, 1].
-		 * Lower costs indicate better matches.
-		 * @param bullseyeA The bullseye from the first camera, must be valid
-		 * @param bullseyeB The bullseye from the second camera, must be valid
-		 * @param epipolarGeometry The epipolar geometry describing the relationship between the two cameras, must be valid
-		 * @param maxSqrDistance The squared maximum allowed distance from a point to its matching epipolar line, in pixels squared, with range (0, infinity)
-		 * @param cameraB_s_cameraA The scale factor relating measurements in camera B to camera A (e.g., width_B / width_A), with range (0, infinity)
-		 * @return The matching cost value, with range [0, 1], where lower values indicate better matches
-		 */
-		static Scalar computeBullseyeMatchingCost(const Bullseye& bullseyeA, const Bullseye& bullseyeB, const EpipolarGeometry& epipolarGeometry, const Scalar maxSqrDistance, const Scalar cameraB_s_cameraA);
-
-		/**
-		 * Computes a cost matrix containing matching costs between all pairs of bullseyes from two cameras.
-		 * Each element (i, j) in the matrix represents the matching cost between bullseye i from camera A and bullseye j from camera B.
-		 * The cost matrix can be used with an assignment solver to find optimal bullseye correspondences.
-		 * @param bullseyesA The bullseyes detected in the first camera, must not be empty
-		 * @param bullseyesB The bullseyes detected in the second camera, must not be empty
-		 * @param epipolarGeometry The epipolar geometry describing the relationship between the two cameras, must be valid
-		 * @param maxSqrDistanceToEpipolarLine The squared maximum allowed distance from a point to its epipolar line, in pixels squared, with range (0, infinity)
-		 * @param cameraB_s_cameraA The scale factor relating measurements in camera B to camera A (e.g., width_B / width_A), with range (0, infinity)
-		 * @param costMatrix The resulting cost matrix with dimensions [bullseyesA.size() x bullseyesB.size()]
-		 * @return True if the cost matrix was successfully computed
-		 */
-		static bool computeBullseyeMatchingCostMatrix(const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const EpipolarGeometry& epipolarGeometry, const Scalar maxSqrDistanceToEpipolarLine, const Scalar cameraB_s_cameraA, Matrix& costMatrix);
 
 		/**
 		 * Triangulates a single matched bullseye pair to compute its 3D position in world coordinates.
@@ -183,20 +284,6 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		 * @return True if triangulation succeeded and the 3D point is in front of both cameras, otherwise false
 		 */
 		static bool triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB);
-
-		/**
-		 * Triangulates matched bullseye pairs to compute their 3D positions.
-		 * @param cameras The camera profiles for the stereo pair, must contain exactly 2 valid cameras
-		 * @param world_T_device The transformation from the device coordinate system to the world coordinate system, must be valid
-		 * @param device_T_cameras The transformations from each camera coordinate system to the device coordinate system, must contain exactly 2 valid transformations
-		 * @param candidates The candidate bullseye pairs to triangulate
-		 * @param bullseyePairs The resulting validated bullseye pairs
-		 * @param bullseyeCenters The resulting 3D positions of the bullseye centers in world coordinates
-		 * @param reprojectionErrorsA The resulting reprojection errors for camera A, in pixels, one value per validated bullseye pair
-		 * @param reprojectionErrorsB The resulting reprojection errors for camera B, in pixels, one value per validated bullseye pair
-		 * @return True, if succeeded
-		 */
-		static bool triangulateBullseyes(const SharedAnyCameras& cameras, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const BullseyePairs& candidates, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, Scalars& reprojectionErrorsA, Scalars& reprojectionErrorsB);
 };
 
 constexpr Scalar StereoBullseyeDetector::invalidMatchingCost()
