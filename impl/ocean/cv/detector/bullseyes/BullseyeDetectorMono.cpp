@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ocean/cv/detector/bullseyes/MonoBullseyeDetector.h"
+#include "ocean/cv/detector/bullseyes/BullseyeDetectorMono.h"
 
 #include "ocean/cv/FramePyramid.h"
 
@@ -21,37 +21,37 @@ namespace Detector
 namespace Bullseyes
 {
 
-bool MonoBullseyeDetector::Parameters::isValid() const noexcept
+bool BullseyeDetectorMono::Parameters::isValid() const noexcept
 {
 	return true;
 }
 
-unsigned int MonoBullseyeDetector::Parameters::framePyramidPixelThreshold() const noexcept
+unsigned int BullseyeDetectorMono::Parameters::framePyramidPixelThreshold() const noexcept
 {
 	return framePyramidPixelThreshold_;
 }
 
-unsigned int MonoBullseyeDetector::Parameters::framePyramidLayers() const noexcept
+unsigned int BullseyeDetectorMono::Parameters::framePyramidLayers() const noexcept
 {
 	return framePyramidLayers_;
 }
 
-bool MonoBullseyeDetector::Parameters::useAdaptiveRowSpacing() const noexcept
+bool BullseyeDetectorMono::Parameters::useAdaptiveRowSpacing() const noexcept
 {
 	return useAdaptiveRowSpacing_;
 }
 
-void MonoBullseyeDetector::Parameters::setUseAdaptiveRowSpacing(bool useAdaptiveRowSpacing) noexcept
+void BullseyeDetectorMono::Parameters::setUseAdaptiveRowSpacing(bool useAdaptiveRowSpacing) noexcept
 {
 	useAdaptiveRowSpacing_ = useAdaptiveRowSpacing;
 }
 
-MonoBullseyeDetector::Parameters MonoBullseyeDetector::Parameters::defaultParameters() noexcept
+BullseyeDetectorMono::Parameters BullseyeDetectorMono::Parameters::defaultParameters() noexcept
 {
 	return Parameters();
 }
 
-bool MonoBullseyeDetector::detectBullseyes(const AnyCamera& camera, const Frame& yFrame, Bullseyes& bullseyes, const Parameters& parameters, Worker* worker)
+bool BullseyeDetectorMono::detectBullseyes(const AnyCamera& camera, const Frame& yFrame, Bullseyes& bullseyes, const Parameters& parameters, Worker* worker)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
@@ -119,7 +119,7 @@ bool MonoBullseyeDetector::detectBullseyes(const AnyCamera& camera, const Frame&
 		if (worker && yFrameLayer.height() >= 600u)
 		{
 			Lock multiThreadLock;
-			worker->executeFunction(Worker::Function::createStatic(&MonoBullseyeDetector::detectBullseyesSubset, (const AnyCamera*)cameraLayer.get(), &yFrameLayer,  &layerBullseyes, &multiThreadLock, parameters.useAdaptiveRowSpacing(), 0u, 0u), 10u, yFrameLayer.height() - 20u);
+			worker->executeFunction(Worker::Function::createStatic(&BullseyeDetectorMono::detectBullseyesSubset, (const AnyCamera*)cameraLayer.get(), &yFrameLayer,  &layerBullseyes, &multiThreadLock, parameters.useAdaptiveRowSpacing(), 0u, 0u), 10u, yFrameLayer.height() - 20u);
 		}
 		else
 		{
@@ -165,7 +165,7 @@ bool MonoBullseyeDetector::detectBullseyes(const AnyCamera& camera, const Frame&
 	return true;
 }
 
-void MonoBullseyeDetector::detectBullseyesSubset(const AnyCamera* camera, const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int firstRow, const unsigned int numberRows)
+void BullseyeDetectorMono::detectBullseyesSubset(const AnyCamera* camera, const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int firstRow, const unsigned int numberRows)
 {
 	ocean_assert(camera != nullptr && camera->isValid());
 	ocean_assert(yFrame != nullptr && yFrame->isValid() && yFrame->pixelFormat() == FrameType::FORMAT_Y8);
@@ -200,7 +200,7 @@ void MonoBullseyeDetector::detectBullseyesSubset(const AnyCamera* camera, const 
 	bullseyes->insert(bullseyes->end(), localBullseyes.cbegin(), localBullseyes.cend());
 }
 
-void MonoBullseyeDetector::detectBullseyesInRow(const AnyCamera& camera, const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes)
+void BullseyeDetectorMono::detectBullseyesInRow(const AnyCamera& camera, const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
@@ -466,7 +466,7 @@ void MonoBullseyeDetector::detectBullseyesInRow(const AnyCamera& camera, const F
 	}
 }
 
-inline bool MonoBullseyeDetector::isTransitionToBlack(const uint8_t* pixel, TransitionHistory& history)
+inline bool BullseyeDetectorMono::isTransitionToBlack(const uint8_t* pixel, TransitionHistory& history)
 {
 	const int currentDelta = int(*(pixel + 0) - *(pixel - 1));
 
@@ -488,7 +488,7 @@ inline bool MonoBullseyeDetector::isTransitionToBlack(const uint8_t* pixel, Tran
 	return result;
 }
 
-inline bool MonoBullseyeDetector::isTransitionToWhite(const uint8_t* pixel, TransitionHistory& history)
+inline bool BullseyeDetectorMono::isTransitionToWhite(const uint8_t* pixel, TransitionHistory& history)
 {
 	const int currentDelta = int(*(pixel + 0) - *(pixel - 1));
 
@@ -511,7 +511,7 @@ inline bool MonoBullseyeDetector::isTransitionToWhite(const uint8_t* pixel, Tran
 }
 
 template <bool tFindBlackPixel>
-bool MonoBullseyeDetector::findNextUpperPixel(const Frame& yFrame, const unsigned int x, const unsigned int y, const unsigned int maximalRows, const unsigned int threshold, unsigned int& rows)
+bool BullseyeDetectorMono::findNextUpperPixel(const Frame& yFrame, const unsigned int x, const unsigned int y, const unsigned int maximalRows, const unsigned int threshold, unsigned int& rows)
 {
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 	ocean_assert(x < yFrame.width() && y < yFrame.height());
@@ -540,7 +540,7 @@ bool MonoBullseyeDetector::findNextUpperPixel(const Frame& yFrame, const unsigne
 }
 
 template <bool tFindBlackPixel>
-bool MonoBullseyeDetector::findNextLowerPixel(const Frame& yFrame, const unsigned int x, const unsigned int y, const unsigned int maximalRows, const unsigned int threshold, unsigned int& rows)
+bool BullseyeDetectorMono::findNextLowerPixel(const Frame& yFrame, const unsigned int x, const unsigned int y, const unsigned int maximalRows, const unsigned int threshold, unsigned int& rows)
 {
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 	ocean_assert(x < yFrame.width() && y < yFrame.height());
@@ -568,7 +568,7 @@ bool MonoBullseyeDetector::findNextLowerPixel(const Frame& yFrame, const unsigne
 	return currentY < yFrame.height() && rows <= maximalRows;
 }
 
-unsigned int MonoBullseyeDetector::determineThreshold(const uint8_t* yPosition, const unsigned int segmentSize1, const unsigned int segmentSize2, const unsigned int segmentSize3, const unsigned int segmentSize4, const unsigned int segmentSize5)
+unsigned int BullseyeDetectorMono::determineThreshold(const uint8_t* yPosition, const unsigned int segmentSize1, const unsigned int segmentSize2, const unsigned int segmentSize3, const unsigned int segmentSize4, const unsigned int segmentSize5)
 {
 	unsigned int sumBlack = 0u;
 	unsigned int sumWhite = 0u;
@@ -614,7 +614,7 @@ unsigned int MonoBullseyeDetector::determineThreshold(const uint8_t* yPosition, 
 	return (averageBlack + averageWhite + 1u) / 2u;
 }
 
-bool MonoBullseyeDetector::checkBullseyeInColumn(const Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int blackRingSegmentMin, const unsigned int blackRingSegmentMax, const unsigned int whiteRingSegmentMin, const unsigned int whiteRingSegmentMax, const unsigned int dotSegmentMin, const unsigned int dotSegmentMax)
+bool BullseyeDetectorMono::checkBullseyeInColumn(const Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const unsigned int blackRingSegmentMin, const unsigned int blackRingSegmentMax, const unsigned int whiteRingSegmentMin, const unsigned int whiteRingSegmentMax, const unsigned int dotSegmentMin, const unsigned int dotSegmentMax)
 {
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 	ocean_assert(xCenter < yFrame.width() && yCenter < yFrame.height());
@@ -668,7 +668,7 @@ bool MonoBullseyeDetector::checkBullseyeInColumn(const Frame& yFrame, const unsi
 	return true;
 }
 
-bool MonoBullseyeDetector::checkBullseyeInNeighborhood(const Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float whiteRingRadius, const float blackRingRadius, const float whiteBorderRadius)
+bool BullseyeDetectorMono::checkBullseyeInNeighborhood(const Frame& yFrame, const unsigned int xCenter, const unsigned int yCenter, const unsigned int threshold, const float whiteRingRadius, const float blackRingRadius, const float whiteBorderRadius)
 {
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 	ocean_assert(yFrame.width() >= 21u && yFrame.height() >= 21u);
@@ -795,7 +795,7 @@ bool MonoBullseyeDetector::checkBullseyeInNeighborhood(const Frame& yFrame, cons
 	return true;
 }
 
-bool MonoBullseyeDetector::determineAccurateBullseyeLocation(const Frame& yFrame, const unsigned int xBullseye, const unsigned int yBullseye, const unsigned int threshold, Vector2& location)
+bool BullseyeDetectorMono::determineAccurateBullseyeLocation(const Frame& yFrame, const unsigned int xBullseye, const unsigned int yBullseye, const unsigned int threshold, Vector2& location)
 {
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
 	ocean_assert(yFrame.width() >= 21u && yFrame.height() >= 21u);

@@ -23,10 +23,10 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\TransitionHistory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\MonoBullseyeDetector.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\BullseyeDetectorMono.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\StereoBullseyeDetector.h">
+    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\BullseyeDetectorStereo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\AssignmentSolver.h">
@@ -43,10 +43,10 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\TransitionHistory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\MonoBullseyeDetector.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\BullseyeDetectorMono.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\StereoBullseyeDetector.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\BullseyeDetectorStereo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\cv\detector\bullseyes\AssignmentSolver.cpp">

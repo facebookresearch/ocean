@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef OCEAN_CV_DETECTOR_BULLSEYES_MONOBULLSEYEDETECTOR_H
-#define OCEAN_CV_DETECTOR_BULLSEYES_MONOBULLSEYEDETECTOR_H
+#ifndef OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYEDETECTORMONO_H
+#define OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYEDETECTORMONO_H
 
 #include "ocean/cv/detector/bullseyes/Bullseyes.h"
 
@@ -35,7 +35,7 @@ namespace Bullseyes
  * Implementation of a monocular detector for the bullseye pattern.
  * @ingroup cvdetectorbullseyes
  */
-class MonoBullseyeDetector
+class BullseyeDetectorMono
 {
 	public:
 
@@ -252,4 +252,4 @@ class MonoBullseyeDetector
 
 } // namespace Ocean
 
-#endif // OCEAN_CV_DETECTOR_BULLSEYES_MONOBULLSEYEDETECTOR_H
+#endif // OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYEDETECTORMONO_H

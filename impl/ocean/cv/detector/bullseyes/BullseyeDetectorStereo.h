@@ -5,13 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef OCEAN_CV_DETECTOR_BULLSEYES_STEREOBULLSEYEDETECTOR_H
-#define OCEAN_CV_DETECTOR_BULLSEYES_STEREOBULLSEYEDETECTOR_H
+#ifndef OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYEDETECTORSTEREO_H
+#define OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYEDETECTORSTEREO_H
 
 #include "ocean/cv/detector/bullseyes/Bullseyes.h"
 
 #include "ocean/cv/detector/bullseyes/Bullseye.h"
-#include "ocean/cv/detector/bullseyes/MonoBullseyeDetector.h"
+#include "ocean/cv/detector/bullseyes/BullseyeDetectorMono.h"
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/Worker.h"
@@ -36,7 +36,7 @@ namespace Bullseyes
  * This class implements a stereo detector for bullseye patterns.
  * @ingroup cvdetectorbullseyes
  */
-class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
+class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorStereo
 {
 	public:
 
@@ -59,7 +59,7 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		 * This class holds the most important parameters for the stereo detector.
 		 * Currently, this class inherits all parameters from the monocular detector.
 		 */
-		class Parameters : public MonoBullseyeDetector::Parameters
+		class Parameters : public BullseyeDetectorMono::Parameters
 		{
 			public:
 
@@ -263,7 +263,7 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		static bool triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB);
 };
 
-constexpr Scalar StereoBullseyeDetector::invalidMatchingCost()
+constexpr Scalar BullseyeDetectorStereo::invalidMatchingCost()
 {
 	// Arbitrarily large value that doesn't cause numerical issues.
 	return Scalar(1000);
@@ -277,4 +277,4 @@ constexpr Scalar StereoBullseyeDetector::invalidMatchingCost()
 
 } // namespace Ocean
 
-#endif // OCEAN_CV_DETECTOR_BULLSEYES_STEREOBULLSEYEDETECTOR_H
+#endif // OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYEDETECTORSTEREO_H

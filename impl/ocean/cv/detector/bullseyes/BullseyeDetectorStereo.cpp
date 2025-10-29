@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ocean/cv/detector/bullseyes/StereoBullseyeDetector.h"
+#include "ocean/cv/detector/bullseyes/BullseyeDetectorStereo.h"
 
 #include "ocean/cv/detector/bullseyes/AssignmentSolver.h"
 
@@ -21,43 +21,43 @@ namespace Detector
 namespace Bullseyes
 {
 
-StereoBullseyeDetector::Parameters StereoBullseyeDetector::Parameters::defaultParameters()
+BullseyeDetectorStereo::Parameters BullseyeDetectorStereo::Parameters::defaultParameters()
 {
 	return Parameters();
 }
 
-StereoBullseyeDetector::Candidate::Candidate(const Vector3& center, const Scalar reprojectionErrorA, const Scalar reprojectionErrorB) :
+BullseyeDetectorStereo::Candidate::Candidate(const Vector3& center, const Scalar reprojectionErrorA, const Scalar reprojectionErrorB) :
 	center_(center), reprojectionErrorA_(reprojectionErrorA), reprojectionErrorB_(reprojectionErrorB)
 {
 	ocean_assert(isValid());
 }
 
-bool StereoBullseyeDetector::Candidate::isValid() const
+bool BullseyeDetectorStereo::Candidate::isValid() const
 {
 	return center_ != invalidBullseyeCenter() && reprojectionErrorA_ >= 0 && reprojectionErrorB_ >= 0;
 }
 
-const Vector3& StereoBullseyeDetector::Candidate::center() const
+const Vector3& BullseyeDetectorStereo::Candidate::center() const
 {
 	return center_;
 }
 
-Scalar StereoBullseyeDetector::Candidate::reprojectionErrorA() const
+Scalar BullseyeDetectorStereo::Candidate::reprojectionErrorA() const
 {
 	return reprojectionErrorA_;
 }
 
-Scalar StereoBullseyeDetector::Candidate::reprojectionErrorB() const
+Scalar BullseyeDetectorStereo::Candidate::reprojectionErrorB() const
 {
 	return reprojectionErrorB_;
 }
 
-Vector3 StereoBullseyeDetector::Candidate::invalidBullseyeCenter()
+Vector3 BullseyeDetectorStereo::Candidate::invalidBullseyeCenter()
 {
 	return Vector3::minValue();
 }
 
-size_t StereoBullseyeDetector::IndexPairHash32::operator()(const IndexPair32& indexPair) const
+size_t BullseyeDetectorStereo::IndexPairHash32::operator()(const IndexPair32& indexPair) const
 {
 	size_t seed = std::hash<Index32>{}(indexPair.first);
 	seed ^= std::hash<Index32>{}(indexPair.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
@@ -65,7 +65,7 @@ size_t StereoBullseyeDetector::IndexPairHash32::operator()(const IndexPair32& in
 	return seed;
 }
 
-bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, const Parameters& parameters, Worker* worker)
+bool BullseyeDetectorStereo::detectBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, const Parameters& parameters, Worker* worker)
 {
 	ocean_assert(cameras.size() == 2 && yFrames.size() == 2);
 	if (cameras.size() != 2 || yFrames.size() != 2)
@@ -117,7 +117,7 @@ bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, co
 	const size_t lowerResolutionCameraIndex = (cameras[0]->width() * cameras[0]->height() <= cameras[1]->width() * cameras[1]->height()) ? 0 : 1;
 	for (const size_t cameraIndex : {lowerResolutionCameraIndex, 1 - lowerResolutionCameraIndex})
 	{
-		if (!MonoBullseyeDetector::detectBullseyes(*cameras[cameraIndex], yFrames[cameraIndex], bullseyeGroup[cameraIndex], parameters, worker))
+		if (!BullseyeDetectorMono::detectBullseyes(*cameras[cameraIndex], yFrames[cameraIndex], bullseyeGroup[cameraIndex], parameters, worker))
 		{
 			return false;
 		}
@@ -144,7 +144,7 @@ bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, co
 	return true;
 }
 
-StereoBullseyeDetector::CandidateMap StereoBullseyeDetector::extractBullseyeCandidates(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB)
+BullseyeDetectorStereo::CandidateMap BullseyeDetectorStereo::extractBullseyeCandidates(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB)
 {
 	ocean_assert(cameraA.isValid() && cameraB.isValid());
 	ocean_assert(world_T_cameraA.isValid() && world_T_cameraB.isValid());
@@ -179,7 +179,7 @@ StereoBullseyeDetector::CandidateMap StereoBullseyeDetector::extractBullseyeCand
 	return candidateMap;
 }
 
-bool StereoBullseyeDetector::extractBullseyes(const AnyCamera& cameraA, const AnyCamera& cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const CandidateMap& candidateMap, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters)
+bool BullseyeDetectorStereo::extractBullseyes(const AnyCamera& cameraA, const AnyCamera& cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const CandidateMap& candidateMap, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters)
 {
 	ocean_assert(cameraA.isValid() && cameraB.isValid());
 
@@ -237,7 +237,7 @@ bool StereoBullseyeDetector::extractBullseyes(const AnyCamera& cameraA, const An
 	return true;
 }
 
-bool StereoBullseyeDetector::computeCostMatrix(const AnyCamera& cameraA, const AnyCamera& cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const CandidateMap& candidateMap, Matrix& costMatrix)
+bool BullseyeDetectorStereo::computeCostMatrix(const AnyCamera& cameraA, const AnyCamera& cameraB, const Bullseyes& bullseyesA, const Bullseyes& bullseyesB, const CandidateMap& candidateMap, Matrix& costMatrix)
 {
 	ocean_assert(cameraA.isValid() && cameraB.isValid());
 
@@ -292,7 +292,7 @@ bool StereoBullseyeDetector::computeCostMatrix(const AnyCamera& cameraA, const A
 	return true;
 }
 
-bool StereoBullseyeDetector::triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB)
+bool BullseyeDetectorStereo::triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB)
 {
 	ocean_assert(cameraA.isValid() && cameraB.isValid());
 	ocean_assert(world_T_cameraA.isValid() && world_T_cameraA.isValid());
