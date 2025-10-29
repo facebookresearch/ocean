@@ -175,7 +175,6 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		 * @param cameraB The camera profile for the second camera, must be valid
 		 * @param world_T_cameraA The transformation from camera A coordinate system to world coordinate system, must be valid
 		 * @param world_T_cameraB The transformation from camera B coordinate system to world coordinate system, must be valid
-		 * @param epipolarGeometry The epipolar geometry describing the relationship between the two cameras, must be valid
 		 * @param bullseyeA The bullseye from camera A, must be valid and within camera A's field of view
 		 * @param bullseyeB The bullseye from camera B, must be valid and within camera B's field of view
 		 * @param bullseyeCenter The resulting 3D position of the bullseye center in world coordinates
@@ -183,14 +182,13 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		 * @param reprojectionErrorB The resulting reprojection error for camera B, in pixels
 		 * @return True if triangulation succeeded and the 3D point is in front of both cameras, otherwise false
 		 */
-		static bool triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const EpipolarGeometry& epipolarGeometry, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB);
+		static bool triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB);
 
 		/**
 		 * Triangulates matched bullseye pairs to compute their 3D positions.
 		 * @param cameras The camera profiles for the stereo pair, must contain exactly 2 valid cameras
 		 * @param world_T_device The transformation from the device coordinate system to the world coordinate system, must be valid
 		 * @param device_T_cameras The transformations from each camera coordinate system to the device coordinate system, must contain exactly 2 valid transformations
-		 * @param epipolarGeometry The epipolar geometry describing the relationship between the two stereo cameras, must be valid
 		 * @param candidates The candidate bullseye pairs to triangulate
 		 * @param bullseyePairs The resulting validated bullseye pairs
 		 * @param bullseyeCenters The resulting 3D positions of the bullseye centers in world coordinates
@@ -198,7 +196,7 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT StereoBullseyeDetector
 		 * @param reprojectionErrorsB The resulting reprojection errors for camera B, in pixels, one value per validated bullseye pair
 		 * @return True, if succeeded
 		 */
-		static bool triangulateBullseyes(const SharedAnyCameras& cameras, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const EpipolarGeometry& epipolarGeometry, const BullseyePairs& candidates, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, Scalars& reprojectionErrorsA, Scalars& reprojectionErrorsB);
+		static bool triangulateBullseyes(const SharedAnyCameras& cameras, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const BullseyePairs& candidates, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, Scalars& reprojectionErrorsA, Scalars& reprojectionErrorsB);
 };
 
 constexpr Scalar StereoBullseyeDetector::invalidMatchingCost()

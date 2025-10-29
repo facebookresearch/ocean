@@ -131,7 +131,7 @@ bool StereoBullseyeDetector::detectBullseyes(const SharedAnyCameras& cameras, co
 	Scalars reprojectionErrorsA;
 	Scalars reprojectionErrorsB;
 
-	if (!triangulateBullseyes(cameras, world_T_device, device_T_cameras, epipolarGeometry, candidates, bullseyePairs, bullseyeCenters, reprojectionErrorsA, reprojectionErrorsB))
+	if (!triangulateBullseyes(cameras, world_T_device, device_T_cameras, candidates, bullseyePairs, bullseyeCenters, reprojectionErrorsA, reprojectionErrorsB))
 	{
 		return false;
 	}
@@ -271,11 +271,10 @@ bool StereoBullseyeDetector::computeBullseyeMatchingCostMatrix(const Bullseyes& 
 	return true;
 }
 
-bool StereoBullseyeDetector::triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const EpipolarGeometry& /*epipolarGeometry*/, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB)
+bool StereoBullseyeDetector::triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB)
 {
 	ocean_assert(cameraA.isValid() && cameraB.isValid());
 	ocean_assert(world_T_cameraA.isValid() && world_T_cameraA.isValid());
-	// ocean_assert(epipolarGeometry.isValid());
 	ocean_assert(bullseyeA.isValid() && bullseyeB.isValid());
 
 	ocean_assert(cameraA.isInside(bullseyeA.position()));
@@ -307,14 +306,13 @@ bool StereoBullseyeDetector::triangulateBullseye(const AnyCamera& cameraA, const
 	return false;
 }
 
-bool StereoBullseyeDetector::triangulateBullseyes(const SharedAnyCameras& cameras, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const EpipolarGeometry& epipolarGeometry, const BullseyePairs& candidates, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, Scalars& reprojectionErrorsA, Scalars& reprojectionErrorsB)
+bool StereoBullseyeDetector::triangulateBullseyes(const SharedAnyCameras& cameras, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, const BullseyePairs& candidates, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, Scalars& reprojectionErrorsA, Scalars& reprojectionErrorsB)
 {
 	ocean_assert(cameras.size() == 2);
 	ocean_assert(cameras[0] && cameras[0]->isValid() && cameras[1] && cameras[1]->isValid());
 	ocean_assert(world_T_device.isValid());
 	ocean_assert(device_T_cameras.size() == 2);
 	ocean_assert(device_T_cameras[0].isValid() && device_T_cameras[1].isValid());
-	ocean_assert(epipolarGeometry.isValid());
 
 	ocean_assert(!candidates.empty());
 	if (candidates.empty())
@@ -347,7 +345,7 @@ bool StereoBullseyeDetector::triangulateBullseyes(const SharedAnyCameras& camera
 		Vector3 bullseyeCenter;
 		Scalar reprojectionErrorA;
 		Scalar reprojectionErrorB;
-		if (triangulateBullseye(cameraA, cameraB, world_T_cameraA, world_T_cameraB, epipolarGeometry, bullseyeA, bullseyeB, bullseyeCenter, reprojectionErrorA, reprojectionErrorB))
+		if (triangulateBullseye(cameraA, cameraB, world_T_cameraA, world_T_cameraB, bullseyeA, bullseyeB, bullseyeCenter, reprojectionErrorA, reprojectionErrorB))
 		{
 			bullseyePairs.emplace_back(bullseyeA, bullseyeB);
 			bullseyeCenters.emplace_back(bullseyeCenter);
