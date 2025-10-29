@@ -15,6 +15,7 @@
 
 #include "ocean/base/Frame.h"
 #include "ocean/base/Worker.h"
+#include "ocean/base/Utilities.h"
 
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/Matrix.h"
@@ -146,33 +147,12 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT BullseyeDetectorStereo
 		};
 
 		/**
-		 * Hash function for IndexPair32 to enable its use as a key in unordered_map.
-		 * This provides a consistent hash computation for pairs of 32-bit indices.
-		 */
-		class IndexPairHash32
-		{
-			public:
-
-				/**
-				 * Creates a default hash function object.
-				 */
-				IndexPairHash32() = default;
-
-				/**
-				 * Computes a hash value for an index pair.
-				 * @param indexPair The pair of indices to hash
-				 * @return The computed hash value
-				 */
-				size_t operator()(const IndexPair32& indexPair) const;
-		};
-
-		/**
 		 * Definition of an unordered map holding candidate bullseyes.
 		 * The key is a pair of indices (indexA, indexB) where indexA corresponds to a bullseye in camera A
 		 * and indexB corresponds to a bullseye in camera B. The value is the Candidate object containing
 		 * the triangulated 3D position and reprojection errors for this match.
 		 */
-		using CandidateMap = std::unordered_map<IndexPair32, Candidate, IndexPairHash32>;
+		using CandidateMap = std::unordered_map<IndexPair32, Candidate, PairHash>;
 
 	public:
 

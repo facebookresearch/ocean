@@ -57,14 +57,6 @@ Vector3 BullseyeDetectorStereo::Candidate::invalidBullseyeCenter()
 	return Vector3::minValue();
 }
 
-size_t BullseyeDetectorStereo::IndexPairHash32::operator()(const IndexPair32& indexPair) const
-{
-	size_t seed = std::hash<Index32>{}(indexPair.first);
-	seed ^= std::hash<Index32>{}(indexPair.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-
-	return seed;
-}
-
 bool BullseyeDetectorStereo::detectBullseyes(const SharedAnyCameras& cameras, const Frames& yFrames, const HomogenousMatrix4& world_T_device, const HomogenousMatrices4& device_T_cameras, BullseyePairs& bullseyePairs, Vectors3& bullseyeCenters, const Parameters& parameters, Worker* worker)
 {
 	ocean_assert(cameras.size() == 2 && yFrames.size() == 2);
