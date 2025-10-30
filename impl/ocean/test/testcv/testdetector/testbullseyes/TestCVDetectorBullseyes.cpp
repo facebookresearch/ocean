@@ -7,6 +7,7 @@
 
 #include "ocean/test/testcv/testdetector/testbullseyes/TestCVDetectorBullseyes.h"
 
+#include "ocean/test/testcv/testdetector/testbullseyes/TestBullseyeDetectorMono.h"
 #include "ocean/test/testcv/testdetector/testbullseyes/TestAssignmentSolver.h"
 #include "ocean/test/testcv/testdetector/testbullseyes/TestBullseye.h"
 
@@ -92,6 +93,15 @@ bool testCVDetectorBullseyes(const double testDuration, Worker& worker, const st
 		Log::info() << " ";
 		Log::info() << " ";
 		allSucceeded = TestBullseye::test(testDuration) && allSucceeded;
+	}
+
+	if (testSet.empty() || testSet.find("bullseyedetectormono") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		allSucceeded = TestBullseyeDetectorMono::test(testDuration) && allSucceeded;
 	}
 
 	Log::info() << " ";

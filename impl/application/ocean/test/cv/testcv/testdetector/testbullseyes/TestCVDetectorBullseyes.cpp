@@ -49,7 +49,6 @@ using namespace Ocean;
 	const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
 	std::string mediaFilename = frameworkPath + std::string("/res/application/ocean/test/cv/testcv/testdetectorbullseyes/sift800x640.bmp");
 
-
 #ifdef OCEAN_DEBUG
 	constexpr double defaultTestDuration = 0.1;
 #else
