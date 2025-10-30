@@ -569,17 +569,28 @@ class CameraProjectionCheckerT
 		/**
 		 * Returns whether a given normalized image point lies inside the camera's boundary.
 		 * @param cameraBoundarySegments The 2D line segments defining the camera's boundary, at least three
-		 * @param imagePoint The normalized image point to be checked
+		 * @param normalizedImagePoint The normalized image point to be checked
 		 * @return True, if if so
 		 */
-		static bool isInside(const FiniteLinesT2<T>& cameraBoundarySegments, const VectorT2<T>& imagePoint);
+		static bool isInside(const FiniteLinesT2<T>& cameraBoundarySegments, const VectorT2<T>& normalizedImagePoint);
+
+		/**
+		 * Returns whether a given camera model is valid for a specified 2D image point in the camera image.
+		 * The function does not only check whether the provided image point re-projects back to the same image point but also whether additional image points sampled towards the principal point have the same behavior.
+		 * @param camera The camera model to be checked, must be valid
+		 * @param imagePoint The 2D image point to be checked, defined in the camera image, with range [0, width()]x[0, height()]
+		 * @param maximalReprojectionError The maximal allowed re-projection error in pixel, with range [0, infinity)
+		 * @param additionalChecksTowardsPrincipalPoint The number of additional image points sampled towards the principal point to be checked, with range [1, infinity)
+		 * @return True, if the camera model is valid for the specified image point
+		 */
+		static bool isValidForPoint(const AnyCameraT<T>& camera, const VectorT2<T>& imagePoint, const T maximalReprojectionError = T(1), const unsigned int additionalChecksTowardsPrincipalPoint = 3u);
 
 	protected:
 
 		/// The actual camera model this checker is based on.
 		SharedAnyCameraT<T> camera_;
 
-		/// The 2D line segments defined in the camera's normalized image plane defining the camera's boundary.
+		/// The 2D line segments defined in the camera's normalized image plane defining the camera's boundary, defined in the flipped camera coordinate system with y-axis down.
 		FiniteLinesT2<T> cameraBoundarySegments_;
 };
 
@@ -1767,13 +1778,31 @@ bool CameraProjectionCheckerT<T>::determineCameraBoundary(const AnyCameraT<T>& c
 		return false;
 	}
 
+	constexpr unsigned int border = 0u;
+
 	const std::array<VectorT2<T>, 4> corners =
 	{
-		VectorT2<T>(T(0), T(0)),
-		VectorT2<T>(T(0), T(camera.height() - 1u)),
-		VectorT2<T>(T(camera.width() - 1u), T(camera.height() - 1u)),
-		VectorT2<T>(T(camera.width() - 1u), T(0))
+		VectorT2<T>(T(border), T(border)),
+		VectorT2<T>(T(border), T(camera.height() - border - 1u)),
+		VectorT2<T>(T(camera.width() - border - 1u), T(camera.height() - border - 1u)),
+		VectorT2<T>(T(camera.width() - border - 1u), T(border))
 	};
+
+	const VectorT2<T> principalPoint = camera.principalPoint();
+
+	constexpr T maximalSqrDistance = NumericT<T>::sqr(T(1));
+
+	// let's first check whether the camera model is precise enough at the principal point
+
+	const VectorT3<T> principalObjectPoint = camera.vectorIF(principalPoint, false /*makeUnitVector*/);
+
+	const T sqrProjectionErrorPrincipalPoint = camera.projectToImageIF(principalObjectPoint).sqrDistance(principalPoint);
+
+	if (sqrProjectionErrorPrincipalPoint > maximalSqrDistance)
+	{
+		ocean_assert(false && "The camera model is not precise enough");
+		return false;
+	}
 
 	VectorsT2<T> normalizedImagePoints;
 	normalizedImagePoints.reserve(corners.size() * segmentSteps);
@@ -1789,12 +1818,64 @@ bool CameraProjectionCheckerT<T>::determineCameraBoundary(const AnyCameraT<T>& c
 
 			const VectorT2<T> distortedImagePoint = corner0 * (T(1) - factor) + corner1 * factor;
 
-			VectorT3<T> objectPoint = camera.vectorIF(distortedImagePoint);
-			ocean_assert(objectPoint.z() >= NumericT<T>::eps());
+			const VectorT2<T> offsetTowardsPrincipalPoint = (principalPoint - distortedImagePoint).normalizedOrZero() * T(1.0); // one pixel towards the pinciapl point
 
-			const VectorT2<T> normalizedImagePoint  = objectPoint.xy() / objectPoint.z();
+			VectorT3<T> objectPoint = VectorT3<T>::minValue();
 
-			normalizedImagePoints.emplace_back(normalizedImagePoint.x(), normalizedImagePoint.y());
+			if (isValidForPoint(camera, distortedImagePoint, maximalSqrDistance, 3u))
+			{
+				objectPoint = camera.vectorIF(distortedImagePoint, false /*makeUnitVector*/);
+			}
+			else
+			{
+				// un-projecting and re-projecting the distorted image point did not result in a similar image point, so the camera model is not well defined in this area
+				// so let's try to find the point closest to the image boundary which is precise enough
+
+				// | image boundary             ideal point              principal point |
+
+				VectorT2<T> boundaryImagePoint = distortedImagePoint;
+				VectorT2<T> centerImagePoint = principalPoint;
+
+				objectPoint = principalObjectPoint;
+
+				constexpr unsigned int iterations = 20u;
+
+				for (unsigned int nIteration = 0u; nIteration < iterations; ++nIteration)
+				{
+					if (boundaryImagePoint.sqrDistance(centerImagePoint) <= maximalSqrDistance)
+					{
+						break;
+					}
+
+					const VectorT2<T> middleImagePoint = (boundaryImagePoint + centerImagePoint) * T(0.5);
+
+					const VectorT3<T> middleObjectPoint = camera.vectorIF(middleImagePoint, false /*makeUnitVector*/);
+					const VectorT2<T> projectedMiddleObjectPoint = camera.projectToImageIF(middleObjectPoint);
+
+					const T sqrMiddleDistance = middleImagePoint.sqrDistance(projectedMiddleObjectPoint);
+
+					if (sqrMiddleDistance <= maximalSqrDistance)
+					{
+						centerImagePoint = middleImagePoint;
+
+						objectPoint = camera.vectorIF(middleImagePoint + offsetTowardsPrincipalPoint, false /*makeUnitVector*/);
+					}
+					else
+					{
+						boundaryImagePoint = middleImagePoint;
+					}
+				}
+
+				ocean_assert(objectPoint != principalObjectPoint);
+			}
+
+			if (objectPoint != VectorT3<T>::minValue())
+			{
+				ocean_assert(objectPoint.z() >= NumericT<T>::eps());
+				const VectorT2<T> normalizedImagePoint  = objectPoint.xy() / objectPoint.z();
+
+				normalizedImagePoints.emplace_back(normalizedImagePoint.x(), normalizedImagePoint.y());
+			}
 		}
 	}
 
@@ -1817,7 +1898,7 @@ bool CameraProjectionCheckerT<T>::determineCameraBoundary(const AnyCameraT<T>& c
 }
 
 template <typename T>
-bool CameraProjectionCheckerT<T>::isInside(const FiniteLinesT2<T>& cameraBoundarySegments, const VectorT2<T>& imagePoint)
+bool CameraProjectionCheckerT<T>::isInside(const FiniteLinesT2<T>& cameraBoundarySegments, const VectorT2<T>& normalizedImagePoint)
 {
 	ocean_assert(cameraBoundarySegments.size() >= 3);
 
@@ -1831,27 +1912,27 @@ bool CameraProjectionCheckerT<T>::isInside(const FiniteLinesT2<T>& cameraBoundar
 
 		if (segmentTopDown)
 		{
-			if (cameraBoundarySegment.point1().y() < imagePoint.y() || imagePoint.y() < cameraBoundarySegment.point0().y())
+			if (cameraBoundarySegment.point1().y() < normalizedImagePoint.y() || normalizedImagePoint.y() < cameraBoundarySegment.point0().y())
 			{
 				continue;
 			}
 		}
 		else
 		{
-			if (cameraBoundarySegment.point0().y() < imagePoint.y() || imagePoint.y() < cameraBoundarySegment.point1().y())
+			if (cameraBoundarySegment.point0().y() < normalizedImagePoint.y() || normalizedImagePoint.y() < cameraBoundarySegment.point1().y())
 			{
 				continue;
 			}
 		}
 
-		if (cameraBoundarySegment.isOnLine(imagePoint))
+		if (cameraBoundarySegment.isOnLine(normalizedImagePoint))
 		{
 			// the point is on the line segment, so we know the point is inside the camera boundary
 
 			return true;
 		}
 
-		if (cameraBoundarySegment.isLeftOfLine(imagePoint) == segmentTopDown)
+		if (cameraBoundarySegment.isLeftOfLine(normalizedImagePoint) == segmentTopDown)
 		{
 			// the point is on the left side of the line segment, we only count points on the right side
 			continue;
@@ -1861,6 +1942,49 @@ bool CameraProjectionCheckerT<T>::isInside(const FiniteLinesT2<T>& cameraBoundar
 	}
 
 	return counter % 2 == 1;
+}
+
+template <typename T>
+bool CameraProjectionCheckerT<T>::isValidForPoint(const AnyCameraT<T>& camera, const VectorT2<T>& imagePoint, const T maximalReprojectionError, const unsigned int additionalChecksTowardsPrincipalPoint)
+{
+	ocean_assert(camera.isValid());
+	ocean_assert(camera.isInside(imagePoint, T(-1)));
+	ocean_assert(maximalReprojectionError >= T(0));
+	ocean_assert(additionalChecksTowardsPrincipalPoint>= 1u);
+
+	const VectorT3<T> objectPoint = camera.vectorIF(imagePoint, false /*makeUnitVector*/);
+	const VectorT2<T> projectedObjectPoint = camera.projectToImageIF(objectPoint);
+
+	if (imagePoint.sqrDistance(projectedObjectPoint) > NumericT<T>::sqr(maximalReprojectionError))
+	{
+		// simple case, the point does not re-project back to the same image point
+		return false;
+	}
+
+	const VectorT2<T> principalPoint = camera.principalPoint();
+
+	const VectorT2<T> direction = (principalPoint - imagePoint).normalizedOrZero();
+
+	if (direction.isNull())
+	{
+		// we check the principal point
+		return true;
+	}
+
+	for (unsigned int n = 0u; n < std::min(additionalChecksTowardsPrincipalPoint, 10u); ++n)
+	{
+		const VectorT2<T> additionalImagePoint = imagePoint + direction * T(n + 1u);
+
+		const VectorT3<T> additionalObjectPoint = camera.vectorIF(additionalImagePoint, false /*makeUnitVector*/);
+		const VectorT2<T> additionalProjectedObjectPoint = camera.projectToImageIF(additionalObjectPoint);
+
+		if (additionalImagePoint.sqrDistance(additionalProjectedObjectPoint) > NumericT<T>::sqr(maximalReprojectionError))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 template <>
