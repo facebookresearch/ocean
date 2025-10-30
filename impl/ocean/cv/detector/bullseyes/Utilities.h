@@ -14,8 +14,6 @@
 
 #include "ocean/base/Frame.h"
 
-#include "ocean/geometry/FisheyeEpipolarGeometry.h"
-
 namespace Ocean
 {
 
@@ -63,22 +61,6 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Utilities
 		 * @param color Optional color to be used, one value for each frame channel, nullptr to use the default color (red)
 		 */
 		static void drawBullseyes(Frame& frame, const Bullseye* bullseyes, const size_t numberBullseyes, const uint8_t* color = nullptr);
-
-		/**
-		 * Draws an epipolar line into a given frame.
-		 * @param rgbFrame The frame in which the epipolar line will be painted, must be valid and have a pixel format RGB24 (or compatible)
-		 * @param epipolarLine The epipolar line to be painted, defined as a sequence of connected points
-		 * @param color Optional color to be used, one value for each frame channel, nullptr to use the default color (green)
-		 */
-		static void drawEpipolarLine(Ocean::Frame& rgbFrame, const Geometry::FisheyeEpipolarGeometry::EpipolarLine& epipolarLine, const uint8_t* color = nullptr);
-
-		/**
-		 * Draws multiple epipolar lines into a given frame.
-		 * @param rgbFrame The frame in which the epipolar lines will be painted, must be valid and have a pixel format RGB24 (or compatible)
-		 * @param epipolarLines The epipolar lines to be painted, each defined as a sequence of connected points
-		 * @param color Optional color to be used, one value for each frame channel, nullptr to use the default color (green)
-		 */
-		static void drawEpipolarLines(Ocean::Frame& rgbFrame, const Geometry::FisheyeEpipolarGeometry::EpipolarLines& epipolarLines, const uint8_t* color = nullptr);
 };
 
 } // namespace Bullseyes
