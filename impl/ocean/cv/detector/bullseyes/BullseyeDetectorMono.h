@@ -64,10 +64,22 @@ class BullseyeDetectorMono
 				unsigned int framePyramidPixelThreshold() const noexcept;
 
 				/**
+				 * Sets the pixel threshold for frame pyramid creation.
+				 * @param framePyramidPixelThreshold The pixel threshold value, with range [0, infinity)
+				 */
+				void setFramePyramidPixelThreshold(unsigned int framePyramidPixelThreshold) noexcept;
+
+				/**
 				 * Returns the number of layers for the frame pyramid.
 				 * @return The number of pyramid layers, with range [1, infinity)
 				 */
 				unsigned int framePyramidLayers() const noexcept;
+
+				/**
+				 * Sets the number of layers for the frame pyramid.
+				 * @param framePyramidLayers The number of pyramid layers, with range [1, infinity)
+				 */
+				void setFramePyramidLayers(unsigned int framePyramidLayers) noexcept;
 
 				/**
 				 * Returns whether adaptive row spacing is enabled during bullseye detection.

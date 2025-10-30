@@ -31,9 +31,19 @@ unsigned int BullseyeDetectorMono::Parameters::framePyramidPixelThreshold() cons
 	return framePyramidPixelThreshold_;
 }
 
+void BullseyeDetectorMono::Parameters::setFramePyramidPixelThreshold(unsigned int framePyramidPixelThreshold) noexcept
+{
+	framePyramidPixelThreshold_ = framePyramidPixelThreshold;
+}
+
 unsigned int BullseyeDetectorMono::Parameters::framePyramidLayers() const noexcept
 {
 	return framePyramidLayers_;
+}
+
+void BullseyeDetectorMono::Parameters::setFramePyramidLayers(unsigned int framePyramidLayers) noexcept
+{
+	framePyramidLayers_ = framePyramidLayers;
 }
 
 bool BullseyeDetectorMono::Parameters::useAdaptiveRowSpacing() const noexcept
