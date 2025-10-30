@@ -48,6 +48,50 @@ void TransitionHistory::reset()
 	deltaMinus3 = 0;
 }
 
+bool TransitionHistory::isTransitionToBlack(const uint8_t* pixel, TransitionHistory& history)
+{
+	const int currentDelta = int(*(pixel + 0) - *(pixel - 1));
+
+	bool result = false;
+
+	if (currentDelta < -deltaThreshold_)
+	{
+		result = true;
+	}
+	else if ((currentDelta + history.history1() < -(deltaThreshold_ * 5 / 4))
+		|| (currentDelta + history.history2() < -(deltaThreshold_ * 3 / 2))
+		|| (currentDelta + history.history3() < -(deltaThreshold_ * 3 / 2)))
+	{
+		result = true;
+	}
+
+	history.push(currentDelta);
+
+	return result;
+}
+
+bool TransitionHistory::isTransitionToWhite(const uint8_t* pixel, TransitionHistory& history)
+{
+	const int currentDelta = int(*(pixel + 0) - *(pixel - 1));
+
+	bool result = false;
+
+	if (currentDelta > deltaThreshold_)
+	{
+		result = true;
+	}
+	else if ((currentDelta + history.history1() > (deltaThreshold_ * 5 / 4))
+		|| (currentDelta + history.history2() > (deltaThreshold_ * 3 / 2))
+		|| (currentDelta + history.history3() > (deltaThreshold_ * 3 / 2)))
+	{
+		result = true;
+	}
+
+	history.push(currentDelta);
+
+	return result;
+}
+
 } // namespace Bullseyes
 
 } // namespace Detector

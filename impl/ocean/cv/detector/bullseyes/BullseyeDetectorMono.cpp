@@ -226,7 +226,7 @@ void BullseyeDetectorMono::detectBullseyesInRow(const AnyCamera& camera, const F
 	// start segment 1: we search for the start of the first black segment (with white pixel to the left)
 
 	TransitionHistory history;
-	while (x < width && !isTransitionToBlack(yRow + x, history))
+	while (x < width && !TransitionHistory::isTransitionToBlack(yRow + x, history))
 	{
 		++x;
 	}
@@ -245,7 +245,7 @@ void BullseyeDetectorMono::detectBullseyesInRow(const AnyCamera& camera, const F
 		if (segment_2_start_white == (unsigned int)(-1))
 		{
 			history.reset();
-			while (x < width && !isTransitionToWhite(yRow + x, history))
+			while (x < width && !TransitionHistory::isTransitionToWhite(yRow + x, history))
 			{
 				++x;
 			}
@@ -268,7 +268,7 @@ void BullseyeDetectorMono::detectBullseyesInRow(const AnyCamera& camera, const F
 		// start segment 3: we search for the start of the second black segment (the center dot)
 
 		history.reset();
-		while (x < width && !isTransitionToBlack(yRow + x, history))
+		while (x < width && !TransitionHistory::isTransitionToBlack(yRow + x, history))
 		{
 			++x;
 		}
@@ -307,7 +307,7 @@ void BullseyeDetectorMono::detectBullseyesInRow(const AnyCamera& camera, const F
 		// start segment 4: we search for the start of the second white segment
 
 		history.reset();
-		while (x < width && !isTransitionToWhite(yRow + x, history))
+		while (x < width && !TransitionHistory::isTransitionToWhite(yRow + x, history))
 		{
 			++x;
 		}
@@ -349,7 +349,7 @@ void BullseyeDetectorMono::detectBullseyesInRow(const AnyCamera& camera, const F
 		// start segment 5: we search for the start of the last black segment
 
 		history.reset();
-		while (x < width && !isTransitionToBlack(yRow + x, history))
+		while (x < width && !TransitionHistory::isTransitionToBlack(yRow + x, history))
 		{
 			++x;
 		}
@@ -397,7 +397,7 @@ void BullseyeDetectorMono::detectBullseyesInRow(const AnyCamera& camera, const F
 		// start 'segment 6': we search for the start of the next white segment (the end of the last black segment + 1 pixel)
 
 		history.reset();
-		while (x < width && !isTransitionToWhite(yRow + x, history))
+		while (x < width && !TransitionHistory::isTransitionToWhite(yRow + x, history))
 		{
 			++x;
 		}
@@ -464,50 +464,6 @@ void BullseyeDetectorMono::detectBullseyesInRow(const AnyCamera& camera, const F
 		// we also have to reset x
 		x = segment_2_start_white;
 	}
-}
-
-inline bool BullseyeDetectorMono::isTransitionToBlack(const uint8_t* pixel, TransitionHistory& history)
-{
-	const int currentDelta = int(*(pixel + 0) - *(pixel - 1));
-
-	bool result = false;
-
-	if (currentDelta < -deltaThreshold_)
-	{
-		result = true;
-	}
-	else if ((currentDelta + history.history1() < -(deltaThreshold_ * 5 / 4))
-		|| (currentDelta + history.history2() < -(deltaThreshold_ * 3 / 2))
-		|| (currentDelta + history.history3() < -(deltaThreshold_ * 3 / 2)))
-	{
-		result = true;
-	}
-
-	history.push(currentDelta);
-
-	return result;
-}
-
-inline bool BullseyeDetectorMono::isTransitionToWhite(const uint8_t* pixel, TransitionHistory& history)
-{
-	const int currentDelta = int(*(pixel + 0) - *(pixel - 1));
-
-	bool result = false;
-
-	if (currentDelta > deltaThreshold_)
-	{
-		result = true;
-	}
-	else if ((currentDelta + history.history1() > (deltaThreshold_ * 5 / 4))
-		|| (currentDelta + history.history2() > (deltaThreshold_ * 3 / 2))
-		|| (currentDelta + history.history3() > (deltaThreshold_ * 3 / 2)))
-	{
-		result = true;
-	}
-
-	history.push(currentDelta);
-
-	return result;
 }
 
 template <bool tFindBlackPixel>

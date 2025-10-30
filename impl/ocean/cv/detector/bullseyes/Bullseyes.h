@@ -8,6 +8,8 @@
 #ifndef OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYES_H
 #define OCEAN_CV_DETECTOR_BULLSEYES_BULLSEYES_H
 
+#include "ocean/cv/detector/Detector.h"
+
 namespace Ocean
 {
 

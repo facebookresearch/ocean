@@ -138,22 +138,6 @@ class BullseyeDetectorMono
 		static void detectBullseyesInRow(const AnyCamera& camera, const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes);
 
 		/**
-		 * Checks whether the given pixel is a transition-to-black pixel (whether the direct left neighbor is a bright pixel).
-		 * @param pixel The pixel to be checked, must be valid
-		 * @param history The history object containing information about previous pixels
-		 * @return True, if so
-		 */
-		static bool isTransitionToBlack(const uint8_t* pixel, TransitionHistory& history);
-
-		/**
-		 * Checks whether the given pixel is a transition-to-white pixel (whether the direct left neighbor is a dark pixel).
-		 * @param pixel The pixel to be checked, must be valid
-		 * @param history The history object containing information about previous pixels
-		 * @return True, if so
-		 */
-		static bool isTransitionToWhite(const uint8_t* pixel, TransitionHistory& history);
-
-		/**
 		 * Finds either the next black or the next white pixel towards negative y direction (upwards in an image).
 		 * @param yFrame The 8-bit grayscale frame in which the pixel will be searched, must be valid
 		 * @param x The horizontal location within the frame at which the search will be performed, in pixels, with range [0, yFrame.width())
@@ -237,11 +221,6 @@ class BullseyeDetectorMono
 		 * @return True, if the sub-pixel location could be determined
 		 */
 		static bool determineAccurateBullseyeLocation(const Frame& yFrame, const unsigned int xBullseye, const unsigned int yBullseye, const unsigned int threshold, Vector2& location);
-
-	protected:
-
-		/// The intensity threshold between two successive pixels to count as a transition from black to white (or vice versa).
-		static constexpr int deltaThreshold_ = 20;
 };
 
 } // namespace Bullseyes
