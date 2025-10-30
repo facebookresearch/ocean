@@ -311,67 +311,9 @@ void CalibrationDebugElements::updateCameraCalibratorCameraBoundary(const Camera
 		return;
 	}
 
-	ocean_assert(cameraProjectionChecker.isValid());
+	Frame frame = Utilities::visualizeDistortionValidity(cameraProjectionChecker);
 
-	const AnyCamera& camera = *cameraProjectionChecker.camera();
-
-	const unsigned int width = camera.width();
-	const unsigned int height = camera.height();
-
-	const Scalar width_2 = Scalar(width) * Scalar(0.5);
-	const Scalar height_2 = Scalar(height) * Scalar(0.5);
-
-	const FiniteLines2& cameraBoundarySegments = cameraProjectionChecker.cameraBoundarySegments();
-
-	ocean_assert(cameraBoundarySegments.size() >= 3);
-
-	Box2 boundingBox;
-
-	for (const FiniteLine2& cameraBoundarySegment : cameraBoundarySegments)
-	{
-		boundingBox += cameraBoundarySegment.point0();
-	}
-
-	Frame yFrame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
-	yFrame.setValue(0xFFu);
-
-	const Scalar xRadius = std::max(Numeric::abs(boundingBox.left()), Numeric::abs(boundingBox.right()));
-	const Scalar yRadius = std::max(Numeric::abs(boundingBox.top()), Numeric::abs(boundingBox.bottom()));
-
-	ocean_assert(Numeric::isNotEqualEps(xRadius));
-	ocean_assert(Numeric::isNotEqualEps(yRadius));
-
-	const Vector2 cameraCenter = Vector2(width_2, height_2);
-
-	const Scalar xRadiusNormalization = cameraCenter.x() / xRadius;
-	const Scalar yRadiusNormalization = cameraCenter.y() / yRadius;
-
-	for (const FiniteLine2& cameraBoundarySegment : cameraBoundarySegments)
-	{
-		const Vector2& normalizedPoint0 = cameraBoundarySegment.point0();
-		const Vector2& normalizedPoint1 = cameraBoundarySegment.point1();
-
-		const Vector2 point0 = Vector2(normalizedPoint0.x() * xRadiusNormalization, normalizedPoint0.y() * yRadiusNormalization);
-		const Vector2 point1 = Vector2(normalizedPoint1.x() * xRadiusNormalization, normalizedPoint1.y() * yRadiusNormalization);
-
-		constexpr uint8_t black = 0x00u;
-		CV::Canvas::line<3u>(yFrame, point0 + cameraCenter, point1 + cameraCenter, &black);
-	}
-
-	constexpr uint8_t gray = 0x80u;
-
-	CV::Canvas::line<1u>(yFrame, Vector2(0, height_2), Vector2(Scalar(width - 1u), height_2), &gray);
-	CV::Canvas::line<1u>(yFrame, Vector2(width_2, 0), Vector2(width_2, Scalar(height - 1u)), &gray);
-
-	Vector3 objectPoint = camera.vectorIF(cameraCenter);
-	ocean_assert(objectPoint.z() >= Numeric::eps());
-
-	const Vector2 normalizedImagePoint  = objectPoint.xy() / objectPoint.z();
-
-	constexpr uint8_t black = 0x00u;
-	CV::Canvas::point<3u>(yFrame, Vector2(normalizedImagePoint.x() * xRadiusNormalization, normalizedImagePoint.y() * yRadiusNormalization) + cameraCenter, &black);
-
-	updateElement(EI_CAMERA_CALIBRATOR_CAMERA_BOUNDARY, std::move(yFrame));
+	updateElement(EI_CAMERA_CALIBRATOR_CAMERA_BOUNDARY, std::move(frame));
 }
 
 void CalibrationDebugElements::updateCameraCalibratorCoverage(const CalibrationBoardObservation* observations, const size_t numberObservations, const unsigned int expectedCoverage, const bool showNumbers)
