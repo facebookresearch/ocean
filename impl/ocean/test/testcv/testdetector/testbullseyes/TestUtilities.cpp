@@ -46,6 +46,12 @@ bool TestUtilities::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testDrawBullseyeWithOffset(testDuration, randomGenerator) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testDrawBullseye(testDuration, randomGenerator) && allSucceeded;
 
 	Log::info() << " ";
@@ -76,6 +82,12 @@ TEST(TestUtilities, CreateBullseyeImage)
 {
 	RandomGenerator randomGenerator;
 	EXPECT_TRUE(TestDetector::TestBullseyes::TestUtilities::testCreateBullseyeImage(GTEST_TEST_DURATION, randomGenerator));
+}
+
+TEST(TestUtilities, DrawBullseyeWithOffset)
+{
+	RandomGenerator randomGenerator;
+	EXPECT_TRUE(TestDetector::TestBullseyes::TestUtilities::testDrawBullseyeWithOffset(GTEST_TEST_DURATION, randomGenerator));
 }
 
 TEST(TestUtilities, DrawBullseye)
@@ -199,6 +211,178 @@ bool TestUtilities::testCreateBullseyeImage(const double testDuration, RandomGen
 		}
 
 		if (foundUnexpectedColor)
+		{
+			allSucceeded = false;
+			break;
+		}
+	}
+	while (Timestamp(true) < start + testDuration);
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, RandomGenerator& randomGenerator)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Utilities::drawBullseye() with offset test:";
+
+	bool allSucceeded = true;
+
+	Timestamp start(true);
+
+	do
+	{
+		// Create random frame size
+		const unsigned int frameWidth = RandomI::random(randomGenerator, 200u, 1000u);
+		const unsigned int frameHeight = RandomI::random(randomGenerator, 200u, 1000u);
+
+		// Generate random diameter (must be multiple of 5, and >= 15)
+		const unsigned int k = RandomI::random(randomGenerator, 1u, 20u);
+		const unsigned int diameter = 5u * (2u * k + 1u);
+
+		// Generate random empty border
+		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);
+
+		const unsigned int bullseyeSize = diameter + 2u * emptyBorder;
+
+		// Make sure the bullseye fits in the frame with some margin
+		if (bullseyeSize >= frameWidth || bullseyeSize >= frameHeight)
+		{
+			continue;
+		}
+
+		// Create a random offset position where the bullseye will fit
+		const unsigned int maxOffsetX = frameWidth - bullseyeSize;
+		const unsigned int maxOffsetY = frameHeight - bullseyeSize;
+		const unsigned int offsetX = RandomI::random(randomGenerator, 0u, maxOffsetX);
+		const unsigned int offsetY = RandomI::random(randomGenerator, 0u, maxOffsetY);
+		const CV::PixelPosition offset(offsetX, offsetY);
+
+		// Randomly decide whether to use custom colors or nullptr
+		const bool useCustomForegroundColor = RandomI::random(randomGenerator, 1u) == 0u;
+		const bool useCustomBackgroundColor = RandomI::random(randomGenerator, 1u) == 0u;
+
+		uint8_t foregroundColorBuffer[3];
+		uint8_t backgroundColorBuffer[3];
+
+		const uint8_t* foregroundColor = nullptr;
+		const uint8_t* backgroundColor = nullptr;
+
+		if (useCustomForegroundColor)
+		{
+			foregroundColorBuffer[0] = uint8_t(RandomI::random(randomGenerator, 255u));
+			foregroundColorBuffer[1] = uint8_t(RandomI::random(randomGenerator, 255u));
+			foregroundColorBuffer[2] = uint8_t(RandomI::random(randomGenerator, 255u));
+			foregroundColor = foregroundColorBuffer;
+		}
+
+		if (useCustomBackgroundColor)
+		{
+			backgroundColorBuffer[0] = uint8_t(RandomI::random(randomGenerator, 255u));
+			backgroundColorBuffer[1] = uint8_t(RandomI::random(randomGenerator, 255u));
+			backgroundColorBuffer[2] = uint8_t(RandomI::random(randomGenerator, 255u));
+			backgroundColor = backgroundColorBuffer;
+		}
+
+		// Define the expected colors (use defaults if nullptr was passed)
+		const uint8_t expectedForeground[3] = {foregroundColor ? foregroundColor[0] : uint8_t(0), foregroundColor ? foregroundColor[1] : uint8_t(0), foregroundColor ? foregroundColor[2] : uint8_t(0)};
+		const uint8_t expectedBackground[3] = {backgroundColor ? backgroundColor[0] : uint8_t(255), backgroundColor ? backgroundColor[1] : uint8_t(255), backgroundColor ? backgroundColor[2] : uint8_t(255)};
+
+		// Choose an initialization color that's different from both fore- and background colors
+		uint8_t initColor[3];
+		do
+		{
+			initColor[0] = uint8_t(RandomI::random(randomGenerator, 255u));
+			initColor[1] = uint8_t(RandomI::random(randomGenerator, 255u));
+			initColor[2] = uint8_t(RandomI::random(randomGenerator, 255u));
+		}
+		while ((initColor[0] == expectedForeground[0] && initColor[1] == expectedForeground[1] && initColor[2] == expectedForeground[2]) ||
+		       (initColor[0] == expectedBackground[0] && initColor[1] == expectedBackground[1] && initColor[2] == expectedBackground[2]));
+
+		// Create and initialize the frame with the init color
+		Frame rgbFrame(FrameType(frameWidth, frameHeight, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
+		rgbFrame.setValue(initColor, 3u);
+
+		// Draw the bullseye into the frame
+		if (!Utilities::drawBullseyeWithOffset(rgbFrame, offset, diameter, emptyBorder, foregroundColor, backgroundColor))
+		{
+			allSucceeded = false;
+			break;
+		}
+
+		// Verify the pixel format is still RGB24
+		if (rgbFrame.pixelFormat() != FrameType::FORMAT_RGB24)
+		{
+			allSucceeded = false;
+			break;
+		}
+
+		// Verify the frame size hasn't changed
+		if (rgbFrame.width() != frameWidth || rgbFrame.height() != frameHeight)
+		{
+			allSucceeded = false;
+			break;
+		}
+
+		// Verify that pixels outside the bullseye region are unchanged
+		// and that at least some pixels inside the bullseye region have changed
+		bool foundChangedPixelInside = false;
+		bool foundChangedPixelOutside = false;
+
+		for (unsigned int y = 0u; y < rgbFrame.height(); ++y)
+		{
+			const uint8_t* row = rgbFrame.constrow<uint8_t>(y);
+
+			for (unsigned int x = 0u; x < rgbFrame.width(); ++x)
+			{
+				const uint8_t r = row[x * 3u + 0u];
+				const uint8_t g = row[x * 3u + 1u];
+				const uint8_t b = row[x * 3u + 2u];
+
+				const bool isInsideBullseyeRegion = (x >= offsetX && x < offsetX + bullseyeSize &&
+				                                      y >= offsetY && y < offsetY + bullseyeSize);
+
+				const bool isInitColor = (r == initColor[0] && g == initColor[1] && b == initColor[2]);
+
+				if (isInsideBullseyeRegion)
+				{
+					// Track if any pixel inside has changed from init color
+					if (!isInitColor)
+					{
+						foundChangedPixelInside = true;
+					}
+				}
+				else
+				{
+					// Outside bullseye region: should still be init color
+					if (!isInitColor)
+					{
+						foundChangedPixelOutside = true;
+						break;
+					}
+				}
+			}
+
+			if (foundChangedPixelOutside)
+			{
+				break;
+			}
+		}
+
+		// The test fails if:
+		// 1. Any pixel outside the bullseye region changed (foundChangedPixelOutside == true)
+		// 2. No pixels inside the bullseye region changed (foundChangedPixelInside == false)
+		if (foundChangedPixelOutside || !foundChangedPixelInside)
 		{
 			allSucceeded = false;
 			break;

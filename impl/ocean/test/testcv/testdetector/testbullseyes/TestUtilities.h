@@ -60,6 +60,14 @@ class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestUtilities
 		static bool testCreateBullseyeImage(const double testDuration, RandomGenerator& randomGenerator);
 
 		/**
+		 * Test for Utilities::drawBullseyeWithOffset()
+		 * @param testDuration The duration in seconds for which this test will be run, must be > 0.0
+		 * @param randomGenerator A random generator that will be used to generate test data
+		 * @return True, if succeeded
+		 */
+		static bool testDrawBullseyeWithOffset(const double testDuration, RandomGenerator& randomGenerator);
+
+		/**
 		 * Test for Utilities::drawBullseye()
 		 * @param testDuration The duration in seconds for which this test will be run, must be > 0.0
 		 * @param randomGenerator A random generator that will be used to generate test data

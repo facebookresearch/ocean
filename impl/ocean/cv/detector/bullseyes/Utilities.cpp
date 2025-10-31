@@ -40,39 +40,75 @@ bool Utilities::createBullseyeImage(const unsigned int diameter, const unsigned 
 
 	rgbFrame.setValue(backgroundColor, 3u);
 
-	const CV::PixelPosition center(imageSize / 2u, imageSize / 2u);
+	return drawBullseyeWithOffset(rgbFrame, PixelPosition(0, 0), diameter, emptyBorder, foregroundColor, backgroundColor);
+}
+
+bool Utilities::drawBullseyeWithOffset(Frame& rgbFrame, const PixelPosition& offset, const unsigned int diameter, const unsigned int emptyBorder, const uint8_t* foregroundColor, const uint8_t* backgroundColor)
+{
+	ocean_assert(rgbFrame.isValid() && FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24));
+	if (!rgbFrame.isValid() || !FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24))
+	{
+		return false;
+	}
+
+	ocean_assert(diameter >= 5u && diameter % 5u == 0u);
+	if (diameter < 5u || diameter % 5u != 0u)
+	{
+		return false;
+	}
+
+	const unsigned int bullseyeSize = diameter + 2u * emptyBorder;
+
+	if (offset.x() + bullseyeSize > rgbFrame.width() || offset.y() + bullseyeSize > rgbFrame.height())
+	{
+		// The bullseye won't fit into the frame
+		return false;
+	}
+
+	foregroundColor = foregroundColor != nullptr ? foregroundColor : CV::Canvas::black(FrameType::FORMAT_RGB24);
+	backgroundColor = backgroundColor != nullptr ? backgroundColor : CV::Canvas::white(FrameType::FORMAT_RGB24);
+
+	Frame subFrame = rgbFrame.subFrame(offset.x(), offset.y(), bullseyeSize, bullseyeSize);
+
+	ocean_assert(subFrame.isValid());
+	if (!subFrame.isValid())
+	{
+		return false;
+	}
+
+	const CV::PixelPosition center(bullseyeSize / 2u, bullseyeSize / 2u);
 
 	const unsigned int centerDiscDiameter = diameter / 5u;
 	const unsigned int innerDiscDiameter = 3u * centerDiscDiameter;
 	const unsigned int outerDiscDiameter = 5u * centerDiscDiameter;
 
-	CV::Canvas::ellipse(rgbFrame, center, outerDiscDiameter, outerDiscDiameter, foregroundColor);
-	CV::Canvas::ellipse(rgbFrame, center, innerDiscDiameter, innerDiscDiameter, backgroundColor);
-	CV::Canvas::ellipse(rgbFrame, center, centerDiscDiameter, centerDiscDiameter, foregroundColor);
+	CV::Canvas::ellipse(subFrame, center, outerDiscDiameter, outerDiscDiameter, foregroundColor);
+	CV::Canvas::ellipse(subFrame, center, innerDiscDiameter, innerDiscDiameter, backgroundColor);
+	CV::Canvas::ellipse(subFrame, center, centerDiscDiameter, centerDiscDiameter, foregroundColor);
 
 	return true;
 }
 
-void Utilities::drawBullseye(Frame& frame, const Bullseye& bullseye, const uint8_t* color)
+void Utilities::drawBullseye(Frame& rgbFrame, const Bullseye& bullseye, const uint8_t* color)
 {
-	ocean_assert(frame.isValid() && FrameType::arePixelFormatsCompatible(frame.pixelFormat(), FrameType::FORMAT_RGB24));
+	ocean_assert(rgbFrame.isValid() && FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24));
 	ocean_assert(bullseye.isValid());
 
 	const Vector2& center = bullseye.position();
 	const Scalar radius = bullseye.radius();
 
-	CV::Canvas::line<3u>(frame, center.x() - radius, center.y(), center.x() + radius, center.y(), color);
-	CV::Canvas::line<3u>(frame, center.x(), center.y() - radius, center.x(), center.y() + radius, color);
+	CV::Canvas::line<3u>(rgbFrame, center.x() - radius, center.y(), center.x() + radius, center.y(), color);
+	CV::Canvas::line<3u>(rgbFrame, center.x(), center.y() - radius, center.x(), center.y() + radius, color);
 }
 
-void Utilities::drawBullseyes(Frame& frame, const Bullseye* bullseyes, const size_t numberBullseyes, const uint8_t* color)
+void Utilities::drawBullseyes(Frame& rgbFrame, const Bullseye* bullseyes, const size_t numberBullseyes, const uint8_t* color)
 {
-	ocean_assert(frame.isValid() && FrameType::arePixelFormatsCompatible(frame.pixelFormat(), FrameType::FORMAT_RGB24));
+	ocean_assert(rgbFrame.isValid() && FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24));
 	ocean_assert(bullseyes != nullptr || numberBullseyes == 0);
 
 	for (size_t n = 0; n < numberBullseyes; ++n)
 	{
-		drawBullseye(frame, bullseyes[n], color);
+		drawBullseye(rgbFrame, bullseyes[n], color);
 	}
 }
 
