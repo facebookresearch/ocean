@@ -31,7 +31,7 @@ extern "C" OCEAN_INTERACTION_JS_EXPORT bool pluginLoad();
 extern "C" OCEAN_INTERACTION_JS_EXPORT bool pluginUnload();
 
 /**
- * Returns informations about the used 3rd party libraries.
+ * Returns information about the used 3rd party libraries.
  * @return Name and version of the 3rd party libraries
  * @ingroup interactionjs
  */

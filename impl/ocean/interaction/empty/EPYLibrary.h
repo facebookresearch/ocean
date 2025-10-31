@@ -32,7 +32,7 @@ class OCEAN_INTERACTION_EPY_EXPORT EPYLibrary : public Library
 	public:
 
 		/**
-		 * Creates this library and registeres it at the global interaction manager.<br>
+		 * Creates this library and registers it at the global interaction manager.<br>
 		 * Do not register this library if using it as plugin, because it's done by the plugin itself.<br>
 		 * However, if you are not using the plugin mechanism you have to initialize this library once at program initialization.<br>
 		 * If the library is not used anymore unregister it using the unregister function.<br>
