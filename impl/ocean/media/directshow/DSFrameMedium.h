@@ -65,7 +65,7 @@ class OCEAN_MEDIA_DS_EXPORT DSFrameMedium :
 		/**
 		 * Definition of a vector holding sortable media type objects.
 		 */
-		typedef std::vector<DSSortableFrameType> DSSortableFrameTypes;
+		using DSSortableFrameTypes = std::vector<DSSortableFrameType>;
 
 	public:
 

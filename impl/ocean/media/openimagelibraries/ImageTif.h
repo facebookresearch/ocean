@@ -35,12 +35,12 @@ class OCEAN_MEDIA_OIL_EXPORT ImageTif
 		/**
 		 * Definition of a triple containing the input buffer, the size of the input buffer, and the current location within the buffer.
 		 */
-		typedef Triple<const uint8_t*, size_t, size_t> InputDataTriple;
+		using InputDataTriple = Triple<const uint8_t*, size_t, size_t>;
 
 		/**
 		 * Definition of a triple containing an output buffer (with addtional reserved bytes), the size of the output buffer, and the current location within the output buffer.
 		 */
-		typedef Triple<std::vector<uint8_t>, size_t, size_t> OutputDataTriple;
+		using OutputDataTriple = Triple<std::vector<uint8_t>, size_t, size_t>;
 
 	public:
 

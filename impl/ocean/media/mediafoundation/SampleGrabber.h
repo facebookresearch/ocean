@@ -29,7 +29,7 @@ class SampleGrabber;
  * The wrapped SampleGrabber object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediamf
  */
-typedef ScopedMediaFoundationObject<SampleGrabber> ScopedSampleGrabber;
+using ScopedSampleGrabber = ScopedMediaFoundationObject<SampleGrabber>;
 
 /**
  * This class implements a callback interface.

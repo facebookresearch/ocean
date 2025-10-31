@@ -41,7 +41,7 @@ class OCEAN_MEDIA_OIL_EXPORT OILImageSequenceRecorder :
 		/**
 		 * Definition of a queue holding frame references and frame indices.
 		 */
-		typedef std::queue<std::pair<FrameRef, unsigned int>> FrameQueue;
+		using FrameQueue = std::queue<std::pair<FrameRef, unsigned int>>;
 
 	public:
 

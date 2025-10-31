@@ -25,7 +25,7 @@ class FrameMemoryRecorder;
  * @see SmartObjectRef, FrameMemoryRecorder.
  * @ingroup media
  */
-typedef Ocean::SmartObjectRef<FrameMemoryRecorder, Recorder> FrameMemoryRecorderRef;
+using FrameMemoryRecorderRef = Ocean::SmartObjectRef<FrameMemoryRecorder, Recorder>;
 
 /**
  * This class implements a frame recorder forwarding the frame to a shared memory.

@@ -25,7 +25,7 @@ class Image;
  * @see SmartMediumRef, Image.
  * @ingroup media
  */
-typedef SmartMediumRef<Image> ImageRef;
+using ImageRef = SmartMediumRef<Image>;
 
 /**
  * This class is the base class for all images.

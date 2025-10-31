@@ -26,7 +26,7 @@ class Audio;
  * @see SmartMediumRef, Audio.
  * @ingroup media
  */
-typedef SmartMediumRef<Audio> AudioRef;
+using AudioRef = SmartMediumRef<Audio>;
 
 /**
  * This class is the base class for all audio mediums.

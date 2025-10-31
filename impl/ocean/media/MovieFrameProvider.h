@@ -32,7 +32,7 @@ class MovieFrameProvider;
  * @see MovieFrameProvider.
  * @ingroup media
  */
-typedef ObjectRef<MovieFrameProvider> MovieFrameProviderRef;
+using MovieFrameProviderRef = ObjectRef<MovieFrameProvider>;
 
 /**
  * This class implements a frame provider for movie mediums.
@@ -65,67 +65,67 @@ class OCEAN_MEDIA_EXPORT MovieFrameProvider : protected Thread
 		 * The first parameter defines the index of the frame.<br>
 		 * The second parameter states whether the frames has been explicitly requested.
 		 */
-		typedef Callback<void, const unsigned int, const bool> FrameCallback;
+		using FrameCallback = Callback<void, const unsigned int, const bool>;
 
 		/**
 		 * Definition of a preview frame callback function.
 		 * The first parameter defines the index of the preview frame.<br>
 		 */
-		typedef Callback<void, const unsigned int> PreviewFrameCallback;
+		using PreviewFrameCallback = Callback<void, const unsigned int>;
 
 		/**
 		 * Definition of an event callback function.
 		 * The first parameter specifies the event type.<br>
 		 * The second parameter holds an optional event parameter.<br>
 		 */
-		typedef Callback<void, const EventType, const unsigned long long> EventCallback;
+		using EventCallback = Callback<void, const EventType, const unsigned long long>;
 
 		/**
 		 * Definition of a pair of sizes.
 		 */
-		typedef IndexPair32 Dimension;
+		using Dimension = IndexPair32;
 
 	private:
 
 		/**
 		 * Definition of a non-thread-safe ring map mapping frame indices to frame references.
 		 */
-		typedef RingMapT<unsigned int, FrameRef, false> FrameDatabase;
+		using FrameDatabase = RingMapT<unsigned int, FrameRef, false>;
 
 		/**
 		 * Definition of a preview frame composed of a finished-state and the frame data.
 		 */
-		typedef std::pair<bool, FrameRef> PreviewFrame;
+		using PreviewFrame = std::pair<bool, FrameRef>;
 
 		/**
 		 * Definition of a vector holding preview frames.
 		 */
-		typedef std::vector<PreviewFrame> PreviewFrames;
+		using PreviewFrames = std::vector<PreviewFrame>;
 
 		/**
 		 * Definition of a queue holding frames.
 		 */
-		typedef std::queue<FrameRef> FrameQueue;
+		using FrameQueue = std::queue<FrameRef>;
 
 		/**
 		 * Definition of a list holding frame indices.
 		 */
-		typedef std::list<unsigned int> RequestList;
+		using RequestList = std::list<unsigned int>;
 
 		/**
 		 * Definition of a callback container storing frame callbacks.
 		 */
-		typedef ConcurrentCallbacks<FrameCallback> FrameCallbacks;
+		using FrameCallbacks = ConcurrentCallbacks<FrameCallback>;
 
 		/**
 		 * Definition of a callback container storing preview frame callbacks.
 		 */
-		typedef ConcurrentCallbacks<PreviewFrameCallback> PreviewFrameCallbacks;
+		using PreviewFrameCallbacks = ConcurrentCallbacks<PreviewFrameCallback>;
 
 		/**
 		 * Definition of a callback container storing event callbacks.
 		 */
-		typedef ConcurrentCallbacks<EventCallback> EventCallbacks;
+		using EventCallbacks = ConcurrentCallbacks<EventCallback>;
 
 	public:
 

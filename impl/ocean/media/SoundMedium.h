@@ -28,7 +28,7 @@ class SoundMedium;
  * @see SmartMediumRef, SoundMedium.
  * @ingroup media
  */
-typedef SmartMediumRef<SoundMedium> SoundMediumRef;
+using SoundMediumRef = SmartMediumRef<SoundMedium>;
 
 /**
  * This class is the base class for all sound mediums.
@@ -41,7 +41,7 @@ class OCEAN_MEDIA_EXPORT SoundMedium : public virtual Medium
 		/**
 		 * Definition of a sound frequency defined in Hz.
 		 */
-		typedef float SoundFrequency;
+		using SoundFrequency = float;
 
 		/**
 		 * Definition of a sound type composed by the sound frequency and channels.

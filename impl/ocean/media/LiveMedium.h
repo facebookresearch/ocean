@@ -26,7 +26,7 @@ class LiveMedium;
  * @see SmartMediumRef, LiveMedium.
  * @ingroup media
  */
-typedef SmartMediumRef<LiveMedium> LiveMediumRef;
+using LiveMediumRef = SmartMediumRef<LiveMedium>;
 
 /**
  * This class it the base class for all live mediums.

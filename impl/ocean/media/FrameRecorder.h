@@ -28,7 +28,7 @@ class FrameRecorder;
  * @see SmartObjectRef, Recorder.
  * @ingroup media
  */
-typedef Ocean::SmartObjectRef<FrameRecorder, Recorder> FrameRecorderRef;
+using FrameRecorderRef = Ocean::SmartObjectRef<FrameRecorder, Recorder>;
 
 /**
  * This class is the base class for all frame recorders.

@@ -45,7 +45,7 @@ class AVFAudio :
 		/**
 		 * Definition of a callback function for finished playing.
 		 */
-		typedef Callback<void> FinishedPlayingCallback;
+		using FinishedPlayingCallback = Callback<void>;
 
 	public:
 

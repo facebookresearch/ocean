@@ -25,7 +25,7 @@ class PixelImage;
  * @see SmartMediumRef, PixelImage.
  * @ingroup media
  */
-typedef SmartMediumRef<PixelImage> PixelImageRef;
+using PixelImageRef = SmartMediumRef<PixelImage>;
 
 /**
  * This class implements a frame medium object which uses an explicit frame only.

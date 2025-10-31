@@ -28,7 +28,7 @@ class MovieRecorder;
  * @see SmartObjectRef, MovieRecorder.
  * @ingroup media
  */
-typedef Ocean::SmartObjectRef<MovieRecorder, Recorder> MovieRecorderRef;
+using MovieRecorderRef = Ocean::SmartObjectRef<MovieRecorder, Recorder>;
 
 /**
  * This class is the base class for all movie recorder.

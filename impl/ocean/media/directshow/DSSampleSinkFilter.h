@@ -38,7 +38,7 @@ class DSSampleSinkFilter;
  * The wrapped DSSampleSinkFilter object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<DSSampleSinkFilter> ScopedDSSampleSinkFilter;
+using ScopedDSSampleSinkFilter = ScopeDirectShowObject<DSSampleSinkFilter>;
 
 /**
  * This class implements a sample sink filter for DirectShow.
@@ -53,7 +53,7 @@ class OCEAN_MEDIA_DS_EXPORT DSSampleSinkFilter : public CBaseFilter
 		/**
 		 * Definition of a callback function informing about a new media sample.
 		 */
-		typedef Callback<void, IMediaSample*, const Timestamp, const Timestamp> SampleCallback;
+		using SampleCallback = Callback<void, IMediaSample*, const Timestamp, const Timestamp>;
 
 	protected:
 
@@ -75,7 +75,7 @@ class OCEAN_MEDIA_DS_EXPORT DSSampleSinkFilter : public CBaseFilter
 				/**
 				 * Definition of a vector holding media types.
 				 */
-				typedef std::vector<CMediaType> MediaTypes;
+				using MediaTypes = std::vector<CMediaType>;
 
 			public:
 
@@ -162,7 +162,7 @@ class OCEAN_MEDIA_DS_EXPORT DSSampleSinkFilter : public CBaseFilter
 		 * The wrapped DSInputPin object will be released automatically once the scoped object does not exist anymore.
 		 * @ingroup mediads
 		 */
-		typedef ScopeDirectShowObject<DSInputPin> ScopedDSInputPin;
+		using ScopedDSInputPin = ScopeDirectShowObject<DSInputPin>;
 
 	public:
 

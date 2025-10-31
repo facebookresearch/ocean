@@ -27,7 +27,7 @@ class Recorder;
  * Definition of a object reference holding recorder objects.
  * @ingroup media
  */
-typedef Ocean::ObjectRef<Recorder> RecorderRef;
+using RecorderRef = Ocean::ObjectRef<Recorder>;
 
 /**
  * This class is the base class for all recorder.
@@ -77,7 +77,7 @@ class OCEAN_MEDIA_EXPORT Recorder
 		/**
 		 * Definition of a vector holding encoder names.
 		 */
-		typedef std::vector<std::string> Encoders;
+		using Encoders = std::vector<std::string>;
 
 	public:
 

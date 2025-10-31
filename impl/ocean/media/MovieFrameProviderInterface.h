@@ -34,12 +34,12 @@ class OCEAN_MEDIA_EXPORT MovieFrameProviderInterface : public CV::FrameProviderI
 		/**
 		 * Definition of pair combining a frame index with a frame reference.
 		 */
-		typedef std::pair<unsigned int, FrameRef> FramePair;
+		using FramePair = std::pair<unsigned int, FrameRef>;
 
 		/**
 		 * Definition of a queue storing frame pairs.
 		 */
-		typedef std::queue<FramePair> FrameQueue;
+		using FrameQueue = std::queue<FramePair>;
 
 	public:
 

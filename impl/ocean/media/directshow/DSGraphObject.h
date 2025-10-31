@@ -31,7 +31,7 @@ class OCEAN_MEDIA_DS_EXPORT DSGraphObject : virtual public DSObject
 		/**
 		 * Definition of a vector holding DirectShow filters.
 		 */
-		typedef std::vector<ScopedIBaseFilter> Filters;
+		using Filters = std::vector<ScopedIBaseFilter>;
 
 	protected:
 

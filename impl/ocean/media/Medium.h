@@ -27,7 +27,7 @@ class Medium;
  * @see ObjectRef, Medium
  * @ingroup media
  */
-typedef ObjectRef<Medium> MediumRef;
+using MediumRef = ObjectRef<Medium>;
 
 /**
  * This is the base class for all mediums.

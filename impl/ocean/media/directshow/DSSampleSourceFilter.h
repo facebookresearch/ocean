@@ -36,7 +36,7 @@ class DSSampleSourceFilter;
  * The wrapped DSSampleSourceFilter object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<DSSampleSourceFilter> ScopedDSSampleSourceFilter;
+using ScopedDSSampleSourceFilter = ScopeDirectShowObject<DSSampleSourceFilter>;
 
 /**
  * This class implements a DirectShow sample source filter pushing new samples into a DirectShow filter graph.
@@ -176,7 +176,7 @@ class OCEAN_MEDIA_DS_EXPORT DSSampleSourceFilter : public CSource
 		 * The wrapped DSOutputPin object will be released automatically once the scoped object does not exist anymore.
 		 * @ingroup mediads
 		 */
-		typedef ScopeDirectShowObject<DSOutputPin> ScopedDSOutputPin;
+		using ScopedDSOutputPin = ScopeDirectShowObject<DSOutputPin>;
 
 	public:
 

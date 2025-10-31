@@ -71,7 +71,7 @@ class AVFDevices
 		/**
 		 * Definition of a vector holding devices.
 		 */
-		typedef std::vector<Device> Devices;
+		using Devices = std::vector<Device>;
 
 	public:
 

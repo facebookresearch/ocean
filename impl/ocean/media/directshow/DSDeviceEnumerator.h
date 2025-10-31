@@ -37,7 +37,7 @@ class DSDeviceEnumerator
 		/**
 		 * Definition of a vector holding object names.
 		 */
-		typedef std::vector<std::string> Names;
+		using Names = std::vector<std::string>;
 
 	protected:
 
@@ -62,7 +62,7 @@ class DSDeviceEnumerator
 		/**
 		 * Definition of a vector holding objects.
 		 */
-		typedef std::vector<Object> Objects;
+		using Objects = std::vector<Object>;
 
 	public:
 
@@ -154,7 +154,7 @@ class OCEAN_MEDIA_DS_EXPORT DSEnumerators : public Singleton<DSEnumerators>
 		/**
 		 * Vector holding different device enumerators.
 		 */
-		typedef std::vector<std::shared_ptr<DSDeviceEnumerator>> Enumerators;
+		using Enumerators = std::vector<std::shared_ptr<DSDeviceEnumerator>>;
 
 	public:
 

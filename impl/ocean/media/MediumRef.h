@@ -36,7 +36,7 @@ class SmartMediumRef : public SmartObjectRef<T, Medium>
 		/**
 		 * Redefinition of the release callback function defined in ObjectRef.
 		 */
-		typedef typename SmartObjectRef<T, Medium>::ReleaseCallback ReleaseCallback;
+		using ReleaseCallback = typename SmartObjectRef<T, Medium>::ReleaseCallback;
 
 	public:
 
@@ -88,7 +88,7 @@ class OCEAN_MEDIA_EXPORT MediumRefManager : public Singleton<MediumRefManager>
 		/**
 		 * Map mapping urls to medium references.
 		 */
-		typedef std::multimap<std::string, MediumRef> MediumMap;
+		using MediumMap = std::multimap<std::string, MediumRef>;
 
 	public:
 

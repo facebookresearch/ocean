@@ -65,12 +65,12 @@ class OCEAN_MEDIA_DS_EXPORT DSSoundMedium :
 		/**
 		 * Definition of a vector holding sortable sound type objects.
 		 */
-		typedef std::vector<DSSortableSoundType> DSSortableSoundTypes;
+		using DSSortableSoundTypes = std::vector<DSSortableSoundType>;
 
 		/**
 		 * Definition of a vector holding filters.
 		 */
-		typedef std::vector<ScopedIBaseFilter> Filters;
+		using Filters = std::vector<ScopedIBaseFilter>;
 
 	public:
 

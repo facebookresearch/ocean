@@ -31,7 +31,7 @@ class OCEAN_MEDIA_EXPORT ImageSequenceStereoImageProvider : public StereoImagePr
 		/**
 		 * Definition of a sample map holding 6-DOF transformations.
 		 */
-		typedef SampleMap<HomogenousMatrixD4> TransformationMap;
+		using TransformationMap = SampleMap<HomogenousMatrixD4>;
 
 	public:
 

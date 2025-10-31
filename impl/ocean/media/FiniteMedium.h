@@ -26,7 +26,7 @@ class FiniteMedium;
  * @see SmartMediumRef, FiniteMedium.
  * @ingroup media
  */
-typedef SmartMediumRef<FiniteMedium> FiniteMediumRef;
+using FiniteMediumRef = SmartMediumRef<FiniteMedium>;
 
 /**
  * This class is the base class for all finite mediums.

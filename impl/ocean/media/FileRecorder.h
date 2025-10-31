@@ -27,7 +27,7 @@ class FileRecorder;
  * @see SmartObjectRef, FileRecorder.
  * @ingroup media
  */
-typedef Ocean::SmartObjectRef<FileRecorder, Recorder> FileRecorderRef;
+using FileRecorderRef = Ocean::SmartObjectRef<FileRecorder, Recorder>;
 
 /**
  * This class is the base class for all file recorders.

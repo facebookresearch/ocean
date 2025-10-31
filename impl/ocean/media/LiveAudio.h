@@ -27,7 +27,7 @@ class LiveAudio;
  * @see SmartMediumRef, LiveAudio.
  * @ingroup media
  */
-typedef SmartMediumRef<LiveAudio> LiveAudioRef;
+using LiveAudioRef = SmartMediumRef<LiveAudio>;
 
 /**
  * This class is the base class for all live audios.

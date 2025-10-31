@@ -26,7 +26,7 @@ class ImageSequenceRecorder;
  * @see SmartObjectRef, ImageSequenceRecorder.
  * @ingroup media
  */
-typedef Ocean::SmartObjectRef<ImageSequenceRecorder, Recorder> ImageSequenceRecorderRef;
+using ImageSequenceRecorderRef = Ocean::SmartObjectRef<ImageSequenceRecorder, Recorder>;
 
 /**
  * This class implements an image sequence recorder.

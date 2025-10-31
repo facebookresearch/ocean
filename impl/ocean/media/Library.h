@@ -29,7 +29,7 @@ class Library;
  * @see ObjectRef, Library.
  * @ingroup media
  */
-typedef ObjectRef<Library> LibraryRef;
+using LibraryRef = ObjectRef<Library>;
 
 /**
  * This class is the base class for all media libraries.
@@ -108,14 +108,14 @@ class OCEAN_MEDIA_EXPORT Library
 		/**
 		 * Definition of a vector holding medium definition objects.
 		 */
-		typedef std::vector<Definition> Definitions;
+		using Definitions = std::vector<Definition>;
 
 	protected:
 
 		/**
 		 * Definition of a set holding file extensions.
 		 */
-		typedef std::set<std::string> ExtensionSet;
+		using ExtensionSet = std::set<std::string>;
 
 	public:
 

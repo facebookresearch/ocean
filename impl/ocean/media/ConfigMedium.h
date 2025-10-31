@@ -28,7 +28,7 @@ class ConfigMedium;
  * @see SmartMediumRef, ConfigMedium.
  * @ingroup media
  */
-typedef SmartMediumRef<ConfigMedium> ConfigMediumRef;
+using ConfigMediumRef = SmartMediumRef<ConfigMedium>;
 
 /**
  * This class is the base class for all mediums with advanced configuration possibilities.
@@ -41,7 +41,7 @@ class OCEAN_MEDIA_EXPORT ConfigMedium : virtual public Medium
 		/**
 		 * Definition of a vector holding configuration names.
 		 */
-		typedef std::vector<std::string> ConfigNames;
+		using ConfigNames = std::vector<std::string>;
 
 	public:
 

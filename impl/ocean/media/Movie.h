@@ -27,7 +27,7 @@ class Movie;
  * @see SmartMediumRef, Movie.
  * @ingroup media
  */
-typedef SmartMediumRef<Movie> MovieRef;
+using MovieRef = SmartMediumRef<Movie>;
 
 /**
  * This class is the base class for all movies.

@@ -27,7 +27,7 @@ class BufferImage;
  * @see SmartMediumRef, BufferImage.
  * @ingroup media
  */
-typedef SmartMediumRef<BufferImage> BufferImageRef;
+using BufferImageRef = SmartMediumRef<BufferImage>;
 
 /**
  * This class implements a frame medium object which is defined by a given buffer and image or frame type.

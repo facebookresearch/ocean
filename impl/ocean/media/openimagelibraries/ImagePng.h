@@ -35,12 +35,12 @@ class OCEAN_MEDIA_OIL_EXPORT ImagePng
 		/**
 		 * Definition of a pair combining a pointer to data input buffer with the size of the buffer in bytes.
 		 */
-		typedef std::pair<const uint8_t**, size_t> DataInputPair;
+		using DataInputPair = std::pair<const uint8_t**, size_t>;
 
 		/**
 		 * Definition of a pair combining an output buffer (with additional reserved bytes) with the number of bytes actually used in the buffer.
 		 */
-		typedef std::pair<std::vector<uint8_t>, size_t> OutputDataPair;
+		using OutputDataPair = std::pair<std::vector<uint8_t>, size_t>;
 
 	public:
 

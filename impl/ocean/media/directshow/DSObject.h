@@ -45,126 +45,126 @@ using ScopeDirectShowObject = ScopedObjectCompileTimeVoidT<T*, release>;
  * The wrapped IAMStreamConfig object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IAMStreamConfig> ScopedIAMStreamConfig;
+using ScopedIAMStreamConfig = ScopeDirectShowObject<IAMStreamConfig>;
 
 /**
  * Definition of a scoped object holding an IAMVfwCompressDialogs object.
  * The wrapped IAMVfwCompressDialogs object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IAMVfwCompressDialogs> ScopedIAMVfwCompressDialogs;
+using ScopedIAMVfwCompressDialogs = ScopeDirectShowObject<IAMVfwCompressDialogs>;
 
 /**
  * Definition of a scoped object holding an IBaseFilter object.
  * The wrapped IBaseFilter object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IBaseFilter> ScopedIBaseFilter;
+using ScopedIBaseFilter = ScopeDirectShowObject<IBaseFilter>;
 
 /**
  * Definition of a scoped object holding an IBasicAudio object.
  * The wrapped IBasicAudio object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IBasicAudio> ScopedIBasicAudio;
+using ScopedIBasicAudio = ScopeDirectShowObject<IBasicAudio>;
 
 /**
  * Definition of a scoped object holding an ICreateDevEnum object.
  * The wrapped ICreateDevEnum object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<ICreateDevEnum> ScopedICreateDevEnum;
+using ScopedICreateDevEnum = ScopeDirectShowObject<ICreateDevEnum>;
 
 /**
  * Definition of a scoped object holding an IEnumFilters object.
  * The wrapped IEnumFilters object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IEnumFilters> ScopedIEnumFilters;
+using ScopedIEnumFilters = ScopeDirectShowObject<IEnumFilters>;
 
 /**
  * Definition of a scoped object holding an IEnumMoniker object.
  * The wrapped IEnumMoniker object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IEnumMoniker> ScopedIEnumMoniker;
+using ScopedIEnumMoniker = ScopeDirectShowObject<IEnumMoniker>;
 
 /**
  * Definition of a scoped object holding an IEnumPins object.
  * The wrapped IEnumPins object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IEnumPins> ScopedIEnumPins;
+using ScopedIEnumPins = ScopeDirectShowObject<IEnumPins>;
 
 /**
  * Definition of a scoped object holding an IFileSinkFilter object.
  * The wrapped IFileSinkFilter object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IFileSinkFilter> ScopedIFileSinkFilter;
+using ScopedIFileSinkFilter = ScopeDirectShowObject<IFileSinkFilter>;
 
 /**
  * Definition of a scoped object holding an IGraphBuilder object.
  * The wrapped IGraphBuilder object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IGraphBuilder> ScopedIGraphBuilder;
+using ScopedIGraphBuilder = ScopeDirectShowObject<IGraphBuilder>;
 
 /**
  * Definition of a scoped object holding an IMediaControl object.
  * The wrapped IMediaControl object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IMediaControl> ScopedIMediaControl;
+using ScopedIMediaControl = ScopeDirectShowObject<IMediaControl>;
 
 /**
  * Definition of a scoped object holding an IMediaEvent object.
  * The wrapped IMediaEvent object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IMediaEvent> ScopedIMediaEvent;
+using ScopedIMediaEvent = ScopeDirectShowObject<IMediaEvent>;
 
 /**
  * Definition of a scoped object holding an IMediaFilter object.
  * The wrapped IMediaFilter object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IMediaFilter> ScopedIMediaFilter;
+using ScopedIMediaFilter = ScopeDirectShowObject<IMediaFilter>;
 
 /**
  * Definition of a scoped object holding an IMediaSeeking object.
  * The wrapped IMediaSeeking object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IMediaSeeking> ScopedIMediaSeeking;
+using ScopedIMediaSeeking = ScopeDirectShowObject<IMediaSeeking>;
 
 /**
  * Definition of a scoped object holding an IMoniker object.
  * The wrapped IMoniker object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IMoniker> ScopedIMoniker;
+using ScopedIMoniker = ScopeDirectShowObject<IMoniker>;
 
 /**
  * Definition of a scoped object holding an IPin object.
  * The wrapped IPin object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IPin> ScopedIPin;
+using ScopedIPin = ScopeDirectShowObject<IPin>;
 
 /**
  * Definition of a scoped object holding an IPropertyBag object.
  * The wrapped IPropertyBag object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IPropertyBag> ScopedIPropertyBag;
+using ScopedIPropertyBag = ScopeDirectShowObject<IPropertyBag>;
 
 /**
  * Definition of a scoped object holding an IRunningObjectTable object.
  * The wrapped IRunningObjectTable object will be released automatically once the scoped object does not exist anymore.
  * @ingroup mediads
  */
-typedef ScopeDirectShowObject<IRunningObjectTable> ScopedIRunningObjectTable;
+using ScopedIRunningObjectTable = ScopeDirectShowObject<IRunningObjectTable>;
 
 
 /**
@@ -204,17 +204,17 @@ class OCEAN_MEDIA_DS_EXPORT DSObject
 		/**
 		 * Definition of a pair of pins.
 		 */
-		typedef std::pair<ScopedIPin, ScopedIPin> PinPair;
+		using PinPair = std::pair<ScopedIPin, ScopedIPin>;
 
 		/**
 		 * Definition of a vector holding pin pairs.
 		 */
-		typedef std::vector<PinPair> PinPairs;
+		using PinPairs = std::vector<PinPair>;
 
 		/**
 		 * Definition of a vector holding pins.
 		 */
-		typedef std::vector<ScopedIPin> Pins;
+		using Pins = std::vector<ScopedIPin>;
 
 	public:
 

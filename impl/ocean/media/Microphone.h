@@ -27,7 +27,7 @@ class Microphone;
  * @see SmartMediumRef, Microphone.
  * @ingroup media
  */
-typedef SmartMediumRef<Microphone> MicrophoneRef;
+using MicrophoneRef = SmartMediumRef<Microphone>;
 
 /**
  * This class is the base class for all microphones.

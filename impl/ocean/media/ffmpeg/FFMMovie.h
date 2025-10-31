@@ -45,7 +45,7 @@ class FFMMovie :
 		/**
 		 * Definition of an unordered map mapping frame indices to presentation timestamps.
 		 */
-		typedef std::unordered_map<int64_t, int64_t> PacketTimestampMap;
+		using PacketTimestampMap = std::unordered_map<int64_t, int64_t>;
 
 	public:
 

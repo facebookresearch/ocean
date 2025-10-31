@@ -28,7 +28,7 @@ class ImageSequence;
  * @see SmartMediumRef, ImageSequence.
  * @ingroup media
  */
-typedef SmartMediumRef<ImageSequence> ImageSequenceRef;
+using ImageSequenceRef = SmartMediumRef<ImageSequence>;
 
 /**
  * This class is the base class for all image sequences.

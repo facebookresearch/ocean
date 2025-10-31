@@ -26,7 +26,7 @@ class ImageRecorder;
  * @see SmartObjectRef, ImageRecorder.
  * @ingroup media
  */
-typedef Ocean::SmartObjectRef<ImageRecorder, Recorder> ImageRecorderRef;
+using ImageRecorderRef = Ocean::SmartObjectRef<ImageRecorder, Recorder>;
 
 /**
  * This class is the base class for all image recorders.

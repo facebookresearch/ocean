@@ -38,7 +38,7 @@ class AVFMicrophone :
 		/**
 		 * Definition of a vector holding sample elements.
 		 */
-		typedef std::vector<int16_t> Buffer;
+		using Buffer = std::vector<int16_t>;
 
 	protected:
 

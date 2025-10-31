@@ -44,7 +44,7 @@ class OCEAN_MEDIA_A_EXPORT AMicrophone final :
 		/**
 		 * Definition of a vector holding sample elements.
 		 */
-		typedef std::vector<int16_t> Buffer;
+		using Buffer = std::vector<int16_t>;
 
 	public:
 

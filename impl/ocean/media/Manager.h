@@ -40,19 +40,19 @@ class OCEAN_MEDIA_EXPORT Manager : public Singleton<Manager>
 		/**
 		 * Definition of a vector holding library names.
 		 */
-		typedef std::vector<std::string> Names;
+		using Names = std::vector<std::string>;
 
 	private:
 
 		/**
 		 * Definition of a pair combining a library with a reference counter.
 		 */
-		typedef std::pair<LibraryRef, unsigned int> LibraryCounterPair;
+		using LibraryCounterPair = std::pair<LibraryRef, unsigned int>;
 
 		/**
 		 * Definition of a vector holding library pairs.
 		 */
-		typedef std::vector<LibraryCounterPair> Libraries;
+		using Libraries = std::vector<LibraryCounterPair>;
 
 	public:
 

@@ -151,7 +151,7 @@ class OCEAN_MEDIA_MF_EXPORT MFMedium : virtual public Medium
 		 * Definition of a scoped object holding a EventCallback object.
 		 * The wrapped EventCallback object will be released automatically once the scoped object does not exist anymore.
 		 */
-		typedef ScopedMediaFoundationObject<EventCallback> ScopedEventCallback;
+		using ScopedEventCallback = ScopedMediaFoundationObject<EventCallback>;
 
 	public:
 

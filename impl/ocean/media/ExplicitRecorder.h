@@ -27,7 +27,7 @@ class ExplicitRecorder;
  * @see SmartObjectRef, ExplicitRecorder.
  * @ingroup media
  */
-typedef Ocean::SmartObjectRef<ExplicitRecorder, Recorder> ExplicitRecorderRef;
+using ExplicitRecorderRef = Ocean::SmartObjectRef<ExplicitRecorder, Recorder>;
 
 /**
  * This class is the base class for all explicit media recorder.

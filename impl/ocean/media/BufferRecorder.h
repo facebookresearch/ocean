@@ -27,7 +27,7 @@ class BufferRecorder;
  * @see SmartObjectRef, BufferRecorder.
  * @ingroup media
  */
-typedef Ocean::SmartObjectRef<BufferRecorder, Recorder> BufferRecorderRef;
+using BufferRecorderRef = Ocean::SmartObjectRef<BufferRecorder, Recorder>;
 
 /**
  * This class is the base class for all buffer recorders.
