@@ -13,6 +13,7 @@
 
 #include "ocean/base/Worker.h"
 
+#include "ocean/geometry/GravityConstraints.h"
 #include "ocean/geometry/Octree.h"
 #include "ocean/geometry/RANSAC.h"
 
@@ -64,6 +65,7 @@ class OCEAN_TRACKING_EXPORT PoseEstimationT
 		 * @param usedImagePointIndices Optional resulting indices of the 2D image points which have been used to determine the camera pose, nullptr if not of interest
 		 * @param world_T_roughCamera Optional known rough camera pose allowing to skip the unguided matching, invalid if unknown
 		 * @param worker Optional worker to distribute the computation
+		 * @param gravityConstraints Optional gravity constraints to guide the pose estimation, nullptr otherwise
 		 * @return True, if succeeded
 		 * @tparam TImagePointDescriptor The data type of the descriptor for the 2D image points
 		 * @tparam TObjectPointDescriptor The data type of the descriptor for the 3D object points
@@ -71,7 +73,7 @@ class OCEAN_TRACKING_EXPORT PoseEstimationT
 		 * @tparam tImageObjectDistanceFunction The function pointer to a function allowing to determine the descriptor distance between an image point feature descriptor and an object point feature descriptor, must be valid
 		 */
 		template <typename TImagePointDescriptor, typename TObjectPointDescriptor, typename TDescriptorDistance, TDescriptorDistance(*tImageObjectDistanceFunction)(const TImagePointDescriptor&, const TObjectPointDescriptor&)>
-		static bool determinePoseBruteForce(const AnyCamera& camera, const Vector3* objectPoints, const TObjectPointDescriptor* objectPointDescriptors, const size_t numberObjectPoints, const Vector2* imagePoints, const TImagePointDescriptor* imagePointDescriptors, const size_t numberImagePoints, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const unsigned int minimalNumberCorrespondences, const TDescriptorDistance maximalDescriptorDistance, const Scalar maximalProjectionError, const Scalar inlierRate = Scalar(0.15), Indices32* usedObjectPointIndices = nullptr, Indices32* usedImagePointIndices = nullptr, const HomogenousMatrix4& world_T_roughCamera = HomogenousMatrix4(false), Worker* worker = nullptr);
+		static bool determinePoseBruteForce(const AnyCamera& camera, const Vector3* objectPoints, const TObjectPointDescriptor* objectPointDescriptors, const size_t numberObjectPoints, const Vector2* imagePoints, const TImagePointDescriptor* imagePointDescriptors, const size_t numberImagePoints, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const unsigned int minimalNumberCorrespondences, const TDescriptorDistance maximalDescriptorDistance, const Scalar maximalProjectionError, const Scalar inlierRate = Scalar(0.15), Indices32* usedObjectPointIndices = nullptr, Indices32* usedImagePointIndices = nullptr, const HomogenousMatrix4& world_T_roughCamera = HomogenousMatrix4(false), Worker* worker = nullptr, const Geometry::GravityConstraints* gravityConstraints = nullptr);
 
 		/**
 		 * Determines the 6-DOF pose for 2D/3D correspondences applying a brute-force search.
@@ -256,7 +258,7 @@ class OCEAN_TRACKING_EXPORT PoseEstimationT
 };
 
 template <typename TImagePointDescriptor, typename TObjectPointDescriptor, typename TDescriptorDistance, TDescriptorDistance(*tImageObjectDistanceFunction)(const TImagePointDescriptor&, const TObjectPointDescriptor&)>
-bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vector3* objectPoints, const TObjectPointDescriptor* objectPointDescriptors, const size_t numberObjectPoints, const Vector2* imagePoints, const TImagePointDescriptor* imagePointDescriptors, const size_t numberImagePoints, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const unsigned int minimalNumberCorrespondences, const TDescriptorDistance maximalDescriptorDistance, const Scalar maximalProjectionError, const Scalar inlierRate, Indices32* usedObjectPointIndices, Indices32* usedImagePointIndices, const HomogenousMatrix4& world_T_roughCamera, Worker* worker)
+bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vector3* objectPoints, const TObjectPointDescriptor* objectPointDescriptors, const size_t numberObjectPoints, const Vector2* imagePoints, const TImagePointDescriptor* imagePointDescriptors, const size_t numberImagePoints, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const unsigned int minimalNumberCorrespondences, const TDescriptorDistance maximalDescriptorDistance, const Scalar maximalProjectionError, const Scalar inlierRate, Indices32* usedObjectPointIndices, Indices32* usedImagePointIndices, const HomogenousMatrix4& world_T_roughCamera, Worker* worker, const Geometry::GravityConstraints* gravityConstraints)
 {
 	ocean_assert(camera.isValid());
 
@@ -319,7 +321,7 @@ bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vec
 	const unsigned int unguidedIterations = Geometry::RANSAC::iterations(3u, Scalar(0.99), faultyRate);
 
 	Indices32 validIndices;
-	if (world_T_roughCamera.isValid() || Geometry::RANSAC::p3p(camera, ConstArrayAccessor<Vector3>(matchedObjectPoints), ConstArrayAccessor<Vector2>(matchedImagePoints), randomGenerator, world_T_camera, 20u, true, unguidedIterations, maximalSqrProjectionError, &validIndices))
+	if (world_T_roughCamera.isValid() || Geometry::RANSAC::p3p(camera, ConstArrayAccessor<Vector3>(matchedObjectPoints), ConstArrayAccessor<Vector2>(matchedImagePoints), randomGenerator, world_T_camera, 20u, true, unguidedIterations, maximalSqrProjectionError, &validIndices, nullptr, gravityConstraints))
 	{
 		// now applying guided matching
 
@@ -360,7 +362,7 @@ bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vec
 
 		world_T_camera.toNull();
 		validIndices.clear();
-		if (Geometry::RANSAC::p3p(camera, ConstArrayAccessor<Vector3>(matchedObjectPoints), ConstArrayAccessor<Vector2>(matchedImagePoints), randomGenerator, world_T_camera, 20u, true, guidedIterations, maximalSqrProjectionError, &validIndices))
+		if (Geometry::RANSAC::p3p(camera, ConstArrayAccessor<Vector3>(matchedObjectPoints), ConstArrayAccessor<Vector2>(matchedImagePoints), randomGenerator, world_T_camera, 20u, true, guidedIterations, maximalSqrProjectionError, &validIndices, nullptr, gravityConstraints))
 		{
 			if (validIndices.size() < size_t(minimalNumberCorrespondences))
 			{
@@ -400,12 +402,12 @@ bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vec
 			{
 				// let's ensure that each object point is used only by one image point
 
-				ocean_assert(UnidirectionalCorrespondences::countBijectiveCorrespondences(usedImagePointIndices->data(), usedImagePointIndices->size()) == 0);
+				ocean_assert(UnidirectionalCorrespondences::countBijectiveCorrespondences(usedImagePointIndices->data(), usedImagePointIndices->size()) == usedImagePointIndices->size());
 
 				UnidirectionalCorrespondences::removeNonBijectiveCorrespondences(camera, world_T_camera, objectPoints, imagePoints, *usedObjectPointIndices, *usedImagePointIndices, false /*checkImagePoints*/);
 
-				ocean_assert(UnidirectionalCorrespondences::countBijectiveCorrespondences(usedImagePointIndices->data(), usedImagePointIndices->size()) == 0);
-				ocean_assert(UnidirectionalCorrespondences::countBijectiveCorrespondences(usedObjectPointIndices->data(), usedObjectPointIndices->size()) == 0);
+				ocean_assert(UnidirectionalCorrespondences::countBijectiveCorrespondences(usedImagePointIndices->data(), usedImagePointIndices->size()) == usedImagePointIndices->size());
+				ocean_assert(UnidirectionalCorrespondences::countBijectiveCorrespondences(usedObjectPointIndices->data(), usedObjectPointIndices->size()) == usedObjectPointIndices->size());
 
 				if (usedObjectPointIndices->size() < size_t(minimalNumberCorrespondences))
 				{
