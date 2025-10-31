@@ -27,9 +27,9 @@ namespace Ocean
  * Therefore, applications interested in live messaging have to pop the queued messages recurrently.
  *
  * There different message types are supported dividing all messages related to their magnitude:
- * Error messages hold critical informations which influence the major program progress directly.<br>
- * Warning messages hold informations which can influence minor program progresses, however they are not critical.<br>
- * Information messages hold interesting informations for the user only.<br>
+ * Error messages hold critical information which influence the major program progress directly.<br>
+ * Warning messages hold information which can influence minor program progresses, however they are not critical.<br>
+ * Information messages hold interesting information for the user only.<br>
  * Meaning that error messages should be informed to the user immediately, instead information messages can be informed to the user.<br>
  * Additionally, each message can provide a location specifying e.g. the sender module.
  *
@@ -47,7 +47,7 @@ namespace Ocean
  * {
  *     if (Messenger::get().empty() == false)
  *     {
- *         // Strings which will receive the popped informations
+ *         // Strings which will receive the popped information
  *         std::string message, location;
  *
  *         // Boolean which will receive whether the information has been posted more than one time.
@@ -194,7 +194,7 @@ class OCEAN_BASE_EXPORT Messenger : public Singleton<Messenger>
 
 		/**
 		 * Pops any first message available of a given type or of any type.<br>
-		 * If several messages with different types are available and an undefined type is defined the pop order is: errors, warnings, informations.
+		 * If several messages with different types are available and an undefined type is defined the pop order is: errors, warnings, information.
 		 * @param type The type of the message to pop, may be TYPE_UNDEFINED to return any message while 'type' will be set to the type of the message which is returned
 		 * @param location The resulting location of the message
 		 * @param message The resulting text message

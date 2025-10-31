@@ -85,7 +85,7 @@ std::string Build::architectureType()
 	#elif defined(TARGET_OS_MAC) && TARGET_OS_MAC == 1
 		return std::string("x64");
 	#else
-		#error Missing implmentation
+		#error Missing implementation
 	#endif
 #elif defined(__EMSCRIPTEN__)
 	return std::string("emscripten");

@@ -19,7 +19,7 @@ namespace Ocean
 /**
  * This class implements a functionality to determine the union of individual segments.
  * Each segment is defined by a start point and an end point.<br>
- * The result of such a uion is depicted below:
+ * The result of such a union is depicted below:
  * <pre>
  *       Segment A:          S---------P
  *       Segment B:   S--P
