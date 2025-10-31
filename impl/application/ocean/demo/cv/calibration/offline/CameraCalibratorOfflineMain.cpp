@@ -101,6 +101,11 @@ using namespace Ocean::CV::Calibration;
 	{
 		outputDirectory = IO::Directory(output);
 
+		if (!outputDirectory.isAbsolute())
+		{
+			outputDirectory = inputDirectory + outputDirectory;
+		}
+
 		if (!outputDirectory.exists() && !outputDirectory.create())
 		{
 			Log::error() << "The output directory '" << outputDirectory() << "' could not be created.";
@@ -114,6 +119,11 @@ using namespace Ocean::CV::Calibration;
 	if (commandArguments.hasValue("debugOutput", debugOutput))
 	{
 		debugOutputDirectory = IO::Directory(debugOutput);
+
+		if (!debugOutputDirectory.isAbsolute())
+		{
+			debugOutputDirectory = inputDirectory + debugOutputDirectory;
+		}
 
 		if (!debugOutputDirectory.exists() && !debugOutputDirectory.create())
 		{
@@ -201,43 +211,43 @@ using namespace Ocean::CV::Calibration;
 
 	if (outputDirectory.isValid())
 	{
-		if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_COVERAGE))
+		if (Frame outputFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_COVERAGE))
 		{
 			const IO::File outputFile(outputDirectory + IO::File("coverage.png"));
 
-			if (!IO::Image::writeImage(debugFrame, outputFile()))
+			if (!IO::Image::writeImage(outputFrame, outputFile()))
 			{
-				Log::warning() << "Failed to write debug image '" << outputFile() << "'";
+				Log::warning() << "Failed to write output image '" << outputFile() << "'";
 			}
 		}
 
-		if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_PROJECTION_ERROR))
+		if (Frame outputFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_PROJECTION_ERROR))
 		{
 			const IO::File outputFile(outputDirectory + IO::File("projection_error.png"));
 
-			if (!IO::Image::writeImage(debugFrame, outputFile()))
+			if (!IO::Image::writeImage(outputFrame, outputFile()))
 			{
-				Log::warning() << "Failed to write debug image '" << outputFile() << "'";
+				Log::warning() << "Failed to write output image '" << outputFile() << "'";
 			}
 		}
 
-		if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_DISTORTION_GRID))
+		if (Frame outputFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_DISTORTION_GRID))
 		{
 			const IO::File outputFile(outputDirectory + IO::File("cameracalibrator_distortion_grid.png"));
 
-			if (!IO::Image::writeImage(debugFrame, outputFile()))
+			if (!IO::Image::writeImage(outputFrame, outputFile()))
 			{
-				Log::warning() << "Failed to write debug image '" << outputFile() << "'";
+				Log::warning() << "Failed to write output image '" << outputFile() << "'";
 			}
 		}
 
-		if (Frame debugFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_DISTORTION_VECTORS))
+		if (Frame outputFrame = CalibrationDebugElements::get().element(CalibrationDebugElements::EI_CAMERA_CALIBRATOR_DISTORTION_VECTORS))
 		{
 			const IO::File outputFile(outputDirectory + IO::File("cameracalibrator_distortion_vectors.png"));
 
-			if (!IO::Image::writeImage(debugFrame, outputFile()))
+			if (!IO::Image::writeImage(outputFrame, outputFile()))
 			{
-				Log::warning() << "Failed to write debug image '" << outputFile() << "'";
+				Log::warning() << "Failed to write output image '" << outputFile() << "'";
 			}
 		}
 
@@ -269,6 +279,28 @@ using namespace Ocean::CV::Calibration;
 				{
 					Log::warning() << "Failed to write image '" << outputFile() << "'";
 				}
+			}
+		}
+
+		const CameraProjectionChecker cameraProjectionChecker(cameraCalibrator.camera());
+
+		if (Frame outputFrame = CV::Calibration::Utilities::visualizeDistortionValidity(cameraProjectionChecker, true))
+		{
+			const IO::File outputFile(outputDirectory + IO::File("cameracalibrator_distortion_validity_pixel.png"));
+
+			if (!IO::Image::writeImage(outputFrame, outputFile()))
+			{
+				Log::warning() << "Failed to write outupt image '" << outputFile() << "'";
+			}
+		}
+
+		if (Frame outputFrame = CV::Calibration::Utilities::visualizeDistortionValidity(cameraProjectionChecker, false))
+		{
+			const IO::File outputFile(outputDirectory + IO::File("cameracalibrator_distortion_validity_normalized.png"));
+
+			if (!IO::Image::writeImage(outputFrame, outputFile()))
+			{
+				Log::warning() << "Failed to write outupt image '" << outputFile() << "'";
 			}
 		}
 	}
