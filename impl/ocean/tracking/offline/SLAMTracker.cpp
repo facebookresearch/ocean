@@ -2469,7 +2469,7 @@ bool SLAMTracker::extendStableObjectPointsFull(const PinholeCamera& pinholeCamer
 			return true;
 		}
 
-		// if the extension of the database for rotational camera motion failes we apply the extension for the translation camera motion as backup
+		// if the extension of the database for rotational camera motion fails we apply the extension for the translation camera motion as backup
 		Log::info() << "Extension for rotational camera motion failed, thus we try a translational camera motion as backup.";
 
 		// **TODO**
@@ -2543,7 +2543,7 @@ bool SLAMTracker::extendStableObjectPointsPartially(const PinholeCamera& pinhole
 		if (extendStableObjectPointsPartiallyRotational(pinholeCamera, database, lowerFrame, upperFrame, correspondenceThreshold, finalLowerValidPoseRange, finalUpperValidPoseRange, abort, progress))
 			return true;
 
-		// if the extension of the database for rotational camera motion failes we apply the extension for the translation camera motion as backup
+		// if the extension of the database for rotational camera motion fails we apply the extension for the translation camera motion as backup
 		Log::info() << "Extension for rotational camera motion failed, thus we try a translational camera motion as backup.";
 
 		// **TODO**
