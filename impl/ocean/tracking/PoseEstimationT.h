@@ -9,6 +9,7 @@
 #define META_OCEAN_TRACKING_POSE_ESTIMATION_T_H
 
 #include "ocean/tracking/Tracking.h"
+#include "ocean/tracking/UnidirectionalCorrespondences.h"
 
 #include "ocean/base/Worker.h"
 
@@ -255,8 +256,7 @@ class OCEAN_TRACKING_EXPORT PoseEstimationT
 };
 
 template <typename TImagePointDescriptor, typename TObjectPointDescriptor, typename TDescriptorDistance, TDescriptorDistance(*tImageObjectDistanceFunction)(const TImagePointDescriptor&, const TObjectPointDescriptor&)>
-bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vector3* objectPoints, const TObjectPointDescriptor* objectPointDescriptors, const size_t numberObjectPoints, const Vector2* imagePoints, const TImagePointDescriptor
-* imagePointDescriptors, const size_t numberImagePoints, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const unsigned int minimalNumberCorrespondences, const TDescriptorDistance maximalDescriptorDistance, const Scalar maximalProjectionError, const Scalar inlierRate, Indices32* usedObjectPointIndices, Indices32* usedImagePointIndices, const HomogenousMatrix4& world_T_roughCamera, Worker* worker)
+bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vector3* objectPoints, const TObjectPointDescriptor* objectPointDescriptors, const size_t numberObjectPoints, const Vector2* imagePoints, const TImagePointDescriptor* imagePointDescriptors, const size_t numberImagePoints, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const unsigned int minimalNumberCorrespondences, const TDescriptorDistance maximalDescriptorDistance, const Scalar maximalProjectionError, const Scalar inlierRate, Indices32* usedObjectPointIndices, Indices32* usedImagePointIndices, const HomogenousMatrix4& world_T_roughCamera, Worker* worker)
 {
 	ocean_assert(camera.isValid());
 
@@ -281,6 +281,8 @@ bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vec
 	if (!world_T_roughCamera.isValid())
 	{
 		determineUnguidedBruteForceMatchings<TImagePointDescriptor, TObjectPointDescriptor, TDescriptorDistance, tImageObjectDistanceFunction>(objectPointDescriptors, numberObjectPoints, imagePointDescriptors, numberImagePoints, maximalDescriptorDistance, matchedObjectPointIds.data(), worker);
+
+		ocean_assert(matchedImagePoints.size() == matchedObjectPoints.size());
 
 		for (size_t imagePointIndex = 0; imagePointIndex < numberImagePoints; ++imagePointIndex)
 		{
@@ -360,6 +362,12 @@ bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vec
 		validIndices.clear();
 		if (Geometry::RANSAC::p3p(camera, ConstArrayAccessor<Vector3>(matchedObjectPoints), ConstArrayAccessor<Vector2>(matchedImagePoints), randomGenerator, world_T_camera, 20u, true, guidedIterations, maximalSqrProjectionError, &validIndices))
 		{
+			if (validIndices.size() < size_t(minimalNumberCorrespondences))
+			{
+				world_T_camera.toNull();
+				return false;
+			}
+
 			if (usedObjectPointIndices != nullptr)
 			{
 				ocean_assert(useInternalIndices);
@@ -383,6 +391,26 @@ bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vec
 				for (const Index32 validIndex : validIndices)
 				{
 					usedImagePointIndices->emplace_back(internalUsedImagePointIndices[validIndex]);
+				}
+
+				ocean_assert(UnorderedIndexSet32(usedImagePointIndices->cbegin(), usedImagePointIndices->cend()).size() == usedImagePointIndices->size());
+			}
+
+			if (usedObjectPointIndices != nullptr && usedImagePointIndices != nullptr)
+			{
+				// let's ensure that each object point is used only by one image point
+
+				ocean_assert(UnidirectionalCorrespondences::countBijectiveCorrespondences(usedImagePointIndices->data(), usedImagePointIndices->size()) == 0);
+
+				UnidirectionalCorrespondences::removeNonBijectiveCorrespondences(camera, world_T_camera, objectPoints, imagePoints, *usedObjectPointIndices, *usedImagePointIndices, false /*checkImagePoints*/);
+
+				ocean_assert(UnidirectionalCorrespondences::countBijectiveCorrespondences(usedImagePointIndices->data(), usedImagePointIndices->size()) == 0);
+				ocean_assert(UnidirectionalCorrespondences::countBijectiveCorrespondences(usedObjectPointIndices->data(), usedObjectPointIndices->size()) == 0);
+
+				if (usedObjectPointIndices->size() < size_t(minimalNumberCorrespondences))
+				{
+					world_T_camera.toNull();
+					return false;
 				}
 			}
 
