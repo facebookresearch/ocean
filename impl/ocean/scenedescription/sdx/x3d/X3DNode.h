@@ -38,7 +38,7 @@ class X3DNode;
  * @see X3DNode, Node.
  * @ingroup scenedescription
  */
-typedef SmartObjectRef<X3DNode, Node> X3DNodeRef;
+using X3DNodeRef = SmartObjectRef<X3DNode, Node>;
 
 /**
  * This class implements an abstract x3d node.
