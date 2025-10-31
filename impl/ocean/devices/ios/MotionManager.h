@@ -40,12 +40,12 @@ class OCEAN_DEVICES_IOS_EXPORT MotionManager : public Singleton<MotionManager>
 		/**
 		 * Definition of a listener id for a registered callbacks.
 		 */
-		typedef unsigned int ListenerId;
+		using ListenerId = unsigned int;
 
 		/**
 		 * Definition of a callback function to subscribe for new device motion samples.
 		 */
-		typedef Callback<void, CMDeviceMotion*> DeviceMotionCallback;
+		using DeviceMotionCallback = Callback<void, CMDeviceMotion*>;
 
 	protected:
 
