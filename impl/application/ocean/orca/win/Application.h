@@ -54,12 +54,12 @@ class Application : public CWinApp
 		/**
 		 * Definition of a vector holding filenames.
 		 */
-		typedef std::vector<std::string> Filenames;
+		using Filenames = std::vector<std::string>;
 
 		/**
 		 * Definition of a set holding predefined configuration parameters.
 		 */
-		typedef std::unordered_set<std::wstring> ConfigurationSet;
+		using ConfigurationSet = std::unordered_set<std::wstring>;
 
 	public:
 

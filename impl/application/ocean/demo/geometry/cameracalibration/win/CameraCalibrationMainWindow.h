@@ -37,7 +37,7 @@ class CameraCalibrationMainWindow :
 		/**
 		 * Definition of a vector holding 2D vectors.
 		 */
-		typedef std::vector<Vectors2> Vectors2Groups;
+		using Vectors2Groups = std::vector<Vectors2>;
 
 	public:
 

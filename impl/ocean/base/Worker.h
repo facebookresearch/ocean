@@ -37,17 +37,17 @@ class OCEAN_BASE_EXPORT Worker
 		 * Definition of a worker function caller object for standard functions to be distributed.<br>
 		 * Standard functions allow the computation using a subset of the entire data.
 		 */
-		typedef Caller<void> Function;
+		using Function = Caller<void>;
 
 		/**
 		 * Definition of a worker function caller object for abort functions.
 		 */
-		typedef Caller<bool> AbortableFunction;
+		using AbortableFunction = Caller<bool>;
 
 		/**
 		 * Definition of a vector holding worker functions.
 		 */
-		typedef std::vector<Function> Functions;
+		using Functions = std::vector<Function>;
 
 		/**
 		 * Definition of CPU load types.
@@ -71,7 +71,7 @@ class OCEAN_BASE_EXPORT Worker
 		/**
 		 * Definition of a vector holding indices.
 		 */
-		typedef std::vector<unsigned int> StartIndices;
+		using StartIndices = std::vector<unsigned int>;
 
 	protected:
 
@@ -189,7 +189,7 @@ class OCEAN_BASE_EXPORT Worker
 		/**
 		 * Definition of a vector holding worker threads.
 		 */
-		typedef std::vector<WorkerThread*> WorkerThreads;
+		using WorkerThreads = std::vector<WorkerThread*>;
 
 	public:
 

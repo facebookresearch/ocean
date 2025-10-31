@@ -55,7 +55,7 @@ class ContentManager :
 		/**
 		 * Definition of a content id.
 		 */
-		typedef unsigned int ContentId;
+		using ContentId = unsigned int;
 
 		/**
 		 * Definition of an invalid content id.
@@ -65,19 +65,19 @@ class ContentManager :
 		/**
 		 * Definition of a vector holding content ids.
 		 */
-		typedef std::vector<ContentId> ContentIds;
+		using ContentIds = std::vector<ContentId>;
 
 		/**
 		 * Definition of a callback function for loaded content events.
 		 * The first parameter holds the unique content id
 		 * The second parameter states whether the content could be loaded successfully
 		 */
-		typedef Callback<void, const ContentId, const bool> ContentCallback;
+		using ContentCallback = Callback<void, const ContentId, const bool>;
 
 		/**
 		 * Definition of a vector holding filenames.
 		 */
-		typedef std::vector<std::string> Filenames;
+		using Filenames = std::vector<std::string>;
 
 	private:
 
@@ -87,7 +87,7 @@ class ContentManager :
 		/**
 		 * Defines a vector holding content objects.
 		 */
-		typedef std::vector<Content> Contents;
+		using Contents = std::vector<Content>;
 
 		/**
 		 * Definition of a content object holding all necessary information.
@@ -99,7 +99,7 @@ class ContentManager :
 				/**
 				 * Definition of a set holding filenames.
 				 */
-				typedef std::set<std::string> FilenameSet;
+				using FilenameSet = std::set<std::string>;
 
 				/**
 				 * Definition of different content types.
@@ -342,7 +342,7 @@ class ContentManager :
 		/**
 		 * Definition of a queue holding content objects.
 		 */
-		typedef std::queue<Task> TaskQueue;
+		using TaskQueue = std::queue<Task>;
 
 	public:
 

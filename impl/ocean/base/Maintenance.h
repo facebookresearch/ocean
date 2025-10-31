@@ -38,7 +38,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 		/**
 		 * Definition of a vector holding bytes.
 		 */
-		typedef std::vector<unsigned char> Buffer;
+		using Buffer = std::vector<unsigned char>;
 
 		/**
 		 * This class is the base class for all maintenance connectors.
@@ -222,7 +222,7 @@ class OCEAN_BASE_EXPORT Maintenance : public Singleton<Maintenance>
 		/**
 		 * Definition of a vector holding maintenance data elements.
 		 */
-		typedef std::queue<Element> ElementQueue;
+		using ElementQueue = std::queue<Element>;
 
 	public:
 

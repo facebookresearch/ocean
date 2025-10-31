@@ -19,7 +19,7 @@ namespace Ocean
  * Definition of the base exception.
  * @ingroup base
  */
-typedef std::exception Exception;
+using Exception = std::exception;
 
 /**
  * Definition of a base exception for the entire Ocean framework.

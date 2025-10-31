@@ -29,17 +29,17 @@ class HashMap
 		/**
 		 * Definition of a pair combining a counter states and an object.
 		 */
-		typedef typename std::pair< std::pair<size_t, size_t>, std::pair<TKey, T> > Element;
+		using Element = typename std::pair< std::pair<size_t, size_t>, std::pair<TKey, T> >;
 
 		/**
 		 * Definition of a vector holding the map objects.
 		 */
-		typedef std::vector<Element> Elements;
+		using Elements = std::vector<Element>;
 
 		/**
 		 * Definition of a function pointer returning a hash map value.
 		 */
-		typedef size_t (*ValueFunction)(const TKey& key);
+		using ValueFunction = size_t (*)(const TKey& key);
 
 	public:
 

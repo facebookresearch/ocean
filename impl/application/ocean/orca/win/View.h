@@ -100,12 +100,12 @@ class View : public CWnd
 		/**
 		 * Definition of a vector holding recorder encoder names.
 		 */
-		typedef std::vector<std::string> EncoderNames;
+		using EncoderNames = std::vector<std::string>;
 
 		/**
 		 * Definition of a set holding permanent scene description objects.
 		 */
-		typedef std::set<SceneDescription::SDXSceneRef> SceneSet;
+		using SceneSet = std::set<SceneDescription::SDXSceneRef>;
 
 	public:
 

@@ -210,7 +210,7 @@ class OCEAN_BASE_EXPORT Thread
 		/**
 		 * Definition of a pair holding a thread id and a boolean state.
 		 */
-		typedef std::pair<pthread_t, bool> TimedJoinPair;
+		using TimedJoinPair = std::pair<pthread_t, bool>;
 
 #endif
 

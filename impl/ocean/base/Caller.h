@@ -540,7 +540,7 @@ template <bool tTargetIsReference>
 template <typename T>
 inline void FunctionParameterAccessor<tTargetIsReference>::assign(typename std::add_lvalue_reference<T>::type target, const void* source)
 {
-	typedef typename std::add_const<T>::type SourceType;
+	using SourceType = typename std::add_const<T>::type;
 
 	target = *reinterpret_cast<SourceType*>(source);
 }
@@ -1133,7 +1133,7 @@ class ParameterizedMemberFunction : public ParameterizedFunction<RT, PT0, PT1, P
 		/**
 		 * Definition of a function pointer for the encapsulated function.
 		 */
-		typedef typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type FunctionType;
+		using FunctionType = typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type;
 
 	protected:
 
@@ -1289,7 +1289,7 @@ class ParameterizedMemberFunctionConst : public ParameterizedFunction<RT, PT0, P
 		/**
 		 * Definition of a const function pointer for the encapsulated function.
 		 */
-		typedef typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::TypeConst FunctionType;
+		using FunctionType = typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::TypeConst;
 
 	protected:
 
@@ -1444,7 +1444,7 @@ class ParameterizedStaticFunction : public ParameterizedFunction<RT, PT0, PT1, P
 		/**
 		 * Definition of a function pointer for the encapsulated function.
 		 */
-		typedef typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type FunctionType;
+		using FunctionType = typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type;
 
 	protected:
 

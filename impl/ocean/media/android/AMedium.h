@@ -85,7 +85,7 @@ class OCEAN_MEDIA_A_EXPORT AMedium : virtual public Medium
 				/**
 				 * Definition of a map mapping effect names to effect objects.
 				 */
-				typedef std::unordered_map<std::string, EngineEffect> EngineEffectMap;
+				using EngineEffectMap = std::unordered_map<std::string, EngineEffect>;
 
 			public:
 

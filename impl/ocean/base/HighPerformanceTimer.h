@@ -34,7 +34,7 @@ class OCEAN_BASE_EXPORT HighPerformanceTimer
 		/**
 		 * Definition of CPU ticks.
 		 */
-		typedef int64_t Ticks;
+		using Ticks = int64_t;
 
 	public:
 
@@ -127,7 +127,7 @@ class OCEAN_BASE_EXPORT HighPerformanceStatistic
 		/**
 		 * Definition of a vector storing performance measurements.
 		 */
-		typedef std::vector<double> Measurements;
+		using Measurements = std::vector<double>;
 
 		/**
 		 * This class defines a scoped high performance statistic module.
@@ -485,18 +485,18 @@ class OCEAN_BASE_EXPORT HighPerformanceBenchmark : public Singleton<HighPerforma
 		/**
 		 * Definition of a vector holding measurements in seconds.
 		 */
-		typedef std::vector<double> MeasurementsSeconds;
+		using MeasurementsSeconds = std::vector<double>;
 
 		/**
 		 * Definition of a map mapping category names to measurements.
 		 */
-		typedef std::unordered_map<std::string, MeasurementsSeconds> MeasurementMap;
+		using MeasurementMap = std::unordered_map<std::string, MeasurementsSeconds>;
 
 		/// Forward declaration
 		class Category;
 
 		/// Typedef for a vector of categories
-		typedef std::vector<Category> Categories;
+		using Categories = std::vector<Category>;
 
 		/**
 		 * This class defines a hierarchical category

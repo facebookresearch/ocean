@@ -27,7 +27,7 @@ class StaticBuffer
 		/**
 		 * Definition of the data type of each individual buffer element.
 		 */
-		typedef T Type;
+		using Type = T;
 
 	public:
 

@@ -163,17 +163,17 @@ class OCEAN_BASE_EXPORT CommandArguments
 		/**
 		 * Definition of a map mapping long parameter names to parameter objects.
 		 */
-		typedef std::map<std::string, Parameter> ParameterMap;
+		using ParameterMap = std::map<std::string, Parameter>;
 
 		/**
 		 * Definition of a map mapping short parameter names to long parameter names.
 		 */
-		typedef std::unordered_map<std::string, std::string> ShortToLongMap;
+		using ShortToLongMap = std::unordered_map<std::string, std::string>;
 
 		/**
 		 * Definition of a map mapping long parameter names to values.
 		 */
-		typedef std::unordered_map<std::string, Value> ValueMap;
+		using ValueMap = std::unordered_map<std::string, Value>;
 
 	public:
 

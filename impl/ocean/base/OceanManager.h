@@ -30,14 +30,14 @@ class OCEAN_BASE_EXPORT OceanManager
 		/**
 		 * Definition of a function pointer that releases a singleton object.
 		 */
-		typedef void (*SingletonDestroyFunction)();
+		using SingletonDestroyFunction = void(*)();
 
 	private:
 
 		/**
 		 * Definition of a vector holding functions to release singleton objects.
 		 */
-		typedef std::vector<SingletonDestroyFunction> SingletonDestroyFunctions;
+		using SingletonDestroyFunctions = std::vector<SingletonDestroyFunction>;
 
 	public:
 

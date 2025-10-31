@@ -39,12 +39,12 @@ class Surface : public Platform::WxWidgets::BitmapWindow
 		/**
 		 * Definition of a pair holding two 2D vectors.
 		 */
-		typedef std::pair<Vector2, Vector2> Line;
+		using Line = std::pair<Vector2, Vector2>;
 
 		/**
 		 * Definition of a vector holding vector pairs.
 		 */
-		typedef std::vector<Line> Lines;
+		using Lines = std::vector<Line>;
 
 	public:
 

@@ -44,24 +44,24 @@ class MainWindow : public CFrameWndEx
 		/**
 		 * Definition of a vector holding filenames.
 		 */
-		typedef std::vector<std::string> Filenames;
+		using Filenames = std::vector<std::string>;
 
 	private:
 
 		/**
 		 * Definition of a caller without return type.
 		 */
-		typedef Caller<void> ApplicationEventCaller;
+		using ApplicationEventCaller = Caller<void>;
 
 		/**
 		 * Definition of a queue holding application event caller objects.
 		 */
-		typedef std::queue<ApplicationEventCaller> ApplicationEventCallers;
+		using ApplicationEventCallers = std::queue<ApplicationEventCaller>;
 
 		/**
 		 * Definition of a vector holding pairs of content ids and event ids.
 		 */
-		typedef std::vector< std::pair<ContentManager::ContentId, ApplicationInterface::EventId> > ContentEventIds;
+		using ContentEventIds = std::vector< std::pair<ContentManager::ContentId, ApplicationInterface::EventId> >;
 
 		/// Definition of an invalid window value.
 		static constexpr int invalidWindowValue_ = 2147483647;

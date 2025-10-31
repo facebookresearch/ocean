@@ -108,37 +108,37 @@ namespace Geometry
  * Definition of a 2D image point.
  * @ingroup geometry
  */
-typedef Vector2 ImagePoint;
+using ImagePoint = Vector2;
 
 /**
  * Definition of a 3D object point.
  * @ingroup geometry
  */
-typedef Vector3 ObjectPoint;
+using ObjectPoint = Vector3;
 
 /**
  * Definition of a vector holding 2D image points.
  * @ingroup geometry
  */
-typedef std::vector<ImagePoint> ImagePoints;
+using ImagePoints = std::vector<ImagePoint>;
 
 /**
  * Definition of a vector holding 3D object points.
  * @ingroup geometry
  */
-typedef std::vector<ObjectPoint> ObjectPoints;
+using ObjectPoints = std::vector<ObjectPoint>;
 
 /**
  * Definition of a vector holding object points, so we have groups of object points.
  * @ingroup geometry
  */
-typedef std::vector<ObjectPoints> ObjectPointGroups;
+using ObjectPointGroups = std::vector<ObjectPoints>;
 
 /**
  * Definition of a vector holding image points, so we have groups of image points.
  * @ingroup geometry
  */
-typedef std::vector<ImagePoints> ImagePointGroups;
+using ImagePointGroups = std::vector<ImagePoints>;
 
 
 // Defines OCEAN_GEOMETRY_EXPORT for dll export and import.

@@ -26,7 +26,7 @@ class MVMainWindow : virtual public Platform::Win::ApplicationWindow
 		/**
 		 * Definition of a map mapping application ids to readable ids.
 		 */
-		typedef std::map<unsigned long long, unsigned int> ApplicationIdMap;
+		using ApplicationIdMap = std::map<unsigned long long, unsigned int>;
 
 	public:
 

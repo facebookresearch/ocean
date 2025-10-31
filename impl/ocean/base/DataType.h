@@ -129,7 +129,7 @@ class SquareValueTyper
 		 * Definition of the data type for the square value.
 		 * The default type is the type itself.
 		 */
-		typedef T Type;
+		using Type = T;
 };
 
 /**
@@ -173,7 +173,7 @@ class DifferenceValueTyper
 		 * Definition of the data type for the signed difference value.
 		 * The default type is the type itself.
 		 */
-		typedef T Type;
+		using Type = T;
 };
 
 /**
@@ -222,7 +222,7 @@ class AbsoluteDifferenceValueTyper
 		 * Definition of the data type for the absolute difference value.
 		 * The default type is 'unsigned long long'.
 		 */
-		typedef unsigned long long Type;
+		using Type = unsigned long long;
 };
 
 /**
@@ -252,13 +252,13 @@ class NextLargerTyper
 		 * Definition of the data type for the next larger data type.
 		 * The default type is the type itself.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * Definition of the data type for the next larger data type regarding performance.
 		 * The default type is the type itself.
 		 */
-		typedef T TypePerformance;
+		using TypePerformance = T;
 };
 
 /**
@@ -291,7 +291,7 @@ class SignedTyper
 		/**
 		 * Definition of the signed data type, if existing.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * True, if the data type T is an signed data type; False, otherwise.
@@ -336,7 +336,7 @@ class UnsignedTyper
 		/**
 		 * Definition of the unsigned data type, if existing.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * True, if the data type T is an unsigned data type; False, otherwise.
@@ -370,7 +370,7 @@ struct FloatTyper
 	/**
 	 * The 32 bit floating point data type for any data type T but 'double'
 	 */
-	typedef float Type;
+	using Type = float;
 };
 
 /**
@@ -392,7 +392,7 @@ class NotVoidTyper
 		/**
 		 * Definition of the data type which is 'bool' in case of 'T' is 'void'
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * Returns a default value for 'T'.
@@ -415,7 +415,7 @@ class NotVoidTyper<void>
 		/**
 		 * Definition of the data type which is 'bool' in case of 'T' is 'void'
 		 */
-		typedef bool Type;
+		using Type = bool;
 
 		/**
 		 * Returns a default value for 'T'.
@@ -469,7 +469,7 @@ class TypeMapperBySize
 		/**
 		 * Definition of an invalid mapped data type.
 		 */
-		typedef void Type;
+		using Type = void;
 };
 
 /**
@@ -505,7 +505,7 @@ class TypeMapper
 		/**
 		 * Definition of an invalid mapped data type.
 		 */
-		typedef typename TypeMapperBySize<sizeof(T)>::Type Type;
+		using Type = typename TypeMapperBySize<sizeof(T)>::Type;
 };
 
 /**
@@ -663,7 +663,7 @@ class SquareValueTyper<int>
 		/**
 		 * Definition of the square distance type.
 		 */
-		typedef unsigned int Type;
+		using Type = unsigned int;
 };
 
 /**
@@ -677,7 +677,7 @@ class SquareValueTyper<char>
 		/**
 		 * Definition of the square distance type.
 		 */
-		typedef unsigned int Type;
+		using Type = unsigned int;
 };
 
 /**
@@ -691,7 +691,7 @@ class SquareValueTyper<signed char>
 		/**
 		 * Definition of the square distance type.
 		 */
-		typedef unsigned int Type;
+		using Type = unsigned int;
 };
 
 /**
@@ -705,7 +705,7 @@ class SquareValueTyper<unsigned char>
 		/**
 		 * Definition of the square distance type.
 		 */
-		typedef unsigned int Type;
+		using Type = unsigned int;
 };
 
 /**
@@ -719,7 +719,7 @@ class SquareValueTyper<short>
 		/**
 		 * Definition of the square distance type.
 		 */
-		typedef unsigned int Type;
+		using Type = unsigned int;
 };
 
 /**
@@ -733,7 +733,7 @@ class SquareValueTyper<unsigned short>
 		/**
 		 * Definition of the square distance type.
 		 */
-		typedef unsigned int Type;
+		using Type = unsigned int;
 };
 
 /**
@@ -747,7 +747,7 @@ class SquareValueTyper<long>
 		/**
 		 * Definition of the square distance type.
 		 */
-		typedef unsigned long Type;
+		using Type = unsigned long;
 };
 
 /**
@@ -761,7 +761,7 @@ class SquareValueTyper<long long>
 		/**
 		 * Definition of the square distance type.
 		 */
-		typedef unsigned long long Type;
+		using Type = unsigned long long;
 };
 
 /**
@@ -775,7 +775,7 @@ class DifferenceValueTyper<char>
 		/**
 		 * Definition of the signed distance type.
 		 */
-		typedef int Type;
+		using Type = int;
 };
 
 /**
@@ -789,7 +789,7 @@ class DifferenceValueTyper<signed char>
 		/**
 		 * Definition of the signed distance type.
 		 */
-		typedef int Type;
+		using Type = int;
 };
 
 /**
@@ -803,7 +803,7 @@ class DifferenceValueTyper<unsigned char>
 		/**
 		 * Definition of the signed distance type.
 		 */
-		typedef int Type;
+		using Type = int;
 };
 
 /**
@@ -817,7 +817,7 @@ class DifferenceValueTyper<unsigned int>
 		/**
 		 * Definition of the signed distance type.
 		 */
-		typedef int Type;
+		using Type = int;
 };
 
 /**
@@ -831,7 +831,7 @@ class DifferenceValueTyper<short>
 		/**
 		 * Definition of the signed distance type.
 		 */
-		typedef int Type;
+		using Type = int;
 };
 
 /**
@@ -845,7 +845,7 @@ class DifferenceValueTyper<unsigned short>
 		/**
 		 * Definition of the signed distance type.
 		 */
-		typedef int Type;
+		using Type = int;
 };
 
 /**
@@ -859,7 +859,7 @@ class DifferenceValueTyper<unsigned long>
 		/**
 		 * Definition of the signed distance type.
 		 */
-		typedef long Type;
+		using Type = long;
 };
 
 /**
@@ -873,7 +873,7 @@ class DifferenceValueTyper<unsigned long long>
 		/**
 		 * Definition of the signed distance type.
 		 */
-		typedef long long Type;
+		using Type = long long;
 };
 
 /**
@@ -887,7 +887,7 @@ class AbsoluteDifferenceValueTyper<char>
 		/**
 		 * Definition of the absolute difference value type.
 		 */
-		typedef unsigned int Type;
+		using Type = unsigned int;
 };
 
 /**
@@ -901,7 +901,7 @@ class AbsoluteDifferenceValueTyper<signed char>
 		/**
 		 * Definition of the absolute difference value type.
 		 */
-		typedef unsigned int Type;
+		using Type = unsigned int;
 };
 
 /**
@@ -915,7 +915,7 @@ class AbsoluteDifferenceValueTyper<unsigned char>
 		/**
 		 * Definition of the absolute difference value type.
 		 */
-		typedef unsigned int Type;
+		using Type = unsigned int;
 };
 
 /**
@@ -929,7 +929,7 @@ class AbsoluteDifferenceValueTyper<float>
 		/**
 		 * Definition of the absolute difference value type.
 		 */
-		typedef double Type;
+		using Type = double;
 };
 
 /**
@@ -943,7 +943,7 @@ class AbsoluteDifferenceValueTyper<double>
 		/**
 		 * Definition of the absolute difference value type.
 		 */
-		typedef double Type;
+		using Type = double;
 };
 
 /**
@@ -966,12 +966,12 @@ class NextLargerTyper<signed char>
 		/**
 		 * Definition of the data type for the next larger data type.
 		 */
-		typedef short Type;
+		using Type = short;
 
 		/**
 		 * Definition of the data type for the next larger data type regarding performance.
 		 */
-		typedef int TypePerformance;
+		using TypePerformance = int;
 };
 
 /**
@@ -985,12 +985,12 @@ class NextLargerTyper<unsigned char>
 		/**
 		 * Definition of the data type for the next larger data type.
 		 */
-		typedef unsigned short Type;
+		using Type = unsigned short;
 
 		/**
 		 * Definition of the data type for the next larger data type regarding performance.
 		 */
-		typedef unsigned int TypePerformance;
+		using TypePerformance = unsigned int;
 };
 
 /**
@@ -1004,12 +1004,12 @@ class NextLargerTyper<short>
 		/**
 		 * Definition of the data type for the next larger data type.
 		 */
-		typedef int Type;
+		using Type = int;
 
 		/**
 		 * Definition of the data type for the next larger data type regarding performance.
 		 */
-		typedef int TypePerformance;
+		using TypePerformance = int;
 };
 
 /**
@@ -1023,12 +1023,12 @@ class NextLargerTyper<unsigned short>
 		/**
 		 * Definition of the data type for the next larger data type.
 		 */
-		typedef unsigned int Type;
+		using Type = unsigned int;
 
 		/**
 		 * Definition of the data type for the next larger data type regarding performance.
 		 */
-		typedef unsigned int TypePerformance;
+		using TypePerformance = unsigned int;
 };
 
 /**
@@ -1042,12 +1042,12 @@ class NextLargerTyper<int>
 		/**
 		 * Definition of the data type for the next larger data type.
 		 */
-		typedef long long Type;
+		using Type = long long;
 
 		/**
 		 * Definition of the data type for the next larger data type regarding performance.
 		 */
-		typedef long long TypePerformance;
+		using TypePerformance = long long;
 };
 
 /**
@@ -1061,12 +1061,12 @@ class NextLargerTyper<unsigned int>
 		/**
 		 * Definition of the data type for the next larger data type.
 		 */
-		typedef unsigned long long Type;
+		using Type = unsigned long long;
 
 		/**
 		 * Definition of the data type for the next larger data type regarding performance.
 		 */
-		typedef unsigned long long TypePerformance;
+		using TypePerformance = unsigned long long;
 };
 
 /**
@@ -1080,12 +1080,12 @@ class NextLargerTyper<float>
 		/**
 		 * Definition of the data type for the next larger data type.
 		 */
-		typedef double Type;
+		using Type = double;
 
 		/**
 		 * Definition of the data type for the next larger data type regarding performance.
 		 */
-		typedef float TypePerformance;
+		using TypePerformance = float;
 };
 
 /**
@@ -1099,7 +1099,7 @@ class SignedTyper<bool>
 		/**
 		 * Definition of the signed data type, if existing.
 		 */
-		typedef bool Type;
+		using Type = bool;
 
 		/**
 		 * True, if the data type T is an signed data type; False, otherwise.
@@ -1132,7 +1132,7 @@ class SignedTyper<unsigned short>
 		/**
 		 * Definition of the signed data type, if existing.
 		 */
-		typedef short Type;
+		using Type = short;
 
 		/**
 		 * True, if the data type T is an signed data type; False, otherwise.
@@ -1156,7 +1156,7 @@ class SignedTyper<unsigned int>
 		/**
 		 * Definition of the signed data type, if existing.
 		 */
-		typedef int Type;
+		using Type = int;
 
 		/**
 		 * True, if the data type T is an signed data type; False, otherwise.
@@ -1180,7 +1180,7 @@ class SignedTyper<unsigned long long>
 		/**
 		 * Definition of the signed data type, if existing.
 		 */
-		typedef long long Type;
+		using Type = long long;
 
 		/**
 		 * True, if the data type T is an signed data type; False, otherwise.
@@ -1213,7 +1213,7 @@ class UnsignedTyper<signed char>
 		/**
 		 * Definition of the unsigned data type, if existing.
 		 */
-		typedef unsigned char Type;
+		using Type = unsigned char;
 
 		/**
 		 * True, if the data type T is an unsigned data type; False, otherwise.
@@ -1237,7 +1237,7 @@ class UnsignedTyper<short>
 		/**
 		 * Definition of the unsigned data type, if existing.
 		 */
-		typedef unsigned short Type;
+		using Type = unsigned short;
 
 		/**
 		 * True, if the data type T is an unsigned data type; False, otherwise.
@@ -1261,7 +1261,7 @@ class UnsignedTyper<int>
 		/**
 		 * Definition of the unsigned data type, if existing.
 		 */
-		typedef unsigned int Type;
+		using Type = unsigned int;
 
 		/**
 		 * True, if the data type T is an unsigned data type; False, otherwise.
@@ -1285,7 +1285,7 @@ class UnsignedTyper<long>
 		/**
 		 * Definition of the unsigned data type, if existing.
 		 */
-		typedef unsigned long Type;
+		using Type = unsigned long;
 
 		/**
 		 * True, if the data type T is an unsigned data type; False, otherwise.
@@ -1309,7 +1309,7 @@ class UnsignedTyper<long long>
 		/**
 		 * Definition of the unsigned data type, if existing.
 		 */
-		typedef unsigned long long Type;
+		using Type = unsigned long long;
 
 		/**
 		 * True, if the data type T is an unsigned data type; False, otherwise.
@@ -1333,7 +1333,7 @@ class UnsignedTyper<float>
 		/**
 		 * Definition of the unsigned data type, if existing.
 		 */
-		typedef float Type;
+		using Type = float;
 
 		/**
 		 * True, if the data type T is an unsigned data type; False, otherwise.
@@ -1357,7 +1357,7 @@ class UnsignedTyper<double>
 		/**
 		 * Definition of the unsigned data type, if existing.
 		 */
-		typedef double Type;
+		using Type = double;
 
 		/**
 		 * True, if the data type T is an unsigned data type; False, otherwise.
@@ -1379,7 +1379,7 @@ struct FloatTyper<double>
 	/**
 	 * The 64 bit floating point data type if T is 'double'
 	 */
-	typedef double Type;
+	using Type = double;
 };
 
 template <>
@@ -1491,7 +1491,7 @@ class TypeMapperBySize<1>
 		/**
 		 * Definition of the mapped data type.
 		 */
-		typedef uint8_t Type;
+		using Type = uint8_t;
 };
 
 /**
@@ -1505,7 +1505,7 @@ class TypeMapperBySize<2>
 		/**
 		 * Definition of the mapped data type.
 		 */
-		typedef uint16_t Type;
+		using Type = uint16_t;
 };
 
 /**
@@ -1519,7 +1519,7 @@ class TypeMapperBySize<4>
 		/**
 		 * Definition of the mapped data type.
 		 */
-		typedef uint32_t Type;
+		using Type = uint32_t;
 };
 
 /**
@@ -1533,7 +1533,7 @@ class TypeMapperBySize<8>
 		/**
 		 * Definition of the mapped data type.
 		 */
-		typedef uint64_t Type;
+		using Type = uint64_t;
 };
 
 inline Float16::Float16(const uint16_t sign, const uint16_t fraction, const uint16_t exponent)

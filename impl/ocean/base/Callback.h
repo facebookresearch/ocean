@@ -84,12 +84,12 @@ class MemberFunctionPointerMaker
 		/**
 		 * Definition of a function pointer with twenty parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19);
 
 		/**
 		 * Definition of a const function pointer with twenty parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19) const;
 };
 
 /**
@@ -104,12 +104,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with nineteen parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18);
 
 		/**
 		 * Definition of a const function pointer with nineteen parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18) const;
 };
 
 /**
@@ -124,12 +124,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with eighteen parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17);
 
 		/**
 		 * Definition of a const function pointer with eighteen parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17) const;
 };
 
 /**
@@ -144,12 +144,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with seventeen parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16);
 
 		/**
 		 * Definition of a const function pointer with seventeen parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16) const;
 };
 
 /**
@@ -164,12 +164,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with sixteen parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15);
 
 		/**
 		 * Definition of a const function pointer with sixteen parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15) const;
 };
 
 /**
@@ -184,12 +184,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with fifteen parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14);
 
 		/**
 		 * Definition of a const function pointer with fifteen parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14) const;
 };
 
 /**
@@ -204,12 +204,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with fourteen parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13);
 
 		/**
 		 * Definition of a const function pointer with fourteen parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13) const;
 };
 
 /**
@@ -224,12 +224,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with thirteen parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12);
 
 		/**
 		 * Definition of a const function pointer with thirteen parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12) const;
 };
 
 /**
@@ -244,12 +244,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with twelve parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11);
 
 		/**
 		 * Definition of a const function pointer with twelve parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11) const;
 };
 
 /**
@@ -264,12 +264,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with eleven parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10);
 
 		/**
 		 * Definition of a const function pointer with eleven parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10) const;
 };
 
 /**
@@ -284,12 +284,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with ten parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9);
 
 		/**
 		 * Definition of a const function pointer with ten parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9) const;
 };
 
 /**
@@ -304,12 +304,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with nine parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8);
 
 		/**
 		 * Definition of a const function pointer with nine parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8) const;
 };
 
 /**
@@ -324,12 +324,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7,
 		/**
 		 * Definition of a function pointer with eight parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7);
 
 		/**
 		 * Definition of a const function pointer with eight parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7) const;
 };
 
 /**
@@ -344,12 +344,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, Null
 		/**
 		 * Definition of a function pointer with seven parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6);
 
 		/**
 		 * Definition of a const function pointer with seven parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5, PT6) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6) const;
 };
 
 /**
@@ -364,12 +364,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass
 		/**
 		 * Definition of a function pointer with six parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4, PT5);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5);
 
 		/**
 		 * Definition of a const function pointer with six parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4, PT5) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4, PT5) const;
 };
 
 /**
@@ -384,12 +384,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, NullClass, Nul
 		/**
 		 * Definition of a function pointer with five parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3, PT4);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3, PT4);
 
 		/**
 		 * Definition of a const function pointer with five parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3, PT4) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3, PT4) const;
 };
 
 /**
@@ -404,12 +404,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, NullClass, NullClas
 		/**
 		 * Definition of a function pointer with four parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2, PT3);
+		using Type = RT (CT::*)(PT0, PT1, PT2, PT3);
 
 		/**
 		 * Definition of a const function pointer with four parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2, PT3) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2, PT3) const;
 };
 
 /**
@@ -424,12 +424,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, NullClass, NullClass, Nu
 		/**
 		 * Definition of a function pointer with three parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1, PT2);
+		using Type = RT (CT::*)(PT0, PT1, PT2);
 
 		/**
 		 * Definition of a const function pointer with three parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1, PT2) const;
+		using TypeConst = RT (CT::*)(PT0, PT1, PT2) const;
 };
 
 /**
@@ -444,12 +444,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, PT1, NullClass, NullClass, NullCla
 		/**
 		 * Definition of a function pointer with two parameters.
 		 */
-		typedef RT (CT::*Type)(PT0, PT1);
+		using Type = RT (CT::*)(PT0, PT1);
 
 		/**
 		 * Definition of a const function pointer with two parameters.
 		 */
-		typedef RT (CT::*TypeConst)(PT0, PT1) const;
+		using TypeConst = RT (CT::*)(PT0, PT1) const;
 };
 
 /**
@@ -464,12 +464,12 @@ class MemberFunctionPointerMaker<CT, RT, PT0, NullClass, NullClass, NullClass, N
 		/**
 		 * Definition of a function pointer with one parameter.
 		 */
-		typedef RT (CT::*Type)(PT0);
+		using Type = RT (CT::*)(PT0);
 
 		/**
 		 * Definition of a const function pointer with one parameter.
 		 */
-		typedef RT (CT::*TypeConst)(PT0) const;
+		using TypeConst = RT (CT::*)(PT0) const;
 };
 
 /**
@@ -484,12 +484,12 @@ class MemberFunctionPointerMaker<CT, RT, NullClass, NullClass, NullClass, NullCl
 		/**
 		 * Definition of a function pointer with no parameter.
 		 */
-		typedef RT (CT::*Type)();
+		using Type = RT (CT::*)();
 
 		/**
 		 * Definition of a const function pointer with no parameter.
 		 */
-		typedef RT (CT::*TypeConst)() const;
+		using TypeConst = RT (CT::*)() const;
 };
 
 /**
@@ -525,7 +525,7 @@ class StaticFunctionPointerMaker
 		/**
 		 * Definition of a function pointer with twenty parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19);
 };
 
 /**
@@ -540,7 +540,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8
 		/**
 		 * Definition of a function pointer with nineteen parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18);
 };
 
 /**
@@ -555,7 +555,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8
 		/**
 		 * Definition of a function pointer with eighteen parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17);
 };
 
 /**
@@ -570,7 +570,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8
 		/**
 		 * Definition of a function pointer with seventeen parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16);
 };
 
 /**
@@ -585,7 +585,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8
 		/**
 		 * Definition of a function pointer with sixteen parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15);
 };
 
 /**
@@ -600,7 +600,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8
 		/**
 		 * Definition of a function pointer with fifteen parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14);
 };
 
 /**
@@ -615,7 +615,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8
 		/**
 		 * Definition of a function pointer with fourteen parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13);
 };
 
 /**
@@ -630,7 +630,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8
 		/**
 		 * Definition of a function pointer with thirteen parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12);
 };
 
 /**
@@ -645,7 +645,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8
 		/**
 		 * Definition of a function pointer with twelve parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11);
 };
 
 /**
@@ -660,7 +660,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8
 		/**
 		 * Definition of a function pointer with elven parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10);
 };
 
 /**
@@ -675,7 +675,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8
 		/**
 		 * Definition of a function pointer with ten parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9);
 };
 
 /**
@@ -690,7 +690,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8
 		/**
 		 * Definition of a function pointer with nine parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8);
 };
 
 /**
@@ -705,7 +705,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, Nul
 		/**
 		 * Definition of a function pointer with eight parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7);
 };
 
 /**
@@ -720,7 +720,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, NullClas
 		/**
 		 * Definition of a function pointer with seven parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5, PT6);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5, PT6);
 };
 
 /**
@@ -735,7 +735,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, NullClass, Nu
 		/**
 		 * Definition of a function pointer with six parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4, PT5);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4, PT5);
 };
 
 /**
@@ -750,7 +750,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, NullClass, NullCla
 		/**
 		 * Definition of a function pointer with five parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3, PT4);
+		using Type = RT (*)(PT0, PT1, PT2, PT3, PT4);
 };
 
 /**
@@ -765,7 +765,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, NullClass, NullClass, N
 		/**
 		 * Definition of a function pointer with four parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2, PT3);
+		using Type = RT (*)(PT0, PT1, PT2, PT3);
 };
 
 /**
@@ -780,7 +780,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, PT2, NullClass, NullClass, NullCl
 		/**
 		 * Definition of a function pointer with three parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1, PT2);
+		using Type = RT (*)(PT0, PT1, PT2);
 };
 
 /**
@@ -795,7 +795,7 @@ class StaticFunctionPointerMaker<RT, PT0, PT1, NullClass, NullClass, NullClass, 
 		/**
 		 * Definition of a function pointer with two parameters.
 		 */
-		typedef RT (*Type)(PT0, PT1);
+		using Type = RT (*)(PT0, PT1);
 };
 
 /**
@@ -810,7 +810,7 @@ class StaticFunctionPointerMaker<RT, PT0, NullClass, NullClass, NullClass, NullC
 		/**
 		 * Definition of a function pointer with one parameter.
 		 */
-		typedef RT (*Type)(PT0);
+		using Type = RT (*)(PT0);
 };
 
 /**
@@ -825,7 +825,7 @@ class StaticFunctionPointerMaker<RT, NullClass, NullClass, NullClass, NullClass,
 		/**
 		 * Definition of a function pointer with no parameter.
 		 */
-		typedef RT (*Type)();
+		using Type = RT (*)();
 };
 
 /**
@@ -3140,7 +3140,7 @@ class MemberFunction : public FunctionBase<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6
 		/**
 		 * Definition of a function pointer for the encapsulated function.
 		 */
-		typedef typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type FunctionType;
+		using FunctionType = typename MemberFunctionPointerMaker<CT, RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type;
 
 	protected:
 
@@ -3269,7 +3269,7 @@ class StaticFunction : public FunctionBase<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6
 		/**
 		 * Definition of a function pointer for the encapsulated function.
 		 */
-		typedef typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type FunctionType;
+		using FunctionType = typename StaticFunctionPointerMaker<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, PT11, PT12, PT13, PT14, PT15, PT16, PT17, PT18, PT19>::Type;
 
 	protected:
 
@@ -3457,107 +3457,107 @@ class Callback
 		/**
 		 * Definition of the return type of this callback object.
 		 */
-		typedef RT ReturnType;
+		using ReturnType = RT;
 
 		/**
 		 * Definition of the 1st parameter type of this callback object.
 		 */
-		typedef PT0 ParameterType0;
+		using ParameterType0 = PT0;
 
 		/**
 		 * Definition of the 2rd parameter type of this callback object.
 		 */
-		typedef PT1 ParameterType1;
+		using ParameterType1 = PT1;
 
 		/**
 		 * Definition of the 3rd parameter type of this callback object.
 		 */
-		typedef PT2 ParameterType2;
+		using ParameterType2 = PT2;
 
 		/**
 		 * Definition of the 4th parameter type of this callback object.
 		 */
-		typedef PT3 ParameterType3;
+		using ParameterType3 = PT3;
 
 		/**
 		 * Definition of the 5th parameter type of this callback object.
 		 */
-		typedef PT4 ParameterType4;
+		using ParameterType4 = PT4;
 
 		/**
 		 * Definition of the 6th parameter type of this callback object.
 		 */
-		typedef PT5 ParameterType5;
+		using ParameterType5 = PT5;
 
 		/**
 		 * Definition of the 7th parameter type of this callback object.
 		 */
-		typedef PT6 ParameterType6;
+		using ParameterType6 = PT6;
 
 		/**
 		 * Definition of the 8th parameter type of this callback object.
 		 */
-		typedef PT7 ParameterType7;
+		using ParameterType7 = PT7;
 
 		/**
 		 * Definition of the 9th parameter type of this callback object.
 		 */
-		typedef PT8 ParameterType8;
+		using ParameterType8 = PT8;
 
 		/**
 		 * Definition of the 10th parameter type of this callback object.
 		 */
-		typedef PT9 ParameterType9;
+		using ParameterType9 = PT9;
 
 		/**
 		 * Definition of the 11th parameter type of this callback object.
 		 */
-		typedef PT10 ParameterType10;
+		using ParameterType10 = PT10;
 
 		/**
 		 * Definition of the 12th parameter type of this callback object.
 		 */
-		typedef PT11 ParameterType11;
+		using ParameterType11 = PT11;
 
 		/**
 		 * Definition of the 13th parameter type of this callback object.
 		 */
-		typedef PT12 ParameterType12;
+		using ParameterType12 = PT12;
 
 		/**
 		 * Definition of the 14th parameter type of this callback object.
 		 */
-		typedef PT13 ParameterType13;
+		using ParameterType13 = PT13;
 
 		/**
 		 * Definition of the 15th parameter type of this callback object.
 		 */
-		typedef PT14 ParameterType14;
+		using ParameterType14 = PT14;
 
 		/**
 		 * Definition of the 16th parameter type of this callback object.
 		 */
-		typedef PT15 ParameterType15;
+		using ParameterType15 = PT15;
 
 		/**
 		 * Definition of the 17th parameter type of this callback object.
 		 */
-		typedef PT16 ParameterType16;
+		using ParameterType16 = PT16;
 
 		/**
 		 * Definition of the 18th parameter type of this callback object.
 		 */
-		typedef PT17 ParameterType17;
+		using ParameterType17 = PT17;
 
 		/**
 		 * Definition of the 19th parameter type of this callback object.
 		 */
-		typedef PT18 ParameterType18;
+		using ParameterType18 = PT18;
 
 		/**
 		 * Definition of the 20th parameter type of this callback object.
 		 */
-		typedef PT19 ParameterType19;
+		using ParameterType19 = PT19;
 
 	public:
 
@@ -3803,114 +3803,114 @@ class Callbacks
 		/**
 		 * Definition of the return type of the callback object.
 		 */
-		typedef typename T::ReturnType ReturnType;
+		using ReturnType = typename T::ReturnType;
 
 		/**
 		 * Definition of the 1st function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType0 ParameterType0;
+		using ParameterType0 = typename T::ParameterType0;
 
 		/**
 		 * Definition of the 2nd function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType1 ParameterType1;
+		using ParameterType1 = typename T::ParameterType1;
 
 		/**
 		 * Definition of the 3rd function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType2 ParameterType2;
+		using ParameterType2 = typename T::ParameterType2;
 
 		/**
 		 * Definition of the 4th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType3 ParameterType3;
+		using ParameterType3 = typename T::ParameterType3;
 
 		/**
 		 * Definition of the 5th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType4 ParameterType4;
+		using ParameterType4 = typename T::ParameterType4;
 
 		/**
 		 * Definition of the 6th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType5 ParameterType5;
+		using ParameterType5 = typename T::ParameterType5;
 
 		/**
 		 * Definition of the 7th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType6 ParameterType6;
+		using ParameterType6 = typename T::ParameterType6;
 
 		/**
 		 * Definition of the 8th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType7 ParameterType7;
+		using ParameterType7 = typename T::ParameterType7;
 
 		/**
 		 * Definition of the 9th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType8 ParameterType8;
+		using ParameterType8 = typename T::ParameterType8;
 
 		/**
 		 * Definition of the 10th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType9 ParameterType9;
+		using ParameterType9 = typename T::ParameterType9;
 
 		/**
 		 * Definition of the 11th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType10 ParameterType10;
+		using ParameterType10 = typename T::ParameterType10;
 
 		/**
 		 * Definition of the 12th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType11 ParameterType11;
+		using ParameterType11 = typename T::ParameterType11;
 
 		/**
 		 * Definition of the 13th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType12 ParameterType12;
+		using ParameterType12 = typename T::ParameterType12;
 
 		/**
 		 * Definition of the 14th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType13 ParameterType13;
+		using ParameterType13 = typename T::ParameterType13;
 
 		/**
 		 * Definition of the 15th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType14 ParameterType14;
+		using ParameterType14 = typename T::ParameterType14;
 
 		/**
 		 * Definition of the 16th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType15 ParameterType15;
+		using ParameterType15 = typename T::ParameterType15;
 
 		/**
 		 * Definition of the 17th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType16 ParameterType16;
+		using ParameterType16 = typename T::ParameterType16;
 
 		/**
 		 * Definition of the 18th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType17 ParameterType17;
+		using ParameterType17 = typename T::ParameterType17;
 
 		/**
 		 * Definition of the 19th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType18 ParameterType18;
+		using ParameterType18 = typename T::ParameterType18;
 
 		/**
 		 * Definition of the 20th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType19 ParameterType19;
+		using ParameterType19 = typename T::ParameterType19;
 
 	protected:
 
 		/**
 		 * Definition of a vector holding callback objects.
 		 */
-		typedef std::vector<T> CallbackObjects;
+		using CallbackObjects = std::vector<T>;
 
 	public:
 
@@ -4129,102 +4129,102 @@ class ConcurrentCallbacks : public Callbacks<T>
 		/**
 		 * Definition of the 1st function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType0 ParameterType0;
+		using ParameterType0 = typename T::ParameterType0;
 
 		/**
 		 * Definition of the 2nd function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType1 ParameterType1;
+		using ParameterType1 = typename T::ParameterType1;
 
 		/**
 		 * Definition of the 3rd function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType2 ParameterType2;
+		using ParameterType2 = typename T::ParameterType2;
 
 		/**
 		 * Definition of the 4th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType3 ParameterType3;
+		using ParameterType3 = typename T::ParameterType3;
 
 		/**
 		 * Definition of the 5th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType4 ParameterType4;
+		using ParameterType4 = typename T::ParameterType4;
 
 		/**
 		 * Definition of the 6th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType5 ParameterType5;
+		using ParameterType5 = typename T::ParameterType5;
 
 		/**
 		 * Definition of the 7th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType6 ParameterType6;
+		using ParameterType6 = typename T::ParameterType6;
 
 		/**
 		 * Definition of the 8th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType7 ParameterType7;
+		using ParameterType7 = typename T::ParameterType7;
 
 		/**
 		 * Definition of the 9th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType8 ParameterType8;
+		using ParameterType8 = typename T::ParameterType8;
 
 		/**
 		 * Definition of the 10th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType9 ParameterType9;
+		using ParameterType9 = typename T::ParameterType9;
 
 		/**
 		 * Definition of the 11th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType10 ParameterType10;
+		using ParameterType10 = typename T::ParameterType10;
 
 		/**
 		 * Definition of the 12th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType11 ParameterType11;
+		using ParameterType11 = typename T::ParameterType11;
 
 		/**
 		 * Definition of the 13th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType12 ParameterType12;
+		using ParameterType12 = typename T::ParameterType12;
 
 		/**
 		 * Definition of the 14th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType13 ParameterType13;
+		using ParameterType13 = typename T::ParameterType13;
 
 		/**
 		 * Definition of the 15th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType14 ParameterType14;
+		using ParameterType14 = typename T::ParameterType14;
 
 		/**
 		 * Definition of the 16th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType15 ParameterType15;
+		using ParameterType15 = typename T::ParameterType15;
 
 		/**
 		 * Definition of the 17th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType16 ParameterType16;
+		using ParameterType16 = typename T::ParameterType16;
 
 		/**
 		 * Definition of the 18th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType17 ParameterType17;
+		using ParameterType17 = typename T::ParameterType17;
 
 		/**
 		 * Definition of the 19th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType18 ParameterType18;
+		using ParameterType18 = typename T::ParameterType18;
 
 		/**
 		 * Definition of the 20th function parameter of the callback object.
 		 */
-		typedef typename T::ParameterType19 ParameterType19;
+		using ParameterType19 = typename T::ParameterType19;
 
 	public:
 

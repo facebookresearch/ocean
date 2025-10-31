@@ -104,12 +104,12 @@ class KdTree
 		/**
 		 * Definition of a vector holding single elements.
 		 */
-		typedef std::vector<T> Elements;
+		using Elements = std::vector<T>;
 
 		/**
 		 * Definition of a vector holding single pointers.
 		 */
-		typedef std::vector<const T*> Pointers;
+		using Pointers = std::vector<const T*>;
 
 	public:
 

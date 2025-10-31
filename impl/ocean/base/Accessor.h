@@ -100,12 +100,12 @@ class ConstAccessor : public Accessor
 		/**
 		 * Definition of the element type of this accessor.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * Definition of the key (or e.g., index) type of this accessor.
 		 */
-		typedef TKey KeyType;
+		using KeyType = TKey;
 
 	public:
 
@@ -205,7 +205,7 @@ class TemporaryAccessor : public Accessor
 		/**
 		 * Definition of the element type of this accessor.
 		 */
-		typedef T Type;
+		using Type = T;
 
 	public:
 
@@ -603,12 +603,12 @@ class ConstTemplateArrayAccessor
 		/**
 		 * Definition of the element type of this accessor.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * Definition of the key (or e.g., index) type of this accessor.
 		 */
-		typedef size_t KeyType;
+		using KeyType = size_t;
 
 	public:
 
@@ -808,12 +808,12 @@ class NonconstTemplateArrayAccessor
 		/**
 		 * Definition of the element type of this accessor.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * Definition of the key (or e.g., index) type of this accessor.
 		 */
-		typedef size_t KeyType;
+		using KeyType = size_t;
 
 	public:
 
@@ -1144,7 +1144,7 @@ class ConstArraySubsetAccessor : public ConstIndexedAccessor<T>
 		/**
 		 * Definition of the data type of the indices.
 		 */
-		typedef TIndex IndexType;
+		using IndexType = TIndex;
 
 	public:
 
@@ -1234,17 +1234,17 @@ class ConstTemplateArraySubsetAccessor
 		/**
 		 * Definition of the element type of this accessor.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * Definition of the key (or e.g., index) type of this accessor.
 		 */
-		typedef size_t KeyType;
+		using KeyType = size_t;
 
 		/**
 		 * Definition of the data type of the indices.
 		 */
-		typedef TIndex IndexType;
+		using IndexType = TIndex;
 
 	public:
 
@@ -1411,7 +1411,7 @@ class ConstCallbackIndexedAccessor : public ConstIndexedAccessor<T>
 		 * The first parameter is the index of the elements to be accessed
 		 * The return parameter is the constant reference to the requested element
 		 */
-		typedef Callback<const T&, const size_t> CallbackFunction;
+		using CallbackFunction = Callback<const T&, const size_t>;
 
 	public:
 

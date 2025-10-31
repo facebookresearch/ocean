@@ -81,91 +81,91 @@ using std::max;
  * Definition of a 32 bit index value.
  * @ingroup base
  */
-typedef uint32_t Index32;
+using Index32 = uint32_t;
 
 /**
  * Definition of a 64 bit index value.
  * @ingroup base
  */
-typedef uint64_t Index64;
+using Index64 = uint64_t;
 
 /**
  * Definition of a vector holding 32 bit index values.
  * @ingroup base
  */
-typedef std::vector<Index32> Indices32;
+using Indices32 = std::vector<Index32>;
 
 /**
  * Definition of a vector holding 32 bit indices, so we have groups of indices.
  * @ingroup base
  */
-typedef std::vector<Indices32> IndexGroups32;
+using IndexGroups32 = std::vector<Indices32>;
 
 /**
  * Definition of a vector holding 64 bit index values.
  * @ingroup base
  */
-typedef std::vector<Index64> Indices64;
+using Indices64 = std::vector<Index64>;
 
 /**
  * Definition of a set holding 32 bit indices.
  * @ingroup base
  */
-typedef std::set<Index32> IndexSet32;
+using IndexSet32 = std::set<Index32>;
 
 /**
  * Definition of a set holding 64 bit indices.
  * @ingroup base
  */
-typedef std::set<Index64> IndexSet64;
+using IndexSet64 = std::set<Index64>;
 
 /**
  * Definition of an unordered_set holding 32 bit indices.
  * @ingroup base
  */
-typedef std::unordered_set<Index32> UnorderedIndexSet32;
+using UnorderedIndexSet32 = std::unordered_set<Index32>;
 
 /**
  * Definition of an unordered_set holding 64 bit indices.
  * @ingroup base
  */
-typedef std::unordered_set<Index64> UnorderedIndexSet64;
+using UnorderedIndexSet64 = std::unordered_set<Index64>;
 
 /**
  * Definition of a pair holding 32 bit indices.
  * @ingroup base
  */
-typedef std::pair<Index32, Index32> IndexPair32;
+using IndexPair32 = std::pair<Index32, Index32>;
 
 /**
  * Definition of a vector holding 32 bit index pairs.
  * @ingroup base
  */
-typedef std::vector<IndexPair32> IndexPairs32;
+using IndexPairs32 = std::vector<IndexPair32>;
 
 /**
  * Definition of a pair holding 64 bit indices.
  * @ingroup base
  */
-typedef std::pair<Index64, Index64> IndexPair64;
+using IndexPair64 = std::pair<Index64, Index64>;
 
 /**
  * Definition of a vector holding 64 bit index pairs.
  * @ingroup base
  */
-typedef std::vector<IndexPair64> IndexPairs64;
+using IndexPairs64 = std::vector<IndexPair64>;
 
 /**
  * Definition of a vector holding strings.
  * @ingroup base
  */
-typedef std::vector<std::string> Strings;
+using Strings = std::vector<std::string>;
 
 /**
  * Definition of a vector holding strings.
  * @ingroup base
  */
-typedef std::vector<std::wstring> WStrings;
+using WStrings = std::vector<std::wstring>;
 
 
 

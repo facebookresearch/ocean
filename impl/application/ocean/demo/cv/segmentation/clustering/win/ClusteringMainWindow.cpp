@@ -163,7 +163,7 @@ void ClusteringMainWindow::determineRandomClustering(const Frame& frame)
 {
 	static_assert(tChannels >= 1u, "Invalid channel number!");
 
-	typedef CV::Segmentation::Clustering<tChannels> Clustering;
+	using Clustering = CV::Segmentation::Clustering<tChannels>;
 
 	HighPerformanceTimer timer;
 
@@ -226,7 +226,7 @@ void ClusteringMainWindow::determineKMeansClusteringIndices(const Frame& frame)
 {
 	static_assert(tChannels >= 1u, "Invalid channel number!");
 
-	typedef ClusteringKMeans<uint8_t, tChannels, uint32_t, uint32_t, true> Clustering;
+	using Clustering = ClusteringKMeans<uint8_t, tChannels, uint32_t, uint32_t, true>;
 
 	HighPerformanceTimer timer;
 
@@ -284,7 +284,7 @@ void ClusteringMainWindow::determineKMeansClusteringPointers(const Frame& frame)
 {
 	static_assert(tChannels >= 1u, "Invalid channel number!");
 
-	typedef ClusteringKMeans<uint8_t, tChannels, uint32_t, uint32_t, false> Clustering;
+	using Clustering = ClusteringKMeans<uint8_t, tChannels, uint32_t, uint32_t, false>;
 
 	HighPerformanceTimer timer;
 

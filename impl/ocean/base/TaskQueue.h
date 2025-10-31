@@ -36,14 +36,14 @@ class OCEAN_BASE_EXPORT TaskQueue :
 		/**
 		 * Definition of a task as caller function.
 		 */
-		typedef Caller<void> Task;
+		using Task = Caller<void>;
 
 	protected:
 
 		/**
 		 * Definition of a queue holding tasks.
 		 */
-		typedef std::queue<Task> Tasks;
+		using Tasks = std::queue<Task>;
 
 	public:
 

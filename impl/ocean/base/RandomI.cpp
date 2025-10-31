@@ -26,7 +26,7 @@ class RandomI::ThreadDatabase : public Singleton<ThreadDatabase>
 		/**
 		 * Definition of a set holding thread ids.
 		 */
-		typedef std::set<Thread::ThreadId> ThreadIds;
+		using ThreadIds = std::set<Thread::ThreadId>;
 
 	public:
 

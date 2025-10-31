@@ -73,7 +73,7 @@ class PropertiesWindow : public CDockablePane
 		/**
 		 * Definition of an event callback function for property grid properties.
 		 */
-		typedef Callback<void, CMFCPropertyGridProperty*> EventCallback;
+		using EventCallback = Callback<void, CMFCPropertyGridProperty*>;
 
 		/**
 		 * This class implements a property item with and enhanced event handling.
@@ -86,12 +86,12 @@ class PropertiesWindow : public CDockablePane
 				/**
 				 * Definition of a pair holding a menu entry string and a corresponding id.
 				 */
-				typedef std::pair<std::string, unsigned int> MenuEntry;
+				using MenuEntry = std::pair<std::string, unsigned int>;
 
 				/**
 				 * Definition of a vector holding popup menu entries.
 				 */
-				typedef std::vector<MenuEntry> MenuEntries;
+				using MenuEntries = std::vector<MenuEntry>;
 
 			public:
 

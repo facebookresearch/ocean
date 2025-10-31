@@ -28,7 +28,7 @@ class FITBitmapWindow :
 		/**
 		 * Definition of callback function for interpolation events.
 		 */
-		typedef Callback<void, const Frame&, Frame&> Callback;
+		using Callback = Callback<void, const Frame&, Frame&>;
 
 	public:
 

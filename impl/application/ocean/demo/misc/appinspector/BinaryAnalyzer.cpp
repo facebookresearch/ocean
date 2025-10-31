@@ -197,7 +197,7 @@ BinaryAnalyzer::GraphNodeRefs BinaryAnalyzer::callTraces2callNodes(const SymbolI
 {
 	SymbolIdSet rootSymbols;
 
-	typedef std::unordered_map<SymbolId, SymbolIdSet> SymbolId2ChildIdsMap;
+	using SymbolId2ChildIdsMap = std::unordered_map<SymbolId, SymbolIdSet>;
 
 	SymbolId2ChildIdsMap symbolId2ChildIdsMap;
 

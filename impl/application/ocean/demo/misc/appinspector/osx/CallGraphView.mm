@@ -57,7 +57,7 @@ bool CallGraphView::addGraph()
 
 	setColumnWidth(0u, 1000);
 
-	typedef std::pair<TreeItemId, BinaryAnalyzer::GraphNodeRef> NodePair;
+	using NodePair = std::pair<TreeItemId, BinaryAnalyzer::GraphNodeRef>;
 
 	std::vector<NodePair> pairStack;
 	pairStack.reserve(128);

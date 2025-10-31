@@ -33,7 +33,7 @@ class ItemView : public Platform::Apple::MacOS::TreeView
 		/**
 		 * Defintion of a set holding object ids.
 		 */
-		typedef std::unordered_set<size_t> ObjectIdSet;
+		using ObjectIdSet = std::unordered_set<size_t>;
 
 		/// Definition of an invalid object id.
 		const static size_t invalidObjectId = size_t(-1);
@@ -43,7 +43,7 @@ class ItemView : public Platform::Apple::MacOS::TreeView
 		/**
 		 * Definition of a map mapping tree item ids to object ids.
 		 */
-		typedef std::unordered_map<TreeItemId, size_t> TreeItemId2ObjectIdMap;
+		using TreeItemId2ObjectIdMap = std::unordered_map<TreeItemId, size_t>;
 
 	public:
 

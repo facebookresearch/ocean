@@ -96,7 +96,7 @@ class VideoInpaintingMainWindow :
 				/**
 				 * Definition of a vector holding color adjustment objects.
 				 */
-				typedef std::vector<ColorAdjustmentObject<tChannels>> ColorAdjustmentObjects;
+				using ColorAdjustmentObjects = std::vector<ColorAdjustmentObject<tChannels>>;
 
 			public:
 

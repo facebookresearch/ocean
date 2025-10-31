@@ -406,7 +406,7 @@ std::vector<std::string> HighPerformanceBenchmark::report(const std::string& ref
 		return std::vector<std::string>();
 	}
 
-	typedef std::multimap<double, std::string> SortedMap;
+	using SortedMap = std::multimap<double, std::string>;
 
 	double referenceTotalSeconds = -1.0;
 
@@ -644,7 +644,7 @@ bool HighPerformanceBenchmark::Category::reportAsTokenMatrix(std::vector<std::ve
 	const double referenceSecondsToUse = referenceSeconds > 0.0 ? referenceSeconds : topLevelCategoryTotalSeconds;
 	ocean_assert(referenceSecondsToUse > 0.0);
 
-	typedef std::deque<std::pair<const Category*, unsigned int>> CategoryIndentationStack;
+	using CategoryIndentationStack = std::deque<std::pair<const Category*, unsigned int>>;
 
 	CategoryIndentationStack categoryStack;
 	categoryStack.emplace_front(std::make_pair(this, numberIndentationSpace));
@@ -719,7 +719,7 @@ bool HighPerformanceBenchmark::Category::reportAsTokenMatrix(std::vector<std::ve
 		if (includeSubCategories)
 		{
 			// Continue to generate the information for the (sorted) sub-categories
-			typedef std::multimap<double, const Category*> SortedCategoryMap;
+			using SortedCategoryMap = std::multimap<double, const Category*>;
 
 			SortedCategoryMap sortedCategoryMap;
 			for (Categories::const_reverse_iterator i = currentCategory->subCategories_.crbegin(); i != currentCategory->subCategories_.crend(); ++i)

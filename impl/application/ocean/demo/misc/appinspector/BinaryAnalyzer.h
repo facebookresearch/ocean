@@ -28,7 +28,7 @@ class BinaryAnalyzer;
  * @see BinaryAnalyzer.
  * @ingroup applicationdemomiscappinspectorosx
  */
-typedef std::shared_ptr<BinaryAnalyzer> BinaryAnalyzerRef;
+using BinaryAnalyzerRef = std::shared_ptr<BinaryAnalyzer>;
 
 /**
  * This class implements an analyzer for binary files analyzing existing symbols,
@@ -61,12 +61,12 @@ class BinaryAnalyzer : protected Ocean::Thread
 		/**
 		 * Definition of a unique id for objects.
 		 */
-		typedef size_t ObjectId;
+		using ObjectId = size_t;
 
 		/**
 		 * Definition of a unique id for symbols.
 		 */
-		typedef ObjectId SymbolId;
+		using SymbolId = ObjectId;
 
 		/**
 		 * Definition of an invalid symbol id.
@@ -76,7 +76,7 @@ class BinaryAnalyzer : protected Ocean::Thread
 		/**
 		 * Definition of a unique id for strings.
 		 */
-		typedef ObjectId StringId;
+		using StringId = ObjectId;
 
 		/**
 		 * Definition of an invalid string id.
@@ -86,32 +86,32 @@ class BinaryAnalyzer : protected Ocean::Thread
 		/**
 		 * Definition of a 64 bit address.
 		 */
-		typedef unsigned long long Address64;
+		using Address64 = unsigned long long;
 
 		/**
 		 * Definition of a vector holding symbol ids.
 		 */
-		typedef std::vector<SymbolId> SymbolIds;
+		using SymbolIds = std::vector<SymbolId>;
 
 		/**
 		 * Definition of a vector holding groups of symbol ids.
 		 */
-		typedef std::vector<SymbolIds> SymbolIdGroups;
+		using SymbolIdGroups = std::vector<SymbolIds>;
 
 		/**
 		 * Definition of a set holding addresses.
 		 */
-		typedef std::unordered_set<Address64> AddressSet64;
+		using AddressSet64 = std::unordered_set<Address64>;
 
 		/**
 		 * Definition of a set holding symbol ids.
 		 */
-		typedef std::unordered_set<SymbolId> SymbolIdSet;
+		using SymbolIdSet = std::unordered_set<SymbolId>;
 
 		/**
 		 * Definition of a set holding string ids.
 		 */
-		typedef std::unordered_set<StringId> StringIdSet;
+		using StringIdSet = std::unordered_set<StringId>;
 
 		/**
 		 * This class defines a base class for all objects having a location and a size within a binary.
@@ -356,12 +356,12 @@ class BinaryAnalyzer : protected Ocean::Thread
 		/**
 		 * Definition of a shared pointer reference for GraphNode objects.
 		 */
-		typedef std::shared_ptr<GraphNode> GraphNodeRef;
+		using GraphNodeRef = std::shared_ptr<GraphNode>;
 
 		/**
 		 * Definition of a vector holding graph node references.
 		 */
-		typedef std::vector<GraphNodeRef> GraphNodeRefs;
+		using GraphNodeRefs = std::vector<GraphNodeRef>;
 
 		/**
 		 * This class implements a simple node of a call graph.
@@ -402,22 +402,22 @@ class BinaryAnalyzer : protected Ocean::Thread
 		/**
 		 * Definition of a vector storing all text strings, the index is equivalent with the id of the string.
 		 */
-		typedef std::vector<TextString> TextStrings;
+		using TextStrings = std::vector<TextString>;
 
 		/**
 		 * Definition of a vector storing all symbols, the index is equivalent with the id of the symbol.
 		 */
-		typedef std::vector<Symbol> Symbols;
+		using Symbols = std::vector<Symbol>;
 
 		/**
 		 * Definition of a map mapping symbol addresses to symbol ids.
 		 */
-		typedef std::map<Address64, SymbolId> Address2SymbolIdMap;
+		using Address2SymbolIdMap = std::map<Address64, SymbolId>;
 
 		/**
 		 * Definition of a map mapping symbol addresses to symbol ids.
 		 */
-		typedef std::map<Address64, StringId> Address2StringIdMap;
+		using Address2StringIdMap = std::map<Address64, StringId>;
 
 	protected:
 
@@ -476,7 +476,7 @@ class BinaryAnalyzer : protected Ocean::Thread
 		/**
 		 * Definition of a group of sets of symbol ids.
 		 */
-		typedef std::vector<SymbolIdSet> SymbolIdSetGroup;
+		using SymbolIdSetGroup = std::vector<SymbolIdSet>;
 
 	public:
 

@@ -72,12 +72,12 @@ class OCEAN_BASE_EXPORT PluginManager : public Singleton<PluginManager>
 		/**
 		 * Definition of a set holding plugin types.
 		 */
-		typedef std::set<PluginType> PluginTypeSet;
+		using PluginTypeSet = std::set<PluginType>;
 
 		/**
 		 * Definition of a vector holding plugin names.
 		 */
-		typedef std::vector<std::string> Names;
+		using Names = std::vector<std::string>;
 
 	private:
 
@@ -91,17 +91,17 @@ class OCEAN_BASE_EXPORT PluginManager : public Singleton<PluginManager>
 				/**
 				 * Definition of a function pointer for plugin load functions.
 				 */
-				typedef bool (*PluginLoadFunction)();
+				using PluginLoadFunction = bool (*)();
 
 				/**
 				 * Definition of a function pointer for plugin unload functions.
 				 */
-				typedef bool (*PluginUnloadFunction)();
+				using PluginUnloadFunction = bool (*)();
 
 				/**
 				 * Definition of a function pointer for plugin version information functions.
 				 */
-				typedef const char* (*PluginVersionFunction)();
+				using PluginVersionFunction = const char* (*)();
 
 			public:
 
@@ -256,12 +256,12 @@ class OCEAN_BASE_EXPORT PluginManager : public Singleton<PluginManager>
 		/**
 		 * Definition of a vector holding plugin objects.
 		 */
-		typedef std::vector<Plugin> Plugins;
+		using Plugins = std::vector<Plugin>;
 
 		/**
 		 * Definition of a set holding plugin objects.
 		 */
-		typedef std::set<Plugin> PluginSet;
+		using PluginSet = std::set<Plugin>;
 
 	public:
 

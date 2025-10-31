@@ -88,29 +88,29 @@ class OCEAN_BASE_EXPORT DebugElements
 		/**
 		 * Definition of a vector holding strings (a hierarchy).
 		 */
-		typedef std::vector<std::string> Hierarchy;
+		using Hierarchy = std::vector<std::string>;
 
 		/**
 		 * Definition of a callback function for an updated debug element.
 		 */
-		typedef Callback<void, const uint32_t, const Frame*, const Hierarchy*> ElementUpdateCallback;
+		using ElementUpdateCallback = Callback<void, const uint32_t, const Frame*, const Hierarchy*>;
 
 	protected:
 
 		/**
 		 * Definition of a map mapping hierarchies to frames.
 		 */
-		typedef std::map<Hierarchy, Frame> HierarchyMap;
+		using HierarchyMap = std::map<Hierarchy, Frame>;
 
 		/**
 		 * Definition of a map mapping element ids to hierarchy maps.
 		 */
-		typedef std::map<uint32_t, HierarchyMap> ElementMap;
+		using ElementMap = std::map<uint32_t, HierarchyMap>;
 
 		/**
 		 * Definition of a set holding element ids.
 		 */
-		typedef std::unordered_set<uint32_t> ElementSet;
+		using ElementSet = std::unordered_set<uint32_t>;
 
 	public:
 

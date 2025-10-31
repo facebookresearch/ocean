@@ -37,14 +37,14 @@ class OCEAN_BASE_EXPORT Scheduler :
 		/**
 		 * Definition of a callback function.
 		 */
-		typedef Ocean::Callback<void> Callback;
+		using Callback = Ocean::Callback<void>;
 
 	private:
 
 		/**
 		 * Definition of a callback pair holding a callback function and an active flag.
 		 */
-		typedef ConcurrentCallbacks<Callback> Callbacks;
+		using Callbacks = ConcurrentCallbacks<Callback>;
 
 	public:
 

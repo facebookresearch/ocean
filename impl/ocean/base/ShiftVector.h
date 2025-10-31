@@ -30,22 +30,22 @@ class ShiftVector
 		/**
 		 * Definition of the data type of each element of this object.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * Definition of an element index.
 		 */
-		typedef std::ptrdiff_t Index;
+		using Index = std::ptrdiff_t;
 
 		/**
 		 * Definition of a data iterator.
 		 */
-		typedef typename std::deque<T>::iterator Iterator;
+		using Iterator = typename std::deque<T>::iterator;
 
 		/**
 		 * Definition of a const data iterator.
 		 */
-		typedef typename std::deque<T>::const_iterator ConstIterator;
+		using ConstIterator = typename std::deque<T>::const_iterator;
 
 	public:
 

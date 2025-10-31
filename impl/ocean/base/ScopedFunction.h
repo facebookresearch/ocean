@@ -89,7 +89,7 @@ class ScopedFunctionT
  * Definition of a scoped function with void return parameter.
  * @ingroup base
  */
-typedef ScopedFunctionT<std::function<void()>> ScopedFunctionVoid;
+using ScopedFunctionVoid = ScopedFunctionT<std::function<void()>>;
 
 template <typename T>
 ScopedFunctionT<T>::ScopedFunctionT(T&& function) noexcept :

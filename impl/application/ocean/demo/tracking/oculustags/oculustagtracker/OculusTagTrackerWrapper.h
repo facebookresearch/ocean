@@ -48,7 +48,7 @@ class OculusTagTrackerWrapper
 		/**
 		 * Definition of a sample map for 6-DOF poses a a device.
 		 */
-		typedef SampleMap<HomogenousMatrixD4> DevicePoses;
+		using DevicePoses = SampleMap<HomogenousMatrixD4>;
 
 	public:
 

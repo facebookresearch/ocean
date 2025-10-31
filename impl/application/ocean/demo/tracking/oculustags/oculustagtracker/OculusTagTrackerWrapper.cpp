@@ -459,7 +459,7 @@ bool OculusTagTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 
 	if (OculusTagDebugElements::get().isElementActive(OculusTagDebugElements::EI_DETECTOR_RECTIFIED_TAG))
 	{
-		typedef std::unordered_map<uint32_t, int32_t> YOffsetMap;
+		using YOffsetMap = std::unordered_map<uint32_t, int32_t>;
 		static YOffsetMap frameYOffsetsMap;
 
 		static int32_t maxYOffset = 0;

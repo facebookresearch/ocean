@@ -28,17 +28,17 @@ class HashSet
 		/**
 		 * Definition of a pair combining a counter states and an object.
 		 */
-		typedef typename std::pair<std::pair<size_t, size_t>, T> Element;
+		using Element = typename std::pair<std::pair<size_t, size_t>, T>;
 
 		/**
 		 * Definition of a vector holding the set objects.
 		 */
-		typedef std::vector<Element> Elements;
+		using Elements = std::vector<Element>;
 
 		/**
 		 * Definition of a function pointer returning a hash set value.
 		 */
-		typedef size_t (*ValueFunction)(const T& element);
+		using ValueFunction = size_t (*)(const T& element);
 
 	public:
 

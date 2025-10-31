@@ -139,12 +139,12 @@ class OCEAN_BASE_EXPORT Messenger : public Singleton<Messenger>
 		/**
 		 * Definition of a message.
 		 */
-		typedef std::pair<std::string, std::string> Message;
+		using Message = std::pair<std::string, std::string>;
 
 		/**
 		 * Definition of a message queue.
 		 */
-		typedef std::queue<Message> MessageQueue;
+		using MessageQueue = std::queue<Message>;
 
 	public:
 
@@ -774,12 +774,12 @@ class OCEAN_BASE_EXPORT Log
 		/**
 		 * Definition of a default message object, only active if `Messenger::isActive() == true`.
 		 */
-		typedef Ocean::MessageObject<Messenger::isActive()> MessageObject;
+		using MessageObject = Ocean::MessageObject<Messenger::isActive()>;
 
 		/**
 		 * Definition of a debug message object, only active on debug builds and if `Messenger::isActive() == true`.
 		 */
-		typedef Ocean::MessageObject<Messenger::isActive() && Messenger::isDebugBuild()> DebugMessageObject;
+		using DebugMessageObject = Ocean::MessageObject<Messenger::isActive() && Messenger::isDebugBuild()>;
 
 	protected:
 

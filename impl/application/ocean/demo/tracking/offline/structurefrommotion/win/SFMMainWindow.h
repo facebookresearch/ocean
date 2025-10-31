@@ -77,7 +77,7 @@ class SFMMainWindow :
 		/**
 		 * Definition of a vector holding image points.
 		 */
-		typedef std::vector<Vectors2> ImagePointGroups;
+		using ImagePointGroups = std::vector<Vectors2>;
 
 	public:
 

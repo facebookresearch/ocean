@@ -42,7 +42,7 @@ class SegmentUnion
 		/**
 		 * Definition of a map mapping a start point to the corresponding end point of a segment.
 		 */
-		typedef std::map<T, T> SegmentMap;
+		using SegmentMap = std::map<T, T>;
 
 	public:
 

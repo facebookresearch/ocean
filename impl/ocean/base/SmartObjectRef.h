@@ -93,7 +93,7 @@ class SmartObjectRef : public ObjectRef<TBase>
 		/**
 		 * Redefinition of the release callback function defined in ObjectRef.
 		 */
-		typedef typename ObjectRef<TBase>::ReleaseCallback ReleaseCallback;
+		using ReleaseCallback = typename ObjectRef<TBase>::ReleaseCallback;
 
 	public:
 

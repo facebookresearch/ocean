@@ -82,17 +82,17 @@ class Disassembler
 		/**
 		 * Definition of a vector holding pairs of source symbol ids and target symbol names.
 		 */
-		typedef std::vector<std::pair<BinaryAnalyzer::SymbolId, std::string>> SourceSymbolsTargetNames;
+		using SourceSymbolsTargetNames = std::vector<std::pair<BinaryAnalyzer::SymbolId, std::string>>;
 
 		/**
 		 * Definition of a map mapping symbol ids to addresses.
 		 */
-		typedef std::vector<std::pair<BinaryAnalyzer::SymbolId, BinaryAnalyzer::Address64>> SourceSymbolsTargetAddresses;
+		using SourceSymbolsTargetAddresses = std::vector<std::pair<BinaryAnalyzer::SymbolId, BinaryAnalyzer::Address64>>;
 
 		/**
 		 * Definition of an unordered map mapping symbol names to symbol ids.
 		 */
-		typedef std::unordered_multimap<std::string, BinaryAnalyzer::SymbolId> SymbolName2SymbolIdsMultiMap;
+		using SymbolName2SymbolIdsMultiMap = std::unordered_multimap<std::string, BinaryAnalyzer::SymbolId>;
 
 	protected:
 

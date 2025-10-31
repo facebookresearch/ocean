@@ -34,7 +34,7 @@ class OCEAN_BASE_EXPORT ApplicationInterface : public Singleton<ApplicationInter
 		/**
 		 * Definition of an event id.
 		 */
-		typedef unsigned int EventId;
+		using EventId = unsigned int;
 
 		/**
 		 * Definition of an invalid event id.
@@ -44,19 +44,19 @@ class OCEAN_BASE_EXPORT ApplicationInterface : public Singleton<ApplicationInter
 		/**
 		 * Definition of a vector holding event ids.
 		 */
-		typedef std::vector<EventId> EventIds;
+		using EventIds = std::vector<EventId>;
 
 		/**
 		 * Definition of a vector holding strings.
 		 */
-		typedef std::vector<std::string> StringVector;
+		using StringVector = std::vector<std::string>;
 
 		/**
 		 * Definition of a content add or remove callback function.
 		 * The return parameter is the corresponding event id.<br>
 		 * The first parameter holds the content to be added.<br>
 		 */
-		typedef Callback<EventIds, const StringVector&> ContentCallback;
+		using ContentCallback = Callback<EventIds, const StringVector&>;
 
 		/**
 		 * Definition of a content event callback function.
@@ -64,14 +64,14 @@ class OCEAN_BASE_EXPORT ApplicationInterface : public Singleton<ApplicationInter
 		 * The second parameter defines whether the event has been loaded (true) or unloaded (false)
 		 * The third parameter defined the event state.<br>
 		 */
-		typedef Callback<void, EventId, bool, bool> EventCallback;
+		using EventCallback = Callback<void, EventId, bool, bool>;
 
 	private:
 
 		/**
 		 * Definition of an vector holding event callbacks.
 		 */
-		typedef Callbacks<EventCallback> EventCallbacks;
+		using EventCallbacks = Callbacks<EventCallback>;
 
 	public:
 

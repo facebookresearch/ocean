@@ -65,7 +65,7 @@ class ObjectRef
 		 * Definition of a release callback function.
 		 * The first parameter determines the object for that the release event is invoked.<br>
 		 */
-		typedef Callback<void, const T*> ReleaseCallback;
+		using ReleaseCallback = Callback<void, const T*>;
 
 	protected:
 
