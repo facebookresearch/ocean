@@ -10,6 +10,7 @@
 #include "ocean/test/testtracking/TestHomographyImageAlignmentDense.h"
 #include "ocean/test/testtracking/TestPatternTracker.h"
 #include "ocean/test/testtracking/TestSmoothedTransformation.h"
+#include "ocean/test/testtracking/TestUnidirectionalCorrespondences.h"
 #include "ocean/test/testtracking/TestSimilarityTracker.h"
 #include "ocean/test/testtracking/TestVocabularyTree.h"
 
@@ -126,6 +127,15 @@ bool testTracking(const double testDuration, Worker& worker, const std::string& 
 		Log::info() << " ";
 		Log::info() << " ";
 		allSucceeded = TestHomographyImageAlignmentDense::test(testDuration, worker) && allSucceeded;
+	}
+
+	if (testSet.empty() || testSet.find("unidirectionalcorrespondences") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		allSucceeded = TestUnidirectionalCorrespondences::test(testDuration, worker) && allSucceeded;
 	}
 
 	Log::info() << " ";

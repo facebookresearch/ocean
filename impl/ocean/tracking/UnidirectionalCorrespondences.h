@@ -125,6 +125,59 @@ class OCEAN_TRACKING_EXPORT UnidirectionalCorrespondences
 		template <typename TFirst, typename TSecond>
 		static void extractCorrespondenceElements(const CorrespondencePairs& correspondencePairs, const TFirst* firstElements, const size_t sizeFirstElements, const TSecond* secondElements, const size_t sizeSecondElements, std::vector<TFirst>& correspondenceFirstElements, std::vector<TSecond>& correspondenceSecondElements);
 
+		/**
+		 * Counts the number of bijective correspondences based on provided indices of used points (either image points or object points).
+		 * In case a point index shows up more than once, the point is not part of a bijective correspondence.<br>
+		 *
+		 * Provide the indices of used image points in case the correspondence were determine by iterating over all object points and finding the best matching image point, in such a case an image point could be used more than once:
+		 * <pre>
+		 * objectPoint0 -> imagePoint0
+
+		 * objectPoint2 -> imagePoint1        the imagePoint1 is not part of a bijective correspondence
+		 * objectPoint4 -> imagePoint1
+		 *
+		 * objectPoint7 -> imagePoint5
+		 *
+		 * objectPoint8 -> imagePoint3
+		 * </pre>
+		 *
+		 * Provide the indices of used object points in case the correspondence were determine by iterating over all image points and finding the best matching object point, in such a case an object point could be used more than once:
+		 * <pre>
+		 * imagePoint0 -> objectPoint0
+		 *
+		 * imagePoint1 -> objectPoint2        the objectPoint2 is not part of a bijective correspondence
+		 * imagePoint2 -> objectPoint2
+		 *
+		 * imagePoint4 -> objectPoint3
+		 * </pre>
+		 * @param usedPointIndices The indices of the points to be checked, must be valid
+		 * @param size The number of indices, with range [1, infinity)
+		 * @return The number of bijective correspondences, with range [0, size]
+		 */
+		static size_t countBijectiveCorrespondences(const Index32* usedPointIndices, const size_t size);
+
+		/**
+		 * Counts the number of non-bijective correspondences based on provided indices of used points (either image points or object points).
+		 * The function determines how many points have more than one correspondence, while each non-bijective correspondence is only counted once.
+		 * @param usedPointIndices The indices of the points to be checked, must be valid
+		 * @param size The number of indices, with range [1, infinity)
+		 * @return The number of non-bijective correspondences, with range [0, size/2]
+		 */
+		static size_t countNonBijectiveCorrespondences(const Index32* usedPointIndices, const size_t size);
+
+		/**
+		 * Removes non-bijective correspondences from 2D/3D correspondences.
+		 * The function will remove all non-bijective correspondences from the provided point indices.
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param world_T_camera The camera pose transforming camera to world, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
+		 * @param objectPoints All 3D object points in which the correspondences are defined, must be valid
+		 * @param imagePoints All 2D image points in which the correspondences are defined, must be valid
+		 * @param objectPointIndices The indices of the 3D object points which which correspond to 2D image points, at least one
+		 * @param imagePointIndices The indices of the 2D image points which which correspond to 3D object points, one for each 3D object point, at least one
+		 * @param checkImagePoints True, to check the provided image point indices for bijective correspondences; False, to check the provided object point indices for bijective correspondences
+		 */
+		static void removeNonBijectiveCorrespondences(const AnyCamera& camera, const HomogenousMatrix4& world_T_camera, const Vector3* objectPoints, const Vector2* imagePoints, Indices32& objectPointIndices, Indices32& imagePointIndices, const bool checkImagePoints);
+
 	protected:
 
 		/**
