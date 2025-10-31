@@ -44,6 +44,60 @@ class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestBullseyeDetectorMono : protect
 		static bool test(const double testDuration);
 
 		/**
+		 * Tests the default constructor of Parameters.
+		 * @return True, if succeeded
+		 */
+		static bool testParametersConstructor();
+
+		/**
+		 * Tests the Parameters::isValid() function.
+		 * @return True, if succeeded
+		 */
+		static bool testParametersIsValid();
+
+		/**
+		 * Tests the Parameters::framePyramidPixelThreshold() function.
+		 * @return True, if succeeded
+		 */
+		static bool testParametersFramePyramidPixelThreshold();
+
+		/**
+		 * Tests the Parameters::setFramePyramidPixelThreshold() function.
+		 * @return True, if succeeded
+		 */
+		static bool testParametersSetFramePyramidPixelThreshold();
+
+		/**
+		 * Tests the Parameters::framePyramidLayers() function.
+		 * @return True, if succeeded
+		 */
+		static bool testParametersFramePyramidLayers();
+
+		/**
+		 * Tests the Parameters::setFramePyramidLayers() function.
+		 * @return True, if succeeded
+		 */
+		static bool testParametersSetFramePyramidLayers();
+
+		/**
+		 * Tests the Parameters::useAdaptiveRowSpacing() function.
+		 * @return True, if succeeded
+		 */
+		static bool testParametersUseAdaptiveRowSpacing();
+
+		/**
+		 * Tests the Parameters::setUseAdaptiveRowSpacing() function.
+		 * @return True, if succeeded
+		 */
+		static bool testParametersSetUseAdaptiveRowSpacing();
+
+		/**
+		 * Tests the Parameters::defaultParameters() function.
+		 * @return True, if succeeded
+		 */
+		static bool testParametersDefaultParameters();
+
+		/**
 		 * Stress test for BullseyeDetectorMono::detectBullseyes()
 		 * @param testDuration The duration in seconds for which this test will be run, must be > 0.0
 		 * @param randomGenerator A random generator that will be used to generate test data
