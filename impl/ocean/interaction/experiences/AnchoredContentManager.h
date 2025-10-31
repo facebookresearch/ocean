@@ -43,7 +43,7 @@ class OCEAN_INTERACTION_EXPERIENCES_EXPORT AnchoredContentManager
 		/**
 		 * Definition of an id defining anchored content.
 		 */
-		typedef unsigned int ContentId;
+		using ContentId = unsigned int;
 
 		/**
 		 * Returns an invalid content id.
@@ -158,44 +158,44 @@ class OCEAN_INTERACTION_EXPERIENCES_EXPORT AnchoredContentManager
 		/**
 		 * Definition of a shared content object.
 		 */
-		typedef std::shared_ptr<ContentObject> SharedContentObject;
+		using SharedContentObject = std::shared_ptr<ContentObject>;
 
 		/**
 		 * Definition of an unordered set holding content objects.
 		 */
-		typedef std::unordered_set<SharedContentObject> SharedContentObjectSet;
+		using SharedContentObjectSet = std::unordered_set<SharedContentObject>;
 
 		/**
 		 * Definition of a callback function for removed object events.
 		 */
-		typedef std::function<void(SharedContentObjectSet&&)> RemovedContentCallbackFunction;
+		using RemovedContentCallbackFunction = std::function<void(SharedContentObjectSet&&)>;
 
 	protected:
 
 		/**
 		 * Definition of an unordered map mapping content ids to content objects.
 		 */
-		typedef std::unordered_map<ContentId, SharedContentObject> ContentMap;
+		using ContentMap = std::unordered_map<ContentId, SharedContentObject>;
 
 		/**
 		 * Definition of an unordered multimap mapping object ids to content objects.
 		 */
-		typedef std::unordered_multimap<Devices::Measurement::ObjectId, SharedContentObject> ObjectIdToContentObjectMultiMap;
+		using ObjectIdToContentObjectMultiMap = std::unordered_multimap<Devices::Measurement::ObjectId, SharedContentObject>;
 
 		/**
 		 * Definition of an unordered map mapping trackers to content objects.
 		 */
-		typedef std::unordered_map<const Devices::Tracker6DOF*, SharedContentObject> TrackerToContentObjectMap;
+		using TrackerToContentObjectMap = std::unordered_map<const Devices::Tracker6DOF*, SharedContentObject>;
 
 		/**
 		 * Definition of pair combining a subscription id and a usage counter.
 		 */
-		typedef std::pair<Devices::Tracker::TrackerObjectEventSubscription, unsigned int> SubscriptionPair;
+		using SubscriptionPair = std::pair<Devices::Tracker::TrackerObjectEventSubscription, unsigned int>;
 
 		/**
 		 * Definition of an unordered map mapping trackers to subscription pairs.
 		 */
-		typedef std::unordered_map<Devices::Tracker6DOF*, SubscriptionPair> SubscriptionMap;
+		using SubscriptionMap = std::unordered_map<Devices::Tracker6DOF*, SubscriptionPair>;
 
 	public:
 

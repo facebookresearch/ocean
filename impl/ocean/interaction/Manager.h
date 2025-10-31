@@ -38,17 +38,17 @@ class OCEAN_INTERACTION_EXPORT Manager :
 		/**
 		 * Definition of a set holding registered interaction libraries.
 		 */
-		typedef std::unordered_set<Library*> LibrarySet;
+		using LibrarySet = std::unordered_set<Library*>;
 
 		/**
 		 * Definition of a set holding names of interaction libraries.
 		 */
-		typedef std::unordered_set<std::string> NameSet;
+		using NameSet = std::unordered_set<std::string>;
 
 		/**
 		 * Definition of a vector holding names.
 		 */
-		typedef std::vector<std::string> Names;
+		using Names = std::vector<std::string>;
 
 	public:
 

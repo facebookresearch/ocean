@@ -34,7 +34,7 @@ class OCEAN_INTERACTION_EXPORT Library
 		/**
 		 * Definition of a map mapping file extensions to file type descriptions.
 		 */
-		typedef std::map<std::string, std::string> FileExtensions;
+		using FileExtensions = std::map<std::string, std::string>;
 
 	public:
 

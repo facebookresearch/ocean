@@ -40,29 +40,29 @@ class OCEAN_INTERACTION_JS_EXPORT JSContext
 		/**
 		 * Definition of a vector holding JavaScript code objects.
 		 */
-		typedef std::vector<std::unique_ptr<JSScript>> Scripts;
+		using Scripts = std::vector<std::unique_ptr<JSScript>>;
 
 		/**
 		 * Definition of a vector holding value handles.
 		 */
-		typedef std::vector<v8::Handle<v8::Value>> Values;
+		using Values = std::vector<v8::Handle<v8::Value>>;
 
 		/**
 		 * Definition of a caller object returning JavaScript parameters.
 		 */
-		typedef Caller<Values> FunctionParameterCaller;
+		using FunctionParameterCaller = Caller<Values>;
 
 	protected:
 
 		/**
 		 * Defines a pair holding function names and function parameters.
 		 */
-		typedef std::pair<std::string, FunctionParameterCaller> FunctionPair;
+		using FunctionPair = std::pair<std::string, FunctionParameterCaller>;
 
 		/**
 		 * Definition of a vector holding function pairs.
 		 */
-		typedef std::vector<FunctionPair> FunctionPairs;
+		using FunctionPairs = std::vector<FunctionPair>;
 
 	public:
 

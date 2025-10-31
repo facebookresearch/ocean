@@ -37,12 +37,12 @@ class OCEAN_INTERACTION_EXPERIENCES_EXPORT ExperiencesLibrary : public Library
 		/**
 		 * Definition of a unique pointer to an Experience object.
 		 */
-		typedef std::unique_ptr<Experience> UniqueExperience;
+		using UniqueExperience = std::unique_ptr<Experience>;
 
 		/**
 		 * Definition of a callback function allowing to create a new experience.
 		 */
-		typedef std::function<UniqueExperience()> CreateExperienceFunction;
+		using CreateExperienceFunction = std::function<UniqueExperience()>;
 
 	protected:
 
@@ -86,12 +86,12 @@ class OCEAN_INTERACTION_EXPERIENCES_EXPORT ExperiencesLibrary : public Library
 		/**
 		 * Definition of a vector holding experiences.
 		 */
-		typedef std::unordered_map<std::string, UniqueExperience> NameToExperienceMap;
+		using NameToExperienceMap = std::unordered_map<std::string, UniqueExperience>;
 
 		/**
 		 * Definition of an unordered map mapping experience names to experience create functions.
 		 */
-		typedef std::unordered_map<std::string, CreateExperienceFunction> NameToFunctionMap;
+		using NameToFunctionMap = std::unordered_map<std::string, CreateExperienceFunction>;
 
 	public:
 

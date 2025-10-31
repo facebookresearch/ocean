@@ -48,12 +48,12 @@ class OCEAN_INTERACTION_JS_EXPORT JSOcean : public JSBase
 				/**
 				 * Definition of a pair combining a JSContext object with a function name.
 				 */
-				typedef std::pair<std::weak_ptr<JSContext>, std::string> ContextFunctionPair;
+				using ContextFunctionPair = std::pair<std::weak_ptr<JSContext>, std::string>;
 
 				/**
 				 * Definition of a vector holding ContextFunctionPair objects.
 				 */
-				typedef std::vector<ContextFunctionPair> ContextFunctionPairs;
+				using ContextFunctionPairs = std::vector<ContextFunctionPair>;
 
 			public:
 

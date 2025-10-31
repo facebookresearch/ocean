@@ -34,7 +34,7 @@ class JSObject : public JSBase
 		/**
 		 * Definition of the native data type which is wrapped by this Java Script object.
 		 */
-		typedef TNative NativeType;
+		using NativeType = TNative;
 
 	public:
 

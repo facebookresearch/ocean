@@ -37,7 +37,7 @@ class OCEAN_INTERACTION_JS_EXPORT JSLibrary : public Library
 		/**
 		 * Definition of a vector holding JavaScript contexts.
 		 */
-		typedef std::vector<std::shared_ptr<JSContext>> JSContexts;
+		using JSContexts = std::vector<std::shared_ptr<JSContext>>;
 
 	public:
 
