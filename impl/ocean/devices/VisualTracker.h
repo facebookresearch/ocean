@@ -31,7 +31,7 @@ class VisualTracker;
  * @see VisualTracker.
  * @ingroup devices
  */
-typedef SmartDeviceRef<VisualTracker> VisualTrackerRef;
+using VisualTrackerRef = SmartDeviceRef<VisualTracker>;
 
 /**
  * This class is the base class for all tracker using visual input to create the tracking results.

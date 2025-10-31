@@ -63,12 +63,12 @@ class OCEAN_DEVICES_EXPORT Manager : public Singleton<Manager>
 		/**
 		 * Definition of a vector holding unique pointers of factories.
 		 */
-		typedef std::vector<std::unique_ptr<Factory>> FactoryUniquePointers;
+		using FactoryUniquePointers = std::vector<std::unique_ptr<Factory>>;
 
 		/**
 		 * Definition of an unsorted multimap mapping object ids to descriptions.
 		 */
-		typedef std::unordered_multimap<Measurement::ObjectId, std::string> ObjectIdMultimap;
+		using ObjectIdMultimap = std::unordered_multimap<Measurement::ObjectId, std::string>;
 
 	public:
 

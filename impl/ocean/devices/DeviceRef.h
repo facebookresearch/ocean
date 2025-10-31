@@ -91,7 +91,7 @@ class OCEAN_DEVICES_EXPORT DeviceRefManager : public Singleton<DeviceRefManager>
 		/**
 		 * Definition of a callback function for devices.
 		 */
-		typedef Callback<void, Device*, bool> DeviceCallback;
+		using DeviceCallback = Callback<void, Device*, bool>;
 
 	protected:
 

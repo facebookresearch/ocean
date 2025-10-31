@@ -27,7 +27,7 @@ class Tracker6DOF;
  * @see Tracker6DOF.
  * @ingroup devices
  */
-typedef SmartDeviceRef<Tracker6DOF> Tracker6DOFRef;
+using Tracker6DOFRef = SmartDeviceRef<Tracker6DOF>;
 
 /**
  * This class implements the base for all 6DOF trackers.
@@ -74,7 +74,7 @@ class OCEAN_DEVICES_EXPORT Tracker6DOF :
 		/**
 		 * Definition of a smart object reference for 6DOF tracker samples.
 		 */
-		typedef SmartObjectRef<Tracker6DOFSample, Sample> Tracker6DOFSampleRef;
+		using Tracker6DOFSampleRef = SmartObjectRef<Tracker6DOFSample, Sample>;
 
 	public:
 

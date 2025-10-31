@@ -79,7 +79,7 @@ class OCEAN_DEVICES_EXPORT Tracker : virtual public Measurement
 		/**
 		 * Definition of a tracker frequency in Hz.
 		 */
-		typedef float Frequency;
+		using Frequency = float;
 
 		/**
 		 * Definition of a sample holding one measurement values of a tracker.
@@ -132,7 +132,7 @@ class OCEAN_DEVICES_EXPORT Tracker : virtual public Measurement
 		 * The third parameter hold the ids of the tracker object.
 		 * The last parameter hold the event timestamp.
 		 */
-		typedef Callback<void, const Tracker*, const bool, const ObjectIdSet&, const Timestamp&> TrackerObjectCallback;
+		using TrackerObjectCallback = Callback<void, const Tracker*, const bool, const ObjectIdSet&, const Timestamp&>;
 
 		/**
 		 * This class manages the lifetime of an event subscription for tracker object events.
@@ -215,7 +215,7 @@ class OCEAN_DEVICES_EXPORT Tracker : virtual public Measurement
 		/**
 		 * Definition of a map mapping subscription ids to tracker object event callback functions.
 		 */
-		typedef std::unordered_map<SubscriptionId, TrackerObjectCallback> TrackerObjectSubscriptionMap;
+		using TrackerObjectSubscriptionMap = std::unordered_map<SubscriptionId, TrackerObjectCallback>;
 
 	public:
 
