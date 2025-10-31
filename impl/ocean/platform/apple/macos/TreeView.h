@@ -169,7 +169,7 @@ class TreeView
 				 * Creates a new tree item object.
 				 * @param owner The owner of the item
 				 * @param texts The texts of the item, one for each column
-				 * @param id The unique id of the item, any unique id which does not exist already, or and invalid id to automatically create an unique id
+				 * @param id The unique id of the item, any unique id which does not exist already, or and invalid id to automatically create a unique id
 				 * @param iconIndex The item's icon index, an invalid index if the item has no icon
 				 */
 				explicit TreeItem(TreeView& owner, const Strings& texts, const TreeItemId id = invalidTreeItemId, const unsigned int iconIndex = invalidIconIndex);
@@ -178,7 +178,7 @@ class TreeView
 				 * Creates a new tree item object.
 				 * @param owner The owner of the item
 				 * @param texts The texts of the item, one for each column, will be moved
-				 * @param id The unique id of the item, any unique id which does not exist already, or and invalid id to automatically create an unique id
+				 * @param id The unique id of the item, any unique id which does not exist already, or and invalid id to automatically create a unique id
 				 * @param iconIndex The item's icon index, an invalid index if the item has no icon
 				 */
 				explicit TreeItem(TreeView& owner, Strings&& texts, const TreeItemId id = invalidTreeItemId, const unsigned int iconIndex = invalidIconIndex);
@@ -296,28 +296,28 @@ class TreeView
 		TreeItemRef item(const TreeItemId itemId) const;
 
 		/**
-		 * Creates a new item for this tree view and registeres it.
+		 * Creates a new item for this tree view and registers it.
 		 * @param text The text of the first column of the item to be created
 		 * @param parentId Optional id of the parent item, and invalid id so that the item will not directly show up in the tree view
-		 * @param itemId Optional the unique id of the item, any unique id which does not exist already, or and invalid id to automatically create an unique id, while the root item has item id -1
+		 * @param itemId Optional the unique id of the item, any unique id which does not exist already, or and invalid id to automatically create a unique id, while the root item has item id -1
 		 * @param refreshView True, to refresh the view afterwards; False, to skip refreshing the view
 		 */
 		virtual TreeItemRef createItem(const std::string& text, const TreeItemId parentId = invalidTreeItemId, const TreeItemId itemId = invalidTreeItemId, const bool refreshView = true);
 
 		/**
-		 * Creates a new item for this tree view and registeres it.
+		 * Creates a new item for this tree view and registers it.
 		 * @param texts The texts of the item to be created, one text for each column
 		 * @param parentId Optional id of the parent item, and invalid id so that the item will not directly show up in the tree view
-		 * @param itemId Optional the unique id of the item, any unique id which does not exist already, or and invalid id to automatically create an unique id, while the root item has item id -1
+		 * @param itemId Optional the unique id of the item, any unique id which does not exist already, or and invalid id to automatically create a unique id, while the root item has item id -1
 		 * @param refreshView True, to refresh the view afterwards; False, to skip refreshing the view
 		 */
 		virtual TreeItemRef createItem(const Strings& texts, const TreeItemId parentId = invalidTreeItemId, const TreeItemId itemId = invalidTreeItemId, const bool refreshView = true);
 
 		/**
-		 * Creates a new item for this tree view and registeres it.
+		 * Creates a new item for this tree view and registers it.
 		 * @param texts The texts of the item to be created, one text for each column, will be moved
 		 * @param parentId Optional id of the parent item, and invalid id so that the item will not directly show up in the tree view
-		 * @param itemId Optional the unique id of the item, any unique id which does not exist already, or and invalid id to automatically create an unique id, while the root item has item id -1
+		 * @param itemId Optional the unique id of the item, any unique id which does not exist already, or and invalid id to automatically create a unique id, while the root item has item id -1
 		 * @param refreshView True, to refresh the view afterwards; False, to skip refreshing the view
 		 */
 		virtual TreeItemRef createItem(Strings&& texts, const TreeItemId parentId = invalidTreeItemId, const TreeItemId itemId = invalidTreeItemId, const bool refreshView = true);
