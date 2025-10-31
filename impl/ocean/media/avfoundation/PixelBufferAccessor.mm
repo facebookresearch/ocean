@@ -349,6 +349,8 @@ FrameType::PixelFormat PixelBufferAccessor::translatePixelFormat(const OSType pi
 
 OSType PixelBufferAccessor::translatePixelFormat(const FrameType::PixelFormat pixelFormat)
 {
+	#pragma clang diagnostic push
+	#pragma clang diagnostic ignored "-Wswitch-enum"
 	switch (pixelFormat)
 	{
 		case FrameType::FORMAT_RGB24:
@@ -393,13 +395,14 @@ OSType PixelBufferAccessor::translatePixelFormat(const FrameType::PixelFormat pi
 		default:
 			break;
 	}
+	#pragma clang diagnostic pop
 
 	ocean_assert(false && "Invalid pixel format!");
 	return 0;
 }
 
-}
+} // namespace AVFoundation
 
-}
+} // namespace Media
 
-}
+} // namespace Ocean

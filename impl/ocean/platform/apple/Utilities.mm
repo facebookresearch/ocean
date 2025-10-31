@@ -87,6 +87,8 @@ ScopedCGImageRef Utilities::toCGImage(const Frame& frame, bool copyData)
 			ScopedCGColorSpaceRef colorSpace(CGColorSpaceCreateDeviceRGB());
 			CGBitmapInfo bitmapInfo = kCGBitmapByteOrderDefault;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wswitch-enum"
 			switch (convertedFrame.pixelFormat())
 			{
 				case FrameType::FORMAT_RGBA32:
@@ -115,6 +117,7 @@ ScopedCGImageRef Utilities::toCGImage(const Frame& frame, bool copyData)
 
 			return ScopedCGImageRef(CGImageCreate(convertedFrame.width(), convertedFrame.height(), bitsPerComponent, bitsPerPixel, bytesPerRow, colorSpace.object(), bitmapInfo, dataProvider.object(), nullptr, false, kCGRenderingIntentDefault));
 		}
+#pragma clang diagnostic pop
 	}
 
 	ocean_assert(false && "Not supported frame type!");

@@ -688,6 +688,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 				break;
 			}
 
+			case ConversionFunctionMap::FT_INVALID:
 			default:
 				ocean_assert(false && "Invalid function type!");
 				return false;

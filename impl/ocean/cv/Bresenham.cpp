@@ -252,6 +252,7 @@ void Bresenham::findNext(int& x, int& y)
 			break;
 		}
 
+		case ORIENTATION_INVALID:
 		default:
 			ocean_assert(false && "Invalid parameter!");
 	}

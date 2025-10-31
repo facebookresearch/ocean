@@ -77,6 +77,9 @@ std::string Medium::convertType(const Type type)
 		case MOVIE:
 			return "Movie";
 
+		case PIXEL_IMAGE:
+		case BUFFER_IMAGE:
+		case IMAGE_SEQUENCE:
 		default:
 			break;
 	}

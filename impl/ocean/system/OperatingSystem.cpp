@@ -180,7 +180,6 @@ std::wstring OperatingSystem::name(const bool addVersion)
 			osString = L"Windows Server";
 			break;
 
-
 		case OSID_MICROSOFT_WINDOWS_2000:
 			osString = L"Windows 2000";
 			break;
@@ -209,7 +208,6 @@ std::wstring OperatingSystem::name(const bool addVersion)
 			osString = L"Windows 10";
 			break;
 
-
 		case OSID_MICROSOFT_WINDOWS_SERVER_2003:
 			osString = L"Windows Server 2003";
 			break;
@@ -225,7 +223,6 @@ std::wstring OperatingSystem::name(const bool addVersion)
 		case OSID_MICROSOFT_WINDOWS_SERVER_2016:
 			osString = L"Windows Server 2016";
 			break;
-
 
 		case OSID_MACINTOSH_OS:
 			osString = L"Mac OS";
@@ -243,6 +240,7 @@ std::wstring OperatingSystem::name(const bool addVersion)
 			osString = L"Linux";
 			break;
 
+		case OSID_UNKNOWN:
 		default:
 			ocean_assert(false && "Invalid osid");
 	}

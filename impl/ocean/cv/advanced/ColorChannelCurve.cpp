@@ -26,6 +26,7 @@ ColorChannelCurve::ColorChannelCurve(const TransformationType type)
 			setTransformation(TransformationFunction::createStatic(&ColorChannelCurve::linearizeSRGB));
 			break;
 
+		case TT_IDENTITY:
 		default:
 			setTransformation(TransformationFunction::createStatic(&ColorChannelCurve::identity));
 	}
