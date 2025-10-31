@@ -42,7 +42,7 @@ class OCEAN_RENDERING_EXPORT Manager : public Singleton<Manager>
 	private:
 
 		/**
-		 * Class holding engine informations.
+		 * Class holding engine information.
 		 */
 		class EngineInformation
 		{

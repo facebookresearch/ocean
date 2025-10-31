@@ -37,7 +37,7 @@ class OCEAN_RENDERING_GI_EXPORT GIEngine : public Engine
 	public:
 
 		/**
-		 * Creates this engine and registeres it at the global engine manager.<br>
+		 * Creates this engine and registers it at the global engine manager.<br>
 		 * Do not register this engine if using it as plugin, because it's done by the plugin itself.<br>
 		 * However, if your not using the plugin mechanism you have to initialize this engine once at program initialization.<br>
 		 * If the library is not used anymore unregister it using the unregister function.<br>

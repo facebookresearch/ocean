@@ -43,7 +43,7 @@ class OCEAN_RENDERING_GI_EXPORT GIBitmapFramebuffer :
 	protected:
 
 		/**
-		 * Creates a new bitmap frambuffer.
+		 * Creates a new bitmap framebuffer.
 		 * @param preferredGraphicAPI Preferred graphic API to be used for this framebuffer
 		 */
 		GIBitmapFramebuffer(const Engine::GraphicAPI preferredGraphicAPI);

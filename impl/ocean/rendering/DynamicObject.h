@@ -58,7 +58,7 @@ class OCEAN_RENDERING_EXPORT DynamicObject : virtual public Object
 		void registerDynamicUpdateObject();
 
 		/**
-		 * Unregisteres this dynamic object at the frambuffer update queue.
+		 * Unregisters this dynamic object at the framebuffer update queue.
 		 */
 		void unregisterDynamicUpdateObject();
 

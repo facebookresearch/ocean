@@ -29,7 +29,7 @@ extern "C" bool OCEAN_RENDERING_GI_EXPORT pluginLoad();
 extern "C" bool OCEAN_RENDERING_GI_EXPORT pluginUnload();
 
 /**
- * Returns informations about the used 3rd party libraries.
+ * Returns information about the used 3rd party libraries.
  * @return Name and version of the 3rd party libraries
  * @ingroup renderinggi
  */

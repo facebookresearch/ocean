@@ -118,7 +118,7 @@ class OCEAN_RENDERING_GI_EXPORT GIFramebuffer :
 		bool setSupportQuadbufferedStereo(const bool enable) override;
 
 		/**
-		 * Makes this frambuffer to the current one.
+		 * Makes this framebuffer to the current one.
 		 * @see Framebuffer::makeCurrent().
 		 */
 		void makeCurrent() override;
