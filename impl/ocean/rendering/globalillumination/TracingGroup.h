@@ -31,7 +31,7 @@ class OCEAN_RENDERING_GI_EXPORT TracingGroup : public TracingObject
 		/**
 		 * Definition of a vector holding tracing objects.
 		 */
-		typedef std::vector<const TracingObject*> TracingObjects;
+		using TracingObjects = std::vector<const TracingObject*>;
 
 	public:
 

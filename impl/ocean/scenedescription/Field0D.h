@@ -26,79 +26,79 @@ template <typename T> class Field0D;
  * Definition of a single field with boolean value.
  * @ingroup scenedescription
  */
-typedef Field0D<bool> SingleBool;
+using SingleBool = Field0D<bool>;
 
 /**
  * Definition of a single field with color value.
  * @ingroup scenedescription
  */
-typedef Field0D<RGBAColor> SingleColor;
+using SingleColor = Field0D<RGBAColor>;
 
 /**
  * Definition of a single field with float value.
  * @ingroup scenedescription
  */
-typedef Field0D<Scalar> SingleFloat;
+using SingleFloat = Field0D<Scalar>;
 
 /**
  * Definition of a single field with integer value.
  * @ingroup scenedescription
  */
-typedef Field0D<int> SingleInt;
+using SingleInt = Field0D<int>;
 
 /**
  * Definition of a single field with node value.
  * @ingroup scenedescription
  */
-typedef Field0D<NodeRef> SingleNode;
+using SingleNode = Field0D<NodeRef>;
 
 /**
  * Definition of a single field with 3x3 matrix value.
  * @ingroup scenedescription
  */
-typedef Field0D<SquareMatrix3> SingleMatrix3;
+using SingleMatrix3 = Field0D<SquareMatrix3>;
 
 /**
  * Definition of a single field with 4x4 matrix value.
  * @ingroup scenedescription
  */
-typedef Field0D<SquareMatrix4> SingleMatrix4;
+using SingleMatrix4 = Field0D<SquareMatrix4>;
 
 /**
  * Definition of a single field with rotation value.
  * @ingroup scenedescription
  */
-typedef Field0D<Rotation> SingleRotation;
+using SingleRotation = Field0D<Rotation>;
 
 /**
  * Definition of a single field with string value.
  * @ingroup scenedescription
  */
-typedef Field0D<std::string> SingleString;
+using SingleString = Field0D<std::string>;
 
 /**
  * Definition of a single field with time value.
  * @ingroup scenedescription
  */
-typedef Field0D<Timestamp> SingleTime;
+using SingleTime = Field0D<Timestamp>;
 
 /**
  * Definition of a single field with 2D vector value.
  * @ingroup scenedescription
  */
-typedef Field0D<Vector2> SingleVector2;
+using SingleVector2 = Field0D<Vector2>;
 
 /**
  * Definition of a single field with 3D vector value.
  * @ingroup scenedescription
  */
-typedef Field0D<Vector3> SingleVector3;
+using SingleVector3 = Field0D<Vector3>;
 
 /**
  * Definition of a single field with 4D vector value.
  * @ingroup scenedescription
  */
-typedef Field0D<Vector4> SingleVector4;
+using SingleVector4 = Field0D<Vector4>;
 
 /**
  * This class implements all 0D fields (fields holding a single value only).

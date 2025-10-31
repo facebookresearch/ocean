@@ -34,7 +34,7 @@ class RayIntersection;
 /**
  * Definition of a vector holding ray intersection objects.
  */
-typedef std::vector<RayIntersection> RayIntersections;
+using RayIntersections = std::vector<RayIntersection>;
 
 /**
  * This class implements a ray intersection object.

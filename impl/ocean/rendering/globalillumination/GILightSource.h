@@ -31,13 +31,13 @@ class GILightSource;
  * Definition of a pair holding a light source and a homogenous matrix.
  * @ingroup renderinggi
  */
-typedef std::pair<SmartObjectRef<GILightSource>, HomogenousMatrix4> LightPair;
+using LightPair = std::pair<SmartObjectRef<GILightSource>, HomogenousMatrix4>;
 
 /**
  * Definition of a vector holding light pairs.
  * @ingroup renderinggi
  */
-typedef std::vector<LightPair> LightSources;
+using LightSources = std::vector<LightPair>;
 
 /**
  * This class is the base class for all Global Illumination light sources.

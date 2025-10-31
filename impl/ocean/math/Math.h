@@ -126,7 +126,7 @@ namespace Ocean
 	 * Definition of a scalar type.
 	 * @ingroup math
 	 */
-	typedef float Scalar;
+	using Scalar = float;
 
 #else
 
@@ -134,7 +134,7 @@ namespace Ocean
 	 * Definition of a scalar type.
 	 * @ingroup math
 	 */
-	typedef double Scalar;
+	using Scalar = double;
 
 #endif
 

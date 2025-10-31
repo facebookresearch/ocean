@@ -39,7 +39,7 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 		/**
 		 * Definition of a channel id.
 		 */
-		typedef unsigned int ChannelId;
+		using ChannelId = unsigned int;
 
 		/**
 		 * Returns an invalid channel id.
@@ -59,7 +59,7 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 				/**
 				 * Definition of a stream id.
 				 */
-				typedef unsigned int StreamId;
+				using StreamId = unsigned int;
 
 				/**
 				 * Returns an invalid stream id.

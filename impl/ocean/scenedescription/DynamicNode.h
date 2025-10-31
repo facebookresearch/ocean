@@ -27,7 +27,7 @@ class DynamicNode;
  * @see DynamicNode, Node.
  * @ingroup scenedescription
  */
-typedef SmartObjectRef<DynamicNode, Node> DynamicNodeRef;
+using DynamicNodeRef = SmartObjectRef<DynamicNode, Node>;
 
 /**
  * This class is the base class for all nodes able to handle fields loaded during runtime.
@@ -40,12 +40,12 @@ class OCEAN_SCENEDESCRIPTION_EXPORT DynamicNode : virtual public Node
 		/**
 		 * Definition of a vector holding fields.
 		 */
-		typedef std::vector<Field*> DynamicFields;
+		using DynamicFields = std::vector<Field*>;
 
 		/**
 		 * Definition of a map mapping field names to field indices.
 		 */
-		typedef std::unordered_map<std::string, unsigned int> DynamicFieldIndices;
+		using DynamicFieldIndices = std::unordered_map<std::string, unsigned int>;
 
 	public:
 

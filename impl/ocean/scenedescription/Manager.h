@@ -109,39 +109,39 @@ class OCEAN_SCENEDESCRIPTION_EXPORT Manager :
 		/**
 		 * Definition of a vector holding library names.
 		 */
-		typedef std::vector<std::string> LibraryNames;
+		using LibraryNames = std::vector<std::string>;
 
 	protected:
 
 		/**
 		 * Definition of a pair combining a library with a reference counter.
 		 */
-		typedef std::pair<LibraryRef, unsigned int> LibraryCounterPair;
+		using LibraryCounterPair = std::pair<LibraryRef, unsigned int>;
 
 		/**
 		 * Definition of a vector holding library pairs.
 		 */
-		typedef std::vector<LibraryCounterPair> Libraries;
+		using Libraries = std::vector<LibraryCounterPair>;
 
 		/**
 		 * Definition of a set holding library names.
 		 */
-		typedef std::unordered_set<std::string> NameSet;
+		using NameSet = std::unordered_set<std::string>;
 
 		/**
 		 * Definition of a map mapping scene description node ids to event nodes.
 		 */
-		typedef std::unordered_map<NodeId, SDXEventNode*> EventNodes;
+		using EventNodes = std::unordered_map<NodeId, SDXEventNode*>;
 
 		/**
 		 * Definition of a map mapping scene description node ids to update nodes.
 		 */
-		typedef std::unordered_map<NodeId, SDXUpdateNode*> UpdateNodes;
+		using UpdateNodes = std::unordered_map<NodeId, SDXUpdateNode*>;
 
 		/**
 		 * Definition of a set holding permanent scene description objects.
 		 */
-		typedef std::map<SceneId, SDXSceneRef> PermanentSceneMap;
+		using PermanentSceneMap = std::map<SceneId, SDXSceneRef>;
 
 	public:
 

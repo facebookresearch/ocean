@@ -71,19 +71,18 @@ class Complex
 		T im;
 };
 
-typedef union Cv32suf
+union Cv32suf
 {
 	int i;
 	unsigned u;
 	float f;
-}
-Cv32suf;
+};
 
 
 template<typename _Tp, size_t fixed_size = 1024/sizeof(_Tp)+8> class AutoBuffer
 {
 public:
-	typedef _Tp value_type;
+	using value_type = _Tp;
 
 	//! the default constructor
 	AutoBuffer();
@@ -1586,7 +1585,7 @@ ExpandCCS( unsigned char* _ptr, int n, int elem_size )
 }
 
 
-typedef void (*DFTFunc)(
+using DFTFunc = void (*)(
 	 const void* src, void* dst, int n, int nf, int* factors,
 	 const int* itab, const void* wave, int tab_size,
 	 const void* spec, void* buf, int inv, double scale );

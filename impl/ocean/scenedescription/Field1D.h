@@ -27,79 +27,79 @@ template <typename T> class Field1D;
  * Definition of a multi field with boolean values.
  * @ingroup scenedescription
  */
-typedef Field1D<bool> MultiBool;
+using MultiBool = Field1D<bool>;
 
 /**
  * Definition of a multi field with color values.
  * @ingroup scenedescription
  */
-typedef Field1D<RGBAColor> MultiColor;
+using MultiColor = Field1D<RGBAColor>;
 
 /**
  * Definition of a multi field with float values.
  * @ingroup scenedescription
  */
-typedef Field1D<Scalar> MultiFloat;
+using MultiFloat = Field1D<Scalar>;
 
 /**
  * Definition of a multi field with integer values.
  * @ingroup scenedescription
  */
-typedef Field1D<int> MultiInt;
+using MultiInt = Field1D<int>;
 
 /**
  * Definition of a multi field with node values.
  * @ingroup scenedescription
  */
-typedef Field1D<NodeRef> MultiNode;
+using MultiNode = Field1D<NodeRef>;
 
 /**
  * Definition of a multi field with 3x3 matrix values.
  * @ingroup scenedescription
  */
-typedef Field1D<SquareMatrix3> MultiMatrix3;
+using MultiMatrix3 = Field1D<SquareMatrix3>;
 
 /**
  * Definition of a multi field with 4x4 matrix values.
  * @ingroup scenedescription
  */
-typedef Field1D<SquareMatrix4> MultiMatrix4;
+using MultiMatrix4 = Field1D<SquareMatrix4>;
 
 /**
  * Definition of a multi field with rotation values.
  * @ingroup scenedescription
  */
-typedef Field1D<Rotation> MultiRotation;
+using MultiRotation = Field1D<Rotation>;
 
 /**
  * Definition of a multi field with string values.
  * @ingroup scenedescription
  */
-typedef Field1D<std::string> MultiString;
+using MultiString = Field1D<std::string>;
 
 /**
  * Definition of a multi field with time values.
  * @ingroup scenedescription
  */
-typedef Field1D<Timestamp> MultiTime;
+using MultiTime = Field1D<Timestamp>;
 
 /**
  * Definition of a multi field with 2D vector values.
  * @ingroup scenedescription
  */
-typedef Field1D<Vector2> MultiVector2;
+using MultiVector2 = Field1D<Vector2>;
 
 /**
  * Definition of a multi field with 3D vector values.
  * @ingroup scenedescription
  */
-typedef Field1D<Vector3> MultiVector3;
+using MultiVector3 = Field1D<Vector3>;
 
 /**
  * Definition of a multi field with 4D vector values.
  * @ingroup scenedescription
  */
-typedef Field1D<Vector4> MultiVector4;
+using MultiVector4 = Field1D<Vector4>;
 
 /**
  * This class implements all 1D fields (fields holding an array of single values).
@@ -119,7 +119,7 @@ class Field1D : public Field
 		/**
 		 * Definition of a vector holding the single values.
 		 */
-		typedef std::vector<T> Values;
+		using Values = std::vector<T>;
 
 	public:
 

@@ -27,7 +27,7 @@ class Library;
  * @see ObjectRef, Library.
  * @ingroup media
  */
-typedef ObjectRef<Library> LibraryRef;
+using LibraryRef = ObjectRef<Library>;
 
 /**
  * This class is the base class for all scene description libraries.
@@ -43,7 +43,7 @@ class OCEAN_SCENEDESCRIPTION_EXPORT Library
 		/**
 		 * Definition of a map mapping file extensions to file type descriptions.
 		 */
-		typedef std::map<std::string, std::string> FileExtensions;
+		using FileExtensions = std::map<std::string, std::string>;
 
 	public:
 

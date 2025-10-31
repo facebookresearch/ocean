@@ -29,16 +29,16 @@ namespace OpenXR
 {
 
 #if !defined(GL_EXT_multisampled_render_to_texture)
-	typedef void (GL_APIENTRY* PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC) (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
-	typedef void (GL_APIENTRY* PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC) (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLsizei samples);
+	using PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC = void (GL_APIENTRY*) (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
+	using PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC = void (GL_APIENTRY*) (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLsizei samples);
 #endif
 
 #if !defined(GL_OVR_multiview)
-	typedef void (GL_APIENTRY* PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC) (GLenum target, GLenum attachment, GLuint texture, GLint level, GLint baseViewIndex, GLsizei numViews);
+	using PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRPROC = void (GL_APIENTRY*) (GLenum target, GLenum attachment, GLuint texture, GLint level, GLint baseViewIndex, GLsizei numViews);
 #endif
 
 #if !defined(GL_OVR_multiview_multisampled_render_to_texture)
-	typedef void (GL_APIENTRY* PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei samples, GLint baseViewIndex, GLsizei numViews);
+	using PFNGLFRAMEBUFFERTEXTUREMULTISAMPLEMULTIVIEWOVRPROC = void (GL_APIENTRY*)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei samples, GLint baseViewIndex, GLsizei numViews);
 #endif
 
 #ifndef GL_FRAMEBUFFER_SRGB_EXT

@@ -32,7 +32,7 @@ class OCEAN_NETWORK_EXPORT MessageQueue
 		/**
 		 * Definition of a message id.
 		 */
-		typedef unsigned int Id;
+		using Id = unsigned int;
 
 		/**
 		 * Returns an invalid message id.

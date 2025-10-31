@@ -29,7 +29,7 @@ class SDLScene;
  * @see SDLNode, Node.
  * @ingroup scenedescription
  */
-typedef SmartObjectRef<SDLNode, Node> SDLNodeRef;
+using SDLNodeRef = SmartObjectRef<SDLNode, Node>;
 
 /**
  * This class implements the base class for all scene description nodes.

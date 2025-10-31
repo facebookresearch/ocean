@@ -26,7 +26,7 @@ class SDXScene;
  * @see SDXScene, Node.
  * @ingroup scenedescription
  */
-typedef SmartObjectRef<SDXScene, Node> SDXSceneRef;
+using SDXSceneRef = SmartObjectRef<SDXScene, Node>;
 
 /**
  * This class implements the base class for all sdx scene object providing access to all elements of a scene.

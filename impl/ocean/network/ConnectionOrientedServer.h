@@ -31,7 +31,7 @@ class OCEAN_NETWORK_EXPORT ConnectionOrientedServer : virtual public Server
 		/**
 		 * Definition of a connection id.
 		 */
-		typedef unsigned int ConnectionId;
+		using ConnectionId = unsigned int;
 
 		/**
 		 * Returns an invalid connection id.

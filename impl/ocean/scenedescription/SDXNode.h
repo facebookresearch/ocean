@@ -34,13 +34,13 @@ class SDXScene;
  * @see SDXNode, Node.
  * @ingroup scenedescription
  */
-typedef SmartObjectRef<SDXNode, Node> SDXNodeRef;
+using SDXNodeRef = SmartObjectRef<SDXNode, Node>;
 
 /**
  * Definition of a set holding SDX node references.
  * @ingroup scenedescription
  */
-typedef std::set<SDXNodeRef> SDXNodeSet;
+using SDXNodeSet = std::set<SDXNodeRef>;
 
 /**
  * This class implements the base class for all SDX scene description nodes.
@@ -53,7 +53,7 @@ class OCEAN_SCENEDESCRIPTION_EXPORT SDXNode : virtual public Node
 		/**
 		 * Definition of a map mapping node ids to reference counters.
 		 */
-		typedef std::unordered_map<NodeId, unsigned int> NodeIdMap;
+		using NodeIdMap = std::unordered_map<NodeId, unsigned int>;
 
 		/**
 		 * This class implements a node environment container.

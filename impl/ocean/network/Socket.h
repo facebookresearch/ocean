@@ -39,13 +39,13 @@ class OCEAN_NETWORK_EXPORT Socket
 		/**
 		 * Definition of a socket id.
 		 */
-		typedef SOCKET SocketId;
+		using SocketId = SOCKET;
 
 #else
 		/**
 		 * Definition of a socket id.
 		 */
-		typedef int SocketId;
+		using SocketId = int;
 
 #endif
 

@@ -26,7 +26,7 @@ class SDXDynamicNode;
  * @see SDXDynamicNode, Node.
  * @ingroup scenedescription
  */
-typedef SmartObjectRef<SDXDynamicNode, Node> SDXDynamicNodeRef;
+using SDXDynamicNodeRef = SmartObjectRef<SDXDynamicNode, Node>;
 
 /**
  * This class implements the base class for all dynamic SDX scene description nodes.
