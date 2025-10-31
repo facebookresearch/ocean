@@ -274,102 +274,14 @@ bool EpipolarGeometry::epipolesFast(const SquareMatrix3& fundamental, Vector2& l
 	return true;
 }
 
-bool EpipolarGeometry::factorizeEssential(const SquareMatrix3& essential, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2& leftPoint, const Vector2& rightPoint, HomogenousMatrix4& transformation)
+size_t EpipolarGeometry::factorizeEssential(const SquareMatrix3& normalizedRight_E_normalizedLeft, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, HomogenousMatrix4& left_T_right)
 {
-	Matrix essentialMatrix(3, 3, essential.transposed().data());
+	ocean_assert(leftCamera.isValid());
+	ocean_assert(rightCamera.isValid());
+	ocean_assert(leftPoints != nullptr && rightPoints != nullptr);
+	ocean_assert(correspondences >= 1);
 
-	Matrix uMatrix, wValues, vMatrix;
-	if (!essentialMatrix.singularValueDecomposition(uMatrix, wValues, vMatrix))
-	{
-		return false;
-	}
-
-#ifdef OCEAN_DEBUG
-	const Matrix debugTest = uMatrix * Matrix(3, 3, wValues) * vMatrix.transposed();
-
-	for (size_t n = 0; n < essentialMatrix.elements(); ++n)
-	{
-		ocean_assert(Numeric::isWeakEqual(essentialMatrix(n), debugTest(n)));
-	}
-#endif
-
-	const Scalar w00 = wValues(0);
-	const Scalar w11 = wValues(1);
-	const Scalar w22 = wValues(2);
-	ocean_assert_and_suppress_unused(w22 <= w11 && Numeric::isWeakEqualEps(w22), w22);
-
-	if (Numeric::isNotWeakEqual(w00, w11))
-	{
-		Matrix newW(3, 3, false);
-
-		const Scalar wa = (w00 + w11) * Scalar(0.5);
-
-		newW(0, 0) = wa;
-		newW(1, 1) = wa;
-
-		essentialMatrix = uMatrix * newW * vMatrix.transposed();
-
-		if (!essentialMatrix.singularValueDecomposition(uMatrix, wValues, vMatrix))
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * S matrix:
-	 * |  0  1  0 |
-	 * | -1  0  0 |
-	 * |  0  0  1 |
-	 */
-	const SquareMatrix3 s(0, Scalar(-1), 0, Scalar(1), 0, 0, 0, 0, Scalar(1));
-
-	/**
-	 * Four possible solutions:
-	 * rotation      | translation
-	 * u * s * v^T   | u(0, 0, 1)^T
-	 * u * s * v^T   | -u(0, 0, 1)^T
-	 * u * s^T * v^T | u(0, 0, 1)^T
-	 * u * s^T * v^T | -u(0, 0, 1)^T
-	 */
-
-	const SquareMatrix3 uTransposed(uMatrix.data());
-	const SquareMatrix3 u(uTransposed.transposed());
-	const SquareMatrix3 vTransposed(vMatrix.data());
-
-	SquareMatrix3 rotation0(u * s * vTransposed);
-	SquareMatrix3 rotation1(u * s.transposed() * vTransposed);
-
-	if constexpr (std::is_same<double, Scalar>::value)
-	{
-		ocean_assert(Numeric::isEqual(Numeric::abs(rotation0.determinant()), Scalar(1)));
-		ocean_assert(Numeric::isEqual(Numeric::abs(rotation1.determinant()), Scalar(1)));
-	}
-
-	Vector3 translation0(u.zAxis());
-	Vector3 translation1(-translation0);
-
-	if (rotation0.determinant() < 0)
-	{
-		ocean_assert(rotation1.determinant() < 0);
-
-		rotation0 *= Scalar(-1);
-		rotation1 *= Scalar(-1);
-	}
-	else
-	{
-		ocean_assert(rotation1.determinant() > 0);
-	}
-
-	return solveAmbiguousTransformations(Camera::flippedTransformationLeftAndRightSide(HomogenousMatrix4(translation0, rotation0).inverted()),
-										Camera::flippedTransformationLeftAndRightSide(HomogenousMatrix4(translation1, rotation0).inverted()),
-										Camera::flippedTransformationLeftAndRightSide(HomogenousMatrix4(translation0, rotation1).inverted()),
-										Camera::flippedTransformationLeftAndRightSide(HomogenousMatrix4(translation1, rotation1).inverted()),
-										leftCamera, rightCamera, Vectors2(1, leftPoint), Vectors2(1, rightPoint), transformation) == 1u;
-}
-
-size_t EpipolarGeometry::factorizeEssential(const SquareMatrix3& essential, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vectors2& leftPoints, const Vectors2& rightPoints, HomogenousMatrix4& transformation)
-{
-	Matrix essentialMatrix(3, 3, essential.transposed().data());
+	Matrix essentialMatrix(3, 3, normalizedRight_E_normalizedLeft.data(), false /*valuesRowAligned*/);
 
 	Matrix uMatrix, wValues, vMatrix;
 	if (!essentialMatrix.singularValueDecomposition(uMatrix, wValues, vMatrix))
@@ -386,35 +298,35 @@ size_t EpipolarGeometry::factorizeEssential(const SquareMatrix3& essential, cons
 	}
 #endif
 
-	const Scalar w00 = wValues(0);
-	const Scalar w11 = wValues(1);
-	const Scalar w22 = wValues(2);
-	ocean_assert_and_suppress_unused(w22 <= w11 && Numeric::isWeakEqualEps(w22), w22);
+	const Scalar singularValue0 = wValues(0);
+	const Scalar singularValue1 = wValues(1);
+	const Scalar singularValue2 = wValues(2);
+	ocean_assert_and_suppress_unused(singularValue2 <= singularValue1 && Numeric::isWeakEqualEps(singularValue2), singularValue2);
 
-	if (Numeric::isNotWeakEqual(w00, w11))
+	if (Numeric::isNotWeakEqual(singularValue0, singularValue1))
 	{
-		Matrix newW(3, 3, false);
+		Matrix newSingularValues(3, 3, false);
 
-		const Scalar wa = (w00 + w11) * Scalar(0.5);
+		const Scalar averageSingularValue = (singularValue0 + singularValue1) * Scalar(0.5);
 
-		newW(0, 0) = wa;
-		newW(1, 1) = wa;
-		newW(2, 2) = 0;
+		newSingularValues(0, 0) = averageSingularValue;
+		newSingularValues(1, 1) = averageSingularValue;
+		newSingularValues(2, 2) = 0;
 
-		essentialMatrix = uMatrix * newW * vMatrix.transposed();
+		essentialMatrix = uMatrix * newSingularValues * vMatrix.transposed();
 
 		if (!essentialMatrix.singularValueDecomposition(uMatrix, wValues, vMatrix))
 		{
-			return 0u;
+			return 0;
 		}
 
 #ifdef OCEAN_DEBUG
-		const Scalar _w00 = wValues(0);
-		const Scalar _w11 = wValues(1);
-		const Scalar _w22 = wValues(2);
-		OCEAN_SUPPRESS_UNUSED_WARNING(_w22);
+		const Scalar debugSingularValue0 = wValues(0);
+		const Scalar debugSingularValue1 = wValues(1);
+		const Scalar debugSingularValue2 = wValues(2);
+		OCEAN_SUPPRESS_UNUSED_WARNING(debugSingularValue2);
 
-		ocean_assert(Numeric::isWeakEqual(_w00, _w11));
+		ocean_assert(Numeric::isWeakEqual(debugSingularValue0, debugSingularValue1));
 #endif
 	}
 
@@ -439,32 +351,56 @@ size_t EpipolarGeometry::factorizeEssential(const SquareMatrix3& essential, cons
 	const SquareMatrix3 u(uTransposed.transposed());
 	const SquareMatrix3 vTransposed(vMatrix.data());
 
-	SquareMatrix3 rotation0(u * s * vTransposed);
-	SquareMatrix3 rotation1(u * s.transposed() * vTransposed);
+	SquareMatrix3 rightRotation0(u * s * vTransposed);
+	SquareMatrix3 rightRotation1(u * s.transposed() * vTransposed);
 
-	ocean_assert(Numeric::isEqual(Numeric::abs(rotation0.determinant()), Scalar(1)));
-	ocean_assert(Numeric::isEqual(Numeric::abs(rotation1.determinant()), Scalar(1)));
+	ocean_assert(Numeric::isEqual(Numeric::abs(rightRotation0.determinant()), Scalar(1)));
+	ocean_assert(Numeric::isEqual(Numeric::abs(rightRotation1.determinant()), Scalar(1)));
 
-	Vector3 translation0(u.zAxis());
-	Vector3 translation1(-translation0);
+	Vector3 rightTranslation0(u.zAxis());
+	Vector3 rightTranslation1(-rightTranslation0);
 
-	if (rotation0.determinant() < 0)
+	if (rightRotation0.determinant() < 0)
 	{
-		ocean_assert(rotation1.determinant() < 0);
+		ocean_assert(rightRotation1.determinant() < 0);
 
-		rotation0 *= Scalar(-1);
-		rotation1 *= Scalar(-1);
+		rightRotation0 *= Scalar(-1);
+		rightRotation1 *= Scalar(-1);
 	}
 	else
 	{
-		ocean_assert(rotation1.determinant() > 0);
+		ocean_assert(rightRotation1.determinant() > 0);
 	}
 
-	return solveAmbiguousTransformations(Camera::flippedTransformationLeftAndRightSide(HomogenousMatrix4(translation0, rotation0).inverted()),
-										Camera::flippedTransformationLeftAndRightSide(HomogenousMatrix4(translation1, rotation0).inverted()),
-										Camera::flippedTransformationLeftAndRightSide(HomogenousMatrix4(translation0, rotation1).inverted()),
-										Camera::flippedTransformationLeftAndRightSide(HomogenousMatrix4(translation1, rotation1).inverted()),
-										leftCamera, rightCamera, leftPoints, rightPoints, transformation);
+	HomogenousMatrix4 bestLeft_T_bestRight(false);
+	size_t bestNumberCorrespondences = 0;
+
+	for (unsigned int nCombination = 0u; nCombination < 4u; ++nCombination)
+	{
+		const unsigned int translationIndex = nCombination % 2u;
+		const unsigned int rotationIndex = nCombination / 2u;
+
+		const Vector3& combinationTranslation = translationIndex == 0u ? rightTranslation0 : rightTranslation1;
+		const SquareMatrix3& combinationRotation = rotationIndex == 0u ? rightRotation0 : rightRotation1;
+
+		const HomogenousMatrix4 candidateFlippedRight_T_candidateFlippedLeft(combinationTranslation, combinationRotation);
+
+		const HomogenousMatrix4 candidateRight_T_candidateLeft(Camera::flippedTransformationLeftAndRightSide(candidateFlippedRight_T_candidateFlippedLeft));
+
+		const HomogenousMatrix4 candidateLeft_T_candidateRight(candidateRight_T_candidateLeft.inverted());
+
+		const size_t numberCorrespondences = validateTransformation(candidateLeft_T_candidateRight, leftCamera, rightCamera, leftPoints, rightPoints, correspondences);
+
+		if (numberCorrespondences > bestNumberCorrespondences)
+		{
+			bestNumberCorrespondences = numberCorrespondences;
+			bestLeft_T_bestRight= candidateLeft_T_candidateRight;
+		}
+	}
+
+	left_T_right = bestLeft_T_bestRight;
+
+	return bestNumberCorrespondences;
 }
 
 bool EpipolarGeometry::rectificationHomography(const HomogenousMatrix4& transformation, const PinholeCamera& pinholeCamera, SquareMatrix3& leftHomography, SquareMatrix3& rightHomography, Quaternion& appliedRotation, PinholeCamera* newCamera)
@@ -816,51 +752,6 @@ ObjectPoints EpipolarGeometry::triangulateImagePointsIF(const ConstIndexedAccess
 
 	ocean_assert(objectPoints.size() == correspondences);
 	return objectPoints;
-}
-
-size_t EpipolarGeometry::solveAmbiguousTransformations(const HomogenousMatrix4& transformation0, const HomogenousMatrix4& transformation1, const HomogenousMatrix4& transformation2, const HomogenousMatrix4& transformation3, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vectors2& leftPoints, const Vectors2& rightPoints, HomogenousMatrix4& transformation)
-{
-	ocean_assert(transformation0.isValid());
-	ocean_assert(transformation1.isValid());
-	ocean_assert(transformation2.isValid());
-	ocean_assert(transformation3.isValid());
-
-	ocean_assert(leftCamera && rightCamera);
-
-	ocean_assert(!leftPoints.empty());
-	ocean_assert(leftPoints.empty() == rightPoints.empty());
-
-	const size_t valid0 = validateTransformation(transformation0, leftCamera, rightCamera, leftPoints.data(), rightPoints.data(), leftPoints.size());
-	const size_t valid1 = validateTransformation(transformation1, leftCamera, rightCamera, leftPoints.data(), rightPoints.data(), leftPoints.size());
-	const size_t valid2 = validateTransformation(transformation2, leftCamera, rightCamera, leftPoints.data(), rightPoints.data(), leftPoints.size());
-	const size_t valid3 = validateTransformation(transformation3, leftCamera, rightCamera, leftPoints.data(), rightPoints.data(), leftPoints.size());
-
-	if (valid0 >= valid1 && valid0 >= valid2 && valid0 >= valid3)
-	{
-		transformation = transformation0;
-		return valid0;
-	}
-
-	if (valid1 >= valid0 && valid1 >= valid2 && valid1 >= valid3)
-	{
-		transformation = transformation1;
-		return valid1;
-	}
-
-	if (valid2 >= valid0 && valid2 >= valid1 && valid2 >= valid3)
-	{
-		transformation = transformation2;
-		return valid2;
-	}
-
-	if (valid3 >= valid0 && valid3 >= valid1 && valid3 >= valid2)
-	{
-		transformation = transformation3;
-		return valid3;
-	}
-
-	ocean_assert(false && "This should never happen!");
-	return 0;
 }
 
 size_t EpipolarGeometry::validateTransformation(const HomogenousMatrix4& left_T_right, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences)

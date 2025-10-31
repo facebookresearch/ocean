@@ -155,34 +155,35 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		static inline Line2 rightEpipolarLine(const SquareMatrix3& fundamental, const Vector2& leftPoint);
 
 		/**
-		 * Factorizes the essential matrix into rotation and translation.
+		 * Factorizes an essential matrix into a 6-DOF camera pose composed of rotation and translation.
 		 * Beware: The translation can be determined up to a scale factor only.<br>
-		 * The resulting factorization provides the extrinsic camera matrix for the right camera while the left camera has the identity extrinsic camera matrix.<br>
-		 * Thus, the resulting transformation transforms points defined inside the right camera coordinate system into point defined inside the left camera coordinate system.
-		 * @param essential The essential matrix to be factorized
-		 * @param leftCamera Left camera corresponding to the left image point, must be valid
-		 * @param rightCamera Right camera corresponding to the right image point, must be valid
-		 * @param leftPoint One image point inside the left image, this point must correspond to the given right image point
-		 * @param rightPoint One image point inside the right image, this point must correspond to the given left image point
-		 * @param transformation Resulting transformation of between the left and the right camera
+		 * The resulting factorization provides the camera pose for the right camera while the left camera is located at the origin with identity pose.<br>
+		 * Thus, the resulting transformation transforms points defined in the right camera coordinate system into points defined in the left camera coordinate system: pointLeft = left_T_right * pointRight.<br>
+		 * @param normalizedRight_E_normalizedLeft The essential matrix to be factorized, must be valid
+		 * @param leftCamera The left camera profile defining the projection, must be valid
+		 * @param rightCamera The right camera profile defining the projection, must be valid
+		 * @param leftPoint One image point in the left image, this point must correspond to the given right image point, must be valid
+		 * @param rightPoint One image point in the right image, this point must correspond to the given left image point, must be valid
+		 * @param left_T_right The resulting transformation between the left and the right camera, transforming points from right to left, must be valid
 		 * @return True, if succeeded
 		 */
-		static bool factorizeEssential(const SquareMatrix3& essential, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2& leftPoint, const Vector2& rightPoint, HomogenousMatrix4& transformation);
+		static inline bool factorizeEssential(const SquareMatrix3& normalizedRight_E_normalizedLeft, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2& leftPoint, const Vector2& rightPoint, HomogenousMatrix4& left_T_right);
 
 		/**
-		 * Factorizes an essential matrix into a camera pose composed of rotation and translation.
+		 * Factorizes an essential matrix into a 6-DOF camera pose composed of rotation and translation.
 		 * Beware: The translation can be determined up to a scale factor only.<br>
-		 * The factorization provides the extrinsic camera matrix (camera pose) for the right camera while the left camera is expected to have the identity as extrinsic camera matrix.<br>
-		 * The resulting transformation transforms points defined inside the right camera coordinate system into point defined inside the left camera coordinate system: pointLeft = transformation * pointRight.<br>
-		 * @param essential The essential matrix to be factorized
-		 * @param leftCamera Left camera corresponding to the left image point, must be valid
-		 * @param rightCamera Right camera corresponding to the right image point, must be valid
-		 * @param leftPoints All image point inside the left image to be checked whether they produce 3D object points lying in front of the camera
-		 * @param rightPoints All image points inside the right image, one for each left point
-		 * @param transformation Resulting transformation between the left and the right camera
+		 * The factorization provides the camera pose for the right camera while the left camera is located at the origin with identity pose.<br>
+		 * The resulting transformation transforms points defined in the right camera coordinate system into points defined in the left camera coordinate system: pointLeft = left_T_right * pointRight.<br>
+		 * @param normalizedRight_E_normalizedLeft The essential matrix to be factorized, must be valid
+		 * @param leftCamera The left camera profile defining the projection, must be valid
+		 * @param rightCamera The right camera profile defining the projection, must be valid
+		 * @param leftPoints All image points in the left image to be checked whether they produce 3D object points lying in front of the camera, must be valid
+		 * @param rightPoints All image points in the right image, one for each left point, must be valid
+		 * @param correspondences The number of point correspondences, with range [1, infinity)
+		 * @param left_T_right The resulting transformation between the left and the right camera, transforming points from right to left
 		 * @return The number of given image points resulting in valid object points, with range [0, infinity)
 		 */
-		static size_t factorizeEssential(const SquareMatrix3& essential, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vectors2& leftPoints, const Vectors2& rightPoints, HomogenousMatrix4& transformation);
+		static size_t factorizeEssential(const SquareMatrix3& normalizedRight_E_normalizedLeft, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, HomogenousMatrix4& left_T_right);
 
 		/**
 		 * Determines the homograph for two (stereo) frames rectifying both images using the transformation between the left and the right camera.
@@ -252,22 +253,6 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 	protected:
 
 		/**
-		 * Determines one transformation from a set of four transformations with most given image point correspondences provide 3D object points in front of the two cameras.
-		 * The transformation for the first camera is defined as unit transformation, the four transformation between second and first camera is provided instead.
-		 * @param transformation0 First transformation candidate
-		 * @param transformation1 Second transformation candidate
-		 * @param transformation2 Third transformation candidate
-		 * @param transformation3 Fourth transformation candidate
-		 * @param leftCamera Left camera profile
-		 * @param rightCamera Right camera profile
-		 * @param leftPoints Left image points
-		 * @param rightPoints Right image points, each point corresponds to one from the left set
-		 * @param transformation Resulting transformation with most 3D object points in front of both cameras
-		 * @return Number of valid object points
-		 */
-		static size_t solveAmbiguousTransformations(const HomogenousMatrix4& transformation0, const HomogenousMatrix4& transformation1, const HomogenousMatrix4& transformation2, const HomogenousMatrix4& transformation3, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vectors2& leftPoints, const Vectors2& rightPoints, HomogenousMatrix4& transformation);
-
-		/**
 		 * Returns the number of 3D object points lying in front of two cameras for a given transformation between the two cameras.
 		 * The pose of the first camera is located in the origin (identity transformation) while the pose of the second camera is defined by the given transformation.
 		 * @param left_T_right The transformation between the right and the left camera, must be valid
@@ -317,6 +302,11 @@ inline Line2 EpipolarGeometry::epipolarLine2Line(const Vector3& line)
 	return Line2(line / normalLength);
 
 	//return Line2(Vector3(normal.x() * factor, normal.y() * factor, distance *));
+}
+
+inline bool EpipolarGeometry::factorizeEssential(const SquareMatrix3& normalizedRight_E_normalizedLeft, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2& leftPoint, const Vector2& rightPoint, HomogenousMatrix4& left_T_right)
+{
+	return factorizeEssential(normalizedRight_E_normalizedLeft, leftCamera, rightCamera, &leftPoint, &rightPoint, 1, left_T_right) == 1;
 }
 
 }

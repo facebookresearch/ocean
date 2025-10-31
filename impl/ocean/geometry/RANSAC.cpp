@@ -1400,7 +1400,7 @@ bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamer
 			const SquareMatrix3 candidateEssential(EpipolarGeometry::fundamental2essential(candidateFundamental, leftCamera, rightCamera));
 
 			HomogenousMatrix4 candidateTransformation;
-			if (EpipolarGeometry::factorizeEssential(candidateEssential, leftCamera, rightCamera, permutationLeftImagePoints, permutationRightImagePoints, candidateTransformation) == (unsigned int)permutationLeftImagePoints.size())
+			if (EpipolarGeometry::factorizeEssential(candidateEssential, leftCamera, rightCamera, permutationLeftImagePoints.data(), permutationRightImagePoints.data(), permutationLeftImagePoints.size(), candidateTransformation) == permutationLeftImagePoints.size())
 			{
 				const Scalar candidateRotationAngle = candidateTransformation.rotation().angle();
 				const Vector3 candidateTranslation = candidateTransformation.translation();
