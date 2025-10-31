@@ -37,7 +37,7 @@ class HTTPSClient::CurlSessionData
 		/**
 		 * Definition of a vector holding several buffers.
 		 */
-		typedef std::vector<Buffer> Chunks;
+		using Chunks = std::vector<Buffer>;
 
 	public:
 

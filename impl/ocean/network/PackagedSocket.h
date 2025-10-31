@@ -130,7 +130,7 @@ class OCEAN_NETWORK_EXPORT PackagedSocket : virtual public Socket
 		/**
 		 * Definition of a queue holding memory blocks.
 		 */
-		typedef std::queue<MemoryBlock> MemoryBlockQueue;
+		using MemoryBlockQueue = std::queue<MemoryBlock>;
 
 		/**
 		 * Definition of a package header.
@@ -189,7 +189,7 @@ class OCEAN_NETWORK_EXPORT PackagedSocket : virtual public Socket
 		/**
 		 * Definition of a message id.
 		 */
-		typedef uint32_t MessageId;
+		using MessageId = uint32_t;
 
 		/**
 		 * Returns an invalid message id.

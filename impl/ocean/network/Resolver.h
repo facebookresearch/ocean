@@ -33,12 +33,12 @@ class OCEAN_NETWORK_EXPORT Resolver : public Singleton<Resolver>
 		/**
 		 * Definition of a vector holding addresses.
 		 */
-		typedef std::vector<Address4> Addresses4;
+		using Addresses4 = std::vector<Address4>;
 
 		/**
 		 * Definition of an unordered set holding addresses.
 		 */
-		typedef std::unordered_set<Address4, Address4> AddressSet4;
+		using AddressSet4 = std::unordered_set<Address4, Address4>;
 
 	public:
 

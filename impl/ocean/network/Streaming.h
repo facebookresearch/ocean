@@ -43,7 +43,7 @@ class OCEAN_NETWORK_EXPORT Streaming
 		/**
 		 * Definition of a session id.
 		 */
-		typedef MessageQueue::Id SessionId;
+		using SessionId = MessageQueue::Id;
 
 	protected:
 

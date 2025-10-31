@@ -46,13 +46,13 @@ class OCEAN_NETWORK_EXPORT ConnectionOrientedServer : virtual public Server
 		 * Parameter 2 provides the potential connection id if the connection is accepted.<br>
 		 * Return True, to accept the connection.<br>
 		 */
-		typedef Callback<bool, const Address4&, const Port&, const ConnectionId> ConnectionRequestCallback;
+		using ConnectionRequestCallback = Callback<bool, const Address4&, const Port&, const ConnectionId>;
 
 		/**
 		 * Definition of a disconnect callback function.<br>
 		 * Parameter 0 provides the id of the connection which has been disconnected
 		 */
-		typedef Callback<void, const ConnectionId> DisconnectCallback;
+		using DisconnectCallback = Callback<void, const ConnectionId>;
 
 		/**
 		 * Definition of a receive callback function.
@@ -60,7 +60,7 @@ class OCEAN_NETWORK_EXPORT ConnectionOrientedServer : virtual public Server
 		 * Parameter 1 provides the buffer which has been received, must be copied.<br>
 		 * Parameter 2 provides the size of the buffer which has been received, in bytes
 		 */
-		typedef Callback<void, const ConnectionId, const void*, const size_t> ReceiveCallback;
+		using ReceiveCallback = Callback<void, const ConnectionId, const void*, const size_t>;
 
 	protected:
 
@@ -114,7 +114,7 @@ class OCEAN_NETWORK_EXPORT ConnectionOrientedServer : virtual public Server
 		/**
 		 * Definition of a map mapping connection ids to sockets.
 		 */
-		typedef std::unordered_map<ConnectionId, ConnectionObject> ConnectionMap;
+		using ConnectionMap = std::unordered_map<ConnectionId, ConnectionObject>;
 
 	public:
 

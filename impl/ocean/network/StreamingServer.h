@@ -34,7 +34,7 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 		/**
 		 * Definition of a callback function on channel start, stop or pause requests.
 		 */
-		typedef Callback<void, const State> ChannelCallback;
+		using ChannelCallback = Callback<void, const State>;
 
 		/**
 		 * Definition of a channel id.
@@ -177,7 +177,7 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 				/**
 				 * Definition of a map mapping stream ids to streams.
 				 */
-				typedef std::map<StreamId, std::shared_ptr<Stream>> StreamMap;
+				using StreamMap = std::map<StreamId, std::shared_ptr<Stream>>;
 
 			public:
 
@@ -291,7 +291,7 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 		/**
 		 * Definition of a map mapping channel ids to channels.
 		 */
-		 typedef std::map<ChannelId, Channel> ChannelMap;
+		 using ChannelMap = std::map<ChannelId, Channel>;
 
 		/**
 		 * This class holds some information connected with a TCP connection.
@@ -375,7 +375,7 @@ class OCEAN_NETWORK_EXPORT StreamingServer : public Streaming
 		/**
 		 * Definition of a map mapping TCP connection ids to server stream connections.
 		 */
-		typedef std::unordered_map<TCPServer::ConnectionId, Connection> ConnectionMap;
+		using ConnectionMap = std::unordered_map<TCPServer::ConnectionId, Connection>;
 
 	public:
 

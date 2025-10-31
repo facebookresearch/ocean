@@ -73,7 +73,7 @@ class OCEAN_NETWORK_EXPORT Socket
 		/**
 		 * Definition of a vector holding 8 bit values.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 	public:
 

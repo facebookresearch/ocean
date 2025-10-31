@@ -93,7 +93,7 @@ class OCEAN_NETWORK_EXPORT HTTPClient
 				/**
 				 * Definition of a vector holding header lines.
 				 */
-				typedef std::vector<std::string> Lines;
+				using Lines = std::vector<std::string>;
 
 			public:
 
@@ -238,14 +238,14 @@ class OCEAN_NETWORK_EXPORT HTTPClient
 		/**
 		 * Definition of a vector holding characters.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 		/**
 		 * Callback for receiving progress information when performing a HTTP request.
 		 * The first parameter represents how many Bytes of the payload have been received so far, with range [0, infinity)
 		 * The second parameter represents the total size of the payload in bytes, with range [0, infinity). If the total size is unknown this parameter is 0.
 		 */
-		typedef Callback<void, size_t, size_t> ProgressCallback;
+		using ProgressCallback = Callback<void, size_t, size_t>;
 
 	public:
 

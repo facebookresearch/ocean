@@ -37,7 +37,7 @@ class OCEAN_NETWORK_EXPORT ConnectionlessServer :
 		 * Parameter 2 provides the buffer that has been received, must be copied
 		 * Parameter 3 provides the size of the received buffer, in bytes
 		 */
-		typedef Callback<void, const Address4&, const Port&, const void*, const size_t> ReceiveCallback;
+		using ReceiveCallback = Callback<void, const Address4&, const Port&, const void*, const size_t>;
 
 	public:
 

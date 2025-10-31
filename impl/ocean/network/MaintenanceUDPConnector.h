@@ -42,12 +42,12 @@ class OCEAN_NETWORK_EXPORT MaintenanceUDPConnector :
 		/**
 		 * Definition of a vector holding bytes.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 		/**
 		 * Definition of a buffer queue.
 		 */
-		typedef std::queue<Buffer> BufferQueue;
+		using BufferQueue = std::queue<Buffer>;
 
 	public:
 

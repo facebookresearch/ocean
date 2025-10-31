@@ -38,19 +38,19 @@ class OCEAN_NETWORK_EXPORT StreamingClient : public Streaming
 		/**
 		 * Definition of a callback function for streaming server requests.
 		 */
-		typedef Callback<bool, const State, const std::string&> RequestCallback;
+		using RequestCallback = Callback<bool, const State, const std::string&>;
 
 		/**
 		 * Definition of a callback function for streaming data.
 		 * Parameter 0 provides the buffer that has been received
 		 * Parameter 1 provides the size of the buffer, in bytes
 		 */
-		typedef Callback<void, const void*, const size_t> ReceiveCallback;
+		using ReceiveCallback = Callback<void, const void*, const size_t>;
 
 		/**
 		 * Definition of a vector holding channels.
 		 */
-		typedef std::vector<std::string> Channels;
+		using Channels = std::vector<std::string>;
 
 	public:
 

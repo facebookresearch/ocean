@@ -38,7 +38,7 @@ class OCEAN_NETWORK_EXPORT SocketScheduler :
 		/**
 		 * Definition of a set holding socket pointers.
 		 */
-		typedef std::unordered_set<Socket*> SocketSet;
+		using SocketSet = std::unordered_set<Socket*>;
 
 	protected:
 

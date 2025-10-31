@@ -48,7 +48,7 @@ class OCEAN_NETWORK_EXPORT PackagedTCPServer :
 		/**
 		 * Definition of an unordered map mapping connection ids to ConnectionMemory objects.
 		 */
-		typedef std::unordered_map<ConnectionId, ConnectionMemory> ConnectionMemoryMap;
+		using ConnectionMemoryMap = std::unordered_map<ConnectionId, ConnectionMemory>;
 
 	public:
 

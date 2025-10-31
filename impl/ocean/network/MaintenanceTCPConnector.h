@@ -43,22 +43,22 @@ class OCEAN_NETWORK_EXPORT MaintenanceTCPConnector :
 		/**
 		 * Definition of a vector holding bytes.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 		/**
 		 * Definition of a vector storing buffers.
 		 */
-		typedef std::vector<Buffer> Buffers;
+		using Buffers = std::vector<Buffer>;
 
 		/**
 		 * Definition of a buffer queue.
 		 */
-		typedef std::deque<Buffer> BufferQueue;
+		using BufferQueue = std::deque<Buffer>;
 
 		/**
 		 * Definition of a map mapping connection ids to buffer queues.
 		 */
-		typedef std::unordered_map<TCPServer::ConnectionId, BufferQueue> BufferQueueMap;
+		using BufferQueueMap = std::unordered_map<TCPServer::ConnectionId, BufferQueue>;
 
 	public:
 

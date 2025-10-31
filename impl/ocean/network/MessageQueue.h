@@ -45,17 +45,17 @@ class OCEAN_NETWORK_EXPORT MessageQueue
 		/**
 		 * Definition of a message pair.
 		 */
-		typedef std::pair<std::string, std::string> Message;
+		using Message = std::pair<std::string, std::string>;
 
 		/**
 		 * Definition of a queue holding message pairs.
 		 */
-		typedef std::queue<Message> Queue;
+		using Queue = std::queue<Message>;
 
 		/**
 		 * Definition of a map mapping message ids to message queues.
 		 */
-		typedef std::unordered_map<Id, Queue> MessageMap;
+		using MessageMap = std::unordered_map<Id, Queue>;
 
 	public:
 

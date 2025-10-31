@@ -33,12 +33,12 @@ class OCEAN_NETWORK_EXPORT ConnectionOrientedClient : virtual public Client
 		 * The first parameter provides the received data, which must be copied
 		 * The second parameter provides the size of the received data, in bytes
 		 */
-		typedef Callback<void, const void*, const size_t> ReceiveCallback;
+		using ReceiveCallback = Callback<void, const void*, const size_t>;
 
 		/**
 		 * Definition of a disconnection callback function.
 		 */
-		typedef Callback<void> DisconnectCallback;
+		using DisconnectCallback = Callback<void>;
 
 	public:
 

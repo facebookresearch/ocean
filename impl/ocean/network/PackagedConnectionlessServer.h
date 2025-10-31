@@ -39,7 +39,7 @@ class OCEAN_NETWORK_EXPORT PackagedConnectionlessServer :
 		 * Parameter 3 provides the size of the received buffer, in bytes; 0 if the message could not be delivered correctly
 		 * Parameter 4 provides the id of the message to which the received buffer belongs
 		 */
-		typedef Callback<void, const Address4&, const Port&, const void*, const size_t, const MessageId> ReceiveCallback;
+		using ReceiveCallback = Callback<void, const Address4&, const Port&, const void*, const size_t, const MessageId>;
 
 	protected:
 
@@ -198,7 +198,7 @@ class OCEAN_NETWORK_EXPORT PackagedConnectionlessServer :
 		/**
 		 * Definition of a map mapping message ids to massage data objects.
 		 */
-		typedef std::map<Triple, MessageData> MessageMap;
+		using MessageMap = std::map<Triple, MessageData>;
 
 	public:
 

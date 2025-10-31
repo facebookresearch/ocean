@@ -32,12 +32,12 @@ class BufferQueue
 		/**
 		 * Definition of a vector holding bytes.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 		/**
 		 * Definition of a double-ended queue holding buffers.
 		 */
-		typedef std::deque<Buffer> Queue;
+		using Queue = std::deque<Buffer>;
 
 	public:
 
