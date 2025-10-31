@@ -700,7 +700,7 @@ bool ARSessionManager::Session::extractPlanes(ArSession* arSession, ArFrame* arF
 				}
 			}
 
-			// we need an unique id for the plane
+			// we need a unique id for the plane
 
 			PlaneIdMap::iterator iPlane = planeIdMap_.find(arPlane);
 

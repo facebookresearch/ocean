@@ -190,7 +190,7 @@ class OCEAN_DEVICES_ARCORE_EXPORT ARSessionManager : public Singleton<ARSessionM
 		bool registerTracker(ACDevice* tracker, const Media::FrameMediumRef& frameMedium);
 
 		/**
-		 * Unregisteres a given tracker.
+		 * Unregisters a given tracker.
 		 * Needs to be called before the tracker is disposed.
 		 * @param tracker The tracker to unregister, must be valid
 		 * @return True, if succeeded

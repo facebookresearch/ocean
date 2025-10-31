@@ -153,7 +153,7 @@ class ScopedARObject
 		inline ~ScopedARObject();
 
 		/**
-		 * Allows to ingest an object via an external function.
+		 * Allows ingesting an object via an external function.
 		 * In case this scoped object already holds an existing object, the existing object will be released first.
 		 * @return The pointer to the internal object's pointer.
 		 */
