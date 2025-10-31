@@ -23,7 +23,7 @@ namespace Bullseyes
 
 bool BullseyeDetectorMono::Parameters::isValid() const noexcept
 {
-	return true;
+	return framePyramidLayers_ >= 1u;
 }
 
 unsigned int BullseyeDetectorMono::Parameters::framePyramidPixelThreshold() const noexcept
