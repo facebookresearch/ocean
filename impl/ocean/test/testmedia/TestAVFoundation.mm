@@ -84,7 +84,7 @@ bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double t
 
 	RandomGenerator randomGenerator;
 
-	typedef std::pair<FrameType::PixelFormat, OSType> PixelFormatPair;
+	using PixelFormatPair = std::pair<FrameType::PixelFormat, OSType>;
 
 	const std::vector<PixelFormatPair> pixelFormatPairs =
 	{

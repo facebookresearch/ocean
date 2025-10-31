@@ -3407,13 +3407,13 @@ bool StaticFunction<RT, PT0, PT1, PT2, PT3, PT4, PT5, PT6, PT7, PT8, PT9, PT10, 
  * }
  *
  * // Definition of a callback function with not return value and no function parameter
- * typedef Callback<void> FirstCallback;
+ * using FirstCallback = Callback<void>;
  *
  * // Definition of a callback function with 'bool' as return type and 'int' and 'unsigned char*' as function parameter
- * typedef Callback<bool, int, const unsigned char*> SecondCallback;
+ * using SecondCallback = Callback<bool, int, const unsigned char*>;
  *
  * // Definition of a callback function with 'std::string' as return type and 'short' as function parameter
- * typedef Callback<std::string, short> ThirdCallback;
+ * using ThirdCallback = Callback<std::string, short>;
  *
  * // Any function using the callback
  * void main()

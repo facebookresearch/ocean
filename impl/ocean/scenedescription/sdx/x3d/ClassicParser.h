@@ -42,7 +42,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT ClassicParser
 		/**
 		 * Definition of a scanner token.
 		 */
-		typedef ClassicScanner::Token Token;
+		using Token = ClassicScanner::Token;
 
 	public:
 

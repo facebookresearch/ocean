@@ -109,7 +109,7 @@ class Identity
  * @code
  * void function()
  * {
- *     typedef SquareValueTyper<char>::Type SquareType;
+ *     using SquareType = SquareValueTyper<char>::Type;
  *
  *     char value = 7;
  *
@@ -152,7 +152,7 @@ class SquareValueTyper
  * @code
  * void function()
  * {
- *     typedef DifferenceValueTyper<char>::Type DifferenceType;
+ *     using DifferenceType = DifferenceValueTyper<char>::Type;
  *
  *     char valueA = 7;
  *     char valueB = 170;
@@ -201,7 +201,7 @@ class DifferenceValueTyper
  * @code
  * void function()
  * {
- *     typedef AbsoluteDifferenceValueTyper<char>::Type AbsoluteDifferenceType;
+ *     using AbsoluteDifferenceType = AbsoluteDifferenceValueTyper<char>::Type;
  *
  *     char valueA = 7;
  *     char valueB = 170;

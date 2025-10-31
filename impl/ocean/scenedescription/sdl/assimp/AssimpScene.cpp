@@ -63,7 +63,7 @@ Rendering::SceneRef AssimpScene::internalApply(const Rendering::EngineRef& engin
 
 	ocean_assert(assimpScene->mRootNode != nullptr);
 
-	typedef std::pair<aiNode*, Rendering::TransformRef> NodePair;
+	using NodePair = std::pair<aiNode*, Rendering::TransformRef>;
 
 	const Rendering::SceneRef scene(engine->factory().createScene());
 	ocean_assert(scene);

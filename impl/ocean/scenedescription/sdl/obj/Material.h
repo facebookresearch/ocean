@@ -41,7 +41,7 @@ class OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT Material
 		/**
 		 * Definition of illumination models.
 		 */
-		typedef unsigned int IlluminationModel;
+		using IlluminationModel = unsigned int;
 
 	public:
 

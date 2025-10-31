@@ -34,7 +34,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT OrientationInterpolator : virtual pu
 		/**
 		 * Definition of a vector holding quaternion rotation values.
 		 */
-		typedef std::vector<Quaternion> QuaternionValues;
+		using QuaternionValues = std::vector<Quaternion>;
 
 	public:
 

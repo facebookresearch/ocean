@@ -37,14 +37,14 @@ class OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT MtlParser
 		/**
 		 * Definition of a vector holding materials.
 		 */
-		typedef std::vector<Material> Materials;
+		using Materials = std::vector<Material>;
 
 	protected:
 
 		/**
 		 * Definition of a scanner token.
 		 */
-		typedef MtlScanner::Token Token;
+		using Token = MtlScanner::Token;
 
 	public:
 

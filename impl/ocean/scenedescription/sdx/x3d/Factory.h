@@ -37,12 +37,12 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT Factory
 		/**
 		 * Definition of a function pointer creating nodes.
 		 */
-		typedef SDXNodeRef(*CreateNodeFunction)(const SDXNode::SDXEnvironment* environment);
+		using CreateNodeFunction = SDXNodeRef(*)(const SDXNode::SDXEnvironment* environment);
 
 		/**
 		 * Definition of an unordered map mapping names of node types to functions creating the nodes.
 		 */
-		typedef std::unordered_map<std::string, CreateNodeFunction> CreateNodeMap;
+		using CreateNodeMap = std::unordered_map<std::string, CreateNodeFunction>;
 
 	public:
 

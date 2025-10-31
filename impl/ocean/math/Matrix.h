@@ -66,7 +66,7 @@ class MatrixT
 		/**
 		 * Definition of the used data type.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * Definition of specific properties of matrices.

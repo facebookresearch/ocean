@@ -41,7 +41,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT X3DTexture2DNode : virtual public X3
 		/**
 		 * Definition of a vector holding strings.
 		 */
-		typedef std::vector<std::string> StringVector;
+		using StringVector = std::vector<std::string>;
 
 	protected:
 

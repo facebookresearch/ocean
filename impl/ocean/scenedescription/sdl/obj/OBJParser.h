@@ -39,7 +39,7 @@ class OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT OBJParser
 		/**
 		 * Definition of a scanner token.
 		 */
-		typedef OBJScanner::Token Token;
+		using Token = OBJScanner::Token;
 
 	public:
 

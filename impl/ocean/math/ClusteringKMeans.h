@@ -62,17 +62,17 @@ class Clustering<true>::Data
 		/**
 		 * Definition of an observation object.
 		 */
-		typedef StaticBuffer<T, tDimension> Observation;
+		using Observation = StaticBuffer<T, tDimension>;
 
 		/**
 		 * Definition of an index that addresses one specific observation element in the data object that stores all observations.
 		 */
-		typedef size_t DataIndex;
+		using DataIndex = size_t;
 
 		/**
 		 * Definition of a vector holding indices to the data object.
 		 */
-		typedef std::vector<DataIndex> DataIndices;
+		using DataIndices = std::vector<DataIndex>;
 
 	public:
 
@@ -166,17 +166,17 @@ class Clustering<false>::Data
 		/**
 		 * Definition of an observation object.
 		 */
-		typedef StaticBuffer<T, tDimension> Observation;
+		using Observation = StaticBuffer<T, tDimension>;
 
 		/**
 		 * Definition of an index that addresses one specific observation element in the data object that stores all observations.
 		 */
-		typedef size_t DataIndex;
+		using DataIndex = size_t;
 
 		/**
 		 * Definition of a vector holding indices to the data object.
 		 */
-		typedef std::vector<DataIndex> DataIndices;
+		using DataIndices = std::vector<DataIndex>;
 
 	public:
 
@@ -284,22 +284,22 @@ class ClusteringKMeans : public Clustering<tUseIndices>
 		/**
 		 * (Re-)Definition of a data object providing the data which will be clustered.
 		 */
-		typedef typename Clustering<tUseIndices>::template Data<T, tDimension> Data;
+		using Data = typename Clustering<tUseIndices>::template Data<T, tDimension>;
 
 		/**
 		 * (Re-)Definition of an index that addresses one specific observation element in the data object that stores all observations.
 		 */
-		typedef typename Data::DataIndex DataIndex;
+		using DataIndex = typename Data::DataIndex;
 
 		/**
 		 * (Re-)Definition of a vector holding (size_t) indices.
 		 */
-		typedef typename Data::DataIndices DataIndices;
+		using DataIndices = typename Data::DataIndices;
 
 		/**
 		 * (Re-)Definition of an observation object.
 		 */
-		typedef typename Data::Observation Observation;
+		using Observation = typename Data::Observation;
 
 		/**
 		 * This class implements one cluster that holds the mean values of all observations belonging to this cluster and the indices of all observations belonging to this cluster.
@@ -415,7 +415,7 @@ class ClusteringKMeans : public Clustering<tUseIndices>
 		/**
 		 * Definition of a vector holding cluster objects.
 		 */
-		typedef std::vector<Cluster> Clusters;
+		using Clusters = std::vector<Cluster>;
 
 	public:
 

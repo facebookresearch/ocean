@@ -36,12 +36,12 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT X3DInterpolatorNode : virtual public
 		/**
 		 * Definition of a pair holding two key value indices.
 		 */
-		typedef std::pair<size_t, size_t> IndexPair32;
+		using IndexPair32 = std::pair<size_t, size_t>;
 
 		/**
 		 * Definition of a map mapping keys to key value index pairs.
 		 */
-		typedef std::map<Scalar, IndexPair32> KeyMap;
+		using KeyMap = std::map<Scalar, IndexPair32>;
 
 	protected:
 

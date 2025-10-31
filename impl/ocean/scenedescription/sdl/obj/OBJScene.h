@@ -106,12 +106,12 @@ class OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT OBJScene : public SDLScene
 		/**
 		 * Definition of a vector holding materials.
 		 */
-		typedef std::vector<Material> Materials;
+		using Materials = std::vector<Material>;
 
 		/**
 		 * Definition of a material index.
 		 */
-		typedef unsigned int MaterialIndex;
+		using MaterialIndex = unsigned int;
 
 		/**
 		 * Definition of an invalid material index.
@@ -121,22 +121,22 @@ class OCEAN_SCENEDESCRIPTION_SDL_OBJ_EXPORT OBJScene : public SDLScene
 		/**
 		 * Definition of a map mapping material names to material indices.
 		 */
-		typedef std::unordered_map<std::string, unsigned int> MaterialIndexMap;
+		using MaterialIndexMap = std::unordered_map<std::string, unsigned int>;
 
 		/**
 		 * Definition of a vector holding faces.
 		 */
-		typedef std::vector<Face> Faces;
+		using Faces = std::vector<Face>;
 
 		/**
 		 * Definition of a pair of face type and material index.
 		 */
-		typedef std::pair<FaceType, MaterialIndex> FacePair;
+		using FacePair = std::pair<FaceType, MaterialIndex>;
 
 		/**
 		 * Definition of a map mapping face pairs to faces.
 		 */
-		typedef std::map<FacePair, Faces> FacesMap;
+		using FacesMap = std::map<FacePair, Faces>;
 
 	public:
 

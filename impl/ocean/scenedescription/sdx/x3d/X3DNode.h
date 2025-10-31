@@ -51,12 +51,12 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT X3DNode : virtual public SDXNode
 		/**
 		 * Definition of a node and field pair.
 		 */
-		typedef std::pair<NodeId, std::string> ReceiverPair;
+		using ReceiverPair = std::pair<NodeId, std::string>;
 
 		/**
 		 * Definition of a map mapping field names to field receiver pairs.
 		 */
-		typedef std::multimap<std::string, ReceiverPair> FieldConnectionMap;
+		using FieldConnectionMap = std::multimap<std::string, ReceiverPair>;
 
 	public:
 

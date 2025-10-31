@@ -30,7 +30,7 @@ class AccelerationSensor3DOF;
  * @see AccelerationSensor3DOF.
  * @ingroup devices
  */
-typedef SmartDeviceRef<AccelerationSensor3DOF> AccelerationSensor3DOFRef;
+using AccelerationSensor3DOFRef = SmartDeviceRef<AccelerationSensor3DOF>;
 
 /**
  * This class is the base class for all 3DOF acceleration sensors.

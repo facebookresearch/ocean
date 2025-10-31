@@ -60,7 +60,7 @@ Frame ImageWebp::decodeImage(const void* buffer, const size_t size)
 	const unsigned int height = int(webPBitstreamFeatures.height);
 
 	// A convenience typedef to select the right decoding function.
-	typedef uint8_t* (*WebPDecodeFunctionPtr)(const uint8_t* data, size_t data_size, uint8_t* output_buffer, size_t output_buffer_size, int output_stride);
+	using WebPDecodeFunctionPtr = uint8_t* (*)(const uint8_t* data, size_t data_size, uint8_t* output_buffer, size_t output_buffer_size, int output_stride);
 
 	WebPDecodeFunctionPtr webPDecodeFunctionPtr = nullptr;
 	FrameType::PixelFormat pixelFormat = FrameType::FORMAT_UNDEFINED;
