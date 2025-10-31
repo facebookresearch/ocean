@@ -7,14 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		506C92F72EABE915007A28EC /* FisheyeEpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C92F62EABE915007A28EC /* FisheyeEpipolarGeometry.h */; };
-		506C92F82EABE915007A28EC /* FisheyeEpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C92F62EABE915007A28EC /* FisheyeEpipolarGeometry.h */; };
-		506C92F92EABE915007A28EC /* FisheyeEpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C92F62EABE915007A28EC /* FisheyeEpipolarGeometry.h */; };
-		506C92FA2EABE915007A28EC /* FisheyeEpipolarGeometry.h in Headers */ = {isa = PBXBuildFile; fileRef = 506C92F62EABE915007A28EC /* FisheyeEpipolarGeometry.h */; };
-		506C92FC2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C92FB2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp */; };
-		506C92FD2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C92FB2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp */; };
-		506C92FE2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C92FB2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp */; };
-		506C92FF2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506C92FB2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp */; };
 		5D222B0B1BB176CC00298788 /* NonLinearOptimizationLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D751BAAC24D002E9E7D /* NonLinearOptimizationLine.cpp */; };
 		5D222B0C1BB176CC00298788 /* Quadric.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D7E1BAAC24D002E9E7D /* Quadric.cpp */; };
 		5D222B0D1BB176CC00298788 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5DCE0D821BAAC24D002E9E7D /* Utilities.cpp */; };
@@ -278,8 +270,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		506C92F62EABE915007A28EC /* FisheyeEpipolarGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FisheyeEpipolarGeometry.h; path = ../../../../../impl/ocean/geometry/FisheyeEpipolarGeometry.h; sourceTree = "<group>"; };
-		506C92FB2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = FisheyeEpipolarGeometry.cpp; path = ../../../../../impl/ocean/geometry/FisheyeEpipolarGeometry.cpp; sourceTree = "<group>"; };
 		5D222B461BB176CC00298788 /* libOceanGeometryD.dylib */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanGeometryD.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D9861E61D8B574E00DEDB00 /* libOceanGeometryD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanGeometryD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5DCE0D5C1BAAC126002E9E7D /* libOceanGeometryD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanGeometryD.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -392,7 +382,6 @@
 				5DCE0DA01BAAC25B002E9E7D /* EpipolarGeometry.h */,
 				5DCE0DA11BAAC25B002E9E7D /* Error.h */,
 				5DCE0DA21BAAC25B002E9E7D /* Estimator.h */,
-				506C92F62EABE915007A28EC /* FisheyeEpipolarGeometry.h */,
 				5DCE0DA31BAAC25B002E9E7D /* Geometry.h */,
 				5DCE0DA41BAAC25B002E9E7D /* Grid.h */,
 				5DCE0DA51BAAC25B002E9E7D /* Homography.h */,
@@ -455,7 +444,6 @@
 				5DCE0D6E1BAAC24D002E9E7D /* EpipolarGeometry.cpp */,
 				5DCE0D6F1BAAC24D002E9E7D /* Error.cpp */,
 				9312E8832B1674B100745EF9 /* Estimator.cpp */,
-				506C92FB2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp */,
 				5DCE0D701BAAC24D002E9E7D /* Grid.cpp */,
 				5DCE0D711BAAC24D002E9E7D /* Homography.cpp */,
 				5DCE0D721BAAC24D002E9E7D /* Jacobian.cpp */,
@@ -495,7 +483,6 @@
 				5D222B271BB176CC00298788 /* VanishingProjection.h in Headers */,
 				5D222B281BB176CC00298788 /* Utilities.h in Headers */,
 				5DB7746C1EE999DD00C14BB2 /* MultipleViewGeometry.h in Headers */,
-				506C92FA2EABE915007A28EC /* FisheyeEpipolarGeometry.h in Headers */,
 				5D222B291BB176CC00298788 /* SpatialDistribution.h in Headers */,
 				5D222B2A1BB176CC00298788 /* Homography.h in Headers */,
 				C0F6E5FE1E1EA8AC00F90052 /* JLinkage.h in Headers */,
@@ -538,7 +525,6 @@
 				5D9861C51D8B574E00DEDB00 /* VanishingProjection.h in Headers */,
 				5D9861C61D8B574E00DEDB00 /* Utilities.h in Headers */,
 				5DB7746D1EE999DE00C14BB2 /* MultipleViewGeometry.h in Headers */,
-				506C92F72EABE915007A28EC /* FisheyeEpipolarGeometry.h in Headers */,
 				5D9861C71D8B574E00DEDB00 /* SpatialDistribution.h in Headers */,
 				5D9861C81D8B574E00DEDB00 /* Homography.h in Headers */,
 				C0F6E5FF1E1EA8AD00F90052 /* JLinkage.h in Headers */,
@@ -581,7 +567,6 @@
 				5DCE0DD61BAAC25B002E9E7D /* VanishingProjection.h in Headers */,
 				5DCE0DD51BAAC25B002E9E7D /* Utilities.h in Headers */,
 				5FE46E6C1EC5BE49001CE713 /* MultipleViewGeometry.h in Headers */,
-				506C92F92EABE915007A28EC /* FisheyeEpipolarGeometry.h in Headers */,
 				5DCE0DD31BAAC25B002E9E7D /* SpatialDistribution.h in Headers */,
 				5DCE0DC21BAAC25B002E9E7D /* Homography.h in Headers */,
 				C0F6E5D21E1E931E00F90052 /* JLinkage.h in Headers */,
@@ -624,7 +609,6 @@
 				C041EC281DABE37200BF5D76 /* VanishingProjection.h in Headers */,
 				C041EC291DABE37200BF5D76 /* Utilities.h in Headers */,
 				5DB7746E1EE999DF00C14BB2 /* MultipleViewGeometry.h in Headers */,
-				506C92F82EABE915007A28EC /* FisheyeEpipolarGeometry.h in Headers */,
 				C041EC2A1DABE37200BF5D76 /* SpatialDistribution.h in Headers */,
 				C041EC2B1DABE37200BF5D76 /* Homography.h in Headers */,
 				C0F6E6001E1EA8AD00F90052 /* JLinkage.h in Headers */,
@@ -842,7 +826,6 @@
 				5D222B1F1BB176CC00298788 /* P4P.cpp in Sources */,
 				5D222B201BB176CC00298788 /* CameraCalibration.cpp in Sources */,
 				5D222B211BB176CC00298788 /* NonLinearOptimizationOrientation.cpp in Sources */,
-				506C92FF2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp in Sources */,
 				5D222B221BB176CC00298788 /* Homography.cpp in Sources */,
 				C0F6E6011E1EA8B100F90052 /* JLinkage.cpp in Sources */,
 				5D222B231BB176CC00298788 /* Delaunay.cpp in Sources */,
@@ -880,7 +863,6 @@
 				5D9861BD1D8B574E00DEDB00 /* P4P.cpp in Sources */,
 				5D9861BE1D8B574E00DEDB00 /* CameraCalibration.cpp in Sources */,
 				5D9861BF1D8B574E00DEDB00 /* NonLinearOptimizationOrientation.cpp in Sources */,
-				506C92FD2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp in Sources */,
 				5D9861C01D8B574E00DEDB00 /* Homography.cpp in Sources */,
 				C0F6E6021E1EA8B100F90052 /* JLinkage.cpp in Sources */,
 				5D9861C11D8B574E00DEDB00 /* Delaunay.cpp in Sources */,
@@ -918,7 +900,6 @@
 				5DCE0D941BAAC24D002E9E7D /* P4P.cpp in Sources */,
 				5DCE0D851BAAC24D002E9E7D /* CameraCalibration.cpp in Sources */,
 				5DCE0D901BAAC24D002E9E7D /* NonLinearOptimizationOrientation.cpp in Sources */,
-				506C92FE2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp in Sources */,
 				5DCE0D8A1BAAC24D002E9E7D /* Homography.cpp in Sources */,
 				C0F6E5D41E1E933200F90052 /* JLinkage.cpp in Sources */,
 				5DCE0D861BAAC24D002E9E7D /* Delaunay.cpp in Sources */,
@@ -956,7 +937,6 @@
 				C041EC201DABE37200BF5D76 /* P4P.cpp in Sources */,
 				C041EC211DABE37200BF5D76 /* CameraCalibration.cpp in Sources */,
 				C041EC221DABE37200BF5D76 /* NonLinearOptimizationOrientation.cpp in Sources */,
-				506C92FC2EABE93A007A28EC /* FisheyeEpipolarGeometry.cpp in Sources */,
 				C041EC231DABE37200BF5D76 /* Homography.cpp in Sources */,
 				C0F6E6031E1EA8B200F90052 /* JLinkage.cpp in Sources */,
 				C041EC241DABE37200BF5D76 /* Delaunay.cpp in Sources */,

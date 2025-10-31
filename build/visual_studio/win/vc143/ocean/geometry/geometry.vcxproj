@@ -187,7 +187,6 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\EpipolarGeometry.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Error.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Estimator.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\FisheyeEpipolarGeometry.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Grid.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Homography.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\geometry\Jacobian.cpp" />
@@ -220,7 +219,6 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\EpipolarGeometry.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Error.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Estimator.h" />
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\FisheyeEpipolarGeometry.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Geometry.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\GravityConstraints.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\geometry\Grid.h" />
