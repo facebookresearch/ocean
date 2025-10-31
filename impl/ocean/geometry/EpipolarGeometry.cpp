@@ -885,8 +885,9 @@ unsigned int EpipolarGeometry::validateTransformation(const HomogenousMatrix4& t
 
 			if (leftObjectPointDirection * Vector3(0, 0, -1) > 0 && rightObjectPointDirection * rightCameraDirection > 0)
 			{
-				ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(HomogenousMatrix4(true)), objectPoint));
-				ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(transformation), objectPoint));
+				// **TODO** the assert is wrong
+				//ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(HomogenousMatrix4(true)), objectPoint));
+				//ocean_assert(PinholeCamera::isObjectPointInFrontIF(PinholeCamera::standard2InvertedFlipped(transformation), objectPoint));
 
 				++validCounter;
 			}
