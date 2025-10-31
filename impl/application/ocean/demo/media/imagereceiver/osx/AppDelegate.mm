@@ -24,6 +24,7 @@
 #include "ocean/platform/apple/macos/FrameMediumView.h"
 
 #include "ocean/network/PackagedTCPClient.h"
+#include "ocean/network/PackagedTCPServer.h"
 #include "ocean/network/Resolver.h"
 
 #include "ocean/io/image/Image.h"
@@ -35,8 +36,11 @@
 	/// The view displaying the medium
 	Platform::Apple::MacOS::FrameMediumView frameMediumView_;
 
-	/// The network client for receiving data.
-	Network::PackagedTCPClient networkClient_;
+	/// The network client for receiving data (used in client mode).
+	std::unique_ptr<Network::PackagedTCPClient> networkClient_;
+
+	/// The network server for receiving data (used in server mode).
+	std::unique_ptr<Network::PackagedTCPServer> networkServer_;
 
 	/// The pixel image medium.
 	Media::PixelImageRef pixelImage_;
@@ -63,7 +67,7 @@
 static AppDelegate* appDelegate = nullptr;
 
 /**
- * Event function which is called whenever new data has been received.
+ * Event function which is called whenever new data has been received (client mode).
  * @param data The received data
  * @param size The size of the received data, in bytes
  */
@@ -74,6 +78,31 @@ static void onReceive(const void* data, const size_t size)
 	[appDelegate onReceive:data size:size];
 }
 
+/**
+ * Event function which is called whenever new data has been received (server mode).
+ * @param connectionId The connection ID
+ * @param data The received data
+ * @param size The size of the received data, in bytes
+ */
+static void onReceiveServer(const Network::PackagedTCPServer::ConnectionId /*connectionId*/, const void* data, const size_t size)
+{
+	ocean_assert(appDelegate != nullptr);
+
+	[appDelegate onReceive:data size:size];
+}
+
+/**
+ * Event function which is called when a connection request is received (server mode).
+ * @param address The address of the client
+ * @param port The port of the client
+ * @param connectionId The connection ID
+ * @return True to accept the connection
+ */
+static bool onConnection(const Network::Address4& /*address*/, const Network::Port& /*port*/, const Network::PackagedTCPServer::ConnectionId /*connectionId*/)
+{
+	return true;
+}
+
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification
@@ -82,8 +111,9 @@ static void onReceive(const void* data, const size_t size)
 
 	CommandArguments commandArguments("An image receiver reciving images over network and displaying the images");
 	commandArguments.registerParameter("help", "h", "Showing this help output.");
-	commandArguments.registerParameter("address", "a", "The address of the server to connect to (e.g., 192.168.178.10)");
-	commandArguments.registerParameter("port", "p", "The port of the server to connect to if other than 6666", Value(6666));
+	commandArguments.registerParameter("server", "s", "When specified, the application acts as a server waiting for connections. Otherwise, it acts as a client.");
+	commandArguments.registerParameter("address", "a", "The address of the server to connect to (e.g., 192.168.178.10) - only used in client mode");
+	commandArguments.registerParameter("port", "p", "The port of the server to connect to (client mode) or listen on (server mode)", Value(6666));
 	commandArguments.registerParameter("rotation", "r", "The rotation angle to be applied to the image clockwise, in degree, must be multiple of 90", Value(0));
 
 	commandArguments.parse(commandLines);
@@ -91,35 +121,22 @@ static void onReceive(const void* data, const size_t size)
 	if (commandArguments.hasValue("help"))
 	{
 		Log::info() << commandArguments.makeSummary();
-		exit(0);
+		[[NSApplication sharedApplication] terminate:self];
 	}
 
-	std::string addressString;
-	if (!commandArguments.hasValue("address", addressString))
-	{
-		Log::error() << "No address specified";
-		exit(1);
-	}
-
-	const Network::Address4 address = Network::Resolver::resolveFirstIp4(addressString);
-
-	if (!address.isValid())
-	{
-		Log::error() << "Invalid address: " << addressString;
-		exit(1);
-	}
+	const bool isServerMode = commandArguments.hasValue("server");
 
 	int port = 0;
 	if (!commandArguments.hasValue("port", port) || port < 0 || port > 65535)
 	{
 		Log::error() << "Invalid port: " << port;
-		exit(1);
+		[[NSApplication sharedApplication] terminate:self];
 	}
 
 	if (!commandArguments.hasValue("rotation", rotationAngle_) || rotationAngle_ % 90 != 0)
 	{
 		Log::error() << "Invalid rotation angle: " << rotationAngle_;
-		exit(1);
+		[[NSApplication sharedApplication] terminate:self];
 	}
 
 	appDelegate = self;
@@ -139,12 +156,63 @@ static void onReceive(const void* data, const size_t size)
 
 	[_mainWindowView addSubview:frameMediumView_.nsView()];
 
-	networkClient_.setReceiveCallback(Network::PackagedTCPClient::ReceiveCallback::createStatic(&onReceive));
-
-	if (!networkClient_.connect(address, Network::Port(port, Network::Port::TYPE_READABLE)))
+	if (isServerMode)
 	{
-		Log::error() << "Failed to connect to " << address.readable() << ":" << port;
-		exit(1);
+		Log::info() << "Starting in server mode on port " << port;
+
+		networkServer_ = std::make_unique<Network::PackagedTCPServer>();
+
+		networkServer_->setConnectionRequestCallback(Network::PackagedTCPServer::ConnectionRequestCallback::createStatic(&onConnection));
+		networkServer_->setReceiveCallback(Network::PackagedTCPServer::ReceiveCallback::createStatic(&onReceiveServer));
+
+		networkServer_->setPort(Network::Port(port, Network::Port::TYPE_READABLE));
+
+		if (!networkServer_->start())
+		{
+			Log::error() << "Failed to start server on port " << port;
+			[[NSApplication sharedApplication] terminate:self];
+		}
+
+		const Network::Resolver::Addresses4 addresses = Network::Resolver::get().localAddresses();
+
+		if (!addresses.empty())
+		{
+			Log::info() << "Server listening on:";
+			for (const Network::Address4& localAddress : addresses)
+			{
+				Log::info() << "  " << localAddress.readable() << ":" << port;
+			}
+		}
+	}
+	else
+	{
+		std::string addressString;
+		if (!commandArguments.hasValue("address", addressString))
+		{
+			Log::error() << "No address specified (required in client mode)";
+			[[NSApplication sharedApplication] terminate:self];
+		}
+
+		const Network::Address4 address = Network::Resolver::resolveFirstIp4(addressString);
+
+		if (!address.isValid())
+		{
+			Log::error() << "Invalid address: " << addressString;
+			[[NSApplication sharedApplication] terminate:self];
+		}
+
+		Log::info() << "Starting in client mode, connecting to " << address.readable() << ":" << port;
+
+		networkClient_ = std::make_unique<Network::PackagedTCPClient>();
+		networkClient_->setReceiveCallback(Network::PackagedTCPClient::ReceiveCallback::createStatic(&onReceive));
+
+		if (!networkClient_->connect(address, Network::Port(port, Network::Port::TYPE_READABLE)))
+		{
+			Log::error() << "Failed to connect to " << address.readable() << ":" << port;
+			[[NSApplication sharedApplication] terminate:self];
+		}
+
+		Log::info() << "Connected successfully";
 	}
 }
 
@@ -165,6 +233,11 @@ static void onReceive(const void* data, const size_t size)
  */
 - (void)applicationWillTerminate:(NSNotification*)aNotification
 {
+	networkClient_ = nullptr;
+	networkServer_ = nullptr;
+
+	pixelImage_.release();
+	
 	frameMediumView_ = Platform::Apple::MacOS::FrameMediumView();
 }
 
