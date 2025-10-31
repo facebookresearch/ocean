@@ -26,21 +26,21 @@ template <typename T> class SquareMatrixT2;
  * @see SquareMatrixT2
  * @ingroup math
  */
-typedef SquareMatrixT2<Scalar> SquareMatrix2;
+using SquareMatrix2 = SquareMatrixT2<Scalar>;
 
 /**
  * Instantiation of the SquareMatrixT2 template class using a double precision float data type.
  * @see SquareMatrixT2
  * @ingroup math
  */
-typedef SquareMatrixT2<double> SquareMatrixD2;
+using SquareMatrixD2 = SquareMatrixT2<double>;
 
 /**
  * Instantiation of the SquareMatrixT2 template class using a single precision float data type.
  * @see SquareMatrixT2
  * @ingroup math
  */
-typedef SquareMatrixT2<float> SquareMatrixF2;
+using SquareMatrixF2 = SquareMatrixT2<float>;
 
 /**
  * Definition of a typename alias for vectors with SquareMatrixT2 objects.
@@ -55,7 +55,7 @@ using SquareMatricesT2 = std::vector<SquareMatrixT2<T>>;
  * @see SquareMatrix2
  * @ingroup math
  */
-typedef std::vector<SquareMatrix2> SquareMatrices2;
+using SquareMatrices2 = std::vector<SquareMatrix2>;
 
 /**
  * This class implements a 2x2 square matrix.

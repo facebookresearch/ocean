@@ -35,21 +35,21 @@ template <typename T> class RotationT;
  * @see RotationT
  * @ingroup math
  */
-typedef RotationT<Scalar> Rotation;
+using Rotation = RotationT<Scalar>;
 
 /**
  * Instantiation of the RotationT template class using a double precision float data type.
  * @see RotationT
  * @ingroup math
  */
-typedef RotationT<double> RotationD;
+using RotationD = RotationT<double>;
 
 /**
  * Instantiation of the RotationT template class using a single precision float data type.
  * @see RotationT
  * @ingroup math
  */
-typedef RotationT<float> RotationF;
+using RotationF = RotationT<float>;
 
 /**
  * Definition of a typename alias for vectors with RotationT objects.
@@ -64,7 +64,7 @@ using RotationsT = std::vector<RotationT<T>>;
  * @see Rotation
  * @ingroup math
  */
-typedef std::vector<Rotation> Rotations;
+using Rotations = std::vector<Rotation>;
 
 /**
  * This class implements a axis-angle rotation using floating point values.

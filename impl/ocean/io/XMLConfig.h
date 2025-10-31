@@ -250,7 +250,7 @@ class OCEAN_IO_EXPORT XMLConfig final : public Config
 		/**
 		 * Definition of a vector holding values.
 		 */
-		typedef std::vector<XMLValue*> XMLValues;
+		using XMLValues = std::vector<XMLValue*>;
 
 	public:
 

@@ -27,28 +27,28 @@ class ConeT3;
  * @see ConeT3
  * @ingroup math
  */
-typedef ConeT3<Scalar> Cone3;
+using Cone3 = ConeT3<Scalar>;
 
 /**
  * Definition of a 3D cone with double values.
  * @see ConeT3
  * @ingroup math
  */
-typedef ConeT3<double> ConeD3;
+using ConeD3 = ConeT3<double>;
 
 /**
  * Definition of a 3D cone with float values.
  * @see ConeT3
  * @ingroup math
  */
-typedef ConeT3<float> ConeF3;
+using ConeF3 = ConeT3<float>;
 
 /**
  * Definition of a vector holding Cone3 objects.
  * @see Cone3
  * @ingroup math
  */
-typedef std::vector<Cone3> Cones3;
+using Cones3 = std::vector<Cone3>;
 
 /**
  * This class implements a (possibly truncated) 3D cone.

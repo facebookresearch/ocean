@@ -25,21 +25,21 @@ template <typename T> class LineT2;
  * @see LineT2
  * @ingroup math
  */
-typedef LineT2<Scalar> Line2;
+using Line2 = LineT2<Scalar>;
 
 /**
  * Instantiation of the LineT2 template class using a double precision float data type.
  * @see LineT2
  * @ingroup math
  */
-typedef LineT2<double> LineD2;
+using LineD2 = LineT2<double>;
 
 /**
  * Instantiation of the LineT2 template class using a single precision float data type.
  * @see LineT2
  * @ingroup math
  */
-typedef LineT2<float> LineF2;
+using LineF2 = LineT2<float>;
 
 /**
  * Definition of a typename alias for vectors with LineT2 objects.
@@ -54,21 +54,21 @@ using LinesT2 = std::vector<LineT2<T>>;
  * @see Line2
  * @ingroup math
  */
-typedef std::vector<Line2> Lines2;
+using Lines2 = std::vector<Line2>;
 
 /**
  * Definition of a vector holding Line2 objects with single precision float data type.
  * @see LineF2
  * @ingroup math
  */
-typedef std::vector<LineF2> LinesF2;
+using LinesF2 = std::vector<LineF2>;
 
 /**
  * Definition of a vector holding Line2 objects with double precision float data type.
  * @see LineD2
  * @ingroup math
  */
-typedef std::vector<LineD2> LinesD2;
+using LinesD2 = std::vector<LineD2>;
 
 /**
  * This class implements an infinite line in 2D space.

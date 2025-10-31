@@ -41,21 +41,21 @@ template <typename T> class HomogenousMatrixT4;
  * @see HomogenousMatrixT4
  * @ingroup math
  */
-typedef HomogenousMatrixT4<Scalar> HomogenousMatrix4;
+using HomogenousMatrix4 = HomogenousMatrixT4<Scalar>;
 
 /**
  * Instantiation of the HomogenousMatrixT4 template class using a double precision float data type.
  * @see HomogenousMatrixT4
  * @ingroup math
  */
-typedef HomogenousMatrixT4<double> HomogenousMatrixD4;
+using HomogenousMatrixD4 = HomogenousMatrixT4<double>;
 
 /**
  * Instantiation of the HomogenousMatrixT4 template class using a float precision float data type.
  * @see HomogenousMatrixT4
  * @ingroup math
  */
-typedef HomogenousMatrixT4<float> HomogenousMatrixF4;
+using HomogenousMatrixF4 = HomogenousMatrixT4<float>;
 
 /**
  * Definition of a typename alias for vectors with HomogenousMatrixT4 objects.
@@ -70,19 +70,19 @@ using HomogenousMatricesT4 = std::vector<HomogenousMatrixT4<T>>;
  * @see HomogenousMatrix4
  * @ingroup math
  */
-typedef std::vector<HomogenousMatrix4> HomogenousMatrices4;
+using HomogenousMatrices4 = std::vector<HomogenousMatrix4>;
 
 /**
  * Definition of a vector holding HomogenousMatrixD4 objects.
  * @ingroup math
  */
-typedef std::vector<HomogenousMatrixD4> HomogenousMatricesD4;
+using HomogenousMatricesD4 = std::vector<HomogenousMatrixD4>;
 
 /**
  * Definition of a vector holding HomogenousMatrixF4 objects.
  * @ingroup math
  */
-typedef std::vector<HomogenousMatrixF4> HomogenousMatricesF4;
+using HomogenousMatricesF4 = std::vector<HomogenousMatrixF4>;
 
 
 /**

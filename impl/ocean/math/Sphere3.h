@@ -25,28 +25,28 @@ class SphereT3;
  * @see SphereT3
  * @ingroup math
  */
-typedef SphereT3<Scalar> Sphere3;
+using Sphere3 = SphereT3<Scalar>;
 
 /**
  * Definition of a 3D sphere with double values.
  * @see SphereT3
  * @ingroup math
  */
-typedef SphereT3<double> SphereD3;
+using SphereD3 = SphereT3<double>;
 
 /**
  * Definition of a 3D sphere with float values.
  * @see SphereT3
  * @ingroup math
  */
-typedef SphereT3<float> SphereF3;
+using SphereF3 = SphereT3<float>;
 
 /**
  * Definition of a vector holding Shpere3 objects.
  * @see Sphere3
  * @ingroup math
  */
-typedef std::vector<Sphere3> Spheres3;
+using Spheres3 = std::vector<Sphere3>;
 
 /**
  * This class implements a 3D sphere.

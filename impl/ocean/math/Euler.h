@@ -33,21 +33,21 @@ template <typename T> class EulerT;
  * @see EulerT
  * @ingroup math
  */
-typedef EulerT<Scalar> Euler;
+using Euler = EulerT<Scalar>;
 
 /**
  * Instantiation of the EulerT template class using a double precision float data type.
  * @see EulerT
  * @ingroup math
  */
-typedef EulerT<double> EulerD;
+using EulerD = EulerT<double>;
 
 /**
  * Instantiation of the EulerT template class using a single precision float data type.
  * @see EulerT
  * @ingroup math
  */
-typedef EulerT<float> EulerF;
+using EulerF = EulerT<float>;
 
 /**
  * Definition of a typename alias for vectors with EulerT objects.
@@ -62,7 +62,7 @@ using EulersT = std::vector<EulerT<T>>;
  * @see Euler
  * @ingroup math
  */
-typedef std::vector<Euler> Eulers;
+using Eulers = std::vector<Euler>;
 
 /**
  * This class implements an euler rotation with angles: yaw, pitch and roll.

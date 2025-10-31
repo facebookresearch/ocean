@@ -25,21 +25,21 @@ template <typename T> class BoxT3;
  * @see BoxT3
  * @ingroup math
  */
-typedef BoxT3<Scalar> Box3;
+using Box3 = BoxT3<Scalar>;
 
 /**
  * Instantiation of the BoxT3 template class using a double precision float data type.
  * @see BoxT3
  * @ingroup math
  */
-typedef BoxT3<double> BoxD3;
+using BoxD3 = BoxT3<double>;
 
 /**
  * Instantiation of the BoxT3 template class using a single precision float data type.
  * @see BoxT3
  * @ingroup math
  */
-typedef BoxT3<float> BoxF3;
+using BoxF3 = BoxT3<float>;
 
 /**
  * Definition of a typename alias for vectors with BoxT3 objects.
@@ -54,7 +54,7 @@ using BoxesT3 = std::vector<BoxT3<T>>;
  * @see Box3
  * @ingroup math
  */
-typedef std::vector<Box3> Boxes3;
+using Boxes3 = std::vector<Box3>;
 
 /**
  * This class implements an axis aligned 3D bounding box.

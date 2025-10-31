@@ -24,7 +24,7 @@ class RGBAColor;
  * Definition of a vector holding rgba color objects.
  * @ingroup math
  */
-typedef std::vector<RGBAColor> RGBAColors;
+using RGBAColors = std::vector<RGBAColor>;
 
 /**
  * This class implements a color defined by red, green, blue and alpha parameters.

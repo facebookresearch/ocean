@@ -23,21 +23,21 @@ template <typename T> class LineT3;
  * @see LineT3
  * @ingroup math
  */
-typedef LineT3<Scalar> Line3;
+using Line3 = LineT3<Scalar>;
 
 /**
  * Instantiation of the LineT3 template class using a double precision float data type.
  * @see LineT3
  * @ingroup math
  */
-typedef LineT3<double> LineD3;
+using LineD3 = LineT3<double>;
 
 /**
  * Instantiation of the LineT3 template class using a single precision float data type.
  * @see LineT3
  * @ingroup math
  */
-typedef LineT3<float> LineF3;
+using LineF3 = LineT3<float>;
 
 /**
  * Definition of a typename alias for vectors with LineT3 objects.
@@ -52,7 +52,7 @@ using LinesT3 = std::vector<LineT3<T>>;
  * @see Line3
  * @ingroup math
  */
-typedef std::vector<Line3> Lines3;
+using Lines3 = std::vector<Line3>;
 
 /**
  * This class implements an infinite line in 3D space.

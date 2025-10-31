@@ -37,21 +37,21 @@ template <typename T> class QuaternionT;
  * @see QuaternionT
  * @ingroup math
  */
-typedef QuaternionT<Scalar> Quaternion;
+using Quaternion = QuaternionT<Scalar>;
 
 /**
  * Instantiation of the QuaternionT template class using a double precision float data type.
  * @see QuaternionT
  * @ingroup math
  */
-typedef QuaternionT<double> QuaternionD;
+using QuaternionD = QuaternionT<double>;
 
 /**
  * Instantiation of the QuaternionT template class using a single precision float data type.
  * @see QuaternionT
  * @ingroup math
  */
-typedef QuaternionT<float> QuaternionF;
+using QuaternionF = QuaternionT<float>;
 
 /**
  * Definition of a typename alias for vectors with QuaternionT objects.
@@ -66,21 +66,21 @@ using QuaternionsT = std::vector<QuaternionT<T>>;
  * @see Quaternion
  * @ingroup math
  */
-typedef std::vector<Quaternion> Quaternions;
+using Quaternions = std::vector<Quaternion>;
 
 /**
  * Definition of a vector holding quaternion objects with single precision float data type.
  * @see Quaternion
  * @ingroup math
  */
-typedef std::vector<QuaternionF> QuaternionsF;
+using QuaternionsF = std::vector<QuaternionF>;
 
 /**
  * Definition of a vector holding quaternion objects with double precision float data type.
  * @see Quaternion
  * @ingroup math
  */
-typedef std::vector<QuaternionD> QuaternionsD;
+using QuaternionsD = std::vector<QuaternionD>;
 
 /**
  * This class implements a unit quaternion rotation.

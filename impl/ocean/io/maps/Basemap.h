@@ -36,17 +36,17 @@ class OCEAN_IO_MAPS_EXPORT Basemap
 		/**
 		 * Definition of a location with signed pixel precision.
 		 */
-		typedef CV::PixelPositionI PixelPositionI;
+		using PixelPositionI = CV::PixelPositionI;
 
 		/**
 		 * Definition of a vector holding locations with signed pixel precision.
 		 */
-		typedef CV::PixelPositionsI PixelPositionsI;
+		using PixelPositionsI = CV::PixelPositionsI;
 
 		/**
 		 * Definition of groups of pixel positions.
 		 */
-		typedef std::vector<PixelPositionsI> PixelPositionGroupsI;
+		using PixelPositionGroupsI = std::vector<PixelPositionsI>;
 
 		/**
 		 * This class is the base class for all map objects.
@@ -206,14 +206,14 @@ class OCEAN_IO_MAPS_EXPORT Basemap
 				/**
 				 * Definition of an unordered map mapping road types to road widths.
 				 */
-				typedef std::unordered_map<RoadType, float> RoadWidthMap;
+				using RoadWidthMap = std::unordered_map<RoadType, float>;
 
 			protected:
 
 				/**
 				 * Definition of an unordered map mapping road type strings to road type values.
 				 */
-				typedef std::unordered_map<std::string, RoadType> RoadTypeMap;
+				using RoadTypeMap = std::unordered_map<std::string, RoadType>;
 
 			public:
 
@@ -447,7 +447,7 @@ class OCEAN_IO_MAPS_EXPORT Basemap
 				/**
 				 * Definition of an unordered map mapping water type strings to water type values.
 				 */
-				typedef std::unordered_map<std::string, WaterType> WaterTypeMap;
+				using WaterTypeMap = std::unordered_map<std::string, WaterType>;
 
 			public:
 
@@ -602,12 +602,12 @@ class OCEAN_IO_MAPS_EXPORT Basemap
 		/**
 		 * Definition of a shared pointer holding an Object.
 		 */
-		typedef std::shared_ptr<Object> SharedObject;
+		using SharedObject = std::shared_ptr<Object>;
 
 		/**
 		 * Definition of a vector holding shared objects.
 		 */
-		typedef std::vector<SharedObject> SharedObjects;
+		using SharedObjects = std::vector<SharedObject>;
 
 		/// Forward declaration.
 		class TileIndexPair;
@@ -615,7 +615,7 @@ class OCEAN_IO_MAPS_EXPORT Basemap
 		/**
 		 * Definition of a vector holding tile index pairs.
 		 */
-		typedef std::vector<TileIndexPair> TileIndexPairs;
+		using TileIndexPairs = std::vector<TileIndexPair>;
 
 		/**
 		 * This class holds the tile indics in latitude and longitude direction.
@@ -714,7 +714,7 @@ class OCEAN_IO_MAPS_EXPORT Basemap
 		/**
 		 * Definition of a set holding tile index pairs.
 		 */
-		typedef std::unordered_set<TileIndexPair, TileIndexPair> TileIndexPairSet;
+		using TileIndexPairSet = std::unordered_set<TileIndexPair, TileIndexPair>;
 
 		/**
 		 * This class stores the information belonging to one map tile.
@@ -882,7 +882,7 @@ class OCEAN_IO_MAPS_EXPORT Basemap
 		/**
 		 * Definition of a shared pointer holding a Tile.
 		 */
-		 typedef std::shared_ptr<Tile> SharedTile;
+		 using SharedTile = std::shared_ptr<Tile>;
 
 	protected:
 
@@ -1071,7 +1071,7 @@ class OCEAN_IO_MAPS_EXPORT Basemap
 		/**
 		 * Definition of an unordered map mapping layer type strings to layer type values.
 		 */
-		typedef std::unordered_map<std::string, LayerType> LayerTypeMap;
+		using LayerTypeMap = std::unordered_map<std::string, LayerType>;
 
 		/// The minimal latitude angle, in degree.
 		static constexpr double minLatitude = -85.05112878;

@@ -24,21 +24,21 @@ template <typename T> class ExponentialMapT;
  * @see ExponentialMapT
  * @ingroup math
  */
-typedef ExponentialMapT<Scalar> ExponentialMap;
+using ExponentialMap = ExponentialMapT<Scalar>;
 
 /**
  * Instantiation of the ExponentialMapT template class using a double precision float data type.
  * @see ExponentialMapT
  * @ingroup math
  */
-typedef ExponentialMapT<double> ExponentialMapD;
+using ExponentialMapD = ExponentialMapT<double>;
 
 /**
  * Instantiation of the ExponentialMapT template class using a single precision float data type.
  * @see ExponentialMapT
  * @ingroup math
  */
-typedef ExponentialMapT<float> ExponentialMapF;
+using ExponentialMapF = ExponentialMapT<float>;
 
 /**
  * Definition of a typename alias for vectors with ExponentialMapT objects.
@@ -53,7 +53,7 @@ using ExponentialMapsT = std::vector<ExponentialMapT<T>>;
  * @see ExponentialMap
  * @ingroup math
  */
-typedef std::vector<ExponentialMap> ExponentialMaps;
+using ExponentialMaps = std::vector<ExponentialMap>;
 
 /**
  * This class implements an exponential map defining a rotation by three parameters.<br>

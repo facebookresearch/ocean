@@ -36,21 +36,21 @@ template <typename T> class SquareMatrixT4;
  * @see SquareMatrixT4
  * @ingroup math
  */
-typedef SquareMatrixT4<Scalar> SquareMatrix4;
+using SquareMatrix4 = SquareMatrixT4<Scalar>;
 
 /**
  * Instantiation of the SquareMatrixT4 template class using a double precision float data type.
  * @see SquareMatrixT4
  * @ingroup math
  */
-typedef SquareMatrixT4<double> SquareMatrixD4;
+using SquareMatrixD4 = SquareMatrixT4<double>;
 
 /**
  * Instantiation of the SquareMatrixT4 template class using a double precision float data type.
  * @see SquareMatrixT4
  * @ingroup math
  */
-typedef SquareMatrixT4<float> SquareMatrixF4;
+using SquareMatrixF4 = SquareMatrixT4<float>;
 
 /**
  * Definition of a typename alias for vectors with SquareMatrixT4 objects.
@@ -65,7 +65,7 @@ using SquareMatricesT4 = std::vector<SquareMatrixT4<T>>;
  * @see SquareMatrix4
  * @ingroup math
  */
-typedef std::vector<SquareMatrix4> SquareMatrices4;
+using SquareMatrices4 = std::vector<SquareMatrix4>;
 
 /**
  * This class implements a 4x4 square matrix.

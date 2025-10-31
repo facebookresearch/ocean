@@ -25,21 +25,21 @@ template <typename T> class TriangleT3;
  * @see TriangleT3
  * @ingroup math
  */
-typedef TriangleT3<Scalar> Triangle3;
+using Triangle3 = TriangleT3<Scalar>;
 
 /**
  * Instantiation of the TriangleT3 template class using a double precision float data type.
  * @see TriangleT3
  * @ingroup math
  */
-typedef TriangleT3<double> TriangleD3;
+using TriangleD3 = TriangleT3<double>;
 
 /**
  * Instantiation of the TriangleT3 template class using a single precision float data type.
  * @see TriangleT3
  * @ingroup math
  */
-typedef TriangleT3<float> TriangleF3;
+using TriangleF3 = TriangleT3<float>;
 
 /**
  * Definition of a typename alias for vectors with TriangleT3 objects.
@@ -54,21 +54,21 @@ using TrianglesT3 = std::vector<TriangleT3<T>>;
  * @see Triangle3
  * @ingroup math
  */
-typedef std::vector<Triangle3> Triangles3;
+using Triangles3 = std::vector<Triangle3>;
 
 /**
  * Definition of a vector holding 3D triangles with single precision float data type.
  * @see Triangle3
  * @ingroup math
  */
-typedef std::vector<TriangleF3> TrianglesF3;
+using TrianglesF3 = std::vector<TriangleF3>;
 
 /**
  * Definition of a vector holding 3D triangles with double precision float data type.
  * @see Triangle3
  * @ingroup math
  */
-typedef std::vector<TriangleD3> TrianglesD3;
+using TrianglesD3 = std::vector<TriangleD3>;
 
 /**
  * This class implements a 3D triangle.

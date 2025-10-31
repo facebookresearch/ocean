@@ -35,7 +35,7 @@ class OCEAN_IO_EXPORT FileConfig : public Config
 		/**
 		 * Definition of a map mapping value names to value objects.
 		 */
-		typedef std::multimap<std::string, FileValue> FileValues;
+		using FileValues = std::multimap<std::string, FileValue>;
 
 		/**
 		 * Definition of a file value object.

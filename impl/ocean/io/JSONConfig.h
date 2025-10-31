@@ -33,7 +33,7 @@ class OCEAN_IO_EXPORT JSONConfig final : public Config
 		/**
 		 * Definition of a map mapping value names to value objects.
 		 */
-		typedef std::unordered_map<std::string, std::vector<JSONValue>> JSONValues;
+		using JSONValues = std::unordered_map<std::string, std::vector<JSONValue>>;
 
 		/**
 		 * Definition of a JSON value object.

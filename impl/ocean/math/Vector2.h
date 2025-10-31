@@ -25,28 +25,28 @@ template <typename T> class VectorT2;
  * @see VectorT2
  * @ingroup math
  */
-typedef VectorT2<Scalar> Vector2;
+using Vector2 = VectorT2<Scalar>;
 
 /**
  * Definition of a 2D vector with double values.
  * @see VectorT2
  * @ingroup math
  */
-typedef VectorT2<double> VectorD2;
+using VectorD2 = VectorT2<double>;
 
 /**
  * Definition of a 2D vector with float values.
  * @see VectorT2
  * @ingroup math
  */
-typedef VectorT2<float> VectorF2;
+using VectorF2 = VectorT2<float>;
 
 /**
  * Definition of a 2D vector with integer values.
  * @see VectorT2
  * @ingroup math
  */
-typedef VectorT2<int> VectorI2;
+using VectorI2 = VectorT2<int>;
 
 /**
  * Definition of a typename alias for vectors with VectorT2 objects.
@@ -61,28 +61,28 @@ using VectorsT2 = std::vector<VectorT2<T>>;
  * @see Vector2
  * @ingroup math
  */
-typedef std::vector<Vector2> Vectors2;
+using Vectors2 = std::vector<Vector2>;
 
 /**
  * Definition of a vector holding VectorD2 objects.
  * @see VectorD2
  * @ingroup math
  */
-typedef std::vector<VectorD2> VectorsD2;
+using VectorsD2 = std::vector<VectorD2>;
 
 /**
  * Definition of a vector holding VectorF2 objects.
  * @see VectorF2
  * @ingroup math
  */
-typedef std::vector<VectorF2> VectorsF2;
+using VectorsF2 = std::vector<VectorF2>;
 
 /**
  * Definition of a vector holding VectorI2 objects.
  * @see VectorI2
  * @ingroup math
  */
-typedef std::vector<VectorI2> VectorsI2;
+using VectorsI2 = std::vector<VectorI2>;
 
 /**
  * This class implements a vector with two elements.

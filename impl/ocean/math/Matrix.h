@@ -22,28 +22,28 @@ template <typename T> class MatrixT;
  * @see MatrixT
  * @ingroup math
  */
-typedef MatrixT<Scalar> Matrix;
+using Matrix = MatrixT<Scalar>;
 
 /**
  * Definition of the MatrixT template class using a double precision float data type.
  * @see MatrixT
  * @ingroup math
  */
-typedef MatrixT<double> MatrixD;
+using MatrixD = MatrixT<double>;
 
 /**
  * Definition of the MatrixT template class using a single precision float data type.
  * @see MatrixT
  * @ingroup math
  */
-typedef MatrixT<float> MatrixF;
+using MatrixF = MatrixT<float>;
 
 /**
  * Definition of a vector holding matrix objects.
  * @see Matrix
  * @ingroup math
  */
-typedef std::vector<Matrix> Matrices;
+using Matrices = std::vector<Matrix>;
 
 /**
  * This class implements a matrix with arbitrary size.

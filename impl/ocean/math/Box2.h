@@ -26,21 +26,21 @@ template <typename T> class BoxT2;
  * @see BoxT2
  * @ingroup math
  */
-typedef BoxT2<Scalar> Box2;
+using Box2 = BoxT2<Scalar>;
 
 /**
  * Instantiation of the BoxT2 template class using a double precision float data type.
  * @see BoxT2
  * @ingroup math
  */
-typedef BoxT2<double> BoxD2;
+using BoxD2 = BoxT2<double>;
 
 /**
  * Instantiation of the BoxT2 template class using a single precision float data type.
  * @see BoxT2
  * @ingroup math
  */
-typedef BoxT2<float> BoxF2;
+using BoxF2 = BoxT2<float>;
 
 /**
  * Definition of a typename alias for vectors with BoxT2 objects.
@@ -55,7 +55,7 @@ using BoxesT2 = std::vector<BoxT2<T>>;
  * @see Box2
  * @ingroup math
  */
-typedef std::vector<Box2> Boxes2;
+using Boxes2 = std::vector<Box2>;
 
 /**
  * This class implements an axis aligned 2D box object.

@@ -22,28 +22,28 @@ template <typename T> class VarianceT;
  * @see VarianceT
  * @ingroup math
  */
-typedef VarianceT<Scalar> Variance;
+using Variance = VarianceT<Scalar>;
 
 /**
  * Definition of a variance object with double values.
  * @see VarianceT
  * @ingroup math
  */
-typedef VarianceT<double> VarianceD;
+using VarianceD = VarianceT<double>;
 
 /**
  * Definition of a variance object with float values.
  * @see VarianceT
  * @ingroup math
  */
-typedef VarianceT<float> VarianceF;
+using VarianceF = VarianceT<float>;
 
 /**
  * Definition of a vector holding variance objects.
  * @see Variance
  * @ingroup math
  */
-typedef std::vector<Variance> Variances;
+using Variances = std::vector<Variance>;
 
 /**
  * This class allows to determine the variance in a given data set.

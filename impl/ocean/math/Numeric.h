@@ -30,21 +30,21 @@ template <typename T> class NumericT;
  * @see NumericT
  * @ingroup math
  */
-typedef NumericT<Scalar> Numeric;
+using Numeric = NumericT<Scalar>;
 
 /**
  * Definition of a Numeric class with double values.
  * @see NumericT
  * @ingroup math
  */
-typedef NumericT<double> NumericD;
+using NumericD = NumericT<double>;
 
 /**
  * Definition of a Numeric class with float values.
  * @see NumericT
  * @ingroup math
  */
-typedef NumericT<float> NumericF;
+using NumericF = NumericT<float>;
 
 /**
  * This class provides basic numeric functionalities.

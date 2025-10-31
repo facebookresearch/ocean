@@ -26,28 +26,28 @@ template <typename T> class VectorT3;
  * @see VectorT3
  * @ingroup math
  */
-typedef VectorT3<Scalar> Vector3;
+using Vector3 = VectorT3<Scalar>;
 
 /**
  * Definition of a 3D vector with double values.
  * @see VectorT3
  * @ingroup math
  */
-typedef VectorT3<double> VectorD3;
+using VectorD3 = VectorT3<double>;
 
 /**
  * Definition of a 3D vector with float values.
  * @see VectorT3
  * @ingroup math
  */
-typedef VectorT3<float> VectorF3;
+using VectorF3 = VectorT3<float>;
 
 /**
  * Definition of a 3D vector with integer values.
  * @see VectorT3
  * @ingroup math
  */
-typedef VectorT3<int> VectorI3;
+using VectorI3 = VectorT3<int>;
 
 /**
  * Definition of a typename alias for vectors with VectorT3 objects.
@@ -62,28 +62,28 @@ using VectorsT3 = std::vector<VectorT3<T>>;
  * @see Vector3
  * @ingroup math
  */
-typedef std::vector<Vector3> Vectors3;
+using Vectors3 = std::vector<Vector3>;
 
 /**
  * Definition of a vector holding VectorD3 objects.
  * @see VectorD3
  * @ingroup math
  */
-typedef std::vector<VectorD3> VectorsD3;
+using VectorsD3 = std::vector<VectorD3>;
 
 /**
  * Definition of a vector holding VectorF3 objects.
  * @see VectorF3
  * @ingroup math
  */
-typedef std::vector<VectorF3> VectorsF3;
+using VectorsF3 = std::vector<VectorF3>;
 
 /**
  * Definition of a vector holding VectorI3 objects.
  * @see VectorI3
  * @ingroup math
  */
-typedef std::vector<VectorI3> VectorsI3;
+using VectorsI3 = std::vector<VectorI3>;
 
 /**
  * This class implements a vector with three elements.

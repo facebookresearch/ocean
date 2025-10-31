@@ -25,7 +25,7 @@ class Directory;
  * Definition of a vector holding directories.
  * @ingroup io
  */
-typedef std::vector<Directory> Directories;
+using Directories = std::vector<Directory>;
 
 /**
  * This class holds a directory.

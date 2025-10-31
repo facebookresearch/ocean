@@ -26,7 +26,7 @@ class File;
  * Definition of a vector holding files.
  * @ingroup io
  */
-typedef std::vector<File> Files;
+using Files = std::vector<File>;
 
 /**
  * This class holds a file.

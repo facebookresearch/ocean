@@ -25,21 +25,21 @@ template <typename T> class TriangleT2;
  * @see TriangleT2
  * @ingroup math
  */
-typedef TriangleT2<Scalar> Triangle2;
+using Triangle2 = TriangleT2<Scalar>;
 
 /**
  * Instantiation of the TriangleT2 template class using a double precision float data type.
  * @see TriangleT2
  * @ingroup math
  */
-typedef TriangleT2<double> TriangleD2;
+using TriangleD2 = TriangleT2<double>;
 
 /**
  * Instantiation of the TriangleT2 template class using a single precision float data type.
  * @see TriangleT2
  * @ingroup math
  */
-typedef TriangleT2<float> TriangleF2;
+using TriangleF2 = TriangleT2<float>;
 
 /**
  * Definition of a typename alias for vectors with TriangleT2 objects.
@@ -54,21 +54,21 @@ using TrianglesT2 = std::vector<TriangleT2<T>>;
  * @see Triangle2
  * @ingroup math
  */
-typedef std::vector<Triangle2> Triangles2;
+using Triangles2 = std::vector<Triangle2>;
 
 /**
  * Definition of a vector holding 2D triangles with single precision float data type.
  * @see Triangle2
  * @ingroup math
  */
-typedef std::vector<TriangleF2> TrianglesF2;
+using TrianglesF2 = std::vector<TriangleF2>;
 
 /**
  * Definition of a vector holding 2D triangles with double precision float data type.
  * @see Triangle2
  * @ingroup math
  */
-typedef std::vector<TriangleD2> TrianglesD2;
+using TrianglesD2 = std::vector<TriangleD2>;
 
 /**
  * This class implements a 2D triangle with Cartesian coordinates.

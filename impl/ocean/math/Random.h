@@ -33,21 +33,21 @@ template <typename T> class RandomT;
  * @see RandomT
  * @ingroup math
  */
-typedef RandomT<Scalar> Random;
+using Random = RandomT<Scalar>;
 
 /**
  * Instantiation of the RandomT template class using a double precision float data type.
  * @see RandomT
  * @ingroup math
  */
-typedef RandomT<double> RandomD;
+using RandomD = RandomT<double>;
 
 /**
  * Instantiation of the RandomT template class using a single precision float data type.
  * @see RandomT
  * @ingroup math
  */
-typedef RandomT<float> RandomF;
+using RandomF = RandomT<float>;
 
 /**
  * This class provides several random functions for different data types using a floating point type for its elements that is specified by T.

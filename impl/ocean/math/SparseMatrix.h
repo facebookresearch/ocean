@@ -27,28 +27,28 @@ template <typename T> class SparseMatrixT;
  * @see SparseMatrixT
  * @ingroup math
  */
-typedef SparseMatrixT<Scalar> SparseMatrix;
+using SparseMatrix = SparseMatrixT<Scalar>;
 
 /**
  * Instantiation of the SparseMatrixT template class using a double precision float data type.
  * @see SparseMatrixT
  * @ingroup math
  */
-typedef SparseMatrixT<double> SparseMatrixD;
+using SparseMatrixD = SparseMatrixT<double>;
 
 /**
  * Instantiation of the SparseMatrixT template class using a single precision float data type.
  * @see SparseMatrixT
  * @ingroup math
  */
- typedef SparseMatrixT<float> SparseMatrixF;
+ using SparseMatrixF = SparseMatrixT<float>;
 
 /**
  * Definition of a vector holding sparse matrix objects.
  * @see SparseMatrix
  * @ingroup math
  */
-typedef std::vector<SparseMatrix> SparseMatrices;
+using SparseMatrices = std::vector<SparseMatrix>;
 
 /**
  * This class implements a sparse matrix using a float type for its elements that is specified by T.

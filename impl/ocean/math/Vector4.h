@@ -26,28 +26,28 @@ template <typename T> class VectorT4;
  * @see VectorT4
  * @ingroup math
  */
-typedef VectorT4<Scalar> Vector4;
+using Vector4 = VectorT4<Scalar>;
 
 /**
  * Definition of a 4D vector with double values.
  * @see VectorT4
  * @ingroup math
  */
-typedef VectorT4<double> VectorD4;
+using VectorD4 = VectorT4<double>;
 
 /**
  * Definition of a 4D vector with float values.
  * @see VectorT4
  * @ingroup math
  */
-typedef VectorT4<float> VectorF4;
+using VectorF4 = VectorT4<float>;
 
 /**
  * Definition of a 4D vector with integer values.
  * @see VectorT4
  * @ingroup math
  */
-typedef VectorT4<int> VectorI4;
+using VectorI4 = VectorT4<int>;
 
 /**
  * Definition of a typename alias for vectors with VectorT4 objects.
@@ -62,28 +62,28 @@ using VectorsT4 = std::vector<VectorT4<T>>;
  * @see Vector4
  * @ingroup math
  */
-typedef std::vector<Vector4> Vectors4;
+using Vectors4 = std::vector<Vector4>;
 
 /**
  * Definition of a vector holding VectorD4 objects.
  * @see VectorD4
  * @ingroup math
  */
-typedef std::vector<VectorD4> VectorsD4;
+using VectorsD4 = std::vector<VectorD4>;
 
 /**
  * Definition of a vector holding VectorF4 objects.
  * @see VectorF4
  * @ingroup math
  */
-typedef std::vector<VectorF4> VectorsF4;
+using VectorsF4 = std::vector<VectorF4>;
 
 /**
  * Definition of a vector holding VectorI4 objects.
  * @see VectorI4
  * @ingroup math
  */
-typedef std::vector<VectorI4> VectorsI4;
+using VectorsI4 = std::vector<VectorI4>;
 
 /**
  * This class implements a vector with four elements.

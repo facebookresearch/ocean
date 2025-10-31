@@ -34,7 +34,7 @@ class OCEAN_IO_EXPORT Utilities
 		/**
 		 * Definition of a vector holding 8 bit elements.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 	public:
 

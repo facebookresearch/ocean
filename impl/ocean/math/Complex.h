@@ -19,25 +19,25 @@ namespace Ocean
  * Definition of a complex number based on the double precision floating point data type.
  * @ingroup math
  */
-typedef std::complex<double> ComplexD;
+using ComplexD = std::complex<double>;
 
 /**
  * Definition of a complex number based on the single precision floating point data type.
  * @ingroup math
  */
-typedef std::complex<float> ComplexF;
+using ComplexF = std::complex<float>;
 
 /**
  * Definition of a complex number based on the default floating point precision data type.
  * @ingroup math
  */
-typedef std::complex<Scalar> Complex;
+using Complex = std::complex<Scalar>;
 
 /**
  * Definition of a vector holding complex objects.
  * @ingroup math
  */
-typedef std::vector<Complex> Complexes;
+using Complexes = std::vector<Complex>;
 
 }
 

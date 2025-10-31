@@ -75,17 +75,17 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 				/**
 				 * Definition of a image resolution.
 				 */
-				typedef std::pair<unsigned int, unsigned int> Resolution;
+				using Resolution = std::pair<unsigned int, unsigned int>;
 
 				/**
 				 * Definition of a pair of camera and priority values.
 				 */
-				typedef std::pair<PinholeCamera, Priority> CameraPair;
+				using CameraPair = std::pair<PinholeCamera, Priority>;
 
 				/**
 				 * Definition of a map mapping image resolutions to camera objects.
 				 */
-				typedef std::map<Resolution, CameraPair> ResolutionMap;
+				using ResolutionMap = std::map<Resolution, CameraPair>;
 
 			public:
 
@@ -118,12 +118,12 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		/**
 		 * Definition of a map mapping device names to device objects.
 		 */
-		typedef std::map<std::string, Device> DeviceMap;
+		using DeviceMap = std::map<std::string, Device>;
 
 		/**
 		 * Definition of a map mapping alias device names to device names.
 		 */
-		typedef std::map<std::string, std::string> AliasMap;
+		using AliasMap = std::map<std::string, std::string>;
 
 	public:
 

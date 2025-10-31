@@ -36,21 +36,21 @@ template <typename T> class PinholeCameraT;
  * @see PinholeCameraT
  * @ingroup math
  */
-typedef PinholeCameraT<Scalar> PinholeCamera;
+using PinholeCamera = PinholeCameraT<Scalar>;
 
 /**
  * Definition of an pinhole camera object with double precision.
  * @see PinholeCameraT
  * @ingroup math
  */
-typedef PinholeCameraT<double> PinholeCameraD;
+using PinholeCameraD = PinholeCameraT<double>;
 
 /**
  * Definition of an pinhole camera object with float precision.
  * @see PinholeCameraT
  * @ingroup math
  */
-typedef PinholeCameraT<float> PinholeCameraF;
+using PinholeCameraF = PinholeCameraT<float>;
 
 /**
  * Definition of a typename alias for vectors with PinholeCameraT objects.
@@ -65,21 +65,21 @@ using PinholeCamerasT = std::vector<PinholeCameraT<T>>;
  * @see PinholeCamera
  * @ingroup math
  */
-typedef PinholeCamerasT<Scalar> PinholeCameras;
+using PinholeCameras = PinholeCamerasT<Scalar>;
 
 /**
  * Definition of a vector holding PinholeCameraD objects.
  * @see PinholeCameraD
  * @ingroup math
  */
-typedef PinholeCamerasT<double> PinholeCamerasD;
+using PinholeCamerasD = PinholeCamerasT<double>;
 
 /**
  * Definition of a vector holding PinholeCameraF objects.
  * @see PinholeCameraF
  * @ingroup math
  */
-typedef PinholeCamerasT<float> PinholeCamerasF;
+using PinholeCamerasF = PinholeCamerasT<float>;
 
 /**
  * Definition of a pinhole camera model.<br>

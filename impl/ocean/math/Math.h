@@ -142,7 +142,7 @@ namespace Ocean
  * Definition of a vector holding Scalar objects.
  * @ingroup math
  */
-typedef std::vector<Scalar> Scalars;
+using Scalars = std::vector<Scalar>;
 
 // Defines OCEAN_MATH_EXPORT for dll export and import.
 #if defined(_WINDOWS) && defined(OCEAN_RUNTIME_SHARED)

@@ -233,7 +233,7 @@ class OCEAN_IO_EXPORT Tag
 				/**
 				 * Definition of a set holding tag values.
 				 */
-				typedef std::set<unsigned long long> TagSet;
+				using TagSet = std::set<unsigned long long>;
 
 			public:
 

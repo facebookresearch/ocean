@@ -27,21 +27,21 @@ template <typename T> class FrustumT;
  * @see FrustumT
  * @ingroup math
  */
-typedef FrustumT<Scalar> Frustum;
+using Frustum = FrustumT<Scalar>;
 
 /**
  * Definition of a frustum with double values.
  * @see FrustumT
  * @ingroup math
  */
-typedef FrustumT<double> FrustumD;
+using FrustumD = FrustumT<double>;
 
 /**
  * Definition of a frustum vector with float values.
  * @see FrustumT
  * @ingroup math
  */
-typedef FrustumT<float> FrustumF;
+using FrustumF = FrustumT<float>;
 
 /**
  * Definition of a typename alias for vectors with FrustumT objects.
@@ -56,21 +56,21 @@ using FrustumsT = std::vector<FrustumT<T>>;
  * @see Frustum
  * @ingroup math
  */
-typedef std::vector<Frustum> Frustums;
+using Frustums = std::vector<Frustum>;
 
 /**
  * Definition of a vector holding FrustumD objects.
  * @see FrustumD
  * @ingroup math
  */
-typedef std::vector<FrustumD> FrustumsD;
+using FrustumsD = std::vector<FrustumD>;
 
 /**
  * Definition of a vector holding FrustumF objects.
  * @see FrustumF
  * @ingroup math
  */
-typedef std::vector<FrustumF> FrustumsF;
+using FrustumsF = std::vector<FrustumF>;
 
 /**
  * This class implements a viewing frustum.

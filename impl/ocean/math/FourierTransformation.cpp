@@ -225,8 +225,8 @@ template<typename _Tp, size_t fixed_size> inline
 AutoBuffer<_Tp, fixed_size>::operator const _Tp* () const
 { return ptr; }
 
-typedef Complex<float> Complexf;
-typedef Complex<double> Complexd;
+using Complexf = Complex<float>;
+using Complexd = Complex<double>;
 
 enum DftFlags {
 	/** performs an inverse 1D or 2D transform instead of the default forward

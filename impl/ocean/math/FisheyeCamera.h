@@ -28,21 +28,21 @@ template <typename T> class FisheyeCameraT;
  * @see FisheyeCameraT
  * @ingroup math
  */
-typedef FisheyeCameraT<Scalar> FisheyeCamera;
+using FisheyeCamera = FisheyeCameraT<Scalar>;
 
 /**
  * Definition of a FisheyeCamera object using 'float'' as data type.
  * @see FisheyeCameraT
  * @ingroup math
  */
-typedef FisheyeCameraT<float> FisheyeCameraF;
+using FisheyeCameraF = FisheyeCameraT<float>;
 
 /**
  * Definition of a FisheyeCamera object using 'double'' as data type.
  * @see FisheyeCameraT
  * @ingroup math
  */
-typedef FisheyeCameraT<double> FisheyeCameraD;
+using FisheyeCameraD = FisheyeCameraT<double>;
 
 /**
  * Definition of a typename alias for vectors with FisheyeCameraT objects.
@@ -56,7 +56,7 @@ using FisheyeCamerasT = std::vector<FisheyeCameraT<T>>;
  * Definition of a vector holding camera objects.
  * @ingroup math
  */
-typedef std::vector<FisheyeCamera> FisheyeCameras;
+using FisheyeCameras = std::vector<FisheyeCamera>;
 
 /**
  * Class representing a fisheye camera.<br>

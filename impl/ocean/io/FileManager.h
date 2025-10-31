@@ -29,7 +29,7 @@ class OCEAN_IO_EXPORT FileManager
 		/**
 		 * Definition of a map mapping supported file extensions to file type descriptions.
 		 */
-		typedef std::map<std::string, std::string> FileExtensions;
+		using FileExtensions = std::map<std::string, std::string>;
 
 	public:
 

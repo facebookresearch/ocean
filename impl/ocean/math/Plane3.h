@@ -28,21 +28,21 @@ template <typename T> class PlaneT3;
  * @see PlaneT3
  * @ingroup math
  */
-typedef PlaneT3<Scalar> Plane3;
+using Plane3 = PlaneT3<Scalar>;
 
 /**
  * Definition of a 3D plane with double values.
  * @see PlaneT3
  * @ingroup math
  */
-typedef PlaneT3<double> PlaneD3;
+using PlaneD3 = PlaneT3<double>;
 
 /**
  * Definition of a 3D plane with float values.
  * @see PlaneT3
  * @ingroup math
  */
-typedef PlaneT3<float> PlaneF3;
+using PlaneF3 = PlaneT3<float>;
 
 /**
  * Definition of a typename alias for vectors with PlaneT3 objects.
@@ -57,7 +57,7 @@ using PlanesT3 = std::vector<PlaneT3<T>>;
  * @see Plane3
  * @ingroup math
  */
-typedef std::vector<Plane3> Planes3;
+using Planes3 = std::vector<Plane3>;
 
 /**
  * This class implements a plane in 3D space.

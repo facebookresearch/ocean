@@ -26,7 +26,7 @@ class OCEAN_IO_EXPORT Base64
 		/**
 		 * Definition of a vector holding characters.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 	public:
 

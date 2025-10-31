@@ -27,28 +27,28 @@ class CylinderT3;
  * @see CylinderT3
  * @ingroup math
  */
-typedef CylinderT3<Scalar> Cylinder3;
+using Cylinder3 = CylinderT3<Scalar>;
 
 /**
  * Definition of a 3D cylinder with double values.
  * @see CylinderT3
  * @ingroup math
  */
-typedef CylinderT3<double> CylinderD3;
+using CylinderD3 = CylinderT3<double>;
 
 /**
  * Definition of a 3D cylinder with float values.
  * @see CylinderT3
  * @ingroup math
  */
-typedef CylinderT3<float> CylinderF3;
+using CylinderF3 = CylinderT3<float>;
 
 /**
  * Definition of a vector holding Cylinder3 objects.
  * @see Cylinder3
  * @ingroup math
  */
-typedef std::vector<Cylinder3> Cylinders3;
+using Cylinders3 = std::vector<Cylinder3>;
 
 /**
  * This class implements a 3D cylinder defined by its origin, axis, radius, and (signed) starting and stopping points along its axis.

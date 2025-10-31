@@ -26,21 +26,21 @@ template <typename T> class CameraT;
  * @see CameraT
  * @ingroup math
  */
-typedef CameraT<Scalar> Camera;
+using Camera = CameraT<Scalar>;
 
 /**
  * Definition of an Camera object with double precision.
  * @see CameraT
  * @ingroup math
  */
-typedef CameraT<double> CameraD;
+using CameraD = CameraT<double>;
 
 /**
  * Definition of an Camera object with float precision.
  * @see CameraT
  * @ingroup math
  */
-typedef CameraT<float> CameraF;
+using CameraF = CameraT<float>;
 
 /**
  * This class implements the base class for all cameras.

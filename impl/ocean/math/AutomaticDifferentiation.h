@@ -22,21 +22,21 @@ template <typename T, typename TNumeric> class AutomaticDifferentiationT;
  * @see AutomaticDifferentiationT
  * @ingroup math
  */
-typedef AutomaticDifferentiationT<Scalar, Numeric> AutomaticDifferentiation;
+using AutomaticDifferentiation = AutomaticDifferentiationT<Scalar, Numeric>;
 
 /**
  * Definition of a scalar differentiation object using double as data type.
  * @see AutomaticDifferentiationT
  * @ingroup math
  */
-typedef AutomaticDifferentiationT<double, NumericD> AutomaticDifferentiationD;
+using AutomaticDifferentiationD = AutomaticDifferentiationT<double, NumericD>;
 
 /**
  * Definition of a scalar differentiation object using float as data type.
  * @see AutomaticDifferentiationT
  * @ingroup math
  */
-typedef AutomaticDifferentiationT<float, NumericF> AutomaticDifferentiationF;
+using AutomaticDifferentiationF = AutomaticDifferentiationT<float, NumericF>;
 
 /**
  * This class implements an automatic differentiation functionality.

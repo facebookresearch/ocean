@@ -29,7 +29,7 @@ class OCEAN_IO_EXPORT Compression
 		/**
 		 * Definition of a vector holding bytes.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 	public:
 

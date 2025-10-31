@@ -22,21 +22,21 @@ template <typename T> class TriangleT;
  * @see TriangleT
  * @ingroup math
  */
-typedef TriangleT<Scalar> Triangle;
+using Triangle = TriangleT<Scalar>;
 
 /**
  * Instantiation of the TriangleT template class using a double precision float data type.
  * @see TriangleT
  * @ingroup math
  */
-typedef TriangleT<double> TriangleD;
+using TriangleD = TriangleT<double>;
 
 /**
  * Instantiation of the TriangleT template class using a single precision float data type.
  * @see TriangleT
  * @ingroup math
  */
-typedef TriangleT<float> TriangleF;
+using TriangleF = TriangleT<float>;
 
 /**
  * This class implements a base class for all triangle classes.

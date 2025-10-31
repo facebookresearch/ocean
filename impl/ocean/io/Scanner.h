@@ -283,22 +283,22 @@ class OCEAN_IO_EXPORT Scanner
 		/**
 		 * Definition of an unordered map mapping strings to ids.
 		 */
-		typedef std::unordered_map<std::string, uint32_t> IdMap;
+		using IdMap = std::unordered_map<std::string, uint32_t>;
 
 		/**
 		 * Definition of an unordered set holding line remark symbols.
 		 */
-		typedef std::unordered_set<std::string> LineRemarks;
+		using LineRemarks = std::unordered_set<std::string>;
 
 		/**
 		 * Definition of an unordered map mapping begin remark symbols to end remark symbols.
 		 */
-		typedef std::unordered_map<std::string, std::string> ScopeRemarks;
+		using ScopeRemarks = std::unordered_map<std::string, std::string>;
 
 		/**
 		 * Definition of a character table.
 		 */
-		typedef std::array<uint16_t, 256> CharTable;
+		using CharTable = std::array<uint16_t, 256>;
 
 		/**
 		 * Definition of first character types.
