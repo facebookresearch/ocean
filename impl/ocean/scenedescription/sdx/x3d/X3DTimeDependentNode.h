@@ -43,7 +43,7 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT X3DTimeDependentNode :
 
 		/**
 		 * Registers the fields of this node.
-		 * @param specification Node specification receiving the field informations
+		 * @param specification Node specification receiving the field information
 		 */
 		void registerFields(NodeSpecification& specification);
 

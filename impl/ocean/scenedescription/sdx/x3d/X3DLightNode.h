@@ -72,18 +72,18 @@ class OCEAN_SCENEDESCRIPTION_SDX_X3D_EXPORT X3DLightNode :
 
 		/**
 		 * Registers the fields of this node.
-		 * @param specification Node specification receiving the field informations
+		 * @param specification Node specification receiving the field information
 		 */
 		void registerFields(NodeSpecification& specification);
 
 		/**
-		 * Registers this light at the renering objects.
+		 * Registers this light at the rendering objects.
 		 * @param willBeGlobal True, if the light will be a global light; False, if the light will be a local light
 		 */
 		void registerLight(const bool willBeGlobal);
 
 		/**
-		 * Unregisters this light at the renering objects.
+		 * Unregisters this light at the rendering objects.
 		 * @param wasGlobal True, if the light was a global light; False, if the light was a local light
 		 */
 		void unregisterLight(const bool wasGlobal);
