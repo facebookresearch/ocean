@@ -44,12 +44,12 @@ class OCEAN_GEOMETRY_EXPORT CameraCalibration
 				/**
 				 * Definition of a (row) vector holding 2D positions.
 				 */
-				typedef Vectors2 PatternRow;
+				using PatternRow = Vectors2;
 
 				/**
 				 * Definition of a vector holding rows.
 				 */
-				typedef std::vector<PatternRow> PatternRows;
+				using PatternRows = std::vector<PatternRow>;
 
 			public:
 
@@ -133,7 +133,7 @@ class OCEAN_GEOMETRY_EXPORT CameraCalibration
 		/**
 		 * Definition of a vector holding calibration patterns.
 		 */
-		typedef std::vector<Pattern> Patterns;
+		using Patterns = std::vector<Pattern>;
 
 	public:
 

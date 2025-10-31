@@ -34,7 +34,7 @@ class NonLinearOptimizationCamera::CameraOrientationsBaseData
 		/**
 		 * Definition of a hash map used as lookup table to translate ids of object points to indices of object points.
 		 */
-		typedef HashMap<Index32, Index32> IndexLookupTable;
+		using IndexLookupTable = HashMap<Index32, Index32>;
 
 	public:
 
@@ -1037,8 +1037,8 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 	// shared model: camera profile with 4, 6 or 8 scalar parameters
 	// individual model: camera orientation with 3 scalar parameters for each orientation
 
-	typedef StaticBuffer<Scalar, 3> IndividualModel;
-	typedef std::vector<IndividualModel> IndividualModels;
+	using IndividualModel = StaticBuffer<Scalar, 3>;
+	using IndividualModels = std::vector<IndividualModel>;
 
 	IndividualModels individualModels, optimizedIndividualModels;
 	for (size_t n = 0; n < world_R_cameras.size(); ++n)
@@ -1062,7 +1062,7 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 		{
 			// we have shared model with 4 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_FOCAL_LENGTH, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTH, 16u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_FOCAL_LENGTH, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTH, 16u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTH>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -1087,7 +1087,7 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 		{
 			// we have shared model with 4 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_FOCAL_LENGTHS, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTHS, 16u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_FOCAL_LENGTHS, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTHS, 16u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTHS>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -1112,7 +1112,7 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 		{
 			// we have shared model with 4 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_INTRINSIC_PARAMETERS, 3u, 2u, PinholeCamera::OS_INTRINSIC_PARAMETERS, 16u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_INTRINSIC_PARAMETERS, 3u, 2u, PinholeCamera::OS_INTRINSIC_PARAMETERS, 16u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraOrientationsData<PinholeCamera::OS_INTRINSIC_PARAMETERS>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -1137,7 +1137,7 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 		{
 			// we have shared model with 6 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION, 16u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION, 16u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraOrientationsData<PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -1162,7 +1162,7 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 		{
 			// we have shared model with 7 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS, 3u, 2u, PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS, 16u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS, 3u, 2u, PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS, 16u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraOrientationsData<PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -1187,7 +1187,7 @@ bool NonLinearOptimizationCamera::optimizeCameraOrientations(const PinholeCamera
 		{
 			// we have shared model with 8 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS, 3u, 2u, PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS, 16u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS, 3u, 2u, PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS, 16u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraOrientationsData<PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -1882,8 +1882,8 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 	// shared model: camera profile with 4, 6 or 8 scalar parameters
 	// individual model: camera orientation with 3 scalar parameters for each orientation
 
-	typedef StaticBuffer<Scalar, 6> FirstIndividualModel;
-	typedef std::vector<FirstIndividualModel> FirstIndividualModels;
+	using FirstIndividualModel = StaticBuffer<Scalar, 6>;
+	using FirstIndividualModels = std::vector<FirstIndividualModel>;
 
 	FirstIndividualModels firstIndividualModels, optimizedFirstIndividualModels;
 	for (size_t n = 0; n < world_T_cameras.size(); ++n)
@@ -1892,8 +1892,8 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 		firstIndividualModels.push_back(FirstIndividualModel(pose.data()));
 	}
 
-	typedef StaticBuffer<Scalar, 3> SecondIndividualModel;
-	typedef std::vector<SecondIndividualModel> SecondIndividualModels;
+	using SecondIndividualModel = StaticBuffer<Scalar, 3>;
+	using SecondIndividualModels = std::vector<SecondIndividualModel>;
 
 	SecondIndividualModels secondIndividualModels, optimizedSecondIndividualModels;
 	for (size_t n = 0; n < objectPoints.size(); ++n)
@@ -1916,7 +1916,7 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 		{
 			// we have shared model with 1 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_FOCAL_LENGTH, 6u, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTH, 16u, 3u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_FOCAL_LENGTH, 6u, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTH, 16u, 3u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraObjectPointsPosesData<PinholeCamera::OS_FOCAL_LENGTH>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -1942,7 +1942,7 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 		{
 			// we have shared model with 2 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_FOCAL_LENGTHS, 6u, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTHS, 16u, 3u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_FOCAL_LENGTHS, 6u, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTHS, 16u, 3u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraObjectPointsPosesData<PinholeCamera::OS_FOCAL_LENGTHS>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -1968,7 +1968,7 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 		{
 			// we have shared model with 4 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_INTRINSIC_PARAMETERS, 6u, 3u, 2u, PinholeCamera::OS_INTRINSIC_PARAMETERS, 16u, 3u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_INTRINSIC_PARAMETERS, 6u, 3u, 2u, PinholeCamera::OS_INTRINSIC_PARAMETERS, 16u, 3u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraObjectPointsPosesData<PinholeCamera::OS_INTRINSIC_PARAMETERS>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -1994,7 +1994,7 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 		{
 			// we have shared model with 6 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION, 6u, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION, 16u, 3u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION, 6u, 3u, 2u, PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION, 16u, 3u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraObjectPointsPosesData<PinholeCamera::OS_FOCAL_LENGTHS_DISTORTION>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -2020,7 +2020,7 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 		{
 			// we have shared model with 6 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS, 6u, 3u, 2u, PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS, 16u, 3u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS, 6u, 3u, 2u, PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS, 16u, 3u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraObjectPointsPosesData<PinholeCamera::OS_SYMMETRIC_INTRINSIC_PARAMETERS_DISTORTIONS>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -2046,7 +2046,7 @@ bool NonLinearOptimizationCamera::optimizeCameraObjectPointsPoses(const PinholeC
 		{
 			// we have shared model with 8 parameters
 
-			typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS, 6u, 3u, 2u, PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS, 16u, 3u> UniversalOptimization;
+			using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModelsIndividualModels<PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS, 6u, 3u, 2u, PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS, 16u, 3u>;
 
 			UniversalOptimization::SharedModel sharedModel = CameraObjectPointsPosesData<PinholeCamera::OS_INTRINSIC_PARAMETERS_DISTORTIONS>::profile2model(pinholeCamera);
 			UniversalOptimization::SharedModel optimizedSharedModel;
@@ -2174,7 +2174,7 @@ void NonLinearOptimizationCamera::findInitialFieldOfViewSubset(const PinholeCame
 	// shared model: camera profile with 1 scalar parameters
 	// individual model: camera orientation with 3 scalar parameters for each orientation
 
-	typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<1u, 3u, 2u, 1u, 16u> UniversalOptimization;
+	using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<1u, 3u, 2u, 1u, 16u>;
 
 	UniversalOptimization::SharedModel sharedModel, optimizedSharedModel;
 	UniversalOptimization::IndividualModels individualModels, optimizedIndividualModels;

@@ -107,7 +107,7 @@ bool NonLinearOptimizationLine::optimizeLine(const Line2& line, const ConstIndex
 {
 	ocean_assert(line.isValid() && pointAccessor.size() >= 2);
 
-	typedef NonLinearUniversalOptimizationDense<2, 2, 4> UniversalOptimization;
+	using UniversalOptimization = NonLinearUniversalOptimizationDense<2, 2, 4>;
 
 	LineData lineData(pointAccessor);
 

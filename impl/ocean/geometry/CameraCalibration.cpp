@@ -57,9 +57,9 @@ Box2 CameraCalibration::Pattern::boundingBox() const
 
 Scalar CameraCalibration::Pattern::distance(const Pattern& pattern) const
 {
-	typedef std::pair<Scalar, IndexPair32> DistancePair;
-	typedef std::vector<DistancePair> DistancePairs;
-	typedef std::set<unsigned int> IndexSet;
+	using DistancePair = std::pair<Scalar, IndexPair32>;
+	using DistancePairs = std::vector<DistancePair>;
+	using IndexSet = std::set<unsigned int>;
 
 	DistancePairs distances;
 	distances.reserve(16);

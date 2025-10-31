@@ -32,12 +32,12 @@ class OCEAN_GEOMETRY_EXPORT NonLinearOptimizationPlane : protected NonLinearOpti
 		/**
 		 * Definition of a pair holding to sets of corresponding image points.
 		 */
-		typedef std::pair<Vectors2, Vectors2> ImagePointsPair;
+		using ImagePointsPair = std::pair<Vectors2, Vectors2>;
 
 		/**
 		 * Definition of a vector holding pairs of corresponding image points.
 		 */
-		typedef std::vector<ImagePointsPair> ImagePointsPairs;
+		using ImagePointsPairs = std::vector<ImagePointsPair>;
 
 	protected:
 

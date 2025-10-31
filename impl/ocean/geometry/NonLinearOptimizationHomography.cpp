@@ -103,7 +103,7 @@ bool NonLinearOptimizationHomography::optimizeHomography(const SquareMatrix3& ho
 	ocean_assert(imagePointsLeft && imagePointsRight);
 	ocean_assert(modelParameters == 9u);
 
-	typedef NonLinearUniversalOptimizationDense<9, 2, 9> UniversalOptimization;
+	using UniversalOptimization = NonLinearUniversalOptimizationDense<9, 2, 9>;
 
 	HomographyData data(imagePointsLeft, imagePointsRight);
 
@@ -693,7 +693,7 @@ bool NonLinearOptimizationHomography::optimizeHomography(const PinholeCamera& pi
 {
 	ocean_assert(imagePointsLeft && imagePointsRight);
 
-	typedef NonLinearUniversalOptimizationDense<8, 2, 9> UniversalOptimization;
+	using UniversalOptimization = NonLinearUniversalOptimizationDense<8, 2, 9>;
 
 	NormalizedHomographyData data(pinholeCamera, imagePointsLeft, imagePointsRight);
 
@@ -839,7 +839,7 @@ bool NonLinearOptimizationHomography::optimizeCameraHomography(const PinholeCame
 {
 	ocean_assert(imagePointsLeft && imagePointsRight);
 
-	typedef NonLinearUniversalOptimizationDense<16, 2, 17> UniversalOptimization;
+	using UniversalOptimization = NonLinearUniversalOptimizationDense<16, 2, 17>;
 
 	HomographyCameraData data(pinholeCamera.width(), pinholeCamera.height(), imagePointsLeft, imagePointsRight);
 
@@ -1043,7 +1043,7 @@ bool NonLinearOptimizationHomography::optimizeCameraHomographies(const PinholeCa
 	ocean_assert(pinholeCamera.isValid());
 	ocean_assert(homographies.size() == imagePointsPairs.size());
 
-	typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<8u, 8u, 2u, 8u, 9u> UniversalOptimization;
+	using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<8u, 8u, 2u, 8u, 9u>;
 
 	UniversalOptimization::SharedModel sharedModel, optimizedSharedModel;
 	pinholeCamera.copyElements(sharedModel.data());
@@ -1102,7 +1102,7 @@ bool NonLinearOptimizationHomography::optimizeDistortionCameraHomographies(const
 	ocean_assert(pinholeCamera.isValid());
 	ocean_assert(homographies.size() == imagePointsPairs.size());
 
-	typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<4u, 8u, 2u, 4u, 9u> UniversalOptimization;
+	using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<4u, 8u, 2u, 4u, 9u>;
 
 	UniversalOptimization::SharedModel sharedModel, optimizedSharedModel;
 	sharedModel[0] = pinholeCamera.radialDistortion().first;

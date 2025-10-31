@@ -35,17 +35,17 @@ class NonLinearUniversalOptimizationDense : protected NonLinearOptimization
 		/**
 		 * Definition of a model.
 		 */
-		typedef StaticBuffer<Scalar, tModelSize> Model;
+		using Model = StaticBuffer<Scalar, tModelSize>;
 
 		/**
 		 * Definition of an external model.
 		 */
-		typedef StaticBuffer<Scalar, tExternalModelSize> ExternalModel;
+		using ExternalModel = StaticBuffer<Scalar, tExternalModelSize>;
 
 		/**
 		 * Definition of a model result.
 		 */
-		typedef StaticBuffer<Scalar, tResultDimension> Result;
+		using Result = StaticBuffer<Scalar, tResultDimension>;
 
 		/**
 		 * Definition of a callback function for dense value calculation.
@@ -53,7 +53,7 @@ class NonLinearUniversalOptimizationDense : protected NonLinearOptimization
 		 * The second parameter provides the index of the measurement elements that is used to determine the value.<br>
 		 * The third parameter receives the determined value.
 		 */
-		typedef Callback<void, const ExternalModel&, const size_t, Result&> ValueCallback;
+		using ValueCallback = Callback<void, const ExternalModel&, const size_t, Result&>;
 
 		/**
 		 * Definition of a callback function for dense error calculation.
@@ -62,7 +62,7 @@ class NonLinearUniversalOptimizationDense : protected NonLinearOptimization
 		 * The third parameter receives the determined error.<br>
 		 * The return value provides True if both models provide valid information for the measurement element.
 		 */
-		typedef Callback<bool, const ExternalModel&, const size_t, Result&> ErrorCallback;
+		using ErrorCallback = Callback<bool, const ExternalModel&, const size_t, Result&>;
 
 		/**
 		 * Definition of a dense model transformation function.
@@ -70,14 +70,14 @@ class NonLinearUniversalOptimizationDense : protected NonLinearOptimization
 		 * The first parameter provides the internal model.<br>
 		 * The second parameter receives the external model.
 		 */
-		typedef Callback<void, Model&, ExternalModel&> ModelTransformationCallback;
+		using ModelTransformationCallback = Callback<void, Model&, ExternalModel&>;
 
 		/**
 		 * Definition of a dense model adjustment function.
 		 * The adjustment function allows to modify the internal model (the modification should be tiny e.g., a normalization of a vector which has almost length 1) before the model will be accepted or rejected
 		 * The first parameter provides the model to be adjusted
 		 */
-		typedef Callback<void, Model&> ModelAdjustmentCallback;
+		using ModelAdjustmentCallback = Callback<void, Model&>;
 
 	protected:
 

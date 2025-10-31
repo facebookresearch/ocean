@@ -1592,7 +1592,7 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 		return false;
 	}
 
-	typedef std::vector<Indices32> IndexVectorSet;
+	using IndexVectorSet = std::vector<Indices32>;
 
 	const unsigned int maxInterations = iterations * 10u;
 

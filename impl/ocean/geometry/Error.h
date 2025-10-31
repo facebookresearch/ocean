@@ -107,7 +107,7 @@ class OCEAN_GEOMETRY_EXPORT Error
 		/**
 		 * Definition of a vector holding error elements.
 		 */
-		typedef std::vector<ErrorElement> ErrorElements;
+		using ErrorElements = std::vector<ErrorElement>;
 
 	public:
 

@@ -42,32 +42,32 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				/**
 				 * Definition of a shared model.
 				 */
-				typedef StaticBuffer<Scalar, tSharedModelSize> SharedModel;
+				using SharedModel = StaticBuffer<Scalar, tSharedModelSize>;
 
 				/**
 				 * Definition of an external shared model.
 				 */
-				typedef StaticBuffer<Scalar, tExternalSharedModelSize> ExternalSharedModel;
+				using ExternalSharedModel = StaticBuffer<Scalar, tExternalSharedModelSize>;
 
 				/**
 				 * Definition of an individual model.
 				 */
-				typedef StaticBuffer<Scalar, tIndividualModelSize> IndividualModel;
+				using IndividualModel = StaticBuffer<Scalar, tIndividualModelSize>;
 
 				/**
 				 * Definition of an external individual model.
 				 */
-				typedef StaticBuffer<Scalar, tExternalIndividualModelSize> ExternalIndividualModel;
+				using ExternalIndividualModel = StaticBuffer<Scalar, tExternalIndividualModelSize>;
 
 				/**
 				 * Definition of a model result.
 				 */
-				typedef StaticBuffer<Scalar, tResultDimension> Result;
+				using Result = StaticBuffer<Scalar, tResultDimension>;
 
 				/**
 				 * Definition of a vector holding individual models.
 				 */
-				typedef std::vector<IndividualModel> IndividualModels;
+				using IndividualModels = std::vector<IndividualModel>;
 
 				/**
 				 * Definition of a callback function for sparse value calculation.
@@ -77,7 +77,7 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The fourth parameter provides the element index for the individual model.<br>
 				 * The fifth parameter receives the determined value.
 				 */
-				typedef Callback<void, const ExternalSharedModel&, const ExternalIndividualModel&, const size_t, const size_t, Result&> ValueCallback;
+				using ValueCallback = Callback<void, const ExternalSharedModel&, const ExternalIndividualModel&, const size_t, const size_t, Result&>;
 
 				/**
 				 * Definition of a callback function for sparse error calculation.
@@ -88,14 +88,14 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The fifth parameter receives the determined error.<br>
 				 * The return value provides True if both models provide valid information for the measurement element.<br>
 				 */
-				typedef Callback<bool, const ExternalSharedModel&, const ExternalIndividualModel&, const size_t, const size_t, Result&> ErrorCallback;
+				using ErrorCallback = Callback<bool, const ExternalSharedModel&, const ExternalIndividualModel&, const size_t, const size_t, Result&>;
 
 				/**
 				 * Definition of a callback function determining whether a shared model is valid.
 				 * The first parameter provides the external shared model for which the decision has to be done
 				 * True, if the shared model is valid.<br>
 				 */
-				typedef Callback<bool, const ExternalSharedModel&> SharedModelIsValidCallback;
+				using SharedModelIsValidCallback = Callback<bool, const ExternalSharedModel&>;
 
 				/**
 				 * Definition of a shared model transformation function.
@@ -103,7 +103,7 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The first parameter provides the internal shared model.<br>
 				 * The second parameter receives the external shared model.<br>
 				 */
-				typedef Callback<void, SharedModel&, ExternalSharedModel&> SharedModelTransformationCallback;
+				using SharedModelTransformationCallback = Callback<void, SharedModel&, ExternalSharedModel&>;
 
 				/**
 				 * Definition of an individual model transformation function.
@@ -111,21 +111,21 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The first parameter provides the internal shared model.<br>
 				 * The second parameter receives the external shared model.<br>
 				 */
-				typedef Callback<void, IndividualModel&, ExternalIndividualModel&> IndividualModelTransformationCallback;
+				using IndividualModelTransformationCallback = Callback<void, IndividualModel&, ExternalIndividualModel&>;
 
 				/**
 				 * Definition of a model accepted function.
 				 * The first parameter provides the internal shared model that has been accepted as improved model.
 				 * The second parameter provides the internal individual models that have been accepted as improved model.
 				 */
-				typedef Callback<void, const SharedModel&, const IndividualModels&> ModelAcceptedCallback;
+				using ModelAcceptedCallback = Callback<void, const SharedModel&, const IndividualModels&>;
 
 			protected:
 
 				/**
 				 * Definition of a vector holding individual models.
 				 */
-				typedef std::vector<ExternalIndividualModel> ExternalIndividualModels;
+				using ExternalIndividualModels = std::vector<ExternalIndividualModel>;
 
 				/**
 				 * This class implements a sparse universal optimization provider for universal models and measurement/data values.
@@ -259,47 +259,47 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				/**
 				 * Definition of the first model.
 				 */
-				typedef StaticBuffer<Scalar, tFirstModelSize> FirstModel;
+				using FirstModel = StaticBuffer<Scalar, tFirstModelSize>;
 
 				/**
 				 * Definition of the external first model.
 				 */
-				typedef StaticBuffer<Scalar, tExternalFirstModelSize> ExternalFirstModel;
+				using ExternalFirstModel = StaticBuffer<Scalar, tExternalFirstModelSize>;
 
 				/**
 				 * Definition of the second model.
 				 */
-				typedef StaticBuffer<Scalar, tSecondModelSize> SecondModel;
+				using SecondModel = StaticBuffer<Scalar, tSecondModelSize>;
 
 				/**
 				 * Definition of the external second model.
 				 */
-				typedef StaticBuffer<Scalar, tExternalSecondModelSize> ExternalSecondModel;
+				using ExternalSecondModel = StaticBuffer<Scalar, tExternalSecondModelSize>;
 
 				/**
 				 * Definition of a model result.
 				 */
-				typedef StaticBuffer<Scalar, tResultDimension> Result;
+				using Result = StaticBuffer<Scalar, tResultDimension>;
 
 				/**
 				 * Definition of a vector holding the first models.
 				 */
-				typedef std::vector<FirstModel> FirstModels;
+				using FirstModels = std::vector<FirstModel>;
 
 				/**
 				 * Definition of a vector holding the external first models.
 				 */
-				typedef std::vector<ExternalFirstModel> ExternalFirstModels;
+				using ExternalFirstModels = std::vector<ExternalFirstModel>;
 
 				/**
 				 * Definition of a vector holding the first models.
 				 */
-				typedef std::vector<SecondModel> SecondModels;
+				using SecondModels = std::vector<SecondModel>;
 
 				/**
 				 * Definition of a vector holding the external second models.
 				 */
-				typedef std::vector<ExternalSecondModel> ExternalSecondModels;
+				using ExternalSecondModels = std::vector<ExternalSecondModel>;
 
 				/**
 				 * Definition of a callback function for sparse value calculation.
@@ -310,7 +310,7 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The fifth parameter receives the determined value.<br>
 				 * The return value provides the index of the corresponding first model.<br>
 				 */
-				typedef Callback<size_t, const ExternalFirstModels&, const ExternalSecondModels&, const size_t, const size_t, Result&> ValueCallback;
+				using ValueCallback = Callback<size_t, const ExternalFirstModels&, const ExternalSecondModels&, const size_t, const size_t, Result&>;
 
 				/**
 				 * Definition of a callback function for sparse error calculation.
@@ -320,7 +320,7 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The fourth parameter provides the element index for the second model for which the error needs to be determined.<br>
 				 * The fifth parameter receives the determined error.<br>
 				 */
-				typedef Callback<bool, const ExternalFirstModels&, const ExternalSecondModels&, const size_t, const size_t, Result&> ErrorCallback;
+				using ErrorCallback = Callback<bool, const ExternalFirstModels&, const ExternalSecondModels&, const size_t, const size_t, Result&>;
 
 				/**
 				 * Definition of a first model transformation function.
@@ -328,7 +328,7 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The first parameter provides the internal first model.<br>
 				 * The second parameter receives the external first model.<br>
 				 */
-				typedef Callback<void, FirstModel&, ExternalFirstModel&> FirstModelTransformationCallback;
+				using FirstModelTransformationCallback = Callback<void, FirstModel&, ExternalFirstModel&>;
 
 				/**
 				 * Definition of a second model transformation function.
@@ -336,14 +336,14 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The first parameter provides the internal second model.<br>
 				 * The second parameter receives the external second model.<br>
 				 */
-				typedef Callback<void, SecondModel&, ExternalSecondModel&> SecondModelTransformationCallback;
+				using SecondModelTransformationCallback = Callback<void, SecondModel&, ExternalSecondModel&>;
 
 				/**
 				 * Definition of a model accepted function.
 				 * The first parameter provides the internal first models that have been accepted as improved models.
 				 * The second parameter provides the internal second models that have been accepted as improved model.
 				 */
-				typedef Callback<void, const FirstModels&, const SecondModels&> ModelAcceptedCallback;
+				using ModelAcceptedCallback = Callback<void, const FirstModels&, const SecondModels&>;
 
 			protected:
 
@@ -491,57 +491,57 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				/**
 				 * Definition of the shared model.
 				 */
-				typedef StaticBuffer<Scalar, tSharedModelSize> SharedModel;
+				using SharedModel = StaticBuffer<Scalar, tSharedModelSize>;
 
 				/**
 				 * Definition of the external shared model.
 				 */
-				typedef StaticBuffer<Scalar, tExternalSharedModelSize> ExternalSharedModel;
+				using ExternalSharedModel = StaticBuffer<Scalar, tExternalSharedModelSize>;
 
 				/**
 				 * Definition of the first individual model.
 				 */
-				typedef StaticBuffer<Scalar, tFirstIndividualModelSize> FirstIndividualModel;
+				using FirstIndividualModel = StaticBuffer<Scalar, tFirstIndividualModelSize>;
 
 				/**
 				 * Definition of the external first individual model.
 				 */
-				typedef StaticBuffer<Scalar, tExternalFirstIndividualModelSize> ExternalFirstIndividualModel;
+				using ExternalFirstIndividualModel = StaticBuffer<Scalar, tExternalFirstIndividualModelSize>;
 
 				/**
 				 * Definition of the second individual model.
 				 */
-				typedef StaticBuffer<Scalar, tSecondIndividualModelSize> SecondIndividualModel;
+				using SecondIndividualModel = StaticBuffer<Scalar, tSecondIndividualModelSize>;
 
 				/**
 				 * Definition of the external second individual model.
 				 */
-				typedef StaticBuffer<Scalar, tExternalSecondIndividualModelSize> ExternalSecondIndividualModel;
+				using ExternalSecondIndividualModel = StaticBuffer<Scalar, tExternalSecondIndividualModelSize>;
 
 				/**
 				 * Definition of a model result.
 				 */
-				typedef StaticBuffer<Scalar, tResultDimension> Result;
+				using Result = StaticBuffer<Scalar, tResultDimension>;
 
 				/**
 				 * Definition of a vector holding the first individual models.
 				 */
-				typedef std::vector<FirstIndividualModel> FirstIndividualModels;
+				using FirstIndividualModels = std::vector<FirstIndividualModel>;
 
 				/**
 				 * Definition of a vector holding the external first individual models.
 				 */
-				typedef std::vector<ExternalFirstIndividualModel> ExternalFirstIndividualModels;
+				using ExternalFirstIndividualModels = std::vector<ExternalFirstIndividualModel>;
 
 				/**
 				 * Definition of a vector holding the first individual models.
 				 */
-				typedef std::vector<SecondIndividualModel> SecondIndividualModels;
+				using SecondIndividualModels = std::vector<SecondIndividualModel>;
 
 				/**
 				 * Definition of a vector holding the external second individual models.
 				 */
-				typedef std::vector<ExternalSecondIndividualModel> ExternalSecondIndividualModels;
+				using ExternalSecondIndividualModels = std::vector<ExternalSecondIndividualModel>;
 
 				/**
 				 * Definition of a callback function for sparse value calculation.
@@ -553,7 +553,7 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The sixth parameter receives the determined value.<br>
 				 * The return value provides the index of the corresponding first model.<br>
 				 */
-				typedef Callback<size_t, const ExternalSharedModel&, const ExternalFirstIndividualModels&, const ExternalSecondIndividualModels&, const size_t, const size_t, Result&> ValueCallback;
+				using ValueCallback = Callback<size_t, const ExternalSharedModel&, const ExternalFirstIndividualModels&, const ExternalSecondIndividualModels&, const size_t, const size_t, Result&>;
 
 				/**
 				 * Definition of a callback function for sparse error calculation.
@@ -564,14 +564,14 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The fifth parameter provides the element index for the second model for which the error needs to be determined.<br>
 				 * The sixth parameter receives the determined error.<br>
 				 */
-				typedef Callback<bool, const ExternalSharedModel&, const ExternalFirstIndividualModels&, const ExternalSecondIndividualModels&, const size_t, const size_t, Result&> ErrorCallback;
+				using ErrorCallback = Callback<bool, const ExternalSharedModel&, const ExternalFirstIndividualModels&, const ExternalSecondIndividualModels&, const size_t, const size_t, Result&>;
 
 				/**
 				 * Definition of a callback function determining whether a shared model is valid.
 				 * The first parameter provides the external shared model for which the decision has to be done
 				 * True, if the shared model is valid.<br>
 				 */
-				typedef Callback<bool, const ExternalSharedModel&> SharedModelIsValidCallback;
+				using SharedModelIsValidCallback = Callback<bool, const ExternalSharedModel&>;
 
 				/**
 				 * Definition of a transformation function for the shared model.
@@ -579,7 +579,7 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The first parameter provides the internal shared model.<br>
 				 * The second parameter receives the external shared model.<br>
 				 */
-				typedef Callback<void, SharedModel&, ExternalSharedModel&> SharedModelTransformationCallback;
+				using SharedModelTransformationCallback = Callback<void, SharedModel&, ExternalSharedModel&>;
 
 				/**
 				 * Definition of a transformation function for the first individual models.
@@ -587,7 +587,7 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The first parameter provides the internal first individual model.<br>
 				 * The second parameter receives the external first individual model.<br>
 				 */
-				typedef Callback<void, FirstIndividualModel&, ExternalFirstIndividualModel&> FirstIndividualModelTransformationCallback;
+				using FirstIndividualModelTransformationCallback = Callback<void, FirstIndividualModel&, ExternalFirstIndividualModel&>;
 
 				/**
 				 * Definition of a transformation function for the second individual models.
@@ -595,7 +595,7 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The first parameter provides the internal second individual model.<br>
 				 * The second parameter receives the external second individual model.<br>
 				 */
-				typedef Callback<void, SecondIndividualModel&, ExternalSecondIndividualModel&> SecondIndividualModelTransformationCallback;
+				using SecondIndividualModelTransformationCallback = Callback<void, SecondIndividualModel&, ExternalSecondIndividualModel&>;
 
 				/**
 				 * Definition of a model accepted function.
@@ -603,7 +603,7 @@ class NonLinearUniversalOptimizationSparse : protected NonLinearOptimization
 				 * The second parameter provides the internal first individual models that have been accepted as improved models.
 				 * The third parameter provides the internal second individual models that have been accepted as improved model.
 				 */
-				typedef Callback<void, const SharedModel&, const FirstIndividualModels&, const SecondIndividualModels&> ModelAcceptedCallback;
+				using ModelAcceptedCallback = Callback<void, const SharedModel&, const FirstIndividualModels&, const SecondIndividualModels&>;
 
 			protected:
 

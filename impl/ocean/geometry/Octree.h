@@ -29,21 +29,21 @@ class OctreeT;
  * @see OctreeT
  * @ingroup geometry
  */
-typedef OctreeT<Scalar> Octree;
+using Octree = OctreeT<Scalar>;
 
 /**
  * Definition of an Octree using double as data type.
  * @see OctreeT
  * @ingroup geometry
  */
-typedef OctreeT<double> OctreeD;
+using OctreeD = OctreeT<double>;
 
 /**
  * Definition of an Octree using float as data type.
  * @see OctreeT
  * @ingroup geometry
  */
-typedef OctreeT<float> OctreeF;
+using OctreeF = OctreeT<float>;
 
 /**
  * This class implements an Octree allowing to manage 3D points.
@@ -56,7 +56,7 @@ class OctreeT
 	public:
 
 		/// The data type of this octree.
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * This class stores construction parameters for an octree.

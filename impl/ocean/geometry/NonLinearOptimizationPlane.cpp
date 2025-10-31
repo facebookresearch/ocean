@@ -113,7 +113,7 @@ bool NonLinearOptimizationPlane::optimizePlane(const Plane3& plane, const ConstI
 {
 	ocean_assert(plane.isValid() && pointAccessor.size() >= 3);
 
-	typedef NonLinearUniversalOptimizationDense<3, 3, 4> UniversalOptimization;
+	using UniversalOptimization = NonLinearUniversalOptimizationDense<3, 3, 4>;
 
 	PlaneData planeData(pointAccessor);
 
@@ -277,7 +277,7 @@ class NonLinearOptimizationPlane::OnePoseOnePlaneData
 
 bool NonLinearOptimizationPlane::optimizeOnePoseOnePlaneIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCameraFirst_T_world, const HomogenousMatrix4& flippedCameraSecond_T_world, const Plane3& plane, const ConstIndexedAccessor<Vector2>& imagePointsFirst, const ConstIndexedAccessor<Vector2>& imagePointsSecond, const bool distortImagePoints, HomogenousMatrix4& optimizedInvertedFlippedPoseSecond, Plane3& optimizedPlane, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError)
 {
-	typedef NonLinearUniversalOptimizationDense<8, 2, 20> UniversalOptimization;
+	using UniversalOptimization = NonLinearUniversalOptimizationDense<8, 2, 20>;
 
 	ocean_assert(pinholeCamera.isValid());
 	ocean_assert(flippedCameraFirst_T_world.isValid());
@@ -483,7 +483,7 @@ class NonLinearOptimizationPlane::PosesPlaneData
 
 bool NonLinearOptimizationPlane::optimizePosesPlaneIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCameraFirst_T_world, const ImagePoints& imagePointsFirst, const HomogenousMatrices4& invertedFlippedPoses, const Plane3& plane, const ImagePointGroups& imagePointGroups, const bool distortImagePoints, HomogenousMatrices4& optimizedInvertedFlippedPoses, Plane3& optimizedPlane, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError)
 {
-	typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<2, 6, 2, 4, 16> UniversalOptimization;
+	using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<2, 6, 2, 4, 16>;
 
 	ocean_assert(pinholeCamera.isValid());
 	ocean_assert(invertedFlippedPoses.size() >= 1);
@@ -710,7 +710,7 @@ class NonLinearOptimizationPlane::GeneralizedPosesPlaneData
 
 bool NonLinearOptimizationPlane::optimizePosesPlaneIF(const PinholeCamera& pinholeCamera, const HomogenousMatrix4& flippedCamera_T_world, const HomogenousMatrices4& flippedCameras_T_world, const ImagePointsPairs& imagePointPairGroups, const Plane3& plane, const bool distortImagePoints, HomogenousMatrices4& optimizedInvertedFlippedPoses, Plane3& optimizedPlane, const unsigned int iterations, const Estimator::EstimatorType estimator, Scalar lambda, const Scalar lambdaFactor, const bool onlyFrontObjectPoints, Scalar* initialError, Scalar* finalError)
 {
-	typedef NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<2, 6, 2, 4, 16> UniversalOptimization;
+	using UniversalOptimization = NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<2, 6, 2, 4, 16>;
 
 	ocean_assert(pinholeCamera.isValid());
 	ocean_assert(flippedCameras_T_world.size() >= 1);

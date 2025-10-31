@@ -1068,12 +1068,12 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOrientations(const
 	ocean_assert(objectPointDistance > Numeric::eps());
 
 	// orientations
-	typedef StaticBuffer<Scalar, 3> FirstModel;
-	typedef std::vector<FirstModel> FirstModels;
+	using FirstModel = StaticBuffer<Scalar, 3>;
+	using FirstModels = std::vector<FirstModel>;
 
 	// object points
-	typedef StaticBuffer<Scalar, 2> SecondModel;
-	typedef std::vector<SecondModel> SecondModels;
+	using SecondModel = StaticBuffer<Scalar, 2>;
+	using SecondModels = std::vector<SecondModel>;
 
 	FirstModels firstModels;
 	firstModels.reserve(orientations.size());
@@ -1122,7 +1122,7 @@ bool NonLinearOptimizationObjectPoint::optimizeObjectPointsAndOrientations(const
 	}
 #endif
 
-	typedef Geometry::NonLinearUniversalOptimizationSparse::IndividualModelsIndividualModels<3u, 2u, 2u, 16u, 3u> UniversalOptimization;
+	using UniversalOptimization = Geometry::NonLinearUniversalOptimizationSparse::IndividualModelsIndividualModels<3u, 2u, 2u, 16u, 3u>;
 
 	UniversalOptimization::FirstModels optimizedFirstModels;
 	UniversalOptimization::SecondModels optimizedSecondModels;

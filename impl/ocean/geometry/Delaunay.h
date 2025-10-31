@@ -111,7 +111,7 @@ class OCEAN_GEOMETRY_EXPORT Delaunay
 		/**
 		 * Definition of a vector holding index triangles.
 		 */
-		typedef std::vector<IndexTriangle> IndexTriangles;
+		using IndexTriangles = std::vector<IndexTriangle>;
 
 	protected:
 
@@ -186,12 +186,12 @@ class OCEAN_GEOMETRY_EXPORT Delaunay
 		/**
 		 * Definition of a vector holding extended index triangles.
 		 */
-		typedef std::vector<CircumCricleIndexTriangle> CircumCricleIndexTriangles;
+		using CircumCricleIndexTriangles = std::vector<CircumCricleIndexTriangle>;
 
 		/**
 		 * Definition of a list holding extended index triangles.
 		 */
-		typedef std::list<CircumCricleIndexTriangle> CircumCricleIndexTriangleList;
+		using CircumCricleIndexTriangleList = std::list<CircumCricleIndexTriangle>;
 
 		/**
 		 * This class implements the lesser operator for indices of points.
@@ -274,7 +274,7 @@ class OCEAN_GEOMETRY_EXPORT Delaunay
 		/**
 		 * Definition of a map mapping edge pairs to a counter.
 		 */
-		typedef std::map<IndexEdge, unsigned int> EdgeMap;
+		using EdgeMap = std::map<IndexEdge, unsigned int>;
 
 	public:
 

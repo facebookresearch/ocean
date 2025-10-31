@@ -38,7 +38,7 @@ class OCEAN_GEOMETRY_EXPORT JLinkage
 		/**
 		 * Definition of a pair combining a point index with the distance to a reference.
 		 */
-		typedef std::pair<Scalar, Index32> DistancePair;
+		using DistancePair = std::pair<Scalar, Index32>;
 
 	public:
 
