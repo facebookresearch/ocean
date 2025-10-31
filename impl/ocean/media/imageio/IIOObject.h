@@ -89,7 +89,7 @@ class OCEAN_MEDIA_IIO_EXPORT IIOObject
 		/**
 		 * Finds the corresponding uniform type identifier for a specified file extension.
 		 * @param fileExtension The file extension for which the identifier is requested, possible values are "bmp", "gif", "jpg", "png", "tif"
-		 * @return The uniform type identifier for the specified file extension, an invalid object if not matching identifer could be found
+		 * @return The uniform type identifier for the specified file extension, an invalid object if not matching identifier could be found
 		 */
 		static Platform::Apple::ScopedCFStringRef findUniformTypeIdentifier(const std::string& fileExtension);
 
