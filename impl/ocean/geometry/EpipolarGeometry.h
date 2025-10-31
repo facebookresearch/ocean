@@ -9,7 +9,8 @@
 #define META_OCEAN_GEOMETRY_EPIPOLAR_GEOMETRY_H
 
 #include "ocean/geometry/Geometry.h"
-#include "ocean/geometry/NonLinearOptimization.h"
+
+#include "ocean/base/Accessor.h"
 
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/Line2.h"
@@ -17,8 +18,6 @@
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/SquareMatrix3.h"
 #include "ocean/math/Vector3.h"
-
-#include <vector>
 
 namespace Ocean
 {
@@ -35,80 +34,74 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 	public:
 
 		/**
-		 * Calculates the fundamental matrix by two sets of at least eight corresponding image points.
-		 * @param leftPoints Left image points
-		 * @param rightPoints Right image points
-		 * @param correspondences Number of point correspondences (at least 8)
-		 * @param fundamental Resulting fundamental matrix
+		 * Calculates the fundamental matrix based on corresponding image points in a 'left' and in a 'right' camera image.
+		 * The resulting fundamental matrix is defined by the following equation:
+		 * <pre>
+		 * rightPoint^T * right_F_left * leftPoint = 0
+		 * </pre>
+		 * @param leftPoints The left image points, must be valid
+		 * @param rightPoints The right image points, must be valid
+		 * @param correspondences The number of point correspondences, with range [8, infinity)
+		 * @param fundamental The resulting fundamental matrix 'right_F_left'
 		 * @return True, if succeeded
 		 */
-		static bool fundamentalMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& fundamental);
+		static bool fundamentalMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& fundamental);
 
 		/**
-		 * Returns the inverse fundamental matrix.
-		 * Actually the matrix will be transposed only.
-		 * @param fundamental The fundamental matrix F with property xr F xl = 0
-		 * @return Fundamental matrix F' with property xl F' xr = 0
+		 * Returns the reverted fundamental matrix.
+		 * Actually the matrix will be transposed only, because the fundamental matrix is singular.
+		 * @param right_F_left The fundamental matrix satisfying the equation rightPoint^T * right_F_left * leftPoint = 0
+		 * @return The resulting reverted fundamental matrix 'left_F_right'
 		 */
-		static SquareMatrix3 inverseFundamentalMatrix(const SquareMatrix3& fundamental);
+		static inline SquareMatrix3 reverseFundamentalMatrix(const SquareMatrix3& fundamental);
 
 		/**
-		 * Calculates the essential matrix by the rotation and translation between two cameras.
-		 * The matrix will be calculated by the extrinsic camera matrix of the right camera relative to the left camera.<br>
-		 * The camera is pointing into the negative z-direction with positive y-direction as up-vector.<br>
-		 * The right extrinsic camera matrix transforms points defined in the right camera coordinate system in the left camera coordinate system.
-		 *
-		 * However, as the essential matrix needs the inverted extrinsic matrix of the right camera, the given extrinsic matrix will be inverted before creating the extrinsic matrix.<br>
-		 * The extrinsic matrix then is defined by the product of the skew-symmetric matrix of the translation and the rotation matrix of the (now inverted) extrinsic (right) camera matrix:
-		 *
-		 * Further, the essential matrix is defined for cameras pointing into the positive z-direction.<br>
-		 * Thus, the given extrinsic camera matrix will be flipped around the x-axis (by 180 deg) before computing the essential matrix.
+		 * Calculates the essential matrix based on 6-DOF camera pose between two cameras.
+		 * The resulting essential matrix is defined by the following equation:
 		 * <pre>
-		 * Thus E is defined by:
-		 * E = skew[T.translation()] * T.rotationMatrix(),
-		 * T = extrinsicFlipped.inverted(),
-		 * extrinsicFlipped = flipMatrix * extrinsic * flipMatrix
+		 * normalizedRightPoint^T * normalizedRight_E_normalizedLeft * normalizedLeftPoint = 0
+		 * with normalizedRightPoint = [objectPoint.x() / objectPoint.z(), objectPoint.y() / objectPoint.z(), 1]^T
 		 * </pre>
-		 * @param extrinsic The extrinsic camera matrix of the right camera relative to the left camera (rightTleft)
-		 * @return Essential matrix
+		 * @param rightCamera_T_leftCamera The transformation transforming the left camera to the right camera, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
+		 * @return The resulting essential matrix 'normalizedRight_E_normalizedLeft'
 		 */
-		static SquareMatrix3 essentialMatrix(const HomogenousMatrix4 extrinsic);
+		static SquareMatrix3 essentialMatrix(const HomogenousMatrix4& rightCamera_T_leftCamera);
 
 		/**
-		 * Calculates the fundamental matrix by the given essential matrix and the two intrinsic camera matrices.
-		 * @param essential The essential matrix to convert into fundamental matrix
+		 * Calculates the fundamental matrix from a given essential matrix and the two intrinsic camera matrices.
+		 * @param normalizedRight_E_normalizedLeft The essential matrix to convert, must be valid
+		 * @param leftIntrinsic The left intrinsic camera matrix, must be valid
+		 * @param rightIntrinsic The right intrinsic camera matrix, must be valid
+		 * @param fundamental The resulting fundamental matrix 'right_F_left'
+		 */
+		static SquareMatrix3 essential2fundamental(const SquareMatrix3& normalizedRight_E_normalizedLeft, const SquareMatrix3& leftIntrinsic, const SquareMatrix3& rightIntrinsic);
+
+		/**
+		 * Calculates the fundamental matrix from a given essential matrix and the two intrinsic camera matrices.
+		 * @param normalizedRight_E_normalizedLeft The essential matrix to convert, must be valid
+		 * @param leftCamera The left camera profile defining the projection, must be a pure pinhole model without any distortion parameters
+		 * @param rightCamera The right camera profile defining the projection, must be a pure pinhole model without any distortion parameters
+		 * @return The resulting fundamental matrix 'right_F_left'
+		 */
+		static SquareMatrix3 essential2fundamental(const SquareMatrix3& normalizedRight_E_normalizedLeft, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera);
+
+		/**
+		 * Calculates the essential matrix from a given fundamental matrix and the two intrinsic camera matrices.
+		 * @param right_F_left The fundamental matrix to convert into essential matrix, must be valid
 		 * @param leftIntrinsic Left intrinsic camera matrix
 		 * @param rightIntrinsic Right intrinsic camera matrix
-		 * @return Resulting fundamental matrix
+		 * @return The resulting essential matrix 'normalizedRight_E_normalizedLeft'
 		 */
-		static SquareMatrix3 essential2fundamental(const SquareMatrix3& essential, const SquareMatrix3& leftIntrinsic, const SquareMatrix3& rightIntrinsic);
-
-		/**
-		 * Calculates the fundamental matrix by the given essential matrix and the two cameras.
-		 * @param essential The essential matrix to convert into fundamental matrix
-		 * @param leftCamera Left camera
-		 * @param rightCamera Right camera
-		 * @return Resulting fundamental matrix
-		 */
-		static SquareMatrix3 essential2fundamental(const SquareMatrix3& essential, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera);
-
-		/**
-		 * Calculates the essential matrix by the given fundamental matrix and the two intrinsic camera matrices.
-		 * @param fundamental The fundamental matrix to convert into essential matrix
-		 * @param leftIntrinsic Left intrinsic camera matrix
-		 * @param rightIntrinsic Right intrinsic camera matrix
-		 * @return Resulting essential matrix
-		 */
-		static SquareMatrix3 fundamental2essential(const SquareMatrix3& fundamental, const SquareMatrix3& leftIntrinsic, const SquareMatrix3& rightIntrinsic);
+		static SquareMatrix3 fundamental2essential(const SquareMatrix3& right_F_left, const SquareMatrix3& leftIntrinsic, const SquareMatrix3& rightIntrinsic);
 
 		/**
 		 * Calculates the essential matrix by the given fundamental matrix and the two cameras.
-		 * @param fundamental The fundamental matrix to convert into essential matrix
-		 * @param leftCamera Left camera
-		 * @param rightCamera Right camera
-		 * @return Resulting essential matrix
+		 * @param right_F_left The fundamental matrix to convert into essential matrix, must be valid
+		 * @param leftCamera The left camera profile defining the projection, must be a pure pinhole model without any distortion parameters
+		 * @param rightCamera The right camera profile defining the projection, must be a pure pinhole model without any distortion parameters
+		 * @return The resulting essential matrix 'normalizedRight_E_normalizedLeft'
 		 */
-		static SquareMatrix3 fundamental2essential(const SquareMatrix3& fundamental, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera);
+		static SquareMatrix3 fundamental2essential(const SquareMatrix3& right_F_left, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera);
 
 		/**
 		 * Determines the two epipoles corresponding to a fundamental matrix.
@@ -174,7 +167,7 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 * @param transformation Resulting transformation of between the left and the right camera
 		 * @return True, if succeeded
 		 */
-		static bool factorizeEssential(const SquareMatrix3& essential, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint& leftPoint, const ImagePoint& rightPoint, HomogenousMatrix4& transformation);
+		static bool factorizeEssential(const SquareMatrix3& essential, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2& leftPoint, const Vector2& rightPoint, HomogenousMatrix4& transformation);
 
 		/**
 		 * Factorizes an essential matrix into a camera pose composed of rotation and translation.
@@ -189,7 +182,7 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 * @param transformation Resulting transformation between the left and the right camera
 		 * @return The number of given image points resulting in valid object points, with range [0, infinity)
 		 */
-		static unsigned int factorizeEssential(const SquareMatrix3& essential, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoints& leftPoints, const ImagePoints& rightPoints, HomogenousMatrix4& transformation);
+		static size_t factorizeEssential(const SquareMatrix3& essential, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vectors2& leftPoints, const Vectors2& rightPoints, HomogenousMatrix4& transformation);
 
 		/**
 		 * Determines the homograph for two (stereo) frames rectifying both images using the transformation between the left and the right camera.
@@ -242,7 +235,7 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 * @param invalidIndices Optional resulting indices of the resulting object points with invalid location
 		 * @return objectPoints Resulting object points in inverted flipped coordinate space
 		 */
-		static ObjectPoints triangulateImagePointsIF(const PinholeCamera& camera1, const HomogenousMatrix4& iFlippedPose1, const PinholeCamera& camera2, const HomogenousMatrix4& iFlippedPose2, const ImagePoint* points1, const ImagePoint* points2, const size_t correspondences, const Vector3& invalidObjectPoint = Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()), Indices32* invalidIndices = nullptr);
+		static ObjectPoints triangulateImagePointsIF(const PinholeCamera& camera1, const HomogenousMatrix4& iFlippedPose1, const PinholeCamera& camera2, const HomogenousMatrix4& iFlippedPose2, const Vector2* points1, const Vector2* points2, const size_t correspondences, const Vector3& invalidObjectPoint = Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()), Indices32* invalidIndices = nullptr);
 
 		/**
 		 * Calculates the 3D positions for a set of image point correspondences in multiple views with corresponding camera projection matrices (K * Rt) or poses (Rt) in inverted flipped camera system.
@@ -254,7 +247,7 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 * @param invalidIndices Optional resulting indices of the resulting object points with invalid location
 		 * @return objectPoints Resulting object points in inverted flipped coordinates
 		 */
-		static ObjectPoints triangulateImagePointsIF(const ConstIndexedAccessor<HomogenousMatrix4>& posesIF, const ConstIndexedAccessor<ImagePoints>& imagePointsPerPose, const PinholeCamera* pinholeCamera = nullptr, const Vector3& invalidObjectPoint = Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()), Indices32* invalidIndices = nullptr);
+		static ObjectPoints triangulateImagePointsIF(const ConstIndexedAccessor<HomogenousMatrix4>& posesIF, const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, const PinholeCamera* pinholeCamera = nullptr, const Vector3& invalidObjectPoint = Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()), Indices32* invalidIndices = nullptr);
 
 	protected:
 
@@ -272,20 +265,20 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 * @param transformation Resulting transformation with most 3D object points in front of both cameras
 		 * @return Number of valid object points
 		 */
-		static unsigned int solveAmbiguousTransformations(const HomogenousMatrix4& transformation0, const HomogenousMatrix4& transformation1, const HomogenousMatrix4& transformation2, const HomogenousMatrix4& transformation3, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoints& leftPoints, const ImagePoints& rightPoints, HomogenousMatrix4& transformation);
+		static size_t solveAmbiguousTransformations(const HomogenousMatrix4& transformation0, const HomogenousMatrix4& transformation1, const HomogenousMatrix4& transformation2, const HomogenousMatrix4& transformation3, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vectors2& leftPoints, const Vectors2& rightPoints, HomogenousMatrix4& transformation);
 
 		/**
 		 * Returns the number of 3D object points lying in front of two cameras for a given transformation between the two cameras.
-		 * The transformation for the first camera is defined as unit transformation, the transformation between second and first camera is provided instead.
-		 * @param transformation The transformation between the right and left camera, transforming points defined in the right coordinate system to points defined in the left (identity) coordinate system, must be valid
-		 * @param leftCamera Left camera profile, must be valid
-		 * @param rightCamera Right camera profile, must be valid
-		 * @param leftPoints Left image points, can be nullptr if 'correspondences' is 0
-		 * @param rightPoints Right image points, one for each left point, can be nullptr if 'correspondences' is 0
+		 * The pose of the first camera is located in the origin (identity transformation) while the pose of the second camera is defined by the given transformation.
+		 * @param left_T_right The transformation between the right and the left camera, must be valid
+		 * @param leftCamera The left camera profile defining the projection, must be valid
+		 * @param rightCamera The right camera profile defining the projection, must be valid
+		 * @param leftPoints The left image points, must be valid if correspondences != 0
+		 * @param rightPoints The right image points, one for each left point, must be valid if correspondences != 0
 		 * @param correspondences The number of provided point correspondences, with range [0, infinity)
 		 * @return Number of valid object points, with range [0, correspondences]
 		 */
-		static unsigned int validateTransformation(const HomogenousMatrix4& transformation, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences);
+		static size_t validateTransformation(const HomogenousMatrix4& left_T_right, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences);
 
 		/**
 		 * Converts a epipolar line to a line object.
@@ -294,6 +287,11 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 */
 		static inline Line2 epipolarLine2Line(const Vector3& line);
 };
+
+inline SquareMatrix3 EpipolarGeometry::reverseFundamentalMatrix(const SquareMatrix3& fundamental)
+{
+	return fundamental.transposed();
+}
 
 inline Line2 EpipolarGeometry::leftEpipolarLine(const SquareMatrix3& fundamental, const Vector2& rightPoint)
 {
