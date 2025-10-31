@@ -140,7 +140,7 @@ inline void FrameFilterLaplace::filter1Channel8Bit(const uint8_t* source, int8_t
  	 * | -1   4  -1 | * 1/8
  	 * |  0  -1   0 |
  	 */
-	typedef FrameFilterTemplate<int16_t, 0, -1, 0, -1, 4, -1, 0, -1, 0> LaplaceFilter;
+	using LaplaceFilter = FrameFilterTemplate<int16_t, 0, -1, 0, -1, 4, -1, 0, -1, 0>;
 
 	constexpr int16_t normalization = 8;
 	constexpr int16_t normalizationBias = 0;
@@ -160,7 +160,7 @@ inline void FrameFilterLaplace::filter1Channel8Bit(const uint8_t* source, int16_
  	 * | -1   4  -1 |
  	 * |  0  -1   0 |
  	 */
-	typedef FrameFilterTemplate<int16_t, 0, -1, 0, -1, 4, -1, 0, -1, 0> LaplaceFilter;
+	using LaplaceFilter = FrameFilterTemplate<int16_t, 0, -1, 0, -1, 4, -1, 0, -1, 0>;
 
 	constexpr short normalization = 1;
 	constexpr short normalizationBias = 0;

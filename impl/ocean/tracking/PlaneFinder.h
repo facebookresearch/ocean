@@ -35,7 +35,7 @@ class OCEAN_TRACKING_EXPORT PlaneFinder
 		/**
 		 * Definition of a correspondence set object with handling 2D vectors.
 		 */
-		typedef CorrespondenceSet<Vector2> ImagePointCorrespondenceSet;
+		using ImagePointCorrespondenceSet = CorrespondenceSet<Vector2>;
 
 	public:
 

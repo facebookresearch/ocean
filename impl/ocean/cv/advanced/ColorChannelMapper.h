@@ -40,7 +40,7 @@ class OCEAN_CV_ADVANCED_EXPORT ColorChannelMapper
 		 * Second parameter: color channel input value
 		 * Return value: color channel output value
 		 */
-		typedef Callback<uint8_t, unsigned int, uint8_t> ColorChannelMapFunction;
+		using ColorChannelMapFunction = Callback<uint8_t, unsigned int, uint8_t>;
 
 	public:
 

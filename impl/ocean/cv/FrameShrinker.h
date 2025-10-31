@@ -37,7 +37,7 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @param sourceRow1 The lower source row, must be valid
 		 * @param target The target receiving the down sampled data
 		 */
-		typedef void (*DownsampleBlockByTwo8BitPerChannelFunction)(const uint8_t* const sourceRow0, const uint8_t* const sourceRow1, uint8_t* const target);
+		using DownsampleBlockByTwo8BitPerChannelFunction = void (*)(const uint8_t* const sourceRow0, const uint8_t* const sourceRow1, uint8_t* const target);
 
 		/**
 		 * Definition of a function pointer allowing to down sample a binary block of elements by using a 11 pattern.
@@ -46,7 +46,7 @@ class OCEAN_CV_EXPORT FrameShrinker
 		 * @param target The target receiving the down sampled data
 		 * @param threshold Minimal sum threshold of four pixels to result in a pixel with value 255
 		 */
-		typedef void (*DownsampleBlockByTwoBinary8BitPerChannelFunction)(const uint8_t* const sourceRow0, const uint8_t* const sourceRow1, uint8_t* const target, const uint16_t threshold);
+		using DownsampleBlockByTwoBinary8BitPerChannelFunction = void (*)(const uint8_t* const sourceRow0, const uint8_t* const sourceRow1, uint8_t* const target, const uint16_t threshold);
 
 	public:
 

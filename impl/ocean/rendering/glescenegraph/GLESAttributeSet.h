@@ -47,9 +47,9 @@ class OCEAN_RENDERING_GLES_EXPORT GLESAttributeSet :
 		 * Definition of an unordered map mapping attribute types to counters.
 		 */
 #if defined(OCEAN_GCC_VERSION) && OCEAN_GCC_VERSION > 0 && OCEAN_GCC_VERSION < 50000
-		typedef std::unordered_map<int, unsigned int> AttributeCounterMap; // workaround due to compiler bug
+		using AttributeCounterMap = std::unordered_map<int, unsigned int>;
 #else
-		typedef std::unordered_map<ObjectType, unsigned int> AttributeCounterMap;
+		using AttributeCounterMap = std::unordered_map<ObjectType, unsigned int>;
 #endif
 
 	public:

@@ -52,7 +52,7 @@ class OCEAN_TRACKING_POINT_EXPORT PointTracker
 		/**
 		 * Definition of a vector holding 2D vectors.
 		 */
-		typedef std::vector<Vectors2> PointTracks;
+		using PointTracks = std::vector<Vectors2>;
 
 		/**
 		 * Definition of individual tracking modes.

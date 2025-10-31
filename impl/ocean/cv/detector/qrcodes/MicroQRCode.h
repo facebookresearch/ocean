@@ -25,7 +25,7 @@ namespace QRCodes
 class MicroQRCode;
 
 /// Definition of a vector of Micro QR codes
-typedef std::vector<MicroQRCode> MicroQRCodes;
+using MicroQRCodes = std::vector<MicroQRCode>;
 
 /**
  * Definition of a Micro QR code

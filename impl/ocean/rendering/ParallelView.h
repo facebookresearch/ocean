@@ -25,7 +25,7 @@ class ParallelView;
  * @see SmartObjectRef, ParallelView.
  * @ingroup rendering
  */
-typedef SmartObjectRef<ParallelView> ParallelViewRef;
+using ParallelViewRef = SmartObjectRef<ParallelView>;
 
 /**
  * This class is the base class for all parallel views

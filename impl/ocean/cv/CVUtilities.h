@@ -350,7 +350,7 @@ inline void CVUtilities::copyPixel(T* const target, const T* const source)
 
 	ocean_assert(target != nullptr && source != nullptr);
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	*((PixelType*)target) = *((const PixelType*)source);
 }
@@ -368,7 +368,7 @@ inline void CVUtilities::copyPixel(T* const target, const T* const source, const
 
 	ocean_assert(target != nullptr && source != nullptr);
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	*((PixelType*)target + targetIndex) = *((const PixelType*)source + sourceIndex);
 }
@@ -388,7 +388,7 @@ inline void CVUtilities::copyPixel(T* const target, const T* const source, const
 	ocean_assert(xSource < sourceWidth);
 	ocean_assert(xTarget < targetWidth);
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	const unsigned int sourceStrideElements = sourceWidth * tChannels + sourcePaddingElements;
 	const unsigned int targetStrideElements = targetWidth * tChannels + targetPaddingElements;

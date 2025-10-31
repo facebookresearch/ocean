@@ -33,7 +33,7 @@ class OCEAN_TRACKING_MAPBUILDING_EXPORT TrackerMono final : public RelocalizerMo
 		/**
 		 * Definition of an unordered map mapping object point ids to object point indices.
 		 */
-		typedef std::unordered_map<Index32, Index32> ObjectPointIdMap;
+		using ObjectPointIdMap = std::unordered_map<Index32, Index32>;
 
 	public:
 

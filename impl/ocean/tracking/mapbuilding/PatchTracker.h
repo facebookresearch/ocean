@@ -55,7 +55,7 @@ class OCEAN_TRACKING_MAPBUILDING_EXPORT PatchTracker : public DescriptorHandling
 		/**
 		 * Definition of a shared FramePyramid.
 		 */
-		typedef std::shared_ptr<CV::FramePyramid> SharedFramePyramid;
+		using SharedFramePyramid = std::shared_ptr<CV::FramePyramid>;
 
 		/**
 		 * This class implement a container holding options for the tracker.

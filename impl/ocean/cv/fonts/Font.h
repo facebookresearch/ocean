@@ -31,7 +31,7 @@ class Font;
  * @see Font.
  * @ingroup cvfonts
  */
-typedef std::shared_ptr<Font> SharedFont;
+using SharedFont = std::shared_ptr<Font>;
 
 /**
  * This class is the base class for all font implementations.
@@ -164,10 +164,10 @@ class OCEAN_CV_FONTS_EXPORT Font
 		};
 
 		/// Definition of a vector holding information about characters.
-		typedef std::vector<Character> Characters;
+		using Characters = std::vector<Character>;
 
 		/// Definition of a shared pointers holding characters.
-		typedef std::shared_ptr<Characters> SharedCharacters;
+		using SharedCharacters = std::shared_ptr<Characters>;
 
 	public:
 

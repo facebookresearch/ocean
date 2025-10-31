@@ -33,13 +33,13 @@ class Node;
  * @see Node.
  * @ingroup scenedescription
  */
-typedef Ocean::ObjectRef<Node> NodeRef;
+using NodeRef = Ocean::ObjectRef<Node>;
 
 /**
  * Definition of a vector holding scene description node references.
  * @ingroup scenedescription
  */
-typedef std::vector<NodeRef> NodeRefs;
+using NodeRefs = std::vector<NodeRef>;
 
 /**
  * This class is the base class for all scene description nodes.
@@ -84,12 +84,12 @@ class OCEAN_SCENEDESCRIPTION_EXPORT Node
 				 * The first parameter holds the field address offset.
 				 * The second parameter holds the field access type.
 				 */
-				typedef std::pair<size_t, FieldAccessType> FieldPair;
+				using FieldPair = std::pair<size_t, FieldAccessType>;
 
 				/**
 				 * Definition of a map mapping field names to field address offsets.
 				 */
-				typedef std::map<std::string, FieldPair> FieldSpecificationMap;
+				using FieldSpecificationMap = std::map<std::string, FieldPair>;
 
 			public:
 
@@ -175,7 +175,7 @@ class OCEAN_SCENEDESCRIPTION_EXPORT Node
 		/**
 		 * Definition of a map mapping field names to fields
 		 */
-		typedef std::map<std::string, Field*> FieldMap;
+		using FieldMap = std::map<std::string, Field*>;
 
 	public:
 

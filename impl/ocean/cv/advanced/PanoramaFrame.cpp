@@ -801,7 +801,7 @@ void PanoramaFrame::mergeSetAll8BitPerChannelSubset(const uint8_t* panoramaSubFr
 	ocean_assert(subTopLeftX >= panoramaTopLeftX && subTopLeftY >= panoramaTopLeftY);
 	ocean_assert(panoramaWidth >= subFrameWidth);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const unsigned int panoramaSubFrameStrideElements = subFrameWidth * tChannels + panoramaSubFramePaddingElements;
 	const unsigned int panoramaSubMaskStrideElements = subFrameWidth + panoramaSubMaskPaddingElements;
@@ -843,7 +843,7 @@ void PanoramaFrame::mergeSetNew8BitPerChannelSubset(const uint8_t* panoramaSubFr
 	ocean_assert(subTopLeftX >= panoramaTopLeftX && subTopLeftY >= panoramaTopLeftY);
 	ocean_assert(panoramaWidth >= subFrameWidth);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const unsigned int panoramaSubFrameStrideElements = subFrameWidth * tChannels + panoramaSubFramePaddingElements;
 	const unsigned int panoramaSubMaskStrideElements = subFrameWidth + panoramaSubMaskPaddingElements;

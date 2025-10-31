@@ -26,7 +26,7 @@ class Attribute;
  * @see SmartObjectRef, Attribute.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Attribute> AttributeRef;
+using AttributeRef = SmartObjectRef<Attribute>;
 
 /**
  * This class is the base class for all rendering attribute objects.

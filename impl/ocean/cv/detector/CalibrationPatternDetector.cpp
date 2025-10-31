@@ -473,7 +473,7 @@ void CalibrationPatternDetector::sortLinesAccordingDistance(Lines2& lines, const
 		ocean_assert(referenceLine.direction() * lines[n].direction() > 0);
 	}
 
-	typedef std::map<Scalar, Line2> LineMap;
+	using LineMap = std::map<Scalar, Line2>;
 	LineMap lineMap;
 
 	for (size_t n = 0; n < lines.size(); ++n)

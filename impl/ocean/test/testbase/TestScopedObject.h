@@ -36,7 +36,7 @@ class OCEAN_TEST_BASE_EXPORT TestScopedObject
 
 			protected:
 
-				typedef std::unordered_map<uint64_t, uint64_t> IdCounterMap;
+				using IdCounterMap = std::unordered_map<uint64_t, uint64_t>;
 
 			public:
 
@@ -124,12 +124,12 @@ class OCEAN_TEST_BASE_EXPORT TestScopedObject
 		/**
 		 * Definition of a vector holding pointers to objects.
 		 */
-		typedef std::vector<Object*> ObjectPointers;
+		using ObjectPointers = std::vector<Object*>;
 
 		/**
 		 * Definition of an unordered map mapping ids to counters.
 		 */
-		typedef std::unordered_map<int32_t, size_t> CounterMap;
+		using CounterMap = std::unordered_map<int32_t, size_t>;
 
 	public:
 

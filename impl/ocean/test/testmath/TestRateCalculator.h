@@ -32,12 +32,12 @@ class OCEAN_TEST_MATH_EXPORT TestRateCalculator
 		/**
 		 * Definition of a pair combining a timestamp with a quantity.
 		 */
-		typedef std::pair<Timestamp, double> TimestampPair;
+		using TimestampPair = std::pair<Timestamp, double>;
 
 		/**
 		 * Definition of a vector holding timestamp pair objects.
 		 */
-		typedef std::vector<TimestampPair> TimestampPairs;
+		using TimestampPairs = std::vector<TimestampPair>;
 
 	public:
 

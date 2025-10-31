@@ -27,7 +27,7 @@ class FrameTexture2D;
  * @see SmartObjectRef, Texture2D.
  * @ingroup rendering
  */
-typedef SmartObjectRef<FrameTexture2D> FrameTexture2DRef;
+using FrameTexture2DRef = SmartObjectRef<FrameTexture2D>;
 
 /**
  * This class is the base class for all 2D textures receiving their image content from a frame or a buffer.
@@ -62,7 +62,7 @@ class OCEAN_RENDERING_EXPORT FrameTexture2D : virtual public Texture2D
 		/**
 		 * Definition of a vector holding bytes.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 		/**
 		 * This class implements a container for a compressed texture.

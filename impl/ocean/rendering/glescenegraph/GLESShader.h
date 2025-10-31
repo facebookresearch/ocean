@@ -29,7 +29,7 @@ class GLESShader;
  * Definition of an object reference for shader containers.
  * @ingroup renderinggles
  */
-typedef Ocean::ObjectRef<GLESShader> GLESShaderRef;
+using GLESShaderRef = Ocean::ObjectRef<GLESShader>;
 
 /**
  * This class is the base class for all OpenGL ES shader container.

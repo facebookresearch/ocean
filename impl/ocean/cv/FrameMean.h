@@ -331,7 +331,7 @@ void FrameMean::meanValue(const T* frame, const unsigned int width, const unsign
 	ocean_assert(frame != nullptr && meanValues != nullptr);
 	ocean_assert(width > 0u && height > 0u);
 
-	typedef typename NextLargerTyper<T>::TypePerformance TSum;
+	using TSum = typename NextLargerTyper<T>::TypePerformance;
 
 	TSum sumValues[tChannels];
 	for (unsigned int n = 0u; n < tChannels; ++n)
@@ -797,7 +797,7 @@ void FrameMean::normalizeFrameIndividually8BitPerChannelSubset(const unsigned in
 	ocean_assert(source && denominators && target && zeroValue);
 	ocean_assert_and_suppress_unused(firstRow + numberRows <= height, height);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	target += firstRow * width * tChannels;
 	denominators += firstRow * width;
@@ -839,7 +839,7 @@ void FrameMean::normalizeFrameIndividually8BitPerChannelSubset(const unsigned in
 	ocean_assert(sourceWithDenominator && target && zeroValue);
 	ocean_assert_and_suppress_unused(firstRow + numberRows <= height, height);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	target += firstRow * width * tChannels;
 	sourceWithDenominator += firstRow * width * (tChannels + 1u);

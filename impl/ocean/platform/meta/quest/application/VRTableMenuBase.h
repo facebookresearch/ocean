@@ -73,17 +73,17 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTableMenuBase
 		/**
 		 * Definition of a vector holding entries.
 		 */
-		typedef std::vector<Entry> Entries;
+		using Entries = std::vector<Entry>;
 
 		/**
 		 * Definition of a pair combining a group section name and menu entries.
 		 */
-		typedef std::pair<std::string, Entries> Group;
+		using Group = std::pair<std::string, Entries>;
 
 		/**
 		 * Definition of a vector holding groups.
 		 */
-		typedef std::vector<Group> Groups;
+		using Groups = std::vector<Group>;
 
 	protected:
 
@@ -156,7 +156,7 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTableMenuBase
 		/**
 		 * Definition of a vector holding menu entries.
 		 */
-		typedef std::vector<MenuEntry> MenuEntries;
+		using MenuEntries = std::vector<MenuEntry>;
 
 	public:
 

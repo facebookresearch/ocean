@@ -35,7 +35,7 @@ class VisualTracker;
  * @see VisualTracker.
  * @ingroup tracking
  */
-typedef ObjectRef<VisualTracker> VisualTrackerRef;
+using VisualTrackerRef = ObjectRef<VisualTracker>;
 
 /**
  * This class implements a base class for all visual tracker objects.
@@ -48,7 +48,7 @@ class OCEAN_TRACKING_EXPORT VisualTracker : public Tracker
 		/**
 		 * Definition of an object id.
 		 */
-		typedef unsigned int ObjectId;
+		using ObjectId = unsigned int;
 
 		/**
 		 * Definition of a simple tracking sample combining a tracking object id with a transformation.
@@ -95,7 +95,7 @@ class OCEAN_TRACKING_EXPORT VisualTracker : public Tracker
 		/**
 		 * Definition of a vector holding a transformation sample object.
 		 */
-		typedef std::vector<TransformationSample> TransformationSamples;
+		using TransformationSamples = std::vector<TransformationSample>;
 
 	public:
 

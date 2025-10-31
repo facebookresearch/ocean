@@ -41,7 +41,7 @@ class OCEAN_TRACKING_MAPTEXTURING_EXPORT NewTextureGenerator : protected Thread
 		/**
 		 * Definition of an unordered map mapping triangle ids to votes.
 		 */
-		typedef std::unordered_map<Index64, Scalar> TriangleVoteMap;
+		using TriangleVoteMap = std::unordered_map<Index64, Scalar>;
 
 		class OCEAN_TRACKING_MAPTEXTURING_EXPORT Keyframe
 		{
@@ -141,15 +141,15 @@ class OCEAN_TRACKING_MAPTEXTURING_EXPORT NewTextureGenerator : protected Thread
 				UnorderedIndexSet32 usedKeyframeIds_;
 		};
 
-		typedef std::vector<TexturedMesh> TexturedMeshes;
+		using TexturedMeshes = std::vector<TexturedMesh>;
 
-		typedef std::unordered_map<VectorI3, TexturedMesh, VectorI3> TexturedMeshMap;
+		using TexturedMeshMap = std::unordered_map<VectorI3, TexturedMesh, VectorI3>;
 
-		typedef std::vector<Keyframe> Keyframes;
+		using Keyframes = std::vector<Keyframe>;
 
-		typedef std::unordered_map<Index32, Keyframe> KeyframeMap;
+		using KeyframeMap = std::unordered_map<Index32, Keyframe>;
 
-		typedef std::unordered_map<Index32, TexturedRegion> TexturedRegionMap;
+		using TexturedRegionMap = std::unordered_map<Index32, TexturedRegion>;
 
 	protected:
 
@@ -166,17 +166,17 @@ class OCEAN_TRACKING_MAPTEXTURING_EXPORT NewTextureGenerator : protected Thread
 			EM_MESES_PROCESSED
 		};
 
-		typedef std::unordered_map<VectorI3, UnorderedIndexSet32, VectorI3> UsedKeyframeIdsPerMeshMap;
+		using UsedKeyframeIdsPerMeshMap = std::unordered_map<VectorI3, UnorderedIndexSet32, VectorI3>;
 
 		/**
 		 * Definition of an unordered map mapping ids of keyframes to usage counters.
 		 */
-		typedef std::unordered_map<Index32, Index32> KeyframeIdCounterMap;
+		using KeyframeIdCounterMap = std::unordered_map<Index32, Index32>;
 
 		/**
 		 * Definition of an unordered set holding block ids.
 		 */
-		typedef std::unordered_set<VectorI3, VectorI3> BlockCoordinateSet;
+		using BlockCoordinateSet = std::unordered_set<VectorI3, VectorI3>;
 
 	public:
 

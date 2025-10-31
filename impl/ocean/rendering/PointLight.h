@@ -25,7 +25,7 @@ class PointLight;
  * @see SmartObjectRef, PointLight.
  * @ingroup rendering
  */
-typedef SmartObjectRef<PointLight> PointLightRef;
+using PointLightRef = SmartObjectRef<PointLight>;
 
 /**
  * This class is the base class for all point lights.

@@ -308,7 +308,7 @@ bool TestVocabularyTree::testDetermineClustersMeanForBinaryDescriptor(const doub
 
 	Log::info() << "Test determineClustersMeanForBinaryDescriptor():";
 
-	typedef std::vector<BinaryDescriptor> BinaryDescriptors;
+	using BinaryDescriptors = std::vector<BinaryDescriptor>;
 
 	constexpr unsigned int descriptorBits = sizeof(uint8_t) * binaryDescriptorElements_ * 8u;
 
@@ -436,7 +436,7 @@ bool TestVocabularyTree::testDetermineClustersMeanForFloatDescriptor(const doubl
 
 	Log::info() << "Test determineClustersMeanForFloatDescriptor():";
 
-	typedef std::vector<FloatDescriptor> FloatDescriptors;
+	using FloatDescriptors = std::vector<FloatDescriptor>;
 
 	RandomGenerator randomGenerator;
 	bool allSucceeded = true;

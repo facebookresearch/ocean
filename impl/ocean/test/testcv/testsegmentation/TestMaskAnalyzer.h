@@ -43,12 +43,12 @@ class OCEAN_TEST_CV_SEGMENTATION_EXPORT TestMaskAnalyzer : public CV::Segmentati
 		/**
 		 * Definition of an unordered set holding bounding boxes.
 		 */
-		typedef std::unordered_set<CV::PixelBoundingBox, CV::PixelBoundingBox> BoundingBoxSet;
+		using BoundingBoxSet = std::unordered_set<CV::PixelBoundingBox, CV::PixelBoundingBox>;
 
 		/**
 		 * Definition of an unordered set holding pixel positions boxes.
 		 */
-		typedef std::unordered_set<CV::PixelPosition, CV::PixelPosition> PixelPositionSet;
+		using PixelPositionSet = std::unordered_set<CV::PixelPosition, CV::PixelPosition>;
 
 	public:
 

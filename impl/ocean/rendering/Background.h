@@ -27,7 +27,7 @@ class Background;
  * @see SmartObjectRef, Background.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Background> BackgroundRef;
+using BackgroundRef = SmartObjectRef<Background>;
 
 /**
  * This class is the base class for all backgrounds.

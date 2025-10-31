@@ -69,7 +69,7 @@ class RowSegmenter
 	public:
 
 		// The type that is used for the image gradient.
-		typedef typename DifferenceValueTyper<TPixel>::Type TGradient;
+		using TGradient = typename DifferenceValueTyper<TPixel>::Type;
 
 	protected:
 
@@ -122,7 +122,7 @@ class RowSegmenter
 		};
 
 		/// Definition of a function pointer for function that determine intensity transitions between back- and foreground pixels.
-		typedef bool (*IsTransitionFunc)(const TPixel*, const TGradient, TransitionHistory&);
+		using IsTransitionFunc = bool (*)(const TPixel*, const TGradient, TransitionHistory&);
 
 	public:
 
@@ -479,13 +479,13 @@ class OCEAN_CV_DETECTOR_BARCODES_EXPORT BarcodeDetector2D
 		};
 
 		/// Definition of a vector of observations.
-		typedef std::vector<Observation> Observations;
+		using Observations = std::vector<Observation>;
 
 		/// Definition of a function pointer for parser functions which detect the actual barcodes.
-		typedef bool (*ParserFunction)(const uint32_t* segmentData, const size_t size, Barcode& barcode, IndexPair32& xCoordinates);
+		using ParserFunction = bool (*)(const uint32_t* segmentData, const size_t size, Barcode& barcode, IndexPair32& xCoordinates);
 
 		/// Definition of a set of parser functions.
-		typedef std::unordered_set<ParserFunction> ParserFunctionSet;
+		using ParserFunctionSet = std::unordered_set<ParserFunction>;
 
 	public:
 

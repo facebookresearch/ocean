@@ -34,7 +34,7 @@ class Resource
 		/**
 		 * Definition of a vector holding 8 bit values.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 	public:
 
@@ -80,12 +80,12 @@ class ResourceManager : public Singleton<ResourceManager>
 		/**
 		 * Definition of a pair combining a resource name and a resource type.
 		 */
-		typedef std::pair<std::wstring, std::wstring> ResourcePair;
+		using ResourcePair = std::pair<std::wstring, std::wstring>;
 
 		/**
 		 * Definition of a map mapping resources pair to frames.
 		 */
-		typedef std::map<ResourcePair, FrameRef> FrameMap;
+		using FrameMap = std::map<ResourcePair, FrameRef>;
 
 	public:
 

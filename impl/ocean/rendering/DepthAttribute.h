@@ -25,7 +25,7 @@ class DepthAttribute;
  * @see SmartObjectRef, DepthAttribute.
  * @ingroup rendering
  */
-typedef SmartObjectRef<DepthAttribute> DepthAttributeRef;
+using DepthAttributeRef = SmartObjectRef<DepthAttribute>;
 
 /**
  * This class implements a depth attribute specifying the depth buffer behavior for associated objects.

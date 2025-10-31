@@ -35,7 +35,7 @@ class OCEAN_PLATFORM_OPENXR_EXPORT Session final
 		/**
 		 * Definition of a vector holding color spaces.
 		 */
-		typedef std::vector<XrColorSpaceFB> XrColorSpacesFB;
+		using XrColorSpacesFB = std::vector<XrColorSpaceFB>;
 
 	public:
 

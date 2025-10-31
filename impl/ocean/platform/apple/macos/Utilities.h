@@ -43,7 +43,7 @@ class Utilities
 		/**
 		 * Definition of a vector holding application commands.
 		 */
-		typedef std::vector<std::wstring> Commands;
+		using Commands = std::vector<std::wstring>;
 
 		/**
 		 * Forward declaration of a manager for frame windows.

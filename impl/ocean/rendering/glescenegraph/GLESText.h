@@ -103,12 +103,12 @@ class OCEAN_RENDERING_GLES_EXPORT GLESText :
 				/**
 				 * Definition of a pair combining the font's family name and style name.
 				 */
-				typedef std::pair<std::string, std::string> FontPair;
+				using FontPair = std::pair<std::string, std::string>;
 
 				/**
 				 * Definition of a map mapping the font's name pair to FontData objects.
 				 */
-				typedef std::map<FontPair, FontData> FontMap;
+				using FontMap = std::map<FontPair, FontData>;
 
 			public:
 

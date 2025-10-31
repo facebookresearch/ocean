@@ -39,7 +39,7 @@ class CreatorInformationCost4NeighborhoodI1 :
 		/**
 		 * Definition of a vector holding costs.
 		 */
-		typedef std::vector<uint64_t> Costs;
+		using Costs = std::vector<uint64_t>;
 
 	public:
 

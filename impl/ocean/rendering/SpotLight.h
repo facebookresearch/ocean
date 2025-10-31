@@ -27,7 +27,7 @@ class SpotLight;
  * @see SmartObjectRef, SpotLight.
  * @ingroup rendering
  */
-typedef SmartObjectRef<SpotLight> SpotLightRef;
+using SpotLightRef = SmartObjectRef<SpotLight>;
 
 /**
  * This class is the base class for all spot lights.

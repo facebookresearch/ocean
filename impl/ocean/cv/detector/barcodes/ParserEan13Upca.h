@@ -31,7 +31,7 @@ class OCEAN_CV_DETECTOR_BARCODES_EXPORT ParserEan13Upca
 	protected:
 
 		/// Definition of a digit pattern, i.e. any digit is encoded by the widths of two light and dark bars
-		typedef std::array<uint32_t, 4> DigitPattern;
+		using DigitPattern = std::array<uint32_t, 4>;
 
 	public:
 

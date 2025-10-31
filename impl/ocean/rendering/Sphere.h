@@ -25,7 +25,7 @@ class Sphere;
  * @see SmartObjectRef, Sphere.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Sphere> SphereRef;
+using SphereRef = SmartObjectRef<Sphere>;
 
 /**
  * This class is the base class for all spheres.<br>

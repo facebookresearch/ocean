@@ -25,28 +25,28 @@ template <typename T> class PixelBoundingBoxT;
  * @see PixelPositionT
  * @ingroup cv
  */
-typedef PixelBoundingBoxT<unsigned int> PixelBoundingBox;
+using PixelBoundingBox = PixelBoundingBoxT<unsigned int>;
 
 /**
  * Definition of a PixelBoundingBox object with data type allowing positive and negative coordinate values.
  * @see PixelPositionT
  * @ingroup cv
  */
-typedef PixelBoundingBoxT<int> PixelBoundingBoxI;
+using PixelBoundingBoxI = PixelBoundingBoxT<int>;
 
 /**
  * Definition of a vector holding bounding box objects with only positive coordinate values.
  * @see PixelBoundingBox
  * @ingroup cv
  */
-typedef std::vector<PixelBoundingBox> PixelBoundingBoxes;
+using PixelBoundingBoxes = std::vector<PixelBoundingBox>;
 
 /**
  * Definition of a vector holding bounding box objects with positive and negative coordinate values.
  * @see PixelBoundingBoxI
  * @ingroup cv
  */
-typedef std::vector<PixelBoundingBoxI> PixelBoundingBoxesI;
+using PixelBoundingBoxesI = std::vector<PixelBoundingBoxI>;
 
 /**
  * This class implements a 2D bounding box with pixel precision.

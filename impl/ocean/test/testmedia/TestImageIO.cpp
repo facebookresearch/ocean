@@ -1816,7 +1816,7 @@ bool TestImageIO::testColorProfileNameProperty(const std::string& imageType, con
 
 	Log::info() << "Test color profile name property for '" << imageType << "':";
 
-	typedef std::pair<FrameType::PixelFormat, std::string> ColorProfilePair;
+	using ColorProfilePair = std::pair<FrameType::PixelFormat, std::string>;
 
 	std::vector<ColorProfilePair> colorProfileNames =
 	{

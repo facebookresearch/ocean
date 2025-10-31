@@ -38,7 +38,7 @@ namespace SceneDescription
  * Definition of a object id.
  * @ingroup scenedescription
  */
-typedef size_t NodeId;
+using NodeId = size_t;
 
 /**
  * Definition of an invalid object id.
@@ -49,7 +49,7 @@ constexpr NodeId invalidNodeId = NodeId(-1);
 /**
  * Definition of a unique scene id.
  */
-typedef size_t SceneId;
+using SceneId = size_t;
 
 /**
  * Definition of an invalid scene id.

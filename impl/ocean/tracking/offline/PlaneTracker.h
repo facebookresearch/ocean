@@ -31,7 +31,7 @@ class PlaneTracker;
  * @see PlaneTracker.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<PlaneTracker, OfflineTracker> PlaneTrackerRef;
+using PlaneTrackerRef = SmartObjectRef<PlaneTracker, OfflineTracker>;
 
 /**
  * This class implements the abstract base class for all plane trackers.

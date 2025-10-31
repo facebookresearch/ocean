@@ -41,24 +41,24 @@ class OCEAN_TRACKING_ORB_EXPORT Correspondences
 		/**
 		 * Definition of a pair holding the indices of two corresponding features.
 		 */
-		typedef std::pair<unsigned int, unsigned int> CorrespondencePair;
+		using CorrespondencePair = std::pair<unsigned int, unsigned int>;
 
 		/**
 		 * Definition of a vector holding correspondence pairs.
 		 */
-		typedef std::vector<CorrespondencePair> CorrespondencePairs;
+		using CorrespondencePairs = std::vector<CorrespondencePair>;
 
 		/**
 		 * Definition of a vector holding different feature indices.
 		 */
-		typedef std::vector<CV::Detector::FeatureIndices> MultiCandidates;
+		using MultiCandidates = std::vector<CV::Detector::FeatureIndices>;
 
 	private:
 
 		/**
 		 * Definition of a set holding feature indices.
 		 */
-		typedef std::set<unsigned int> CandidateSet;
+		using CandidateSet = std::set<unsigned int>;
 
 	public:
 

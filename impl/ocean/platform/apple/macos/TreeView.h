@@ -44,22 +44,22 @@ class TreeView
 		/**
 		 * Definition of a vector holding strings.
 		 */
-		typedef std::vector<std::string> Strings;
+		using Strings = std::vector<std::string>;
 
 		/**
 		 * Definition of a unique tree item id.
 		 */
-		typedef uint64_t TreeItemId;
+		using TreeItemId = uint64_t;
 
 		/**
 		 * Definition of a vector holding unique tree item ids.
 		 */
-		typedef std::vector<TreeItemId> TreeItemIds;
+		using TreeItemIds = std::vector<TreeItemId>;
 
 		/**
 		 * Definition of an (unordered) map mapping item ids to item ids.
 		 */
-		typedef std::unordered_map<TreeItemId, TreeItemId> TreeItemResortingMap;
+		using TreeItemResortingMap = std::unordered_map<TreeItemId, TreeItemId>;
 
 		/**
 		 * Definition of an invalid tree item id.
@@ -207,14 +207,14 @@ class TreeView
 		/**
 		 * Definition of an (not thread safe) object reference holding a tree item.
 		 */
-		typedef std::shared_ptr<TreeItem> TreeItemRef;
+		using TreeItemRef = std::shared_ptr<TreeItem>;
 
 	protected:
 
 		/**
 		 * Definition of a map mapping tree item ids to tree items.
 		 */
-		typedef std::map<TreeItemId, TreeItemRef> TreeItemMap;
+		using TreeItemMap = std::map<TreeItemId, TreeItemRef>;
 
 	public:
 

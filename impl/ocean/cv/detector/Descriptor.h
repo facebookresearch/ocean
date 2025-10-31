@@ -143,7 +143,7 @@ OCEAN_FORCE_INLINE unsigned int Descriptor::calculateHammingDistance<128u>(const
 
 #else
 
-	typedef std::bitset<128> Bitset;
+	using Bitset = std::bitset<128>;
 	static_assert(sizeof(Bitset) == 128u / 8u, "Invalid data type!");
 
 	Bitset bitsetA, bitsetB;
@@ -233,7 +233,7 @@ OCEAN_FORCE_INLINE unsigned int Descriptor::calculateHammingDistance<256u>(const
 
 #else
 
-	typedef std::bitset<256> Bitset;
+	using Bitset = std::bitset<256>;
 	static_assert(sizeof(Bitset) == 256u / 8u, "Invalid data type!");
 
 	Bitset bitsetA, bitsetB;
@@ -328,7 +328,7 @@ OCEAN_FORCE_INLINE unsigned int Descriptor::calculateHammingDistance(const void*
 
 #else
 
-	typedef std::bitset<tBits> Bitset;
+	using Bitset = std::bitset<tBits>;
 	static_assert(sizeof(Bitset) == tBits / 8u, "Invalid data type!");
 
 	Bitset bitsetA, bitsetB;

@@ -33,17 +33,17 @@ class OCEAN_PLATFORM_OPENXR_EXPORT Instance final
 		/**
 		 * Definition of a vector holding extension properties.
 		 */
-		typedef std::vector<XrExtensionProperties> XrExtensionPropertyGroups;
+		using XrExtensionPropertyGroups = std::vector<XrExtensionProperties>;
 
 		/**
 		 * Definition of an unordered set holding strings.
 		 */
-		typedef std::unordered_set<std::string> StringSet;
+		using StringSet = std::unordered_set<std::string>;
 
 		/**
 		 * Definition of a vector holding XrViewConfigurationView objects.
 		 */
-		typedef std::vector<XrViewConfigurationView> XrViewConfigurationViews;
+		using XrViewConfigurationViews = std::vector<XrViewConfigurationView>;
 
 	public:
 

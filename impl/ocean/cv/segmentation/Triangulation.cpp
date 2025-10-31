@@ -27,7 +27,7 @@ Triangulation::IndexTriangles Triangulation::triangulate(const PixelContourT<T>&
 {
 	static_assert(SignedTyper<T>::hasSigned, "Invalid data type!");
 
-	typedef typename SignedTyper<T>::Type TSigned;
+	using TSigned = typename SignedTyper<T>::Type;
 
 	if (triangulationForced)
 	{

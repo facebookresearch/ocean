@@ -100,7 +100,7 @@ class OCEAN_CV_DETECTOR_EXPORT FASTFeatureDetector
 		/**
 		 * Definition of a maximum suppression object holding integer strength parameters.
 		 */
-		typedef NonMaximumSuppression<uint32_t> NonMaximumSuppressionVote;
+		using NonMaximumSuppressionVote = NonMaximumSuppression<uint32_t>;
 
 	public:
 

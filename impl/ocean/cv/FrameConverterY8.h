@@ -37,7 +37,7 @@ class OCEAN_CV_EXPORT FrameConverterY8 : public FrameConverter
 			protected:
 
 				/// Definition of a map mapping gamma values to the memory of lookup tables.
-				typedef std::unordered_map<float, Memory> LookupTables;
+				using LookupTables = std::unordered_map<float, Memory>;
 
 			public:
 

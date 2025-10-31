@@ -83,22 +83,22 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRNativeApplication : 
 		/**
 		 * Definition of a vector holding xrCompositorLayerUnion objects.
 		 */
-		typedef std::vector<XrCompositorLayerUnion> XrCompositorLayerUnions;
+		using XrCompositorLayerUnions = std::vector<XrCompositorLayerUnion>;
 
 		/**
 		 * Definition of a vector holding XrCompositionLayerBaseHeader objects.
 		 */
-		typedef std::vector<const XrCompositionLayerBaseHeader*> XrCompositionLayerBaseHeaders;
+		using XrCompositionLayerBaseHeaders = std::vector<const XrCompositionLayerBaseHeader*>;
 
 		/**
 		 * Definition of a vector holding XrActionSet handles.
 		 */
-		typedef std::vector<XrActionSet> XrActionSets;
+		using XrActionSets = std::vector<XrActionSet>;
 
 		/**
 		 * Definition of a vector holding XrActiveActionSet objects.
 		 */
-		typedef std::vector<XrActiveActionSet> XrActiveActionSets;
+		using XrActiveActionSets = std::vector<XrActiveActionSet>;
 
 	public:
 

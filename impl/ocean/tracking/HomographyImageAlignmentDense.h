@@ -77,7 +77,7 @@ class OCEAN_TRACKING_EXPORT HomographyImageAlignmentDense
 		/**
 		 * Definition of an object reference holding a consistency data object.
 		 */
-		typedef ObjectRef<ConsistencyData> ConsistencyDataRef;
+		using ConsistencyDataRef = ObjectRef<ConsistencyData>;
 
 	protected:
 

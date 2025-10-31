@@ -27,7 +27,7 @@ class Material;
  * @see SmartObjectRef, Material.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Material> MaterialRef;
+using MaterialRef = SmartObjectRef<Material>;
 
 /**
  * This class is the base class for all materials.

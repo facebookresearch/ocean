@@ -122,7 +122,7 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestQRCodeEncoder
 		};
 
 		/// Vector of verification items
-		typedef std::vector<QRCodeVerificationItem> QRCodeVerificationItems;
+		using QRCodeVerificationItems = std::vector<QRCodeVerificationItem>;
 
 	public:
 

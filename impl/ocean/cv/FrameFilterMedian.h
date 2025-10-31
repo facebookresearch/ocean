@@ -158,7 +158,7 @@ void FrameFilterMedian::filter(const T* source, T* target, const unsigned int wi
 		ocean_assert(sizeof(T) != sizeof(uint8_t) || histogramElements == 256);
 		ocean_assert(sizeof(T) != sizeof(uint16_t) || histogramElements == 65536);
 
-		typedef HistogramInteger<T, uint16_t, histogramElements> Histogram;
+		using Histogram = HistogramInteger<T, uint16_t, histogramElements>;
 
 		if (worker)
 		{

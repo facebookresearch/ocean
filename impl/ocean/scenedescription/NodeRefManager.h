@@ -35,12 +35,12 @@ class OCEAN_SCENEDESCRIPTION_EXPORT NodeRefManager
 		/**
 		 * Definition of a multimap mapping node names to node ids.
 		 */
-		typedef std::unordered_multimap<std::string, NodeId> NameMultiMap;
+		using NameMultiMap = std::unordered_multimap<std::string, NodeId>;
 
 		/**
 		 * Definition of a map mapping node ids to node references.
 		 */
-		typedef std::unordered_map<NodeId, NodeRef> NodeMap;
+		using NodeMap = std::unordered_map<NodeId, NodeRef>;
 
 	public:
 

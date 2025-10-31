@@ -56,13 +56,13 @@ namespace Barcodes
  * Definition of scan line data, i.e., a sequence of raw pixel data.
  * @ingroup cvdetectorbarcodes
  */
-typedef std::vector<uint8_t> ScanlineData;
+using ScanlineData = std::vector<uint8_t>;
 
 /**
  * Definition of segment data, i.e., a sequence of lengths of binary, alternating foreground and background segments (resulting from applying a threshold to raw pixel data).
  * @ingroup cvdetectorbarcodes
  */
-typedef std::vector<uint32_t> SegmentData;
+using SegmentData = std::vector<uint32_t>;
 
 } // namespace Barcodes
 

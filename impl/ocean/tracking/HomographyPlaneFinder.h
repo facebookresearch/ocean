@@ -33,14 +33,14 @@ class OCEAN_TRACKING_EXPORT HomographyPlaneFinder : public PlaneFinder
 		/**
 		 * Definition of a pair storing two corresponding normals.
 		 */
-		typedef std::pair<Vector3, Vector3> NormalPair;
+		using NormalPair = std::pair<Vector3, Vector3>;
 
 	protected:
 
 		/**
 		 * Definition of a vector holding pairs of normals.
 		 */
-		typedef std::vector<NormalPair> NormalPairs;
+		using NormalPairs = std::vector<NormalPair>;
 
 	public:
 

@@ -40,17 +40,17 @@ class OCEAN_CV_DETECTOR_EXPORT CalibrationPatternDetector
 		/**
 		 * Definition of a (row) vector holding 2D positions.
 		 */
-		typedef std::vector<Vector2> PatternRow;
+		using PatternRow = std::vector<Vector2>;
 
 		/**
 		 * Definition of a vector holding rows.
 		 */
-		typedef std::vector<PatternRow> PatternRows;
+		using PatternRows = std::vector<PatternRow>;
 
 		/**
 		 * Redefinition of a calibration pattern.
 		 */
-		typedef Geometry::CameraCalibration::Pattern Pattern;
+		using Pattern = Geometry::CameraCalibration::Pattern;
 
 	protected:
 

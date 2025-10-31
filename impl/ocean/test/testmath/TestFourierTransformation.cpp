@@ -310,7 +310,7 @@ bool TestFourierTransformation::testElementwiseMultiplication2(const double test
 
 	RandomGenerator randomGenerator;
 
-	typedef std::complex<T> ComplexT;
+	using ComplexT = std::complex<T>;
 
 	const Timestamp startTimestamp(true);
 
@@ -458,7 +458,7 @@ bool TestFourierTransformation::testElementwiseDivision2(const double testDurati
 
 	RandomGenerator randomGenerator;
 
-	typedef std::complex<T> ComplexT;
+	using ComplexT = std::complex<T>;
 
 	const Timestamp startTimestamp(true);
 

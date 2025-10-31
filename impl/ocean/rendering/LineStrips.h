@@ -25,7 +25,7 @@ class LineStrips;
  * @see SmartObjectRef, LineStrips.
  * @ingroup rendering
  */
-typedef SmartObjectRef<LineStrips> LineStripsRef;
+using LineStripsRef = SmartObjectRef<LineStrips>;
 
 /**
  * This class is the base for all rendering line strips.

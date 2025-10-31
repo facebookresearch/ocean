@@ -33,7 +33,7 @@ class BlockedMesh;
 /**
  * Definition of a vector holding BlockedMesh objects.
  */
-typedef std::vector<BlockedMesh> BlockedMeshes;
+using BlockedMeshes = std::vector<BlockedMesh>;
 
 /**
  * This class implements a blocked mesh storing only triangles located in a 3D block/box.
@@ -43,7 +43,7 @@ class OCEAN_TRACKING_MAPTEXTURING_EXPORT BlockedMesh
 {
 	protected:
 
-		typedef std::unordered_map<Index32, Index32> IndexMap;
+		using IndexMap = std::unordered_map<Index32, Index32>;
 
 	public:
 

@@ -90,13 +90,13 @@ class OCEAN_TRACKING_OFFLINE_EXPORT TrackerEvent : public Event
  * @see TrackerEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<TrackerEvent, Event> TrackerEventRef;
+using TrackerEventRef = SmartObjectRef<TrackerEvent, Event>;
 
 /**
  * Definition of a scoped event for tracker events.
  * @ingroup trackingoffline
  */
-typedef ScopedEvent<TrackerEvent> ScopedEvent;
+using ScopedEvent = ScopedEvent<TrackerEvent>;
 
 /**
  * This class implements the base class for all component events.
@@ -182,7 +182,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT ComponentEvent : public TrackerEvent
  * @see ComponentEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<ComponentEvent, Event> ComponentEventRef;
+using ComponentEventRef = SmartObjectRef<ComponentEvent, Event>;
 
 /**
  * This class implements a component event for the entire tracker process.
@@ -213,7 +213,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT TrackerProcessComponentEvent : public Compon
  * @see TrackerProcessComponentEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<TrackerProcessComponentEvent, Event> TrackerProcessComponentEventRef;
+using TrackerProcessComponentEventRef = SmartObjectRef<TrackerProcessComponentEvent, Event>;
 
 /**
  * This class implements a component event for the analysis components
@@ -244,7 +244,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT AnalysisComponentEvent : public ComponentEve
  * @see AnalysisComponentEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<AnalysisComponentEvent, Event> AnalysisComponentEventRef;
+using AnalysisComponentEventRef = SmartObjectRef<AnalysisComponentEvent, Event>;
 
 /**
  * This class implements a component event for the tracking components
@@ -275,7 +275,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT TrackingComponentEvent : public ComponentEve
  * @see TrackingComponentEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<TrackingComponentEvent, Event> TrackingComponentEventRef;
+using TrackingComponentEventRef = SmartObjectRef<TrackingComponentEvent, Event>;
 
 /**
  * This class implements the base class for all progress events.
@@ -336,7 +336,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT ProgressEvent : public TrackerEvent
  * @see ProgressEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<ProgressEvent, Event> ProgressEventRef;
+using ProgressEventRef = SmartObjectRef<ProgressEvent, Event>;
 
 /**
  * This class implements a progress event for tracker processes.
@@ -367,7 +367,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT TrackerProcessProgressEvent : public Progres
  * @see TrackerProcessProgressEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<TrackerProcessProgressEvent, Event> TrackerProcessProgressEventRef;
+using TrackerProcessProgressEventRef = SmartObjectRef<TrackerProcessProgressEvent, Event>;
 
 /**
  * This class implements a progress event for analysis components.
@@ -398,7 +398,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT AnalysisProgressEvent : public ProgressEvent
  * @see AnalysisProgressEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<AnalysisProgressEvent, Event> AnalysisProgressEventRef;
+using AnalysisProgressEventRef = SmartObjectRef<AnalysisProgressEvent, Event>;
 
 /**
  * This class implements a progress event for tracking components.
@@ -429,7 +429,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT TrackingProgressEvent : public ProgressEvent
  * @see TrackingProgressEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<TrackingProgressEvent, Event> TrackingProgressEventRef;
+using TrackingProgressEventRef = SmartObjectRef<TrackingProgressEvent, Event>;
 
 /**
  * This class is the base class for all state events.
@@ -481,7 +481,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT StateEvent : public TrackerEvent
  * @see StateEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<StateEvent, Event> StateEventRef;
+using StateEventRef = SmartObjectRef<StateEvent, Event>;
 
 /**
  * This class implements a camera state event that provides a camera profile.
@@ -523,7 +523,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT CameraCalibrationStateEvent : public StateEv
  * @see CameraCalibrationStateEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<CameraCalibrationStateEvent, Event> CameraCalibrationStateEventRef;
+using CameraCalibrationStateEventRef = SmartObjectRef<CameraCalibrationStateEvent, Event>;
 
 /**
  * This class implements a tracker pose state event that provides a tracker pose.
@@ -565,7 +565,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT TrackerPoseStateEvent : public StateEvent
  * @see TrackerPoseStateEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<TrackerPoseStateEvent, Event> TrackerPoseStateEventRef;
+using TrackerPoseStateEventRef = SmartObjectRef<TrackerPoseStateEvent, Event>;
 
 /**
  * This class implements a tracker poses state event that provides the all determined tracker poses.
@@ -607,7 +607,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT TrackerPosesStateEvent : public StateEvent
  * @see TrackerPosesStateEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<TrackerPosesStateEvent, Event> TrackerPosesStateEventRef;
+using TrackerPosesStateEventRef = SmartObjectRef<TrackerPosesStateEvent, Event>;
 
 /**
  * This class implements an tracker transformation state event that provides the transformation between world coordinate system and tracker coordinate system.
@@ -660,7 +660,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT TrackerTransformationStateEvent : public Sta
  * @see TrackerTransformationStateEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<TrackerTransformationStateEvent, Event> TrackerTransformationStateEventRef;
+using TrackerTransformationStateEventRef = SmartObjectRef<TrackerTransformationStateEvent, Event>;
 
 /**
  * This class implements a tracker plane state event that provides the detected plane of a tracker.
@@ -702,7 +702,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT TrackerPlaneStateEvent : public StateEvent
  * @see TrackerPlaneStateEvent.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<TrackerPlaneStateEvent, Event> TrackerPlaneStateEventRef;
+using TrackerPlaneStateEventRef = SmartObjectRef<TrackerPlaneStateEvent, Event>;
 
 inline unsigned int TrackerEvent::trackerId() const
 {

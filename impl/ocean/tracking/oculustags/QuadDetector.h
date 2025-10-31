@@ -37,11 +37,11 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT QuadDetector
 	public:
 
 		/// Definition of a quadrilateral
-		typedef std::array<Vector2, 4> Quad;
+		using Quad = std::array<Vector2, 4>;
 
 
 		/// A vector of quadrilaterals
-		typedef std::vector<Quad> Quads;
+		using Quads = std::vector<Quad>;
 
 	public:
 

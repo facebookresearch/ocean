@@ -36,7 +36,7 @@ class PatternTracker;
  * @see PatternTracker.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<PatternTracker, OfflineTracker> PatternTrackerRef;
+using PatternTrackerRef = SmartObjectRef<PatternTracker, OfflineTracker>;
 
 /**
  * This class implements an offline tracker able to detect and track a previously known 2D pattern.

@@ -26,7 +26,7 @@ class Box;
  * @see SmartObjectRef, Box.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Box> BoxRef;
+using BoxRef = SmartObjectRef<Box>;
 
 /**
  * This class is the base class for all boxes.<br>

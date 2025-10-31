@@ -26,7 +26,7 @@ class Primitive;
  * @see SmartObjectRef, Primitive.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Primitive> PrimitiveRef;
+using PrimitiveRef = SmartObjectRef<Primitive>;
 
 /**
  * This class is the base class for all primitive objects.

@@ -209,7 +209,7 @@ void Utilities::drawObservations(const AnyCamera& anyCamera, Frame& frame, const
 	const uint8_t* foregroundColor = CV::Canvas::red(frame.pixelFormat());
 	const uint8_t* backgroundColor = CV::Canvas::green(frame.pixelFormat());
 
-	typedef bool (*DrawPointFunc)(Frame& frame, const Vector2& position, const uint8_t* value);
+	using DrawPointFunc = bool (*)(Frame& frame, const Vector2& position, const uint8_t* value);
 	DrawPointFunc drawPointFunc = frame.width() >= 2000u ? CV::Canvas::point<9u> : CV::Canvas::point<5u>;
 
 	for (size_t i = 0; i < observations.size(); ++i)
@@ -342,7 +342,7 @@ void Utilities::drawObservations(const AnyCamera& anyCamera, Frame& frame, const
 	const uint8_t* foregroundColor = CV::Canvas::red(frame.pixelFormat());
 	const uint8_t* backgroundColor = CV::Canvas::green(frame.pixelFormat());
 
-	typedef bool (*DrawPointFunc)(Frame& frame, const Vector2& position, const uint8_t* value);
+	using DrawPointFunc = bool (*)(Frame& frame, const Vector2& position, const uint8_t* value);
 	DrawPointFunc drawPointFunc = frame.width() >= 2000u ? CV::Canvas::point<9u> : CV::Canvas::point<5u>;
 
 	for (size_t i = 0; i < observations.size(); ++i)

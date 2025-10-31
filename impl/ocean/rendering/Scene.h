@@ -26,13 +26,13 @@ class Scene;
  * @see SmartObjectRef, Scene.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Scene> SceneRef;
+using SceneRef = SmartObjectRef<Scene>;
 
 /**
  * Definition of a vector holding scenes.
  * @ingroup rendering
  */
-typedef std::vector<SceneRef> Scenes;
+using Scenes = std::vector<SceneRef>;
 
 /**
  * This is the base class for all rendering scenes.

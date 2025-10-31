@@ -26,7 +26,7 @@ class Lines;
  * @see SmartObjectRef, Lines.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Lines> LinesRef;
+using LinesRef = SmartObjectRef<Lines>;
 
 /**
  * This class is the base for all lines objects.

@@ -33,17 +33,17 @@ class CorrespondenceSet
 		/**
 		 * Defines the data type of the individual elements.
 		 */
-		typedef T Type;
+		using Type = T;
 
 		/**
 		 * This class defines a vector storing individual elements.
 		 */
-		typedef std::vector<T> Elements;
+		using Elements = std::vector<T>;
 
 		/**
 		 * This class defines a vector storing vectors of elements.
 		 */
-		typedef std::vector<Elements> ElementsVector;
+		using ElementsVector = std::vector<Elements>;
 
 	public:
 

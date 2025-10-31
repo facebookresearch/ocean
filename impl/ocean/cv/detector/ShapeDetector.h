@@ -150,7 +150,7 @@ class OCEAN_CV_DETECTOR_EXPORT ShapeDetector
 		/**
 		 * Definition of a vector holding pointers to TwoLineShapes.
 		 */
-		typedef std::vector<const CV::Detector::ShapeDetector::TwoLineShape*> TwoLineShapes;
+		using TwoLineShapes = std::vector<const CV::Detector::ShapeDetector::TwoLineShape*>;
 
 		/**
 		 * This class implements an L-shape element like a corner of a rectangle.
@@ -366,37 +366,37 @@ class OCEAN_CV_DETECTOR_EXPORT ShapeDetector
 		/**
 		 * Definition of a vector holding L-shape objects.
 		 */
-		typedef std::vector<LShape> LShapes;
+		using LShapes = std::vector<LShape>;
 
 		/**
 		 * Definition of a vector holding T-shape objects.
 		 */
-		typedef std::vector<TShape> TShapes;
+		using TShapes = std::vector<TShape>;
 
 		/**
 		 * Definition of a vector holding X-shape objects.
 		 */
-		typedef std::vector<XShape> XShapes;
+		using XShapes = std::vector<XShape>;
 
 		/**
 		 * Definition of an array holding four indices e.g., of L-shape objects.
 		 */
-		typedef std::array<Index32, 4> IndexedRectangle;
+		using IndexedRectangle = std::array<Index32, 4>;
 
 		/**
 		 * Definition of a vector holding rectangles.
 		 */
-		typedef std::vector<IndexedRectangle> IndexedRectangles;
+		using IndexedRectangles = std::vector<IndexedRectangle>;
 
 		/**
 		 * A rectangle defined by its four corners (counter-clockwise direction)
 		 */
-		typedef std::array<Vector2, 4> Rectangle;
+		using Rectangle = std::array<Vector2, 4>;
 
 		/**
 		 * A vector of rectangles
 		 */
-		typedef std::vector<Rectangle> Rectangles;
+		using Rectangles = std::vector<Rectangle>;
 
 		/**
 		 * This class implements a shape detector mainly based on gradients.

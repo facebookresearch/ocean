@@ -36,28 +36,28 @@ template <typename T> class PixelTriangleT;
  * @see PixelTriangleT
  * @ingroup cvadvanced
  */
-typedef PixelTriangleT<unsigned int> PixelTriangle;
+using PixelTriangle = PixelTriangleT<unsigned int>;
 
 /**
  * Definition of a PixelTriangle object with a data type allowing positive and negative coordinate values.
  * @see PixelTriangleT
  * @ingroup cvadvanced
  */
-typedef PixelTriangleT<int> PixelTriangleI;
+using PixelTriangleI = PixelTriangleT<int>;
 
 /**
  * Definition of a vector holding pixel triangles (with positive coordinate values).
  * @see PixelTriangle
  * @ingroup cvadvanced
  */
-typedef std::vector<PixelTriangle> PixelTriangles;
+using PixelTriangles = std::vector<PixelTriangle>;
 
 /**
  * Definition of a vector holding pixel triangles (with positive and negative coordinate values).
  * @see PixelTriangleI
  * @ingroup cvadvanced
  */
-typedef std::vector<PixelTriangleI> PixelTrianglesI;
+using PixelTrianglesI = std::vector<PixelTriangleI>;
 
 /**
  * This class implements a 2D triangle with pixel precision.

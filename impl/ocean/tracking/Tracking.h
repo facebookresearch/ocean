@@ -40,37 +40,37 @@ namespace Tracking
  * Definition of a 2D image point.
  * @ingroup tracking
  */
-typedef Vector2 ImagePoint;
+using ImagePoint = Vector2;
 
 /**
  * Definition of a 3D object point.
  * @ingroup tracking
  */
-typedef Vector3 ObjectPoint;
+using ObjectPoint = Vector3;
 
 /**
  * Definition of a vector holding 2D image points.
  * @ingroup tracking
  */
-typedef std::vector<ImagePoint> ImagePoints;
+using ImagePoints = std::vector<ImagePoint>;
 
 /**
  * Definition of a vector holding 3D object points.
  * @ingroup tracking
  */
-typedef std::vector<ObjectPoint> ObjectPoints;
+using ObjectPoints = std::vector<ObjectPoint>;
 
 /**
  * Definition of a vector holding object points.
  * @ingroup tracking
  */
-typedef std::vector<ObjectPoints> ObjectPointsVector;
+using ObjectPointsVector = std::vector<ObjectPoints>;
 
 /**
  * Definition of a vector holding image points.
  * @ingroup tracking
  */
-typedef std::vector<ImagePoints> ImagePointsVector;
+using ImagePointsVector = std::vector<ImagePoints>;
 
 
 // Defines OCEAN_TRACKING_EXPORT for dll export and import.

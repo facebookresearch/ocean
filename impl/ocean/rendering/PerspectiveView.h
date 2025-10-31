@@ -27,7 +27,7 @@ class PerspectiveView;
  * @see SmartObjectRef, PerspectiveView.
  * @ingroup rendering
  */
-typedef SmartObjectRef<PerspectiveView> PerspectiveViewRef;
+using PerspectiveViewRef = SmartObjectRef<PerspectiveView>;
 
 /**
  * This class is the base class for all perspective views.

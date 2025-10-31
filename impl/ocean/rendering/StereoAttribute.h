@@ -25,7 +25,7 @@ class StereoAttribute;
  * @see SmartObjectRef, StereoAttribute.
  * @ingroup rendering
  */
-typedef SmartObjectRef<StereoAttribute> StereoAttributeRef;
+using StereoAttributeRef = SmartObjectRef<StereoAttribute>;
 
 /**
  * This class implements a stereo attribute specifying the stereo behavior for associated objects.

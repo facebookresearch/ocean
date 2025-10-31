@@ -25,7 +25,7 @@ class Billboard;
  * @see SmartObjectRef, Billboard.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Billboard> BillboardRef;
+using BillboardRef = SmartObjectRef<Billboard>;
 
 /**
  * This class is the base class for all billboard objects.

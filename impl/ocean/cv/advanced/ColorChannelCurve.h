@@ -35,7 +35,7 @@ class OCEAN_CV_ADVANCED_EXPORT ColorChannelCurve
 		 * Callback function type that returns a floating point value for the specified unsigned char input color value.
 		 * Callback functions of this type can be used to define a color channel curve like gamma correction.
 		 */
-		typedef Callback<Scalar, unsigned char> TransformationFunction;
+		using TransformationFunction = Callback<Scalar, unsigned char>;
 
 		/**
 		 * Represents a specific color channel transformation

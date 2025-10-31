@@ -36,7 +36,7 @@ class OCEAN_PLATFORM_WIN_EXPORT Resource
 		/**
 		 * Definition of a vector holding 8 bit values.
 		 */
-		typedef std::vector<unsigned char> Buffer;
+		using Buffer = std::vector<unsigned char>;
 
 	public:
 
@@ -64,7 +64,7 @@ class OCEAN_PLATFORM_WIN_EXPORT ResourceManager : public Singleton<ResourceManag
 		/**
 		 * Definition of a map mapping resource ids to frames.
 		 */
-		typedef std::map<unsigned int, FrameRef> FrameMap;
+		using FrameMap = std::map<unsigned int, FrameRef>;
 
 	public:
 

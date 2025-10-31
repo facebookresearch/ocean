@@ -25,7 +25,7 @@ namespace QRCodes
 class QRCode;
 
 /// Definition of a vector of QR codes
-typedef std::vector<QRCode> QRCodes;
+using QRCodes = std::vector<QRCode>;
 
 /**
  * Definition of a QR code

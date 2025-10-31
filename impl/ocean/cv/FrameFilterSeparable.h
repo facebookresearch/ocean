@@ -70,7 +70,7 @@ class OCEAN_CV_EXPORT FrameFilterSeparable
 		template <typename T>
 		struct SIMD32x4
 		{
-			typedef DataType<uint32_t, 4u>::Type Type;
+			using Type = DataType<uint32_t, 4u>::Type;
 		};
 
 	public:
@@ -651,7 +651,7 @@ class OCEAN_CV_EXPORT FrameFilterSeparable
 template <>
 struct FrameFilterSeparable::SIMD32x4<unsigned int>
 {
-	typedef __m128i Type;
+	using Type = __m128i;
 };
 
 /**
@@ -660,7 +660,7 @@ struct FrameFilterSeparable::SIMD32x4<unsigned int>
 template <>
 struct FrameFilterSeparable::SIMD32x4<float>
 {
-	typedef __m128 Type;
+	using Type = __m128;
 };
 
 #elif defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
@@ -671,7 +671,7 @@ struct FrameFilterSeparable::SIMD32x4<float>
 template <>
 struct FrameFilterSeparable::SIMD32x4<unsigned int>
 {
-	typedef uint32x4_t Type;
+	using Type = uint32x4_t;
 };
 
 /**
@@ -680,7 +680,7 @@ struct FrameFilterSeparable::SIMD32x4<unsigned int>
 template <>
 struct FrameFilterSeparable::SIMD32x4<float>
 {
-	typedef float32x4_t Type;
+	using Type = float32x4_t;
 };
 
 #endif
@@ -3607,7 +3607,7 @@ bool FrameFilterSeparable::filterUniversal(const T* source, T* target, const uns
 		return false;
 	}
 
-	typedef typename FloatTyper<T>::Type TIntermediate;
+	using TIntermediate = typename FloatTyper<T>::Type;
 
 	Frame intermediateFrame(FrameType(width, height, FrameType::genericPixelFormat<TIntermediate>(channels), FrameType::ORIGIN_UPPER_LEFT));
 

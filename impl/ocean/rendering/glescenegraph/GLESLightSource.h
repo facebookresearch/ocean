@@ -35,13 +35,13 @@ class GLESLightSource;
  * Definition of a pair combinding light sources with transformation matrices.
  * @ingroup renderinggles
  */
-typedef std::pair<SmartObjectRef<GLESLightSource>, HomogenousMatrix4> LightPair;
+using LightPair = std::pair<SmartObjectRef<GLESLightSource>, HomogenousMatrix4>;
 
 /**
  * Definition of a set holding light sources.
  * @ingroup renderinggles
  */
-typedef std::vector<LightPair> Lights;
+using Lights = std::vector<LightPair>;
 
 /**
  * This class is the base class for all GLESceneGraph light sources.

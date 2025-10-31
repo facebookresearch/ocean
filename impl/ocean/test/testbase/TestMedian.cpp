@@ -371,7 +371,7 @@ bool TestMedian::testMedian(const unsigned int number, const double testDuration
 
 	Log::info() << "... with " << String::insertCharacter(String::toAString(number), ',', 3, false) << " elements:";
 
-	typedef std::vector<T> Elements;
+	using Elements = std::vector<T>;
 	Elements elements(number);
 
 	bool allSucceeded = true;

@@ -244,7 +244,7 @@ bool TestDataType::testUnsignedTyper()
 	bool allSucceeded = true;
 
 	{
-		typedef UnsignedTyper<bool> Typer;
+		using Typer = UnsignedTyper<bool>;
 
 		if (typeid(Typer::Type) != typeid(bool))
 		{
@@ -263,7 +263,7 @@ bool TestDataType::testUnsignedTyper()
 	}
 
 	{
-		typedef UnsignedTyper<signed char> Typer;
+		using Typer = UnsignedTyper<signed char>;
 
 		if (typeid(Typer::Type) != typeid(unsigned char))
 		{
@@ -282,7 +282,7 @@ bool TestDataType::testUnsignedTyper()
 	}
 
 	{
-		typedef UnsignedTyper<unsigned char> Typer;
+		using Typer = UnsignedTyper<unsigned char>;
 
 		if (typeid(Typer::Type) != typeid(unsigned char))
 		{
@@ -301,7 +301,7 @@ bool TestDataType::testUnsignedTyper()
 	}
 
 	{
-		typedef UnsignedTyper<short> Typer;
+		using Typer = UnsignedTyper<short>;
 
 		if (typeid(Typer::Type) != typeid(unsigned short))
 		{
@@ -320,7 +320,7 @@ bool TestDataType::testUnsignedTyper()
 	}
 
 	{
-		typedef UnsignedTyper<unsigned short> Typer;
+		using Typer = UnsignedTyper<unsigned short>;
 
 		if (typeid(Typer::Type) != typeid(unsigned short))
 		{
@@ -339,7 +339,7 @@ bool TestDataType::testUnsignedTyper()
 	}
 
 	{
-		typedef UnsignedTyper<int> Typer;
+		using Typer = UnsignedTyper<int>;
 
 		if (typeid(Typer::Type) != typeid(unsigned int))
 		{
@@ -358,7 +358,7 @@ bool TestDataType::testUnsignedTyper()
 	}
 
 	{
-		typedef UnsignedTyper<unsigned int> Typer;
+		using Typer = UnsignedTyper<unsigned int>;
 
 		if (typeid(Typer::Type) != typeid(unsigned int))
 		{
@@ -377,7 +377,7 @@ bool TestDataType::testUnsignedTyper()
 	}
 
 	{
-		typedef UnsignedTyper<long long> Typer;
+		using Typer = UnsignedTyper<long long>;
 
 		if (typeid(Typer::Type) != typeid(unsigned long long))
 		{
@@ -396,7 +396,7 @@ bool TestDataType::testUnsignedTyper()
 	}
 
 	{
-		typedef UnsignedTyper<unsigned long long> Typer;
+		using Typer = UnsignedTyper<unsigned long long>;
 
 		if (typeid(Typer::Type) != typeid(unsigned long long))
 		{
@@ -415,7 +415,7 @@ bool TestDataType::testUnsignedTyper()
 	}
 
 	{
-		typedef UnsignedTyper<float> Typer;
+		using Typer = UnsignedTyper<float>;
 
 		if (typeid(Typer::Type) != typeid(float))
 		{
@@ -434,7 +434,7 @@ bool TestDataType::testUnsignedTyper()
 	}
 
 	{
-		typedef UnsignedTyper<double> Typer;
+		using Typer = UnsignedTyper<double>;
 
 		if (typeid(Typer::Type) != typeid(double))
 		{

@@ -81,32 +81,32 @@ class OCEAN_TRACKING_EXPORT Database
 		/**
 		 * Definition of a map mapping ids to 2D image point object.
 		 */
-		typedef std::map<Index32, Vector2> IdPointMap;
+		using IdPointMap = std::map<Index32, Vector2>;
 
 		/**
 		 * Definition of a pair of ids and 2D image points.
 		 */
-		typedef std::pair<Index32, Vector2> IdPointPair;
+		using IdPointPair = std::pair<Index32, Vector2>;
 
 		/**
 		 * Definition of a vector holding pairs of ids and 2D image points.
 		 */
-		typedef std::vector<IdPointPair> IdPointPairs;
+		using IdPointPairs = std::vector<IdPointPair>;
 
 		/**
 		 * Definition of a map mapping ids to 2D image point id pairs.
 		 */
-		typedef std::map<Index32, IdPointPairs> IdIdPointPairsMap;
+		using IdIdPointPairsMap = std::map<Index32, IdPointPairs>;
 
 		/**
 		 * Definition of a map mapping ids to 2D vectors.
 		 */
-		typedef std::map<Index32, Vectors2> ImagePointsMap;
+		using ImagePointsMap = std::map<Index32, Vectors2>;
 
 		/**
 		 * Definition of a vector holding 2D vectors.
 		 */
-		typedef std::vector<Vectors2> ImagePointGroups;
+		using ImagePointGroups = std::vector<Vectors2>;
 
 		/**
 		 * This class implements an object storing an id of an image point.
@@ -242,17 +242,17 @@ class OCEAN_TRACKING_EXPORT Database
 		/**
 		 * Definition of a vector holding several pairs of pose and image point ids.
 		 */
-		typedef std::vector<PoseImagePointPair> PoseImagePointTopology;
+		using PoseImagePointTopology = std::vector<PoseImagePointPair>;
 
 		/**
 		 * Definition of a vector holding several groups of pairs of pose and image point ids.
 		 */
-		typedef std::vector< std::pair<Index32, PoseImagePointTopology> > PoseImagePointTopologyGroups;
+		using PoseImagePointTopologyGroups = std::vector< std::pair<Index32, PoseImagePointTopology> >;
 
 		/**
 		 * Definition of a vector holding object of topology triple.
 		 */
-		typedef std::vector<TopologyTriple> TopologyTriples;
+		using TopologyTriples = std::vector<TopologyTriple>;
 
 		/**
 		 * This class implements an accessor object for image points based on a set of image point ids.
@@ -647,27 +647,27 @@ class OCEAN_TRACKING_EXPORT Database
 		/**
 		 * Definition of an (ordered) map mapping pose ids to pose data objects, we use an ordered map as poses have an order.
 		 */
-		typedef std::map<Index32, PoseData> PoseMap;
+		using PoseMap = std::map<Index32, PoseData>;
 
 		/**
 		 * Definition of an (unordered) map mapping object point ids to object point data objects.
 		 */
-		typedef std::unordered_map<Index32, ObjectPointData> ObjectPointMap;
+		using ObjectPointMap = std::unordered_map<Index32, ObjectPointData>;
 
 		/**
 		 * Definition of an (unordered) map mapping image point ids to image point data objects.
 		 */
-		typedef std::unordered_map<Index32, ImagePointData> ImagePointMap;
+		using ImagePointMap = std::unordered_map<Index32, ImagePointData>;
 
 		/**
 		 * Definition of an (unordered) map mapping 32 bit ids to 32 bit ids.
 		 */
-		typedef std::unordered_map<Index32, Index32> Index32To32Map;
+		using Index32To32Map = std::unordered_map<Index32, Index32>;
 
 		/**
 		 * Definition of an (unordered) map mapping 64 bit ids to 32 bit ids.
 		 */
-		typedef std::unordered_map<Index64, Index32> Index64To32Map;
+		using Index64To32Map = std::unordered_map<Index64, Index32>;
 
 	public:
 

@@ -30,7 +30,7 @@ class ORBDescriptor;
  * Definition of a static vector holding up to three ORB descriptors.
  * @ingroup cvdetector
  */
-typedef StaticVector<ORBDescriptor, 3> ORBDescriptors;
+using ORBDescriptors = StaticVector<ORBDescriptor, 3>;
 
 /**
  * This class implement the descriptor for ORB features.
@@ -47,7 +47,7 @@ class ORBDescriptor
 		/**
 		 * Definition of a bitset with 256 bits.
 		 */
-		typedef std::bitset<descriptorLengthInBits> DescriptorBitset;
+		using DescriptorBitset = std::bitset<descriptorLengthInBits>;
 
 	public:
 

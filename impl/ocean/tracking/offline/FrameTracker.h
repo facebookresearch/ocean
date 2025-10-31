@@ -36,7 +36,7 @@ class FrameTracker;
  * @see FrameTracker.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<FrameTracker, OfflineTracker> FrameTrackerRef;
+using FrameTrackerRef = SmartObjectRef<FrameTracker, OfflineTracker>;
 
 /**
  * This class implements the base class for all visual offline tracker using frames to provide the tracking data.

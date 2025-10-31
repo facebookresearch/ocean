@@ -37,12 +37,12 @@ class OCEAN_PLATFORM_GLES_EXPORT EGLContext
 		/**
 		 * Definition of a configuration attribute pair combining attribute (first) and value (second).
 		 */
-		typedef std::pair<EGLint, EGLint> ConfigAttributePair;
+		using ConfigAttributePair = std::pair<EGLint, EGLint>;
 
 		/**
 		 * Definition of a vector holding configuration pairs.
 		 */
-		typedef std::vector<ConfigAttributePair> ConfigAttributePairs;
+		using ConfigAttributePairs = std::vector<ConfigAttributePair>;
 
 	public:
 

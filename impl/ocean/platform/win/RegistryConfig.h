@@ -52,7 +52,7 @@ class OCEAN_PLATFORM_WIN_EXPORT RegistryConfig final : public Config
 		/**
 		 * Definition of a map mapping value names to value objects using case-insensitive key comparison.
 		 */
-		typedef std::map<std::string, RegistryValue, CaseInsensitiveCompare> Values;
+		using Values = std::map<std::string, RegistryValue, CaseInsensitiveCompare>;
 
 		/**
 		 * Definition of a registry value object.

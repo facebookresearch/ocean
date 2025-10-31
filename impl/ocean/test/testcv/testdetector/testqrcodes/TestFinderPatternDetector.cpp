@@ -122,7 +122,7 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 		Scalar rotation;
 	};
 
-	typedef std::vector<GroundtruthFinderPattern> GroundtruthFinderPatterns;
+	using GroundtruthFinderPatterns = std::vector<GroundtruthFinderPattern>;
 
 	uint64_t finderPatternsTotal = 0ull;
 	uint64_t truePositiveDetections = 0ull;

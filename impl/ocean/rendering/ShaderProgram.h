@@ -34,7 +34,7 @@ class ShaderProgram;
  * @see SmartObjectRef, ShaderProgram.
  * @ingroup rendering
  */
-typedef SmartObjectRef<ShaderProgram> ShaderProgramRef;
+using ShaderProgramRef = SmartObjectRef<ShaderProgram>;
 
 /**
  * This class implements a shader program attribute.
@@ -83,22 +83,22 @@ class OCEAN_RENDERING_EXPORT ShaderProgram : virtual public Attribute
 		/**
 		 * Definition of a pair combining a filename with a shader type with.
 		 */
-		typedef std::pair<std::string, ShaderType> FilenamePair;
+		using FilenamePair = std::pair<std::string, ShaderType>;
 
 		/**
 		 * Definition of a vector holding pairs combining filenames with shader types.
 		 */
-		typedef std::vector<FilenamePair> FilenamePairs;
+		using FilenamePairs = std::vector<FilenamePair>;
 
 		/**
 		 * Definition of a pair combining shader code parts with a shader type with.
 		 */
-		typedef std::pair<std::vector<const char*>, ShaderType> CodePair;
+		using CodePair = std::pair<std::vector<const char*>, ShaderType>;
 
 		/**
 		 * Definition of a vector holding pairs combining shader codes with shader types.
 		 */
-		typedef std::vector<CodePair> CodePairs;
+		using CodePairs = std::vector<CodePair>;
 
 		/**
 		 * Definition of a parameter types.
@@ -138,7 +138,7 @@ class OCEAN_RENDERING_EXPORT ShaderProgram : virtual public Attribute
 		/**
 		 * Definition of a sampler index.
 		 */
-		typedef unsigned int SamplerIndex;
+		using SamplerIndex = unsigned int;
 
 		/**
 		 * Definition of an invalid sampler index.
@@ -150,7 +150,7 @@ class OCEAN_RENDERING_EXPORT ShaderProgram : virtual public Attribute
 		/**
 		 * Definition of a vector holding sample objects.
 		 */
-		typedef std::vector<TextureRef> Textures;
+		using Textures = std::vector<TextureRef>;
 
 	public:
 

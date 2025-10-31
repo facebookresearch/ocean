@@ -70,7 +70,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT WxDialog : public wxDialog
 		/**
 		 * Definition of an object reference for event loop objects.
 		 */
-		typedef ObjectRef<EventLoop> EventLoopRef;
+		using EventLoopRef = ObjectRef<EventLoop>;
 
 #endif
 

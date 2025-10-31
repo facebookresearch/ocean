@@ -116,7 +116,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT SeedSegmentation
 		/**
 		 * Definition of a vector holding pixel candidate objects (will be used as stack).
 		 */
-		typedef std::vector<PixelCandidate> PixelCandidates;
+		using PixelCandidates = std::vector<PixelCandidate>;
 
 		/// Mask value for unvisited mask pixels.
 		static constexpr uint8_t unvisitedMaskValue_ = 0xFFu;
@@ -273,7 +273,7 @@ unsigned int SeedSegmentation::seedSegmentation(const T* frame, uint8_t* mask, c
 
 	stack.emplace_back(seed.x(), seed.y(), frameSeedOffset);
 
-	typedef typename SquareValueTyper<T>::Type SqrType;
+	using SqrType = typename SquareValueTyper<T>::Type;
 
 	const SqrType sqrLocalThreshold = localThreshold * localThreshold;
 	const SqrType sqrGlobalThreshold = globalThreshold * globalThreshold;

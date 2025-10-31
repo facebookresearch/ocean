@@ -41,7 +41,7 @@ class GLESFramebuffer;
  * Definition of an object reference for shader program containers.
  * @ingroup renderinggles
  */
-typedef SmartObjectRef<GLESShaderProgram> GLESShaderProgramRef;
+using GLESShaderProgramRef = SmartObjectRef<GLESShaderProgram>;
 
 /**
  * This class implements a container for an OpenGL ES shader program.
@@ -56,12 +56,12 @@ class OCEAN_RENDERING_GLES_EXPORT GLESShaderProgram :
 		/**
 		 * Definition of a pair combining a GL shader type and shader code parts.
 		 */
-		typedef std::pair<GLenum, std::vector<const char*>> ShaderCodePair;
+		using ShaderCodePair = std::pair<GLenum, std::vector<const char*>>;
 
 		/**
 		 * Definition of a vector holding shader code pairs.
 		 */
-		typedef std::vector<ShaderCodePair> ShaderCodePairs;
+		using ShaderCodePairs = std::vector<ShaderCodePair>;
 
 	protected:
 
@@ -78,7 +78,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESShaderProgram :
 				/**
 				 * Definition of a map mapping parameter names to parameter values.
 				 */
-				typedef std::unordered_map<std::string, T> ValueMap;
+				using ValueMap = std::unordered_map<std::string, T>;
 
 			public:
 
@@ -111,7 +111,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESShaderProgram :
 		/**
 		 * Definition of a map mapping sampler indices to textures.
 		 */
-		typedef std::unordered_map<SamplerIndex, TextureRef> SamplerMap;
+		using SamplerMap = std::unordered_map<SamplerIndex, TextureRef>;
 
 	public:
 

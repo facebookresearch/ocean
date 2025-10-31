@@ -55,12 +55,12 @@ class OCEAN_TRACKING_POINT_EXPORT HomographyTracker
 		/**
 		 * Definition of a pyramid of 2D image points, mainly a vector with image points located in individual pyramid frames.
 		 */
-		typedef std::vector<Vectors2> Vectors2Pyramid;
+		using Vectors2Pyramid = std::vector<Vectors2>;
 
 		/**
 		 * Definition of a pyramid of 3D object points, mainly a vector with object points visible in individual pyramid frames.
 		 */
-		typedef std::vector<Vectors3> Vectors3Pyramid;
+		using Vectors3Pyramid = std::vector<Vectors3>;
 
 		/**
 		 * This class composes several parameters necessary for a key-frame.

@@ -217,8 +217,8 @@ bool TestBresenham::testIntegerBorderIntersection(const double testDuration)
 			Vector2 bottomIntersectionPoint;
 			const bool bottomIntersection = bottomBorderLine.intersection(line, bottomIntersectionPoint);
 
-			typedef std::pair<int, int> Coordinate;
-			typedef std::set<Coordinate> CoordinateSet;
+			using Coordinate = std::pair<int, int>;
+			using CoordinateSet = std::set<Coordinate>;
 			CoordinateSet testIntersectionSet;
 
 			if (leftIntersection)

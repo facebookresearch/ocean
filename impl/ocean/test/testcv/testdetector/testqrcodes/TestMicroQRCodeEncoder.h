@@ -116,7 +116,7 @@ class OCEAN_TEST_CV_DETECTOR_QRCODES_EXPORT TestMicroQRCodeEncoder
 		};
 
 		/// Vector of verification items
-		typedef std::vector<MicroQRCodeVerificationItem> MicroQRCodeVerificationItems;
+		using MicroQRCodeVerificationItems = std::vector<MicroQRCodeVerificationItem>;
 
 	public:
 

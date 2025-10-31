@@ -38,17 +38,17 @@ class LineEvaluator
 		/**
 		 * Definition of an id identifying e.g., a specific line.
 		 */
-		typedef unsigned int Id;
+		using Id = unsigned int;
 
 		/**
 		 * Definition of an unordered set of ids.
 		 */
-		typedef std::unordered_set<Id> IdSet;
+		using IdSet = std::unordered_set<Id>;
 
 		/**
 		 * Definition of an unordered map mapping ids to sets of ids.
 		 */
-		typedef std::unordered_map<Id, IdSet> IdToIdSetMap;
+		using IdToIdSetMap = std::unordered_map<Id, IdSet>;
 
 		/**
 		 * This class is the base class for all line matches.
@@ -110,12 +110,12 @@ class LineEvaluator
 		 * Definition of a shared pointer for a LineMatch object.
 		 * @see LineMatch.
 		 */
-		typedef std::shared_ptr<LineMatch> LineMatchRef;
+		using LineMatchRef = std::shared_ptr<LineMatch>;
 
 		/**
 		 * Definition of an unordered multi map mapping ids to match objects.
 		 */
-		typedef std::unordered_multimap<Id, LineMatchRef> LineMatchMap;
+		using LineMatchMap = std::unordered_multimap<Id, LineMatchRef>;
 
 		/**
 		 * This class implements a perfect match between a source line and a target line.
@@ -344,7 +344,7 @@ class LineEvaluator
 		/**
 		 * Definition of a set holding a pair of ids.
 		 */
-		typedef std::unordered_set<unsigned long long> Id64Set;
+		using Id64Set = std::unordered_set<unsigned long long>;
 
 	public:
 
@@ -812,7 +812,7 @@ LineEvaluator::LineMatchMap LineEvaluator::evaluateLineSegments(const std::unord
 	ocean_assert(partialMatchNonOverlappingPixelThreshold >= 0);
 	ocean_assert(complexMatchMaximalGapPixelThreshold >= 0);
 
-	typedef std::unordered_map<Id, FiniteLineT2<T>> LineMap;
+	using LineMap = std::unordered_map<Id, FiniteLineT2<T>>;
 
 	// first, we determine a mapping from ground truth lines to connected evaluation lines (all lines which are almost similar and partially overlapping)
 	// we can use this map to check for valid matching candidates

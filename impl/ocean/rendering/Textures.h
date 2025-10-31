@@ -29,7 +29,7 @@ class Textures;
  * @see SmartObjectRef, Textures.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Textures> TexturesRef;
+using TexturesRef = SmartObjectRef<Textures>;
 
 /**
  * This class is the base class for all textures objects.
@@ -42,7 +42,7 @@ class OCEAN_RENDERING_EXPORT Textures : virtual public Attribute
 		/**
 		 * Definition of a vector holding textures.
 		 */
-		typedef std::vector<TextureRef> TextureObjects;
+		using TextureObjects = std::vector<TextureRef>;
 
 	public:
 

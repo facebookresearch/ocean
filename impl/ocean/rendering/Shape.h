@@ -25,7 +25,7 @@ class Shape;
  * @see SmartObjectRef, Shape.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Shape> ShapeRef;
+using ShapeRef = SmartObjectRef<Shape>;
 
 /**
  * This class is the base class for all geometries.

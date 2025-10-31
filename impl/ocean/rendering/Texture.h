@@ -28,7 +28,7 @@ class Texture;
  * @see SmartObjectRef, Texture.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Texture> TextureRef;
+using TextureRef = SmartObjectRef<Texture>;
 
 /**
  * This class is the base class for all textures.

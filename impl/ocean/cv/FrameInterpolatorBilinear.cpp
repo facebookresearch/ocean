@@ -1762,7 +1762,7 @@ void FrameInterpolatorBilinear::scale8BitPerChannelSubset7BitPrecisionNEON(const
 	// in general, the horizontal interpolation is more complicated as the vertical interpolation
 	// we can optimize the performance by pre-calculating the interpolation coordinates and interpolation factors
 
-	typedef void (*RowInterpolationHorizontalFunction)(const uint8_t*, uint8_t*, const unsigned int, const unsigned int, const unsigned int*, const uint8_t*);
+	using RowInterpolationHorizontalFunction = void (*)(const uint8_t*, uint8_t*, const unsigned int, const unsigned int, const unsigned int*, const uint8_t*);
 
 	RowInterpolationHorizontalFunction rowInterpolationHorizontalFunction = nullptr;
 

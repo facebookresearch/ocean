@@ -35,7 +35,7 @@ class OCEAN_CV_ADVANCED_EXPORT BlackPointDetector
 		/**
 		 * Definition of a vector holding 32 bit floating point values.
 		 */
-		typedef std::vector<float> Color;
+		using Color = std::vector<float>;
 
 	public:
 

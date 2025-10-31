@@ -37,7 +37,7 @@ class SLAMTracker;
  * @see PlanarRectangleTracker.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<SLAMTracker, OfflineTracker> SLAMTrackerRef;
+using SLAMTrackerRef = SmartObjectRef<SLAMTracker, OfflineTracker>;
 
 /**
  * This class implements a SLAM (Simultaneous Localization and Mapping) tracker for arbitrary environments and camera movements.
@@ -53,7 +53,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT SLAMTracker : public FrameTracker
 		/**
 		 * Definition of a map mapping frame indices to transformations e.g., camera poses or object transformations.
 		 */
-		typedef std::map<unsigned int, HomogenousMatrix4> TransformationMap;
+		using TransformationMap = std::map<unsigned int, HomogenousMatrix4>;
 
 	protected:
 

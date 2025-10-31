@@ -420,7 +420,7 @@ void FrameInterpolatorTrilinear::homography8BitPerChannelSubset(const FramePyram
 	const Scalar scalarWidth_1 = Scalar(width - 1u);
 	const Scalar scalarHeight_1 = Scalar(height - 1u);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	PixelType zeroColor;
 	memset(&zeroColor, 0x00, sizeof(PixelType));

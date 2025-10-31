@@ -34,7 +34,7 @@ class OfflineTracker;
  * Definition of an object reference holding an offline tracker object.
  * @ingroup trackingoffline
  */
-typedef ObjectRef<OfflineTracker> OfflineTrackerRef;
+using OfflineTrackerRef = ObjectRef<OfflineTracker>;
 
 /**
  * This class is the base class for all offline tracker objects.
@@ -102,7 +102,7 @@ class OCEAN_TRACKING_OFFLINE_EXPORT OfflineTracker : protected Thread
 		 * Definition of a component event callback function.
 		 * The first parameter provides the event.
 		 */
-		typedef Callback<void, const TrackerEvent&> EventCallback;
+		using EventCallback = Callback<void, const TrackerEvent&>;
 
 		/**
 		 * Frees the offline tracker object.
@@ -229,12 +229,12 @@ class OCEAN_TRACKING_OFFLINE_EXPORT OfflineTracker : protected Thread
 		/**
 		 * Definition of a vector holding EventStackLayer objects which actually is used to implement a stack of these objects.
 		 */
-		typedef std::vector<EventStackLayer> EventStack;
+		using EventStack = std::vector<EventStackLayer>;
 
 		/**
 		 * Definition of a vector holding event callback functions.
 		 */
-		typedef ConcurrentCallbacks<EventCallback> EventCallbacks;
+		using EventCallbacks = ConcurrentCallbacks<EventCallback>;
 
 	public:
 

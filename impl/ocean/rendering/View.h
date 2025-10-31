@@ -36,7 +36,7 @@ class View;
  * @see SmartObjectRef, View.
  * @ingroup rendering
  */
-typedef SmartObjectRef<View> ViewRef;
+using ViewRef = SmartObjectRef<View>;
 
 /**
  * This class is the base class for all rendering views.
@@ -49,7 +49,7 @@ class OCEAN_RENDERING_EXPORT View : virtual public Object
 		/**
 		 * Definition of a vector holding background objects.
 		 */
-		typedef std::vector<BackgroundRef> Backgrounds;
+		using Backgrounds = std::vector<BackgroundRef>;
 
 	public:
 

@@ -29,7 +29,7 @@ class AttributeSet;
  * @see SmartObjectRef, AttributeSet.
  * @ingroup rendering
  */
-typedef SmartObjectRef<AttributeSet> AttributeSetRef;
+using AttributeSetRef = SmartObjectRef<AttributeSet>;
 
 /**
  * This class is the base class for all attribute set objects.
@@ -46,7 +46,7 @@ class OCEAN_RENDERING_EXPORT AttributeSet : virtual public Object
 		/**
 		 * Definition of a set holding attribute objects.
 		 */
-		typedef std::set<AttributeRef> Attributes;
+		using Attributes = std::set<AttributeRef>;
 
 	public:
 

@@ -32,271 +32,271 @@ class OCEAN_PLATFORM_GL_EXPORT Context
 		/**
 		 * Definition of a set holding strings.
 		 */
-		typedef std::set<std::string> StringSet;
+		using StringSet = std::set<std::string>;
 
 		/**
 		 * Definition of the glGetStringi function pointer type.
 		 */
-		typedef const GLubyte*(*glGetStringiFunction)(GLenum, GLuint);
+		using glGetStringiFunction = const GLubyte* (*)(GLenum, GLuint);
 
 		/**
 		 * Definition of the glGenFramebuffers function pointer type.
 		 */
-		typedef void (*glGenFramebuffersFunction)(GLsizei, GLuint*);
+		using glGenFramebuffersFunction = void (*)(GLsizei, GLuint*);
 
 		/**
 		 * Definition of the glDeleteFramebuffers function pointer type.
 		 */
-		typedef void (*glDeleteFramebuffersFunction)(GLsizei, const GLuint*);
+		using glDeleteFramebuffersFunction = void (*)(GLsizei, const GLuint*);
 
 		/**
 		 * Definition of the glBindFramebuffer function pointer type.
 		 */
-		typedef void (*glBindFramebufferFunction)(GLenum, GLuint);
+		using glBindFramebufferFunction = void (*)(GLenum, GLuint);
 
 		/**
 		 * Definition of the glGenRenderbuffers function pointer type.
 		 */
-		typedef void (*glGenRenderbuffersFunction)(GLsizei, GLuint*);
+		using glGenRenderbuffersFunction = void (*)(GLsizei, GLuint*);
 
 		/**
 		 * Definition of the glDeleteRenderbuffers function pointer type.
 		 */
-		typedef void (*glDeleteRenderbuffersFunction)(GLsizei, const GLuint*);
+		using glDeleteRenderbuffersFunction = void (*)(GLsizei, const GLuint*);
 
 		/**
 		 * Definition of the glBindRenderbuffer function pointer type.
 		 */
-		typedef void (*glBindRenderbufferFunction)(GLenum, GLuint);
+		using glBindRenderbufferFunction = void (*)(GLenum, GLuint);
 
 		/**
 		 * Definition of the glRenderbufferStorage function pointer type.
 		 */
-		typedef void (*glRenderbufferStorageFunction)(GLenum, GLenum, GLsizei, GLsizei);
+		using glRenderbufferStorageFunction = void (*)(GLenum, GLenum, GLsizei, GLsizei);
 
 		/**
 		 * Definition of the glRenderbufferStorageMultisample function pointer type.
 		 */
-		typedef void (*glRenderbufferStorageMultisampleFunction)(GLenum, GLsizei, GLenum, GLsizei, GLsizei);
+		using glRenderbufferStorageMultisampleFunction = void (*)(GLenum, GLsizei, GLenum, GLsizei, GLsizei);
 
 		/**
 		 * Definition of the glFramebufferRenderbuffer function pointer type.
 		 */
-		typedef void (*glFramebufferRenderbufferFunction)(GLenum, GLenum, GLenum, GLuint);
+		using glFramebufferRenderbufferFunction = void (*)(GLenum, GLenum, GLenum, GLuint);
 
 		/**
 		 * Definition of the glBlitFramebuffer function pointer type.
 		 */
-		typedef void(*glBlitFramebufferFunction)(GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLbitfield, GLenum);
+		using glBlitFramebufferFunction = void (*)(GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLint, GLbitfield, GLenum);
 
 		/**
 		 * Definition of the glCheckFramebufferStatus function pointer type.
 		 */
-		typedef GLenum (*glCheckFramebufferStatusFunction)(GLenum);
+		using glCheckFramebufferStatusFunction = GLenum (*)(GLenum);
 
 		/**
 		 * Definition of the glGenBuffers function pointer type.
 		 */
-		typedef void (*glGenBuffersFunction)(GLsizei, GLuint*);
+		using glGenBuffersFunction = void (*)(GLsizei, GLuint*);
 
 		/**
 		 * Definition of the glDeleteBuffers function pointer type.
 		 */
-		typedef void (*glDeleteBuffersFunction)(GLsizei, const GLuint*);
+		using glDeleteBuffersFunction = void (*)(GLsizei, const GLuint*);
 
 		/**
 		 * Definition of the glBindBuffer function pointer type.
 		 */
-		typedef void (*glBindBufferFunction)(GLenum, GLuint);
+		using glBindBufferFunction = void (*)(GLenum, GLuint);
 
 		/**
 		 * Definition of the glBufferData function pointer type.
 		 */
-		typedef void (*glBufferDataFunction)(GLenum, GLsizeiptr, const GLvoid*, GLenum);
+		using glBufferDataFunction = void (*)(GLenum, GLsizeiptr, const GLvoid*, GLenum);
 
 		/**
 		 * Definition of the glCreateProgram function pointer type.
 		 */
-		typedef GLuint (*glCreateProgramFunction)();
+		using glCreateProgramFunction = GLuint (*)();
 
 		/**
 		 * Definition of the glDeleteProgram function pointer type.
 		 */
-		typedef void (*glDeleteProgramFunction)(GLuint);
+		using glDeleteProgramFunction = void (*)(GLuint);
 
 		/**
 		 * Definition of the glIsProgram function pointer type.
 		 */
-		typedef GLboolean (*glIsProgramFunction)(GLuint);
+		using glIsProgramFunction = GLboolean (*)(GLuint);
 
 		/**
 		 * Definition of the glAttachShader function pointer type.
 		 */
-		typedef void (*glAttachShaderFunction)(GLuint, GLuint);
+		using glAttachShaderFunction = void (*)(GLuint, GLuint);
 
 		/**
 		 * Definition of the glDetachShader function pointer type.
 		 */
-		typedef void (*glDetachShaderFunction)(GLuint, GLuint);
+		using glDetachShaderFunction = void (*)(GLuint, GLuint);
 
 		/**
 		 * Definition of the glLinkProgram function pointer type.
 		 */
-		typedef void (*glLinkProgramFunction)(GLuint);
+		using glLinkProgramFunction = void (*)(GLuint);
 
 		/**
 		 * Definition of the glUseProgram function pointer type.
 		 */
-		typedef void (*glUseProgramFunction)(GLuint);
+		using glUseProgramFunction = void (*)(GLuint);
 
 		/**
 		 * Definition of the glCreateShader function pointer type.
 		 */
-		typedef GLuint (*glCreateShaderFunction)(GLenum);
+		using glCreateShaderFunction = GLuint (*)(GLenum);
 
 		/**
 		 * Definition of the glDeleteShader function pointer type.
 		 */
-		typedef void (*glDeleteShaderFunction)(GLuint);
+		using glDeleteShaderFunction = void (*)(GLuint);
 
 		/**
 		 * Definition of the glCompileShader function pointer type.
 		 */
-		typedef void (*glCompileShaderFunction)(GLuint);
+		using glCompileShaderFunction = void (*)(GLuint);
 
 		/**
 		 * Definition of the glShaderSource function pointer type.
 		 */
-		typedef void (*glShaderSourceFunction)(GLuint, GLsizei, const GLchar**, const GLint*);
+		using glShaderSourceFunction = void (*)(GLuint, GLsizei, const GLchar**, const GLint*);
 
 		/**
 		 * Definition of the glGetProgramiv function pointer type.
 		 */
-		typedef void (*glGetProgramivFunction)(GLuint, GLenum, GLint*);
+		using glGetProgramivFunction = void (*)(GLuint, GLenum, GLint*);
 
 		/**
 		 * Definition of the glGetShaderiv function pointer type.
 		 */
-		typedef void (*glGetShaderivFunction)(GLuint, GLenum, GLint*);
+		using glGetShaderivFunction = void (*)(GLuint, GLenum, GLint*);
 
 		/**
 		 * Definition of the glGetProgramInfoLog function pointer type.
 		 */
-		typedef void (*glGetProgramInfoLogFunction)(GLuint, GLsizei, GLsizei*, GLchar*);
+		using glGetProgramInfoLogFunction = void (*)(GLuint, GLsizei, GLsizei*, GLchar*);
 
 		/**
 		 * Definition of the glGetShaderInfoLog function pointer type.
 		 */
-		typedef void (*glGetShaderInfoLogFunction)(GLuint, GLsizei, GLsizei*, GLchar*);
+		using glGetShaderInfoLogFunction = void (*)(GLuint, GLsizei, GLsizei*, GLchar*);
 
 		/**
 		 * Definition of the glGetAttribLocation function pointer type.
 		 */
-		typedef GLint (*glGetAttribLocationFunction)(GLuint, const GLchar*);
+		using glGetAttribLocationFunction = GLint (*)(GLuint, const GLchar*);
 
 		/**
 		 * Definition of the glGetUniformLocation function pointer type.
 		 */
-		typedef GLint (*glGetUniformLocationFunction)(GLuint, const GLchar*);
+		using glGetUniformLocationFunction = GLint (*)(GLuint, const GLchar*);
 
 		/**
 		 * Definition of the glUniform1i function pointer type.
 		 */
-		typedef void (*glUniform1iFunction)(GLint, GLint);
+		using glUniform1iFunction = void (*)(GLint, GLint);
 
 		/**
 		 * Definition of the glUniform1fv function pointer type.
 		 */
-		typedef void (*glUniform1fvFunction)(GLint, GLsizei, const GLfloat*);
+		using glUniform1fvFunction = void (*)(GLint, GLsizei, const GLfloat*);
 
 		/**
 		 * Definition of the glUniform2fv function pointer type.
 		 */
-		typedef void (*glUniform2fvFunction)(GLint, GLsizei, const GLfloat*);
+		using glUniform2fvFunction = void (*)(GLint, GLsizei, const GLfloat*);
 
 		/**
 		 * Definition of the glUniform3fv function pointer type.
 		 */
-		typedef void (*glUniform3fvFunction)(GLint, GLsizei, const GLfloat*);
+		using glUniform3fvFunction = void (*)(GLint, GLsizei, const GLfloat*);
 
 		/**
 		 * Definition of the glUniform4fv function pointer type.
 		 */
-		typedef void (*glUniform4fvFunction)(GLint, GLsizei, const GLfloat*);
+		using glUniform4fvFunction = void (*)(GLint, GLsizei, const GLfloat*);
 
 		/**
 		 * Definition of the glUniformMatrix3fv function pointer type.
 		 */
-		typedef void(*glUniformMatrix3fvFunction)(GLint, GLsizei, GLboolean, const GLfloat*);
+		using glUniformMatrix3fvFunction = void (*)(GLint, GLsizei, GLboolean, const GLfloat*);
 
 		/**
 		 * Definition of the glUniformMatrix4fv function pointer type.
 		 */
-		typedef void (*glUniformMatrix4fvFunction)(GLint, GLsizei, GLboolean, const GLfloat*);
+		using glUniformMatrix4fvFunction = void (*)(GLint, GLsizei, GLboolean, const GLfloat*);
 
 		/**
 		 * Definition of the glEnableVertexAttribArray function pointer type.
 		 */
-		typedef void (*glEnableVertexAttribArrayFunction)(GLuint);
+		using glEnableVertexAttribArrayFunction = void (*)(GLuint);
 
 		/**
 		 * Definition of the glDisableVertexAttribArray function pointer type.
 		 */
-		typedef void (*glDisableVertexAttribArrayFunction)(GLuint);
+		using glDisableVertexAttribArrayFunction = void (*)(GLuint);
 
 		/**
 		 * Definition of the glVertexAttribPointer function pointer type.
 		 */
-		typedef void (*glVertexAttribPointerFunction)(GLuint, GLint, GLenum, GLboolean, GLsizei, const GLvoid*);
+		using glVertexAttribPointerFunction = void (*)(GLuint, GLint, GLenum, GLboolean, GLsizei, const GLvoid*);
 
 		/**
 		 * Definition of the glActiveTexture function pointer type.
 		 */
-		typedef void (*glActiveTextureFunction)(GLenum);
+		using glActiveTextureFunction = void (*)(GLenum);
 
 		/**
 		 * Definition of the glGenerateMipmap function pointer type.
 		 */
-		typedef void (*glGenerateMipmapFunction)(GLenum);
+		using glGenerateMipmapFunction = void (*)(GLenum);
 
 		/**
 		 * Definition of the glBlendFuncSeparate function pointer type.
 		 */
-		typedef void (*glBlendFuncSeparateFunction)(GLenum, GLenum, GLenum, GLenum);
+		using glBlendFuncSeparateFunction = void (*)(GLenum, GLenum, GLenum, GLenum);
 
 		/**
 		 * Definition of the glTexImage2DMultisample function pointer type.
 		 */
-		typedef void (*glTexImage2DMultisampleFunction)(GLenum, GLsizei, GLenum, GLsizei, GLsizei, GLboolean);
+		using glTexImage2DMultisampleFunction = void (*)(GLenum, GLsizei, GLenum, GLsizei, GLsizei, GLboolean);
 
 		/**
 		 * Definition of the glFramebufferTexture2D function pointer type.
 		 */
-		typedef void (*glFramebufferTexture2DFunction)(GLenum, GLenum, GLenum, GLuint, GLint);
+		using glFramebufferTexture2DFunction = void (*)(GLenum, GLenum, GLenum, GLuint, GLint);
 
 		/**
 		 * Definition of the glBindFragDataLocation function pointer type.
 		 */
-		typedef void (*glBindFragDataLocationFunction)(GLuint, GLuint, const char*);
+		using glBindFragDataLocationFunction = void (*)(GLuint, GLuint, const char*);
 
 		/**
 		 * Definition of the glGenVertexArrays function pointer type.
 		 */
-		typedef void (*glGenVertexArraysFunction)(GLsizei, GLuint*);
+		using glGenVertexArraysFunction = void (*)(GLsizei, GLuint*);
 
 		/**
 		 * Definition of the glDeleteVertexArrays function pointer type.
 		 */
-		typedef void (*glDeleteVertexArraysFunction)(GLsizei, const GLuint*);
+		using glDeleteVertexArraysFunction = void (*)(GLsizei, const GLuint*);
 
 		/**
 		 * Definition of the glBindVertexArray function pointer type.
 		 */
-		typedef void(*glBindVertexArrayFunction)(GLuint);
+		using glBindVertexArrayFunction = void (*)(GLuint);
 
 #ifdef _WINDOWS
 
-		typedef HGLRC (*wglCreateContextAttribsARBFunction)(HDC, HGLRC, const int*);
+		using wglCreateContextAttribsARBFunction = HGLRC (*)(HDC, HGLRC, const int*);
 
 #endif
 

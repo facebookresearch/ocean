@@ -45,13 +45,13 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT OculusTagDetector
 	public:
 
 		/// A data structure to map tag IDs to tag sizes
-		typedef std::unordered_map<uint32_t, Scalar> TagSizeMap;
+		using TagSizeMap = std::unordered_map<uint32_t, Scalar>;
 
 		/// Definition of boundary patterns (quadrilaterals) which are Oculus tag candidates
-		typedef std::array<Vector2, 4> BoundaryPattern;
+		using BoundaryPattern = std::array<Vector2, 4>;
 
 		/// A vector of boundary patterns
-		typedef std::vector<BoundaryPattern> BoundaryPatterns;
+		using BoundaryPatterns = std::vector<BoundaryPattern>;
 
 	public:
 

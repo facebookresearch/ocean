@@ -25,7 +25,7 @@ class PrimitiveAttribute;
  * @see SmartObjectRef, PrimitiveAttribute.
  * @ingroup rendering
  */
-typedef SmartObjectRef<PrimitiveAttribute> PrimitiveAttributeRef;
+using PrimitiveAttributeRef = SmartObjectRef<PrimitiveAttribute>;
 
 /**
  * This class implements an attribute specifying face and culling properties of primitives.

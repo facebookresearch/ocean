@@ -56,7 +56,7 @@ namespace Rendering
  * Definition of a object id.
  * @ingroup rendering
  */
-typedef size_t ObjectId;
+using ObjectId = size_t;
 
 /**
  * Definition of an invalid object id.
@@ -68,7 +68,7 @@ const ObjectId invalidObjectId = ObjectId(-1);
  * Definition of a vertex index.
  * @ingroup rendering
  */
-typedef unsigned int VertexIndex;
+using VertexIndex = unsigned int;
 
 /**
  * Definition of an invalid vertex index.
@@ -80,49 +80,49 @@ constexpr VertexIndex invalidIndex = VertexIndex(-1);
  * Definition of a 3D normal.
  * @ingroup rendering
  */
-typedef Vector3 Normal;
+using Normal = Vector3;
 
 /**
  * Definition of a 2D texture coordinate.
  * @ingroup rendering
  */
-typedef Vector2 TextureCoordinate;
+using TextureCoordinate = Vector2;
 
 /**
  * Definition of a 3D vertex.
  * @ingroup rendering
  */
-typedef Vector3 Vertex;
+using Vertex = Vector3;
 
 /**
  * Definition of a vector holding vertex indices.
  * @ingroup rendering
  */
-typedef std::vector<VertexIndex> VertexIndices;
+using VertexIndices = std::vector<VertexIndex>;
 
 /**
  * Definition of a vector holding normals.
  * @ingroup rendering
  */
-typedef std::vector<Normal> Normals;
+using Normals = std::vector<Normal>;
 
 /**
  * Definition of a vector holding texture coordinates.
  * @ingroup rendering
  */
-typedef std::vector<TextureCoordinate> TextureCoordinates;
+using TextureCoordinates = std::vector<TextureCoordinate>;
 
 /**
  * Definition of a vector holding vertices.
  * @ingroup rendering
  */
-typedef std::vector<Vertex> Vertices;
+using Vertices = std::vector<Vertex>;
 
 /**
  * Definition of a vector holding vertex indices.
  * @ingroup rendering
  */
-typedef std::vector<VertexIndices> VertexIndexGroups;
+using VertexIndexGroups = std::vector<VertexIndices>;
 
 // Defines OCEAN_RENDERING_EXPORT for dll export and import.
 #if defined(_WINDOWS) && defined(OCEAN_RUNTIME_SHARED)

@@ -25,7 +25,7 @@ class BlendAttribute;
  * @see SmartObjectRef, BlendAttribute.
  * @ingroup rendering
  */
-typedef SmartObjectRef<BlendAttribute> BlendAttributeRef;
+using BlendAttributeRef = SmartObjectRef<BlendAttribute>;
 
 /**
  * This class is the base class for all blend attributes.

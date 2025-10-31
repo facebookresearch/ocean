@@ -119,7 +119,7 @@ class Clustering
 		/**
 		 * Definition of a vector holding data object.
 		 */
-		typedef std::vector<Data> Datas;
+		using Datas = std::vector<Data>;
 
 		/**
 		 * This class implements a single cluster for 3 channel 24 bit data objects.
@@ -228,7 +228,7 @@ class Clustering
 		};
 
 		/// Definition of a vector holding cluster objects.
-		typedef std::vector<Cluster> Clusters;
+		using Clusters = std::vector<Cluster>;
 
 		/**
 		 * This class implements the management of clusters.

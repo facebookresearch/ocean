@@ -123,8 +123,8 @@ inline void FrameFilterGradientBase::filterHorizontalVertical(const TSource* sou
 template <typename TSource, typename TTarget, unsigned int tChannels, bool tNormalizeByTwo>
 inline void FrameFilterGradientBase::filterHorizontalVerticalMagnitudeSquared(const TSource* source, TTarget* target, const unsigned int width, const unsigned int height, const TTarget multiplicationFactor, Worker* worker)
 {
-	typedef typename NextLargerTyper<TSource>::TypePerformance TSourceLarger;
-	typedef typename SignedTyper<TSourceLarger>::Type TSourceLargerSigned;
+	using TSourceLarger = typename NextLargerTyper<TSource>::TypePerformance;
+	using TSourceLargerSigned = typename SignedTyper<TSourceLarger>::Type;
 
 	applyPixelModifier<TSource, TTarget, tChannels, TSourceLargerSigned, horizontalVerticalMagnitudeSquared<TSourceLargerSigned, TTarget, tNormalizeByTwo>>(source, target, width, height, multiplicationFactor, worker);
 }
@@ -165,7 +165,7 @@ void FrameFilterGradientBase::filterHorizontalVerticalSubset(const TSource* sour
 
 	ocean_assert(firstRow + numberRows <= height);
 
-	typedef typename NextLargerTyper<TTarget>::TypePerformance TTargetLarger;
+	using TTargetLarger = typename NextLargerTyper<TTarget>::TypePerformance;
 
 	const unsigned int sourceStrideElements = width * tChannels + sourcePaddingElements;
 	const unsigned int targetStrideElements = width * tChannels * 2u + targetPaddingElements;
@@ -433,7 +433,7 @@ void FrameFilterGradientBase::filterHorizontalVerticalSubFrameSubset(const TSour
 
 	ocean_assert_and_suppress_unused(firstTargetRow + numberTargetRows <= targetHeight, targetHeight);
 
-	typedef typename NextLargerTyper<TTarget>::TypePerformance TTargetLarger;
+	using TTargetLarger = typename NextLargerTyper<TTarget>::TypePerformance;
 
 	const unsigned int sourceStrideElements = sourceWidth * tChannels + sourcePaddingElements;
 	const unsigned int targetStrideElements = targetWidth * tChannels * 2u + targetPaddingElements;

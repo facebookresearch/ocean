@@ -43,7 +43,7 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT OculusTag
 		};
 
 		/// Data structure for the payload of the code: 4 x 4 = 16 bits
-		typedef uint16_t DataMatrix;
+		using DataMatrix = uint16_t;
 
 	public:
 
@@ -133,13 +133,13 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT OculusTag
  * A vector of Oculus tags.
  * @ingroup trackingoculustags
  */
-typedef std::vector<OculusTag> OculusTags;
+using OculusTags = std::vector<OculusTag>;
 
 /**
  * A data structure to map tag IDs to tag sizes.
  * @ingroup trackingoculustags
  */
-typedef std::unordered_map<uint32_t, Scalar> TagSizeMap;
+using TagSizeMap = std::unordered_map<uint32_t, Scalar>;
 
 inline uint32_t OculusTag::tagID() const
 {

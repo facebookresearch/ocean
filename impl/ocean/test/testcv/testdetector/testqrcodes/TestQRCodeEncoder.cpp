@@ -487,7 +487,7 @@ bool TestQRCodeEncoder::convertCSVToQRCodeVerificationItem(const std::string& li
 		return false;
 	}
 
-	typedef std::unordered_map<std::string, QRCode::ErrorCorrectionCapacity> TokenStringToErrorCorrectionCapacityMap;
+	using TokenStringToErrorCorrectionCapacityMap = std::unordered_map<std::string, QRCode::ErrorCorrectionCapacity>;
 
 	const TokenStringToErrorCorrectionCapacityMap tokenStringToErrorCorrectionCapacityMap =
 	{
@@ -497,7 +497,7 @@ bool TestQRCodeEncoder::convertCSVToQRCodeVerificationItem(const std::string& li
 		std::make_pair(std::string("ECC_HIGH_30"), QRCode::ECC_30)
 	};
 
-	typedef std::unordered_map<std::string, QRCodeEncoder::MaskingPattern> TokenStringToMaskingPatternMap;
+	using TokenStringToMaskingPatternMap = std::unordered_map<std::string, QRCodeEncoder::MaskingPattern>;
 
 	const TokenStringToMaskingPatternMap tokenStringToMaskingPatternMap =
 	{

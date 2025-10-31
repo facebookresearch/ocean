@@ -42,17 +42,17 @@ class OCEAN_RENDERING_GLES_EXPORT GLESProgramManager : public Singleton<GLESProg
 		/**
 		 * Definition of a vector holding pointers to shader codes.
 		 */
-		typedef std::vector<const char*> ShaderCodes;
+		using ShaderCodes = std::vector<const char*>;
 
 		/**
 		 * Definition of a map mapping shader codes to compiled shader objects.
 		 */
-		typedef std::map<ShaderCodes, GLESShaderRef> ShaderMap;
+		using ShaderMap = std::map<ShaderCodes, GLESShaderRef>;
 
 		/**
 		 * Definition of an unordered map mapping program types to program objects.
 		 */
-		typedef std::unordered_map<GLESAttribute::ProgramType, GLESShaderProgramRef> ProgramMap;
+		using ProgramMap = std::unordered_map<GLESAttribute::ProgramType, GLESShaderProgramRef>;
 
 	public:
 

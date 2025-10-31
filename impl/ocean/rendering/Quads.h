@@ -26,7 +26,7 @@ class Quads;
  * @see SmartObjectRef, Quads.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Quads> QuadsRef;
+using QuadsRef = SmartObjectRef<Quads>;
 
 /**
  * This class is the base class for all rendering quads.

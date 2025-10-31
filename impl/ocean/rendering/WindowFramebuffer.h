@@ -25,7 +25,7 @@ class WindowFramebuffer;
  * @see SmartObjectRef, WindowFramebuffer.
  * @ingroup rendering
  */
-typedef SmartObjectRef<WindowFramebuffer> WindowFramebufferRef;
+using WindowFramebufferRef = SmartObjectRef<WindowFramebuffer>;
 
 /**
  * This class is the base class for all window framebuffers.

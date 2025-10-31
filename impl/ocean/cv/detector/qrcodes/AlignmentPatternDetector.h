@@ -77,7 +77,7 @@ class AlignmentPattern
 };
 
 /// Definition of a vector of alignment patterns
-typedef std::vector<AlignmentPattern> AlignmentPatterns;
+using AlignmentPatterns = std::vector<AlignmentPattern>;
 
 /**
  * This class implements a detector for alignment patterns inside QR codes.

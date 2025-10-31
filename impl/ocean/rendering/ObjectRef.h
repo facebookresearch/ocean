@@ -69,12 +69,12 @@ class OCEAN_RENDERING_EXPORT ObjectRefManager : public Singleton<ObjectRefManage
 		/**
 		 * Definition of a multimap mapping object names to object ids.
 		 */
-		typedef std::unordered_multimap<std::string, ObjectId> NameMap;
+		using NameMap = std::unordered_multimap<std::string, ObjectId>;
 
 		/**
 		 * Definition of a map mapping object ids to object references.
 		 */
-		typedef std::unordered_map<ObjectId, ObjectRef> ObjectMap;
+		using ObjectMap = std::unordered_map<ObjectId, ObjectRef>;
 
 	public:
 

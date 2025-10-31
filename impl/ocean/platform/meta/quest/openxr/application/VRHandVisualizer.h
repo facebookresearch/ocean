@@ -161,7 +161,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRHandVisualizer : pub
 		/**
 		 * Definition of a vector holding state objects.
 		 */
-		typedef std::vector<ScopedState> ScopedStates;
+		using ScopedStates = std::vector<ScopedState>;
 
 	public:
 

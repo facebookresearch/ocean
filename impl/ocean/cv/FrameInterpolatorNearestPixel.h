@@ -36,7 +36,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorNearestPixel
 	public:
 
 		/// Definition of a lookup table for 2D vectors.
-		typedef LookupCorner2<Vector2> LookupTable;
+		using LookupTable = LookupCorner2<Vector2>;
 
 	public:
 
@@ -668,7 +668,7 @@ inline void FrameInterpolatorNearestPixel::homography(const T* input, const unsi
 	// Merge the additional translation into the homography
 	const SquareMatrix3 input_H_adjustedOutput = input_H_output * SquareMatrix3(Vector3(1, 0, 0), Vector3(0, 1, 0), Vector3(Scalar(outputOrigin.x()), Scalar(outputOrigin.y()), 1));
 
-	typedef typename TypeMapper<T>::Type MappedTypeT;
+	using MappedTypeT = typename TypeMapper<T>::Type;
 
 	if (worker)
 	{
@@ -815,7 +815,7 @@ void FrameInterpolatorNearestPixel::affine8BitPerChannelSubset(const uint8_t* in
 
 	ocean_assert(firstOutputRow + numberOutputRows <= outputHeight);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -892,7 +892,7 @@ void FrameInterpolatorNearestPixel::homographySubset(const T* input, const unsig
 	const unsigned int inputStrideElements = inputWidth * tChannels + inputPaddingElements;
 	const unsigned int outputStrideElements = outputWidth * tChannels + outputPaddingElements;
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	const T zeroColor[tChannels] = {T(0)};
 	const PixelType bColor = borderColor ? *(const PixelType*)(borderColor) : *(const PixelType*)(zeroColor);
@@ -938,7 +938,7 @@ inline void FrameInterpolatorNearestPixel::affine8BitPerChannelSSESubset(const u
 
 	ocean_assert_and_suppress_unused(firstOutputRow + numberOutputRows <= outputHeight, outputHeight);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -1078,7 +1078,7 @@ void FrameInterpolatorNearestPixel::homographySSESubset(const T* input, const un
 	const unsigned int inputStrideElements = inputWidth * tChannels + inputPaddingElements;
 	const unsigned int outputStrideElements = outputWidth * tChannels + outputPaddingElements;
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	const T zeroColor[tChannels] = {T(0)};
 	const PixelType bColor = borderColor ? *(const PixelType*)(borderColor) : *(const PixelType*)(zeroColor);
@@ -1307,7 +1307,7 @@ void FrameInterpolatorNearestPixel::affine8BitPerChannelIntegerNEONSubset(const 
 
 	ocean_assert(firstOutputRow + numberOutputRows <= outputHeight);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -1496,7 +1496,7 @@ void FrameInterpolatorNearestPixel::homographyNEONSubset(const T* input, const u
 	const unsigned int inputStrideElements = inputWidth * tChannels + inputPaddingElements;
 	const unsigned int outputStrideElements = outputWidth * tChannels + outputPaddingElements;
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	const T zeroColor[tChannels] = {T(0)};
 	const PixelType bColor = borderColor ? *(const PixelType*)(borderColor) : *(const PixelType*)(zeroColor);
@@ -1679,7 +1679,7 @@ void FrameInterpolatorNearestPixel::homographyMask8BitPerChannelSubset(const uin
 	const unsigned int outputStrideElements = outputWidth * tChannels + outputPaddingElements;
 	const unsigned int outputMaskStrideElements = outputWidth + outputMaskPaddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	output += firstOutputRow * outputStrideElements;
 	outputMask += firstOutputRow * outputMaskStrideElements;
@@ -1731,7 +1731,7 @@ void FrameInterpolatorNearestPixel::transform8BitPerChannelSubset(const uint8_t*
 	const unsigned int inputStrideElements = inputWidth * tChannels + inputPaddingElements;
 	const unsigned int outputStrideElements = outputWidth * tChannels + outputPaddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)(borderColor) : (PixelType*)(zeroColor);
@@ -1809,7 +1809,7 @@ void FrameInterpolatorNearestPixel::transformMask8BitPerChannelSubset(const uint
 	const unsigned int outputStrideElements = outputWidth * tChannels + outputPaddingElements;
 	const unsigned int outputMaskStrideElements = outputWidth + outputMaskPaddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	output += firstRow * outputStrideElements;
 	outputMask += firstRow * outputMaskStrideElements;

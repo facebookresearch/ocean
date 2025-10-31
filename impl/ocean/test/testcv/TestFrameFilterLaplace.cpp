@@ -274,7 +274,7 @@ bool TestFrameFilterLaplace::validate(const Frame& frame, const Frame& response,
 	ocean_assert(frame.isPixelFormatCompatible(FrameType::genericPixelFormat<T>(1u)));
 	ocean_assert(response.isPixelFormatCompatible(FrameType::genericPixelFormat<TResponse>(1u)));
 
-	typedef typename FloatTyper<TResponse>::Type TFloat;
+	using TFloat = typename FloatTyper<TResponse>::Type;
 
 	/*
 	 * Laplace with positive peak:

@@ -27,7 +27,7 @@ class HarrisCorner;
  * Definition of a vector holding Harris corners.
  * @ingroup cvdetector
  */
-typedef std::vector<HarrisCorner> HarrisCorners;
+using HarrisCorners = std::vector<HarrisCorner>;
 
 /**
  * This class implements a Harris corner.

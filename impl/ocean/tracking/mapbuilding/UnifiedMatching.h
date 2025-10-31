@@ -286,13 +286,13 @@ class UnifiedGuidedMatchingT : public UnifiedGuidedMatching
 	public:
 
 		/// Definition of the distance data type.
-		typedef TDistance DescriptorDistance;
+		using DescriptorDistance = TDistance;
 
 		/// Definition of the descriptor for 2D image points.
-		typedef TImagePointDescriptor ImagePointDescriptor;
+		using ImagePointDescriptor = TImagePointDescriptor;
 
 		/// Definition of the descriptor for 3D object points.
-		typedef TObjectPointDescriptor ObjectPointDescriptor;
+		using ObjectPointDescriptor = TObjectPointDescriptor;
 
 		/**
 		 * Definition of an unordered map mapping object point ids to descriptors.
@@ -383,19 +383,19 @@ class UnifiedUnguidedMatchingT : public UnifiedUnguidedMatching
 	public:
 
 		/// Definition of the distance for the binary descriptor.
-		typedef TDistance DescriptorDistance;
+		using DescriptorDistance = TDistance;
 
 		/// Definition of the descriptor for 2D image points.
-		typedef TImagePointDescriptor ImagePointDescriptor;
+		using ImagePointDescriptor = TImagePointDescriptor;
 
 		/// Definition of the descriptor for 3D object points.
-		typedef TObjectPointVocabularyDescriptor ObjectPointVocabularyDescriptor;
+		using ObjectPointVocabularyDescriptor = TObjectPointVocabularyDescriptor;
 
 		/// Definition of a vocabulary forest for object point descriptors.
-		typedef Tracking::VocabularyForest<ObjectPointVocabularyDescriptor, DescriptorDistance, UnifiedDescriptorT<ObjectPointVocabularyDescriptor>::determineDistance> VocabularyForest;
+		using VocabularyForest = Tracking::VocabularyForest<ObjectPointVocabularyDescriptor, DescriptorDistance, UnifiedDescriptorT<ObjectPointVocabularyDescriptor>::determineDistance>;
 
 		/// Definition of a vocabulary tree for object point descriptors.
-		typedef typename VocabularyForest::TVocabularyTree VocabularyTree;
+		using VocabularyTree = typename VocabularyForest::TVocabularyTree;
 
 	public:
 
@@ -478,16 +478,16 @@ class UnifiedGuidedMatchingFreakMultiDescriptor256Group : public UnifiedGuidedMa
 {
 	public:
 		/// Definition of the distance for the binary descriptor.
-		typedef unsigned int DescriptorDistance;
+		using DescriptorDistance = unsigned int;
 
 		/// Definition of the descriptor for 2D image points.
-		typedef CV::Detector::FREAKDescriptor32 ImagePointDescriptor;
+		using ImagePointDescriptor = CV::Detector::FREAKDescriptor32;
 
 		/// Definition of the groups of descriptors for 2D image points.
-		typedef const CV::Detector::FREAKDescriptors32* ImagePointDescriptorGroup;
+		using ImagePointDescriptorGroup = const CV::Detector::FREAKDescriptors32*;
 
 		/// Definition of the descriptor for 3D object points (several descriptors per point possible).
-		typedef CV::Detector::FREAKDescriptors32 ObjectPointDescriptor;
+		using ObjectPointDescriptor = CV::Detector::FREAKDescriptors32;
 
 		/**
 		 * Definition of an unordered map mapping object point ids to descriptors.
@@ -560,22 +560,22 @@ class UnifiedUnguidedMatchingFreakMultiFeatures256Group : public UnifiedUnguided
 	public:
 
 		/// Definition of the distance for the binary descriptor.
-		typedef unsigned int DescriptorDistance;
+		using DescriptorDistance = unsigned int;
 
 		/// Definition of the descriptor for 2D image points.
-		typedef CV::Detector::FREAKDescriptor32 ImagePointDescriptor;
+		using ImagePointDescriptor = CV::Detector::FREAKDescriptor32;
 
 		/// Definition of the groups of descriptors for 2D image points.
-		typedef const CV::Detector::FREAKDescriptors32* ImagePointDescriptorGroup;
+		using ImagePointDescriptorGroup = const CV::Detector::FREAKDescriptors32*;
 
 		/// Definition of the descriptor for 3D object points (several descriptors per point possible).
-		typedef UnifiedDescriptor::BinaryDescriptor<256u> ObjectPointDescriptor;
+		using ObjectPointDescriptor = UnifiedDescriptor::BinaryDescriptor<256u>;
 
 		/// Definition of a vocabulary forest for object point descriptors.
-		typedef Tracking::VocabularyForest<ObjectPointDescriptor, DescriptorDistance, UnifiedDescriptorT<ObjectPointDescriptor>::determineDistance> BinaryVocabularyForest;
+		using BinaryVocabularyForest = Tracking::VocabularyForest<ObjectPointDescriptor, DescriptorDistance, UnifiedDescriptorT<ObjectPointDescriptor>::determineDistance>;
 
 		/// Definition of a vocabulary tree for object point descriptors.
-		typedef BinaryVocabularyForest::TVocabularyTree BinaryVocabularyTree;
+		using BinaryVocabularyTree = BinaryVocabularyForest::TVocabularyTree;
 
 	public:
 

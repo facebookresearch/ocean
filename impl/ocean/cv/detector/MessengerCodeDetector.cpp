@@ -289,7 +289,7 @@ MessengerCodeDetector::IndexQuartets MessengerCodeDetector::extractCodeCandidate
 	const Scalar minimalDistanceScaleFactor = Scalar(1) - distanceScaleTolerance;
 	const Scalar maximalDistanceScaleFactor = Scalar(1) + distanceScaleTolerance;
 
-	typedef StaticVector<unsigned int, 2> StaticVector;
+	using StaticVector = StaticVector<unsigned int, 2>;
 
 	// we simply iterate over every possible combination of bullseyes while using geometric constraints to keep the list of candidates as small as possible
 

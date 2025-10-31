@@ -115,7 +115,7 @@ class OCEAN_TRACKING_MAPBUILDING_EXPORT MultiViewMapCreator : public DescriptorH
 				/**
 				 * Definition of a vector holding observations.
 				 */
-				typedef std::vector<Observation> Observations;
+				using Observations = std::vector<Observation>;
 
 			public:
 
@@ -243,7 +243,7 @@ class OCEAN_TRACKING_MAPBUILDING_EXPORT MultiViewMapCreator : public DescriptorH
 		/**
 		 * Definition of a vector holding features.
 		 */
-		typedef std::vector<Feature> Features;
+		using Features = std::vector<Feature>;
 
 	public:
 

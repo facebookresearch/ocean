@@ -37,7 +37,7 @@ class SLAMPlaneTracker;
  * @see SLAMPlaneTracker.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<SLAMPlaneTracker, OfflineTracker> SLAMPlaneTrackerRef;
+using SLAMPlaneTrackerRef = SmartObjectRef<SLAMPlaneTracker, OfflineTracker>;
 
 /**
  * This class implements a SLAM tracker.
@@ -52,12 +52,12 @@ class OCEAN_TRACKING_OFFLINE_EXPORT SLAMPlaneTracker :
 		/**
 		 * Definition of a shift vector holding homographies.
 		 */
-		typedef ShiftVector<SquareMatrix3> Homographies;
+		using Homographies = ShiftVector<SquareMatrix3>;
 
 		/**
 		 * Definition of a shift vector holding image point pairs.
 		 */
-		typedef ShiftVector<Geometry::NonLinearOptimizationPlane::ImagePointsPair> ImagePointsPairs;
+		using ImagePointsPairs = ShiftVector<Geometry::NonLinearOptimizationPlane::ImagePointsPair>;
 
 		/**
 		 * This class implements a homography tracker component that determines an accurate homography for the planar tracking sub-region between successive frames.
@@ -71,12 +71,12 @@ class OCEAN_TRACKING_OFFLINE_EXPORT SLAMPlaneTracker :
 				/**
 				 * Definition of a pair of normals.
 				 */
-				typedef std::pair<Vector3, Vector3> NormalPair;
+				using NormalPair = std::pair<Vector3, Vector3>;
 
 				/**
 				 * Definition of a shift vector holding normal pairs.
 				 */
-				typedef ShiftVector<NormalPair> NormalPairs;
+				using NormalPairs = ShiftVector<NormalPair>;
 
 			public:
 

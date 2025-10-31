@@ -62,17 +62,17 @@ class OCEAN_PLATFORM_META_QUEST_PLATFORMSDK_EXPORT Manager :
 		/**
 		 * Definition of an unordered map mapping message requests to response callback functions.
 		 */
-		typedef std::unordered_map<ovrRequest, ResponseCallback> RequestMap;
+		using RequestMap = std::unordered_map<ovrRequest, ResponseCallback>;
 
 		/**
 		 * Definition of a pair combining a response callback with a subscription id.
 		 */
-		typedef std::pair<ResponseCallback, unsigned int> ResponseSubscriptionPair;
+		using ResponseSubscriptionPair = std::pair<ResponseCallback, unsigned int>;
 
 		/**
 		 * Definition of an unordered multi-map mapping message types to response subscription pairs.
 		 */
-		typedef std::unordered_multimap<ovrMessageType, ResponseSubscriptionPair> ResponseTypeSubscriptionMap;
+		using ResponseTypeSubscriptionMap = std::unordered_multimap<ovrMessageType, ResponseSubscriptionPair>;
 
 	public:
 

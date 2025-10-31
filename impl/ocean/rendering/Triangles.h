@@ -26,7 +26,7 @@ class Triangles;
  * @see SmartObjectRef, Triangles.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Triangles> TrianglesRef;
+using TrianglesRef = SmartObjectRef<Triangles>;
 
 /**
  * This class is the base for all triangles objects.

@@ -37,7 +37,7 @@ class OCEAN_TEST_CV_EXPORT TestNEON
 		 * @param source1 The lower source row, must be valid
 		 * @param target The resulting averaged elements, must be valid
 		 */
-		typedef void (*AveragingFunction)(const unsigned char* const source0, const unsigned char* const source1, unsigned char* const target);
+		using AveragingFunction = void (*)(const unsigned char* const source0, const unsigned char* const source1, unsigned char* const target);
 
 	public:
 

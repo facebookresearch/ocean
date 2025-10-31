@@ -28,7 +28,7 @@ class FrameProviderInterface;
  * @see FrameProviderInterface;
  * @ingroup cv
  */
-typedef ObjectRef<FrameProviderInterface> FrameProviderInterfaceRef;
+using FrameProviderInterfaceRef = ObjectRef<FrameProviderInterface>;
 
 /**
  * This class defines an abstract interface allowing to request frames from any kind of frame provider.
@@ -44,34 +44,34 @@ class OCEAN_CV_EXPORT FrameProviderInterface
 		 * Definition of a frame request callback function.
 		 * A frame request callback is invoked by the interface whenever a requested frame arrives.
 		 */
-		typedef Callback<void, FrameRef, const unsigned int> FrameCallback;
+		using FrameCallback = Callback<void, FrameRef, const unsigned int>;
 
 		/**
 		 * Definition of a frame number request callback function.
 		 */
-		typedef Callback<void, unsigned int> FrameNumberCallback;
+		using FrameNumberCallback = Callback<void, unsigned int>;
 
 		/**
 		 * Definition of a frame type request callback function.
 		 */
-		typedef Callback<void, const FrameType&> FrameTypeCallback;
+		using FrameTypeCallback = Callback<void, const FrameType&>;
 
 	protected:
 
 		/**
 		 * Definition of a list that stores frame request callbacks.
 		 */
-		typedef ConcurrentCallbacks<FrameCallback> FrameCallbacks;
+		using FrameCallbacks = ConcurrentCallbacks<FrameCallback>;
 
 		/**
 		 * Definition of a list that stores frame number request callbacks.
 		 */
-		typedef ConcurrentCallbacks<FrameNumberCallback> FrameNumberCallbacks;
+		using FrameNumberCallbacks = ConcurrentCallbacks<FrameNumberCallback>;
 
 		/**
 		 * Definition of a list that stores frame type request callbacks.
 		 */
-		typedef ConcurrentCallbacks<FrameTypeCallback> FrameTypeCallbacks;
+		using FrameTypeCallbacks = ConcurrentCallbacks<FrameTypeCallback>;
 
 	public:
 

@@ -42,13 +42,13 @@ namespace QRCodes
  * Definition of a triplet of indices
  * @ingroup cvdetectorqrcodes
  */
-typedef std::array<unsigned int, 3> IndexTriplet;
+using IndexTriplet = std::array<unsigned int, 3>;
 
 /**
  * Definition of a vector index triplets
  * @ingroup cvdetectorqrcodes
  */
-typedef std::vector<IndexTriplet> IndexTriplets;
+using IndexTriplets = std::vector<IndexTriplet>;
 
 /**
  * Definition of a class for finder patterns of QR codes (squares in the top-left, top-right and bottom-left corners)
@@ -189,13 +189,13 @@ class FinderPattern
  * Definition of a vector holding finder pattern.
  * @ingroup cvdetectorqrcodes
  */
-typedef std::vector<FinderPattern> FinderPatterns;
+using FinderPatterns = std::vector<FinderPattern>;
 
 /**
  * Definition of a 3-tuple of finder patterns
  * @ingroup cvdetectorqrcodes
  */
-typedef std::array<FinderPattern, 3> FinderPatternTriplet;
+using FinderPatternTriplet = std::array<FinderPattern, 3>;
 
 /**
  * This class implements a detector for finder patterns which are part of QR Codes.

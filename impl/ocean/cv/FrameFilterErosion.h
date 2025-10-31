@@ -35,7 +35,7 @@ class OCEAN_CV_EXPORT FrameFilterErosion : public FrameFilterMorphology
 		/**
 		 * Definition of an unordered set holding pixel positions.
 		 */
-		typedef std::unordered_set<CV::PixelPosition, CV::PixelPosition> PixelPositionSet;
+		using PixelPositionSet = std::unordered_set<CV::PixelPosition, CV::PixelPosition>;
 
 	public:
 

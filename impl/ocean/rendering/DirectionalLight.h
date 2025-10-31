@@ -27,7 +27,7 @@ class DirectionalLight;
  * @see SmartObjectRef, DirectionalLight.
  * @ingroup rendering
  */
-typedef SmartObjectRef<DirectionalLight> DirectionalLightRef;
+using DirectionalLightRef = SmartObjectRef<DirectionalLight>;
 
 /**
  * This class is the base class for all directional lights.

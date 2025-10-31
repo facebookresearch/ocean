@@ -55,7 +55,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT NativeApplication
 		 * Positive counter values indicate that the permission has been granted and the counter is used to delay the announcement of the granted permission, cf. `handlePendingAndroidPermissions()` for details.
 		 * Negative counter values are used to store the state of a permission.
 		 */
-		typedef std::unordered_map<std::string, int> AndroidPermissionMap;
+		using AndroidPermissionMap = std::unordered_map<std::string, int>;
 
 		/// The counter value for permissions not yet requested.
 		static constexpr int permissionNotYetRequested_ = -2;
@@ -66,12 +66,12 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT NativeApplication
 		/**
 		 * Definition of an unordered set holding strings.
 		 */
-		typedef std::unordered_set<std::string> StringSet;
+		using StringSet = std::unordered_set<std::string>;
 
 		/**
 		 * Definition of a vector holding XrViewConfigurationView objects.
 		 */
-		typedef std::vector<XrViewConfigurationView> XrViewConfigurationViews;
+		using XrViewConfigurationViews = std::vector<XrViewConfigurationView>;
 
 	public:
 

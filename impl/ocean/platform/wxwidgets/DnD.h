@@ -34,7 +34,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT FileDropTarget : public wxFileDropTarget
 		/**
 		 * Definition of a callback function for file drag and drop events.
 		 */
-		typedef Callback<bool, const std::vector<std::string>&> Callback;
+		using Callback = Callback<bool, const std::vector<std::string>&>;
 
 	public:
 

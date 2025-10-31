@@ -32,7 +32,7 @@ class PosePointPair;
  * Definition of a vector holding pose point pairs.
  * @ingroup trackingpoint
  */
-typedef std::vector<PosePointPair> PosePointPairs;
+using PosePointPairs = std::vector<PosePointPair>;
 
 // Forward declaration.
 class PosePointPairsObject;
@@ -41,7 +41,7 @@ class PosePointPairsObject;
  * Definition of a vector holding pose objects.
  * @ingroup trackingpoint
  */
-typedef std::vector<PosePointPairsObject> PosePointPairsObjects;
+using PosePointPairsObjects = std::vector<PosePointPairsObject>;
 
 /**
  * Definition of a simple struct combining a pose and an image point id.

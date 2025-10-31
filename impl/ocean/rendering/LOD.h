@@ -25,7 +25,7 @@ class LOD;
  * @see SmartObjectRef, LOD.
  * @ingroup rendering
  */
-typedef SmartObjectRef<LOD> LODRef;
+using LODRef = SmartObjectRef<LOD>;
 
 /**
  * This class is the base class for all level-of-detail nodes.
@@ -38,7 +38,7 @@ class OCEAN_RENDERING_EXPORT LOD : virtual public Group
 		/**
 		 * Definition of a vector holding distance ranges.
 		 */
-		typedef std::vector<Scalar> DistanceRanges;
+		using DistanceRanges = std::vector<Scalar>;
 
 	public:
 

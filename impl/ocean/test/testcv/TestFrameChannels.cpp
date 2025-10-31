@@ -3615,7 +3615,7 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo1Channel(const double t
 
 	bool allSucceeded = true;
 
-	typedef std::vector<unsigned char> Elements;
+	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
 
@@ -3737,7 +3737,7 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels6BitPrecision(
 
 	bool allSucceeded = true;
 
-	typedef std::vector<unsigned char> Elements;
+	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
 
@@ -3858,7 +3858,7 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels7BitPrecision(
 
 	bool allSucceeded = true;
 
-	typedef std::vector<unsigned char> Elements;
+	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
 
@@ -3985,7 +3985,7 @@ bool TestFrameChannels::testRowPixelConversion3ChannelsTo3Channels10BitPrecision
 
 	bool allSucceeded = true;
 
-	typedef std::vector<unsigned char> Elements;
+	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
 
@@ -4086,7 +4086,7 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo1Channel(const double t
 
 	bool allSucceeded = true;
 
-	typedef std::vector<unsigned char> Elements;
+	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
 
@@ -4240,7 +4240,7 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo2Channels(const double 
 
 	bool allSucceeded = true;
 
-	typedef std::vector<unsigned char> Elements;
+	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
 
@@ -4339,7 +4339,7 @@ bool TestFrameChannels::testRowPixelConversion4ChannelsTo3Channels(const double 
 
 	bool allSucceeded = true;
 
-	typedef std::vector<unsigned char> Elements;
+	using Elements = std::vector<unsigned char>;
 
 	RandomGenerator randomGenerator;
 

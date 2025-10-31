@@ -3839,7 +3839,7 @@ bool Solver3::determinePlane(const Database& database, const PinholeCamera& pinh
 	if (!database.hasPose<false>(subRegionFrameIndex, &subRegionFramePose) || !subRegionFramePose.isValid())
 		return false;
 
-	typedef std::map<Index32, Vector3> ObjectPointMap;
+	using ObjectPointMap = std::map<Index32, Vector3>;
 	ObjectPointMap objectPointMap;
 
 	Vectors2 imagePoints;

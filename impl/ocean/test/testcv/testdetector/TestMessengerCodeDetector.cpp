@@ -243,8 +243,8 @@ bool TestMessengerCodeDetector::testExtractCodeCandidates(const double testDurat
 	bool allSucceeded = true;
 
 	// CodePair stores the center of a code and the radius of the bullseyes
-	typedef std::pair<Vector2, Scalar> CodePair;
-	typedef std::vector<CodePair> CodePairs;
+	using CodePair = std::pair<Vector2, Scalar>;
+	using CodePairs = std::vector<CodePair>;
 
 	RandomGenerator randomGenerator;
 
@@ -414,8 +414,8 @@ bool TestMessengerCodeDetector::testBullseyeDetectionArtificial(const unsigned i
 	Log::info() << "Artificial bullseye detection test, with filter size " << filterSize << ":";
 
 	// BullseyePair stores the center of a bullseye and the radius
-	typedef std::pair<Vector2, Scalar> BullseyePair;
-	typedef std::vector<BullseyePair> BullseyePairs;
+	using BullseyePair = std::pair<Vector2, Scalar>;
+	using BullseyePairs = std::vector<BullseyePair>;
 
 	unsigned long long bullseyesTotal = 0ull;
 	unsigned long long bullseyesDetectedCorrect = 0ull;

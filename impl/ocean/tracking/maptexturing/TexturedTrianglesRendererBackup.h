@@ -44,7 +44,7 @@ class OCEAN_TRACKING_MAPTEXTURING_EXPORT TexturedTrianglesRendererBackup
 		/**
 		 * Definition of an unordered map mapping mesh ids to texture framebuffers.
 		 */
-		typedef std::unordered_map<Index32, Rendering::TextureFramebufferRef> TextureFramebufferMap;
+		using TextureFramebufferMap = std::unordered_map<Index32, Rendering::TextureFramebufferRef>;
 
 	public:
 

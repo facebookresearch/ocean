@@ -205,12 +205,12 @@ class OCEAN_TEST_BASE_EXPORT TestMoveBehavior
 		/**
 		 * Definition of a vector holding objects.
 		 */
-		typedef std::vector<Object> Objects;
+		using Objects = std::vector<Object>;
 
 		/**
 		 * Definition of a vector holding objects.
 		 */
-		typedef std::vector<NonExceptObject> NonExceptObjects;
+		using NonExceptObjects = std::vector<NonExceptObject>;
 
 	public:
 	

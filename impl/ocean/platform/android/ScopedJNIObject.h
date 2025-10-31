@@ -28,28 +28,28 @@ template <typename T> class ScopedJNIObject;
  * @see ScopedJNIObject
  * @ingroup platformandroid
  */
-typedef ScopedJNIObject<jclass> ScopedJClass;
+using ScopedJClass = ScopedJNIObject<jclass>;
 
 /**
  * Definition of a scoped object encapsulating a jobject object.
  * @see ScopedJNIObject
  * @ingroup platformandroid
  */
-typedef ScopedJNIObject<jobject> ScopedJObject;
+using ScopedJObject = ScopedJNIObject<jobject>;
 
 /**
  * Definition of a scoped object encapsulating a jobjectArray object.
  * @see ScopedJNIObject
  * @ingroup platformandroid
  */
-typedef ScopedJNIObject<jobjectArray> ScopedJObjectArray;
+using ScopedJObjectArray = ScopedJNIObject<jobjectArray>;
 
 /**
  * Definition of a scoped object encapsulating a jstring object.
  * @see ScopedJNIObject
  * @ingroup platformandroid
  */
-typedef ScopedJNIObject<jstring> ScopedJString;
+using ScopedJString = ScopedJNIObject<jstring>;
 
 /**
  * This class implements a scoped JNI jobject/jclass/jstring.

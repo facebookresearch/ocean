@@ -91,7 +91,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		/**
 		 * Definition of a vector holding correspondence objects.
 		 */
-		typedef std::vector<Correspondence> Correspondences;
+		using Correspondences = std::vector<Correspondence>;
 
 		/**
 		 * This class extends the correspondence object to allow at most two correspondence candidates.
@@ -159,7 +159,7 @@ class OCEAN_TRACKING_EXPORT PointCorrespondences
 		/**
 		 * Definition of a vector holding redundant correspondence sets.
 		 */
-		typedef std::vector<RedundantCorrespondence> RedundantCorrespondences;
+		using RedundantCorrespondences = std::vector<RedundantCorrespondence>;
 
 	public:
 

@@ -31,7 +31,7 @@ class UndistortedBackground;
  * @see SmartObjectRef, UndistortedBackground.
  * @ingroup rendering
  */
-typedef SmartObjectRef<UndistortedBackground> UndistortedBackgroundRef;
+using UndistortedBackgroundRef = SmartObjectRef<UndistortedBackground>;
 
 /**
  * This class is the base class for all undistorted backgrounds.<br>

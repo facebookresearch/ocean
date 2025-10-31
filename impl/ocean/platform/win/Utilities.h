@@ -209,7 +209,7 @@ class ScopedDisableWindow
 				/**
 				 * Definition of a map mapping window handles to counters.
 				 */
-				typedef std::unordered_map<HWND, unsigned int> CounterMap;
+				using CounterMap = std::unordered_map<HWND, unsigned int>;
 
 			protected:
 

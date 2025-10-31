@@ -776,8 +776,8 @@ bool MapMerging::mergeMaps(const PinholeCamera& sourceCamera, const Database& so
 		}
 	}
 
-	typedef Tracking::VocabularyForest<BinaryDescriptor256, unsigned int, Tracking::MapBuilding::DescriptorHandling::calculateHammingDistance> BinaryVocabularyForest;
-	typedef BinaryVocabularyForest::TVocabularyTree BinaryVocabularyTree;
+	using BinaryVocabularyForest = Tracking::VocabularyForest<BinaryDescriptor256, unsigned int, Tracking::MapBuilding::DescriptorHandling::calculateHammingDistance>;
+	using BinaryVocabularyTree = BinaryVocabularyForest::TVocabularyTree;
 	const BinaryVocabularyTree::ClustersMeanFunction clustersMeanFunction = &BinaryVocabularyTree::determineClustersMeanForBinaryDescriptor<sizeof(BinaryDescriptor256) * 8>;
 
 	const BinaryVocabularyForest targetobjectPointDescriptorsForest(2, targetObjectPointDescriptors.data(), targetObjectPointDescriptors.size(), clustersMeanFunction, BinaryVocabularyForest::Parameters(), WorkerPool::get().scopedWorker()(), &randomGenerator);

@@ -25,7 +25,7 @@ class Switch;
  * @see SmartObjectRef, Switch.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Switch> SwitchRef;
+using SwitchRef = SmartObjectRef<Switch>;
 
 /**
  * This class is the base class for all switch nodes.

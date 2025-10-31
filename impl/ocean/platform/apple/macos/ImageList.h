@@ -40,7 +40,7 @@ class ImageList
 		/**
 		 * Definition of a vector holding image object.
 		 */
-		typedef std::vector<Image> Images;
+		using Images = std::vector<Image>;
 
 	public:
 

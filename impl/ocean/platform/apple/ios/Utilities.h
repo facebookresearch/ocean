@@ -36,7 +36,7 @@ class Utilities
 		/**
 		 * Definition of a callback function for picked images.
 		 */
-		typedef Callback<void, void*> OnPickedImageCallback;
+		using OnPickedImageCallback = Callback<void, void*>;
 
 	public:
 

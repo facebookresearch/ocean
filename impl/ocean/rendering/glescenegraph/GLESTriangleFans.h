@@ -37,12 +37,12 @@ class OCEAN_RENDERING_GLES_EXPORT GLESTriangleFans :
 		/**
 		 * Definition of a pair holding a vertex buffer object and the number of indices.
 		 */
-		typedef std::pair<GLuint, unsigned int> VertexBufferPair;
+		using VertexBufferPair = std::pair<GLuint, unsigned int>;
 
 		/**
 		 * Definition of a vector holding vertex buffer objects.
 		 */
-		typedef std::vector<VertexBufferPair> VertexBufferPairs;
+		using VertexBufferPairs = std::vector<VertexBufferPair>;
 
 	public:
 

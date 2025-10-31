@@ -610,7 +610,7 @@ bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
 			{
 				// testing runtime-based accessor
 
-				typedef ConstArrayAccessor<Vector2> Accessor;
+				using Accessor = ConstArrayAccessor<Vector2>;
 
 				Vectors2 errors(size);
 				Scalars sqrErrors(size);
@@ -646,7 +646,7 @@ bool TestError::testDetermineHomographyErrorSeparate(const double testDuration)
 			{
 				// testing template-based accessor
 
-				typedef ConstTemplateArrayAccessor<Vector2> Accessor;
+				using Accessor = ConstTemplateArrayAccessor<Vector2>;
 
 				Vectors2 errors(size);
 				Scalars sqrErrors(size);

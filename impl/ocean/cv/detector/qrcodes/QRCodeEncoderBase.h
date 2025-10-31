@@ -36,19 +36,19 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoderBase
 	public:
 
 		/// Codeword: sequence of 8 bits
-		typedef uint8_t Codeword;
+		using Codeword = uint8_t;
 
 		/// Vector of codewords
-		typedef std::vector<Codeword> Codewords;
+		using Codewords = std::vector<Codeword>;
 
 		/// Typedef for a bit buffer
-		typedef std::vector<uint8_t> BitBuffer;
+		using BitBuffer = std::vector<uint8_t>;
 
 		/// Forward declaration of the segment class
 		class Segment;
 
 		/// Typedef for a vector of segments
-		typedef std::vector<Segment> Segments;
+		using Segments = std::vector<Segment>;
 
 		/**
 		 * Enum for the error codes returned by the encoding functions
@@ -180,7 +180,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeEncoderBase
 			public:
 
 				/// Coefficients of the divisor polynomial, stored from highest to lower power (excluding the leading term which is always 1). Example x^3 + 255x^2 + 8x + 93 is stored as {255, 8, 93}.
-				typedef std::vector<uint8_t> Coefficients;
+				using Coefficients = std::vector<uint8_t>;
 
 			public:
 

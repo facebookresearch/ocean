@@ -27,7 +27,7 @@ class Engine;
  * Definition of an engine reference object.
  * @ingroup rendering
  */
-typedef Ocean::ObjectRef<Engine> EngineRef;
+using EngineRef = Ocean::ObjectRef<Engine>;
 
 /**
  * This class is the base class for all rendering engines like.<br>
@@ -70,19 +70,19 @@ class OCEAN_RENDERING_EXPORT Engine
 		/**
 		 * Definition of a callback function used to create a registered engine.
 		 */
-		typedef Callback<Engine*, const GraphicAPI> CreateCallback;
+		using CreateCallback = Callback<Engine*, const GraphicAPI>;
 
 		/**
 		 * Definition of a vector holding framebuffer references.
 		 */
-		typedef std::vector<FramebufferRef> Framebuffers;
+		using Framebuffers = std::vector<FramebufferRef>;
 
 	protected:
 
 		/**
 		 * Definition of a vector holding framebuffer ids.
 		 */
-		typedef std::vector<ObjectId> ObjectIds;
+		using ObjectIds = std::vector<ObjectId>;
 
 	public:
 

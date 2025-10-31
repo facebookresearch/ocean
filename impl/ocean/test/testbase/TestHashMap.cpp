@@ -132,9 +132,9 @@ bool TestHashMap::testPerformanceSingleIntegers(const unsigned int number, const
 
 	Log::info() << "Test performance " << number << " (single) elements with " << occupancy << "% occupancy:";
 
-	typedef HashMap<unsigned int, double> Table;
-	typedef std::map<unsigned int, double> ElementMap;
-	typedef std::vector<std::pair<unsigned int, double> > Elements;
+	using Table = HashMap<unsigned int, double>;
+	using ElementMap = std::map<unsigned int, double>;
+	using Elements = std::vector<std::pair<unsigned int, double> >;
 
 	ElementMap tmpElementMap;
 	Elements addElements;
@@ -228,9 +228,9 @@ bool TestHashMap::validationStaticCapacitySingleIntegers(const unsigned int numb
 
 	Log::info() << "Test " << number << " (single) elements with " << occupancy << "% occupancy:";
 
-	typedef HashMap<unsigned int, double> Table;
-	typedef std::vector<std::pair<unsigned int, double> > Elements;
-	typedef std::map<unsigned int, double> ElementMap;
+	using Table = HashMap<unsigned int, double>;
+	using Elements = std::vector<std::pair<unsigned int, double> >;
+	using ElementMap = std::map<unsigned int, double>;
 
 	ElementMap elementMap;
 	Elements elements;
@@ -376,9 +376,9 @@ bool TestHashMap::validationDynamicCapacitySingleIntegers(const unsigned int num
 
 	Log::info() << "Test " << number << " (single) elements with " << capacity << " initial capacity:";
 
-	typedef HashMap<unsigned int, double> Table;
-	typedef std::vector<std::pair<unsigned int, double> > Elements;
-	typedef std::map<unsigned int, double> ElementMap;
+	using Table = HashMap<unsigned int, double>;
+	using Elements = std::vector<std::pair<unsigned int, double> >;
+	using ElementMap = std::map<unsigned int, double>;
 
 	ElementMap elementMap;
 	Elements elements;
@@ -514,9 +514,9 @@ bool TestHashMap::validationMultipleIntegers(const unsigned int number, const un
 
 	Log::info() << "Test " << number << " (multiple) elements with " << occupancy << "% occupancy:";
 
-	typedef HashMap<unsigned int, double> Table;
-	typedef std::vector<std::pair<unsigned int, double> > Elements;
-	typedef std::multimap<unsigned int, double> ElementMap;
+	using Table = HashMap<unsigned int, double>;
+	using Elements = std::vector<std::pair<unsigned int, double> >;
+	using ElementMap = std::multimap<unsigned int, double>;
 
 	ElementMap elementMap;
 	Elements elements;

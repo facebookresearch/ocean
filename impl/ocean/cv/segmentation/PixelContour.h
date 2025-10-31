@@ -33,28 +33,28 @@ template <typename T> class PixelContourT;
  * @see PixelCountourT
  * @ingroup cvsegmentation
  */
-typedef PixelContourT<unsigned int> PixelContour;
+using PixelContour = PixelContourT<unsigned int>;
 
 /**
  * Definition of a PixelContour object with a data type allowing positive and negative coordinate values.
  * @see PixelCountourT
  * @ingroup cvsegmentation
  */
-typedef PixelContourT<int> PixelContourI;
+using PixelContourI = PixelContourT<int>;
 
 /**
  * Definition of a vector holding pixel contours (with positive coordinate values).
  * @see PixelContour
  * @ingroup cvsegmentation
  */
-typedef std::vector<PixelContour> PixelContours;
+using PixelContours = std::vector<PixelContour>;
 
 /**
  * Definition of a vector holding pixel contours (with positive and negative coordinate values).
  * @see PixelContourI
  * @ingroup cvsegmentation
  */
-typedef std::vector<PixelContourI> PixelContoursI;
+using PixelContoursI = std::vector<PixelContourI>;
 
 /**
  * This class implements a contour with pixel accuracy.
@@ -73,17 +73,17 @@ class PixelContourT
 		/**
 		 * Definition of a pixel position.
 		 */
-		typedef PixelPositionT<T> PixelPosition;
+		using PixelPosition = PixelPositionT<T>;
 
 		/**
 		 * Definition of a vector holding pixel positions.
 		 */
-		typedef std::vector<PixelPosition> PixelPositions;
+		using PixelPositions = std::vector<PixelPosition>;
 
 		/**
 		 * Definition of a pixel bounding box.
 		 */
-		typedef PixelBoundingBoxT<T> PixelBoundingBox;
+		using PixelBoundingBox = PixelBoundingBoxT<T>;
 
 	public:
 

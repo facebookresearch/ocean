@@ -333,11 +333,11 @@ bool TestInheritance::testNormal(const double testDuration)
 	Log::info() << "Size of base class: " << sizeof(NormalBaseClass) << " bytes";
 	Log::info() << "Size of sub class: " << sizeof(NormalSubClass) << " bytes";
 
-	typedef std::vector<NormalBaseClass> BaseClassObjects;
-	typedef std::vector<NormalSubClass> SubClassObjects;
+	using BaseClassObjects = std::vector<NormalBaseClass>;
+	using SubClassObjects = std::vector<NormalSubClass>;
 
-	typedef std::vector<NormalBaseClass*> BaseClassPointers;
-	typedef std::vector<NormalSubClass*> SubClassPointers;
+	using BaseClassPointers = std::vector<NormalBaseClass*>;
+	using SubClassPointers = std::vector<NormalSubClass*>;
 
 	const size_t size = 1000000;
 
@@ -633,8 +633,8 @@ bool TestInheritance::testVirtual(const double testDuration)
 	Log::info() << "Size of base class: " << sizeof(VirtualBaseClass) << " bytes";
 	Log::info() << "Size of sub class: " << sizeof(VirtualSubClass) << " bytes";
 
-	typedef std::vector<VirtualSubClass> VirtualClassObjects;
-	typedef std::vector<VirtualBaseClass*> VirtualClassPointers;
+	using VirtualClassObjects = std::vector<VirtualSubClass>;
+	using VirtualClassPointers = std::vector<VirtualBaseClass*>;
 
 	const size_t size = 1000000;
 
@@ -805,8 +805,8 @@ bool TestInheritance::testDiamond(const double testDuration)
 	Log::info() << "Size of second subclasses: " << sizeof(DiamondSubClass0) << ", " << sizeof(DiamondSubClass1) << " bytes";
 	Log::info() << "Size of final subclass: " << sizeof(DiamondSubClass) << " bytes";
 
-	typedef std::vector<DiamondSubClass> SubClassObjects;
-	typedef std::vector<DiamondSubClass*> SubClassPointers;
+	using SubClassObjects = std::vector<DiamondSubClass>;
+	using SubClassPointers = std::vector<DiamondSubClass*>;
 
 	const size_t size = 1000000;
 

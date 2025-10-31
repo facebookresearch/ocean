@@ -47,7 +47,7 @@ class OCEAN_CV_EXPORT FrameInterpolatorBilinear
 		/**
 		 * Definition of a lookup table for 2D vectors.
 		 */
-		typedef LookupCorner2<Vector2> LookupTable;
+		using LookupTable = LookupCorner2<Vector2>;
 
 	public:
 
@@ -1643,7 +1643,7 @@ inline void FrameInterpolatorBilinear::scale(const T* source, T* target, const u
 	}
 	else
 	{
-		typedef typename FloatTyper<T>::Type TScale;
+		using TScale = typename FloatTyper<T>::Type;
 
 		if (worker)
 		{
@@ -2245,7 +2245,7 @@ void FrameInterpolatorBilinear::affine8BitPerChannelSubset(const uint8_t* source
 	const Scalar scalarSourceWidth_1 = Scalar(sourceWidth - 1u);
 	const Scalar scalarSourceHeight_1 = Scalar(sourceHeight - 1u);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -2319,7 +2319,7 @@ void FrameInterpolatorBilinear::homography8BitPerChannelSubset(const uint8_t* in
 	const Scalar scalarInputWidth_1 = Scalar(inputWidth - 1u);
 	const Scalar scalarInputHeight_1 = Scalar(inputHeight - 1u);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType bColor = borderColor ? *(PixelType*)borderColor : *(PixelType*)zeroColor;
@@ -2397,9 +2397,9 @@ void FrameInterpolatorBilinear::homographySubset(const T* input, const unsigned 
 	const Scalar scalarInputHeight1 = Scalar(inputHeight - 1u);
 
 	// we need to find a best matching floating point data type for the intermediate interpolation results
-	typedef typename FloatTyper<T>::Type TIntermediate;
+	using TIntermediate = typename FloatTyper<T>::Type;
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	constexpr T zeroColor[tChannels] = {T(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)(borderColor) : (PixelType*)(zeroColor);
@@ -2479,7 +2479,7 @@ inline void FrameInterpolatorBilinear::affine8BitPerChannelSSESubset(const uint8
 	const unsigned int sourceStrideElements = tChannels * sourceWidth + sourcePaddingElements;
 	const unsigned int targetStrideElements = tChannels * targetWidth + targetPaddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -2663,7 +2663,7 @@ inline void FrameInterpolatorBilinear::homography8BitPerChannelSSESubset(const u
 	const unsigned int inputStrideElements = inputWidth * tChannels + inputPaddingElements;
 	const unsigned int outputStrideElements = outputWidth * tChannels + outputPaddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -3040,7 +3040,7 @@ OCEAN_FORCE_INLINE void FrameInterpolatorBilinear::interpolate4Pixels8BitPerChan
 	ocean_assert(source != nullptr);
 	ocean_assert(targetPositionPixels != nullptr);
 
-	typedef typename DataType<uint8_t, 1u>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, 1u>::Type;
 
 	// as we do not initialize the following intermediate data,
 	// we hopefully will not allocate memory on the stack each time this function is called
@@ -3134,7 +3134,7 @@ OCEAN_FORCE_INLINE void FrameInterpolatorBilinear::interpolate4Pixels8BitPerChan
 	ocean_assert(source != nullptr);
 	ocean_assert(targetPositionPixels != nullptr);
 
-	typedef typename DataType<uint8_t, 3u>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, 3u>::Type;
 
 	// as we do not initialize the following intermediate data,
 	// we hopefully will not allocate memory on the stack each time this function is called
@@ -3200,7 +3200,7 @@ OCEAN_FORCE_INLINE void FrameInterpolatorBilinear::interpolate4Pixels8BitPerChan
 	ocean_assert(source != nullptr);
 	ocean_assert(targetPositionPixels != nullptr);
 
-	typedef typename DataType<uint8_t, 4u>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, 4u>::Type;
 
 	// as we do not initialize the following intermediate data,
 	// we hopefully will not allocate memory on the stack each time this function is called
@@ -3342,7 +3342,7 @@ void FrameInterpolatorBilinear::affine8BitPerChannelNEONSubset(const uint8_t* so
 	const unsigned int sourceStrideElements = sourceWidth * tChannels + sourcePaddingElements;
 	const unsigned int targetStrideElements = targetWidth * tChannels + targetPaddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -3591,7 +3591,7 @@ void FrameInterpolatorBilinear::homography8BitPerChannelNEONSubset(const uint8_t
 	const unsigned int inputStrideElements = inputWidth * tChannels + inputPaddingElements;
 	const unsigned int outputStrideElements = outputWidth * tChannels + outputPaddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -3986,7 +3986,7 @@ OCEAN_FORCE_INLINE void FrameInterpolatorBilinear::interpolate4Pixels8BitPerChan
 	ocean_assert(source != nullptr);
 	ocean_assert(targetPositionPixels != nullptr);
 
-	typedef typename DataType<uint8_t, 2u>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, 2u>::Type;
 
 	// as we do not initialize the following intermediate data,
 	// we hopefully will not allocate memory on the stack each time this function is called
@@ -4191,7 +4191,7 @@ OCEAN_FORCE_INLINE void FrameInterpolatorBilinear::interpolate4Pixels8BitPerChan
 	ocean_assert(source != nullptr);
 	ocean_assert(targetPositionPixels != nullptr);
 
-	typedef typename DataType<uint8_t, 4u>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, 4u>::Type;
 
 	// as we do not initialize the following intermediate data,
 	// we hopefully will not allocate memory on the stack each time this function is called
@@ -4449,7 +4449,7 @@ void FrameInterpolatorBilinear::homographyMask8BitPerChannelSubset(const uint8_t
 	const Scalar scalarInputWidth_1 = Scalar(inputWidth - 1u);
 	const Scalar scalarInputHeight_1 = Scalar(inputHeight - 1u);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	for (unsigned int y = firstOutputRow; y < firstOutputRow + numberOutputRows; ++y)
 	{
@@ -4603,7 +4603,7 @@ void FrameInterpolatorBilinear::homographyWithCamera8BitPerChannelSubset(const P
 
 	const SquareMatrix3 combinedMatrix(*normalizedHomography * outputCamera->invertedIntrinsic());
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -4691,7 +4691,7 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubset(const uint8_t* input,
 	ocean_assert(inputWidth != 0u && inputHeight != 0u);
 	ocean_assert(firstRow + numberRows <= input_LT_output->sizeY());
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -4747,7 +4747,7 @@ void FrameInterpolatorBilinear::lookupSubset(const T* input, const unsigned int 
 	ocean_assert(inputWidth != 0u && inputHeight != 0u);
 	ocean_assert(firstRow + numberRows <= input_LT_output->sizeY());
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	const T zeroColor[tChannels] = {T(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -4801,7 +4801,7 @@ inline void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON<1u>(const 
 	ocean_assert(inputWidth != 0u && inputHeight != 0u);
 	ocean_assert(firstRow + numberRows <= input_LT_output->sizeY());
 
-	typedef uint8_t PixelType;
+	using PixelType = uint8_t;
 
 	const uint8x16_t constantBorderColor_u_8x16 = vdupq_n_u8(borderColor ? *borderColor : 0u);
 
@@ -5000,7 +5000,7 @@ void FrameInterpolatorBilinear::lookup8BitPerChannelSubsetNEON(const uint8_t* in
 	ocean_assert(inputWidth != 0u && inputHeight != 0u);
 	ocean_assert(firstRow + numberRows <= input_LT_output->sizeY());
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const uint8_t zeroColor[tChannels] = {uint8_t(0)};
 	const PixelType* const bColor = borderColor ? (PixelType*)borderColor : (PixelType*)zeroColor;
@@ -5142,7 +5142,7 @@ void FrameInterpolatorBilinear::lookupMask8BitPerChannelSubset(const uint8_t* in
 	ocean_assert(inputWidth != 0u && inputHeight != 0u);
 	ocean_assert(firstRow + numberRows <= input_LT_output->sizeY());
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const unsigned int columns = (unsigned int)(input_LT_output->sizeX());
 
@@ -5360,7 +5360,7 @@ void FrameInterpolatorBilinear::interpolateRowVertical(const T* sourceRowTop, co
 	ocean_assert(elements >= 1u);
 	ocean_assert(factorBottom >= 0.0f && factorBottom <= 1.0f);
 
-	typedef typename FloatTyper<T>::Type FloatType;
+	using FloatType = typename FloatTyper<T>::Type;
 
 	const FloatType internalFactorBottom = FloatType(factorBottom);
 	const FloatType internalFactorTop = FloatType(1.0f - factorBottom);
@@ -5383,7 +5383,7 @@ void FrameInterpolatorBilinear::interpolateRowHorizontal(const T* extendedSource
 	ocean_assert(interpolationFactorsRight != nullptr);
 	ocean_assert(channels == tChannels);
 
-	typedef typename FloatTyper<T>::Type FloatType;
+	using FloatType = typename FloatTyper<T>::Type;
 
 	for (unsigned int x = 0u; x < targetWidth; ++x)
 	{
@@ -5419,7 +5419,7 @@ inline void FrameInterpolatorBilinear::scale8BitPerChannelSubset7BitPrecisionNEO
 	ocean_assert(sourcePaddingElements == 0u); // not supported
 	ocean_assert(targetPaddingElements == 0u);
 
-	typedef typename DataType<uint8_t, 2u>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, 2u>::Type;
 
 	PixelType* targetPixelData = (PixelType*)target + firstTargetRow * targetWidth;
 	const PixelType* const sourcePixelData = (const PixelType*)source;
@@ -5682,7 +5682,7 @@ inline void FrameInterpolatorBilinear::scale8BitPerChannelSubset7BitPrecisionNEO
 	ocean_assert(sourcePaddingElements == 0u); // not supported
 	ocean_assert(targetPaddingElements == 0u);
 
-	typedef typename DataType<uint8_t, 2u>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, 2u>::Type;
 
 	PixelType* targetPixelData = (PixelType*)target + firstTargetRow * targetWidth;
 	const PixelType* const sourcePixelData = (const PixelType*)source;
@@ -5944,7 +5944,7 @@ inline void FrameInterpolatorBilinear::scale8BitPerChannelSubset7BitPrecisionNEO
 	ocean_assert(sourcePaddingElements == 0u); // not supported
 	ocean_assert(targetPaddingElements == 0u);
 
-	typedef typename DataType<uint8_t, 3u>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, 3u>::Type;
 
 	PixelType* targetPixelData = (PixelType*)target + firstTargetRow * targetWidth;
 	const PixelType* const sourcePixelData = (const PixelType*)source;
@@ -6218,7 +6218,7 @@ inline void FrameInterpolatorBilinear::resize8BitPerChannelSubset7BitPrecisionNE
 	ocean_assert(sourcePaddingElements == 0u); // not supported
 	ocean_assert(targetPaddingElements == 0u);
 
-	typedef typename DataType<uint8_t, 4u>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, 4u>::Type;
 
 	PixelType* targetPixelData = (PixelType*)target + firstTargetRow * targetWidth;
 	const PixelType* const sourcePixelData = (const PixelType*)source;
@@ -6657,8 +6657,8 @@ inline void FrameInterpolatorBilinear::scaleSubset<float, float, 1u>(const float
 	const unsigned int sourceStrideElements = sourceWidth * 1u + sourcePaddingElements;
 	const unsigned int targetStrideElements = targetWidth * 1u + targetPaddingElements;
 
-	typedef void (*InterpolateRowVerticalFunction)(const float*, const float*, float*, const unsigned int, const float);
-	typedef void (*InterpolateRowHorizontalFunction)(const float*, float*, const unsigned int, const unsigned int, const unsigned int*, const float*);
+	using InterpolateRowVerticalFunction = void (*)(const float*, const float*, float*, const unsigned int, const float);
+	using InterpolateRowHorizontalFunction = void (*)(const float*, float*, const unsigned int, const unsigned int, const unsigned int*, const float*);
 
 	InterpolateRowVerticalFunction interpolateRowVerticalFunction = interpolateRowVertical<float>;
 	InterpolateRowHorizontalFunction interpolateRowHorizontalFunction = interpolateRowHorizontal<float, 1u>;
@@ -6962,7 +6962,7 @@ void FrameInterpolatorBilinear::rotate8BitPerChannelSubset(const uint8_t* source
 
 	ocean_assert(firstTargetRow + numberTargetRows <= height);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const unsigned int targetStrideElements = width * tChannels + targetPaddingElements;
 

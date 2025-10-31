@@ -56,27 +56,27 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_APPLICATION_EXPORT VRNativeApplicationAdv
 		/**
 		 * Definition of a pair holding a 3D model filename and an optional 6-DOF transformation.
 		 */
-		typedef std::pair<std::string, HomogenousMatrix4> ModelFilenamePair;
+		using ModelFilenamePair = std::pair<std::string, HomogenousMatrix4>;
 
 		/**
 		 * Definition of a queue holding model filename pairs.
 		 */
-		typedef std::queue<ModelFilenamePair> ModelFilenamePairQueue;
+		using ModelFilenamePairQueue = std::queue<ModelFilenamePair>;
 
 		/**
 		 * Definition of a queue holdingfilename.
 		 */
-		typedef std::queue<std::string> ModelFilenameQueue;
+		using ModelFilenameQueue = std::queue<std::string>;
 
 		/**
 		 * Definition of a pair combining scene description and rendering scene ids.
 		 */
-		typedef std::pair<SceneDescription::SceneId, Rendering::ObjectId> SceneIdPair;
+		using SceneIdPair = std::pair<SceneDescription::SceneId, Rendering::ObjectId>;
 
 		/**
 		 * Definition of a map mapping filenames to scene ids.
 		 */
-		typedef std::unordered_map<std::string, SceneIdPair> SceneFilenameMap;
+		using SceneFilenameMap = std::unordered_map<std::string, SceneIdPair>;
 
 	public:
 

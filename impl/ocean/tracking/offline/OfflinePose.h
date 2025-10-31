@@ -30,7 +30,7 @@ class OfflinePose;
  * Definition of a shift vector holding offline poses.
  * @ingroup trackingoffline
  */
-typedef ShiftVector<OfflinePose> OfflinePoses;
+using OfflinePoses = ShiftVector<OfflinePose>;
 
 /**
  * This class encapsulates the tracking pose data.

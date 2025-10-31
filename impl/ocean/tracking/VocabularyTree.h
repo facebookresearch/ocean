@@ -226,17 +226,17 @@ class VocabularyTree : public VocabularyStructure
 		/**
 		 * The descriptor type of this tree.
 		 */
-		typedef TDescriptor Descriptor;
+		using Descriptor = TDescriptor;
 
 		/**
 		 * The distance data type of this tree.
 		 */
-		typedef TDistance Distance;
+		using Distance = TDistance;
 
 		/**
 		 * The data type of the sum of distances, uint64_t for uint32_t, and float for float.
 		 */
-		typedef typename NextLargerTyper<TDistance>::TypePerformance TSumDistances;
+		using TSumDistances = typename NextLargerTyper<TDistance>::TypePerformance;
 
 		/**
 		 * The pointer to the function determining the distance between two descriptors of this tree.
@@ -246,27 +246,27 @@ class VocabularyTree : public VocabularyStructure
 		/**
 		 * Definition of a vector holding descriptors.
 		 */
-		typedef std::vector<TDescriptor> TDescriptors;
+		using TDescriptors = std::vector<TDescriptor>;
 
 		/**
 		 * Definition of a vector holding distances.
 		 */
-		typedef std::vector<TDistance> TDistances;
+		using TDistances = std::vector<TDistance>;
 
 		/**
 		 * Definition of a tree node which is just an alias for the tree (the root node).
 		 */
-		typedef VocabularyTree<TDescriptor, TDistance, tDistanceFunction> Node;
+		using Node = VocabularyTree<TDescriptor, TDistance, tDistanceFunction>;
 
 		/**
 		 * Definition of a vector holding tree nodes.
 		 */
-		typedef std::vector<Node*> Nodes;
+		using Nodes = std::vector<Node*>;
 
 		/**
 		 * Definition of a vector holding constant tree nodes.
 		 */
-		typedef std::vector<const Node*> ConstNodes;
+		using ConstNodes = std::vector<const Node*>;
 
 		/**
 		 * Definition of a Match object using the distance data type of this tree.
@@ -769,12 +769,12 @@ class VocabularyForest : public VocabularyStructure
 		/**
 		 * The descriptor type of this forest.
 		 */
-		typedef TDescriptor Descriptor;
+		using Descriptor = TDescriptor;
 
 		/**
 		 * The distance data type of this forest.
 		 */
-		typedef TDistance Distance;
+		using Distance = TDistance;
 
 		/**
 		 * The pointer to the function determining the distance between two descriptors of this forest.
@@ -784,17 +784,17 @@ class VocabularyForest : public VocabularyStructure
 		/**
 		 * Definition of a vector holding descriptors.
 		 */
-		typedef std::vector<TDescriptor> TDescriptors;
+		using TDescriptors = std::vector<TDescriptor>;
 
 		/**
 		 * Definition of a vector holding distances.
 		 */
-		typedef std::vector<TDistance> TDistances;
+		using TDistances = std::vector<TDistance>;
 
 		/**
 		 * Definition of the Vocabulary Tree object.
 		 */
-		typedef VocabularyTree<TDescriptor, TDistance, tDistanceFunction> TVocabularyTree;
+		using TVocabularyTree = VocabularyTree<TDescriptor, TDistance, tDistanceFunction>;
 
 		/**
 		 * Definition of a Match object using the distance data type of this tree.
@@ -838,7 +838,7 @@ class VocabularyForest : public VocabularyStructure
 		/**
 		 * Definition of a vector holding VocabularyTree objects.
 		 */
-		typedef std::vector<TVocabularyTree> TVocabularyTrees;
+		using TVocabularyTrees = std::vector<TVocabularyTree>;
 
 	public:
 

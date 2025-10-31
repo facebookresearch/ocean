@@ -418,7 +418,7 @@ bool TestMicroQRCodeEncoder::convertCSVToMicroQRCodeVerificationItem(const std::
 		return false;
 	}
 
-	typedef std::unordered_map<std::string, MicroQRCode::ErrorCorrectionCapacity> TokenStringToErrorCorrectionCapacityMap;
+	using TokenStringToErrorCorrectionCapacityMap = std::unordered_map<std::string, MicroQRCode::ErrorCorrectionCapacity>;
 
 	const TokenStringToErrorCorrectionCapacityMap tokenStringToErrorCorrectionCapacityMap =
 	{
@@ -428,7 +428,7 @@ bool TestMicroQRCodeEncoder::convertCSVToMicroQRCodeVerificationItem(const std::
 		std::make_pair(std::string("ECC_QUARTILE_25"), MicroQRCode::ECC_25),
 	};
 
-	typedef std::unordered_map<std::string, MicroQRCodeEncoder::MaskingPattern> TokenStringToMaskingPatternMap;
+	using TokenStringToMaskingPatternMap = std::unordered_map<std::string, MicroQRCodeEncoder::MaskingPattern>;
 
 	const TokenStringToMaskingPatternMap tokenStringToMaskingPatternMap =
 	{

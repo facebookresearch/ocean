@@ -27,7 +27,7 @@ class TriangleFace;
  * @see TriangleFace.
  * @ingroup rendering
  */
-typedef std::vector<TriangleFace> TriangleFaces;
+using TriangleFaces = std::vector<TriangleFace>;
 
 /**
  * Definition of a triangle face with three vertex indices.
@@ -40,7 +40,7 @@ class OCEAN_RENDERING_EXPORT TriangleFace
 		/**
 		 * Definition of a map mapping vertices to their corresponding face indices.
 		 */
-		typedef std::map<Vertex, VertexIndices> VertexMap;
+		using VertexMap = std::map<Vertex, VertexIndices>;
 
 	public:
 

@@ -25,7 +25,7 @@ class StripPrimitive;
  * @see SmartObjectRef, StripPrimitive.
  * @ingroup rendering
  */
-typedef SmartObjectRef<StripPrimitive> StripPrimitiveRef;
+using StripPrimitiveRef = SmartObjectRef<StripPrimitive>;
 
 /**
  * This class is the base class for all primitive with strip organization.

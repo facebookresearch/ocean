@@ -25,7 +25,7 @@ class TriangleFans;
  * @see SmartObjectRef, TriangleFans.
  * @ingroup rendering
  */
-typedef SmartObjectRef<TriangleFans> TriangleFansRef;
+using TriangleFansRef = SmartObjectRef<TriangleFans>;
 
 /**
  * This class is the base class for all triangle fan objects.

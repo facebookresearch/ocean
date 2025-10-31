@@ -69,7 +69,7 @@ class OCEAN_CV_DETECTOR_EXPORT LineDetectorULF
 		/**
 		 * Definition of a vector holding edge types.
 		 */
-		typedef std::vector<EdgeType> EdgeTypes;
+		using EdgeTypes = std::vector<EdgeType>;
 
 	public:
 
@@ -220,7 +220,7 @@ class OCEAN_CV_DETECTOR_EXPORT LineDetectorULF
 		/**
 		 * Definition of a vector holding edge detectors.
 		 */
-		typedef std::vector<std::shared_ptr<EdgeDetector>> EdgeDetectors;
+		using EdgeDetectors = std::vector<std::shared_ptr<EdgeDetector>>;
 
 		/**
 		 * This class implements an integer-based bar edge detector based on root mean square residuals.

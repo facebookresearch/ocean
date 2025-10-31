@@ -25,7 +25,7 @@ namespace Detector
  * Definition of a vector holding feature indices.
  * @ingroup cv
  */
-typedef std::vector<unsigned int> FeatureIndices;
+using FeatureIndices = std::vector<unsigned int>;
 
 /**
  * This class implements the abstract base class for arbitrary computer vision features.

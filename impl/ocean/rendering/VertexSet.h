@@ -28,7 +28,7 @@ class VertexSet;
  * @see SmartObjectRef, VertexSet.
  * @ingroup rendering
  */
-typedef SmartObjectRef<VertexSet> VertexSetRef;
+using VertexSetRef = SmartObjectRef<VertexSet>;
 
 /**
  * This class is the base class for all rendering vertex sets.

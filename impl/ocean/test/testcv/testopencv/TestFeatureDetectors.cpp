@@ -22,10 +22,10 @@ namespace
 {
 
 /// Typedef for Harris corners
-typedef std::vector<cv::Point2f> HarrisCorners;
+using HarrisCorners = std::vector<cv::Point2f>;
 
 /// Typedef for FAST keypoints
-typedef std::vector<cv::KeyPoint> KeyPoints;
+using KeyPoints = std::vector<cv::KeyPoint>;
 
 /**
  * Helper (base) class for the determination of detector thresholds

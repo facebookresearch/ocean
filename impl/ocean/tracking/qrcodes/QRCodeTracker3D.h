@@ -36,7 +36,7 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 		class ObservationHistory;
 
 		/// Vector of observation histories
-		typedef std::vector<ObservationHistory> ObservationHistories;
+		using ObservationHistories = std::vector<ObservationHistory>;
 
 	public:
 
@@ -54,13 +54,13 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 		};
 
 		/// The unique ID of each tracked code.
-		typedef uint32_t ObjectId;
+		using ObjectId = uint32_t;
 
 		/// Definition of a pointer to the function that provides new 6DOF detections of QR codes, QRCodeDetector3D::detectQRCodes()
-		typedef std::function<bool(const SharedAnyCameras&, const Frames&, const HomogenousMatrix4&, const HomogenousMatrices4&, CV::Detector::QRCodes::QRCodes&, HomogenousMatrices4&, Scalars&, Worker*, const bool)> CallbackQRCodeDetection3D;
+		using CallbackQRCodeDetection3D = std::function<bool(const SharedAnyCameras&, const Frames&, const HomogenousMatrix4&, const HomogenousMatrices4&, CV::Detector::QRCodes::QRCodes&, HomogenousMatrices4&, Scalars&, Worker*, const bool)>;
 
 		/// Definition of a function pointer that is called in the event a new QR code is detected for the first time.
-		typedef std::function<void(const CV::Detector::QRCodes::QRCode&, const HomogenousMatrix4&, const Scalar, const ObjectId)> CallbackNewQRCode;
+		using CallbackNewQRCode = std::function<void(const CV::Detector::QRCodes::QRCode&, const HomogenousMatrix4&, const Scalar, const ObjectId)>;
 
 		/**
 		 * Definition of parameters that control the tracker
@@ -207,7 +207,7 @@ class OCEAN_TRACKING_QRCODES_EXPORT QRCodeTracker3D : public CV::Detector::QRCod
 		};
 
 		/// The definition of map of tracked QR codes.
-		typedef std::unordered_map<ObjectId, TrackedQRCode> TrackedQRCodesMap;
+		using TrackedQRCodesMap = std::unordered_map<ObjectId, TrackedQRCode>;
 
 	protected:
 

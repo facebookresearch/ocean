@@ -40,7 +40,7 @@ class OCEAN_TRACKING_ORB_EXPORT UnidirectionalCorrespondences : public Correspon
 		/**
 		 * Definition of a vector counting correspondences.
 		 */
-		typedef std::vector<unsigned int> CorrespondenceCounters;
+		using CorrespondenceCounters = std::vector<unsigned int>;
 
 	public:
 

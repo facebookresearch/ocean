@@ -35,17 +35,17 @@ class OCEAN_TRACKING_MAPBUILDING_EXPORT DescriptorHandling
 		/**
 		 * Definition of a FREAK  Multi Descriptor with 32 bytes or 256 bits.
 		 */
-		typedef CV::Detector::FREAKDescriptor32 FreakMultiDescriptor256;
+		using FreakMultiDescriptor256 = CV::Detector::FREAKDescriptor32;
 
 		/**
 		 * Definition of a vector holding FREAK  Multi Descriptors with 32 bytes or 256 bits.
 		 */
-		typedef CV::Detector::FREAKDescriptors32 FreakMultiDescriptors256;
+		using FreakMultiDescriptors256 = CV::Detector::FREAKDescriptors32;
 
 		/**
 		 * Definition of an unordered map mapping FREAK  Multi descriptors.
 		 */
-		typedef std::unordered_map<Index32, FreakMultiDescriptors256> FreakMultiDescriptorMap256;
+		using FreakMultiDescriptorMap256 = std::unordered_map<Index32, FreakMultiDescriptors256>;
 
 	public:
 

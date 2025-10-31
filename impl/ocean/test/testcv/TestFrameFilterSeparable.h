@@ -265,7 +265,7 @@ void TestFrameFilterSeparable::validateFilter(const T* source, const T* target, 
 	double sumAbsError = 0.0;
 	double maxAbsError = 0.0;
 
-	typedef typename FloatTyper<T>::Type TIntermediate;
+	using TIntermediate = typename FloatTyper<T>::Type;
 
 	Frame intermediateFrame(FrameType(width, height, FrameType::genericPixelFormat<TIntermediate>(channels), FrameType::ORIGIN_UPPER_LEFT));
 

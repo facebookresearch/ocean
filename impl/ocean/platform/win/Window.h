@@ -49,14 +49,14 @@ class OCEAN_PLATFORM_WIN_EXPORT Window
 		/**
 		 * Definition of a vector holding files.
 		 */
-		typedef std::vector<std::wstring> Files;
+		using Files = std::vector<std::wstring>;
 
 	protected:
 
 		/**
 		 * Map mapping class names to an reference counter.
 		 */
-		typedef std::unordered_map<std::wstring, unsigned int> ClassMap;
+		using ClassMap = std::unordered_map<std::wstring, unsigned int>;
 
 	public:
 

@@ -85,7 +85,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT MicroQRCodeDetector2D : public MicroQRCod
 		};
 
 		/// Definition of a vector of observations
-		typedef std::vector<Observation> Observations;
+		using Observations = std::vector<Observation>;
 
 	public:
 

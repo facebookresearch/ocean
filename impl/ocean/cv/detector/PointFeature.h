@@ -32,7 +32,7 @@ class PointFeature;
  * Definition of a vector holding point features.
  * @ingroup cvdetector
  */
-typedef std::vector<PointFeature> PointFeatures;
+using PointFeatures = std::vector<PointFeature>;
 
 /**
  * This class implements the base class for all computer vision features mainly basing on points.

@@ -37,10 +37,10 @@ namespace TestCV
 namespace TestOpenCV
 {
 
-typedef cv::Point3f ObjectPoint;
-typedef cv::Point2f ImagePoint;
-typedef std::vector<ObjectPoint> ObjectPoints;
-typedef std::vector<cv::Point2f> ImagePoints;
+using ObjectPoint = cv::Point3f;
+using ImagePoint = cv::Point2f;
+using ObjectPoints = std::vector<ObjectPoint>;
+using ImagePoints = std::vector<cv::Point2f>;
 
 namespace
 {

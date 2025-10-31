@@ -1366,7 +1366,7 @@ void FrameColorAdjustment::adjustFrameMaskBilinearAdvanced8BitPerChannelSubset(c
 	ocean_assert(lookupTable != nullptr && !lookupTable->isEmpty());
 	ocean_assert(firstRow + numberRows <= lookupTable->sizeY());
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	frame += firstRow * lookupTable->sizeX() * tChannels;
 	adjustedFrame += firstRow * lookupTable->sizeX() * tChannels;
@@ -1413,7 +1413,7 @@ void FrameColorAdjustment::adjustFrameMaskBilinearAdvanced8BitPerChannelSubset(c
 	ocean_assert(lookupTableA->sizeX() == lookupTableB->sizeX() && lookupTableA->sizeY() == lookupTableB->sizeY());
 	ocean_assert(firstRow + numberRows <= lookupTableA->sizeY());
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	frame += firstRow * lookupTableA->sizeX() * tChannels;
 	adjustedFrame += firstRow * lookupTableA->sizeX() * tChannels;

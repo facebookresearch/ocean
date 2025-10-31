@@ -44,16 +44,16 @@ class AdvancedPointTracker
 		{
 			protected:
 
-				typedef StaticVector<unsigned int, tSuccessiveFrames> StaticPoseIndices;
+				using StaticPoseIndices = StaticVector<unsigned int, tSuccessiveFrames>;
 
-				typedef StaticVector<Vector2, 10u> StaticVectors2;
-				typedef StaticVector<StaticVectors2, tSuccessiveFrames> StaticVectors2Set;
+				using StaticVectors2 = StaticVector<Vector2, 10u>;
+				using StaticVectors2Set = StaticVector<StaticVectors2, tSuccessiveFrames>;
 
-				typedef StaticVector<Line2, 10u> StaticLines2;
-				typedef StaticVector<StaticLines2, tSuccessiveFrames> StaticLines2Set;
+				using StaticLines2 = StaticVector<Line2, 10u>;
+				using StaticLines2Set = StaticVector<StaticLines2, tSuccessiveFrames>;
 
-				typedef StaticVector<Line3, 10u> StaticLines3;
-				typedef StaticVector<StaticLines3, tSuccessiveFrames> StaticLines3Set;
+				using StaticLines3 = StaticVector<Line3, 10u>;
+				using StaticLines3Set = StaticVector<StaticLines3, tSuccessiveFrames>;
 
 			public:
 
@@ -78,7 +78,7 @@ class AdvancedPointTracker
 				bool candidateIsValid;
 		};
 
-		typedef std::vector<Candidate> Candidates;
+		using Candidates = std::vector<Candidate>;
 
 	public:
 

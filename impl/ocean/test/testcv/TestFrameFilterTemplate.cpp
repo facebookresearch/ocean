@@ -480,8 +480,8 @@ bool TestFrameFilterTemplate::testPixel8BitPerChannel(const unsigned int width, 
 	ocean_assert(frame.isContinuous());
 	ocean_assert(target.isContinuous());
 
-	typedef CV::FrameFilterTemplate<int32_t, -1, 0, 1, -2, 0, 2, -1, 0, 1> IntegerFilterTemplate;
-	typedef CV::FrameFilterTemplate<int32_t, -1, 4, 3, -2, -4, 2, 1, 7, -6> FloatFilterTemplate;
+	using IntegerFilterTemplate = CV::FrameFilterTemplate<int32_t, -1, 0, 1, -2, 0, 2, -1, 0, 1>;
+	using FloatFilterTemplate = CV::FrameFilterTemplate<int32_t, -1, 4, 3, -2, -4, 2, 1, 7, -6>;
 
 	bool allSucceeded = true;
 

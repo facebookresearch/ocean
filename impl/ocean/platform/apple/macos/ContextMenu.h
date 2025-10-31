@@ -40,7 +40,7 @@ class ContextMenu
 		/**
 		 * Definition of a vector holding a string.
 		 */
-		typedef std::vector<std::string> Strings;
+		using Strings = std::vector<std::string>;
 
 	public:
 

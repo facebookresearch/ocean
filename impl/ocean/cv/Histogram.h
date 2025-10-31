@@ -759,10 +759,10 @@ class OCEAN_CV_EXPORT ContrastLimitedAdaptiveHistogram
 		static constexpr unsigned int histogramSize = 256u;
 
 		/// Tile histogram
-		typedef std::array<unsigned int, histogramSize> TileHistogram;
+		using TileHistogram = std::array<unsigned int, histogramSize>;
 
 		/// Image partitioning and tile boundary lookup
-		typedef LookupCenter2<uint8_t> TileLookupCenter2;
+		using TileLookupCenter2 = LookupCenter2<uint8_t>;
 
 	public:
 

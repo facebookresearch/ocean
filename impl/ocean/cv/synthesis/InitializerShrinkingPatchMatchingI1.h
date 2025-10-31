@@ -175,7 +175,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT InitializerShrinkingPatchMatchingI1 :
 		/**
 		 * Definition of a list holding inpainting pixels.
 		 */
-		typedef std::list<InpaintingPixel> InpaintingPixelList;
+		using InpaintingPixelList = std::list<InpaintingPixel>;
 
 	public:
 

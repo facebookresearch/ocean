@@ -28,7 +28,7 @@ class LightSource;
  * @see SmartObjectRef, LightSource.
  * @ingroup rendering
  */
-typedef SmartObjectRef<LightSource> LightSourceRef;
+using LightSourceRef = SmartObjectRef<LightSource>;
 
 /**
  * This is the base class for all lights.

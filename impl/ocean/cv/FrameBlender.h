@@ -49,7 +49,7 @@ class OCEAN_CV_EXPORT FrameBlender
 		 * The first parameter provides the target pixel
 		 * The second parameter provides the target blend factor, with range [0, 255]
 		 */
-		typedef void (*BlendFunction)(uint8_t*, const uint8_t);
+		using BlendFunction = void (*)(uint8_t*, const uint8_t);
 
 		/**
 		 * Helper class allowing to determine the offset that is necessary to access the alpha channel.

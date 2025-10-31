@@ -132,8 +132,8 @@ bool TestSubset::testSubset(const double testDuration)
 
 	Log::info() << "... for \"" << TypeNamer::name<TIndex>() << "\" indices:";
 
-	typedef std::set<TIndex> IndexSet;
-	typedef std::vector<TIndex> Indices;
+	using IndexSet = std::set<TIndex>;
+	using Indices = std::vector<TIndex>;
 
 	Indices32 setInteger32;
 	Indices64 setInteger64;
@@ -451,8 +451,8 @@ bool TestSubset::testInvertedSubset(const double testDuration)
 
 	Log::info() << "... for \"" << TypeNamer::name<TIndex>() << "\" indices:";
 
-	typedef std::set<TIndex> IndexSet;
-	typedef std::vector<TIndex> Indices;
+	using IndexSet = std::set<TIndex>;
+	using Indices = std::vector<TIndex>;
 
 	Indices32 setInteger32;
 	Indices64 setInteger64;

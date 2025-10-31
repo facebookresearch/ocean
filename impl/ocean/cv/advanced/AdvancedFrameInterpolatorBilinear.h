@@ -676,7 +676,7 @@ inline void AdvancedFrameInterpolatorBilinear::interpolatePixelWithMask8BitPerCh
 
 	const uint32_t state = stateTopLeft | (stateTopRight << 8u) | (stateBottomLeft << 16u) | (stateBottomRight << 24u);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	switch (state)
 	{

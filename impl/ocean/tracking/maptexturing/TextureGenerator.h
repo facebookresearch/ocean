@@ -84,7 +84,7 @@ class OCEAN_TRACKING_MAPTEXTURING_EXPORT TextureGenerator
 		/**
 		 * Definition of an unordered map mapping Mesh ids to mesh objects.
 		 */
-		typedef std::unordered_map<Index32, Mesh> MeshMap;
+		using MeshMap = std::unordered_map<Index32, Mesh>;
 
 	protected:
 
@@ -114,22 +114,22 @@ class OCEAN_TRACKING_MAPTEXTURING_EXPORT TextureGenerator
 		/**
 		 * Definition of an unordered map mapping hash-able triangles to a TriangleObject objects.
 		 */
-		typedef std::unordered_map<HashableTriangle, TriangleObject, HashableTriangle> TriangleMap;
+		using TriangleMap = std::unordered_map<HashableTriangle, TriangleObject, HashableTriangle>;
 
 		/**
 		 * Definition of a vector holding hash-able triangle objects.
 		 */
-		typedef std::vector<HashableTriangle> Triangles;
+		using Triangles = std::vector<HashableTriangle>;
 
 		/**
 		 * Definition of a map mapping unique scene mesh ids to vertex counts.
 		 */
-		typedef std::unordered_map<Index32, size_t> SceneMeshVertexCounterMap;
+		using SceneMeshVertexCounterMap = std::unordered_map<Index32, size_t>;
 
 		/**
 		 * Definition of an unordered map mapping mesh ids to texture framebuffers.
 		 */
-		typedef std::unordered_map<Index32, Rendering::TextureFramebufferRef> TextureFramebufferMap;
+		using TextureFramebufferMap = std::unordered_map<Index32, Rendering::TextureFramebufferRef>;
 
 	public:
 

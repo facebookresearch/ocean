@@ -48,7 +48,7 @@ class OCEAN_CV_FONTS_EXPORT FTFontManager
 				/**
 				 * Definition of a map mapping size and dpi to font objects.
 				 */
-				typedef std::unordered_map<uint64_t, SharedFont> FontMap;
+				using FontMap = std::unordered_map<uint64_t, SharedFont>;
 
 			public:
 
@@ -126,12 +126,12 @@ class OCEAN_CV_FONTS_EXPORT FTFontManager
 		/**
 		 * Definition of a map mapping style names to Face objects.
 		 */
-		typedef std::unordered_map<std::string, Face> FaceMap;
+		using FaceMap = std::unordered_map<std::string, Face>;
 
 		/**
 		 * Definition of a map mapping family names to face maps.
 		 */
-		typedef std::unordered_map<std::string, FaceMap> FamilyMap;
+		using FamilyMap = std::unordered_map<std::string, FaceMap>;
 
 	public:
 

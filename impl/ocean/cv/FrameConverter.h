@@ -530,7 +530,7 @@ class OCEAN_CV_EXPORT FrameConverter
 				/**
 				 * Definition of a map mapping pairs or pixel formats to function pointers.
 				 */
-				typedef std::unordered_map<ConversionTriple, FunctionWrapper, ConversionTriple::Hash> FormatPair2FunctionWrapperMap;
+				using FormatPair2FunctionWrapperMap = std::unordered_map<ConversionTriple, FunctionWrapper, ConversionTriple::Hash>;
 
 			public:
 

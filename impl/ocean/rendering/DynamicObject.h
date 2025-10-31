@@ -28,7 +28,7 @@ class DynamicObject;
  * @see SmartObjectRef, DynamicObject.
  * @ingroup rendering
  */
-typedef SmartObjectRef<DynamicObject> DynamicObjectRef;
+using DynamicObjectRef = SmartObjectRef<DynamicObject>;
 
 
 /**

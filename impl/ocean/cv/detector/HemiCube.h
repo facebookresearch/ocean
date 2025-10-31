@@ -36,7 +36,7 @@ class OCEAN_CV_DETECTOR_EXPORT HemiCube
 	public:
 
 		/// The location of a line in the cube map is defined as the triple (binX, binY, faceIndex), faceIndex = {0, 1, 2}
-		typedef VectorT3<unsigned int> MapIndex;
+		using MapIndex = VectorT3<unsigned int>;
 
 		/**
 		 * Helper to compute hash values for map indices
@@ -52,7 +52,7 @@ class OCEAN_CV_DETECTOR_EXPORT HemiCube
 		};
 
 		/// The actual cube map: maps a line to a bin (set of line indices)
-		typedef std::unordered_map<MapIndex, IndexSet32, MapIndexHash> Map;
+		using Map = std::unordered_map<MapIndex, IndexSet32, MapIndexHash>;
 
 	public:
 

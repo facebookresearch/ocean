@@ -25,7 +25,7 @@ class AbsoluteTransform;
  * @see SmartObjectRef, AbsoluteTransform.
  * @ingroup rendering
  */
-typedef SmartObjectRef<AbsoluteTransform> AbsoluteTransformRef;
+using AbsoluteTransformRef = SmartObjectRef<AbsoluteTransform>;
 
 /**
  * This class is the base class for all absolute transform nodes.

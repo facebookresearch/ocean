@@ -37,7 +37,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT ContourAnalyzer
 		/**
 		 * Definition of a vector holding indices.
 		 */
-		typedef std::vector<unsigned int> Indices;
+		using Indices = std::vector<unsigned int>;
 
 	protected:
 
@@ -90,7 +90,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT ContourAnalyzer
 		};
 
 		/// Definition of a vector holding dense objects.
-		typedef std::vector<DenseObject> DenseObjects;
+		using DenseObjects = std::vector<DenseObject>;
 
 	public:
 

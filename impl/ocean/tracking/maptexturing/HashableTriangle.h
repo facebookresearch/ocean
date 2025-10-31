@@ -29,7 +29,7 @@ template <typename T> class HashableTriangleT;
  * @see HashableTriangleT
  * @ingroup trackingmaptexturing
  */
-typedef HashableTriangleT<Scalar> HashableTriangle;
+using HashableTriangle = HashableTriangleT<Scalar>;
 
 /**
  * This class implements a 3D triangle which is hash-able.

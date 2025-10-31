@@ -74,7 +74,7 @@ bool TestFrameFilterSorted::testHistogram(const double testDuration)
 	Log::info() << "Testing histogram:";
 	Log::info() << " ";
 
-	typedef HistogramInteger<uint8_t, uint16_t, 256> MedianHistogram;
+	using MedianHistogram = HistogramInteger<uint8_t, uint16_t, 256>;
 
 	const bool allSucceeded = testHistogram<MedianHistogram>(testDuration);
 
@@ -138,7 +138,7 @@ bool TestFrameFilterSorted::testHistogram(const double testDuration)
 
 		THistogram histogram;
 
-		typedef typename THistogram::Type ValueType;
+		using ValueType = typename THistogram::Type;
 
 		std::vector<ValueType> values;
 		values.reserve(numberIterations);

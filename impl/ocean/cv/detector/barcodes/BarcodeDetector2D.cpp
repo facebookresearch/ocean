@@ -382,7 +382,7 @@ bool BarcodeDetector2D::isForegroundPixel(const uint8_t pixelValue, const uint8_
 
 BarcodeDetector2D::ParserFunctionSet BarcodeDetector2D::getParserFunctions(const BarcodeTypeSet& barcodeTypeSet)
 {
-	typedef std::unordered_map<BarcodeType, ParserFunction> ParserFunctionMap;
+	using ParserFunctionMap = std::unordered_map<BarcodeType, ParserFunction>;
 
 	const ParserFunctionMap parserFunctionMap =
 	{

@@ -30,21 +30,21 @@ class ActionSet;
  * @see ActionSet.
  * @ingroup platformopenxr
  */
-typedef std::shared_ptr<ActionSet> SharedActionSet;
+using SharedActionSet = std::shared_ptr<ActionSet>;
 
 /**
  * Definition of a vector holding ActionSet objects.
  * @see ActinoSet
  * @ingroup platformopenxr
  */
-typedef std::vector<ActionSet> ActionSets;
+using ActionSets = std::vector<ActionSet>;
 
 /**
  * Definition of a vector holding a SharedActionSet object.
  * @see SharedActionSet.
  * @ingroup platformopenxr
  */
-typedef std::vector<SharedActionSet> SharedActionSets;
+using SharedActionSets = std::vector<SharedActionSet>;
 
 /**
  * This class implements a wrapper for an OpenXR action set.
@@ -57,17 +57,17 @@ class OCEAN_PLATFORM_OPENXR_EXPORT ActionSet final
 		/**
 		 * Definition of an id for an action.
 		 */
-		typedef uint32_t ActionId;
+		using ActionId = uint32_t;
 
 		/**
 		 * Definition of an unordered map mapping action ids to XrAction objects.
 		 */
-		typedef std::unordered_map<ActionId, XrAction> ActionIdMap;
+		using ActionIdMap = std::unordered_map<ActionId, XrAction>;
 
 		/**
 		 * Definition of a vector holding strings.
 		 */
-		typedef std::vector<std::string> Paths;
+		using Paths = std::vector<std::string>;
 
 		/// An invalid action id.
 		static constexpr ActionId invalidActionId_ = ActionId(-1);
@@ -77,7 +77,7 @@ class OCEAN_PLATFORM_OPENXR_EXPORT ActionSet final
 		/**
 		 * Definition of a vector holding XrActionSuggestedBinding objects.
 		 */
-		typedef std::vector<XrActionSuggestedBinding> XrActionSuggestedBindings;
+		using XrActionSuggestedBindings = std::vector<XrActionSuggestedBinding>;
 
 	public:
 

@@ -25,7 +25,7 @@ class QuadFace;
  * Definition of a vector holding quad faces.
  * @ingroup rendering
  */
-typedef std::vector<QuadFace> QuadFaces;
+using QuadFaces = std::vector<QuadFace>;
 
 /**
  * Definition of a quad face with four vertex indices.

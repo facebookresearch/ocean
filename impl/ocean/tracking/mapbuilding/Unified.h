@@ -98,22 +98,22 @@ class OCEAN_TRACKING_MAPBUILDING_EXPORT UnifiedHelperFreakMultiDescriptor256 : p
 	public:
 
 		/// The binary descriptor.
-		typedef UnifiedDescriptor::BinaryDescriptor<256u> BinaryDescriptor256;
+		using BinaryDescriptor256 = UnifiedDescriptor::BinaryDescriptor<256u>;
 
 		/// The binary descriptors.
-		typedef UnifiedDescriptor::BinaryDescriptors<256u> BinaryDescriptors256;
+		using BinaryDescriptors256 = UnifiedDescriptor::BinaryDescriptors<256u>;
 
 		/// Definition of the distance value.
-		typedef unsigned int BinaryDescriptorDistance;
+		using BinaryDescriptorDistance = unsigned int;
 
 		/// Definition of a vocabulary forest.
-		typedef Tracking::VocabularyForest<BinaryDescriptor256, BinaryDescriptorDistance, UnifiedDescriptorT<BinaryDescriptor256>::determineDistance> BinaryVocabularyForest;
+		using BinaryVocabularyForest = Tracking::VocabularyForest<BinaryDescriptor256, BinaryDescriptorDistance, UnifiedDescriptorT<BinaryDescriptor256>::determineDistance>;
 
 		/// Definition of a vocabulary tree.
-		typedef BinaryVocabularyForest::TVocabularyTree BinaryVocabularyTree;
+		using BinaryVocabularyTree = BinaryVocabularyForest::TVocabularyTree;
 
 		/// Definition of a descriptor for object points.
-		typedef CV::Detector::FREAKDescriptors32 ObjectPointDescriptor;
+		using ObjectPointDescriptor = CV::Detector::FREAKDescriptors32;
 
 		/**
 		 * Initializes the data structures for guided and unguided matching.

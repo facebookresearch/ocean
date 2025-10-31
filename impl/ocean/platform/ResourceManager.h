@@ -30,24 +30,24 @@ class OCEAN_PLATFORM_EXPORT ResourceManager
 		/**
 		 * Definition of a vector holding 8 bit values.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 		/**
 		 * Definition of an object reference holding a buffer.
 		 */
-		typedef ObjectRef<Buffer> BufferRef;
+		using BufferRef = ObjectRef<Buffer>;
 
 	protected:
 
 		/**
 		 * Definition of a map mapping resource ids to frames with individual resolutions.
 		 */
-		typedef std::unordered_map<unsigned int, FrameRefs> FrameMap;
+		using FrameMap = std::unordered_map<unsigned int, FrameRefs>;
 
 		/**
 		 * Definition of a map mapping resource ids to buffer objects.
 		 */
-		typedef std::unordered_map<unsigned int, BufferRef> BufferMap;
+		using BufferMap = std::unordered_map<unsigned int, BufferRef>;
 
 	public:
 

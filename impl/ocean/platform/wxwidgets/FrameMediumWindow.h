@@ -38,7 +38,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT FrameMediumWindow :
 		/**
 		 * Definition of a callback for medium finished events.
 		 */
-		typedef Ocean::Callback<void> Callback;
+		using Callback = Ocean::Callback<void>;
 
 	public:
 

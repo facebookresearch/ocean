@@ -181,7 +181,7 @@ class OCEAN_CV_EXPORT Canvas
 				/**
 				 * Definition of a vector holding characters.
 				 */
-				typedef std::vector<Character> Characters;
+				using Characters = std::vector<Character>;
 
 			public:
 
@@ -1180,7 +1180,7 @@ void Canvas::rectangle8BitPerChannel(uint8_t* frame, const unsigned int width, c
 		return;
 	}
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const uint8_t black[tChannels] = {0u};
 	const PixelType pixelValue = value ? *(const PixelType*)value : *(const PixelType*)black;
@@ -1331,7 +1331,7 @@ void Canvas::ellipse8BitPerChannel(uint8_t* frame, const unsigned int width, con
 
 	const unsigned int frameStrideElements = width * tChannels + paddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 	const uint8_t valueZero[tChannels] = {uint8_t(0)};
 
 	const PixelType* const pixelValue = value == nullptr ? (PixelType*)valueZero : (PixelType*)value;
@@ -1424,7 +1424,7 @@ void Canvas::rotatedEllipse8BitPerChannel(uint8_t* frame, const unsigned int wid
 
 	const unsigned int frameStrideElements = width * tChannels + paddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 	const uint8_t valueZero[tChannels] = {0u};
 
 	const PixelType* const pixelValue = value == nullptr ? (PixelType*)valueZero : (PixelType*)value;
@@ -1521,7 +1521,7 @@ void Canvas::fill8BitPerChannel(uint8_t* frame, const unsigned int width, const 
 
 	ocean_assert(position.x() < width && position.y() < height);
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const uint8_t zeroValue[tChannels] = {0u};
 	const PixelType pixelValue = value ? *((PixelType*)value) : *((PixelType*)zeroValue);

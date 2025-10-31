@@ -25,7 +25,7 @@ class Points;
  * @see SmartObjectRef, Points.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Points> PointsRef;
+using PointsRef = SmartObjectRef<Points>;
 
 /**
  * This class is the base for all points objects.

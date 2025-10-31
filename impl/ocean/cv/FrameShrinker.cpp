@@ -1700,8 +1700,8 @@ void FrameShrinker::downsampleByTwo8BitPerChannel14641Subset(const uint8_t* sour
 	// we have specialized horizontal downsampling functions,
 	// we use a function pointer to select the correct function
 
-	typedef void (*DownsampleByTwoRowVertical8BitPerChannel14641Function)(const uint8_t* const, uint16_t*, const unsigned int, const unsigned int, const unsigned int, const unsigned int);
-	typedef void (*DownsampleByTwoRowHorizontal8BitPerChannel14641Function)(const uint16_t*, uint8_t*, const unsigned int, const unsigned int);
+	using DownsampleByTwoRowVertical8BitPerChannel14641Function = void (*)(const uint8_t* const, uint16_t*, const unsigned int, const unsigned int, const unsigned int, const unsigned int);
+	using DownsampleByTwoRowHorizontal8BitPerChannel14641Function = void (*)(const uint16_t*, uint8_t*, const unsigned int, const unsigned int);
 
 	DownsampleByTwoRowVertical8BitPerChannel14641Function downsampleByTwoRowVerticalFunction = downsampleByTwoRowVertical8BitPerChannel14641;
 	DownsampleByTwoRowHorizontal8BitPerChannel14641Function downsampleByTwoRowHorizontalFunction = downsampleByTwoRowHorizontal8BitPerChannel14641;

@@ -107,7 +107,7 @@ enum PixelDirection : int32_t
  * Definition of a vector holding pixel directions.
  * @ingroup cv
  */
-typedef std::vector<PixelDirection> PixelDirections;
+using PixelDirections = std::vector<PixelDirection>;
 
 /**
  * Definition of individual centers of pixels.

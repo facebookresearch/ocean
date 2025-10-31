@@ -52,7 +52,7 @@ class FrameFilterTemplate
 		/**
 		 * Definition of the filter factor data type.
 		 */
-		typedef TFactor Type;
+		using Type = TFactor;
 
 	public:
 

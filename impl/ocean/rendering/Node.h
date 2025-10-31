@@ -31,13 +31,13 @@ class Node;
  * @see SmartObjectRef, Node.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Node> NodeRef;
+using NodeRef = SmartObjectRef<Node>;
 
 /**
  * Definition of a vector holding node references.
  * @ingroup rendering
  */
-typedef std::vector<NodeRef> NodeRefs;
+using NodeRefs = std::vector<NodeRef>;
 
 /**
  * This is the base class for all rendering nodes.

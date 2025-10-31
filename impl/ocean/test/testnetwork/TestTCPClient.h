@@ -32,7 +32,7 @@ class OCEAN_TEST_NETWORK_EXPORT TestTCPClient
 		/**
 		 * Definition of a vector holding bytes.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 		/**
 		 * This class implements a receiver.

@@ -43,7 +43,7 @@ class OCEAN_CV_EXPORT FrameFilterSorted
 			public:
 
 				/// The data type of the histogram values.
-				typedef T Type;
+				using Type = T;
 
 			public:
 
@@ -118,7 +118,7 @@ class OCEAN_CV_EXPORT FrameFilterSorted
 				/**
 				 * Definition of a vector holding the elements.
 				 */
-				typedef std::vector<T> Elements;
+				using Elements = std::vector<T>;
 
 			public:
 

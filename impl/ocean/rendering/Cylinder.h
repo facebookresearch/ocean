@@ -26,7 +26,7 @@ class Cylinder;
  * @see SmartObjectRef, Cylinder.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Cylinder> CylinderRef;
+using CylinderRef = SmartObjectRef<Cylinder>;
 
 /**
  * This class is the base class for all cylinders.

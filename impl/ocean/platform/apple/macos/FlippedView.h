@@ -41,12 +41,12 @@ class FlippedView
 		/**
 		 * Definition of a vector holding 8 bit values.
 		 */
-		typedef std::vector<unsigned char> EnabledStates;
+		using EnabledStates = std::vector<unsigned char>;
 
 		/**
 		 * Definition of a vector holding view objects.
 		 */
-		typedef std::vector<NSView*> NSViews;
+		using NSViews = std::vector<NSView*>;
 
 	public:
 

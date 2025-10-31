@@ -297,7 +297,7 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT OculusTagTracker
 		};
 
 		/// A vector of tag observation histories
-		typedef std::vector<TagObservationHistory> TagObservationHistories;
+		using TagObservationHistories = std::vector<TagObservationHistory>;
 
 		/**
 		 * This class organizes the information of tracked tags
@@ -360,10 +360,10 @@ class OCEAN_TRACKING_OCULUSTAGS_EXPORT OculusTagTracker
 		};
 
 		/// A map to store all tracked tags
-		typedef std::unordered_map<uint32_t, TrackedTag> TrackedTagMap;
+		using TrackedTagMap = std::unordered_map<uint32_t, TrackedTag>;
 
 		/// A vector of tracked tags.
-		typedef std::vector<TrackedTag> TrackedTags;
+		using TrackedTags = std::vector<TrackedTag>;
 
 	public:
 

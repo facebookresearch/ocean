@@ -68,7 +68,7 @@ void MappingI2::applyTwoFrameMapping8BitPerChannelSubset(uint8_t* const target, 
 
 	const PixelPosition* mappingPointer = mappingI_ + firstRow * width_;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	PixelType* targetPointer = (PixelType*)target + firstRow * width_;
 

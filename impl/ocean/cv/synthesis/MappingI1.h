@@ -745,7 +745,7 @@ void MappingI1::applyOneFrameMapping8BitPerChannelSubset(uint8_t* const frame, c
 {
 	static_assert(tChannels >= 1u, "Invalid channels!");
 
-	typedef typename DataType<uint8_t, tChannels>::Type DataType;
+	using DataType = typename DataType<uint8_t, tChannels>::Type;
 
 	ocean_assert(xStart + xWidth <= width_);
 	ocean_assert(firstRow + numberRows <= height_);

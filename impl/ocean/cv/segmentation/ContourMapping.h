@@ -266,7 +266,7 @@ void ContourMapping::mappingInterpolation8BitPerChannel(uint8_t* frame, uint8_t*
 	const unsigned int frameStrideElements = width * tChannels + framePaddingElements;
 	const unsigned int maskStrideElements = width + maskPaddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const unsigned int boundingBoxWidth = boundingBox.width();
 

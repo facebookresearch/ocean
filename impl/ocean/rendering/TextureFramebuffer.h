@@ -29,7 +29,7 @@ class TextureFramebuffer;
  * @see SmartObjectRef, TextureFramebuffer.
  * @ingroup rendering
  */
-typedef SmartObjectRef<TextureFramebuffer> TextureFramebufferRef;
+using TextureFramebufferRef = SmartObjectRef<TextureFramebuffer>;
 
 /**
  * This class is the base class for all textures based on a framebuffer.

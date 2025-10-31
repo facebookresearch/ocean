@@ -74,7 +74,7 @@ bool TestLineEvaluator::testMatchDetermination(const double /*testDuration*/)
 {
 	Log::info() << "Match determination test for " << TypeNamer::name<T>() << "':";
 
-	typedef std::unordered_map<LineEvaluator::Id, FiniteLineT2<T>> LineMap;
+	using LineMap = std::unordered_map<LineEvaluator::Id, FiniteLineT2<T>>;
 
 	bool allSucceeded = true;
 

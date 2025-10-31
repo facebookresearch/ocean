@@ -29,7 +29,7 @@ class ORBFeature;
  * Definition of a vector holding ORB features.
  * @ingroup cvdetector
  */
-typedef std::vector<ORBFeature> ORBFeatures;
+using ORBFeatures = std::vector<ORBFeature>;
 
 /**
  * This class implements a ORB feature.

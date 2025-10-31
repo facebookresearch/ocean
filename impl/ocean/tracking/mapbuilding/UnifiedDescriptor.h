@@ -150,13 +150,13 @@ class UnifiedDescriptor
 		 * Definition of a FREAK  Multi Descriptor with 256 bits (32 bytes).
 		 * This custom definition should be removed unce entirely replaced with generic binary descriptors.
 		 */
-		typedef CV::Detector::FREAKDescriptor32 FreakMultiDescriptor256;
+		using FreakMultiDescriptor256 = CV::Detector::FREAKDescriptor32;
 
 		/**
 		 * Definition of vector holding FREAK  Multi Descriptors with 256 bits (32 bytes).
 		 * This custom definition should be removed unce entirely replaced with generic binary descriptors.
 		 */
-		typedef std::vector<FreakMultiDescriptor256> FreakMultiDescriptors256;
+		using FreakMultiDescriptors256 = std::vector<FreakMultiDescriptor256>;
 
 		/**
 		 * This class implements a helper class allowing to determine the type of the distance value between two descriptors.
@@ -332,7 +332,7 @@ class UnifiedDescriptor::DistanceTyper<UnifiedDescriptor::ByteDescriptor<tNumber
 	public:
 
 		/// The distance type the descriptor uses.
-		typedef unsigned int Type;
+		using Type = unsigned int;
 };
 
 /**
@@ -348,7 +348,7 @@ class UnifiedDescriptor::DistanceTyper<UnifiedDescriptor::FloatDescriptor<tNumbe
 	public:
 
 		/// The distance type the descriptor uses.
-		typedef float Type;
+		using Type = float;
 };
 
 /**
@@ -362,7 +362,7 @@ class UnifiedDescriptor::DistanceTyper<CV::Detector::FREAKDescriptor32>
 	public:
 
 		/// The distance type the descriptor uses.
-		typedef unsigned int Type;
+		using Type = unsigned int;
 };
 
 /**
@@ -612,12 +612,12 @@ class UnifiedDescriptorT<UnifiedDescriptor::ByteDescriptor<tNumberBytes>> : publ
 		/**
 		 * The data type of the descriptor.
 		 */
-		typedef ByteDescriptor<tNumberBytes> Descriptor;
+		using Descriptor = ByteDescriptor<tNumberBytes>;
 
 		/**
 		 * Definition of a vector holding descriptors.
 		 */
-		typedef std::vector<Descriptor> Descriptors;
+		using Descriptors = std::vector<Descriptor>;
 
 	public:
 
@@ -679,12 +679,12 @@ class UnifiedDescriptorT<UnifiedDescriptor::FloatDescriptor<tNumberElements>> : 
 		/**
 		 * The data type of the descriptor.
 		 */
-		typedef FloatDescriptor<tNumberElements> Descriptor;
+		using Descriptor = FloatDescriptor<tNumberElements>;
 
 		/**
 		 * Definition of a vector holding descriptors.
 		 */
-		typedef std::vector<Descriptor> Descriptors;
+		using Descriptors = std::vector<Descriptor>;
 
 	public:
 
@@ -758,12 +758,12 @@ class UnifiedDescriptorT<UnifiedDescriptor::FreakMultiDescriptor256> : public Un
 		/**
 		 * The data type of the descriptor.
 		 */
-		typedef UnifiedDescriptor::FreakMultiDescriptor256 Descriptor;
+		using Descriptor = UnifiedDescriptor::FreakMultiDescriptor256;
 
 		/**
 		 * Definition of a vector holding descriptors.
 		 */
-		typedef std::vector<Descriptor> Descriptors;
+		using Descriptors = std::vector<Descriptor>;
 
 	public:
 

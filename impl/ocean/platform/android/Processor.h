@@ -30,7 +30,7 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Processor
 		/**
 		 * Definition of a processor operation frequency.
 		 */
-		typedef unsigned int Frequency;
+		using Frequency = unsigned int;
 
 	public:
 

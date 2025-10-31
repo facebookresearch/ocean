@@ -528,7 +528,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 		{
 			case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT8:
 			{
-				typedef ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
@@ -537,7 +537,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_1_UINT8_GAMMA_TO_1_UINT8:
 			{
-				typedef ConversionFunctionMap::OneSourceGammaOneTargetConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::OneSourceGammaOneTargetConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, options.gamma(), source.paddingElements(), target.paddingElements(), worker);
@@ -546,7 +546,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT8_ALPHA:
 			{
-				typedef ConversionFunctionMap::OneSourceOneTargetAlphaConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetAlphaConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), options.alphaChannelTargetValue(), worker);
@@ -555,7 +555,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT8_BLACKLEVEL_WHITEBALANCE_GAMMA:
 			{
-				typedef ConversionFunctionMap::OneSourceOneTargetBlackLevelWhiteBalanceGammaConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetBlackLevelWhiteBalanceGammaConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, options.blackLevel(), options.whiteBalance(), options.gamma(), source.paddingElements(), target.paddingElements(), worker);
@@ -564,7 +564,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT16:
 			{
-				typedef ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint8_t, uint16_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint8_t, uint16_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(), target.data<uint16_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
@@ -573,7 +573,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_1_UINT16_TO_1_UINT8:
 			{
-				typedef ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint16_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint16_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint16_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
@@ -582,7 +582,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_1_UINT16_TO_1_UINT16:
 			{
-				typedef ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint16_t, uint16_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint16_t, uint16_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint16_t>(), target.data<uint16_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
@@ -591,7 +591,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_1_UINT32_TO_1_UINT8:
 			{
-				typedef ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint32_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint32_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint32_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
@@ -600,7 +600,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_1_UINT32_TO_1_UINT16:
 			{
-				typedef ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint32_t, uint16_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint32_t, uint16_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint32_t>(), target.data<uint16_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
@@ -609,7 +609,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_1_UINT8_TO_2_UINT8:
 			{
-				typedef ConversionFunctionMap::OneSourceTwoTargetsConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::OneSourceTwoTargetsConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(0u), target.data<uint8_t>(1u), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(0u), target.paddingElements(1u), worker);
@@ -618,7 +618,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_1_UINT8_TO_3_UINT8:
 			{
-				typedef ConversionFunctionMap::OneSourceThreeTargetsConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::OneSourceThreeTargetsConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(0u), target.data<uint8_t>(1u), target.data<uint8_t>(2u), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(0u), target.paddingElements(1u), target.paddingElements(2u), worker);
@@ -627,7 +627,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_2_UINT8_TO_1_UINT8:
 			{
-				typedef ConversionFunctionMap::TwoSourcesOneTargetConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::TwoSourcesOneTargetConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), worker);
@@ -636,7 +636,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_2_UINT8_TO_1_UINT8_ALPHA:
 			{
-				typedef ConversionFunctionMap::TwoSourcesOneTargetAlphaConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::TwoSourcesOneTargetAlphaConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), options.alphaChannelTargetValue(), worker);
@@ -645,7 +645,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_2_UINT8_TO_2_UINT8:
 			{
-				typedef ConversionFunctionMap::TwoSourcesTwoTargetConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::TwoSourcesTwoTargetConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), target.paddingElements(1u), worker);
@@ -654,7 +654,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_2_UINT8_TO_3_UINT8:
 			{
-				typedef ConversionFunctionMap::TwoSourcesThreeTargetConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::TwoSourcesThreeTargetConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), target.data<uint8_t>(2u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), target.paddingElements(1u), target.paddingElements(2u), worker);
@@ -663,7 +663,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_3_UINT8_TO_1_UINT8:
 			{
-				typedef ConversionFunctionMap::ThreeSourcesOneTargetConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::ThreeSourcesOneTargetConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), source.constdata<uint8_t>(2u), target.data<uint8_t>(0u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), source.paddingElements(2u), target.paddingElements(0u), worker);
@@ -672,7 +672,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_3_UINT8_TO_1_UINT8_ALPHA:
 			{
-				typedef ConversionFunctionMap::ThreeSourcesOneTargetAlphaConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::ThreeSourcesOneTargetAlphaConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), source.constdata<uint8_t>(2u), target.data<uint8_t>(0u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), source.paddingElements(2u), target.paddingElements(0u), options.alphaChannelTargetValue(), worker);
@@ -681,7 +681,7 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 
 			case ConversionFunctionMap::FT_3_UINT8_TO_3_UINT8:
 			{
-				typedef ConversionFunctionMap::ThreeSourcesThreeTargetConversionFunction<uint8_t, uint8_t> SpecializedFunction;
+				using SpecializedFunction = ConversionFunctionMap::ThreeSourcesThreeTargetConversionFunction<uint8_t, uint8_t>;
 				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), source.constdata<uint8_t>(2u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), target.data<uint8_t>(2u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), source.paddingElements(2u), target.paddingElements(0u), target.paddingElements(1u), target.paddingElements(2u), worker);

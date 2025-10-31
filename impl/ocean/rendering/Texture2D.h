@@ -28,7 +28,7 @@ class Texture2D;
  * @see SmartObjectRef, Texture2D.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Texture2D> Texture2DRef;
+using Texture2DRef = SmartObjectRef<Texture2D>;
 
 /**
  * This class is the base class for all 2D textures.

@@ -69,7 +69,7 @@ class OCEAN_CV_ADVANCED_EXPORT PanoramaFrame
 		/**
 		 * Definition of a lookup table for 2D vectors.
 		 */
-		typedef LookupCorner2<Vector2> LookupTable;
+		using LookupTable = LookupCorner2<Vector2>;
 
 	public:
 

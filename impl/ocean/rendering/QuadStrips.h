@@ -26,7 +26,7 @@ class QuadStrips;
  * @see SmartObjectRef, QuadStrips.
  * @ingroup rendering
  */
-typedef SmartObjectRef<QuadStrips> QuadStripsRef;
+using QuadStripsRef = SmartObjectRef<QuadStrips>;
 
 /**
  * This class is the base class for all stripped quad objects.

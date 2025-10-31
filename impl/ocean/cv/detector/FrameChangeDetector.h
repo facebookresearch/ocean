@@ -45,10 +45,10 @@ class OCEAN_CV_DETECTOR_EXPORT FrameChangeDetector
 		static constexpr unsigned int kIntensityBinWidth = 16u;
 
 		/// Histogram type for a one-channel image.
-		typedef std::array<uint32_t, kNumberIntensityBins> TileHistogram;
+		using TileHistogram = std::array<uint32_t, kNumberIntensityBins>;
 
 		/// A vector of histograms for tiles in the image.
-		typedef std::vector<TileHistogram> TileHistograms;
+		using TileHistograms = std::vector<TileHistogram>;
 
 		/**
 		 * Different possible results for processFrame().

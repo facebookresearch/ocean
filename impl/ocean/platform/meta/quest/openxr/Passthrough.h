@@ -39,7 +39,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT Passthrough final
 		/**
 		 * Definition of an unordered set holding strings.
 		 */
-		typedef std::unordered_set<std::string> StringSet;
+		using StringSet = std::unordered_set<std::string>;
 
 		/**
 		 * This class implements a scoped state object allowing to reset all passthrough states of a visualizer.
@@ -110,7 +110,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT Passthrough final
 		/**
 		 * Definition of a vector holding state objects.
 		 */
-		typedef std::vector<ScopedState> ScopedStates;
+		using ScopedStates = std::vector<ScopedState>;
 
 	public:
 

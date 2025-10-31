@@ -35,7 +35,7 @@ class Framebuffer;
  * @see SmartObjectRef, Framebuffer.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Framebuffer> FramebufferRef;
+using FramebufferRef = SmartObjectRef<Framebuffer>;
 
 /**
  * This class is the base class for all rendering framebuffers.
@@ -104,7 +104,7 @@ class OCEAN_RENDERING_EXPORT Framebuffer : virtual public Object
 		 * The default face mode gives the responsibility to the renderable object themselves, and does not overwrite the global state.
 		 * @see PrimitiveAttribute::FaceMode.
 		 */
-		typedef PrimitiveAttribute::FaceMode FaceMode;
+		using FaceMode = PrimitiveAttribute::FaceMode;
 
 		/**
 		 * Definition of different rendering face culling modes.
@@ -112,7 +112,7 @@ class OCEAN_RENDERING_EXPORT Framebuffer : virtual public Object
 		 * The default culling mode gives the responsibility to the renderable object themselves, and does not overwrite the global state.
 		 * @see PrimitiveAttribute::CullingMode.
 		 */
-		typedef PrimitiveAttribute::CullingMode CullingMode;
+		using CullingMode = PrimitiveAttribute::CullingMode;
 
 		/**
 		 * Definition of different face lighting modes.
@@ -120,14 +120,14 @@ class OCEAN_RENDERING_EXPORT Framebuffer : virtual public Object
 		 * The default culling mode gives the responsibility to the renderable object themselves, and does not overwrite the global state.
 		 * @see PrimitiveAttribute::LightingMode.
 		 */
-		typedef PrimitiveAttribute::LightingMode LightingMode;
+		using LightingMode = PrimitiveAttribute::LightingMode;
 
 		/**
 		 * Definition of different rendering phantom modes.
 		 * These modes correspond to those defined in PhantomMode except the meaning of the default culling mode.<br>
 		 * The default culling mode gives the responsibility to the renderable objects themselves, and does not overwrite the global state.
 		 */
-		typedef PhantomAttribute::PhantomMode PhantomMode;
+		using PhantomMode = PhantomAttribute::PhantomMode;
 
 		/**
 		 * Definition of a callback function for render events.
@@ -137,7 +137,7 @@ class OCEAN_RENDERING_EXPORT Framebuffer : virtual public Object
 		 * Third parameter (projection): The projection matrix of the view (eye)
 		 * Fourth parameter (predictedDisplayTime): The predicted timestamp when the image will be display
 		 */
-		typedef Callback<void, const size_t, const HomogenousMatrix4, const SquareMatrix4, const Timestamp> RenderCallback;
+		using RenderCallback = Callback<void, const size_t, const HomogenousMatrix4, const SquareMatrix4, const Timestamp>;
 
 	public:
 

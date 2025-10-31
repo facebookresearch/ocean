@@ -851,7 +851,7 @@ bool TestFrameFilterGradient::validationHorizontalVertical(const Frame& source, 
 
 	const double epsilon = (std::is_floating_point<TSource>::value && std::is_floating_point<TTarget>::value) ? Numeric::weakEps() : double(1); // for integer we allow an error of 1 due to rounding
 
-	typedef typename NextLargerTyper<TTarget>::TypePerformance TTargetLarger;
+	using TTargetLarger = typename NextLargerTyper<TTarget>::TypePerformance;
 
 	// top & bottom row
 
@@ -957,8 +957,8 @@ bool TestFrameFilterGradient::validationHorizontalVerticalMagnitudeSquared(const
 		return false;
 	}
 
-	typedef typename NextLargerTyper<TSource>::TypePerformance TSourceLarger;
-	typedef typename SignedTyper<TSourceLarger>::Type TSourceLargerSigned;
+	using TSourceLarger = typename NextLargerTyper<TSource>::TypePerformance;
+	using TSourceLargerSigned = typename SignedTyper<TSourceLarger>::Type;
 
 	// top & bottom row
 

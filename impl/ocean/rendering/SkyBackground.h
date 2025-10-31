@@ -28,7 +28,7 @@ class SkyBackground;
  * @see SmartObjectRef, SkyBackground.
  * @ingroup rendering
  */
-typedef SmartObjectRef<SkyBackground> SkyBackgroundRef;
+using SkyBackgroundRef = SmartObjectRef<SkyBackground>;
 
 /**
  * This class is the base class for all sky backgrounds.
@@ -42,12 +42,12 @@ class OCEAN_RENDERING_EXPORT SkyBackground : virtual public Background
 		 * Definition of a pair holding an angle and a color value.
 		 * All angles must be defined as radian.
 		 */
-		typedef std::pair<Scalar, RGBAColor> ColorPair;
+		using ColorPair = std::pair<Scalar, RGBAColor>;
 
 		/**
 		 * Definition of a vector holding color values.
 		 */
-		typedef std::vector<ColorPair> ColorPairs;
+		using ColorPairs = std::vector<ColorPair>;
 
 	public:
 

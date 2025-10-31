@@ -26,7 +26,7 @@ class TriangleStrips;
  * @see SmartObjectRef, TriangleStrips.
  * @ingroup rendering
  */
-typedef SmartObjectRef<TriangleStrips> TriangleStripsRef;
+using TriangleStripsRef = SmartObjectRef<TriangleStrips>;
 
 /**
  * This class is the base for all rendering triangle strips.

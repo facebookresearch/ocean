@@ -109,7 +109,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT MaskAnalyzer
 		/**
 		 * Definition of a vector holding mask block objects.
 		 */
-		typedef std::vector<MaskBlock> MaskBlocks;
+		using MaskBlocks = std::vector<MaskBlock>;
 
 	protected:
 
@@ -139,12 +139,12 @@ class OCEAN_CV_SEGMENTATION_EXPORT MaskAnalyzer
 		/**
 		 * Definition of a set holding pixel positions.
 		 */
-		typedef std::set<PixelPosition> PixelPositionSet;
+		using PixelPositionSet = std::set<PixelPosition>;
 
 		/**
 		 * Definition of a vector holding index pair vectors.
 		 */
-		typedef std::vector<IndexPairs32> IndexPairGroups;
+		using IndexPairGroups = std::vector<IndexPairs32>;
 
 		/// Chessboard distance for vertical and horizontal steps
 		static constexpr uint32_t distanceVerticalHorizontalC = 1u;
@@ -171,12 +171,12 @@ class OCEAN_CV_SEGMENTATION_EXPORT MaskAnalyzer
 				/**
 				 * Definition of a pair combining the horizontal start position (inclusive), and the horizontal end position (exclusive).
 				 */
-				typedef std::pair<unsigned int, unsigned int> RowSegment;
+				using RowSegment = std::pair<unsigned int, unsigned int>;
 
 				/**
 				 * Definition of a vector holding row segments.
 				 */
-				typedef std::vector<RowSegment> RowSegments;
+				using RowSegments = std::vector<RowSegment>;
 
 			public:
 
@@ -243,7 +243,7 @@ class OCEAN_CV_SEGMENTATION_EXPORT MaskAnalyzer
 		/**
 		 * Definition of a vector holding SweepMaskIsland objects.
 		 */
-		typedef std::vector<SweepMaskIsland> SweepMaskIslands;
+		using SweepMaskIslands = std::vector<SweepMaskIsland>;
 
 	public:
 

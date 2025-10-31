@@ -50,7 +50,7 @@ class GLESFramebuffer;
  * @see GLESFramebuffer.
  * @ingroup platformmetaquestopenxr
  */
-typedef std::vector<GLESFramebuffer> GLESFramebuffers;
+using GLESFramebuffers = std::vector<GLESFramebuffer>;
 
 /**
  * This class encapsulates an OpenGLES framebuffer for Meta Quest devices implementing OpenXR's swap chain.
@@ -60,7 +60,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT GLESFramebuffer
 {
 	protected:
 
-		typedef std::vector<XrSwapchainImageOpenGLESKHR> XrSwapchainImages;
+		using XrSwapchainImages = std::vector<XrSwapchainImageOpenGLESKHR>;
 
 	public:
 

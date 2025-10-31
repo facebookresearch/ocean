@@ -379,7 +379,7 @@ void FrameTransposer::transpose(const T* source, T* target, const unsigned int s
 
 	const unsigned int blocks8 = xBlocks8 * yBlocks8;
 
-	typedef typename TypeMapper<T>::Type MappedType;
+	using MappedType = typename TypeMapper<T>::Type;
 
 	if (worker && blocks8 >= 800u)
 	{
@@ -400,7 +400,7 @@ void FrameTransposer::rotate90(const T* source, T* target, const unsigned int so
 	ocean_assert(source != target);
 	ocean_assert(sourceWidth != 0u && sourceHeight != 0u);
 
-	typedef typename TypeMapper<T>::Type MappedType;
+	using MappedType = typename TypeMapper<T>::Type;
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION > 0
 
@@ -1398,7 +1398,7 @@ OCEAN_FORCE_INLINE void FrameTransposer::BlockTransposer<T, tChannels>::transpos
 	ocean_assert(sourceBlock && targetBlock);
 	ocean_assert(sourceStrideElements >= 8u && targetStrideElements >= 8u);
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	switch (tFlipDirection)
 	{
@@ -1477,7 +1477,7 @@ OCEAN_FORCE_INLINE void FrameTransposer::BlockTransposer<T, tChannels>::transpos
 	ocean_assert(sourceStrideElements >= blockWidth);
 	ocean_assert(targetStrideElements >= blockHeight);
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	switch (tFlipDirection)
 	{

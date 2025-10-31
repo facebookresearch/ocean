@@ -42,7 +42,7 @@ class OCEAN_CV_ADVANCED_EXPORT FrameRectification
 		/**
 		 * Definition of a lookup table storing 2D vectors as elements.
 		 */
-		typedef LookupCorner2<Vector2> LookupTable;
+		using LookupTable = LookupCorner2<Vector2>;
 
 		/**
 		 * The following comfort class provides comfortable functions simplifying prototyping applications but also increasing binary size of the resulting applications.
@@ -1101,7 +1101,7 @@ void FrameRectification::triangleObjectIF8BitPerChannelSubset(const uint8_t* cam
 
 	const unsigned int targetStrideElements = targetWidth * tChannels + targetFramePaddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	for (unsigned int y = firstTargetRow; y < firstTargetRow + numberTargetRows; ++y)
 	{
@@ -1152,7 +1152,7 @@ void FrameRectification::triangleObjectLookup8BitPerChannelSubset(const uint8_t*
 
 	const unsigned int targetFrameStrideElements = targetFrameWidth * tChannels + targetFramePaddingElements;
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	for (unsigned int y = firstTargetRow; y < firstTargetRow + numberTargetRows; ++y)
 	{

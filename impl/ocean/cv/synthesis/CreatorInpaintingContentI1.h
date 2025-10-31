@@ -83,7 +83,7 @@ void CreatorInpaintingContentI1::createSubsetChannels(const unsigned int firstCo
 	ocean_assert(firstColumn + numberColumns <= layerI_.width());
 	ocean_assert(firstRow + numberRows <= layerI_.height());
 
-	typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+	using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 	const uint8_t* targetData = target_.data<uint8_t>();
 

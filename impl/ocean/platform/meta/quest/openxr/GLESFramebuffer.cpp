@@ -509,7 +509,7 @@ GLESFramebuffer& GLESFramebuffer::operator=(GLESFramebuffer&& framebuffer)
 
 bool GLESFramebuffer::translateSwapchainFormat(const int64_t swapchainFormat, std::string& readableSwapchainFormat)
 {
-	typedef std::unordered_map<int64_t, std::string> SwapchainFormatMap;
+	using SwapchainFormatMap = std::unordered_map<int64_t, std::string>;
 
 	static const SwapchainFormatMap swapchainFormatMap =
 	{

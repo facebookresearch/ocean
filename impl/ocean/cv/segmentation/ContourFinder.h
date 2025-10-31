@@ -47,14 +47,14 @@ class OCEAN_CV_SEGMENTATION_EXPORT ContourFinder
 				/**
 				 * Definition of a vector holding fingerprint objects.
 				 */
-				typedef typename std::vector<Fingerprint<tChannels>> Fingerprints;
+				using Fingerprints = typename std::vector<Fingerprint<tChannels>>;
 
 			protected:
 
 				/**
 				 * Definition of a data type storing the information of one fingerprint.
 				 */
-				typedef typename DataType<uint8_t, tChannels>::Type Type;
+				using Type = typename DataType<uint8_t, tChannels>::Type;
 
 			public:
 

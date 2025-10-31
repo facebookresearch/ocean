@@ -32,19 +32,19 @@ class Object;
  * @see Object.
  * @ingroup rendering
  */
-typedef Ocean::ObjectRef<Object> ObjectRef;
+using ObjectRef = Ocean::ObjectRef<Object>;
 
 /**
  * Definition of a vector holding rendering object references.
  * @ingroup rendering
  */
-typedef std::vector<ObjectRef> ObjectRefs;
+using ObjectRefs = std::vector<ObjectRef>;
 
 /**
  * Definition of a vector holding rendering object references.
  * @ingroup rendering
  */
-typedef std::set<ObjectRef> ObjectRefSet;
+using ObjectRefSet = std::set<ObjectRef>;
 
 /**
  * This class is the base class for all rendering objects.
@@ -184,7 +184,7 @@ class OCEAN_RENDERING_EXPORT Object
 		/**
 		 * Definition of a map holding object ids to reference counters.
 		 */
-		typedef std::unordered_map<ObjectId, unsigned int> ObjectIdMap;
+		using ObjectIdMap = std::unordered_map<ObjectId, unsigned int>;
 
 	public:
 

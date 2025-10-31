@@ -376,8 +376,8 @@ TEST(TestCaller, CallerParameters)
 
 bool TestCaller::testCallerMembers()
 {
-	typedef Ocean::Caller<void> CallerFunction;
-	typedef Ocean::Caller<int> CallerFunctionInt;
+	using CallerFunction = Ocean::Caller<void>;
+	using CallerFunctionInt = Ocean::Caller<int>;
 
 	Object object;
 
@@ -513,8 +513,8 @@ bool TestCaller::testCallerMembers()
 
 bool TestCaller::testCallerStatics()
 {
-	typedef Ocean::Caller<void> CallerFunction;
-	typedef Ocean::Caller<int> CallerFunctionInt;
+	using CallerFunction = Ocean::Caller<void>;
+	using CallerFunctionInt = Ocean::Caller<int>;
 
 	Param0 param0;
 	Param1 param1;
@@ -649,7 +649,7 @@ bool TestCaller::testCallerParameters()
 {
 	Log::info() << "Testing mixed parameter types:";
 
-	typedef Caller<int> MixedCaller;
+	using MixedCaller = Caller<int>;
 
 	bool allSucceeded = true;
 

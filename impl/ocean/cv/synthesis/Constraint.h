@@ -307,7 +307,7 @@ class OCEAN_CV_SYNTHESIS_EXPORT Constraints
 		/**
 		 * Definition of a vector holding constraints.
 		 */
-		typedef std::vector<std::unique_ptr<Constraint>> ConstraintsVector;
+		using ConstraintsVector = std::vector<std::unique_ptr<Constraint>>;
 
 	public:
 

@@ -249,8 +249,8 @@ void SumAbsoluteDifferences::determine(const T* firstFrame, const T* secondFrame
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(absoluteDifferences != nullptr);
 
-	typedef typename AbsoluteDifferenceValueTyper<T>::Type TResult;
-	typedef typename DifferenceValueTyper<T>::Type TDifferenceType;
+	using TResult = typename AbsoluteDifferenceValueTyper<T>::Type;
+	using TDifferenceType = typename DifferenceValueTyper<T>::Type;
 
 	const unsigned int firstFrameStrideElements = width * tChannels + firstFramePaddingElements;
 	const unsigned int secondFrameStrideElements = width * tChannels + secondFramePaddingElements;

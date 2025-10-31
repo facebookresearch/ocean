@@ -35,7 +35,7 @@ class UnifiedFeatureMap;
  * @see UnifiedFeatureMap.
  * @ingroup trackingmapbuilding
  */
-typedef std::shared_ptr<UnifiedFeatureMap> SharedUnifiedFeatureMap;
+using SharedUnifiedFeatureMap = std::shared_ptr<UnifiedFeatureMap>;
 
 /**
  * This class implements the base class for a feature map necessary to re-localize with optimized data structures.

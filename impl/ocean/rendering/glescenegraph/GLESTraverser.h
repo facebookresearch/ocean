@@ -107,7 +107,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESTraverser
 		/**
 		 * Definition of a vector holding traverser objects.
 		 */
-		typedef std::vector<TraverserObject> TraverserObjects;
+		using TraverserObjects = std::vector<TraverserObject>;
 
 	public:
 

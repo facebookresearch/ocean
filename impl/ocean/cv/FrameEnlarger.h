@@ -321,7 +321,7 @@ void FrameEnlarger::addBorder(const T* source, T* target, const unsigned int sou
 	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(sourceWidth != 0u && sourceHeight != 0u);
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 	static_assert(sizeof(PixelType) == sizeof(T) * tChannels, "Invalid pixel type!");
 
 	const unsigned int targetWidth = sourceWidth + borderSizeLeft + borderSizeRight;
@@ -414,7 +414,7 @@ void FrameEnlarger::addBorderNearestPixel(const T* source, T* target, const unsi
 	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(sourceWidth != 0u && sourceHeight != 0u);
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 	static_assert(sizeof(PixelType) == sizeof(T) * tChannels, "Invalid pixel type!");
 
 	const unsigned int targetWidth = sourceWidth + borderSizeLeft + borderSizeRight;
@@ -521,7 +521,7 @@ void FrameEnlarger::addBorderMirrored(const T* source, T* target, const unsigned
 	ocean_assert(borderSizeLeft <= sourceWidth && borderSizeRight <= sourceWidth);
 	ocean_assert(borderSizeTop <= sourceHeight && borderSizeBottom <= sourceHeight);
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 	static_assert(sizeof(PixelType) == sizeof(T) * tChannels, "Invalid pixel type!");
 
 	const unsigned int targetWidth = sourceWidth + borderSizeLeft + borderSizeRight;
@@ -777,7 +777,7 @@ void FrameEnlarger::addTransparentBorder8BitPerChannel(const unsigned char* sour
 {
 	ocean_assert(source && target);
 
-	typedef typename DataType<uint8_t, tChannelsWithAlpha - 1u>::Type TypeWithoutAlpha;
+	using TypeWithoutAlpha = typename DataType<uint8_t, tChannelsWithAlpha - 1u>::Type;
 
 	if (topBorder != 0u)
 	{
@@ -930,7 +930,7 @@ void FrameEnlarger::multiplyByTwoSubset(const T* source, T* target, const unsign
 	const unsigned int sourceStrideElements = sourceWidth * tChannels + sourcePaddingElements;
 	const unsigned int targetStrideElements = targetWidth * tChannels + targetPaddingElements;
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	// check whether no extra right column handling is necessary
 	if (targetWidth % 2u == 0u)

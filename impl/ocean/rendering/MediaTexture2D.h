@@ -30,7 +30,7 @@ class MediaTexture2D;
  * @see SmartObjectRef, Texture2D.
  * @ingroup rendering
  */
-typedef SmartObjectRef<MediaTexture2D> MediaTexture2DRef;
+using MediaTexture2DRef = SmartObjectRef<MediaTexture2D>;
 
 /**
  * This class is the base class for all 2D textures receiving their image content from Media objects.

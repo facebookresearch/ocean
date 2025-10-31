@@ -102,7 +102,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT TrackedController
 		/**
 		 * Definition of a vector holding controller types.
 		 */
-		typedef std::vector<ControllerType> ControllerTypes;
+		using ControllerTypes = std::vector<ControllerType>;
 
 	protected:
 
@@ -134,7 +134,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT TrackedController
 		/**
 		 * Definition of an unordered map mapping button types to OpenXR boolean states.
 		 */
-		typedef std::unordered_map<ButtonType, XrActionStateBoolean> XrActionStateMap;
+		using XrActionStateMap = std::unordered_map<ButtonType, XrActionStateBoolean>;
 
 		/// The number of controllers.
 		static constexpr size_t numberControllers_ = 2;

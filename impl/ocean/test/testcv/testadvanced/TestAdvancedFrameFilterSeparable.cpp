@@ -206,7 +206,7 @@ bool TestAdvancedFrameFilterSeparable::testFilter(const unsigned int width, cons
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	typedef typename NextLargerTyper<T>::TypePerformance TFilter;
+	using TFilter = typename NextLargerTyper<T>::TypePerformance;
 
 	Log::info() << "Testing advanced filter with resolution " << width << "x" << height << " for element type '" << TypeNamer::name<T>() << "' with filter type '" << TypeNamer::name<TFilter>() << "':";
 	Log::info() << " ";
@@ -370,7 +370,7 @@ bool TestAdvancedFrameFilterSeparable::testFilterInPlace(const unsigned int widt
 	ocean_assert(width >= 1u && height >= 1u);
 	ocean_assert(testDuration > 0.0);
 
-	typedef typename NextLargerTyper<T>::TypePerformance TFilter;
+	using TFilter = typename NextLargerTyper<T>::TypePerformance;
 
 	Log::info() << "Testing advanced in-place filter with resolution " << width << "x" << height << " for element type '" << TypeNamer::name<T>() << "' with filter type '" << TypeNamer::name<TFilter>() << "':";
 	Log::info() << " ";

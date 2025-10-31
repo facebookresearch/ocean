@@ -643,7 +643,7 @@ bool PlanarRectangleTracker::PlaneTrackerComponent::optimizeCamera(PinholeCamera
 		return false;
 	}
 
-	typedef std::vector< StaticBuffer<Scalar, 6> > IndividualModels;
+	using IndividualModels = std::vector< StaticBuffer<Scalar, 6> >;
 
 	IndividualModels individualModels(bestPosesIF.size());
 
@@ -665,7 +665,7 @@ bool PlanarRectangleTracker::PlaneTrackerComponent::optimizeCamera(PinholeCamera
 
 	// first we try to optimized the entire camera model including, focal length, principal point and camera distortion
 	{
-		typedef Geometry::NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<8, 6, 2, 12, 16> UniversalOptimization;
+		using UniversalOptimization = Geometry::NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<8, 6, 2, 12, 16>;
 
 		UniversalOptimization::SharedModel sharedModel;
 		camera_.copyElements(sharedModel.data());
@@ -697,7 +697,7 @@ bool PlanarRectangleTracker::PlaneTrackerComponent::optimizeCamera(PinholeCamera
 
 	// now we try to optimize the distortion parameters only
 	{
-		typedef Geometry::NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<4, 6, 2, 8, 16> UniversalOptimization;
+		using UniversalOptimization = Geometry::NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<4, 6, 2, 8, 16>;
 
 		UniversalOptimization::SharedModel sharedModel;
 		sharedModel[0] = camera_.radialDistortion().first;

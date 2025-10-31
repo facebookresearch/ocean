@@ -44,7 +44,7 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 		/**
 		 * Definition of an unordered set holding strings.
 		 */
-		typedef std::unordered_set<std::string> StringSet;
+		using StringSet = std::unordered_set<std::string>;
 
 		/// The number of supported hands.
 		static constexpr size_t numberHands_ = 2;
@@ -67,12 +67,12 @@ class OCEAN_PLATFORM_META_QUEST_OPENXR_EXPORT HandPoses
 				/**
 				 * Definition of a vector holding radii.
 				 */
-				typedef std::vector<float> Radii;
+				using Radii = std::vector<float>;
 
 				/**
 				 * Definition of a vector holding signed 16-bit indices.
 				 */
-				typedef std::vector<int16_t> SignedIndices16;
+				using SignedIndices16 = std::vector<int16_t>;
 
 			public:
 

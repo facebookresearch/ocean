@@ -31,7 +31,7 @@ class LayerI1;
  * @see LayerI1.
  * @ingroup cvsynthesis
  */
-typedef std::vector<LayerI1> LayersI1;
+using LayersI1 = std::vector<LayerI1>;
 
 /**
  * This class implements a single layer for pixel synthesis within one frame and pixel accuracy.

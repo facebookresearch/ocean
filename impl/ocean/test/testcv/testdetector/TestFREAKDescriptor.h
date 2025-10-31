@@ -33,10 +33,10 @@ template <size_t tSize>
 class TestFREAKDescriptorT;
 
 /// Typedef for the test class of the 32-bytes long FREAK descriptors
-typedef TestFREAKDescriptorT<32> TestFREAKDescriptor32;
+using TestFREAKDescriptor32 = TestFREAKDescriptorT<32>;
 
 /// Typedef for the test class of the 64-bytes long FREAK descriptors
-typedef TestFREAKDescriptorT<64> TestFREAKDescriptor64;
+using TestFREAKDescriptor64 = TestFREAKDescriptorT<64>;
 
 /**
  * This class implements a test for the FREAK descriptor.

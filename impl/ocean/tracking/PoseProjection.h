@@ -134,7 +134,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		/**
 		 * Definition of a vector holding pose projections.
 		 */
-		typedef std::vector<PoseProjection> PoseProjections;
+		using PoseProjections = std::vector<PoseProjection>;
 
 		/**
 		 * This class implements a error object.
@@ -181,7 +181,7 @@ class OCEAN_TRACKING_EXPORT PoseProjection
 		/**
 		 * Definition of a vector holding error objects.
 		 */
-		typedef std::vector<ErrorObject> ErrorObjects;
+		using ErrorObjects = std::vector<ErrorObject>;
 
 	public:
 

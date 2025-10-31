@@ -25,7 +25,7 @@ class PhantomAttribute;
  * @see SmartObjectRef, PhantomAttribute.
  * @ingroup rendering
  */
-typedef SmartObjectRef<PhantomAttribute> PhantomAttributeRef;
+using PhantomAttributeRef = SmartObjectRef<PhantomAttribute>;
 
 /**
  * This class is the base class for all phantom attributes.

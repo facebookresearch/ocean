@@ -31,28 +31,28 @@ template <typename T> class PixelLineT;
  * @see PixelLineT
  * @ingroup cvadvanced
  */
-typedef PixelLineT<unsigned int> PixelLine;
+using PixelLine = PixelLineT<unsigned int>;
 
 /**
  * Definition of a PixelLine object with a data type allowing positive and negative coordinate values.
  * @see PixelLineT
  * @ingroup cvadvanced
  */
-typedef PixelLineT<int> PixelLineI;
+using PixelLineI = PixelLineT<int>;
 
 /**
  * Definition of a vector holding pixel lines (with positive coordinate values).
  * @see PixelLine
  * @ingroup cvadvanced
  */
-typedef std::vector<PixelLine> PixelLines;
+using PixelLines = std::vector<PixelLine>;
 
 /**
  * Definition of a vector holding pixel lines (with positive and negative coordinate values).
  * @see PixelLineT
  * @ingroup cvadvanced
  */
-typedef std::vector<PixelLineI> PixelLinesI;
+using PixelLinesI = std::vector<PixelLineI>;
 
 /**
  * This class implements a 2D line with pixel precision.
@@ -254,7 +254,7 @@ bool PixelLineT<T>::horizontalIntersection(const T y, T& x) const
 	}
 	else
 	{
-		typedef typename SignedTyper<T>::Type SignedType;
+		using SignedType = typename SignedTyper<T>::Type;
 
 		const float t = float(int(y) - SignedType(lineP0.y())) / float(SignedType(lineP1.y()) - SignedType(lineP0.y()));
 		x = lineP0.x() + T(float((SignedType(lineP1.x()) - SignedType(lineP0.x()))) * t + 0.5f);
@@ -274,7 +274,7 @@ inline typename SignedTyper<T>::Type PixelLineT<T>::operator*(const PixelLineT<T
 {
 	ocean_assert(isValid() && line.isValid());
 
-	typedef typename SignedTyper<T>::Type SignedType;
+	using SignedType = typename SignedTyper<T>::Type;
 
 	const SignedType vx0 = SignedType(lineP1.x()) - SignedType(lineP0.x());
 	const SignedType vy0 = SignedType(lineP1.y()) - SignedType(lineP0.y());

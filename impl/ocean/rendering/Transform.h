@@ -27,13 +27,13 @@ class Transform;
  * @see SmartObjectRef, Transform.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Transform> TransformRef;
+using TransformRef = SmartObjectRef<Transform>;
 
 /**
  * Definition of a vector of references holding transform nods
  * @ingroup rendering
  */
-typedef std::vector<TransformRef> TransformRefs;
+using TransformRefs = std::vector<TransformRef>;
 
 /**
  * This class is the base class for all transform nodes.
@@ -86,7 +86,7 @@ class OCEAN_RENDERING_EXPORT Transform : virtual public Group
 		 * Definition of a shared pointer holding a TransformModifier object.
 		 * @see TransformModifier.
 		 */
-		typedef std::shared_ptr<TransformModifier> SharedTransformModifier;
+		using SharedTransformModifier = std::shared_ptr<TransformModifier>;
 
 	public:
 

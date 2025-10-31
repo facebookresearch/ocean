@@ -42,7 +42,7 @@ class OCEAN_CV_EXPORT FrameNormalizer
 		struct FloatType
 		{
 			/// The matching float type for `T`, is `double` if `T` is double, otherwise always `float`.
-			typedef float Type;
+			using Type = float;
 		};
 
 		/**
@@ -53,7 +53,7 @@ class OCEAN_CV_EXPORT FrameNormalizer
 		struct DataTypeMultiple255
 		{
 			/// The matching datatype which is able to store all values in T multiplied by 255
-			typedef typename NextLargerTyper<T>::Type Type;
+			using Type = typename NextLargerTyper<T>::Type;
 		};
 
 	public:
@@ -418,19 +418,19 @@ class OCEAN_CV_EXPORT FrameNormalizer
 template <>
 struct FrameNormalizer::FloatType<double>
 {
-	typedef double Type;
+	using Type = double;
 };
 
 template <>
 struct FrameNormalizer::DataTypeMultiple255<uint64_t>
 {
-	typedef double Type;
+	using Type = double;
 };
 
 template <>
 struct FrameNormalizer::DataTypeMultiple255<float>
 {
-	typedef float Type;
+	using Type = float;
 };
 
 template <typename T>
@@ -684,8 +684,8 @@ void FrameNormalizer::normalize1ChannelIntegerToUint8Subset(const T* source, uin
 	const unsigned int sourceStrideElements = width + sourcePaddingElements;
 	const unsigned int targetStrideElements = width + targetPaddingElements;
 
-	typedef typename UnsignedTyper<T>::Type UnsignedType;
-	typedef typename DataTypeMultiple255<UnsignedType>::Type NextLargerUnsignedType;
+	using UnsignedType = typename UnsignedTyper<T>::Type;
+	using NextLargerUnsignedType = typename DataTypeMultiple255<UnsignedType>::Type;
 
 	const NextLargerUnsignedType range_2 = NextLargerUnsignedType(range) / NextLargerUnsignedType(2);
 
@@ -819,7 +819,7 @@ void FrameNormalizer::normalizeLogarithm1ChannelToUint8Subset(const T* source, u
 	ocean_assert(source && target);
 	ocean_assert_and_suppress_unused(firstRow + numberRows <= height, height);
 
-	typedef typename FloatType<TRange>::Type FloatType;
+	using FloatType = typename FloatType<TRange>::Type;
 
 	const unsigned int sourceStrideElements = width + sourcePaddingElements;
 	const unsigned int targetStrideElements = width + targetPaddingElements;

@@ -1564,7 +1564,7 @@ bool TestMaskAnalyzer::testDetectBoundingBoxes(const double testDuration)
 
 		// determine unions of all box groups
 
-		typedef std::vector<IndexSet32> IndexSetGroups;
+		using IndexSetGroups = std::vector<IndexSet32>;
 
 		IndexSetGroups connectedBoxIndexGroups;
 		connectedBoxIndexGroups.reserve(boxes.size());

@@ -89,7 +89,7 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT QRCodeDetector2D : public QRCodeDetector
 		};
 
 		/// Definition of a vector of observations
-		typedef std::vector<Observation> Observations;
+		using Observations = std::vector<Observation>;
 
 	public:
 

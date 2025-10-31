@@ -138,7 +138,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESVertexSet :
 
 	protected:
 
-		typedef std::unordered_map<std::string, std::shared_ptr<VertexBufferObject>> VertexBufferObjectMap;
+		using VertexBufferObjectMap = std::unordered_map<std::string, std::shared_ptr<VertexBufferObject>>;
 
 		/**
 		 * Returns the number of components a data type has.

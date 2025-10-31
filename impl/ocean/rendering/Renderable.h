@@ -26,7 +26,7 @@ class Renderable;
  * @see SmartObjectRef, Renderable.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Renderable> RenderableRef;
+using RenderableRef = SmartObjectRef<Renderable>;
 
 /**
  * This class is the base class for all renderable objects.

@@ -1331,7 +1331,7 @@ unsigned int TestHistogram::validateTileLookupTables(const unsigned char* source
 	const int tilesX_ = (int)horizontalTiles;
 	const int tilesY_ = (int)verticalTiles;
 
-	typedef uint8_t T;
+	using T = uint8_t;
 	ocean_assert(src_.width() % horizontalTiles == 0u);
 	ocean_assert(src_.height() % verticalTiles == 0u);
 	const int tileWidth_ = (int)src_.width() / tilesX_;

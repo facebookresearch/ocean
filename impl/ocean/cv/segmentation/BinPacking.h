@@ -83,24 +83,24 @@ class OCEAN_CV_SEGMENTATION_EXPORT BinPacking
 		/**
 		 * Definition of a vector holding Packing objects.
 		 */
-		typedef std::vector<Packing> Packings;
+		using Packings = std::vector<Packing>;
 
 	protected:
 
 		/**
 		 * Definition of a pair combining a 2D box with an id.
 		 */
-		typedef std::pair<CV::PixelBoundingBox, Index32> BoundingBoxIdPair;
+		using BoundingBoxIdPair = std::pair<CV::PixelBoundingBox, Index32>;
 
 		/**
 		 * Definition of a vector holding box id pairs.
 		 */
-		typedef std::vector<BoundingBoxIdPair> BoundingBoxIdPairs;
+		using BoundingBoxIdPairs = std::vector<BoundingBoxIdPair>;
 
 		/**
 		 * Definition of an ordered set holding 2D boxes with pixel accuracy.
 		 */
-		typedef std::set<CV::PixelBoundingBox, BinPacking> BoxSet;
+		using BoxSet = std::set<CV::PixelBoundingBox, BinPacking>;
 
 	public:
 

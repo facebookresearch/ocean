@@ -27,7 +27,7 @@ class FASTFeature;
  * Definition of a vector holding FAST features.
  * @ingroup cvdetector
  */
-typedef std::vector<FASTFeature> FASTFeatures;
+using FASTFeatures = std::vector<FASTFeature>;
 
 /**
  * This class implements a FAST feature.

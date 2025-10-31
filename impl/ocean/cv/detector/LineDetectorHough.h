@@ -157,12 +157,12 @@ class OCEAN_CV_DETECTOR_EXPORT LineDetectorHough
 		/**
 		 * Definition of a vector holding infinite lines.
 		 */
-		typedef std::vector<InfiniteLine> InfiniteLines;
+		using InfiniteLines = std::vector<InfiniteLine>;
 
 		/**
 		 * Definition of a vector holding infinite lines.
 		 */
-		typedef std::vector<InfiniteLines> InfiniteLineGroups;
+		using InfiniteLineGroups = std::vector<InfiniteLines>;
 
 	protected:
 
@@ -244,22 +244,22 @@ class OCEAN_CV_DETECTOR_EXPORT LineDetectorHough
 						/**
 						 * Definition of a pair combining an unsigned integer with a boolean state.
 						 */
-						typedef std::pair<unsigned int, bool> MapPair;
+						using MapPair = std::pair<unsigned int, bool>;
 
 						/**
 						 * Definition of a tuple combining angleBins, distanceBins and halfOrientationPrecision.
 						 */
-						typedef std::tuple<unsigned int, unsigned int, bool> MapTriple;
+						using MapTriple = std::tuple<unsigned int, unsigned int, bool>;
 
 						/**
 						 * Definition of a map mapping precision values to angle lookup data.
 						 */
-						typedef std::map<MapPair, AngleLookupData*> AngleLookupMap;
+						using AngleLookupMap = std::map<MapPair, AngleLookupData*>;
 
 						/**
 						 * Definition of a map mapping precision values to direction lookup data.
 						 */
-						typedef std::map<MapTriple, DirectionLookupData*> DirectionLookupMap;
+						using DirectionLookupMap = std::map<MapTriple, DirectionLookupData*>;
 
 					public:
 
@@ -555,7 +555,7 @@ class OCEAN_CV_DETECTOR_EXPORT LineDetectorHough
 		/**
 		 * Definition of a vector holding index sets.
 		 */
-		typedef std::vector<IndexSet32> IndexSetVector;
+		using IndexSetVector = std::vector<IndexSet32>;
 
 	public:
 

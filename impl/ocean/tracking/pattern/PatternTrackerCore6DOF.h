@@ -157,7 +157,7 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 				/**
 				 * Definition of a vector holding 2D feature positions.
 				 */
-				typedef std::vector<Vectors2> PointLayers;
+				using PointLayers = std::vector<Vectors2>;
 
 			public:
 
@@ -368,7 +368,7 @@ class OCEAN_TRACKING_PATTERN_EXPORT PatternTrackerCore6DOF
 		/**
 		 * Definition of a map holding pattern objects.
 		 */
-		typedef std::map<unsigned int, Pattern> PatternMap;
+		using PatternMap = std::map<unsigned int, Pattern>;
 
 	public:
 

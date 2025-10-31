@@ -362,7 +362,7 @@ Scalar HomographyImageAlignmentDense::HomographyProvider<tChannels>::determineEr
 
 				if (!needCoverageMask || *transformedCurrentSubMask.constpixel<uint8_t>(x, y) == 0xFFu)
 				{
-					typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+					using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 					const PixelType* subFramePixel = (const PixelType*)(transformedCurrentSubFrame.constpixel<uint8_t>(x, y));
 					const PixelType* largePixel = (const PixelType*)(transformedCurrentFrameLarge.constpixel<uint8_t>(x + templateSubRegionBoundingBox_.left(), y + templateSubRegionBoundingBox_.top()));
@@ -626,7 +626,7 @@ bool HomographyImageAlignmentDense::DenseAdditiveHomographyProvider<tChannels>::
 
 				if (*transformedCurrentSubMask.constpixel<uint8_t>(x, y) == 0xFFu)
 				{
-					typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+					using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 					const PixelType* subFramePixel = (const PixelType*)(transformedCurrentSubFrame.constpixel<uint8_t>(x, y));
 					const PixelType* largePixel = (const PixelType*)(transformedCurrentFrameLarge.constpixel<uint8_t>(x + this->templateSubRegionBoundingBox_.left(), y + this->templateSubRegionBoundingBox_.top()));
@@ -1166,7 +1166,7 @@ bool HomographyImageAlignmentDense::DenseInverseCompositionalHomographyProvider<
 
 				if (!needCoverageMask || *transformedCurrentSubMask.constpixel<uint8_t>(x, y) == 0xFFu)
 				{
-					typedef typename DataType<uint8_t, tChannels>::Type PixelType;
+					using PixelType = typename DataType<uint8_t, tChannels>::Type;
 
 					ocean_assert(*((const PixelType*)(transformedCurrentSubFrame.constpixel<uint8_t>(x, y))) == *((const PixelType*)(transformedCurrentFrameLarge.constpixel<uint8_t>(x + this->templateSubRegionBoundingBox_.left(), y + this->templateSubRegionBoundingBox_.top()))));
 				}

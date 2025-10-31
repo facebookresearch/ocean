@@ -305,12 +305,12 @@ class OCEAN_TRACKING_EXPORT Solver3
 		/**
 		 * Definition of a map mapping 32 bit indices to 32 bit indices.
 		 */
-		typedef std::map<unsigned int, unsigned int> IndexMap32;
+		using IndexMap32 = std::map<unsigned int, unsigned int>;
 
 		/**
 		 * Definition of a shift vector holding groups of image points.
 		 */
-		typedef ShiftVector<Vectors2> ImagePointGroups;
+		using ImagePointGroups = ShiftVector<Vectors2>;
 
 		/**
 		 * This class implements an accessor providing access to observation pairs (the observation of a projected object points in camera poses/frames) for a set of object points.
@@ -391,12 +391,12 @@ class OCEAN_TRACKING_EXPORT Solver3
 		/**
 		 * Definition of a pair combining a pose id and an error parameter.
 		 */
-		typedef std::pair<Index32, Scalar> PoseErrorPair;
+		using PoseErrorPair = std::pair<Index32, Scalar>;
 
 		/**
 		 * Definition of a vector holding pose error pairs.
 		 */
-		typedef std::vector<PoseErrorPair> PoseErrorPairs;
+		using PoseErrorPairs = std::vector<PoseErrorPair>;
 
 	public:
 

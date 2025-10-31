@@ -197,7 +197,7 @@ void FrameFilterGradient::filterHorizontal1x2LinedIntegralImage(const T* source,
 	 * |------------
 	 */
 
-	typedef typename DifferenceValueTyper<TIntegral>::Type TSignedIntegral;
+	using TSignedIntegral = typename DifferenceValueTyper<TIntegral>::Type;
 
 	// entire top line will be set to zero
 	memset(integral, 0x00, width * sizeof(TIntegral));
@@ -283,7 +283,7 @@ void FrameFilterGradient::filterVertical2x1LinedIntegralImage(const T* source, c
 	 * |------------
 	 */
 
-	typedef typename DifferenceValueTyper<TIntegral>::Type TSignedIntegral;
+	using TSignedIntegral = typename DifferenceValueTyper<TIntegral>::Type;
 
 	// entire top line will be set to zero
 	memset(integral, 0x00, (width + 1u) * sizeof(TIntegral));

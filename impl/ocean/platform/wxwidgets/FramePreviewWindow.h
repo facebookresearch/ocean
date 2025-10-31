@@ -33,7 +33,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT FramePreviewWindow : public wxPanel
 		 * Definition of a selection callback function.
 		 * The first parameter defines the index of the selection.<br>
 		 */
-		typedef Callback<void, const unsigned int> SelectionCallback;
+		using SelectionCallback = Callback<void, const unsigned int>;
 
 	private:
 
@@ -122,7 +122,7 @@ class OCEAN_PLATFORM_WXWIDGETS_EXPORT FramePreviewWindow : public wxPanel
 		/**
 		 * Definition of a vector holding elements.
 		 */
-		typedef std::vector<Element> Elements;
+		using Elements = std::vector<Element>;
 
 	public:
 

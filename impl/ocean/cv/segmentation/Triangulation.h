@@ -77,19 +77,19 @@ class OCEAN_CV_SEGMENTATION_EXPORT Triangulation
 		/**
 		 * Definition of a vector holding index triangle objects.
 		 */
-		typedef std::vector<IndexTriangle> IndexTriangles;
+		using IndexTriangles = std::vector<IndexTriangle>;
 
 	private:
 
 		/**
 		 * Definition of a pair combining a pixel position index and a boolean state.
 		 */
-		typedef std::pair<unsigned int, bool> PixelPositionPair;
+		using PixelPositionPair = std::pair<unsigned int, bool>;
 
 		/**
 		 * Definition of a vector holding pixel position pairs.
 		 */
-		typedef std::vector<PixelPositionPair> PixelPositionPairs;
+		using PixelPositionPairs = std::vector<PixelPositionPair>;
 
 	public:
 

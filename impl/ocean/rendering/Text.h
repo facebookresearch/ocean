@@ -29,7 +29,7 @@ class Text;
  * @see SmartObjectRef, Text.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Text> TextRef;
+using TextRef = SmartObjectRef<Text>;
 
 /**
  * This class is the base class for all texts.

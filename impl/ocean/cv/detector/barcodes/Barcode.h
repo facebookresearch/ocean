@@ -25,7 +25,7 @@ namespace Barcodes
 class Barcode;
 
 /// Definition of a vector of barcodes
-typedef std::vector<Barcode> Barcodes;
+using Barcodes = std::vector<Barcode>;
 
 /**
  * Definition of barcode types
@@ -42,7 +42,7 @@ enum class BarcodeType : uint32_t
 };
 
 /// Definition of a set of barcode types
-typedef std::unordered_set<BarcodeType> BarcodeTypeSet;
+using BarcodeTypeSet = std::unordered_set<BarcodeType>;
 
 /**
  * Definition of a barcode

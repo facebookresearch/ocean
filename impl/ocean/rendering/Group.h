@@ -30,7 +30,7 @@ class Group;
  * @see SmartObjectRef, Group.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Group> GroupRef;
+using GroupRef = SmartObjectRef<Group>;
 
 /**
  * This is the base class for all rendering groups.
@@ -43,12 +43,12 @@ class OCEAN_RENDERING_EXPORT Group : virtual public Node
 		/**
 		 * Definition of a vector holding node objects.
 		 */
-		typedef std::vector<NodeRef> Nodes;
+		using Nodes = std::vector<NodeRef>;
 
 		/**
 		 * Definition of a set holding light objects.
 		 */
-		typedef std::set<LightSourceRef> LightSet;
+		using LightSet = std::set<LightSourceRef>;
 
 	public:
 

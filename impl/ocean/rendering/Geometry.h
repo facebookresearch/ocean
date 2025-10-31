@@ -28,7 +28,7 @@ class Geometry;
  * @see SmartObjectRef, Geometry.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Geometry> GeometryRef;
+using GeometryRef = SmartObjectRef<Geometry>;
 
 /**
  * This class is the base class for all rendering geometry nodes.<br>
@@ -46,7 +46,7 @@ class OCEAN_RENDERING_EXPORT Geometry : virtual public Node
 		/**
 		 * Definition of a map mapping renderable objects to attributes.
 		 */
-		typedef std::map<RenderableRef, AttributeSetRef> Renderables;
+		using Renderables = std::map<RenderableRef, AttributeSetRef>;
 
 	public:
 

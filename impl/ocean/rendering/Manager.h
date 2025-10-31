@@ -37,7 +37,7 @@ class OCEAN_RENDERING_EXPORT Manager : public Singleton<Manager>
 		/**
 		 * Definition of a vector holding engine names.
 		 */
-		typedef std::vector<std::string> EngineNames;
+		using EngineNames = std::vector<std::string>;
 
 	private:
 
@@ -109,7 +109,7 @@ class OCEAN_RENDERING_EXPORT Manager : public Singleton<Manager>
 		/**
 		 * Definition of a map mapping rendering engine priorities to engine information objects.
 		 */
-		typedef std::multimap<unsigned int, EngineInformation> EngineMap;
+		using EngineMap = std::multimap<unsigned int, EngineInformation>;
 
 	public:
 

@@ -32,7 +32,7 @@ class OCEAN_PLATFORM_WIN_EXPORT PopupMenu
 		/**
 		 * Definition of a vector holding popup menus.
 		 */
-		typedef std::vector<PopupMenu*> PopupMenus;
+		using PopupMenus = std::vector<PopupMenu*>;
 
 	public:
 

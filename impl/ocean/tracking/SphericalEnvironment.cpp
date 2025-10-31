@@ -1449,7 +1449,7 @@ bool SphericalEnvironment::optimizeCamera(const PinholeCamera& pinholeCamera, co
 	// shared model: camera profile with 8 scalar parameters
 	// individual model: camera orientation with 3 scalar parameters for each orientation
 
-	typedef Geometry::NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<8u, 3u, 2u, 8u, 9u> UniversalOptimization;
+	using UniversalOptimization = Geometry::NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<8u, 3u, 2u, 8u, 9u>;
 
 	UniversalOptimization::SharedModel sharedModel, optimizedSharedModel;
 	pinholeCamera.copyElements(sharedModel.data());
@@ -1532,7 +1532,7 @@ bool SphericalEnvironment::findInitialFieldOfView(const unsigned int width, cons
 	// shared model: camera profile with 1 scalar parameters
 	// individual model: camera orientation with 3 scalar parameters for each orientation
 
-	typedef Geometry::NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<1u, 3u, 2u, 1u, 9u> UniversalOptimization;
+	using UniversalOptimization = Geometry::NonLinearUniversalOptimizationSparse::SharedModelIndividualModels<1u, 3u, 2u, 1u, 9u>;
 
 	UniversalOptimization::SharedModel sharedModel, optimizedSharedModel;
 
@@ -1607,7 +1607,7 @@ bool SphericalEnvironment::determineTransformationTable2x2(const unsigned int wi
 	}
 #endif
 
-	typedef Geometry::NonLinearUniversalOptimizationDense<18, 2, 18> UniversalOptimization;
+	using UniversalOptimization = Geometry::NonLinearUniversalOptimizationDense<18, 2, 18>;
 
 	TransformationTableData2x2 data(width, height, points0, points1);
 

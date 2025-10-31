@@ -32,21 +32,21 @@ template <typename TMetric> class Motion;
  * @see MotionSSD, MotionZeroMeanSSD, Motion.
  * @ingroup cv
  */
-typedef Motion<SumAbsoluteDifferences> MotionSAD;
+using MotionSAD = Motion<SumAbsoluteDifferences>;
 
 /**
  * Definition of a Motion class that applies sum square difference calculations as metric.
  * @see MotionSAD, MotionZeroMeanSSD, Motion.
  * @ingroup cv
  */
-typedef Motion<SumSquareDifferences> MotionSSD;
+using MotionSSD = Motion<SumSquareDifferences>;
 
 /**
  * Definition of a Motion class that applies zero-mean sum square difference calculations as metric.
  * @see MotionSAD, MotionSSD, Motion.
  * @ingroup cv
  */
-typedef Motion<ZeroMeanSumSquareDifferences> MotionZeroMeanSSD;
+using MotionZeroMeanSSD = Motion<ZeroMeanSumSquareDifferences>;
 
 /**
  * This class implements patch-based motion techniques.

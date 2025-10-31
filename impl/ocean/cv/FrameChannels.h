@@ -3021,7 +3021,7 @@ void FrameChannels::reverseRowPixelOrderInPlace(T* data, const size_t size)
 	ocean_assert(data != nullptr);
 	ocean_assert(size >= 1);
 
-	typedef typename DataType<T, tChannels>::Type PixelType;
+	using PixelType = typename DataType<T, tChannels>::Type;
 
 	size_t n = 0;
 
@@ -4039,7 +4039,7 @@ inline void FrameChannels::transformGeneric(const T* source, T* target, const un
 	const unsigned int sourceStrideBytes = width * sizeof(T) * tChannels + sizeof(T) * sourcePaddingElements;
 	const unsigned int targetStrideBytes = width * sizeof(T) * tChannels + sizeof(T) * targetPaddingElements;
 
-	typedef typename TypeMapper<T>::Type MappedType;
+	using MappedType = typename TypeMapper<T>::Type;
 
 	const RowReversePixelOrderFunction<void> rowReversePixelOrderFunction = (const RowReversePixelOrderFunction<void>)(FrameChannels::reverseRowPixelOrder<MappedType, tChannels>);
 

@@ -1316,7 +1316,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane1ChannelAnd1Plane2ChannelsDowns
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -1566,7 +1566,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane1ChannelAnd1Plane2ChannelsDowns
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -1803,7 +1803,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDown
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -2034,7 +2034,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDown
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -2884,7 +2884,7 @@ bool TestFrameConverter::testMapOneRow_1Plane1ChannelAnd1Plane2ChannelsDownsampl
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -3125,7 +3125,7 @@ bool TestFrameConverter::testMapTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsamp
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -3353,7 +3353,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane1ChannelAnd2Planes1ChannelDowns
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -3596,7 +3596,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd2Planes1ChannelDown
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -3839,7 +3839,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd2Planes1ChannelDown
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -4106,7 +4106,7 @@ bool TestFrameConverter::testConvertTwoRows_1Plane1ChannelAnd2Planes1ChannelDown
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -4337,7 +4337,7 @@ bool TestFrameConverter::testMapOneRow_1Plane1ChannelAnd2Planes1ChannelDownsampl
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -4586,7 +4586,7 @@ bool TestFrameConverter::testMapTwoRows_1Plane1ChannelAnd2Planes1ChannelDownsamp
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -4824,7 +4824,7 @@ bool TestFrameConverter::testConvertOneRow_3Planes1Channel_To_1Plane3Channels_8B
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -4978,7 +4978,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane3ChannelsWith2ChannelsDownsampl
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 
@@ -5118,7 +5118,7 @@ bool TestFrameConverter::testConvertOneRow_1Plane3ChannelsWith2ChannelsDownsampl
 
 	bool allSucceeded = true;
 
-	typedef std::vector<uint8_t> Elements;
+	using Elements = std::vector<uint8_t>;
 
 	RandomGenerator randomGenerator;
 

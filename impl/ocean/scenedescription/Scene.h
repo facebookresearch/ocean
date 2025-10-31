@@ -25,7 +25,7 @@ class Scene;
  * @see Scene, Node.
  * @ingroup scenedescription
  */
-typedef SmartObjectRef<Scene, Node> SceneRef;
+using SceneRef = SmartObjectRef<Scene, Node>;
 
 /**
  * This class implements the base class for all scene objects providing access to all elements of a scene.

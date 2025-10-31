@@ -39,22 +39,22 @@ class OCEAN_TRACKING_EXPORT SphericalEnvironment : public CV::Advanced::Panorama
 		/**
 		 * Definition of a vector holding 8 bit characters.
 		 */
-		typedef std::vector<uint8_t> Buffer;
+		using Buffer = std::vector<uint8_t>;
 
 		/**
 		 * Definition of a vector holding buffers.
 		 */
-		typedef std::vector<Buffer> Buffers;
+		using Buffers = std::vector<Buffer>;
 
 		/**
 		 * Definition of a map mapping indices.
 		 */
-		typedef std::unordered_map<uint32_t, uint32_t> IndexMap;
+		using IndexMap = std::unordered_map<uint32_t, uint32_t>;
 
 		/**
 		 * Definition of a map mapping unique frame-feature-point-ids to unique frame-feature-point-ids.
 		 */
-		typedef std::multimap<uint64_t, uint64_t> FeaturePointMap;
+		using FeaturePointMap = std::multimap<uint64_t, uint64_t>;
 
 		/**
 		 * Forward declaration of a base class for all optimization classes.
@@ -91,12 +91,12 @@ class OCEAN_TRACKING_EXPORT SphericalEnvironment : public CV::Advanced::Panorama
 		 * Parameter 8: An optional worker object
 		 * Return value: True, if the camera frame can be used to update the panorama frame
 		 */
-		typedef Callback<bool, const CV::FramePyramid&, const CV::FramePyramid&, const PinholeCamera&, const PinholeCamera&, const SquareMatrix3&, const SquareMatrix3&, const uint8_t, Frame&, Worker*> FrameCallback;
+		using FrameCallback = Callback<bool, const CV::FramePyramid&, const CV::FramePyramid&, const PinholeCamera&, const PinholeCamera&, const SquareMatrix3&, const SquareMatrix3&, const uint8_t, Frame&, Worker*>;
 
 		/**
 		 * Definition of a vector holding groups of pairs between camera pose ids and image point ids.
 		 */
-		typedef std::vector<IndexPairs32> PoseImagePointPairGroups;
+		using PoseImagePointPairGroups = std::vector<IndexPairs32>;
 
 	public:
 

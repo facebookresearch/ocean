@@ -39,22 +39,22 @@ class OCEAN_PLATFORM_ANDROID_EXPORT ProcessorMonitor :
 		/**
 		 * Definition of a vector holding processor operation frequencies.
 		 */
-		typedef std::vector<Processor::Frequency> Frequencies;
+		using Frequencies = std::vector<Processor::Frequency>;
 
 		/**
 		 * Definition of a pair combining a timestamp with frequencies.
 		 */
-		typedef std::pair<Timestamp, Frequencies> FrequencyPair;
+		using FrequencyPair = std::pair<Timestamp, Frequencies>;
 
 		/**
 		 * Definition of a vector holding frequency pairs.
 		 */
-		typedef std::vector<FrequencyPair> FrequencyPairs;
+		using FrequencyPairs = std::vector<FrequencyPair>;
 
 		/**
 		 * Definition of an ordered map mapping timestamps to frequencies.
 		 */
-		typedef std::map<Timestamp, Frequencies> FrequencyMap;
+		using FrequencyMap = std::map<Timestamp, Frequencies>;
 
 	public:
 

@@ -266,10 +266,10 @@ void quirc_flip(struct quirc_code *code);
 
 #if QUIRC_MAX_REGIONS < UINT8_MAX
 #define QUIRC_PIXEL_ALIAS_IMAGE	1
-typedef uint8_t quirc_pixel_t;
+using quirc_pixel_t = uint8_t;
 #elif QUIRC_MAX_REGIONS < UINT16_MAX
 #define QUIRC_PIXEL_ALIAS_IMAGE	0
-typedef uint16_t quirc_pixel_t;
+using quirc_pixel_t = uint16_t;
 #else
 #error "QUIRC_MAX_REGIONS > 65534 is not supported"
 #endif
@@ -283,9 +283,9 @@ typedef uint16_t quirc_pixel_t;
  * This will use the type-generic math functions (tgmath.h, C99 or later) instead of the normal ones,
  * which will allow the compiler to use the correct overloaded functions for the type.
  */
-typedef QUIRC_FLOAT_TYPE quirc_float_t;
+using quirc_float_t = QUIRC_FLOAT_TYPE;
 #else
-typedef double quirc_float_t;
+using quirc_float_t = double;
 #endif
 
 struct quirc_region {

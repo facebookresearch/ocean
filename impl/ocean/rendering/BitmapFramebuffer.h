@@ -25,7 +25,7 @@ class BitmapFramebuffer;
  * @see SmartObjectRef, BitmapFramebuffer.
  * @ingroup rendering
  */
-typedef SmartObjectRef<BitmapFramebuffer> BitmapFramebufferRef;
+using BitmapFramebufferRef = SmartObjectRef<BitmapFramebuffer>;
 
 /**
  * This class is the base class for all bitmap framebuffers.

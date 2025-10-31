@@ -26,7 +26,7 @@ class Cone;
  * @see SmartObjectRef, Cone.
  * @ingroup rendering
  */
-typedef SmartObjectRef<Cone> ConeRef;
+using ConeRef = SmartObjectRef<Cone>;
 
 /**
  * This class is the base class for all cones.

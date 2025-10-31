@@ -25,7 +25,7 @@ class StereoView;
  * @see SmartObjectRef, StereoView.
  * @ingroup rendering
  */
-typedef SmartObjectRef<StereoView> StereoViewRef;
+using StereoViewRef = SmartObjectRef<StereoView>;
 
 /**
  * This class is the base class for all stereo views.

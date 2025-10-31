@@ -27,7 +27,7 @@ class OrientedPointFeature;
  * Definition of a vector holding oriented point features.
  * @ingroup cvdetector
  */
-typedef std::vector<OrientedPointFeature> OrientedPointFeatures;
+using OrientedPointFeatures = std::vector<OrientedPointFeature>;
 
 /**
  * This class implements the base class for all computer vision features mainly basing on points width an orientation.

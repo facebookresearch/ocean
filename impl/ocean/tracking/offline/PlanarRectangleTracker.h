@@ -36,7 +36,7 @@ class PlanarRectangleTracker;
  * @see PlanarRectangleTracker.
  * @ingroup trackingoffline
  */
-typedef SmartObjectRef<PlanarRectangleTracker, OfflineTracker> PlanarRectangleTrackerRef;
+using PlanarRectangleTrackerRef = SmartObjectRef<PlanarRectangleTracker, OfflineTracker>;
 
 /**
  * This class implements a tracker that is able to track an rectangle located one a 3D plane.
@@ -51,12 +51,12 @@ class OCEAN_TRACKING_OFFLINE_EXPORT PlanarRectangleTracker :
 		/**
 		 * Definition of a shift vector holding homographies.
 		 */
-		typedef ShiftVector<SquareMatrix3> Homographies;
+		using Homographies = ShiftVector<SquareMatrix3>;
 
 		/**
 		 * Definition of a shift vector holding image point pairs.
 		 */
-		typedef ShiftVector<Geometry::NonLinearOptimizationPlane::ImagePointsPair> ImagePointsPairs;
+		using ImagePointsPairs = ShiftVector<Geometry::NonLinearOptimizationPlane::ImagePointsPair>;
 
 		// Forward declaration of an optimization data object for camera profiles.
 		class CameraPosesData;

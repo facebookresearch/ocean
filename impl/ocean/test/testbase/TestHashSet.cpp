@@ -144,11 +144,11 @@ bool TestHashSet::testPerformanceSingleIntegers(const unsigned int number, const
 
 	bool allSucceeded = true;
 
-	typedef HashSet<unsigned int> Table;
-	typedef std::set<unsigned int> ElementSet;
-	typedef std::vector<unsigned int> Elements;
+	using Table = HashSet<unsigned int>;
+	using ElementSet = std::set<unsigned int>;
+	using Elements = std::vector<unsigned int>;
 
-	typedef std::unordered_set<unsigned int> ElementUnorderedSet;
+	using ElementUnorderedSet = std::unordered_set<unsigned int>;
 
 	ElementSet tmpElementSet;
 	Elements addElements;
@@ -273,9 +273,9 @@ bool TestHashSet::validationStaticCapacitySingleIntegers(const unsigned int numb
 
 	RandomGenerator randomGenerator;
 
-	typedef HashSet<unsigned int> Table;
-	typedef std::vector<unsigned int> Elements;
-	typedef std::set<unsigned int> ElementSet;
+	using Table = HashSet<unsigned int>;
+	using Elements = std::vector<unsigned int>;
+	using ElementSet = std::set<unsigned int>;
 
 	ElementSet elementSet;
 	Elements elements;
@@ -408,9 +408,9 @@ bool TestHashSet::validationDynamicCapacitySingleIntegers(const unsigned int num
 
 	RandomGenerator randomGenerator;
 
-	typedef HashSet<unsigned int> Table;
-	typedef std::vector<unsigned int> Elements;
-	typedef std::set<unsigned int> ElementSet;
+	using Table = HashSet<unsigned int>;
+	using Elements = std::vector<unsigned int>;
+	using ElementSet = std::set<unsigned int>;
 
 	ElementSet elementSet;
 	Elements elements;
@@ -533,9 +533,9 @@ bool TestHashSet::validationMultipleIntegers(const unsigned int number, const un
 
 	RandomGenerator randomGenerator;
 
-	typedef HashSet<unsigned int> Table;
-	typedef std::vector<unsigned int> Elements;
-	typedef std::multiset<unsigned int> ElementSet;
+	using Table = HashSet<unsigned int>;
+	using Elements = std::vector<unsigned int>;
+	using ElementSet = std::multiset<unsigned int>;
 
 	ElementSet elementSet;
 	Elements elements;

@@ -34,7 +34,7 @@ class Ocean::Platform::Apple::MacOS::Utilities::FrameWindowManager : public Ocea
 		/**
 		 * Definition of a map mapping window objects to view objects.
 		 */
-		typedef std::map<OceanPlatformAppleMacOSWindow*, FrameView*> WindowMap;
+		using WindowMap = std::map<OceanPlatformAppleMacOSWindow*, FrameView*>;
 
 	public:
 
