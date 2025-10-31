@@ -108,7 +108,7 @@ struct quirc_point {
 };
 
 /* This enum describes the various decoder errors which may occur. */
-typedef enum {
+using quirc_decode_error_t = enum {
 	QUIRC_SUCCESS = 0,
 	QUIRC_ERROR_INVALID_GRID_SIZE,
 	QUIRC_ERROR_INVALID_VERSION,
@@ -117,7 +117,7 @@ typedef enum {
 	QUIRC_ERROR_UNKNOWN_DATA_TYPE,
 	QUIRC_ERROR_DATA_OVERFLOW,
 	QUIRC_ERROR_DATA_UNDERFLOW
-} quirc_decode_error_t;
+};
 
 /* Return a string error message for an error code. */
 const char *quirc_strerror(quirc_decode_error_t err);
