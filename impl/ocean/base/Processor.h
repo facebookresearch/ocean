@@ -191,10 +191,10 @@ class OCEAN_BASE_EXPORT Processor : public Singleton<Processor>
 		static inline bool isLittleEndian();
 
 		/**
-		 * Returns the current value of the ARM virtual count register cntvct_el0/cntpct_el0.
+		 * Returns the current value of the ARM Generic Timer virtual counter register CNTVCT.
 		 * The value returned is a monotonically increasing counter, typically used for high-resolution timing and performance measurements.<br>
 		 * To convert the counter value to seconds, divide the difference between two readings by the system counter frequency.<br>
-		 * The virtual count value is equal to the physical count value minus the virtual offset visible in cntvoff_el2.
+		 * The virtual count value is equal to the physical count value minus the virtual offset (CNTVOFF).
 		 * @param counter The resulting counter value
 		 * @return True, if succeeded
 		 * @see virtualCountFrequency().
@@ -202,7 +202,7 @@ class OCEAN_BASE_EXPORT Processor : public Singleton<Processor>
 		static bool virtualCountRegister(uint64_t& counter);
 
 		/**
-		 * Returns the frequency of the ARM virtual count register cntvct_el0/cntpct_el0 from the system counter frequency register cntfrq_el0.
+		 * Returns the frequency of the ARM Generic Timer virtual count register CNTVCT from the system counter frequency register CNTFRQ.
 		 * @param frequency The resulting frequency in Hz
 		 * @return True, if succeeded
 		 */
