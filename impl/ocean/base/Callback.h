@@ -19,7 +19,7 @@ namespace Ocean
  * This class can do nothing, but can be used as default class types.
  * @ingroup base
  */
-using NullClass = class {};
+class NullClass {};
 
 // Forward declaration.
 template <typename RT, typename PT0, typename PT1, typename PT2, typename PT3, typename PT4, typename PT5, typename PT6, typename PT7, typename PT8, typename PT9, typename PT10, typename PT11, typename PT12, typename PT13, typename PT14, typename PT15, typename PT16, typename PT17, typename PT18, typename PT19> class Callback;
