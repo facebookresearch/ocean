@@ -114,7 +114,7 @@ bool TestEpipolarGeometry::testFundamentalMatrix(const double testDuration)
 		ValidationPrecision validationFundamental(0.99, randomGenerator);
 		ValidationPrecision validationEpipoles(0.99, randomGenerator);
 		ValidationPrecision validationEssential(0.99, randomGenerator);
-		ValidationPrecision validationFactorized(0.95, randomGenerator);
+		ValidationPrecision validationFactorized(0.99, randomGenerator);
 
 		bool needMoreIterations = false;
 
@@ -252,7 +252,7 @@ bool TestEpipolarGeometry::testFundamentalMatrix(const double testDuration)
 					}
 
 					HomogenousMatrix4 factorizedTransformation;
-					if (Geometry::EpipolarGeometry::factorizeEssential(normalizedRight_E_normalizedLeft, pinholeCamera, pinholeCamera, leftImagePoints[0], rightImagePoints[0], factorizedTransformation))
+					if (Geometry::EpipolarGeometry::factorizeEssential(normalizedRight_E_normalizedLeft, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), factorizedTransformation))
 					{
 						const Vector3 factorizedTranslation(factorizedTransformation.translation());
 						const Quaternion factorizedRotation(factorizedTransformation.rotation());
@@ -403,7 +403,7 @@ bool TestEpipolarGeometry::testFaultlessNoisedFundamentalMatrix(const double tes
 				const SquareMatrix3 essential = Ocean::Geometry::EpipolarGeometry::fundamental2essential(fundamental, pinholeCamera.intrinsic(), pinholeCamera.intrinsic());
 
 				HomogenousMatrix4 factorizedTransformation;
-				if (Ocean::Geometry::EpipolarGeometry::factorizeEssential(essential, pinholeCamera, pinholeCamera, leftImagePoints[0], rightImagePoints[0], factorizedTransformation))
+				if (Ocean::Geometry::EpipolarGeometry::factorizeEssential(essential, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), factorizedTransformation))
 				{
 					const Vector3 factorizedTranslation(factorizedTransformation.translation());
 					const Quaternion factorizedRotation(factorizedTransformation.rotation());
@@ -585,7 +585,7 @@ bool TestEpipolarGeometry::testFaultyFundamentalMatrix(const double testDuration
 				}
 
 				HomogenousMatrix4 factorizedTransformation;
-				if (Ocean::Geometry::EpipolarGeometry::factorizeEssential(essential, pinholeCamera, pinholeCamera, leftImagePoints[0], rightImagePoints[0], factorizedTransformation))
+				if (Ocean::Geometry::EpipolarGeometry::factorizeEssential(essential, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), factorizedTransformation))
 				{
 					const Vector3 factorizedTranslation(factorizedTransformation.translation());
 					const Quaternion factorizedRotation(factorizedTransformation.rotation());
