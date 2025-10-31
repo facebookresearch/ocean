@@ -238,11 +238,11 @@ bool BullseyeDetectorStereo::computeCostMatrix(const AnyCamera& cameraA, const A
 		return false;
 	}
 
-	// The camera resolutions can be different. To compare similarity of
+	// The camera resolutions and focal lengths can be different. To compare similarity of
 	// bullseyes using something like their radii, their size has to be
-	// normalized to the same scale.
-	ocean_assert(cameraA.width() != 0u && cameraB.width() != 0u);
-	const Scalar cameraB_s_cameraA = Scalar(cameraB.width()) / Scalar(cameraA.width());
+	// normalized to the same scale. We use focal length ratio for accurate scaling.
+	ocean_assert(cameraA.focalLengthX() > 0 && cameraB.focalLengthX() > 0);
+	const Scalar cameraB_s_cameraA = cameraB.focalLengthX() / cameraA.focalLengthX();
 	ocean_assert(cameraB_s_cameraA > 0);
 
 	costMatrix = Matrix(bullseyesA.size(), bullseyesB.size(), invalidMatchingCost());
