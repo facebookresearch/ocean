@@ -44,12 +44,11 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestEpipolarGeometry
 		static bool testFundamentalMatrix(const double testDuration);
 
 		/**
-		 * Tests the calculation of the fundamental matrix.
-		 * All point coordinates are faultless but have an Gaussian noise.
+		 * Tests the calculation of the fundamental matrix with noise.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testFaultlessNoisedFundamentalMatrix(const double testDuration);
+		static bool testFundamentalMatrixWithNoise(const double testDuration);
 
 		/**
 		 * Tests the calculation of the fundamental matrix.

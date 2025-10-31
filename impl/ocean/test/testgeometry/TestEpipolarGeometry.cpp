@@ -42,7 +42,7 @@ bool TestEpipolarGeometry::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testFaultlessNoisedFundamentalMatrix(testDuration) && allSucceeded;
+	allSucceeded = testFundamentalMatrixWithNoise(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -77,9 +77,9 @@ TEST(TestEpipolarGeometry, FundamentalMatrix)
 	EXPECT_TRUE(TestEpipolarGeometry::testFundamentalMatrix(GTEST_TEST_DURATION));
 }
 
-TEST(TestEpipolarGeometry, FaultlessNoisedFundamentalMatrix)
+TEST(TestEpipolarGeometry, undamentalMatrixWithNoise)
 {
-	EXPECT_TRUE(TestEpipolarGeometry::testFaultlessNoisedFundamentalMatrix(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestEpipolarGeometry::testFundamentalMatrixWithNoise(GTEST_TEST_DURATION));
 }
 
 TEST(TestEpipolarGeometry, FaultyFundamentalMatrix)
@@ -251,11 +251,11 @@ bool TestEpipolarGeometry::testFundamentalMatrix(const double testDuration)
 						}
 					}
 
-					HomogenousMatrix4 factorizedTransformation;
-					if (Geometry::EpipolarGeometry::factorizeEssential(normalizedRight_E_normalizedLeft, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), factorizedTransformation))
+					HomogenousMatrix4 left_T_right;
+					if (Geometry::EpipolarGeometry::factorizeEssential(normalizedRight_E_normalizedLeft, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), left_T_right))
 					{
-						const Vector3 factorizedTranslation(factorizedTransformation.translation());
-						const Quaternion factorizedRotation(factorizedTransformation.rotation());
+						const Vector3 factorizedTranslation(left_T_right.translation());
+						const Quaternion factorizedRotation(left_T_right.rotation());
 
 						const Vector3 translation = leftCamera_T_rightCamera.translation();
 						const Quaternion rotation = leftCamera_T_rightCamera.rotation();
@@ -313,140 +313,137 @@ bool TestEpipolarGeometry::testFundamentalMatrix(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestEpipolarGeometry::testFaultlessNoisedFundamentalMatrix(const double testDuration)
+bool TestEpipolarGeometry::testFundamentalMatrixWithNoise(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Testing Gaussian noised fundamental matrix:";
+	Log::info() << "Testing fundamental matrix with nosy image points:";
+
+	bool allSucceeded = true;
 
 	RandomGenerator randomGenerator;
 
-	for (unsigned int points : {8u, 11u, 15u, 30u, 50u, 90u, 500u})
+	for (const size_t correspondences : {8, 11, 15, 30, 50, 90, 200})
 	{
 		Log::info() << " ";
-		Log::info() << "... with " << points << " points:";
+		Log::info() << "... with " << correspondences << " correspondences:";
 
-		unsigned long long failed = 0ull;
-		unsigned long long iterations = 0ull;
+		HighPerformanceStatistic performance;
 
-		Scalar totalFundamentalScalarProductError = 0;
-		Scalar totalTranslationError = 0;
-		Scalar totalAngleError = 0;
+		Scalars angleErrors;
+		Scalars translationErrors;
 
 		const Timestamp startTimestamp(true);
 
 		do
 		{
-			bool noError = true;
+			const unsigned int width = RandomI::random(randomGenerator, 600u, 800u);
+			const unsigned int height = RandomI::random(randomGenerator, 600u, 600u);
+			const Scalar fovX = Numeric::deg2rad(Random::scalar(randomGenerator, Scalar(30), Scalar(70)));
 
-			const PinholeCamera pinholeCamera(640u, 480u, Numeric::deg2rad(Random::scalar(randomGenerator, Scalar(50), Scalar(70))));
+			const PinholeCamera pinholeCamera(width, height, fovX);
+			const AnyCameraPinhole camera(pinholeCamera);
 
-			Vectors2 leftImagePoints;
-			Vectors3 leftObjectPoints;
+			const Scalar sphereRadius = Random::scalar(randomGenerator, Scalar(0.1), Scalar(1));
 
-			for (unsigned int i = 0u; i < points; ++i)
+			Vectors3 objectPoints(correspondences);
+			for (size_t n = 0; n < correspondences; ++n)
 			{
-				const Vector2 imagePoint(Random::scalar(randomGenerator, 0, Scalar(pinholeCamera.width())), Random::scalar(randomGenerator, 0, Scalar(pinholeCamera.height())));
-				const Vector3 objectPoint(pinholeCamera.vector(imagePoint) * Random::scalar(randomGenerator, Scalar(0.1), Scalar(2.0)));
-
-				leftImagePoints.push_back(imagePoint);
-				leftObjectPoints.push_back(objectPoint);
+				objectPoints[n] = Random::vector3(randomGenerator) * sphereRadius;
 			}
 
-			const Vector3 translation(Random::vector3(randomGenerator, Scalar(0.01), Scalar(0.1)));
-			const Euler euler(Random::scalar(randomGenerator, Numeric::deg2rad(Scalar(-10)), Numeric::deg2rad(Scalar(10))),
-							Random::scalar(randomGenerator, Numeric::deg2rad(Scalar(-10)), Numeric::deg2rad(Scalar(10))),
-							Random::scalar(randomGenerator, Numeric::deg2rad(Scalar(-10)), Numeric::deg2rad(Scalar(10))));
-			const Quaternion quaternion(euler);
+			const Vector3 viewingDirectionLeft = Random::vector3(randomGenerator);
+			const Vector3 viewingDirectionRight = Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(50))) * viewingDirectionLeft;
 
-			const HomogenousMatrix4 lTr(translation, quaternion);
-			const HomogenousMatrix4 rTl(lTr.inverted());
+			HomogenousMatrix4 world_T_leftCamera = Utilities::viewPosition(camera, Sphere3(Vector3(0, 0, 0), sphereRadius), viewingDirectionLeft);
+			HomogenousMatrix4 world_T_rightCamera = Utilities::viewPosition(camera, Sphere3(Vector3(0, 0, 0), sphereRadius), viewingDirectionRight);
 
-			Vectors2 rightImagePoints;
-			Vectors3 rightObjectPoints;
+			// let's apply a random roll
+			world_T_leftCamera *= HomogenousMatrix4(Quaternion(Vector3(0, 0, 1), Random::scalar(randomGenerator, 0, Numeric::pi2())));
+			world_T_rightCamera *= HomogenousMatrix4(Quaternion(Vector3(0, 0, 1), Random::scalar(randomGenerator, 0, Numeric::pi2())));
 
-			for (size_t i = 0; i < leftImagePoints.size(); ++i)
+			const HomogenousMatrix4 flippedLeftCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_leftCamera));
+			const HomogenousMatrix4 flippedRightCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_rightCamera));
+
+#ifdef OCEAN_DEBUG
+			for (const Vector3& objectPoint : objectPoints)
 			{
-				const Vector3 objectPoint(rTl * leftObjectPoints[i]);
-				const Vector2 imagePoint(pinholeCamera.projectToImage<true>(HomogenousMatrix4(true), objectPoint, false));
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedLeftCamera_T_world, objectPoint));
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedRightCamera_T_world, objectPoint));
+			}
+#endif
 
-				rightImagePoints.push_back(imagePoint);
-				rightObjectPoints.push_back(objectPoint);
+			Vectors2 leftImagePoints(correspondences);
+			Vectors2 rightImagePoints(correspondences);
+
+			for (size_t n = 0; n < correspondences; ++n)
+			{
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedLeftCamera_T_world, objectPoints[n]));
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedRightCamera_T_world, objectPoints[n]));
+
+				leftImagePoints[n] = camera.projectToImageIF(flippedLeftCamera_T_world, objectPoints[n]);
+				rightImagePoints[n] = camera.projectToImageIF(flippedRightCamera_T_world, objectPoints[n]);
+
+				leftImagePoints[n] += Random::gaussianNoiseVector2(randomGenerator, Scalar(1), Scalar(1));
+				rightImagePoints[n] += Random::gaussianNoiseVector2(randomGenerator, Scalar(1), Scalar(1));
 			}
 
-			for (size_t i = 0; i < points; ++i)
+			performance.start();
+
+				SquareMatrix3 right_F_left(false);
+				const bool result = Geometry::EpipolarGeometry::fundamentalMatrix(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), right_F_left);
+
+			performance.stop();
+
+			if (result)
 			{
-				const Vector2 leftNoise(Random::gaussianNoise(randomGenerator, Scalar(2)), Random::gaussianNoise(randomGenerator, Scalar(2)));
-				const Vector2 rightNoise(Random::gaussianNoise(randomGenerator, Scalar(2)), Random::gaussianNoise(randomGenerator, Scalar(2)));
+				const HomogenousMatrix4 leftCamera_T_rightCamera = world_T_leftCamera.inverted() * world_T_rightCamera;
 
-				leftImagePoints[i] += leftNoise;
-				rightImagePoints[i] += rightNoise;
-			}
+				// verifying the essential matrix
 
-			SquareMatrix3 fundamental;
-			if (Ocean::Geometry::EpipolarGeometry::fundamentalMatrix(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), fundamental))
-			{
-				Scalar fundamentalScalarProductError = 0;
+				const SquareMatrix3 normalizedRight_E_normalizedLeft = Geometry::EpipolarGeometry::fundamental2essential(right_F_left, pinholeCamera.intrinsic(), pinholeCamera.intrinsic());
 
-				for (size_t i = 0; i < leftImagePoints.size(); ++i)
+				HomogenousMatrix4 left_T_right;
+				if (Geometry::EpipolarGeometry::factorizeEssential(normalizedRight_E_normalizedLeft, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), left_T_right))
 				{
-					const Vector3 left(leftImagePoints[i], 1);
-					const Vector3 right(rightImagePoints[i], 1);
+					const Vector3 factorizedTranslation(left_T_right.translation());
+					const Quaternion factorizedRotation(left_T_right.rotation());
 
-					const Scalar scalarProduct = Numeric::abs((fundamental * left) * right);
-
-					fundamentalScalarProductError += scalarProduct;
-				}
-
-				totalFundamentalScalarProductError += fundamentalScalarProductError / Scalar(leftImagePoints.size());
-
-				const SquareMatrix3 essential = Ocean::Geometry::EpipolarGeometry::fundamental2essential(fundamental, pinholeCamera.intrinsic(), pinholeCamera.intrinsic());
-
-				HomogenousMatrix4 factorizedTransformation;
-				if (Ocean::Geometry::EpipolarGeometry::factorizeEssential(essential, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), factorizedTransformation))
-				{
-					const Vector3 factorizedTranslation(factorizedTransformation.translation());
-					const Quaternion factorizedRotation(factorizedTransformation.rotation());
+					const Vector3 translation = leftCamera_T_rightCamera.translation();
+					const Quaternion rotation = leftCamera_T_rightCamera.rotation();
 
 					const Scalar translationDifference = (translation.normalized() - factorizedTranslation).length();
-					const Scalar angleDifference = Numeric::rad2deg(factorizedRotation.angle(quaternion));
+					const Scalar angleDifference = Numeric::rad2deg(factorizedRotation.angle(rotation));
 
-					totalTranslationError += translationDifference;
-					totalAngleError += angleDifference;
-
-					if (translationDifference >= Scalar(0.05) || angleDifference > Scalar(5))
-					{
-						noError = false;
-					}
-				}
-				else
-				{
-					noError = false;
+					angleErrors.push_back(angleDifference);
+					translationErrors.push_back(translationDifference);
 				}
 			}
-			else
-			{
-				noError = false;
-			}
-
-			if (!noError)
-			{
-				++failed;
-			}
-
-			++iterations;
 		}
-		while (startTimestamp + testDuration > Timestamp(true));
+		while (!startTimestamp.hasTimePassed(testDuration));
 
-		ocean_assert(iterations != 0ull);
+		std::sort(angleErrors.begin(), angleErrors.end());
+		std::sort(translationErrors.begin(), translationErrors.end());
 
-		Log::info() << "Average error (Pright * F * Pleft): " << totalFundamentalScalarProductError / Scalar(iterations);
-		Log::info() << "Average translation error: " << totalTranslationError / Scalar(iterations);
-		Log::info() << "Average angle error: " << totalAngleError / Scalar(iterations);
-		Log::info() << "Validation: " << String::toAString(double(iterations - failed) * 100.0 / double(iterations), 1u) << "% succeeded.";
+		const Scalar angleErrorP95 = angleErrors[angleErrors.size() * 95 / 100];
+		const Scalar translationErrorP95 = translationErrors[translationErrors.size() * 95 / 100];
+
+		Log::info() << "Performance: " << performance;
+		Log::info() << "Angle error P95: " << String::toAString(angleErrorP95, 1u) << "deg";
+		Log::info() << "Translation error P95: " << String::toAString(translationErrorP95 * 100.0, 1u) << "%";
+
+		if (correspondences >= 50)
+		{
+			if (angleErrorP95 >= Scalar(5))
+			{
+				allSucceeded = false;
+
+				Log::info() << "Validation: FAILED!";
+			}
+		}
 	}
 
-	return true;
+	return allSucceeded;
 }
 
 bool TestEpipolarGeometry::testFaultyFundamentalMatrix(const double testDuration)
