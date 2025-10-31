@@ -157,21 +157,6 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		/**
 		 * Factorizes an essential matrix into a 6-DOF camera pose composed of rotation and translation.
 		 * Beware: The translation can be determined up to a scale factor only.<br>
-		 * The resulting factorization provides the camera pose for the right camera while the left camera is located at the origin with identity pose.<br>
-		 * Thus, the resulting transformation transforms points defined in the right camera coordinate system into points defined in the left camera coordinate system: pointLeft = left_T_right * pointRight.<br>
-		 * @param normalizedRight_E_normalizedLeft The essential matrix to be factorized, must be valid
-		 * @param leftCamera The left camera profile defining the projection, must be valid
-		 * @param rightCamera The right camera profile defining the projection, must be valid
-		 * @param leftPoint One image point in the left image, this point must correspond to the given right image point, must be valid
-		 * @param rightPoint One image point in the right image, this point must correspond to the given left image point, must be valid
-		 * @param left_T_right The resulting transformation between the left and the right camera, transforming points from right to left, must be valid
-		 * @return True, if succeeded
-		 */
-		static inline bool factorizeEssential(const SquareMatrix3& normalizedRight_E_normalizedLeft, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2& leftPoint, const Vector2& rightPoint, HomogenousMatrix4& left_T_right);
-
-		/**
-		 * Factorizes an essential matrix into a 6-DOF camera pose composed of rotation and translation.
-		 * Beware: The translation can be determined up to a scale factor only.<br>
 		 * The factorization provides the camera pose for the right camera while the left camera is located at the origin with identity pose.<br>
 		 * The resulting transformation transforms points defined in the right camera coordinate system into points defined in the left camera coordinate system: pointLeft = left_T_right * pointRight.<br>
 		 * @param normalizedRight_E_normalizedLeft The essential matrix to be factorized, must be valid
@@ -302,11 +287,6 @@ inline Line2 EpipolarGeometry::epipolarLine2Line(const Vector3& line)
 	return Line2(line / normalLength);
 
 	//return Line2(Vector3(normal.x() * factor, normal.y() * factor, distance *));
-}
-
-inline bool EpipolarGeometry::factorizeEssential(const SquareMatrix3& normalizedRight_E_normalizedLeft, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2& leftPoint, const Vector2& rightPoint, HomogenousMatrix4& left_T_right)
-{
-	return factorizeEssential(normalizedRight_E_normalizedLeft, leftCamera, rightCamera, &leftPoint, &rightPoint, 1, left_T_right) == 1;
 }
 
 }
