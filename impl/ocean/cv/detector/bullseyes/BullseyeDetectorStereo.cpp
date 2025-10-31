@@ -287,7 +287,7 @@ bool BullseyeDetectorStereo::computeCostMatrix(const AnyCamera& cameraA, const A
 bool BullseyeDetectorStereo::triangulateBullseye(const AnyCamera& cameraA, const AnyCamera& cameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const Bullseye& bullseyeA, const Bullseye& bullseyeB, Vector3& bullseyeCenter, Scalar& reprojectionErrorA, Scalar& reprojectionErrorB)
 {
 	ocean_assert(cameraA.isValid() && cameraB.isValid());
-	ocean_assert(world_T_cameraA.isValid() && world_T_cameraA.isValid());
+	ocean_assert(world_T_cameraA.isValid() && world_T_cameraB.isValid());
 	ocean_assert(bullseyeA.isValid() && bullseyeB.isValid());
 
 	ocean_assert(cameraA.isInside(bullseyeA.position()));
