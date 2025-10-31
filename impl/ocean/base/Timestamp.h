@@ -23,6 +23,10 @@
 	#define OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
 #endif
 
+#if defined(OCEAN_PLATFORM_BUILD_ANDROID) && (defined(__arm__) || defined(__aarch64__))
+	#define OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+#endif
+
 namespace Ocean
 {
 
@@ -82,6 +86,10 @@ class OCEAN_BASE_EXPORT Timestamp
 					/// The monotonically increasing time domain defined in nanoseconds, the time the system has been awake since the last time it was restarted.
 					TD_UPTIME_RAW,
 #endif
+
+#ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+					TD_VIRTUAL_COUNTER_REGISTER
+#endif
 				};
 
 				/**
@@ -96,6 +104,11 @@ class OCEAN_BASE_EXPORT Timestamp
 				 * @see isValid().
 				 */
 				TimestampConverter() = default;
+
+				/**
+				 * Default destructor.
+				 */
+				~TimestampConverter() = default;
 
 				/**
 				 * Creates a new converter object for a specific time domain.
@@ -134,6 +147,12 @@ class OCEAN_BASE_EXPORT Timestamp
 				bool isWithinRange(const int64_t domainTimestampNs, const double maxDistance = 1.0, double* distance = nullptr);
 
 				/**
+				 * Returns the current timestamp in the time domain of this converter.
+				 * @return The current timestamp in the converter's time domain, in nanoseconds, invalidValue_ in case of an error
+				 */
+				int64_t currentDomainTimestampNs() const;
+
+				/**
 				 * Returns the time domain of this converter.
 				 * @return The converter's time domain
 				 */
@@ -170,7 +189,7 @@ class OCEAN_BASE_EXPORT Timestamp
 				 * @param timeDomain The time domain for which the current timestamp will be returned
 				 * @return The current timestamp in the specified time domain, in nanoseconds
 				 */
-				static int64_t currentTimestampNs(const TimeDomain timeDomain);
+				static int64_t currentDomainTimestampNs(const TimeDomain timeDomain);
 
 				/**
 				 * Converts a timestamp which is defined in seconds to a timestamp which is defined in nanoseconds.
@@ -224,6 +243,9 @@ class OCEAN_BASE_EXPORT Timestamp
 
 				/// The number of necessary measurements before the converter keeps the determined offset fixed.
 				size_t necessaryMeasurements_ = 0;
+
+				/// The optional frequency of the domain time, in Hz (in case the domain time is not defined in nanoseconds).
+				uint64_t domainFrequency_ = 0ull;
 
 				/// The converter's lock.
 				Lock lock_;

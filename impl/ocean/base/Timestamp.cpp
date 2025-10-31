@@ -8,6 +8,7 @@
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/DateTime.h"
 #include "ocean/base/Messenger.h"
+#include "ocean/base/Processor.h"
 
 #ifdef OCEAN_PLATFORM_BUILD_WINDOWS
 	#include <chrono>
@@ -24,6 +25,14 @@ Timestamp::TimestampConverter::TimestampConverter(const TimeDomain timeDomain, c
 {
 #ifndef OCEAN_PLATFORM_BUILD_WINDOWS
 	domainPosixClockId_ = posixClockId(timeDomain_);
+#endif
+
+#ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+	if (timeDomain_ == TD_VIRTUAL_COUNTER_REGISTER)
+	{
+		const bool result = Processor::virtualCountFrequency(domainFrequency_);
+		ocean_assert_and_suppress_unused(result, result);
+	}
 #endif
 }
 
@@ -75,9 +84,9 @@ bool Timestamp::TimestampConverter::isWithinRange(const int64_t domainTimestampN
 {
 	ocean_assert(maxDistance >= 0.0);
 
-	const int64_t currentDomainTimestampNs = currentTimestampNs(timeDomain_);
+	const int64_t localCurrentDomainTimestampNs = currentDomainTimestampNs(timeDomain_);
 
-	const int64_t distanceNs = domainTimestampNs - currentDomainTimestampNs;
+	const int64_t distanceNs = domainTimestampNs - localCurrentDomainTimestampNs;
 
 	const int64_t absDistanceNs = std::abs(distanceNs);
 
@@ -89,6 +98,71 @@ bool Timestamp::TimestampConverter::isWithinRange(const int64_t domainTimestampN
 	}
 
 	return absDistanceSeconds <= maxDistance;
+}
+
+int64_t Timestamp::TimestampConverter::currentDomainTimestampNs() const
+{
+	ocean_assert(isValid());
+	if (!isValid())
+	{
+		return invalidValue_;
+	}
+
+#ifdef OCEAN_PLATFORM_BUILD_WINDOWS
+
+	ocean_assert(timeDomain_ == TD_MONOTONIC);
+
+	const std::chrono::steady_clock::time_point domainTimestampTimePoint = std::chrono::steady_clock::now();
+
+	return std::chrono::duration_cast<std::chrono::nanoseconds>(domainTimestampTimePoint.time_since_epoch()).count();
+
+#else // OCEAN_PLATFORM_BUILD_WINDOWS
+
+	switch (timeDomain_)
+	{
+		case TD_INVALID:
+			break;
+
+	#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
+		case TD_BOOTTIME:
+			[[fallthrough]];
+	#endif
+
+	#ifdef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
+		case TD_UPTIME_RAW:
+			[[fallthrough]];
+	#endif
+
+		case TD_MONOTONIC:
+		{
+			ocean_assert(domainPosixClockId_ != -1);
+
+			struct timespec timestampSpec;
+			const int result = clock_gettime(clockid_t(domainPosixClockId_), &timestampSpec);
+			ocean_assert_and_suppress_unused(result == 0, result);
+
+			return timestampSpec.tv_sec * nanosecondsPerSecond_ + timestampSpec.tv_nsec;
+		}
+
+	#ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+		case TD_VIRTUAL_COUNTER_REGISTER:
+		{
+			uint64_t virtualCounter = 0ull;
+			if (Processor::virtualCountRegister(virtualCounter) && domainFrequency_ != 0ull)
+			{
+				return timestampInNs(virtualCounter, domainFrequency_);
+			}
+
+			ocean_assert(false && "Invalid virtual counter!");
+			return invalidValue_;
+		}
+	#endif // OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+	}
+
+#endif // OCEAN_PLATFORM_BUILD_WINDOWS
+
+	ocean_assert(false && "Invalid time domain!");
+	return invalidValue_;
 }
 
 int64_t Timestamp::TimestampConverter::domainToUnixOffset()
@@ -112,6 +186,8 @@ int64_t Timestamp::TimestampConverter::domainToUnixOffset()
 	// then we determine the offset (averaged over several measurements)
 	// finally, we convert the provided domain timestamp to the corresponding unix timestamp by applying the determined (averaged) offset
 
+	int64_t domainNs = invalidValue_;
+
 #ifdef OCEAN_PLATFORM_BUILD_WINDOWS
 
 	ocean_assert(timeDomain_ == TD_MONOTONIC);
@@ -119,49 +195,42 @@ int64_t Timestamp::TimestampConverter::domainToUnixOffset()
 	// On Windows, steady_clock wraps the QueryPerformanceCounter function.
 	// https://learn.microsoft.com/en-us/cpp/standard-library/steady-clock-struct
 
-	std::chrono::steady_clock::time_point domainTimestampTimePoint;
 	std::chrono::system_clock::time_point unixTimestampTimePoint;
 
 	if (measurements_ % 2 == 0)
 	{
-		domainTimestampTimePoint = std::chrono::steady_clock::now();
+		domainNs = currentDomainTimestampNs();
 		unixTimestampTimePoint = std::chrono::system_clock::now();
 
 	}
 	else
 	{
 		unixTimestampTimePoint = std::chrono::system_clock::now();
-		domainTimestampTimePoint = std::chrono::steady_clock::now();
+		domainNs = currentDomainTimestampNs();
 	}
 
-	const int64_t domainNs = std::chrono::duration_cast<std::chrono::nanoseconds>(domainTimestampTimePoint.time_since_epoch()).count();
 	const int64_t unixNs = std::chrono::duration_cast<std::chrono::nanoseconds>(unixTimestampTimePoint.time_since_epoch()).count();
 
 #else
 
-	ocean_assert(domainPosixClockId_ != -1);
-
-	struct timespec domainTimestampSpec;
 	struct timespec unixTimestampSpec;
 
 	if (measurements_ % 2 == 0)
 	{
-		const int resultDomain = clock_gettime(clockid_t(domainPosixClockId_), &domainTimestampSpec);
+		domainNs = currentDomainTimestampNs();
 		const int resultUnix = clock_gettime(CLOCK_REALTIME, &unixTimestampSpec);
 
-		ocean_assert_and_suppress_unused(resultDomain == 0, resultDomain);
 		ocean_assert_and_suppress_unused(resultUnix == 0, resultUnix);
 	}
 	else
 	{
 		const int resultUnix = clock_gettime(CLOCK_REALTIME, &unixTimestampSpec);
-		const int resultDomain = clock_gettime(clockid_t(domainPosixClockId_), &domainTimestampSpec);
+		domainNs = currentDomainTimestampNs();
 
 		ocean_assert_and_suppress_unused(resultUnix == 0, resultUnix);
-		ocean_assert_and_suppress_unused(resultDomain == 0, resultDomain);
 	}
 
-	const int64_t domainNs = domainTimestampSpec.tv_sec * nanosecondsPerSecond_ + domainTimestampSpec.tv_nsec;
+	ocean_assert(domainNs != invalidValue_);
 	const int64_t unixNs = unixTimestampSpec.tv_sec * nanosecondsPerSecond_ + unixTimestampSpec.tv_nsec;
 
 #endif // OCEAN_PLATFORM_BUILD_WINDOWS
@@ -264,7 +333,7 @@ Timestamp::TimestampConverter& Timestamp::TimestampConverter::operator=(Timestam
 	return *this;
 }
 
-int64_t Timestamp::TimestampConverter::currentTimestampNs(const TimeDomain timeDomain)
+int64_t Timestamp::TimestampConverter::currentDomainTimestampNs(const TimeDomain timeDomain)
 {
 #ifdef OCEAN_PLATFORM_BUILD_WINDOWS
 
@@ -274,18 +343,59 @@ int64_t Timestamp::TimestampConverter::currentTimestampNs(const TimeDomain timeD
 
 	return std::chrono::duration_cast<std::chrono::nanoseconds>(domainTimestampTimePoint.time_since_epoch()).count();
 
-#else
+#else // OCEAN_PLATFORM_BUILD_WINDOWS
 
-	const int domainClockId = posixClockId(timeDomain);
-	ocean_assert(domainClockId != -1);
+	switch (timeDomain)
+	{
+		case TD_INVALID:
+			break;
 
-	struct timespec timestampSpec;
-	const int result = clock_gettime(clockid_t(domainClockId), &timestampSpec);
-	ocean_assert_and_suppress_unused(result == 0, result);
+	#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
+		case TD_BOOTTIME:
+			[[fallthrough]];
+	#endif
 
-	return timestampSpec.tv_sec * nanosecondsPerSecond_ + timestampSpec.tv_nsec;
+	#ifdef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
+		case TD_UPTIME_RAW:
+			[[fallthrough]];
+	#endif
+
+		case TD_MONOTONIC:
+		{
+			const int domainPosixClockId = posixClockId(timeDomain);
+
+			if (domainPosixClockId == -1)
+			{
+				break;
+			}
+
+			struct timespec timestampSpec;
+			const int result = clock_gettime(clockid_t(domainPosixClockId), &timestampSpec);
+			ocean_assert_and_suppress_unused(result == 0, result);
+
+			return timestampSpec.tv_sec * nanosecondsPerSecond_ + timestampSpec.tv_nsec;
+		}
+
+	#ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+		case TD_VIRTUAL_COUNTER_REGISTER:
+		{
+			uint64_t virtualCounter = 0ull;
+			uint64_t domainFrequency = 0ull;
+			if (Processor::virtualCountRegister(virtualCounter) && Processor::virtualCountFrequency(domainFrequency))
+			{
+				return timestampInNs(virtualCounter, domainFrequency);
+			}
+
+			ocean_assert(false && "Invalid virtual counter!");
+			return invalidValue_;
+		}
+	#endif // OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+	}
 
 #endif // OCEAN_PLATFORM_BUILD_WINDOWS
+
+	ocean_assert(false && "Invalid time domain!");
+	return invalidValue_;
 }
 
 int64_t Timestamp::TimestampConverter::timestampInNs(const int64_t timeValue, const int64_t timeDenominator)
@@ -337,15 +447,20 @@ int Timestamp::TimestampConverter::posixClockId(const TimeDomain timeDomain)
 		case TD_MONOTONIC:
 			return CLOCK_MONOTONIC;
 
-	#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
+#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
 		case TD_BOOTTIME:
 			return CLOCK_BOOTTIME;
-	#endif
+#endif
 
-	#ifdef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
+#ifdef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
 		case TD_UPTIME_RAW:
 			return CLOCK_UPTIME_RAW;
-	#endif
+#endif
+
+#ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+		case TD_VIRTUAL_COUNTER_REGISTER:
+			return -1;
+#endif
 
 		case TD_INVALID:
 			break;
