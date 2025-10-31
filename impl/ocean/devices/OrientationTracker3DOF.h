@@ -28,7 +28,7 @@ class OrientationTracker3DOF;
  * @see OrientationTracker3DOF.
  * @ingroup devices
  */
-typedef SmartObjectRef<OrientationTracker3DOF, Device> OrientationTracker3DOFRef;
+using OrientationTracker3DOFRef = SmartObjectRef<OrientationTracker3DOF, Device>;
 
 /**
  * This class is the base class for all 3DOF orientation tracker objects.
@@ -48,7 +48,7 @@ class OCEAN_DEVICES_EXPORT OrientationTracker3DOF : virtual public Tracker
 				/**
 				 * Definition of a vector holding orientation values.
 				 */
-				typedef std::vector<Quaternion> Orientations;
+				using Orientations = std::vector<Quaternion>;
 
 			public:
 
@@ -88,7 +88,7 @@ class OCEAN_DEVICES_EXPORT OrientationTracker3DOF : virtual public Tracker
 		/**
 		 * Definition of a smart object reference for 3DOF orientation tracker samples.
 		 */
-		typedef SmartObjectRef<OrientationTracker3DOFSample, Sample> OrientationTracker3DOFSampleRef;
+		using OrientationTracker3DOFSampleRef = SmartObjectRef<OrientationTracker3DOFSample, Sample>;
 
 	public:
 

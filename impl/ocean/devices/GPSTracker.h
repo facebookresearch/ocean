@@ -27,7 +27,7 @@ class GPSTracker;
  * @see GPSTracker.
  * @ingroup devices
  */
-typedef SmartDeviceRef<GPSTracker> GPSTrackerRef;
+using GPSTrackerRef = SmartDeviceRef<GPSTracker>;
 
 /**
  * This class is the base class for all gps tracker objects.
@@ -156,7 +156,7 @@ class OCEAN_DEVICES_EXPORT GPSTracker : virtual public Tracker
 		/**
 			* Definition of a vector holding GPS data values.
 			*/
-		typedef std::vector<Location> Locations;
+		using Locations = std::vector<Location>;
 
 		/**
 		 * Definition of a sample holding GPS measurements.
@@ -200,7 +200,7 @@ class OCEAN_DEVICES_EXPORT GPSTracker : virtual public Tracker
 		/**
 		 * Definition of a smart object reference for GPS tracker samples.
 		 */
-		typedef SmartObjectRef<GPSTrackerSample, Sample> GPSTrackerSampleRef;
+		using GPSTrackerSampleRef = SmartObjectRef<GPSTrackerSample, Sample>;
 
 	public:
 

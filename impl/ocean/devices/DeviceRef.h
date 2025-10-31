@@ -24,7 +24,7 @@ namespace Devices
  * @see Device
  * @ingroup devices
  */
-typedef ObjectRef<Device> DeviceRef;
+using DeviceRef = ObjectRef<Device>;
 
 /**
  * This class implements a smart device reference.
@@ -39,7 +39,7 @@ class SmartDeviceRef : public SmartObjectRef<T, Device>
 		/**
 		 * Redefinition of the release callback function defined in ObjectRef.
 		 */
-		typedef typename SmartObjectRef<T, Device>::ReleaseCallback ReleaseCallback;
+		using ReleaseCallback = typename SmartObjectRef<T, Device>::ReleaseCallback;
 
 	public:
 
@@ -98,17 +98,17 @@ class OCEAN_DEVICES_EXPORT DeviceRefManager : public Singleton<DeviceRefManager>
 		/**
 		 * Definition of a pair combining a device reference with a state specifying whether the medium is used exclusively.
 		 */
-		typedef std::pair<DeviceRef, bool> DevicePair;
+		using DevicePair = std::pair<DeviceRef, bool>;
 
 		/**
 		 * Map mapping urls to device references.
 		 */
-		typedef std::multimap<std::string, DevicePair> DeviceMap;
+		using DeviceMap = std::multimap<std::string, DevicePair>;
 
 		/**
 		 * Definition of device callback functions.
 		 */
-		typedef Callbacks<DeviceCallback> DeviceCallbacks;
+		using DeviceCallbacks = Callbacks<DeviceCallback>;
 
 	public:
 

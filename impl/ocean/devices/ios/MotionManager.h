@@ -52,7 +52,7 @@ class OCEAN_DEVICES_IOS_EXPORT MotionManager : public Singleton<MotionManager>
 		/**
 		 * Type of an unordered map mapping listener ids to callback functions.
 		 */
-		typedef std::unordered_map<ListenerId, DeviceMotionCallback> DeviceMotionListenerMap;
+		using DeviceMotionListenerMap = std::unordered_map<ListenerId, DeviceMotionCallback>;
 
 	public:
 

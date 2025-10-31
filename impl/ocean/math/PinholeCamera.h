@@ -206,7 +206,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 				/**
 				 * Definition of a lookup table for 2D vectors.
 				 */
-				typedef LookupCenter2<VectorT2<T>, T> LookupTable;
+				using LookupTable = LookupCenter2<VectorT2<T>, T>;
 
 			public:
 

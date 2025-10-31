@@ -171,7 +171,7 @@ class InterpolationMap
 		/**
 		 * Definition of a map mapping keys to values.
 		 */
-		typedef std::map<TKey, TValue> ValueMap;
+		using ValueMap = std::map<TKey, TValue>;
 
 		/**
 		 * Definition of a function pointer for a function providing a linear interpolation.
@@ -179,7 +179,7 @@ class InterpolationMap
 		 * The second parameter defines the second interpolation value.<br>
 		 * The third parameter defines the interpolation factor, with range [0, 1].<br>
 		 */
-		typedef TValue (*LinearInterpolationFunction)(const TValue&, const TValue&, const TFactor&);
+		using LinearInterpolationFunction = TValue (*)(const TValue&, const TValue&, const TFactor&);
 
 	public:
 

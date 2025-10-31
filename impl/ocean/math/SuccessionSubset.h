@@ -38,24 +38,24 @@ class SuccessionSubset
 		/**
 		 * The definition of an abstract object of this constainer.
 		 */
-		typedef StaticBuffer<T, tDimensions> Object;
+		using Object = StaticBuffer<T, tDimensions>;
 
 		/**
 		 * Definition of a vector holding indices.
 		 */
-		typedef std::vector<size_t> Indices;
+		using Indices = std::vector<size_t>;
 
 	protected:
 
 		/**
 		 * Definition of a vector holding abstract objects.
 		 */
-		typedef std::vector<Object> Objects;
+		using Objects = std::vector<Object>;
 
 		/**
 		 * Definition of a vector holding flags.
 		 */
-		typedef std::vector<unsigned char> Flags;
+		using Flags = std::vector<unsigned char>;
 
 	public:
 

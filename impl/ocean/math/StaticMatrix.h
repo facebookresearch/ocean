@@ -35,7 +35,7 @@ class StaticMatrix
 	public:
 
 		/// Definition of the matrix element type.
-		typedef T Type;
+		using Type = T;
 
 	public:
 

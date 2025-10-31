@@ -115,7 +115,7 @@ class HomogenousMatrixT4
 		/**
 		 * Definition of the used data type.
 		 */
-		typedef T Type;
+		using Type = T;
 
 	public:
 

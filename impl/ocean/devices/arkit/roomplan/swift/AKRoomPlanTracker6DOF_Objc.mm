@@ -363,7 +363,7 @@ using namespace Ocean::Devices::ARKit;
 
 + (AKRoomPlanTracker6DOFBase::PlanarRoomObject::PlanarType) translatePlanarType:(NSString*)planarType
 {
-	typedef std::unordered_map<std::string, AKRoomPlanTracker6DOFBase::PlanarRoomObject::PlanarType> TypeMap;
+	using TypeMap = std::unordered_map<std::string, AKRoomPlanTracker6DOFBase::PlanarRoomObject::PlanarType>;
 
 	const static TypeMap typeMap =
 	{
@@ -389,7 +389,7 @@ using namespace Ocean::Devices::ARKit;
 
 + (AKRoomPlanTracker6DOFBase::VolumetricRoomObject::VolumetricType) translateVolumetricType:(NSString*)volumetricType
 {
-	typedef std::unordered_map<std::string, AKRoomPlanTracker6DOFBase::VolumetricRoomObject::VolumetricType> TypeMap;
+	using TypeMap = std::unordered_map<std::string, AKRoomPlanTracker6DOFBase::VolumetricRoomObject::VolumetricType>;
 
 	const static TypeMap typeMap =
 	{

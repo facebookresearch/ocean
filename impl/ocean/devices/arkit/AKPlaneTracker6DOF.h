@@ -39,7 +39,7 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKPlaneTracker6DOF :
 		/**
 		 * Definition of an unordered map mapping anchor identifier strings to unique ids.
 		 */
-		typedef std::unordered_map<std::string, Index32> IdentifierMap;
+		using IdentifierMap = std::unordered_map<std::string, Index32>;
 
 	public:
 

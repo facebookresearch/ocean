@@ -31,7 +31,7 @@ class SceneTracker6DOF;
  * @see SceneTracker6DOF.
  * @ingroup devices
  */
-typedef SmartDeviceRef<SceneTracker6DOF> SceneTracker6DOFRef;
+using SceneTracker6DOFRef = SmartDeviceRef<SceneTracker6DOF>;
 
 /**
  * This class implements the base for all 6-DOF scene trackers.
@@ -317,7 +317,7 @@ class OCEAN_DEVICES_EXPORT SceneTracker6DOF : virtual public Tracker6DOF
 				/**
 				 * Definition of a vector holding planes.
 				 */
-				typedef std::vector<Plane> Planes;
+				using Planes = std::vector<Plane>;
 
 			public:
 
@@ -457,12 +457,12 @@ class OCEAN_DEVICES_EXPORT SceneTracker6DOF : virtual public Tracker6DOF
 				/**
 				 * Definition of a shared pointer for Mesh objects.
 				 */
-				typedef std::shared_ptr<Mesh> SharedMesh;
+				using SharedMesh = std::shared_ptr<Mesh>;
 
 				/**
 				 * Definition of a vector holding meshes.
 				 */
-				typedef std::vector<SharedMesh> SharedMeshes;
+				using SharedMeshes = std::vector<SharedMesh>;
 
 			public:
 
@@ -764,7 +764,7 @@ class OCEAN_DEVICES_EXPORT SceneTracker6DOF : virtual public Tracker6DOF
 						/**
 						 * Definition of an unordered map mapping readable strings to volumetric types.
 						 */
-						typedef std::unordered_map<std::string, VolumetricType> VolumetricTypeMap;
+						using VolumetricTypeMap = std::unordered_map<std::string, VolumetricType>;
 
 					public:
 
@@ -807,42 +807,42 @@ class OCEAN_DEVICES_EXPORT SceneTracker6DOF : virtual public Tracker6DOF
 				/**
 				 * Definition of a shared pointer holding a room object.
 				 */
-				typedef std::shared_ptr<RoomObject> SharedRoomObject;
+				using SharedRoomObject = std::shared_ptr<RoomObject>;
 
 				/**
 				 * Definition of a shared pointer holding a planar room object.
 				 */
-				typedef std::shared_ptr<PlanarRoomObject> SharedPlanarRoomObject;
+				using SharedPlanarRoomObject = std::shared_ptr<PlanarRoomObject>;
 
 				/**
 				 * Definition of a shared pointer holding a volumetric room object.
 				 */
-				typedef std::shared_ptr<VolumetricRoomObject> SharedVolumetricRoomObject;
+				using SharedVolumetricRoomObject = std::shared_ptr<VolumetricRoomObject>;
 
 				/**
 				 * Definition of a vector holding room objects.
 				 */
-				typedef std::vector<SharedRoomObject> SharedRoomObjects;
+				using SharedRoomObjects = std::vector<SharedRoomObject>;
 
 				/**
 				 * Definition of a vector holding planar room objects.
 				 */
-				typedef std::vector<SharedPlanarRoomObject> SharedPlanarRoomObjects;
+				using SharedPlanarRoomObjects = std::vector<SharedPlanarRoomObject>;
 
 				/**
 				 * Definition of a vector holding volumetric room objects.
 				 */
-				typedef std::vector<SharedVolumetricRoomObject> SharedVolumetricRoomObjects;
+				using SharedVolumetricRoomObjects = std::vector<SharedVolumetricRoomObject>;
 
 				/**
 				 * Definition of an unordered set holding object identifiers.
 				 */
-				typedef std::unordered_set<std::string> RoomObjectIdentifierSet;
+				using RoomObjectIdentifierSet = std::unordered_set<std::string>;
 
 				/**
 				 * Definitio of an unordered map mapping object identifiers to room objects.
 				 */
-				typedef std::unordered_map<std::string, SharedRoomObject> RoomObjectMap;
+				using RoomObjectMap = std::unordered_map<std::string, SharedRoomObject>;
 
 			public:
 
@@ -907,12 +907,12 @@ class OCEAN_DEVICES_EXPORT SceneTracker6DOF : virtual public Tracker6DOF
 		/**
 		 * Definition of a shared pointer holding a scene element.
 		 */
-		typedef std::shared_ptr<SceneElement> SharedSceneElement;
+		using SharedSceneElement = std::shared_ptr<SceneElement>;
 
 		/**
 		 * Definition of a vector holding scene elements.
 		 */
-		typedef std::vector<SharedSceneElement> SharedSceneElements;
+		using SharedSceneElements = std::vector<SharedSceneElement>;
 
 		/**
 		 * Definition of a sample holding one single 6DOF tracker measurement.
@@ -961,7 +961,7 @@ class OCEAN_DEVICES_EXPORT SceneTracker6DOF : virtual public Tracker6DOF
 		/**
 		 * Definition of a smart object reference for 6-DOF scene tracker samples.
 		 */
-		typedef SmartObjectRef<SceneTracker6DOFSample, Sample> SceneTracker6DOFSampleRef;
+		using SceneTracker6DOFSampleRef = SmartObjectRef<SceneTracker6DOFSample, Sample>;
 
 	public:
 

@@ -25,7 +25,7 @@ class Sensor;
  * @see Sensor.
  * @ingroup devices
  */
-typedef SmartObjectRef<Sensor, Device> SensorRef;
+using SensorRef = SmartObjectRef<Sensor, Device>;
 
 /**
  * This class implements the base class for all sensors.

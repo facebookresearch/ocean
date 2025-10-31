@@ -47,7 +47,7 @@ class OCEAN_DEVICES_PATTERN_EXPORT StaticPatternTracker6DOF :
 		/**
 		 * Definition of a sorted map combining timestamp with transformations.
 		 */
-		typedef std::map<Timestamp, HomogenousMatrix4> TransformationMap;
+		using TransformationMap = std::map<Timestamp, HomogenousMatrix4>;
 
 		/**
 		 * This class stores necessary information for one pattern.
@@ -99,7 +99,7 @@ class OCEAN_DEVICES_PATTERN_EXPORT StaticPatternTracker6DOF :
 		/**
 		 * Definition of an unsorted map combining object ids with pattern transformations.
 		 */
-		typedef std::unordered_map<ObjectId, PatternTransformations> PatternTransformationsMap;
+		using PatternTransformationsMap = std::unordered_map<ObjectId, PatternTransformations>;
 
 	public:
 

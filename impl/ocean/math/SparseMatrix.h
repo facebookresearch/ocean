@@ -67,7 +67,7 @@ class SparseMatrixT
 		/**
 		 * Definition of a vector holding entries.
 		 */
-		typedef std::vector<Entry> Entries;
+		using Entries = std::vector<Entry>;
 
 		/**
 		 * This class implements a triple object for matrix entries.

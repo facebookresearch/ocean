@@ -33,14 +33,14 @@ class Lookup2
 		/**
 		 * Definition of the lookup data type.
 		 */
-		typedef T Type;
+		using Type = T;
 
 	protected:
 
 		/**
 		 * Definition of a vector holding lookup values.
 		 */
-		typedef std::vector<T> Values;
+		using Values = std::vector<T>;
 
 	public:
 
@@ -427,7 +427,7 @@ class AdvancedLookupCenter2 : public LookupCenter2<T, TScalar>
 		/**
 		 * Definition of a vector holding 1 byte values.
 		 */
-		typedef std::vector<unsigned char> ValidBins;
+		using ValidBins = std::vector<unsigned char>;
 
 	public:
 

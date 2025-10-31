@@ -33,7 +33,7 @@ class SampleMap
 		/**
 		 * Definition of a map mapping timestamps to samples.
 		 */
-		typedef std::map<double, T> Map;
+		using Map = std::map<double, T>;
 
 		/**
 		 * Definition of individual interpolation strategies for samples.

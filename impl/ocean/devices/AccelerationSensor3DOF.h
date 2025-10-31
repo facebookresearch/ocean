@@ -52,7 +52,7 @@ class OCEAN_DEVICES_EXPORT AccelerationSensor3DOF : virtual public Sensor
 				 * Definition of a vector holding acceleration measurements.
 				 * One measurement holds three different acceleration values for three separated axis.
 				 */
-				typedef std::vector<Vector3> Measurements;
+				using Measurements = std::vector<Vector3>;
 
 			public:
 
@@ -89,7 +89,7 @@ class OCEAN_DEVICES_EXPORT AccelerationSensor3DOF : virtual public Sensor
 		/**
 		 * Definition of a smart object reference for 3DOF acceleration sensor samples.
 		 */
-		typedef SmartObjectRef<Acceleration3DOFSample, Sample> Acceleration3DOFSampleRef;
+		using Acceleration3DOFSampleRef = SmartObjectRef<Acceleration3DOFSample, Sample>;
 
 	public:
 

@@ -120,8 +120,8 @@ Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> matrixMultipli
 
 	// **TODO** performance improvement
 
-	typedef typename Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> DenseMatrix;
-	typedef typename Eigen::SparseMatrix<T, Eigen::ColMajor> InternalSparseMatrix;
+	using DenseMatrix = typename Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+	using InternalSparseMatrix = typename Eigen::SparseMatrix<T, Eigen::ColMajor>;
 
 	DenseMatrix result(sparseMatrix.rows(), denseMatrix.rows());
 	memset(result.data(), 0, sizeof(T) * result.rows() * result.cols());
@@ -185,8 +185,8 @@ Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> matrixMultipli
 
 	// **TODO** performance improvement
 
-	typedef typename Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> DenseMatrix;
-	typedef typename Eigen::SparseMatrix<T, Eigen::ColMajor> InternalSparseMatrix;
+	using DenseMatrix = typename Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
+	using InternalSparseMatrix = typename Eigen::SparseMatrix<T, Eigen::ColMajor>;
 
 	DenseMatrix result(denseMatrix.cols(), sparseMatrix.cols());
 	memset(result.data(), 0, sizeof(T) * result.rows() * result.cols());
@@ -266,7 +266,7 @@ struct InternalMatrix
 	/**
 	 * Definition of the sparse Eigen matrix.
 	 */
-	typedef Eigen::SparseMatrix<T, Eigen::ColMajor> Type;
+	using Type = Eigen::SparseMatrix<T, Eigen::ColMajor>;
 };
 
 template <typename T>
@@ -332,7 +332,7 @@ SparseMatrixT<T>::SparseMatrixT(const size_t rows, const size_t columns, const M
 	typename InternalMatrix<T>::Type& matrix = *static_cast<typename InternalMatrix<T>::Type*>(internalMatrix);
 	matrix.reserve(int(diagonal.elements()));
 
-	typedef typename InternalMatrix<T>::Type::Index Index;
+	using Index = typename InternalMatrix<T>::Type::Index;
 
 	if (diagonal.columns() == 1u)
 	{
@@ -385,7 +385,7 @@ template <typename T>
 SparseMatrixT<T>::SparseMatrixT(const MatrixT<T>& denseMatrix) :
 	internalMatrix(nullptr)
 {
-	typedef typename InternalMatrix<T>::Type::Index Index;
+	using Index = typename InternalMatrix<T>::Type::Index;
 
 	size_t nonZeros = 0;
 
@@ -556,9 +556,9 @@ void SparseMatrixT<T>::setEntries(const Entries& entries)
 {
 	ocean_assert(internalMatrix);
 
-	typedef typename InternalMatrix<T>::Type::Index Index;
-	typedef Eigen::Triplet<T, Index> Triplet;
-	typedef std::vector<Triplet> Triplets;
+	using Index = typename InternalMatrix<T>::Type::Index;
+	using Triplet = Eigen::Triplet<T, Index>;
+	using Triplets = std::vector<Triplet>;
 
 	ocean_assert(std::set<Entry>(entries.begin(), entries.end()).size() == entries.size());
 
@@ -588,7 +588,7 @@ SparseMatrixT<T> SparseMatrixT<T>::submatrix(const size_t row, const size_t colu
 	ocean_assert(row + rows <= this->rows());
 	ocean_assert(column + columns <= this->columns());
 
-	typedef typename InternalMatrix<T>::Type::Index Index;
+	using Index = typename InternalMatrix<T>::Type::Index;
 
 	return SparseMatrixT<T>(new typename InternalMatrix<T>::Type(static_cast<typename InternalMatrix<T>::Type*>(internalMatrix)->block(Index(row), Index(column), Index(rows), Index(columns))));
 }
@@ -886,7 +886,7 @@ bool SparseMatrixT<T>::invertBlockDiagonal(const size_t size)
 {
 	ocean_assert(size >= 2);
 
-	typedef typename InternalMatrix<T>::Type::Index Index;
+	using Index = typename InternalMatrix<T>::Type::Index;
 
 	typename InternalMatrix<T>::Type& sparseMatrix = *static_cast<typename InternalMatrix<T>::Type*>(internalMatrix);
 

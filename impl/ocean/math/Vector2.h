@@ -647,7 +647,7 @@ inline T VectorT2<T>::sqrDistance(const VectorT2<T>& right) const
 #ifdef OCEAN_DEBUG
 	if (!std::is_same<T, typename SignedTyper<T>::Type>::value)
 	{
-		typedef typename SignedTyper<T>::Type SignedT;
+		using SignedT = typename SignedTyper<T>::Type;
 
 		// -15 == 46 - 61
 		// 225 == -15 * -15

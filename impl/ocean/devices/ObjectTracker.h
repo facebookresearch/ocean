@@ -28,7 +28,7 @@ class ObjectTracker;
  * @see ObjectTracker.
  * @ingroup devices
  */
-typedef SmartDeviceRef<ObjectTracker> ObjectTrackerRef;
+using ObjectTrackerRef = SmartDeviceRef<ObjectTracker>;
 
 /**
  * This class is the base class for all tracker allowing to track an object or location.

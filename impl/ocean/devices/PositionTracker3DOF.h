@@ -27,7 +27,7 @@ class PositionTracker3DOF;
  * @see PositionTracker3DOF.
  * @ingroup devices
  */
-typedef SmartDeviceRef<PositionTracker3DOF> PositionTracker3DOFRef;
+using PositionTracker3DOFRef = SmartDeviceRef<PositionTracker3DOF>;
 
 /**
  * This class is the base class for all 3DOF position trackers.
@@ -47,7 +47,7 @@ class OCEAN_DEVICES_EXPORT PositionTracker3DOF : virtual public Tracker
 				/**
 				 * Definition of a vector holding position values.
 				 */
-				typedef std::vector<Vector3> Positions;
+				using Positions = std::vector<Vector3>;
 
 			public:
 
@@ -87,7 +87,7 @@ class OCEAN_DEVICES_EXPORT PositionTracker3DOF : virtual public Tracker
 		/**
 		 * Definition of a smart object reference for 3DOF position tracker samples.
 		 */
-		typedef SmartObjectRef<PositionTracker3DOFSample, Sample> PositionTracker3DOFSampleRef;
+		using PositionTracker3DOFSampleRef = SmartObjectRef<PositionTracker3DOFSample, Sample>;
 
 	public:
 

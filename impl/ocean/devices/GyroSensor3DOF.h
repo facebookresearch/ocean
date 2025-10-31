@@ -30,7 +30,7 @@ class GyroSensor3DOF;
  * @see GyroSensor3DOF.
  * @ingroup devices
  */
-typedef SmartDeviceRef<GyroSensor3DOF> GyroSensor3DOFRef;
+using GyroSensor3DOFRef = SmartDeviceRef<GyroSensor3DOF>;
 
 /**
  * This class is the base class for all 3DOF gyro sensors.
@@ -52,7 +52,7 @@ class OCEAN_DEVICES_EXPORT GyroSensor3DOF : virtual public Sensor
 				 * Definition of a vector holding gyro measurements.
 				 * One measurement holds three different gyro values for three separated axis.
 				 */
-				typedef std::vector<Vector3> Measurements;
+				using Measurements = std::vector<Vector3>;
 
 			public:
 
@@ -87,7 +87,7 @@ class OCEAN_DEVICES_EXPORT GyroSensor3DOF : virtual public Sensor
 		/**
 		 * Definition of a smart object reference for 3DOF gyro sensor samples.
 		 */
-		typedef SmartObjectRef<Gyro3DOFSample, Sample> Gyro3DOFSampleRef;
+		using Gyro3DOFSampleRef = SmartObjectRef<Gyro3DOFSample, Sample>;
 
 	public:
 

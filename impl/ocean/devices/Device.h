@@ -148,7 +148,7 @@ class OCEAN_DEVICES_EXPORT Device
 		/**
 		 * Definition of a subscription id for event callbacks.
 		 */
-		typedef unsigned int SubscriptionId;
+		using SubscriptionId = unsigned int;
 
 	public:
 

@@ -30,77 +30,77 @@ class ScopedARObject;
  * @see ScopedARObject
  * @ingroup devicesarcore
  */
-typedef ScopedARObject<ArSession, ArSession_destroy> ScopedARSession;
+using ScopedARSession = ScopedARObject<ArSession, ArSession_destroy>;
 
 /**
  * Definition of a scoped object for ArConfig.
  * @see ScopedARObject
  * @ingroup devicesarcore
  */
-typedef ScopedARObject<ArConfig, ArConfig_destroy> ScopedARConfig;
+using ScopedARConfig = ScopedARObject<ArConfig, ArConfig_destroy>;
 
 /**
  * Definition of a scoped object for ArPose.
  * @see ScopedARObject
  * @ingroup devicesarcore
  */
-typedef ScopedARObject<ArPose, ArPose_destroy> ScopedARPose;
+using ScopedARPose = ScopedARObject<ArPose, ArPose_destroy>;
 
 /**
  * Definition of a scoped object for ArImage.
  * @see ScopedARObject
  * @ingroup devicesarcore
  */
-typedef ScopedARObject<ArImage, ArImage_release> ScopedARImage;
+using ScopedARImage = ScopedARObject<ArImage, ArImage_release>;
 
 /**
  * Definition of a scoped object for ArCameraConfig.
  * @see ScopedARObject
  * @ingroup devicesarcore
  */
-typedef ScopedARObject<ArCameraConfig, ArCameraConfig_destroy> ScopedARCameraConfig;
+using ScopedARCameraConfig = ScopedARObject<ArCameraConfig, ArCameraConfig_destroy>;
 
 /**
  * Definition of a scoped object for ArCameraConfigList.
  * @see ScopedARObject
  * @ingroup devicesarcore
  */
-typedef ScopedARObject<ArCameraConfigList, ArCameraConfigList_destroy> ScopedARCameraConfigList;
+using ScopedARCameraConfigList = ScopedARObject<ArCameraConfigList, ArCameraConfigList_destroy>;
 
 /**
  * Definition of a scoped object for ArCameraConfigFilter.
  * @see ScopedARObject
  * @ingroup devicesarcore
  */
-typedef ScopedARObject<ArCameraConfigFilter, ArCameraConfigFilter_destroy> ScopedARCameraConfigFilter;
+using ScopedARCameraConfigFilter = ScopedARObject<ArCameraConfigFilter, ArCameraConfigFilter_destroy>;
 
 /**
  * Definition of a scoped object for ArCameraIntrinsics.
  * @see ScopedARObject
  * @ingroup devicesarcore
  */
-typedef ScopedARObject<ArCameraIntrinsics, ArCameraIntrinsics_destroy> ScopedARCameraIntrinsics;
+using ScopedARCameraIntrinsics = ScopedARObject<ArCameraIntrinsics, ArCameraIntrinsics_destroy>;
 
 /**
  * Definition of a scoped object for ArTrackable.
  * @see ScopedARObject
  * @ingroup devicesarcore
  */
-typedef ScopedARObject<ArTrackable, ArTrackable_release> ScopedARTrackable;
+using ScopedARTrackable = ScopedARObject<ArTrackable, ArTrackable_release>;
 
 /**
  * Definition of a scoped object for ArTrackableList.
  * @see ScopedARObject
  * @ingroup devicesarcore
  */
-typedef ScopedARObject<ArTrackableList, ArTrackableList_destroy> ScopedARTrackableList;
+using ScopedARTrackableList = ScopedARObject<ArTrackableList, ArTrackableList_destroy>;
 
 /**
  * Definition of a scoped object for ArPointCloud.
  * @see ScopedARObject
  * @ingroup devicesarcore
  */
-typedef ScopedARObject<ArPointCloud, ArPointCloud_release> ScopedARPointCloud;
+using ScopedARPointCloud = ScopedARObject<ArPointCloud, ArPointCloud_release>;
 
 /**
  * This class implements a scoped object for ARCore objects.
@@ -119,7 +119,7 @@ class ScopedARObject
 		 * @param arSession The ARCore session for which the object will be created
 		 * @param object The resulting created object
 		 */
-		typedef void(*CreateFunction)(const ArSession* arSession, T** object);
+		using CreateFunction = void(*)(const ArSession* arSession, T** object);
 
 	public:
 

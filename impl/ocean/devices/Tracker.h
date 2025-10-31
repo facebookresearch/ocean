@@ -29,7 +29,7 @@ class Tracker;
  * @see Tracker.
  * @ingroup devices
  */
-typedef SmartDeviceRef<Tracker> TrackerRef;
+using TrackerRef = SmartDeviceRef<Tracker>;
 
 /**
  * This class implements the base class for all tracker devices.
@@ -123,7 +123,7 @@ class OCEAN_DEVICES_EXPORT Tracker : virtual public Measurement
 		/**
 		 * Definition of a smart object reference for tracker samples.
 		 */
-		typedef SmartObjectRef<TrackerSample, Sample> TrackerSampleRef;
+		using TrackerSampleRef = SmartObjectRef<TrackerSample, Sample>;
 
 		/**
 		 * Definition of a callback function to subscribe for lost and found tracker events.

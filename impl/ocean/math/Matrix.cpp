@@ -689,11 +689,11 @@ bool MatrixT<T>::solve(const T* b, T* x) const
 {
 	ocean_assert(b && x);
 	ocean_assert(rows() == columns());
-	typedef Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> EigenMatrix;
+	using EigenMatrix = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
 	Eigen::Map<const EigenMatrix> matrix(data(), rows(), columns());
 
-	typedef Eigen::Matrix<T, Eigen::Dynamic, 1, Eigen::ColMajor> EigenVector;
+	using EigenVector = Eigen::Matrix<T, Eigen::Dynamic, 1, Eigen::ColMajor>;
 	Eigen::Map<const EigenVector> bVector(b, rows());
 
 	switch (tMatrixProperty)
@@ -781,7 +781,7 @@ size_t MatrixT<T>::rank(const T* data, const size_t rows, const size_t columns)
 {
 	ocean_assert(data && rows != 0 && columns != 0);
 
-	typedef Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> EigenMatrix;
+	using EigenMatrix = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
 	return Eigen::Map<const EigenMatrix>(data, rows, columns).fullPivLu().rank();
 }
@@ -893,7 +893,7 @@ bool MatrixT<T>::eigenSystem(MatrixT<T>& values, MatrixT<T>& vectors) const
 		return false;
 	}
 
-	typedef Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> EigenMatrix;
+	using EigenMatrix = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 	Eigen::Map<const EigenMatrix> eigenMatrix(data(), rows(), columns());
 
 	const Eigen::EigenSolver<EigenMatrix> evd(eigenMatrix);
@@ -912,7 +912,7 @@ bool MatrixT<T>::eigenSystem(MatrixT<T>& values, MatrixT<T>& vectors) const
 template <typename T>
 bool MatrixT<T>::singularValueDecomposition(MatrixT<T>& u, MatrixT<T>& w, MatrixT<T>& v) const
 {
-	typedef Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> EigenMatrix;
+	using EigenMatrix = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 	Eigen::Map<const EigenMatrix> eigenMatrix(data(), rows(), columns());
 
 	const Eigen::JacobiSVD<EigenMatrix, Eigen::FullPivHouseholderQRPreconditioner> svd(eigenMatrix, Eigen::ComputeFullU | Eigen::ComputeFullV);
@@ -941,7 +941,7 @@ inline bool MatrixT<T>::qrDecomposition(MatrixT<T>& qMatrix, MatrixT<T>* rMatrix
 	const size_t m = rows();
 	const size_t n = columns();
 
-	typedef Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> EigenMatrix;
+	using EigenMatrix = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
 	Eigen::Map<const EigenMatrix> eigenMatrix(data(), m, n);
 
@@ -974,7 +974,7 @@ bool MatrixT<T>::choleskyDecomposition(MatrixT<T>& lMatrix) const
 
 	const size_t size = rows();
 
-	typedef Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> EigenMatrix;
+	using EigenMatrix = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
 	Eigen::Map<const EigenMatrix> eigenMatrix(data(), size, size);
 
@@ -996,7 +996,7 @@ bool MatrixT<T>::choleskyDecomposition(MatrixT<T>& lMatrix) const
 template <typename T>
 MatrixT<T> MatrixT<T>::pseudoInverted(const T epsilon) const
 {
-	typedef Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> EigenMatrix;
+	using EigenMatrix = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
 	Eigen::Map<const EigenMatrix> eigenMatrix(data(), rows(), columns());
 
@@ -1251,7 +1251,7 @@ MatrixT<T> MatrixT<T>::operator*(const MatrixT<T>& right) const
 
 	MatrixT<T> result(rows(), right.columns());
 
-	typedef Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> EigenMatrix;
+	using EigenMatrix = Eigen::Matrix<T, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
 	Eigen::Map<const EigenMatrix> leftEigen(data(), rows(), columns());
 	Eigen::Map<const EigenMatrix> rightEigen(right.data(), right.rows(), right.columns());

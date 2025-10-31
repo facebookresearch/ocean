@@ -44,7 +44,7 @@ class OCEAN_MATH_EXPORT RGBAColor
 		/**
 		 * Definition of a internal used data type.
 		 */
-		typedef float Type;
+		using Type = float;
 
 	public:
 

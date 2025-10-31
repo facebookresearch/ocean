@@ -41,7 +41,7 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKGeoAnchorsTracker6DOF :
 		/**
 		 * Definition of an unordered map mapping object ids to transformations.
 		 */
-		typedef std::unordered_map<ObjectId, HomogenousMatrix4> TransformationMap;
+		using TransformationMap = std::unordered_map<ObjectId, HomogenousMatrix4>;
 
 	protected:
 
@@ -79,7 +79,7 @@ class OCEAN_DEVICES_ARKIT_EXPORT AKGeoAnchorsTracker6DOF :
 		/**
 		 * Definition of a vector holding locations.
 		 */
-		typedef std::vector<Location> Locations;
+		using Locations = std::vector<Location>;
 
 	public:
 

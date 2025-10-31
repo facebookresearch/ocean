@@ -25,7 +25,7 @@ class MagneticTracker;
  * @see MagneticTracker.
  * @ingroup devices
  */
-typedef SmartDeviceRef<MagneticTracker> MagneticTrackerRef;
+using MagneticTrackerRef = SmartDeviceRef<MagneticTracker>;
 
 /**
  * This class is the base class for all tracker using a magnetic filed as input measurements.
