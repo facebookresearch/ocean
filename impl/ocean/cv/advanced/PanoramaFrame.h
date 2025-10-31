@@ -37,7 +37,7 @@ namespace Advanced
  * However, internally a sub-frame of the panorama frame is stored and iteratively extended if necessary.<br>
  * The resulting panorama frame is a combination of several camera frames which have been projected into the inner side of a sphere.<br>
  * The default camera orientation is looking into the negative z-axis and has the y-axis as up-vector.<br>
- * An horizontal orientation is a rotation around the y-axis.<br>
+ * A horizontal orientation is a rotation around the y-axis.<br>
  * A frame with default orientation is mapped to the center position of the panorama frame.<br>
  * The maximal possible panorama frame covers an horizontal angle of [-180, 180) degrees (from left to right),<br>
  * and a vertical angle of [90, -90) degrees from top to bottom).<br>

@@ -258,7 +258,7 @@ unsigned int SeedSegmentation::seedSegmentation(const T* frame, uint8_t* mask, c
 
 	Frame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), mask, Frame::CM_USE_KEEP_LAYOUT, maskPaddingElements).setValue(unvisitedMaskValue_);
 
-	// we use a vector and not a std::stack as the stack implementation is significant slower
+	// we use a vector and not a std::stack as the stack implementation is significantly slower
 	PixelCandidates stack;
 	stack.reserve(width * height / 32u);
 
@@ -346,7 +346,7 @@ unsigned int SeedSegmentation::iterativeSeedSegmentation(const T* frame, uint8_t
 		return 0u;
 	}
 
-	// we use a vector and not a std::stack as the stack implementation is significant slower
+	// we use a vector and not a std::stack as the stack implementation is significantly slower
 	PixelCandidates stack;
 	stack.reserve((width * height) / 16u);
 
@@ -509,7 +509,7 @@ unsigned int SeedSegmentation::seedSegmentationArea8BitPerChannel(const uint32_t
 
 	Frame(FrameType(width, height, FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT), mask, Frame::CM_USE_KEEP_LAYOUT, maskPaddingElements).setValue(unvisitedMaskValue_);
 
-	// we use a vector and not a std::stack as the stack implementation is significant slower
+	// we use a vector and not a std::stack as the stack implementation is significantly slower
 	PixelCandidates stack;
 	stack.reserve((width * height) / 16u);
 

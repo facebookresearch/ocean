@@ -1539,7 +1539,7 @@ void Canvas::fill8BitPerChannel(uint8_t* frame, const unsigned int width, const 
 	const PixelType areaPixelValue = *(const PixelType*)(frame + offset);
 	*(PixelType*)(frame + offset) = pixelValue;
 
-	// we use a vector and not a std::stack as the stack implementation is significant slower
+	// we use a vector and not a std::stack as the stack implementation is significantly slower
 	std::vector<PixelPosition> stack;
 	stack.reserve((width * height) / 16u);
 
