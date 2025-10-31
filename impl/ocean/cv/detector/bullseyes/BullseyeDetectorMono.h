@@ -41,6 +41,28 @@ class BullseyeDetectorMono
 
 		/**
 		 * This class holds the most important parameters for the detector.
+		 *
+		 * Parameter Guide:
+		 *
+		 * framePyramidPixelThreshold:
+		 *   Controls when to use multi-scale detection via image pyramids.
+		 *   - Default: 640 * 480 = 307200 pixels (VGA resolution)
+		 *   - For images larger than this threshold, pyramid layers are used to detect bullseyes at multiple scales
+		 *   - Smaller values enable pyramid processing for smaller images (more thorough but slower)
+		 *   - Larger values disable pyramid processing for more images (faster but may miss small bullseyes)
+		 *
+		 * framePyramidLayers:
+		 *   Number of pyramid layers to use for multi-scale detection.
+		 *   - Default: 3 layers
+		 *   - More layers detect smaller bullseyes but increase computation time
+		 *   - Typical range: 2-4 layers
+		 *
+		 * useAdaptiveRowSpacing:
+		 *   Whether to skip rows during detection for better performance.
+		 *   - Default: true (enabled)
+		 *   - When enabled: Rows are skipped based on image height (height/150)
+		 *   - When disabled: Every row is scanned (slower but more accurate)
+		 *   - Recommended: true for real-time applications, false for offline/accuracy-critical applications
 		 */
 		class Parameters
 		{
