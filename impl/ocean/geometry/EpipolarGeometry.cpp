@@ -389,7 +389,7 @@ size_t EpipolarGeometry::factorizeEssential(const SquareMatrix3& normalizedRight
 
 		const HomogenousMatrix4 candidateLeft_T_candidateRight(candidateRight_T_candidateLeft.inverted());
 
-		const size_t numberCorrespondences = validateTransformation(candidateLeft_T_candidateRight, leftCamera, rightCamera, leftPoints, rightPoints, correspondences);
+		const size_t numberCorrespondences = validateCameraPose(candidateLeft_T_candidateRight, leftCamera, rightCamera, leftPoints, rightPoints, correspondences);
 
 		if (numberCorrespondences > bestNumberCorrespondences)
 		{
@@ -754,19 +754,22 @@ ObjectPoints EpipolarGeometry::triangulateImagePointsIF(const ConstIndexedAccess
 	return objectPoints;
 }
 
-size_t EpipolarGeometry::validateTransformation(const HomogenousMatrix4& left_T_right, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences)
+size_t EpipolarGeometry::validateCameraPose(const HomogenousMatrix4& leftCamera_T_rightCamera, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences)
 {
-	ocean_assert(left_T_right.isValid());
+	ocean_assert(leftCamera_T_rightCamera.isValid());
 	ocean_assert(leftCamera.isValid() && rightCamera.isValid());
 
 	ocean_assert(leftPoints != nullptr || correspondences == 0);
 	ocean_assert(rightPoints != nullptr || correspondences == 0);
 
-	const Vector3 rightTranslation(left_T_right.translation());
-	const Quaternion rightOrientation(left_T_right.rotation());
+	const HomogenousMatrix4 world_T_leftCamera(true);
+	const HomogenousMatrix4 world_T_rightCamera = world_T_leftCamera * leftCamera_T_rightCamera;
 
-	// the viewing direction is directed into the negative z-space
-	const Vector3 rightCameraDirection = rightOrientation * Vector3(0, 0, -1);
+	const HomogenousMatrix4 leftFlippedCamera_T_world = Camera::standard2InvertedFlipped(world_T_leftCamera);
+	const HomogenousMatrix4 rightFlippedCamera_T_world = Camera::standard2InvertedFlipped(world_T_rightCamera);
+
+	const Vector3 rightTranslation(leftCamera_T_rightCamera.translation());
+	const Quaternion rightOrientation(leftCamera_T_rightCamera.rotation());
 
 	size_t validCounter = 0;
 
@@ -775,22 +778,16 @@ size_t EpipolarGeometry::validateTransformation(const HomogenousMatrix4& left_T_
 		const Vector2& leftPoint = leftPoints[n];
 		const Vector2& rightPoint = rightPoints[n];
 
-		const Line3 leftRay = leftCamera.ray(leftPoint, Vector3(0, 0, 0), Quaternion());
+		const Line3 leftRay = leftCamera.ray(leftPoint, Vector3(0, 0, 0), Quaternion(true));
 		const Line3 rightRay = rightCamera.ray(rightPoint, rightTranslation, rightOrientation);
 
 		Vector3 objectPoint;
 		if (leftRay.nearestPoint(rightRay, objectPoint))
 		{
-			// the left camera is defined in the origin
-			const Vector3& leftObjectPointDirection = objectPoint;
-			const Vector3 rightObjectPointDirection = objectPoint - rightTranslation;
+			// let's ensure that the object point is in front of both cameras
 
-			if (leftObjectPointDirection * Vector3(0, 0, -1) > 0 && rightObjectPointDirection * rightCameraDirection > 0)
+			if (Camera::isObjectPointInFrontIF(leftFlippedCamera_T_world, objectPoint) && Camera::isObjectPointInFrontIF(rightFlippedCamera_T_world, objectPoint))
 			{
-				// **TODO** the assert is wrong
-				//ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(HomogenousMatrix4(true)), objectPoint));
-				//ocean_assert(Camera::isObjectPointInFrontIF(Camera::standard2InvertedFlipped(left_T_right), objectPoint));
-
 				++validCounter;
 			}
 		}

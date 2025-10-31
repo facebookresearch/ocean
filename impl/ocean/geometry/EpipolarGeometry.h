@@ -255,7 +255,7 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		/**
 		 * Returns the number of 3D object points lying in front of two cameras for a given transformation between the two cameras.
 		 * The pose of the first camera is located in the origin (identity transformation) while the pose of the second camera is defined by the given transformation.
-		 * @param left_T_right The transformation between the right and the left camera, must be valid
+		 * @param leftCamera_T_rightCamera The transformation between the right and the left camera, must be valid
 		 * @param leftCamera The left camera profile defining the projection, must be valid
 		 * @param rightCamera The right camera profile defining the projection, must be valid
 		 * @param leftPoints The left image points, must be valid if correspondences != 0
@@ -263,7 +263,7 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 * @param correspondences The number of provided point correspondences, with range [0, infinity)
 		 * @return Number of valid object points, with range [0, correspondences]
 		 */
-		static size_t validateTransformation(const HomogenousMatrix4& left_T_right, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences);
+		static size_t validateCameraPose(const HomogenousMatrix4& leftCamera_T_rightCamera, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences);
 
 		/**
 		 * Converts a epipolar line to a line object.
