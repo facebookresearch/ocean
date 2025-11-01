@@ -42,10 +42,10 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 * @param leftPoints The left image points, must be valid
 		 * @param rightPoints The right image points, must be valid
 		 * @param correspondences The number of point correspondences, with range [8, infinity)
-		 * @param fundamental The resulting fundamental matrix 'right_F_left'
+		 * @param right_F_left The resulting fundamental matrix
 		 * @return True, if succeeded
 		 */
-		static bool fundamentalMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& fundamental);
+		static bool fundamentalMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& right_F_left);
 
 		/**
 		 * Returns the reverted fundamental matrix.
@@ -53,15 +53,48 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		 * @param right_F_left The fundamental matrix satisfying the equation rightPoint^T * right_F_left * leftPoint = 0
 		 * @return The resulting reverted fundamental matrix 'left_F_right'
 		 */
-		static inline SquareMatrix3 reverseFundamentalMatrix(const SquareMatrix3& fundamental);
+		static inline SquareMatrix3 reverseFundamentalMatrix(const SquareMatrix3& right_F_left);
+
+		/**
+		 * Calculates the essential matrix based on corresponding viewing rays from the 'left' and 'right' camera.
+		 * This function implements the 8-point algorithm based on corresponding viewing rays.
+		 * The resulting essential matrix is defined by the following equation:
+		 * <pre>
+		 * rightViewingRay^T * normalizedRight_E_normalizedLeft * leftViewingRay = 0
+		 * </pre>
+		 * The normalized image points are defined in the flipped camera, with default flipped camera pointing towards the positive z-space with y-axis upwards.
+		 * @param leftImageRays Three 3D rays with unit length, defined in the coordinate system of the left camera, starting at the camera's center of projection (equal to the origin) and hitting the image plane at a known image points
+		 * @param rightImageRays The 3D rays with unit length, defined in the coordinate system of the right camera, starting at the camera's center of projection (equal to the origin) and hitting the image plane at a known image points, one for each left image ray
+		 * @param correspondences The number of bearing vector correspondences, with range [8, infinity)
+		 * @param normalizedRight_E_normalizedLeft The resulting essential matrix
+		 * @return True, if succeeded
+		 */
+		static bool essentialMatrix(const Vector3* leftImageRays, const Vector3* rightImageRays, const size_t correspondences, SquareMatrix3& normalizedRight_E_normalizedLeft);
+
+		/**
+		 * Calculates the essential matrix based on corresponding viewing rays from the 'left' and 'right' camera.
+		 * This function implements the 8-point algorithm based on corresponding viewing rays.
+		 * The resulting essential matrix is defined by the following equation:
+		 * <pre>
+		 * rightViewingRay^T * normalizedRight_E_normalizedLeft * leftViewingRay = 0
+		 * </pre>
+		 * The normalized image points are defined in the flipped camera, with default flipped camera pointing towards the positive z-space with y-axis upwards.
+		 * @param flippedLeftImageRays Three flipped 3D rays with unit length, defined in the flipped coordinate system of the left camera, starting at the camera's center of projection (equal to the origin) and hitting the image plane at a known image points
+		 * @param flippedRightImageRays The flipped 3D rays with unit length, defined in the flipped coordinate system of the right camera, starting at the camera's center of projection (equal to the origin) and hitting the image plane at a known image points, one for each left image ray
+		 * @param correspondences The number of bearing vector correspondences, with range [8, infinity)
+		 * @param normalizedRight_E_normalizedLeft The resulting essential matrix
+		 * @return True, if succeeded
+		 */
+		static bool essentialMatrixF(const Vector3* flippedLeftImageRays, const Vector3* flippedRightImageRays, const size_t correspondences, SquareMatrix3& normalizedRight_E_normalizedLeft);
 
 		/**
 		 * Calculates the essential matrix based on 6-DOF camera pose between two cameras.
 		 * The resulting essential matrix is defined by the following equation:
 		 * <pre>
 		 * normalizedRightPoint^T * normalizedRight_E_normalizedLeft * normalizedLeftPoint = 0
-		 * with normalizedRightPoint = [objectPoint.x() / objectPoint.z(), objectPoint.y() / objectPoint.z(), 1]^T
+		 * with normalizedRightPoint = [flippedObjectPoint.x() / flippedObjectPoint.z(), flippedObjectPoint.y() / flippedObjectPoint.z(), 1]^T
 		 * </pre>
+		 * The flipped object points and the normalized image points are defined in the flipped camera, with default flipped camera pointing towards the positive z-space with y-axis upwards.
 		 * @param rightCamera_T_leftCamera The transformation transforming the left camera to the right camera, with default camera pointing towards the negative z-space with y-axis upwards, must be valid
 		 * @return The resulting essential matrix 'normalizedRight_E_normalizedLeft'
 		 */
@@ -106,12 +139,12 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		/**
 		 * Determines the two epipoles corresponding to a fundamental matrix.
 		 * This method uses singular values decomposition for the calculation.
-		 * @param fundamental The fundamental matrix to extract the epipoles from
+		 * @param right_F_left The fundamental matrix to convert into essential matrix, must be valid
 		 * @param leftEpipole Resulting left epipole
 		 * @param rightEpipole Resulting right epipole
 		 * @return True, if succeeded
 		 */
-		static bool epipoles(const SquareMatrix3& fundamental, Vector2& leftEpipole, Vector2& rightEpipole);
+		static bool epipoles(const SquareMatrix3& right_F_left, Vector2& leftEpipole, Vector2& rightEpipole);
 
 		/**
 		 * Determines the two epipoles corresponding to two cameras separated by an extrinsic camera matrix.
@@ -236,6 +269,24 @@ class OCEAN_GEOMETRY_EXPORT EpipolarGeometry
 		static ObjectPoints triangulateImagePointsIF(const ConstIndexedAccessor<HomogenousMatrix4>& posesIF, const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, const PinholeCamera* pinholeCamera = nullptr, const Vector3& invalidObjectPoint = Vector3(Numeric::minValue(), Numeric::minValue(), Numeric::minValue()), Indices32* invalidIndices = nullptr);
 
 	protected:
+
+		/**
+		 * Calculates the essential matrix based on corresponding viewing rays from the 'left' and 'right' camera.
+		 * This function implements the 8-point algorithm based on corresponding viewing rays.
+		 * The resulting essential matrix is defined by the following equation:
+		 * <pre>
+		 * rightViewingRay^T * normalizedRight_E_normalizedLeft * leftViewingRay = 0
+		 * </pre>
+		 * The normalized image points are defined in the flipped camera, with default flipped camera pointing towards the positive z-space with y-axis upwards.
+		 * @param leftImageRays Three 3D rays with unit length, defined in the coordinate system of the left camera, starting at the camera's center of projection (equal to the origin) and hitting the image plane at a known image points
+		 * @param rightImageRays The 3D rays with unit length, defined in the coordinate system of the right camera, starting at the camera's center of projection (equal to the origin) and hitting the image plane at a known image points, one for each left image ray
+		 * @param correspondences The number of bearing vector correspondences, with range [8, infinity)
+		 * @param normalizedRight_E_normalizedLeft The resulting essential matrix
+		 * @return True, if succeeded
+		 * @tparam tRaysAreFlipped True, to interpret the rays as flipped (pointing towards the positive z-space with y-axis upwards); False, to interpret the rays as normal (pointing towards the negative z space with y-axis downwards)
+		 */
+		template <bool tRaysAreFlipped>
+		static bool essentialMatrix(const Vector3* leftImageRays, const Vector3* rightImageRays, const size_t correspondences, SquareMatrix3& normalizedRight_E_normalizedLeft);
 
 		/**
 		 * Returns the number of 3D object points lying in front of two cameras for a given transformation between the two cameras.

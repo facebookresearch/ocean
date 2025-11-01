@@ -48,6 +48,12 @@ bool TestEpipolarGeometry::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testEssentialMatrix(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testTriangulateImagePoints(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -74,6 +80,11 @@ TEST(TestEpipolarGeometry, FundamentalMatrix)
 TEST(TestEpipolarGeometry, undamentalMatrixWithNoise)
 {
 	EXPECT_TRUE(TestEpipolarGeometry::testFundamentalMatrixWithNoise(GTEST_TEST_DURATION));
+}
+
+TEST(TestEpipolarGeometry, EssentialMatrix)
+{
+	EXPECT_TRUE(TestEpipolarGeometry::testEssentialMatrix(GTEST_TEST_DURATION));
 }
 
 TEST(TestEpipolarGeometry, TriangulateImagePoints)
@@ -429,6 +440,210 @@ bool TestEpipolarGeometry::testFundamentalMatrixWithNoise(const double testDurat
 
 				Log::info() << "Validation: FAILED!";
 			}
+		}
+	}
+
+	return allSucceeded;
+}
+
+bool TestEpipolarGeometry::testEssentialMatrix(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing essential matrix:";
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	for (const size_t correspondences : {8, 11, 15, 30, 50, 90, 200})
+	{
+		Log::info() << " ";
+		Log::info() << "... with " << correspondences << " correspondences:";
+
+		HighPerformanceStatistic performance;
+
+		ValidationPrecision validationEssential(0.99, randomGenerator);
+		ValidationPrecision validationFactorized(0.99, randomGenerator);
+
+		bool needMoreIterations = false;
+
+		const Timestamp startTimestamp(true);
+
+		do
+		{
+			ValidationPrecision::ScopedIteration scopedIterationEssential(validationEssential);
+			ValidationPrecision::ScopedIteration scopedIterationFactorized(validationFactorized);
+
+			const unsigned int width = RandomI::random(randomGenerator, 600u, 800u);
+			const unsigned int height = RandomI::random(randomGenerator, 600u, 600u);
+			const Scalar fovX = Numeric::deg2rad(Random::scalar(randomGenerator, Scalar(30), Scalar(70)));
+
+			const PinholeCamera pinholeCamera(width, height, fovX);
+			const AnyCameraPinhole camera(pinholeCamera);
+
+			const Scalar sphereRadius = Random::scalar(randomGenerator, Scalar(0.1), Scalar(1));
+
+			Vectors3 objectPoints(correspondences);
+			for (size_t n = 0; n < correspondences; ++n)
+			{
+				objectPoints[n] = Random::vector3(randomGenerator) * sphereRadius;
+			}
+
+			const Vector3 viewingDirectionLeft = Random::vector3(randomGenerator);
+			const Vector3 viewingDirectionRight = Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(50))) * viewingDirectionLeft;
+
+			HomogenousMatrix4 world_T_leftCamera = Utilities::viewPosition(camera, Sphere3(Vector3(0, 0, 0), sphereRadius), viewingDirectionLeft);
+			HomogenousMatrix4 world_T_rightCamera = Utilities::viewPosition(camera, Sphere3(Vector3(0, 0, 0), sphereRadius), viewingDirectionRight);
+
+			// let's apply a random roll
+			world_T_leftCamera *= HomogenousMatrix4(Quaternion(Vector3(0, 0, 1), Random::scalar(randomGenerator, 0, Numeric::pi2())));
+			world_T_rightCamera *= HomogenousMatrix4(Quaternion(Vector3(0, 0, 1), Random::scalar(randomGenerator, 0, Numeric::pi2())));
+
+			const HomogenousMatrix4 flippedLeftCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_leftCamera));
+			const HomogenousMatrix4 flippedRightCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_rightCamera));
+
+#ifdef OCEAN_DEBUG
+			for (const Vector3& objectPoint : objectPoints)
+			{
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedLeftCamera_T_world, objectPoint));
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedRightCamera_T_world, objectPoint));
+			}
+#endif
+
+			Vectors2 leftImagePoints(correspondences);
+			Vectors2 rightImagePoints(correspondences);
+
+			for (size_t n = 0; n < correspondences; ++n)
+			{
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedLeftCamera_T_world, objectPoints[n]));
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedRightCamera_T_world, objectPoints[n]));
+
+				leftImagePoints[n] = camera.projectToImageIF(flippedLeftCamera_T_world, objectPoints[n]);
+				rightImagePoints[n] = camera.projectToImageIF(flippedRightCamera_T_world, objectPoints[n]);
+			}
+
+			Vectors3 leftImageRays(correspondences);
+			Vectors3 rightImageRays(correspondences);
+
+			const bool useFlippedRays = Random::boolean(randomGenerator);
+
+			if (useFlippedRays)
+			{
+				camera.vectorIF(leftImagePoints.data(), leftImagePoints.size(), leftImageRays.data(), true /*makeUnitVector*/);
+				camera.vectorIF(rightImagePoints.data(), rightImagePoints.size(), rightImageRays.data(), true /*makeUnitVector*/);
+			}
+			else
+			{
+				camera.vector(leftImagePoints.data(), leftImagePoints.size(), leftImageRays.data(), true /*makeUnitVector*/);
+				camera.vector(rightImagePoints.data(), rightImagePoints.size(), rightImageRays.data(), true /*makeUnitVector*/);
+			}
+
+			bool result = false;
+
+			performance.start();
+
+				SquareMatrix3 normalizedRight_E_normalizedLeft(false);
+
+				if (useFlippedRays)
+				{
+					result = Geometry::EpipolarGeometry::essentialMatrixF(leftImageRays.data(), rightImageRays.data(), leftImageRays.size(), normalizedRight_E_normalizedLeft);
+				}
+				else
+				{
+					result = Geometry::EpipolarGeometry::essentialMatrix(leftImageRays.data(), rightImageRays.data(), leftImageRays.size(), normalizedRight_E_normalizedLeft);
+				}
+
+			performance.stop();
+
+			if (result)
+			{
+				const HomogenousMatrix4 leftCamera_T_rightCamera = world_T_leftCamera.inverted() * world_T_rightCamera;
+
+				for (size_t n = 0; n < correspondences; ++n)
+				{
+					const Vector3& left = leftImageRays[n];
+					const Vector3& right = rightImageRays[n];
+
+					Scalar scalarProduct = Numeric::maxValue();
+
+					if (useFlippedRays)
+					{
+						scalarProduct = (normalizedRight_E_normalizedLeft * left) * right;
+					}
+					else
+					{
+						const Vector3 leftFlipped(left.x(), -left.y(), -left.z());
+						const Vector3 rightFlipped(right.x(), -right.y(), -right.z());
+
+						scalarProduct = (normalizedRight_E_normalizedLeft * leftFlipped) * rightFlipped;
+					}
+
+					if (Numeric::isNotWeakEqualEps(scalarProduct))
+					{
+						scopedIterationEssential.setInaccurate();
+					}
+				}
+
+				for (size_t n = 0; n < correspondences; ++n)
+				{
+					const Vector3 left(leftImagePoints[n], 1);
+					const Vector3 right(rightImagePoints[n], 1);
+
+					const Vector3 normalizedLeft = pinholeCamera.invertedIntrinsic() * left;
+					const Vector3 normalizedRight = pinholeCamera.invertedIntrinsic() * right;
+
+					const Scalar scalarProduct = (normalizedRight_E_normalizedLeft * normalizedLeft) * normalizedRight;
+
+					if (Numeric::isNotWeakEqualEps(scalarProduct))
+					{
+						scopedIterationEssential.setInaccurate();
+					}
+				}
+
+				HomogenousMatrix4 left_T_right;
+				if (Geometry::EpipolarGeometry::factorizeEssential(normalizedRight_E_normalizedLeft, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), left_T_right))
+				{
+					const Vector3 factorizedTranslation(left_T_right.translation());
+					const Quaternion factorizedRotation(left_T_right.rotation());
+
+					const Vector3 translation = leftCamera_T_rightCamera.translation();
+					const Quaternion rotation = leftCamera_T_rightCamera.rotation();
+
+					const Scalar translationDifference = (translation.normalized() - factorizedTranslation).length();
+					const Scalar angleDifference = Numeric::rad2deg(factorizedRotation.angle(rotation));
+
+					if (translationDifference >= Scalar(0.001) || angleDifference > Scalar(5))
+					{
+						scopedIterationFactorized.setInaccurate();
+					}
+				}
+				else
+				{
+					scopedIterationFactorized.setInaccurate();
+				}
+			}
+			else
+			{
+				scopedIterationEssential.setInaccurate();
+			}
+
+			needMoreIterations = validationEssential.needMoreIterations() || validationFactorized.needMoreIterations();
+		}
+		while (needMoreIterations || !startTimestamp.hasTimePassed(testDuration));
+
+		Log::info() << "Performance: " << performance;
+		Log::info() << "Validation Essential: " << validationEssential;
+		Log::info() << "Validation Factorized: " << validationFactorized;
+
+		if (!validationEssential.succeeded())
+		{
+			allSucceeded = false;
+		}
+
+		if (!validationFactorized.succeeded())
+		{
+			allSucceeded = false;
 		}
 	}
 

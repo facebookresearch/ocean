@@ -19,7 +19,7 @@ namespace Ocean
 namespace Geometry
 {
 
-bool EpipolarGeometry::fundamentalMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& fundamental)
+bool EpipolarGeometry::fundamentalMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& right_F_left)
 {
 	ocean_assert(leftPoints != nullptr && rightPoints != nullptr);
 	ocean_assert(correspondences >= 8);
@@ -46,9 +46,9 @@ bool EpipolarGeometry::fundamentalMatrix(const Vector2* leftPoints, const Vector
 	 * | xr yr 1 | * | f21 xl + f22 yl + f23 | = 0
 	 *               | f31 xl + f32 yl + f33 |
 	 *
-	 * (f11xl + f12yl + f13)xr + (f21xl + f22yl + f23)yr + (f31xl + f32yl + f33) = 0
+	 * (f11 * xl + f12 * yl + f13) * xr + (f21 * xl + f22 * yl + f23) * yr + (f31 * xl + f32 * yl + f33) = 0
 	 *
-	 * f11xlxr + f12ylxr + f13xr + f21xlyr + f22ylyr + f23yr + f31xl + f32yl + f33 = 0
+	 * f11 * xl * xr + f12 * yl * xr + f13 * xr + f21 * xl * yr + f22 * yl * yr + f23 * yr + f31 * xl + f32 * yl + f33 = 0
 	 */
 
 	/**
@@ -64,7 +64,6 @@ bool EpipolarGeometry::fundamentalMatrix(const Vector2* leftPoints, const Vector
 	const SquareMatrix3 normalizationLeft = Normalization::calculateNormalizedPoints(normalizationLeftPoints.data(), correspondences);
 	const SquareMatrix3 normalizationRight = Normalization::calculateNormalizedPoints(normalizationRightPoints.data(), correspondences);
 
-
 	Matrix matrix(correspondences, 9);
 	for (size_t row = 0; row < correspondences; row++)
 	{
@@ -79,7 +78,7 @@ bool EpipolarGeometry::fundamentalMatrix(const Vector2* leftPoints, const Vector
 		matrix(row, 5) = r[1];
 		matrix(row, 6) = l[0];
 		matrix(row, 7) = l[1];
-		matrix(row, 8) = 1.0;
+		matrix(row, 8) = Scalar(1);
 	}
 
 	Matrix u_, w_, v_;
@@ -118,9 +117,19 @@ bool EpipolarGeometry::fundamentalMatrix(const Vector2* leftPoints, const Vector
 	w(2, 0) = 0;
 
 	const Matrix normalizedFundamentalRankTwo(u * Matrix(3, 3, w) * v.transposed());
-	fundamental = normalizationRight.transposed() * SquareMatrix3(normalizedFundamentalRankTwo.data()).transposed() * normalizationLeft;
+	right_F_left = normalizationRight.transposed() * SquareMatrix3(normalizedFundamentalRankTwo.data()).transposed() * normalizationLeft;
 
 	return true;
+}
+
+bool EpipolarGeometry::essentialMatrix(const Vector3* leftImageRays, const Vector3* rightImageRays, const size_t correspondences, SquareMatrix3& normalizedRight_E_normalizedLeft)
+{
+	return essentialMatrix<false>(leftImageRays, rightImageRays, correspondences, normalizedRight_E_normalizedLeft);
+}
+
+bool EpipolarGeometry::essentialMatrixF(const Vector3* leftImageRays, const Vector3* rightImageRays, const size_t correspondences, SquareMatrix3& normalizedRight_E_normalizedLeft)
+{
+	return essentialMatrix<true>(leftImageRays, rightImageRays, correspondences, normalizedRight_E_normalizedLeft);
 }
 
 SquareMatrix3 EpipolarGeometry::essentialMatrix(const HomogenousMatrix4& rightCamera_T_leftCamera)
@@ -172,9 +181,9 @@ SquareMatrix3 EpipolarGeometry::fundamental2essential(const SquareMatrix3& right
 	return rightCamera.intrinsic().transposed() * (right_F_left * leftCamera.intrinsic());
 }
 
-bool EpipolarGeometry::epipoles(const SquareMatrix3& fundamental, Vector2& leftEpipole, Vector2& rightEpipole)
+bool EpipolarGeometry::epipoles(const SquareMatrix3& right_F_left, Vector2& leftEpipole, Vector2& rightEpipole)
 {
-	const Matrix f(3, 3, fundamental.transposed().data());
+	const Matrix f(3, 3, right_F_left.data(), false /*valuesRowAligned*/);
 
 	Matrix u, w, v;
 	if (!f.singularValueDecomposition(u, w, v))
@@ -204,10 +213,10 @@ bool EpipolarGeometry::epipoles(const SquareMatrix3& fundamental, Vector2& leftE
 #ifdef OCEAN_DEBUG
 
 	const Vector3 left(leftEpipole, 1);
-	const Vector3 testLeft(fundamental * left);
+	const Vector3 testLeft(right_F_left * left);
 
 	const Vector3 right(rightEpipole, 1);
-	const Vector3 testRight(fundamental.transposed() * right);
+	const Vector3 testRight(right_F_left.transposed() * right);
 
 	if constexpr (std::is_same<double, Scalar>::value)
 	{
@@ -752,6 +761,133 @@ ObjectPoints EpipolarGeometry::triangulateImagePointsIF(const ConstIndexedAccess
 
 	ocean_assert(objectPoints.size() == correspondences);
 	return objectPoints;
+}
+
+template <bool tRaysAreFlipped>
+bool EpipolarGeometry::essentialMatrix(const Vector3* leftImageRays, const Vector3* rightImageRays, const size_t correspondences, SquareMatrix3& normalizedRight_E_normalizedLeft)
+{
+	ocean_assert(leftImageRays != nullptr && rightImageRays != nullptr);
+	ocean_assert(correspondences >= 8);
+
+	if (correspondences < 8)
+	{
+		return false;
+	}
+
+	/**
+	 * 8-Point algorithm for Essential Matrix from image rays:
+	 *
+	 * For normalized rays/vectors (unprojected image points), the epipolar constraint is:
+	 * rightFlippedRay^T * E * leftFlippedRay = 0
+	 *
+	 * Where image rays are 3D unit vectors:
+	 *     | vx |
+	 * v = | vy |
+	 *     | vz |
+	 *
+	 * Expanding the constraint:
+	 * | vxr vyr vzr | * | e11 e12 e13 | * | vxl |
+	 *                   | e21 e22 e23 |   | vyl | = 0
+	 *                   | e31 e32 e33 |   | vzl |
+	 *
+	 * This gives:
+	 * e11*vxl*vxr + e12*vyl*vxr + e13*vzl*vxr + e21*vxl*vyr + e22*vyl*vyr + e23*vzl*vyr + e31*vxl*vzr + e32*vyl*vzr + e33*vzl*vzr = 0
+	 */
+
+	Matrix matrix(correspondences, 9);
+	for (size_t row = 0; row < correspondences; row++)
+	{
+		const Vector3& leftImageRay = leftImageRays[row];
+		const Vector3& rightImageRay = rightImageRays[row];
+
+		ocean_assert(leftImageRay.isUnit());
+		ocean_assert(rightImageRay.isUnit());
+
+		if constexpr (tRaysAreFlipped)
+		{
+			matrix(row, 0) = leftImageRay.x() * rightImageRay.x();
+			matrix(row, 1) = leftImageRay.y() * rightImageRay.x();
+			matrix(row, 2) = leftImageRay.z() * rightImageRay.x();
+			matrix(row, 3) = leftImageRay.x() * rightImageRay.y();
+			matrix(row, 4) = leftImageRay.y() * rightImageRay.y();
+			matrix(row, 5) = leftImageRay.z() * rightImageRay.y();
+			matrix(row, 6) = leftImageRay.x() * rightImageRay.z();
+			matrix(row, 7) = leftImageRay.y() * rightImageRay.z();
+			matrix(row, 8) = leftImageRay.z() * rightImageRay.z();
+		}
+		else
+		{
+			const Scalar xLeftFlipped = leftImageRay.x();
+			const Scalar yLeftFlipped = -leftImageRay.y();
+			const Scalar zLeftFlipped = -leftImageRay.z();
+
+			const Scalar xRightFlipped = rightImageRay.x();
+			const Scalar yRightFlipped = -rightImageRay.y();
+			const Scalar zRightFlipped = -rightImageRay.z();
+
+			matrix(row, 0) = xLeftFlipped * xRightFlipped;
+			matrix(row, 1) = yLeftFlipped * xRightFlipped;
+			matrix(row, 2) = zLeftFlipped * xRightFlipped;
+			matrix(row, 3) = xLeftFlipped * yRightFlipped;
+			matrix(row, 4) = yLeftFlipped * yRightFlipped;
+			matrix(row, 5) = zLeftFlipped * yRightFlipped;
+			matrix(row, 6) = xLeftFlipped * zRightFlipped;
+			matrix(row, 7) = yLeftFlipped * zRightFlipped;
+			matrix(row, 8) = zLeftFlipped * zRightFlipped;
+		}
+	}
+
+	Matrix u_, w_, v_;
+	Matrix essentialMatrixUnconstrained(3, 3);
+	if (!matrix.singularValueDecomposition(u_, w_, v_))
+	{
+		return false;
+	}
+
+#ifdef OCEAN_DEBUG
+	for (unsigned int n = 1; n < w_.rows(); ++n)
+	{
+		ocean_assert(w_(n - 1) >= w_(n));
+	}
+#endif // OCEAN_DEBUG
+
+	ocean_assert(v_.rows() == 9);
+
+	// Extract essential matrix from last column of V (null space)
+	unsigned int eigenVectorRow = 0u;
+	for (size_t r = 0; r < 3; r++)
+	{
+		for (size_t c = 0; c < 3; c++)
+		{
+			essentialMatrixUnconstrained(r, c) = v_(eigenVectorRow++, 8);
+		}
+	}
+
+	/**
+	 * Enforce the essential matrix constraint:
+	 * Essential matrix must have two equal singular values and one zero singular value.
+	 * E = U * diag(sigma, sigma, 0) * V^T
+	 */
+
+	Matrix u, w, v;
+	if (!essentialMatrixUnconstrained.singularValueDecomposition(u, w, v))
+	{
+		return false;
+	}
+
+	ocean_assert(w.rows() == 3 && w.columns() == 1);
+	ocean_assert(w(0, 0) >= w(1, 0) && w(1, 0) >= w(2, 0));
+
+	// Set two largest singular values to their average, and set the smallest to zero
+	const Scalar wa = (w(0, 0) + w(1, 0)) * Scalar(0.5);
+	w(0, 0) = wa;
+	w(1, 0) = wa;
+	w(2, 0) = 0;
+
+	const Matrix essentialMatrixRankTwo(u * Matrix(3, 3, w) * v.transposed());
+	normalizedRight_E_normalizedLeft = SquareMatrix3(essentialMatrixRankTwo.data(), true /*valuesRowAligned*/);
+
+	return true;
 }
 
 size_t EpipolarGeometry::validateCameraPose(const HomogenousMatrix4& leftCamera_T_rightCamera, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences)

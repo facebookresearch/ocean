@@ -51,6 +51,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestEpipolarGeometry
 		static bool testFundamentalMatrixWithNoise(const double testDuration);
 
 		/**
+		 * Tests the calculation of the essential matrix.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testEssentialMatrix(const double testDuration);
+
+		/**
 		 * Tests the triangulation of image points
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
