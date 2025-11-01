@@ -42,8 +42,6 @@ bool FrameFilterMedian::Comfort::filter(const Frame& source, Frame& target, cons
 			return false;
 		}
 
-		#pragma clang diagnostic push
-		#pragma clang diagnostic ignored "-Wswitch-enum"
 		switch (target.dataType())
 		{
 			case FrameType::DT_UNSIGNED_INTEGER_8:
@@ -106,7 +104,6 @@ bool FrameFilterMedian::Comfort::filter(const Frame& source, Frame& target, cons
 				ocean_assert(false && "Data type not supported!");
 				return false;
 		}
-		#pragma clang diagnostic pop
 	}
 
 	return true;
