@@ -48,8 +48,6 @@ bool TestBullseyeDetectorMono::test(const double testDuration)
 	Log::info() << "---   Test for BullseyeDetectorMono:   ---";
 	Log::info() << " ";
 
-	RandomGenerator randomGenerator;
-
 	bool allSucceeded = true;
 
 	allSucceeded = testParametersConstructor() && allSucceeded;
@@ -97,12 +95,12 @@ bool TestBullseyeDetectorMono::test(const double testDuration)
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = testDetectBullseyesWithSyntheticData(testDuration, randomGenerator) && allSucceeded;
+	allSucceeded = testDetectBullseyesWithSyntheticData(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << " ";
 
-	allSucceeded = stressTestDetectBullseyes(testDuration, randomGenerator) && allSucceeded;
+	allSucceeded = stressTestDetectBullseyes(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -124,14 +122,12 @@ bool TestBullseyeDetectorMono::test(const double testDuration)
 
 TEST(TestBullseyeDetectorMono, DetectBullseyesWithSyntheticData)
 {
-	RandomGenerator randomGenerator;
-	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(GTEST_TEST_DURATION, randomGenerator));
+	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(GTEST_TEST_DURATION));
 }
 
 TEST(TestBullseyeDetectorMono, StressTestDetectBullseyes)
 {
-	RandomGenerator randomGenerator;
-	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorMono::stressTestDetectBullseyes(GTEST_TEST_DURATION, randomGenerator));
+	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorMono::stressTestDetectBullseyes(GTEST_TEST_DURATION));
 }
 
 namespace TestBullseyes
@@ -579,11 +575,13 @@ bool TestBullseyeDetectorMono::testParametersDefaultParameters()
 	return allSucceeded;
 }
 
-bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double testDuration, RandomGenerator& randomGenerator)
+bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "Test for BullseyeDetectorMono::detectBullseyes() with synthetic data:";
+
+	RandomGenerator randomGenerator;
 
 	bool allSucceeded = true;
 
@@ -713,11 +711,13 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 	return allSucceeded;
 }
 
-bool TestBullseyeDetectorMono::stressTestDetectBullseyes(const double testDuration, RandomGenerator& randomGenerator)
+bool TestBullseyeDetectorMono::stressTestDetectBullseyes(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
 	Log::info() << "BullseyeDetectorMono::detectBullseyes() stress test:";
+
+	RandomGenerator randomGenerator;
 
 	bool allSucceeded = true;
 
