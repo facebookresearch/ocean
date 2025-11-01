@@ -38,7 +38,7 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Utilities
 
 		/**
 		 * Creates a bullseye image with a given diameter and quiet zone.
-		 * @param diameter The diameter of the bullseye in pixels, with range [5, infinity) and must be a multiple of 5
+		 * @param diameter The diameter of the bullseye in pixels, with range [15, infinity); must be odd; for best results the diameter should also be a multiple of 5
 		 * @param emptyBorder The width of an empty border around the bullseye (quiet zone), in pixels, with range [0, infinity)
 		 * @param rgbFrame The resulting bullseye image, the frame will be created internally
 		 * @param foregroundColor Optional foreground color of the bullseye, nullptr to use the default color (black)
@@ -51,7 +51,7 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT Utilities
 		 * Draws a bullseye pattern into a given frame at a specified offset.
 		 * @param rgbFrame The frame in which the bullseye will be drawn, must be valid and have a pixel format RGB24 (or compatible)
 		 * @param offset The top-left position where the bullseye will be drawn, must be within frame bounds considering the bullseye size
-		 * @param diameter The diameter of the bullseye in pixels, with range [5, infinity) and must be a multiple of 5
+		 * @param diameter The diameter of the bullseye in pixels, with range [15, infinity); must be odd; for best results the diameter should also be a multiple of 5
 		 * @param emptyBorder The width of an empty border around the bullseye (quiet zone), in pixels, with range [0, infinity)
 		 * @param foregroundColor Optional foreground color of the bullseye, nullptr to use the default color (black)
 		 * @param backgroundColor Optional background color of the bullseye, nullptr to use the default color (white)

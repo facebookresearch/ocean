@@ -119,12 +119,7 @@ bool TestUtilities::testCreateBullseyeImage(const double testDuration, RandomGen
 
 	do
 	{
-		// Generate random diameter (must be multiple of 5, and >= 15)
-		// Canvas::ellipse requires sizes to be odd and >= 3
-		// Since centerDiscDiameter = diameter / 5, we need diameter / 5 to be odd and >= 3
-		// This means diameter = 5 * (2k + 1) where k >= 1, giving us 15, 25, 35, ...
-		const unsigned int k = RandomI::random(randomGenerator, 1u, 100u);
-		const unsigned int diameter = 5u * (2u * k + 1u);
+		const unsigned int diameter = RandomI::random(randomGenerator, 15u, 100u) | 1u;
 
 		// Generate random empty border
 		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 100u);
@@ -246,9 +241,7 @@ bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, Random
 		const unsigned int frameWidth = RandomI::random(randomGenerator, 200u, 1000u);
 		const unsigned int frameHeight = RandomI::random(randomGenerator, 200u, 1000u);
 
-		// Generate random diameter (must be multiple of 5, and >= 15)
-		const unsigned int k = RandomI::random(randomGenerator, 1u, 20u);
-		const unsigned int diameter = 5u * (2u * k + 1u);
+		const unsigned int diameter = RandomI::random(randomGenerator, 15u, 100u) | 1u;
 
 		// Generate random empty border
 		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);

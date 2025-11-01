@@ -24,8 +24,7 @@ namespace Bullseyes
 
 bool Utilities::createBullseyeImage(const unsigned int diameter, const unsigned int emptyBorder, Frame& rgbFrame, const uint8_t* foregroundColor, const uint8_t* backgroundColor)
 {
-	ocean_assert(diameter >= 5u && diameter % 5u == 0u);
-	if (diameter < 5u || diameter % 5u != 0u)
+	if (diameter < 15u || ((diameter & 1u) == 0u))
 	{
 		return false;
 	}
@@ -51,8 +50,7 @@ bool Utilities::drawBullseyeWithOffset(Frame& rgbFrame, const PixelPosition& off
 		return false;
 	}
 
-	ocean_assert(diameter >= 5u && diameter % 5u == 0u);
-	if (diameter < 5u || diameter % 5u != 0u)
+	if (diameter < 15u || ((diameter & 1u) == 0u))
 	{
 		return false;
 	}
@@ -78,10 +76,13 @@ bool Utilities::drawBullseyeWithOffset(Frame& rgbFrame, const PixelPosition& off
 
 	const CV::PixelPosition center(bullseyeSize / 2u, bullseyeSize / 2u);
 
-	const unsigned int centerDiscDiameter = diameter / 5u;
-	const unsigned int innerDiscDiameter = 3u * centerDiscDiameter;
-	const unsigned int outerDiscDiameter = 5u * centerDiscDiameter;
+	// All diameters must be odd values for CV::Canvas::ellipse()
+	const unsigned int centerDiscDiameter = (diameter / 5u) | 1u;
+	const unsigned int innerDiscDiameter = ((3u * diameter) / 5u) | 1u;
+	const unsigned int outerDiscDiameter = diameter;
+	const unsigned int emptyBorderDiameter = (diameter + emptyBorder) | 1u;
 
+	CV::Canvas::ellipse(subFrame, center, emptyBorderDiameter, emptyBorderDiameter, backgroundColor);
 	CV::Canvas::ellipse(subFrame, center, outerDiscDiameter, outerDiscDiameter, foregroundColor);
 	CV::Canvas::ellipse(subFrame, center, innerDiscDiameter, innerDiscDiameter, backgroundColor);
 	CV::Canvas::ellipse(subFrame, center, centerDiscDiameter, centerDiscDiameter, foregroundColor);
