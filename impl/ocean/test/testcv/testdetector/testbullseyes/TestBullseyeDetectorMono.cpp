@@ -12,7 +12,14 @@
 #include "ocean/base/WorkerPool.h"
 
 #include "ocean/cv/CVUtilities.h"
+#include "ocean/cv/FrameConverter.h"
 
+#include "ocean/cv/detector/bullseyes/Utilities.h"
+
+#include "ocean/math/AnyCamera.h"
+#include "ocean/math/FisheyeCamera.h"
+#include "ocean/math/Numeric.h"
+#include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Random.h"
 
 #include "ocean/test/testgeometry/Utilities.h"
@@ -90,6 +97,11 @@ bool TestBullseyeDetectorMono::test(const double testDuration)
 	Log::info() << " ";
 	Log::info() << " ";
 
+	allSucceeded = testDetectBullseyesWithSyntheticData(testDuration, randomGenerator) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
 	allSucceeded = stressTestDetectBullseyes(testDuration, randomGenerator) && allSucceeded;
 
 	Log::info() << " ";
@@ -109,6 +121,12 @@ bool TestBullseyeDetectorMono::test(const double testDuration)
 #ifdef OCEAN_USE_GTEST
 
 } // namespace TestBullseyes
+
+TEST(TestBullseyeDetectorMono, DetectBullseyesWithSyntheticData)
+{
+	RandomGenerator randomGenerator;
+	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(GTEST_TEST_DURATION, randomGenerator));
+}
 
 TEST(TestBullseyeDetectorMono, StressTestDetectBullseyes)
 {
@@ -556,6 +574,140 @@ bool TestBullseyeDetectorMono::testParametersDefaultParameters()
 	else
 	{
 		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double testDuration, RandomGenerator& randomGenerator)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Test for BullseyeDetectorMono::detectBullseyes() with synthetic data:";
+
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+
+	unsigned int iterations = 0u;
+	unsigned int iterationsWithDetections = 0u;
+
+	Scalars detectionAccuracyErrors;
+
+	do
+	{
+		const unsigned int width = RandomI::random(randomGenerator, 250u, 2048u);
+		const unsigned int height = RandomI::random(randomGenerator, 250u, 2048u);
+
+		const bool useFisheye = RandomI::random(randomGenerator, 1u) == 1u;
+
+		SharedAnyCamera camera;
+
+		if (useFisheye)
+		{
+			const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(65), Numeric::deg2rad(120));
+			camera = std::make_shared<AnyCameraFisheye>(FisheyeCamera(width, height, fovX));
+		}
+		else
+		{
+			const Scalar fovX = Random::scalar(randomGenerator, Numeric::deg2rad(45), Numeric::deg2rad(65));
+			camera = std::make_shared<AnyCameraPinhole>(PinholeCamera(width, height, fovX));
+		}
+
+		ocean_assert(camera != nullptr && camera->isValid());
+
+		// Draw a single bullseye with random size and offset
+		constexpr unsigned int minDiameter = 15u;
+		const unsigned int maxDiameter = std::min(width, height) / 2u;
+		ocean_assert(minDiameter < maxDiameter);
+
+		const unsigned int diameter = RandomI::random(randomGenerator, minDiameter, maxDiameter) | 1u;
+		const unsigned int emptyBorder = 50u * diameter / 100u;
+
+		const unsigned int bullseyeSize = diameter + 2u * emptyBorder;
+
+		if (bullseyeSize > width || bullseyeSize > height)
+		{
+			continue;
+		}
+
+		const unsigned int maxOffsetX = width - bullseyeSize;
+		const unsigned int maxOffsetY = height - bullseyeSize;
+		const unsigned int offsetX = maxOffsetX == 0u ? 0u : RandomI::random(randomGenerator, 0u, maxOffsetX);
+		const unsigned int offsetY = maxOffsetY == 0u ? 0u : RandomI::random(randomGenerator, 0u, maxOffsetY);
+		const CV::PixelPosition offset(offsetX, offsetY);
+
+		Frame rgbFrame(FrameType(width, height, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT));
+		CV::CVUtilities::randomizeFrame(rgbFrame, /*skipPaddingArea*/ true, &randomGenerator);
+
+		if (!CV::Detector::Bullseyes::Utilities::drawBullseyeWithOffset(rgbFrame, offset, diameter, emptyBorder, nullptr, nullptr))
+		{
+			allSucceeded = false;
+			break;
+		}
+
+		Frame yFrame;
+		if (!CV::FrameConverter::Comfort::convert(rgbFrame, FrameType::FORMAT_Y8, yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE, WorkerPool::get().scopedWorker()()))
+		{
+			allSucceeded = false;
+			break;
+		}
+
+		iterations++;
+		BullseyeDetectorMono::Parameters parameters = BullseyeDetectorMono::Parameters::defaultParameters();
+		parameters.setUseAdaptiveRowSpacing(false); // Scan every row for better accuracy in this test
+
+		Bullseyes bullseyes;
+		if (!BullseyeDetectorMono::detectBullseyes(*camera, yFrame, bullseyes, parameters, WorkerPool::get().scopedWorker()()))
+		{
+			allSucceeded = false;
+			break;
+		}
+
+		if (bullseyes.size() == 1)
+		{
+			iterationsWithDetections++;
+
+			const unsigned int trueCenterX = offsetX + (bullseyeSize / 2); // pixel-accurate
+			const unsigned int trueCenterY = offsetY + (bullseyeSize / 2);
+			const Vector2 truePosition(trueCenterX, trueCenterY);
+
+			const Vector2 detectedPposition = bullseyes.front().position();
+
+			const Scalar distance = truePosition.distance(detectedPposition);
+
+			detectionAccuracyErrors.emplace_back(distance);
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	std::sort(detectionAccuracyErrors.begin(), detectionAccuracyErrors.end());
+	const Scalar detectionAccuracyErrorP50 = detectionAccuracyErrors[detectionAccuracyErrors.size() / 2];
+	const Scalar detectionAccuracyErrorP95 = detectionAccuracyErrors[95 * detectionAccuracyErrors.size() / 100];
+	const Scalar detectionAccuracyErrorP99 = detectionAccuracyErrors[99 * detectionAccuracyErrors.size() / 100];
+	const Scalar detectionAccuracyErrorMax = detectionAccuracyErrors.back();
+	Log::info() << "Detection accuracy errors: P50: " << String::toAString(detectionAccuracyErrorP50, 1u) << "px, P95: " << String::toAString(detectionAccuracyErrorP95, 1u) << "px, P99: " << String::toAString(detectionAccuracyErrorP99, 1u) << "px, max: " << String::toAString(detectionAccuracyErrorMax, 1u) << "px";
+
+	if (detectionAccuracyErrorMax > 1.5)
+	{
+		allSucceeded = false;
+	}
+
+	const Scalar detectionRate = Scalar(iterationsWithDetections) / Scalar(iterations);
+	Log::info() << "Detection rate: " << String::toAString(detectionRate * 100.0, 1u) << "%";
+
+	if (detectionRate < 0.99)
+	{
+		allSucceeded = false;
+	}
+
+	if (allSucceeded)
+	{
+		Log::info() << "Test for BullseyeDetectorMono::detectBullseyes() with synthetic data succeeded.";
+	}
+	else
+	{
+		Log::info() << "Test for BullseyeDetectorMono::detectBullseyes() with synthetic data: FAILED! (random generator: " << randomGenerator.seed() << ")";
 	}
 
 	return allSucceeded;

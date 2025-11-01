@@ -98,6 +98,14 @@ class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestBullseyeDetectorMono : protect
 		static bool testParametersDefaultParameters();
 
 		/**
+		 * Unit test for BullseyeDetectorMono::detectBullseyes() with synthetic bullseye patterns
+		 * @param testDuration The duration in seconds for which this test will be run, must be > 0.0
+		 * @param randomGenerator A random generator that will be used to generate test data
+		 * @return True, if succeeded
+		 */
+		static bool testDetectBullseyesWithSyntheticData(const double testDuration, RandomGenerator& randomGenerator);
+
+		/**
 		 * Stress test for BullseyeDetectorMono::detectBullseyes()
 		 * @param testDuration The duration in seconds for which this test will be run, must be > 0.0
 		 * @param randomGenerator A random generator that will be used to generate test data
