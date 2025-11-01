@@ -11,6 +11,7 @@
 #include "ocean/test/testcv/testdetector/testbullseyes/TestBullseyeDetectorStereo.h"
 #include "ocean/test/testcv/testdetector/testbullseyes/TestAssignmentSolver.h"
 #include "ocean/test/testcv/testdetector/testbullseyes/TestBullseye.h"
+#include "ocean/test/testcv/testdetector/testbullseyes/TestTransitionHistory.h"
 #include "ocean/test/testcv/testdetector/testbullseyes/TestUtilities.h"
 
 #include "ocean/base/Build.h"
@@ -113,6 +114,15 @@ bool testCVDetectorBullseyes(const double testDuration, Worker& worker, const st
 		Log::info() << " ";
 		Log::info() << " ";
 		allSucceeded = TestBullseyeDetectorStereo::test(testDuration) && allSucceeded;
+	}
+
+	if (testSet.empty() || testSet.find("transitionhistory") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		allSucceeded = TestTransitionHistory::test(testDuration) && allSucceeded;
 	}
 
 	if (testSet.empty() || testSet.find("utilities") != testSet.end())
