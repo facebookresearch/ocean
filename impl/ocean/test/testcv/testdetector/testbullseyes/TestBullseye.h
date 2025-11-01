@@ -29,8 +29,8 @@ namespace TestBullseyes
 {
 
 /**
- * This class implements tests for the QR code features
- * @ingroup testcvdetectorqrcodes
+ * This class implements tests for the Bullseye class
+ * @ingroup testcvdetectorbullseyes
  */
 class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestBullseye
 {
