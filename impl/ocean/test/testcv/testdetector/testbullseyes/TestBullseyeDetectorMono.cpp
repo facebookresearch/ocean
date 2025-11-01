@@ -730,7 +730,7 @@ bool TestBullseyeDetectorMono::stressTestDetectBullseyes(const double testDurati
 		ocean_assert(realisticCamera != nullptr && realisticCamera->isValid());
 
 		const unsigned int width = RandomI::random(randomGenerator, 21u, 2048u);
-		const unsigned int height = (realisticCamera->height() * width) / realisticCamera->width();
+		const unsigned int height = (realisticCamera->height() * width + realisticCamera->width() / 2u) / realisticCamera->width();
 
 		if (height < 21u)
 		{
