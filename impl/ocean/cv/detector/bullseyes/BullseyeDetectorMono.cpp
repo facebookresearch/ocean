@@ -61,17 +61,10 @@ BullseyeDetectorMono::Parameters BullseyeDetectorMono::Parameters::defaultParame
 	return Parameters();
 }
 
-bool BullseyeDetectorMono::detectBullseyes(const AnyCamera& camera, const Frame& yFrame, Bullseyes& bullseyes, const Parameters& parameters, Worker* worker)
+bool BullseyeDetectorMono::detectBullseyes(const Frame& yFrame, Bullseyes& bullseyes, const Parameters& parameters, Worker* worker)
 {
-	ocean_assert(camera.isValid());
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
-	if (!camera.isValid() || !yFrame.isValid() || yFrame.pixelFormat() != FrameType::FORMAT_Y8)
-	{
-		return false;
-	}
-
-	ocean_assert(camera.width() == yFrame.width() && camera.height() == yFrame.height());
-	if (camera.width() != yFrame.width() || camera.height() != yFrame.height())
+	if (!yFrame.isValid() || yFrame.pixelFormat() != FrameType::FORMAT_Y8)
 	{
 		return false;
 	}
@@ -115,25 +108,17 @@ bool BullseyeDetectorMono::detectBullseyes(const AnyCamera& camera, const Frame&
 			continue;
 		}
 
-		const SharedAnyCamera cameraLayer = camera.clone(yFrameLayer.width(), yFrameLayer.height());
-
-		ocean_assert(cameraLayer && cameraLayer->isValid());
-		if (!cameraLayer || !cameraLayer->isValid())
-		{
-			return false;
-		}
-
 		Bullseyes layerBullseyes;
 		layerBullseyes.reserve(4);
 
 		if (worker && yFrameLayer.height() >= 600u)
 		{
 			Lock multiThreadLock;
-			worker->executeFunction(Worker::Function::createStatic(&BullseyeDetectorMono::detectBullseyesSubset, (const AnyCamera*)cameraLayer.get(), &yFrameLayer,  &layerBullseyes, &multiThreadLock, parameters.useAdaptiveRowSpacing(), 0u, 0u), 10u, yFrameLayer.height() - 20u);
+			worker->executeFunction(Worker::Function::createStatic(&BullseyeDetectorMono::detectBullseyesSubset, &yFrameLayer,  &layerBullseyes, &multiThreadLock, parameters.useAdaptiveRowSpacing(), 0u, 0u), 10u, yFrameLayer.height() - 20u);
 		}
 		else
 		{
-			detectBullseyesSubset(cameraLayer.get(), &yFrameLayer, &layerBullseyes, nullptr, parameters.useAdaptiveRowSpacing(), 10u, yFrameLayer.height() - 20u);
+			detectBullseyesSubset(&yFrameLayer, &layerBullseyes, nullptr, parameters.useAdaptiveRowSpacing(), 10u, yFrameLayer.height() - 20u);
 		}
 
 		for (const Bullseye& layerBullseye : layerBullseyes)
@@ -175,11 +160,9 @@ bool BullseyeDetectorMono::detectBullseyes(const AnyCamera& camera, const Frame&
 	return true;
 }
 
-void BullseyeDetectorMono::detectBullseyesSubset(const AnyCamera* camera, const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int firstRow, const unsigned int numberRows)
+void BullseyeDetectorMono::detectBullseyesSubset(const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int firstRow, const unsigned int numberRows)
 {
-	ocean_assert(camera != nullptr && camera->isValid());
 	ocean_assert(yFrame != nullptr && yFrame->isValid() && yFrame->pixelFormat() == FrameType::FORMAT_Y8);
-	ocean_assert(camera->width() == yFrame->width() && camera->height() == yFrame->height());
 
 	// Adaptive row spacing
 	//
@@ -202,7 +185,7 @@ void BullseyeDetectorMono::detectBullseyesSubset(const AnyCamera* camera, const 
 	Bullseyes localBullseyes;
 	for (unsigned int y = firstRow; y < firstRow + numberRows; y += rowSpacing)
 	{
-		detectBullseyesInRow(*camera, *yFrame, y, localBullseyes);
+		detectBullseyesInRow(*yFrame, y, localBullseyes);
 	}
 
 	const OptionalScopedLock scopedLock(multiThreadLock);
@@ -210,11 +193,9 @@ void BullseyeDetectorMono::detectBullseyesSubset(const AnyCamera* camera, const 
 	bullseyes->insert(bullseyes->end(), localBullseyes.cbegin(), localBullseyes.cend());
 }
 
-void BullseyeDetectorMono::detectBullseyesInRow(const AnyCamera& camera, const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes)
+void BullseyeDetectorMono::detectBullseyesInRow(const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes)
 {
-	ocean_assert(camera.isValid());
 	ocean_assert(yFrame.isValid() && yFrame.pixelFormat() == FrameType::FORMAT_Y8);
-	ocean_assert(camera.width() == yFrame.width() && camera.height() == yFrame.height());
 	ocean_assert(y < yFrame.height());
 	ocean_assert(y >= 10u && y < yFrame.height() - 10u);
 	ocean_assert(yFrame.width() >= 21u && yFrame.height() >= 21u);

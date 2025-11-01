@@ -579,9 +579,9 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Test for BullseyeDetectorMono::detectBullseyes() with synthetic data:";
-
 	RandomGenerator randomGenerator;
+
+	Log::info() << "Test for BullseyeDetectorMono::detectBullseyes() with synthetic data (random seed: " << randomGenerator.initialSeed() << "):";
 
 	bool allSucceeded = true;
 
@@ -656,7 +656,7 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 		parameters.setUseAdaptiveRowSpacing(false); // Scan every row for better accuracy in this test
 
 		Bullseyes bullseyes;
-		if (!BullseyeDetectorMono::detectBullseyes(*camera, yFrame, bullseyes, parameters, WorkerPool::get().scopedWorker()()))
+		if (!BullseyeDetectorMono::detectBullseyes(yFrame, bullseyes, parameters, WorkerPool::get().scopedWorker()()))
 		{
 			allSucceeded = false;
 			break;
@@ -705,7 +705,7 @@ bool TestBullseyeDetectorMono::testDetectBullseyesWithSyntheticData(const double
 	}
 	else
 	{
-		Log::info() << "Test for BullseyeDetectorMono::detectBullseyes() with synthetic data: FAILED! (random generator: " << randomGenerator.seed() << ")";
+		Log::info() << "Test for BullseyeDetectorMono::detectBullseyes() with synthetic data: FAILED!";
 	}
 
 	return allSucceeded;
@@ -754,7 +754,7 @@ bool TestBullseyeDetectorMono::stressTestDetectBullseyes(const double testDurati
 
 
 		Bullseyes bullseyes;
-		if (!BullseyeDetectorMono::detectBullseyes(*camera, yFrame, bullseyes, parameters, (useWorker ? WorkerPool::get().scopedWorker()() : nullptr)))
+		if (!BullseyeDetectorMono::detectBullseyes(yFrame, bullseyes, parameters, (useWorker ? WorkerPool::get().scopedWorker()() : nullptr)))
 		{
 			allSucceeded = false;
 			break;

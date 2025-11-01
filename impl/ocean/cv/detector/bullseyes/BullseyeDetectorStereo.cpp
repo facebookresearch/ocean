@@ -109,7 +109,7 @@ bool BullseyeDetectorStereo::detectBullseyes(const SharedAnyCameras& cameras, co
 	const size_t lowerResolutionCameraIndex = (cameras[0]->width() * cameras[0]->height() <= cameras[1]->width() * cameras[1]->height()) ? 0 : 1;
 	for (const size_t cameraIndex : {lowerResolutionCameraIndex, 1 - lowerResolutionCameraIndex})
 	{
-		if (!BullseyeDetectorMono::detectBullseyes(*cameras[cameraIndex], yFrames[cameraIndex], bullseyeGroup[cameraIndex], parameters, worker))
+		if (!BullseyeDetectorMono::detectBullseyes(yFrames[cameraIndex], bullseyeGroup[cameraIndex], parameters, worker))
 		{
 			return false;
 		}

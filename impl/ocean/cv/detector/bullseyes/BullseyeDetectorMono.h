@@ -17,8 +17,6 @@
 #include "ocean/base/Lock.h"
 #include "ocean/base/Worker.h"
 
-#include "ocean/math/AnyCamera.h"
-
 namespace Ocean
 {
 
@@ -139,20 +137,18 @@ class BullseyeDetectorMono
 
 		/**
 		 * Detects bullseyes in a given 8-bit grayscale image.
-		 * @param camera The camera profile that was used to capture the given frame, must be valid
 		 * @param yFrame The 8-bit grayscale frame in which the bullseyes will be detected, with origin in the upper left corner, must be valid
 		 * @param bullseyes The resulting detected bullseyes, will be appended to the end of the vector
 		 * @param parameters The parameters for the detector, must be valid
 		 * @param worker Optional worker to distribute the computation
 		 * @return True, if succeeded
 		 */
-		static bool detectBullseyes(const AnyCamera& camera, const Frame& yFrame, Bullseyes& bullseyes, const Parameters& parameters = Parameters::defaultParameters(), Worker* worker = nullptr);
+		static bool detectBullseyes(const Frame& yFrame, Bullseyes& bullseyes, const Parameters& parameters = Parameters::defaultParameters(), Worker* worker = nullptr);
 
 	protected:
 
 		/**
 		 * Detects bullseyes in a subset of a given 8-bit grayscale image.
-		 * @param camera The camera profile that was used to capture the given frame, must be valid
 		 * @param yFrame The 8-bit grayscale frame in which the bullseyes will be detected, must be valid
 		 * @param bullseyes The resulting bullseyes, will be added to the end of the vector
 		 * @param multiThreadLock Lock object in case this function is executed in multiple threads concurrently, otherwise nullptr
@@ -160,16 +156,15 @@ class BullseyeDetectorMono
 		 * @param firstRow The first row to be handled, with range [0, yFrame.height())
 		 * @param numberRows The number of rows to be handled, with range [1, yFrame.height() - firstRow]
 		 */
-		static void detectBullseyesSubset(const AnyCamera* camera, const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int firstRow, const unsigned int numberRows);
+		static void detectBullseyesSubset(const Frame* yFrame, Bullseyes* bullseyes, Lock* multiThreadLock, const bool useAdaptiveRowSpacing, const unsigned int firstRow, const unsigned int numberRows);
 
 		/**
 		 * Detects bullseyes in a row of a grayscale image.
-		 * @param camera The camera profile that was used to capture the given frame, must be valid
 		 * @param yFrame The 8-bit grayscale frame in which the bullseyes will be detected, must be valid
 		 * @param y The index of the row in which the bullseyes will be detected, with range [0, yFrame.height())
 		 * @param bullseyes The resulting detected bullseyes, will be added to the end of the vector
 		 */
-		static void detectBullseyesInRow(const AnyCamera& camera, const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes);
+		static void detectBullseyesInRow(const Frame& yFrame, const unsigned int y, Bullseyes& bullseyes);
 
 		/**
 		 * Finds either the next black or the next white pixel towards negative y direction (upwards in an image).
