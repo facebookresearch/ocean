@@ -48,19 +48,21 @@ void TransitionHistory::reset()
 	deltaMinus3 = 0;
 }
 
-bool TransitionHistory::isTransitionToBlack(const uint8_t* pixel, TransitionHistory& history)
+bool TransitionHistory::isTransitionToBlack(const uint8_t* pixel, TransitionHistory& history, const int deltaThreshold)
 {
+	ocean_assert(deltaThreshold >= 0);
+
 	const int currentDelta = int(*(pixel + 0) - *(pixel - 1));
 
 	bool result = false;
 
-	if (currentDelta < -deltaThreshold_)
+	if (currentDelta < -deltaThreshold)
 	{
 		result = true;
 	}
-	else if ((currentDelta + history.history1() < -(deltaThreshold_ * 5 / 4))
-		|| (currentDelta + history.history2() < -(deltaThreshold_ * 3 / 2))
-		|| (currentDelta + history.history3() < -(deltaThreshold_ * 3 / 2)))
+	else if ((currentDelta + history.history1() < -(deltaThreshold * 5 / 4))
+		|| (currentDelta + history.history2() < -(deltaThreshold * 3 / 2))
+		|| (currentDelta + history.history3() < -(deltaThreshold * 3 / 2)))
 	{
 		result = true;
 	}
@@ -70,19 +72,21 @@ bool TransitionHistory::isTransitionToBlack(const uint8_t* pixel, TransitionHist
 	return result;
 }
 
-bool TransitionHistory::isTransitionToWhite(const uint8_t* pixel, TransitionHistory& history)
+bool TransitionHistory::isTransitionToWhite(const uint8_t* pixel, TransitionHistory& history, const int deltaThreshold)
 {
+	ocean_assert(deltaThreshold >= 0);
+
 	const int currentDelta = int(*(pixel + 0) - *(pixel - 1));
 
 	bool result = false;
 
-	if (currentDelta > deltaThreshold_)
+	if (currentDelta > deltaThreshold)
 	{
 		result = true;
 	}
-	else if ((currentDelta + history.history1() > (deltaThreshold_ * 5 / 4))
-		|| (currentDelta + history.history2() > (deltaThreshold_ * 3 / 2))
-		|| (currentDelta + history.history3() > (deltaThreshold_ * 3 / 2)))
+	else if ((currentDelta + history.history1() > (deltaThreshold * 5 / 4))
+		|| (currentDelta + history.history2() > (deltaThreshold * 3 / 2))
+		|| (currentDelta + history.history3() > (deltaThreshold * 3 / 2)))
 	{
 		result = true;
 	}
