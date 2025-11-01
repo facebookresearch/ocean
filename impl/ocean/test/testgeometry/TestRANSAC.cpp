@@ -1284,7 +1284,7 @@ bool TestRANSAC::testFundamentalMatrix(const double testDuration)
 
 		HighPerformanceStatistic performance;
 
-		ValidationPrecision validationFundamental(0.70, randomGenerator);
+		ValidationPrecision validationFundamental(0.95, randomGenerator);
 		ValidationPrecision validationEssential(0.99, randomGenerator);
 		ValidationPrecision validationFactorized(0.99, randomGenerator);
 
@@ -1359,12 +1359,15 @@ bool TestRANSAC::testFundamentalMatrix(const double testDuration)
 				rightImagePoints[index] = Random::vector2(randomGenerator, Scalar(0), Scalar(camera.width()), Scalar(0), Scalar(camera.height()));
 			}
 
-			const unsigned int iterations = Geometry::RANSAC::iterations(8u, Scalar(0.99), Scalar(0.2));
+			constexpr Scalar maximalScalarProduct = Scalar(0.001);
+
+			const unsigned int iterations = Geometry::RANSAC::iterations(8u, Scalar(0.999), Scalar(0.2));
 
 			performance.start();
 
 				SquareMatrix3 right_F_left(false);
-				const bool result = Geometry::RANSAC::fundamentalMatrix(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), camera.width(), camera.height(), right_F_left, 8u, iterations);
+				Indices32 validIndices;
+				const bool result = Geometry::RANSAC::fundamentalMatrix(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), randomGenerator, right_F_left, 8u, iterations, maximalScalarProduct, &validIndices);
 
 			performance.stop();
 
@@ -1372,22 +1375,20 @@ bool TestRANSAC::testFundamentalMatrix(const double testDuration)
 			{
 				const HomogenousMatrix4 leftCamera_T_rightCamera = world_T_leftCamera.inverted() * world_T_rightCamera;
 
+				Subset::applySubset(leftImagePoints, validIndices);
+				Subset::applySubset(rightImagePoints, validIndices);
+
 				{
 					// verifying the fundamental matrix
 
-					for (size_t n = 0; n < correspondences; ++n)
+					for (size_t n = 0; n < leftImagePoints.size(); ++n)
 					{
-						if (invalidCorrespondences.contains(Index32(n)))
-						{
-							continue;
-						}
-
 						const Vector3 left(leftImagePoints[n], 1);
 						const Vector3 right(rightImagePoints[n], 1);
 
 						const Scalar scalarProduct = (right_F_left * left) * right;
 
-						if (Numeric::isNotWeakEqualEps(scalarProduct))
+						if (scalarProduct > maximalScalarProduct)
 						{
 							scopedIterationFundamental.setInaccurate();
 						}
@@ -1399,13 +1400,8 @@ bool TestRANSAC::testFundamentalMatrix(const double testDuration)
 
 					const SquareMatrix3 normalizedRight_E_normalizedLeft = Geometry::EpipolarGeometry::fundamental2essential(right_F_left, pinholeCamera.intrinsic(), pinholeCamera.intrinsic());
 
-					for (size_t n = 0; n < correspondences; ++n)
+					for (size_t n = 0; n < leftImagePoints.size(); ++n)
 					{
-						if (invalidCorrespondences.contains(Index32(n)))
-						{
-							continue;
-						}
-
 						const Vector3 left(leftImagePoints[n], 1);
 						const Vector3 right(rightImagePoints[n], 1);
 
@@ -1414,7 +1410,7 @@ bool TestRANSAC::testFundamentalMatrix(const double testDuration)
 
 						const Scalar scalarProduct = (normalizedRight_E_normalizedLeft * normalizedLeft) * normalizedRight;
 
-						if (Numeric::isNotWeakEqualEps(scalarProduct))
+						if (scalarProduct > maximalScalarProduct)
 						{
 							scopedIterationEssential.setInaccurate();
 						}

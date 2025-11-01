@@ -191,7 +191,7 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 				if (AnyCamera::isObjectPointInFrontIF(flippedCandidateCamera_T_world, objectPoints[c]))
 				{
 					const Vector2 projectedImagePoint(anyCamera.projectToImageIF(flippedCandidateCamera_T_world, objectPoints[c]));
-					const ImagePoint& imagePoint = imagePoints[c];
+					const Vector2& imagePoint = imagePoints[c];
 
 					const Scalar sqrError = imagePoint.sqrDistance(projectedImagePoint);
 
@@ -290,7 +290,7 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 	return true;
 }
 
-bool RANSAC::objectPoint(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, ObjectPoint& objectPoint, const unsigned int iterations, const Scalar maximalSqrError, const unsigned int minValidCorrespondences, const bool onlyFrontObjectPoint, const Estimator::EstimatorType refinementEstimator, Scalar* finalRobustError, Indices32* usedIndices)
+bool RANSAC::objectPoint(const ConstIndexedAccessor<const AnyCamera*>& cameras, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector2>& imagePoints, RandomGenerator& randomGenerator, Vector3& objectPoint, const unsigned int iterations, const Scalar maximalSqrError, const unsigned int minValidCorrespondences, const bool onlyFrontObjectPoint, const Estimator::EstimatorType refinementEstimator, Scalar* finalRobustError, Indices32* usedIndices)
 {
 	ocean_assert(cameras.size() == world_T_cameras.size() && world_T_cameras.size() == imagePoints.size() && world_T_cameras.size() >= 2 && maximalSqrError >= 0);
 	ocean_assert(iterations >= 1u);
@@ -323,7 +323,7 @@ bool RANSAC::objectPoint(const ConstIndexedAccessor<const AnyCamera*>& cameras, 
 		unsigned int index1;
 		RandomI::random(randomGenerator, (unsigned int)(flippedCamera_T_world.size()) - 1u, index0, index1);
 
-		ObjectPoint candidate;
+		Vector3 candidate;
 		if (rays[index0].nearestPoint(rays[index1], candidate))
 		{
 			Scalar sqrError = 0;
@@ -365,7 +365,7 @@ bool RANSAC::objectPoint(const ConstIndexedAccessor<const AnyCamera*>& cameras, 
 
 	if (refinementEstimator != Estimator::ET_INVALID)
 	{
-		ObjectPoint optimizedObjectPoint;
+		Vector3 optimizedObjectPoint;
 
 		if (bestIndices.size() == flippedCamera_T_world.size())
 		{
@@ -378,7 +378,7 @@ bool RANSAC::objectPoint(const ConstIndexedAccessor<const AnyCamera*>& cameras, 
 		{
 			const ScopedConstMemoryAccessor<const AnyCamera*> scopedMemoryCameras(cameras);
 
-			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedPosesIF(ConstArraySubsetAccessor<const AnyCamera*, unsigned int>(scopedMemoryCameras.data(), bestIndices.data(), bestIndices.size()), ConstArraySubsetAccessor<HomogenousMatrix4, unsigned int>(flippedCamera_T_world, bestIndices), objectPoint, ConstIndexedAccessorSubsetAccessor<ImagePoint, unsigned int>(imagePoints, bestIndices), optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalRobustError))
+			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedPosesIF(ConstArraySubsetAccessor<const AnyCamera*, unsigned int>(scopedMemoryCameras.data(), bestIndices.data(), bestIndices.size()), ConstArraySubsetAccessor<HomogenousMatrix4, unsigned int>(flippedCamera_T_world, bestIndices), objectPoint, ConstIndexedAccessorSubsetAccessor<Vector2, unsigned int>(imagePoints, bestIndices), optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalRobustError))
 			{
 				objectPoint = optimizedObjectPoint;
 			}
@@ -393,7 +393,7 @@ bool RANSAC::objectPoint(const ConstIndexedAccessor<const AnyCamera*>& cameras, 
 	return true;
 }
 
-bool RANSAC::objectPoint(const AnyCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const ConstIndexedAccessor<ImagePoint>& imagePoints, RandomGenerator& randomGenerator, ObjectPoint& objectPoint, const Scalar objectPointDistance, const unsigned int iterations, const Scalar maximalError, const unsigned int minValidCorrespondences, const bool onlyFrontObjectPoint, const Estimator::EstimatorType refinementEstimator, Scalar* finalError, Indices32* usedIndices)
+bool RANSAC::objectPoint(const AnyCamera& camera, const ConstIndexedAccessor<SquareMatrix3>& world_R_cameras, const ConstIndexedAccessor<Vector2>& imagePoints, RandomGenerator& randomGenerator, Vector3& objectPoint, const Scalar objectPointDistance, const unsigned int iterations, const Scalar maximalError, const unsigned int minValidCorrespondences, const bool onlyFrontObjectPoint, const Estimator::EstimatorType refinementEstimator, Scalar* finalError, Indices32* usedIndices)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(world_R_cameras.size() == imagePoints.size() && world_R_cameras.size() >= 2 && maximalError > 0);
@@ -425,7 +425,7 @@ bool RANSAC::objectPoint(const AnyCamera& camera, const ConstIndexedAccessor<Squ
 	{
 		const unsigned int index = RandomI::random(randomGenerator, (unsigned int)(flippedCameras_R_world.size()) - 1u);
 
-		const ObjectPoint candidateObjectPoint(camera.ray(imagePoints[index], HomogenousMatrix4(world_R_cameras[index])).direction() * objectPointDistance);
+		const Vector3 candidateObjectPoint(camera.ray(imagePoints[index], HomogenousMatrix4(world_R_cameras[index])).direction() * objectPointDistance);
 
 		Scalar error = 0;
 		indices.clear();
@@ -465,7 +465,7 @@ bool RANSAC::objectPoint(const AnyCamera& camera, const ConstIndexedAccessor<Squ
 
 	if (refinementEstimator != Estimator::ET_INVALID)
 	{
-		ObjectPoint optimizedObjectPoint;
+		Vector3 optimizedObjectPoint;
 
 		if (bestIndices.size() == flippedCameras_R_world.size())
 		{
@@ -476,7 +476,7 @@ bool RANSAC::objectPoint(const AnyCamera& camera, const ConstIndexedAccessor<Squ
 		}
 		else
 		{
-			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(camera, ConstArraySubsetAccessor<SquareMatrix3, unsigned int>(flippedCameras_R_world, bestIndices), ConstIndexedAccessorSubsetAccessor<ImagePoint, unsigned int>(imagePoints, bestIndices), objectPoint, objectPointDistance, optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalError))
+			if (Geometry::NonLinearOptimizationObjectPoint::optimizeObjectPointForFixedOrientationsIF(camera, ConstArraySubsetAccessor<SquareMatrix3, unsigned int>(flippedCameras_R_world, bestIndices), ConstIndexedAccessorSubsetAccessor<Vector2, unsigned int>(imagePoints, bestIndices), objectPoint, objectPointDistance, optimizedObjectPoint, 10u, refinementEstimator, Scalar(0.001), Scalar(5), onlyFrontObjectPoint, nullptr, finalError))
 			{
 				objectPoint = optimizedObjectPoint;
 			}
@@ -491,7 +491,7 @@ bool RANSAC::objectPoint(const AnyCamera& camera, const ConstIndexedAccessor<Squ
 	return true;
 }
 
-bool RANSAC::plane(const ConstIndexedAccessor<ObjectPoint>& objectPoints, RandomGenerator& randomGenerator, Plane3& plane, const unsigned int iterations, const Scalar medianDistanceFactor, const unsigned int minValidCorrespondences, const Estimator::EstimatorType refinementEstimator, Scalar* finalError, Indices32* usedIndices)
+bool RANSAC::plane(const ConstIndexedAccessor<Vector3>& objectPoints, RandomGenerator& randomGenerator, Plane3& plane, const unsigned int iterations, const Scalar medianDistanceFactor, const unsigned int minValidCorrespondences, const Estimator::EstimatorType refinementEstimator, Scalar* finalError, Indices32* usedIndices)
 {
 	ocean_assert(objectPoints.size() >= 3);
 	ocean_assert(iterations >= 1u);
@@ -587,7 +587,7 @@ bool RANSAC::plane(const ConstIndexedAccessor<ObjectPoint>& objectPoints, Random
 		}
 		else
 		{
-			if (Geometry::NonLinearOptimizationPlane::optimizePlane(plane, ConstIndexedAccessorSubsetAccessor<ObjectPoint, unsigned int>(objectPoints, bestIndices), optimizedPlane, 20u, refinementEstimator, Scalar(0.001), Scalar(5), nullptr, finalError))
+			if (Geometry::NonLinearOptimizationPlane::optimizePlane(plane, ConstIndexedAccessorSubsetAccessor<Vector3, unsigned int>(objectPoints, bestIndices), optimizedPlane, 20u, refinementEstimator, Scalar(0.001), Scalar(5), nullptr, finalError))
 			{
 				plane = optimizedPlane;
 			}
@@ -602,7 +602,7 @@ bool RANSAC::plane(const ConstIndexedAccessor<ObjectPoint>& objectPoints, Random
 	return true;
 }
 
-bool RANSAC::plane(const Plane3& initialPlane, const ConstIndexedAccessor<ObjectPoint>& objectPoints, RandomGenerator& randomGenerator, Plane3& plane, const unsigned int iterations, const Scalar maximalNormalOrientationOffset, const Scalar medianDistanceFactor, const unsigned int minValidCorrespondences, const Estimator::EstimatorType refinementEstimator, Scalar* finalError, Indices32* usedIndices)
+bool RANSAC::plane(const Plane3& initialPlane, const ConstIndexedAccessor<Vector3>& objectPoints, RandomGenerator& randomGenerator, Plane3& plane, const unsigned int iterations, const Scalar maximalNormalOrientationOffset, const Scalar medianDistanceFactor, const unsigned int minValidCorrespondences, const Estimator::EstimatorType refinementEstimator, Scalar* finalError, Indices32* usedIndices)
 {
 	ocean_assert(initialPlane.isValid());
 	ocean_assert(objectPoints.size() >= 3);
@@ -717,7 +717,7 @@ bool RANSAC::plane(const Plane3& initialPlane, const ConstIndexedAccessor<Object
 		}
 		else
 		{
-			if (Geometry::NonLinearOptimizationPlane::optimizePlane(plane, ConstIndexedAccessorSubsetAccessor<ObjectPoint, unsigned int>(objectPoints, bestIndices), optimizedPlane, 20u, refinementEstimator, Scalar(0.001), Scalar(5), nullptr, finalError))
+			if (Geometry::NonLinearOptimizationPlane::optimizePlane(plane, ConstIndexedAccessorSubsetAccessor<Vector3, unsigned int>(objectPoints, bestIndices), optimizedPlane, 20u, refinementEstimator, Scalar(0.001), Scalar(5), nullptr, finalError))
 			{
 				plane = optimizedPlane;
 			}
@@ -1246,100 +1246,103 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vec
 	return bestError != Numeric::maxValue();
 }
 
-bool RANSAC::fundamentalMatrix(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, const unsigned int width, const unsigned int height, SquareMatrix3& fundamental, const unsigned int testCandidates, const unsigned int iterations, const Scalar errorThreshold, Indices32* usedIndices)
+bool RANSAC::fundamentalMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& right_F_left, const size_t testCandidates, const unsigned int iterations, const Scalar maxScalarProduct, Indices32* usedIndices)
 {
-	ocean_assert(errorThreshold > 0);
-	ocean_assert(leftImagePoints && rightImagePoints);
+	ocean_assert(leftImagePoints != nullptr && rightImagePoints != nullptr);
+	ocean_assert(correspondences >= 8);
+	ocean_assert(testCandidates >= 8 && testCandidates <= correspondences);
+	ocean_assert(maxScalarProduct >= 0);
 
 	if (testCandidates < 8u || correspondences < testCandidates)
 	{
 		return false;
 	}
 
-	ImagePoints permutationLeftImagePoints(testCandidates);
-	ImagePoints permutationRightImagePoints(testCandidates);
+	Indices32 indices = createIndices(correspondences, 0u);
 
-	unsigned int maxValidCorrespondences = testCandidates - 1u;
-	Scalar minErrors = Numeric::maxValue();
+	Vectors2 testLeftPoints(testCandidates);
+	Vectors2 testRightPoints(testCandidates);
 
-	unsigned int horizontalBins = 0u;
-	unsigned int verticalBins = 0u;
-	const SpatialDistribution::DistributionArray indexArray(SpatialDistribution::distributeToArray(leftImagePoints, correspondences, Scalar(0), Scalar(0), Scalar(width), Scalar(height), 4u, 10u, 10u, horizontalBins, verticalBins));
+	Scalar bestErrors = Numeric::maxValue();
+	size_t bestCorrespondences = 0;
+	SquareMatrix3 bestFundamental(false);
 
-	for (unsigned int i = 0u; i < iterations; ++i)
+	for (unsigned int nIteration = 0u; nIteration < iterations; ++nIteration)
 	{
-		IndexSet32 indexSet;
+		subsetIndices(indices, testCandidates, randomGenerator);
 
-		while (indexSet.size() < testCandidates)
+		for (size_t n = 0; n < testCandidates; ++n)
 		{
-			const unsigned int horizontalBin = Random::random(horizontalBins - 1u);
-			const unsigned int verticalBin = Random::random(verticalBins - 1u);
+			const Index32 index = indices[n];
 
-			if (indexArray(horizontalBin, verticalBin).empty())
-			{
-				continue;
-			}
-
-			const unsigned int element = Random::random((unsigned int)(indexArray(horizontalBin, verticalBin).size()) - 1u);
-
-			indexSet.insert(indexArray(horizontalBin, verticalBin)[element]);
+			testLeftPoints[n] = leftImagePoints[index];
+			testRightPoints[n] = rightImagePoints[index];
 		}
-
-		unsigned int n = 0u;
-		for (IndexSet32::const_iterator iS = indexSet.begin(); iS != indexSet.end(); ++iS)
-		{
-			ocean_assert(*iS < correspondences);
-
-			permutationLeftImagePoints[n] = leftImagePoints[*iS];
-			permutationRightImagePoints[n] = rightImagePoints[*iS];
-			++n;
-		}
-		ocean_assert(n == testCandidates);
 
 		SquareMatrix3 candidateFundamental;
-		if (EpipolarGeometry::fundamentalMatrix(permutationLeftImagePoints.data(), permutationRightImagePoints.data(), testCandidates, candidateFundamental))
+		if (!EpipolarGeometry::fundamentalMatrix(testLeftPoints.data(), testRightPoints.data(), testCandidates, candidateFundamental))
 		{
-			unsigned int validCorrespondences = 0u;
-			Scalar errors = 0;
-			Indices32 indices;
+			continue;
+		}
 
-			for (unsigned int c = 0; c < correspondences; ++c)
+		size_t validCorrespondences = 0;
+		Scalar errors = 0;
+
+		for (size_t n = 0; n < correspondences; ++n)
+		{
+			const Vector2& leftImagePoint = leftImagePoints[n];
+			const Vector2& rightImagePoint = rightImagePoints[n];
+
+			const Scalar scalarProduct = Numeric::abs((candidateFundamental * Vector3(leftImagePoint, 1)) * Vector3(rightImagePoint, 1));
+
+			if (scalarProduct <= maxScalarProduct)
 			{
-				const Vector3 left(leftImagePoints[c], 1);
-				const Vector3 right(rightImagePoints[c], 1);
+				++validCorrespondences;
 
-				const Scalar scalarProduct = Numeric::abs((candidateFundamental * left) * right);
-
-				if (scalarProduct < errorThreshold)
-				{
-					++validCorrespondences;
-					errors += scalarProduct;
-
-					if (usedIndices)
-					{
-						indices.push_back(c);
-					}
-				}
+				errors += scalarProduct;
 			}
+		}
 
-			if (validCorrespondences > maxValidCorrespondences || (validCorrespondences == maxValidCorrespondences && errors < minErrors))
-			{
-				fundamental = candidateFundamental;
-				minErrors = errors;
-				maxValidCorrespondences = validCorrespondences;
+		if (validCorrespondences > bestCorrespondences || (validCorrespondences == bestCorrespondences && errors < bestErrors))
+		{
+			bestFundamental = candidateFundamental;
 
-				if (usedIndices)
-				{
-					*usedIndices = indices;
-				}
-			}
+			bestErrors = errors;
+			bestCorrespondences = validCorrespondences;
 		}
 	}
 
-	return maxValidCorrespondences >= testCandidates;
+	if (bestCorrespondences < testCandidates)
+	{
+		return false;
+	}
+
+	if (usedIndices != nullptr)
+	{
+		indices.clear();
+
+		for (size_t n = 0; n < correspondences; ++n)
+		{
+			const Vector2& leftImagePoint = leftImagePoints[n];
+			const Vector2& rightImagePoint = rightImagePoints[n];
+
+			const Scalar scalarProduct = Numeric::abs((bestFundamental * Vector3(leftImagePoint, 1)) * Vector3(rightImagePoint, 1));
+
+			if (scalarProduct <= maxScalarProduct)
+			{
+				indices.push_back(Index32(n));
+			}
+		}
+
+		*usedIndices = std::move(indices);
+	}
+
+	right_F_left = bestFundamental;
+
+	return true;
 }
 
-bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4& transformation, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, const Box3& maxTranslation, const Scalar maxRotation, Indices32* usedIndices)
+bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, HomogenousMatrix4& transformation, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, const Box3& maxTranslation, const Scalar maxRotation, Indices32* usedIndices)
 {
 	ocean_assert(squarePixelErrorThreshold > 0);
 	ocean_assert(leftImagePoints && rightImagePoints);
@@ -1391,8 +1394,8 @@ bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamer
 			indexSet.insert(indexArray[bin][element]);
 		}
 
-		const ImagePoints permutationLeftImagePoints(Subset::subset(leftImagePoints, correspondences, indexSet));
-		const ImagePoints permutationRightImagePoints(Subset::subset(rightImagePoints, correspondences, indexSet));
+		const Vectors2 permutationLeftImagePoints(Subset::subset(leftImagePoints, correspondences, indexSet));
+		const Vectors2 permutationRightImagePoints(Subset::subset(rightImagePoints, correspondences, indexSet));
 
 		SquareMatrix3 candidateFundamental;
 		if (EpipolarGeometry::fundamentalMatrix(permutationLeftImagePoints.data(), permutationRightImagePoints.data(), testCandidates, candidateFundamental))
@@ -1468,7 +1471,7 @@ bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamer
 	return true;
 }
 
-bool RANSAC::homographyMatrices(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, const Vector2& leftQuadrantCenter, RandomGenerator& randomGenerator, SquareMatrix3 homographies[4], const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
+bool RANSAC::homographyMatrices(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, const Vector2& leftQuadrantCenter, RandomGenerator& randomGenerator, SquareMatrix3 homographies[4], const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
 {
 	ocean_assert(squarePixelErrorThreshold > 0);
 	ocean_assert(leftImagePoints && rightImagePoints);
@@ -1552,7 +1555,7 @@ bool RANSAC::homographyMatrices(const ImagePoint* leftImagePoints, const ImagePo
 	return true;
 }
 
-bool RANSAC::projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<ImagePoints>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const unsigned int iterations, const Scalar squarePixelErrorThreshold, NonconstArrayAccessor<ObjectPoint>* objectPointsIF, Indices32* usedIndices, Worker* worker)
+bool RANSAC::projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const unsigned int iterations, const Scalar squarePixelErrorThreshold, NonconstArrayAccessor<Vector3>* objectPointsIF, Indices32* usedIndices, Worker* worker)
 {
 	ocean_assert(squarePixelErrorThreshold > 0);
 	ocean_assert(imagePointsPerPose.size() > 2);
@@ -1706,11 +1709,11 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 
 	for (unsigned int n = 0u; n < objectPointGroups.size(); ++n)
 	{
-		ObjectPoints& objectPoints = objectPointGroups[n];
-		ImagePoints& imagePoints = imagePointGroups[n];
+		Vectors3& objectPoints = objectPointGroups[n];
+		Vectors2& imagePoints = imagePointGroups[n];
 
 		HomogenousMatrix4 roughPose;
-		const bool result = RANSAC::p3p(AnyCameraPinhole(finalCamera), ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), randomGenerator, roughPose);
+		const bool result = RANSAC::p3p(AnyCameraPinhole(finalCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, roughPose);
 
 		ocean_assert(result);
 		if (!result)
@@ -1719,7 +1722,7 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 		}
 
 		HomogenousMatrix4 pose;
-		if (!NonLinearOptimizationPose::optimizePose(finalCamera, roughPose, ConstArrayAccessor<ObjectPoint>(objectPoints), ConstArrayAccessor<ImagePoint>(imagePoints), true, pose))
+		if (!NonLinearOptimizationPose::optimizePose(finalCamera, roughPose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), true, pose))
 		{
 			ocean_assert(false && "Should always succeed!");
 			continue;
@@ -1778,7 +1781,7 @@ void RANSAC::determineCameraCalibrationPlanarIteration(const unsigned int width,
 	CameraCalibration::determineCameraCalibrationPlanar(width, height, ConstIndexedAccessorSubsetAccessor<Vectors3, unsigned int>(*objectPointGroups, *indices), ConstIndexedAccessorSubsetAccessor<Vectors2, unsigned int>(*imagePointGroups, *indices), *pinholeCamera, 20u, sqrAccuracy);
 }
 
-bool RANSAC::affineMatrix(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& right_A_left, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
+bool RANSAC::affineMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& right_A_left, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
 {
 	if (testCandidates < 3u || correspondences < testCandidates)
 	{
@@ -1788,7 +1791,7 @@ bool RANSAC::affineMatrix(const ImagePoint* leftImagePoints, const ImagePoint* r
 	return geometricTransform(Geometry::Homography::affineMatrix, leftImagePoints, rightImagePoints, correspondences, randomGenerator, right_A_left, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
 }
 
-bool RANSAC::similarityMatrix(const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& similarity, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
+bool RANSAC::similarityMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& similarity, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
 {
 	if (testCandidates < 2u || correspondences < testCandidates)
 	{
@@ -2109,7 +2112,7 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 	return true;
 }
 
-bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& camera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
+bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& camera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
 {
 	const ScopedConstMemoryAccessor<Vector3> objectPoints(objectPointAccessor);
 	const ScopedConstMemoryAccessor<Vector2> imagePoints(imagePointAccessor);
@@ -2295,7 +2298,7 @@ bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& 
 	return true;
 }
 
-bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initialZoom, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<ObjectPoint>& objectPointAccessor, const ConstIndexedAccessor<ImagePoint>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, Scalar& zoom, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
+bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initialZoom, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, Scalar& zoom, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
 {
 	ocean_assert((initialPose && initialZoom) || (!initialPose && !initialZoom));
 
@@ -2316,8 +2319,8 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 	indices.reserve(correspondences);
 	bestIndices.reserve(correspondences);
 
-	ObjectPoint permutationObjectPoints[4];
-	ImagePoint permutationImagePoints[4];
+	Vector3 permutationObjectPoints[4];
+	Vector2 permutationImagePoints[4];
 	HomogenousMatrix4 poses[4];
 
 	HomogenousMatrix4 internalPose;
@@ -2418,7 +2421,7 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 					if ((optimizedPoseIF * objectPoints[c]).z() > Numeric::eps())
 					{
 						const Vector2 projectedImagePoint(pinholeCamera.projectToImageIF<true>(optimizedPoseIF, objectPoints[c], useDistortionParameters, optimizedZoom));
-						const ImagePoint& imagePoint = imagePoints[c];
+						const Vector2& imagePoint = imagePoints[c];
 
 						const Scalar sqrError = imagePoint.sqrDistance(projectedImagePoint);
 
@@ -2523,7 +2526,7 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 	return true;
 }
 
-bool RANSAC::geometricTransform(const GeometricTransformFunction geometricTransformFunction, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& transformMatrix, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
+bool RANSAC::geometricTransform(const GeometricTransformFunction geometricTransformFunction, const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& transformMatrix, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
 {
 	ocean_assert(geometricTransformFunction != nullptr);
 	ocean_assert(squarePixelErrorThreshold > 0);
@@ -2564,7 +2567,7 @@ bool RANSAC::geometricTransform(const GeometricTransformFunction geometricTransf
 	return true;
 }
 
-bool RANSAC::geometricTransformForNonBijectiveCorrespondences(const GeometricTransformFunction geometricTransformFunction, const ImagePoint* leftImagePoints, const size_t numberLeftImagePoints, const ImagePoint* rightImagePoints, const size_t numberRightImagePoints, const IndexPair32* correspondences, const size_t numberCorrespondences, RandomGenerator& randomGenerator, SquareMatrix3& transformMatrix, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
+bool RANSAC::geometricTransformForNonBijectiveCorrespondences(const GeometricTransformFunction geometricTransformFunction, const Vector2* leftImagePoints, const size_t numberLeftImagePoints, const Vector2* rightImagePoints, const size_t numberRightImagePoints, const IndexPair32* correspondences, const size_t numberCorrespondences, RandomGenerator& randomGenerator, SquareMatrix3& transformMatrix, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
 {
 	ocean_assert(geometricTransformFunction != nullptr);
 	ocean_assert(leftImagePoints != nullptr && rightImagePoints != nullptr);
@@ -2608,7 +2611,7 @@ bool RANSAC::geometricTransformForNonBijectiveCorrespondences(const GeometricTra
 	return true;
 }
 
-void RANSAC::geometricTransformSubset(const GeometricTransformFunction geometricTransformFunction, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, RandomGenerator* randomGenerator, SquareMatrix3* transformMatrix, const unsigned int testCandidates, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, unsigned int* maxValidCandidates, Scalar* minSquareErrors, Lock* lock, const unsigned int /*firstIteration*/, const unsigned int numberIterations)
+void RANSAC::geometricTransformSubset(const GeometricTransformFunction geometricTransformFunction, const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator* randomGenerator, SquareMatrix3* transformMatrix, const unsigned int testCandidates, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, unsigned int* maxValidCandidates, Scalar* minSquareErrors, Lock* lock, const unsigned int /*firstIteration*/, const unsigned int numberIterations)
 {
 	ocean_assert(geometricTransformFunction != nullptr);
 	ocean_assert(squarePixelErrorThreshold > 0);
@@ -2647,8 +2650,8 @@ void RANSAC::geometricTransformSubset(const GeometricTransformFunction geometric
 			indexSet.insert(index);
 		}
 
-		const ImagePoints permutationLeftImagePoints(Subset::subset(leftImagePoints, correspondences, indexSet));
-		const ImagePoints permutationRightImagePoints(Subset::subset(rightImagePoints, correspondences, indexSet));
+		const Vectors2 permutationLeftImagePoints(Subset::subset(leftImagePoints, correspondences, indexSet));
+		const Vectors2 permutationRightImagePoints(Subset::subset(rightImagePoints, correspondences, indexSet));
 
 		SquareMatrix3 candidateModel;
 		if (geometricTransformFunction(permutationLeftImagePoints.data(), permutationRightImagePoints.data(), testCandidates, candidateModel))
@@ -2705,7 +2708,7 @@ void RANSAC::geometricTransformSubset(const GeometricTransformFunction geometric
 	}
 }
 
-void RANSAC::geometricTransformForNonBijectiveCorrespondencesSubset(const GeometricTransformFunction geometricTransformFunction, const ImagePoint* leftImagePoints, const size_t numberLeftImagePoints, const ImagePoint* rightImagePoints, const size_t numberRightImagePoints, const IndexPair32* correspondences, const size_t numberCorrespondences, RandomGenerator* randomGenerator, SquareMatrix3* transformMatrix, const unsigned int testCandidates, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, unsigned int* maxValidCandidates, Scalar* minSquareErrors, Lock* lock, const unsigned int /*firstIteration*/, const unsigned int numberIterations)
+void RANSAC::geometricTransformForNonBijectiveCorrespondencesSubset(const GeometricTransformFunction geometricTransformFunction, const Vector2* leftImagePoints, const size_t numberLeftImagePoints, const Vector2* rightImagePoints, const size_t numberRightImagePoints, const IndexPair32* correspondences, const size_t numberCorrespondences, RandomGenerator* randomGenerator, SquareMatrix3* transformMatrix, const unsigned int testCandidates, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, unsigned int* maxValidCandidates, Scalar* minSquareErrors, Lock* lock, const unsigned int /*firstIteration*/, const unsigned int numberIterations)
 {
 	ocean_assert(geometricTransformFunction != nullptr);
 	ocean_assert(leftImagePoints != nullptr && rightImagePoints != nullptr);
@@ -2734,8 +2737,8 @@ void RANSAC::geometricTransformForNonBijectiveCorrespondencesSubset(const Geomet
 
 	const unsigned int maximalSearchIterations = testCandidates * 20u;
 
-	ImagePoints permutationLeftImagePoints;
-	ImagePoints permutationRightImagePoints;
+	Vectors2 permutationLeftImagePoints;
+	Vectors2 permutationRightImagePoints;
 
 	std::vector<unsigned char> leftIndicesUsed(numberLeftImagePoints);
 	std::vector<unsigned char> rightIndicesUsed(numberRightImagePoints);
@@ -2847,7 +2850,7 @@ void RANSAC::geometricTransformForNonBijectiveCorrespondencesSubset(const Geomet
 	}
 }
 
-void RANSAC::projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAccessor<ImagePoints>* imagePointsPerPose, const size_t views, RandomGenerator* randomGenerator, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const Scalar squarePixelErrorThreshold, NonconstArrayAccessor<ObjectPoint>* objectPointsIF, Indices32* usedIndices, Scalar* minSquareErrors, Lock* lock, const unsigned int /*firstIteration*/, const unsigned int numberIterations)
+void RANSAC::projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAccessor<Vectors2>* imagePointsPerPose, const size_t views, RandomGenerator* randomGenerator, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const Scalar squarePixelErrorThreshold, NonconstArrayAccessor<Vector3>* objectPointsIF, Indices32* usedIndices, Scalar* minSquareErrors, Lock* lock, const unsigned int /*firstIteration*/, const unsigned int numberIterations)
 {
 	ocean_assert(squarePixelErrorThreshold > 0);
 	ocean_assert(views >= 2);
@@ -2874,18 +2877,18 @@ void RANSAC::projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAcces
 			indexSet.insert(index);
 		}
 
-		std::vector<ImagePoints> permutationImagePointsSet;
+		std::vector<Vectors2> permutationImagePointsSet;
 		permutationImagePointsSet.reserve(views);
 		for (size_t n = 0; n < views; n++)
 		{
-			const ImagePoints permutationImagePoints(Subset::subset((*imagePointsPerPose)[n], indexSet));
+			const Vectors2 permutationImagePoints(Subset::subset((*imagePointsPerPose)[n], indexSet));
 			permutationImagePointsSet.push_back(permutationImagePoints);
 		}
 
 		HomogenousMatrices4 candidateModels;
 		NonconstArrayAccessor<HomogenousMatrix4> candidateModelsAccessor(candidateModels, views);
 		Scalar projectionSqrError;
-		if (MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(ConstArrayAccessor<ImagePoints>(permutationImagePointsSet), candidateModelsAccessor.pointer(), squarePixelErrorThreshold, &projectionSqrError))
+		if (MultipleViewGeometry::projectiveReconstructionFrom6PointsIF(ConstArrayAccessor<Vectors2>(permutationImagePointsSet), candidateModelsAccessor.pointer(), squarePixelErrorThreshold, &projectionSqrError))
 		{
 			Scalar squareErrors = 0;
 			Indices32 indices;
@@ -2893,14 +2896,14 @@ void RANSAC::projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAcces
 
 			const PinholeCamera identify(SquareMatrix3(true), 1, 1);
 
-			Geometry::ObjectPoints points3d = Geometry::EpipolarGeometry::triangulateImagePointsIF(ConstArrayAccessor<HomogenousMatrix4>(candidateModels), *imagePointsPerPose);
+			Vectors3 points3d = Geometry::EpipolarGeometry::triangulateImagePointsIF(ConstArrayAccessor<HomogenousMatrix4>(candidateModels), *imagePointsPerPose);
 
 			for (unsigned int n = 0u; n < correspondences; ++n)
 			{
 				Scalar sqrDistance(0);
 				for (size_t iView = 0; iView < views; iView++)
 				{
-					const ImagePoint imagePoint = identify.projectToImageIF<true>(candidateModels[iView], points3d[n], false);
+					const Vector2 imagePoint = identify.projectToImageIF<true>(candidateModels[iView], points3d[n], false);
 					sqrDistance += imagePoint.sqrDistance((*imagePointsPerPose)[iView][n]);
 				}
 
@@ -2931,10 +2934,22 @@ void RANSAC::projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAcces
 
 				if (objectPointsIF != nullptr)
 				{
-					*objectPointsIF = NonconstArrayAccessor<ObjectPoint>(points3d, points3d.size());
+					*objectPointsIF = NonconstArrayAccessor<Vector3>(points3d, points3d.size());
 				}
 			}
 		}
+	}
+}
+
+void RANSAC::subsetIndices(Indices32& indices, const size_t subset, RandomGenerator& randomGenerator)
+{
+	ocean_assert(subset <= indices.size());
+
+	for (size_t n = 0; n < subset; ++n)
+	{
+		const size_t index = RandomI::random(randomGenerator, (unsigned int)(n), (unsigned int)(indices.size()) - 1u);
+
+		std::swap(indices[n], indices[index]);
 	}
 }
 
