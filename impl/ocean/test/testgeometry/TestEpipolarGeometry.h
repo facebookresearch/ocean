@@ -51,14 +51,6 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestEpipolarGeometry
 		static bool testFundamentalMatrixWithNoise(const double testDuration);
 
 		/**
-		 * Tests the calculation of the fundamental matrix.
-		 * Some point coordinates will be faulty.
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		static bool testFaultyFundamentalMatrix(const double testDuration);
-
-		/**
 		 * Tests the triangulation of image points
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded

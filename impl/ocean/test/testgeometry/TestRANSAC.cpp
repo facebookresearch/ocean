@@ -12,6 +12,7 @@
 #include "ocean/base/Timestamp.h"
 #include "ocean/base/Utilities.h"
 
+#include "ocean/geometry/EpipolarGeometry.h"
 #include "ocean/geometry/RANSAC.h"
 
 #include "ocean/math/Random.h"
@@ -66,6 +67,12 @@ bool TestRANSAC::test(const double testDuration, Worker& worker)
 	Log::info() << " ";
 
 	allSucceeded = testHomographyMatrixForNonBijectiveCorrespondences(testDuration, worker) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testFundamentalMatrix(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -252,6 +259,12 @@ TEST(TestRANSAC, HomographyMatrixForNonBijectiveCorrespondencesWithRefinementSVD
 {
 	Worker worker;
 	EXPECT_TRUE(TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(GTEST_TEST_DURATION, true, true, worker));
+}
+
+
+TEST(TestRANSAC, FundamentalMatrix)
+{
+	EXPECT_TRUE(TestRANSAC::testFundamentalMatrix(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -1246,6 +1259,215 @@ bool TestRANSAC::testHomographyMatrixForNonBijectiveCorrespondences(const double
 		Log::info() << "Validation: " << validation;
 
 		if (!validation.succeeded())
+		{
+			allSucceeded = false;
+		}
+	}
+
+	return allSucceeded;
+}
+
+bool TestRANSAC::testFundamentalMatrix(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing fundamental matrix with 20% invalid correspondences:";
+
+	bool allSucceeded = true;
+
+	RandomGenerator randomGenerator;
+
+	for (const size_t correspondences : {14, 20, 30, 50, 90, 200})
+	{
+		Log::info() << " ";
+		Log::info() << "... with " << correspondences << " correspondences:";
+
+		HighPerformanceStatistic performance;
+
+		ValidationPrecision validationFundamental(0.70, randomGenerator);
+		ValidationPrecision validationEssential(0.99, randomGenerator);
+		ValidationPrecision validationFactorized(0.99, randomGenerator);
+
+		bool needMoreIterations = false;
+
+		const Timestamp startTimestamp(true);
+
+		do
+		{
+			ValidationPrecision::ScopedIteration scopedIterationFundamental(validationFundamental);
+			ValidationPrecision::ScopedIteration scopedIterationEssential(validationEssential);
+			ValidationPrecision::ScopedIteration scopedIterationFactorized(validationFactorized);
+
+			const unsigned int width = RandomI::random(randomGenerator, 600u, 800u);
+			const unsigned int height = RandomI::random(randomGenerator, 600u, 600u);
+			const Scalar fovX = Numeric::deg2rad(Random::scalar(randomGenerator, Scalar(30), Scalar(70)));
+
+			const PinholeCamera pinholeCamera(width, height, fovX);
+			const AnyCameraPinhole camera(pinholeCamera);
+
+			const Scalar sphereRadius = Random::scalar(randomGenerator, Scalar(0.1), Scalar(1));
+
+			Vectors3 objectPoints(correspondences);
+			for (size_t n = 0; n < correspondences; ++n)
+			{
+				objectPoints[n] = Random::vector3(randomGenerator) * sphereRadius;
+			}
+
+			const Vector3 viewingDirectionLeft = Random::vector3(randomGenerator);
+			const Vector3 viewingDirectionRight = Quaternion(Random::euler(randomGenerator, Numeric::deg2rad(50))) * viewingDirectionLeft;
+
+			HomogenousMatrix4 world_T_leftCamera = Utilities::viewPosition(camera, Sphere3(Vector3(0, 0, 0), sphereRadius), viewingDirectionLeft);
+			HomogenousMatrix4 world_T_rightCamera = Utilities::viewPosition(camera, Sphere3(Vector3(0, 0, 0), sphereRadius), viewingDirectionRight);
+
+			// let's apply a random roll
+			world_T_leftCamera *= HomogenousMatrix4(Quaternion(Vector3(0, 0, 1), Random::scalar(randomGenerator, 0, Numeric::pi2())));
+			world_T_rightCamera *= HomogenousMatrix4(Quaternion(Vector3(0, 0, 1), Random::scalar(randomGenerator, 0, Numeric::pi2())));
+
+			const HomogenousMatrix4 flippedLeftCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_leftCamera));
+			const HomogenousMatrix4 flippedRightCamera_T_world(AnyCamera::standard2InvertedFlipped(world_T_rightCamera));
+
+#ifdef OCEAN_DEBUG
+			for (const Vector3& objectPoint : objectPoints)
+			{
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedLeftCamera_T_world, objectPoint));
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedRightCamera_T_world, objectPoint));
+			}
+#endif
+
+			Vectors2 leftImagePoints(correspondences);
+			Vectors2 rightImagePoints(correspondences);
+
+			for (size_t n = 0; n < correspondences; ++n)
+			{
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedLeftCamera_T_world, objectPoints[n]));
+				ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedRightCamera_T_world, objectPoints[n]));
+
+				leftImagePoints[n] = camera.projectToImageIF(flippedLeftCamera_T_world, objectPoints[n]);
+				rightImagePoints[n] = camera.projectToImageIF(flippedRightCamera_T_world, objectPoints[n]);
+			}
+
+			UnorderedIndexSet32 invalidCorrespondences;
+
+			while (invalidCorrespondences.size() < correspondences / 5)
+			{
+				invalidCorrespondences.insert(RandomI::random(randomGenerator, (unsigned int)(correspondences - 1)));
+			}
+
+			for (const Index32& index : invalidCorrespondences)
+			{
+				leftImagePoints[index] = Random::vector2(randomGenerator, Scalar(0), Scalar(camera.width()), Scalar(0), Scalar(camera.height()));
+				rightImagePoints[index] = Random::vector2(randomGenerator, Scalar(0), Scalar(camera.width()), Scalar(0), Scalar(camera.height()));
+			}
+
+			const unsigned int iterations = Geometry::RANSAC::iterations(8u, Scalar(0.99), Scalar(0.2));
+
+			performance.start();
+
+				SquareMatrix3 right_F_left(false);
+				const bool result = Geometry::RANSAC::fundamentalMatrix(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), camera.width(), camera.height(), right_F_left, 8u, iterations);
+
+			performance.stop();
+
+			if (result)
+			{
+				const HomogenousMatrix4 leftCamera_T_rightCamera = world_T_leftCamera.inverted() * world_T_rightCamera;
+
+				{
+					// verifying the fundamental matrix
+
+					for (size_t n = 0; n < correspondences; ++n)
+					{
+						if (invalidCorrespondences.contains(Index32(n)))
+						{
+							continue;
+						}
+
+						const Vector3 left(leftImagePoints[n], 1);
+						const Vector3 right(rightImagePoints[n], 1);
+
+						const Scalar scalarProduct = (right_F_left * left) * right;
+
+						if (Numeric::isNotWeakEqualEps(scalarProduct))
+						{
+							scopedIterationFundamental.setInaccurate();
+						}
+					}
+				}
+
+				{
+					// verifying the essential matrix
+
+					const SquareMatrix3 normalizedRight_E_normalizedLeft = Geometry::EpipolarGeometry::fundamental2essential(right_F_left, pinholeCamera.intrinsic(), pinholeCamera.intrinsic());
+
+					for (size_t n = 0; n < correspondences; ++n)
+					{
+						if (invalidCorrespondences.contains(Index32(n)))
+						{
+							continue;
+						}
+
+						const Vector3 left(leftImagePoints[n], 1);
+						const Vector3 right(rightImagePoints[n], 1);
+
+						const Vector3 normalizedLeft = pinholeCamera.invertedIntrinsic() * left;
+						const Vector3 normalizedRight = pinholeCamera.invertedIntrinsic() * right;
+
+						const Scalar scalarProduct = (normalizedRight_E_normalizedLeft * normalizedLeft) * normalizedRight;
+
+						if (Numeric::isNotWeakEqualEps(scalarProduct))
+						{
+							scopedIterationEssential.setInaccurate();
+						}
+					}
+
+					HomogenousMatrix4 left_T_right;
+					if (Geometry::EpipolarGeometry::factorizeEssential(normalizedRight_E_normalizedLeft, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), left_T_right))
+					{
+						const Vector3 factorizedTranslation(left_T_right.translation());
+						const Quaternion factorizedRotation(left_T_right.rotation());
+
+						const Vector3 translation = leftCamera_T_rightCamera.translation();
+						const Quaternion rotation = leftCamera_T_rightCamera.rotation();
+
+						const Scalar translationDifference = (translation.normalized() - factorizedTranslation).length();
+						const Scalar angleDifference = Numeric::rad2deg(factorizedRotation.angle(rotation));
+
+						if (translationDifference >= Scalar(0.001) || angleDifference > Scalar(5))
+						{
+							scopedIterationFactorized.setInaccurate();
+						}
+					}
+					else
+					{
+						scopedIterationFactorized.setInaccurate();
+					}
+				}
+			}
+			else
+			{
+				scopedIterationFundamental.setInaccurate();
+			}
+
+			needMoreIterations = validationFundamental.needMoreIterations() || validationEssential.needMoreIterations() || validationFactorized.needMoreIterations();
+		}
+		while (needMoreIterations || !startTimestamp.hasTimePassed(testDuration));
+
+		Log::info() << "Performance: " << performance;
+		Log::info() << "Validation Fundamental: " << validationFundamental;
+		Log::info() << "Validation Essential: " << validationEssential;
+		Log::info() << "Validation Factorized: " << validationFactorized;
+
+		if (!validationFundamental.succeeded())
+		{
+			allSucceeded = false;
+		}
+
+		if (!validationEssential.succeeded())
+		{
+			allSucceeded = false;
+		}
+
+		if (!validationFactorized.succeeded())
 		{
 			allSucceeded = false;
 		}

@@ -48,12 +48,6 @@ bool TestEpipolarGeometry::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testFaultyFundamentalMatrix(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-	Log::info() << "-";
-	Log::info() << " ";
-
 	allSucceeded = testTriangulateImagePoints(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -80,11 +74,6 @@ TEST(TestEpipolarGeometry, FundamentalMatrix)
 TEST(TestEpipolarGeometry, undamentalMatrixWithNoise)
 {
 	EXPECT_TRUE(TestEpipolarGeometry::testFundamentalMatrixWithNoise(GTEST_TEST_DURATION));
-}
-
-TEST(TestEpipolarGeometry, FaultyFundamentalMatrix)
-{
-	EXPECT_TRUE(TestEpipolarGeometry::testFaultyFundamentalMatrix(GTEST_TEST_DURATION));
 }
 
 TEST(TestEpipolarGeometry, TriangulateImagePoints)
@@ -444,182 +433,6 @@ bool TestEpipolarGeometry::testFundamentalMatrixWithNoise(const double testDurat
 	}
 
 	return allSucceeded;
-}
-
-bool TestEpipolarGeometry::testFaultyFundamentalMatrix(const double testDuration)
-{
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Testing faulty fundamental matrix with 20% invalid correspondences:";
-
-	RandomGenerator randomGenerator;
-
-	for (unsigned int points : {14u, 20u, 30u, 50u, 90u, 500u})
-	{
-		Log::info() << " ";
-		Log::info() << "... with " << points << " points:";
-
-		unsigned long long failed = 0ull;
-		unsigned long long iterations = 0ull;
-
-		const Timestamp startTimestamp(true);
-
-		do
-		{
-			bool noError = true;
-
-			const PinholeCamera pinholeCamera(Random::random(randomGenerator, 600u, 800u), Random::random(randomGenerator, 600u, 800u), Numeric::deg2rad(Random::scalar(randomGenerator, Scalar(30), Scalar(70))));
-
-			Vectors2 leftImagePoints;
-			Vectors3 leftObjectPoints;
-
-			for (unsigned int i = 0u; i < points; ++i)
-			{
-				const Vector2 imagePoint(Random::scalar(randomGenerator, Scalar(0), Scalar(pinholeCamera.width() - 1)), Random::scalar(randomGenerator, Scalar(0), Scalar(pinholeCamera.height() - 1)));
-				const Vector3 objectPoint(pinholeCamera.vector(imagePoint) * Random::scalar(randomGenerator, Scalar(1), Scalar(3)));
-
-				leftImagePoints.push_back(imagePoint);
-				leftObjectPoints.push_back(objectPoint);
-			}
-
-			const Vector3 translation(Random::vector3(randomGenerator, Scalar(0.01), Scalar(0.1)));
-			const Euler euler(Random::scalar(randomGenerator, Numeric::deg2rad(Scalar(-10)), Numeric::deg2rad(Scalar(10))),
-							Random::scalar(randomGenerator, Numeric::deg2rad(Scalar(-10)), Numeric::deg2rad(Scalar(10))),
-							Random::scalar(randomGenerator, Numeric::deg2rad(Scalar(-10)), Numeric::deg2rad(Scalar(10))));
-			const Quaternion quaternion(euler);
-
-			const HomogenousMatrix4 lTr(translation, quaternion);
-			const HomogenousMatrix4 rTl(lTr.inverted());
-
-			Vectors2 rightImagePoints;
-			Vectors3 rightObjectPoints;
-
-			for (size_t i = 0; i < leftImagePoints.size(); ++i)
-			{
-				const Vector3 objectPoint(rTl * leftObjectPoints[i]);
-				const Vector2 imagePoint(pinholeCamera.projectToImage<true>(HomogenousMatrix4(true), objectPoint, false));
-
-				rightImagePoints.push_back(imagePoint);
-				rightObjectPoints.push_back(objectPoint);
-			}
-
-			// randomly select some image points to disturb
-			IndexSet32 indexSet;
-
-			unsigned int numberInvalidFeatures = points * 2u / 10u;
-			ocean_assert(numberInvalidFeatures < points);
-
-			while (indexSet.size() < numberInvalidFeatures)
-			{
-				indexSet.insert(Random::random(randomGenerator, points - 1u));
-			}
-
-			for (IndexSet32::const_iterator i = indexSet.begin(); i != indexSet.end(); ++i)
-			{
-				ocean_assert(*i < points);
-
-				leftImagePoints[*i] += Random::vector2(randomGenerator, Scalar(-15), Scalar(15));
-				leftImagePoints[*i].x() = max(Scalar(0), min(Scalar(pinholeCamera.width() - 1u), leftImagePoints[*i].x()));
-				leftImagePoints[*i].y() = max(Scalar(0), min(Scalar(pinholeCamera.height() - 1u), leftImagePoints[*i].y()));
-
-				rightImagePoints[*i] += Random::vector2(randomGenerator, Scalar(-15), Scalar(15));
-				rightImagePoints[*i].x() = max(Scalar(0), min(Scalar(pinholeCamera.width() - 1u), rightImagePoints[*i].x()));
-				rightImagePoints[*i].y() = max(Scalar(0), min(Scalar(pinholeCamera.height() - 1u), rightImagePoints[*i].y()));
-			}
-
-			SquareMatrix3 fundamental;
-			if (Geometry::RANSAC::fundamentalMatrix(leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), pinholeCamera.width(), pinholeCamera.height(), fundamental))
-			{
-				for (size_t i = 0; i < leftImagePoints.size(); ++i)
-				{
-					if (indexSet.find((unsigned int)i) == indexSet.end())
-					{
-						const Vector3 left(leftImagePoints[i], 1);
-						const Vector3 right(rightImagePoints[i], 1);
-
-						const Scalar scalarProduct = (fundamental * left) * right;
-
-						if (Numeric::isNotWeakEqualEps(scalarProduct))
-						{
-							noError = false;
-						}
-					}
-				}
-
-				Vector2 leftEpipole, rightEpipole;
-				if (Ocean::Geometry::EpipolarGeometry::epipoles(fundamental, leftEpipole, rightEpipole))
-				{
-					Vector2 trueLeftEpipole(0, 0);
-					Vector2 trueRightEpipole(0, 0);
-					Ocean::Geometry::EpipolarGeometry::epipoles(lTr, pinholeCamera.intrinsic(), pinholeCamera.intrinsic(), trueLeftEpipole, trueRightEpipole);
-
-					const Scalar errorLeft = (leftEpipole - trueLeftEpipole).length();
-					const Scalar errorRight = (rightEpipole - trueRightEpipole).length();
-
-					// maximal pixel error: 0.1
-					if (errorLeft > Scalar(0.1) || errorRight > Scalar(0.1))
-					{
-						noError = false;
-					}
-				}
-
-				const SquareMatrix3 essential = Ocean::Geometry::EpipolarGeometry::fundamental2essential(fundamental, pinholeCamera.intrinsic(), pinholeCamera.intrinsic());
-
-				for (size_t i = 0; i < leftObjectPoints.size(); ++i)
-				{
-					if (indexSet.find((unsigned int)i) == indexSet.end())
-					{
-						const Vector3 left = pinholeCamera.intrinsic().inverted() * Vector3(leftImagePoints[i], 1);
-						const Vector3 right = pinholeCamera.intrinsic().inverted() * Vector3(rightImagePoints[i], 1);
-
-						const Scalar scalarProduct = (essential * left) * right;
-
-						if (Numeric::isNotWeakEqualEps(scalarProduct))
-						{
-							noError = false;
-						}
-					}
-				}
-
-				HomogenousMatrix4 factorizedTransformation;
-				if (Ocean::Geometry::EpipolarGeometry::factorizeEssential(essential, pinholeCamera, pinholeCamera, leftImagePoints.data(), rightImagePoints.data(), leftImagePoints.size(), factorizedTransformation))
-				{
-					const Vector3 factorizedTranslation(factorizedTransformation.translation());
-					const Quaternion factorizedRotation(factorizedTransformation.rotation());
-
-					const Scalar translationDifference = (translation.normalized() - factorizedTranslation).length();
-					const Scalar angleDifference = Numeric::rad2deg(factorizedRotation.angle(quaternion));
-
-					if (translationDifference >= Scalar(0.05) || angleDifference > Scalar(5))
-					{
-						noError = false;
-					}
-				}
-				else
-				{
-					noError = false;
-				}
-			}
-			else
-			{
-				noError = false;
-			}
-
-			if (!noError)
-			{
-				++failed;
-			}
-
-			++iterations;
-		}
-		while (startTimestamp + testDuration > Timestamp(true));
-
-		ocean_assert(iterations != 0ull);
-
-		Log::info() << "Validation: " << String::toAString(double(iterations - failed) * 100.0 / double(iterations), 1u) << "% succeeded.";
-	}
-
-	return true;
 }
 
 bool TestEpipolarGeometry::testTriangulateImagePoints(const double testDuration)

@@ -125,6 +125,13 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestRANSAC
 		 * @return True, if succeeded
 		 */
 		static bool testHomographyMatrixForNonBijectiveCorrespondences(const double testDuration, const bool refine, const bool useSVD, Worker& worker);
+
+		/**
+		 * Tests the calculation of the fundamental matrix.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testFundamentalMatrix(const double testDuration);
 };
 
 }
