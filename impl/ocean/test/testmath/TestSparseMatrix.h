@@ -42,9 +42,18 @@ class OCEAN_TEST_MATH_EXPORT TestSparseMatrix
 
 		/**
 		 * Tests the non-negative matrix factorization
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @param components The number of components to be used, with range [1, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testNonNegativeMatrixFactorization(const double testDuration, const unsigned int components = 5u);
+
+		/**
+		 * Tests the inversion of a diagonal matrix.
+		 * @param testDuration The number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testInvertDiagonal(const double testDuration);
 };
 
 }

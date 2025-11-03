@@ -13,6 +13,8 @@
 #include "ocean/math/SparseMatrix.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -34,23 +36,33 @@ bool TestSparseMatrix::test(const double testDuration)
 	allSucceeded = testRank() && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 
 	allSucceeded = testNonNegativeMatrixFactorization(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testInvertDiagonal(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
 	if (allSucceeded)
-		Log::info() << "Sparse Matrix test suceeded.";
+	{
+		Log::info() << "Sparse Matrix test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Sparse Matrix test FAILED!";
+	}
 
 	return allSucceeded;
 }
-	
+
 #ifdef OCEAN_USE_GTEST
-	
+
 TEST(TestSparseMatrix, Rank)
 {
 	EXPECT_TRUE(TestSparseMatrix::testRank());
@@ -60,45 +72,50 @@ TEST(TestSparseMatrix, NonNegativeMatrixFactorization)
 {
 	EXPECT_TRUE(TestSparseMatrix::testNonNegativeMatrixFactorization(GTEST_TEST_DURATION));
 }
-	
+
+TEST(TestSparseMatrix, InvertDiagonal)
+{
+	EXPECT_TRUE(TestSparseMatrix::testInvertDiagonal(GTEST_TEST_DURATION));
+}
+
 #endif // OCEAN_USE_GTEST
 
 bool TestSparseMatrix::testRank()
 {
 	Log::info() << "Rank test:";
 
-	bool allSucceeded = true;
+	Validation validation;
 
 	{
 		const SparseMatrix zeroMatrix1(1, 1, 0);
-		if (zeroMatrix1.rank() != 0u)
-			allSucceeded = false;
+		OCEAN_EXPECT_EQUAL(validation, zeroMatrix1.rank(), size_t(0));
 
 		const SparseMatrix zeroMatrix3(3, 3, 0);
-		if (zeroMatrix3.rank() != 0u)
-			allSucceeded = false;
+		OCEAN_EXPECT_EQUAL(validation, zeroMatrix3.rank(), size_t(0));
 
 		const SparseMatrix zeroMatrix7(7, 7, 0);
-		if (zeroMatrix7.rank() != 0u)
-			allSucceeded = false;
+		OCEAN_EXPECT_EQUAL(validation, zeroMatrix7.rank(), size_t(0));
 	}
 
 	{
-		const Scalar data[3] = { 1, 1, 1 };
-		SparseMatrix identityMatrix3(3, 3, Matrix(3, 1, data));
-		if (identityMatrix3.rank() != 3u)
-			allSucceeded = false;
+		const Scalar data[3] = {1, 1, 1};
+
+		const SparseMatrix identityMatrix3(3, 3, Matrix(3, 1, data));
+
+		OCEAN_EXPECT_EQUAL(validation, identityMatrix3.rank(), size_t(3));
 	}
 
 	{
-		const Scalar data[7] = { 1, 1, 1, 1, 1, 1, 1 };
+		const Scalar data[7] = {1, 1, 1, 1, 1, 1, 1};
+
 		const SparseMatrix identityMatrix7(7, 7, Matrix(7, 1, data));
-		if (identityMatrix7.rank() != 7u)
-			allSucceeded = false;
+
+		OCEAN_EXPECT_EQUAL(validation, identityMatrix7.rank(), size_t(7));
 	}
 
 	{
 		const Scalar data[9] = {1, 2, 3, 0, 5, 4, 0, 10, 2};
+
 		SparseMatrix matrix(3, 3);
 		for (unsigned int i = 0; i < 9; i++)
 		{
@@ -106,12 +123,13 @@ bool TestSparseMatrix::testRank()
 			unsigned int y = i / 3;
 			matrix(y, x) = data[i];
 		}
-		if (matrix.rank() != 3u)
-			allSucceeded = false;
+
+		OCEAN_EXPECT_EQUAL(validation, matrix.rank(), size_t(3));
 	}
 
 	{
 		const Scalar data[9] = {1, 2, 3, 0, 6, 4, 0, 3, 2};
+
 		SparseMatrix matrix(3, 3);
 		for (unsigned int i = 0; i < 9; i++)
 		{
@@ -119,12 +137,13 @@ bool TestSparseMatrix::testRank()
 			unsigned int y = i / 3;
 			matrix(y, x) = data[i];
 		}
-		if (matrix.rank() != 2u)
-			allSucceeded = false;
+
+		OCEAN_EXPECT_EQUAL(validation, matrix.rank(), size_t(2));
 	}
 
 	{
 		const Scalar data[6] = {2, 3, 0, 1, 4, -1};
+
 		SparseMatrix matrix(3, 2);
 		for (unsigned int i = 0; i < 6; i++)
 		{
@@ -132,23 +151,21 @@ bool TestSparseMatrix::testRank()
 			unsigned int y = i / 2;
 			matrix(y, x) = data[i];
 		}
-		if (matrix.rank() != 2u)
-			allSucceeded = false;
+
+		OCEAN_EXPECT_EQUAL(validation, matrix.rank(), size_t(2));
 	}
 
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSparseMatrix::testNonNegativeMatrixFactorization(const double testDuration, const unsigned int components)
 {
 	Log::info() << "Non-negative matrix factorization test with " << components << " components:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 
@@ -157,9 +174,9 @@ bool TestSparseMatrix::testNonNegativeMatrixFactorization(const double testDurat
 	do
 	{
 		SparseMatrix matrix(310, 212);
-		for (size_t row = 0; row < matrix.rows(); row += RandomI::random(1u, 3u))
+		for (size_t row = 0; row < matrix.rows(); row += RandomI::random(randomGenerator, 1u, 3u))
 		{
-			for (size_t col = 0; col < matrix.columns(); col += RandomI::random(1u, 3u))
+			for (size_t col = 0; col < matrix.columns(); col += RandomI::random(randomGenerator, 1u, 3u))
 			{
 				matrix(row, col) = Scalar(row * col + 1u);
 			}
@@ -169,33 +186,79 @@ bool TestSparseMatrix::testNonNegativeMatrixFactorization(const double testDurat
 		Matrix denseDebug = matrix.denseMatrix();
 #endif
 
-		Matrix s, w;
 		performance.start();
-		bool success = matrix.nonNegativeMatrixFactorization(s, w, components, 100u);
+			Matrix s;
+			Matrix w;
+			const bool success = matrix.nonNegativeMatrixFactorization(s, w, components, 100u);
 		performance.stop();
-		if (!success)
+
+		OCEAN_EXPECT_TRUE(validation, success);
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestSparseMatrix::testInvertDiagonal(const double testDuration)
+{
+	Log::info() << "Invert diagonal test:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	Timestamp startTimestamp(true);
+
+	do
+	{
+		const size_t dimension = RandomI::random(1, 100);
+
+		SparseMatrix sparseMatrix(dimension, dimension);
+		Matrix matrix(dimension, dimension, false);
+
+		for (size_t n = 0; n < dimension; ++n)
 		{
-			allSucceeded = false;
+			Scalar value = Random::scalar(randomGenerator, Scalar(0.001), Scalar(10));
+			value *= Random::sign(randomGenerator);
+
+			sparseMatrix(n, n) = value;
+			matrix(n, n) = value;
 		}
-		else
+
+		const Matrix invertedMatrix = matrix.inverted();
+
+		const bool result = sparseMatrix.invertDiagonal();
+		OCEAN_EXPECT_TRUE(validation, result);
+
+		for (size_t row = 0; row < matrix.rows(); ++row)
 		{
-#ifdef OCEAN_DEBUG
-			Matrix resultDebug = s * w;
-#endif
+			for (size_t column = 0; column < matrix.columns(); ++column)
+			{
+				if (sparseMatrix.isZero(row, column))
+				{
+					OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqualEps(invertedMatrix(row, column)));
+				}
+				else
+				{
+					const Scalar value = matrix(row, column);
+					const Scalar invertedValue = Scalar(1) / value;
+
+					const Scalar sparseValue = sparseMatrix(row, column);
+					const Scalar matrixValue = invertedMatrix(row, column);
+
+					OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(sparseValue, invertedValue));
+					OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(sparseValue, matrixValue));
+				}
+			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-//	Log::info() << "Performance for " << matrix.rows()*matrix.columns() << " ("<<  matrix.nonZeroElements() << " non-zero) elements: " << String::toAString(performance.averageMseconds(), 1u) << "ms";
-	Log::info() << "Performance: " << String::toAString(performance.averageMseconds(), 1u) << "ms";
+	Log::info() << "Validation: " << validation;
 
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
-
-	return allSucceeded;
-
+	return validation.succeeded();
 }
 
 }
