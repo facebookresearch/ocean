@@ -44,7 +44,6 @@ bool Utilities::createBullseyeImage(const unsigned int diameter, const unsigned 
 
 bool Utilities::drawBullseyeWithOffset(Frame& rgbFrame, const PixelPosition& offset, const unsigned int diameter, const unsigned int emptyBorder, const uint8_t* foregroundColor, const uint8_t* backgroundColor)
 {
-	ocean_assert(rgbFrame.isValid() && FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24));
 	if (!rgbFrame.isValid() || !FrameType::arePixelFormatsCompatible(rgbFrame.pixelFormat(), FrameType::FORMAT_RGB24))
 	{
 		return false;
@@ -67,12 +66,7 @@ bool Utilities::drawBullseyeWithOffset(Frame& rgbFrame, const PixelPosition& off
 	backgroundColor = backgroundColor != nullptr ? backgroundColor : CV::Canvas::white(FrameType::FORMAT_RGB24);
 
 	Frame subFrame = rgbFrame.subFrame(offset.x(), offset.y(), bullseyeSize, bullseyeSize);
-
 	ocean_assert(subFrame.isValid());
-	if (!subFrame.isValid())
-	{
-		return false;
-	}
 
 	const CV::PixelPosition center(bullseyeSize / 2u, bullseyeSize / 2u);
 

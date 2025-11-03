@@ -115,6 +115,21 @@ bool TestUtilities::testCreateBullseyeImage(const double testDuration, RandomGen
 
 	bool allSucceeded = true;
 
+	{
+		// Invalid diameter - expect failure
+		const unsigned int width = RandomI::random(randomGenerator, 200u, 1000u);
+		const unsigned int height = RandomI::random(randomGenerator, 200u, 1000u);
+		Frame incompatibleFrame(FrameType(width, height, FrameType::FORMAT_Y16, FrameType::ORIGIN_UPPER_LEFT));
+
+		const unsigned int invalidDiameter = RandomI::random(randomGenerator, 1u) == 0u ? RandomI::random(randomGenerator, 0u, 14u) : (RandomI::random(randomGenerator, 15u, 100u) & 0u);
+		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);
+
+		if (Utilities::drawBullseyeWithOffset(incompatibleFrame, CV::PixelPosition(width / 2u, height / 2u), invalidDiameter, emptyBorder))
+		{
+			allSucceeded = false;
+		}
+	}
+
 	Timestamp start(true);
 
 	do
@@ -232,6 +247,68 @@ bool TestUtilities::testDrawBullseyeWithOffset(const double testDuration, Random
 	Log::info() << "Utilities::drawBullseye() with offset test:";
 
 	bool allSucceeded = true;
+
+	{
+		// Invalid frame - expect failure
+		Frame invalidFrame;
+		const unsigned int diameter = RandomI::random(randomGenerator, 15u, 100u) | 1u;
+		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);
+		if (Utilities::drawBullseyeWithOffset(invalidFrame, CV::PixelPosition(0u, 0u), diameter, emptyBorder))
+		{
+			allSucceeded = false;
+		}
+	}
+
+	{
+		// Incompatible pixel format - expect failure
+		const unsigned int width = RandomI::random(randomGenerator, 200u, 1000u);
+		const unsigned int height = RandomI::random(randomGenerator, 200u, 1000u);
+		Frame incompatibleFrame(FrameType(width, height, FrameType::FORMAT_Y16, FrameType::ORIGIN_UPPER_LEFT));
+
+		const unsigned int diameter = RandomI::random(randomGenerator, 15u, 100u) | 1u;
+		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);
+
+		if (Utilities::drawBullseyeWithOffset(incompatibleFrame, CV::PixelPosition(width / 2u, height / 2u), diameter, emptyBorder))
+		{
+			allSucceeded = false;
+		}
+	}
+
+	{
+		// Exceeds image boundaries - expect failure
+		const unsigned int width = RandomI::random(randomGenerator, 200u, 1000u);
+		const unsigned int height = RandomI::random(randomGenerator, 200u, 1000u);
+		Frame incompatibleFrame(FrameType(width, height, FrameType::FORMAT_Y16, FrameType::ORIGIN_UPPER_LEFT));
+
+		const unsigned int diameter = RandomI::random(randomGenerator, 1u) == 0u ? RandomI::random(randomGenerator, 0u, 14u) : (RandomI::random(randomGenerator, 15u, 100u) & 0u);
+		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);
+
+		const unsigned int bullseyeSize = diameter + 2u * emptyBorder;
+
+		const unsigned int offsetX = RandomI::random(randomGenerator, width - bullseyeSize + 1u, width);
+		const unsigned int offsetY = RandomI::random(randomGenerator, height - bullseyeSize + 1u, height);
+		const CV::PixelPosition offset(offsetX, offsetY);
+
+		if (Utilities::drawBullseyeWithOffset(incompatibleFrame, offset, diameter, emptyBorder))
+		{
+			allSucceeded = false;
+		}
+	}
+
+	{
+		// Invalid diameter - expect failure
+		const unsigned int width = RandomI::random(randomGenerator, 200u, 1000u);
+		const unsigned int height = RandomI::random(randomGenerator, 200u, 1000u);
+		Frame incompatibleFrame(FrameType(width, height, FrameType::FORMAT_Y16, FrameType::ORIGIN_UPPER_LEFT));
+
+		const unsigned int invalidDiameter = RandomI::random(randomGenerator, 1u) == 0u ? RandomI::random(randomGenerator, 0u, 14u) : (RandomI::random(randomGenerator, 15u, 100u) & 0u);
+		const unsigned int emptyBorder = RandomI::random(randomGenerator, 0u, 20u);
+
+		if (Utilities::drawBullseyeWithOffset(incompatibleFrame, CV::PixelPosition(width / 2u, height / 2u), invalidDiameter, emptyBorder))
+		{
+			allSucceeded = false;
+		}
+	}
 
 	Timestamp start(true);
 
