@@ -52,7 +52,7 @@ SparseMatrixT<T> elementDivision(const Eigen::SparseMatrix<T, Eigen::ColMajor>& 
 
 	const MatrixT<T> bTranspose = denominatorB.transposed(); //we want to access single columns from denominatorB, so it will be transposed and accessed by row(.)
 
-	SparseMatrixT<T> result(matrixA.rows(), matrixA.rows());
+	SparseMatrixT<T> result(matrixA.rows(), matrixA.cols());
 
 	// visit only non-zero elements
 	for (auto c = 0; c < matrixA.outerSize(); ++c)
@@ -700,34 +700,40 @@ bool SparseMatrixT<T>::invertDiagonal()
 	ocean_assert(sparseMatrix.rows() == sparseMatrix.cols());
 
 	if (sparseMatrix.rows() != sparseMatrix.cols())
+	{
 		return false;
+	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	for (int r = 0; r < sparseMatrix.rows(); ++r)
+	{
 		for (int c = 0; c < sparseMatrix.cols(); ++c)
 		{
 			const T value = sparseMatrix.coeff(r, c);
 
 			if (r != c)
+			{
 				ocean_assert(NumericT<T>::isEqualEps(value));
+			}
 		}
+	}
 
 	const typename InternalMatrix<T>::Type copyMatrix(sparseMatrix);
 	typename InternalMatrix<T>::Type identityMatrix(sparseMatrix.rows(), sparseMatrix.cols());
 	identityMatrix.setIdentity();
-
 #endif
 
-	for (typename InternalMatrix<T>::Type::Index r = 0; r < sparseMatrix.rows(); ++r)
-		for (typename InternalMatrix<T>::Type::Index c = 0; c < sparseMatrix.cols(); ++c)
+	for (typename InternalMatrix<T>::Type::Index n = 0; n < sparseMatrix.rows(); ++n)
+	{
+		T& value = sparseMatrix.coeffRef(n, n);
+
+		if (NumericT<T>::isEqualEps(value))
 		{
-			T& value = sparseMatrix.coeffRef(r, c);
-
-			if (NumericT<T>::isEqualEps(value))
-				return false;
-
-			value = 1 / value;
+			return false;
 		}
+
+		value = T(1) / value;
+	}
 
 #ifdef OCEAN_INTENSIVE_DEBUG
 	ocean_assert(SparseMatrixT<T>((void*)&copyMatrix) * SparseMatrixT<T>((void*)&sparseMatrix) == SparseMatrixT<T>((void*)&identityMatrix));
