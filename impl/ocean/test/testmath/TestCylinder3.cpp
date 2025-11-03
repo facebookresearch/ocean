@@ -85,8 +85,8 @@ bool TestCylinder3::testConstructor()
 	}
 	{
 		// Height constructor.
-		Cylinder3 cylinder(Vector3(1., 1., 1.), Vector3(0., 0., 1.), 1., 10.);
-		if (!cylinder.isValid() || cylinder.origin() != Vector3(1., 1., 1.) || cylinder.axis() != Vector3(0., 0., 1.) || cylinder.radius() != 1. || cylinder.minSignedDistanceAlongAxis() != 0. || cylinder.maxSignedDistanceAlongAxis() != 10. || cylinder.height() != 10.)
+		Cylinder3 cylinder(Vector3(1.0, 1.0, 1.0), Vector3(0.0, 0.0, 1.0), 1.0, 10.0);
+		if (!cylinder.isValid() || cylinder.origin() != Vector3(1.0, 1.0, 1.0) || cylinder.axis() != Vector3(0.0, 0.0, 1.0) || cylinder.radius() != 1.0 || cylinder.minSignedDistanceAlongAxis() != 0.0 || cylinder.maxSignedDistanceAlongAxis() != 10.0 || cylinder.height() != 10.0)
 		{
 			Log::info() << "Cylinder3 valid constructor failed";
 			allSucceeded = false;
@@ -94,8 +94,8 @@ bool TestCylinder3::testConstructor()
 	}
 	{
 		// Min/max distance constructor.
-		Cylinder3 cylinder(Vector3(1., 1., 1.), Vector3(0., 0., 1.), 1., -10., 10.);
-		if (!cylinder.isValid() || cylinder.origin() != Vector3(1., 1., 1.) || cylinder.axis() != Vector3(0., 0., 1.) || cylinder.radius() != 1. || cylinder.minSignedDistanceAlongAxis() != -10. || cylinder.maxSignedDistanceAlongAxis() != 10. || cylinder.height() != 20.)
+		Cylinder3 cylinder(Vector3(1.0, 1.0, 1.0), Vector3(0.0, 0.0, 1.0), 1.0, -10.0, 10.0);
+		if (!cylinder.isValid() || cylinder.origin() != Vector3(1.0, 1.0, 1.0) || cylinder.axis() != Vector3(0.0, 0.0, 1.0) || cylinder.radius() != 1.0 || cylinder.minSignedDistanceAlongAxis() != -10.0 || cylinder.maxSignedDistanceAlongAxis() != 10.0 || cylinder.height() != 20.0)
 		{
 			Log::info() << "Cylinder3 valid constructor failed";
 			allSucceeded = false;
@@ -139,10 +139,10 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 		{
 			// Mapping from the unit cylinder (with random, non-unit height) to arbitrary cylinders.
 			const RotationT<T> rotation(RandomT<T>::rotation(randomGenerator));
-			const VectorT3<T> translation(RandomT<T>::vector3(randomGenerator, -100., 100.));
+			const VectorT3<T> translation(RandomT<T>::vector3(randomGenerator, -100.0, 100.0));
 			const T scale = RandomT<T>::scalar(randomGenerator, T(0.001), T(100.0));
-			const T minSignedDistanceAlongAxis = RandomT<T>::scalar(randomGenerator, -10., 10.); // before scaling
-			const T maxSignedDistanceAlongAxis = minSignedDistanceAlongAxis + RandomT<T>::scalar(randomGenerator, 1., 10.); // before scaling
+			const T minSignedDistanceAlongAxis = RandomT<T>::scalar(randomGenerator, -10.0, 10.0); // before scaling
+			const T maxSignedDistanceAlongAxis = minSignedDistanceAlongAxis + RandomT<T>::scalar(randomGenerator, 1.0, 10.0); // before scaling
 
 			const auto transform = [&](VectorT3<T>& v)
 			{
@@ -152,14 +152,14 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 			// Define the cylinder after the similarity transformation. We'll check the "ground-truth"
 			// method against the result of cylinder.nearestIntersection().
 			const VectorT3<T>& origin = translation;
-			const VectorT3<T> axis = rotation * VectorT3<T>(0., 0., 1.);
+			const VectorT3<T> axis = rotation * VectorT3<T>(0.0, 0.0, 1.0);
 			const CylinderT3<T> cylinder(origin, axis, scale, scale * minSignedDistanceAlongAxis, scale * maxSignedDistanceAlongAxis);
 
 			for (unsigned int i = 0u; i < kNumRandomRays; ++i)
 			{
 				// Define a ray in the pre-transformed space.
-				VectorT3<T> rayOrigin = RandomT<T>::vector3(randomGenerator, T(-5.), T(5.));
-				rayOrigin.z() *= T(2.); // allow more variation in z for the ray origin
+				VectorT3<T> rayOrigin = RandomT<T>::vector3(randomGenerator, T(-5.0), T(5.0));
+				rayOrigin.z() *= T(2.0); // allow more variation in z for the ray origin
 				VectorT3<T> rayDirection = RandomT<T>::vector3(randomGenerator);
 
 				// Compute the intersection in the pre-transformed space and check whether there might be
@@ -167,13 +167,13 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 				bool gtIntersection = false;
 				bool discriminantIsNearlyZero = false;
 				VectorT3<T> gtPoint = rayOrigin;
-				T gtMinDistance3D = T(0.); // only used for debugging
+				T gtMinDistance3D = T(0.0); // only used for debugging
 
 				VectorT2<T> projectedOrigin(rayOrigin.x(), rayOrigin.y());
 				const T sqrDistanceOriginToCircle = projectedOrigin.sqr();
 
 				// (Only ray origins outside (or on) the unit circle are valid.)
-				if (sqrDistanceOriginToCircle > T(1.) && !NumericT<T>::isEqual(sqrDistanceOriginToCircle, T(1.)))
+				if (sqrDistanceOriginToCircle > T(1.0) && !NumericT<T>::isEqual(sqrDistanceOriginToCircle, T(1.0)))
 				{
 					// Project the ray onto the xy plane and calculate the intersection point with the unit circle.
 					VectorT2<T> projectedDirection(rayDirection.x(), rayDirection.y());
@@ -182,23 +182,37 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 						// Let the 2D ray be defined by origin p and direction v.
 						// Solve for closest distance along the ray t, which gives 2D point X on the unit circle:
 						//   X = t * v + p, || X || = 1
-						//   => v.v * t^2 + [ 2 * v.p ] * t + [ p.p - 1 ] = 0.
-						T minDistance = T(-1.), maxDistance = T(-1.);
+						//   => v.v * t^2 + [ 2 * v.p ] * t + [ p.p - 1 ] = 0
+
+						T minDistance = NumericT<T>::maxValue();
+						T maxDistance = NumericT<T>::maxValue();
 
 						const T a = projectedDirection.sqr();
-						const T b = T(2.) * (projectedDirection * projectedOrigin);
-						const T c = projectedOrigin.sqr() - T(1.);
+						const T b = T(2.0) * (projectedDirection * projectedOrigin);
+						const T c = projectedOrigin.sqr() - T(1.0);
 						if (EquationT<T>::solveQuadratic(a, b, c, minDistance, maxDistance))
 						{
+							if (minDistance < T(0.0))
+							{
+								minDistance = NumericT<T>::inf();
+							}
+
+							if (maxDistance < T(0.0))
+							{
+								maxDistance = NumericT<T>::inf();
+							}
+
 							minDistance = min(minDistance, maxDistance);
 						}
 
-						discriminantIsNearlyZero = NumericT<T>::isEqual(b * b - T(4.) * a * c, T(0.), semiWeakEps);
+						discriminantIsNearlyZero = NumericT<T>::isEqual(b * b - T(4.0) * a * c, T(0.0), semiWeakEps);
 
 						// Having computed the distance along the 2D-projected ray, now compute the distance
 						// along the 3D ray. The (x, y) coordinates are the same for the intersection points of
 						// both the 3D ray and its projection: t_3D * v_3D[x] = t_2D * v_2D[x].
-						if (minDistance >= T(0.))
+
+						ocean_assert(minDistance >= T(0.0));
+						if (minDistance != NumericT<T>::maxValue())
 						{
 							gtMinDistance3D = minDistance * (NumericT<T>::isWeakEqualEps(projectedDirection.x()) ? projectedDirection.y() / rayDirection.y() : projectedDirection.x() / rayDirection.x());
 							gtPoint = rayOrigin + rayDirection * gtMinDistance3D;
@@ -219,7 +233,7 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 				}
 				// If the point is on the unit circle, then it just needs to be within the z-range of the
 				// cylinder to be a valid intersection.
-				else if (NumericT<T>::isEqual(sqrDistanceOriginToCircle, T(1.)))
+				else if (NumericT<T>::isEqual(sqrDistanceOriginToCircle, T(1.0)))
 				{
 					gtIntersection = gtPoint.z() >= minSignedDistanceAlongAxis && gtPoint.z() <= maxSignedDistanceAlongAxis;
 				}
@@ -232,7 +246,7 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 
 				// Compute the intersection using the Cylinder3 class, then check that both
 				// intersection-estimation methods agree.
-				VectorT3<T> point(T(0.), T(0.), T(0.));
+				VectorT3<T> point(T(0.0), T(0.0), T(0.0));
 				const bool intersects = cylinder.nearestIntersection(LineT3<T>(rayOrigin, rayDirection), point);
 
 				bool success = !gtIntersection;
@@ -254,7 +268,7 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 					// If the origin is nearly on the cylinder or the ray is nearly tangent, there's a small
 					// chance that numerical issues cause the GT to be true, but the intersection is not found
 					// after the transformation. So, we'll ignore this case.
-					if (NumericT<T>::isEqual(sqrDistanceOriginToCircle, T(1.), semiWeakEps))
+					if (NumericT<T>::isEqual(sqrDistanceOriginToCircle, T(1.0), semiWeakEps))
 					{
 						success = true;
 						++numGroundTruthTrueButPointNearSurface;
@@ -298,9 +312,9 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 		Log::info() << "In rare cases, the ground-truth (GT) intersection result will disagree with the estimated intersection result due to issues with numerical precision.";
 		Log::info() << "The following percentages should all be much less than 0.01%:";
 		// For this first one, the GT point was calculated as if the discriminant was zero (see above).
-		Log::info() << "Num GT False but Points Equal: " << numGroundTruthFalseButPointsEqual << " / " << testId << " (" << (T(numGroundTruthFalseButPointsEqual) / T(testId) * T(100)) << "%)";
-		Log::info() << "Num GT True but Point Near Surface: " << numGroundTruthTrueButPointNearSurface << " / " << testId << " (" << (T(numGroundTruthTrueButPointNearSurface) / T(testId) * T(100)) << "%)";
-		Log::info() << "Num GT True but Discriminant Near Zero: " << numGroundTruthTrueButDiscriminantNearZero << " / " << testId << " (" << (T(numGroundTruthTrueButDiscriminantNearZero) / T(testId) * T(100)) << "%)";
+		Log::info() << "Num GT False but Points Equal: " << numGroundTruthFalseButPointsEqual << " / " << testId << " (" << (T(numGroundTruthFalseButPointsEqual) / T(testId) * T(100.0)) << "%)";
+		Log::info() << "Num GT True but Point Near Surface: " << numGroundTruthTrueButPointNearSurface << " / " << testId << " (" << (T(numGroundTruthTrueButPointNearSurface) / T(testId) * T(100.0)) << "%)";
+		Log::info() << "Num GT True but Discriminant Near Zero: " << numGroundTruthTrueButDiscriminantNearZero << " / " << testId << " (" << (T(numGroundTruthTrueButDiscriminantNearZero) / T(testId) * T(100.0)) << "%)";
 	}
 
 	return allSucceeded;
