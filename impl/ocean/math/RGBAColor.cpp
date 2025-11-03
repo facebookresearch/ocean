@@ -294,7 +294,7 @@ void RGBAColor::clamp()
 {
 	ocean_assert(isValid());
 
-	values_[0] =
+	values_[0] = max(0.0f, min(1.0f, values_[0]));
 	values_[1] = max(0.0f, min(1.0f, values_[1]));
 	values_[2] = max(0.0f, min(1.0f, values_[2]));
 	values_[3] = max(0.0f, min(1.0f, values_[3]));
