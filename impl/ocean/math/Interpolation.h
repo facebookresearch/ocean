@@ -648,7 +648,7 @@ T Interpolation::lagrange2(const TKey& x0, const T& y0, const TKey& x1, const T&
 template <typename T, typename TKey>
 T Interpolation::lagrange3(const TKey& x0, const T& y0, const TKey& x1, const T& y1, const TKey& x2, const T& y2, const TKey& x)
 {
-	ocean_assert(NumericT<TKey>::isNotEqual(x0, x1) && NumericT<TKey>::isNotEqual(x0, x2) && NumericT<TKey>::isNotEqual(x1, 2));
+	ocean_assert(NumericT<TKey>::isNotEqual(x0, x1) && NumericT<TKey>::isNotEqual(x0, x2) && NumericT<TKey>::isNotEqual(x1, x2));
 
 	return y0 * ((x - x1) * (x - x2)) * (TKey(1) / ((x0 - x1) * (x0 - x2)))
 		+ y1 * ((x - x0) * (x - x2)) * (TKey(1) / ((x1 - x0) * (x1 - x2)))
