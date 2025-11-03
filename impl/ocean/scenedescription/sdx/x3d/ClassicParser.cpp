@@ -260,7 +260,7 @@ NodeRef ClassicParser::parseNode()
 			throw OceanException(std::string("The node \"") + nodeType + std::string("\" does not have a field \"") + token.raw() + std::string("\"."));
 		}
 	}
-	catch(const Exception& exception)
+	catch (const Exception& exception)
 	{
 		Log::error() << "Error in \"" << scanner_.filename() << "\", line " << scanner_.line() << ", column " << scanner_.column() << ": " << exception.what();
 
@@ -1512,7 +1512,7 @@ void ClassicParser::parseRoute()
 
 		startNode->addConnection(startFieldName, targetNode->id(), targetFieldName);
 	}
-	catch(const Exception& exception)
+	catch (const Exception& exception)
 	{
 		Log::warning() << "Failed to establish the ROUTE in line " << scanner_.line() << ": " << exception.what();
 	}

@@ -660,7 +660,7 @@ bool FileConfig::read()
 		values_.clear();
 		return readSubValues(values_, configScanner, false);
 	}
-	catch(const Exception& exception)
+	catch (const Exception& exception)
 	{
 		Log::error() << "Failed to load config file: \"" << filename_ << "\" :" << exception.what();
 	}

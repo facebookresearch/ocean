@@ -9,6 +9,7 @@
 #include "application/ocean/demo/math/lookup/win/LookupMainWindow.h"
 
 #include "ocean/base/Build.h"
+#include "ocean/base/Exception.h"
 #include "ocean/base/PluginManager.h"
 
 #include "ocean/platform/win/System.h"
@@ -27,9 +28,9 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 		mainWindow.initialize();
 		mainWindow.start();
 	}
-	catch(const Exception& e)
+	catch (const Exception& exception)
 	{
-		Log::error() << "Unhandled exception: " << e.what();
+		Log::error() << "Unhandled exception: " << exception.what();
 	}
 
 	return 0;

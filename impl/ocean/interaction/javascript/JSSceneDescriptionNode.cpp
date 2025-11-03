@@ -349,7 +349,7 @@ void JSBase::function<SceneDescription::NodeRef, JSSceneDescriptionNode::FI_FIEL
 					}
 				}
 			}
-			catch(const Exception& exception)
+			catch (const Exception& exception)
 			{
 				Log::error() << "SceneDescriptionNode::setField() failed: " << exception.what();
 			}
@@ -817,7 +817,7 @@ void JSBase::function<SceneDescription::NodeRef, JSSceneDescriptionNode::FI_SET_
 					Log::warning() << "Unsupported field type of a SceneDescription node.";
 				}
 			}
-			catch(const Exception& exception)
+			catch (const Exception& exception)
 			{
 				Log::error() << "SceneDescriptionNode::setField() failed: " << exception.what();
 			}

@@ -45,9 +45,9 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 		mainWindow.initialize();
 		mainWindow.start();
 	}
-	catch(const Exception& e)
+	catch (const Exception& exception)
 	{
-		Log::error() << "Unhandled exception: " << e.what();
+		Log::error() << "Unhandled exception: " << exception.what();
 	}
 
 #ifdef OCEAN_RUNTIME_STATIC

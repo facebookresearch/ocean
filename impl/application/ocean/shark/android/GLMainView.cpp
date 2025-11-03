@@ -148,7 +148,7 @@ bool GLMainView::loadScene(const std::string& filename, const bool replace)
 			return false;
 		}
 	}
-	catch(const Exception& exception)
+	catch (const Exception& exception)
 	{
 		Log::error() << exception.what();
 		return false;
@@ -258,7 +258,7 @@ bool GLMainView::render()
 
 		return true;
 	}
-	catch(const Exception& exception)
+	catch (const Exception& exception)
 	{
 		Log::error() << exception.what();
 	}

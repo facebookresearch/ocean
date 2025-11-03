@@ -246,7 +246,7 @@ NodeRef XMLParser::parseNode(const tinyxml2::XMLElement* xmlNode)
 			node->setName(name_);
 		}
 	}
-	catch(const Exception& exception)
+	catch (const Exception& exception)
 	{
 		if (name_.empty())
 		{
@@ -275,7 +275,7 @@ NodeRef XMLParser::parseNode(const tinyxml2::XMLElement* xmlNode)
 				{
 					addDynamicField(node, xmlChild);
 				}
-				catch(const Exception& exception)
+				catch (const Exception& exception)
 				{
 					if (name_.empty())
 					{
@@ -293,7 +293,7 @@ NodeRef XMLParser::parseNode(const tinyxml2::XMLElement* xmlNode)
 				{
 					parseNodeField(node, xmlChild);
 				}
-				catch(const Exception& exception)
+				catch (const Exception& exception)
 				{
 					Log::warning() << exception.what();
 				}
@@ -302,7 +302,7 @@ NodeRef XMLParser::parseNode(const tinyxml2::XMLElement* xmlNode)
 			xmlChild = xmlChild->NextSiblingElement();
 		}
 	}
-	catch(const Exception& exception)
+	catch (const Exception& exception)
 	{
 		if (name_.empty())
 		{
@@ -428,7 +428,7 @@ void XMLParser::parseRoute(const tinyxml2::XMLElement* xmlNode)
 
 		startNode->addConnection(startFieldName, targetNode->id(), targetFieldName);
 	}
-	catch(const Exception& exception)
+	catch (const Exception& exception)
 	{
 		Log::warning() << "Failed to establish a ROUTE: " << exception.what();
 	}

@@ -431,7 +431,7 @@ void IndexedFaceSet::apply()
 			++numberPolygons;
 		}
 	}
-	catch(const Exception& exception)
+	catch (const Exception& exception)
 	{
 		Log::error() << exception.what();
 		renderingObject_.release();
@@ -481,7 +481,7 @@ void IndexedFaceSet::apply()
 					renderingVertexSet_->setPhantomTextureCoordinateSystem(texCoord_.value()->field<SingleString>("reference").value());
 				}
 			}
-			catch(const Exception& exception)
+			catch (const Exception& exception)
 			{
 				Log::warning() << exception.what();
 			}
