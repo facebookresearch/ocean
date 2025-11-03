@@ -601,22 +601,10 @@ template <typename T>
 template <typename U>
 inline SquareMatrixT4<T>::SquareMatrixT4(const SquareMatrixT4<U>& matrix)
 {
-	values[ 0] = T(matrix.values[ 0]);
-	values[ 1] = T(matrix.values[ 1]);
-	values[ 2] = T(matrix.values[ 2]);
-	values[ 3] = T(matrix.values[ 3]);
-	values[ 4] = T(matrix.values[ 4]);
-	values[ 5] = T(matrix.values[ 5]);
-	values[ 6] = T(matrix.values[ 6]);
-	values[ 7] = T(matrix.values[ 7]);
-	values[ 8] = T(matrix.values[ 8]);
-	values[ 9] = T(matrix.values[ 9]);
-	values[10] = T(matrix.values[10]);
-	values[11] = T(matrix.values[11]);
-	values[12] = T(matrix.values[12]);
-	values[13] = T(matrix.values[13]);
-	values[14] = T(matrix.values[14]);
-	values[15] = T(matrix.values[15]);
+	for (unsigned int n = 0u; n < 16u; ++n)
+	{
+		values[n] = T(matrix.values[n]);
+	}
 }
 
 template <typename T>
@@ -624,41 +612,11 @@ SquareMatrixT4<T>::SquareMatrixT4(const bool setToIdentity)
 {
 	if (setToIdentity)
 	{
-		values[ 0] = T(1.0);
-		values[ 1] = T(0.0);
-		values[ 2] = T(0.0);
-		values[ 3] = T(0.0);
-		values[ 4] = T(0.0);
-		values[ 5] = T(1.0);
-		values[ 6] = T(0.0);
-		values[ 7] = T(0.0);
-		values[ 8] = T(0.0);
-		values[ 9] = T(0.0);
-		values[10] = T(1.0);
-		values[11] = T(0.0);
-		values[12] = T(0.0);
-		values[13] = T(0.0);
-		values[14] = T(0.0);
-		values[15] = T(1.0);
+		toIdentity();
 	}
 	else
 	{
-		values[ 0] = T(0.0);
-		values[ 1] = T(0.0);
-		values[ 2] = T(0.0);
-		values[ 3] = T(0.0);
-		values[ 4] = T(0.0);
-		values[ 5] = T(0.0);
-		values[ 6] = T(0.0);
-		values[ 7] = T(0.0);
-		values[ 8] = T(0.0);
-		values[ 9] = T(0.0);
-		values[10] = T(0.0);
-		values[11] = T(0.0);
-		values[12] = T(0.0);
-		values[13] = T(0.0);
-		values[14] = T(0.0);
-		values[15] = T(0.0);
+		toNull();
 	}
 }
 
@@ -709,7 +667,9 @@ SquareMatrixT4<T>::SquareMatrixT4(const U* arrayValues, const bool valuesRowAlig
 	else
 	{
 		for (unsigned int n = 0u; n < 16u; ++n)
+		{
 			values[n] = T(arrayValues[n]);
+		}
 	}
 }
 
@@ -1000,22 +960,10 @@ inline void SquareMatrixT4<T>::toIdentity()
 template <typename T>
 inline void SquareMatrixT4<T>::toNull()
 {
-	values[ 0] = T(0.0);
-	values[ 1] = T(0.0);
-	values[ 2] = T(0.0);
-	values[ 3] = T(0.0);
-	values[ 4] = T(0.0);
-	values[ 5] = T(0.0);
-	values[ 6] = T(0.0);
-	values[ 7] = T(0.0);
-	values[ 8] = T(0.0);
-	values[ 9] = T(0.0);
-	values[10] = T(0.0);
-	values[11] = T(0.0);
-	values[12] = T(0.0);
-	values[13] = T(0.0);
-	values[14] = T(0.0);
-	values[15] = T(0.0);
+	for (unsigned int n = 0u; n < 16u; ++n)
+	{
+		values[n] = T(0.0);
+	}
 }
 
 template <typename T>
@@ -1136,30 +1084,18 @@ template <typename T>
 template <typename U>
 void SquareMatrixT4<T>::copyElements(U* arrayValues) const
 {
-	ocean_assert(arrayValues);
+	ocean_assert(arrayValues != nullptr);
 
-	arrayValues[ 0] = U(values[ 0]);
-	arrayValues[ 1] = U(values[ 1]);
-	arrayValues[ 2] = U(values[ 2]);
-	arrayValues[ 3] = U(values[ 3]);
-	arrayValues[ 4] = U(values[ 4]);
-	arrayValues[ 5] = U(values[ 5]);
-	arrayValues[ 6] = U(values[ 6]);
-	arrayValues[ 7] = U(values[ 7]);
-	arrayValues[ 8] = U(values[ 8]);
-	arrayValues[ 9] = U(values[ 9]);
-	arrayValues[10] = U(values[10]);
-	arrayValues[11] = U(values[11]);
-	arrayValues[12] = U(values[12]);
-	arrayValues[13] = U(values[13]);
-	arrayValues[14] = U(values[14]);
-	arrayValues[15] = U(values[15]);
+	for (unsigned int n = 0u; n < 16u; ++n)
+	{
+		arrayValues[n] = U(values[n]);
+	}
 }
 
 template <typename T>
 void SquareMatrixT4<T>::copyElements(T* arrayValues) const
 {
-	ocean_assert(arrayValues);
+	ocean_assert(arrayValues != nullptr);
 
 	memcpy(arrayValues, values, sizeof(T) * 16);
 }
@@ -1268,22 +1204,7 @@ SquareMatrixT4<T> SquareMatrixT4<T>::operator+(const SquareMatrixT4<T>& matrix) 
 {
 	SquareMatrixT4<T> result(*this);
 
-	result.values[0] += matrix.values[0];
-	result.values[1] += matrix.values[1];
-	result.values[2] += matrix.values[2];
-	result.values[3] += matrix.values[3];
-	result.values[4] += matrix.values[4];
-	result.values[5] += matrix.values[5];
-	result.values[6] += matrix.values[6];
-	result.values[7] += matrix.values[7];
-	result.values[8] += matrix.values[8];
-	result.values[9] += matrix.values[9];
-	result.values[10] += matrix.values[10];
-	result.values[11] += matrix.values[11];
-	result.values[12] += matrix.values[12];
-	result.values[13] += matrix.values[13];
-	result.values[14] += matrix.values[14];
-	result.values[15] += matrix.values[15];
+	result += matrix;
 
 	return result;
 }
@@ -1291,22 +1212,10 @@ SquareMatrixT4<T> SquareMatrixT4<T>::operator+(const SquareMatrixT4<T>& matrix) 
 template <typename T>
 SquareMatrixT4<T>& SquareMatrixT4<T>::operator+=(const SquareMatrixT4<T>& matrix)
 {
-	values[0] += matrix.values[0];
-	values[1] += matrix.values[1];
-	values[2] += matrix.values[2];
-	values[3] += matrix.values[3];
-	values[4] += matrix.values[4];
-	values[5] += matrix.values[5];
-	values[6] += matrix.values[6];
-	values[7] += matrix.values[7];
-	values[8] += matrix.values[8];
-	values[9] += matrix.values[9];
-	values[10] += matrix.values[10];
-	values[11] += matrix.values[11];
-	values[12] += matrix.values[12];
-	values[13] += matrix.values[13];
-	values[14] += matrix.values[14];
-	values[15] += matrix.values[15];
+	for (unsigned int n = 0u; n < 16u; ++n)
+	{
+		values[n] += matrix.values[n];
+	}
 
 	return *this;
 }
@@ -1316,22 +1225,7 @@ SquareMatrixT4<T> SquareMatrixT4<T>::operator-(const SquareMatrixT4<T>& matrix) 
 {
 	SquareMatrixT4<T> result(*this);
 
-	result.values[0] -= matrix.values[0];
-	result.values[1] -= matrix.values[1];
-	result.values[2] -= matrix.values[2];
-	result.values[3] -= matrix.values[3];
-	result.values[4] -= matrix.values[4];
-	result.values[5] -= matrix.values[5];
-	result.values[6] -= matrix.values[6];
-	result.values[7] -= matrix.values[7];
-	result.values[8] -= matrix.values[8];
-	result.values[9] -= matrix.values[9];
-	result.values[10] -= matrix.values[10];
-	result.values[11] -= matrix.values[11];
-	result.values[12] -= matrix.values[12];
-	result.values[13] -= matrix.values[13];
-	result.values[14] -= matrix.values[14];
-	result.values[15] -= matrix.values[15];
+	result -= matrix;
 
 	return result;
 }
@@ -1339,22 +1233,10 @@ SquareMatrixT4<T> SquareMatrixT4<T>::operator-(const SquareMatrixT4<T>& matrix) 
 template <typename T>
 SquareMatrixT4<T>& SquareMatrixT4<T>::operator-=(const SquareMatrixT4<T>& matrix)
 {
-	values[0] -= matrix.values[0];
-	values[1] -= matrix.values[1];
-	values[2] -= matrix.values[2];
-	values[3] -= matrix.values[3];
-	values[4] -= matrix.values[4];
-	values[5] -= matrix.values[5];
-	values[6] -= matrix.values[6];
-	values[7] -= matrix.values[7];
-	values[8] -= matrix.values[8];
-	values[9] -= matrix.values[9];
-	values[10] -= matrix.values[10];
-	values[11] -= matrix.values[11];
-	values[12] -= matrix.values[12];
-	values[13] -= matrix.values[13];
-	values[14] -= matrix.values[14];
-	values[15] -= matrix.values[15];
+	for (unsigned int n = 0u; n < 16u; ++n)
+	{
+		values[n] -= matrix.values[n];
+	}
 
 	return *this;
 }
@@ -1364,21 +1246,10 @@ inline SquareMatrixT4<T> SquareMatrixT4<T>::operator-() const
 {
 	SquareMatrixT4<T> result;
 
-	result.values[ 0] = -values[ 0];
-	result.values[ 1] = -values[ 1];
-	result.values[ 2] = -values[ 2];
-	result.values[ 3] = -values[ 3];
-	result.values[ 4] = -values[ 4];
-	result.values[ 5] = -values[ 5];
-	result.values[ 6] = -values[ 6];
-	result.values[ 7] = -values[ 7];
-	result.values[ 8] = -values[ 8];
-	result.values[ 9] = -values[ 9];
-	result.values[10] = -values[10];
-	result.values[11] = -values[11];
-	result.values[12] = -values[12];
-	result.values[13] = -values[13];
-	result.values[14] = -values[14];
+	for (unsigned int n = 0u; n < 16u; ++n)
+	{
+		result.values[n] = -values[n];
+	}
 
 	return result;
 }
