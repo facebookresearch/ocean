@@ -86,6 +86,52 @@ bool TestSquareMatrix4::test(const double testDuration, Worker& worker)
 	allSucceeded = testProjectionMatrixCameraMatrix<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testTranspose<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testTranspose<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testDeterminant<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testDeterminant<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testTrace<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testTrace<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testMatrixAddition<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testMatrixAddition<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testMatrixSubtraction<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testMatrixSubtraction<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testAccessor(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -161,6 +207,61 @@ TEST(TestSquareMatrix4, ProjectionMatrixCameraMatrix_Float)
 TEST(TestSquareMatrix4, ProjectionMatrixCameraMatrix_Double)
 {
 	EXPECT_TRUE(TestSquareMatrix4::testProjectionMatrixCameraMatrix<double>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, Transpose_Float)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testTranspose<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, Transpose_Double)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testTranspose<double>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, Determinant_Float)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testDeterminant<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, Determinant_Double)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testDeterminant<double>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, Trace_Float)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testTrace<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, Trace_Double)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testTrace<double>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, MatrixAddition_Float)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testMatrixAddition<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, MatrixAddition_Double)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testMatrixAddition<double>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, MatrixSubtraction_Float)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testMatrixSubtraction<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, MatrixSubtraction_Double)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testMatrixSubtraction<double>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, Accessor)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testAccessor(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -639,7 +740,7 @@ bool TestSquareMatrix4::testInvert(const double testDuration)
 	RandomGenerator randomGenerator;
 	ValidationPrecision validation(0.99, randomGenerator);
 
-	const Scalar epsilon = Numeric::eps() * 100;
+	const Scalar epsilon = Numeric::eps() * Scalar(100);
 	const SquareMatrix4 identity(true);
 
 	const Timestamp startTimestamp(true);
@@ -953,6 +1054,368 @@ bool TestSquareMatrix4::testProjectionMatrixCameraMatrix(const double testDurati
 			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(imagePoint.x(), pointInClipSpaceX, pointThreshold));
 			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(imagePoint.y(), pointInClipSpaceY, pointThreshold));
 		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestSquareMatrix4::testTranspose(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Transpose test, with " << TypeNamer::name<T>() << ":";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		SquareMatrixT4<T> matrix;
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			matrix[i] = RandomT<T>::scalar(randomGenerator, T(-10), T(10));
+		}
+
+		const SquareMatrixT4<T> transposedMatrix = matrix.transposed();
+
+		for (unsigned int r = 0u; r < 4u; ++r)
+		{
+			for (unsigned int c = 0u; c < 4u; ++c)
+			{
+				OCEAN_EXPECT_EQUAL(validation, transposedMatrix(r, c), matrix(c, r));
+			}
+		}
+
+		SquareMatrixT4<T> matrix2(matrix);
+		matrix2.transpose();
+
+		OCEAN_EXPECT_TRUE(validation, transposedMatrix == matrix2);
+
+		SquareMatrixT4<T> doubleTransposed = transposedMatrix.transposed();
+
+		OCEAN_EXPECT_TRUE(validation, matrix == doubleTransposed);
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestSquareMatrix4::testDeterminant(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Determinant test, with " << TypeNamer::name<T>() << ":";
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const SquareMatrixT4<T> identity(true);
+			const T det = identity.determinant();
+
+			if (NumericT<T>::isNotEqual(det, T(1), NumericT<T>::weakEps()))
+			{
+				scopedIteration.setInaccurate();
+			}
+		}
+
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			SquareMatrixT4<T> matrixA, matrixB;
+			for (unsigned int i = 0u; i < 16u; ++i)
+			{
+				matrixA[i] = RandomT<T>::scalar(randomGenerator, T(-10), T(10));
+				matrixB[i] = RandomT<T>::scalar(randomGenerator, T(-10), T(10));
+			}
+
+			const T detA = matrixA.determinant();
+			const T detB = matrixB.determinant();
+			const SquareMatrixT4<T> matrixAB = matrixA * matrixB;
+			const T detAB = matrixAB.determinant();
+
+			const T expectedDetAB = detA * detB;
+
+			const T epsilon = std::max(NumericT<T>::abs(expectedDetAB) * T(0.01), NumericT<T>::eps() * T(100));
+
+			if (NumericT<T>::isNotEqual(detAB, expectedDetAB, epsilon))
+			{
+				scopedIteration.setInaccurate();
+			}
+		}
+
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			SquareMatrixT4<T> matrix;
+			for (unsigned int i = 0u; i < 16u; ++i)
+			{
+				matrix[i] = RandomT<T>::scalar(randomGenerator, T(-10), T(10));
+			}
+
+			const T det = matrix.determinant();
+			const SquareMatrixT4<T> transposed = matrix.transposed();
+			const T detTransposed = transposed.determinant();
+
+			const T epsilon = std::max(NumericT<T>::abs(det) * T(0.01), NumericT<T>::eps() * T(100));
+
+			if (NumericT<T>::isNotEqual(det, detTransposed, epsilon))
+			{
+				scopedIteration.setInaccurate();
+			}
+		}
+	}
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestSquareMatrix4::testTrace(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Trace test, with " << TypeNamer::name<T>() << ":";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const SquareMatrixT4<T> identity(true);
+		OCEAN_EXPECT_EQUAL(validation, identity.trace(), T(4));
+
+		SquareMatrixT4<T> matrix;
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			matrix[i] = RandomT<T>::scalar(randomGenerator, T(-100), T(100));
+		}
+
+		const T trace = matrix.trace();
+		const T expectedTrace = matrix(0, 0) + matrix(1, 1) + matrix(2, 2) + matrix(3, 3);
+
+		OCEAN_EXPECT_EQUAL(validation, trace, expectedTrace);
+
+		SquareMatrixT4<T> matrixA, matrixB;
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			matrixA[i] = RandomT<T>::scalar(randomGenerator, T(-100), T(100));
+			matrixB[i] = RandomT<T>::scalar(randomGenerator, T(-100), T(100));
+		}
+
+		const T traceA = matrixA.trace();
+		const T traceB = matrixB.trace();
+		const SquareMatrixT4<T> matrixSum = matrixA + matrixB;
+		const T traceSum = matrixSum.trace();
+
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isWeakEqual(traceSum, traceA + traceB));
+
+		const SquareMatrixT4<T> transposed = matrixA.transposed();
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(matrixA.trace(), transposed.trace()));
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestSquareMatrix4::testMatrixAddition(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Matrix addition test, with " << TypeNamer::name<T>() << ":";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		SquareMatrixT4<T> matrixA, matrixB;
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			matrixA[i] = RandomT<T>::scalar(randomGenerator, T(-100), T(100));
+			matrixB[i] = RandomT<T>::scalar(randomGenerator, T(-100), T(100));
+		}
+
+		const SquareMatrixT4<T> sum = matrixA + matrixB;
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			OCEAN_EXPECT_EQUAL(validation, sum[i], matrixA[i] + matrixB[i]);
+		}
+
+		SquareMatrixT4<T> matrixC(matrixA);
+		matrixC += matrixB;
+		OCEAN_EXPECT_TRUE(validation, sum == matrixC);
+
+		const SquareMatrixT4<T> sumBA = matrixB + matrixA;
+		OCEAN_EXPECT_TRUE(validation, sum == sumBA);
+
+		SquareMatrixT4<T> matrixD;
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			matrixD[i] = RandomT<T>::scalar(randomGenerator, T(-100), T(100));
+		}
+		const SquareMatrixT4<T> sumABC1 = (matrixA + matrixB) + matrixD;
+		const SquareMatrixT4<T> sumABC2 = matrixA + (matrixB + matrixD);
+
+		OCEAN_EXPECT_TRUE(validation, sumABC1.isEqual(sumABC2, NumericT<T>::weakEps()));
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestSquareMatrix4::testMatrixSubtraction(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Matrix subtraction test, with " << TypeNamer::name<T>() << ":";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		SquareMatrixT4<T> matrixA, matrixB;
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			matrixA[i] = RandomT<T>::scalar(randomGenerator, T(-100), T(100));
+			matrixB[i] = RandomT<T>::scalar(randomGenerator, T(-100), T(100));
+		}
+
+		const SquareMatrixT4<T> diff = matrixA - matrixB;
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			OCEAN_EXPECT_EQUAL(validation, diff[i], matrixA[i] - matrixB[i]);
+		}
+
+		SquareMatrixT4<T> matrixC(matrixA);
+		matrixC -= matrixB;
+		OCEAN_EXPECT_TRUE(validation, diff == matrixC);
+
+		const SquareMatrixT4<T> negA = -matrixA;
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			OCEAN_EXPECT_EQUAL(validation, negA[i], -matrixA[i]);
+		}
+
+		const SquareMatrixT4<T> zero = matrixA - matrixA;
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqualEps(zero[i]));
+		}
+
+		const SquareMatrixT4<T> negB = -matrixB;
+		const SquareMatrixT4<T> diffAlt = matrixA + negB;
+		OCEAN_EXPECT_TRUE(validation, diff.isEqual(diffAlt));
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestSquareMatrix4::testAccessor(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Accessor operators test:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		Scalar values[16];
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			values[i] = Random::scalar(randomGenerator, Scalar(-100), Scalar(100));
+		}
+
+		SquareMatrix4 matrix(values);
+
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			OCEAN_EXPECT_EQUAL(validation, matrix[i], values[i]);
+		}
+
+		unsigned int index = 0u;
+		for (unsigned int c = 0u; c < 4u; ++c)
+		{
+			for (unsigned int r = 0u; r < 4u; ++r)
+			{
+				OCEAN_EXPECT_EQUAL(validation, matrix(r, c), values[index]);
+				++index;
+			}
+		}
+
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			OCEAN_EXPECT_EQUAL(validation, matrix(i), values[i]);
+		}
+
+		const Scalar* dataPtr = matrix.data();
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			OCEAN_EXPECT_EQUAL(validation, dataPtr[i], values[i]);
+		}
+
+		const Scalar* directPtr = matrix();
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			OCEAN_EXPECT_EQUAL(validation, directPtr[i], values[i]);
+		}
+
+		SquareMatrix4 matrix2;
+		for (unsigned int i = 0u; i < 16u; ++i)
+		{
+			matrix2[i] = values[i];
+		}
+		OCEAN_EXPECT_TRUE(validation, matrix == matrix2);
+
+		// Test modification via operator()(row, col)
+		SquareMatrix4 matrix3;
+		index = 0u;
+		for (unsigned int c = 0u; c < 4u; ++c)
+		{
+			for (unsigned int r = 0u; r < 4u; ++r)
+			{
+				matrix3(r, c) = values[index];
+				++index;
+			}
+		}
+		OCEAN_EXPECT_TRUE(validation, matrix == matrix3);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 

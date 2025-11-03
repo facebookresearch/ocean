@@ -104,6 +104,58 @@ class OCEAN_TEST_MATH_EXPORT TestSquareMatrix4
 		template <typename T>
 		static bool testProjectionMatrixCameraMatrix(const double testDuration);
 
+		/**
+		 * Tests the transpose functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar value
+		 */
+		template <typename T>
+		static bool testTranspose(const double testDuration);
+
+		/**
+		 * Tests the determinant function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar value
+		 */
+		template <typename T>
+		static bool testDeterminant(const double testDuration);
+
+		/**
+		 * Tests the trace function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar value
+		 */
+		template <typename T>
+		static bool testTrace(const double testDuration);
+
+		/**
+		 * Tests the matrix addition operators.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar value
+		 */
+		template <typename T>
+		static bool testMatrixAddition(const double testDuration);
+
+		/**
+		 * Tests the matrix subtraction operators.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar value
+		 */
+		template <typename T>
+		static bool testMatrixSubtraction(const double testDuration);
+
+		/**
+		 * Tests the accessor operators.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testAccessor(const double testDuration);
+
 	private:
 
 		/**
