@@ -462,7 +462,7 @@ bool TestApproximation::validateAtan2(const double testDuration)
 
 			++iterations;
 
-			if (angle2 < -Numeric::pi() && angle2 > Numeric::pi())
+			if (angle2 < -Numeric::pi() || angle2 > Numeric::pi())
 			{
 				continue;
 			}
