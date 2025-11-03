@@ -28,7 +28,9 @@ MagneticTracker::~MagneticTracker()
 
 bool MagneticTracker::resetMagneticField()
 {
-	throw NotSupportedException("Magnetic field reset is not supported.");
+	Log::debug() << "MagneticTracker::resetMagneticField(): Not supported.";
+
+	return false;
 }
 
 }

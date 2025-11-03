@@ -38,7 +38,6 @@ class OCEAN_DEVICES_EXPORT MagneticTracker : virtual public Tracker
 		/**
 		 * Resets the magnetic field.
 		 * @return True, if succeeded
-		 * @exception NotSupportedException is thrown if this function is not supported.
 		 */
 		virtual bool resetMagneticField();
 
