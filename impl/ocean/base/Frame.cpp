@@ -2256,6 +2256,7 @@ bool Frame::Plane::copy(const Plane& sourcePlane, const AdvancedCopyMode advance
 				break;
 			}
 
+			case ACM_USE_KEEP_LAYOUT:
 			default:
 			{
 				ocean_assert(false && "Invalid copy mode!");

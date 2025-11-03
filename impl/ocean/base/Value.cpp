@@ -172,6 +172,10 @@ double Value::float64Value(const bool allowIntAndFloat) const
 			case VT_INT_32:
 				return double(valueUnion_.valueInt_);
 
+			case VT_BOOL:
+			case VT_STRING:
+			case VT_BUFFER:
+			case VT_INVALID:
 			default:
 				break;
 		}
@@ -248,6 +252,8 @@ std::string Value::readableString(const unsigned int floatingPointPrecision) con
 		case VT_STRING:
 			return stringValue();
 
+		case VT_BUFFER:
+		case VT_INVALID:
 		default:
 			break;
 	}
