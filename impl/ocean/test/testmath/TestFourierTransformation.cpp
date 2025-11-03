@@ -410,7 +410,7 @@ bool TestFourierTransformation::testElementwiseMultiplication2(const double test
 				const ComplexT& calculatedResult = complexTargetRow[x];
 
 				if (NumericT<T>::isNotEqual(groundTruthResult.real(), calculatedResult.real(), epsilon)
-						&& NumericT<T>::isNotEqual(groundTruthResult.imag(), calculatedResult.imag(), epsilon))
+						|| NumericT<T>::isNotEqual(groundTruthResult.imag(), calculatedResult.imag(), epsilon))
 				{
 					allSucceeded = false;
 				}
@@ -533,7 +533,7 @@ bool TestFourierTransformation::testElementwiseDivision2(const double testDurati
 				const ComplexT& calculatedResult = complexTargetRow[x];
 
 				if (NumericT<T>::isNotEqual(groundTruthResult.real(), calculatedResult.real(), epsilon)
-						&& NumericT<T>::isNotEqual(groundTruthResult.imag(), calculatedResult.imag(), epsilon))
+						|| NumericT<T>::isNotEqual(groundTruthResult.imag(), calculatedResult.imag(), epsilon))
 				{
 					allSucceeded = false;
 				}

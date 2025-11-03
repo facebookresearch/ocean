@@ -178,7 +178,7 @@ bool TestFiniteLine3::testDistance(const double testDuration)
 
 			const FiniteLine3 line(point0, point1);
 
-			const Vector3 point(Random::vector2(-100, 100));
+			const Vector3 point(Random::vector3(-100, 100));
 
 			const Scalar result = line.distance(point);
 

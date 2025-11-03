@@ -33,9 +33,9 @@ bool TestBox2::test(const double testDuration)
 	Log::info() << "---   Box2 test:   ---";
 	Log::info() << " ";
 
-	allSucceeded = testConsturctors<float>(testDuration) && allSucceeded;
+	allSucceeded = testConstructors<float>(testDuration) && allSucceeded;
 	Log::info() << " ";
-	allSucceeded = testConsturctors<double>(testDuration) && allSucceeded;
+	allSucceeded = testConstructors<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -85,14 +85,14 @@ bool TestBox2::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestBox2, Consturctor_float)
+TEST(TestBox2, Constructors_float)
 {
-	EXPECT_TRUE(TestBox2::testConsturctors<float>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestBox2::testConstructors<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestBox2, Consturctor_double)
+TEST(TestBox2, Constructors_double)
 {
-	EXPECT_TRUE(TestBox2::testConsturctors<double>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestBox2::testConstructors<double>(GTEST_TEST_DURATION));
 }
 
 
@@ -142,7 +142,7 @@ TEST(TestBox2, MultiplicationOperators_double)
 #endif // OCEAN_USE_GTEST
 
 template <typename T>
-bool TestBox2::testConsturctors(const double testDuration)
+bool TestBox2::testConstructors(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 

@@ -853,9 +853,9 @@ bool TestLinearAlgebra::testQrDecompositionDynamic(const double testDuration)
 		uint64_t validIterations = 0ull;
 
 		const size_t rows = dimension;
-		const size_t colums = dimension;
+		const size_t columns = dimension;
 
-		Log::info() << "... with dimension " << rows << "x" << colums << ":";
+		Log::info() << "... with dimension " << rows << "x" << columns << ":";
 
 		HighPerformanceStatistic performance;
 
@@ -863,9 +863,9 @@ bool TestLinearAlgebra::testQrDecompositionDynamic(const double testDuration)
 
 		do
 		{
-			MatrixT<T> matrix(rows, colums);
+			MatrixT<T> matrix(rows, columns);
 
-			for (size_t n = 0; n < rows * colums; ++n)
+			for (size_t n = 0; n < rows * columns; ++n)
 			{
 				matrix(n) = RandomT<T>::scalar(-1, 1);
 			}

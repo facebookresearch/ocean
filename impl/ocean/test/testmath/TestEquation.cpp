@@ -407,7 +407,7 @@ bool TestEquation::testCubicEquation(const double testDuration)
 		ocean_assert(overallExecutions != 0);
 		const double percentRealRoots = double(executionsWithRealRoots) * 100.0 / double(overallExecutions);
 
-		const double averageResidual = sumResidual / double(executionsWithRealRoots);
+		const double averageResidual = NumericD::ratio(sumResidual, double(executionsWithRealRoots), 0.0);
 
 		Log::info() << "Performance for " << iterations << " iterations: " << performance;
 		Log::info() << "Average residual: " << String::toAString(averageResidual, 12u);
@@ -540,7 +540,7 @@ bool TestEquation::testQuarticEquation(const double testDuration)
 		ocean_assert(overallExecutions != 0);
 		const double percentRealRoots = double(executionsWithRealRoots) * 100.0 / double(overallExecutions);
 
-		const double averageResidual = sumResidual / double(executionsWithRealRoots);
+		const double averageResidual = NumericD::ratio(sumResidual, double(executionsWithRealRoots), 0.0);
 
 		Log::info() << indentation << "Performance for " << iterations << " iterations: " << performance;
 		Log::info() << indentation << "Average residual: " << String::toAString(averageResidual, 12u);

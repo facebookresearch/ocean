@@ -41,7 +41,7 @@ class OCEAN_TEST_MATH_EXPORT TestBox2
 		 * @tparam T The data type of the scalar to be used, either 'float' or 'double'
 		 */
 		template <typename T>
-		static bool testConsturctors(const double testDuration);
+		static bool testConstructors(const double testDuration);
 
 		/**
 		 * Tests the intersects function.

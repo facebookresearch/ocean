@@ -370,9 +370,9 @@ bool TestBox3::testAddition(const double testDuration)
 			const T newY0 = RandomT<T>::scalar(-1000, 1000);
 			const T newZ0 = RandomT<T>::scalar(-1000, 1000);
 
-			const T newX1 = x0 + RandomT<T>::scalar(0, 1000);
-			const T newY1 = y0 + RandomT<T>::scalar(0, 1000);
-			const T newZ1 = z0 + RandomT<T>::scalar(0, 1000);
+			const T newX1 = newX0 + RandomT<T>::scalar(0, 1000);
+			const T newY1 = newY0 + RandomT<T>::scalar(0, 1000);
+			const T newZ1 = newZ0 + RandomT<T>::scalar(0, 1000);
 
 			const BoxT3<T> newBox(VectorT3<T>(newX0, newY0, newZ0), VectorT3<T>(newX1, newY1, newZ1));
 
@@ -967,7 +967,7 @@ bool TestBox3::hasIntersection(const BoxT3<T>& box, const LineT3<T>& line)
 		}
 	}
 
-	const PlaneT3<T> bottomPlane(box.higher(), VectorT3<T>(0, -1, 0));
+	const PlaneT3<T> bottomPlane(box.lower(), VectorT3<T>(0, -1, 0));
 	if (bottomPlane.intersection(line, point))
 	{
 		if (point.x() >= box.lower().x() && point.x() <= box.higher().x()

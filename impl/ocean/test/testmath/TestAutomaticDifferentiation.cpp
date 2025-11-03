@@ -780,7 +780,7 @@ bool TestAutomaticDifferentiation::testFunctions(const double testDuration)
 				}
 			}
 
-			if (x > Numeric::eps())
+			if (x > NumericT<T>::eps())
 			{
 				ValidationPrecision::ScopedIteration scopedIteration(validation);
 
