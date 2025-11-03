@@ -105,7 +105,7 @@ HSVAColor::HSVAColor(const RGBAColor& color)
 
 bool HSVAColor::setHue(const float hue)
 {
-	if (hue < 0.0f || hue > 1.0f)
+	if (hue < 0.0f || hue > NumericF::pi2())
 	{
 		return false;
 	}
