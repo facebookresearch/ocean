@@ -1731,24 +1731,33 @@ FrameType::PixelFormat FrameType::findPixelFormat(const DataType dataType, const
 	ocean_assert(dataType != DT_UNDEFINED);
 	ocean_assert(channels >= 1u);
 
-	switch ((((unsigned int)dataType) << 8u) | channels)
+	const uint64_t value = (uint64_t(dataType) << 32u) | uint64_t(channels);
+
+	constexpr uint64_t valueY8 = (uint64_t(DT_UNSIGNED_INTEGER_8) << 32u) | 1ull;
+	constexpr uint64_t valueYA16 = (uint64_t(DT_UNSIGNED_INTEGER_8) << 32u) | 2ull;
+	constexpr uint64_t valueRGB24 = (uint64_t(DT_UNSIGNED_INTEGER_8) << 32u) | 3ull;
+	constexpr uint64_t valueRGBA32 = (uint64_t(DT_UNSIGNED_INTEGER_8) << 32u) | 4ull;
+	constexpr uint64_t valueRGB48 = (uint64_t(DT_UNSIGNED_INTEGER_16) << 32u) | 3ull;
+	constexpr uint64_t valueRGBA64 = (uint64_t(DT_UNSIGNED_INTEGER_16) << 32u) | 4ull;
+
+	switch (value)
 	{
-		case ((((unsigned int)DT_UNSIGNED_INTEGER_8) << 8u) | 1u):
+		case valueY8:
 			return FORMAT_Y8;
 
-		case ((((unsigned int)DT_UNSIGNED_INTEGER_8) << 8u) | 2u):
+		case valueYA16:
 			return FORMAT_YA16;
 
-		case ((((unsigned int)DT_UNSIGNED_INTEGER_8) << 8u) | 3u):
+		case valueRGB24:
 			return FORMAT_RGB24;
 
-		case ((((unsigned int)DT_UNSIGNED_INTEGER_8) << 8u) | 4u):
+		case valueRGBA32:
 			return FORMAT_RGBA32;
 
-		case ((((unsigned int)DT_UNSIGNED_INTEGER_16) << 8u) | 3u):
-			return FORMAT_RGBA64;
+		case valueRGB48:
+			return FORMAT_RGB48;
 
-		case ((((unsigned int)DT_UNSIGNED_INTEGER_16) << 8u) | 4u):
+		case valueRGBA64:
 			return FORMAT_RGBA64;
 	}
 
