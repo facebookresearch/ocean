@@ -985,6 +985,8 @@ bool BoxT2<T>::box2integer(const unsigned int maximalWidth, const unsigned int m
 		intersectionTop = 0u;
 		intersectionWidth = maximalWidth;
 		intersectionHeight = maximalHeight;
+
+		return false;
 	}
 
 	if (left() >= T(maximalWidth) || top() >= T(maximalHeight) || right() < 0 || bottom() < 0)
