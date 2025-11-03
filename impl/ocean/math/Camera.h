@@ -667,9 +667,9 @@ inline SquareMatrixT3<U> CameraT<T>::flippedTransformationLeftAndRightSide(const
 	result[1] = -result[1];
 	result[2] = -result[2];
 
-	result[3] = -result[4];
+	result[3] = -result[3];
 
-	result[6] = -result[5];
+	result[6] = -result[6];
 
 	ocean_assert(result == flipMatrix3<U>() * left_R_right * flipMatrix3<U>());
 
