@@ -623,7 +623,7 @@ unsigned int EquationT<T>::optimizeQuartic(const T a, const T b, const T c, cons
 		const T delta = fx / fdx;
 		const T newX = x - delta * updateFactor;
 
-		const T newFx = a * newX * newX * newX * newX + b * newX * newX * newX + c * newX * newX + d * x + e;
+		const T newFx = a * newX * newX * newX * newX + b * newX * newX * newX + c * newX * newX + d * newX + e;
 
 		if (NumericT<T>::abs(fx) < NumericT<T>::abs(newFx))
 		{
