@@ -57,6 +57,14 @@ unsigned int FrameType::channels(const PixelFormat pixelFormat)
 		case FORMAT_RGBA4444:
 			return 4u;
 
+		case FORMAT_ABGR32:
+		case FORMAT_ARGB32:
+		case FORMAT_BGR24:
+		case FORMAT_BGR32:
+		case FORMAT_BGRA32:
+			ocean_assert(false && "unimplemented formats");
+			return 0u;
+
 		default:
 			ocean_assert(false && "Unknown pixel format.");
 			return 0u;
