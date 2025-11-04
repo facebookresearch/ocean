@@ -122,6 +122,13 @@ class OCEAN_RENDERING_GLES_EXPORT GLESMediaTexture2D final :
 		void onDynamicUpdate(const ViewRef& view, const Timestamp timestamp) override;
 
 		/**
+		 * Updates the texture based on a given frame.
+		 * @param frame The frame to be used to update the texture, must be valid
+		 * @return True, if succeeded
+		 */
+		bool updateTexture(const Frame& frame);
+
+		/**
 		 * Returns whether a second texture is necessary for a given frame type.
 		 * @param frameType The frame type for which the check will be done, must be valid
 		 * @return True, if so; False, if the frame type can be handled with just one texture
