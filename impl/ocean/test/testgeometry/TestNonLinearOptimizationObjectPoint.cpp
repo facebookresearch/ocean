@@ -195,6 +195,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationPosesObjectPoint
 	}
 }
 
+#ifndef OCEAN_DEBUG // in debug builds, the test needs too long
+
 TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationPosesObjectPoints_50Poses_50Points_NoOutliers_NoNoise)
 {
 	constexpr unsigned int numberPoses = 50u;
@@ -208,6 +210,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationPosesObjectPoint
 		EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectPoints(numberPoses, numberObjectPoints, GTEST_TEST_DURATION, estimatorType, noise, numberPoses * percentOutliers / 100u));
 	}
 }
+
+#endif // OCEAN_DEBUG
 
 TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationPosesObjectPoints_20Poses_20Points_Outliers_NoNoise)
 {
@@ -223,6 +227,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationPosesObjectPoint
 	}
 }
 
+#ifndef OCEAN_DEBUG // in debug builds, the test needs too long
+
 TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationPosesObjectPoints_50Poses_50Points_Outliers_NoNoise)
 {
 	constexpr unsigned int numberPoses = 50u;
@@ -236,6 +242,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationPosesObjectPoint
 		EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectPoints(numberPoses, numberObjectPoints, GTEST_TEST_DURATION, estimatorType, noise, numberPoses * percentOutliers / 100u));
 	}
 }
+
+#endif // OCEAN_DEBUG
 
 TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationPosesObjectPoints_20Poses_20Points_Outliers_Noise)
 {
@@ -251,6 +259,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationPosesObjectPoint
 	}
 }
 
+#ifndef OCEAN_DEBUG // in debug builds, the test needs too long
+
 TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationPosesObjectPoints_50Poses_50Points_Outliers_Noise)
 {
 	constexpr unsigned int numberPoses = 50u;
@@ -264,6 +274,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationPosesObjectPoint
 		EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationPosesObjectPoints(numberPoses, numberObjectPoints, GTEST_TEST_DURATION, estimatorType, noise, numberPoses * percentOutliers / 100u));
 	}
 }
+
+#endif // OCEAN_DEBUG
 
 
 TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPosesObjectPoints_20Poses_20Points_NoOutliers_NoNoise)
@@ -280,6 +292,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPos
 	}
 }
 
+#ifndef OCEAN_DEBUG // in debug builds, the test needs too long
+
 TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPosesObjectPoints_50Poses_50Points_NoOutliers_NoNoise)
 {
 	constexpr unsigned int numberPoses = 50u;
@@ -293,6 +307,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPos
 		EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationalPosesObjectPoints(numberPoses, numberObjectPoints, GTEST_TEST_DURATION, estimatorType, noise, numberPoses * percentOutliers / 100u));
 	}
 }
+
+#endif // OCEAN_DEBUG
 
 TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPosesObjectPoints_20Poses_20Points_Outliers_NoNoise)
 {
@@ -308,6 +324,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPos
 	}
 }
 
+#ifndef OCEAN_DEBUG // in debug builds, the test needs too long
+
 TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPosesObjectPoints_50Poses_50Points_Outliers_NoNoise)
 {
 	constexpr unsigned int numberPoses = 50u;
@@ -321,6 +339,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPos
 		EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationalPosesObjectPoints(numberPoses, numberObjectPoints, GTEST_TEST_DURATION, estimatorType, noise, numberPoses * percentOutliers / 100u));
 	}
 }
+
+#endif // OCEAN_DEBUG
 
 TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPosesObjectPoints_20Poses_20Points_Outliers_Noise)
 {
@@ -336,6 +356,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPos
 	}
 }
 
+#ifndef OCEAN_DEBUG // in debug builds, the test needs too long
+
 TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPosesObjectPoints_50Poses_50Points_Outliers_Noise)
 {
 	constexpr unsigned int numberPoses = 50u;
@@ -349,6 +371,8 @@ TEST(TestNonLinearOptimizationObjectPoint, NonLinearOptimizationOrientationalPos
 		EXPECT_TRUE(TestNonLinearOptimizationObjectPoint::testNonLinearOptimizationOrientationalPosesObjectPoints(numberPoses, numberObjectPoints, GTEST_TEST_DURATION, estimatorType, noise, numberPoses * percentOutliers / 100u));
 	}
 }
+
+#endif // OCEAN_DEBUG
 
 
 TEST(TestNonLinearOptimizationObjectPoint, OptimizeObjectPointRotationalPoses_50Observations_NoOutliers_NoNoise)
