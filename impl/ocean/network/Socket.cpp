@@ -57,7 +57,7 @@ Address4 Socket::address() const
 		return Address4();
 	}
 
-	sockaddr_in address;
+	sockaddr_in address = {};
 #if defined(OCEAN_POSIX_AVAILABLE)
 	socklen_t length = sizeof(address);
 #else
@@ -82,7 +82,7 @@ Port Socket::port() const
 		return Port();
 	}
 
-	sockaddr_in address;
+	sockaddr_in address = {};
 #if defined(OCEAN_POSIX_AVAILABLE)
 	socklen_t length = sizeof(address);
 #else
@@ -108,7 +108,7 @@ bool Socket::setAddress(const Address4& address)
 		return false;
 	}
 
-	sockaddr_in value;
+	sockaddr_in value = {};
 	value.sin_family = AF_INET;
 	value.sin_addr.s_addr = address;
 	value.sin_port = 0;
@@ -130,7 +130,7 @@ bool Socket::setPort(const Port& port)
 		return false;
 	}
 
-	sockaddr_in address;
+	sockaddr_in address = {};
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
 	address.sin_port = port;

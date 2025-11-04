@@ -41,7 +41,7 @@ ConnectionlessClient::SocketResult ConnectionlessClient::send(const Address4& ad
 		return SR_FAILED;
 	}
 
-	sockaddr_in receiver;
+	sockaddr_in receiver = {};
 	receiver.sin_family = AF_INET;
 	receiver.sin_addr.s_addr = address;
 	receiver.sin_port = port;

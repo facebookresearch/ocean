@@ -287,7 +287,9 @@ bool HTTPClient::invokeGetRequest(const std::string& uri, Buffer& data, const do
 				if (buffer.size() > responseHeader.length())
 				{
 					if (appendData(responseHeader, responseBuffer, responseBufferPosition, (char*)buffer.data() + responseHeader.length(), buffer.size() - responseHeader.length(), responsePendingChunkSize))
+					{
 						break;
+					}
 				}
 
 				startTimestamp.toNow();
@@ -301,7 +303,7 @@ bool HTTPClient::invokeGetRequest(const std::string& uri, Buffer& data, const do
 
 		Thread::sleep(1);
 	}
-	while (startTimestamp + timeout > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(timeout));
 
 	if (responseHeader.encodingType() == HTTPHeader::ET_GZIP)
 	{
@@ -506,7 +508,9 @@ bool HTTPClient::appendData(const HTTPHeader& header, Buffer& buffer, size_t& bu
 	ocean_assert(header.transferEncodingChunked() || pendingChunkSize == 0);
 
 	if (buffer.empty() && header.contentLength() != 0)
+	{
 		buffer.resize(header.contentLength());
+	}
 
 	size_t iterationSize = 0;
 
@@ -518,7 +522,7 @@ bool HTTPClient::appendData(const HTTPHeader& header, Buffer& buffer, size_t& bu
 			size_t offset = 0;
 			const std::string chungSizeLine = line((const char*)payload, payloadSize, offset);
 
-			unsigned int chunkSize = 0u;
+			uint32_t chunkSize = 0u;
 			if (!hexToNumber(chungSizeLine, chunkSize))
 			{
 				return false;
@@ -608,7 +612,7 @@ std::string HTTPClient::line(const char* data, const size_t size, size_t& offset
 	return std::string(data, size);
 }
 
-bool HTTPClient::hexToNumber(const std::string& hex, unsigned int& value)
+bool HTTPClient::hexToNumber(const std::string& hex, uint32_t& value)
 {
 	value = 0u;
 
@@ -639,8 +643,14 @@ bool HTTPClient::hexToNumber(const std::string& hex, unsigned int& value)
 			return false;
 		}
 
-		ocean_assert(value <= value + (digit << (n * 4u)));
-		value += (digit << (n * 4u));
+		const uint32_t digitValue = digit << (n * 4u);
+
+		if (digitValue > std::numeric_limits<uint32_t>::max() - value)
+		{
+			return false;
+		}
+
+		value += digitValue;
 	}
 
 	return true;

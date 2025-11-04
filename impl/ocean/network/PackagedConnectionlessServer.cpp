@@ -42,7 +42,7 @@ bool PackagedConnectionlessServer::onScheduler()
 		return false;
 	}
 
-	sockaddr_in senderAddress;
+	sockaddr_in senderAddress = {};
 #if defined(OCEAN_POSIX_AVAILABLE)
 	socklen_t senderAddressSize = sizeof(senderAddress);
 #else

@@ -369,7 +369,7 @@ class OCEAN_NETWORK_EXPORT HTTPClient
 		 * @param value The resulting number
 		 * @return True, if succeeded
 		 */
-		static bool hexToNumber(const std::string& hex, unsigned int& value);
+		static bool hexToNumber(const std::string& hex, uint32_t& value);
 
 		/**
 		 * Returns the HTTP version string for a given version number.

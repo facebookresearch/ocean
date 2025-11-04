@@ -37,7 +37,7 @@ Resolver::Addresses4 Resolver::localAddresses() const
 
 	Addresses4 result = Addresses4(explicitLocalAddresses_.cbegin(), explicitLocalAddresses_.cend());
 
-#ifdef __APPLE__
+#ifdef OCEAN_PLATFORM_BUILD_APPLE
 
 	ifaddrs* interfaces = nullptr;
 	if (getifaddrs(&interfaces) == 0)
@@ -46,7 +46,7 @@ Resolver::Addresses4 Resolver::localAddresses() const
 
 		while (nextInterface != nullptr)
 		{
-			if (nextInterface->ifa_addr->sa_family == AF_INET)
+			if (nextInterface->ifa_addr != nullptr && nextInterface->ifa_addr->sa_family == AF_INET)
 			{
 				const Address4 address(((struct sockaddr_in*)(nextInterface->ifa_addr))->sin_addr.s_addr);
 
@@ -74,7 +74,7 @@ Resolver::Addresses4 Resolver::localAddresses() const
 
 	freeifaddrs(interfaces);
 
-#endif // __APPLE__
+#endif // OCEAN_PLATFORM_BUILD_APPLE
 
 	return result;
 }
@@ -105,7 +105,7 @@ Address4 Resolver::resolveFirstIp4(const std::string& host)
 			{
 				ocean_assert(nextAddressInfo->ai_addrlen >= sizeof(Address4));
 
-				sockaddr_in* sockAddress = (sockaddr_in*)nextAddressInfo->ai_addr;
+				sockaddr_in* sockAddress = (sockaddr_in*)(nextAddressInfo->ai_addr);
 				result = *(Address4*)(&sockAddress->sin_addr);
 
 				break;
@@ -152,7 +152,7 @@ std::string Resolver::resolve(const Address4& address)
 {
 	const NetworkResource networkResource;
 
-	sockaddr_in addressInfo;
+	sockaddr_in addressInfo = {};
 
 	addressInfo.sin_family = AF_INET;
 	addressInfo.sin_addr.s_addr = address;

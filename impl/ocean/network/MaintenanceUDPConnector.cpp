@@ -28,7 +28,7 @@ MaintenanceUDPConnector::~MaintenanceUDPConnector()
 	stopThreadExplicitly();
 }
 
-void MaintenanceUDPConnector::configurateAsSender(const Address4& address, Port& port)
+void MaintenanceUDPConnector::configurateAsSender(const Address4& address, const Port& port)
 {
 	ocean_assert(address.isValid() && port.isValid());
 

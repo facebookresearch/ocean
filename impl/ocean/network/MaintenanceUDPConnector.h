@@ -81,7 +81,7 @@ class OCEAN_NETWORK_EXPORT MaintenanceUDPConnector :
 		 * @param targetPort The port of the remote host to which the maintenance data will be sent
 		 * @see configurateAsReceiver().
 		 */
-		void configurateAsSender(const Address4& targetAddress, Port& targetPort);
+		void configurateAsSender(const Address4& targetAddress, const Port& targetPort);
 
 		/**
 		 * Configures this connector as receiver.

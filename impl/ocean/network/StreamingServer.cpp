@@ -598,7 +598,7 @@ void StreamingServer::onClientPort(const TCPServer::ConnectionId tcpConnectionId
 		{
 			int readablePort = atoi(value.c_str());
 
-			if (readablePort > 0 && readablePort < 65535)
+			if (readablePort > 0 && readablePort <= 65535)
 			{
 				if (streamConnection.setPort(Port((unsigned short)(readablePort), Port::TYPE_READABLE)))
 				{

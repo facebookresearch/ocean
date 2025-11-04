@@ -71,7 +71,7 @@ PackagedConnectionlessClient::SocketResult PackagedConnectionlessClient::send(co
 
 	const size_t maximalPayloadSize = maximalPackageSize_ - packageManagmentHeaderSize();
 
-	sockaddr_in receiver;
+	sockaddr_in receiver = {};
 	receiver.sin_family = AF_INET;
 	receiver.sin_addr.s_addr = address;
 	receiver.sin_port = port;

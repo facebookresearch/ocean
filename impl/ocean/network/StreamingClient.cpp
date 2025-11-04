@@ -362,7 +362,7 @@ bool StreamingClient::start(const std::string& channel)
 	}
 
 	const int readablePort = atoi(value.c_str());
-	if (readablePort < 0 || readablePort >= 65535)
+	if (readablePort < 0 || readablePort > 65535)
 	{
 		Log::error() << name_ << " received an invalid server port.";
 		return false;

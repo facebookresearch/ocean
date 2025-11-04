@@ -49,7 +49,7 @@ bool TCPClient::connect(const Address4& address, const Port& port, const unsigne
 		return address == receiverAddress_ && port == receiverPort_;
 	}
 
-	sockaddr_in receiver;
+	sockaddr_in receiver = {};
 	receiver.sin_family = AF_INET;
 	receiver.sin_addr.s_addr = address;
 	receiver.sin_port = port;
@@ -148,7 +148,7 @@ bool TCPClient::connect(const unsigned int timeout)
 		return false;
 	}
 
-	sockaddr_in receiver;
+	sockaddr_in receiver = {};
 	receiver.sin_family = AF_INET;
 	receiver.sin_addr.s_addr = receiverAddress_;
 	receiver.sin_port = receiverPort_;

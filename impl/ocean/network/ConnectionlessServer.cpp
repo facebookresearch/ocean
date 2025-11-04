@@ -36,7 +36,7 @@ bool ConnectionlessServer::onScheduler()
 		return false;
 	}
 
-	sockaddr_in senderAddress;
+	sockaddr_in senderAddress = {};
 #if defined(OCEAN_POSIX_AVAILABLE)
 	socklen_t senderAddressSize = sizeof(senderAddress);
 #else
@@ -47,7 +47,7 @@ bool ConnectionlessServer::onScheduler()
 
 	if (size > 0)
 	{
-		receiveCallback_(Address4(senderAddress.sin_port), Port(senderAddress.sin_port), buffer_.data(), size_t(size));
+		receiveCallback_(Address4(senderAddress.sin_addr.s_addr), Port(senderAddress.sin_port), buffer_.data(), size_t(size));
 		return true;
 	}
 

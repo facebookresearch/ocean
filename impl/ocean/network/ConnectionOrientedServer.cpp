@@ -128,7 +128,7 @@ bool ConnectionOrientedServer::onScheduler()
 
 	ocean_assert(!buffer_.empty());
 
-	sockaddr_in request;
+	sockaddr_in request = {};
 
 	// handle listen events
 #if (defined(__clang__) && !defined(_MSC_VER)) || defined(__GNUC__)

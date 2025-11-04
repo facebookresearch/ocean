@@ -52,7 +52,7 @@ bool UDPServer::buildSocket(const Address4& localAddress, const Port localPort)
 		return false;
 	}
 
-	sockaddr_in address;
+	sockaddr_in address = {};
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = localAddress.isValid() ? (unsigned int)(localAddress) : (unsigned int)(INADDR_ANY);
 	address.sin_port = localPort;

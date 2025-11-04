@@ -7,7 +7,7 @@
 
 #include "ocean/network/TCPServer.h"
 
-#ifndef _WINDOWS
+#ifndef OCEAN_PLATFORM_BUILD_WINDOWS
 	#include <errno.h>
 	#include <unistd.h>
 #endif
@@ -28,12 +28,14 @@ TCPServer::~TCPServer()
 {
 	const ScopedLock scopedLock(lock_);
 
-	for (ConnectionMap::const_iterator i = connectionMap_.cbegin(); i != connectionMap_.cend(); ++i)
+	for (const ConnectionMap::value_type& connectionPair : connectionMap_)
 	{
-#ifdef _WINDOWS
-		closesocket(i->second.id());
+		const ConnectionObject& connectionObject = connectionPair.second;
+
+#ifdef OCEAN_PLATFORM_BUILD_WINDOWS
+		closesocket(connectionObject.id());
 #else
-		close(i->second.id());
+		close(connectionObject.id());
 #endif
 	}
 
@@ -68,14 +70,16 @@ bool TCPServer::disconnect(const ConnectionId connectionId)
 {
 	const ScopedLock scopedLock(lock_);
 
-	ConnectionMap::iterator i = connectionMap_.find(connectionId);
-	if (i == connectionMap_.end())
+	ConnectionMap::const_iterator iConnection = connectionMap_.find(connectionId);
+	if (iConnection == connectionMap_.cend())
 	{
 		return false;
 	}
 
-#ifdef _WINDOWS
-	const int result = shutdown(i->second.id(), SD_BOTH);
+	const ConnectionObject& connectionObject = iConnection->second;
+
+#ifdef OCEAN_PLATFORM_BUILD_WINDOWS
+	const int result = shutdown(connectionObject.id(), SD_BOTH);
 
 	if (result != 0)
 	{
@@ -85,9 +89,9 @@ bool TCPServer::disconnect(const ConnectionId connectionId)
 		}
 	}
 
-	closesocket(i->second.id());
+	closesocket(connectionObject.id());
 #else
-	const int result = shutdown(socketId_, SHUT_RDWR);
+	const int result = shutdown(connectionObject.id(), SHUT_RDWR);
 
 	if (result != 0)
 	{
@@ -97,10 +101,11 @@ bool TCPServer::disconnect(const ConnectionId connectionId)
 		}
 	}
 
-	close(i->second.id());
+	close(connectionObject.id());
 #endif
 
-	connectionMap_.erase(i);
+	connectionMap_.erase(iConnection);
+
 	return result == 0;
 }
 
