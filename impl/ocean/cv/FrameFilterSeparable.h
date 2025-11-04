@@ -3531,7 +3531,14 @@ bool FrameFilterSeparable::filter(const T* source, T* target, const unsigned int
 
 	if (width * channels >= 16u && width >= horizontalFilterSize + 1u)
 	{
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wswitch-enum"
+#endif
 		switch (Processor::bestInstructionGroup<false>(processorInstructions))
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 		{
 			case PI_GROUP_AVX_2_SSE_4_1:
 				// temporary disabled: OCEAN_APPLY_IF_AVX((filter<T, TFilter, PI_GROUP_AVX_2_SSE_4_1>(source, target, width, height, channels, horizontalFilter, horizontalFilterSize, verticalFilter, verticalFilterSize, worker)));
