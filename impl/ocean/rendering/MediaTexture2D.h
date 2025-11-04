@@ -11,9 +11,6 @@
 #include "ocean/rendering/Rendering.h"
 #include "ocean/rendering/Texture2D.h"
 
-#include "ocean/base/Timestamp.h"
-
-#include "ocean/media/MediumRef.h"
 #include "ocean/media/FrameMedium.h"
 
 namespace Ocean
@@ -91,12 +88,6 @@ class OCEAN_RENDERING_EXPORT MediaTexture2D : virtual public Texture2D
 
 		/// Frame medium providing the image data.
 		Media::FrameMediumRef frameMedium_;
-
-		/// The frame type of the current frame.
-		FrameType frameType_;
-
-		/// The timestamp of the current frame.
-		Timestamp frameTimestamp_;
 };
 
 }

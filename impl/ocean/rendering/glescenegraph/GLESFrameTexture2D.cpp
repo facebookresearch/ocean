@@ -241,127 +241,10 @@ void GLESFrameTexture2D::updateTexture()
 
 	if (frame_.isValid())
 	{
-		FrameType internalFrameType;
-		if (!determineInternalFrameType(frame_.frameType(), internalFrameType))
+		if (!GLESTexture2D::updateTexture(frame_))
 		{
-			ocean_assert(false && "This must never happen!");
+			ocean_assert(false && "Failed to update texture!");
 			return;
-		}
-
-		// Create/update texture objects if necessary
-		if (!defineTextureObject(internalFrameType))
-		{
-			ocean_assert(false && "Failed to define texture objects!");
-			return;
-		}
-
-		// Upload primary texture data
-		GLenum format, type;
-		unsigned int width, height;
-
-		if (determinePrimaryTextureProperties(internalFrameType, width, height, format, type))
-		{
-			ocean_assert(primaryTextureId_ != 0u);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glBindTexture(GL_TEXTURE_2D, primaryTextureId_);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			unsigned int rowLength = 0u;
-			unsigned int byteAlignment = 0u;
-			if (determineAlignment(frame_.strideBytes(0u), rowLength, byteAlignment))
-			{
-				glPixelStorei(GL_UNPACK_ALIGNMENT, int(byteAlignment));
-				ocean_assert(GL_NO_ERROR == glGetError());
-
-				glTexImage2D(GL_TEXTURE_2D, 0, format, GLsizei(width), GLsizei(height), 0, format, type, frame_.constdata<void>(0u));
-				ocean_assert(GL_NO_ERROR == glGetError());
-			}
-		}
-
-		// Upload secondary texture data if needed
-		if (determineSecondaryTextureProperties(internalFrameType, width, height, format, type))
-		{
-			ocean_assert(secondaryTextureId_ != 0u);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glBindTexture(GL_TEXTURE_2D, secondaryTextureId_);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			switch (internalFrameType.pixelFormat())
-			{
-				case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
-				case FrameType::FORMAT_Y_VU12_FULL_RANGE:
-				case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
-				case FrameType::FORMAT_Y_UV12_FULL_RANGE:
-				{
-					unsigned int rowLength = 0u;
-					unsigned int byteAlignment = 0u;
-					if (determineAlignment(frame_.strideBytes(1u), rowLength, byteAlignment))
-					{
-						glPixelStorei(GL_UNPACK_ALIGNMENT, int(byteAlignment));
-						ocean_assert(GL_NO_ERROR == glGetError());
-
-						glTexImage2D(GL_TEXTURE_2D, 0, format, GLsizei(width), GLsizei(height), 0, format, type, frame_.constdata<void>(1u));
-						ocean_assert(GL_NO_ERROR == glGetError());
-					}
-
-					break;
-				}
-
-				case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
-				case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
-				case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
-				case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
-				{
-					const bool uIsFirstPlane = internalFrameType.pixelFormat() == FrameType::FORMAT_Y_U_V12_LIMITED_RANGE
-														|| internalFrameType.pixelFormat() == FrameType::FORMAT_Y_U_V12_FULL_RANGE;
-
-					// we use the Y_U_V12 shader also for Y_V_U12, just switching the source planes
-					const unsigned int firstPlaneIndex = uIsFirstPlane ? 1u : 2u;
-					const unsigned int secondPlaneIndex = uIsFirstPlane ? 2u : 1u;
-
-					const GLsizei height_2 = GLsizei(height) / 2;
-
-					unsigned int rowLength = 0u;
-					unsigned int byteAlignment = 0u;
-					if (determineAlignment(frame_.strideBytes(firstPlaneIndex), rowLength, byteAlignment))
-					{
-						glPixelStorei(GL_UNPACK_ALIGNMENT, int(byteAlignment));
-						ocean_assert(GL_NO_ERROR == glGetError());
-
-						glTexImage2D(GL_TEXTURE_2D, 0, format, GLsizei(width), GLsizei(height), 0, format, type, frame_.constdata<void>(firstPlaneIndex));
-						ocean_assert(GL_NO_ERROR == glGetError());
-					}
-
-					rowLength = 0u;
-					byteAlignment = 0u;
-					if (determineAlignment(frame_.strideBytes(secondPlaneIndex), rowLength, byteAlignment))
-					{
-						glPixelStorei(GL_UNPACK_ALIGNMENT, int(byteAlignment));
-						ocean_assert(GL_NO_ERROR == glGetError());
-
-						const GLint& yOffset = height_2;
-
-						glTexSubImage2D(GL_TEXTURE_2D, 0, 0, yOffset, GLsizei(width), height_2, format, type, frame_.constdata<void>(secondPlaneIndex));
-						ocean_assert(GL_NO_ERROR == glGetError());
-					}
-
-					break;
-				}
-
-				default:
-					ocean_assert(false && "This should never happen!");
-			}
-		}
-		else
-		{
-			if (secondaryTextureId_ != 0u)
-			{
-				glDeleteTextures(1, &secondaryTextureId_);
-				ocean_assert(GL_NO_ERROR == glGetError());
-				secondaryTextureId_ = 0u;
-			}
 		}
 	}
 	else
@@ -423,11 +306,11 @@ void GLESFrameTexture2D::updateTexture()
 		{
 			ocean_assert(false && "This must never happen!");
 		}
-	}
 
-	if (useMipmap_)
-	{
-		createMipmap();
+		if (useMipmap_)
+		{
+			createMipmap();
+		}
 	}
 
 	updateNeeded_ = false;

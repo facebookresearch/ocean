@@ -189,6 +189,15 @@ class OCEAN_RENDERING_GLES_EXPORT GLESTexture2D :
 
 	protected:
 
+		/**
+		 * Updates the texture based on a given frame.
+		 * @param frame The frame to be used to update the texture, must be valid
+		 * @return True, if succeeded
+		 */
+		bool updateTexture(const Frame& frame);
+
+	protected:
+
 		/// The texture wrap s type.
 		WrapType wrapTypeS_ = WRAP_CLAMP;
 
@@ -203,6 +212,9 @@ class OCEAN_RENDERING_GLES_EXPORT GLESTexture2D :
 
 		/// The name of the texture in the shader.
 		std::string textureName_ = std::string("primaryTexture,secondaryTexture");
+
+		/// Optional temp conversion frame.
+		Frame conversionFrame_;
 };
 
 inline GLuint GLESTexture2D::primaryTextureId() const

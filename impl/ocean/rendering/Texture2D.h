@@ -12,6 +12,7 @@
 #include "ocean/rendering/Texture.h"
 
 #include "ocean/base/Frame.h"
+#include "ocean/base/Timestamp.h"
 #include "ocean/base/Utilities.h"
 
 namespace Ocean
@@ -121,6 +122,14 @@ class OCEAN_RENDERING_EXPORT Texture2D : virtual public Texture
 		 * @param powerOfTwoHeight Resulting power of two height, with range [height, infinity), will be a power of two
 		 */
 		static inline void calculatePowerOfTwoDimension(const unsigned int width, const unsigned int height, unsigned int& powerOfTwoWidth, unsigned int& powerOfTwoHeight);
+
+	protected:
+
+		/// The frame type of the current frame.
+		FrameType frameType_;
+
+		/// The timestamp of the current frame.
+		Timestamp frameTimestamp_;
 };
 
 inline void Texture2D::calculatePowerOfTwoDimension(const unsigned int width, const unsigned int height, unsigned int& powerOfTwoWidth, unsigned int& powerOfTwoHeight)
