@@ -26,9 +26,7 @@ namespace GLESceneGraph
 GLESTexture2D::GLESTexture2D() :
 	GLESTexture(),
 	Texture2D(),
-	DynamicObject(),
-	wrapTypeS_(WRAP_CLAMP),
-	wrapTypeT_(WRAP_CLAMP)
+	DynamicObject()
 {
 	registerDynamicUpdateObject();
 }

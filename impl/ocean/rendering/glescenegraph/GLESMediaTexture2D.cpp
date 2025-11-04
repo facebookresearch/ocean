@@ -94,89 +94,105 @@ unsigned int GLESMediaTexture2D::bindTexture(GLESShaderProgram& shaderProgram, c
 {
 	ocean_assert(GL_NO_ERROR == glGetError());
 
+	const ScopedLock scopedLock(objectLock);
+
+	if (primaryTextureId_ == 0u)
+	{
+		return 0u;
+	}
+
 	const GLenum glesMinificationFilterMode = translateMinificationFilterMode(minificationFilterMode_);
 	const GLenum glesMagnificationFilterMode = translateMagnificationFilterMode(magnificationFilterMode_);
 
 	const GLenum glesWrapTypeS = translateWrapType(wrapTypeS_);
 	const GLenum glesWrapTypeT = translateWrapType(wrapTypeT_);
 
-	if (primaryTextureId_ != 0u)
+	glActiveTexture(GLenum(GL_TEXTURE0 + id));
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glBindTexture(GL_TEXTURE_2D, primaryTextureId_);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glesMinificationFilterMode);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glesMagnificationFilterMode);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glesWrapTypeS);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glesWrapTypeT);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	const GLint locationTextureTransformMatrix = glGetUniformLocation(shaderProgram.id(), "textureTransformationMatrix");
+	if (locationTextureTransformMatrix != -1)
 	{
-		glActiveTexture(GLenum(GL_TEXTURE0 + id));
-		ocean_assert(GL_NO_ERROR == glGetError());
+		ocean_assert(transformation_.isValid());
+		setUniform(locationTextureTransformMatrix, transformation_);
+	}
 
-		glBindTexture(GL_TEXTURE_2D, primaryTextureId_);
-		ocean_assert(GL_NO_ERROR == glGetError());
+	const GLint locationTextureOriginLowerLeft = glGetUniformLocation(shaderProgram.id(), "textureOriginLowerLeft");
+	if (locationTextureOriginLowerLeft != -1)
+	{
+		setUniform(locationTextureOriginLowerLeft, frameType_.pixelOrigin() == FrameType::ORIGIN_LOWER_LEFT ? 1 : 0);
+	}
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glesMinificationFilterMode);
-		ocean_assert(GL_NO_ERROR == glGetError());
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glesMagnificationFilterMode);
-		ocean_assert(GL_NO_ERROR == glGetError());
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glesWrapTypeS);
-		ocean_assert(GL_NO_ERROR == glGetError());
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glesWrapTypeT);
-		ocean_assert(GL_NO_ERROR == glGetError());
-
-		const GLint locationTextureTransformMatrix = glGetUniformLocation(shaderProgram.id(), "textureTransformationMatrix");
-		if (locationTextureTransformMatrix != -1)
+	std::string primaryTexture;
+	if (primaryTextureName(textureName_, primaryTexture))
+	{
+		const GLint locationTexture = glGetUniformLocation(shaderProgram.id(), primaryTexture.c_str());
+		if (locationTexture != -1)
 		{
-			ocean_assert(transformation_.isValid());
-			setUniform(locationTextureTransformMatrix, transformation_);
+			setUniform(locationTexture, int(id));
 		}
+	}
 
-		const GLint locationTextureOriginLowerLeft = glGetUniformLocation(shaderProgram.id(), "textureOriginLowerLeft");
-		if (locationTextureOriginLowerLeft != -1)
-		{
-			setUniform(locationTextureOriginLowerLeft, frameType_.pixelOrigin() == FrameType::ORIGIN_LOWER_LEFT ? 1 : 0);
-		}
-
-		std::string primaryTexture;
-		if (primaryTextureName(textureName_, primaryTexture))
-		{
-			const GLint locationTexture = glGetUniformLocation(shaderProgram.id(), primaryTexture.c_str());
-			if (locationTexture != -1)
-			{
-				setUniform(locationTexture, int(id));
-			}
-		}
-
-		if (secondaryTextureId_ != 0u)
-		{
-			glActiveTexture(GLenum(GL_TEXTURE0 + id + 1u));
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glBindTexture(GL_TEXTURE_2D, secondaryTextureId_);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glesMinificationFilterMode);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glesMagnificationFilterMode);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glesWrapTypeS);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glesWrapTypeT);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			std::string secondaryTexture;
-			if (secondaryTextureName(textureName_, secondaryTexture))
-			{
-				const GLint locationSecondaryTexture = glGetUniformLocation(shaderProgram.id(), secondaryTexture.c_str());
-				setUniform(locationSecondaryTexture, int(id + 1u));
-			}
-
-			return 2u;
-		}
-
+	if (secondaryTextureId_ == 0u)
+	{
 		return 1u;
 	}
 
-	return 0u;
+	glActiveTexture(GLenum(GL_TEXTURE0 + id + 1u));
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glBindTexture(GL_TEXTURE_2D, secondaryTextureId_);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glesMinificationFilterMode);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glesMagnificationFilterMode);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glesWrapTypeS);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glesWrapTypeT);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	std::string secondaryTexture;
+	if (secondaryTextureName(textureName_, secondaryTexture))
+	{
+		const GLint locationSecondaryTexture = glGetUniformLocation(shaderProgram.id(), secondaryTexture.c_str());
+
+		if (locationSecondaryTexture != -1)
+		{
+			setUniform(locationSecondaryTexture, int(id + 1u));
+
+			return 2u;
+		}
+		else
+		{
+			ocean_assert(false && "This should never happen!");
+		}
+	}
+	else
+	{
+		ocean_assert(false && "This should never happen!");
+	}
+
+	return 1u;
 }
 
 void GLESMediaTexture2D::createMipmap()
@@ -229,6 +245,12 @@ bool GLESMediaTexture2D::definePrimaryTextureObject(const FrameType& frameType)
 	{
 		glGenTextures(1, &primaryTextureId_);
 		ocean_assert(GL_NO_ERROR == glGetError());
+
+		if (primaryTextureId_ == 0u)
+		{
+			ocean_assert(false && "This should never happen");
+			return false;
+		}
 	}
 
 	glBindTexture(GL_TEXTURE_2D, primaryTextureId_);
@@ -254,13 +276,13 @@ bool GLESMediaTexture2D::definePrimaryTextureObject(const FrameType& frameType)
 
 		if (wrapTypeS_ != WRAP_CLAMP)
 		{
-			Log::warning() << "Due to the non-power-of-two texture the warp-s mode was set to clamp-to-edge!";
+			Log::warning() << "Due to the non-power-of-two texture the wrap-s mode was set to clamp-to-edge!";
 			wrapTypeS_ = WRAP_CLAMP;
 		}
 
 		if (wrapTypeT_ != WRAP_CLAMP)
 		{
-			Log::warning() << "Due to the non-power-of-two texture the warp-t mode was set to clamp-to-edge!";
+			Log::warning() << "Due to the non-power-of-two texture the wrap-t mode was set to clamp-to-edge!";
 			wrapTypeT_ = WRAP_CLAMP;
 		}
 	}
@@ -293,6 +315,12 @@ bool GLESMediaTexture2D::defineSecondaryTextureObject(const FrameType& frameType
 	{
 		glGenTextures(1, &secondaryTextureId_);
 		ocean_assert(GL_NO_ERROR == glGetError());
+
+		if (secondaryTextureId_ == 0u)
+		{
+			ocean_assert(false && "This should never happen");
+			return false;
+		}
 	}
 
 	glBindTexture(GL_TEXTURE_2D, secondaryTextureId_);
@@ -387,7 +415,7 @@ void GLESMediaTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestam
 
 					if (determineSecondaryTextureProperties(frameType_, width, height, format, type))
 					{
-						ocean_assert(secondaryTextureId_ != 0);
+						ocean_assert(secondaryTextureId_ != 0u);
 						ocean_assert(GL_NO_ERROR == glGetError());
 
 						glBindTexture(GL_TEXTURE_2D, secondaryTextureId_);
@@ -474,7 +502,7 @@ void GLESMediaTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestam
 				}
 				else
 				{
-					ocean_assert(secondaryTextureId_ == 0);
+					ocean_assert(secondaryTextureId_ == 0u);
 
 					GLenum format, type;
 					unsigned int width, height;
@@ -495,7 +523,7 @@ void GLESMediaTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestam
 							ocean_assert(conversionFrame_.numberPlanes() == 1u);
 							ocean_assert(conversionFrame_.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
 
-							ocean_assert(primaryTextureId_ != 0);
+							ocean_assert(primaryTextureId_ != 0u);
 							ocean_assert(GL_NO_ERROR == glGetError());
 
 							glBindTexture(GL_TEXTURE_2D, primaryTextureId_);
@@ -526,6 +554,8 @@ void GLESMediaTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestam
 
 bool GLESMediaTexture2D::needsSecondaryTextureObjects(const FrameType& frameType)
 {
+	ocean_assert(frameType.isValid());
+
 	switch (frameType.pixelFormat())
 	{
 		case FrameType::FORMAT_BGR24:

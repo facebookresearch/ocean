@@ -84,10 +84,10 @@ class OCEAN_RENDERING_GLES_EXPORT GLESTexture2D :
 	protected:
 
 		/// The texture wrap s type.
-		WrapType wrapTypeS_;
+		WrapType wrapTypeS_ = WRAP_CLAMP;
 
 		/// The texture wrap t type.
-		WrapType wrapTypeT_;
+		WrapType wrapTypeT_ = WRAP_CLAMP;
 };
 
 }
