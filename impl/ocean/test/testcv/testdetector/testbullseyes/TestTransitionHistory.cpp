@@ -291,8 +291,6 @@ bool TestTransitionHistory::testIsTransitionToBlack(const double testDuration, R
 		TransitionHistory history;
 		std::vector<unsigned int> transitionIndices;
 
-		Log::info() << "Testing steep gradient (255->0):";
-
 		for (unsigned int n = 1u; n < pixelCount; ++n)
 		{
 			const bool isTransition = TransitionHistory::isTransitionToBlack(&pixels[n], history);
@@ -300,7 +298,6 @@ bool TestTransitionHistory::testIsTransitionToBlack(const double testDuration, R
 			if (isTransition)
 			{
 				transitionIndices.push_back(n);
-				Log::info() << "  Transition detected at index " << n << " (pixel value: " << int(pixels[n]) << ", delta: " << int(pixels[n]) - int(pixels[n - 1]) << ")";
 			}
 		}
 
@@ -328,9 +325,6 @@ bool TestTransitionHistory::testIsTransitionToBlack(const double testDuration, R
 		TransitionHistory history;
 		std::vector<unsigned int> transitionIndices;
 
-		Log::info() << "Testing gentle gradient (delta=-10 per pixel) where history matters:";
-		Log::info() << "  Pixel values: " << int(pixels[0]) << ", " << int(pixels[1]) << ", " << int(pixels[2]) << ", " << int(pixels[3]) << ", " << int(pixels[4]) << ", ...";
-
 		for (unsigned int n = 1u; n < pixelCount; ++n)
 		{
 			const bool isTransition = TransitionHistory::isTransitionToBlack(&pixels[n], history);
@@ -338,11 +332,8 @@ bool TestTransitionHistory::testIsTransitionToBlack(const double testDuration, R
 			if (isTransition)
 			{
 				transitionIndices.push_back(n);
-				Log::info() << "  Transition detected at index " << n << " (pixel value: " << int(pixels[n]) << ", delta: " << int(pixels[n]) - int(pixels[n - 1]) << ")";
 			}
 		}
-
-		Log::info() << "  Total transitions detected: " << transitionIndices.size();
 
 		if (transitionIndices.empty())
 		{
@@ -473,8 +464,6 @@ bool TestTransitionHistory::testIsTransitionToWhite(const double testDuration, R
 		TransitionHistory history;
 		std::vector<unsigned int> transitionIndices;
 
-		Log::info() << "Testing steep gradient (0->255):";
-
 		for (unsigned int n = 1u; n < pixelCount; ++n)
 		{
 			const bool isTransition = TransitionHistory::isTransitionToWhite(&pixels[n], history);
@@ -482,7 +471,6 @@ bool TestTransitionHistory::testIsTransitionToWhite(const double testDuration, R
 			if (isTransition)
 			{
 				transitionIndices.push_back(n);
-				Log::info() << "  Transition detected at index " << n << " (pixel value: " << int(pixels[n]) << ", delta: " << int(pixels[n]) - int(pixels[n - 1]) << ")";
 			}
 		}
 
@@ -510,9 +498,6 @@ bool TestTransitionHistory::testIsTransitionToWhite(const double testDuration, R
 		TransitionHistory history;
 		std::vector<unsigned int> transitionIndices;
 
-		Log::info() << "Testing gentle gradient (delta=+10 per pixel) where history matters:";
-		Log::info() << "  Pixel values: " << int(pixels[0]) << ", " << int(pixels[1]) << ", " << int(pixels[2]) << ", " << int(pixels[3]) << ", " << int(pixels[4]) << ", ...";
-
 		for (unsigned int n = 1u; n < pixelCount; ++n)
 		{
 			const bool isTransition = TransitionHistory::isTransitionToWhite(&pixels[n], history);
@@ -520,11 +505,8 @@ bool TestTransitionHistory::testIsTransitionToWhite(const double testDuration, R
 			if (isTransition)
 			{
 				transitionIndices.push_back(n);
-				Log::info() << "  Transition detected at index " << n << " (pixel value: " << int(pixels[n]) << ", delta: " << int(pixels[n]) - int(pixels[n - 1]) << ")";
 			}
 		}
-
-		Log::info() << "  Total transitions detected: " << transitionIndices.size();
 
 		if (transitionIndices.empty())
 		{
