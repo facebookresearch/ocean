@@ -35,18 +35,6 @@ class OCEAN_RENDERING_GLES_EXPORT GLESFrameTexture2D final :
 	public:
 
 		/**
-		 * Returns the name of the texture e.g., in a shader.
-		 * @see Texture::textureName().
-		 */
-		std::string textureName() const override;
-
-		/**
-		 * Sets the name of the texture e.g., in a shader.
-		 * @see Texture::setTextureName().
-		 */
-		bool setTextureName(const std::string& name) override;
-
-		/**
 		 * Sets or updates the texture with a given frame.
 		 * @see FrameTexture2D::setTexture().
 		 */
@@ -69,12 +57,6 @@ class OCEAN_RENDERING_GLES_EXPORT GLESFrameTexture2D final :
 		 * @see Texture2D::hasTransparentPixel();
 		 */
 		bool hasTransparentPixel() const override;
-
-		/**
-		 * Returns the texture id of the texture.
-		 * @return The id of the texture, 0 if invalid
-		 */
-		inline GLuint textureId() const;
 
 		/**
 		 * Binds this texture.
@@ -101,12 +83,6 @@ class OCEAN_RENDERING_GLES_EXPORT GLESFrameTexture2D final :
 		~GLESFrameTexture2D() override;
 
 		/**
-		 * Updates the mipmap for this texture.
-		 * @see GLESTexture::createMipmap().
-		 */
-		void createMipmap() override;
-
-		/**
 		 * Update function called by the framebuffer.
 		 * @see DynamicObject::onDynamicUpdate().
 		 */
@@ -116,15 +92,6 @@ class OCEAN_RENDERING_GLES_EXPORT GLESFrameTexture2D final :
 		 * Updates the texture.
 		 */
 		void updateTexture();
-
-		/**
-		 * Determines the properties of the texture for a given frame type.
-		 * @param frameType The frame type for which the properties will be determined, must be valid
-		 * @param format The resulting GL format of the primary texture
-		 * @param type The resulting GL type of the primary texture
-		 * @return True, if succeeded; False, if the frame type is not supported
-		 */
-		static bool determineTextureProperties(const FrameType& frameType, GLenum& format, GLenum& type);
 
 		/**
 		 * Determines the OpenGL format for a given compressed texture format.
@@ -146,9 +113,6 @@ class OCEAN_RENDERING_GLES_EXPORT GLESFrameTexture2D final :
 
 	protected:
 
-		/// The OpenGL ES texture id.
-		GLuint textureId_ = 0u;
-
 		/// The texture's frame, if any.
 		Frame frame_;
 
@@ -157,15 +121,7 @@ class OCEAN_RENDERING_GLES_EXPORT GLESFrameTexture2D final :
 
 		/// True, if the texture needs to be updated.
 		bool updateNeeded_ = false;
-
-		/// The name of the texture in the shader.
-		std::string textureName_ = std::string("primaryTexture");
 };
-
-inline GLuint GLESFrameTexture2D::textureId() const
-{
-	return textureId_;
-}
 
 }
 
