@@ -14,21 +14,15 @@
 #include "ocean/math/Quaternion.h"
 #include "ocean/math/SquareMatrix3.h"
 
-#include "ocean/base/Exception.h"
-
-#include <vector>
-
 namespace Ocean
 {
 
 // Forward declaration.
-template <typename T> class SquareMatrixT3;
-
-// Forward declaration.
 template <typename T> class HomogenousMatrixT4;
-
 // Forward declaration.
 template <typename T> class RotationT;
+// Forward declaration.
+template <typename T> class SquareMatrixT3;
 
 /**
  * Definition of the Rotation object, depending on the OCEAN_MATH_USE_SINGLE_PRECISION flag either with single or double precision float data type.
@@ -473,7 +467,7 @@ RotationT<T>::RotationT(const SquareMatrixT3<T>& matrix)
 			{
 				case 0:
 				{
-					axis(0) = T(0.5) * sqrt(matrix(0, 0) - matrix(1, 1) - matrix(2, 2) + T(1.0));
+					axis(0) = T(0.5) * NumericT<T>::sqrt(matrix(0, 0) - matrix(1, 1) - matrix(2, 2) + T(1.0));
 					T factor = T(0.5) / axis(0);
 
 					axis(1) = matrix(0, 1) * factor;
@@ -483,7 +477,7 @@ RotationT<T>::RotationT(const SquareMatrixT3<T>& matrix)
 
 				case 1:
 				{
-					axis(1) = T(0.5) * sqrt(matrix(1, 1) - matrix(0, 0) - matrix(2, 2) + T(1.0));
+					axis(1) = T(0.5) * NumericT<T>::sqrt(matrix(1, 1) - matrix(0, 0) - matrix(2, 2) + T(1.0));
 					T factor = T(0.5) / axis(1);
 
 					axis(0) = matrix(0, 1) * factor;
@@ -493,7 +487,7 @@ RotationT<T>::RotationT(const SquareMatrixT3<T>& matrix)
 
 				case 2:
 				{
-					axis(2) = T(0.5) * sqrt(matrix(2, 2) - matrix(0, 0) - matrix(1, 1) + T(1.0));
+					axis(2) = T(0.5) * NumericT<T>::sqrt(matrix(2, 2) - matrix(0, 0) - matrix(1, 1) + T(1.0));
 					T factor = T(0.5) / axis(2);
 
 					axis(0) = matrix(0, 2) * factor;
@@ -511,7 +505,7 @@ RotationT<T>::RotationT(const SquareMatrixT3<T>& matrix)
 		else
 		{
 			axis = VectorT3<T>(matrix(2, 1) - matrix(1, 2), matrix(0, 2) - matrix(2, 0), matrix(1, 0) - matrix(0, 1));
-			values_[3] = acos(cosValue);
+			values_[3] = NumericT<T>::acos(cosValue);
 		}
 
 		axis.normalize();
@@ -601,7 +595,7 @@ RotationT<T>::RotationT(const HomogenousMatrixT4<T>& transformation)
 		}
 		else
 		{
-			axis =VectorT3<T>(matrix(2, 1) - matrix(1, 2), matrix(0, 2) - matrix(2, 0), matrix(1, 0) - matrix(0, 1));
+			axis = VectorT3<T>(matrix(2, 1) - matrix(1, 2), matrix(0, 2) - matrix(2, 0), matrix(1, 0) - matrix(0, 1));
 			values_[3] = NumericT<T>::acos(cosValue);
 		}
 
@@ -618,6 +612,8 @@ RotationT<T>::RotationT(const HomogenousMatrixT4<T>& transformation)
 template <typename T>
 RotationT<T>::RotationT(const T* valueArray)
 {
+	ocean_assert(valueArray != nullptr);
+
 	memcpy(values_, valueArray, sizeof(T) * 4);
 
 	ocean_assert(isValid());

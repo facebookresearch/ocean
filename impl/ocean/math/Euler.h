@@ -19,9 +19,9 @@ namespace Ocean
 // Forward declaration
 template <typename T> class HomogenousMatrixT4;
 // Forward declaration
-template <typename T> class RotationT;
-// Forward declaration
 template <typename T> class QuaternionT;
+// Forward declaration
+template <typename T> class RotationT;
 // Forward declaration
 template <typename T> class SquareMatrixT3;
 
