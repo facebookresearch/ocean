@@ -59,12 +59,6 @@ class OCEAN_RENDERING_GLES_EXPORT GLESFrameTexture2D final :
 		bool hasTransparentPixel() const override;
 
 		/**
-		 * Binds this texture.
-		 * @see GLESTexture::bindTexture().
-		 */
-		unsigned int bindTexture(GLESShaderProgram& shaderProgram, const unsigned int id) override;
-
-		/**
 		 * Returns whether the texture internally holds valid data.
 		 * @see Texture::isValid().
 		 */

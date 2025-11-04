@@ -35,12 +35,6 @@ class OCEAN_RENDERING_GLES_EXPORT GLESMediaTexture2D final :
 	public:
 
 		/**
-		 * Binds this texture.
-		 * @see GLESTexture::bindTexture().
-		 */
-		unsigned int bindTexture(GLESShaderProgram& shaderProgram, const unsigned int id) override;
-
-		/**
 		 * Returns whether the texture internally holds valid data.
 		 * @see Texture::isValid().
 		 */

@@ -85,6 +85,12 @@ class OCEAN_RENDERING_GLES_EXPORT GLESTexture2D :
 		 */
 		inline GLuint secondaryTextureId() const;
 
+		/**
+		 * Binds this texture.
+		 * @see GLESTexture::bindTexture().
+		 */
+		unsigned int bindTexture(GLESShaderProgram& shaderProgram, const unsigned int id) override;
+
 	protected:
 
 		/**
