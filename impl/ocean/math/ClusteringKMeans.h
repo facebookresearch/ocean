@@ -253,7 +253,7 @@ class Clustering<false>::Data
 		const Observation** observationPointers_ = nullptr;
 
 		/// The number of observation elements of this data object.
-		size_t numberObservations_;
+		size_t numberObservations_ = 0;
 };
 
 /**
