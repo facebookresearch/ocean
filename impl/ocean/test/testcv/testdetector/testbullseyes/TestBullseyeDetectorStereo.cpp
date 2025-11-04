@@ -45,6 +45,11 @@ bool TestBullseyeDetectorStereo::test(const double testDuration)
 
 	bool allSucceeded = true;
 
+	allSucceeded = testParameters(testDuration, randomGenerator) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
 	allSucceeded = stressTestDetectBullseyes(testDuration, randomGenerator) && allSucceeded;
 
 	Log::info() << " ";
@@ -65,6 +70,12 @@ bool TestBullseyeDetectorStereo::test(const double testDuration)
 
 } // namespace TestBullseyes
 
+TEST(TestBullseyeDetectorStereo, Parameters)
+{
+	RandomGenerator randomGenerator;
+	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorStereo::testParameters(GTEST_TEST_DURATION, randomGenerator));
+}
+
 TEST(TestBullseyeDetectorStereo, StressTestDetectBullseyes)
 {
 	RandomGenerator randomGenerator;
@@ -75,6 +86,153 @@ namespace TestBullseyes
 {
 
 #endif // OCEAN_USE_GTEST
+
+bool TestBullseyeDetectorStereo::testParameters(const double testDuration, RandomGenerator& randomGenerator)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Parameters class test:";
+
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		// Test 1: Default constructor (verify inherits mono parameters correctly)
+		{
+			const BullseyeDetectorStereo::Parameters defaultParams;
+
+			// Verify the object is valid
+			if (!defaultParams.isValid())
+			{
+				allSucceeded = false;
+			}
+
+			// Verify inherited mono parameters have default values
+			if (defaultParams.framePyramidPixelThreshold() != 640u * 480u)
+			{
+				allSucceeded = false;
+			}
+
+			if (defaultParams.framePyramidLayers() != 3u)
+			{
+				allSucceeded = false;
+			}
+
+			if (defaultParams.useAdaptiveRowSpacing() != true)
+			{
+				allSucceeded = false;
+			}
+		}
+
+		// Test 2: Static factory method (Parameters::defaultParameters())
+		{
+			const BullseyeDetectorStereo::Parameters factoryParams = BullseyeDetectorStereo::Parameters::defaultParameters();
+
+			// Verify the object is valid
+			if (!factoryParams.isValid())
+			{
+				allSucceeded = false;
+			}
+
+			// Verify it has the same values as default constructor
+			if (factoryParams.framePyramidPixelThreshold() != 640u * 480u)
+			{
+				allSucceeded = false;
+			}
+
+			if (factoryParams.framePyramidLayers() != 3u)
+			{
+				allSucceeded = false;
+			}
+
+			if (factoryParams.useAdaptiveRowSpacing() != true)
+			{
+				allSucceeded = false;
+			}
+		}
+
+		// Test 3: Parameter modification (modify inherited mono parameters, verify changes persist)
+		{
+			BullseyeDetectorStereo::Parameters params;
+
+			// Modify framePyramidPixelThreshold
+			const unsigned int newPixelThreshold = RandomI::random(randomGenerator, 100u, 1000000u);
+			params.setFramePyramidPixelThreshold(newPixelThreshold);
+
+			if (params.framePyramidPixelThreshold() != newPixelThreshold)
+			{
+				allSucceeded = false;
+			}
+
+			// Modify framePyramidLayers
+			const unsigned int newLayers = RandomI::random(randomGenerator, 1u, 10u);
+			params.setFramePyramidLayers(newLayers);
+
+			if (params.framePyramidLayers() != newLayers)
+			{
+				allSucceeded = false;
+			}
+
+			// Modify useAdaptiveRowSpacing
+			const bool newAdaptiveSpacing = RandomI::random(randomGenerator, 1u) == 1u;
+			params.setUseAdaptiveRowSpacing(newAdaptiveSpacing);
+
+			if (params.useAdaptiveRowSpacing() != newAdaptiveSpacing)
+			{
+				allSucceeded = false;
+			}
+
+			// Verify still valid after modifications
+			if (!params.isValid())
+			{
+				allSucceeded = false;
+			}
+		}
+
+		// Test 4: Inheritance verification (verify all BullseyeDetectorMono::Parameters members accessible)
+		{
+			BullseyeDetectorStereo::Parameters stereoParams;
+
+			// Test that we can use it as a BullseyeDetectorMono::Parameters
+			const BullseyeDetectorMono::Parameters& monoParamsRef = stereoParams;
+
+			// Verify mono parameters are accessible through the reference
+			if (!monoParamsRef.isValid())
+			{
+				allSucceeded = false;
+			}
+
+			if (monoParamsRef.framePyramidPixelThreshold() != stereoParams.framePyramidPixelThreshold())
+			{
+				allSucceeded = false;
+			}
+
+			if (monoParamsRef.framePyramidLayers() != stereoParams.framePyramidLayers())
+			{
+				allSucceeded = false;
+			}
+
+			if (monoParamsRef.useAdaptiveRowSpacing() != stereoParams.useAdaptiveRowSpacing())
+			{
+				allSucceeded = false;
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
 
 bool TestBullseyeDetectorStereo::stressTestDetectBullseyes(const double testDuration, RandomGenerator& randomGenerator)
 {
