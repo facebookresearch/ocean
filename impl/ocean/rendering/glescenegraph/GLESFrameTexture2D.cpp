@@ -119,9 +119,9 @@ unsigned int GLESFrameTexture2D::bindTexture(GLESShaderProgram& shaderProgram, c
 
 	const ScopedLock scopedLock(objectLock);
 
-	if (updateNeeded_)
+	if (primaryTextureId_ == 0u)
 	{
-		updateTexture();
+		return 0u;
 	}
 
 	const GLenum glesMinificationFilterMode = translateMinificationFilterMode(minificationFilterMode_);
@@ -130,97 +130,94 @@ unsigned int GLESFrameTexture2D::bindTexture(GLESShaderProgram& shaderProgram, c
 	const GLenum glesWrapTypeS = translateWrapType(wrapTypeS_);
 	const GLenum glesWrapTypeT = translateWrapType(wrapTypeT_);
 
-	if (primaryTextureId_ != 0u)
+	glActiveTexture(GLenum(GL_TEXTURE0 + id));
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glBindTexture(GL_TEXTURE_2D, primaryTextureId_);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glesMinificationFilterMode);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glesMagnificationFilterMode);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glesWrapTypeS);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glesWrapTypeT);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	const GLint locationTextureTransformMatrix = glGetUniformLocation(shaderProgram.id(), "textureTransformationMatrix");
+	if (locationTextureTransformMatrix != -1)
 	{
-		glActiveTexture(GLenum(GL_TEXTURE0 + id));
-		ocean_assert(GL_NO_ERROR == glGetError());
+		ocean_assert(transformation_.isValid());
+		setUniform(locationTextureTransformMatrix, transformation_);
+	}
 
-		glBindTexture(GL_TEXTURE_2D, primaryTextureId_);
-		ocean_assert(GL_NO_ERROR == glGetError());
+	const GLint locationTextureOriginLowerLeft = glGetUniformLocation(shaderProgram.id(), "textureOriginLowerLeft");
+	if (locationTextureOriginLowerLeft != -1)
+	{
+		const FrameType frameType = frame_.isValid() ? frame_.frameType() : compressedFrame_.internalFrameType();
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glesMinificationFilterMode);
-		ocean_assert(GL_NO_ERROR == glGetError());
+		setUniform(locationTextureOriginLowerLeft, frameType.pixelOrigin() == FrameType::ORIGIN_LOWER_LEFT ? 1 : 0);
+	}
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glesMagnificationFilterMode);
-		ocean_assert(GL_NO_ERROR == glGetError());
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glesWrapTypeS);
-		ocean_assert(GL_NO_ERROR == glGetError());
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glesWrapTypeT);
-		ocean_assert(GL_NO_ERROR == glGetError());
-
-		const GLint locationTextureTransformMatrix = glGetUniformLocation(shaderProgram.id(), "textureTransformationMatrix");
-		if (locationTextureTransformMatrix != -1)
+	std::string primaryTexture;
+	if (primaryTextureName(textureName_, primaryTexture))
+	{
+		const GLint locationTexture = glGetUniformLocation(shaderProgram.id(), primaryTexture.c_str());
+		if (locationTexture != -1)
 		{
-			ocean_assert(transformation_.isValid());
-			setUniform(locationTextureTransformMatrix, transformation_);
+			setUniform(locationTexture, int(id));
 		}
+	}
 
-		const GLint locationTextureOriginLowerLeft = glGetUniformLocation(shaderProgram.id(), "textureOriginLowerLeft");
-		if (locationTextureOriginLowerLeft != -1)
-		{
-			const FrameType frameType = frame_.isValid() ? frame_.frameType() : compressedFrame_.internalFrameType();
-
-			setUniform(locationTextureOriginLowerLeft, frameType.pixelOrigin() == FrameType::ORIGIN_LOWER_LEFT ? 1 : 0);
-		}
-
-		std::string primaryTexture;
-		if (primaryTextureName(textureName_, primaryTexture))
-		{
-			const GLint locationTexture = glGetUniformLocation(shaderProgram.id(), primaryTexture.c_str());
-			if (locationTexture != -1)
-			{
-				setUniform(locationTexture, int(id));
-			}
-		}
-
-		if (secondaryTextureId_ != 0u)
-		{
-			glActiveTexture(GLenum(GL_TEXTURE0 + id + 1u));
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glBindTexture(GL_TEXTURE_2D, secondaryTextureId_);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glesMinificationFilterMode);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glesMagnificationFilterMode);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glesWrapTypeS);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glesWrapTypeT);
-			ocean_assert(GL_NO_ERROR == glGetError());
-
-			std::string secondaryTexture;
-			if (secondaryTextureName(textureName_, secondaryTexture))
-			{
-				const GLint locationSecondaryTexture = glGetUniformLocation(shaderProgram.id(), secondaryTexture.c_str());
-
-				if (locationSecondaryTexture != -1)
-				{
-					setUniform(locationSecondaryTexture, int(id + 1u));
-
-					return 2u;
-				}
-				else
-				{
-					ocean_assert(false && "This should never happen!");
-				}
-			}
-			else
-			{
-				ocean_assert(false && "This should never happen!");
-			}
-		}
-
+	if (secondaryTextureId_ == 0u)
+	{
 		return 1u;
 	}
 
-	return 0u;
+	glActiveTexture(GLenum(GL_TEXTURE0 + id + 1u));
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glBindTexture(GL_TEXTURE_2D, secondaryTextureId_);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glesMinificationFilterMode);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glesMagnificationFilterMode);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, glesWrapTypeS);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, glesWrapTypeT);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	std::string secondaryTexture;
+	if (secondaryTextureName(textureName_, secondaryTexture))
+	{
+		const GLint locationSecondaryTexture = glGetUniformLocation(shaderProgram.id(), secondaryTexture.c_str());
+
+		if (locationSecondaryTexture != -1)
+		{
+			setUniform(locationSecondaryTexture, int(id + 1u));
+
+			return 2u;
+		}
+		else
+		{
+			ocean_assert(false && "This should never happen!");
+		}
+	}
+	else
+	{
+		ocean_assert(false && "This should never happen!");
+	}
+
+	return 1u;
 }
 
 void GLESFrameTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestamp /*timestamp*/)
@@ -229,91 +226,92 @@ void GLESFrameTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestam
 
 	if (updateNeeded_)
 	{
-		updateTexture();
-	}
-}
-
-void GLESFrameTexture2D::updateTexture()
-{
-	ocean_assert(updateNeeded_);
-
-	ocean_assert(GL_NO_ERROR == glGetError());
-
-	if (frame_.isValid())
-	{
-		if (!GLESTexture2D::updateTexture(frame_))
-		{
-			ocean_assert(false && "Failed to update texture!");
-			return;
-		}
-	}
-	else
-	{
-		ocean_assert(compressedFrame_.isValid());
-
-		if (primaryTextureId_ == 0u)
-		{
-			glGenTextures(1, &primaryTextureId_);
-			ocean_assert(GL_NO_ERROR == glGetError());
-		}
-
-		glBindTexture(GL_TEXTURE_2D, primaryTextureId_);
 		ocean_assert(GL_NO_ERROR == glGetError());
 
-		GLenum internalFormat = 0;
-		if (determineCompressedFormat(compressedFrame_.compressedFormat(), internalFormat))
+		if (frame_.isValid())
 		{
-			unsigned int width = compressedFrame_.internalFrameType().width();
-			unsigned int height = compressedFrame_.internalFrameType().height();
-
-			size_t remainingBufferSize = compressedFrame_.buffer().size();
-			const uint8_t* buffer = compressedFrame_.buffer().data();
-
-			for (unsigned int nLevel = 0u; nLevel < compressedFrame_.mipmapLevels(); ++nLevel)
+			if (!GLESTexture2D::updateTexture(frame_))
 			{
-				unsigned int levelSize = 0u;
-				if (!compressedImageSize(compressedFrame_.compressedFormat(), width, height, levelSize) || size_t(levelSize) > remainingBufferSize)
-				{
-					Log::error() << "Failed to create compressed texture for level " << nLevel;
-					break;
-				}
-
-				glCompressedTexImage2D(GL_TEXTURE_2D, GLint(nLevel), internalFormat, GLsizei(width), GLsizei(height), 0, GLsizei(levelSize), buffer);
-
-				const GLenum error = glGetError();
-
-				if (error != GL_NO_ERROR)
-				{
-					Log::error() << "Failed to specify 2D compressed texture for level " << nLevel << ", error: " << int(error);
-					break;
-				}
-
-				if (width == 1u && height == 1u)
-				{
-					break;
-				}
-
-				width = std::max(1u, width / 2u);
-				height = std::max(1u, height / 2u);
-
-				ocean_assert(remainingBufferSize >= size_t(levelSize));
-				remainingBufferSize -= size_t(levelSize);
-
-				buffer += levelSize;
+				ocean_assert(false && "Failed to update texture!");
+				return;
 			}
 		}
 		else
 		{
-			ocean_assert(false && "This must never happen!");
+			ocean_assert(compressedFrame_.isValid());
+
+			updateTexture(compressedFrame_);
 		}
 
-		if (useMipmap_)
-		{
-			createMipmap();
-		}
+		updateNeeded_ = false;
+	}
+}
+
+bool GLESFrameTexture2D::updateTexture(const CompressedFrame& compressedFrame)
+{
+	ocean_assert(compressedFrame_.isValid());
+
+	if (primaryTextureId_ == 0u)
+	{
+		glGenTextures(1, &primaryTextureId_);
+		ocean_assert(GL_NO_ERROR == glGetError());
 	}
 
-	updateNeeded_ = false;
+	glBindTexture(GL_TEXTURE_2D, primaryTextureId_);
+	ocean_assert(GL_NO_ERROR == glGetError());
+
+	GLenum internalFormat = 0;
+	if (!determineCompressedFormat(compressedFrame_.compressedFormat(), internalFormat))
+	{
+		ocean_assert(false && "This must never happen!");
+		return false;
+	}
+
+	unsigned int width = compressedFrame_.internalFrameType().width();
+	unsigned int height = compressedFrame_.internalFrameType().height();
+
+	size_t remainingBufferSize = compressedFrame_.buffer().size();
+	const uint8_t* buffer = compressedFrame_.buffer().data();
+
+	for (unsigned int nLevel = 0u; nLevel < compressedFrame_.mipmapLevels(); ++nLevel)
+	{
+		unsigned int levelSize = 0u;
+		if (!compressedImageSize(compressedFrame_.compressedFormat(), width, height, levelSize) || size_t(levelSize) > remainingBufferSize)
+		{
+			Log::error() << "Failed to create compressed texture for level " << nLevel;
+			break;
+		}
+
+		glCompressedTexImage2D(GL_TEXTURE_2D, GLint(nLevel), internalFormat, GLsizei(width), GLsizei(height), 0, GLsizei(levelSize), buffer);
+
+		const GLenum error = glGetError();
+
+		if (error != GL_NO_ERROR)
+		{
+			Log::error() << "Failed to specify 2D compressed texture for level " << nLevel << ", error: " << int(error);
+			break;
+		}
+
+		if (width == 1u && height == 1u)
+		{
+			break;
+		}
+
+		width = std::max(1u, width / 2u);
+		height = std::max(1u, height / 2u);
+
+		ocean_assert(remainingBufferSize >= size_t(levelSize));
+		remainingBufferSize -= size_t(levelSize);
+
+		buffer += levelSize;
+	}
+
+	if (useMipmap_)
+	{
+		createMipmap();
+	}
+
+	return true;
 }
 
 bool GLESFrameTexture2D::determineCompressedFormat(const CompressedFormat compressedFormat, GLenum& internalFormat)

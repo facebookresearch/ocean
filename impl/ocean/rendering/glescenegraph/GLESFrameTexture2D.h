@@ -89,9 +89,11 @@ class OCEAN_RENDERING_GLES_EXPORT GLESFrameTexture2D final :
 		void onDynamicUpdate(const ViewRef& view, const Timestamp timestamp) override;
 
 		/**
-		 * Updates the texture.
+		 * Updates the texture based on a given compressed frame.
+		 * @param compressedFrame The compressed frame to be used to update the texture, must be valid
+		 * @return True, if succeeded
 		 */
-		void updateTexture();
+		bool updateTexture(const CompressedFrame& compressedFrame);
 
 		/**
 		 * Determines the OpenGL format for a given compressed texture format.
