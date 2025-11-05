@@ -31,7 +31,7 @@ Bullseye::Bullseye(const Vector2& position, const Scalar& radius, const unsigned
 
 bool Bullseye::isValid() const
 {
-	return position_.x() >= 0 && position_.y() >= 0 && radius_ > 0 && grayThreshold_ != 0u && grayThreshold_ < 256u;
+	return position_ != invalidPosition() && radius_ > 0 && grayThreshold_ != 0u && grayThreshold_ < 256u;
 }
 
 const Vector2& Bullseye::position() const
