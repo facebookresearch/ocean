@@ -1,0 +1,50 @@
+name: Get commit SHA
+description: Get commit SHA from input or artifact and validate it
+
+inputs:
+  commit_sha:
+    description: 'Optional commit SHA (if not provided, will download from artifact)'
+    required: false
+  artifact_name:
+    description: 'Name of artifact to download SHA from'
+    required: false
+    default: 'ocean-build-sha-debug'
+
+outputs:
+  commit_sha:
+    description: 'The validated commit SHA'
+    value: ${{ steps.validate.outputs.commit_sha }}
+
+runs:
+  using: composite
+  steps:
+    - name: Download commit SHA artifact
+      if: ${{ !inputs.commit_sha }}
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ inputs.artifact_name }}
+
+    - name: Read and validate commit SHA
+      id: validate
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.commit_sha }}" ]; then
+          SHA="${{ inputs.commit_sha }}"
+          echo "Using commit SHA from input: $SHA"
+        elif [ -f commit_sha.txt ]; then
+          SHA=$(cat commit_sha.txt)
+          echo "Using commit SHA from artifact: $SHA"
+        else
+          echo "ERROR: No commit SHA provided via input or artifact"
+          exit 1
+        fi
+        if [ -z "$SHA" ]; then
+          echo "ERROR: Commit SHA is empty"
+          exit 1
+        fi
+        if ! [[ "$SHA" =~ ^[a-f0-9]{40}$ ]]; then
+          echo "ERROR: Invalid commit SHA format: $SHA"
+          exit 1
+        fi
+        echo "commit_sha=${SHA}" >> $GITHUB_OUTPUT
+        echo "Validated commit SHA: $SHA"

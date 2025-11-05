@@ -2,6 +2,11 @@ name: Test Ocean on Linux (static) [Helper]
 
 on:
   workflow_call:
+    inputs:
+      commit_sha:
+        description: 'Commit SHA to test (optional - will download from artifact if not provided)'
+        required: false
+        type: string
 
 env:
   OCEAN_LINK_TYPE: static
@@ -14,11 +19,22 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.post.outputs.matrix }}
+      commit_sha: ${{ steps.get-sha.outputs.commit_sha }}
     env:
       config_path: ./.github/workflows/test_config.json
       matrix_path: ./matrix.json
     steps:
+      - name: Get commit SHA
+        id: get-sha
+        uses: ./.github/actions/get-commit-sha
+        with:
+          commit_sha: ${{ inputs.commit_sha }}
+          # Use debug artifact (both debug and release contain the same SHA, so either works)
+          artifact_name: ocean-build-sha-debug
+
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.get-sha.outputs.commit_sha }}
       - name: Use full matrix
         if: ${{ !github.event.pull_request }}
         id: full
@@ -40,7 +56,7 @@ jobs:
           } >> $GITHUB_OUTPUT
 
   run-tests:
-    name: "${{ matrix.suite.id }} (${{ matrix.build_config.capitalcase }})"
+    name: "${{ matrix.suite.id }} (${{ matrix.build_config }})"
     runs-on: ubuntu-latest
     needs: build-test-matrix
     if: ${{ needs.build-test-matrix.outputs.matrix != '[]'}}
@@ -49,19 +65,24 @@ jobs:
       fail-fast: ${{ !!github.event.pull_request }}
       matrix:
         suite: ${{ fromJSON(needs.build-test-matrix.outputs.matrix) }}
-        build_config:
-          - capitalcase: Debug
-            lowercase: debug
-          - capitalcase: Release
-            lowercase: release
+        build_config: [debug, release]
     steps:
+      - name: Get commit SHA
+        id: get-sha
+        uses: ./.github/actions/get-commit-sha
+        with:
+          commit_sha: ${{ inputs.commit_sha }}
+          artifact_name: ocean-build-sha-${{ matrix.build_config }}
+
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.get-sha.outputs.commit_sha }}
       - name: Restore cached build artifacts
         id: restore-build
         uses: actions/cache/restore@v4
         with:
           path: ${{ env.OCEAN_BUILD_PATH }}
-          key: ocean-build-${{ matrix.build_config.lowercase }}-${{ github.sha }}
+          key: ocean-build-${{ matrix.build_config }}-${{ steps.get-sha.outputs.commit_sha }}
           fail-on-cache-miss: true
       - name: Run tests
         run: |

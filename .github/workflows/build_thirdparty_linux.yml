@@ -13,4 +13,6 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/build_thirdparty_linux_helper.yml
+    with:
+      commit_sha: ${{ github.sha }}
     secrets: inherit

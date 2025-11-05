@@ -3,7 +3,12 @@
 name: Build Ocean on Linux (static) [Helper]
 
 on:
-  workflow_call
+  workflow_call:
+    inputs:
+      commit_sha:
+        description: 'Commit SHA to build (optional - will download from artifact if not provided)'
+        required: false
+        type: string
 
 env:
   OCEAN_LINK_TYPE: static
@@ -22,7 +27,16 @@ jobs:
         build_config: [debug, release]
 
     steps:
+      - name: Get commit SHA
+        id: get-sha
+        uses: ./.github/actions/get-commit-sha
+        with:
+          commit_sha: ${{ inputs.commit_sha }}
+          artifact_name: ocean-build-sha-${{ matrix.build_config }}
+
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.get-sha.outputs.commit_sha }}
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -51,7 +65,7 @@ jobs:
         id: cache-ocean-build
         uses: actions/cache@v4
         with:
-          key: ocean-build-${{ matrix.build_config.lowercase }}-${{ github.sha }}
+          key: ocean-build-${{ matrix.build_config }}-${{ steps.get-sha.outputs.commit_sha }}
           path: ${{ env.OCEAN_BUILD_PATH }}
 
       - name: Build and install Ocean
@@ -63,3 +77,21 @@ jobs:
             -c ${{ matrix.build_config }} \
             -l ${{ env.OCEAN_LINK_TYPE }} \
             -t ${{ env.OCEAN_THIRDPARTY_INSTALL_PATH }}
+
+      # Re-upload commit SHA artifact for next workflow in the chain (test workflow).
+      # This is necessary because artifacts from the first workflow (thirdparty) may not
+      # be accessible to workflows further down the chain when using workflow_run triggers.
+      # We re-upload here with overwrite: true to ensure both matrix jobs (debug/release)
+      # produce consistent artifacts that the test workflow can reliably download.
+      - name: Re-upload commit SHA artifact for next workflow
+        if: ${{ !inputs.commit_sha }}
+        run: echo "${{ steps.get-sha.outputs.commit_sha }}" > commit_sha.txt
+
+      - name: Upload commit SHA artifact for next workflow
+        if: ${{ !inputs.commit_sha }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ocean-build-sha-${{ matrix.build_config }}
+          path: commit_sha.txt
+          retention-days: 7
+          overwrite: true

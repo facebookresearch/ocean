@@ -3,7 +3,12 @@
 name: Build Third-party libraries on Linux (static) [Helper]
 
 on:
-  workflow_call
+  workflow_call:
+    inputs:
+      commit_sha:
+        description: 'Commit SHA to build (for cache consistency across workflow chain)'
+        required: true
+        type: string
 
 env:
   OCEAN_LINK_TYPE: static
@@ -21,6 +26,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit_sha }}
 
       - name: Cache install artifacts
         id: cache-thirdparty-install
@@ -56,3 +63,13 @@ jobs:
             -b ${{ env.OCEAN_THIRDPARTY_BUILD_PATH }} \
             -c ${{ matrix.build_config }} \
             -l ${{ env.OCEAN_LINK_TYPE }}
+
+      - name: Store commit SHA for workflow chain
+        run: echo "${{ inputs.commit_sha }}" > commit_sha.txt
+
+      - name: Upload commit SHA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ocean-build-sha-${{ matrix.build_config }}
+          path: commit_sha.txt
+          retention-days: 7
