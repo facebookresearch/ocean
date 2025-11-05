@@ -400,38 +400,22 @@ unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T
 
 		if (NumericT<T>::isEqualEps(cx1.imag()))
 		{
-			T solution = cx1.real();
-			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
-			{
-				x[solutions++] = solution;
-			}
+			x[solutions++] = cx1.real();
 		}
 
 		if (NumericT<T>::isEqualEps(cx2.imag()))
 		{
-			T solution = cx2.real();
-			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
-			{
-				x[solutions++] = solution;
-			}
+			x[solutions++] = cx2.real();
 		}
 
 		if (NumericT<T>::isEqualEps(cx3.imag()))
 		{
-			T solution = cx3.real();
-			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
-			{
-				x[solutions++] = solution;
-			}
+			x[solutions++] = cx3.real();
 		}
 
 		if (NumericT<T>::isEqualEps(cx4.imag()))
 		{
-			T solution = cx4.real();
-			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
-			{
-				x[solutions++] = solution;
-			}
+			x[solutions++] = cx4.real();
 		}
 	}
 	else
@@ -490,40 +474,26 @@ unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T
 
 		if (NumericT<T>::isEqualEps(cx1.imag()))
 		{
-			T solution = cx1.real();
-			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
-			{
-				x[solutions++] = solution;
-			}
+			x[solutions++] = cx1.real();
 		}
 
 		if (NumericT<T>::isEqualEps(cx2.imag()))
 		{
-			T solution = cx2.real();
-			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
-			{
-				x[solutions++] = solution;
-			}
+			x[solutions++] = cx2.real();
 		}
 
 		if (NumericT<T>::isEqualEps(cx3.imag()))
 		{
-			T solution = cx3.real();
-			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
-			{
-				x[solutions++] = solution;
-			}
+			x[solutions++] = cx3.real();
 		}
 
 		if (NumericT<T>::isEqualEps(cx4.imag()))
 		{
-			T solution = cx4.real();
-			if (NumericT<T>::isWeakEqualEps(solution * solution * solution * solution * a + solution * solution * solution * b + solution * solution * c + solution * d + e))
-			{
-				x[solutions++] = solution;
-			}
+			x[solutions++] = cx4.real();
 		}
 	}
+
+	// first, we try to refine/optimize the solutions
 
 	if (refine)
 	{
@@ -532,6 +502,28 @@ unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T
 			optimizeQuartic(a, b, c, d, e, x[n]);
 		}
 	}
+
+	// finally, we remove all solutions which are not accurate enough
+
+	unsigned int nOutput = 0u;
+	for (unsigned int nInput = 0u; nInput < solutions; ++nInput)
+	{
+		const T value = x[nInput];
+
+		if (NumericT<T>::isWeakEqualEps(value * value * value * value * a + value * value * value * b + value * value * c + value * d + e))
+		{
+			// the solution is accurate enough
+
+			if (nOutput != nInput)
+			{
+				x[nOutput] = x[nInput];
+			}
+
+			++nOutput;
+		}
+	}
+
+	solutions = nOutput;
 
 	return solutions;
 }
