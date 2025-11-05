@@ -586,6 +586,11 @@ bool Utilities::deviceModel(JNIEnv* env, std::string& model)
 	return true;
 }
 
+bool Utilities::deviceSerialNumber(std::string& serialNumber)
+{
+	return systemPropertyValue("ro.serialno", serialNumber);
+}
+
 bool Utilities::determinePackageName(std::string& packageName)
 {
 	std::ifstream stream;

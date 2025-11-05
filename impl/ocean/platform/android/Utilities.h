@@ -150,6 +150,14 @@ class OCEAN_PLATFORM_ANDROID_EXPORT Utilities
 		static bool deviceModel(JNIEnv* env, std::string& model);
 
 		/**
+		 * Returns the serial number of the device.
+		 * On Android 8.0 (API 26) and above, access to the serial number is restricted to system apps.
+		 * @param serialNumber The resulting device's serial number
+		 * @return True, if succeeded
+		 */
+		static bool deviceSerialNumber(std::string& serialNumber);
+
+		/**
 		 * Returns the name of the package.
 		 * @param packageName The resulting package name
 		 * @return True, if succeeded
