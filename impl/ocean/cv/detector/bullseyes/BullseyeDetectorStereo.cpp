@@ -290,8 +290,10 @@ bool BullseyeDetectorStereo::triangulateBullseye(const AnyCamera& cameraA, const
 	ocean_assert(world_T_cameraA.isValid() && world_T_cameraB.isValid());
 	ocean_assert(bullseyeA.isValid() && bullseyeB.isValid());
 
-	ocean_assert(cameraA.isInside(bullseyeA.position()));
-	ocean_assert(cameraB.isInside(bullseyeB.position()));
+	if (!cameraA.isInside(bullseyeA.position()) || !cameraB.isInside(bullseyeB.position()))
+	{
+		return false;
+	}
 
 	const Line3 rayA = cameraA.ray(bullseyeA.position(), world_T_cameraA);
 	const Line3 rayB = cameraB.ray(bullseyeB.position(), world_T_cameraB);
