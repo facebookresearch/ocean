@@ -992,6 +992,78 @@ Frame Utilities::paintBoundingBox(const Frame& frame, const CV::PixelBoundingBox
 	return paintMask(frame, mask, 0x00, worker);
 }
 
+bool Utilities::paintGravity(const AnyCamera& camera, Frame& frame, const Vector3& gravity, const unsigned int thickness, const uint8_t* color, const unsigned int segments, const Vector3& position, const Scalar length)
+{
+	ocean_assert(camera.isValid());
+	ocean_assert(frame.isValid());
+	ocean_assert(camera.width() == frame.width() && camera.height() == frame.height());
+
+	ocean_assert(gravity.isUnit());
+
+	ocean_assert(segments >= 1u);
+
+	ocean_assert(position.z() < -Numeric::eps());
+	ocean_assert(length > Numeric::eps());
+
+	Vector2 previousImagePosition = camera.principalPoint();
+
+	for (unsigned int nSegment = 1u; nSegment <= segments; ++nSegment)
+	{
+		const Vector3 currentObjectPosition = position + gravity * length * Scalar(nSegment) / Scalar(segments);
+
+		const Vector2 currentImagePosition = camera.projectToImage(currentObjectPosition);
+
+		switch (thickness)
+		{
+			case 7u:
+			{
+				if (!CV::Canvas::line<7u>(frame, previousImagePosition, currentImagePosition, color))
+				{
+					return false;
+				}
+
+				break;
+			}
+
+			case 5u:
+			{
+				if (!CV::Canvas::line<5u>(frame, previousImagePosition, currentImagePosition, color))
+				{
+					return false;
+				}
+
+				break;
+			}
+
+			case 3u:
+			{
+				if (!CV::Canvas::line<3u>(frame, previousImagePosition, currentImagePosition, color))
+				{
+					return false;
+				}
+
+				break;
+			}
+
+			default:
+			{
+				ocean_assert(thickness == 1u);
+
+				if (!CV::Canvas::line<1u>(frame, previousImagePosition, currentImagePosition, color))
+				{
+					return false;
+				}
+
+				break;
+			}
+		}
+
+		previousImagePosition = currentImagePosition;
+	}
+
+	return true;
+}
+
 bool Utilities::alignFramesHomography(const Frame& fixedFrame, const Frame& dynamicFrame, const SquareMatrix3& dynamic_H_fixed, Frame& result, const bool blend, Worker* worker)
 {
 	ocean_assert(fixedFrame && dynamicFrame);

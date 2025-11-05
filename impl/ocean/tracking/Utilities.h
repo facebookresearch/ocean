@@ -585,6 +585,20 @@ class OCEAN_TRACKING_EXPORT Utilities
 		static Frame paintBoundingBox(const Frame& frame, const CV::PixelBoundingBox& boundingBox, Worker* worker = nullptr);
 
 		/**
+		 * Paints a gravity vector into a given frame.
+		 * @param camera The camera profile defining the projection, must be valid
+		 * @param frame The frame in which the gravity vector will be painted, must be valid
+		 * @param gravity The gravity unit vector, defined in the coordinate system of the camera, with default camera pointing towards the negative z-space and y-axis upwards, must be valid
+		 * @param thickness The thickness of the gravity vector, possible values are {1, 3, 5, 7}
+		 * @param color The color to be used to paint the gravity vector, nullptr to use black
+		 * @param segments The number of segments the gravity vector will be separated, to cameras with distortion, with range [1, infinity)
+		 * @param position The starting position of the gravity vector, defined in the camera coordinate system
+		 * @param length The length of the gravity to be painted, defined in units of the camera coordinate system, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool paintGravity(const AnyCamera& camera, Frame& frame, const Vector3& gravity, const unsigned int thickness = 3u, const uint8_t* color = nullptr, const unsigned int segments = 20u, const Vector3& position = Vector3(0, 0, -1), const Scalar length = Scalar(1));
+
+		/**
 		 * Aligns two frames connected by a given homography into one frame while the resulting frame covers the area of one given frame only (the fixed frame).
 		 * @param fixedFrame The fixed frame which will be untouched while the dynamic frame will be transformed by application of the homography and aligned to this frame, must be valid
 		 * @param dynamicFrame The dynamic frame which will be transformed and then aligned to the fixed frame, with same pixel format and pixel orientation as the fixed frame
