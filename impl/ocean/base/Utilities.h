@@ -37,7 +37,7 @@ class OCEAN_BASE_EXPORT Utilities
 
 		/**
 		 * Sorts two values so that the lowest value will finally be the first value.
-		 * The sorting is not stable.<br>
+		 * The sorting is not stable.
 		 * @param value0 First value
 		 * @param value1 Second value
 		 * @tparam T Data type of the values to be sorted
@@ -47,7 +47,7 @@ class OCEAN_BASE_EXPORT Utilities
 
 		/**
 		 * Sorts three values so that the lowest value will finally be the first value.
-		 * The sorting is not stable.<br>
+		 * The sorting is not stable.
 		 * @param value0 First value
 		 * @param value1 Second value
 		 * @param value2 Third value
@@ -59,7 +59,7 @@ class OCEAN_BASE_EXPORT Utilities
 		/**
 		 * Sorts two values so that the lowest value will finally be the first value.
 		 * Each value has a connected data value that will be sorted accordingly.<br>
-		 * The sorting is not stable.<br>
+		 * The sorting is not stable.
 		 * @param value0 First value
 		 * @param value1 Second value
 		 * @param data0 First data value
@@ -72,7 +72,7 @@ class OCEAN_BASE_EXPORT Utilities
 		/**
 		 * Sorts three values so that the lowest value will finally be the first value.
 		 * Each value has a connected data value that will be sorted accordingly.<br>
-		 * The sorting is not stable.<br>
+		 * The sorting is not stable.
 		 * @param value0 First value
 		 * @param value1 Second value
 		 * @param value2 Third value
@@ -86,7 +86,7 @@ class OCEAN_BASE_EXPORT Utilities
 
 		/**
 		 * Sorts two values so that the highest value will finally be the first value.
-		 * The sorting is not stable.<br>
+		 * The sorting is not stable.
 		 * @param value0 First value
 		 * @param value1 Second value
 		 * @tparam T Data type of the values to be sorted
@@ -96,7 +96,7 @@ class OCEAN_BASE_EXPORT Utilities
 
 		/**
 		 * Sorts three values so that the highest value will finally be the first value.
-		 * The sorting is not stable.<br>
+		 * The sorting is not stable.
 		 * @param value0 First value
 		 * @param value1 Second value
 		 * @param value2 Third value
@@ -106,9 +106,21 @@ class OCEAN_BASE_EXPORT Utilities
 		static void sortHighestToFront3(T& value0, T& value1, T& value2);
 
 		/**
+		 * Sorts four values so that the highest value will finally be the first value.
+		 * The sorting is not stable.
+		 * @param value0 First value
+		 * @param value1 Second value
+		 * @param value2 Third value
+		 * @param value3 Fourth value
+		 * @tparam T Data type of the values to be sorted
+		 */
+		template <typename T>
+		static void sortHighestToFront4(T& value0, T& value1, T& value2, T& value3);
+
+		/**
 		 * Sorts two values so that the highest value will finally be the first value.
 		 * Each value has a connected payload data value that will be sorted accordingly.<br>
-		 * The sorting is not stable.<br>
+		 * The sorting is not stable.
 		 * @param value0 First value
 		 * @param value1 Second value
 		 * @param data0 First data value
@@ -122,7 +134,7 @@ class OCEAN_BASE_EXPORT Utilities
 		/**
 		 * Sorts three values so that the highest value will finally be the first value.
 		 * Each value has a connected payload data value that will be sorted accordingly.<br>
-		 * The sorting is not stable.<br>
+		 * The sorting is not stable.
 		 * @param value0 First value
 		 * @param value1 Second value
 		 * @param value2 Third value
@@ -741,6 +753,40 @@ void Utilities::sortHighestToFront3(T& value0, T& value1, T& value2)
 	ocean_assert(value0 >= value1);
 	ocean_assert(value1 >= value2);
 }
+
+template <typename T>
+void Utilities::sortHighestToFront4(T& value0, T& value1, T& value2, T& value3)
+{
+    if (value0 < value1)
+	{
+		std::swap(value0, value1);
+	}
+
+    if (value2 < value3)
+	{
+		std::swap(value2, value3);
+	}
+
+    if (value0 < value2)
+	{
+		std::swap(value0, value2);
+	}
+
+    if (value1 < value3)
+	{
+		std::swap(value1, value3);
+	}
+
+    if (value1 < value2)
+	{
+		std::swap(value1, value2);
+	}
+
+    ocean_assert(value0 >= value1);
+    ocean_assert(value1 >= value2);
+    ocean_assert(value2 >= value3);
+}
+
 
 template <typename T, typename TData>
 void Utilities::sortHighestToFront2(T& value0, T& value1, TData& data0, TData& data1)
