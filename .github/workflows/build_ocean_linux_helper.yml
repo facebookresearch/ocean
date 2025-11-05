@@ -51,7 +51,7 @@ jobs:
         id: cache-ocean-build
         uses: actions/cache@v4
         with:
-          key: ocean-build-${{ matrix.build_config }}-${{ github.sha }}
+          key: ocean-build-${{ matrix.build_config.lowercase }}-${{ github.sha }}
           path: ${{ env.OCEAN_BUILD_PATH }}
 
       - name: Build and install Ocean
