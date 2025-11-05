@@ -708,7 +708,7 @@ bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
 
 		bool expectSuccess = true;
 
-		if (!FrameConverter::Comfort::isSupported(sourceFrameType, targetPixelFormat))
+		if (!FrameConverter::Comfort::isSupported(sourceFrameType, targetPixelFormat, targetPixelOrigin))
 		{
 			// the combination is not supported
 			expectSuccess = false;
@@ -741,14 +741,14 @@ bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
 				// target frame is not owner of the writable memory
 				externalMemory = Memory(targetFrameType.frameTypeSize() * targetFrameType.numberPlanes());
 
-				Frame::PlaneInitializers<void> planeInitialiers;
+				Frame::PlaneInitializers<void> planeInitializers;
 
 				for (unsigned int planeIndex = 0u; planeIndex < targetFrameType.numberPlanes(); ++planeIndex)
 				{
-					planeInitialiers.emplace_back((void*)(externalMemory.data<uint8_t>() + targetFrameType.frameTypeSize() * planeIndex), Frame::CM_USE_KEEP_LAYOUT);
+					planeInitializers.emplace_back((void*)(externalMemory.data<uint8_t>() + targetFrameType.frameTypeSize() * planeIndex), Frame::CM_USE_KEEP_LAYOUT);
 				}
 
-				targetFrame = Frame(targetFrameType, planeInitialiers);
+				targetFrame = Frame(targetFrameType, planeInitializers);
 				break;
 			}
 
@@ -760,14 +760,14 @@ bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
 				// target frame is not owner of the writable memory
 				externalMemory = Memory(targetFrameType.frameTypeSize() * targetFrameType.numberPlanes());
 
-				Frame::PlaneInitializers<void> planeInitialiers;
+				Frame::PlaneInitializers<void> planeInitializers;
 
 				for (unsigned int planeIndex = 0u; planeIndex < targetFrameType.numberPlanes(); ++planeIndex)
 				{
-					planeInitialiers.emplace_back((const void*)(externalMemory.data<uint8_t>() + targetFrameType.frameTypeSize() * planeIndex), Frame::CM_USE_KEEP_LAYOUT);
+					planeInitializers.emplace_back((const void*)(externalMemory.data<uint8_t>() + targetFrameType.frameTypeSize() * planeIndex), Frame::CM_USE_KEEP_LAYOUT);
 				}
 
-				targetFrame = Frame(targetFrameType, planeInitialiers);
+				targetFrame = Frame(targetFrameType, planeInitializers);
 
 				expectSuccess = false;
 				break;
