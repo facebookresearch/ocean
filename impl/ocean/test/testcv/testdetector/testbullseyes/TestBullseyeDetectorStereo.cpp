@@ -50,6 +50,11 @@ bool TestBullseyeDetectorStereo::test(const double testDuration)
 	Log::info() << " ";
 	Log::info() << " ";
 
+	allSucceeded = testInvalidMatchingCost() && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
 	allSucceeded = stressTestDetectBullseyes(testDuration, randomGenerator) && allSucceeded;
 
 	Log::info() << " ";
@@ -74,6 +79,11 @@ TEST(TestBullseyeDetectorStereo, Parameters)
 {
 	RandomGenerator randomGenerator;
 	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorStereo::testParameters(GTEST_TEST_DURATION, randomGenerator));
+}
+
+TEST(TestBullseyeDetectorStereo, InvalidMatchingCost)
+{
+	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorStereo::testInvalidMatchingCost());
 }
 
 TEST(TestBullseyeDetectorStereo, StressTestDetectBullseyes)
@@ -221,6 +231,24 @@ bool TestBullseyeDetectorStereo::testParameters(const double testDuration, Rando
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestBullseyeDetectorStereo::testInvalidMatchingCost()
+{
+	Log::info() << "invalidMatchingCost() function test:";
+
+	bool allSucceeded = invalidMatchingCost() == Scalar(1000);
 
 	if (allSucceeded)
 	{

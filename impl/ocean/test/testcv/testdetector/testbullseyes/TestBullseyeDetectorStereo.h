@@ -32,7 +32,7 @@ namespace TestBullseyes
  * This class implements tests for the BullseyeDetectorStereo
  * @ingroup testcvdetectorbullseyes
  */
-class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestBullseyeDetectorStereo
+class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestBullseyeDetectorStereo : protected CV::Detector::Bullseyes::BullseyeDetectorStereo
 {
 	public:
 
@@ -58,6 +58,12 @@ class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestBullseyeDetectorStereo
 		 * @return True, if succeeded
 		 */
 		static bool testParameters(const double testDuration, RandomGenerator& randomGenerator);
+
+		/**
+		 * Tests the invalidMatchingCost() static function.
+		 * @return True, if succeeded
+		 */
+		static bool testInvalidMatchingCost();
 };
 
 } // namespace TestBullseyes
