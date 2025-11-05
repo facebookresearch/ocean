@@ -530,7 +530,9 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 			possibleFunctionIds.emplace_back(ID_PIXELORIGIN);
 		}
 
-		switch (RandomI::random(randomGenerator, possibleFunctionIds))
+		const Index32 possibleFunctionId = RandomI::random(randomGenerator, possibleFunctionIds);
+
+		switch (possibleFunctionId)
 		{
 			case ID_PIXELFORMAT_AND_PIXELORIGIN:
 				// testing pixel format and pixel origin function
@@ -562,9 +564,29 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 				allSucceeded = false;
 			}
 
-			if (forceCopy && !targetFrame.isOwner())
+			if (forceCopy)
 			{
-				allSucceeded = false;
+				if (!targetFrame.isOwner())
+				{
+					allSucceeded = false;
+				}
+			}
+			else
+			{
+				if (canBeConvertedWithoutCopy(sourceFrame, targetFrameType))
+				{
+					if (targetFrame.isOwner())
+					{
+						allSucceeded = false;
+					}
+				}
+				else
+				{
+					if (!targetFrame.isOwner())
+					{
+						allSucceeded = false;
+					}
+				}
 			}
 
 			if (targetFrame.timestamp() != sourceFrame.timestamp())
