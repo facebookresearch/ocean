@@ -806,6 +806,41 @@ class OCEAN_CV_EXPORT FrameConverter
 				 * @return True, if the frame type conversion is supported and succeeded
 				 */
 				static inline bool change(Frame& frame, const FrameType::PixelOrigin targetPixelOrigin, const bool forceCopy = true, Worker* worker = nullptr, const Options& options = Options());
+
+			protected:
+
+				/**
+				 * Converts frames with compatible formats that do not require an actual conversion, either memory is copyied or used.
+				 * @param source The source frame to convert, must be valid
+				 * @param targetType The target frame type, must be valid
+				 * @param target The resulting target frame, will be modified if conversion is supported
+				 * @param forceCopy True, to force copying of frame data; False, to allow referencing source data when possible
+				 * @return True, if the conversion was handled by this function; False, if a different conversion method is needed
+				 */
+				static bool convertCompatibleFormats(const Frame& source, const FrameType& targetType, Frame& target, const bool forceCopy);
+
+				/**
+				 * Converts frames using a registered conversion function from the ConversionFunctionMap.
+				 * This function looks up and applies optimized, format-specific conversion functions
+				 * that have been registered in the conversion function map (e.g., YUV to RGB, format-specific conversions).
+				 * @param source The source frame to convert, must be valid
+				 * @param targetType The target frame type, must be valid
+				 * @param target The resulting target frame, will be modified if conversion is supported
+				 * @param options The conversion options (e.g., alpha channel value, gamma correction)
+				 * @param worker Optional worker object to distribute computation across multiple CPU cores
+				 * @return True, if a registered conversion function exists and was applied successfully; False, otherwise
+				 */
+				static bool convertWithConversionFunction(const Frame& source, const FrameType& targetType, Frame& target, const Options& options, Worker* worker);
+
+				/**
+				 * Converts frames with generic pixel formats.
+				 * @param source The source frame to convert, must be valid
+				 * @param targetType The target frame type, must be valid
+				 * @param target The resulting target frame, will be modified if conversion is supported
+				 * @param worker Optional worker object to distribute computation across multiple CPU cores
+				 * @return True, if the conversion was successful; False, otherwise
+				 */
+				static bool convertGenericFormats(const Frame& source, const FrameType& targetType, Frame& target, Worker* worker);
 		};
 
 		/**

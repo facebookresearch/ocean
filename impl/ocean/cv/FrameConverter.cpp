@@ -505,372 +505,23 @@ bool FrameConverter::Comfort::convert(const Frame& source, const FrameType::Pixe
 		return false;
 	}
 
-	const ConversionFlag flag = source.pixelOrigin() == targetType.pixelOrigin() ? CONVERT_NORMAL : CONVERT_FLIPPED;
-
-	const bool perfectMatchAndGeneric = source.pixelFormat() == targetType.pixelFormat() && FrameType::formatIsGeneric(source.pixelFormat());
-	const bool compatibleAndAtLeastOneIsPureGeneric = (FrameType::formatIsPureGeneric(source.pixelFormat()) || FrameType::formatIsPureGeneric(targetType.pixelFormat())) && FrameType::arePixelFormatsCompatible(source.pixelFormat(), targetType.pixelFormat());
-
-	ConversionFunctionMap::FunctionType functionType = ConversionFunctionMap::FT_INVALID;
-	const void* function = ConversionFunctionMap::get().function(source.pixelFormat(), targetType.pixelFormat(), functionType, options);
-
-	if (function != nullptr)
+	if (!convertCompatibleFormats(source, targetType, target, forceCopy))
 	{
-		constexpr bool forceOwner = false;
-		constexpr bool forceWritable = true;
-
-		if (!target.set(targetType, forceOwner, forceWritable))
+		if (!convertWithConversionFunction(source, targetType, target, options, worker))
 		{
-			ocean_assert(false && "This should never happen!");
-			return false;
-		}
-
-		switch (functionType)
-		{
-			case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT8:
+			if (!convertGenericFormats(source, targetType, target, worker))
 			{
-				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_1_UINT8_GAMMA_TO_1_UINT8:
-			{
-				using SpecializedFunction = ConversionFunctionMap::OneSourceGammaOneTargetConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, options.gamma(), source.paddingElements(), target.paddingElements(), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT8_ALPHA:
-			{
-				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetAlphaConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), options.alphaChannelTargetValue(), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT8_BLACKLEVEL_WHITEBALANCE_GAMMA:
-			{
-				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetBlackLevelWhiteBalanceGammaConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, options.blackLevel(), options.whiteBalance(), options.gamma(), source.paddingElements(), target.paddingElements(), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT16:
-			{
-				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint8_t, uint16_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(), target.data<uint16_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_1_UINT16_TO_1_UINT8:
-			{
-				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint16_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint16_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_1_UINT16_TO_1_UINT16:
-			{
-				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint16_t, uint16_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint16_t>(), target.data<uint16_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_1_UINT32_TO_1_UINT8:
-			{
-				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint32_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint32_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_1_UINT32_TO_1_UINT16:
-			{
-				using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint32_t, uint16_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint32_t>(), target.data<uint16_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_1_UINT8_TO_2_UINT8:
-			{
-				using SpecializedFunction = ConversionFunctionMap::OneSourceTwoTargetsConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(0u), target.data<uint8_t>(1u), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(0u), target.paddingElements(1u), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_1_UINT8_TO_3_UINT8:
-			{
-				using SpecializedFunction = ConversionFunctionMap::OneSourceThreeTargetsConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(0u), target.data<uint8_t>(1u), target.data<uint8_t>(2u), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(0u), target.paddingElements(1u), target.paddingElements(2u), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_2_UINT8_TO_1_UINT8:
-			{
-				using SpecializedFunction = ConversionFunctionMap::TwoSourcesOneTargetConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_2_UINT8_TO_1_UINT8_ALPHA:
-			{
-				using SpecializedFunction = ConversionFunctionMap::TwoSourcesOneTargetAlphaConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), options.alphaChannelTargetValue(), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_2_UINT8_TO_2_UINT8:
-			{
-				using SpecializedFunction = ConversionFunctionMap::TwoSourcesTwoTargetConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), target.paddingElements(1u), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_2_UINT8_TO_3_UINT8:
-			{
-				using SpecializedFunction = ConversionFunctionMap::TwoSourcesThreeTargetConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), target.data<uint8_t>(2u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), target.paddingElements(1u), target.paddingElements(2u), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_3_UINT8_TO_1_UINT8:
-			{
-				using SpecializedFunction = ConversionFunctionMap::ThreeSourcesOneTargetConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), source.constdata<uint8_t>(2u), target.data<uint8_t>(0u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), source.paddingElements(2u), target.paddingElements(0u), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_3_UINT8_TO_1_UINT8_ALPHA:
-			{
-				using SpecializedFunction = ConversionFunctionMap::ThreeSourcesOneTargetAlphaConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), source.constdata<uint8_t>(2u), target.data<uint8_t>(0u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), source.paddingElements(2u), target.paddingElements(0u), options.alphaChannelTargetValue(), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_3_UINT8_TO_3_UINT8:
-			{
-				using SpecializedFunction = ConversionFunctionMap::ThreeSourcesThreeTargetConversionFunction<uint8_t, uint8_t>;
-				const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
-
-				specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), source.constdata<uint8_t>(2u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), target.data<uint8_t>(2u), source.width(), source.height(), flag, source.paddingElements(0u), source.paddingElements(1u), source.paddingElements(2u), target.paddingElements(0u), target.paddingElements(1u), target.paddingElements(2u), worker);
-				break;
-			}
-
-			case ConversionFunctionMap::FT_INVALID:
-			default:
-				ocean_assert(false && "Invalid function type!");
-				return false;
-		}
-	}
-	else if (source.numberPlanes() == 1u && (perfectMatchAndGeneric || compatibleAndAtLeastOneIsPureGeneric))
-	{
-		if (source.pixelOrigin() == targetType.pixelOrigin() && forceCopy == false)
-		{
-			target = Frame(source, Frame::ACM_USE_KEEP_LAYOUT);
-		}
-		else
-		{
-			constexpr bool forceOwner = false;
-			constexpr bool forceWritable = true;
-
-			if (!target.set(targetType, forceOwner, forceWritable))
-			{
-				ocean_assert(false && "This should never happen!");
-				return false;
-			}
-
-			ocean_assert(source.numberPlanes() == 1u && target.numberPlanes() == 1u);
-
-			switch (source.dataType())
-			{
-				case FrameType::DT_UNSIGNED_INTEGER_8:
-				case FrameType::DT_SIGNED_INTEGER_8:
-				{
-					switch (source.channels())
-					{
-						case 1u:
-							FrameChannels::transformGeneric<uint8_t, 1u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 2u:
-							FrameChannels::transformGeneric<uint8_t, 2u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 3u:
-							FrameChannels::transformGeneric<uint8_t, 3u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 4u:
-							FrameChannels::transformGeneric<uint8_t, 4u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						default:
-							ocean_assert(false && "Invalid function type!");
-							return false;
-					}
-
-					break;
-				}
-
-				case FrameType::DT_UNSIGNED_INTEGER_16:
-				case FrameType::DT_SIGNED_INTEGER_16:
-				case FrameType::DT_SIGNED_FLOAT_16:
-				{
-					switch (source.channels())
-					{
-						case 1u:
-							FrameChannels::transformGeneric<uint16_t, 1u>(source.constdata<uint16_t>(), target.data<uint16_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 2u:
-							FrameChannels::transformGeneric<uint16_t, 2u>(source.constdata<uint16_t>(), target.data<uint16_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 3u:
-							FrameChannels::transformGeneric<uint16_t, 3u>(source.constdata<uint16_t>(), target.data<uint16_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 4u:
-							FrameChannels::transformGeneric<uint16_t, 4u>(source.constdata<uint16_t>(), target.data<uint16_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						default:
-							ocean_assert(false && "Invalid function type!");
-							return false;
-					}
-
-					break;
-				}
-
-				case FrameType::DT_UNSIGNED_INTEGER_32:
-				case FrameType::DT_SIGNED_INTEGER_32:
-				case FrameType::DT_SIGNED_FLOAT_32:
-				{
-					switch (source.channels())
-					{
-						case 1u:
-							FrameChannels::transformGeneric<uint32_t, 1u>(source.constdata<uint32_t>(), target.data<uint32_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 2u:
-							FrameChannels::transformGeneric<uint32_t, 2u>(source.constdata<uint32_t>(), target.data<uint32_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 3u:
-							FrameChannels::transformGeneric<uint32_t, 3u>(source.constdata<uint32_t>(), target.data<uint32_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 4u:
-							FrameChannels::transformGeneric<uint32_t, 4u>(source.constdata<uint32_t>(), target.data<uint32_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						default:
-							ocean_assert(false && "Invalid function type!");
-							return false;
-					}
-
-					break;
-				}
-
-				case FrameType::DT_UNSIGNED_INTEGER_64:
-				case FrameType::DT_SIGNED_INTEGER_64:
-				case FrameType::DT_SIGNED_FLOAT_64:
-				{
-					switch (source.channels())
-					{
-						case 1u:
-							FrameChannels::transformGeneric<uint64_t, 1u>(source.constdata<uint64_t>(), target.data<uint64_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 2u:
-							FrameChannels::transformGeneric<uint64_t, 2u>(source.constdata<uint64_t>(), target.data<uint64_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 3u:
-							FrameChannels::transformGeneric<uint64_t, 3u>(source.constdata<uint64_t>(), target.data<uint64_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						case 4u:
-							FrameChannels::transformGeneric<uint64_t, 4u>(source.constdata<uint64_t>(), target.data<uint64_t>(), source.width(), source.height(), flag, source.paddingElements(), target.paddingElements(), worker);
-							break;
-
-						default:
-							ocean_assert(false && "Invalid function type!");
-							return false;
-					}
-
-					break;
-				}
-
-				case FrameType::DT_UNDEFINED:
-				case FrameType::DT_END:
-					ocean_assert(false && "Invalid data type!");
-					return false;
-			}
-		}
-	}
-	else if (source.frameType() == targetType)
-	{
-		if (forceCopy && target.isValid() && target.frameType() == targetType)
-		{
-			// the target frame has the correct frame type, and we need to make a copy
-			// therefore, we can use the target memory
-
-			if (!target.copy(0, 0, source))
-			{
-				ocean_assert(false && "This should never happen!");
-				return false;
-			}
-		}
-		else
-		{
-			const Frame::AdvancedCopyMode advancedCopyMode = forceCopy ? Frame::ACM_COPY_REMOVE_PADDING_LAYOUT : Frame::ACM_USE_KEEP_LAYOUT;
-			target = Frame(source, advancedCopyMode);
-		}
-	}
-	else
-	{
 #ifdef OCEAN_DEBUG
-		const std::string debugSourcePixelFormat = FrameType::formatIsPureGeneric(source.pixelFormat()) ? "generic (" + String::toAString(source.pixelFormat()) + ")" : FrameType::translatePixelFormat(source.pixelFormat());
-		const std::string debugTargetPixelFormat = FrameType::formatIsPureGeneric(targetType.pixelFormat()) ? "generic (" + String::toAString(targetType.pixelFormat()) + ")" : FrameType::translatePixelFormat(targetType.pixelFormat());
+				const std::string debugSourcePixelFormat = FrameType::formatIsPureGeneric(source.pixelFormat()) ? "generic (" + String::toAString(source.pixelFormat()) + ")" : FrameType::translatePixelFormat(source.pixelFormat());
+				const std::string debugTargetPixelFormat = FrameType::formatIsPureGeneric(targetType.pixelFormat()) ? "generic (" + String::toAString(targetType.pixelFormat()) + ")" : FrameType::translatePixelFormat(targetType.pixelFormat());
 
-		Log::debug() << "Failed to convert frame with pixel format '" << debugSourcePixelFormat << "' to '" << debugTargetPixelFormat << "'";
+				Log::debug() << "Failed to convert frame with pixel format '" << debugSourcePixelFormat << "' to '" << debugTargetPixelFormat << "'";
 #endif
 
-		ocean_assert(false && "Invalid frame types.");
-		return false;
+				ocean_assert(false && "Invalid frame types.");
+				return false;
+			}
+		}
 	}
 
 	target.setTimestamp(source.timestamp());
@@ -906,6 +557,470 @@ bool FrameConverter::Comfort::convertAndCopy(const Frame& source, Frame& target,
 	}
 
 	return convert(source, target.pixelFormat(), target.pixelOrigin(), target, true, worker, options);
+}
+
+bool FrameConverter::Comfort::convertCompatibleFormats(const Frame& source, const FrameType& targetType, Frame& target, const bool forceCopy)
+{
+	ocean_assert(source.isValid());
+	ocean_assert(targetType.isValid());
+
+	if (source.frameType() == targetType)
+	{
+		if (forceCopy)
+		{
+			if (target.isValid() && target.frameType() == targetType && !target.isReadOnly())
+			{
+				// the target frame has the correct frame type, and we need to make a copy
+				// therefore, we can use the target's memory and copy the source image into the existing memory
+
+				if (!target.copy(0, 0, source))
+				{
+					ocean_assert(false && "This should never happen!");
+					return false;
+				}
+			}
+			else
+			{
+				target = Frame(source, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
+			}
+		}
+		else
+		{
+			// the source and target frame types are matching perfectly, so we can re-use the memory of the source frame
+
+			target = Frame(source, Frame::ACM_USE_KEEP_LAYOUT);
+		}
+
+		return true;
+	}
+
+	if (source.isFrameTypeCompatible(targetType, false /*allowDifferentPixelsOrigins*/) && FrameType::formatIsPureGeneric(targetType.pixelFormat()))
+	{
+		ocean_assert(!FrameType::formatIsPureGeneric(source.pixelFormat()));
+
+		// the source and target frame types are compatible (have the same data layout), and the target frame has a pure generic pixel format, so we can re-use the memory of the source frame
+
+		const Frame::AdvancedCopyMode copyMode = forceCopy ? Frame::ACM_COPY_REMOVE_PADDING_LAYOUT : Frame::ACM_USE_KEEP_LAYOUT;
+
+		target = Frame(source, copyMode);
+		target.setPixelFormat(targetType.pixelFormat());
+
+		return true;
+	}
+
+	if (!forceCopy && source.pixelOrigin() == targetType.pixelOrigin())
+	{
+		// special handling for frames containing a Y-plane while the target pixel format is a single y-plane image
+
+		bool useYPlane = false;
+
+		if (targetType.pixelFormat() == FrameType::FORMAT_Y8_FULL_RANGE)
+		{
+			switch (source.pixelFormat())
+			{
+				case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
+				case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
+				case FrameType::FORMAT_Y_UV12_FULL_RANGE:
+				case FrameType::FORMAT_Y_VU12_FULL_RANGE:
+				case FrameType::FORMAT_Y_U_V24_FULL_RANGE:
+					useYPlane = true;
+					break;
+
+				default:
+					break;
+			}
+		}
+		else if (targetType.pixelFormat() == FrameType::FORMAT_Y8_LIMITED_RANGE)
+		{
+			switch (source.pixelFormat())
+			{
+				case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
+				case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
+				case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
+				case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
+				case FrameType::FORMAT_Y_U_V24_LIMITED_RANGE:
+					useYPlane = true;
+					break;
+
+				default:
+					break;
+			}
+		}
+
+		if (useYPlane)
+		{
+			const uint8_t* ySourcePlane = source.constdata<uint8_t>(0u);
+			const unsigned int ySourcePlanePaddingElements = source.paddingElements(0u);
+
+			target = Frame(targetType, ySourcePlane, Frame::CM_USE_KEEP_LAYOUT, ySourcePlanePaddingElements);
+
+			target.setTimestamp(source.timestamp());
+			target.setRelativeTimestamp(source.relativeTimestamp());
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool FrameConverter::Comfort::convertWithConversionFunction(const Frame& source, const FrameType& targetType, Frame& target, const Options& options, Worker* worker)
+{
+	ocean_assert(source.isValid());
+	ocean_assert(targetType.isValid());
+
+	ConversionFunctionMap::FunctionType functionType = ConversionFunctionMap::FT_INVALID;
+	const void* function = ConversionFunctionMap::get().function(source.pixelFormat(), targetType.pixelFormat(), functionType, options);
+
+	if (function == nullptr)
+	{
+		return false;
+	}
+
+	constexpr bool forceOwner = false;
+	constexpr bool forceWritable = true;
+
+	if (!target.set(targetType, forceOwner, forceWritable))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
+
+	const ConversionFlag conversionFlag = source.pixelOrigin() == targetType.pixelOrigin() ? CONVERT_NORMAL : CONVERT_FLIPPED;
+
+	switch (functionType)
+	{
+		case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT8:
+		{
+			using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_1_UINT8_GAMMA_TO_1_UINT8:
+		{
+			using SpecializedFunction = ConversionFunctionMap::OneSourceGammaOneTargetConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), conversionFlag, options.gamma(), source.paddingElements(), target.paddingElements(), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT8_ALPHA:
+		{
+			using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetAlphaConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), options.alphaChannelTargetValue(), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT8_BLACKLEVEL_WHITEBALANCE_GAMMA:
+		{
+			using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetBlackLevelWhiteBalanceGammaConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), conversionFlag, options.blackLevel(), options.whiteBalance(), options.gamma(), source.paddingElements(), target.paddingElements(), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_1_UINT8_TO_1_UINT16:
+		{
+			using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint8_t, uint16_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(), target.data<uint16_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_1_UINT16_TO_1_UINT8:
+		{
+			using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint16_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint16_t>(), target.data<uint8_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_1_UINT16_TO_1_UINT16:
+		{
+			using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint16_t, uint16_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint16_t>(), target.data<uint16_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_1_UINT32_TO_1_UINT8:
+		{
+			using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint32_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint32_t>(), target.data<uint8_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_1_UINT32_TO_1_UINT16:
+		{
+			using SpecializedFunction = ConversionFunctionMap::OneSourceOneTargetConversionFunction<uint32_t, uint16_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint32_t>(), target.data<uint16_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_1_UINT8_TO_2_UINT8:
+		{
+			using SpecializedFunction = ConversionFunctionMap::OneSourceTwoTargetsConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(0u), target.data<uint8_t>(1u), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(0u), target.paddingElements(1u), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_1_UINT8_TO_3_UINT8:
+		{
+			using SpecializedFunction = ConversionFunctionMap::OneSourceThreeTargetsConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(), target.data<uint8_t>(0u), target.data<uint8_t>(1u), target.data<uint8_t>(2u), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(0u), target.paddingElements(1u), target.paddingElements(2u), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_2_UINT8_TO_1_UINT8:
+		{
+			using SpecializedFunction = ConversionFunctionMap::TwoSourcesOneTargetConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), source.width(), source.height(), conversionFlag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_2_UINT8_TO_1_UINT8_ALPHA:
+		{
+			using SpecializedFunction = ConversionFunctionMap::TwoSourcesOneTargetAlphaConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), source.width(), source.height(), conversionFlag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), options.alphaChannelTargetValue(), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_2_UINT8_TO_2_UINT8:
+		{
+			using SpecializedFunction = ConversionFunctionMap::TwoSourcesTwoTargetConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), source.width(), source.height(), conversionFlag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), target.paddingElements(1u), worker);
+			return true;break;
+		}
+
+		case ConversionFunctionMap::FT_2_UINT8_TO_3_UINT8:
+		{
+			using SpecializedFunction = ConversionFunctionMap::TwoSourcesThreeTargetConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), target.data<uint8_t>(2u), source.width(), source.height(), conversionFlag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), target.paddingElements(1u), target.paddingElements(2u), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_3_UINT8_TO_1_UINT8:
+		{
+			using SpecializedFunction = ConversionFunctionMap::ThreeSourcesOneTargetConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), source.constdata<uint8_t>(2u), target.data<uint8_t>(0u), source.width(), source.height(), conversionFlag, source.paddingElements(0u), source.paddingElements(1u), source.paddingElements(2u), target.paddingElements(0u), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_3_UINT8_TO_1_UINT8_ALPHA:
+		{
+			using SpecializedFunction = ConversionFunctionMap::ThreeSourcesOneTargetAlphaConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), source.constdata<uint8_t>(2u), target.data<uint8_t>(0u), source.width(), source.height(), conversionFlag, source.paddingElements(0u), source.paddingElements(1u), source.paddingElements(2u), target.paddingElements(0u), options.alphaChannelTargetValue(), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_3_UINT8_TO_3_UINT8:
+		{
+			using SpecializedFunction = ConversionFunctionMap::ThreeSourcesThreeTargetConversionFunction<uint8_t, uint8_t>;
+			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
+
+			specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), source.constdata<uint8_t>(2u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), target.data<uint8_t>(2u), source.width(), source.height(), conversionFlag, source.paddingElements(0u), source.paddingElements(1u), source.paddingElements(2u), target.paddingElements(0u), target.paddingElements(1u), target.paddingElements(2u), worker);
+			return true;
+		}
+
+		case ConversionFunctionMap::FT_INVALID:
+		default:
+			break;
+	}
+
+	ocean_assert(false && "Invalid function type!");
+	return false;
+}
+
+bool FrameConverter::Comfort::convertGenericFormats(const Frame& source, const FrameType& targetType, Frame& target, Worker* worker)
+{
+	ocean_assert(source.isValid());
+	ocean_assert(targetType.isValid());
+
+	if (source.numberPlanes() != 1u)
+	{
+		// the generic conversion cannot be applied to images with multiple planes
+		return false;
+	}
+
+	const bool perfectMatchAndGeneric = source.pixelFormat() == targetType.pixelFormat() && FrameType::formatIsGeneric(source.pixelFormat());
+	const bool compatibleAndAtLeastOneIsPureGeneric = (FrameType::formatIsPureGeneric(source.pixelFormat()) || FrameType::formatIsPureGeneric(targetType.pixelFormat())) && FrameType::arePixelFormatsCompatible(source.pixelFormat(), targetType.pixelFormat());
+
+	if (!perfectMatchAndGeneric && !compatibleAndAtLeastOneIsPureGeneric)
+	{
+		return false;
+	}
+
+	const ConversionFlag conversionFlag = source.pixelOrigin() == targetType.pixelOrigin() ? CONVERT_NORMAL : CONVERT_FLIPPED;
+
+	constexpr bool forceOwner = false;
+	constexpr bool forceWritable = true;
+
+	if (!target.set(targetType, forceOwner, forceWritable))
+	{
+		ocean_assert(false && "This should never happen!");
+		return false;
+	}
+
+	ocean_assert(source.numberPlanes() == 1u && target.numberPlanes() == 1u);
+
+	switch (source.dataType())
+	{
+		case FrameType::DT_UNSIGNED_INTEGER_8:
+		case FrameType::DT_SIGNED_INTEGER_8:
+		{
+			switch (source.channels())
+			{
+				case 1u:
+					FrameChannels::transformGeneric<uint8_t, 1u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 2u:
+					FrameChannels::transformGeneric<uint8_t, 2u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 3u:
+					FrameChannels::transformGeneric<uint8_t, 3u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 4u:
+					FrameChannels::transformGeneric<uint8_t, 4u>(source.constdata<uint8_t>(), target.data<uint8_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				default:
+					ocean_assert(false && "Invalid function type!");
+					return false;
+			}
+
+			break;
+		}
+
+		case FrameType::DT_UNSIGNED_INTEGER_16:
+		case FrameType::DT_SIGNED_INTEGER_16:
+		case FrameType::DT_SIGNED_FLOAT_16:
+		{
+			switch (source.channels())
+			{
+				case 1u:
+					FrameChannels::transformGeneric<uint16_t, 1u>(source.constdata<uint16_t>(), target.data<uint16_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 2u:
+					FrameChannels::transformGeneric<uint16_t, 2u>(source.constdata<uint16_t>(), target.data<uint16_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 3u:
+					FrameChannels::transformGeneric<uint16_t, 3u>(source.constdata<uint16_t>(), target.data<uint16_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 4u:
+					FrameChannels::transformGeneric<uint16_t, 4u>(source.constdata<uint16_t>(), target.data<uint16_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				default:
+					ocean_assert(false && "Invalid function type!");
+					return false;
+			}
+
+			break;
+		}
+
+		case FrameType::DT_UNSIGNED_INTEGER_32:
+		case FrameType::DT_SIGNED_INTEGER_32:
+		case FrameType::DT_SIGNED_FLOAT_32:
+		{
+			switch (source.channels())
+			{
+				case 1u:
+					FrameChannels::transformGeneric<uint32_t, 1u>(source.constdata<uint32_t>(), target.data<uint32_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 2u:
+					FrameChannels::transformGeneric<uint32_t, 2u>(source.constdata<uint32_t>(), target.data<uint32_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 3u:
+					FrameChannels::transformGeneric<uint32_t, 3u>(source.constdata<uint32_t>(), target.data<uint32_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 4u:
+					FrameChannels::transformGeneric<uint32_t, 4u>(source.constdata<uint32_t>(), target.data<uint32_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				default:
+					ocean_assert(false && "Invalid function type!");
+					return false;
+			}
+
+			break;
+		}
+
+		case FrameType::DT_UNSIGNED_INTEGER_64:
+		case FrameType::DT_SIGNED_INTEGER_64:
+		case FrameType::DT_SIGNED_FLOAT_64:
+		{
+			switch (source.channels())
+			{
+				case 1u:
+					FrameChannels::transformGeneric<uint64_t, 1u>(source.constdata<uint64_t>(), target.data<uint64_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 2u:
+					FrameChannels::transformGeneric<uint64_t, 2u>(source.constdata<uint64_t>(), target.data<uint64_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 3u:
+					FrameChannels::transformGeneric<uint64_t, 3u>(source.constdata<uint64_t>(), target.data<uint64_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 4u:
+					FrameChannels::transformGeneric<uint64_t, 4u>(source.constdata<uint64_t>(), target.data<uint64_t>(), source.width(), source.height(), conversionFlag, source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				default:
+					ocean_assert(false && "Invalid function type!");
+					return false;
+			}
+
+			break;
+		}
+
+		case FrameType::DT_UNDEFINED:
+		case FrameType::DT_END:
+			break;
+	}
+
+	ocean_assert(false && "Invalid data type!");
+	return false;
 }
 
 MatrixD FrameConverter::transformationMatrix_FullRangeRGB24_To_FullRangeYUV24_BT601()
