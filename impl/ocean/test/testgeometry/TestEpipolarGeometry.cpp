@@ -657,20 +657,19 @@ bool TestEpipolarGeometry::testTriangulateImagePoints(const double testDuration)
 	Log::info() << "Testing triangulation of image points";
 	Log::info() << " ";
 
-	const Timestamp startTimestamp(true);
-
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
-
 	RandomGenerator randomGenerator;
 
-	bool allSucceeded = true;
+	ValidationPrecision validation(0.99, randomGenerator);
+
+	const Timestamp startTimestamp(true);
 
 	do
 	{
-		for (const AnyCameraType anyCameraType : { AnyCameraType::PINHOLE, AnyCameraType::FISHEYE })
+		for (const AnyCameraType anyCameraType : {AnyCameraType::PINHOLE, AnyCameraType::FISHEYE})
 		{
-			const SharedAnyCamera anyCamera = Utilities::realisticAnyCamera(anyCameraType);
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const SharedAnyCamera anyCamera = Utilities::realisticAnyCamera(anyCameraType, RandomI::random(randomGenerator, 1u));
 
 			ocean_assert(anyCamera != nullptr && anyCamera->isValid());
 
@@ -683,8 +682,8 @@ bool TestEpipolarGeometry::testTriangulateImagePoints(const double testDuration)
 			const HomogenousMatrix4 world_T_cameraA = Test::TestGeometry::Utilities::viewPosition(*anyCamera, boundingSphere, /* viewDirection */ Random::vector3(randomGenerator));
 			const HomogenousMatrix4 world_T_cameraB = Test::TestGeometry::Utilities::viewPosition(*anyCamera, boundingSphere, /* viewDirection */ Random::vector3(randomGenerator));
 
-			const HomogenousMatrix4 flippedCameraA_T_world = PinholeCamera::standard2InvertedFlipped(world_T_cameraA);
-			const HomogenousMatrix4 flippedCameraB_T_world = PinholeCamera::standard2InvertedFlipped(world_T_cameraB);
+			const HomogenousMatrix4 flippedCameraA_T_world = Camera::standard2InvertedFlipped(world_T_cameraA);
+			const HomogenousMatrix4 flippedCameraB_T_world = Camera::standard2InvertedFlipped(world_T_cameraB);
 
 			Vectors2 imagePointsA;
 			Vectors2 imagePointsB;
@@ -694,8 +693,8 @@ bool TestEpipolarGeometry::testTriangulateImagePoints(const double testDuration)
 
 			for (const Vector3& objectPoint : objectPoints)
 			{
-				ocean_assert(PinholeCamera::isObjectPointInFrontIF(flippedCameraA_T_world, objectPoint));
-				ocean_assert(PinholeCamera::isObjectPointInFrontIF(flippedCameraB_T_world, objectPoint));
+				ocean_assert(Camera::isObjectPointInFrontIF(flippedCameraA_T_world, objectPoint));
+				ocean_assert(Camera::isObjectPointInFrontIF(flippedCameraB_T_world, objectPoint));
 
 				imagePointsA.emplace_back(anyCamera->projectToImageIF(flippedCameraA_T_world * objectPoint));
 				imagePointsB.emplace_back(anyCamera->projectToImageIF(flippedCameraB_T_world * objectPoint));
@@ -705,44 +704,25 @@ bool TestEpipolarGeometry::testTriangulateImagePoints(const double testDuration)
 
 			if (triangulatedObjectPoints.size() != objectPoints.size())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 			else
 			{
 				for (size_t i = 0; i < objectPoints.size(); ++i)
 				{
-					if (Numeric::isWeakEqualEps(objectPoints[i].sqrDistance(triangulatedObjectPoints[i])))
+					if (Numeric::isNotWeakEqualEps(objectPoints[i].sqrDistance(triangulatedObjectPoints[i])))
 					{
-						++validIterations;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
-
-			iterations += uint64_t(objectPoints.size());
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations > 0ull);
-	ocean_assert(validIterations <= iterations);
+	Log::info() << "Validation: " << validation;
 
-	const double percent = double(validIterations) / double(iterations);
-
-	if (percent <= 0.99)
-	{
-		allSucceeded = false;
-	}
-
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
