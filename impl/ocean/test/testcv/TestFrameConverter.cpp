@@ -14,7 +14,7 @@
 
 #include "ocean/math/Random.h"
 
-#include <array>
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -421,7 +421,8 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 
 	Log::info() << "Test comfort convert function:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats pixelFormats = CV::CVUtilities::definedPixelFormats();
 
@@ -430,7 +431,7 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 	if (pixelFormats.size() != size_t(FrameType::FORMAT_END) - 1)
 	{
 		ocean_assert(false && "Missing pixel format!");
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	const std::vector<FrameType::DataType> dataTypes =
@@ -451,7 +452,7 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 	if (dataTypes.size() != size_t(FrameType::DT_END) - 2) // -2 due to missing DT_SIGNED_FLOAT_16
 	{
 		ocean_assert(false && "Missing data type!");
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	const std::vector<Options> allOptions =
@@ -461,8 +462,6 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 		Options(0.7f),
 		Options(64u, 2.0f, 1.0f, 2.0f, 1.5f),
 	};
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -551,7 +550,7 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 
 			default:
 				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 		}
 
@@ -561,14 +560,14 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 
 			if (targetFrame.frameType() != targetFrameType)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (forceCopy)
 			{
 				if (!targetFrame.isOwner())
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 			else
@@ -577,21 +576,21 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 				{
 					if (targetFrame.isOwner())
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 				else
 				{
 					if (!targetFrame.isOwner())
 					{
-						allSucceeded = false;
+						OCEAN_SET_FAILED(validation);
 					}
 				}
 			}
 
 			if (targetFrame.timestamp() != sourceFrame.timestamp())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (sourcePixelFormat == targetPixelFormat && options.optionsType() == Options::OT_DEFAULT)
@@ -612,34 +611,27 @@ bool TestFrameConverter::testComfortConvert(const double testDuration)
 						{
 							if (memcmp(reinterpret_cast<const void*>(sourcePlane.constdata<uint8_t>() + y * sourcePlane.strideBytes()), reinterpret_cast<const void*>(convertedTargetPlane.constdata<uint8_t>() + y * convertedTargetPlane.strideBytes()), sourcePlane.widthBytes()) != 0)
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
@@ -648,7 +640,8 @@ bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
 
 	Log::info() << "Test comfort convert & copy function:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats pixelFormats = CV::CVUtilities::definedPixelFormats();
 
@@ -657,7 +650,7 @@ bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
 	if (pixelFormats.size() != size_t(FrameType::FORMAT_END) - 1)
 	{
 		ocean_assert(false && "Missing pixel format!");
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	const std::vector<FrameType::DataType> dataTypes =
@@ -678,12 +671,10 @@ bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
 	if (dataTypes.size() != size_t(FrameType::DT_END) - 2) // -2 due to missing DT_SIGNED_FLOAT_16
 	{
 		ocean_assert(false && "Missing data type!");
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	Memory externalMemory;
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -802,21 +793,14 @@ bool TestFrameConverter::testComfortConvertAndCopy(const double testDuration)
 
 		if (CV::FrameConverter::Comfort::convertAndCopy(sourceFrame, targetFrame) != expectSuccess)
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameConverter::testComfortChange(const double testDuration)
@@ -825,7 +809,8 @@ bool TestFrameConverter::testComfortChange(const double testDuration)
 
 	Log::info() << "Test comfort change function:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const FrameType::PixelFormats pixelFormats = CV::CVUtilities::definedPixelFormats();
 
@@ -834,7 +819,7 @@ bool TestFrameConverter::testComfortChange(const double testDuration)
 	if (pixelFormats.size() != size_t(FrameType::FORMAT_END) - 1)
 	{
 		ocean_assert(false && "Missing pixel format!");
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	const std::vector<FrameType::DataType> dataTypes =
@@ -855,7 +840,7 @@ bool TestFrameConverter::testComfortChange(const double testDuration)
 	if (dataTypes.size() != size_t(FrameType::DT_END) - 2) // -2 due to missing DT_SIGNED_FLOAT_16
 	{
 		ocean_assert(false && "Missing data type!");
-		allSucceeded = false;
+		OCEAN_SET_FAILED(validation);
 	}
 
 	const std::vector<Options> allOptions =
@@ -865,8 +850,6 @@ bool TestFrameConverter::testComfortChange(const double testDuration)
 		Options(0.7f),
 		Options(64u, 2.0f, 1.0f, 2.0f, 1.5f),
 	};
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -953,7 +936,7 @@ bool TestFrameConverter::testComfortChange(const double testDuration)
 
 			default:
 				ocean_assert(false && "This should never happen!");
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 				break;
 		}
 
@@ -963,17 +946,17 @@ bool TestFrameConverter::testComfortChange(const double testDuration)
 
 			if (frame.frameType() != targetFrameType)
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (forceCopy && !frame.isOwner())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (frame.timestamp() != copyFrame.timestamp())
 			{
-				allSucceeded = false;
+				OCEAN_SET_FAILED(validation);
 			}
 
 			if (sourcePixelFormat == targetPixelFormat && options.optionsType() == Options::OT_DEFAULT)
@@ -994,34 +977,27 @@ bool TestFrameConverter::testComfortChange(const double testDuration)
 						{
 							if (memcmp(reinterpret_cast<const void*>(sourcePlane.constdata<uint8_t>() + y * sourcePlane.strideBytes()), reinterpret_cast<const void*>(convertedTargetPlane.constdata<uint8_t>() + y * convertedTargetPlane.strideBytes()), sourcePlane.widthBytes()) != 0)
 							{
-								allSucceeded = false;
+								OCEAN_SET_FAILED(validation);
 							}
 						}
 					}
 				}
 				else
 				{
-					allSucceeded = false;
+					OCEAN_SET_FAILED(validation);
 				}
 			}
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestFrameConverter::testCast(const double testDuration)
