@@ -37,6 +37,15 @@ HomogenousMatrixD4 PixelImage::device_T_camera() const
 	return device_T_camera_;
 }
 
+bool PixelImage::setCamera(SharedAnyCamera&& camera)
+{
+	const ScopedLock scopedLock(lock_);
+
+	camera_ = std::move(camera);
+
+	return true;
+}
+
 void PixelImage::setDevice_T_camera(const HomogenousMatrixD4& device_T_camera)
 {
 	ocean_assert(device_T_camera.isValid());
@@ -112,7 +121,14 @@ bool PixelImage::setPixelImage(Frame&& frame, SharedAnyCamera anyCamera)
 
 	if (isStarted_)
 	{
-		return deliverNewFrame(std::move(frame), std::move(anyCamera));
+		if (anyCamera)
+		{
+			return deliverNewFrame(std::move(frame), std::move(anyCamera));
+		}
+		else
+		{
+			return deliverNewFrame(std::move(frame), SharedAnyCamera(camera_));
+		}
 	}
 	else
 	{

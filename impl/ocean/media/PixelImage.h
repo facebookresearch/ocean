@@ -51,6 +51,13 @@ class OCEAN_MEDIA_EXPORT PixelImage : virtual public FrameMedium
 		HomogenousMatrixD4 device_T_camera() const override;
 
 		/**
+		 * Sets the known camera profile of this frame medium.
+		 * The camera profile will be the default camera profile, a per-frame camera profile can be specified in setPixelImage().
+		 * @see FrameMedium::setCamera().
+		 */
+		bool setCamera(SharedAnyCamera&& camera) override;
+
+		/**
 		 * Sets the transformation between the camera and device.
 		 * @param device_T_camera The transformation to be set, must be valid
 		 * @see device_T_camera().
@@ -97,7 +104,7 @@ class OCEAN_MEDIA_EXPORT PixelImage : virtual public FrameMedium
 		 * Sets or changes the explicit frame of this pixel image.
 		 * Beware: The frame will not be set if the medium is not started, further the frame should have a valid timestamp.<br>
 		 * @param frame The frame to be set, the frame will be moved
-		 * @param anyCamera The camera profile of the given frame, if known
+		 * @param anyCamera The camera profile of the given frame, will not be used for other frames, if known
 		 * @return True, if succeeded
 		 */
 		virtual bool setPixelImage(Frame&& frame, SharedAnyCamera anyCamera = nullptr);
@@ -106,7 +113,7 @@ class OCEAN_MEDIA_EXPORT PixelImage : virtual public FrameMedium
 		 * Sets or changes the explicit frame of this pixel image.
 		 * Beware: The frame will not be set if the medium is not started, further the frame should have a valid timestamp.<br>
 		 * @param frame The frame to be set, the frame data will be copied
-		 * @param anyCamera The camera profile of the given frame, if known
+		 * @param anyCamera The camera profile of the given frame, will not be used for other frames, if known
 		 * @return True, if succeeded
 		 */
 		virtual bool setPixelImage(const Frame& frame, SharedAnyCamera anyCamera = nullptr);
@@ -132,6 +139,9 @@ class OCEAN_MEDIA_EXPORT PixelImage : virtual public FrameMedium
 
 		/// Determining whether this image is 'started' and holds valid image data.
 		bool isStarted_;
+
+		/// The camera profile for all images for which no per-frame camera profile is provided via setPixelImage(), nullptr if unknown.
+		SharedAnyCamera camera_;
 
 		/// The transformation between camera and device.
 		HomogenousMatrixD4 device_T_camera_;
