@@ -382,7 +382,7 @@ class SquareMatrixT3
 		 * @param eigenVectors The three corresponding eigen vectors
 		 * @return True, if succeeded
 		 */
-		bool eigenSystem(T* eigenValues,VectorT3<T>* eigenVectors) const;
+		bool eigenSystem(T* eigenValues, VectorT3<T>* eigenVectors) const;
 
 		/**
 		 * Returns a 3d vector with values of the matrix diagonal.

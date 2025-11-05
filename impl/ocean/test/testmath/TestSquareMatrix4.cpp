@@ -12,6 +12,7 @@
 
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/MathUtilities.h"
+#include "ocean/math/Matrix.h"
 #include "ocean/math/Random.h"
 
 #include "ocean/test/Validation.h"
@@ -130,6 +131,14 @@ bool TestSquareMatrix4::test(const double testDuration, Worker& worker)
 	Log::info() << " ";
 
 	allSucceeded = testAccessor(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testEigenSystem<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testEigenSystem<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -262,6 +271,16 @@ TEST(TestSquareMatrix4, MatrixSubtraction_Double)
 TEST(TestSquareMatrix4, Accessor)
 {
 	EXPECT_TRUE(TestSquareMatrix4::testAccessor(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, EigenSystem_Float)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testEigenSystem<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestSquareMatrix4, EigenSystem_Double)
+{
+	EXPECT_TRUE(TestSquareMatrix4::testEigenSystem<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -1419,6 +1438,193 @@ bool TestSquareMatrix4::testAccessor(const double testDuration)
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestSquareMatrix4::testEigenSystem(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "EigenSystem test, with " << TypeNamer::name<T>() << ":";
+
+	constexpr double successThreshold = std::is_same<T, float>::value ? 0.90 : 0.95;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(successThreshold, randomGenerator);
+
+	{
+		// the identity matrix should have eigenvalues 1, 1, 1, 1
+
+		const SquareMatrixT4<T> identity(true);
+
+		T eigenValues[4];
+		VectorT4<T> eigenVectors[4];
+
+		if (identity.eigenSystem(eigenValues, eigenVectors))
+		{
+			for (unsigned int i = 0u; i < 4u; ++i)
+			{
+				if (NumericT<T>::isNotEqual(eigenValues[i], T(1.0), NumericT<T>::weakEps()))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+		}
+		else
+		{
+			OCEAN_SET_FAILED(validation);
+		}
+	}
+
+	HighPerformanceStatistic performance;
+	HighPerformanceStatistic performanceArbitrary;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			// let's test a diagonal matrix, eigenvalues should be the diagonal elements
+			// eigenvectors are the standard basis vectors
+
+			const T d0 = RandomT<T>::scalar(randomGenerator, T(-10), T(10));
+			const T d1 = RandomT<T>::scalar(randomGenerator, T(-10), T(10));
+			const T d2 = RandomT<T>::scalar(randomGenerator, T(-10), T(10));
+			const T d3 = RandomT<T>::scalar(randomGenerator, T(-10), T(10));
+
+			const SquareMatrixT4<T> diagonalMatrix(VectorT4<T>(d0, d1, d2, d3));
+
+			T eigenValues[4];
+			VectorT4<T> eigenVectors[4];
+
+			if (diagonalMatrix.eigenSystem(eigenValues, eigenVectors))
+			{
+				std::vector<T> expectedEigenValues = {d0, d1, d2, d3};
+				std::sort(expectedEigenValues.begin(), expectedEigenValues.end());
+
+				std::vector<T> actualEigenValues = {eigenValues[0], eigenValues[1], eigenValues[2], eigenValues[3]};
+				std::sort(actualEigenValues.begin(), actualEigenValues.end());
+
+				for (unsigned int i = 0u; i < 4u; ++i)
+				{
+					const T expectedEigenValue = expectedEigenValues[i];
+					const T actualEigenValue = actualEigenValues[i];
+
+					constexpr T epsilon = std::is_same<T, float>::value ? T(0.1) : NumericT<T>::weakEps();
+
+					if (NumericT<T>::isNotEqual(expectedEigenValue, actualEigenValue, epsilon))
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+
+				for (unsigned int i = 0u; i < 4u; ++i)
+				{
+					const T eigenValue = eigenValues[i];
+					const VectorT4<T>& eigenVector = eigenVectors[i];
+
+					VectorT4<T> Av = diagonalMatrix * eigenVector;
+					VectorT4<T> lambdaV = eigenVector * eigenValue;
+
+					constexpr T epsilon = std::is_same<T, float>::value ? T(0.1) : NumericT<T>::weakEps();
+
+					if (!Av.isEqual(lambdaV, epsilon))
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+			}
+			else
+			{
+				scopedIteration.setInaccurate();
+			}
+		}
+
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			// symmetric matrix, all eigenvalues should be real and eigenvectors should be orthogonal
+
+			SquareMatrixT4<T> matrix;
+			for (unsigned int r = 0u; r < 4u; ++r)
+			{
+				for (unsigned int c = r; c < 4u; ++c)
+				{
+					const T value = RandomT<T>::scalar(randomGenerator, T(-10), T(10));
+
+					matrix(r, c) = value;
+					matrix(c, r) = value;
+				}
+			}
+
+			T eigenValues[4];
+			VectorT4<T> eigenVectors[4];
+
+			performance.start();
+				const bool result = matrix.eigenSystem(eigenValues, eigenVectors);
+			performance.stop();
+
+			if (result)
+			{
+				for (unsigned int i = 0u; i < 4u; ++i)
+				{
+					const T eigenValue = eigenValues[i];
+					const VectorT4<T>& eigenVector = eigenVectors[i];
+
+					VectorT4<T> Av = matrix * eigenVector;
+					VectorT4<T> lambdaV = eigenVector * eigenValue;
+
+					if (!Av.isEqual(lambdaV, NumericT<T>::eps() * T(100)))
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+
+				// let's ensure that the eigenvectors are orthogonal
+
+				for (unsigned int iOuter = 0u; iOuter < 4u; ++iOuter)
+				{
+					const VectorT4<T>& outerEigenVector = eigenVectors[iOuter];
+
+					for (unsigned int iInner = iOuter + 1u; iInner < 4u; ++iInner)
+					{
+						const VectorT4<T>& innerEigenVector = eigenVectors[iInner];
+
+						const T dotProduct = outerEigenVector * innerEigenVector;
+
+						if (NumericT<T>::isNotWeakEqual(dotProduct, T(0)))
+						{
+							scopedIteration.setInaccurate();
+						}
+					}
+				}
+			}
+			else
+			{
+				scopedIteration.setInaccurate();
+			}
+
+			{
+				const MatrixT<T> matrixArbitrary(4, 4, matrix.data(), false /*valuesRowAligned*/);
+
+				MatrixT<T> eigenValuesArbitrary;
+				MatrixT<T> eigenVectorsArbitrary;
+
+				performanceArbitrary.start();
+					matrixArbitrary.eigenSystem(eigenValuesArbitrary, eigenVectorsArbitrary);
+				performanceArbitrary.stop();
+			}
+		}
+	}
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Performance SquareMatrix4: " << performance;
+	Log::info() << "Performance Matrix: " << performanceArbitrary;
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();

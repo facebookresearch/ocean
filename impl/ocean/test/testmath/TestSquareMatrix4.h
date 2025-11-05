@@ -156,6 +156,15 @@ class OCEAN_TEST_MATH_EXPORT TestSquareMatrix4
 		 */
 		static bool testAccessor(const double testDuration);
 
+		/**
+		 * Tests the eigenSystem function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar value
+		 */
+		template <typename T>
+		static bool testEigenSystem(const double testDuration);
+
 	private:
 
 		/**

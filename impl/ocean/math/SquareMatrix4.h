@@ -266,11 +266,11 @@ class SquareMatrixT4
 
 		/**
 		 * Performs an eigen value analysis.
-		 * @param eigenValues Vector holding the three eigen values
-		 * @param eigenVectors Matrix holding the three corresponding eigen vectors
+		 * @param eigenValues The resulting four eigen values, must be valid
+		 * @param eigenVectors The resulting four eigen vectors, must be valid
 		 * @return True, if succeeded
 		 */
-		bool eigenSystem(VectorT4<T>& eigenValues, SquareMatrixT4<T>& eigenVectors);
+		bool eigenSystem(T* eigenValues, VectorT4<T>* eigenVectors) const;
 
 		/**
 		 * Returns a pointer to the internal values.
@@ -1013,8 +1013,10 @@ inline bool SquareMatrixT4<T>::isEqual(const SquareMatrixT4<T>& matrix, const T 
 }
 
 template <typename T>
-bool SquareMatrixT4<T>::eigenSystem(VectorT4<T>& eigenValues, SquareMatrixT4<T>& eigenVectors)
+bool SquareMatrixT4<T>::eigenSystem(T* eigenValues, VectorT4<T>* eigenVectors) const
 {
+	ocean_assert(eigenValues != nullptr && eigenVectors != nullptr);
+
 	/**
 	 * <pre>
 	 * Computation of the characteristic polynomial
@@ -1068,16 +1070,240 @@ bool SquareMatrixT4<T>::eigenSystem(VectorT4<T>& eigenValues, SquareMatrixT4<T>&
 						+ d * f * i * o - b * h * i * o - d * e * j * o + a * h * j * o + b * e * l * o - a * f * l * o
 						- c * f * i * p + b * g * i * p + c * e * j * p - a * g * j * p - b * e * k * p + a * f * k * p;
 
-#if defined(SQUARE_MATRIX_DISABLED_MISSING_IMPLEMENTATION)
-	T x[4];
-	unsigned int solutions = EquationT<T>::solveQuartic(a1, a2, a3, a4, a5, x);
-#endif // SQUARE_MATRIX_DISABLED_MISSING_IMPLEMENTATION
+	// Solve the quartic equation to find eigenvalues
 
-	ocean_assert(false && "Missing implementation, calculate eigen vectors");
-	OCEAN_SUPPRESS_UNUSED_WARNING(eigenValues);
-	OCEAN_SUPPRESS_UNUSED_WARNING(eigenVectors);
+	double x[4];
+	const unsigned int solutions = EquationT<double>::solveQuartic(double(a1), double(a2), double(a3), double(a4), double(a5), x);
 
-	return false;
+	if (solutions != 4u)
+	{
+		return false;
+	}
+
+	for (unsigned int iEigen = 0u; iEigen < solutions && iEigen < 4u; ++iEigen)
+	{
+		eigenValues[iEigen] = T(x[iEigen]);
+	}
+
+	for (unsigned int iEigen = solutions; iEigen < 4u; ++iEigen)
+	{
+		eigenValues[iEigen] = T(0);
+	}
+
+	Utilities::sortHighestToFront4(eigenValues[0], eigenValues[1], eigenValues[2], eigenValues[3]);
+
+	/**
+	 * <pre>
+	 * Determination of the eigen vectors (vx, vy, vz, vw):
+	 *             [ a-x   b    c    d  ]   [ vx ]
+	 * A - x * I = [  e   f-x   g    h  ] * [ vy ] = 0
+	 *             [  i    j   k-x   l  ]   [ vz ]
+	 *             [  m    n    o   p-x ]   [ vw ]
+	 * </pre>
+	 */
+
+	for (unsigned int nSolution = 0u; nSolution < solutions; ++nSolution)
+	{
+		const T lambda = eigenValues[nSolution];
+
+		// create matrix (A - x*I) as rows
+
+		VectorT4<T> rows[4];
+		rows[0] = VectorT4<T>(a - lambda, b, c, d);
+		rows[1] = VectorT4<T>(e, f - lambda, g, h);
+		rows[2] = VectorT4<T>(i, j, k - lambda, l);
+		rows[3] = VectorT4<T>(m, n, o, p - lambda);
+
+		// Find eigenvector by solving (A - lambda*I) * v = 0
+		// We'll try setting each component to 1 and solving for the others
+
+		VectorT4<T> eigenvector(T(0), T(0), T(0), T(0));
+		T bestResidual = NumericT<T>::maxValue();
+
+		for (unsigned int freeIndex = 0u; freeIndex < 4u; ++freeIndex)
+		{
+			// Try setting component freeIndex to 1
+			VectorT4<T> candidate(T(0), T(0), T(0), T(0));
+			candidate[freeIndex] = T(1);
+
+			// Find the 3 rows with largest coefficients at freeIndex position
+			// (these will give us the most stable equations)
+			unsigned int rowIndices[4] = {0, 1, 2, 3};
+			T rowScores[4];
+
+			for (unsigned int rowNum = 0u; rowNum < 4u; ++rowNum)
+			{
+				rowScores[rowNum] = NumericT<T>::abs(rows[rowNum][freeIndex]);
+			}
+
+			// Sort rows by score (descending)
+			for (unsigned int row = 0u; row < 3u; ++row)
+			{
+				for (unsigned int row2 = row + 1u; row2 < 4u; ++row2)
+				{
+					if (rowScores[row2] > rowScores[row])
+					{
+						std::swap(rowScores[row], rowScores[row2]);
+						std::swap(rowIndices[row], rowIndices[row2]);
+					}
+				}
+			}
+
+			// Build 3x3 system from the 3 best rows
+			// System: coeffMatrix * unknowns = rhs
+			T coeffMatrix[3][3];
+			T rhs[3];
+			unsigned int unknownIndices[3];
+			unsigned int idx = 0u;
+
+			for (unsigned int col = 0u; col < 4u; ++col)
+			{
+				if (col != freeIndex)
+				{
+					unknownIndices[idx++] = col;
+				}
+			}
+
+			for (unsigned int rowIdx = 0u; rowIdx < 3u; ++rowIdx)
+			{
+				const VectorT4<T>& row = rows[rowIndices[rowIdx]];
+				rhs[rowIdx] = -row[freeIndex];
+
+				for (unsigned int colIdx = 0u; colIdx < 3u; ++colIdx)
+				{
+					coeffMatrix[rowIdx][colIdx] = row[unknownIndices[colIdx]];
+				}
+			}
+
+			// Solve 3x3 system using Gaussian elimination
+			T augmented[3][4];
+			T rowScales[3];
+
+			for (unsigned int rowIdx = 0u; rowIdx < 3u; ++rowIdx)
+			{
+				// Copy coefficients
+				for (unsigned int colIdx = 0u; colIdx < 3u; ++colIdx)
+				{
+					augmented[rowIdx][colIdx] = coeffMatrix[rowIdx][colIdx];
+				}
+				augmented[rowIdx][3] = rhs[rowIdx];
+
+				// Compute row scale for better numerical conditioning
+				T maxRowVal = T(0);
+				for (unsigned int colIdx = 0u; colIdx < 4u; ++colIdx)
+				{
+					maxRowVal = std::max(maxRowVal, NumericT<T>::abs(augmented[rowIdx][colIdx]));
+				}
+
+				rowScales[rowIdx] = maxRowVal;
+
+				// Scale the row if possible (improves conditioning)
+				if (maxRowVal > NumericT<T>::weakEps())
+				{
+					const T scale = T(1) / maxRowVal;
+					for (unsigned int colIdx = 0u; colIdx < 4u; ++colIdx)
+					{
+						augmented[rowIdx][colIdx] *= scale;
+					}
+				}
+			}
+
+			// Forward elimination with partial pivoting
+			for (unsigned int pivot = 0u; pivot < 3u; ++pivot)
+			{
+				// Find row with largest pivot element
+				unsigned int maxRow = pivot;
+				T maxVal = NumericT<T>::abs(augmented[pivot][pivot]);
+
+				for (unsigned int rowIdx = pivot + 1u; rowIdx < 3u; ++rowIdx)
+				{
+					const T val = NumericT<T>::abs(augmented[rowIdx][pivot]);
+					if (val > maxVal)
+					{
+						maxVal = val;
+						maxRow = rowIdx;
+					}
+				}
+
+				// Swap rows if needed
+				if (maxRow != pivot)
+				{
+					for (unsigned int colIdx = 0u; colIdx < 4u; ++colIdx)
+					{
+						std::swap(augmented[pivot][colIdx], augmented[maxRow][colIdx]);
+					}
+				}
+
+				// Use generous threshold (system may be near-singular as we're finding null space)
+				const T pivotThreshold = std::is_same<T, float>::value ? (NumericT<T>::weakEps() * T(10)) : NumericT<T>::weakEps();
+
+				// Skip elimination if pivot is too small, but continue (system is expected to be singular)
+				if (NumericT<T>::abs(augmented[pivot][pivot]) < pivotThreshold)
+				{
+					continue;
+				}
+
+				// Eliminate below pivot
+				for (unsigned int rowIdx = pivot + 1u; rowIdx < 3u; ++rowIdx)
+				{
+					const T factor = augmented[rowIdx][pivot] / augmented[pivot][pivot];
+					for (unsigned int colIdx = pivot; colIdx < 4u; ++colIdx)
+					{
+						augmented[rowIdx][colIdx] -= factor * augmented[pivot][colIdx];
+					}
+				}
+			}
+
+			// Back substitution
+			T solution[3] = {T(0), T(0), T(0)};
+
+			for (int rowIdx = 2; rowIdx >= 0; --rowIdx)
+			{
+				T sum = augmented[rowIdx][3];
+
+				for (unsigned int colIdx = rowIdx + 1u; colIdx < 3u; ++colIdx)
+				{
+					sum -= augmented[rowIdx][colIdx] * solution[colIdx];
+				}
+
+				const T pivotThreshold = std::is_same<T, float>::value ? (NumericT<T>::weakEps() * T(10)) : NumericT<T>::weakEps();
+				if (NumericT<T>::abs(augmented[rowIdx][rowIdx]) > pivotThreshold)
+				{
+					solution[rowIdx] = sum / augmented[rowIdx][rowIdx];
+				}
+				// else: leave solution[rowIdx] as 0 (free variable in under-determined system)
+			}
+
+			// Build candidate eigenvector
+			for (unsigned int idx2 = 0u; idx2 < 3u; ++idx2)
+			{
+				candidate[unknownIndices[idx2]] = solution[idx2];
+			}
+
+			// Evaluate residual: ||A*v - lambda*v||
+			const VectorT4<T> Av = (*this) * candidate;
+			const VectorT4<T> lambdaV = candidate * lambda;
+			const T residual = (Av - lambdaV).length();
+
+			if (residual < bestResidual)
+			{
+				bestResidual = residual;
+				eigenvector = candidate;
+			}
+		}
+
+		// Normalize the eigenvector
+		if (!eigenvector.normalize())
+		{
+			// Normalization failed - use standard basis vector
+			eigenvector = VectorT4<T>(T(0), T(0), T(0), T(0));
+			eigenvector[nSolution % 4u] = T(1);
+		}
+
+		eigenVectors[nSolution] = eigenvector;
+	}
+
+	return true;
 }
 
 template <typename T>
