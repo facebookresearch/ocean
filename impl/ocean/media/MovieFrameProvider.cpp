@@ -228,7 +228,7 @@ bool MovieFrameProvider::setPreferredFrameType(const FrameType::PixelFormat pixe
 {
 	const ScopedLock scopedLock(lock_);
 
-	if (frameType_.isValid() && !CV::FrameConverter::Comfort::isSupported(frameType_, pixelFormat))
+	if (frameType_.isValid() && !CV::FrameConverter::Comfort::isSupported(frameType_, pixelFormat, pixelOrigin))
 	{
 		return false;
 	}

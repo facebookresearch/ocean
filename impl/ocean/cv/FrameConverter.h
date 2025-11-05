@@ -638,11 +638,12 @@ class OCEAN_CV_EXPORT FrameConverter
 				 * Returns whether the convert function of this class supports the conversion of a frame with one pixel format to a new frame with other pixel format.
 				 * @param sourceType The frame type of the source frame, must be valid
 				 * @param targetPixelFormat The pixel format of the target frame, must be valid
+				 * @param targetPixelOrigin The pixel origin of the target frame, ORIGIN_INVALID to use the pixel origin of the source frame
 				 * @param options The options to be used for conversion
 				 * @return True, if so
 				 * @see convert().
 				 */
-				static bool isSupported(const FrameType& sourceType, const FrameType::PixelFormat targetPixelFormat, const Options& options = Options());
+				static bool isSupported(const FrameType& sourceType, const FrameType::PixelFormat targetPixelFormat, const FrameType::PixelOrigin targetPixelOrigin = FrameType::ORIGIN_INVALID, const Options& options = Options());
 
 				/**
 				 * Converts a frame with arbitrary dimension, pixel format and pixel origin into a frame with the same dimension, but different pixel format or pixel origin.

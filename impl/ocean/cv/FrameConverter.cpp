@@ -441,11 +441,21 @@ const void* FrameConverter::ConversionFunctionMap::function(const FrameType::Pix
 	return nullptr;
 }
 
-bool FrameConverter::Comfort::isSupported(const FrameType& sourceType, const FrameType::PixelFormat targetPixelFormat, const Options& options)
+bool FrameConverter::Comfort::isSupported(const FrameType& sourceType, const FrameType::PixelFormat targetPixelFormat, const FrameType::PixelOrigin targetPixelOrigin, const Options& options)
 {
 	if (!sourceType.isValid() || targetPixelFormat == FrameType::FORMAT_UNDEFINED)
 	{
 		return false;
+	}
+
+	if (sourceType.pixelFormat() == targetPixelFormat)
+	{
+		if (sourceType.pixelOrigin() == targetPixelOrigin || targetPixelOrigin == FrameType::ORIGIN_INVALID)
+		{
+			// source and target frame types are identical
+
+			return true;
+		}
 	}
 
 	if (sourceType.width() % FrameType::widthMultiple(targetPixelFormat) != 0u || sourceType.height() % FrameType::heightMultiple(targetPixelFormat) != 0u)
