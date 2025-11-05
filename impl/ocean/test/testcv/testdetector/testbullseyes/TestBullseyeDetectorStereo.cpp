@@ -55,6 +55,11 @@ bool TestBullseyeDetectorStereo::test(const double testDuration)
 	Log::info() << " ";
 	Log::info() << " ";
 
+	allSucceeded = testCandidate(testDuration, randomGenerator) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
 	allSucceeded = stressTestDetectBullseyes(testDuration, randomGenerator) && allSucceeded;
 
 	Log::info() << " ";
@@ -84,6 +89,12 @@ TEST(TestBullseyeDetectorStereo, Parameters)
 TEST(TestBullseyeDetectorStereo, InvalidMatchingCost)
 {
 	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorStereo::testInvalidMatchingCost());
+}
+
+TEST(TestBullseyeDetectorStereo, Candidate)
+{
+	RandomGenerator randomGenerator;
+	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorStereo::testCandidate(GTEST_TEST_DURATION, randomGenerator));
 }
 
 TEST(TestBullseyeDetectorStereo, StressTestDetectBullseyes)
@@ -249,6 +260,253 @@ bool TestBullseyeDetectorStereo::testInvalidMatchingCost()
 	Log::info() << "invalidMatchingCost() function test:";
 
 	bool allSucceeded = invalidMatchingCost() == Scalar(1000);
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, RandomGenerator& randomGenerator)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Candidate class test:";
+
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		// Test 1: Default Constructor
+		{
+			const Candidate defaultCandidate;
+
+			// Verify default candidate is invalid
+			if (defaultCandidate.isValid())
+			{
+				allSucceeded = false;
+			}
+
+			// Verify center is sentinel value
+			if (defaultCandidate.center() != Candidate::invalidBullseyeCenter())
+			{
+				allSucceeded = false;
+			}
+
+			// Verify reprojection errors are negative (Numeric::minValue())
+			if (defaultCandidate.reprojectionErrorA() >= Scalar(0) || defaultCandidate.reprojectionErrorB() >= Scalar(0))
+			{
+				allSucceeded = false;
+			}
+		}
+
+		// Test 2: Parameterized Constructor with valid data
+		{
+			const Vector3 center(Random::scalar(randomGenerator, -10, 10), Random::scalar(randomGenerator, -10, 10), Random::scalar(randomGenerator, 0.1, 10));
+			const Scalar errorA = Random::scalar(randomGenerator, 0, 10);
+			const Scalar errorB = Random::scalar(randomGenerator, 0, 10);
+
+			const Candidate candidate(center, errorA, errorB);
+
+			// Verify candidate is valid
+			if (!candidate.isValid())
+			{
+				allSucceeded = false;
+			}
+
+			// Verify center is stored correctly
+			if (candidate.center() != center)
+			{
+				allSucceeded = false;
+			}
+
+			// Verify reprojection errors are stored correctly
+			if (candidate.reprojectionErrorA() != errorA)
+			{
+				allSucceeded = false;
+			}
+
+			if (candidate.reprojectionErrorB() != errorB)
+			{
+				allSucceeded = false;
+			}
+		}
+
+		// Test 3: Parameterized Constructor with zero errors
+		{
+			const Vector3 center(Scalar(1), Scalar(2), Scalar(3));
+			const Scalar errorA = Scalar(0);
+			const Scalar errorB = Scalar(0);
+
+			const Candidate candidate(center, errorA, errorB);
+
+			// Verify candidate is valid (zero errors are valid)
+			if (!candidate.isValid())
+			{
+				allSucceeded = false;
+			}
+
+			// Verify values
+			if (candidate.center() != center || candidate.reprojectionErrorA() != errorA || candidate.reprojectionErrorB() != errorB)
+			{
+				allSucceeded = false;
+			}
+		}
+
+		// Test 4: Invalid candidate with sentinel center value (cannot test directly as constructor asserts isValid())
+		// Instead, verify that default constructed candidate has invalid center
+		{
+			const Candidate defaultCandidate;
+			const Vector3 invalidCenter = Candidate::invalidBullseyeCenter();
+
+			if (defaultCandidate.center() != invalidCenter)
+			{
+				allSucceeded = false;
+			}
+
+			// Verify sentinel value is Vector3::minValue()
+			if (invalidCenter != Vector3::minValue())
+			{
+				allSucceeded = false;
+			}
+		}
+
+		// Test 5: Static method invalidBullseyeCenter()
+		{
+			const Vector3 invalidCenter1 = Candidate::invalidBullseyeCenter();
+			const Vector3 invalidCenter2 = Candidate::invalidBullseyeCenter();
+
+			// Verify consistency
+			if (invalidCenter1 != invalidCenter2)
+			{
+				allSucceeded = false;
+			}
+
+			// Verify it returns Vector3::minValue()
+			if (invalidCenter1 != Vector3::minValue())
+			{
+				allSucceeded = false;
+			}
+		}
+
+		// Test 6: Copy semantics
+		{
+			const Vector3 center(Random::scalar(randomGenerator, -10, 10), Random::scalar(randomGenerator, -10, 10), Random::scalar(randomGenerator, 0.1, 10));
+			const Scalar errorA = Random::scalar(randomGenerator, 0, 5);
+			const Scalar errorB = Random::scalar(randomGenerator, 0, 5);
+
+			const Candidate original(center, errorA, errorB);
+
+			// Test copy constructor
+			const Candidate copied(original);
+
+			if (!copied.isValid())
+			{
+				allSucceeded = false;
+			}
+
+			if (copied.center() != original.center())
+			{
+				allSucceeded = false;
+			}
+
+			if (copied.reprojectionErrorA() != original.reprojectionErrorA())
+			{
+				allSucceeded = false;
+			}
+
+			if (copied.reprojectionErrorB() != original.reprojectionErrorB())
+			{
+				allSucceeded = false;
+			}
+
+			// Test assignment operator
+			Candidate assigned;
+			assigned = original;
+
+			if (!assigned.isValid())
+			{
+				allSucceeded = false;
+			}
+
+			if (assigned.center() != original.center())
+			{
+				allSucceeded = false;
+			}
+
+			if (assigned.reprojectionErrorA() != original.reprojectionErrorA())
+			{
+				allSucceeded = false;
+			}
+
+			if (assigned.reprojectionErrorB() != original.reprojectionErrorB())
+			{
+				allSucceeded = false;
+			}
+		}
+
+		// Test 7: Accessor methods return correct types
+		{
+			const Vector3 center(Scalar(5), Scalar(10), Scalar(15));
+			const Scalar errorA = Scalar(1.5);
+			const Scalar errorB = Scalar(2.5);
+
+			const Candidate candidate(center, errorA, errorB);
+
+			// Verify center() returns const reference (by checking it's the same object)
+			const Vector3& centerRef = candidate.center();
+			if (&centerRef != &candidate.center())
+			{
+				// Different addresses would indicate copy, not reference
+				allSucceeded = false;
+			}
+
+			// Verify values match exactly
+			if (!centerRef.isEqual(center, Numeric::weakEps()))
+			{
+				allSucceeded = false;
+			}
+
+			if (std::abs(candidate.reprojectionErrorA() - errorA) > Numeric::weakEps())
+			{
+				allSucceeded = false;
+			}
+
+			if (std::abs(candidate.reprojectionErrorB() - errorB) > Numeric::weakEps())
+			{
+				allSucceeded = false;
+			}
+		}
+
+		// Test 8: Const correctness
+		{
+			const Vector3 center(Scalar(1), Scalar(2), Scalar(3));
+			const Scalar errorA = Scalar(0.5);
+			const Scalar errorB = Scalar(0.8);
+
+			const Candidate constCandidate(center, errorA, errorB);
+
+			// All these should compile and work on const object
+			const bool valid = constCandidate.isValid();
+			const Vector3& constCenter = constCandidate.center();
+			const Scalar constErrorA = constCandidate.reprojectionErrorA();
+			const Scalar constErrorB = constCandidate.reprojectionErrorB();
+
+			if (!valid || constCenter != center || constErrorA != errorA || constErrorB != errorB)
+			{
+				allSucceeded = false;
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
 
 	if (allSucceeded)
 	{
