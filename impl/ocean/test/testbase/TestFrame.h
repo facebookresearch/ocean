@@ -251,6 +251,12 @@ class OCEAN_TEST_BASE_EXPORT TestFrame
 		static bool testFormatIsPacked();
 
 		/**
+		 * Tests the formatIsLimitedRange() function.
+		 * @return True, if succeeded
+		 */
+		static bool testFormatIsLimitedRange();
+
+		/**
 		 * Tests the translate data type functions.
 		 * @return True, if succeeded
 		 */

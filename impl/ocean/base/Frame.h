@@ -1516,6 +1516,13 @@ class OCEAN_BASE_EXPORT FrameType
 		static bool formatIsPacked(const PixelFormat pixelFormat);
 
 		/**
+		 * Returns whether a given pixel format is using a limited value range (e.g., like Y_UV12_LIMITED_RANGE) or a full value range (e.g., like Y_UV12_FULL_RANGE).
+		 * @param pixelFormat The pixel format to be checked
+		 * @return True, if the pixel format is using a limited value range; False, if the pixel format is using a full value range
+		 */
+		static bool formatIsLimitedRange(const PixelFormat pixelFormat);
+
+		/**
 		 * Returns the most suitable 1-plane pixel format for a given pixel format which may be composed of several planes.
 		 * If the given pixel format is a generic 1-plane pixel format already, the same pixel format will be returned.
 		 * Here is a table with some examples:
@@ -1672,6 +1679,9 @@ class OCEAN_BASE_EXPORT FrameType
 		 * DT_UNSIGNED_INTEGER_8     2            FORMAT_YA16
 		 * DT_UNSIGNED_INTEGER_8     3            FORMAT_RGB24
 		 * DT_UNSIGNED_INTEGER_8     4            FORMAT_RGBA32
+		 *
+		 * DT_UNSIGNED_INTEGER_16    3            FORMAT_RGB48
+		 * DT_UNSIGNED_INTEGER_16    4            FORMAT_RGBA64
 		 * </pre>
 		 * @param dataType The data type of each pixel element for which a pixel type is determined, must be valid
 		 * @param channels The number of channels for which a pixel format will be determined, with range [1, infinity)

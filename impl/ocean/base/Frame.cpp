@@ -545,6 +545,25 @@ bool FrameType::formatIsPacked(const PixelFormat pixelFormat)
 	return false;
 }
 
+bool FrameType::formatIsLimitedRange(const PixelFormat pixelFormat)
+{
+	switch (pixelFormat)
+	{
+		case FORMAT_Y8_LIMITED_RANGE:
+		case FORMAT_Y_U_V24_LIMITED_RANGE:
+		case FORMAT_Y_UV12_LIMITED_RANGE:
+		case FORMAT_Y_VU12_LIMITED_RANGE:
+		case FORMAT_Y_U_V12_LIMITED_RANGE:
+		case FORMAT_Y_V_U12_LIMITED_RANGE:
+			return true;
+
+		default:
+			break;
+	}
+
+	return false;
+}
+
 FrameType::PixelFormat FrameType::genericSinglePlanePixelFormat(const PixelFormat pixelFormat)
 {
 	if (formatGenericNumberChannels(pixelFormat) != 0u)

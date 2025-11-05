@@ -219,6 +219,12 @@ bool TestFrame::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testFormatIsLimitedRange() && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testTranslateDataType() && allSucceeded;
 
 	Log::info() << " ";
@@ -401,6 +407,11 @@ TEST(TestFrame, HaveIntersectingMemory)
 TEST(TestFrame, FormatIsPacked)
 {
 	EXPECT_TRUE(TestFrame::testFormatIsPacked());
+}
+
+TEST(TestFrame, FormatIsLimitedRange)
+{
+	EXPECT_TRUE(TestFrame::testFormatIsLimitedRange());
 }
 
 TEST(TestFrame, TranslatePixelFormat)
@@ -5782,6 +5793,99 @@ bool TestFrame::testFormatIsPacked()
 	}
 
 	return allSucceeded;
+}
+
+bool TestFrame::testFormatIsLimitedRange()
+{
+	Log::info() << "Format is limited range test:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	for (const FrameType::PixelFormat pixelFormat : FrameType::definedPixelFormats())
+	{
+		bool testFormatIsLimitedRange = false;
+
+		switch (pixelFormat)
+		{
+			case FrameType::FORMAT_ABGR32:
+			case FrameType::FORMAT_ARGB32:
+			case FrameType::FORMAT_BGR24:
+			case FrameType::FORMAT_BGR32:
+			case FrameType::FORMAT_BGR4444:
+			case FrameType::FORMAT_BGR5551:
+			case FrameType::FORMAT_BGR565:
+			case FrameType::FORMAT_BGRA32:
+			case FrameType::FORMAT_BGRA4444:
+			case FrameType::FORMAT_BGGR10_PACKED:
+			case FrameType::FORMAT_RGB24:
+			case FrameType::FORMAT_RGB32:
+			case FrameType::FORMAT_RGB4444:
+			case FrameType::FORMAT_RGB5551:
+			case FrameType::FORMAT_RGB565:
+			case FrameType::FORMAT_RGBA32:
+			case FrameType::FORMAT_RGBA4444:
+			case FrameType::FORMAT_RGBT32:
+			case FrameType::FORMAT_RGGB10_PACKED:
+			case FrameType::FORMAT_UYVY16:
+			case FrameType::FORMAT_YUV24:
+			case FrameType::FORMAT_YUVA32:
+			case FrameType::FORMAT_YUVT32:
+			case FrameType::FORMAT_YVU24:
+			case FrameType::FORMAT_YUYV16:
+			case FrameType::FORMAT_Y16:
+			case FrameType::FORMAT_Y32:
+			case FrameType::FORMAT_Y64:
+			case FrameType::FORMAT_YA16:
+			case FrameType::FORMAT_RGB48:
+			case FrameType::FORMAT_RGBA64:
+			case FrameType::FORMAT_Y_U_V24_FULL_RANGE:
+			case FrameType::FORMAT_Y8_FULL_RANGE:
+			case FrameType::FORMAT_Y10:
+			case FrameType::FORMAT_Y10_PACKED:
+			case FrameType::FORMAT_Y_UV12_FULL_RANGE:
+			case FrameType::FORMAT_Y_VU12_FULL_RANGE:
+			case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
+			case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
+			case FrameType::FORMAT_F32:
+			case FrameType::FORMAT_F64:
+			case FrameType::FORMAT_R_G_B24:
+			case FrameType::FORMAT_B_G_R24:
+				testFormatIsLimitedRange = false;
+				break;
+
+			case FrameType::FORMAT_Y_U_V24_LIMITED_RANGE:
+			case FrameType::FORMAT_Y8_LIMITED_RANGE:
+			case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
+			case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
+			case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
+			case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
+				testFormatIsLimitedRange = true;
+				break;
+
+			case FrameType::FORMAT_UNDEFINED:
+			case FrameType::FORMAT_END:
+				break;
+		}
+
+		const bool formatIsLimitedRange = FrameType::formatIsLimitedRange(pixelFormat);
+
+		OCEAN_EXPECT_EQUAL(validation, formatIsLimitedRange, testFormatIsLimitedRange);
+	}
+
+	for (unsigned int n = 0u; 10u; ++n)
+	{
+		const FrameType::DataType dataType = RandomI::random(randomGenerator, FrameType::definedDataTypes());
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 32u);
+
+		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(dataType, channels);
+
+		OCEAN_EXPECT_FALSE(validation, FrameType::formatIsLimitedRange(pixelFormat));
+	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestFrame::testTranslateDataType()
