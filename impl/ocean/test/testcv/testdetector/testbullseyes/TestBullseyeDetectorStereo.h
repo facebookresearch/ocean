@@ -72,6 +72,14 @@ class OCEAN_TEST_CV_DETECTOR_BULLSEYES_EXPORT TestBullseyeDetectorStereo : prote
 		 * @return True, if succeeded
 		 */
 		static bool testCandidate(const double testDuration, RandomGenerator& randomGenerator);
+
+		/**
+		 * Tests the triangulateBullseye() static function.
+		 * @param testDuration The duration in seconds for which this test will be run, must be > 0.0
+		 * @param randomGenerator A random generator that will be used to generate test data
+		 * @return True, if succeeded
+		 */
+		static bool testTriangulateBullseye(const double testDuration, RandomGenerator& randomGenerator);
 };
 
 } // namespace TestBullseyes

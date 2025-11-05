@@ -60,6 +60,11 @@ bool TestBullseyeDetectorStereo::test(const double testDuration)
 	Log::info() << " ";
 	Log::info() << " ";
 
+	allSucceeded = testTriangulateBullseye(testDuration, randomGenerator) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << " ";
+
 	allSucceeded = stressTestDetectBullseyes(testDuration, randomGenerator) && allSucceeded;
 
 	Log::info() << " ";
@@ -95,6 +100,12 @@ TEST(TestBullseyeDetectorStereo, Candidate)
 {
 	RandomGenerator randomGenerator;
 	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorStereo::testCandidate(GTEST_TEST_DURATION, randomGenerator));
+}
+
+TEST(TestBullseyeDetectorStereo, TriangulateBullseye)
+{
+	RandomGenerator randomGenerator;
+	EXPECT_TRUE(TestDetector::TestBullseyes::TestBullseyeDetectorStereo::testTriangulateBullseye(GTEST_TEST_DURATION, randomGenerator));
 }
 
 TEST(TestBullseyeDetectorStereo, StressTestDetectBullseyes)
@@ -511,6 +522,126 @@ bool TestBullseyeDetectorStereo::testCandidate(const double testDuration, Random
 	if (allSucceeded)
 	{
 		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestBullseyeDetectorStereo::testTriangulateBullseye(const double testDuration, RandomGenerator& randomGenerator)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "triangulateBullseye() function test:";
+
+	bool allSucceeded = true;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		// Random camera
+		constexpr std::array<AnyCameraType, 2> anyCameraTypes = {AnyCameraType::PINHOLE, AnyCameraType::FISHEYE};
+		const AnyCameraType cameraType = anyCameraTypes[RandomI::random(randomGenerator, 1u)];
+
+		const SharedAnyCamera realisticCamera = TestGeometry::Utilities::realisticAnyCamera(cameraType, RandomI::random(randomGenerator, 1u));
+		ocean_assert(realisticCamera != nullptr && realisticCamera->isValid());
+
+		const SharedAnyCamera& camera0 = realisticCamera;
+		const SharedAnyCamera& camera1 = realisticCamera;
+
+		// Random camera pose
+		const HomogenousMatrix4 world_T_device(Random::vector3(randomGenerator, Scalar(-1), Scalar(1)), Random::quaternion(randomGenerator));
+
+		const Scalar baseline = Random::scalar(randomGenerator, Scalar(0.1), Scalar(0.5)); // 0.01 m to 0.5 m
+		const Scalar yOffset = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1)); // -0.1 m to 0.1 m
+		const Scalar zOffset = Random::scalar(randomGenerator, Scalar(-0.1), Scalar(0.1)); // -0.1 m to 0.1 m
+		const HomogenousMatrix4 device_T_camera0(Vector3(-baseline / 2, yOffset, zOffset));
+		const HomogenousMatrix4 device_T_camera1(Vector3(baseline / 2, yOffset, zOffset));
+
+		const HomogenousMatrix4 world_T_camera0 = world_T_device * device_T_camera0;
+		const HomogenousMatrix4 world_T_camera1 = world_T_device * device_T_camera1;
+
+		// Test random points (in front of 0, 1, or both cameras)
+		for (size_t i = 0; i < 10; ++i)
+		{
+			const Scalar x = Random::scalar(randomGenerator, Scalar(0.1), Scalar(0.5)); // 0.01 m to 0.5 m
+			const Scalar y = Random::scalar(randomGenerator, Scalar(0.1), Scalar(0.5)); // 0.01 m to 0.5 m
+			const Scalar z = Scalar(-1) * Random::scalar(randomGenerator, Scalar(0.1), Scalar(0.5)); // -0.01 m to -0.5 m
+			const Vector3 groundtruthDevicePoint = Vector3(x, y, z);
+			const Vector3 groundtruthWorldPoint = world_T_device * groundtruthDevicePoint;
+
+			const bool isPointInFront0 = AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_camera0), groundtruthWorldPoint);
+			const bool isPointInFront1 = AnyCamera::isObjectPointInFrontIF(AnyCamera::standard2InvertedFlipped(world_T_camera1), groundtruthWorldPoint);
+
+			if (!isPointInFront0 && !isPointInFront1)
+			{
+				// Point is not visible at all, skip this iteration.
+				continue;
+			}
+
+			const Vector2 imagePoint0 = camera0->projectToImage(world_T_camera0, groundtruthWorldPoint);
+			const Vector2 imagePoint1 = camera1->projectToImage(world_T_camera1, groundtruthWorldPoint);
+
+			const bool isPointInside0 = camera0->isInside(imagePoint0);
+			const bool isPointInside1 = camera1->isInside(imagePoint1);
+			if (!isPointInside0 && !isPointInside1)
+			{
+				// Point is not visible at all, skip this iteration.
+				continue;
+			}
+
+			const bool expectedSuccess = isPointInFront0 && isPointInFront1 && isPointInside0 && isPointInside1;
+
+			// Create fake bullseyes from the projected points to use as input
+			const Scalar diameter = Random::scalar(randomGenerator, Scalar(10), Scalar(20));
+			const uint8_t grayThreshold = static_cast<uint8_t>(RandomI::random(randomGenerator, 100u, 150u));
+
+			const Bullseye bullseye0(imagePoint0, diameter, grayThreshold);
+			const Bullseye bullseye1(imagePoint1, diameter, grayThreshold);
+
+			// Triangulate the bullseye pair
+			Vector3 triangulatedCenter;
+			Scalar reprojectionError0;
+			Scalar reprojectionError1;
+
+			const bool triangulationSucceeded = triangulateBullseye(*camera0, *camera1, world_T_camera0, world_T_camera1, bullseye0, bullseye1, triangulatedCenter, reprojectionError0, reprojectionError1);
+
+			if (triangulationSucceeded != expectedSuccess)
+			{
+				allSucceeded = false;
+			}
+			else
+			{
+				if (triangulationSucceeded)
+				{
+					const Scalar pointError = (triangulatedCenter - groundtruthWorldPoint).length();
+
+					const Scalar pointDistance = groundtruthDevicePoint.length();
+					const Scalar maxPointError = pointDistance * Scalar(0.01); // 1% of distance
+
+					if (pointError > maxPointError)
+					{
+						allSucceeded = false;
+					}
+
+					constexpr Scalar maxReprojectionError = Scalar(1.5); // in pixels
+					if (reprojectionError0 > maxReprojectionError || reprojectionError1 > maxReprojectionError)
+					{
+						allSucceeded = false;
+					}
+				}
+			}
+		}
+	}
+	while (startTimestamp + testDuration > Timestamp(true));
+
+	if (allSucceeded > 0u)
+	{
+		Log::info() << "Validation: succeeded";
 	}
 	else
 	{
