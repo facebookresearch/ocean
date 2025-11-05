@@ -5844,6 +5844,132 @@ bool TestFrameConverter::validateSubFrameMask(const unsigned int channels, const
 	return true;
 }
 
+bool TestFrameConverter::canBeConvertedWithoutCopy(const FrameType& sourceFrameType, const FrameType& targetFrameType)
+{
+	ocean_assert(sourceFrameType.isValid());
+	ocean_assert(targetFrameType.isValid());
+
+	if (sourceFrameType.pixelOrigin() != targetFrameType.pixelOrigin())
+	{
+		return false;
+	}
+
+	if (sourceFrameType.pixels() != targetFrameType.pixels())
+	{
+		return false;
+	}
+
+	// we have two frames with same resolution and pixel origin, so there is a chance that we can convert the frame without copy
+
+	if (sourceFrameType.pixelFormat() == targetFrameType.pixelFormat())
+	{
+		// both pixel formats are identical, so we can simply use the memory
+		// e.g., RGB24 -> RGB24, Y8 -> Y8, ...
+
+		return true;
+	}
+
+	if (sourceFrameType.isPixelFormatCompatible(targetFrameType.pixelFormat()))
+	{
+		if (FrameType::formatIsPureGeneric(targetFrameType.pixelFormat()))
+		{
+			// the target pixel format is pure generic (does not contain any channel layout information), so we can simply use the memory
+			// e.g., RGB24 -> genericPixelFormat<uint8_t, 3u>(), Y8 -> genericPixelFormat<uint8_t, 1u>(), ...
+
+			return true;
+		}
+	}
+
+	if (targetFrameType.pixelFormat() == FrameType::FORMAT_Y8_FULL_RANGE)
+	{
+		static_assert(FrameType::FORMAT_Y8 == FrameType::FORMAT_Y8_FULL_RANGE);
+
+		const bool sourceContainsGrayscaleChannel = containsGrayscaleChannel(sourceFrameType.pixelFormat());
+		const bool sourceIsMultiPlaneFrame = sourceFrameType.numberPlanes() >= 2u;
+		const bool sourceIsFullRange = !FrameType::formatIsLimitedRange(sourceFrameType.pixelFormat());
+
+		return sourceContainsGrayscaleChannel && sourceIsMultiPlaneFrame && sourceIsFullRange;
+	}
+	else if (targetFrameType.pixelFormat() == FrameType::FORMAT_Y8_LIMITED_RANGE)
+	{
+		static_assert(FrameType::FORMAT_Y8_LIMITED_RANGE != FrameType::FORMAT_Y8_FULL_RANGE);
+
+		const bool sourceContainsGrayscaleChannel = containsGrayscaleChannel(sourceFrameType.pixelFormat());
+		const bool sourceIsMultiPlaneFrame = sourceFrameType.numberPlanes() >= 2u;
+		const bool sourceIsLimitedRange = FrameType::formatIsLimitedRange(sourceFrameType.pixelFormat());
+
+		return sourceContainsGrayscaleChannel && sourceIsMultiPlaneFrame && sourceIsLimitedRange;
+	}
+
+	return false;
+}
+
+bool TestFrameConverter::containsGrayscaleChannel(const FrameType::PixelFormat pixelFormat)
+{
+	switch (pixelFormat)
+	{
+		case FrameType::FORMAT_ABGR32:
+		case FrameType::FORMAT_ARGB32:
+		case FrameType::FORMAT_BGR24:
+		case FrameType::FORMAT_BGR32:
+		case FrameType::FORMAT_BGR4444:
+		case FrameType::FORMAT_BGR5551:
+		case FrameType::FORMAT_BGR565:
+		case FrameType::FORMAT_BGRA32:
+		case FrameType::FORMAT_BGRA4444:
+		case FrameType::FORMAT_BGGR10_PACKED:
+		case FrameType::FORMAT_RGB24:
+		case FrameType::FORMAT_RGB32:
+		case FrameType::FORMAT_RGB4444:
+		case FrameType::FORMAT_RGB5551:
+		case FrameType::FORMAT_RGB565:
+		case FrameType::FORMAT_RGBA32:
+		case FrameType::FORMAT_RGBA4444:
+		case FrameType::FORMAT_RGBT32:
+		case FrameType::FORMAT_RGGB10_PACKED:
+		case FrameType::FORMAT_RGB48:
+		case FrameType::FORMAT_RGBA64:
+		case FrameType::FORMAT_F32:
+		case FrameType::FORMAT_F64:
+		case FrameType::FORMAT_R_G_B24:
+		case FrameType::FORMAT_B_G_R24:
+			return false;
+
+		case FrameType::FORMAT_UYVY16:
+		case FrameType::FORMAT_YUV24:
+		case FrameType::FORMAT_YUVA32:
+		case FrameType::FORMAT_YUVT32:
+		case FrameType::FORMAT_YVU24:
+		case FrameType::FORMAT_YUYV16:
+		case FrameType::FORMAT_Y16:
+		case FrameType::FORMAT_Y32:
+		case FrameType::FORMAT_Y64:
+		case FrameType::FORMAT_YA16:
+		case FrameType::FORMAT_Y_U_V24_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_U_V24_FULL_RANGE:
+		case FrameType::FORMAT_Y8_LIMITED_RANGE:
+		case FrameType::FORMAT_Y8_FULL_RANGE:
+		case FrameType::FORMAT_Y10:
+		case FrameType::FORMAT_Y10_PACKED:
+		case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_UV12_FULL_RANGE:
+		case FrameType::FORMAT_Y_VU12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_VU12_FULL_RANGE:
+		case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
+		case FrameType::FORMAT_Y_V_U12_LIMITED_RANGE:
+		case FrameType::FORMAT_Y_V_U12_FULL_RANGE:
+			return true;
+
+		case FrameType::FORMAT_UNDEFINED:
+		case FrameType::FORMAT_END:
+			break;
+	}
+
+	ocean_assert(false && "Invalid pixel format!");
+	return false;
+}
+
 } // namespace TestCV
 
 } // namespace Test

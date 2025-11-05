@@ -367,6 +367,21 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverter : protected CV::FrameConverter
 		 */
 		template <typename T>
 		static bool validateSubFrameMask(const unsigned int channels, const T* source, const unsigned int sourceWidth, const unsigned int sourceHeight, const T* originalTarget, const T* target, const unsigned int targetWidth, const unsigned int targetHeight, const uint8_t* mask, const unsigned int sourceLeft, const unsigned int sourceTop, const unsigned int targetLeft, const unsigned int targetTop, const unsigned int subFrameWidth, const unsigned int subFrameHeight, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const unsigned int maskPaddingElements, const uint8_t maskValue);
+
+		/**
+		 * Returns whether an image type can be converted to another image type without needing to create a copy of the image.
+		 * @param sourceType The source image type, must be valid
+		 * @param targetType The target image type, must be valid
+		 * @return True, if soc
+		 */
+		static bool canBeConvertedWithoutCopy(const FrameType& sourceFrameType, const FrameType& targetFrameType);
+
+		/**
+		 * Returns whether a given pixel format contains a grayscale channel.
+		 * @param pixelFormat The pixel format to be checked, must be valid
+		 * @return True, if so
+		 */
+		static bool containsGrayscaleChannel(const FrameType::PixelFormat pixelFormat);
 };
 
 } // namespace TestCV
