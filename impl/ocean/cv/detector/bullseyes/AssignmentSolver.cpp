@@ -73,6 +73,8 @@ bool AssignmentSolver::solve(CostMatrix&& costMatrix, Assignments& assignments)
 
 	while (iterations < maxIterations)
 	{
+		++iterations;
+
 		// Try to find matches using the current zero elements in the cost matrix
 		yAssignments.assign(matrixSize, invalidIndex());
 		xAssignments.assign(matrixSize, invalidIndex());
@@ -100,8 +102,6 @@ bool AssignmentSolver::solve(CostMatrix&& costMatrix, Assignments& assignments)
 				// No more reductions are possible. This could indicate numerical problems. Let's give up.
 				return false;
 			}
-
-			++iterations;
 		}
 		else
 		{
