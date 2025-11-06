@@ -7009,6 +7009,434 @@ void FrameConverter::convertOneRow_1Plane1Channel_To_1Plane1Channel_8BitPerChann
 	}
 }
 
+void FrameConverter::convertOneRow_1Plane1Channel_To_1Plane3Channels_8BitPerChannel_Precision10Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options)
+{
+	ocean_assert(sources != nullptr && targets != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+
+	ocean_assert(options != nullptr);
+	const int* intOptions = reinterpret_cast<const int*>(options);
+	ocean_assert(intOptions != nullptr);
+
+	// options layout:
+	// uint32_t: sourcePaddingElements
+	// uint32_t: targetPaddingElements
+	//  int32_t: factor
+	//  int32_t: biasInput
+	//  int32_t: biasOutput
+
+	// with transformation:
+	// t0 = t1 = t2 = clamp(0, ((s - biasInput) * factor) / 1024 + biasOutput, 255)
+
+	const uint32_t sourcePaddingElements = uint32_t(intOptions[0]);
+	const uint32_t targetPaddingElements = uint32_t(intOptions[1]);
+
+	const int32_t factor = intOptions[2];
+	const int32_t biasInput = intOptions[3];
+	const int32_t biasOutput = intOptions[4];
+
+	const uint8_t* source = (const uint8_t*)(sources[0]);
+	uint8_t* target = (uint8_t*)(targets[0]);
+
+	const uint32_t sourceStrideElements = width + sourcePaddingElements;
+	const uint32_t targetStrideElements = width * 3u + targetPaddingElements;
+
+	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+
+	source += multipleRowIndex * sourceStrideElements;
+	target = flipTarget ? (target + (height - multipleRowIndex - 1u) * targetStrideElements) : target + multipleRowIndex * targetStrideElements;
+
+	const uint8_t* const sourceEnd = source + width;
+
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	const int16x4_t factor_s_16x4 = vdup_n_s16(int16_t(factor));
+	const int32x4_t biasOutput_1024_s_32x4 = vdupq_n_s32(int32_t(biasOutput) * 1024);
+
+	constexpr unsigned int blockSize = 8u;
+	const unsigned int blocks = width / blockSize;
+
+	for (unsigned int n = 0u; n < blocks; ++n)
+	{
+		const uint8x8_t source_u_8x8 = vld1_u8(source);
+		const int16x8_t source_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(source_u_8x8));
+
+		const int16x4_t source_low_s_16x4 = vget_low_s16(source_s_16x8);
+		const int16x4_t source_high_s_16x4 = vget_high_s16(source_s_16x8);
+
+		// s * factor + biasOutput * 1024
+		int32x4_t result_low_s_32x4 = vmlal_s16(biasOutput_1024_s_32x4, source_low_s_16x4, factor_s_16x4);
+		int32x4_t result_high_s_32x4 = vmlal_s16(biasOutput_1024_s_32x4, source_high_s_16x4, factor_s_16x4);
+
+		// subtract biasInput * factor
+		const int32x4_t biasInputAdjustment_s_32x4 = vdupq_n_s32(int32_t(biasInput) * int32_t(factor));
+		result_low_s_32x4 = vsubq_s32(result_low_s_32x4, biasInputAdjustment_s_32x4);
+		result_high_s_32x4 = vsubq_s32(result_high_s_32x4, biasInputAdjustment_s_32x4);
+
+		// divide by 1024 and saturate to uint8
+		const uint8x8_t result_u_8x8 = vqmovn_u16(vcombine_u16(vqrshrun_n_s32(result_low_s_32x4, 10), vqrshrun_n_s32(result_high_s_32x4, 10)));
+
+		// replicate to 3 channels
+		uint8x8x3_t result_u_8x8x3;
+		result_u_8x8x3.val[0] = result_u_8x8;
+		result_u_8x8x3.val[1] = result_u_8x8;
+		result_u_8x8x3.val[2] = result_u_8x8;
+
+		vst3_u8(target, result_u_8x8x3);
+
+		source += blockSize;
+		target += blockSize * 3u;
+	}
+
+#endif // OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	while (source != sourceEnd)
+	{
+		ocean_assert(source < sourceEnd);
+
+		const int16_t adjustedSource = int16_t(*source) - int16_t(biasInput);
+		const uint8_t convertedValue = (uint8_t)(minmax<int>(0, (adjustedSource * int16_t(factor)) / 1024 + int16_t(biasOutput), 255));
+
+		target[0] = convertedValue;
+		target[1] = convertedValue;
+		target[2] = convertedValue;
+
+		++source;
+		target += 3;
+	}
+
+	if (mirrorTarget)
+	{
+		CV::FrameChannels::reverseRowPixelOrderInPlace<uint8_t, 3u>(target - width * 3u, width);
+	}
+}
+
+void FrameConverter::convertOneRow_1Plane1Channel_To_1Plane4Channels_8BitPerChannel_Precision10Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options)
+{
+	ocean_assert(sources != nullptr && targets != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+
+	ocean_assert(options != nullptr);
+	const int* intOptions = reinterpret_cast<const int*>(options);
+	ocean_assert(intOptions != nullptr);
+
+	// options layout:
+	// uint32_t: sourcePaddingElements
+	// uint32_t: targetPaddingElements
+	//  int32_t: factor
+	//  int32_t: biasInput
+	//  int32_t: biasOutput
+	//  int32_t: alphaValue
+
+	// with transformation:
+	// t0 = t1 = t2 = clamp(0, ((s - biasInput) * factor) / 1024 + biasOutput, 255)
+	// t3 = alphaValue
+
+	const uint32_t sourcePaddingElements = uint32_t(intOptions[0]);
+	const uint32_t targetPaddingElements = uint32_t(intOptions[1]);
+
+	const int32_t factor = intOptions[2];
+	const int32_t biasInput = intOptions[3];
+	const int32_t biasOutput = intOptions[4];
+	const int32_t alphaValue = intOptions[5];
+
+	ocean_assert(alphaValue >= 0 && alphaValue <= 255);
+
+	const uint8_t* source = (const uint8_t*)(sources[0]);
+	uint8_t* target = (uint8_t*)(targets[0]);
+
+	const uint32_t sourceStrideElements = width + sourcePaddingElements;
+	const uint32_t targetStrideElements = width * 4u + targetPaddingElements;
+
+	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+
+	source += multipleRowIndex * sourceStrideElements;
+	target = flipTarget ? (target + (height - multipleRowIndex - 1u) * targetStrideElements) : target + multipleRowIndex * targetStrideElements;
+
+	const uint8_t* const sourceEnd = source + width;
+
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	const int16x4_t factor_s_16x4 = vdup_n_s16(int16_t(factor));
+	const int32x4_t biasOutput_1024_s_32x4 = vdupq_n_s32(int32_t(biasOutput) * 1024);
+	const uint8x8_t alphaValue_u_8x8 = vdup_n_u8(uint8_t(alphaValue));
+
+	constexpr unsigned int blockSize = 8u;
+	const unsigned int blocks = width / blockSize;
+
+	for (unsigned int n = 0u; n < blocks; ++n)
+	{
+		const uint8x8_t source_u_8x8 = vld1_u8(source);
+		const int16x8_t source_s_16x8 = vreinterpretq_s16_u16(vmovl_u8(source_u_8x8));
+
+		const int16x4_t source_low_s_16x4 = vget_low_s16(source_s_16x8);
+		const int16x4_t source_high_s_16x4 = vget_high_s16(source_s_16x8);
+
+		// s * factor + biasOutput * 1024
+		int32x4_t result_low_s_32x4 = vmlal_s16(biasOutput_1024_s_32x4, source_low_s_16x4, factor_s_16x4);
+		int32x4_t result_high_s_32x4 = vmlal_s16(biasOutput_1024_s_32x4, source_high_s_16x4, factor_s_16x4);
+
+		// subtract biasInput * factor
+		const int32x4_t biasInputAdjustment_s_32x4 = vdupq_n_s32(int32_t(biasInput) * int32_t(factor));
+		result_low_s_32x4 = vsubq_s32(result_low_s_32x4, biasInputAdjustment_s_32x4);
+		result_high_s_32x4 = vsubq_s32(result_high_s_32x4, biasInputAdjustment_s_32x4);
+
+		// divide by 1024 and saturate to uint8
+		const uint8x8_t result_u_8x8 = vqmovn_u16(vcombine_u16(vqrshrun_n_s32(result_low_s_32x4, 10), vqrshrun_n_s32(result_high_s_32x4, 10)));
+
+		// replicate to 4 channels with alpha
+		uint8x8x4_t result_u_8x8x4;
+		result_u_8x8x4.val[0] = result_u_8x8;
+		result_u_8x8x4.val[1] = result_u_8x8;
+		result_u_8x8x4.val[2] = result_u_8x8;
+		result_u_8x8x4.val[3] = alphaValue_u_8x8;
+
+		vst4_u8(target, result_u_8x8x4);
+
+		source += blockSize;
+		target += blockSize * 4u;
+	}
+
+#endif // OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	while (source != sourceEnd)
+	{
+		ocean_assert(source < sourceEnd);
+
+		const int16_t adjustedSource = int16_t(*source) - int16_t(biasInput);
+		const uint8_t convertedValue = (uint8_t)(minmax<int>(0, (adjustedSource * int16_t(factor)) / 1024 + int16_t(biasOutput), 255));
+
+		target[0] = convertedValue;
+		target[1] = convertedValue;
+		target[2] = convertedValue;
+		target[3] = (uint8_t)alphaValue;
+
+		++source;
+		target += 4;
+	}
+
+	if (mirrorTarget)
+	{
+		CV::FrameChannels::reverseRowPixelOrderInPlace<uint8_t, 4u>(target - width * 4u, width);
+	}
+}
+
+void FrameConverter::convertOneRow_1Plane1Channel_To_1Plane3Channels_8BitPerChannel_Precision6Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options)
+{
+	ocean_assert(sources != nullptr && targets != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+
+	ocean_assert(options != nullptr);
+	const int* intOptions = reinterpret_cast<const int*>(options);
+	ocean_assert(intOptions != nullptr);
+
+	// options layout:
+	// uint32_t: sourcePaddingElements
+	// uint32_t: targetPaddingElements
+	//  int32_t: factor
+	//  int32_t: biasInput
+	//  int32_t: biasOutput
+
+	// with transformation:
+	// t0 = t1 = t2 = clamp(0, ((s - biasInput) * factor) / 64 + biasOutput, 255)
+
+	const uint32_t sourcePaddingElements = uint32_t(intOptions[0]);
+	const uint32_t targetPaddingElements = uint32_t(intOptions[1]);
+
+	const int32_t factor = intOptions[2];
+	const int32_t biasInput = intOptions[3];
+	const int32_t biasOutput = intOptions[4];
+
+	const uint8_t* source = (const uint8_t*)(sources[0]);
+	uint8_t* target = (uint8_t*)(targets[0]);
+
+	const uint32_t sourceStrideElements = width + sourcePaddingElements;
+	const uint32_t targetStrideElements = width * 3u + targetPaddingElements;
+
+	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+
+	source += multipleRowIndex * sourceStrideElements;
+	target = flipTarget ? (target + (height - multipleRowIndex - 1u) * targetStrideElements) : target + multipleRowIndex * targetStrideElements;
+
+	const uint8_t* const sourceEnd = source + width;
+
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	const int16x8_t factor_s_16x8 = vdupq_n_s16(int16_t(factor));
+	const uint8x8_t biasInput_u_8x8 = vdup_n_u8((uint8_t)(biasInput));
+	const int16x8_t biasOutput_s_16x8 = vdupq_n_s16(int16_t(biasOutput));
+
+	constexpr unsigned int blockSize = 16u;
+	const unsigned int blocks = width / blockSize;
+
+	for (unsigned int n = 0u; n < blocks; ++n)
+	{
+		const uint8x16_t source_u_8x16 = vld1q_u8(source);
+
+		// source - biasInput
+		const int16x8_t source_low_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(vget_low_u8(source_u_8x16), biasInput_u_8x8));
+		const int16x8_t source_high_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(vget_high_u8(source_u_8x16), biasInput_u_8x8));
+
+		// multiply by factor
+		int16x8_t result_low_s_16x8 = vmulq_s16(source_low_s_16x8, factor_s_16x8);
+		int16x8_t result_high_s_16x8 = vmulq_s16(source_high_s_16x8, factor_s_16x8);
+
+		// divide by 64 (shift right by 6) and add biasOutput
+		result_low_s_16x8 = vaddq_s16(vrshrq_n_s16(result_low_s_16x8, 6), biasOutput_s_16x8);
+		result_high_s_16x8 = vaddq_s16(vrshrq_n_s16(result_high_s_16x8, 6), biasOutput_s_16x8);
+
+		// saturated narrow to uint8
+		const uint8x16_t result_u_8x16 = vcombine_u8(vqmovun_s16(result_low_s_16x8), vqmovun_s16(result_high_s_16x8));
+
+		// replicate to 3 channels
+		uint8x16x3_t result_u_8x16x3;
+		result_u_8x16x3.val[0] = result_u_8x16;
+		result_u_8x16x3.val[1] = result_u_8x16;
+		result_u_8x16x3.val[2] = result_u_8x16;
+
+		vst3q_u8(target, result_u_8x16x3);
+
+		source += blockSize;
+		target += blockSize * 3u;
+	}
+
+#endif // OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	while (source != sourceEnd)
+	{
+		ocean_assert(source < sourceEnd);
+
+		const int16_t adjustedSource = int16_t(*source) - int16_t(biasInput);
+		const uint8_t convertedValue = (uint8_t)(minmax<int16_t>(0, (adjustedSource * int16_t(factor)) / 64 + int16_t(biasOutput), 255));
+
+		target[0] = convertedValue;
+		target[1] = convertedValue;
+		target[2] = convertedValue;
+
+		++source;
+		target += 3;
+	}
+
+	if (mirrorTarget)
+	{
+		CV::FrameChannels::reverseRowPixelOrderInPlace<uint8_t, 3u>(target - width * 3u, width);
+	}
+}
+
+void FrameConverter::convertOneRow_1Plane1Channel_To_1Plane4Channels_8BitPerChannel_Precision6Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options)
+{
+	ocean_assert(sources != nullptr && targets != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+
+	ocean_assert(options != nullptr);
+	const int* intOptions = reinterpret_cast<const int*>(options);
+	ocean_assert(intOptions != nullptr);
+
+	// options layout:
+	// uint32_t: sourcePaddingElements
+	// uint32_t: targetPaddingElements
+	//  int32_t: factor
+	//  int32_t: biasInput
+	//  int32_t: biasOutput
+	//  int32_t: alphaValue
+
+	// with transformation:
+	// t0 = t1 = t2 = clamp(0, ((s - biasInput) * factor) / 64 + biasOutput, 255)
+	// t3 = alphaValue
+
+	const uint32_t sourcePaddingElements = uint32_t(intOptions[0]);
+	const uint32_t targetPaddingElements = uint32_t(intOptions[1]);
+
+	const int32_t factor = intOptions[2];
+	const int32_t biasInput = intOptions[3];
+	const int32_t biasOutput = intOptions[4];
+	const int32_t alphaValue = intOptions[5];
+
+	ocean_assert(alphaValue >= 0 && alphaValue <= 255);
+
+	const uint8_t* source = (const uint8_t*)(sources[0]);
+	uint8_t* target = (uint8_t*)(targets[0]);
+
+	const uint32_t sourceStrideElements = width + sourcePaddingElements;
+	const uint32_t targetStrideElements = width * 4u + targetPaddingElements;
+
+	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
+
+	source += multipleRowIndex * sourceStrideElements;
+	target = flipTarget ? (target + (height - multipleRowIndex - 1u) * targetStrideElements) : target + multipleRowIndex * targetStrideElements;
+
+	const uint8_t* const sourceEnd = source + width;
+
+#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	const int16x8_t factor_s_16x8 = vdupq_n_s16(int16_t(factor));
+	const uint8x8_t biasInput_u_8x8 = vdup_n_u8((uint8_t)(biasInput));
+	const int16x8_t biasOutput_s_16x8 = vdupq_n_s16(int16_t(biasOutput));
+	const uint8x16_t alphaValue_u_8x16 = vdupq_n_u8(uint8_t(alphaValue));
+
+	constexpr unsigned int blockSize = 16u;
+	const unsigned int blocks = width / blockSize;
+
+	for (unsigned int n = 0u; n < blocks; ++n)
+	{
+		const uint8x16_t source_u_8x16 = vld1q_u8(source);
+
+		// source - biasInput
+		const int16x8_t source_low_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(vget_low_u8(source_u_8x16), biasInput_u_8x8));
+		const int16x8_t source_high_s_16x8 = vreinterpretq_s16_u16(vsubl_u8(vget_high_u8(source_u_8x16), biasInput_u_8x8));
+
+		// multiply by factor
+		int16x8_t result_low_s_16x8 = vmulq_s16(source_low_s_16x8, factor_s_16x8);
+		int16x8_t result_high_s_16x8 = vmulq_s16(source_high_s_16x8, factor_s_16x8);
+
+		// divide by 64 (shift right by 6) and add biasOutput
+		result_low_s_16x8 = vaddq_s16(vrshrq_n_s16(result_low_s_16x8, 6), biasOutput_s_16x8);
+		result_high_s_16x8 = vaddq_s16(vrshrq_n_s16(result_high_s_16x8, 6), biasOutput_s_16x8);
+
+		// saturated narrow to uint8
+		const uint8x16_t result_u_8x16 = vcombine_u8(vqmovun_s16(result_low_s_16x8), vqmovun_s16(result_high_s_16x8));
+
+		// replicate to 4 channels with alpha
+		uint8x16x4_t result_u_8x16x4;
+		result_u_8x16x4.val[0] = result_u_8x16;
+		result_u_8x16x4.val[1] = result_u_8x16;
+		result_u_8x16x4.val[2] = result_u_8x16;
+		result_u_8x16x4.val[3] = alphaValue_u_8x16;
+
+		vst4q_u8(target, result_u_8x16x4);
+
+		source += blockSize;
+		target += blockSize * 4u;
+	}
+
+#endif // OCEAN_HARDWARE_NEON_VERSION >= 10
+
+	while (source != sourceEnd)
+	{
+		ocean_assert(source < sourceEnd);
+
+		const int16_t adjustedSource = int16_t(*source) - int16_t(biasInput);
+		const uint8_t convertedValue = (uint8_t)(minmax<int16_t>(0, (adjustedSource * int16_t(factor)) / 64 + int16_t(biasOutput), 255));
+
+		target[0] = convertedValue;
+		target[1] = convertedValue;
+		target[2] = convertedValue;
+		target[3] = (uint8_t)alphaValue;
+
+		++source;
+		target += 4;
+	}
+
+	if (mirrorTarget)
+	{
+		CV::FrameChannels::reverseRowPixelOrderInPlace<uint8_t, 4u>(target - width * 4u, width);
+	}
+}
+
 template <unsigned int tSourceChannelIndex0, unsigned int tSourceChannelIndex1, unsigned int tSourceChannelIndex2>
 void FrameConverter::mapOneRow_1Plane3ChannelsWith2ChannelsDownsampled2x1BackIsDownsampled_To_1Plane3Channels_8BitPerChannel(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options)
 {

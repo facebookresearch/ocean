@@ -2604,6 +2604,126 @@ class OCEAN_CV_EXPORT FrameConverter
 		static void convertOneRow_1Plane1Channel_To_1Plane1Channel_8BitPerChannel_Precision10Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options);
 
 		/**
+		 * Converts one row of a single-channel image to a 3-channel image with 10-bit precision and range conversion.
+		 * This function supports conversions like Y8_LIMITED_RANGE [16, 235] to RGB24 [0, 255].
+		 * This function uses fixed-point arithmetic with 10 fractional bits and replicates the converted value to all 3 channels.<br>
+		 * The layout of the options parameters is as follows:
+		 * <pre>
+		 * options[0] uint32_t: sourcePaddingElements
+		 * options[1] uint32_t: targetPaddingElements
+		 *
+		 * options[2] int32_t: factor (pre-multiplied by 1024)
+		 * options[3] int32_t: biasInput (subtracted from input before multiplication)
+		 * options[4] int32_t: biasOutput (added to output after division)
+		 *
+		 * with transformation:
+		 * t0 = t1 = t2 = clamp(0, ((s - biasInput) * factor) / 1024 + biasOutput, 255)
+		 *
+		 * Example for Y8_LIMITED_RANGE [16, 235] → RGB24 [0, 255]:
+		 * factor = 1192 (255/219 * 1024), biasInput = 16, biasOutput = 0
+		 * </pre>
+		 * @param sources The pointer to the source plane, must be valid
+		 * @param targets The pointer to the target plane, must be valid
+		 * @param multipleRowIndex The index of the multiple-row to be handled, with range [0, height - 1]
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param conversionFlag The conversion to be applied
+		 * @param options The 5 options parameters: 2 padding parameters, 1 factor, 2 bias parameters, must be valid
+		 */
+		static void convertOneRow_1Plane1Channel_To_1Plane3Channels_8BitPerChannel_Precision10Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options);
+
+		/**
+		 * Converts one row of a single-channel image to a 3-channel image with 6-bit precision and range conversion.
+		 * This function supports conversions like Y8_LIMITED_RANGE [16, 235] to RGB24 [0, 255].
+		 * This function uses fixed-point arithmetic with 6 fractional bits and replicates the converted value to all 3 channels.<br>
+		 * The layout of the options parameters is as follows:
+		 * <pre>
+		 * options[0] uint32_t: sourcePaddingElements
+		 * options[1] uint32_t: targetPaddingElements
+		 *
+		 * options[2] int32_t: factor (pre-multiplied by 64)
+		 * options[3] int32_t: biasInput (subtracted from input before multiplication)
+		 * options[4] int32_t: biasOutput (added to output after division)
+		 *
+		 * with transformation:
+		 * t0 = t1 = t2 = clamp(0, ((s - biasInput) * factor) / 64 + biasOutput, 255)
+		 *
+		 * Example for Y8_LIMITED_RANGE [16, 235] → RGB24 [0, 255]:
+		 * factor = 75 (255/219 * 64), biasInput = 16, biasOutput = 0
+		 * </pre>
+		 * @param sources The pointer to the source plane, must be valid
+		 * @param targets The pointer to the target plane, must be valid
+		 * @param multipleRowIndex The index of the multiple-row to be handled, with range [0, height - 1]
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param conversionFlag The conversion to be applied
+		 * @param options The 5 options parameters: 2 padding parameters, 1 factor, 2 bias parameters, must be valid
+		 */
+		static void convertOneRow_1Plane1Channel_To_1Plane3Channels_8BitPerChannel_Precision6Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options);
+
+		/**
+		 * Converts one row of a single-channel image to a 4-channel image with 10-bit precision and range conversion.
+		 * This function supports conversions like Y8_LIMITED_RANGE [16, 235] to RGBA32 [0, 255].
+		 * This function uses fixed-point arithmetic with 10 fractional bits and replicates the converted value to first 3 channels, with a constant alpha.<br>
+		 * The layout of the options parameters is as follows:
+		 * <pre>
+		 * options[0] uint32_t: sourcePaddingElements
+		 * options[1] uint32_t: targetPaddingElements
+		 *
+		 * options[2] int32_t: factor (pre-multiplied by 1024)
+		 * options[3] int32_t: biasInput (subtracted from input before multiplication)
+		 * options[4] int32_t: biasOutput (added to output after division)
+		 * options[5] int32_t: alphaValue (constant value for alpha channel)
+		 *
+		 * with transformation:
+		 * t0 = t1 = t2 = clamp(0, ((s - biasInput) * factor) / 1024 + biasOutput, 255)
+		 * t3 = alphaValue
+		 *
+		 * Example for Y8_LIMITED_RANGE [16, 235] → RGBA32 [0, 255]:
+		 * factor = 1192 (255/219 * 1024), biasInput = 16, biasOutput = 0, alphaValue = 255
+		 * </pre>
+		 * @param sources The pointer to the source plane, must be valid
+		 * @param targets The pointer to the target plane, must be valid
+		 * @param multipleRowIndex The index of the multiple-row to be handled, with range [0, height - 1]
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param conversionFlag The conversion to be applied
+		 * @param options The 6 options parameters: 2 padding parameters, 1 factor, 2 bias parameters, 1 alpha value, must be valid
+		 */
+		static void convertOneRow_1Plane1Channel_To_1Plane4Channels_8BitPerChannel_Precision10Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options);
+
+		/**
+		 * Converts one row of a single-channel image to a 4-channel image with 6-bit precision and range conversion.
+		 * This function supports conversions like Y8_LIMITED_RANGE [16, 235] to RGBA32 [0, 255].
+		 * This function uses fixed-point arithmetic with 6 fractional bits and replicates the converted value to first 3 channels, with a constant alpha.<br>
+		 * The layout of the options parameters is as follows:
+		 * <pre>
+		 * options[0] uint32_t: sourcePaddingElements
+		 * options[1] uint32_t: targetPaddingElements
+		 *
+		 * options[2] int32_t: factor (pre-multiplied by 64)
+		 * options[3] int32_t: biasInput (subtracted from input before multiplication)
+		 * options[4] int32_t: biasOutput (added to output after division)
+		 * options[5] int32_t: alphaValue (constant value for alpha channel)
+		 *
+		 * with transformation:
+		 * t0 = t1 = t2 = clamp(0, ((s - biasInput) * factor) / 64 + biasOutput, 255)
+		 * t3 = alphaValue
+		 *
+		 * Example for Y8_LIMITED_RANGE [16, 235] → RGBA32 [0, 255]:
+		 * factor = 75 (255/219 * 64), biasInput = 16, biasOutput = 0, alphaValue = 255
+		 * </pre>
+		 * @param sources The pointer to the source plane, must be valid
+		 * @param targets The pointer to the target plane, must be valid
+		 * @param multipleRowIndex The index of the multiple-row to be handled, with range [0, height - 1]
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param conversionFlag The conversion to be applied
+		 * @param options The 6 options parameters: 2 padding parameters, 1 factor, 2 bias parameters, 1 alpha value, must be valid
+		 */
+		static void convertOneRow_1Plane1Channel_To_1Plane4Channels_8BitPerChannel_Precision6Bit(const void** sources, void** targets, const unsigned int multipleRowIndex, const unsigned int width, const unsigned int height, const ConversionFlag conversionFlag, const void* options);
+
+		/**
 		 * Converts one row of an image with e.g., a YUYV16 pixel format to one row of an image with e.g., an YUV24 or YVU24 pixel format.
 		 * The layout of the options parameters is as follows:
 		 * <pre>
