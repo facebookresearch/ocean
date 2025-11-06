@@ -134,6 +134,34 @@ class OCEAN_CV_EXPORT FrameConverterY8 : public FrameConverter
 		 */
 		static inline void convertY8ToY8GammaLUT(const uint8_t* const source, uint8_t* const target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const float gamma, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
+		/**
+		 * Converts a Y8 limited range frame [16, 235] to a Y8 full range frame [0, 255].
+		 * This function uses 10-bit fixed-point arithmetic for high precision (error < 0.03%).
+		 * @param source The source frame buffer with limited range values, must be valid
+		 * @param target The target frame buffer with full range values, must be valid
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param flag Determining the type of conversion
+		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
+		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computational load
+		 */
+		static inline void convertY8LimitedRangeToY8FullRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+
+		/**
+		 * Converts a Y8 full range frame [0, 255] to a Y8 limited range frame [16, 235].
+		 * This function uses 10-bit fixed-point arithmetic for high precision (error < 0.05%).
+		 * @param source The source frame buffer with full range values, must be valid
+		 * @param target The target frame buffer with limited range values, must be valid
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param flag Determining the type of conversion
+		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
+		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computational load
+		 */
+		static inline void convertY8FullRangeToY8LimitedRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+
 	protected:
 
 		/**
@@ -211,6 +239,50 @@ inline void FrameConverterY8::convertY8ToY8GammaLUT(const uint8_t* source, uint8
 	const bool areContinuous = sourcePaddingElements == 0u && targetPaddingElements == 0u;
 
 	FrameConverter::convertGenericPixelFormat(source, target, width, height, sourceStrideElements, targetStrideElements, flag, convertRowY8ToY8GammaLUT, CV::FrameChannels::reverseRowPixelOrderInPlace<uint8_t, 1u>, areContinuous, options, worker);
+}
+
+inline void FrameConverterY8::convertY8LimitedRangeToY8FullRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
+{
+	ocean_assert(source != nullptr && target != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+
+	// Y_full = (Y_limited - 16) * 255 / 219
+	const int32_t options[5] =
+	{
+		int32_t(sourcePaddingElements),
+		int32_t(targetPaddingElements),
+
+		1192, // 255 / 219 * 1024
+		16,
+		0
+	};
+
+	const void* sources[1] = {source};
+	void* targets[1] = {target};
+
+	FrameConverter::convertArbitraryPixelFormat(sources, targets, width, height, flag, 1u, FrameConverter::convertOneRow_1Plane1Channel_To_1Plane1Channel_8BitPerChannel_Precision10Bit, &options, worker);
+}
+
+inline void FrameConverterY8::convertY8FullRangeToY8LimitedRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
+{
+	ocean_assert(source != nullptr && target != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+
+	// Y_limited = Y_full * 219 / 255 + 16
+	const int32_t options[5] =
+	{
+		int32_t(sourcePaddingElements),
+		int32_t(targetPaddingElements),
+
+		879, // 219 / 255 * 1024
+		0,
+		16
+	};
+
+	const void* sources[1] = {source};
+	void* targets[1] = {target};
+
+	FrameConverter::convertArbitraryPixelFormat(sources, targets, width, height, flag, 1u, FrameConverter::convertOneRow_1Plane1Channel_To_1Plane1Channel_8BitPerChannel_Precision10Bit, &options, worker);
 }
 
 }

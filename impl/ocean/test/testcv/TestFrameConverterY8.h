@@ -97,6 +97,28 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY8
 		 */
 		static bool testY8ToY8GammaLUT(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
 
+		/**
+		 * Tests the Y8 limited range to Y8 full range conversion.
+		 * @param width The width of the original frame in pixel, with range [1, infinity)
+		 * @param height The height of the original frame in pixel, with range [1, infinity)
+		 * @param flag The conversion flag that has been applied during conversion
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		static bool testY8LimitedRangeToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
+
+		/**
+		 * Tests the Y8 full range to Y8 limited range conversion.
+		 * @param width The width of the original frame in pixel, with range [1, infinity)
+		 * @param height The height of the original frame in pixel, with range [1, infinity)
+		 * @param flag The conversion flag that has been applied during conversion
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @param worker The worker object
+		 * @return True, if succeeded
+		 */
+		static bool testY8FullRangeToY8LimitedRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
+
 	protected:
 
 		/**
