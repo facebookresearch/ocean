@@ -1557,6 +1557,20 @@ class OCEAN_BASE_EXPORT FrameType
 		static PixelFormat formatRemoveAlphaChannel(const PixelFormat pixelFormat);
 
 		/**
+		 * Returns the best matching grayscale pixel format for a given pixel format.
+		 * The resulting pixel format will either be FORMAT_Y8_LIMITED_RANGE or FORMAT_Y8_FULL_RANGE, depending on the whether the input pixel format is a limited range or a full range pixel format.<br>
+		 * The function can be used to quickly determine the grayscale pixel format for an input image to avoid making a copy of the image during conversion:
+		 * <pre>
+		 * Frame inputFrame = ... // e.g., FORMAT_RGB24, or FORMAT_Y_UV12_LIMITED_RANGE, or FORMAT_Y_UV12_FULL_RANGE
+		 * Frame yFrame; // a frame with either FORMAT_Y8_LIMITED_RANGE or FORMAT_Y8_FULL_RANGE
+		 * CV::FrameConverter::Comfort::convert(inputFrame, FrameType::formatGrayscalePixelFormat(inputFrame.pixelFormat()), yFrame, CV::FrameConverter::CP_AVOID_COPY_IF_POSSIBLE);
+		 * </pre>
+		 * @param pixelFormat The pixel format for which the best matching grayscale pixel format will be returned, must be valid
+		 * @return The best matching grayscale pixel format, either FORMAT_Y8_LIMITED_RANGE or FORMAT_Y8_FULL_RANGE
+		 */
+		static PixelFormat formatGrayscalePixelFormat(const PixelFormat pixelFormat);
+
+		/**
 		 * Returns the number of pixels the width of a frame must be a multiple of.
 		 * @param pixelFormat Pixel format to return the number of pixels for
 		 * @return Number of pixels
@@ -3039,9 +3053,9 @@ class OCEAN_BASE_EXPORT Frame : public FrameType
 		/**
 		 * Deleted constructor to prevent misuse.
 		 * @param frameType The frame type which would be used to create the object
-		 * @param avancedCopyMode The advanced copy mode which would be used to create the object
+		 * @param advancedCopyMode The advanced copy mode which would be used to create the object
 		 */
-		Frame(const FrameType& frameType, const AdvancedCopyMode avancedCopyMode) = delete;
+		Frame(const FrameType& frameType, const AdvancedCopyMode advancedCopyMode) = delete;
 
 		/**
 		 * Deleted constructor to prevent misuse, use `AdvancedCopyMode` instead.
@@ -3699,14 +3713,14 @@ constexpr bool Frame::Plane::validateMemoryLayout(const unsigned int planeWidth,
 		return false;
 	}
 
-	const unsigned int planeStideElements = planeWidthElements + paddingElements;
+	const unsigned int planeStrideElements = planeWidthElements + paddingElements;
 
-	if (!isProductInsideValueRange(planeStideElements, bytesPerElement))
+	if (!isProductInsideValueRange(planeStrideElements, bytesPerElement))
 	{
 		return false;
 	}
 
-	const unsigned int planeStrideBytes = planeStideElements * bytesPerElement;
+	const unsigned int planeStrideBytes = planeStrideElements * bytesPerElement;
 
 	if (!isProductInsideValueRange(planeStrideBytes, planeHeight))
 	{

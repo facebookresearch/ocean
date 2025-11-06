@@ -772,6 +772,20 @@ FrameType::PixelFormat FrameType::formatRemoveAlphaChannel(const PixelFormat pix
 	}
 }
 
+FrameType::PixelFormat FrameType::formatGrayscalePixelFormat(const PixelFormat pixelFormat)
+{
+	ocean_assert(pixelFormat != FORMAT_UNDEFINED);
+
+	if (formatIsLimitedRange(pixelFormat))
+	{
+		return FORMAT_Y8_LIMITED_RANGE;
+	}
+
+	static_assert(FORMAT_Y8 == FORMAT_Y8_FULL_RANGE);
+
+	return FORMAT_Y8_FULL_RANGE; // FORMAT_Y8
+}
+
 unsigned int FrameType::planeChannels(const PixelFormat& imagePixelFormat, const unsigned int planeIndex)
 {
 	unsigned int planeWidthDummy;
@@ -2270,7 +2284,7 @@ bool Frame::Plane::copy(const Plane& sourcePlane, const AdvancedCopyMode advance
 
 			case ACM_COPY_KEEP_LAYOUT_DO_NOT_COPY_PADDING_DATA:
 			{
-				// Makes a copy of the source memory, the padding layout is preserved, but the padding data is not copyied.
+				// Makes a copy of the source memory, the padding layout is preserved, but the padding data is not copied.
 
 				debugMakeCopyOfPaddingData = false;
 				break;
@@ -2964,7 +2978,7 @@ Frame Frame::subFrame(const unsigned int subFrameLeft, const unsigned int subFra
 			return Frame();
 		}
 
-		const unsigned int subFrameLeftAdjusted = std::max(widthMultiple(pixelFormat()), subFrameLeft); // planeLayout() must be called with (subFrameLeft, subFrameTop) >= (widthMultple, heightMultiple)
+		const unsigned int subFrameLeftAdjusted = std::max(widthMultiple(pixelFormat()), subFrameLeft); // planeLayout() must be called with (subFrameLeft, subFrameTop) >= (widthMultiple, heightMultiple)
 		const unsigned int subFrameTopAdjusted = std::max(heightMultiple(pixelFormat()), subFrameTop);
 
 		if (!planeLayout(pixelFormat(), subFrameLeftAdjusted, subFrameTopAdjusted, planeIndex, planeSubFrameLeft, planeSubFrameTop, planeChannelsDummy))
