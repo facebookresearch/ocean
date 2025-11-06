@@ -142,7 +142,7 @@ void GLESFrameTexture2D::onDynamicUpdate(const ViewRef& /*view*/, const Timestam
 
 bool GLESFrameTexture2D::updateTexture(const CompressedFrame& compressedFrame)
 {
-	ocean_assert(compressedFrame_.isValid());
+	ocean_assert(compressedFrame.isValid());
 
 	if (primaryTextureId_ == 0u)
 	{
@@ -154,24 +154,24 @@ bool GLESFrameTexture2D::updateTexture(const CompressedFrame& compressedFrame)
 	ocean_assert(GL_NO_ERROR == glGetError());
 
 	GLenum internalFormat = 0;
-	if (!determineCompressedFormat(compressedFrame_.compressedFormat(), internalFormat))
+	if (!determineCompressedFormat(compressedFrame.compressedFormat(), internalFormat))
 	{
 		ocean_assert(false && "This must never happen!");
 		return false;
 	}
 
-	frameType_ = compressedFrame_.internalFrameType();
+	frameType_ = compressedFrame.internalFrameType();
 
-	unsigned int width = compressedFrame_.internalFrameType().width();
-	unsigned int height = compressedFrame_.internalFrameType().height();
+	unsigned int width = compressedFrame.internalFrameType().width();
+	unsigned int height = compressedFrame.internalFrameType().height();
 
-	size_t remainingBufferSize = compressedFrame_.buffer().size();
-	const uint8_t* buffer = compressedFrame_.buffer().data();
+	size_t remainingBufferSize = compressedFrame.buffer().size();
+	const uint8_t* buffer = compressedFrame.buffer().data();
 
-	for (unsigned int nLevel = 0u; nLevel < compressedFrame_.mipmapLevels(); ++nLevel)
+	for (unsigned int nLevel = 0u; nLevel < compressedFrame.mipmapLevels(); ++nLevel)
 	{
 		unsigned int levelSize = 0u;
-		if (!compressedImageSize(compressedFrame_.compressedFormat(), width, height, levelSize) || size_t(levelSize) > remainingBufferSize)
+		if (!compressedImageSize(compressedFrame.compressedFormat(), width, height, levelSize) || size_t(levelSize) > remainingBufferSize)
 		{
 			Log::error() << "Failed to create compressed texture for level " << nLevel;
 			break;
