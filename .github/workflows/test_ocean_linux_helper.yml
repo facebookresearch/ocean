@@ -125,6 +125,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ steps.get-sha.outputs.commit_sha }}
+
+      - name: Set capitalized build config
+        id: build-config
+        run: |
+          BUILD_CONFIG="${{ matrix.build_config }}"
+          BUILD_CONFIG_CAP="$(tr '[:lower:]' '[:upper:]' <<< ${BUILD_CONFIG:0:1})${BUILD_CONFIG:1}"
+          echo "capitalcase=${BUILD_CONFIG_CAP}" >> $GITHUB_OUTPUT
+
       - name: Restore cached build artifacts
         id: restore-build
         uses: actions/cache/restore@v4
@@ -141,6 +149,6 @@ jobs:
             ctest $CTEST_ARGS --rerun-failed
           fi
         env:
-          INSTALL_PATH: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ matrix.build_config.capitalcase }}
-          TEST_PATH: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ matrix.build_config.capitalcase }}/${{ matrix.suite.test-directory }}
+          INSTALL_PATH: ${{ env.OCEAN_INSTALL_PATH }}/linux_static_${{ steps.build-config.outputs.capitalcase }}
+          TEST_PATH: ${{ env.OCEAN_BUILD_PATH }}/linux_static_${{ steps.build-config.outputs.capitalcase }}/${{ matrix.suite.test-directory }}
           CTEST_ARGS: ${{ matrix.suite.ctest-args }}
