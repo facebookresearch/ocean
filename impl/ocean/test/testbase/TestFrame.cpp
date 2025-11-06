@@ -5873,10 +5873,10 @@ bool TestFrame::testFormatIsLimitedRange()
 		OCEAN_EXPECT_EQUAL(validation, formatIsLimitedRange, testFormatIsLimitedRange);
 	}
 
-	for (unsigned int n = 0u; 10u; ++n)
+	for (unsigned int n = 0u; n < 10u; ++n)
 	{
 		const FrameType::DataType dataType = RandomI::random(randomGenerator, FrameType::definedDataTypes());
-		const unsigned int channels = RandomI::random(randomGenerator, 1u, 32u);
+		const unsigned int channels = RandomI::random(randomGenerator, 1u, 31u);
 
 		const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(dataType, channels);
 
