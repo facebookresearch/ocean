@@ -98,14 +98,16 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y8 limited range to Y8 full range conversion with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y8 limited range to Y8 full range conversion (6-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8LimitedRangeToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+			allSucceeded = testY8LimitedRangeToY8FullRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -114,12 +116,40 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y8 full range to Y8 limited range conversion with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y8 limited range to Y8 full range conversion (10-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8FullRangeToY8LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+			allSucceeded = testY8LimitedRangeToY8FullRangePrecision10Bit(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y8 full range to Y8 limited range conversion (6-bit) with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY8FullRangeToY8LimitedRangePrecision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y8 full range to Y8 limited range conversion (10-bit) with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY8FullRangeToY8LimitedRangePrecision10Bit(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -264,53 +294,103 @@ TEST(TestFrameConverterY8, Y8ToY8GammaLUTFlippedMirrored)
 }
 
 
-TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangeNormal)
+TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangePrecision6BitNormal)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRangePrecision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangeFlipped)
+TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangePrecision6BitFlipped)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRangePrecision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangeMirrored)
+TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangePrecision6BitMirrored)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRangePrecision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangeFlippedMirrored)
+TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangePrecision6BitFlippedMirrored)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRangePrecision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
 
-TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangeNormal)
+TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangePrecision10BitNormal)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRangePrecision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangeFlipped)
+TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangePrecision10BitFlipped)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRangePrecision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangeMirrored)
+TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangePrecision10BitMirrored)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRangePrecision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangeFlippedMirrored)
+TEST(TestFrameConverterY8, Y8LimitedRangeToY8FullRangePrecision10BitFlippedMirrored)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToY8FullRangePrecision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangePrecision6BitNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangePrecision6BitFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangePrecision6BitMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangePrecision6BitFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangePrecision10BitNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangePrecision10BitFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangePrecision10BitMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangePrecision10BitFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -392,7 +472,7 @@ bool TestFrameConverterY8::testY8ToY8GammaLUT(const unsigned int width, const un
 	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8ToY8GammaLUT), flag, TestFrameConverterY8::pixelFunctionY8Gamma, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
-bool TestFrameConverterY8::testY8LimitedRangeToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+bool TestFrameConverterY8::testY8LimitedRangeToY8FullRangePrecision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
@@ -406,10 +486,27 @@ bool TestFrameConverterY8::testY8LimitedRangeToY8FullRange(const unsigned int wi
 	transformationMatrix(0, 0) = 255.0 / 219.0;
 	transformationMatrix(0, 1) = -16.0 * 255.0 / 219.0;
 
-	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8LimitedRangeToY8FullRange), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8LimitedRangeToY8FullRange<6u>), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
-bool TestFrameConverterY8::testY8FullRangeToY8LimitedRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+bool TestFrameConverterY8::testY8LimitedRangeToY8FullRangePrecision10Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	// Y_full = (Y_limited - 16) * 255 / 219
+
+	// | Y_full | = | 255/219  -16*255/219 | * | Y_limited |
+	//                                         |     1     |
+
+	MatrixD transformationMatrix(1, 2);
+	transformationMatrix(0, 0) = 255.0 / 219.0;
+	transformationMatrix(0, 1) = -16.0 * 255.0 / 219.0;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8LimitedRangeToY8FullRange<10u>), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+}
+
+bool TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
@@ -423,7 +520,24 @@ bool TestFrameConverterY8::testY8FullRangeToY8LimitedRange(const unsigned int wi
 	transformationMatrix(0, 0) = 219.0 / 255.0;
 	transformationMatrix(0, 1) = 16.0;
 
-	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8FullRangeToY8LimitedRange), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 16.0, 235.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8FullRangeToY8LimitedRange<6u>), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 16.0, 235.0, testDuration, worker);
+}
+
+bool TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision10Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	// Y_limited = Y_full * 219 / 255 + 16
+
+	// | Y_limited | = | 219/255  16 | * | Y_full |
+	//                                   |   1    |
+
+	MatrixD transformationMatrix(1, 2);
+	transformationMatrix(0, 0) = 219.0 / 255.0;
+	transformationMatrix(0, 1) = 16.0;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8FullRangeToY8LimitedRange<10u>), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 16.0, 235.0, testDuration, worker);
 }
 
 MatrixD TestFrameConverterY8::pixelFunctionY8Gamma(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)
