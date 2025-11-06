@@ -19,17 +19,17 @@ namespace Detector
 namespace Bullseyes
 {
 
-int TransitionHistory::history1()
+int TransitionHistory::history1() const
 {
 	return deltaMinus1;
 }
 
-int TransitionHistory::history2()
+int TransitionHistory::history2() const
 {
 	return deltaMinus1 + deltaMinus2;
 }
 
-int TransitionHistory::history3()
+int TransitionHistory::history3() const
 {
 	return deltaMinus1 + deltaMinus2 + deltaMinus3;
 }

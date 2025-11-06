@@ -41,19 +41,19 @@ class OCEAN_CV_DETECTOR_BULLSEYES_EXPORT TransitionHistory
 		 * Returns the history with window size 1.
 		 * @return The previous intensity difference (delta) between adjacent pixels, with range [-255, 255]
 		 */
-		int history1();
+		int history1() const;
 
 		/**
 		 * Returns the history with window size 2.
 		 * @return The sum of the previous two intensity differences (deltas), with range [-510, 510]
 		 */
-		int history2();
+		int history2() const;
 
 		/**
 		 * Returns the history with window size 3.
 		 * @return The sum of the previous three intensity differences (deltas), with range [-765, 765]
 		 */
-		int history3();
+		int history3() const;
 
 		/**
 		 * Adds a new intensity difference (delta) as the most recent history entry.
