@@ -12,4 +12,6 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/build_ocean_linux_helper.yml
+    with:
+      commit_sha: ${{ github.event.workflow_run.head_sha }}
     secrets: inherit
