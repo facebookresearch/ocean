@@ -712,6 +712,7 @@ bool MatrixT<T>::solve(const T* b, T* x) const
 			break;
 		}
 
+		case MP_UNKNOWN:
 		default:
 		{
 			ocean_assert(tMatrixProperty == MP_UNKNOWN);

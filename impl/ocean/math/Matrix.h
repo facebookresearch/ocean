@@ -735,6 +735,7 @@ inline bool MatrixT<T>::solve(const T* b, T* x, const MatrixProperty matrixPrope
 		case MP_SYMMETRIC:
 			return solve<MP_SYMMETRIC>(b, x);
 
+		case MP_UNKNOWN:
 		default:
 			ocean_assert(matrixProperty == MP_UNKNOWN);
 			return solve<MP_UNKNOWN>(b, x);
