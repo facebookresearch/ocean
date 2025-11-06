@@ -154,6 +154,62 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 	}
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y8 limited range to RGB24 (full range) conversion (6-bit) with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY8LimitedRangeToRGB24Precision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y8 limited range to RGBA32 (full range) conversion (6-bit) with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY8LimitedRangeToRGBA32Precision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y8 limited range to RGB24 (full range) conversion (10-bit) with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY8LimitedRangeToRGB24Precision10Bit(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y8 limited range to RGBA32 (full range) conversion (10-bit) with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY8LimitedRangeToRGBA32Precision10Bit(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -393,6 +449,106 @@ TEST(TestFrameConverterY8, Y8FullRangeToY8LimitedRangePrecision10BitFlippedMirro
 	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGB24Precision6BitNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGB24Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGB24Precision6BitFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGB24Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGB24Precision6BitMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGB24Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGB24Precision6BitFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGB24Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGB24Precision10BitNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGB24Precision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGB24Precision10BitFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGB24Precision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGB24Precision10BitMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGB24Precision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGB24Precision10BitFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGB24Precision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision10BitNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision10BitFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision10BitMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision10BitFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
 #endif // OCEAN_USE_GTEST
 
 bool TestFrameConverterY8::testY8ToBGR24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
@@ -538,6 +694,110 @@ bool TestFrameConverterY8::testY8FullRangeToY8LimitedRangePrecision10Bit(const u
 	transformationMatrix(0, 1) = 16.0;
 
 	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8FullRangeToY8LimitedRange<10u>), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 16.0, 235.0, testDuration, worker);
+}
+
+bool TestFrameConverterY8::testY8LimitedRangeToRGB24Precision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	// Y_full = (Y_limited - 16) * 255 / 219
+
+	// | R |   | 255/219  -16*255/219 |   | Y_limited |
+	// | G | = | 255/219  -16*255/219 | * |     1     |
+	// | B |   | 255/219  -16*255/219 |
+
+	constexpr double factor = 255.0 / 219.0;
+	constexpr double bias = -16.0 * 255.0 / 219.0;
+
+	MatrixD transformationMatrix(3, 2);
+	transformationMatrix(0, 0) = factor;
+	transformationMatrix(1, 0) = factor;
+	transformationMatrix(2, 0) = factor;
+	transformationMatrix(0, 1) = bias;
+	transformationMatrix(1, 1) = bias;
+	transformationMatrix(2, 1) = bias;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8LimitedRangeToRGB24<6u>), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+}
+
+bool TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	// Y_full = (Y_limited - 16) * 255 / 219
+
+	// | R |   | 255/219  -16*255/219 |   | Y_limited |
+	// | G | = | 255/219  -16*255/219 | * |     1     |
+	// | B |   | 255/219  -16*255/219 |
+	// | A |   |   0       alphaValue |
+
+	constexpr double factor = 255.0 / 219.0;
+	constexpr double bias = -16.0 * 255.0 / 219.0;
+
+	MatrixD transformationMatrix(4, 2, false);
+	transformationMatrix(0, 0) = factor;
+	transformationMatrix(1, 0) = factor;
+	transformationMatrix(2, 0) = factor;
+	transformationMatrix(0, 1) = bias;
+	transformationMatrix(1, 1) = bias;
+	transformationMatrix(2, 1) = bias;
+	transformationMatrix(3, 1) = double(FrameConverterTestUtilities::ValueProvider::get().alphaValue());
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_RGBA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8LimitedRangeToRGBA32<6u>), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+}
+
+bool TestFrameConverterY8::testY8LimitedRangeToRGB24Precision10Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	// Y_full = (Y_limited - 16) * 255 / 219
+
+	// | R |   | 255/219  -16*255/219 |   | Y_limited |
+	// | G | = | 255/219  -16*255/219 | * |     1     |
+	// | B |   | 255/219  -16*255/219 |
+
+	constexpr double factor = 255.0 / 219.0;
+	constexpr double bias = -16.0 * 255.0 / 219.0;
+
+	MatrixD transformationMatrix(3, 2);
+	transformationMatrix(0, 0) = factor;
+	transformationMatrix(1, 0) = factor;
+	transformationMatrix(2, 0) = factor;
+	transformationMatrix(0, 1) = bias;
+	transformationMatrix(1, 1) = bias;
+	transformationMatrix(2, 1) = bias;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8LimitedRangeToRGB24<10u>), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+}
+
+bool TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision10Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	// Y_full = (Y_limited - 16) * 255 / 219
+
+	// | R |   | 255/219  -16*255/219 |   | Y_limited |
+	// | G | = | 255/219  -16*255/219 | * |     1     |
+	// | B |   | 255/219  -16*255/219 |
+	// | A |   |   0       alphaValue |
+
+	constexpr double factor = 255.0 / 219.0;
+	constexpr double bias = -16.0 * 255.0 / 219.0;
+
+	MatrixD transformationMatrix(4, 2, false);
+	transformationMatrix(0, 0) = factor;
+	transformationMatrix(1, 0) = factor;
+	transformationMatrix(2, 0) = factor;
+	transformationMatrix(0, 1) = bias;
+	transformationMatrix(1, 1) = bias;
+	transformationMatrix(2, 1) = bias;
+	transformationMatrix(3, 1) = double(FrameConverterTestUtilities::ValueProvider::get().alphaValue());
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_RGBA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8LimitedRangeToRGBA32<10u>), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 MatrixD TestFrameConverterY8::pixelFunctionY8Gamma(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)

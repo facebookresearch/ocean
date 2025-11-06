@@ -104,6 +104,39 @@ class OCEAN_CV_EXPORT FrameConverterY8 : public FrameConverter
 		static inline void convertY8ToRGBA32(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const uint8_t alphaValue = 0xFF, Worker* worker = nullptr);
 
 		/**
+		 * Converts a Y8 limited range frame [16, 235] to an RGB24 (full range) frame [0, 255].
+		 * This function first converts limited range to full range, then expands grayscale to RGB.
+		 * @param source The source frame buffer with limited range values, must be valid
+		 * @param target The target frame buffer, must be valid
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param flag Determining the type of conversion
+		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
+		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computational load
+		 * @tparam tPrecision The precision to use for range conversion: 6 for 6-bit (faster) or 10 for 10-bit (slower, higher quality)
+		 */
+		template <unsigned int tPrecision = 10u>
+		static inline void convertY8LimitedRangeToRGB24(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+
+		/**
+		 * Converts a Y8 limited range frame [16, 235] to an RGBA32 (full range) frame [0, 255].
+		 * This function first converts limited range to full range, then expands grayscale to RGBA.
+		 * @param source The source frame buffer with limited range values, must be valid
+		 * @param target The target frame buffer, must be valid
+		 * @param width The width of the frame in pixel, with range [1, infinity)
+		 * @param height The height of the frame in pixel, with range [1, infinity)
+		 * @param flag Determining the type of conversion
+		 * @param sourcePaddingElements The number of padding elements at the end of each source row, in elements, with range [0, infinity)
+		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
+		 * @param alphaValue The value of the alpha channel to be set, with range [0, 255]
+		 * @param worker Optional worker object to distribute the computational load
+		 * @tparam tPrecision The precision to use for range conversion: 6 for 6-bit (faster) or 10 for 10-bit (slower, higher quality)
+		 */
+		template <unsigned int tPrecision = 10u>
+		static inline void convertY8LimitedRangeToRGBA32(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const uint8_t alphaValue = 0xFF, Worker* worker = nullptr);
+
+		/**
 		 * Converts a Y 8 bit frame to a Y 8 bit frame.
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
@@ -304,6 +337,71 @@ inline void FrameConverterY8::convertY8FullRangeToY8LimitedRange(const uint8_t* 
 	else
 	{
 		FrameConverter::convertArbitraryPixelFormat(sources, targets, width, height, flag, 1u, FrameConverter::convertOneRow_1Plane1Channel_To_1Plane1Channel_8BitPerChannel_Precision10Bit, &options, worker);
+	}
+}
+
+template <unsigned int tPrecision>
+inline void FrameConverterY8::convertY8LimitedRangeToRGB24(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
+{
+	static_assert(tPrecision == 6u || tPrecision == 10u, "Precision must be 6 or 10");
+
+	ocean_assert(source != nullptr && target != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+
+	// Y_full = (Y_limited - 16) * 255 / 219
+	const int32_t options[5] =
+	{
+		int32_t(sourcePaddingElements),
+		int32_t(targetPaddingElements),
+
+		tPrecision == 6u ? int32_t(75) : int32_t(1192), // 6-bit: 75 == (255/219 * 64); 10-bit: 1192 == (255/219 * 1024)
+		16,
+		0
+	};
+
+	const void* sources[1] = {source};
+	void* targets[1] = {target};
+
+	if constexpr (tPrecision == 6u)
+	{
+		FrameConverter::convertArbitraryPixelFormat(sources, targets, width, height, flag, 1u, FrameConverter::convertOneRow_1Plane1Channel_To_1Plane3Channels_8BitPerChannel_Precision6Bit, &options, worker);
+	}
+	else
+	{
+		FrameConverter::convertArbitraryPixelFormat(sources, targets, width, height, flag, 1u, FrameConverter::convertOneRow_1Plane1Channel_To_1Plane3Channels_8BitPerChannel_Precision10Bit, &options, worker);
+	}
+}
+
+template <unsigned int tPrecision>
+inline void FrameConverterY8::convertY8LimitedRangeToRGBA32(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const uint8_t alphaValue, Worker* worker)
+{
+	static_assert(tPrecision == 6u || tPrecision == 10u, "Precision must be 6 or 10");
+
+	ocean_assert(source != nullptr && target != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+
+	// Y_full = (Y_limited - 16) * 255 / 219
+	const int32_t options[6] =
+	{
+		int32_t(sourcePaddingElements),
+		int32_t(targetPaddingElements),
+
+		tPrecision == 6u ? int32_t(75) : int32_t(1192), // 6-bit: 75 == (255/219 * 64); 10-bit: 1192 == (255/219 * 1024)
+		16,
+		0,
+		int32_t(alphaValue)
+	};
+
+	const void* sources[1] = {source};
+	void* targets[1] = {target};
+
+	if constexpr (tPrecision == 6u)
+	{
+		FrameConverter::convertArbitraryPixelFormat(sources, targets, width, height, flag, 1u, FrameConverter::convertOneRow_1Plane1Channel_To_1Plane4Channels_8BitPerChannel_Precision6Bit, &options, worker);
+	}
+	else
+	{
+		FrameConverter::convertArbitraryPixelFormat(sources, targets, width, height, flag, 1u, FrameConverter::convertOneRow_1Plane1Channel_To_1Plane4Channels_8BitPerChannel_Precision10Bit, &options, worker);
 	}
 }
 
