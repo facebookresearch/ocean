@@ -1450,6 +1450,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		 *
 		 * Converts one row of an image with e.g., a Y_UV12 pixel format to one row of an image with e.g., RGB24 pixel format with 6 bit precision.
 		 * This function needs one plane with the first channel and another plane/block of 2x2 sub-sampled pixels containing the second and third channels.<br>
+		 * This function uses fixed-point arithmetic with 6 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^6 = 64, and the intermediate results are divided by 64 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are defined in the domain of the color space and will be subtracted from the source color values.<br>
 		 * The layout of the source image of e.g., an Y_UV12 image looks like this:
 		 * <pre>
 		 *  source0:        source1:
@@ -1485,14 +1487,17 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[  ] ...
 		 * options[11] int32_t: f22
 		 *
-		 * options[12] int32_t: b0
-		 * options[13] int32_t: b1
-		 * options[14] int32_t: b2
+		 * options[12] int32_t: b0, with range [0, 128]
+		 * options[13] int32_t: b1, with range [0, 128]
+		 * options[14] int32_t: b2, with range [0, 128]
 		 *
 		 * with transformation:
-		 * t0 = clamp(0, f00 * (s0 - b0) + f01 * (s1 - b1) + f02 * (s2 - b2), 255)
-		 * t1 = clamp(0, f10 * (s0 - b0) + f11 * (s1 - b1) + f12 * (s2 - b2), 255)
-		 * t2 = clamp(0, f20 * (s0 - b0) + f21 * (s1 - b1) + f22 * (s2 - b2), 255)
+		 * sb0 = s0 - b0 // source adjusted with bias
+		 * sb1 = s1 - b1
+		 * sb2 = s2 - b2
+		 * t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+		 * t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+		 * t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 		 * </pre>
 		 * @param sources The pointer to the first and second memory block of the source image, must be valid
 		 * @param targets The one pointer to the target image, must be valid
@@ -1510,6 +1515,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		 *
 		 * Converts one row of an image with e.g., a Y_UV12 pixel format to one row of an image with e.g., RGB24 pixel format with 10 bit precision.
 		 * This function needs one plane with the first channel and another plane/block of 2x2 sub-sampled pixels containing the second and third channels.<br>
+		 * This function uses fixed-point arithmetic with 10 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^10 = 1024, and the intermediate results are divided by 1024 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are added AFTER the division by 1024.<br>
 		 * The layout of the source image of e.g., an Y_UV12 image looks like this:
 		 * <pre>
 		 *  source0:        source1:
@@ -1550,9 +1557,9 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[14] int32_t: b2
 		 *
 		 * with transformation:
-		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+		 * t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+		 * t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+		 * t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 		 * </pre>
 		 * @param sources The pointer to the first and second memory block of the source image, must be valid
 		 * @param targets The one pointer to the target image, must be valid
@@ -1568,6 +1575,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Converts two rows of an image with e.g., a Y_UV12 pixel format to two rows of an image with e.g., an RGB24 pixel format with 6 bit precision.
 		 * This function needs one plane with the first channel and another plane/block of 2x2 sub-sampled pixels containing the second and third channels.<br>
+		 * This function uses fixed-point arithmetic with 6 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^6 = 64, and the intermediate results are divided by 64 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are defined in the domain of the color space and will be subtracted from the source color values.<br>
 		 * The layout of the source image of e.g., an Y_UV12 image looks like this:
 		 * <pre>
 		 *  source0:        source1:
@@ -1603,14 +1612,17 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[  ] ...
 		 * options[11] int32_t: f22
 		 *
-		 * options[12] int32_t: b0
-		 * options[13] int32_t: b1
-		 * options[14] int32_t: b2
+		 * options[12] int32_t: b0, with range [0, 128]
+		 * options[13] int32_t: b1, with range [0, 128]
+		 * options[14] int32_t: b2, with range [0, 128]
 		 *
 		 * with transformation:
-		 * t0 = clamp(0, f00 * (s0 - b0) + f01 * (s1 - b1) + f02 * (s2 - b2), 255)
-		 * t1 = clamp(0, f10 * (s0 - b0) + f11 * (s1 - b1) + f12 * (s2 - b2), 255)
-		 * t2 = clamp(0, f20 * (s0 - b0) + f21 * (s1 - b1) + f22 * (s2 - b2), 255)
+		 * sb0 = s0 - b0 // source adjusted with bias
+		 * sb1 = s1 - b1
+		 * sb2 = s2 - b2
+		 * t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+		 * t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+		 * t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 		 * </pre>
 		 * @param sources The pointer to the first and second memory block of the source image, must be valid
 		 * @param targets The one pointer to the target image, must be valid
@@ -1625,6 +1637,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Converts two rows of an image with e.g., a Y_UV12 pixel format to two rows of an image with e.g., an RGB24 pixel format with 10 bit precision.
 		 * This function needs one plane with the first channel and another plane/block of 2x2 sub-sampled pixels containing the second and third channels.<br>
+		 * This function uses fixed-point arithmetic with 10 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^10 = 1024, and the intermediate results are divided by 1024 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are added AFTER the division by 1024.<br>
 		 * The layout of the source image of e.g., an Y_UV12 image looks like this:
 		 * <pre>
 		 *  source0:        source1:
@@ -1665,9 +1679,9 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[14] int32_t: b2
 		 *
 		 * with transformation:
-		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+		 * t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+		 * t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+		 * t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 		 * </pre>
 		 * @param sources The pointer to the first and second memory block of the source image, must be valid
 		 * @param targets The one pointer to the target image, must be valid
@@ -1682,6 +1696,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Converts two rows of an image with e.g., a RGB pixel format to two rows of an image with e.g., an Y_UV12 pixel format with 7 bit precision.
 		 * This function needs a source image with one plane and a target image with two planes.
+		 * This function uses fixed-point arithmetic with 7 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^7 = 128, and the intermediate results are divided by 128 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are added AFTER the division by 128.<br>
 		 * The layout of the source image of e.g., a RGB24 image looks like this:
 		 * <pre>
 		 *  source:
@@ -1717,14 +1733,14 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[  ] ...
 		 * options[11] int32_t: f22
 		 *
-		 * options[12] int32_t: b0
-		 * options[13] int32_t: b1
-		 * options[14] int32_t: b2
+		 * options[12] int32_t: b0, with range [-128, 128]
+		 * options[13] int32_t: b1, with range [-128, 128]
+		 * options[14] int32_t: b2, with range [-128, 128]
 		 *
 		 * with transformation:
-		 * t0 = clamp(0, f00 * s0 + f01 * s1 + f02 * s2 + b0, 255)
-		 * t1 = clamp(0, f10 * s0 + f11 * s1 + f12 * s2 + b1, 255)
-		 * t2 = clamp(0, f20 * s0 + f21 * s1 + f22 * s2 + b2, 255)
+		 * t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 128 + b0, 255)
+		 * t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 128 + b1, 255)
+		 * t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 128 + b2, 255)
 		 * </pre>
 		 * @param sources The pointer to the source plane, must be valid
 		 * @param targets The pointers to the first and second target plane, must be valid
@@ -1739,6 +1755,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Converts two rows of an image with e.g., a RGB pixel format to two rows of an image with e.g., an Y_U_V12 pixel format with 7 bit precision.
 		 * This function needs a source image with one plane and a target image with three planes.
+		 * This function uses fixed-point arithmetic with 7 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^7 = 128, and the intermediate results are divided by 128 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are added AFTER the division by 128.<br>
 		 * The layout of the source image of e.g., a RGB24 image looks like this:
 		 * <pre>
 		 *  source:
@@ -1775,14 +1793,14 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[  ] ...
 		 * options[12] int32_t: f22
 		 *
-		 * options[13] int32_t: b0
-		 * options[14] int32_t: b1
-		 * options[15] int32_t: b2
+		 * options[13] int32_t: b0, with range [-128, 128]
+		 * options[14] int32_t: b1, with range [-128, 128]
+		 * options[15] int32_t: b2, with range [-128, 128]
 		 *
 		 * with transformation:
-		 * t0 = clamp(0, f00 * s0 + f01 * s1 + f02 * s2 + b0, 255)
-		 * t1 = clamp(0, f10 * s0 + f11 * s1 + f12 * s2 + b1, 255)
-		 * t2 = clamp(0, f20 * s0 + f21 * s1 + f22 * s2 + b2, 255)
+		 * t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 128 + b0, 255)
+		 * t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 128 + b1, 255)
+		 * t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 128 + b2, 255)
 		 * </pre>
 		 * @param sources The pointer to the source plane, must be valid
 		 * @param targets The pointers to the first, second, and third target planes, must be valid
@@ -1988,6 +2006,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Converts one row of an image with e.g., a Y_U_V12 pixel format to one row of an image with e.g., an RGB24 pixel format with 10 bit precision.
 		 * This function needs one plane with the first channel, and two additional planes with 2x2 sub-sampled pixels containing the second and third channels.<br>
+		 * This function uses fixed-point arithmetic with 10 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^10 = 1024, and the intermediate results are divided by 1024 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are added AFTER the division by 1024.<br>
 		 * The layout of the source image of e.g., an Y_U_V12 image looks like this:
 		 * <pre>
 		 *  source0:        source1:    source2:
@@ -2018,9 +2038,9 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[15] int32_t: b2
 		 *
 		 * with transformation:
-		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+		 * t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+		 * t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+		 * t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 		 * </pre>
 		 * @param sources The pointer to the first, second, and third memory block of the source image, must be valid
 		 * @param targets The one pointer to the target image, must be valid
@@ -2035,6 +2055,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Converts two rows of an image with e.g., a Y_U_V12 pixel format to two rows of an image with e.g., an RGB24 pixel format with 10 bit precision.
 		 * This function needs one plane with the first channel, and two additional planes with 2x2 sub-sampled pixels containing the second and third channels.<br>
+		 * This function uses fixed-point arithmetic with 10 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^10 = 1024, and the intermediate results are divided by 1024 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are added AFTER the division by 1024.<br>
 		 * The layout of the source image of e.g., an Y_U_V12 image looks like this:
 		 * <pre>
 		 *  source0:        source1:    source2:
@@ -2065,9 +2087,9 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[15] int32_t: b2
 		 *
 		 * with transformation:
-		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+		 * t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+		 * t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+		 * t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 		 * </pre>
 		 * @param sources The pointer to the first, second, and third memory block of the source image, must be valid
 		 * @param targets The one pointer to the target image, must be valid
@@ -2194,6 +2216,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Converts one row of an image with e.g., a Y_U_V24 pixel format to one rows of an image with e.g., an RGB24 pixel format.
 		 * This function needs three source planes/blocks with three individual channels.
+		 * This function uses fixed-point arithmetic with 6 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^6 = 64, and the intermediate results are divided by 64 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are defined in the domain of the color space and will be subtracted from the source color values.<br>
 		 * The layout of the options parameters is as follows:
 		 * <pre>
 		 * options[ 0] uint32_t: sourcePlane0PaddingElements
@@ -2208,14 +2232,17 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[  ] ...
 		 * options[12] int32_t: f22
 		 *
-		 * options[13] int32_t: b0
-		 * options[14] int32_t: b1
-		 * options[15] int32_t: b2
+		 * options[13] int32_t: b0, with range [0, 128]
+		 * options[14] int32_t: b1, with range [0, 128]
+		 * options[15] int32_t: b2, with range [0, 128]
 		 *
 		 * with transformation:
-		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+		 * sb0 = s0 - b0 // source adjusted with bias
+		 * sb1 = s1 - b1
+		 * sb2 = s2 - b2
+		 * t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+		 * t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+		 * t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 		 * </pre>
 		 * @param sources The pointer to the first, second, and third memory block of the source image, must be valid
 		 * @param targets The one pointer to the target image, must be valid
@@ -2230,6 +2257,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Converts one row of an image with e.g., a Y_U_V24 pixel format to one rows of an image with e.g., an RGBA32 pixel format.
 		 * This function needs three source planes/blocks with three individual channels.
+		 * This function uses fixed-point arithmetic with 6 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^6 = 64, and the intermediate results are divided by 64 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are defined in the domain of the color space and will be subtracted from the source color values.<br>
 		 * The layout of the options parameters is as follows:
 		 * <pre>
 		 * options[ 0] uint32_t: sourcePlane0PaddingElements
@@ -2244,16 +2273,19 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[  ] ...
 		 * options[12] int32_t: f22
 		 *
-		 * options[13] int32_t: b0
-		 * options[14] int32_t: b1
-		 * options[15] int32_t: b2
+		 * options[13] int32_t: b0, with range [0, 128]
+		 * options[14] int32_t: b1, with range [0, 128]
+		 * options[15] int32_t: b2, with range [0, 128]
 		 *
-		 * options[16] uint32_t: channelValue3
+		 * options[16] int32_t: channelValue3, with range [0, 255]
 		 *
 		 * with transformation:
-		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+		 * sb0 = s0 - b0 // source adjusted with bias
+		 * sb1 = s1 - b1
+		 * sb2 = s2 - b2
+		 * t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+		 * t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+		 * t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 		 * t3 = channelValue3
 		 * </pre>
 		 * @param sources The pointer to the first, second, and third memory block of the source image, must be valid
@@ -2269,6 +2301,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Converts one row of an image with e.g., a Y_U_V12 pixel format to one row of an image with e.g., an RGBA32 pixel format.
 		 * This function needs one plane with the first channel, and two additional planes with 2x2 sub-sampled pixels containing the second and third channels.<br>
+		 * This function uses fixed-point arithmetic with 6 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^6 = 64, and the intermediate results are divided by 64 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are defined in the domain of the color space and will be subtracted from the source color values.<br>
 		 * The layout of the source image of e.g., an Y_U_V12 image looks like this:
 		 * <pre>
 		 *  source0:        source1:    source2:
@@ -2293,16 +2327,19 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[  ] ...
 		 * options[12] int32_t: f22
 		 *
-		 * options[13] int32_t: b0
-		 * options[14] int32_t: b1
-		 * options[15] int32_t: b2
+		 * options[13] int32_t: b0, with range [0, 128]
+		 * options[14] int32_t: b1, with range [0, 128]
+		 * options[15] int32_t: b2, with range [0, 128]
 		 *
 		 * options[16] int32_t: channelValue3
 		 *
 		 * with transformation:
-		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+		 * sb0 = s0 - b0 // source adjusted with bias
+		 * sb1 = s1 - b1
+		 * sb2 = s2 - b2
+		 * t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+		 * t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+		 * t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 		 * t3 = channelValue3
 		 * </pre>
 		 * @param sources The pointer to the first, second, and third memory block of the source image, must be valid
@@ -2318,6 +2355,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Converts two rows of an image with e.g., a Y_U_V12 pixel format to two rows of an image with e.g., an RGB24 pixel format.
 		 * This function needs one plane with the first channel, and two additional planes with 2x2 sub-sampled pixels containing the second and third channels.<br>
+		 * This function uses fixed-point arithmetic with 6 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^6 = 64, and the intermediate results are divided by 64 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are defined in the domain of the color space and will be subtracted from the source color values.<br>
 		 * The layout of the source image of e.g., an Y_U_V12 image looks like this:
 		 * <pre>
 		 *  source0:        source1:    source2:
@@ -2354,15 +2393,17 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[  ] ...
 		 * options[12] int32_t: f22
 		 *
-		 * options[13] int32_t: b0
-		 * options[14] int32_t: b1
-		 * options[15] int32_t: b2
+		 * options[13] int32_t: b0, with range [0, 128]
+		 * options[14] int32_t: b1, with range [0, 128]
+		 * options[15] int32_t: b2, with range [0, 128]
 		 *
 		 * with transformation:
-		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
-		 * t3 = channelValue3
+		 * sb0 = s0 - b0 // source adjusted with bias
+		 * sb1 = s1 - b1
+		 * sb2 = s2 - b2
+		 * t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+		 * t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+		 * t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 		 * </pre>
 		 * @param sources The pointer to the first, second, and third memory block of the source image, must be valid
 		 * @param targets The one pointer to the target image, must be valid
@@ -2377,6 +2418,8 @@ class OCEAN_CV_EXPORT FrameConverter
 		/**
 		 * Converts two rows of an image with e.g., a Y_U_V12 pixel format to two rows of an image with e.g., an RGBA32 pixel format.
 		 * This function needs one plane with the first channel, and two additional planes with 2x2 sub-sampled pixels containing the second and third channels.<br>
+		 * This function uses fixed-point arithmetic with 6 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^6 = 64, and the intermediate results are divided by 64 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are defined in the domain of the color space and will be subtracted from the source color values.<br>
 		 * The layout of the source image of e.g., an Y_U_V12 image looks like this:
 		 * <pre>
 		 *  source0:        source1:    source2:
@@ -2387,7 +2430,7 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * | Y Y Y Y |
 		 *  ---------
 		 *
-		 * The layout of the target image of e.g., a RGBA24 image looks like this:
+		 * The layout of the target image of e.g., a RGBA32 image looks like this:
 		 * <pre>
 		 *  target:
 		 *  ------------------------------------
@@ -2413,16 +2456,19 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[  ] ...
 		 * options[12] int32_t: f22
 		 *
-		 * options[13] int32_t: b0
-		 * options[14] int32_t: b1
-		 * options[15] int32_t: b2
+		 * options[13] int32_t: b0, with range [0, 128]
+		 * options[14] int32_t: b1, with range [0, 128]
+		 * options[15] int32_t: b2, with range [0, 128]
 		 *
-		 * options[16] uint32_t: channelValue3
+		 * options[16] int32_t: channelValue3, with range [0, 255]
 		 *
 		 * with transformation:
-		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+		 * sb0 = s0 - b0 // source adjusted with bias
+		 * sb1 = s1 - b1
+		 * sb2 = s2 - b2
+		 * t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+		 * t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+		 * t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 		 * t3 = channelValue3
 		 * </pre>
 		 * @param sources The pointer to the first, second, and third memory block of the source image, must be valid
@@ -2437,6 +2483,8 @@ class OCEAN_CV_EXPORT FrameConverter
 
 		/**
 		 * Converts one row of an image with e.g., a YUYV16 pixel format to one row of an image with e.g., an RGB24 or BGR2424 pixel format.
+		 * This function uses fixed-point arithmetic with 10 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^10 = 1024, and the intermediate results are divided by 1024 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are added AFTER the division by 1024.<br>
 		 * The layout of the options parameters is as follows:
 		 * <pre>
 		 * options[ 0] uint32_t: sourcePaddingElements
@@ -2454,9 +2502,9 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[13] int32_t: b2
 		 *
 		 * with transformation:
-		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+		 * t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+		 * t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+		 * t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 		 * </pre>
 		 * @param sources The pointer to the first, second, and third memory block of the source image, must be valid
 		 * @param targets The one pointer to the target image, must be valid
@@ -2470,6 +2518,8 @@ class OCEAN_CV_EXPORT FrameConverter
 
 		/**
 		 * Converts one row of an image with e.g., a UYVY16 pixel format to one row of an image with e.g., an RGB24 or BGR2424 pixel format.
+		 * This function uses fixed-point arithmetic with 10 fractional bits: the conversion factors (f00-f22) are provided pre-multiplied by 2^10 = 1024, and the intermediate results are divided by 1024 to obtain the final color values.<br>
+		 * Note: The bias values (b0-b2) are added AFTER the division by 1024.<br>
 		 * The layout of the options parameters is as follows:
 		 * <pre>
 		 * options[ 0] uint32_t: sourcePaddingElements
@@ -2487,9 +2537,9 @@ class OCEAN_CV_EXPORT FrameConverter
 		 * options[13] int32_t: b2
 		 *
 		 * with transformation:
-		 * t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-		 * t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-		 * t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+		 * t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+		 * t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+		 * t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 		 * </pre>
 		 * @param sources The pointer to the first, second, and third memory block of the source image, must be valid
 		 * @param targets The one pointer to the target image, must be valid

@@ -1635,42 +1635,45 @@ void FrameConverter::convertOneRow_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = clamp(0, f00 * (s0 - b0) + f01 * (s1 - b1) + f02 * (s2 - b2), 255)
-	// t1 = clamp(0, f10 * (s0 - b0) + f11 * (s1 - b1) + f12 * (s2 - b2), 255)
-	// t2 = clamp(0, f20 * (s0 - b0) + f21 * (s1 - b1) + f22 * (s2 - b2), 255)
+	// sb0 = s0 - b0 // source adjusted with bias
+	// sb1 = s1 - b1
+	// sb2 = s2 - b2
+	// t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+	// t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+	// t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 
-	const unsigned int sourcePlane0PaddingElements = (unsigned int)(intOptions[0]);
-	const unsigned int sourcePlane1PaddingElements = (unsigned int)(intOptions[1]);
-	const unsigned int targetPlanePaddingElements = (unsigned int)(intOptions[2]);
+	const uint32_t sourcePlane0PaddingElements = uint32_t(intOptions[0]);
+	const uint32_t sourcePlane1PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t targetPlanePaddingElements = uint32_t(intOptions[2]);
 
 	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
 	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
 
 	uint8_t* targetPlane = (uint8_t*)(targets[0]);
 
-	const unsigned int sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
-	const unsigned int sourcePlane1StrideElements = width + sourcePlane1PaddingElements; // 2x2 downsampling but 2 channels
-	const unsigned int targetPlaneStrideElements = width * 3u + targetPlanePaddingElements;
+	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
+	const uint32_t sourcePlane1StrideElements = width + sourcePlane1PaddingElements; // 2x2 downsampling but 2 channels
+	const uint32_t targetPlaneStrideElements = width * 3u + targetPlanePaddingElements;
 
-	const int factorChannel00_64 = intOptions[3];
-	const int factorChannel10_64 = intOptions[4];
-	const int factorChannel20_64 = intOptions[5];
+	const int32_t factorChannel00_64 = intOptions[3];
+	const int32_t factorChannel10_64 = intOptions[4];
+	const int32_t factorChannel20_64 = intOptions[5];
 
-	const int factorChannel01_64 = intOptions[6];
-	const int factorChannel11_64 = intOptions[7];
-	const int factorChannel21_64 = intOptions[8];
+	const int32_t factorChannel01_64 = intOptions[6];
+	const int32_t factorChannel11_64 = intOptions[7];
+	const int32_t factorChannel21_64 = intOptions[8];
 
-	const int factorChannel02_64 = intOptions[9];
-	const int factorChannel12_64 = intOptions[10];
-	const int factorChannel22_64 = intOptions[11];
+	const int32_t factorChannel02_64 = intOptions[9];
+	const int32_t factorChannel12_64 = intOptions[10];
+	const int32_t factorChannel22_64 = intOptions[11];
 
 	ocean_assert(std::abs(factorChannel00_64 + factorChannel01_64 + factorChannel02_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel10_64 + factorChannel11_64 + factorChannel12_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel20_64 + factorChannel21_64 + factorChannel22_64) < 64 * 4);
 
-	const int bias0 = intOptions[12];
-	const int bias1 = intOptions[13];
-	const int bias2 = intOptions[14];
+	const int32_t bias0 = intOptions[12];
+	const int32_t bias1 = intOptions[13];
+	const int32_t bias2 = intOptions[14];
 
 	ocean_assert(bias0 >= 0 && bias0 <= 128);
 	ocean_assert(bias1 >= 0 && bias1 <= 128);
@@ -1823,38 +1826,38 @@ void FrameConverter::convertOneRow_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-	// t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-	// t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+	// t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+	// t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+	// t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 
-	const unsigned int sourcePlane0PaddingElements = (unsigned int)(intOptions[0]);
-	const unsigned int sourcePlane1PaddingElements = (unsigned int)(intOptions[1]);
-	const unsigned int targetPlanePaddingElements = (unsigned int)(intOptions[2]);
+	const uint32_t sourcePlane0PaddingElements = uint32_t(intOptions[0]);
+	const uint32_t sourcePlane1PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t targetPlanePaddingElements = uint32_t(intOptions[2]);
 
 	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
 	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
 
 	uint8_t* targetPlane = (uint8_t*)(targets[0]);
 
-	const unsigned int sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
-	const unsigned int sourcePlane1StrideElements = width + sourcePlane1PaddingElements; // 2x2 downsampling but 2 channels
-	const unsigned int targetPlanetrideElements = width * 3u + targetPlanePaddingElements;
+	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
+	const uint32_t sourcePlane1StrideElements = width + sourcePlane1PaddingElements; // 2x2 downsampling but 2 channels
+	const uint32_t targetPlanetrideElements = width * 3u + targetPlanePaddingElements;
 
-	const int factorChannel00_1024 = intOptions[3];
-	const int factorChannel10_1024 = intOptions[4];
-	const int factorChannel20_1024 = intOptions[5];
+	const int32_t factorChannel00_1024 = intOptions[3];
+	const int32_t factorChannel10_1024 = intOptions[4];
+	const int32_t factorChannel20_1024 = intOptions[5];
 
-	const int factorChannel01_1024 = intOptions[6];
-	const int factorChannel11_1024 = intOptions[7];
-	const int factorChannel21_1024 = intOptions[8];
+	const int32_t factorChannel01_1024 = intOptions[6];
+	const int32_t factorChannel11_1024 = intOptions[7];
+	const int32_t factorChannel21_1024 = intOptions[8];
 
-	const int factorChannel02_1024 = intOptions[9];
-	const int factorChannel12_1024 = intOptions[10];
-	const int factorChannel22_1024 = intOptions[11];
+	const int32_t factorChannel02_1024 = intOptions[9];
+	const int32_t factorChannel12_1024 = intOptions[10];
+	const int32_t factorChannel22_1024 = intOptions[11];
 
-	const int bias0 = intOptions[12];
-	const int bias1 = intOptions[13];
-	const int bias2 = intOptions[14];
+	const int32_t bias0 = intOptions[12];
+	const int32_t bias1 = intOptions[13];
+	const int32_t bias2 = intOptions[14];
 
 	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
 	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
@@ -2017,42 +2020,45 @@ void FrameConverter::convertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = clamp(0, f00 * (s0 - b0) + f01 * (s1 - b1) + f02 * (s2 - b2), 255)
-	// t1 = clamp(0, f10 * (s0 - b0) + f11 * (s1 - b1) + f12 * (s2 - b2), 255)
-	// t2 = clamp(0, f20 * (s0 - b0) + f21 * (s1 - b1) + f22 * (s2 - b2), 255)
+	// sb0 = s0 - b0 // source adjusted with bias
+	// sb1 = s1 - b1
+	// sb2 = s2 - b2
+	// t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+	// t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+	// t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 
-	const unsigned int sourcePlane0PaddingElements = (unsigned int)(intOptions[0]);
-	const unsigned int sourcePlane1PaddingElements = (unsigned int)(intOptions[1]);
-	const unsigned int targetPlanePaddingElements = (unsigned int)(intOptions[2]);
+	const uint32_t sourcePlane0PaddingElements = uint32_t(intOptions[0]);
+	const uint32_t sourcePlane1PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t targetPlanePaddingElements = uint32_t(intOptions[2]);
 
 	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
 	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
 
 	uint8_t* targetPlane = (uint8_t*)(targets[0]);
 
-	const unsigned int sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
-	const unsigned int sourcePlane1StrideElements = width + sourcePlane1PaddingElements; // 2x2 downsampling but 2 channels
-	const unsigned int targetPlaneStrideElements = width * 3u + targetPlanePaddingElements;
+	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
+	const uint32_t sourcePlane1StrideElements = width + sourcePlane1PaddingElements; // 2x2 downsampling but 2 channels
+	const uint32_t targetPlaneStrideElements = width * 3u + targetPlanePaddingElements;
 
-	const int factorChannel00_64 = intOptions[3];
-	const int factorChannel10_64 = intOptions[4];
-	const int factorChannel20_64 = intOptions[5];
+	const int32_t factorChannel00_64 = intOptions[3];
+	const int32_t factorChannel10_64 = intOptions[4];
+	const int32_t factorChannel20_64 = intOptions[5];
 
-	const int factorChannel01_64 = intOptions[6];
-	const int factorChannel11_64 = intOptions[7];
-	const int factorChannel21_64 = intOptions[8];
+	const int32_t factorChannel01_64 = intOptions[6];
+	const int32_t factorChannel11_64 = intOptions[7];
+	const int32_t factorChannel21_64 = intOptions[8];
 
-	const int factorChannel02_64 = intOptions[9];
-	const int factorChannel12_64 = intOptions[10];
-	const int factorChannel22_64 = intOptions[11];
+	const int32_t factorChannel02_64 = intOptions[9];
+	const int32_t factorChannel12_64 = intOptions[10];
+	const int32_t factorChannel22_64 = intOptions[11];
 
 	ocean_assert(std::abs(factorChannel00_64 + factorChannel01_64 + factorChannel02_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel10_64 + factorChannel11_64 + factorChannel12_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel20_64 + factorChannel21_64 + factorChannel22_64) < 64 * 4);
 
-	const int bias0 = intOptions[12];
-	const int bias1 = intOptions[13];
-	const int bias2 = intOptions[14];
+	const int32_t bias0 = intOptions[12];
+	const int32_t bias1 = intOptions[13];
+	const int32_t bias2 = intOptions[14];
 
 	ocean_assert(bias0 >= 0 && bias0 <= 128);
 	ocean_assert(bias1 >= 0 && bias1 <= 128);
@@ -2246,38 +2252,38 @@ void FrameConverter::convertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-	// t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-	// t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+	// t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+	// t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+	// t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 
-	const unsigned int sourcePlane0PaddingElements = (unsigned int)(intOptions[0]);
-	const unsigned int sourcePlane1PaddingElements = (unsigned int)(intOptions[1]);
-	const unsigned int targetPlanePaddingElements = (unsigned int)(intOptions[2]);
+	const uint32_t sourcePlane0PaddingElements = uint32_t(intOptions[0]);
+	const uint32_t sourcePlane1PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t targetPlanePaddingElements = uint32_t(intOptions[2]);
 
 	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
 	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
 
 	uint8_t* targetPlane = (uint8_t*)(targets[0]);
 
-	const unsigned int sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
-	const unsigned int sourcePlane1StrideElements = width + sourcePlane1PaddingElements; // 2x2 downsampling but 2 channels
-	const unsigned int targetPlaneStrideElements = width * 3u + targetPlanePaddingElements;
+	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
+	const uint32_t sourcePlane1StrideElements = width + sourcePlane1PaddingElements; // 2x2 downsampling but 2 channels
+	const uint32_t targetPlaneStrideElements = width * 3u + targetPlanePaddingElements;
 
-	const int factorChannel00_1024 = intOptions[3];
-	const int factorChannel10_1024 = intOptions[4];
-	const int factorChannel20_1024 = intOptions[5];
+	const int32_t factorChannel00_1024 = intOptions[3];
+	const int32_t factorChannel10_1024 = intOptions[4];
+	const int32_t factorChannel20_1024 = intOptions[5];
 
-	const int factorChannel01_1024 = intOptions[6];
-	const int factorChannel11_1024 = intOptions[7];
-	const int factorChannel21_1024 = intOptions[8];
+	const int32_t factorChannel01_1024 = intOptions[6];
+	const int32_t factorChannel11_1024 = intOptions[7];
+	const int32_t factorChannel21_1024 = intOptions[8];
 
-	const int factorChannel02_1024 = intOptions[9];
-	const int factorChannel12_1024 = intOptions[10];
-	const int factorChannel22_1024 = intOptions[11];
+	const int32_t factorChannel02_1024 = intOptions[9];
+	const int32_t factorChannel12_1024 = intOptions[10];
+	const int32_t factorChannel22_1024 = intOptions[11];
 
-	const int bias0 = intOptions[12];
-	const int bias1 = intOptions[13];
-	const int bias2 = intOptions[14];
+	const int32_t bias0 = intOptions[12];
+	const int32_t bias1 = intOptions[13];
+	const int32_t bias2 = intOptions[14];
 
 	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
 	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
@@ -2482,22 +2488,22 @@ void FrameConverter::convertTwoRows_1Plane3Channels_To_1Plane1ChannelAnd1Plane2C
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = clamp(0, f00 * s0 + f01 * s1 + f02 * s2 + b0, 255)
-	// t1 = clamp(0, f10 * s0 + f11 * s1 + f12 * s2 + b1, 255)
-	// t2 = clamp(0, f20 * s0 + f21 * s1 + f22 * s2 + b2, 255)
+	// t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 128 + b0, 255)
+	// t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 128 + b1, 255)
+	// t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 128 + b2, 255)
 
-	const unsigned int sourcePlanePaddingElements = (unsigned int)(intOptions[0]);
-	const unsigned int targetPlane0PaddingElements = (unsigned int)(intOptions[1]);
-	const unsigned int targetPlane1PaddingElements = (unsigned int)(intOptions[2]);
+	const uint32_t sourcePlanePaddingElements = uint32_t(intOptions[0]);
+	const uint32_t targetPlane0PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t targetPlane1PaddingElements = uint32_t(intOptions[2]);
 
 	const uint8_t* sourcePlane = (const uint8_t*)(sources[0]);
 
 	uint8_t* targetPlane0 = (uint8_t*)(targets[0]);
 	uint8_t* targetPlane1 = (uint8_t*)(targets[1]);
 
-	const unsigned int sourcePlaneStrideElements = width * 3u + sourcePlanePaddingElements;
-	const unsigned int targetPlane0StrideElements = width + targetPlane0PaddingElements;
-	const unsigned int targetPlane1StrideElements = width + targetPlane1PaddingElements; // 2x2 downsampling but 2 channels
+	const uint32_t sourcePlaneStrideElements = width * 3u + sourcePlanePaddingElements;
+	const uint32_t targetPlane0StrideElements = width + targetPlane0PaddingElements;
+	const uint32_t targetPlane1StrideElements = width + targetPlane1PaddingElements; // 2x2 downsampling but 2 channels
 
 	const int16_t factorChannel00_128 = int16_t(intOptions[3]);
 	const int16_t factorChannel10_128 = int16_t(intOptions[4]);
@@ -2711,14 +2717,14 @@ void FrameConverter::convertTwoRows_1Plane3Channels_To_1Plane1ChannelAnd2Planes1
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = clamp(0, f00 * s0 + f01 * s1 + f02 * s2 + b0, 255)
-	// t1 = clamp(0, f10 * s0 + f11 * s1 + f12 * s2 + b1, 255)
-	// t2 = clamp(0, f20 * s0 + f21 * s1 + f22 * s2 + b2, 255)
+	// t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 128 + b0, 255)
+	// t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 128 + b1, 255)
+	// t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 128 + b2, 255)
 
-	const unsigned int sourcePlanePaddingElements = (unsigned int)(intOptions[0]);
-	const unsigned int targetPlane0PaddingElements = (unsigned int)(intOptions[1]);
-	const unsigned int targetPlane1PaddingElements = (unsigned int)(intOptions[2]);
-	const unsigned int targetPlane2PaddingElements = (unsigned int)(intOptions[3]);
+	const uint32_t sourcePlanePaddingElements = uint32_t(intOptions[0]);
+	const uint32_t targetPlane0PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t targetPlane1PaddingElements = uint32_t(intOptions[2]);
+	const uint32_t targetPlane2PaddingElements = uint32_t(intOptions[3]);
 
 	const uint8_t* sourcePlane = (const uint8_t*)(sources[0]);
 
@@ -2726,10 +2732,10 @@ void FrameConverter::convertTwoRows_1Plane3Channels_To_1Plane1ChannelAnd2Planes1
 	uint8_t* targetPlane1 = (uint8_t*)(targets[1]);
 	uint8_t* targetPlane2 = (uint8_t*)(targets[2]);
 
-	const unsigned int sourcePlaneStrideElements = width * 3u + sourcePlanePaddingElements;
-	const unsigned int targetPlane0StrideElements = width + targetPlane0PaddingElements;
-	const unsigned int targetPlane1StrideElements = width_2 + targetPlane1PaddingElements;
-	const unsigned int targetPlane2StrideElements = width_2 + targetPlane2PaddingElements;
+	const uint32_t sourcePlaneStrideElements = width * 3u + sourcePlanePaddingElements;
+	const uint32_t targetPlane0StrideElements = width + targetPlane0PaddingElements;
+	const uint32_t targetPlane1StrideElements = width_2 + targetPlane1PaddingElements;
+	const uint32_t targetPlane2StrideElements = width_2 + targetPlane2PaddingElements;
 
 	const int16_t factorChannel00_128 = int16_t(intOptions[4]);
 	const int16_t factorChannel10_128 = int16_t(intOptions[5]);
@@ -3768,14 +3774,14 @@ void FrameConverter::convertOneRow_1Plane1ChannelAnd2Planes1ChannelDownsampled2x
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-	// t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-	// t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+	// t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+	// t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+	// t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 
-	const unsigned int sourcePlane0PaddingElements = (unsigned int)intOptions[0];
-	const unsigned int sourcePlane1PaddingElements = (unsigned int)intOptions[1];
-	const unsigned int sourcePlane2PaddingElements = (unsigned int)intOptions[2];
-	const unsigned int targetZippedPaddingElements = (unsigned int)intOptions[3];
+	const uint32_t sourcePlane0PaddingElements = uint32_t(intOptions[0]);
+	const uint32_t sourcePlane1PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t sourcePlane2PaddingElements = uint32_t(intOptions[2]);
+	const uint32_t targetZippedPaddingElements = uint32_t(intOptions[3]);
 
 	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
 	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
@@ -3785,26 +3791,26 @@ void FrameConverter::convertOneRow_1Plane1ChannelAnd2Planes1ChannelDownsampled2x
 
 	const unsigned int width_2 = width / 2u;
 
-	const unsigned int sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
-	const unsigned int sourcePlane1StrideElements = width_2 + sourcePlane1PaddingElements;
-	const unsigned int sourcePlane2StrideElements = width_2 + sourcePlane2PaddingElements;
-	const unsigned int targetZippedStrideElements = width * 3u + targetZippedPaddingElements;
+	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
+	const uint32_t sourcePlane1StrideElements = width_2 + sourcePlane1PaddingElements;
+	const uint32_t sourcePlane2StrideElements = width_2 + sourcePlane2PaddingElements;
+	const uint32_t targetZippedStrideElements = width * 3u + targetZippedPaddingElements;
 
-	const int factorChannel00_1024 = intOptions[4];
-	const int factorChannel10_1024 = intOptions[5];
-	const int factorChannel20_1024 = intOptions[6];
+	const int32_t factorChannel00_1024 = intOptions[4];
+	const int32_t factorChannel10_1024 = intOptions[5];
+	const int32_t factorChannel20_1024 = intOptions[6];
 
-	const int factorChannel01_1024 = intOptions[7];
-	const int factorChannel11_1024 = intOptions[8];
-	const int factorChannel21_1024 = intOptions[9];
+	const int32_t factorChannel01_1024 = intOptions[7];
+	const int32_t factorChannel11_1024 = intOptions[8];
+	const int32_t factorChannel21_1024 = intOptions[9];
 
-	const int factorChannel02_1024 = intOptions[10];
-	const int factorChannel12_1024 = intOptions[11];
-	const int factorChannel22_1024 = intOptions[12];
+	const int32_t factorChannel02_1024 = intOptions[10];
+	const int32_t factorChannel12_1024 = intOptions[11];
+	const int32_t factorChannel22_1024 = intOptions[12];
 
-	const int bias0 = intOptions[13];
-	const int bias1 = intOptions[14];
-	const int bias2 = intOptions[15];
+	const int32_t bias0 = intOptions[13];
+	const int32_t bias1 = intOptions[14];
+	const int32_t bias2 = intOptions[15];
 
 	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
 	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
@@ -4001,14 +4007,14 @@ void FrameConverter::convertTwoRows_1Plane1ChannelAnd2Planes1ChannelDownsampled2
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-	// t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-	// t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+	// t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+	// t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+	// t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 
-	const unsigned int sourcePlane0PaddingElements = (unsigned int)intOptions[0];
-	const unsigned int sourcePlane1PaddingElements = (unsigned int)intOptions[1];
-	const unsigned int sourcePlane2PaddingElements = (unsigned int)intOptions[2];
-	const unsigned int targetZippedPaddingElements = (unsigned int)intOptions[3];
+	const uint32_t sourcePlane0PaddingElements = uint32_t(intOptions[0]);
+	const uint32_t sourcePlane1PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t sourcePlane2PaddingElements = uint32_t(intOptions[2]);
+	const uint32_t targetZippedPaddingElements = uint32_t(intOptions[3]);
 
 	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
 	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
@@ -4018,26 +4024,26 @@ void FrameConverter::convertTwoRows_1Plane1ChannelAnd2Planes1ChannelDownsampled2
 
 	const unsigned int width_2 = width / 2u;
 
-	const unsigned int sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
-	const unsigned int sourcePlane1StrideElements = width_2 + sourcePlane1PaddingElements;
-	const unsigned int sourcePlane2StrideElements = width_2 + sourcePlane2PaddingElements;
-	const unsigned int targetZippedStrideElements = width * 3u + targetZippedPaddingElements;
+	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
+	const uint32_t sourcePlane1StrideElements = width_2 + sourcePlane1PaddingElements;
+	const uint32_t sourcePlane2StrideElements = width_2 + sourcePlane2PaddingElements;
+	const uint32_t targetZippedStrideElements = width * 3u + targetZippedPaddingElements;
 
-	const int factorChannel00_1024 = intOptions[4];
-	const int factorChannel10_1024 = intOptions[5];
-	const int factorChannel20_1024 = intOptions[6];
+	const int32_t factorChannel00_1024 = intOptions[4];
+	const int32_t factorChannel10_1024 = intOptions[5];
+	const int32_t factorChannel20_1024 = intOptions[6];
 
-	const int factorChannel01_1024 = intOptions[7];
-	const int factorChannel11_1024 = intOptions[8];
-	const int factorChannel21_1024 = intOptions[9];
+	const int32_t factorChannel01_1024 = intOptions[7];
+	const int32_t factorChannel11_1024 = intOptions[8];
+	const int32_t factorChannel21_1024 = intOptions[9];
 
-	const int factorChannel02_1024 = intOptions[10];
-	const int factorChannel12_1024 = intOptions[11];
-	const int factorChannel22_1024 = intOptions[12];
+	const int32_t factorChannel02_1024 = intOptions[10];
+	const int32_t factorChannel12_1024 = intOptions[11];
+	const int32_t factorChannel22_1024 = intOptions[12];
 
-	const int bias0 = intOptions[13];
-	const int bias1 = intOptions[14];
-	const int bias2 = intOptions[15];
+	const int32_t bias0 = intOptions[13];
+	const int32_t bias1 = intOptions[14];
+	const int32_t bias2 = intOptions[15];
 
 	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
 	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
@@ -5159,14 +5165,17 @@ void FrameConverter::convertOneRow_3Planes1Channel_To_1Plane3Channels_8BitPerCha
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-	// t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-	// t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+	// sb0 = s0 - b0 // source adjusted with bias
+	// sb1 = s1 - b1
+	// sb2 = s2 - b2
+	// t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+	// t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+	// t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 
-	const unsigned int sourcePlane0PaddingElements = (unsigned int)intOptions[0];
-	const unsigned int sourcePlane1PaddingElements = (unsigned int)intOptions[1];
-	const unsigned int sourcePlane2PaddingElements = (unsigned int)intOptions[2];
-	const unsigned int targetZippedPaddingElements = (unsigned int)intOptions[3];
+	const uint32_t sourcePlane0PaddingElements = uint32_t(intOptions[0]);
+	const uint32_t sourcePlane1PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t sourcePlane2PaddingElements = uint32_t(intOptions[2]);
+	const uint32_t targetZippedPaddingElements = uint32_t(intOptions[3]);
 
 	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
 	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
@@ -5174,30 +5183,30 @@ void FrameConverter::convertOneRow_3Planes1Channel_To_1Plane3Channels_8BitPerCha
 
 	uint8_t* targetZipped = (uint8_t*)(targets[0]);
 
-	const unsigned int sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
-	const unsigned int sourcePlane1StrideElements = width + sourcePlane1PaddingElements;
-	const unsigned int sourcePlane2StrideElements = width + sourcePlane2PaddingElements;
-	const unsigned int targetZippedStrideElements = width * 3u + targetZippedPaddingElements;
+	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
+	const uint32_t sourcePlane1StrideElements = width + sourcePlane1PaddingElements;
+	const uint32_t sourcePlane2StrideElements = width + sourcePlane2PaddingElements;
+	const uint32_t targetZippedStrideElements = width * 3u + targetZippedPaddingElements;
 
-	const int factorChannel00_64 = intOptions[4];
-	const int factorChannel10_64 = intOptions[5];
-	const int factorChannel20_64 = intOptions[6];
+	const int32_t factorChannel00_64 = intOptions[4];
+	const int32_t factorChannel10_64 = intOptions[5];
+	const int32_t factorChannel20_64 = intOptions[6];
 
-	const int factorChannel01_64 = intOptions[7];
-	const int factorChannel11_64 = intOptions[8];
-	const int factorChannel21_64 = intOptions[9];
+	const int32_t factorChannel01_64 = intOptions[7];
+	const int32_t factorChannel11_64 = intOptions[8];
+	const int32_t factorChannel21_64 = intOptions[9];
 
-	const int factorChannel02_64 = intOptions[10];
-	const int factorChannel12_64 = intOptions[11];
-	const int factorChannel22_64 = intOptions[12];
+	const int32_t factorChannel02_64 = intOptions[10];
+	const int32_t factorChannel12_64 = intOptions[11];
+	const int32_t factorChannel22_64 = intOptions[12];
 
 	ocean_assert(std::abs(factorChannel00_64 + factorChannel01_64 + factorChannel02_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel10_64 + factorChannel11_64 + factorChannel12_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel20_64 + factorChannel21_64 + factorChannel22_64) < 64 * 4);
 
-	const int bias0 = intOptions[13];
-	const int bias1 = intOptions[14];
-	const int bias2 = intOptions[15];
+	const int32_t bias0 = intOptions[13];
+	const int32_t bias1 = intOptions[14];
+	const int32_t bias2 = intOptions[15];
 
 	ocean_assert(bias0 >= 0 && bias0 <= 128);
 	ocean_assert(bias1 >= 0 && bias1 <= 128);
@@ -5343,18 +5352,21 @@ void FrameConverter::convertOneRow_3Planes1Channel_To_1Plane4Channels_8BitPerCha
 	//  int32_t: b0
 	//  int32_t: b1
 	//  int32_t: b2
-	// uint32_t: channelValue3
+	//  int32_t: channelValue3
 
 	// with transformation:
-	// t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-	// t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-	// t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+	// sb0 = s0 - b0 // source adjusted with bias
+	// sb1 = s1 - b1
+	// sb2 = s2 - b2
+	// t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+	// t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+	// t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 	// t3 = channelValue3
 
-	const unsigned int sourcePlane0PaddingElements = (unsigned int)intOptions[0];
-	const unsigned int sourcePlane1PaddingElements = (unsigned int)intOptions[1];
-	const unsigned int sourcePlane2PaddingElements = (unsigned int)intOptions[2];
-	const unsigned int targetZippedPaddingElements = (unsigned int)intOptions[3];
+	const uint32_t sourcePlane0PaddingElements = uint32_t(intOptions[0]);
+	const uint32_t sourcePlane1PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t sourcePlane2PaddingElements = uint32_t(intOptions[2]);
+	const uint32_t targetZippedPaddingElements = uint32_t(intOptions[3]);
 
 	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
 	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
@@ -5362,36 +5374,36 @@ void FrameConverter::convertOneRow_3Planes1Channel_To_1Plane4Channels_8BitPerCha
 
 	uint8_t* targetZipped = (uint8_t*)(targets[0]);
 
-	const unsigned int sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
-	const unsigned int sourcePlane1StrideElements = width + sourcePlane1PaddingElements;
-	const unsigned int sourcePlane2StrideElements = width + sourcePlane2PaddingElements;
-	const unsigned int targetZippedStrideElements = width * 4u + targetZippedPaddingElements;
+	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
+	const uint32_t sourcePlane1StrideElements = width + sourcePlane1PaddingElements;
+	const uint32_t sourcePlane2StrideElements = width + sourcePlane2PaddingElements;
+	const uint32_t targetZippedStrideElements = width * 4u + targetZippedPaddingElements;
 
-	const int factorChannel00_64 = intOptions[4];
-	const int factorChannel10_64 = intOptions[5];
-	const int factorChannel20_64 = intOptions[6];
+	const int32_t factorChannel00_64 = intOptions[4];
+	const int32_t factorChannel10_64 = intOptions[5];
+	const int32_t factorChannel20_64 = intOptions[6];
 
-	const int factorChannel01_64 = intOptions[7];
-	const int factorChannel11_64 = intOptions[8];
-	const int factorChannel21_64 = intOptions[9];
+	const int32_t factorChannel01_64 = intOptions[7];
+	const int32_t factorChannel11_64 = intOptions[8];
+	const int32_t factorChannel21_64 = intOptions[9];
 
-	const int factorChannel02_64 = intOptions[10];
-	const int factorChannel12_64 = intOptions[11];
-	const int factorChannel22_64 = intOptions[12];
+	const int32_t factorChannel02_64 = intOptions[10];
+	const int32_t factorChannel12_64 = intOptions[11];
+	const int32_t factorChannel22_64 = intOptions[12];
 
 	ocean_assert(std::abs(factorChannel00_64 + factorChannel01_64 + factorChannel02_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel10_64 + factorChannel11_64 + factorChannel12_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel20_64 + factorChannel21_64 + factorChannel22_64) < 64 * 4);
 
-	const int bias0 = intOptions[13];
-	const int bias1 = intOptions[14];
-	const int bias2 = intOptions[15];
+	const int32_t bias0 = intOptions[13];
+	const int32_t bias1 = intOptions[14];
+	const int32_t bias2 = intOptions[15];
 
 	ocean_assert(bias0 >= 0 && bias0 <= 128);
 	ocean_assert(bias1 >= 0 && bias1 <= 128);
 	ocean_assert(bias2 >= 0 && bias2 <= 128);
 
-	const int valueChannel3 = intOptions[16];
+	const int32_t valueChannel3 = intOptions[16];
 	ocean_assert(valueChannel3 >= 0 && valueChannel3 <= 255);
 
 	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
@@ -5538,16 +5550,20 @@ void FrameConverter::convertOneRow_1Plane1ChannelAnd2Planes1ChannelDownsampled2x
 	//  int32_t: b0
 	//  int32_t: b1
 	//  int32_t: b2
+	//  int32_t: channelValue3
 
 	// with transformation:
-	// t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-	// t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-	// t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+	// sb0 = s0 - b0 // source adjusted with bias
+	// sb1 = s1 - b1
+	// sb2 = s2 - b2
+	// t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+	// t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+	// t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 
-	const unsigned int sourcePlane0PaddingElements = (unsigned int)intOptions[0];
-	const unsigned int sourcePlane1PaddingElements = (unsigned int)intOptions[1];
-	const unsigned int sourcePlane2PaddingElements = (unsigned int)intOptions[2];
-	const unsigned int targetZippedPaddingElements = (unsigned int)intOptions[3];
+	const uint32_t sourcePlane0PaddingElements = uint32_t(intOptions[0]);
+	const uint32_t sourcePlane1PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t sourcePlane2PaddingElements = uint32_t(intOptions[2]);
+	const uint32_t targetZippedPaddingElements = uint32_t(intOptions[3]);
 
 	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
 	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
@@ -5557,36 +5573,36 @@ void FrameConverter::convertOneRow_1Plane1ChannelAnd2Planes1ChannelDownsampled2x
 
 	const unsigned int width_2 = width / 2u;
 
-	const unsigned int sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
-	const unsigned int sourcePlane1StrideElements = width_2 + sourcePlane1PaddingElements;
-	const unsigned int sourcePlane2StrideElements = width_2 + sourcePlane2PaddingElements;
-	const unsigned int targetZippedStrideElements = width * 4u + targetZippedPaddingElements;
+	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
+	const uint32_t sourcePlane1StrideElements = width_2 + sourcePlane1PaddingElements;
+	const uint32_t sourcePlane2StrideElements = width_2 + sourcePlane2PaddingElements;
+	const uint32_t targetZippedStrideElements = width * 4u + targetZippedPaddingElements;
 
-	const int factorChannel00_64 = intOptions[4];
-	const int factorChannel10_64 = intOptions[5];
-	const int factorChannel20_64 = intOptions[6];
+	const int32_t factorChannel00_64 = intOptions[4];
+	const int32_t factorChannel10_64 = intOptions[5];
+	const int32_t factorChannel20_64 = intOptions[6];
 
-	const int factorChannel01_64 = intOptions[7];
-	const int factorChannel11_64 = intOptions[8];
-	const int factorChannel21_64 = intOptions[9];
+	const int32_t factorChannel01_64 = intOptions[7];
+	const int32_t factorChannel11_64 = intOptions[8];
+	const int32_t factorChannel21_64 = intOptions[9];
 
-	const int factorChannel02_64 = intOptions[10];
-	const int factorChannel12_64 = intOptions[11];
-	const int factorChannel22_64 = intOptions[12];
+	const int32_t factorChannel02_64 = intOptions[10];
+	const int32_t factorChannel12_64 = intOptions[11];
+	const int32_t factorChannel22_64 = intOptions[12];
 
 	ocean_assert(std::abs(factorChannel00_64 + factorChannel01_64 + factorChannel02_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel10_64 + factorChannel11_64 + factorChannel12_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel20_64 + factorChannel21_64 + factorChannel22_64) < 64 * 4);
 
-	const int bias0 = intOptions[13];
-	const int bias1 = intOptions[14];
-	const int bias2 = intOptions[15];
+	const int32_t bias0 = intOptions[13];
+	const int32_t bias1 = intOptions[14];
+	const int32_t bias2 = intOptions[15];
 
 	ocean_assert(bias0 >= 0 && bias0 <= 128);
 	ocean_assert(bias1 >= 0 && bias1 <= 128);
 	ocean_assert(bias2 >= 0 && bias2 <= 128);
 
-	const int valueChannel3 = intOptions[16];
+	const int32_t valueChannel3 = intOptions[16];
 	ocean_assert(valueChannel3 >= 0 && valueChannel3 <= 255);
 
 	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
@@ -5750,14 +5766,17 @@ void FrameConverter::convertTwoRows_1Plane1ChannelAnd2Planes1ChannelDownsampled2
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-	// t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-	// t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+	// sb0 = s0 - b0 // source adjusted with bias
+	// sb1 = s1 - b1
+	// sb2 = s2 - b2
+	// t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+	// t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+	// t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
 
-	const unsigned int sourcePlane0PaddingElements = (unsigned int)(intOptions[0]);
-	const unsigned int sourcePlane1PaddingElements = (unsigned int)(intOptions[1]);
-	const unsigned int sourcePlane2PaddingElements = (unsigned int)(intOptions[2]);
-	const unsigned int targetPlanePaddingElements = (unsigned int)(intOptions[3]);
+	const uint32_t sourcePlane0PaddingElements = uint32_t(intOptions[0]);
+	const uint32_t sourcePlane1PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t sourcePlane2PaddingElements = uint32_t(intOptions[2]);
+	const uint32_t targetPlanePaddingElements = uint32_t(intOptions[3]);
 
 	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
 	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
@@ -5767,30 +5786,30 @@ void FrameConverter::convertTwoRows_1Plane1ChannelAnd2Planes1ChannelDownsampled2
 
 	const unsigned int width_2 = width / 2u;
 
-	const unsigned int sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
-	const unsigned int sourcePlane1StrideElements = width_2 + sourcePlane1PaddingElements;
-	const unsigned int sourcePlane2StrideElements = width_2 + sourcePlane2PaddingElements;
-	const unsigned int targetPlaneStrideElements = width * 3u + targetPlanePaddingElements;
+	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
+	const uint32_t sourcePlane1StrideElements = width_2 + sourcePlane1PaddingElements;
+	const uint32_t sourcePlane2StrideElements = width_2 + sourcePlane2PaddingElements;
+	const uint32_t targetPlaneStrideElements = width * 3u + targetPlanePaddingElements;
 
-	const int factorChannel00_64 = intOptions[4];
-	const int factorChannel10_64 = intOptions[5];
-	const int factorChannel20_64 = intOptions[6];
+	const int32_t factorChannel00_64 = intOptions[4];
+	const int32_t factorChannel10_64 = intOptions[5];
+	const int32_t factorChannel20_64 = intOptions[6];
 
-	const int factorChannel01_64 = intOptions[7];
-	const int factorChannel11_64 = intOptions[8];
-	const int factorChannel21_64 = intOptions[9];
+	const int32_t factorChannel01_64 = intOptions[7];
+	const int32_t factorChannel11_64 = intOptions[8];
+	const int32_t factorChannel21_64 = intOptions[9];
 
-	const int factorChannel02_64 = intOptions[10];
-	const int factorChannel12_64 = intOptions[11];
-	const int factorChannel22_64 = intOptions[12];
+	const int32_t factorChannel02_64 = intOptions[10];
+	const int32_t factorChannel12_64 = intOptions[11];
+	const int32_t factorChannel22_64 = intOptions[12];
 
 	ocean_assert(std::abs(factorChannel00_64 + factorChannel01_64 + factorChannel02_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel10_64 + factorChannel11_64 + factorChannel12_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel20_64 + factorChannel21_64 + factorChannel22_64) < 64 * 4);
 
-	const int bias0 = intOptions[13];
-	const int bias1 = intOptions[14];
-	const int bias2 = intOptions[15];
+	const int32_t bias0 = intOptions[13];
+	const int32_t bias1 = intOptions[14];
+	const int32_t bias2 = intOptions[15];
 
 	ocean_assert(bias0 >= 0 && bias0 <= 128);
 	ocean_assert(bias1 >= 0 && bias1 <= 128);
@@ -6124,17 +6143,21 @@ void FrameConverter::convertTwoRows_1Plane1ChannelAnd2Planes1ChannelDownsampled2
 	//  int32_t: b0
 	//  int32_t: b1
 	//  int32_t: b2
-	// uint32_t: alphaChannel
+	//  int32_t: channelValue3
 
 	// with transformation:
-	// t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-	// t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-	// t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+	// sb0 = s0 - b0 // source adjusted with bias
+	// sb1 = s1 - b1
+	// sb2 = s2 - b2
+	// t0 = clamp(0, (f00 * sb0 + f01 * sb1 + f02 * sb2) / 64, 255)
+	// t1 = clamp(0, (f10 * sb0 + f11 * sb1 + f12 * sb2) / 64, 255)
+	// t2 = clamp(0, (f20 * sb0 + f21 * sb1 + f22 * sb2) / 64, 255)
+	// t3 = channelValue3
 
-	const unsigned int sourcePlane0PaddingElements = (unsigned int)(intOptions[0]);
-	const unsigned int sourcePlane1PaddingElements = (unsigned int)(intOptions[1]);
-	const unsigned int sourcePlane2PaddingElements = (unsigned int)(intOptions[2]);
-	const unsigned int targetPlanePaddingElements = (unsigned int)(intOptions[3]);
+	const uint32_t sourcePlane0PaddingElements = uint32_t(intOptions[0]);
+	const uint32_t sourcePlane1PaddingElements = uint32_t(intOptions[1]);
+	const uint32_t sourcePlane2PaddingElements = uint32_t(intOptions[2]);
+	const uint32_t targetPlanePaddingElements = uint32_t(intOptions[3]);
 
 	const uint8_t* sourcePlane0 = (const uint8_t*)(sources[0]);
 	const uint8_t* sourcePlane1 = (const uint8_t*)(sources[1]);
@@ -6144,36 +6167,36 @@ void FrameConverter::convertTwoRows_1Plane1ChannelAnd2Planes1ChannelDownsampled2
 
 	const unsigned int width_2 = width / 2u;
 
-	const unsigned int sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
-	const unsigned int sourcePlane1StrideElements = width_2 + sourcePlane1PaddingElements;
-	const unsigned int sourcePlane2StrideElements = width_2 + sourcePlane2PaddingElements;
-	const unsigned int targetPlaneStrideElements = width * 4u + targetPlanePaddingElements;
+	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
+	const uint32_t sourcePlane1StrideElements = width_2 + sourcePlane1PaddingElements;
+	const uint32_t sourcePlane2StrideElements = width_2 + sourcePlane2PaddingElements;
+	const uint32_t targetPlaneStrideElements = width * 4u + targetPlanePaddingElements;
 
-	const int factorChannel00_64 = intOptions[4];
-	const int factorChannel10_64 = intOptions[5];
-	const int factorChannel20_64 = intOptions[6];
+	const int32_t factorChannel00_64 = intOptions[4];
+	const int32_t factorChannel10_64 = intOptions[5];
+	const int32_t factorChannel20_64 = intOptions[6];
 
-	const int factorChannel01_64 = intOptions[7];
-	const int factorChannel11_64 = intOptions[8];
-	const int factorChannel21_64 = intOptions[9];
+	const int32_t factorChannel01_64 = intOptions[7];
+	const int32_t factorChannel11_64 = intOptions[8];
+	const int32_t factorChannel21_64 = intOptions[9];
 
-	const int factorChannel02_64 = intOptions[10];
-	const int factorChannel12_64 = intOptions[11];
-	const int factorChannel22_64 = intOptions[12];
+	const int32_t factorChannel02_64 = intOptions[10];
+	const int32_t factorChannel12_64 = intOptions[11];
+	const int32_t factorChannel22_64 = intOptions[12];
 
 	ocean_assert(std::abs(factorChannel00_64 + factorChannel01_64 + factorChannel02_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel10_64 + factorChannel11_64 + factorChannel12_64) < 64 * 4);
 	ocean_assert(std::abs(factorChannel20_64 + factorChannel21_64 + factorChannel22_64) < 64 * 4);
 
-	const int bias0 = intOptions[13];
-	const int bias1 = intOptions[14];
-	const int bias2 = intOptions[15];
+	const int32_t bias0 = intOptions[13];
+	const int32_t bias1 = intOptions[14];
+	const int32_t bias2 = intOptions[15];
 
 	ocean_assert(bias0 >= 0 && bias0 <= 128);
 	ocean_assert(bias1 >= 0 && bias1 <= 128);
 	ocean_assert(bias2 >= 0 && bias2 <= 128);
 
-	const int valueChannel3 = intOptions[16];
+	const int32_t valueChannel3 = intOptions[16];
 	ocean_assert(valueChannel3 >= 0 && valueChannel3 <= 255);
 
 	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
@@ -6382,34 +6405,34 @@ void FrameConverter::convertOneRow_1Plane3ChannelsWith2ChannelsDownsampled2x1Bac
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-	// t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-	// t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+	// t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+	// t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+	// t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 
-	const unsigned int sourcePaddingElements = (unsigned int)intOptions[0];
-	const unsigned int targetPaddingElements = (unsigned int)intOptions[1];
+	const uint32_t sourcePaddingElements = uint32_t(intOptions[0]);
+	const uint32_t targetPaddingElements = uint32_t(intOptions[1]);
 
 	const uint8_t* source = (const uint8_t*)(sources[0]);
 	uint8_t* target = (uint8_t*)(targets[0]);
 
-	const unsigned int sourceStrideElements = width * 2u + sourcePaddingElements;
-	const unsigned int targetStrideElements = width * 3u + targetPaddingElements;
+	const uint32_t sourceStrideElements = width * 2u + sourcePaddingElements;
+	const uint32_t targetStrideElements = width * 3u + targetPaddingElements;
 
-	const int factorChannel00_1024 = intOptions[2];
-	const int factorChannel10_1024 = intOptions[3];
-	const int factorChannel20_1024 = intOptions[4];
+	const int32_t factorChannel00_1024 = intOptions[2];
+	const int32_t factorChannel10_1024 = intOptions[3];
+	const int32_t factorChannel20_1024 = intOptions[4];
 
-	const int factorChannel01_1024 = intOptions[5];
-	const int factorChannel11_1024 = intOptions[6];
-	const int factorChannel21_1024 = intOptions[7];
+	const int32_t factorChannel01_1024 = intOptions[5];
+	const int32_t factorChannel11_1024 = intOptions[6];
+	const int32_t factorChannel21_1024 = intOptions[7];
 
-	const int factorChannel02_1024 = intOptions[8];
-	const int factorChannel12_1024 = intOptions[9];
-	const int factorChannel22_1024 = intOptions[10];
+	const int32_t factorChannel02_1024 = intOptions[8];
+	const int32_t factorChannel12_1024 = intOptions[9];
+	const int32_t factorChannel22_1024 = intOptions[10];
 
-	const int bias0 = intOptions[11];
-	const int bias1 = intOptions[12];
-	const int bias2 = intOptions[13];
+	const int32_t bias0 = intOptions[11];
+	const int32_t bias1 = intOptions[12];
+	const int32_t bias2 = intOptions[13];
 
 	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
 	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
@@ -6603,34 +6626,34 @@ void FrameConverter::convertOneRow_1Plane3ChannelsWith2ChannelsDownsampled2x1Fro
 	//  int32_t: b2
 
 	// with transformation:
-	// t0 = f00 * s0 + f01 * s1 + f02 * s2 + b0
-	// t1 = f10 * s0 + f11 * s1 + f12 * s2 + b1
-	// t2 = f20 * s0 + f21 * s1 + f22 * s2 + b2
+	// t0 = clamp(0, (f00 * s0 + f01 * s1 + f02 * s2) / 1024 + b0, 255)
+	// t1 = clamp(0, (f10 * s0 + f11 * s1 + f12 * s2) / 1024 + b1, 255)
+	// t2 = clamp(0, (f20 * s0 + f21 * s1 + f22 * s2) / 1024 + b2, 255)
 
-	const unsigned int sourcePaddingElements = (unsigned int)intOptions[0];
-	const unsigned int targetPaddingElements = (unsigned int)intOptions[1];
+	const uint32_t sourcePaddingElements = uint32_t(intOptions[0]);
+	const uint32_t targetPaddingElements = uint32_t(intOptions[1]);
 
 	const uint8_t* source = (const uint8_t*)(sources[0]);
 	uint8_t* target = (uint8_t*)(targets[0]);
 
-	const unsigned int sourceStrideElements = width * 2u + sourcePaddingElements;
-	const unsigned int targetStrideElements = width * 3u + targetPaddingElements;
+	const uint32_t sourceStrideElements = width * 2u + sourcePaddingElements;
+	const uint32_t targetStrideElements = width * 3u + targetPaddingElements;
 
-	const int factorChannel00_1024 = intOptions[2];
-	const int factorChannel10_1024 = intOptions[3];
-	const int factorChannel20_1024 = intOptions[4];
+	const int32_t factorChannel00_1024 = intOptions[2];
+	const int32_t factorChannel10_1024 = intOptions[3];
+	const int32_t factorChannel20_1024 = intOptions[4];
 
-	const int factorChannel01_1024 = intOptions[5];
-	const int factorChannel11_1024 = intOptions[6];
-	const int factorChannel21_1024 = intOptions[7];
+	const int32_t factorChannel01_1024 = intOptions[5];
+	const int32_t factorChannel11_1024 = intOptions[6];
+	const int32_t factorChannel21_1024 = intOptions[7];
 
-	const int factorChannel02_1024 = intOptions[8];
-	const int factorChannel12_1024 = intOptions[9];
-	const int factorChannel22_1024 = intOptions[10];
+	const int32_t factorChannel02_1024 = intOptions[8];
+	const int32_t factorChannel12_1024 = intOptions[9];
+	const int32_t factorChannel22_1024 = intOptions[10];
 
-	const int bias0 = intOptions[11];
-	const int bias1 = intOptions[12];
-	const int bias2 = intOptions[13];
+	const int32_t bias0 = intOptions[11];
+	const int32_t bias1 = intOptions[12];
+	const int32_t bias2 = intOptions[13];
 
 	const bool flipTarget = conversionFlag == CONVERT_FLIPPED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
 	const bool mirrorTarget = conversionFlag == CONVERT_MIRRORED || conversionFlag == CONVERT_FLIPPED_AND_MIRRORED;
