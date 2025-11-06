@@ -27,12 +27,36 @@ jobs:
         build_config: [debug, release]
 
     steps:
-      - name: Get commit SHA
-        id: get-sha
-        uses: ./.github/actions/get-commit-sha
+      - name: Download commit SHA artifact
+        if: ${{ !inputs.commit_sha }}
+        uses: actions/download-artifact@v4
         with:
-          commit_sha: ${{ inputs.commit_sha }}
-          artifact_name: ocean-build-sha-${{ matrix.build_config }}
+          name: ocean-build-sha-${{ matrix.build_config }}
+
+      - name: Read and validate commit SHA
+        id: get-sha
+        shell: bash
+        run: |
+          if [ -n "${{ inputs.commit_sha }}" ]; then
+            SHA="${{ inputs.commit_sha }}"
+            echo "Using commit SHA from input: $SHA"
+          elif [ -f commit_sha.txt ]; then
+            SHA=$(cat commit_sha.txt)
+            echo "Using commit SHA from artifact: $SHA"
+          else
+            echo "ERROR: No commit SHA provided via input or artifact"
+            exit 1
+          fi
+          if [ -z "$SHA" ]; then
+            echo "ERROR: Commit SHA is empty"
+            exit 1
+          fi
+          if ! [[ "$SHA" =~ ^[a-f0-9]{40}$ ]]; then
+            echo "ERROR: Invalid commit SHA format: $SHA"
+            exit 1
+          fi
+          echo "commit_sha=${SHA}" >> $GITHUB_OUTPUT
+          echo "Validated commit SHA: $SHA"
 
       - uses: actions/checkout@v4
         with:
