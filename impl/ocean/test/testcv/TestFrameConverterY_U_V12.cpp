@@ -43,7 +43,7 @@ bool TestFrameConverterY_U_V12::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y_U_V12 (limited range) to BGR24 (full range) conversion with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y_U_V12_LIMITED_RANGE to BGR24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -57,7 +57,7 @@ bool TestFrameConverterY_U_V12::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y_U_V12 (full range) to BGR24 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
+		Log::info() << "Testing Y_U_V12_LIMITED_RANGE to BGR24 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -71,7 +71,7 @@ bool TestFrameConverterY_U_V12::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y_U_V12 (limited range) to BGRA32 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
+		Log::info() << "Testing Y_U_V12_LIMITED_RANGE to BGRA32 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -85,7 +85,7 @@ bool TestFrameConverterY_U_V12::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y_U_V12 (limited range) to RGB24 (full range) conversion with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y_U_V12_LIMITED_RANGE to RGB24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -99,7 +99,7 @@ bool TestFrameConverterY_U_V12::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y_U_V12 (limited range) to RGB24 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
+		Log::info() << "Testing Y_U_V12_LIMITED_RANGE to RGB24 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -113,7 +113,7 @@ bool TestFrameConverterY_U_V12::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y_U_V12 (full range) to RGB24 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
+		Log::info() << "Testing Y_U_V12_FULL_RANGE to RGB24 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -127,7 +127,7 @@ bool TestFrameConverterY_U_V12::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y_U_V12 (limited range) to RGBA32 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
+		Log::info() << "Testing Y_U_V12_LIMITED_RANGE to RGBA32 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -175,6 +175,34 @@ bool TestFrameConverterY_U_V12::test(const unsigned int width, const unsigned in
 		{
 			Log::info() << " ";
 			allSucceeded = testY_U_V12ToY8(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y_U_V12_LIMITED_RANGE to Y8_LIMITED_RANGE conversion with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY_U_V12LimitedRangeToY8LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y_U_V12_FULL_RANGE to Y8_FULL_RANGE conversion with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY_U_V12FullRangeToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -468,6 +496,56 @@ TEST(TestFrameConverterY_U_V12, Y_U_V12ToY8FlippedMirrored)
 	EXPECT_TRUE(TestFrameConverterY_U_V12::testY_U_V12ToY8(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
+
+TEST(TestFrameConverterY_U_V12, Y_U_V12LimitedRangeToY8LimitedRangeNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_U_V12::testY_U_V12LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_U_V12, Y_U_V12LimitedRangeToY8LimitedRangeFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_U_V12::testY_U_V12LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_U_V12, Y_U_V12LimitedRangeToY8LimitedRangeMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_U_V12::testY_U_V12LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_U_V12, Y_U_V12LimitedRangeToY8LimitedRangeFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_U_V12::testY_U_V12LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFrameConverterY_U_V12, Y_U_V12FullRangeToY8FullRangeNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_U_V12::testY_U_V12FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_U_V12, Y_U_V12FullRangeToY8FullRangeFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_U_V12::testY_U_V12FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_U_V12, Y_U_V12FullRangeToY8FullRangeMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_U_V12::testY_U_V12FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_U_V12, Y_U_V12FullRangeToY8FullRangeFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_U_V12::testY_U_V12FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
 #endif // OCEAN_USE_GTEST
 
 bool TestFrameConverterY_U_V12::testY_U_V12ToY_U_V12(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -622,6 +700,40 @@ bool TestFrameConverterY_U_V12::testY_U_V12ToY8(const unsigned int width, const 
 	const unsigned int thresholdMaximalErrorToInteger = 0u;
 
 	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_U_V12_LIMITED_RANGE, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_U_V12::convertY_U_V12ToY8), conversionFlag, pixelFunctionY_U_V12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+}
+
+bool TestFrameConverterY_U_V12::testY_U_V12LimitedRangeToY8LimitedRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	//                     | Y |
+	// | Y | = | 1 0 0 | * | U |
+	//                     | V |
+
+	MatrixD transformationMatrix(1, 3, false);
+	transformationMatrix(0, 0) = 1.0;
+
+	const unsigned int thresholdMaximalErrorToInteger = 0u;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_U_V12_LIMITED_RANGE, FrameType::FORMAT_Y8_LIMITED_RANGE, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_U_V12::convertY_U_V12LimitedRangeToY8LimitedRange), conversionFlag, pixelFunctionY_U_V12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+}
+
+bool TestFrameConverterY_U_V12::testY_U_V12FullRangeToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	//                     | Y |
+	// | Y | = | 1 0 0 | * | U |
+	//                     | V |
+
+	MatrixD transformationMatrix(1, 3, false);
+	transformationMatrix(0, 0) = 1.0;
+
+	const unsigned int thresholdMaximalErrorToInteger = 0u;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_U_V12_FULL_RANGE, FrameType::FORMAT_Y8_FULL_RANGE, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_U_V12::convertY_U_V12FullRangeToY8FullRange), conversionFlag, pixelFunctionY_U_V12ForYUV24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
 }
 
 MatrixD TestFrameConverterY_U_V12::pixelFunctionY_U_V12ForYUV24(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)
