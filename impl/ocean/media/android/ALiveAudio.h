@@ -251,7 +251,7 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 		 * Sets the volume of the sound in db.
 		 * @see SoundMedium::setSoundVolume().
 		 */
-		bool setSoundVolume(const float volume) override;
+		bool setSoundVolume(const float decibels) override;
 
 		/**
 		 * Sets or un-sets the sound medium to a mute state.

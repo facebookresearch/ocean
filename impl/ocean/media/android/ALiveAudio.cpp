@@ -348,7 +348,7 @@ float ALiveAudio::soundVolume() const
 			return -1.0f;
 		}
 
-		return float(millibel) * 0.1f;
+		return float(millibel) * 0.01f;
 	}
 
 	return -1.0f;
@@ -372,13 +372,13 @@ bool ALiveAudio::soundMute() const
 	return false;
 }
 
-bool ALiveAudio::setSoundVolume(const float volume)
+bool ALiveAudio::setSoundVolume(const float decibels)
 {
 	const ScopedLock scopedLock(lock_);
 
 	if (slVolumeInterface_ != nullptr)
 	{
-		if ((*slVolumeInterface_)->SetVolumeLevel(slVolumeInterface_, SLmillibel(volume * 10.0f)) == SL_RESULT_SUCCESS)
+		if ((*slVolumeInterface_)->SetVolumeLevel(slVolumeInterface_, SLmillibel(decibels * 100.0f)) == SL_RESULT_SUCCESS)
 		{
 			return true;
 		}
