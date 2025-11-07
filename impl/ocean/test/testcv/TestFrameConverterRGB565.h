@@ -54,7 +54,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterRGB565
 		static bool testRGB565ToRGB24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the exact RGB565 to Y8 conversion.
+		 * Tests the exact RGB565 to Y8 full range conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param flag The conversion flag that has been applied during conversion
@@ -62,7 +62,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterRGB565
 		 * @param worker The worker object
 		 * @return True, if succeeded
 		 */
-		static bool testRGB565ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
+		static bool testRGB565ToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
 
 	protected:
 

@@ -42,7 +42,7 @@ class OCEAN_CV_EXPORT FrameConverterRGB565 : public FrameConverter
 		static inline void convertRGB565ToRGB24(const uint16_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
-		 * Converts a RGB565 (16 bit) frame to a Y8 bit frame.
+		 * Converts a RGB565 (16 bit) frame to a Y8 bit full range frame.
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
 		 * @param width The width of the frame in pixel, with range (0, infinity)
@@ -52,7 +52,7 @@ class OCEAN_CV_EXPORT FrameConverterRGB565 : public FrameConverter
 		 * @param flag Determining the type of conversion
 		 * @param worker Optional worker object to distribute the computational load
 		 */
-		static inline void convertRGB565ToY8(const uint16_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+		static inline void convertRGB565ToY8FullRange(const uint16_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 	protected:
 
@@ -66,13 +66,13 @@ class OCEAN_CV_EXPORT FrameConverterRGB565 : public FrameConverter
 		static void convertRowRGB565ToRGB24(const uint16_t* source, uint8_t* target, const size_t width, const void* unusedOptions);
 
 		/**
-		 * Converts a row of a RGB656 frame to a row of a Y8 frame.
+		 * Converts a row of a RGB656 frame to a row of a Y8 full range frame.
 		 * @param source The source row, must be valid
 		 * @param target The target row, must be valid
 		 * @param width The width of the row in pixel, with range [1, infinity)
 		 * @param unusedOptions Unused options parameter, must be nullptr
 		 */
-		static void convertRowRGB565ToY8(const uint16_t* source, uint8_t* target, const size_t width, const void* unusedOptions);
+		static void convertRowRGB565ToY8FullRange(const uint16_t* source, uint8_t* target, const size_t width, const void* unusedOptions);
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
@@ -90,7 +90,7 @@ class OCEAN_CV_EXPORT FrameConverterRGB565 : public FrameConverter
 		 * @param target The target row, must be valid
 		 * @param width The width of the row in pixel, with range [8, infinity)
 		 */
-		static void convertRowRGB565ToY8NEON(const uint16_t* source, uint8_t* target, const unsigned int width);
+		static void convertRowRGB565ToY8FullRangeNEON(const uint16_t* source, uint8_t* target, const unsigned int width);
 
 #endif // OCEAN_HARDWARE_NEON_VERSION >= 10
 };
@@ -108,7 +108,7 @@ inline void FrameConverterRGB565::convertRGB565ToRGB24(const uint16_t* source, u
 	FrameConverter::convertGenericPixelFormat<uint16_t, uint8_t>(source, target, width, height, sourceStrideElements, targetStrideElements, flag, CV::FrameConverterRGB565::convertRowRGB565ToRGB24, CV::FrameChannels::reverseRowPixelOrderInPlace<uint8_t, 3u>, areContinuous, nullptr, worker);
 }
 
-inline void FrameConverterRGB565::convertRGB565ToY8(const uint16_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
+inline void FrameConverterRGB565::convertRGB565ToY8FullRange(const uint16_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
 {
 	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(width >= 1u && height >= 1u);
@@ -118,7 +118,7 @@ inline void FrameConverterRGB565::convertRGB565ToY8(const uint16_t* source, uint
 
 	const bool areContinuous = sourcePaddingElements == 0u && targetPaddingElements == 0u;
 
-	FrameConverter::convertGenericPixelFormat<uint16_t, uint8_t>(source, target, width, height, sourceStrideElements, targetStrideElements, flag, CV::FrameConverterRGB565::convertRowRGB565ToY8, CV::FrameChannels::reverseRowPixelOrderInPlace<uint8_t, 1u>, areContinuous, nullptr, worker);
+	FrameConverter::convertGenericPixelFormat<uint16_t, uint8_t>(source, target, width, height, sourceStrideElements, targetStrideElements, flag, CV::FrameConverterRGB565::convertRowRGB565ToY8FullRange, CV::FrameChannels::reverseRowPixelOrderInPlace<uint8_t, 1u>, areContinuous, nullptr, worker);
 }
 
 }

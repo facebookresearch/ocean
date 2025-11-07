@@ -78,7 +78,7 @@ void FrameConverterBGR565::convertRowBGR565ToRGB24(const uint16_t* source, uint8
 	}
 }
 
-void FrameConverterBGR565::convertRowBGR565ToY8(const uint16_t* source, uint8_t* target, const size_t width, const void* unusedOptions)
+void FrameConverterBGR565::convertRowBGR565ToY8FullRange(const uint16_t* source, uint8_t* target, const size_t width, const void* unusedOptions)
 {
 	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(width >= 1u);
@@ -89,7 +89,7 @@ void FrameConverterBGR565::convertRowBGR565ToY8(const uint16_t* source, uint8_t*
 
 	if (width >= size_t(8))
 	{
-		convertRowBGR565ToY8NEON(source, target, (unsigned int)width);
+		convertRowBGR565ToY8FullRangeNEON(source, target, (unsigned int)width);
 		return;
 	}
 
@@ -219,7 +219,7 @@ void FrameConverterBGR565::convertRowBGR565ToRGB24NEON(const uint16_t* source, u
 	}
 }
 
-void FrameConverterBGR565::convertRowBGR565ToY8NEON(const uint16_t* source, uint8_t* target, const unsigned int width)
+void FrameConverterBGR565::convertRowBGR565ToY8FullRangeNEON(const uint16_t* source, uint8_t* target, const unsigned int width)
 {
 	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(width >= 8u);

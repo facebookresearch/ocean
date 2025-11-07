@@ -57,12 +57,12 @@ bool TestFrameConverterBGR565::test(const unsigned int width, const unsigned int
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing BGR565 to Y8 conversion with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing BGR565 (full range) to Y8 full range conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testBGR565ToY8(width, height, flag, testDuration, worker) && allSucceeded;
+			allSucceeded = testBGR565ToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -132,28 +132,28 @@ TEST(TestFrameConverterBGR565,BGR565ToRGB24FlippedMirrored)
 }
 
 
-TEST(TestFrameConverterBGR565, BGR565ToY8Normal)
+TEST(TestFrameConverterBGR565, BGR565ToY8FullRangeNormal)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterBGR565::testBGR565ToY8(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterBGR565::testBGR565ToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterBGR565, BGR565ToY8Flipped)
+TEST(TestFrameConverterBGR565, BGR565ToY8FullRangeFlipped)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterBGR565::testBGR565ToY8(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterBGR565::testBGR565ToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterBGR565, BGR565ToY8Mirrored)
+TEST(TestFrameConverterBGR565, BGR565ToY8FullRangeMirrored)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterBGR565::testBGR565ToY8(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterBGR565::testBGR565ToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterBGR565, BGR565ToY8FlippedMirrored)
+TEST(TestFrameConverterBGR565, BGR565ToY8FullRangeFlippedMirrored)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterBGR565::testBGR565ToY8(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterBGR565::testBGR565ToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -189,7 +189,7 @@ bool TestFrameConverterBGR565::testBGR565ToRGB24(const unsigned int width, const
 	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_BGR565, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterBGR565::convertBGR565ToRGB24), conversionFlag, pixelFunctionBGR565ForBGR24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
-bool TestFrameConverterBGR565::testBGR565ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
+bool TestFrameConverterBGR565::testBGR565ToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
@@ -203,7 +203,7 @@ bool TestFrameConverterBGR565::testBGR565ToY8(const unsigned int width, const un
 	transformationMatrix(0, 1) = 0.587;
 	transformationMatrix(0, 2) = 0.299;
 
-	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_BGR565, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterBGR565::convertBGR565ToY8), conversionFlag, pixelFunctionBGR565ForBGR24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_BGR565, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterBGR565::convertBGR565ToY8FullRange), conversionFlag, pixelFunctionBGR565ForBGR24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 MatrixD TestFrameConverterBGR565::pixelFunctionBGR565ForBGR24(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)

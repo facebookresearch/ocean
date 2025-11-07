@@ -207,7 +207,7 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	// FORMAT_BGR565
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_BGR565, FrameType::FORMAT_BGR24), FrameConverterBGR565::convertBGR565ToBGR24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_BGR565, FrameType::FORMAT_RGB24), FrameConverterBGR565::convertBGR565ToRGB24);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_BGR565, FrameType::FORMAT_Y8), FrameConverterBGR565::convertBGR565ToY8);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_BGR565, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterBGR565::convertBGR565ToY8FullRange);
 
 	// FORMAT_BGRA32
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_BGRA32, FrameType::FORMAT_ARGB32), FrameConverterBGRA32::convertBGRA32ToARGB32);
@@ -243,7 +243,7 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 
 	// FORMAT_RGB565
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGB565, FrameType::FORMAT_RGB24), FrameConverterRGB565::convertRGB565ToRGB24);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGB565, FrameType::FORMAT_Y8), FrameConverterRGB565::convertRGB565ToY8);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGB565, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterRGB565::convertRGB565ToY8FullRange);
 
 	// FORMAT_RGBA32
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGBA32, FrameType::FORMAT_ABGR32), FrameConverterRGBA32::convertRGBA32ToABGR32);
