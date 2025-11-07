@@ -752,6 +752,23 @@ class SSE
 		static OCEAN_FORCE_INLINE void interleave3Channel8Bit48Elements(const uint8_t* const channel0, const uint8_t* const channel1, const uint8_t* const channel2, uint8_t* const interleaved);
 
 		/**
+		 * Stores 8 single-channel 8-bit elements as 24 interleaved 3-channel elements (8 elements -> 8×3 = 24 bytes).
+		 * Each input element is replicated to all 3 channels.
+		 * @param singleChannel_u_8x8 The input with 8 single-channel elements in lower 8 bytes
+		 * @param interleaved Pointer to 24 bytes where interleaved data will be stored, must be valid
+		 */
+		static OCEAN_FORCE_INLINE void store1Channel8Bit8ElementsTo3Channels24Elements(const __m128i& singleChannel_u_8x8, uint8_t* interleaved);
+
+		/**
+		 * Stores 8 single-channel 8-bit elements as 32 interleaved 4-channel elements (8 elements -> 8×4 = 32 bytes) with constant 4th channel value.
+		 * Each input element is replicated to the first 3 channels, with a constant value for the 4th channel.
+		 * @param singleChannel_u_8x8 The input with 8 single-channel elements in lower 8 bytes
+		 * @param lastChannelValue The constant value for the last channel
+		 * @param interleaved Pointer to 32 bytes where interleaved data will be stored, must be valid
+		 */
+		static OCEAN_FORCE_INLINE void store1Channel8Bit8ElementsTo4Channels32ElementsWithConstantLastChannel(const __m128i& singleChannel_u_8x8, const uint8_t lastChannelValue, uint8_t* interleaved);
+
+		/**
 		 * Reverses the order of the channels of 16 pixels (32 elements) of an image with 2 interleaved channels and 8 bit per element (e.g., YA16 to AY16).
 		 * @param interleaved 16 elements of an image with 2 channels and 8 bit per element (32 bytes)
 		 * @param reversedInterleaved Resulting 32 elements with reversed channel order
@@ -3367,6 +3384,46 @@ OCEAN_FORCE_INLINE void SSE::interleave3Channel8Bit48Elements(const uint8_t* con
 	store128i(interleavedA_128, interleaved + 0);
 	store128i(interleavedB_128, interleaved + 16);
 	store128i(interleavedC_128, interleaved + 32);
+}
+
+OCEAN_FORCE_INLINE void SSE::store1Channel8Bit8ElementsTo3Channels24Elements(const __m128i& singleChannel_u_8x8, uint8_t* interleaved)
+{
+	ocean_assert(interleaved != nullptr);
+
+	// singleChannel_u_8x8 contains 8 elements in lower 8 bytes: [s0, s1, s2, s3, s4, s5, s6, s7]
+
+	const __m128i shuffleMask0 = _mm_set_epi8(5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0);
+	const __m128i interleaved0 = _mm_shuffle_epi8(singleChannel_u_8x8, shuffleMask0);
+
+	const __m128i shuffleMask1 = _mm_set_epi8(-1, -1, -1, -1, -1, -1, -1, -1, 7, 7, 7, 6, 6, 6, 5, 5);
+	const __m128i interleaved1 = _mm_shuffle_epi8(singleChannel_u_8x8, shuffleMask1);
+
+	_mm_storeu_si128((__m128i*)(interleaved + 0), interleaved0);
+	_mm_storel_epi64((__m128i*)(interleaved + 16), interleaved1);
+}
+
+OCEAN_FORCE_INLINE void SSE::store1Channel8Bit8ElementsTo4Channels32ElementsWithConstantLastChannel(const __m128i& singleChannel_u_8x8, const uint8_t lastChannelValue, uint8_t* interleaved)
+{
+	ocean_assert(interleaved != nullptr);
+
+	// singleChannel_u_8x8 contains 8 elements in lower 8 bytes: [s0, s1, s2, s3, s4, s5, s6, s7]
+
+	const __m128i shuffleMask0 = _mm_set_epi8(-128, 3, 3, 3, -128, 2, 2, 2, -128, 1, 1, 1, -128, 0, 0, 0); // -128 means set to zero, for 4th channel positions
+	const __m128i shuffleMask1 = _mm_set_epi8(-128, 7, 7, 7, -128, 6, 6, 6, -128, 5, 5, 5, -128, 4, 4, 4);
+
+	// expand to first 3 channels with zero in 4th channel positions
+	__m128i result0 = _mm_shuffle_epi8(singleChannel_u_8x8, shuffleMask0);
+	__m128i result1 = _mm_shuffle_epi8(singleChannel_u_8x8, shuffleMask1);
+
+	const __m128i channel4Mask = _mm_set_epi8(-1, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0);
+
+	const __m128i lastChannelValue_u_8x16 = _mm_set1_epi8(char(lastChannelValue));
+
+	result0 = _mm_blendv_epi8(result0, lastChannelValue_u_8x16, channel4Mask);
+	result1 = _mm_blendv_epi8(result1, lastChannelValue_u_8x16, channel4Mask);
+
+	_mm_storeu_si128((__m128i*)(interleaved + 0), result0);
+	_mm_storeu_si128((__m128i*)(interleaved + 16), result1);
 }
 
 OCEAN_FORCE_INLINE void SSE::reverseChannelOrder2Channel8Bit32Elements(const uint8_t* interleaved, uint8_t* reversedInterleaved)

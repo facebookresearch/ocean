@@ -445,6 +445,20 @@ class OCEAN_TEST_CV_EXPORT TestSSE
 		 * @return True, if succeeded
 		 */
 		static bool referenceAverageElements4Channel128Bit2x2(const unsigned int elements, const float* const imageLine0Buffer32Bit, const float* const imageLine1Buffer32Bit, float* const averageLine);
+
+		/**
+		 * Tests the SSE store 1 channel 8-bit 8 elements to 3 channels 24 elements function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testStore1Channel8Bit8ElementsTo3Channels24Elements(const double testDuration);
+
+		/**
+		 * Tests the SSE store 1 channel 8-bit 8 elements to 4 channels 32 elements with constant last channel function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testStore1Channel8Bit8ElementsTo4Channels32ElementsWithConstantLastChannel(const double testDuration);
 };
 
 }

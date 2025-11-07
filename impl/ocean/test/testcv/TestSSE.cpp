@@ -16,6 +16,8 @@
 #include "ocean/cv/CVUtilities.h"
 #include "ocean/cv/SSE.h"
 
+#include "ocean/test/Validation.h"
+
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
 
 namespace Ocean
@@ -163,6 +165,18 @@ bool TestSSE::test(const double testDuration)
 	Log::info() << " ";
 
 	allSucceeded = testSwapReversedElements8Bit48Elements() && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testStore1Channel8Bit8ElementsTo3Channels24Elements(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testStore1Channel8Bit8ElementsTo4Channels32ElementsWithConstantLastChannel(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -3237,6 +3251,117 @@ bool TestSSE::referenceAverageElements4Channel128Bit2x2(const unsigned int eleme
 	}
 
 	return true;
+}
+
+bool TestSSE::testStore1Channel8Bit8ElementsTo3Channels24Elements(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Test store 1 channel 8-bit 8 elements to 3 channels 24 elements:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		uint8_t inputElements[8];
+		for (unsigned int n = 0u; n < 8u; ++n)
+		{
+			inputElements[n] = uint8_t(RandomI::random(randomGenerator, 255u));
+		}
+
+		const __m128i input_u_8x8 = _mm_loadl_epi64((const __m128i*)(inputElements));
+
+		std::array<uint8_t, 25> outputInterleaved;
+		std::array<uint8_t, 25> copyInterleaved;
+
+		for (size_t n = 0; n < outputInterleaved.size(); ++n)
+		{
+			outputInterleaved[n] = uint8_t(RandomI::random(randomGenerator, 255u));
+			copyInterleaved[n] = outputInterleaved[n];
+		}
+
+		CV::SSE::store1Channel8Bit8ElementsTo3Channels24Elements(input_u_8x8, outputInterleaved.data());
+
+		for (unsigned int n = 0u; n < 8u; ++n)
+		{
+			const uint8_t interleaved0 = outputInterleaved[n * 3 + 0];
+			const uint8_t interleaved1 = outputInterleaved[n * 3 + 1];
+			const uint8_t interleaved2 = outputInterleaved[n * 3 + 2];
+
+			OCEAN_EXPECT_EQUAL(validation, interleaved0, inputElements[n]);
+			OCEAN_EXPECT_EQUAL(validation, interleaved1, inputElements[n]);
+			OCEAN_EXPECT_EQUAL(validation, interleaved2, inputElements[n]);
+		}
+
+		// now, let's ensure that we did not overwrite the memory outside the 24 elements
+
+		for (size_t n = 24; n < outputInterleaved.size(); ++n)
+		{
+			OCEAN_EXPECT_EQUAL(validation, copyInterleaved[n], outputInterleaved[n]);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestSSE::testStore1Channel8Bit8ElementsTo4Channels32ElementsWithConstantLastChannel(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Test store 1 channel 8-bit 8 elements to 4 channels 32 elements with constant last channel:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		uint8_t inputElements[8];
+		for (unsigned int n = 0u; n < 8u; ++n)
+		{
+			inputElements[n] = uint8_t(RandomI::random(randomGenerator, 255u));
+		}
+
+		const uint8_t lastChannelValue = uint8_t(RandomI::random(randomGenerator, 255u));
+
+		const __m128i input_u_8x8 = _mm_loadl_epi64((const __m128i*)(inputElements));
+
+		std::array<uint8_t, 33> outputInterleaved;
+		std::array<uint8_t, 33> copyInterleaved;
+
+		for (size_t n = 0; n < outputInterleaved.size(); ++n)
+		{
+			outputInterleaved[n] = uint8_t(RandomI::random(randomGenerator, 255u));
+			copyInterleaved[n] = outputInterleaved[n];
+		}
+
+		CV::SSE::store1Channel8Bit8ElementsTo4Channels32ElementsWithConstantLastChannel(input_u_8x8, lastChannelValue, outputInterleaved.data());
+
+		for (unsigned int n = 0u; n < 8u; ++n)
+		{
+			const uint8_t interleaved0 = outputInterleaved[n * 4 + 0];
+			const uint8_t interleaved1 = outputInterleaved[n * 4 + 1];
+			const uint8_t interleaved2 = outputInterleaved[n * 4 + 2];
+			const uint8_t interleaved3 = outputInterleaved[n * 4 + 3];
+
+			OCEAN_EXPECT_EQUAL(validation, interleaved0, inputElements[n]);
+			OCEAN_EXPECT_EQUAL(validation, interleaved1, inputElements[n]);
+			OCEAN_EXPECT_EQUAL(validation, interleaved2, inputElements[n]);
+			OCEAN_EXPECT_EQUAL(validation, interleaved3, lastChannelValue);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 }
