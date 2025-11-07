@@ -375,16 +375,21 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_V_U12_FULL_RANGE, FrameType::FORMAT_BGR24), FrameConverterY_V_U12::convertY_V_U12FullRangeToBGR24FullRangePrecision6Bit);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_V_U12_FULL_RANGE, FrameType::FORMAT_RGB24), FrameConverterY_V_U12::convertY_V_U12FullRangeToRGB24FullRangePrecision6Bit);
 
-	// FORMAT_Y_UV12
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_Y8), FrameConverterY_UV12::convertY_UV12ToY8);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_FULL_RANGE, FrameType::FORMAT_Y8), FrameConverterY_UV12::convertY_UV12ToY8);
+	// FORMAT_Y_UV12_LIMITED_RANGE (alias is FORMAT_Y_UV12)
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_LIMITED_RANGE, FrameType::FORMAT_Y8_LIMITED_RANGE), FrameConverterY_UV12::convertY_UV12LimitedRangeToY8LimitedRange);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_LIMITED_RANGE, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterY_UV12::convertY_UV12LimitedRangeToY8FullRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_LIMITED_RANGE, FrameType::FORMAT_BGR24), FrameConverterY_UV12::convertY_UV12LimitedRangeToBGR24FullRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_LIMITED_RANGE, FrameType::FORMAT_RGB24), FrameConverterY_UV12::convertY_UV12LimitedRangeToRGB24FullRange);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_LIMITED_RANGE, FrameType::FORMAT_YUV24), FrameConverterY_UV12::convertY_UV12ToYUV24);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_LIMITED_RANGE, FrameType::FORMAT_YVU24), FrameConverterY_UV12::convertY_UV12ToYVU24);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_LIMITED_RANGE, FrameType::FORMAT_Y_U_V12_LIMITED_RANGE), FrameConverterY_UV12::convertY_UV12ToY_U_V12);
+
+	// FORMAT_Y_UV12_FULL_RANGE
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_FULL_RANGE, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterY_UV12::convertY_UV12FullRangeToY8FullRange);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_FULL_RANGE, FrameType::FORMAT_Y8_LIMITED_RANGE), FrameConverterY_UV12::convertY_UV12FullRangeToY8LimitedRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_FULL_RANGE, FrameType::FORMAT_BGR24), FrameConverterY_UV12::convertY_UV12FullRangeToBGR24FullRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_FULL_RANGE, FrameType::FORMAT_RGB24), FrameConverterY_UV12::convertY_UV12FullRangeToRGB24FullRange);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_YUV24), FrameConverterY_UV12::convertY_UV12ToYUV24);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_YVU24), FrameConverterY_UV12::convertY_UV12ToYVU24);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_Y_U_V12), FrameConverterY_UV12::convertY_UV12ToY_U_V12);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_UV12_FULL_RANGE, FrameType::FORMAT_Y_U_V12_FULL_RANGE), FrameConverterY_UV12::convertY_UV12ToY_U_V12);
 
 	// FORMAT_Y_VU12_LIMITED_RANGE (alias is FORMAT_Y_VU12)
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y_VU12_LIMITED_RANGE, FrameType::FORMAT_Y8), FrameConverterY_VU12::convertY_VU12ToY8);
