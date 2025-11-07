@@ -64,7 +64,7 @@ class OCEAN_CV_EXPORT FrameConverterY8 : public FrameConverter
 	public:
 
 		/**
-		 * Converts a Y 8 bit frame to a BGR 24 bit frame.
+		 * Converts a Y 8 bit full range [0, 255] frame to a BGR 24 bit frame.
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
 		 * @param width The width of the frame in pixel, with range [1, infinity)
@@ -74,7 +74,7 @@ class OCEAN_CV_EXPORT FrameConverterY8 : public FrameConverter
 		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
 		 * @param worker Optional worker object to distribute the computational load
 		 */
-		static inline void convertY8ToBGR24(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+		static inline void convertY8FullRangeToBGR24(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * Converts a Y 8 bit frame to a RGB 24 bit frame.
@@ -209,7 +209,7 @@ class OCEAN_CV_EXPORT FrameConverterY8 : public FrameConverter
 		static void convertRowY8ToY8GammaLUT(const uint8_t* source, uint8_t* target, const size_t size, const void* parameters);
 };
 
-inline void FrameConverterY8::convertY8ToBGR24(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
+inline void FrameConverterY8::convertY8FullRangeToBGR24(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
 {
 	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(width >= 1u && height >= 1u);
