@@ -131,7 +131,7 @@ bool FrameConverterColorMap::Comfort::convertFloat1ChannelToRGB24(const Frame& s
 				Frame yFrame(FrameType(convertedSourceFrame, FrameType::FORMAT_Y8));
 				CV::FrameNormalizer::normalize1ChannelToUint8<float>(convertedSourceFrame.constdata<float>(), yFrame.data<uint8_t>(), convertedSourceFrame.width(), convertedSourceFrame.height(), convertedSourceFrame.paddingElements(), yFrame.paddingElements(), worker);
 
-				CV::FrameConverterY8::convertY8ToRGB24(yFrame.constdata<uint8_t>(), target.data<uint8_t>(), yFrame.width(), yFrame.height(), CONVERT_NORMAL, yFrame.paddingElements(), target.paddingElements(), worker);
+				CV::FrameConverterY8::convertY8FullRangeToRGB24(yFrame.constdata<uint8_t>(), target.data<uint8_t>(), yFrame.width(), yFrame.height(), CONVERT_NORMAL, yFrame.paddingElements(), target.paddingElements(), worker);
 				return true;
 			}
 		}
