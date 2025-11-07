@@ -11,6 +11,8 @@
 
 #include "ocean/io/File.h"
 
+#include "ocean/math/Numeric.h"
+
 #include "ocean/media/Manager.h"
 
 #include <SLES/OpenSLES_Android.h>
@@ -139,10 +141,10 @@ double AAudio::duration() const
 
 	if (slPlayInterface_ != nullptr)
 	{
-		SLmicrosecond durationMilliseconds = 0u;
+		SLmillisecond durationMilliseconds = 0u;
 		if ((*slPlayInterface_)->GetDuration(slPlayInterface_, &durationMilliseconds) == SL_RESULT_SUCCESS)
 		{
-			return double(durationMilliseconds) * 0.001;
+			return Timestamp::milliseconds2seconds(durationMilliseconds);
 		}
 	}
 
@@ -160,10 +162,10 @@ double AAudio::position() const
 
 	if (slPlayInterface_ != nullptr)
 	{
-		SLmicrosecond durationMilliseconds = 0u;
-		if ((*slPlayInterface_)->GetPosition(slPlayInterface_, &durationMilliseconds) == SL_RESULT_SUCCESS)
+		SLmillisecond positionMilliseconds = 0u;
+		if ((*slPlayInterface_)->GetPosition(slPlayInterface_, &positionMilliseconds) == SL_RESULT_SUCCESS)
 		{
-			return double(durationMilliseconds) * 0.001;
+			return Timestamp::milliseconds2seconds(positionMilliseconds);
 		}
 	}
 
@@ -176,11 +178,16 @@ bool AAudio::setPosition(const double position)
 
 	if (slSeekInterface_ != nullptr)
 	{
-		const SLmicrosecond durationMilliseconds = SLmicrosecond(position * 1000.0 + 0.5);
+		const int64_t positionMilliseconds = Timestamp::seconds2milliseconds(position);
 
-		if ((*slSeekInterface_)->SetPosition(slSeekInterface_, durationMilliseconds, SL_SEEKMODE_FAST) == SL_RESULT_SUCCESS)
+		if (NumericT<SLmillisecond>::isInsideValueRange(positionMilliseconds))
 		{
-			return true;
+			const SLmillisecond slPositionMilliseconds = SLmillisecond(positionMilliseconds);
+
+			if ((*slSeekInterface_)->SetPosition(slSeekInterface_, slPositionMilliseconds, SL_SEEKMODE_FAST) == SL_RESULT_SUCCESS)
+			{
+				return true;
+			}
 		}
 	}
 
@@ -405,13 +412,13 @@ bool AAudio::initialize(const SLEngineItf& slEngineInterface)
 		noError = false;
 	}
 
-	if (noError && (*slPlayInterface_)->RegisterCallback(slPlayInterface_, staticCallbackFunction, this))
+	if (noError && (*slPlayInterface_)->RegisterCallback(slPlayInterface_, staticCallbackFunction, this) != SL_RESULT_SUCCESS)
 	{
 		Log::error() << "Failed to register SL callback function";
 		noError = false;
 	}
 
-	if (noError && (*slPlayInterface_)->SetCallbackEventsMask(slPlayInterface_, SL_PLAYEVENT_HEADATEND))
+	if (noError && (*slPlayInterface_)->SetCallbackEventsMask(slPlayInterface_, SL_PLAYEVENT_HEADATEND) != SL_RESULT_SUCCESS)
 	{
 		Log::error() << "Failed to register SL callback function";
 		noError = false;
