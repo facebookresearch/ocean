@@ -137,7 +137,7 @@ class OCEAN_CV_EXPORT FrameConverterY8 : public FrameConverter
 		static inline void convertY8LimitedRangeToRGBA32(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const uint8_t alphaValue = 0xFF, Worker* worker = nullptr);
 
 		/**
-		 * Converts a Y 8 bit frame to a Y 8 bit frame.
+		 * Converts a Y 8 bit frame to a Y 8 bit frame, either limited range to limited range or full range to full range.
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
 		 * @param width The width of the frame in pixel, with range [1, infinity)
@@ -150,7 +150,7 @@ class OCEAN_CV_EXPORT FrameConverterY8 : public FrameConverter
 		static inline void convertY8ToY8(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
-		 * Converts a Y8 frame to a Y8 frame by applying gamma compression/correction using a lookup table.
+		 * Converts a Y8 frame to a Y8 frame by applying gamma compression/correction using a lookup table, either limited range to limited range or full range to full range.
 		 * The gamma compression/correction is based the following equation
 		 * <pre>
 		 * Y8 = 255 * (Y8 / 255) ^ gamma
@@ -265,6 +265,14 @@ inline void FrameConverterY8::convertY8ToY8GammaLUT(const uint8_t* source, uint8
 	ocean_assert(width >= 1u && height >= 1u);
 
 	ocean_assert(gamma > 0.0f && gamma < 2.0f);
+
+	if (NumericF::isEqual(gamma, 1.0f))
+	{
+		// no gamma correction necessary
+
+		FrameConverterY8::convertY8ToY8(source, target, width, height, flag, sourcePaddingElements, targetPaddingElements, worker);
+		return;
+	}
 
 	const unsigned int sourceStrideElements = width + sourcePaddingElements;
 	const unsigned int targetStrideElements = width + targetPaddingElements;
