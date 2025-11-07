@@ -109,19 +109,6 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_VU12
 		static bool testY_VU12ToYVU24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Deprecated.
-		 *
-		 * Tests the Y_VU12 to Y8 conversion.
-		 * @param width The width of the original frame in pixel, with range [1, infinity)
-		 * @param height The height of the original frame in pixel, with range [1, infinity)
-		 * @param conversionFlag The conversion flag that has been applied during conversion
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param worker The worker object
-		 * @return True, if succeeded
-		 */
-		static bool testY_VU12ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
-
-		/**
 		 * Tests the Y_VU12_LIMITED_RANGE to Y8_LIMITED_RANGE conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
