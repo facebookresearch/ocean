@@ -31,7 +31,7 @@ bool TestFrameConverterY_V_U12::test(const unsigned int width, const unsigned in
 	bool allSucceeded = true;
 
 	{
-		Log::info() << "Testing Y_V_U12 (limited range) to BGR24 (full range) conversion with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y_V_U12_LIMITED_RANGE to BGR24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -45,7 +45,7 @@ bool TestFrameConverterY_V_U12::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y_V_U12 (limited range) to RGB24 (full range) conversion with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y_V_U12_LIMITED_RANGE to RGB24 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -59,7 +59,7 @@ bool TestFrameConverterY_V_U12::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y_V_U12 (full range) to BGR24 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
+		Log::info() << "Testing Y_V_U12_FULL_RANGE to BGR24 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -73,7 +73,7 @@ bool TestFrameConverterY_V_U12::test(const unsigned int width, const unsigned in
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y_V_U12 (full range) to RGB24 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
+		Log::info() << "Testing Y_V_U12_FULL_RANGE to RGB24 (full range) conversion with resolution " << width << "x" << height << " (6 bit):";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
@@ -121,6 +121,62 @@ bool TestFrameConverterY_V_U12::test(const unsigned int width, const unsigned in
 		{
 			Log::info() << " ";
 			allSucceeded = testY_V_U12ToY8(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y_V_U12_LIMITED_RANGE to Y8_LIMITED_RANGE conversion with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY_V_U12LimitedRangeToY8LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y_V_U12_LIMITED_RANGE to Y8_FULL_RANGE conversion with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY_V_U12LimitedRangeToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y_V_U12_FULL_RANGE to Y8_FULL_RANGE conversion with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY_V_U12FullRangeToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
+		}
+	}
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	{
+		Log::info() << "Testing Y_V_U12_FULL_RANGE to Y8_LIMITED_RANGE conversion with resolution " << width << "x" << height << ":";
+
+		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
+		{
+			Log::info() << " ";
+			allSucceeded = testY_V_U12FullRangeToY8LimitedRange(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -314,6 +370,106 @@ TEST(TestFrameConverterY_V_U12, Y_V_U12ToY8FlippedMirrored)
 	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12ToY8(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12LimitedRangeToY8LimitedRangeNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12LimitedRangeToY8LimitedRangeFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12LimitedRangeToY8LimitedRangeMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12LimitedRangeToY8LimitedRangeFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12LimitedRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12LimitedRangeToY8FullRangeNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12LimitedRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12LimitedRangeToY8FullRangeFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12LimitedRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12LimitedRangeToY8FullRangeMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12LimitedRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12LimitedRangeToY8FullRangeFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12LimitedRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12FullRangeToY8FullRangeNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12FullRangeToY8FullRangeFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12FullRangeToY8FullRangeMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12FullRangeToY8FullRangeFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12FullRangeToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12FullRangeToY8LimitedRangeNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12FullRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12FullRangeToY8LimitedRangeFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12FullRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12FullRangeToY8LimitedRangeMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12FullRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY_V_U12, Y_V_U12FullRangeToY8LimitedRangeFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY_V_U12::testY_V_U12FullRangeToY8LimitedRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
 #endif // OCEAN_USE_GTEST
 
 bool TestFrameConverterY_V_U12::testY_V_U12LimitedRangeToBGR24FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
@@ -406,6 +562,78 @@ bool TestFrameConverterY_V_U12::testY_V_U12ToY8(const unsigned int width, const 
 	constexpr unsigned int thresholdMaximalErrorToInteger = 0u;
 
 	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_V_U12_LIMITED_RANGE, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_V_U12::convertY_V_U12ToY8), conversionFlag, pixelFunctionY_V_U12ForYVU24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+}
+
+bool TestFrameConverterY_V_U12::testY_V_U12LimitedRangeToY8LimitedRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	//                     | Y |
+	// | Y | = | 1 0 0 | * | V |
+	//                     | U |
+
+	MatrixD transformationMatrix(1, 3, false);
+	transformationMatrix(0, 0) = 1.0;
+
+	constexpr unsigned int thresholdMaximalErrorToInteger = 0u;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_V_U12_LIMITED_RANGE, FrameType::FORMAT_Y8_LIMITED_RANGE, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_V_U12::convertY_V_U12LimitedRangeToY8LimitedRange), conversionFlag, pixelFunctionY_V_U12ForYVU24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+}
+
+bool TestFrameConverterY_V_U12::testY_V_U12LimitedRangeToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	// Y_full = (Y_limited - 16) * 255 / 219
+
+	// | Y_full | = | 255/219  0  0  -16*255/219 | * | Y |
+	//                                               | V |
+	//                                               | U |
+	//                                               | 1 |
+
+	MatrixD transformationMatrix(1, 4, false);
+	transformationMatrix(0, 0) = 255.0 / 219.0;
+	transformationMatrix(0, 3) = -16.0 * 255.0 / 219.0;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_V_U12_LIMITED_RANGE, FrameType::FORMAT_Y8_FULL_RANGE, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_V_U12::convertY_V_U12LimitedRangeToY8FullRange), conversionFlag, pixelFunctionY_V_U12ForYVU24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+}
+
+bool TestFrameConverterY_V_U12::testY_V_U12FullRangeToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	//                     | Y |
+	// | Y | = | 1 0 0 | * | V |
+	//                     | U |
+
+	MatrixD transformationMatrix(1, 3, false);
+	transformationMatrix(0, 0) = 1.0;
+
+	constexpr unsigned int thresholdMaximalErrorToInteger = 0u;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_V_U12_FULL_RANGE, FrameType::FORMAT_Y8_FULL_RANGE, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_V_U12::convertY_V_U12FullRangeToY8FullRange), conversionFlag, pixelFunctionY_V_U12ForYVU24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker, thresholdMaximalErrorToInteger);
+}
+
+bool TestFrameConverterY_V_U12::testY_V_U12FullRangeToY8LimitedRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker)
+{
+	ocean_assert(testDuration > 0.0);
+	ocean_assert(width != 0u && height != 0u);
+
+	// Y_limited = Y_full * 219 / 255 + 16
+
+	// | Y_limited | = | 219/255  0  0  16 | * | Y |
+	//                                         | V |
+	//                                         | U |
+	//                                         | 1 |
+
+	MatrixD transformationMatrix(1, 4, false);
+	transformationMatrix(0, 0) = 219.0 / 255.0;
+	transformationMatrix(0, 3) = 16.0;
+
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y_V_U12_FULL_RANGE, FrameType::FORMAT_Y8_LIMITED_RANGE, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY_V_U12::convertY_V_U12FullRangeToY8LimitedRange), conversionFlag, pixelFunctionY_V_U12ForYVU24, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 MatrixD TestFrameConverterY_V_U12::pixelFunctionY_V_U12ForYVU24(const Frame& frame, const unsigned int x, const unsigned int y, const CV::FrameConverter::ConversionFlag conversionFlag)
