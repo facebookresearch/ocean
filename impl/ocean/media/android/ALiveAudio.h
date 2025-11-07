@@ -323,6 +323,13 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 		 */
 		static void onFillBufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue, void* context);
 
+		/**
+		 * Translates the value of a stream type to a readable string.
+		 * @param streamType The stream type value to translate
+		 * @return The readable string
+		 */
+		static std::string translateStreamType(const SLint32 streamType);
+
 	protected:
 
 		/// Start timestamp.

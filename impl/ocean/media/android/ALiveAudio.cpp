@@ -479,6 +479,10 @@ bool ALiveAudio::initialize(const SLEngineItf& slEngineInterface)
 		const SLint32 streamType = preferredStreamType();
 		ocean_assert(streamType >= SL_ANDROID_STREAM_VOICE && streamType <= SL_ANDROID_STREAM_NOTIFICATION);
 
+#ifdef OCEAN_DEBUG
+		Log::debug() << "ALiveAudio: Using stream type: " << translateStreamType(streamType);
+#endif
+
 		if ((*slPlayerConfiguration)->SetConfiguration(slPlayerConfiguration, SL_ANDROID_KEY_STREAM_TYPE, &streamType, sizeof(SLint32)) != SL_RESULT_SUCCESS)
 		{
 			Log::warning() << "Failed to set SL player's stream type";
@@ -593,6 +597,33 @@ void ALiveAudio::onFillBufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQ
 	ocean_assert(liveAudio != nullptr);
 
 	liveAudio->onFillBufferQueueCallback(bufferQueue);
+}
+
+std::string ALiveAudio::translateStreamType(const SLint32 streamType)
+{
+	switch (streamType)
+	{
+		case SL_ANDROID_STREAM_VOICE:
+			return "SL_ANDROID_STREAM_VOICE";
+
+		case SL_ANDROID_STREAM_SYSTEM:
+			return "SL_ANDROID_STREAM_SYSTEM";
+
+		case SL_ANDROID_STREAM_RING:
+			return "SL_ANDROID_STREAM_RING";
+
+		case SL_ANDROID_STREAM_MEDIA:
+			return "SL_ANDROID_STREAM_MEDIA";
+
+		case SL_ANDROID_STREAM_ALARM:
+			return "SL_ANDROID_STREAM_ALARM";
+
+		case SL_ANDROID_STREAM_NOTIFICATION:
+			return "SL_ANDROID_STREAM_NOTIFICATION";
+	}
+
+	ocean_assert(false && "Unknown stream type");
+	return "Unknown";
 }
 
 }
