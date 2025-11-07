@@ -7175,6 +7175,54 @@ void FrameConverter::convertOneRow_1Plane1Channel_To_1Plane3Channels_8BitPerChan
 		target += blockSize * 3u;
 	}
 
+#elif defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+	const __m128i factor_s_16x8 = _mm_set1_epi16(int16_t(factor));
+	const __m128i biasOutput_1024_s_32x4 = _mm_set1_epi32(int32_t(biasOutput) * 1024);
+	const __m128i biasInputAdjustment_s_32x4 = _mm_set1_epi32(int32_t(biasInput) * int32_t(factor));
+	const __m128i constant_512_s_32x4 = _mm_set1_epi32(512); // for rounding
+
+	constexpr unsigned int blockSize = 8u;
+	const unsigned int blocks = width / blockSize;
+
+	for (unsigned int n = 0u; n < blocks; ++n)
+	{
+		// load 8 uint8 values
+		const __m128i source_u_8x8 = _mm_loadl_epi64((const __m128i*)source);
+		const __m128i source_u_16x8 = _mm_unpacklo_epi8(source_u_8x8, _mm_setzero_si128());
+
+		// multiply by factor (16-bit x 16-bit -> 32-bit)
+		const __m128i source_factor_low_s_16x8 = _mm_mullo_epi16(source_u_16x8, factor_s_16x8);
+		const __m128i source_factor_high_s_16x8 = _mm_mulhi_epu16(source_u_16x8, factor_s_16x8);
+
+		// interleave low and high parts to form 32-bit results
+		__m128i result_low_s_32x4 = _mm_unpacklo_epi16(source_factor_low_s_16x8, source_factor_high_s_16x8);
+		__m128i result_high_s_32x4 = _mm_unpackhi_epi16(source_factor_low_s_16x8, source_factor_high_s_16x8);
+
+		// add biasOutput * 1024
+		result_low_s_32x4 = _mm_add_epi32(result_low_s_32x4, biasOutput_1024_s_32x4);
+		result_high_s_32x4 = _mm_add_epi32(result_high_s_32x4, biasOutput_1024_s_32x4);
+
+		// subtract biasInput * factor
+		result_low_s_32x4 = _mm_sub_epi32(result_low_s_32x4, biasInputAdjustment_s_32x4);
+		result_high_s_32x4 = _mm_sub_epi32(result_high_s_32x4, biasInputAdjustment_s_32x4);
+
+		// divide by 1024 with rounding: (value + 512) >> 10
+		result_low_s_32x4 = _mm_srai_epi32(_mm_add_epi32(result_low_s_32x4, constant_512_s_32x4), 10);
+		result_high_s_32x4 = _mm_srai_epi32(_mm_add_epi32(result_high_s_32x4, constant_512_s_32x4), 10);
+
+		// pack int32 to int16
+		const __m128i result_s_16x8 = _mm_packs_epi32(result_low_s_32x4, result_high_s_32x4);
+
+		// pack int16 to uint8 with saturation
+		const __m128i result_u_8x8 = _mm_packus_epi16(result_s_16x8, _mm_setzero_si128());
+
+		SSE::store1Channel8Bit8ElementsTo3Channels24Elements(result_u_8x8, target);
+
+		source += blockSize;
+		target += blockSize * 3u;
+	}
+
 #endif // OCEAN_HARDWARE_NEON_VERSION >= 10
 
 	while (source != sourceEnd)
@@ -7280,6 +7328,54 @@ void FrameConverter::convertOneRow_1Plane1Channel_To_1Plane4Channels_8BitPerChan
 		result_u_8x8x4.val[3] = alphaValue_u_8x8;
 
 		vst4_u8(target, result_u_8x8x4);
+
+		source += blockSize;
+		target += blockSize * 4u;
+	}
+
+#elif defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+	const __m128i factor_s_16x8 = _mm_set1_epi16(int16_t(factor));
+	const __m128i biasOutput_1024_s_32x4 = _mm_set1_epi32(int32_t(biasOutput) * 1024);
+	const __m128i biasInputAdjustment_s_32x4 = _mm_set1_epi32(int32_t(biasInput) * int32_t(factor));
+	const __m128i constant_512_s_32x4 = _mm_set1_epi32(512); // for rounding
+
+	constexpr unsigned int blockSize = 8u;
+	const unsigned int blocks = width / blockSize;
+
+	for (unsigned int n = 0u; n < blocks; ++n)
+	{
+		// load 8 uint8 values
+		const __m128i source_u_8x8 = _mm_loadl_epi64((const __m128i*)source);
+		const __m128i source_u_16x8 = _mm_unpacklo_epi8(source_u_8x8, _mm_setzero_si128());
+
+		// multiply by factor (16-bit x 16-bit -> 32-bit)
+		const __m128i source_factor_low_s_16x8 = _mm_mullo_epi16(source_u_16x8, factor_s_16x8);
+		const __m128i source_factor_high_s_16x8 = _mm_mulhi_epu16(source_u_16x8, factor_s_16x8);
+
+		// interleave low and high parts to form 32-bit results
+		__m128i result_low_s_32x4 = _mm_unpacklo_epi16(source_factor_low_s_16x8, source_factor_high_s_16x8);
+		__m128i result_high_s_32x4 = _mm_unpackhi_epi16(source_factor_low_s_16x8, source_factor_high_s_16x8);
+
+		// add biasOutput * 1024
+		result_low_s_32x4 = _mm_add_epi32(result_low_s_32x4, biasOutput_1024_s_32x4);
+		result_high_s_32x4 = _mm_add_epi32(result_high_s_32x4, biasOutput_1024_s_32x4);
+
+		// subtract biasInput * factor
+		result_low_s_32x4 = _mm_sub_epi32(result_low_s_32x4, biasInputAdjustment_s_32x4);
+		result_high_s_32x4 = _mm_sub_epi32(result_high_s_32x4, biasInputAdjustment_s_32x4);
+
+		// divide by 1024 with rounding: (value + 512) >> 10
+		result_low_s_32x4 = _mm_srai_epi32(_mm_add_epi32(result_low_s_32x4, constant_512_s_32x4), 10);
+		result_high_s_32x4 = _mm_srai_epi32(_mm_add_epi32(result_high_s_32x4, constant_512_s_32x4), 10);
+
+		// pack int32 to int16
+		const __m128i result_s_16x8 = _mm_packs_epi32(result_low_s_32x4, result_high_s_32x4);
+
+		// pack int16 to uint8 with saturation
+		const __m128i result_u_8x8 = _mm_packus_epi16(result_s_16x8, _mm_setzero_si128());
+
+		SSE::store1Channel8Bit8ElementsTo4Channels32ElementsWithConstantLastChannel(result_u_8x8, uint8_t(alphaValue), target);
 
 		source += blockSize;
 		target += blockSize * 4u;
