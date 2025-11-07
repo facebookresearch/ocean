@@ -43,7 +43,7 @@ class OCEAN_TEST_CV_LIBYUV_EXPORT TestFrameConverterBGRA32
 		 * @param skipValidation True, to skip the validation
 		 * @return True, if succeeded
 		 */
-		static bool testConvertBGRA32ToY8(const double testDuration, const bool skipValidation = false);
+		static bool testConvertBGRA32ToY8FullRange(const double testDuration, const bool skipValidation = false);
 };
 
 }

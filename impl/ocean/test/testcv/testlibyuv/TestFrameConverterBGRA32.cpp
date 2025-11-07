@@ -45,7 +45,7 @@ void TestFrameConverterBGRA32::test(const double testDuration, const bool skipVa
 	Log::info() << " ";
 
 #ifdef OCEAN_TEST_CV_LIBYUV_HAS_EXTRAS
-	testConvertBGRA32ToY8(testDuration, skipValidation);
+	testConvertBGRA32ToY8FullRange(testDuration, skipValidation);
 #else
 	Log::info() << "Skiping as `OCEAN_TEST_CV_LIBYUV_HAS_EXTRAS` is not defined";
 #endif
@@ -58,16 +58,16 @@ void TestFrameConverterBGRA32::test(const double testDuration, const bool skipVa
 
 #ifdef OCEAN_TEST_CV_LIBYUV_HAS_EXTRAS
 
-TEST(TestFrameConverterBGRA32, ConvertBGRA32ToY8)
+TEST(TestFrameConverterBGRA32, ConvertBGRA32ToY8FullRange)
 {
-	EXPECT_TRUE(TestFrameConverterBGRA32::testConvertBGRA32ToY8(GTEST_TEST_DURATION, false));
+	EXPECT_TRUE(TestFrameConverterBGRA32::testConvertBGRA32ToY8FullRange(GTEST_TEST_DURATION, false));
 }
 
 #endif // OCEAN_TEST_CV_LIBYUV_HAS_EXTRAS
 
 #endif // OCEAN_USE_GTEST
 
-bool TestFrameConverterBGRA32::testConvertBGRA32ToY8(const double testDuration, const bool skipValidation)
+bool TestFrameConverterBGRA32::testConvertBGRA32ToY8FullRange(const double testDuration, const bool skipValidation)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -135,7 +135,7 @@ bool TestFrameConverterBGRA32::testConvertBGRA32ToY8(const double testDuration, 
 					HighPerformanceStatistic& performnace = useWorker ? performanceOceanMultiCore : performanceOceanSingleCore;
 
 					performnace.start();
-					CV::FrameConverterBGRA32::convertBGRA32ToY8(frameBGRA32.constdata<uint8_t>(), frameY8.data<uint8_t>(), frameBGRA32.width(), frameBGRA32.height(), CV::FrameConverterBGRA32::CONVERT_NORMAL, frameBGRA32.paddingElements(), frameY8.paddingElements(), WorkerPool::get().conditionalScopedWorker(useWorker)());
+					CV::FrameConverterBGRA32::convertBGRA32ToY8FullRange(frameBGRA32.constdata<uint8_t>(), frameY8.data<uint8_t>(), frameBGRA32.width(), frameBGRA32.height(), CV::FrameConverterBGRA32::CONVERT_NORMAL, frameBGRA32.paddingElements(), frameY8.paddingElements(), WorkerPool::get().conditionalScopedWorker(useWorker)());
 					performnace.stop();
 
 					double localAverageErrorToInteger = NumericD::maxValue();
