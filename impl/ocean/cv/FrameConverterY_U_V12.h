@@ -11,6 +11,7 @@
 #include "ocean/cv/CV.h"
 #include "ocean/cv/FrameChannels.h"
 #include "ocean/cv/FrameConverter.h"
+#include "ocean/cv/FrameConverterY8.h"
 
 #include "ocean/base/Worker.h"
 
@@ -54,6 +55,8 @@ class OCEAN_CV_EXPORT FrameConverterY_U_V12 : public FrameConverter
 		static inline void convertY_U_V12ToY_U_V12(const uint8_t* ySource, const uint8_t* uSource, const uint8_t* vSource, uint8_t* yTarget, uint8_t* uTarget, uint8_t* vTarget, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int uSourcePaddingElements, const unsigned int vSourcePaddingElements, const unsigned int yTargetPaddingElements, const unsigned int uTargetPaddingElements, const unsigned int vTargetPaddingElements, Worker* worker = nullptr);
 
 		/**
+		 * Deprecated.
+		 *
 		 * Converts a Y_U_V12 frame to an 8 bit gray scale frame into a second image buffer.
 		 * @param ySource The y source frame buffer, with (width + yPaddingElements) * height elements, must be valid
 		 * @param uSource The u source frame buffer, with (width/2 + uPaddingElements) * height/2 elements, can be invalid, as this parameter is not used
@@ -88,6 +91,23 @@ class OCEAN_CV_EXPORT FrameConverterY_U_V12 : public FrameConverter
 		static inline void convertY_U_V12LimitedRangeToY8LimitedRange(const uint8_t* ySource, const uint8_t* uSource, const uint8_t* vSource, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int uSourcePaddingElements, const unsigned int vSourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
+		 * Converts a Y_U_V12_LIMITED_RANGE frame to a Y8_FULL_RANGE frame into a second image buffer.
+		 * @param ySource The y source frame buffer, with (width + yPaddingElements) * height elements, must be valid
+		 * @param uSource The u source frame buffer, with (width/2 + uPaddingElements) * height/2 elements, can be invalid, as this parameter is not used
+		 * @param vSource The v source frame buffer, with (width/2 + vPaddingElements) * height/2 elements, can be invalid, as this parameter is not used
+		 * @param target The target frame buffer, with (width + targetPaddingElements) * height elements, must be valid
+		 * @param width The width of the frame in pixel, with range [2, infinity), must be a multiple of 2
+		 * @param height The height of the frame in pixel, with range [2, infinity), must be a multiple of 2
+		 * @param flag Determining the type of conversion
+		 * @param ySourcePaddingElements The number of padding elements at the end of each y-source row, in (uint8_t) elements, with range [0, infinity)
+		 * @param uSourcePaddingElements The number of padding elements at the end of each u-source row, in (uint8_t) elements, with range [0, infinity), actually this parameter is not used
+		 * @param vSourcePaddingElements The number of padding elements at the end of each v-source row, in (uint8_t) elements, with range [0, infinity), actually this parameter is not used
+		 * @param targetPaddingElements The number of padding elements at the end of each target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computational to several CPU cores
+		 */
+		static inline void convertY_U_V12LimitedRangeToY8FullRange(const uint8_t* ySource, const uint8_t* uSource, const uint8_t* vSource, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int uSourcePaddingElements, const unsigned int vSourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+
+		/**
 		 * Converts a Y_U_V12_FULL_RANGE frame to a Y8_FULL_RANGE frame into a second image buffer.
 		 * @param ySource The y source frame buffer, with (width + yPaddingElements) * height elements, must be valid
 		 * @param uSource The u source frame buffer, with (width/2 + uPaddingElements) * height/2 elements, can be invalid, as this parameter is not used
@@ -103,6 +123,23 @@ class OCEAN_CV_EXPORT FrameConverterY_U_V12 : public FrameConverter
 		 * @param worker Optional worker object to distribute the computational to several CPU cores
 		 */
 		static inline void convertY_U_V12FullRangeToY8FullRange(const uint8_t* ySource, const uint8_t* uSource, const uint8_t* vSource, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int uSourcePaddingElements, const unsigned int vSourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+
+		/**
+		 * Converts a Y_U_V12_FULL_RANGE frame to a Y8_LIMITED_RANGE frame into a second image buffer.
+		 * @param ySource The y source frame buffer, with (width + yPaddingElements) * height elements, must be valid
+		 * @param uSource The u source frame buffer, with (width/2 + uPaddingElements) * height/2 elements, can be invalid, as this parameter is not used
+		 * @param vSource The v source frame buffer, with (width/2 + vPaddingElements) * height/2 elements, can be invalid, as this parameter is not used
+		 * @param target The target frame buffer, with (width + targetPaddingElements) * height elements, must be valid
+		 * @param width The width of the frame in pixel, with range [2, infinity), must be a multiple of 2
+		 * @param height The height of the frame in pixel, with range [2, infinity), must be a multiple of 2
+		 * @param flag Determining the type of conversion
+		 * @param ySourcePaddingElements The number of padding elements at the end of each y-source row, in (uint8_t) elements, with range [0, infinity)
+		 * @param uSourcePaddingElements The number of padding elements at the end of each u-source row, in (uint8_t) elements, with range [0, infinity), actually this parameter is not used
+		 * @param vSourcePaddingElements The number of padding elements at the end of each v-source row, in (uint8_t) elements, with range [0, infinity), actually this parameter is not used
+		 * @param targetPaddingElements The number of padding elements at the end of each target row, in (uint8_t) elements, with range [0, infinity)
+		 * @param worker Optional worker object to distribute the computational to several CPU cores
+		 */
+		static inline void convertY_U_V12FullRangeToY8LimitedRange(const uint8_t* ySource, const uint8_t* uSource, const uint8_t* vSource, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int uSourcePaddingElements, const unsigned int vSourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * Converts a Y_U_V12 frame to a 24 bit BGR frame into a second image buffer using BT.601 (digital).
@@ -386,12 +423,28 @@ inline void FrameConverterY_U_V12::convertY_U_V12LimitedRangeToY8LimitedRange(co
 	FrameChannels::transformGeneric<uint8_t, 1u>(ySource, target, width, height, flag, ySourcePaddingElements, targetPaddingElements, worker);
 }
 
+inline void FrameConverterY_U_V12::convertY_U_V12LimitedRangeToY8FullRange(const uint8_t* ySource, const uint8_t* /* uSource */, const uint8_t* /* vSource */, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int /* uSourcePaddingElements */, const unsigned int /* vSourcePaddingElements */, const unsigned int targetPaddingElements, Worker* worker)
+{
+	ocean_assert(ySource != nullptr && target != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+
+	FrameConverterY8::convertY8LimitedRangeToY8FullRange(ySource, target, width, height, flag, ySourcePaddingElements, targetPaddingElements, worker);
+}
+
 inline void FrameConverterY_U_V12::convertY_U_V12FullRangeToY8FullRange(const uint8_t* ySource, const uint8_t* /* uSource */, const uint8_t* /* vSource */, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int /* uSourcePaddingElements */, const unsigned int /* vSourcePaddingElements */, const unsigned int targetPaddingElements, Worker* worker)
 {
 	ocean_assert(ySource != nullptr && target != nullptr);
 	ocean_assert(width >= 1u && height >= 1u);
 
 	FrameChannels::transformGeneric<uint8_t, 1u>(ySource, target, width, height, flag, ySourcePaddingElements, targetPaddingElements, worker);
+}
+
+inline void FrameConverterY_U_V12::convertY_U_V12FullRangeToY8LimitedRange(const uint8_t* ySource, const uint8_t* /* uSource */, const uint8_t* /* vSource */, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int /* uSourcePaddingElements */, const unsigned int /* vSourcePaddingElements */, const unsigned int targetPaddingElements, Worker* worker)
+{
+	ocean_assert(ySource != nullptr && target != nullptr);
+	ocean_assert(width >= 1u && height >= 1u);
+
+	FrameConverterY8::convertY8FullRangeToY8LimitedRange(ySource, target, width, height, flag, ySourcePaddingElements, targetPaddingElements, worker);
 }
 
 inline void FrameConverterY_U_V12::convertY_U_V12LimitedRangeToBGR24FullRange(const uint8_t* ySource, const uint8_t* uSource, const uint8_t* vSource, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int ySourcePaddingElements, const unsigned int uSourcePaddingElements, const unsigned int vSourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
