@@ -23,6 +23,7 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -39,6 +40,12 @@ import android.widget.TextView;
 
 /**
  * This class implements the main Activity object for the Picture Taker (Android).
+ * By default, the app allows to select which camera to be used through a UI.<br>
+ * In addition, the user can configure the camera selection through an intent, the app can be started and configured via:<br>
+ * <pre>
+ * adb shell am start -n com.meta.ocean.app.demo.cv.calibration.picturetaker.android/.PictureTakerActivity --es camera_name '"Back-facing Camera 0"' --es resolution '"1920x1080"' --ef focus 0.75 --ez video_stabilization false
+ * </pre>
+ * In case the app is started and configured via an intent, any key event is used to trigger the button to take an image.
  * @ingroup applicationdemocvcalibrationpicturetakerandroid
  */
 public class PictureTakerActivity extends GLFrameViewActivity
@@ -57,7 +64,86 @@ public class PictureTakerActivity extends GLFrameViewActivity
 
 		addContentView(new MessengerView(this, true), new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 200));
 
+		readIntentExtras();
+
 		setupUI();
+
+		if (autoStartEnabled_)
+		{
+			Log.d("Ocean", "PictureTakerActivity: Auto-start mode enabled");
+			Log.d("Ocean", "PictureTakerActivity: Camera: " + preConfiguredCamera_);
+			Log.d("Ocean", "PictureTakerActivity: Resolution: " + preConfiguredResolution_);
+			Log.d("Ocean", "PictureTakerActivity: Focus: " + preConfiguredFocus_);
+			Log.d("Ocean", "PictureTakerActivity: Video Stabilization: " + preConfiguredVideoStabilization_);
+
+			if (checkSelfPermission(android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+			{
+				startCameraWithPreConfiguration();
+			}
+		}
+	}
+
+	private void readIntentExtras()
+	{
+		Log.d("Ocean", "PictureTakerActivity: readIntentExtras() called");
+
+		if (getIntent() != null)
+		{
+			Log.d("Ocean", "PictureTakerActivity: Intent is not null");
+			Bundle extras = getIntent().getExtras();
+
+			if (extras != null)
+			{
+				Log.d("Ocean", "PictureTakerActivity: Extras bundle is not null");
+				Log.d("Ocean", "PictureTakerActivity: Extras contents: " + extras.toString());
+
+				if (extras.containsKey(EXTRA_CAMERA_NAME))
+				{
+					preConfiguredCamera_ = extras.getString(EXTRA_CAMERA_NAME);
+					Log.d("Ocean", "PictureTakerActivity: Found camera_name: " + preConfiguredCamera_);
+				}
+				else
+				{
+					Log.d("Ocean", "PictureTakerActivity: No camera_name in extras");
+				}
+
+				if (extras.containsKey(EXTRA_RESOLUTION))
+				{
+					preConfiguredResolution_ = extras.getString(EXTRA_RESOLUTION);
+					Log.d("Ocean", "PictureTakerActivity: Found resolution: " + preConfiguredResolution_);
+				}
+				else
+				{
+					Log.d("Ocean", "PictureTakerActivity: No resolution in extras");
+				}
+
+				if (extras.containsKey(EXTRA_FOCUS))
+				{
+					preConfiguredFocus_ = extras.getFloat(EXTRA_FOCUS, initialFocus_);
+					Log.d("Ocean", "PictureTakerActivity: Found focus: " + preConfiguredFocus_);
+				}
+
+				if (extras.containsKey(EXTRA_VIDEO_STABILIZATION))
+				{
+					preConfiguredVideoStabilization_ = extras.getBoolean(EXTRA_VIDEO_STABILIZATION, false);
+					Log.d("Ocean", "PictureTakerActivity: Found video_stabilization: " + preConfiguredVideoStabilization_);
+				}
+
+				// Enable auto-start only if all required settings are provided
+				autoStartEnabled_ = preConfiguredCamera_ != null &&
+				                     preConfiguredResolution_ != null;
+
+				Log.d("Ocean", "PictureTakerActivity: autoStartEnabled_ = " + autoStartEnabled_);
+			}
+			else
+			{
+				Log.d("Ocean", "PictureTakerActivity: Extras bundle is null");
+			}
+		}
+		else
+		{
+			Log.d("Ocean", "PictureTakerActivity: Intent is null");
+		}
 	}
 
 	private void setupUI()
@@ -65,6 +151,11 @@ public class PictureTakerActivity extends GLFrameViewActivity
 		cameraSelectionContainer_ = new LinearLayout(this);
 		cameraSelectionContainer_.setOrientation(LinearLayout.VERTICAL);
 		cameraSelectionContainer_.setPadding(40, 40, 40, 40);
+
+		if (autoStartEnabled_)
+		{
+			cameraSelectionContainer_.setVisibility(View.GONE);
+		}
 
 		GradientDrawable cameraContainerBackground = new GradientDrawable();
 		cameraContainerBackground.setColor(Color.argb(220, 40, 40, 40));
@@ -340,24 +431,24 @@ public class PictureTakerActivity extends GLFrameViewActivity
 				cameraSelected_ = true;
 				cameraSpinner_.setEnabled(false);
 				cameraSpinner_.setAlpha(0.5f);
-				
+
 				GradientDrawable disabledSpinnerBackground = new GradientDrawable();
 				disabledSpinnerBackground.setColor(Color.rgb(200, 200, 200));
 				disabledSpinnerBackground.setCornerRadius(12);
 				cameraSpinner_.setBackground(disabledSpinnerBackground);
-				
+
 				String[] resolutions = availableResolutions();
 				if (resolutions != null && resolutions.length > 0)
 				{
 					String[] resolutionsWithPrompt = new String[resolutions.length + 1];
 					resolutionsWithPrompt[0] = "Select Resolution";
 					System.arraycopy(resolutions, 0, resolutionsWithPrompt, 1, resolutions.length);
-					
+
 					ArrayAdapter<String> resolutionAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, resolutionsWithPrompt);
 					resolutionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 					resolutionSpinner_.setAdapter(resolutionAdapter);
 					resolutionSpinner_.setTag(resolutions);
-					
+
 					resolutionSelectionContainer_.setVisibility(View.VISIBLE);
 				}
 			}
@@ -371,22 +462,22 @@ public class PictureTakerActivity extends GLFrameViewActivity
 			Log.d("Ocean", "PictureTakerActivity: Starting camera with resolution: " + selectedResolution_);
 			boolean success = startCamera(selectedResolution_);
 			Log.d("Ocean", "PictureTakerActivity: Camera start result: " + success);
-			
+
 			if (success)
 			{
 				cameraStarted_ = true;
 
 				stabilizationCheckBox_.setChecked(videoStabilization());
-				
+
 				runOnUiThread(() -> {
 					cameraSelectionContainer_.setVisibility(View.GONE);
 					resolutionSelectionContainer_.setVisibility(View.GONE);
-					
+
 					if (setFocus(initialFocus_))
 					{
 						focusContainer_.setVisibility(View.VISIBLE);
 					}
-					
+
 					takeImageButton_.setVisibility(View.VISIBLE);
 					takeImageButton_.setEnabled(true);
 					updateButtonState();
@@ -404,7 +495,7 @@ public class PictureTakerActivity extends GLFrameViewActivity
 	{
 		takeImageButton_.setEnabled(false);
 		updateButtonState();
-		
+
 		focusContainer_.setVisibility(View.GONE);
 
 		countdownValue_ = 3;
@@ -426,10 +517,10 @@ public class PictureTakerActivity extends GLFrameViewActivity
 		else
 		{
 			countdownTextView_.setVisibility(TextView.INVISIBLE);
-			
+
 			takeImageButton_.setEnabled(true);
 			updateButtonState();
-			
+
 			if (takePicture())
 			{
 				imageCounter_++;
@@ -465,11 +556,116 @@ public class PictureTakerActivity extends GLFrameViewActivity
 		}
 	}
 
+	private void startCameraWithPreConfiguration()
+	{
+		selectedCamera_ = preConfiguredCamera_;
+		selectedResolution_ = preConfiguredResolution_;
+
+		Log.d("Ocean", "PictureTakerActivity: Starting camera with pre-configuration");
+
+		boolean cameraSelectSuccess = selectCamera(selectedCamera_);
+		if (!cameraSelectSuccess)
+		{
+			Log.e("Ocean", "PictureTakerActivity: Failed to select camera: " + selectedCamera_);
+			return;
+		}
+
+		cameraSelected_ = true;
+
+		Log.d("Ocean", "PictureTakerActivity: Starting camera with resolution: " + selectedResolution_);
+		boolean cameraStartSuccess = startCamera(selectedResolution_);
+		Log.d("Ocean", "PictureTakerActivity: Camera start result: " + cameraStartSuccess);
+
+		if (!cameraStartSuccess)
+		{
+			Log.e("Ocean", "PictureTakerActivity: Failed to start camera!");
+			return;
+		}
+
+		cameraStarted_ = true;
+
+		float focusValue = preConfiguredFocus_ != null ? preConfiguredFocus_ : initialFocus_;
+		boolean focusSuccess = setFocus(focusValue);
+		Log.d("Ocean", "PictureTakerActivity: Set focus to " + focusValue + ": " + focusSuccess);
+
+		if (preConfiguredVideoStabilization_ != null)
+		{
+			boolean stabilizationSuccess = setVideoStabilization(preConfiguredVideoStabilization_);
+			Log.d("Ocean", "PictureTakerActivity: Set video stabilization to " + preConfiguredVideoStabilization_ + ": " + stabilizationSuccess);
+		}
+
+		runOnUiThread(() -> {
+			cameraSelectionContainer_.setVisibility(View.GONE);
+			resolutionSelectionContainer_.setVisibility(View.GONE);
+
+			if (focusSuccess)
+			{
+				focusSeekBar_.setProgress((int)(100.0f * focusValue));
+				focusContainer_.setVisibility(View.VISIBLE);
+			}
+
+			if (preConfiguredVideoStabilization_ != null)
+			{
+				stabilizationCheckBox_.setChecked(preConfiguredVideoStabilization_);
+			}
+			else
+			{
+				stabilizationCheckBox_.setChecked(videoStabilization());
+			}
+
+			takeImageButton_.setVisibility(View.VISIBLE);
+			takeImageButton_.setEnabled(true);
+			updateButtonState();
+			Log.d("Ocean", "PictureTakerActivity: Auto-start complete - ready to take pictures");
+		});
+	}
+
 	@Override
 	protected void onCameraPermissionGranted()
 	{
 		super.onCameraPermissionGranted();
-		onCameraSelected();
+
+		if (autoStartEnabled_)
+		{
+			startCameraWithPreConfiguration();
+		}
+		else
+		{
+			onCameraSelected();
+		}
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)
+	{
+		if (autoStartEnabled_)
+		{
+			String keyName = KeyEvent.keyCodeToString(keyCode);
+
+			Log.d("Ocean", "PictureTakerActivity: Key DOWN, Code " + keyCode + " (" + keyName + ")");
+
+			if (takeImageButton_ != null && takeImageButton_.isEnabled() && takeImageButton_.getVisibility() == View.VISIBLE)
+			{
+				Log.d("Ocean", "PictureTakerActivity: Triggering take picture via key press");
+
+				runOnUiThread(() -> takeImageButton_.performClick());
+				return true;
+			}
+		}
+
+		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event)
+	{
+		if (autoStartEnabled_)
+		{
+			String keyName = KeyEvent.keyCodeToString(keyCode);
+			Log.d("Ocean", "PictureTakerActivity: Key UP, Code " + keyCode + " (" + keyName + ")");
+		}
+
+		return super.onKeyUp(keyCode, event);
 	}
 
 	/**
@@ -544,4 +740,15 @@ public class PictureTakerActivity extends GLFrameViewActivity
 	private boolean cameraSelected_ = false;
 	private boolean cameraStarted_ = false;
 	private final float initialFocus_ = 0.85f;
+
+	private boolean autoStartEnabled_ = false;
+	private String preConfiguredCamera_ = null;
+	private String preConfiguredResolution_ = null;
+	private Float preConfiguredFocus_ = null;
+	private Boolean preConfiguredVideoStabilization_ = null;
+
+	public static final String EXTRA_CAMERA_NAME = "camera_name";
+	public static final String EXTRA_RESOLUTION = "resolution";
+	public static final String EXTRA_FOCUS = "focus";
+	public static final String EXTRA_VIDEO_STABILIZATION = "video_stabilization";
 }
