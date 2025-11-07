@@ -172,12 +172,12 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y8 limited range to RGBA32 (full range) conversion (6-bit) with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y8 limited range to RGB24 (full range) conversion (10-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8LimitedRangeToRGBA32Precision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			allSucceeded = testY8LimitedRangeToRGB24Precision10Bit(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -186,12 +186,12 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y8 limited range to RGB24 (full range) conversion (10-bit) with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y8 limited range to RGBA32 (full range) conversion (6-bit) with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8LimitedRangeToRGB24Precision10Bit(width, height, flag, testDuration, worker) && allSucceeded;
+			allSucceeded = testY8LimitedRangeToRGBA32Precision6Bit(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -475,31 +475,6 @@ TEST(TestFrameConverterY8, Y8LimitedRangeToRGB24Precision6BitFlippedMirrored)
 }
 
 
-TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitNormal)
-{
-	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
-}
-
-TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitFlipped)
-{
-	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
-}
-
-TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitMirrored)
-{
-	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
-}
-
-TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitFlippedMirrored)
-{
-	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
-}
-
-
 TEST(TestFrameConverterY8, Y8LimitedRangeToRGB24Precision10BitNormal)
 {
 	Worker worker;
@@ -522,6 +497,31 @@ TEST(TestFrameConverterY8, Y8LimitedRangeToRGB24Precision10BitFlippedMirrored)
 {
 	Worker worker;
 	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGB24Precision10Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitNormal)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitFlipped)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+}
+
+TEST(TestFrameConverterY8, Y8LimitedRangeToRGBA32Precision6BitFlippedMirrored)
+{
+	Worker worker;
+	EXPECT_TRUE(TestFrameConverterY8::testY8LimitedRangeToRGBA32Precision6Bit(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
 
