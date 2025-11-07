@@ -277,7 +277,7 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	// FORMAT_Y8_FULL_RANGE (aka FORMAT_Y8)
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y8_FULL_RANGE, FrameType::FORMAT_BGR24), FrameConverterY8::convertY8FullRangeToBGR24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y8_FULL_RANGE, FrameType::FORMAT_RGB24), FrameConverterY8::convertY8FullRangeToRGB24);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y8_FULL_RANGE, FrameType::FORMAT_RGBA32, Options::OT_ALPHA_CHANNEL_TARGET_VALUE), FrameConverterY8::convertY8ToRGBA32);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y8_FULL_RANGE, FrameType::FORMAT_RGBA32, Options::OT_ALPHA_CHANNEL_TARGET_VALUE), FrameConverterY8::convertY8FullRangeToRGBA32);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_Y8_FULL_RANGE, FrameType::FORMAT_Y8, Options::OT_GAMMA_CORRECTION), FrameConverterY8::convertY8ToY8GammaLUT);
 
 	// FORMAT_Y10_Packed

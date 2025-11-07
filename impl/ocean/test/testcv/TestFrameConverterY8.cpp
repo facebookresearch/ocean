@@ -58,12 +58,12 @@ bool TestFrameConverterY8::test(const unsigned int width, const unsigned int hei
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing Y8 to RGBA32 conversion with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing Y8 full range to RGBA32 (full range) conversion with resolution " << width << "x" << height << ":";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testY8ToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
+			allSucceeded = testY8FullRangeToRGBA32(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -275,28 +275,28 @@ TEST(TestFrameConverterY8, Y8FullRangeToRGB24FlippedMirrored)
 }
 
 
-TEST(TestFrameConverterY8, Y8ToRGBA32Normal)
+TEST(TestFrameConverterY8, Y8FullRangeToRGBA32Normal)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8ToRGBA32(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToRGBA32(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterY8, Y8ToRGBA32Flipped)
+TEST(TestFrameConverterY8, Y8FullRangeToRGBA32Flipped)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8ToRGBA32(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToRGBA32(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterY8, Y8ToRGBA32Mirrored)
+TEST(TestFrameConverterY8, Y8FullRangeToRGBA32Mirrored)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8ToRGBA32(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToRGBA32(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterY8, Y8ToRGBA32FlippedMirrored)
+TEST(TestFrameConverterY8, Y8FullRangeToRGBA32FlippedMirrored)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterY8::testY8ToRGBA32(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterY8::testY8FullRangeToRGBA32(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
 
@@ -585,7 +585,7 @@ bool TestFrameConverterY8::testY8FullRangeToRGB24(const unsigned int width, cons
 	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_RGB24, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8FullRangeToRGB24), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
-bool TestFrameConverterY8::testY8ToRGBA32(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+bool TestFrameConverterY8::testY8FullRangeToRGBA32(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
@@ -601,7 +601,7 @@ bool TestFrameConverterY8::testY8ToRGBA32(const unsigned int width, const unsign
 	transformationMatrix(2, 0) = 1;
 	transformationMatrix(3, 1) = double(FrameConverterTestUtilities::ValueProvider::get().alphaValue());
 
-	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_RGBA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8ToRGBA32), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_Y8, FrameType::FORMAT_RGBA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterY8::convertY8FullRangeToRGBA32), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterY8::testY8ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
