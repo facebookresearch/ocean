@@ -134,13 +134,13 @@ bool TestFrameConverterRGB24::test(const unsigned int width, const unsigned int 
 	Log::info() << " ";
 
 	{
-		Log::info() << "Testing RGB24 to Y8 conversion with resolution " << width << "x" << height << ":";
+		Log::info() << "Testing RGB24 (full range) to Y8 full range conversion with resolution " << width << "x" << height << ":";
 		Log::info() << " ";
 
 		for (const CV::FrameConverter::ConversionFlag flag : CV::FrameConverter::conversionFlags())
 		{
 			Log::info() << " ";
-			allSucceeded = testRGB24ToY8(width, height, flag, testDuration, worker) && allSucceeded;
+			allSucceeded = testRGB24ToY8FullRange(width, height, flag, testDuration, worker) && allSucceeded;
 		}
 	}
 
@@ -485,28 +485,28 @@ TEST(TestFrameConverterRGB24, RGB24ToRGBA32FlippedMirrored)
 }
 
 
-TEST(TestFrameConverterRGB24, RGB24ToY8Normal)
+TEST(TestFrameConverterRGB24, RGB24ToY8FullRangeNormal)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToY8(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_NORMAL, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterRGB24, RGB24ToY8Flipped)
+TEST(TestFrameConverterRGB24, RGB24ToY8FullRangeFlipped)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToY8(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterRGB24, RGB24ToY8Mirrored)
+TEST(TestFrameConverterRGB24, RGB24ToY8FullRangeMirrored)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToY8(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
-TEST(TestFrameConverterRGB24, RGB24ToY8FlippedMirrored)
+TEST(TestFrameConverterRGB24, RGB24ToY8FullRangeFlippedMirrored)
 {
 	Worker worker;
-	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToY8(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
+	EXPECT_TRUE(TestFrameConverterRGB24::testRGB24ToY8FullRange(GTEST_TEST_IMAGE_WIDTH, GTEST_TEST_IMAGE_HEIGHT, CV::FrameConverter::CONVERT_FLIPPED_AND_MIRRORED, GTEST_TEST_DURATION, worker));
 }
 
 
@@ -878,7 +878,7 @@ bool TestFrameConverterRGB24::testRGB24ToRGBA32(const unsigned int width, const 
 	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGB24::convertRGB24ToRGBA32), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
-bool TestFrameConverterRGB24::testRGB24ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
+bool TestFrameConverterRGB24::testRGB24ToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)
 {
 	ocean_assert(testDuration > 0.0);
 	ocean_assert(width != 0u && height != 0u);
@@ -892,7 +892,7 @@ bool TestFrameConverterRGB24::testRGB24ToY8(const unsigned int width, const unsi
 	transformationMatrix(0, 1) = 0.587;
 	transformationMatrix(0, 2) = 0.114;
 
-	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGB24, FrameType::FORMAT_Y8, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGB24::convertRGB24ToY8), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
+	return FrameConverterTestUtilities::testFrameConversion(FrameType::FORMAT_RGB24, FrameType::FORMAT_Y8_FULL_RANGE, width, height, FrameConverterTestUtilities::FunctionWrapper(CV::FrameConverterRGB24::convertRGB24ToY8FullRange), flag, FrameConverterTestUtilities::functionGenericPixel, FrameConverterTestUtilities::functionGenericPixel, transformationMatrix, 0.0, 255.0, testDuration, worker);
 }
 
 bool TestFrameConverterRGB24::testRGB24ToYUV24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker)

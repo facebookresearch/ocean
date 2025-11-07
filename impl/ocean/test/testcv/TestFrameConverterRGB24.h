@@ -128,7 +128,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterRGB24
 		 * @param worker The worker object to distribute the computation
 		 * @return True, if succeeded
 		 */
-		static bool testRGB24ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
+		static bool testRGB24ToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
 
 		/**
 		 * Tests the exact RGB24 to YUV24 conversion.

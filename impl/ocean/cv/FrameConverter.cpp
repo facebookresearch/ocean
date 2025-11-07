@@ -226,7 +226,7 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGB24, FrameType::FORMAT_BGRA32, Options::OT_ALPHA_CHANNEL_TARGET_VALUE), FrameConverterRGB24::convertRGB24ToBGRA32);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGB24, FrameType::FORMAT_RGB32), FrameConverterRGB24::convertRGB24ToRGB32);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32, Options::OT_ALPHA_CHANNEL_TARGET_VALUE), FrameConverterRGB24::convertRGB24ToRGBA32);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGB24, FrameType::FORMAT_Y8), FrameConverterRGB24::convertRGB24ToY8);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGB24, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterRGB24::convertRGB24ToY8FullRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGB24, FrameType::FORMAT_YUV24), FrameConverterRGB24::convertRGB24ToYUV24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGB24, FrameType::FORMAT_Y_UV12_LIMITED_RANGE), FrameConverterRGB24::convertRGB24FullRangeToY_UV12LimitedRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGB24, FrameType::FORMAT_Y_VU12_LIMITED_RANGE), FrameConverterRGB24::convertRGB24FullRangeToY_VU12LimitedRange);
