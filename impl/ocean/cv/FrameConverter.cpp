@@ -253,7 +253,7 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGBA32, FrameType::FORMAT_BGRA32), FrameConverterRGBA32::convertRGBA32ToBGRA32);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGBA32, FrameType::FORMAT_RGB24), FrameConverterRGBA32::convertRGBA32ToRGB24);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGBA32, FrameType::FORMAT_RGB32), FrameConverterRGBA32::convertRGBA32ToRGB32);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGBA32, FrameType::FORMAT_Y8), FrameConverterRGBA32::convertRGBA32ToY8);
+	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGBA32, FrameType::FORMAT_Y8_FULL_RANGE), FrameConverterRGBA32::convertRGBA32ToY8FullRange);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGBA32, FrameType::FORMAT_YA16), FrameConverterRGBA32::convertRGBA32ToYA16);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_RGBA32, FrameType::FORMAT_YUV24), FrameConverterRGBA32::convertRGBA32ToYUV24);
 

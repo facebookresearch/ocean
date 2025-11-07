@@ -133,7 +133,7 @@ class OCEAN_CV_EXPORT FrameConverterRGBA32 : public FrameConverter
 	static inline void convertRGBA32ToRGB32(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker);
 
 		/**
-		 * Converts a RGBA 32 bit frame to a Y 8 bit grayscale frame by the exact conversion.
+		 * Converts a RGBA 32 bit frame to a Y 8 bit full range grayscale frame by the exact conversion.
 		 * Gray = Red * 0.299 + Green * 0.587 + Blue * 0.114
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
@@ -144,7 +144,7 @@ class OCEAN_CV_EXPORT FrameConverterRGBA32 : public FrameConverter
 		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
 		 * @param worker Optional worker to distribute the computation to several CPU cores
 		 */
-		static inline void convertRGBA32ToY8(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker);
+		static inline void convertRGBA32ToY8FullRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker);
 
 		/**
 		 * Converts a RGBA 32 bit frame to a YA 16 bit frame by the exact conversion.
@@ -268,7 +268,7 @@ inline void FrameConverterRGBA32::convertRGBA32ToRGB32(const uint8_t* source, ui
 	FrameChannels::shuffleChannelsAndSetLastChannelValue<uint8_t, 4u, 4u, shufflePattern>(source, 0u, target, width, height, flag, sourcePaddingElements, targetPaddingElements, worker);
 }
 
-inline void FrameConverterRGBA32::convertRGBA32ToY8(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
+inline void FrameConverterRGBA32::convertRGBA32ToY8FullRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
 {
 	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(width >= 1u && height >= 1u);

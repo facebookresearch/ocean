@@ -74,7 +74,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterRGBA32
 		 * @return True, if succeeded
 		 */
 		static bool testRGBA32ToRGB24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
-	
+
 		/**
 		 * Tests the RGBA32 to RGB32 conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
@@ -131,7 +131,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterRGBA32
 		static bool testRGBA32ToBGRA32(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the exact RGBA32 to Y8 conversion.
+		 * Tests the exact RGBA32 (full range) to Y8 full range conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param flag The conversion flag that has been applied during conversion
@@ -139,7 +139,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterRGBA32
 		 * @param worker The worker object
 		 * @return True, if succeeded
 		 */
-		static bool testRGBA32ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
+		static bool testRGBA32ToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag flag, const double testDuration, Worker& worker);
 
 		/**
 		 * Tests the exact RGBA32 to YA16 conversion.

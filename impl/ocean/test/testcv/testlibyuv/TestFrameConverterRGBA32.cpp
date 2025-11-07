@@ -135,7 +135,7 @@ bool TestFrameConverterRGBA32::testConvertRGBA32ToY8(const double testDuration, 
 					HighPerformanceStatistic& performnace = useWorker ? performanceOceanMultiCore : performanceOceanSingleCore;
 
 					performnace.start();
-					CV::FrameConverterRGBA32::convertRGBA32ToY8(frameRGBA32.constdata<uint8_t>(), frameY8.data<uint8_t>(), frameRGBA32.width(), frameRGBA32.height(), CV::FrameConverterRGBA32::CONVERT_NORMAL, frameRGBA32.paddingElements(), frameY8.paddingElements(), WorkerPool::get().conditionalScopedWorker(useWorker)());
+					CV::FrameConverterRGBA32::convertRGBA32ToY8FullRange(frameRGBA32.constdata<uint8_t>(), frameY8.data<uint8_t>(), frameRGBA32.width(), frameRGBA32.height(), CV::FrameConverterRGBA32::CONVERT_NORMAL, frameRGBA32.paddingElements(), frameY8.paddingElements(), WorkerPool::get().conditionalScopedWorker(useWorker)());
 					performnace.stop();
 
 					double localAverageErrorToInteger = NumericD::maxValue();
