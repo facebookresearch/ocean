@@ -30,7 +30,7 @@ size_t ALiveAudio::ChunkManager::StereoChunk::addElements(const SampleType sampl
 	const size_t remainingElements = buffer_.size() - position_;
 	ocean_assert(remainingElements % 2 == 0);
 
-	if (remainingElements == 0)
+	if (remainingElements == 0 || remainingElements % 2 != 0)
 	{
 		return 0;
 	}
@@ -581,7 +581,7 @@ void ALiveAudio::onFillBufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQ
 	ocean_assert(bufferQueue != nullptr);
 	ocean_assert(bufferQueue == slBufferQueueInterface_);
 
-	// the oldst buffer has been processed by OpenSL
+	// the oldest buffer has been processed by OpenSL
 	chunkManager_.fillBufferQueue(bufferQueue);
 }
 

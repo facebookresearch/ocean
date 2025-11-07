@@ -137,7 +137,7 @@ class OCEAN_MEDIA_A_EXPORT ALibrary : public Library
 		 * Initializes the SL audio engine.
 		 * @return True, if succeeded
 		 */
-		bool initializerAudioEngine();
+		bool initializeAudioEngine();
 
 		/**
 		 * Releases the SL audio engine.

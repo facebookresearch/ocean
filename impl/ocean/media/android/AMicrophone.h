@@ -155,7 +155,7 @@ class OCEAN_MEDIA_A_EXPORT AMicrophone final :
 		/// The SL recorder interface.
 		SLRecordItf slRecordInterface_ = nullptr;
 
-		/// THe SL buffer queue interface.
+		/// The SL buffer queue interface.
 		SLAndroidSimpleBufferQueueItf slBufferQueueInterface_ = nullptr;
 
 		/// The buffer for the sample queue.

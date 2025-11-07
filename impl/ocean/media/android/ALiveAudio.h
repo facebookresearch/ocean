@@ -340,7 +340,7 @@ class OCEAN_MEDIA_A_EXPORT ALiveAudio final :
 		/// The SL player interface.
 		SLPlayItf slPlayInterface_ = nullptr;
 
-		/// THe SL buffer queue interface.
+		/// The SL buffer queue interface.
 		SLAndroidSimpleBufferQueueItf slBufferQueueInterface_ = nullptr;
 
 		/// The SL output mix object.

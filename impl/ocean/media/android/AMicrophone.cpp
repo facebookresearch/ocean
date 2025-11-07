@@ -7,12 +7,9 @@
 
 #include "ocean/media/android/AMicrophone.h"
 
-#include "ocean/base/Thread.h"
 #include "ocean/base/Utilities.h"
 
 #include "ocean/math/Numeric.h"
-
-#include "ocean/media/Manager.h"
 
 #include <SLES/OpenSLES_AndroidConfiguration.h>
 
@@ -115,7 +112,10 @@ bool AMicrophone::start()
 					SLboolean isEnabled = false;
 					if ((*slAcousticEchoCancelEffect_)->IsEnabled(slAcousticEchoCancelEffect_, slAcousticEchoCancelerEffectImplementationId_, &isEnabled) == SL_RESULT_SUCCESS)
 					{
-						Log::warning() << "Acoustic Echo Cancel effect may not be enabled";
+						if (!isEnabled)
+						{
+							Log::warning() << "Acoustic Echo Cancel effect may not be enabled";
+						}
 					}
 				}
 				else

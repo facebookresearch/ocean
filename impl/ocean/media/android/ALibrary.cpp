@@ -211,7 +211,7 @@ MediumRef ALibrary::newAudio(const std::string& url, bool useExclusive)
 
 	if (slEngine_ == nullptr)
 	{
-		if (!initializerAudioEngine())
+		if (!initializeAudioEngine())
 		{
 			return MediumRef();
 		}
@@ -250,7 +250,7 @@ MediumRef ALibrary::newLiveAudio(const std::string& url, bool useExclusive)
 
 	if (slEngine_ == nullptr)
 	{
-		if (!initializerAudioEngine())
+		if (!initializeAudioEngine())
 		{
 			return MediumRef();
 		}
@@ -289,7 +289,7 @@ MediumRef ALibrary::newMicrophone(const std::string& url, bool useExclusive)
 
 	if (slEngine_ == nullptr)
 	{
-		if (!initializerAudioEngine())
+		if (!initializeAudioEngine())
 		{
 			return MediumRef();
 		}
@@ -314,7 +314,7 @@ MediumRef ALibrary::newMicrophone(const std::string& url, bool useExclusive)
 	return MediumRefManager::get().registerMedium(medium);
 }
 
-bool ALibrary::initializerAudioEngine()
+bool ALibrary::initializeAudioEngine()
 {
 	ocean_assert(slEngine_ == nullptr);
 

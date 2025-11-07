@@ -704,7 +704,7 @@ bool ALiveVideo::createCamera(FrameType& frameType)
 	}
 
 	float cameraSensorPhysicalSizeX = -1.0f;
-	if (cameraSensorPysicalSize(*cameraManager, cameraId, cameraSensorPhysicalSizeX))
+	if (cameraSensorPhysicalSize(*cameraManager, cameraId, cameraSensorPhysicalSizeX))
 	{
 		Log::debug() << "camera " << cameraId << ", Physical sensor size: " << cameraSensorPhysicalSizeX;
 	}
@@ -2088,7 +2088,7 @@ bool ALiveVideo::cameraAvailableFocusModes(ACameraManager* cameraManager, const 
 	return true;
 }
 
-bool ALiveVideo::cameraSensorPysicalSize(ACameraManager* cameraManager, const std::string& cameraId, float& cameraSensorPhysicalSizeX)
+bool ALiveVideo::cameraSensorPhysicalSize(ACameraManager* cameraManager, const std::string& cameraId, float& cameraSensorPhysicalSizeX)
 {
 	ocean_assert(cameraManager != nullptr && !cameraId.empty());
 
@@ -2098,10 +2098,10 @@ bool ALiveVideo::cameraSensorPysicalSize(ACameraManager* cameraManager, const st
 
 	if (cameraMetadata.isValid())
 	{
-		ACameraMetadata_const_entry constEntryPysicalSize = {};
-		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_SENSOR_INFO_PHYSICAL_SIZE, &constEntryPysicalSize) == ACAMERA_OK)
+		ACameraMetadata_const_entry constEntryPhysicalSize = {};
+		if (NativeCameraLibrary::get().ACameraMetadata_getConstEntry(*cameraMetadata, ACAMERA_SENSOR_INFO_PHYSICAL_SIZE, &constEntryPhysicalSize) == ACAMERA_OK)
 		{
-			cameraSensorPhysicalSizeX = constEntryPysicalSize.data.f[0];
+			cameraSensorPhysicalSizeX = constEntryPhysicalSize.data.f[0];
 
 			result = true;
 		}

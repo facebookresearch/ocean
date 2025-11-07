@@ -107,7 +107,7 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 				/**
 				 * Creates a new device object.
 				 * @param id The id of the device, must be valid
-				 * @param name The human redable name of the device, must be valid
+				 * @param name The human readable name of the device, must be valid
 				 * @param lensFacing The direction of the device
 				 * @param metadataMap The optional metadata map of the device
 				 */
@@ -479,7 +479,7 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		 * @param cameraSensorPhysicalSizeX Resulting horizontal physical size of the sensor
 		 * @return True, if succeeded
 		 */
-		static bool cameraSensorPysicalSize(ACameraManager* cameraManager, const std::string& cameraId, float& cameraSensorPhysicalSizeX);
+		static bool cameraSensorPhysicalSize(ACameraManager* cameraManager, const std::string& cameraId, float& cameraSensorPhysicalSizeX);
 
 		/**
 		 * Determines the horizontal field of view from the camera's metadata based on `ACAMERA_LENS_FOCAL_LENGTH`.
