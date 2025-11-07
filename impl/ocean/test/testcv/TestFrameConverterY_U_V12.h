@@ -54,7 +54,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		static bool testY_U_V12ToY_U_V12(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Y_U_V12 (limited range) to BGR24 (full range) conversion.
+		 * Tests the Y_U_V12_LIMITED_RANGE to BGR24 (full range) conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param conversionFlag The conversion flag that has been applied during conversion
@@ -65,7 +65,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		static bool testY_U_V12LimitedRangeToBGR24FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Y_U_V12 (full range) to BGR24 (full range) conversion.
+		 * Tests the Y_U_V12_FULL_RANGE to BGR24 (full range) conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param conversionFlag The conversion flag that has been applied during conversion
@@ -76,7 +76,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		static bool testY_U_V12FullRangeToBGR24FullRangePrecision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Y_U_V12 (limited range) to BGRA32 (full range) conversion with 6 bit precision.
+		 * Tests the Y_U_V12_LIMITED_RANGE to BGRA32 (full range) conversion with 6 bit precision.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param conversionFlag The conversion flag that has been applied during conversion
@@ -87,7 +87,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		static bool testY_U_V12LimitedRangeToBGRA32FullRangePrecision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Y_U_V12 (limited range) to RGB24 (full range) conversion.
+		 * Tests the Y_U_V12_LIMITED_RANGE to RGB24 (full range) conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param conversionFlag The conversion flag that has been applied during conversion
@@ -98,7 +98,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		static bool testY_U_V12LimitedRangeToRGB24FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Y_U_V12 (limited range) to RGB24 (full range) conversion with 6 bit precision.
+		 * Tests the Y_U_V12_LIMITED_RANGE to RGB24 (full range) conversion with 6 bit precision.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param conversionFlag The conversion flag that has been applied during conversion
@@ -109,7 +109,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		static bool testY_U_V12LimitedRangeToRGB24FullRangePrecision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Y_U_V12 (full range) to RGB24 (full range) conversion.
+		 * Tests the Y_U_V12_FULL_RANGE to RGB24 (full range) conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param conversionFlag The conversion flag that has been applied during conversion
@@ -120,7 +120,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		static bool testY_U_V12FullRangeToRGB24FullRangePrecision6Bit(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Y_U_V12 (limited range) to RGBA32 (full range) conversion with 6 bit precision.
+		 * Tests the Y_U_V12_LIMITED_RANGE to RGBA32 (full range) conversion with 6 bit precision.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param conversionFlag The conversion flag that has been applied during conversion
@@ -153,18 +153,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		static bool testY_U_V12ToYVU24(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Y_U_V12 to Y8 conversion.
-		 * @param width The width of the original frame in pixel, with range [1, infinity)
-		 * @param height The height of the original frame in pixel, with range [1, infinity)
-		 * @param conversionFlag The conversion flag that has been applied during conversion
-		 * @param testDuration Number of seconds for each test, with range (0, infinity)
-		 * @param worker The worker object to distribute the computation
-		 * @return True, if succeeded
-		 */
-		static bool testY_U_V12ToY8(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
-
-		/**
-		 * Tests the Y_U_V12 (limited range) to Y8 (limited range) conversion.
+		 * Tests the Y_U_V12_LIMITED_RANGE to Y8_LIMITED_RANGE conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param conversionFlag The conversion flag that has been applied during conversion
@@ -175,7 +164,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		static bool testY_U_V12LimitedRangeToY8LimitedRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Y_U_V12 (full range) to Y8 (full range) conversion.
+		 * Tests the Y_U_V12_FULL_RANGE to Y8_FULL_RANGE conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param conversionFlag The conversion flag that has been applied during conversion
@@ -186,7 +175,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		static bool testY_U_V12FullRangeToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Y_U_V12 (limited range) to Y8 (full range) conversion.
+		 * Tests the Y_U_V12_LIMITED_RANGE to Y8_FULL_RANGE conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param conversionFlag The conversion flag that has been applied during conversion
@@ -197,7 +186,7 @@ class OCEAN_TEST_CV_EXPORT TestFrameConverterY_U_V12
 		static bool testY_U_V12LimitedRangeToY8FullRange(const unsigned int width, const unsigned int height, const CV::FrameConverter::ConversionFlag conversionFlag, const double testDuration, Worker& worker);
 
 		/**
-		 * Tests the Y_U_V12 (full range) to Y8 (limited range) conversion.
+		 * Tests the Y_U_V12_FULL_RANGE to Y8_LIMITED_RANGE conversion.
 		 * @param width The width of the original frame in pixel, with range [1, infinity)
 		 * @param height The height of the original frame in pixel, with range [1, infinity)
 		 * @param conversionFlag The conversion flag that has been applied during conversion
