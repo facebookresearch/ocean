@@ -138,6 +138,13 @@ class OCEAN_MEDIA_A_EXPORT AMicrophone final :
 		 */
 		static void onFillBufferQueueCallback(SLAndroidSimpleBufferQueueItf bufferQueue, void* context);
 
+		/**
+		 * Translates the value of a recording preset to a readable string.
+		 * @param presetValue The preset value to translate
+		 * @return The readable string
+		 */
+		static std::string translateRecordingPreset(const SLuint32 presetValue);
+
 	protected:
 
 		/// Start timestamp.

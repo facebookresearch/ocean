@@ -317,6 +317,10 @@ bool AMicrophone::initialize(const SLEngineItf& slEngineInterface, const Microph
 
 	ocean_assert(presetValue != SL_ANDROID_RECORDING_PRESET_NONE);
 
+#ifdef OCEAN_DEBUG
+	Log::debug() << "AMicrophone: Using recording preset: " << translateRecordingPreset(presetValue);
+#endif
+
 	if (noError && (*slInputConfig)->SetConfiguration(slInputConfig, SL_ANDROID_KEY_RECORDING_PRESET, &presetValue, sizeof(presetValue)) != SL_RESULT_SUCCESS)
 	{
 		Log::error() << "Failed to set SL recording configuration";
@@ -446,6 +450,33 @@ void AMicrophone::onFillBufferQueueCallback(SLAndroidSimpleBufferQueueItf buffer
 	ocean_assert(microphone != nullptr);
 
 	microphone->onFillBufferQueueCallback(bufferQueue);
+}
+
+std::string AMicrophone::translateRecordingPreset(const SLuint32 presetValue)
+{
+	switch (presetValue)
+	{
+		case SL_ANDROID_RECORDING_PRESET_NONE:
+			return "SL_ANDROID_RECORDING_PRESET_NONE";
+
+		case SL_ANDROID_RECORDING_PRESET_GENERIC:
+			return "SL_ANDROID_RECORDING_PRESET_GENERIC";
+
+		case SL_ANDROID_RECORDING_PRESET_CAMCORDER:
+			return "SL_ANDROID_RECORDING_PRESET_CAMCORDER";
+
+		case SL_ANDROID_RECORDING_PRESET_VOICE_RECOGNITION:
+			return "SL_ANDROID_RECORDING_PRESET_VOICE_RECOGNITION";
+
+		case SL_ANDROID_RECORDING_PRESET_VOICE_COMMUNICATION:
+			return "SL_ANDROID_RECORDING_PRESET_VOICE_COMMUNICATION";
+
+		case SL_ANDROID_RECORDING_PRESET_UNPROCESSED:
+			return "SL_ANDROID_RECORDING_PRESET_UNPROCESSED";
+	}
+
+	ocean_assert(false && "Unknown preset");
+	return "Unknown";
 }
 
 }
