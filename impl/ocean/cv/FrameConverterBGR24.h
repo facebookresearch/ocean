@@ -84,7 +84,7 @@ class OCEAN_CV_EXPORT FrameConverterBGR24 : public FrameConverter
 		static inline void convertBGR24ToRGBA32(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, const uint8_t alphaValue = 0xFF, Worker* worker = nullptr);
 
 		/**
-		 * Converts a BGR 24 bit frame to a gray scale frame.
+		 * Converts a BGR 24 bit frame to a gray scale frame with full range [0, 255].
 		 * Gray = Red * 0.299 + Green * 0.587 + Blue * 0.114
 		 * @param source The source frame buffer, must be valid
 		 * @param target The target frame buffer, must be valid
@@ -95,7 +95,7 @@ class OCEAN_CV_EXPORT FrameConverterBGR24 : public FrameConverter
 		 * @param targetPaddingElements The number of padding elements at the end of each target row, in elements, with range [0, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 */
-		static inline void convertBGR24ToY8(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
+		static inline void convertBGR24ToY8FullRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker = nullptr);
 
 		/**
 		 * Converts a BGR 24 bit frame to a YUV 24 bit frame by the exact conversion.
@@ -233,7 +233,7 @@ inline void FrameConverterBGR24::convertBGR24ToRGBA32(const uint8_t* source, uin
 	FrameChannels::shuffleChannelsAndSetLastChannelValue<uint8_t, 3u, 4u, shufflePattern>(source, alphaValue, target, width, height, flag, sourcePaddingElements, targetPaddingElements, worker);
 }
 
-inline void FrameConverterBGR24::convertBGR24ToY8(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
+inline void FrameConverterBGR24::convertBGR24ToY8FullRange(const uint8_t* source, uint8_t* target, const unsigned int width, const unsigned int height, const ConversionFlag flag, const unsigned int sourcePaddingElements, const unsigned int targetPaddingElements, Worker* worker)
 {
 	ocean_assert(source != nullptr && target != nullptr);
 	ocean_assert(width >= 1u && height >= 1u);
