@@ -369,7 +369,7 @@ bool ImageTif::encodeImage(const Frame& frame, std::vector<uint8_t>& buffer, con
 		return false;
 	}
 
-	ocean_assert(outputFrame->pixelFormat() != FrameType::FORMAT_RGB24 || outputFrame->pixelFormat() != FrameType::FORMAT_RGBA32);
+	ocean_assert(outputFrame->pixelFormat() == FrameType::FORMAT_RGB24 || outputFrame->pixelFormat() == FrameType::FORMAT_RGBA32);
 	const unsigned short tiffSamplesPerPixel = outputFrame->pixelFormat() == FrameType::FORMAT_RGB24 ? 3u : 4u;
 	const unsigned int tiffBitsPerSample = 8u;
 

@@ -349,7 +349,7 @@ bool ImagePng::translatePixelFormat(const FrameType::PixelFormat pixelFormat, in
 			pngColorType = PNG_COLOR_TYPE_GA;
 			break;
 
-		case FrameType::FrameType::FORMAT_RGB24:
+		case FrameType::FORMAT_RGB24:
 			pngColorType = PNG_COLOR_TYPE_RGB;
 			break;
 

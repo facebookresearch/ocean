@@ -324,7 +324,7 @@ Frames ImageGif::decodeImages(const void* buffer, const size_t size, const size_
 							// we make a copy of the current image, but set the region of the current subFrame to the previous image
 
 							frames.emplace_back(frame, Frame::ACM_COPY_REMOVE_PADDING_LAYOUT);
-							frames.back().copy(subFrameLeft, subFrameTop, frame.subFrame(subFrameLeft, subFrameTop, subFrameWidth, subFrameHeight));
+							frames.back().copy(subFrameLeft, subFrameTop, frames[imageIndex - 1].subFrame(subFrameLeft, subFrameTop, subFrameWidth, subFrameHeight));
 						}
 					}
 
