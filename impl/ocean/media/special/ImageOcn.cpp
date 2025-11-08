@@ -400,12 +400,6 @@ bool ImageOcn::readValue(const uint8_t*& data, size_t& remainingSize, T& value)
 
 bool ImageOcn::readValue(const uint8_t*& data, size_t& remainingSize, const size_t numberCharacters, std::string& value)
 {
-	if (value.size() >= numberCharacters)
-	{
-		ocean_assert(false && "This should never happen!");
-		return false;
-	}
-
 	if (remainingSize < numberCharacters)
 	{
 		ocean_assert(false && "This should never happen!");

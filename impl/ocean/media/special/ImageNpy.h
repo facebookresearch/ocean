@@ -23,7 +23,7 @@ namespace Special
 
 /**
  * This class implements read and write functions for NPY (NumPy) images.
- * @ingroup mediaoil
+ * @ingroup mediaspecial
  */
 class OCEAN_MEDIA_SPECIAL_EXPORT ImageNpy
 {

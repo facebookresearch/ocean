@@ -44,10 +44,10 @@ class OCEAN_MEDIA_SPECIAL_EXPORT Image
 		 * Encodes (writes) a given frame as image (with specified image type) to a resulting buffer.
 		 * @param frame The frame to be written, must be valid
 		 * @param imageType The file extension of the image to be created (e.g. jpg, png, bmp, or tif), must be defined
-		 * @param buffer The resulting buffer storing the binary information of the BMP image
-		 * @param allowConversion True, to allow an internal conversion of the frame if BMP does not support the given frame type; False, to prevent a conversion and to stop creating the buffer
+		 * @param buffer The resulting buffer storing the binary information of the image
+		 * @param allowConversion True, to allow an internal conversion of the frame if the encoder does not support the given frame type natively; False, to prevent a conversion and to stop creating the buffer
 		 * @param hasBeenConverted Optional resulting statement whether the frame had to be converted to a different pixel format before it could be written; True, if so; False, if not
-		 * @return True, if succeeded; False, if the frame could not be written as BMP image e.g., if the frame contained an alpha channel
+		 * @return True, if succeeded; False, if the frame could not be encoded
 		 * @see readImage().
 		 */
 		static bool encodeImage(const Frame& frame, const std::string& imageType, std::vector<uint8_t>& buffer, const bool allowConversion = true, bool* hasBeenConverted = nullptr);
@@ -63,8 +63,8 @@ class OCEAN_MEDIA_SPECIAL_EXPORT Image
 		/**
 		 * Writes a given frame to a specified file.
 		 * @param frame The frame to be written, must be valid
-		 * @param filename The name of the file to which the frame will be written, must contain a valid image extension like e.g. jpg, png, bmp, or tif), must be valid
-		 * @param allowConversion True, to allow an internal conversion of the frame if BMP does not support the given frame type; False, to prevent a conversion and to stop creating the buffer
+		 * @param filename The name of the file to which the frame will be written, must contain a valid image extension like e.g. jpg, png, bmp, or tif, must be valid
+		 * @param allowConversion True, to allow an internal conversion of the frame if the encoder does not support the given frame type natively; False, to prevent a conversion and to stop creating the buffer
 		 * @param hasBeenConverted Optional resulting statement whether the frame had to be converted to a different pixel format before it could be written; True, if so; False, if not
 		 * @return True, if succeeded
 		 * @see readImage().
