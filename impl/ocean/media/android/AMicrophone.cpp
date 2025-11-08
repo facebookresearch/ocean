@@ -307,9 +307,9 @@ bool AMicrophone::initialize(const SLEngineItf& slEngineInterface, const Microph
 		}
 		else
 		{
-			// no specifc configuration, we use best audio quality
+			// no specifc configuration, we use the default which is generic
 
-			presetValue = SL_ANDROID_RECORDING_PRESET_VOICE_COMMUNICATION;
+			presetValue = SL_ANDROID_RECORDING_PRESET_GENERIC;
 
 			resultingMicrophoneConfigurations = MicrophoneConfigurations(resultingMicrophoneConfigurations | MC_VOICE_COMMUNICATION);
 		}
