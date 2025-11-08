@@ -41,13 +41,13 @@ Utilities::CoordinateSystemBase::CoordinateSystemBase(const unsigned int modules
 }
 
 Utilities::CoordinateSystem::CoordinateSystem(const unsigned int version, const Scalar scale) :
-	Utilities::CoordinateSystemBase(QRCode::modulesPerSide(version), scale)	
+	Utilities::CoordinateSystemBase(QRCode::modulesPerSide(version), scale)
 {
 	ocean_assert(version >= 1u && version <= 40u);
 }
 
 Utilities::MicroQRCoordinateSystem::MicroQRCoordinateSystem(const unsigned int version, const Scalar scale) :
-	Utilities::CoordinateSystemBase(MicroQRCode::modulesPerSide(version), scale)	
+	Utilities::CoordinateSystemBase(MicroQRCode::modulesPerSide(version), scale)
 {
 	ocean_assert(version >= 1u && version <= 4u);
 }
@@ -1626,7 +1626,7 @@ bool Utilities::computeCodeCenterInImage(const AnyCamera& anyCamera, const Homog
 			Vector2(Scalar(modulesPerSide), Scalar(0)), // TR
 		};
 
-		const CoordinateSystem coordinateSystem(modulesPerSide, Scalar(0.5) * codeSize);
+		const CoordinateSystem coordinateSystem(code.version(), Scalar(0.5) * codeSize);
 
 		Scalar squareRadius = Scalar(0);
 
