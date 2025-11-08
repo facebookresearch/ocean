@@ -1096,10 +1096,10 @@ bool Utilities::computeNumberPixelsPerModule(const AnyCamera& anyCamera, const H
 Scalar Utilities::computeModuleDiagonalLength(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_code, const CoordinateSystemBase& coordinateSystem, const unsigned int xModule, const unsigned int yModule)
 {
 	const Scalar xTop = coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(xModule));
-	const Scalar yTop = coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(yModule));
+	const Scalar yTop = coordinateSystem.convertCodeSpaceToObjectSpaceY(Scalar(yModule));
 
 	const Scalar xBottom = coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(xModule + 1u));
-	const Scalar yBottom = coordinateSystem.convertCodeSpaceToObjectSpaceX(Scalar(yModule + 1u));
+	const Scalar yBottom = coordinateSystem.convertCodeSpaceToObjectSpaceY(Scalar(yModule + 1u));
 
 	const Vector2 topLeft = anyCamera.projectToImageIF(flippedCamera_T_code, Vector3(xTop, yTop, Scalar(0)));
 	const Vector2 topRight = anyCamera.projectToImageIF(flippedCamera_T_code, Vector3(xBottom, yTop, Scalar(0)));
