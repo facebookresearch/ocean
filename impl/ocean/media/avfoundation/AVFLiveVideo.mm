@@ -631,7 +631,7 @@ bool AVFLiveVideo::createCaptureSession()
 	ocean_assert(captureDevice_ != nullptr);
 	ocean_assert(captureSession_ == nullptr && captureDeviceInput_ == nullptr && captureVideoDataOutput_ == nullptr && sampleBufferDelegate_ == nullptr);
 
-	NSError* errorValue;
+	NSError* errorValue = nullptr;
 	captureDeviceInput_ = [[AVCaptureDeviceInput alloc] initWithDevice:captureDevice_ error:&errorValue];
 
 	if (errorValue)
