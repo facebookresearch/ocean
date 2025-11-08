@@ -807,12 +807,12 @@ bool CalibrationBoardDetector::determineContinuousLine(const size_t pointIndexA,
 	{
 		const Vector2& previousPoint = points[lineIndices.back()].observation();
 
-		const Vector2 precitedPoint = previousPoint + updatedOffset;
+		const Vector2 predictedPoint = previousPoint + updatedOffset;
 
 		const Scalar maxSqrDistance = updatedOffset.sqr() * Numeric::sqr(maxDistancePercentage);
 		ocean_assert(Numeric::isWeakEqual(Numeric::sqrt(maxSqrDistance), updatedOffset.length() * maxDistancePercentage));
 
-		const size_t index = PointDetector::closestPoint(precitedPoint, sign, pointsDistributionArray, points, maxSqrDistance);
+		const size_t index = PointDetector::closestPoint(predictedPoint, sign, pointsDistributionArray, points, maxSqrDistance);
 
 		if (index == size_t(-1))
 		{
@@ -843,12 +843,12 @@ bool CalibrationBoardDetector::determineContinuousLine(const size_t pointIndexA,
 	{
 		const Vector2& previousPoint = points[lineIndices.front()].observation();
 
-		const Vector2 precitedPoint = previousPoint + updatedOffset;
+		const Vector2 predictedPoint = previousPoint + updatedOffset;
 
 		const Scalar maxSqrDistance = updatedOffset.sqr() * Numeric::sqr(maxDistancePercentage);
 		ocean_assert(Numeric::isWeakEqual(Numeric::sqrt(maxSqrDistance), updatedOffset.length() * maxDistancePercentage));
 
-		const size_t index = PointDetector::closestPoint(precitedPoint, sign, pointsDistributionArray, points, maxSqrDistance);
+		const size_t index = PointDetector::closestPoint(predictedPoint, sign, pointsDistributionArray, points, maxSqrDistance);
 
 		if (index == size_t(-1))
 		{

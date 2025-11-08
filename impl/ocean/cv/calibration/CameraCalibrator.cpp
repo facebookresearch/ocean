@@ -318,10 +318,10 @@ bool CameraCalibrator::finalize()
 		return false;
 	}
 
-	HomogenousMatrices4 board_T_optimzedCameras;
+	HomogenousMatrices4 board_T_optimizedCameras;
 	Scalar initialError;
 	Scalar finalError;
-	camera_ = CameraCalibrator::determinePreciseCamera(observations_.data(), observations_.size(), CameraCalibrator::OptimizationStrategy::OS_ALL_PARAMETERS_AFTER_ANOTHER, &board_T_optimzedCameras, Geometry::Estimator::ET_SQUARE, &initialError, &finalError);
+	camera_ = CameraCalibrator::determinePreciseCamera(observations_.data(), observations_.size(), CameraCalibrator::OptimizationStrategy::OS_ALL_PARAMETERS_AFTER_ANOTHER, &board_T_optimizedCameras, Geometry::Estimator::ET_SQUARE, &initialError, &finalError);
 
 	if (!camera_)
 	{
@@ -330,13 +330,13 @@ bool CameraCalibrator::finalize()
 		return false;
 	}
 
-	ocean_assert(board_T_optimzedCameras.size() == observations_.size());
+	ocean_assert(board_T_optimizedCameras.size() == observations_.size());
 
 	for (size_t nObservation = 0; nObservation < observations_.size(); ++nObservation)
 	{
 		CalibrationBoardObservation& observation = observations_[nObservation];
 
-		observation.updateCamera(camera_, board_T_optimzedCameras[nObservation]);
+		observation.updateCamera(camera_, board_T_optimizedCameras[nObservation]);
 	}
 
 	cameraProjectionError_ = finalError;
@@ -400,9 +400,9 @@ bool CameraCalibrator::determineInitialPoseWithValidMarkerCandidates(const AnyCa
 		const MarkerCandidate& markerCandidate = markerCandidates_[markerCandidateIndex];
 
 		ocean_assert(markerCandidate.hasMarkerCoordinate());
-		const CV::PixelPosition& markerCoodinate = markerCandidate.markerCoordinate();
+		const CV::PixelPosition& markerCoordinate = markerCandidate.markerCoordinate();
 
-		reusableMarkerCoordinateUsageFrame_.pixel<uint8_t>(markerCoodinate.x(), markerCoodinate.y())[0] = 0x00u;
+		reusableMarkerCoordinateUsageFrame_.pixel<uint8_t>(markerCoordinate.x(), markerCoordinate.y())[0] = 0x00u;
 	}
 
 	Indices32 bestUsedMarkerCandidatesAccessorIndices;

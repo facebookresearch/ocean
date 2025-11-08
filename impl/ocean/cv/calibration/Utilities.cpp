@@ -180,7 +180,7 @@ bool Utilities::paintCalibrationBoardObservation(Frame& frame, const MetricCalib
 Frame Utilities::visualizeDistortionGrid(const AnyCamera& camera, const unsigned int horizontalBins, const unsigned int verticalBins, const bool undistort, Worker* worker)
 {
 	ocean_assert(camera.isValid());
-	ocean_assert(horizontalBins != 0u || verticalBins != 0u);
+	ocean_assert(horizontalBins != 0u && verticalBins != 0u);
 
 	Frame frame(FrameType(camera.width(), camera.height(), FrameType::FORMAT_Y8, FrameType::ORIGIN_UPPER_LEFT));
 	frame.setValue(0xFFu);

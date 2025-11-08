@@ -72,15 +72,15 @@ Vectors3 MetricCalibrationBoard::objectPoints(ObjectPointIds* objectPointIds) co
 	{
 		for (size_t xMarker = 0; xMarker < xMarkers_; ++xMarker)
 		{
-			const MarkerCoordinate markerCoodinate((unsigned int)(xMarker), (unsigned int)(yMarker));
+			const MarkerCoordinate markerCoordinate((unsigned int)(xMarker), (unsigned int)(yMarker));
 
 			for (size_t indexInMarker = 0; indexInMarker < Marker::numberPoints(); ++indexInMarker)
 			{
-				result.push_back(objectPoint(markerCoodinate, indexInMarker));
+				result.push_back(objectPoint(markerCoordinate, indexInMarker));
 
 				if (objectPointIds != nullptr)
 				{
-					objectPointIds->emplace_back(markerCoodinate, indexInMarker);
+					objectPointIds->emplace_back(markerCoordinate, indexInMarker);
 				}
 			}
 		}
