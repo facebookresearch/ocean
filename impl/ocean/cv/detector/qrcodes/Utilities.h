@@ -360,6 +360,22 @@ class OCEAN_CV_DETECTOR_QRCODES_EXPORT Utilities
 		static void drawObservations(const AnyCamera& anyCamera, Frame& frame, const MicroQRCodeDetector2D::Observations& observations, const MicroQRCodes& codes);
 
 		/**
+		 * Draws a QR code visualization into a given frame using 3D pose information.
+		 * This function renders a QR code by projecting it from world space to image space, drawing:
+		 * 1. A red outline around the QR code boundary
+		 * 2. Individual modules
+		 * 3. A 3D coordinate system at the center of the QR code
+		 * @param frame The frame into which the QR code will be drawn, must be valid, have its origin in the upper left corner, and have a pixel format that is compatible with RGB24
+		 * @param camera The camera profile used for projecting 3D points to image coordinates, must be valid
+		 * @param world_T_camera The transformation that maps points from camera coordinate system to world coordinate system, i.e., `worldPoint = world_T_camera * cameraPoint`, must be valid
+		 * @param code The QR code that will be drawn, must be valid
+		 * @param codeSize The physical size (edge length) of the QR code in world space units (typically meters), range: (0, infinity)
+		 * @param world_T_code The transformation that maps points from the QR code's local coordinate system to world coordinate system, i.e., `worldPoint = world_T_code * codePoint`, must be valid
+		 * @sa drawObservations(), drawCoordinateSystemIF()
+		 */
+		static void drawQRCode(Frame& frame, const AnyCamera& camera, const HomogenousMatrix4& world_T_camera, const QRCode& code, const Scalar codeSize, const HomogenousMatrix4& world_T_code);
+
+		/**
 		 * Draw the location of a finder pattern in a given frame.
 		 * @param frame The frame in which the finder pattern will be drawn, must be valid
 		 * @param finderPattern The finder pattern that will be drawn

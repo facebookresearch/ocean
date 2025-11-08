@@ -451,6 +451,86 @@ void Utilities::drawObservations(const AnyCamera& anyCamera, Frame& frame, const
 	}
 }
 
+void Utilities::drawQRCode(Frame& frame, const AnyCamera& camera, const HomogenousMatrix4& world_T_camera, const QRCode& code, const Scalar codeSize, const HomogenousMatrix4& world_T_code)
+{
+	ocean_assert(frame.isValid() && FrameType::arePixelFormatsCompatible(frame.pixelFormat(), FrameType::FORMAT_RGB24));
+	ocean_assert(camera.isValid());
+	ocean_assert(world_T_camera.isValid());
+	ocean_assert(code.isValid());
+	ocean_assert(codeSize > 0);
+	ocean_assert(world_T_code.isValid());
+	if (!frame.isValid() || !camera.isValid() || !code.isValid() || codeSize <= Scalar(0) || !world_T_camera.isValid() || !world_T_code.isValid())
+	{
+		return;
+	}
+
+	const HomogenousMatrix4 flippedCamera_T_code = AnyCamera::standard2InvertedFlipped(world_T_code.inverted() * world_T_camera);
+	ocean_assert(flippedCamera_T_code.isValid());
+
+	const Vector3 codeCenter(Scalar(0), Scalar(0), Scalar(0));
+	if (!camera.isObjectPointInFrontIF(flippedCamera_T_code, codeCenter))
+	{
+		// QR code is behind the camera
+		return;
+	}
+
+	// Draw an outline around the code (points are defined in module space)
+	const CoordinateSystem coordinateSystem(code.version(), Scalar(0.5) * codeSize);
+	const unsigned int modulesPerSide = code.modulesPerSide();
+
+	const Vectors2 outlinePointsModules =
+	{
+		Vector2(Scalar(0), Scalar(0)), // TL
+		Vector2(Scalar(0), Scalar(modulesPerSide)), // BL
+		Vector2(Scalar(modulesPerSide), Scalar(modulesPerSide)), // BR
+		Vector2(Scalar(modulesPerSide), Scalar(0)), // TR
+	};
+
+	Vectors2 outlinePointImage;
+	outlinePointImage.reserve(outlinePointsModules.size());
+
+	for (const Vector2& modulePoint : outlinePointsModules)
+	{
+		const Vector3 objectPoint(coordinateSystem.convertCodeSpaceToObjectSpaceX(modulePoint.x()), coordinateSystem.convertCodeSpaceToObjectSpaceY(modulePoint.y()), Scalar(0));
+
+		outlinePointImage.emplace_back(camera.projectToImageIF(flippedCamera_T_code, objectPoint));
+	}
+
+	const uint8_t* outlineColor = CV::Canvas::red(frame.pixelFormat());
+	for (size_t i = 1; i < outlinePointImage.size(); ++i)
+	{
+		drawLine<3u>(camera, frame, outlinePointImage[i - 1], outlinePointImage[i], outlineColor);
+	}
+	drawLine<3u>(camera, frame, outlinePointImage.back(), outlinePointImage.front(), outlineColor);
+
+	// Draw the modules of the code
+	const uint8_t* darkModuleColor = CV::Canvas::white(frame.pixelFormat());
+	const uint8_t* lightModuleColor = CV::Canvas::black(frame.pixelFormat());
+
+	const std::vector<uint8_t>& modules = code.modules();
+	ocean_assert(modules.size() == modulesPerSide * modulesPerSide);
+
+	for (unsigned int y = 0u; y < modulesPerSide; ++y)
+	{
+		for (unsigned int x = 0u; x < modulesPerSide; ++x)
+		{
+			const Vector2 modulePoint(Scalar(x) + Scalar(0.5), Scalar(y) + Scalar(0.5)); // add 0.5 offset to select module center
+			const Vector3 objectPoint(coordinateSystem.convertCodeSpaceToObjectSpaceX(modulePoint.x()), coordinateSystem.convertCodeSpaceToObjectSpaceY(modulePoint.y()), Scalar(0));
+
+			const Vector2 imagePoint = camera.projectToImageIF(flippedCamera_T_code, objectPoint);
+
+			const uint8_t moduleValue = modules[y * modulesPerSide + x];
+			const uint8_t* moduleColor = moduleValue == 0 ? lightModuleColor : darkModuleColor;
+
+			CV::Canvas::point<3u>(frame, imagePoint, moduleColor);
+		}
+	}
+
+	// Draw a coordinate system in the center of the code
+	const HomogenousMatrix4 flippedCamera_T_world = AnyCamera::standard2InvertedFlipped(world_T_camera);
+	drawCoordinateSystemIF<3u, 5u>(frame, flippedCamera_T_world, camera, world_T_code, codeSize / 4);
+}
+
 void Utilities::drawFinderPattern(Frame& frame, const FinderPattern& finderPattern, const uint8_t* color)
 {
 	ocean_assert(frame.isValid());
