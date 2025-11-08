@@ -286,10 +286,6 @@ NativeMediaLibrary::ScopedSubscription NativeMediaLibrary::initialize()
 	AMediaMuxer_new_ = (Function_AMediaMuxer_new*)(dlsym(libraryHandle_, "AMediaMuxer_new"));
 	ocean_assert(AMediaMuxer_new_ != nullptr);
 
-	ocean_assert(AMediaExtractor_selectTrack_ == nullptr);
-	AMediaExtractor_selectTrack_ = (Function_AMediaExtractor_selectTrack*)(dlsym(libraryHandle_, "AMediaExtractor_selectTrack"));
-	ocean_assert(AMediaExtractor_selectTrack_ != nullptr);
-
 	ocean_assert(AMediaMuxer_setLocation_ == nullptr);
 	AMediaMuxer_setLocation_ = (Function_AMediaMuxer_setLocation*)(dlsym(libraryHandle_, "AMediaMuxer_setLocation"));
 	ocean_assert(AMediaMuxer_setLocation_ != nullptr);
@@ -310,7 +306,7 @@ NativeMediaLibrary::ScopedSubscription NativeMediaLibrary::initialize()
 	AMediaMuxer_writeSampleData_ = (Function_AMediaMuxer_writeSampleData*)(dlsym(libraryHandle_, "AMediaMuxer_writeSampleData"));
 	ocean_assert(AMediaMuxer_writeSampleData_ != nullptr);
 
-	if (AMediaMuxer_addTrack_ == nullptr || AMediaMuxer_delete_ == nullptr || AMediaMuxer_new_ == nullptr || AMediaExtractor_selectTrack_ == nullptr || AMediaMuxer_setLocation_ == nullptr || AMediaMuxer_setOrientationHint_ == nullptr || AMediaMuxer_start_ == nullptr || AMediaMuxer_stop_ == nullptr || AMediaMuxer_writeSampleData_ == nullptr)
+	if (AMediaMuxer_addTrack_ == nullptr || AMediaMuxer_delete_ == nullptr || AMediaMuxer_new_ == nullptr || AMediaMuxer_setLocation_ == nullptr || AMediaMuxer_setOrientationHint_ == nullptr || AMediaMuxer_start_ == nullptr || AMediaMuxer_stop_ == nullptr || AMediaMuxer_writeSampleData_ == nullptr)
 	{
 		release();
 		return ScopedSubscription();
@@ -359,7 +355,11 @@ NativeMediaLibrary::ScopedSubscription NativeMediaLibrary::initialize()
 	AMediaExtractor_seekTo_ = (Function_AMediaExtractor_seekTo*)(dlsym(libraryHandle_, "AMediaExtractor_seekTo"));
 	ocean_assert(AMediaExtractor_seekTo_ != nullptr);
 
-	if (AMediaExtractor_advance_ == nullptr || AMediaExtractor_new_ == nullptr || AMediaExtractor_delete_ == nullptr || AMediaExtractor_setDataSource_ == nullptr || AMediaExtractor_setDataSourceFd_ == nullptr || AMediaExtractor_getTrackCount_ == nullptr || AMediaExtractor_getTrackFormat_ == nullptr || AMediaExtractor_readSampleData_ == nullptr || AMediaExtractor_getSampleTime_ == nullptr || AMediaExtractor_seekTo_ == nullptr)
+	ocean_assert(AMediaExtractor_selectTrack_ == nullptr);
+	AMediaExtractor_selectTrack_ = (Function_AMediaExtractor_selectTrack*)(dlsym(libraryHandle_, "AMediaExtractor_selectTrack"));
+	ocean_assert(AMediaExtractor_selectTrack_ != nullptr);
+
+	if (AMediaExtractor_advance_ == nullptr || AMediaExtractor_new_ == nullptr || AMediaExtractor_delete_ == nullptr || AMediaExtractor_setDataSource_ == nullptr || AMediaExtractor_setDataSourceFd_ == nullptr || AMediaExtractor_getTrackCount_ == nullptr || AMediaExtractor_getTrackFormat_ == nullptr || AMediaExtractor_readSampleData_ == nullptr || AMediaExtractor_getSampleTime_ == nullptr || AMediaExtractor_seekTo_ == nullptr || AMediaExtractor_selectTrack_ == nullptr)
 	{
 		release();
 		return ScopedSubscription();
