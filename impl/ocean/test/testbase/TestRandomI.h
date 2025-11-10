@@ -142,6 +142,13 @@ class OCEAN_TEST_BASE_EXPORT TestRandomI
 		 * @return True, if succeeded
 		 */
 		static bool testExtremeValueRange(RandomGenerator& randomGenerator);
+
+		/**
+		 * Tests sequential correlation between random values.
+		 * @param randomGenerator Random randomGenerator object
+		 * @return True, if succeeded
+		 */
+		static bool testSequentialCorrelation(RandomGenerator& randomGenerator);
 };
 
 }

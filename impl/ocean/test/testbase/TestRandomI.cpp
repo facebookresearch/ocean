@@ -125,6 +125,12 @@ bool TestRandomI::test(const double testDuration)
 	allSucceeded = testExtremeValueRange(randomGenerator) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testSequentialCorrelation(randomGenerator) && allSucceeded;
+
+	Log::info() << " ";
 
 	{
 		Log::info() << "Initial seed test:";
@@ -256,6 +262,11 @@ TEST_F(TestRandomI, RandomElementsInitializerList)
 TEST_F(TestRandomI, ExtremeValueRange)
 {
 	EXPECT_TRUE(TestBase::TestRandomI::testExtremeValueRange(randomGenerator_));
+}
+
+TEST_F(TestRandomI, SequentialCorrelation)
+{
+	EXPECT_TRUE(TestBase::TestRandomI::testSequentialCorrelation(randomGenerator_));
 }
 
 namespace TestBase
@@ -2903,6 +2914,50 @@ bool TestRandomI::testExtremeValueRange(RandomGenerator& randomGenerator)
 		}
 	}
 
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestRandomI::testSequentialCorrelation(RandomGenerator& randomGenerator)
+{
+	Log::info() << "Testing sequential value correlation:";
+	Log::info() << " ";
+
+	Validation validation(randomGenerator);
+
+	constexpr unsigned int bins = 100u;
+	std::vector<uint64_t> occurrences(bins * bins, 0ull);
+	constexpr uint64_t iterations = 10000000ull;
+
+	for (uint64_t n = 0ull; n < iterations; ++n)
+	{
+		const uint32_t value1 = randomGenerator.rand() % bins;
+		const uint32_t value2 = randomGenerator.rand() % bins;
+
+		ocean_assert(value1 < bins && value2 < bins);
+		++occurrences[value1 * bins + value2];
+	}
+
+	const double expected = double(iterations) / double(bins * bins);
+	double chiSquared = 0.0;
+
+	for (uint64_t count : occurrences)
+	{
+		const double diff = double(count) - expected;
+		chiSquared += (diff * diff) / expected;
+	}
+
+	const double degreesOfFreedom = double(bins * bins - 1);
+
+	Log::info() << "Created value pairs: " << iterations;
+	Log::info() << "Chi-squared statistic: " << String::toAString(chiSquared, 1u) << ", expected: " << String::toAString(degreesOfFreedom, 1u);
+
+	const double maxExpected = degreesOfFreedom * 1.5;
+
+	OCEAN_EXPECT_LESS_EQUAL(validation, chiSquared, maxExpected);
+
+	Log::info() << " ";
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
