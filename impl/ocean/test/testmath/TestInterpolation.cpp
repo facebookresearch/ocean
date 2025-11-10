@@ -12,6 +12,9 @@
 #include "ocean/math/Interpolation.h"
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -81,96 +84,54 @@ bool TestInterpolation::testLinear(const double /*testDuration*/)
 {
 	Log::info() << "Linear test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	// 1D scalar
 
-	if (NumericF::isNotWeakEqual(Interpolation::linear(0.0f, 2.0f, float(0.8)), 1.6f) || NumericF::isNotWeakEqual(Interpolation::linear(0.0f, 2.0f, double(0.8)), 1.6f))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(Interpolation::linear(0.0f, 2.0f, float(0.8)), 1.6f));
+	OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(Interpolation::linear(0.0f, 2.0f, double(0.8)), 1.6f));
 
-	if (NumericD::isNotWeakEqual(Interpolation::linear(0.0, 2.0, float(0.8)), 1.6) || NumericD::isNotWeakEqual(Interpolation::linear(0.0, 2.0, double(0.8)), 1.6))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(Interpolation::linear(0.0, 2.0, float(0.8)), 1.6));
+	OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(Interpolation::linear(0.0, 2.0, double(0.8)), 1.6));
 
-	if (Numeric::isNotWeakEqual(Interpolation::linear(Scalar(0.0), Scalar(2), Scalar(0.8)), Scalar(1.6)) || Numeric::isNotWeakEqual(Interpolation::linear(Scalar(0), Scalar(2.0), Scalar(0.8)), Scalar(1.6)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(Interpolation::linear(Scalar(0.0), Scalar(2), Scalar(0.8)), Scalar(1.6)));
+	OCEAN_EXPECT_TRUE(validation, Numeric::isWeakEqual(Interpolation::linear(Scalar(0), Scalar(2.0), Scalar(0.8)), Scalar(1.6)));
 
 
 	// 2D vector
 
-	if (!Interpolation::linear(VectorF2(1.0f, 2.0f), VectorF2(2.0f, 4.0f), float(0.5)).isEqual(VectorF2(1.5f, 3.0f), NumericF::weakEps()))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(VectorF2(1.0f, 2.0f), VectorF2(2.0f, 4.0f), float(0.5)).isEqual(VectorF2(1.5f, 3.0f), NumericF::weakEps()));
 
-	if (!Interpolation::linear(VectorD2(1.0, 2.0), VectorD2(2.0, 4.0), float(0.5)).isEqual(VectorD2(1.5, 3.0), NumericD::weakEps())
-		|| !Interpolation::linear(VectorD2(1.0, 2.0), VectorD2(2.0, 4.0), double(0.5)).isEqual(VectorD2(1.5, 3.0), NumericD::weakEps()))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(VectorD2(1.0, 2.0), VectorD2(2.0, 4.0), float(0.5)).isEqual(VectorD2(1.5, 3.0), NumericD::weakEps()));
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(VectorD2(1.0, 2.0), VectorD2(2.0, 4.0), double(0.5)).isEqual(VectorD2(1.5, 3.0), NumericD::weakEps()));
 
-	if (!Interpolation::linear(Vector2(Scalar(1.0), Scalar(2.0)), Vector2(Scalar(2.0), Scalar(4.0)), Scalar(0.5)).isEqual(Vector2(Scalar(1.5), Scalar(3.0)), Numeric::weakEps()))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(Vector2(Scalar(1.0), Scalar(2.0)), Vector2(Scalar(2.0), Scalar(4.0)), Scalar(0.5)).isEqual(Vector2(Scalar(1.5), Scalar(3.0)), Numeric::weakEps()));
 
 
 	// 3D vector
 
-	if (!Interpolation::linear(VectorF3(1.0f, 2.0f, 3.0f), VectorF3(2.0f, 4.0f, 6.0f), float(0.5)).isEqual(VectorF3(1.5f, 3.0f, 4.5f), NumericF::weakEps()))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(VectorF3(1.0f, 2.0f, 3.0f), VectorF3(2.0f, 4.0f, 6.0f), float(0.5)).isEqual(VectorF3(1.5f, 3.0f, 4.5f), NumericF::weakEps()));
 
-	if (!Interpolation::linear(VectorD3(1.0, 2.0, 3.0), VectorD3(2.0, 4.0, 6.0), float(0.5)).isEqual(VectorD3(1.5, 3.0, 4.5), NumericD::weakEps())
-		|| !Interpolation::linear(VectorD3(1.0, 2.0, 3.0), VectorD3(2.0, 4.0, 6.0), double(0.5)).isEqual(VectorD3(1.5, 3.0, 4.5), NumericD::weakEps()))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(VectorD3(1.0, 2.0, 3.0), VectorD3(2.0, 4.0, 6.0), float(0.5)).isEqual(VectorD3(1.5, 3.0, 4.5), NumericD::weakEps()));
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(VectorD3(1.0, 2.0, 3.0), VectorD3(2.0, 4.0, 6.0), double(0.5)).isEqual(VectorD3(1.5, 3.0, 4.5), NumericD::weakEps()));
 
-	if (!Interpolation::linear(Vector3(Scalar(1.0), Scalar(2.0), Scalar(3.0)), Vector3(Scalar(2.0), Scalar(4.0), Scalar(6.0)), Scalar(0.5)).isEqual(Vector3(Scalar(1.5), Scalar(3.0), Scalar(4.5)), Numeric::weakEps()))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(Vector3(Scalar(1.0), Scalar(2.0), Scalar(3.0)), Vector3(Scalar(2.0), Scalar(4.0), Scalar(6.0)), Scalar(0.5)).isEqual(Vector3(Scalar(1.5), Scalar(3.0), Scalar(4.5)), Numeric::weakEps()));
 
 
 	// Quaternion
 
-	if (Interpolation::linear(QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.5f), QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.7f), float(0.5)) != QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.6f))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.5f), QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.7f), float(0.5)) == QuaternionF(VectorF3(1.0f, 0.0f, 0.0f), 0.6f));
 
-	if (Interpolation::linear(QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.5), QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.7), float(0.5)) != QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.6))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.5), QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.7), float(0.5)) == QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.6));
 
-	if (Interpolation::linear(QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.5), QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.7), double(0.5)) != QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.6))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.5), QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.7), double(0.5)) == QuaternionD(VectorD3(1.0, 0.0, 0.0), 0.6));
 
-	if (Interpolation::linear(Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.5)), Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.7)), Scalar(0.5)) != Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.6)))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, Interpolation::linear(Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.5)), Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.7)), Scalar(0.5)) == Quaternion(Vector3(Scalar(1.0), Scalar(0.0), Scalar(0.0)), Scalar(0.6)));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestInterpolation::testBilinear(const double testDuration)
@@ -182,8 +143,8 @@ bool TestInterpolation::testBilinear(const double testDuration)
 	// for 32 bit float values we need to weaken the epsilon by one magnitude
 	const Scalar epsilon = std::is_same<Scalar, float>::value ? Numeric::eps() * Scalar(10) : Numeric::eps();
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -191,16 +152,18 @@ bool TestInterpolation::testBilinear(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			// v00 v01
 			// v10 v11
 
-			const Scalar v00 = Random::scalar(-100, 100);
-			const Scalar v01 = Random::scalar(-100, 100);
-			const Scalar v10 = Random::scalar(-100, 100);
-			const Scalar v11 = Random::scalar(-100, 100);
+			const Scalar v00 = Random::scalar(randomGenerator, -100, 100);
+			const Scalar v01 = Random::scalar(randomGenerator, -100, 100);
+			const Scalar v10 = Random::scalar(randomGenerator, -100, 100);
+			const Scalar v11 = Random::scalar(randomGenerator, -100, 100);
 
-			const Scalar tx = Random::scalar(0, 1);
-			const Scalar ty = Random::scalar(0, 1);
+			const Scalar tx = Random::scalar(randomGenerator, 0, 1);
+			const Scalar ty = Random::scalar(randomGenerator, 0, 1);
 
 			const Scalar result = Interpolation::bilinear(v00, v01, v10, v11, tx, ty);
 
@@ -212,22 +175,17 @@ bool TestInterpolation::testBilinear(const double testDuration)
 
 			const Scalar test = v00 * tx_ * ty_ + v01 * tx * ty_ + v10 * tx_ * ty + v11 * tx * ty;
 
-			if (Numeric::isEqual(result, test, epsilon))
+			if (!Numeric::isEqual(result, test, epsilon))
 			{
-				validIterations++;
+				scopedIteration.setInaccurate();
 			}
-
-			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 bool TestInterpolation::testBilinearSubset(const double testDuration)
@@ -239,8 +197,8 @@ bool TestInterpolation::testBilinearSubset(const double testDuration)
 	// for 32 bit float values we need to weaken the epsilon by one magnitude
 	const Scalar epsilon = std::is_same<Scalar, float>::value ? Numeric::eps() * Scalar(10) : Numeric::eps();
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -248,21 +206,23 @@ bool TestInterpolation::testBilinearSubset(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			// v00 v01
 			// v10 v11
 
-			const Scalar v00 = Random::scalar(-100, 100);
-			const Scalar v01 = Random::scalar(-100, 100);
-			const Scalar v10 = Random::scalar(-100, 100);
-			const Scalar v11 = Random::scalar(-100, 100);
+			const Scalar v00 = Random::scalar(randomGenerator, -100, 100);
+			const Scalar v01 = Random::scalar(randomGenerator, -100, 100);
+			const Scalar v10 = Random::scalar(randomGenerator, -100, 100);
+			const Scalar v11 = Random::scalar(randomGenerator, -100, 100);
 
-			const Scalar tx = Random::scalar(0, 1);
-			const Scalar ty = Random::scalar(0, 1);
+			const Scalar tx = Random::scalar(randomGenerator, 0, 1);
+			const Scalar ty = Random::scalar(randomGenerator, 0, 1);
 
-			bool b00 = RandomI::random(1u) == 0u ? true : false;
-			const bool b01 = RandomI::random(1u) == 0u ? true : false;
-			const bool b10 = RandomI::random(1u) == 0u ? true : false;
-			const bool b11 = RandomI::random(1u) == 0u ? true : false;
+			bool b00 = RandomI::random(randomGenerator, 1u) == 0u ? true : false;
+			const bool b01 = RandomI::random(randomGenerator, 1u) == 0u ? true : false;
+			const bool b10 = RandomI::random(randomGenerator, 1u) == 0u ? true : false;
+			const bool b11 = RandomI::random(randomGenerator, 1u) == 0u ? true : false;
 
 			if (!b00 && !b01 && !b10 && !b11)
 			{
@@ -283,9 +243,9 @@ bool TestInterpolation::testBilinearSubset(const double testDuration)
 
 				const Scalar test = v00 * t_ + v11 * t;
 
-				if (Numeric::isEqual(result, test, epsilon))
+				if (!Numeric::isEqual(result, test, epsilon))
 				{
-					validIterations++;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else if (!b00 && !b11 && b01 && b10)
@@ -303,9 +263,9 @@ bool TestInterpolation::testBilinearSubset(const double testDuration)
 
 				const Scalar test = v10 * t_ + v01 * t;
 
-				if (Numeric::isEqual(result, test, epsilon))
+				if (!Numeric::isEqual(result, test, epsilon))
 				{
-					validIterations++;
+					scopedIteration.setInaccurate();
 				}
 			}
 			else
@@ -357,23 +317,18 @@ bool TestInterpolation::testBilinearSubset(const double testDuration)
 					test = bottom;
 				}
 
-				if (Numeric::isEqual(result, test, epsilon))
+				if (!Numeric::isEqual(result, test, epsilon))
 				{
-					validIterations++;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			iterations++;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(validIterations) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.99;
+	return validation.succeeded();
 }
 
 }
