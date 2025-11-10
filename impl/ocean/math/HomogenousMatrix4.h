@@ -339,7 +339,7 @@ class HomogenousMatrixT4
 		inline VectorT3<T> yAxis() const;
 
 		/**
-		 * Returns the z-axis of the transformation which is the first vector of the upper left 3x3 rotation matrix of this homogeneous 4x4 transformation.
+		 * Returns the z-axis of the transformation which is the third vector of the upper left 3x3 rotation matrix of this homogeneous 4x4 transformation.
 		 * @return The z-axis of this transformation
 		 */
 		inline VectorT3<T> zAxis() const;
@@ -1858,8 +1858,7 @@ inline void HomogenousMatrixT4<T>::copyElements(T* arrayValues, const bool value
 
 	if (valuesRowAligned)
 	{
-		// this matrix and the provided array are both column aligned
-		// thus, we can simply copy the data
+		// this matrix is column aligned but the provided data is row aligned
 
 		arrayValues[ 0] = values_[ 0];
 		arrayValues[ 1] = values_[ 4];
@@ -1898,8 +1897,7 @@ inline void HomogenousMatrixT4<T>::copyElements(U* arrayValues, const bool value
 
 	if (valuesRowAligned)
 	{
-		// the provided buffer is row aligned (this matrix is column aligned)
-		// thus, we have to assign the values in a transposed manner
+		// this matrix is column aligned but the provided data is row aligned
 
 		arrayValues[ 0] = U(values_[ 0]);
 		arrayValues[ 1] = U(values_[ 4]);
