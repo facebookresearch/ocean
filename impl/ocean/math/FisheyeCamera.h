@@ -11,8 +11,8 @@
 #include "ocean/math/Math.h"
 #include "ocean/math/Camera.h"
 #include "ocean/math/HomogenousMatrix4.h"
+#include "ocean/math/Line3.h"
 #include "ocean/math/Numeric.h"
-#include "ocean/math/PinholeCamera.h"
 #include "ocean/math/SquareMatrix2.h"
 #include "ocean/math/Vector2.h"
 #include "ocean/math/Vector3.h"
@@ -31,14 +31,14 @@ template <typename T> class FisheyeCameraT;
 using FisheyeCamera = FisheyeCameraT<Scalar>;
 
 /**
- * Definition of a FisheyeCamera object using 'float'' as data type.
+ * Definition of a FisheyeCamera object using 'float' as data type.
  * @see FisheyeCameraT
  * @ingroup math
  */
 using FisheyeCameraF = FisheyeCameraT<float>;
 
 /**
- * Definition of a FisheyeCamera object using 'double'' as data type.
+ * Definition of a FisheyeCamera object using 'double' as data type.
  * @see FisheyeCameraT
  * @ingroup math
  */
@@ -210,7 +210,7 @@ class FisheyeCameraT : public CameraT<T>
 		 * @param focalY Focal parameter of the vertical axis, with range (0, infinity)
 		 * @param principalX Principal point of the horizontal axis (in pixel), with range (0, width)
 		 * @param principalY Principal point of the vertical axis (in pixel), with range (0, height)
-		 * @param radialDistortion Six radial distortion values, with order k3, k5, k7, k9, k11, 13, must be valid
+		 * @param radialDistortion Six radial distortion values, with order k3, k5, k7, k9, k11, k13, must be valid
 		 * @param tangentialDistortion Two tangential distortion values, with order p1, p2, must be valid
 		 * @tparam TParameter The scalar data type in which the intrinsic camera parameters are provided, will be converted to 'T' internally, 'float' or 'double'
 		 */
@@ -533,7 +533,7 @@ class FisheyeCameraT : public CameraT<T>
 		 * @param x The horizontal coordinate of the normalized image point to be distorted
 		 * @param y The vertical coordinate of the normalized image point to be distorted
 		 * @param radialDistortion The six radial distortion parameters, must be valid
-		 * @param tangentialDistortion The two radial distortion parameters, must be valid
+		 * @param tangentialDistortion The two tangential distortion parameters, must be valid
 		 * @param jx First row of the jacobian, with 2 column entries, must be valid
 		 * @param jy Second row of the jacobian, with 2 column entries, must be valid
 		 */
@@ -562,7 +562,7 @@ class FisheyeCameraT : public CameraT<T>
 		/// The horizontal principal point of the camera, in pixels, with range [0, width())
 		T principalPointX_ = T(0);
 
-		/// The vertical principal point of the camera, in pixels, with range [0, width())
+		/// The vertical principal point of the camera, in pixels, with range [0, height())
 		T principalPointY_ = T(0);
 
 		/// True, if the distortion parameters are defined.
@@ -586,8 +586,8 @@ inline FisheyeCameraT<T>::FisheyeCameraT(const FisheyeCameraT<U>& fisheyeCamera)
 	principalPointY_(T(fisheyeCamera.principalPointY_)),
 	hasDistortionParameters_(fisheyeCamera.hasDistortionParameters_)
 {
-	static_assert(sizeof(radialDistortion_) / 6u == sizeof(T), "Invalid parameter");
-	static_assert(sizeof(tangentialDistortion_) / 2u == sizeof(T), "Invalid parameter");
+	static_assert(sizeof(radialDistortion_) == sizeof(T) * 6, "Invalid parameter");
+	static_assert(sizeof(tangentialDistortion_) == sizeof(T) * 2, "Invalid parameter");
 
 	invFocalLengthX_ = NumericT<T>::isEqualEps(focalLengthX_) ? T(0) : T(1) / focalLengthX_;
 	invFocalLengthY_ = NumericT<T>::isEqualEps(focalLengthY_) ? T(0) : T(1) / focalLengthY_;
@@ -933,15 +933,23 @@ T FisheyeCameraT<T>::fovY() const
 template <typename T>
 T FisheyeCameraT<T>::fovDiagonal() const
 {
-	const VectorT2<T> topLeft(-principalPointX(), -principalPointY());
-	const VectorT2<T> bottomRight(principalPointX(), principalPointY());
+	ocean_assert(isValid());
 
-	const T diagonal = (topLeft - bottomRight).length();
-	const T halfDiagonal = diagonal * T(0.5);
+	const VectorT2<T> cornerTopLeft(-principalPointX(), -principalPointY());
+	const VectorT2<T> cornerTopRight(T(width_) - principalPointX(), -principalPointY());
+	const VectorT2<T> cornerBottomLeft(-principalPointX(), T(height_) - principalPointY());
+	const VectorT2<T> cornerBottomRight(T(width_) - principalPointX(), T(height_) - principalPointY());
+
+	const T lengthDiagonalTopLeftBottomRight = cornerTopLeft.length() + cornerBottomRight.length();
+	const T lengthDiagonalBottomLeftTopRight = cornerBottomLeft.length() + cornerTopRight.length();
+
+	const T maxDiagonal = std::max(lengthDiagonalTopLeftBottomRight, lengthDiagonalBottomLeftTopRight);
+
+	const T maxDiagonal_2 = maxDiagonal * T(0.5);
 
 	const T invFocalLength = (invFocalLengthX_ + invFocalLengthY_) * T(0.5);
 
-	return T(2) * NumericT<T>::abs(NumericT<T>::atan(halfDiagonal * invFocalLength));
+	return T(2) * NumericT<T>::atan(maxDiagonal_2 * invFocalLength);
 }
 
 template <typename T>
@@ -1004,7 +1012,7 @@ VectorT2<T> FisheyeCameraT<T>::distortNormalized(const VectorT2<T>& undistortedN
 	ocean_assert(isValid());
 
 	/*
-	 * 3) Two radial distortion parameters k3, k5, k7, k9, k11, k13
+	 * 3) Six radial distortion parameters k3, k5, k7, k9, k11, k13
 	 *
 	 * 4) Two tangential distortion parameters p1 and p2.
 	 *
@@ -1269,7 +1277,7 @@ inline LineT3<T> FisheyeCameraT<T>::ray(const VectorT2<T>& distortedImagePoint) 
 {
 	ocean_assert(isValid());
 
-	return LineT3<T>(Vector3(0, 0, 0), vector<tUseDistortionParameters>(distortedImagePoint));
+	return LineT3<T>(VectorT3<T>(0, 0, 0), vector<tUseDistortionParameters>(distortedImagePoint));
 }
 
 template <typename T>
@@ -1318,14 +1326,17 @@ inline void FisheyeCameraT<T>::pointJacobian2x3IF(const VectorT3<T>& flippedCame
 	}
 	else
 	{
-		const T fx_jDistXx_invW = fx * invW;
-		const T fy_jDistYx_invW = fy * invW;
+		// J = | fx/w   0      -fx * u/w^2 |
+    	//     | 0      fy/w   -fy * v/w^2 |
 
-		const T fx_jDistXy_invW = fx * invW;
+		const T fx_jDistXx_invW = fx * invW;
+		const T fy_jDistYx_invW = 0;
+
+		const T fx_jDistXy_invW = 0;
 		const T fy_jDistYy_invW = fy * invW;
 
-		const T u_fx_jDistXx__ = u_invW * fx_jDistXx_invW + v_invW * fx_jDistXy_invW;
-		const T u_fy_jDistYx__ = u_invW * fy_jDistYx_invW + v_invW * fy_jDistYy_invW;
+		const T u_fx_jDistXx__ = u_invW * fx_jDistXx_invW + v_invW;
+		const T u_fy_jDistYx__ = u_invW * fy_jDistYx_invW + v_invW;
 
 		jx[0] = fx_jDistXx_invW;
 		jx[1] = fx_jDistXy_invW;
@@ -1416,7 +1427,7 @@ VectorT2<T> FisheyeCameraT<T>::tangentialFreeDistortion(const VectorT2<T>& disto
 		const T dxx = p1 * T(6) * x_r + T(2) * p2 * y_r + T(1);
 		const T dxy = p1 * T(2) * y_r + T(2) * p2 * x_r;
 
-		const T& dyx = dxy; // dxy == p2 * T(2) * y_r + T(2) * p1 * y_r;
+		const T& dyx = dxy; // dyx == p2 * T(2) * y_r + T(2) * p1 * x_r;
 		const T dyy = p2 * T(6) * y_r + T(2) * p1 * x_r + T(1);
 
 		VectorT2<T> delta(0, 0);
@@ -1424,7 +1435,7 @@ VectorT2<T> FisheyeCameraT<T>::tangentialFreeDistortion(const VectorT2<T>& disto
 
 		distortedTangentialFree -= delta;
 
-		if (delta.sqr() < Numeric::eps())
+		if (delta.sqr() < NumericT<T>::eps())
 		{
 			break;
 		}
@@ -1493,7 +1504,7 @@ OCEAN_FORCE_INLINE void FisheyeCameraT<T>::jacobianDistortNormalized2x2(const T 
 	const T xTangential_dx = 6 * p1 * rx + 2 * p2 * ry + 1;
 	const T xTangential_dy = 2 * p1 * ry + 2 * p2 * rx;
 
-	// const T yTangential_dx = 2 * p2 * rx + 2 * p1 * ry; // == yTangential_dx
+	// const T yTangential_dx = 2 * p2 * rx + 2 * p1 * ry; // == xTangential_dx
 	const T& yTangential_dx = xTangential_dy;
 	const T yTangential_dy = 6 * p2 * ry + 2 * p1 * rx + 1;
 
