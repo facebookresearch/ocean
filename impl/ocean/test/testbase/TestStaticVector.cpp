@@ -67,6 +67,12 @@ bool TestStaticVector::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testEmplaceBack(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testPopBack(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -119,6 +125,11 @@ TEST(TestStaticVector, Comparison)
 TEST(TestStaticVector, PushBack)
 {
 	EXPECT_TRUE(TestStaticVector::testPushBack(GTEST_TEST_DURATION));
+}
+
+TEST(TestStaticVector, EmplaceBack)
+{
+	EXPECT_TRUE(TestStaticVector::testEmplaceBack(GTEST_TEST_DURATION));
 }
 
 TEST(TestStaticVector, PopBack)
@@ -820,6 +831,43 @@ bool TestStaticVector::testPushBack(const double testDuration)
 	return validation.succeeded();
 }
 
+bool TestStaticVector::testEmplaceBack(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing emplaceBack:";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<int32_t, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<int32_t, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<int32_t, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<uint8_t, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<uint8_t, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<uint8_t, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<float, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<float, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<float, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<std::string, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<std::string, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testEmplaceBack<std::string, 10>(randomGenerator));
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
 bool TestStaticVector::testPopBack(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
@@ -1057,6 +1105,88 @@ bool TestStaticVector::testPushBack(RandomGenerator& randomGenerator)
 		staticVector.pushBack(TestStaticBuffer::randomValue<T>(randomGenerator));
 
 		if (!staticVector)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+template <typename T, size_t tCapacity>
+bool TestStaticVector::testEmplaceBack(RandomGenerator& randomGenerator)
+{
+	static_assert(tCapacity >= 1, "Invalid capacity");
+
+	{
+		// emplaceBack()
+
+		StaticVector<T, tCapacity> staticVector;
+
+		std::vector<T> expectedValues;
+
+		for (size_t n = 0; n < tCapacity; ++n)
+		{
+			const T value = TestStaticBuffer::randomValue<T>(randomGenerator);
+			expectedValues.push_back(value);
+
+			// Emplace using copy constructor
+			staticVector.emplaceBack(value);
+
+			if (staticVector.size() != n + 1)
+			{
+				return false;
+			}
+
+			if (staticVector[n] != expectedValues[n])
+			{
+				return false;
+			}
+		}
+
+		if (!staticVector.occupied())
+		{
+			return false;
+		}
+	}
+
+	{
+		// secureEmplaceBack()
+
+		StaticVector<T, tCapacity> staticVector;
+
+		for (size_t n = 0; n < tCapacity; ++n)
+		{
+			const T value = TestStaticBuffer::randomValue<T>(randomGenerator);
+
+			if (!staticVector.secureEmplaceBack(value))
+			{
+				return false;
+			}
+		}
+
+		const T extraValue = TestStaticBuffer::randomValue<T>(randomGenerator);
+
+		if (staticVector.secureEmplaceBack(extraValue))
+		{
+			return false;
+		}
+	}
+
+	if constexpr (std::is_same<T, std::string>::value)
+	{
+		// Test with std::string multi-argument constructor
+		StaticVector<std::string, tCapacity> staticVector;
+
+		// Emplace a string constructed with (count, char)
+		staticVector.emplaceBack(5, 'x');
+
+		if (staticVector.size() != 1)
+		{
+			return false;
+		}
+
+		if (staticVector[0] != "xxxxx")
 		{
 			return false;
 		}

@@ -117,6 +117,26 @@ class StaticVector : public StaticBuffer<T, tCapacity>
 		inline bool securePushBack(T&& value);
 
 		/**
+		 * Constructs a new element in-place at the end of this vector.
+		 * Beware: No range check is applied.
+		 * @param args The arguments to forward to the constructor of the element
+		 * @tparam TArgs The types of the arguments
+		 * @see secureEmplaceBack().
+		 */
+		template <typename... TArgs>
+		inline void emplaceBack(TArgs&&... args);
+
+		/**
+		 * Constructs a new element in-place at the end of this vector if this vector has free elements left.
+		 * @param args The arguments to forward to the constructor of the element
+		 * @tparam TArgs The types of the arguments
+		 * @return True, if succeeded
+		 * @see emplaceBack().
+		 */
+		template <typename... TArgs>
+		inline bool secureEmplaceBack(TArgs&&... args);
+
+		/**
 		 * Adds a new elements to this vector.
 		 * This function avoids a memory overflow.<br>
 		 * @param value Values to be added
@@ -392,6 +412,29 @@ inline bool StaticVector<T, tCapacity>::securePushBack(T&& value)
 	}
 
 	this->elements_[size_++] = std::move(value);
+
+	return true;
+}
+
+template <typename T, size_t tCapacity>
+template <typename... TArgs>
+inline void StaticVector<T, tCapacity>::emplaceBack(TArgs&&... args)
+{
+	ocean_assert(size_ < tCapacity);
+
+	this->elements_[size_++] = T(std::forward<TArgs>(args)...);
+}
+
+template <typename T, size_t tCapacity>
+template <typename... TArgs>
+inline bool StaticVector<T, tCapacity>::secureEmplaceBack(TArgs&&... args)
+{
+	if (size_ >= tCapacity)
+	{
+		return false;
+	}
+
+	this->elements_[size_++] = T(std::forward<TArgs>(args)...);
 
 	return true;
 }

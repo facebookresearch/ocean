@@ -79,6 +79,13 @@ class OCEAN_TEST_BASE_EXPORT TestStaticVector
 		static bool testPushBack(const double testDuration);
 
 		/**
+		 * Tests the emplaceBack functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testEmplaceBack(const double testDuration);
+
+		/**
 		 * Tests the popBack functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -153,6 +160,16 @@ class OCEAN_TEST_BASE_EXPORT TestStaticVector
 		 */
 		template <typename T, size_t tCapacity>
 		static bool testPushBack(RandomGenerator& randomGenerator);
+
+		/**
+		 * Tests the emplaceBack functions.
+		 * @param randomGenerator The random generator to be used
+		 * @return True, if succeeded
+		 * @tparam T The data type of the buffer
+		 * @tparam tCapacity The capacity of the buffer, with range [1, infinity)
+		 */
+		template <typename T, size_t tCapacity>
+		static bool testEmplaceBack(RandomGenerator& randomGenerator);
 
 		/**
 		 * Tests the popBack functions.
