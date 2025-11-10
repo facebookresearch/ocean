@@ -99,6 +99,13 @@ class OCEAN_TEST_BASE_EXPORT TestStaticVector
 		 */
 		static bool testErase(const double testDuration);
 
+		/**
+		 * Tests the iterator functions (begin/end) and range-based for loops.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testIterator(const double testDuration);
+
 	protected:
 
 		/**
@@ -190,6 +197,16 @@ class OCEAN_TEST_BASE_EXPORT TestStaticVector
 		 */
 		template <typename T, size_t tCapacity>
 		static bool testErase(RandomGenerator& randomGenerator);
+
+		/**
+		 * Tests the iterator functions (begin/end) and range-based for loops.
+		 * @param randomGenerator The random generator to be used
+		 * @return True, if succeeded
+		 * @tparam T The data type of the buffer
+		 * @tparam tCapacity The capacity of the buffer, with range [1, infinity)
+		 */
+		template <typename T, size_t tCapacity>
+		static bool testIterator(RandomGenerator& randomGenerator);
 };
 
 }

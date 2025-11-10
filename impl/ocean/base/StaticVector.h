@@ -252,6 +252,30 @@ class StaticVector : public StaticBuffer<T, tCapacity>
 		inline T& back();
 
 		/**
+		 * Returns an iterator to the beginning of the vector.
+		 * @return Iterator to the first element
+		 */
+		inline T* begin();
+
+		/**
+		 * Returns a const iterator to the beginning of the vector.
+		 * @return Const iterator to the first element
+		 */
+		inline const T* begin() const;
+
+		/**
+		 * Returns an iterator to the end of the vector.
+		 * @return Iterator to the element following the last element
+		 */
+		inline T* end();
+
+		/**
+		 * Returns a const iterator to the end of the vector.
+		 * @return Const iterator to the element following the last element
+		 */
+		inline const T* end() const;
+
+		/**
 		 * Returns whether this vector hold no element.
 		 * @return True, if so
 		 */
@@ -530,6 +554,30 @@ inline T& StaticVector<T, tCapacity>::back()
 	ocean_assert(!empty());
 
 	return this->elements_[size_ - 1];
+}
+
+template <typename T, size_t tCapacity>
+inline T* StaticVector<T, tCapacity>::begin()
+{
+	return this->elements_;
+}
+
+template <typename T, size_t tCapacity>
+inline const T* StaticVector<T, tCapacity>::begin() const
+{
+	return this->elements_;
+}
+
+template <typename T, size_t tCapacity>
+inline T* StaticVector<T, tCapacity>::end()
+{
+	return this->elements_ + size_;
+}
+
+template <typename T, size_t tCapacity>
+inline const T* StaticVector<T, tCapacity>::end() const
+{
+	return this->elements_ + size_;
 }
 
 template <typename T, size_t tCapacity>

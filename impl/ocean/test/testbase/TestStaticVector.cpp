@@ -82,6 +82,12 @@ bool TestStaticVector::test(const double testDuration)
 	allSucceeded = testErase(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testIterator(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -140,6 +146,11 @@ TEST(TestStaticVector, PopBack)
 TEST(TestStaticVector, Erase)
 {
 	EXPECT_TRUE(TestStaticVector::testErase(GTEST_TEST_DURATION));
+}
+
+TEST(TestStaticVector, Iterator)
+{
+	EXPECT_TRUE(TestStaticVector::testIterator(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -1439,6 +1450,176 @@ bool TestStaticVector::testErase(RandomGenerator& randomGenerator)
 		if (staticVector.size() != sizeBefore - 1)
 		{
 			return false;
+		}
+	}
+
+	return true;
+}
+
+bool TestStaticVector::testIterator(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing iterator:";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		OCEAN_EXPECT_TRUE(validation, testIterator<int32_t, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testIterator<int32_t, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testIterator<int32_t, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testIterator<uint8_t, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testIterator<uint8_t, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testIterator<uint8_t, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testIterator<float, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testIterator<float, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testIterator<float, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testIterator<std::string, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testIterator<std::string, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testIterator<std::string, 10>(randomGenerator));
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T, size_t tCapacity>
+bool TestStaticVector::testIterator(RandomGenerator& randomGenerator)
+{
+	static_assert(tCapacity >= 1, "Invalid capacity");
+
+	for (size_t size = 0; size <= tCapacity; ++size)
+	{
+		StaticVector<T, tCapacity> staticVector;
+		std::vector<T> expectedValues;
+
+		for (size_t n = 0; n < size; ++n)
+		{
+			const T value = TestStaticBuffer::randomValue<T>(randomGenerator);
+			staticVector.pushBack(value);
+			expectedValues.push_back(value);
+		}
+
+		{
+			T* beginPtr = staticVector.begin();
+			T* endPtr = staticVector.end();
+
+			if (beginPtr != staticVector.data())
+			{
+				return false;
+			}
+
+			if (endPtr != staticVector.data() + size)
+			{
+				return false;
+			}
+
+			if (static_cast<size_t>(endPtr - beginPtr) != size)
+			{
+				return false;
+			}
+		}
+
+		{
+			const StaticVector<T, tCapacity>& constStaticVector = staticVector;
+
+			const T* beginPtr = constStaticVector.begin();
+			const T* endPtr = constStaticVector.end();
+
+			if (beginPtr != constStaticVector.data())
+			{
+				return false;
+			}
+
+			if (endPtr != constStaticVector.data() + size)
+			{
+				return false;
+			}
+
+			if (static_cast<size_t>(endPtr - beginPtr) != size)
+			{
+				return false;
+			}
+		}
+
+		{
+			size_t index = 0;
+
+			for (T& element : staticVector)
+			{
+				if (index >= expectedValues.size())
+				{
+					return false;
+				}
+
+				if (element != expectedValues[index])
+				{
+					return false;
+				}
+
+				++index;
+			}
+
+			if (index != size)
+			{
+				return false;
+			}
+		}
+
+		{
+			const StaticVector<T, tCapacity>& constStaticVector = staticVector;
+
+			size_t index = 0;
+
+			for (const T& element : constStaticVector)
+			{
+				if (index >= expectedValues.size())
+				{
+					return false;
+				}
+
+				if (element != expectedValues[index])
+				{
+					return false;
+				}
+
+				++index;
+			}
+
+			if (index != size)
+			{
+				return false;
+			}
+		}
+
+		if (size > 0)
+		{
+			for (T& element : staticVector)
+			{
+				element = TestStaticBuffer::randomValue<T>(randomGenerator);
+			}
+
+			size_t index = 0;
+
+			for (T* it = staticVector.begin(); it != staticVector.end(); ++it)
+			{
+				if (*it != staticVector[index])
+				{
+					return false;
+				}
+
+				++index;
+			}
 		}
 	}
 
