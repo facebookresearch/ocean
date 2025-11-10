@@ -57,6 +57,30 @@ bool TestStackHeapVector::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testEmplaceBack(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testPopBack(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testFrontBack(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testReserve(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testPerformance(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -93,6 +117,26 @@ TEST(TestStackHeapVector, PushBack)
 TEST(TestStackHeapVector, Resize)
 {
 	EXPECT_TRUE(TestStackHeapVector::testResize(GTEST_TEST_DURATION));
+}
+
+TEST(TestStackHeapVector, EmplaceBack)
+{
+	EXPECT_TRUE(TestStackHeapVector::testEmplaceBack(GTEST_TEST_DURATION));
+}
+
+TEST(TestStackHeapVector, PopBack)
+{
+	EXPECT_TRUE(TestStackHeapVector::testPopBack(GTEST_TEST_DURATION));
+}
+
+TEST(TestStackHeapVector, FrontBack)
+{
+	EXPECT_TRUE(TestStackHeapVector::testFrontBack(GTEST_TEST_DURATION));
+}
+
+TEST(TestStackHeapVector, Reserve)
+{
+	EXPECT_TRUE(TestStackHeapVector::testReserve(GTEST_TEST_DURATION));
 }
 
 TEST(TestStackHeapVector, Performance)
@@ -217,6 +261,134 @@ bool TestStackHeapVector::testResize(const double testDuration)
 	allSucceeded = testResize<31>(testDuration) && allSucceeded;
 	allSucceeded = testResize<32>(testDuration) && allSucceeded;
 	allSucceeded = testResize<64>(testDuration) && allSucceeded;
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestStackHeapVector::testEmplaceBack(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing emplace back:";
+
+	bool allSucceeded = true;
+
+	allSucceeded = testEmplaceBack<1>(testDuration) && allSucceeded;
+	allSucceeded = testEmplaceBack<2>(testDuration) && allSucceeded;
+	allSucceeded = testEmplaceBack<3>(testDuration) && allSucceeded;
+	allSucceeded = testEmplaceBack<4>(testDuration) && allSucceeded;
+	allSucceeded = testEmplaceBack<5>(testDuration) && allSucceeded;
+	allSucceeded = testEmplaceBack<6>(testDuration) && allSucceeded;
+	allSucceeded = testEmplaceBack<7>(testDuration) && allSucceeded;
+	allSucceeded = testEmplaceBack<8>(testDuration) && allSucceeded;
+	allSucceeded = testEmplaceBack<31>(testDuration) && allSucceeded;
+	allSucceeded = testEmplaceBack<32>(testDuration) && allSucceeded;
+	allSucceeded = testEmplaceBack<64>(testDuration) && allSucceeded;
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestStackHeapVector::testPopBack(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing pop back:";
+
+	bool allSucceeded = true;
+
+	allSucceeded = testPopBack<1>(testDuration) && allSucceeded;
+	allSucceeded = testPopBack<2>(testDuration) && allSucceeded;
+	allSucceeded = testPopBack<3>(testDuration) && allSucceeded;
+	allSucceeded = testPopBack<4>(testDuration) && allSucceeded;
+	allSucceeded = testPopBack<5>(testDuration) && allSucceeded;
+	allSucceeded = testPopBack<6>(testDuration) && allSucceeded;
+	allSucceeded = testPopBack<7>(testDuration) && allSucceeded;
+	allSucceeded = testPopBack<8>(testDuration) && allSucceeded;
+	allSucceeded = testPopBack<31>(testDuration) && allSucceeded;
+	allSucceeded = testPopBack<32>(testDuration) && allSucceeded;
+	allSucceeded = testPopBack<64>(testDuration) && allSucceeded;
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestStackHeapVector::testFrontBack(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing front/back:";
+
+	bool allSucceeded = true;
+
+	allSucceeded = testFrontBack<1>(testDuration) && allSucceeded;
+	allSucceeded = testFrontBack<2>(testDuration) && allSucceeded;
+	allSucceeded = testFrontBack<3>(testDuration) && allSucceeded;
+	allSucceeded = testFrontBack<4>(testDuration) && allSucceeded;
+	allSucceeded = testFrontBack<5>(testDuration) && allSucceeded;
+	allSucceeded = testFrontBack<6>(testDuration) && allSucceeded;
+	allSucceeded = testFrontBack<7>(testDuration) && allSucceeded;
+	allSucceeded = testFrontBack<8>(testDuration) && allSucceeded;
+	allSucceeded = testFrontBack<31>(testDuration) && allSucceeded;
+	allSucceeded = testFrontBack<32>(testDuration) && allSucceeded;
+	allSucceeded = testFrontBack<64>(testDuration) && allSucceeded;
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestStackHeapVector::testReserve(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing reserve:";
+
+	bool allSucceeded = true;
+
+	allSucceeded = testReserve<1>(testDuration) && allSucceeded;
+	allSucceeded = testReserve<2>(testDuration) && allSucceeded;
+	allSucceeded = testReserve<3>(testDuration) && allSucceeded;
+	allSucceeded = testReserve<4>(testDuration) && allSucceeded;
+	allSucceeded = testReserve<5>(testDuration) && allSucceeded;
+	allSucceeded = testReserve<6>(testDuration) && allSucceeded;
+	allSucceeded = testReserve<7>(testDuration) && allSucceeded;
+	allSucceeded = testReserve<8>(testDuration) && allSucceeded;
+	allSucceeded = testReserve<31>(testDuration) && allSucceeded;
+	allSucceeded = testReserve<32>(testDuration) && allSucceeded;
+	allSucceeded = testReserve<64>(testDuration) && allSucceeded;
 
 	if (allSucceeded)
 	{
@@ -614,6 +786,304 @@ bool TestStackHeapVector::testResize(const double testDuration)
 			{
 				OCEAN_EXPECT_TRUE(validation, stackHeapVector[n].empty());
 			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	return validation.succeeded();
+}
+
+template <size_t tStackCapacity>
+bool TestStackHeapVector::testEmplaceBack(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		// Test emplaceBack with TestElement
+		// Note: Due to the use of a default-constructed array for stack storage,
+		// emplaceBack must use assignment for stack elements, which adds offsets in TestElement
+		{
+			StackHeapVector<TestElement, tStackCapacity> stackHeapVector;
+
+			// Emplace elements both in stack and heap regions
+			const size_t numberElements = RandomI::random(randomGenerator, 1u, 100u);
+
+			for (size_t n = 0; n < numberElements; ++n)
+			{
+				stackHeapVector.emplaceBack(n);
+				OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), n + 1);
+			}
+
+			// Verify all elements exist
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), numberElements);
+		}
+
+		// Test emplaceBack with strings to ensure proper forwarding
+		{
+			StackHeapVector<std::string, tStackCapacity> stackHeapVector;
+
+			for (size_t n = 0; n < 20; ++n)
+			{
+				const std::string value = String::toAString(RandomI::random64(randomGenerator));
+				std::string& element = stackHeapVector.emplaceBack(value);
+
+				OCEAN_EXPECT_EQUAL(validation, element, value);
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	return validation.succeeded();
+}
+
+template <size_t tStackCapacity>
+bool TestStackHeapVector::testPopBack(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		// Test that popBack properly clears stack elements
+		{
+			StackHeapVector<std::string, tStackCapacity> stackHeapVector;
+
+			// Fill the vector
+			const size_t maxSize = tStackCapacity + 10;
+			for (size_t n = 0; n < maxSize; ++n)
+			{
+				stackHeapVector.pushBack(String::toAString(n));
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), maxSize);
+
+			// Pop back all heap elements
+			while (stackHeapVector.size() > tStackCapacity)
+			{
+				const size_t oldSize = stackHeapVector.size();
+				stackHeapVector.popBack();
+				OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), oldSize - 1);
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), tStackCapacity);
+
+			// Pop back stack elements and verify they're cleared
+			for (size_t n = tStackCapacity; n > 0; --n)
+			{
+				stackHeapVector.popBack();
+				OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), n - 1);
+			}
+
+			OCEAN_EXPECT_TRUE(validation, stackHeapVector.isEmpty());
+
+			// Now re-add elements and verify they're properly initialized
+			for (size_t n = 0; n < tStackCapacity; ++n)
+			{
+				stackHeapVector.pushBack(String::toAString(n + 1000));
+				OCEAN_EXPECT_EQUAL(validation, stackHeapVector[n], String::toAString(n + 1000));
+			}
+		}
+
+		// Test popBack with primitive types
+		{
+			StackHeapVector<uint64_t, tStackCapacity> stackHeapVector;
+
+			for (size_t n = 0; n < tStackCapacity + 5; ++n)
+			{
+				stackHeapVector.pushBack(n);
+			}
+
+			while (!stackHeapVector.isEmpty())
+			{
+				const size_t expectedSize = stackHeapVector.size() - 1;
+				stackHeapVector.popBack();
+				OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), expectedSize);
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	return validation.succeeded();
+}
+
+template <size_t tStackCapacity>
+bool TestStackHeapVector::testFrontBack(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		// Test front() and back() at various sizes, especially at stack/heap boundary
+		for (size_t testSize = 1; testSize <= tStackCapacity + 10; ++testSize)
+		{
+			StackHeapVector<size_t, tStackCapacity> stackHeapVector;
+
+			for (size_t n = 0; n < testSize; ++n)
+			{
+				stackHeapVector.pushBack(n);
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.front(), size_t(0));
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.back(), testSize - 1);
+
+			// Only test modification if there's more than one element
+			if (testSize > 1)
+			{
+				// Modify via front() and back()
+				stackHeapVector.front() = 999;
+				stackHeapVector.back() = 888;
+
+				OCEAN_EXPECT_EQUAL(validation, stackHeapVector.front(), size_t(999));
+				OCEAN_EXPECT_EQUAL(validation, stackHeapVector.back(), size_t(888));
+				OCEAN_EXPECT_EQUAL(validation, stackHeapVector[0], size_t(999));
+				OCEAN_EXPECT_EQUAL(validation, stackHeapVector[testSize - 1], size_t(888));
+
+				// Test const front() and back()
+				const StackHeapVector<size_t, tStackCapacity>& constVector = stackHeapVector;
+				OCEAN_EXPECT_EQUAL(validation, constVector.front(), size_t(999));
+				OCEAN_EXPECT_EQUAL(validation, constVector.back(), size_t(888));
+			}
+		}
+
+		// Specifically test the boundary when size == tStackCapacity
+		{
+			StackHeapVector<std::string, tStackCapacity> stackHeapVector;
+
+			for (size_t n = 0; n < tStackCapacity; ++n)
+			{
+				stackHeapVector.pushBack(String::toAString(n));
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), tStackCapacity);
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.front(), String::toAString(0));
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.back(), String::toAString(tStackCapacity - 1));
+		}
+
+		// Test when size == tStackCapacity + 1 (first element on heap)
+		{
+			StackHeapVector<std::string, tStackCapacity> stackHeapVector;
+
+			for (size_t n = 0; n < tStackCapacity + 1; ++n)
+			{
+				stackHeapVector.pushBack(String::toAString(n));
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), tStackCapacity + 1);
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.front(), String::toAString(0));
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.back(), String::toAString(tStackCapacity));
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	return validation.succeeded();
+}
+
+template <size_t tStackCapacity>
+bool TestStackHeapVector::testReserve(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		// Test reserve before adding elements
+		{
+			StackHeapVector<uint64_t, tStackCapacity> stackHeapVector;
+
+			const size_t reserveCapacity = RandomI::random(randomGenerator, 1u, 200u);
+			stackHeapVector.reserve(reserveCapacity);
+
+			const size_t expectedCapacity = std::max(tStackCapacity, reserveCapacity);
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.capacity(), expectedCapacity);
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), size_t(0));
+		}
+
+		// Test reserve with existing elements
+		{
+			StackHeapVector<uint64_t, tStackCapacity> stackHeapVector;
+
+			const size_t initialSize = RandomI::random(randomGenerator, 1u, 50u);
+			for (size_t n = 0; n < initialSize; ++n)
+			{
+				stackHeapVector.pushBack(n);
+			}
+
+			const size_t oldCapacity = stackHeapVector.capacity();
+			const size_t reserveCapacity = RandomI::random(randomGenerator, 1u, 200u);
+
+			stackHeapVector.reserve(reserveCapacity);
+
+			const size_t expectedCapacity = std::max({tStackCapacity, reserveCapacity, oldCapacity});
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.capacity(), expectedCapacity);
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), initialSize);
+
+			// Verify elements are unchanged
+			for (size_t n = 0; n < initialSize; ++n)
+			{
+				OCEAN_EXPECT_EQUAL(validation, stackHeapVector[n], uint64_t(n));
+			}
+		}
+
+		// Test reserve with capacity less than current size (should do nothing)
+		{
+			StackHeapVector<uint64_t, tStackCapacity> stackHeapVector;
+
+			const size_t initialSize = RandomI::random(randomGenerator, 20u, 50u);
+			for (size_t n = 0; n < initialSize; ++n)
+			{
+				stackHeapVector.pushBack(n);
+			}
+
+			const size_t oldCapacity = stackHeapVector.capacity();
+			stackHeapVector.reserve(5); // Reserve less than current size
+
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.capacity(), oldCapacity);
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), initialSize);
+		}
+
+		// Test reserve exactly at stack capacity
+		{
+			StackHeapVector<std::string, tStackCapacity> stackHeapVector;
+
+			stackHeapVector.reserve(tStackCapacity);
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.capacity(), tStackCapacity);
+
+			// Fill to stack capacity
+			for (size_t n = 0; n < tStackCapacity; ++n)
+			{
+				stackHeapVector.pushBack(String::toAString(n));
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.capacity(), tStackCapacity);
+		}
+
+		// Test reserve beyond stack capacity
+		{
+			StackHeapVector<std::string, tStackCapacity> stackHeapVector;
+
+			const size_t reserveCapacity = tStackCapacity + RandomI::random(randomGenerator, 10u, 50u);
+			stackHeapVector.reserve(reserveCapacity);
+
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.capacity(), reserveCapacity);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));

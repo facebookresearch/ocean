@@ -133,6 +133,34 @@ class OCEAN_TEST_BASE_EXPORT TestStackHeapVector
 		static bool testResize(const double testDuration);
 
 		/**
+		 * Tests emplace back function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testEmplaceBack(const double testDuration);
+
+		/**
+		 * Tests pop back function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testPopBack(const double testDuration);
+
+		/**
+		 * Tests front and back functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testFrontBack(const double testDuration);
+
+		/**
+		 * Tests reserve function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testReserve(const double testDuration);
+
+		/**
 		 * Tests the performance of the stack heap vector.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -176,6 +204,42 @@ class OCEAN_TEST_BASE_EXPORT TestStackHeapVector
 		 */
 		template <size_t tStackCapacity>
 		static bool testResize(const double testDuration);
+
+		/**
+		 * Tests emplace back function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testEmplaceBack(const double testDuration);
+
+		/**
+		 * Tests pop back function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testPopBack(const double testDuration);
+
+		/**
+		 * Tests front and back functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testFrontBack(const double testDuration);
+
+		/**
+		 * Tests reserve function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testReserve(const double testDuration);
 
 		/**
 		 * Tests the performance of the stack heap vector.
