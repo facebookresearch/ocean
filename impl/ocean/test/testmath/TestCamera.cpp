@@ -144,16 +144,16 @@ bool TestCamera::testObjectPointInFront(const double testDuration)
 
 				// pose with default orientation
 
-				const SquareMatrixT3<T> orientation(true);
-				const HomogenousMatrixT4<T> pose(VectorT3<T>(RandomT<T>::scalar(randomGenerator, -10, 10), RandomT<T>::scalar(randomGenerator, -10, -10), 0));
+				const SquareMatrixT3<T> world_R_camera(true);
+				const HomogenousMatrixT4<T> world_T_camera(VectorT3<T>(RandomT<T>::scalar(randomGenerator, -10, 10), RandomT<T>::scalar(randomGenerator, -10, -10), 0));
 
-				const SquareMatrixT3<T> orientationIF(CameraT<T>::standard2InvertedFlipped(orientation));
-				const HomogenousMatrixT4<T> poseIF(CameraT<T>::standard2InvertedFlipped(pose));
+				const SquareMatrixT3<T> flippedCamera_R_world(CameraT<T>::standard2InvertedFlipped(world_R_camera));
+				const HomogenousMatrixT4<T> flippedCamera_T_world(CameraT<T>::standard2InvertedFlipped(world_T_camera));
 
 				const VectorT3<T> frontObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, -NumericT<T>::eps() * T(100)));
 				const VectorT3<T> backObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, 0, 100));
 
-				if (!CameraT<T>::isObjectPointInFrontIF(poseIF, frontObjectPoint) || !CameraT<T>::isObjectPointInFrontIF(orientationIF, frontObjectPoint) || CameraT<T>::isObjectPointInFrontIF(poseIF, backObjectPoint) || CameraT<T>::isObjectPointInFrontIF(orientationIF, backObjectPoint))
+				if (!CameraT<T>::isObjectPointInFrontIF(flippedCamera_T_world, frontObjectPoint) || !CameraT<T>::isObjectPointInFrontIF(flippedCamera_R_world, frontObjectPoint) || CameraT<T>::isObjectPointInFrontIF(flippedCamera_T_world, backObjectPoint) || CameraT<T>::isObjectPointInFrontIF(flippedCamera_R_world, backObjectPoint))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -164,22 +164,22 @@ bool TestCamera::testObjectPointInFront(const double testDuration)
 
 				// arbitrary pose
 
-				const SquareMatrixT3<T> orientation(RandomT<T>::quaternion(randomGenerator));
-				const HomogenousMatrixT4<T> pose(RandomT<T>::vector3(randomGenerator, -10, 10), orientation);
+				const SquareMatrixT3<T> world_R_camera(RandomT<T>::quaternion(randomGenerator));
+				const HomogenousMatrixT4<T> world_T_camera(RandomT<T>::vector3(randomGenerator, -10, 10), world_R_camera);
 
-				const HomogenousMatrixT4<T> poseIF(CameraT<T>::standard2InvertedFlipped(pose));
-				const SquareMatrixT3<T> orientationIF(CameraT<T>::standard2InvertedFlipped(orientation));
+				const HomogenousMatrixT4<T> flippedCamera_T_world(CameraT<T>::standard2InvertedFlipped(world_T_camera));
+				const SquareMatrixT3<T> flippedCamera_R_world(CameraT<T>::standard2InvertedFlipped(world_R_camera));
 
 				const VectorT3<T> localFrontObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, -NumericT<T>::eps() * T(100)));
 				const VectorT3<T> localBackObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, 0, 100));
 
-				const VectorT3<T> orientationFrontObjectPoint(orientation * localFrontObjectPoint);
-				const VectorT3<T> orientationBackObjectPoint(orientation * localBackObjectPoint);
+				const VectorT3<T> orientationFrontObjectPoint(world_R_camera * localFrontObjectPoint);
+				const VectorT3<T> orientationBackObjectPoint(world_R_camera * localBackObjectPoint);
 
-				const VectorT3<T> poseFrontObjectPoint(pose * localFrontObjectPoint);
-				const VectorT3<T> poseBackObjectPoint(pose * localBackObjectPoint);
+				const VectorT3<T> poseFrontObjectPoint(world_T_camera * localFrontObjectPoint);
+				const VectorT3<T> poseBackObjectPoint(world_T_camera * localBackObjectPoint);
 
-				if (!CameraT<T>::isObjectPointInFrontIF(poseIF, poseFrontObjectPoint) || !CameraT<T>::isObjectPointInFrontIF(orientationIF, orientationFrontObjectPoint) || CameraT<T>::isObjectPointInFrontIF(poseIF, poseBackObjectPoint) || PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, orientationBackObjectPoint))
+				if (!CameraT<T>::isObjectPointInFrontIF(flippedCamera_T_world, poseFrontObjectPoint) || !CameraT<T>::isObjectPointInFrontIF(flippedCamera_R_world, orientationFrontObjectPoint) || CameraT<T>::isObjectPointInFrontIF(flippedCamera_T_world, poseBackObjectPoint) || PinholeCameraT<T>::isObjectPointInFrontIF(flippedCamera_R_world, orientationBackObjectPoint))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -214,16 +214,16 @@ bool TestCamera::testStandard2InvertedFlippedHomogenousMatrix4(const double test
 		const QuaternionT<T> quaternion(RandomT<T>::quaternion(randomGenerator));
 
 		{
-			const HomogenousMatrixT4<T> wTc(translation, quaternion, scale);
-			ocean_assert(wTc.isValid());
+			const HomogenousMatrixT4<T> world_T_camera(translation, quaternion, scale);
+			ocean_assert(world_T_camera.isValid());
 
-			const HomogenousMatrixT4<T> fTw = CameraT<T>::standard2InvertedFlipped(wTc);
-			ocean_assert(fTw.isValid());
+			const HomogenousMatrixT4<T> flippedCamera_T_world = CameraT<T>::standard2InvertedFlipped(world_T_camera);
+			ocean_assert(flippedCamera_T_world.isValid());
 
-			const HomogenousMatrixT4<T> wTf = wTc * HomogenousMatrixT4<T>(RotationT<T>(1, 0, 0, NumericT<T>::pi()));
+			const HomogenousMatrixT4<T> world_T_flippedCamera = world_T_camera * HomogenousMatrixT4<T>(RotationT<T>(1, 0, 0, NumericT<T>::pi()));
 
-			HomogenousMatrixT4<T> test_fTw;
-			if (wTf.invert(test_fTw))
+			HomogenousMatrixT4<T> test_flippedCamera_T_world;
+			if (world_T_flippedCamera.invert(test_flippedCamera_T_world))
 			{
 				for (unsigned int n = 0u; n < 5u; ++n)
 				{
@@ -231,14 +231,14 @@ bool TestCamera::testStandard2InvertedFlippedHomogenousMatrix4(const double test
 
 					const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
 
-					if (!(fTw * testVector).isEqual(test_fTw * testVector, NumericT<T>::weakEps()))
+					if (!(flippedCamera_T_world * testVector).isEqual(test_flippedCamera_T_world * testVector, NumericT<T>::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
 				}
 			}
 
-			const HomogenousMatrixT4<T> test_wTc = CameraT<T>::invertedFlipped2Standard(fTw);
+			const HomogenousMatrixT4<T> test_world_T_camera = CameraT<T>::invertedFlipped2Standard(flippedCamera_T_world);
 
 			for (unsigned int n = 0u; n < 5u; ++n)
 			{
@@ -246,7 +246,7 @@ bool TestCamera::testStandard2InvertedFlippedHomogenousMatrix4(const double test
 
 				const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
 
-				if (!(wTc * testVector).isEqual(test_wTc * testVector, NumericT<T>::weakEps()))
+				if (!(world_T_camera * testVector).isEqual(test_world_T_camera * testVector, NumericT<T>::weakEps()))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -256,11 +256,11 @@ bool TestCamera::testStandard2InvertedFlippedHomogenousMatrix4(const double test
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const HomogenousMatrixT4<T> wTc(translation, quaternion);
-			ocean_assert(wTc.isValid());
+			const HomogenousMatrixT4<T> world_T_camera(translation, quaternion);
+			ocean_assert(world_T_camera.isValid());
 
-			const HomogenousMatrixT4<T> fTw = CameraT<T>::standard2InvertedFlipped(wTc);
-			ocean_assert(fTw.isValid());
+			const HomogenousMatrixT4<T> flippedCamera_T_world = CameraT<T>::standard2InvertedFlipped(world_T_camera);
+			ocean_assert(flippedCamera_T_world.isValid());
 
 			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
@@ -270,10 +270,10 @@ bool TestCamera::testStandard2InvertedFlippedHomogenousMatrix4(const double test
 
 			const VectorT2<T> observation = RandomT<T>::vector2(randomGenerator, 0, T(width), 0, T(height));
 
-			const LineT3<T> ray = pinholeCamera.ray(observation, wTc);
+			const LineT3<T> ray = pinholeCamera.ray(observation, world_T_camera);
 			const VectorT3<T> position = ray.point(RandomT<T>::scalar(randomGenerator, T(0.1), T(2)));
 
-			if (!pinholeCamera.template projectToImageIF<false, false>(fTw, position).isEqual(observation, 2))
+			if (!pinholeCamera.template projectToImageIF<false, false>(flippedCamera_T_world, position).isEqual(observation, 2))
 			{
 				scopedIteration.setInaccurate();
 			}
@@ -302,17 +302,17 @@ bool TestCamera::testStandard2InvertedFlippedSquareMatrix3(const double testDura
 
 	do
 	{
-		const SquareMatrixT3<T> wTc(RandomT<T>::rotation(randomGenerator));
-		ocean_assert(!wTc.isSingular());
+		const SquareMatrixT3<T> world_R_camera(RandomT<T>::rotation(randomGenerator));
+		ocean_assert(!world_R_camera.isSingular());
 
-		const SquareMatrixT3<T> fTw = CameraT<T>::standard2InvertedFlipped(wTc);
-		ocean_assert(!fTw.isSingular());
+		const SquareMatrixT3<T> flippedCamera_R_world = CameraT<T>::standard2InvertedFlipped(world_R_camera);
+		ocean_assert(!flippedCamera_R_world.isSingular());
 
 		{
-			const SquareMatrixT3<T> wTf = wTc * SquareMatrixT3<T>(RotationT<T>(1, 0, 0, NumericT<T>::pi()));
+			const SquareMatrixT3<T> world_R_flippedCamera = world_R_camera * SquareMatrixT3<T>(RotationT<T>(1, 0, 0, NumericT<T>::pi()));
 
-			SquareMatrixT3<T> test_fTw;
-			if (wTf.invert(test_fTw))
+			SquareMatrixT3<T> test_flippedCamera_R_world;
+			if (world_R_flippedCamera.invert(test_flippedCamera_R_world))
 			{
 				for (unsigned int n = 0u; n < 5u; ++n)
 				{
@@ -320,7 +320,7 @@ bool TestCamera::testStandard2InvertedFlippedSquareMatrix3(const double testDura
 
 					const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
 
-					if (!(fTw * testVector).isEqual(test_fTw * testVector, NumericT<T>::weakEps()))
+					if (!(flippedCamera_R_world * testVector).isEqual(test_flippedCamera_R_world * testVector, NumericT<T>::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -329,7 +329,7 @@ bool TestCamera::testStandard2InvertedFlippedSquareMatrix3(const double testDura
 		}
 
 		{
-			const SquareMatrixT3<T> test_wTc = CameraT<T>::invertedFlipped2Standard(fTw);
+			const SquareMatrixT3<T> test_world_R_camera = CameraT<T>::invertedFlipped2Standard(flippedCamera_R_world);
 
 			for (unsigned int n = 0u; n < 5u; ++n)
 			{
@@ -337,7 +337,7 @@ bool TestCamera::testStandard2InvertedFlippedSquareMatrix3(const double testDura
 
 				const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
 
-				if (!(wTc * testVector).isEqual(test_wTc * testVector, NumericT<T>::weakEps()))
+				if (!(world_R_camera * testVector).isEqual(test_world_R_camera * testVector, NumericT<T>::weakEps()))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -355,10 +355,10 @@ bool TestCamera::testStandard2InvertedFlippedSquareMatrix3(const double testDura
 
 			const VectorT2<T> observation = RandomT<T>::vector2(randomGenerator, 0, T(width), 0, T(height));
 
-			const LineT3<T> ray = pinholeCamera.ray(observation, HomogenousMatrixT4<T>(wTc));
+			const LineT3<T> ray = pinholeCamera.ray(observation, HomogenousMatrixT4<T>(world_R_camera));
 			const VectorT3<T> position = ray.point(RandomT<T>::scalar(randomGenerator, T(0.1), T(2)));
 
-			if (!pinholeCamera.template projectToImageIF<false, false>(HomogenousMatrixT4<T>(fTw), position).isEqual(observation, 2))
+			if (!pinholeCamera.template projectToImageIF<false, false>(HomogenousMatrixT4<T>(flippedCamera_R_world), position).isEqual(observation, 2))
 			{
 				scopedIteration.setInaccurate();
 			}
@@ -387,17 +387,17 @@ bool TestCamera::testStandard2InvertedFlippedQuaternion(const double testDuratio
 
 	do
 	{
-		const QuaternionT<T> wTc(RandomT<T>::quaternion(randomGenerator));
-		ocean_assert(wTc.isValid());
+		const QuaternionT<T> world_Q_camera(RandomT<T>::quaternion(randomGenerator));
+		ocean_assert(world_Q_camera.isValid());
 
-		const QuaternionT<T> fTw = CameraT<T>::standard2InvertedFlipped(wTc);
-		ocean_assert(fTw.isValid());
+		const QuaternionT<T> flippedCamera_Q_world = CameraT<T>::standard2InvertedFlipped(world_Q_camera);
+		ocean_assert(flippedCamera_Q_world.isValid());
 
 		{
-			const QuaternionT<T> wTf = wTc * QuaternionT<T>(RotationT<T>(1, 0, 0, NumericT<T>::pi()));
+			const QuaternionT<T> world_Q_flippedCamera = world_Q_camera * QuaternionT<T>(RotationT<T>(1, 0, 0, NumericT<T>::pi()));
 
-			QuaternionT<T> test_fTw;
-			if (wTf.invert(test_fTw))
+			QuaternionT<T> test_flippedCamera_Q_world;
+			if (world_Q_flippedCamera.invert(test_flippedCamera_Q_world))
 			{
 				for (unsigned int n = 0u; n < 5u; ++n)
 				{
@@ -405,7 +405,7 @@ bool TestCamera::testStandard2InvertedFlippedQuaternion(const double testDuratio
 
 					const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
 
-					if (!(fTw * testVector).isEqual(test_fTw * testVector, NumericT<T>::weakEps()))
+					if (!(flippedCamera_Q_world * testVector).isEqual(test_flippedCamera_Q_world * testVector, NumericT<T>::weakEps()))
 					{
 						scopedIteration.setInaccurate();
 					}
@@ -414,7 +414,7 @@ bool TestCamera::testStandard2InvertedFlippedQuaternion(const double testDuratio
 		}
 
 		{
-			const QuaternionT<T> test_wTc = CameraT<T>::invertedFlipped2Standard(fTw);
+			const QuaternionT<T> test_world_Q_camera = CameraT<T>::invertedFlipped2Standard(flippedCamera_Q_world);
 
 			for (unsigned int n = 0u; n < 5u; ++n)
 			{
@@ -422,7 +422,7 @@ bool TestCamera::testStandard2InvertedFlippedQuaternion(const double testDuratio
 
 				const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
 
-				if (!(wTc * testVector).isEqual(test_wTc * testVector, NumericT<T>::weakEps()))
+				if (!(world_Q_camera * testVector).isEqual(test_world_Q_camera * testVector, NumericT<T>::weakEps()))
 				{
 					scopedIteration.setInaccurate();
 				}
@@ -440,10 +440,10 @@ bool TestCamera::testStandard2InvertedFlippedQuaternion(const double testDuratio
 
 			const VectorT2<T> observation = RandomT<T>::vector2(randomGenerator, 0, T(width), 0, T(height));
 
-			const LineT3<T> ray = pinholeCamera.ray(observation, HomogenousMatrixT4<T>(wTc));
+			const LineT3<T> ray = pinholeCamera.ray(observation, HomogenousMatrixT4<T>(world_Q_camera));
 			const VectorT3<T> position = ray.point(RandomT<T>::scalar(randomGenerator, T(0.1), T(2)));
 
-			if (!pinholeCamera.template projectToImageIF<false, false>(HomogenousMatrixT4<T>(fTw), position).isEqual(observation, 2))
+			if (!pinholeCamera.template projectToImageIF<false, false>(HomogenousMatrixT4<T>(flippedCamera_Q_world), position).isEqual(observation, 2))
 			{
 				scopedIteration.setInaccurate();
 			}
