@@ -12,6 +12,7 @@
 #include "ocean/test/testmath/TestBoundingSphere.h"
 #include "ocean/test/testmath/TestBox2.h"
 #include "ocean/test/testmath/TestBox3.h"
+#include "ocean/test/testmath/TestCamera.h"
 #include "ocean/test/testmath/TestCone3.h"
 #include "ocean/test/testmath/TestCylinder3.h"
 #include "ocean/test/testmath/TestEquation.h"
@@ -119,6 +120,15 @@ bool testMath(const double testDuration, Worker& worker, const std::string& test
 		Log::info() << " ";
 		Log::info() << " ";
 		allSucceeded = TestRandom::test(testDuration) && allSucceeded;
+	}
+
+	if (testSet.empty() || testSet.find("camera") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		allSucceeded = TestCamera::test(testDuration) && allSucceeded;
 	}
 
 	if (testSet.empty() || testSet.find("pinholecamera") != testSet.end())

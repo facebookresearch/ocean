@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_TEST_TESTMATH_CAMERA_H
-#define META_OCEAN_TEST_TESTMATH_CAMERA_H
+#ifndef META_OCEAN_TEST_TESTMATH_PINHOLE_CAMERA_H
+#define META_OCEAN_TEST_TESTMATH_PINHOLE_CAMERA_H
 
 #include "ocean/test/testmath/TestMath.h"
 
@@ -20,7 +20,7 @@ namespace TestMath
 {
 
 /**
- * This class implements camera tests.
+ * This class implements tests for the PinholeCamera.
  * @ingroup testmath
  */
 class OCEAN_TEST_MATH_EXPORT TestPinholeCamera
@@ -28,7 +28,7 @@ class OCEAN_TEST_MATH_EXPORT TestPinholeCamera
 	public:
 
 		/**
-		 * Tests all camera functions.
+		 * Tests all pinhole camera functions.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
@@ -87,38 +87,6 @@ class OCEAN_TEST_MATH_EXPORT TestPinholeCamera
 		 */
 		template <typename T>
 		static bool testVectorDistorted(const unsigned int width, const unsigned int height, const double testDuration);
-
-		/**
-		 * Tests function determining whether an object point lies in front of a camera.
-		 * @param testDuration The number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		template <typename T>
-		static bool testObjectPointInFront(const double testDuration);
-
-		/**
-		 * Tests the conversion of a homogenous matrix from standard coordinate system to an inverted and flipped coordinate system.
-		 * @param testDuration The number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		template <typename T>
-		static bool testStandard2InvertedFlippedHomogenousMatrix4(const double testDuration);
-
-		/**
-		 * Tests the conversion of a 3x3 rotation matrix from standard coordinate system to an inverted and flipped coordinate system.
-		 * @param testDuration The number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		template <typename T>
-		static bool testStandard2InvertedFlippedSquareMatrix3(const double testDuration);
-
-		/**
-		 * Tests the conversion of a quaternion from standard coordinate system to an inverted and flipped coordinate system.
-		 * @param testDuration The number of seconds for each test, with range (0, infinity)
-		 * @return True, if succeeded
-		 */
-		template <typename T>
-		static bool testStandard2InvertedFlippedQuaternion(const double testDuration);
 };
 
 }
@@ -127,4 +95,4 @@ class OCEAN_TEST_MATH_EXPORT TestPinholeCamera
 
 }
 
-#endif // META_OCEAN_TEST_TESTMATH_CAMERA_H
+#endif // META_OCEAN_TEST_TESTMATH_PINHOLE_CAMERA_H

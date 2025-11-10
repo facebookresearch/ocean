@@ -36,82 +36,48 @@ bool TestPinholeCamera::test(const double testDuration)
 	Log::info() << " ";
 
 	allSucceeded = testCameraConstructor<float>(testDuration) && allSucceeded;
-
 	Log::info() << " ";
-
 	allSucceeded = testCameraConstructor<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
-
-	allSucceeded = testPatternCamera<float>(testDuration) && allSucceeded;
-
+	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testPatternCamera<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
 	allSucceeded = testPatternCamera<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
-
-	allSucceeded = testSubFrameCamera<float>(testDuration) && allSucceeded;
-
+	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testSubFrameCamera<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
 	allSucceeded = testSubFrameCamera<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
-
-	allSucceeded = testDistortion<float>(640u, 480u, testDuration) && allSucceeded;
-
+	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testDistortion<float>(640u, 480u, testDuration) && allSucceeded;
+	Log::info() << " ";
 	allSucceeded = testDistortion<double>(640u, 480u, testDuration) && allSucceeded;
 
 	Log::info() << " ";
-
-	allSucceeded = testVectorDistortionFree<float>(640u, 480u, testDuration) && allSucceeded;
-
+	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testVectorDistortionFree<float>(640u, 480u, testDuration) && allSucceeded;
+	Log::info() << " ";
 	allSucceeded = testVectorDistortionFree<double>(640u, 480u, testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 
 	allSucceeded = testVectorDistorted<float>(640u, 480u, testDuration) && allSucceeded;
-
 	Log::info() << " ";
-
 	allSucceeded = testVectorDistorted<double>(640u, 480u, testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testObjectPointInFront<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testObjectPointInFront<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testStandard2InvertedFlippedHomogenousMatrix4<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testStandard2InvertedFlippedHomogenousMatrix4<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testStandard2InvertedFlippedSquareMatrix3<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testStandard2InvertedFlippedSquareMatrix3<double>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testStandard2InvertedFlippedQuaternion<float>(testDuration) && allSucceeded;
-
-	Log::info() << " ";
-
-	allSucceeded = testStandard2InvertedFlippedQuaternion<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -129,106 +95,65 @@ bool TestPinholeCamera::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestPinholeCamera, CameraConstructorFloat)
+TEST(TestPinholeCamera, CameraConstructor_float)
 {
 	EXPECT_TRUE(TestPinholeCamera::testCameraConstructor<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestPinholeCamera, CameraConstructorDouble)
+TEST(TestPinholeCamera, CameraConstructor_double)
 {
 	EXPECT_TRUE(TestPinholeCamera::testCameraConstructor<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestPinholeCamera, PatternCameraFloat)
+TEST(TestPinholeCamera, PatternCamera_float)
 {
 	EXPECT_TRUE(TestPinholeCamera::testPatternCamera<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestPinholeCamera, PatternCameraDouble)
+TEST(TestPinholeCamera, PatternCamera_double)
 {
 	EXPECT_TRUE(TestPinholeCamera::testPatternCamera<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestPinholeCamera, SubFrameCameraFloat)
+TEST(TestPinholeCamera, SubFrameCamera_float)
 {
 	EXPECT_TRUE(TestPinholeCamera::testSubFrameCamera<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestPinholeCamera, SubFrameCameraDouble)
+TEST(TestPinholeCamera, SubFrameCamera_double)
 {
 	EXPECT_TRUE(TestPinholeCamera::testSubFrameCamera<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestPinholeCamera, DistortionFloat)
+TEST(TestPinholeCamera, Distortion_float)
 {
 	EXPECT_TRUE(TestPinholeCamera::testDistortion<float>(640u, 480u, GTEST_TEST_DURATION));
 }
 
-TEST(TestPinholeCamera, DistortionDouble)
+TEST(TestPinholeCamera, Distortion_double)
 {
 	EXPECT_TRUE(TestPinholeCamera::testDistortion<double>(640u, 480u, GTEST_TEST_DURATION));
 }
 
-TEST(TestPinholeCamera, VectorDistortionFreeFloat)
+TEST(TestPinholeCamera, VectorDistortionFree_float)
 {
 	EXPECT_TRUE(TestPinholeCamera::testVectorDistortionFree<float>(640u, 480u, GTEST_TEST_DURATION));
 }
 
-TEST(TestPinholeCamera, VectorDistortionFreeDouble)
+TEST(TestPinholeCamera, VectorDistortionFree_double)
 {
 	EXPECT_TRUE(TestPinholeCamera::testVectorDistortionFree<double>(640u, 480u, GTEST_TEST_DURATION));
 }
 
-TEST(TestPinholeCamera, VectorDistortedFloat)
+TEST(TestPinholeCamera, VectorDistorted_float)
 {
 	EXPECT_TRUE(TestPinholeCamera::testVectorDistorted<float>(640u, 480u, GTEST_TEST_DURATION));
 }
 
-TEST(TestPinholeCamera, VectorDistortedDouble)
+TEST(TestPinholeCamera, VectorDistorted_double)
 {
 	EXPECT_TRUE(TestPinholeCamera::testVectorDistorted<double>(640u, 480u, GTEST_TEST_DURATION));
 }
-
-TEST(TestPinholeCamera, ObjectPointInFrontFloat)
-{
-	EXPECT_TRUE(TestPinholeCamera::testObjectPointInFront<float>(GTEST_TEST_DURATION));
-}
-
-TEST(TestPinholeCamera, ObjectPointInFrontDouble)
-{
-	EXPECT_TRUE(TestPinholeCamera::testObjectPointInFront<double>(GTEST_TEST_DURATION));
-}
-
-TEST(TestPinholeCamera, Standard2InvertedFlippedHomogenousMatrix4Float)
-{
-	EXPECT_TRUE(TestPinholeCamera::testStandard2InvertedFlippedHomogenousMatrix4<float>(GTEST_TEST_DURATION));
-}
-
-TEST(TestPinholeCamera, Standard2InvertedFlippedHomogenousMatrix4Double)
-{
-	EXPECT_TRUE(TestPinholeCamera::testStandard2InvertedFlippedHomogenousMatrix4<double>(GTEST_TEST_DURATION));
-}
-
-TEST(TestPinholeCamera, Standard2InvertedFlippedSquareMatrix3Float)
-{
-	EXPECT_TRUE(TestPinholeCamera::testStandard2InvertedFlippedSquareMatrix3<float>(GTEST_TEST_DURATION));
-}
-
-TEST(TestPinholeCamera, Standard2InvertedFlippedSquareMatrix3Double)
-{
-	EXPECT_TRUE(TestPinholeCamera::testStandard2InvertedFlippedSquareMatrix3<double>(GTEST_TEST_DURATION));
-}
-
-TEST(TestPinholeCamera, Standard2InvertedFlippedQuaternionFloat)
-{
-	EXPECT_TRUE(TestPinholeCamera::testStandard2InvertedFlippedQuaternion<float>(GTEST_TEST_DURATION));
-}
-
-TEST(TestPinholeCamera, Standard2InvertedFlippedQuaternionDouble)
-{
-	EXPECT_TRUE(TestPinholeCamera::testStandard2InvertedFlippedQuaternion<double>(GTEST_TEST_DURATION));
-}
-
 
 #endif // OCEAN_USE_GTEST
 
@@ -689,341 +614,6 @@ bool TestPinholeCamera::testVectorDistorted(const unsigned int width, const unsi
 		if (NumericT<T>::abs(distortedProjectedImagePoint.x() - distortedImagePoint.x()) > 0.05 || NumericT<T>::abs(distortedProjectedImagePoint.y() - distortedImagePoint.y()) > 0.05)
 		{
 			scopedIteration.setInaccurate();
-		}
-	}
-	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
-
-	Log::info() << "Validation: " << validation;
-
-	return validation.succeeded();
-}
-
-template <typename T>
-bool TestPinholeCamera::testObjectPointInFront(const double testDuration)
-{
-	static_assert(std::is_same<T, float>::value || std::is_same<T, double>::value, "Template parameter T must be float or double.");
-
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Object Point in front test (" << TypeNamer::name<T>() << "):";
-
-	RandomGenerator randomGenerator;
-	ValidationPrecision validation(0.999, randomGenerator);
-
-	const Timestamp startTimestamp(true);
-
-	do
-	{
-		for (unsigned int n = 0u; n < 1000u; ++n)
-		{
-			{
-				ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-				// pose with default orientation
-
-				const SquareMatrixT3<T> orientation(true);
-				const HomogenousMatrixT4<T> pose(VectorT3<T>(RandomT<T>::scalar(randomGenerator, -10, 10), RandomT<T>::scalar(randomGenerator, -10, -10), 0));
-
-				const SquareMatrixT3<T> orientationIF(PinholeCameraT<T>::standard2InvertedFlipped(orientation));
-				const HomogenousMatrixT4<T> poseIF(PinholeCameraT<T>::standard2InvertedFlipped(pose));
-
-				const VectorT3<T> frontObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, -NumericT<T>::eps() * T(100)));
-				const VectorT3<T> backObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, 0, 100));
-
-				if (!PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, frontObjectPoint) || !PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, frontObjectPoint) || PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, backObjectPoint) || PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, backObjectPoint))
-				{
-					scopedIteration.setInaccurate();
-				}
-			}
-
-			{
-				ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-				// arbitrary pose
-
-				const SquareMatrixT3<T> orientation(RandomT<T>::quaternion(randomGenerator));
-				const HomogenousMatrixT4<T> pose(RandomT<T>::vector3(randomGenerator, -10, 10), orientation);
-
-				const HomogenousMatrixT4<T> poseIF(PinholeCameraT<T>::standard2InvertedFlipped(pose));
-				const SquareMatrixT3<T> orientationIF(PinholeCameraT<T>::standard2InvertedFlipped(orientation));
-
-				const VectorT3<T> localFrontObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, -NumericT<T>::eps() * T(100)));
-				const VectorT3<T> localBackObjectPoint(RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, -100, 100), RandomT<T>::scalar(randomGenerator, 0, 100));
-
-				const VectorT3<T> orientationFrontObjectPoint(orientation * localFrontObjectPoint);
-				const VectorT3<T> orientationBackObjectPoint(orientation * localBackObjectPoint);
-
-				const VectorT3<T> poseFrontObjectPoint(pose * localFrontObjectPoint);
-				const VectorT3<T> poseBackObjectPoint(pose * localBackObjectPoint);
-
-				if (!PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, poseFrontObjectPoint) || !PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, orientationFrontObjectPoint) || PinholeCameraT<T>::isObjectPointInFrontIF(poseIF, poseBackObjectPoint) || PinholeCameraT<T>::isObjectPointInFrontIF(orientationIF, orientationBackObjectPoint))
-				{
-					scopedIteration.setInaccurate();
-				}
-			}
-		}
-	}
-	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
-
-	Log::info() << "Validation: " << validation;
-
-	return validation.succeeded();
-}
-
-template <typename T>
-bool TestPinholeCamera::testStandard2InvertedFlippedHomogenousMatrix4(const double testDuration)
-{
-	static_assert(std::is_same<T, float>::value || std::is_same<T, double>::value, "Template parameter T must be float or double.");
-
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Standard2InvertedFlipped of HomogenousMatrixT4<" << TypeNamer::name<T>() << "> test:";
-
-	RandomGenerator randomGenerator;
-	ValidationPrecision validation(0.999, randomGenerator);
-
-	const Timestamp startTimestamp(true);
-
-	do
-	{
-		const VectorT3<T> translation(RandomT<T>::vector3(randomGenerator, -10, 10));
-		const VectorT3<T> scale(RandomT<T>::vector3(randomGenerator, T(0.5), T(2.0)));
-		const QuaternionT<T> quaternion(RandomT<T>::quaternion(randomGenerator));
-
-		{
-			const HomogenousMatrixT4<T> wTc(translation, quaternion, scale);
-			ocean_assert(wTc.isValid());
-
-			const HomogenousMatrixT4<T> fTw = PinholeCameraT<T>::standard2InvertedFlipped(wTc);
-			ocean_assert(fTw.isValid());
-
-			const HomogenousMatrixT4<T> wTf = wTc * HomogenousMatrixT4<T>(RotationT<T>(1, 0, 0, NumericT<T>::pi()));
-
-			HomogenousMatrixT4<T> test_fTw;
-			if (wTf.invert(test_fTw))
-			{
-				for (unsigned int n = 0u; n < 5u; ++n)
-				{
-					ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-					const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
-
-					if (!(fTw * testVector).isEqual(test_fTw * testVector, NumericT<T>::weakEps()))
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-			}
-
-			const HomogenousMatrixT4<T> test_wTc = PinholeCameraT<T>::invertedFlipped2Standard(fTw);
-
-			for (unsigned int n = 0u; n < 5u; ++n)
-			{
-				ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-				const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
-
-				if (!(wTc * testVector).isEqual(test_wTc * testVector, NumericT<T>::weakEps()))
-				{
-					scopedIteration.setInaccurate();
-				}
-			}
-		}
-
-		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-			const HomogenousMatrixT4<T> wTc(translation, quaternion);
-			ocean_assert(wTc.isValid());
-
-			const HomogenousMatrixT4<T> fTw = PinholeCameraT<T>::standard2InvertedFlipped(wTc);
-			ocean_assert(fTw.isValid());
-
-			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
-			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
-			const T fovX = RandomT<T>::scalar(randomGenerator, NumericT<T>::deg2rad(25), NumericT<T>::deg2rad(120));
-
-			const PinholeCameraT<T> pinholeCamera(width, height, fovX);
-
-			const VectorT2<T> observation = RandomT<T>::vector2(randomGenerator, 0, T(width), 0, T(height));
-
-			const LineT3<T> ray = pinholeCamera.ray(observation, wTc);
-			const VectorT3<T> position = ray.point(RandomT<T>::scalar(randomGenerator, T(0.1), T(2)));
-
-			if (!pinholeCamera.template projectToImageIF<false, false>(fTw, position).isEqual(observation, 2))
-			{
-				scopedIteration.setInaccurate();
-			}
-		}
-	}
-	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
-
-	Log::info() << "Validation: " << validation;
-
-	return validation.succeeded();
-}
-
-template <typename T>
-bool TestPinholeCamera::testStandard2InvertedFlippedSquareMatrix3(const double testDuration)
-{
-	static_assert(std::is_same<T, float>::value || std::is_same<T, double>::value, "Template parameter T must be float or double.");
-
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Standard2InvertedFlipped of SquareMatrixT3<" << TypeNamer::name<T>() << "> test:";
-
-	RandomGenerator randomGenerator;
-	ValidationPrecision validation(0.999, randomGenerator);
-
-	const Timestamp startTimestamp(true);
-
-	do
-	{
-		const SquareMatrixT3<T> wTc(RandomT<T>::rotation(randomGenerator));
-		ocean_assert(!wTc.isSingular());
-
-		const SquareMatrixT3<T> fTw = PinholeCameraT<T>::standard2InvertedFlipped(wTc);
-		ocean_assert(!fTw.isSingular());
-
-		{
-			const SquareMatrixT3<T> wTf = wTc * SquareMatrixT3<T>(RotationT<T>(1, 0, 0, NumericT<T>::pi()));
-
-			SquareMatrixT3<T> test_fTw;
-			if (wTf.invert(test_fTw))
-			{
-				for (unsigned int n = 0u; n < 5u; ++n)
-				{
-					ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-					const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
-
-					if (!(fTw * testVector).isEqual(test_fTw * testVector, NumericT<T>::weakEps()))
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-			}
-		}
-
-		{
-			const SquareMatrixT3<T> test_wTc = PinholeCameraT<T>::invertedFlipped2Standard(fTw);
-
-			for (unsigned int n = 0u; n < 5u; ++n)
-			{
-				ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-				const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
-
-				if (!(wTc * testVector).isEqual(test_wTc * testVector, NumericT<T>::weakEps()))
-				{
-					scopedIteration.setInaccurate();
-				}
-			}
-		}
-
-		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
-			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
-			const T fovX = RandomT<T>::scalar(randomGenerator, NumericT<T>::deg2rad(25), NumericT<T>::deg2rad(120));
-
-			const PinholeCameraT<T> pinholeCamera(width, height, fovX);
-
-			const VectorT2<T> observation = RandomT<T>::vector2(randomGenerator, 0, T(width), 0, T(height));
-
-			const LineT3<T> ray = pinholeCamera.ray(observation, HomogenousMatrixT4<T>(wTc));
-			const VectorT3<T> position = ray.point(RandomT<T>::scalar(randomGenerator, T(0.1), T(2)));
-
-			if (!pinholeCamera.template projectToImageIF<false, false>(HomogenousMatrixT4<T>(fTw), position).isEqual(observation, 2))
-			{
-				scopedIteration.setInaccurate();
-			}
-		}
-	}
-	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
-
-	Log::info() << "Validation: " << validation;
-
-	return validation.succeeded();
-}
-
-template <typename T>
-bool TestPinholeCamera::testStandard2InvertedFlippedQuaternion(const double testDuration)
-{
-	static_assert(std::is_same<T, float>::value || std::is_same<T, double>::value, "Template parameter T must be float or double.");
-
-	ocean_assert(testDuration > 0.0);
-
-	Log::info() << "Standard2InvertedFlipped of QuaternionT<" << TypeNamer::name<T>() << "> test:";
-
-	RandomGenerator randomGenerator;
-	ValidationPrecision validation(0.999, randomGenerator);
-
-	const Timestamp startTimestamp(true);
-
-	do
-	{
-		const QuaternionT<T> wTc(RandomT<T>::quaternion(randomGenerator));
-		ocean_assert(wTc.isValid());
-
-		const QuaternionT<T> fTw = PinholeCameraT<T>::standard2InvertedFlipped(wTc);
-		ocean_assert(fTw.isValid());
-
-		{
-			const QuaternionT<T> wTf = wTc * QuaternionT<T>(RotationT<T>(1, 0, 0, NumericT<T>::pi()));
-
-			QuaternionT<T> test_fTw;
-			if (wTf.invert(test_fTw))
-			{
-				for (unsigned int n = 0u; n < 5u; ++n)
-				{
-					ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-					const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
-
-					if (!(fTw * testVector).isEqual(test_fTw * testVector, NumericT<T>::weakEps()))
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-			}
-		}
-
-		{
-			const QuaternionT<T> test_wTc = PinholeCameraT<T>::invertedFlipped2Standard(fTw);
-
-			for (unsigned int n = 0u; n < 5u; ++n)
-			{
-				ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-				const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator, -1, 1);
-
-				if (!(wTc * testVector).isEqual(test_wTc * testVector, NumericT<T>::weakEps()))
-				{
-					scopedIteration.setInaccurate();
-				}
-			}
-		}
-
-		{
-			ValidationPrecision::ScopedIteration scopedIteration(validation);
-
-			const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
-			const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
-			const T fovX = RandomT<T>::scalar(randomGenerator, NumericT<T>::deg2rad(25), NumericT<T>::deg2rad(120));
-
-			const PinholeCameraT<T> pinholeCamera(width, height, fovX);
-
-			const VectorT2<T> observation = RandomT<T>::vector2(randomGenerator, 0, T(width), 0, T(height));
-
-			const LineT3<T> ray = pinholeCamera.ray(observation, HomogenousMatrixT4<T>(wTc));
-			const VectorT3<T> position = ray.point(RandomT<T>::scalar(randomGenerator, T(0.1), T(2)));
-
-			if (!pinholeCamera.template projectToImageIF<false, false>(HomogenousMatrixT4<T>(fTw), position).isEqual(observation, 2))
-			{
-				scopedIteration.setInaccurate();
-			}
 		}
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
