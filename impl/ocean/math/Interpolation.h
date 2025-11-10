@@ -132,7 +132,7 @@ class Interpolation
 		 * @param x1 Position of the second supporting value, must not be identical with x0
 		 * @param y1 Second supporting value
 		 * @param x Position for that the interpolation value is requested
-		 * @return Resulting Lagrange intgerpolatino value
+		 * @return Resulting Lagrange interpolation value
 		 * @tparam T Data type of the supporting values
 		 * @tparam TKey Data type of the positions of the supporting values
 		 */
@@ -148,7 +148,7 @@ class Interpolation
 		 * @param x2 Position of the third supporting value, must not be identical with x0 or x1
 		 * @param y2 Third supporting value
 		 * @param x Position for that the interpolation value is requested
-		 * @return Resulting Lagrange intgerpolatino value
+		 * @return Resulting Lagrange interpolation value
 		 * @tparam T Data type of the supporting values
 		 * @tparam TKey Data type of the positions of the supporting values
 		 */
@@ -157,7 +157,7 @@ class Interpolation
 };
 
 /**
- * This class implements an interpolation map allowing to determine an interplated value between several individual key values.
+ * This class implements an interpolation map allowing to determine an interpolated value between several individual key values.
  * @tparam TKey The data type of the stored keys
  * @tparam TValue The data type of the stored values
  * @tparam TFactor The data type of the interpolation factor
@@ -273,7 +273,7 @@ class InterpolationMap
 		/**
 		 * Inserts a new pair of key and value to this map object.
 		 * @param key New key to be inserted
-		 * @param value Corresponding value to be instered
+		 * @param value Corresponding value to be inserted
 		 * @param forceOverwrite True, if an already existing pair with same key will be overwritten by the given pair
 		 * @return True, if the given pair has been inserted
 		 */
@@ -336,14 +336,14 @@ class InterpolationMap
 
 		/**
 		 * Returns whether two interpolation objects are equal.
-		 * @param object Second interpoation object
+		 * @param object Second interpolation object
 		 * @return True, if so
 		 */
 		inline bool operator==(const InterpolationMap<TKey, TValue, TFactor>& object) const;
 
 		/**
 		 * Returns whether two interpolation objects are not equal.
-		 * @param object Second interpoation object
+		 * @param object Second interpolation object
 		 * @return True, if so
 		 */
 		inline bool operator!=(const InterpolationMap<TKey, TValue, TFactor>& object) const;
@@ -590,13 +590,13 @@ inline T Interpolation::bilinear(const T& v00, const T& v01, const T& v10, const
 		// 1 0
 		case 0x00010100:
 			// position on the diagonal
-			return linear(v10, v01, Vector2(tx, 1 - ty).length() * Scalar(0.70710678118654752440084436210485));
+			return linear(v10, v01, VectorT2<TFactor>(tx, TFactor(1) - ty).length() * TFactor(0.70710678118654752440084436210485));
 
 		// 1 0
 		// 0 1
 		case 0x01000001:
 			// position on the diagonal
-			return linear(v00, v11, Vector2(tx, ty).length() * Scalar(0.70710678118654752440084436210485));
+			return linear(v00, v11, VectorT2<TFactor>(tx, ty).length() * TFactor(0.70710678118654752440084436210485));
 
 		// 1 0
 		// 0 0
@@ -651,8 +651,8 @@ T Interpolation::lagrange3(const TKey& x0, const T& y0, const TKey& x1, const T&
 	ocean_assert(NumericT<TKey>::isNotEqual(x0, x1) && NumericT<TKey>::isNotEqual(x0, x2) && NumericT<TKey>::isNotEqual(x1, x2));
 
 	return y0 * ((x - x1) * (x - x2)) * (TKey(1) / ((x0 - x1) * (x0 - x2)))
-		+ y1 * ((x - x0) * (x - x2)) * (TKey(1) / ((x1 - x0) * (x1 - x2)))
-		+ y2 * ((x - x0) * (x - x1)) * (TKey(1) / ((x2 - x0) * (x2 - x1)));
+			+ y1 * ((x - x0) * (x - x2)) * (TKey(1) / ((x1 - x0) * (x1 - x2)))
+			+ y2 * ((x - x0) * (x - x1)) * (TKey(1) / ((x2 - x0) * (x2 - x1)));
 }
 
 template <typename TKey, typename TValue, typename TFactor>
