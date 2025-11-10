@@ -297,8 +297,8 @@ inline StaticVector<T, tCapacity>::StaticVector(T&& value) :
 
 template <typename T, size_t tCapacity>
 inline StaticVector<T, tCapacity>::StaticVector(const size_t number, const T& value) :
-	StaticBuffer<T, tCapacity>(number, value),
-	size_(number)
+	StaticBuffer<T, tCapacity>(std::min(number, tCapacity), value),
+	size_(std::min(number, tCapacity))
 {
 	static_assert(tCapacity > 0, "Invalid vector capacity!");
 
@@ -312,28 +312,34 @@ inline StaticVector<T, tCapacity>::StaticVector(const T* values, const size_t si
 
 	ocean_assert(size <= tCapacity);
 
-	for (size_t n = 0; n < std::min(size, tCapacity); ++n)
+	const size_t actualSize = std::min(size, tCapacity);
+
+	for (size_t n = 0; n < actualSize; ++n)
 	{
 		this->elements_[n] = values[n];
 	}
 
-	size_ = size;
+	size_ = actualSize;
 }
 
 template <typename T, size_t tCapacity>
 inline StaticVector<T, tCapacity>::StaticVector(const std::vector<T>& values) :
 	StaticBuffer<T, tCapacity>(values),
-	size_(min(tCapacity, values.size()))
+	size_(std::min(tCapacity, values.size()))
 {
 	static_assert(tCapacity > 0, "Invalid vector capacity!");
 }
 
 template <typename T, size_t tCapacity>
 inline StaticVector<T, tCapacity>::StaticVector(std::vector<T>&& values) :
-	StaticBuffer<T, tCapacity>(std::move(values)),
-	size_(min(tCapacity, values.size()))
+	size_(std::min(tCapacity, values.size()))
 {
 	static_assert(tCapacity > 0, "Invalid vector capacity!");
+
+	for (size_t n = 0; n < size_; ++n)
+	{
+		this->elements_[n] = std::move(values[n]);
+	}
 }
 
 template <typename T, size_t tCapacity>
@@ -394,11 +400,11 @@ template <typename T, size_t tCapacity>
 template <size_t tCapacity2>
 inline void StaticVector<T, tCapacity>::pushBack(const StaticVector<T, tCapacity2>& value)
 {
-	size_t elements = min(value.size(), tCapacity - size_);
+	size_t elements = std::min(value.size(), tCapacity - size_);
 
 	for (size_t n = 0; n < elements; ++n)
 	{
-		this->elements_[n + size_] = value.elements_[n];
+		this->elements_[n + size_] = value[n];
 	}
 
 	size_ += elements;
@@ -407,11 +413,11 @@ inline void StaticVector<T, tCapacity>::pushBack(const StaticVector<T, tCapacity
 template <typename T, size_t tCapacity>
 inline void StaticVector<T, tCapacity>::pushBack(const std::vector<T>& value)
 {
-	size_t elements = min(value.size(), tCapacity - size_);
+	size_t elements = std::min(value.size(), tCapacity - size_);
 
 	for (size_t n = 0; n < elements; ++n)
 	{
-		this->elements_[n + size_] = value.elements_[n];
+		this->elements_[n + size_] = value[n];
 	}
 
 	size_ += elements;
@@ -522,9 +528,23 @@ inline void StaticVector<T, tCapacity>::resize(const size_t size)
 {
 	ocean_assert(size <= tCapacity);
 
-	for (size_t n = size; n < size_; ++n)
+	if (size < size_)
+  	{
+		// we need to overwrite existing elements
+
+		for (size_t n = size; n < size_; ++n)
+		{
+			this->elements_[n] = T();
+		}
+	}
+	else
 	{
-		this->elements_[n] = T();
+		// we need to initialize new elements
+
+		for (size_t n = size_; n < size; ++n)
+		{
+			this->elements_[n] = T();
+		}
 	}
 
 	size_ = size;
