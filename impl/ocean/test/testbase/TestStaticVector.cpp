@@ -58,6 +58,24 @@ bool TestStaticVector::test(const double testDuration)
 	allSucceeded = testComparison(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testPushBack(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testPopBack(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testErase(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -96,6 +114,21 @@ TEST(TestStaticVector, Resize)
 TEST(TestStaticVector, Comparison)
 {
 	EXPECT_TRUE(TestStaticVector::testComparison(GTEST_TEST_DURATION));
+}
+
+TEST(TestStaticVector, PushBack)
+{
+	EXPECT_TRUE(TestStaticVector::testPushBack(GTEST_TEST_DURATION));
+}
+
+TEST(TestStaticVector, PopBack)
+{
+	EXPECT_TRUE(TestStaticVector::testPopBack(GTEST_TEST_DURATION));
+}
+
+TEST(TestStaticVector, Erase)
+{
+	EXPECT_TRUE(TestStaticVector::testErase(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -745,6 +778,538 @@ bool TestStaticVector::testComparison(RandomGenerator& randomGenerator)
 		}
 
 		break;
+	}
+
+	return true;
+}
+
+bool TestStaticVector::testPushBack(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing pushBack:";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		OCEAN_EXPECT_TRUE(validation, testPushBack<int32_t, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPushBack<int32_t, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPushBack<int32_t, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testPushBack<uint8_t, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPushBack<uint8_t, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPushBack<uint8_t, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testPushBack<float, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPushBack<float, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPushBack<float, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testPushBack<std::string, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPushBack<std::string, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPushBack<std::string, 10>(randomGenerator));
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestStaticVector::testPopBack(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing popBack:";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		OCEAN_EXPECT_TRUE(validation, testPopBack<int32_t, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPopBack<int32_t, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPopBack<int32_t, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testPopBack<uint8_t, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPopBack<uint8_t, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPopBack<uint8_t, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testPopBack<float, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPopBack<float, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPopBack<float, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testPopBack<std::string, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPopBack<std::string, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testPopBack<std::string, 10>(randomGenerator));
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestStaticVector::testErase(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing erase:";
+
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		OCEAN_EXPECT_TRUE(validation, testErase<int32_t, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testErase<int32_t, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testErase<int32_t, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testErase<uint8_t, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testErase<uint8_t, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testErase<uint8_t, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testErase<float, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testErase<float, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testErase<float, 10>(randomGenerator));
+
+		OCEAN_EXPECT_TRUE(validation, testErase<std::string, 1>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testErase<std::string, 2>(randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, testErase<std::string, 10>(randomGenerator));
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T, size_t tCapacity>
+bool TestStaticVector::testPushBack(RandomGenerator& randomGenerator)
+{
+	static_assert(tCapacity >= 1, "Invalid capacity");
+
+	{
+		// pushBack()
+
+		StaticVector<T, tCapacity> staticVector;
+
+		std::vector<T> expectedValues;
+
+		for (size_t n = 0; n < tCapacity; ++n)
+		{
+			const T value = TestStaticBuffer::randomValue<T>(randomGenerator);
+			expectedValues.push_back(value);
+
+			if (n % 2 == 0)
+			{
+				staticVector.pushBack(value);
+			}
+			else
+			{
+				T movableValue = value;
+				staticVector.pushBack(std::move(movableValue));
+			}
+
+			if (staticVector.size() != n + 1)
+			{
+				return false;
+			}
+
+			if (staticVector[n] != expectedValues[n])
+			{
+				return false;
+			}
+		}
+
+		if (!staticVector.occupied())
+		{
+			return false;
+		}
+	}
+
+	{
+		// securePushBack()
+
+		StaticVector<T, tCapacity> staticVector;
+
+		for (size_t n = 0; n < tCapacity; ++n)
+		{
+			const T value = TestStaticBuffer::randomValue<T>(randomGenerator);
+
+			if (n % 2 == 0)
+			{
+				if (!staticVector.securePushBack(value))
+				{
+					return false;
+				}
+			}
+			else
+			{
+				T movableValue = value;
+				if (!staticVector.securePushBack(std::move(movableValue)))
+				{
+					return false;
+				}
+			}
+		}
+
+		const T extraValue = TestStaticBuffer::randomValue<T>(randomGenerator);
+
+		if (staticVector.securePushBack(extraValue))
+		{
+			return false;
+		}
+
+		T movableExtraValue = extraValue;
+
+		if (staticVector.securePushBack(std::move(movableExtraValue)))
+		{
+			return false;
+		}
+	}
+
+	if constexpr (tCapacity >= 3)
+	{
+		// pushBack() with vector
+
+		StaticVector<T, tCapacity> staticVector;
+
+		staticVector.pushBack(TestStaticBuffer::randomValue<T>(randomGenerator));
+
+		std::vector<T> vectorToPush;
+		const size_t pushCount = std::min(size_t(3), tCapacity - staticVector.size());
+
+		for (size_t n = 0; n < pushCount; ++n)
+		{
+			vectorToPush.push_back(TestStaticBuffer::randomValue<T>(randomGenerator));
+		}
+
+		const size_t sizeBefore = staticVector.size();
+		staticVector.pushBack(vectorToPush);
+
+		if (staticVector.size() != sizeBefore + pushCount)
+		{
+			return false;
+		}
+
+		for (size_t n = 0; n < pushCount; ++n)
+		{
+			if (staticVector[sizeBefore + n] != vectorToPush[n])
+			{
+				return false;
+			}
+		}
+	}
+
+	if constexpr (tCapacity >= 3)
+	{
+		// pushBack() with static vector
+
+		StaticVector<T, tCapacity> staticVector1;
+		staticVector1.pushBack(TestStaticBuffer::randomValue<T>(randomGenerator));
+
+		StaticVector<T, 3> staticVector2;
+		const size_t pushCount = std::min(size_t(2), tCapacity - staticVector1.size());
+
+		for (size_t n = 0; n < pushCount; ++n)
+		{
+			staticVector2.pushBack(TestStaticBuffer::randomValue<T>(randomGenerator));
+		}
+
+		const size_t sizeBefore = staticVector1.size();
+		staticVector1.pushBack(staticVector2);
+
+		if (staticVector1.size() != sizeBefore + pushCount)
+		{
+			return false;
+		}
+
+		for (size_t n = 0; n < pushCount; ++n)
+		{
+			if (staticVector1[sizeBefore + n] != staticVector2[n])
+			{
+				return false;
+			}
+		}
+	}
+
+	{
+		// bool operator
+
+		StaticVector<T, tCapacity> staticVector;
+
+		if (staticVector)
+		{
+			return false;
+		}
+
+		staticVector.pushBack(TestStaticBuffer::randomValue<T>(randomGenerator));
+
+		if (!staticVector)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+template <typename T, size_t tCapacity>
+bool TestStaticVector::testPopBack(RandomGenerator& randomGenerator)
+{
+	static_assert(tCapacity >= 1, "Invalid capacity");
+
+	{
+		// popBack()
+
+		StaticVector<T, tCapacity> staticVector;
+
+		std::vector<T> expectedValues;
+
+		for (size_t n = 0; n < tCapacity; ++n)
+		{
+			const T value = TestStaticBuffer::randomValue<T>(randomGenerator);
+			expectedValues.push_back(value);
+			staticVector.pushBack(value);
+		}
+
+		for (size_t n = tCapacity; n > 0; --n)
+		{
+			if (staticVector.size() != n)
+			{
+				return false;
+			}
+
+			staticVector.popBack();
+
+			if (staticVector.size() != n - 1)
+			{
+				return false;
+			}
+
+			const T* data = staticVector.data();
+			if (data[n - 1] != T())
+			{
+				return false;
+			}
+		}
+
+		if (!staticVector.empty())
+		{
+			return false;
+		}
+	}
+
+	{
+		// securePopBack()
+
+		StaticVector<T, tCapacity> staticVector;
+
+		for (size_t n = 0; n < tCapacity; ++n)
+		{
+			staticVector.pushBack(TestStaticBuffer::randomValue<T>(randomGenerator));
+		}
+
+		for (size_t n = tCapacity; n > 0; --n)
+		{
+			staticVector.securePopBack();
+
+			if (staticVector.size() != n - 1)
+			{
+				return false;
+			}
+		}
+
+		// calling on empty vector should be safe
+		staticVector.securePopBack();
+
+		if (staticVector.size() != 0)
+		{
+			return false;
+		}
+	}
+
+	{
+		// weakPopBack()
+
+		StaticVector<T, tCapacity> staticVector;
+
+		std::vector<T> expectedValues;
+
+		for (size_t n = 0; n < tCapacity; ++n)
+		{
+			const T value = TestStaticBuffer::randomValue<T>(randomGenerator);
+			expectedValues.push_back(value);
+			staticVector.pushBack(value);
+		}
+
+		for (size_t n = tCapacity; n > 0; --n)
+		{
+			staticVector.weakPopBack();
+
+			if (staticVector.size() != n - 1)
+			{
+				return false;
+			}
+
+			// Verify the element was NOT reset (weak variant)
+			const T* data = staticVector.data();
+			if (data[n - 1] != expectedValues[n - 1])
+			{
+				return false;
+			}
+		}
+	}
+
+	{
+		// secureWeakPopBack()
+
+		StaticVector<T, tCapacity> staticVector;
+
+		for (size_t n = 0; n < tCapacity; ++n)
+		{
+			staticVector.pushBack(TestStaticBuffer::randomValue<T>(randomGenerator));
+		}
+
+		for (size_t n = tCapacity; n > 0; --n)
+		{
+			staticVector.secureWeakPopBack();
+
+			if (staticVector.size() != n - 1)
+			{
+				return false;
+			}
+		}
+
+		// calling on empty vector should be safe
+		staticVector.secureWeakPopBack();
+
+		if (staticVector.size() != 0)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+template <typename T, size_t tCapacity>
+bool TestStaticVector::testErase(RandomGenerator& randomGenerator)
+{
+	static_assert(tCapacity >= 1, "Invalid capacity");
+
+	if constexpr (tCapacity >= 3)
+	{
+		// erase()
+
+		StaticVector<T, tCapacity> staticVector;
+
+		std::vector<T> expectedValues;
+
+		for (size_t n = 0; n < tCapacity; ++n)
+		{
+			const T value = TestStaticBuffer::randomValue<T>(randomGenerator);
+			expectedValues.push_back(value);
+			staticVector.pushBack(value);
+		}
+
+		const size_t eraseIndex = tCapacity / 2;
+		staticVector.erase(eraseIndex);
+		expectedValues.erase(expectedValues.begin() + eraseIndex);
+
+		if (staticVector.size() != tCapacity - 1)
+		{
+			return false;
+		}
+
+		for (size_t n = 0; n < staticVector.size(); ++n)
+		{
+			if (staticVector[n] != expectedValues[n])
+			{
+				return false;
+			}
+		}
+
+		const T* data = staticVector.data();
+		if (data[staticVector.size()] != T())
+		{
+			return false;
+		}
+
+		staticVector.erase(0);
+		expectedValues.erase(expectedValues.begin());
+
+		if (staticVector.size() != tCapacity - 2)
+		{
+			return false;
+		}
+
+		for (size_t n = 0; n < staticVector.size(); ++n)
+		{
+			if (staticVector[n] != expectedValues[n])
+			{
+				return false;
+			}
+		}
+
+		staticVector.erase(staticVector.size() - 1);
+
+		if (staticVector.size() != tCapacity - 3)
+		{
+			return false;
+		}
+	}
+
+	if constexpr (tCapacity >= 3)
+	{
+		// unstableErase()
+
+		StaticVector<T, tCapacity> staticVector;
+
+		for (size_t n = 0; n < tCapacity; ++n)
+		{
+			staticVector.pushBack(TestStaticBuffer::randomValue<T>(randomGenerator));
+		}
+
+		const size_t eraseIndex = 1;
+		const T lastElement = staticVector.back();
+
+		staticVector.unstableErase(eraseIndex);
+
+		if (staticVector.size() != tCapacity - 1)
+		{
+			return false;
+		}
+
+		if (staticVector[eraseIndex] != lastElement)
+		{
+			return false;
+		}
+
+		const T* data = staticVector.data();
+		if (data[staticVector.size()] != T())
+		{
+			return false;
+		}
+
+		const size_t sizeBefore = staticVector.size();
+		staticVector.unstableErase(staticVector.size() - 1);
+
+		if (staticVector.size() != sizeBefore - 1)
+		{
+			return false;
+		}
 	}
 
 	return true;

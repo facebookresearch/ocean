@@ -52,7 +52,7 @@ class OCEAN_TEST_BASE_EXPORT TestStaticVector
 
 		/**
 		 * Tests the clear function.
-		 v
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
 		static bool testClear(const double testDuration);
@@ -70,6 +70,27 @@ class OCEAN_TEST_BASE_EXPORT TestStaticVector
 		 * @return True, if succeeded
 		 */
 		static bool testComparison(const double testDuration);
+
+		/**
+		 * Tests the pushBack functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testPushBack(const double testDuration);
+
+		/**
+		 * Tests the popBack functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testPopBack(const double testDuration);
+
+		/**
+		 * Tests the erase functions.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testErase(const double testDuration);
 
 	protected:
 
@@ -122,6 +143,36 @@ class OCEAN_TEST_BASE_EXPORT TestStaticVector
 		 */
 		template <typename T, size_t tCapacity>
 		static bool testComparison(RandomGenerator& randomGenerator);
+
+		/**
+		 * Tests the pushBack functions.
+		 * @param randomGenerator The random generator to be used
+		 * @return True, if succeeded
+		 * @tparam T The data type of the buffer
+		 * @tparam tCapacity The capacity of the buffer, with range [1, infinity)
+		 */
+		template <typename T, size_t tCapacity>
+		static bool testPushBack(RandomGenerator& randomGenerator);
+
+		/**
+		 * Tests the popBack functions.
+		 * @param randomGenerator The random generator to be used
+		 * @return True, if succeeded
+		 * @tparam T The data type of the buffer
+		 * @tparam tCapacity The capacity of the buffer, with range [1, infinity)
+		 */
+		template <typename T, size_t tCapacity>
+		static bool testPopBack(RandomGenerator& randomGenerator);
+
+		/**
+		 * Tests the erase functions.
+		 * @param randomGenerator The random generator to be used
+		 * @return True, if succeeded
+		 * @tparam T The data type of the buffer
+		 * @tparam tCapacity The capacity of the buffer, with range [1, infinity)
+		 */
+		template <typename T, size_t tCapacity>
+		static bool testErase(RandomGenerator& randomGenerator);
 };
 
 }
