@@ -365,35 +365,35 @@ class Validation
 };
 
 #ifndef OCEAN_EXPECT_TRUE
-	#define OCEAN_EXPECT_TRUE(validation, value) validation.expectTrue(value, __FILE__, __LINE__)
+	#define OCEAN_EXPECT_TRUE(validation, ...) validation.expectTrue(__VA_ARGS__, __FILE__, __LINE__)
 #endif
 
 #ifndef OCEAN_EXPECT_FALSE
-	#define OCEAN_EXPECT_FALSE(validation, value) validation.expectFalse(value, __FILE__, __LINE__)
+	#define OCEAN_EXPECT_FALSE(validation, ...) validation.expectFalse(__VA_ARGS__, __FILE__, __LINE__)
 #endif
 
 #ifndef OCEAN_EXPECT_EQUAL
-	#define OCEAN_EXPECT_EQUAL(validation, value0, value1) validation.expectEqual(value0, value1, __FILE__, __LINE__)
+	#define OCEAN_EXPECT_EQUAL(validation, ...) validation.expectEqual(__VA_ARGS__, __FILE__, __LINE__)
 #endif
 
 #ifndef OCEAN_EXPECT_LESS
-	#define OCEAN_EXPECT_LESS(validation, value0, value1) validation.expectLess(value0, value1, __FILE__, __LINE__)
+	#define OCEAN_EXPECT_LESS(validation, ...) validation.expectLess(__VA_ARGS__, __FILE__, __LINE__)
 #endif
 
 #ifndef OCEAN_EXPECT_LESS_EQUAL
-	#define OCEAN_EXPECT_LESS_EQUAL(validation, value0, value1) validation.expectLessEqual(value0, value1, __FILE__, __LINE__)
+	#define OCEAN_EXPECT_LESS_EQUAL(validation, ...) validation.expectLessEqual(__VA_ARGS__, __FILE__, __LINE__)
 #endif
 
 #ifndef OCEAN_EXPECT_GREATER
-	#define OCEAN_EXPECT_GREATER(validation, value0, value1) validation.expectGreater(value0, value1, __FILE__, __LINE__)
+	#define OCEAN_EXPECT_GREATER(validation, ...) validation.expectGreater(__VA_ARGS__, __FILE__, __LINE__)
 #endif
 
 #ifndef OCEAN_EXPECT_GREATER_EQUAL
-	#define OCEAN_EXPECT_GREATER_EQUAL(validation, value0, value1) validation.expectGreaterEqual(value0, value1, __FILE__, __LINE__)
+	#define OCEAN_EXPECT_GREATER_EQUAL(validation, ...) validation.expectGreaterEqual(__VA_ARGS__, __FILE__, __LINE__)
 #endif
 
 #ifndef OCEAN_EXPECT_INSIDE_RANGE
-	#define OCEAN_EXPECT_INSIDE_RANGE(validation, lower, value, upper) validation.expectInsideRange(lower, value, upper, __FILE__, __LINE__)
+	#define OCEAN_EXPECT_INSIDE_RANGE(validation, ...) validation.expectInsideRange(__VA_ARGS__, __FILE__, __LINE__)
 #endif
 
 #ifndef OCEAN_SET_FAILED

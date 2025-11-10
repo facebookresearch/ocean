@@ -232,7 +232,7 @@ class ValidationPrecision
 };
 
 #ifndef OCEAN_SET_INACCURATE
-	#define OCEAN_SET_INACCURATE(scopedIteration, expected, actual) scopedIteration.setInaccurate(expected, actual, __FILE__, __LINE__);
+	#define OCEAN_SET_INACCURATE(scopedIteration, ...) scopedIteration.setInaccurate(__VA_ARGS__, __FILE__, __LINE__);
 #endif
 
 inline ValidationPrecision::ScopedIteration::ScopedIteration(ValidationPrecision& ValidationPrecision) :
