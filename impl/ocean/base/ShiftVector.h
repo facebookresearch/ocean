@@ -68,20 +68,20 @@ class ShiftVector
 
 		/**
 		 * Creates a new shift vector object.
-		 * @param firstIndex The index of the first element of this vector
+		 * @param firstIndex The index of the first element of this vector, with range (-infinity, infinity)
 		 */
 		explicit ShiftVector(const Index firstIndex);
 
 		/**
 		 * Creates a new shift vector object.
-		 * @param firstIndex The index of the first element of this vector
+		 * @param firstIndex The index of the first element of this vector, with range (-infinity, infinity)
 		 * @param size Number of elements to be created
 		 */
 		ShiftVector(const Index firstIndex, const size_t size);
 
 		/**
 		 * Creates a new shift vector object.
-		 * @param firstIndex The index of the first element of this vector
+		 * @param firstIndex The index of the first element of this vector, with range (-infinity, infinity)
 		 * @param size Number of elements to be created
 		 * @param element Pattern element that will be copied as often as requested
 		 */
@@ -89,7 +89,7 @@ class ShiftVector
 
 		/**
 		 * Creates a new shift vector object and copies a specified number of elements.
-		 * @param firstIndex The index of the first element of this vector
+		 * @param firstIndex The index of the first element of this vector, with range (-infinity, infinity)
 		 * @param elements The elements to be copied
 		 * @param size Number of elements to be copied
 		 */
@@ -97,7 +97,7 @@ class ShiftVector
 
 		/**
 		 * Returns the index of the first element of this object.
-		 * @return Index of first element
+		 * @return Index of first element, with range (-infinity, infinity)
 		 */
 		inline Index firstIndex() const;
 
@@ -119,7 +119,7 @@ class ShiftVector
 		/**
 		 * Sets the index of the first element of this vector.
 		 * The elements of this vector will be untouched, however the individual elements receive a new index due to the new shift offset.
-		 * @param index The index of the first element
+		 * @param index The index of the first element, with range (-infinity, infinity)
 		 */
 		inline void setFirstIndex(const Index index);
 
@@ -150,7 +150,7 @@ class ShiftVector
 		/**
 		 * Returns the element located at the last (including) index.
 		 * Beware: Ensure that this object holds at least one element before accessing the element.
-		 * @return The first element
+		 * @return The last element
 		 * @see lastIndex().
 		 */
 		inline T& back();
@@ -513,7 +513,7 @@ inline void ShiftVector<T>::pushBack(const T& element)
 template <typename T>
 inline void ShiftVector<T>::pushBack(T&& element)
 {
-	elements_.push_back(element);
+	elements_.push_back(std::move(element));
 }
 
 template <typename T>
@@ -526,7 +526,7 @@ inline void ShiftVector<T>::pushFront(const T& element)
 template <typename T>
 inline void ShiftVector<T>::pushFront(T&& element)
 {
-	elements_.push_front(element);
+	elements_.push_front(std::move(element));
 	firstIndex_--;
 }
 
@@ -560,7 +560,7 @@ inline void ShiftVector<T>::insert(const Index index, const T& element)
 	}
 	else
 	{
-		if (index >= (Index)(firstIndex_ + elements_.size()))
+		if (index >= firstIndex_ + Index(elements_.size()))
 		{
 			elements_.resize(index - firstIndex_ + 1);
 		}
@@ -584,7 +584,7 @@ inline void ShiftVector<T>::insert(const Index index, const T& element, const T&
 	}
 	else
 	{
-		if (index >= (Index)(firstIndex_ + elements_.size()))
+		if (index >= firstIndex_ + Index(elements_.size()))
 		{
 			elements_.resize(index - firstIndex_ + 1, intermediateElement);
 		}
@@ -605,11 +605,11 @@ inline void ShiftVector<T>::insert(const Index index, T&& element)
 			pushFront(T());
 		}
 
-		pushFront(element);
+		pushFront(std::move(element));
 	}
 	else
 	{
-		if (index >= (Index)(firstIndex_ + elements_.size()))
+		if (index >= firstIndex_ + Index(elements_.size()))
 		{
 			elements_.resize(index - firstIndex_ + 1);
 		}
@@ -629,23 +629,23 @@ inline void ShiftVector<T>::insert(const Index index, T&& element, const T& inte
 			pushFront(intermediateElement);
 		}
 
-		pushFront(element);
+		pushFront(std::move(element));
 	}
 	else
 	{
-		if (index >= (Index)(firstIndex_ + elements_.size()))
+		if (index >= firstIndex_ + Index(elements_.size()))
 		{
 			elements_.resize(index - firstIndex_ + 1, intermediateElement);
 		}
 
-		elements_[index - firstIndex_] = element;
+		elements_[index - firstIndex_] = std::move(element);
 	}
 }
 
 template <typename T>
 inline bool ShiftVector<T>::isValidIndex(const Index index) const
 {
-	return index >= firstIndex_  && index < Index(firstIndex_ + elements_.size());
+	return index >= firstIndex_  && index < firstIndex_ + Index(elements_.size());
 }
 
 template <typename T>
