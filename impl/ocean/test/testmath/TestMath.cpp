@@ -20,6 +20,7 @@
 #include "ocean/test/testmath/TestExponentialMap.h"
 #include "ocean/test/testmath/TestFiniteLine2.h"
 #include "ocean/test/testmath/TestFiniteLine3.h"
+#include "ocean/test/testmath/TestFisheyeCamera.h"
 #include "ocean/test/testmath/TestFourierTransformation.h"
 #include "ocean/test/testmath/TestFrustum.h"
 #include "ocean/test/testmath/TestHomogenousMatrix4.h"
@@ -138,6 +139,15 @@ bool testMath(const double testDuration, Worker& worker, const std::string& test
 		Log::info() << " ";
 		Log::info() << " ";
 		allSucceeded = TestPinholeCamera::test(testDuration) && allSucceeded;
+	}
+
+	if (testSet.empty() || testSet.find("fisheyecamera") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		Log::info() << " ";
+		allSucceeded = TestFisheyeCamera::test(testDuration) && allSucceeded;
 	}
 
 	if (testSet.empty() || testSet.find("anycamera") != testSet.end())

@@ -152,6 +152,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFisheyeCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestApproximation.h">
@@ -293,6 +296,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFisheyeCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

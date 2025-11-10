@@ -61,6 +61,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCone3.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCylinder3.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestExponentialMap.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFisheyeCamera.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFourierTransformation.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFrustum.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestHSVAColor.cpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCone3.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestCylinder3.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestExponentialMap.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFisheyeCamera.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFourierTransformation.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestFrustum.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testmath\TestHSVAColor.h" />
