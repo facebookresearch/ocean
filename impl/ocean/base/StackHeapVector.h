@@ -390,7 +390,7 @@ typename StackHeapVector<T, tStackCapacity>::ConstIterator& StackHeapVector<T, t
 template <typename T, size_t tStackCapacity>
 typename StackHeapVector<T, tStackCapacity>::ConstIterator StackHeapVector<T, tStackCapacity>::ConstIterator::operator++(int)
 {
-	Iterator iterator(*this);
+	ConstIterator iterator(*this);
 
 	++index_;
 
@@ -546,7 +546,7 @@ void StackHeapVector<T, tStackCapacity>::resize(const size_t size)
 	{
 		// we have to remove elements
 
-		for (size_t n = size; n < tStackCapacity; ++n) // in case size >= tStackCapacity, nothing happens
+		for (size_t n = size; n < std::min(size_, tStackCapacity); ++n) // in case size >= tStackCapacity, nothing happens
 		{
 			stackElements_[n] = T();
 		}
@@ -567,6 +567,11 @@ void StackHeapVector<T, tStackCapacity>::resize(const size_t size)
 	{
 		ocean_assert(size > size_);
 
+		for (size_t n = size_; n < std::min(size, tStackCapacity); ++n)
+		{
+			stackElements_[n] = T();
+		}
+
 		if (size > tStackCapacity)
 		{
 			heapElements_.resize(size - tStackCapacity);
@@ -579,7 +584,7 @@ void StackHeapVector<T, tStackCapacity>::resize(const size_t size)
 template <typename T, size_t tStackCapacity>
 void StackHeapVector<T, tStackCapacity>::assign(const size_t size, const T& element)
 {
-	for (size_t n = 0; n < std::min(size, tStackCapacity); ++n) // we assign as many elements in the stack
+	for (size_t n = 0; n < std::min(size, tStackCapacity); ++n) // we assign as many elements as we have in the stack
 	{
 		stackElements_[n] = element;
 	}
@@ -639,7 +644,7 @@ void StackHeapVector<T, tStackCapacity>::clear()
 template <typename T, size_t tStackCapacity>
 void StackHeapVector<T, tStackCapacity>::reserve(const size_t capacity)
 {
-	if (capacity > size_)
+	if (capacity > this->capacity())
 	{
 		if (capacity > tStackCapacity)
 		{
