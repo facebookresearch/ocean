@@ -1261,7 +1261,7 @@ inline void Utilities::paintPathsAdvancedSubset(Frame* frame, const Vectors2* pa
 
 	for (unsigned int n = firstPath; n < firstPath + numberPaths; ++n)
 	{
-		Numeric::isInsideRange(0, factors[n], 1);
+		ocean_assert(Numeric::isInsideRange(0, factors[n], 1));
 
 		for (unsigned int c = 0u; c < frame->channels(); ++c)
 		{
