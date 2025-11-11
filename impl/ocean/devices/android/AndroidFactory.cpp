@@ -79,6 +79,13 @@ void AndroidFactory::newGPSLocation(const double latitude, const double longitud
 	}
 }
 
+void AndroidFactory::registerCustomTimestampConverter(TimestampConverter&& timestampConverter)
+{
+	ocean_assert(AndroidFactory::timestampConverter().measurements() == 0);
+
+	AndroidFactory::timestampConverter() = std::move(timestampConverter);
+}
+
 void AndroidFactory::registerDevices()
 {
 	ASensorManager* sensorManager = AndroidSensor::sensorManager();
@@ -496,6 +503,16 @@ bool AndroidFactory::registerCustomDevice(const std::string& deviceName, const s
 #endif // __ANDROID_API__ >= 21
 
 	return false;
+}
+
+TimestampConverter& AndroidFactory::timestampConverter()
+{
+	// The time in nanoseconds at which the event happened, and its behavior is identical to SensorEvent::timestamp in Java API.
+	// The time in nanoseconds at which the event happened. For a given sensor, each new sensor event should be monotonically increasing using the same time base as SystemClock.elapsedRealtimeNanos().
+
+	static TimestampConverter timestampConverter(TimestampConverter::TD_BOOTTIME);
+
+	return timestampConverter;
 }
 
 }

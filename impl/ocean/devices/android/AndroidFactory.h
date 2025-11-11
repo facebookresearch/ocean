@@ -29,6 +29,8 @@ namespace Android
  */
 class OCEAN_DEVICES_ANDROID_EXPORT AndroidFactory : public Factory
 {
+	friend class AndroidSensor;
+
 	protected:
 
 		/**
@@ -80,6 +82,12 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidFactory : public Factory
 		 * @param timestamp The timestamp of the GPS location, must be valid
 		 */
 		static void newGPSLocation(const double latitude, const double longitude, const float altitude, const float direction, const float speed, const float accuracy, const float altitudeAccuracy, const float directionAccuracy, const float speedAccuracy, const Timestamp& timestamp);
+
+		/**
+		 * Registers a custom timestamp converter for all Android devices.
+		 * @param timestampConverter The timestamp converter to be registered
+		 */
+		static void registerCustomTimestampConverter(TimestampConverter&& timestampConverter);
 
 	private:
 
@@ -175,6 +183,12 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidFactory : public Factory
 		 * @return True, if the device could be registered
 		 */
 		bool registerCustomDevice(const std::string& deviceName, const std::string& stringType, const Device::DeviceType& deviceType);
+
+		/**
+		 * Returns the timestamp converter for all android devices.
+		 * @return The timestamp converter
+		 */
+		static TimestampConverter& timestampConverter();
 
 	private:
 

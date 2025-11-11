@@ -6,6 +6,7 @@
  */
 
 #include "ocean/devices/android/AndroidSensor.h"
+#include "ocean/devices/android/AndroidFactory.h"
 
 #include "ocean/platform/android/Utilities.h"
 
@@ -171,15 +172,16 @@ bool AndroidSensor::registerForEventFunction(ASensorManager* sensorManager)
 
 Timestamp AndroidSensor::convertTimestamp(const ASensorEvent& sensorEvent, Timestamp& relativeTimestamp)
 {
-	// The time in nanoseconds at which the event happened, and its behavior is identical to SensorEvent::timestamp in Java API.
-	// The time in nanoseconds at which the event happened. For a given sensor, each new sensor event should be monotonically increasing using the same time base as SystemClock.elapsedRealtimeNanos().
-	ocean_assert(timestampConverter_.timeDomain() == TimestampConverter::TD_BOOTTIME);
 
 #ifdef OCEAN_DEBUG
 	double debugDistance;
 	if (!timestampConverter_.isWithinRange(sensorEvent.timestamp, 0.1, &debugDistance))
 	{
 		Log::debug() << "AndroidSensor: Timestamp is not within range of 0.1 seconds, actual distance: " << debugDistance << "s";
+	}
+	else
+	{
+		Log::debug() << "Sensor timestamp distance: " << sensorEvent.type << ": " << debugDistance * 1000.0 << "ms";
 	}
 #endif
 
@@ -190,9 +192,7 @@ Timestamp AndroidSensor::convertTimestamp(const ASensorEvent& sensorEvent, Times
 
 TimestampConverter& AndroidSensor::timestampConverter()
 {
-	static TimestampConverter timestampConverter(TimestampConverter::TD_BOOTTIME);
-
-	return timestampConverter;
+	return AndroidFactory::timestampConverter();
 }
 
 }
