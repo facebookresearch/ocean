@@ -329,6 +329,56 @@ class OCEAN_BASE_EXPORT TemporaryScopedLock
 };
 
 /**
+ * This class implements a scoped lock object that locks two lock objects in a deterministic order based on their memory addresses.
+ * This prevents potential deadlocks when two threads attempt to lock the same pair of locks in different orders.
+ * @tparam TScopedLock The type of scoped lock object, e.g., ScopedLock
+ * @tparam TLock The underlying lock type
+ * @see Lock, ScopedLock, TemplatedScopedLock.
+ * @ingroup base
+ */
+template <typename TScopedLock, typename TLock = Lock>
+class DualScopedLockT
+{
+	public:
+
+		/**
+		 * Creates a new dual scoped lock object based on two given lock objects.
+		 * The locks will be acquired in a deterministic order based on their memory addresses to prevent deadlock.
+		 * @param lockA The first lock object
+		 * @param lockB The second lock object, must not be the same as the first lock object
+		 */
+		explicit inline DualScopedLockT(TLock& lockA, TLock& lockB);
+
+		/**
+		 * Destructs the dual scoped lock and unlocks both internal lock objects in reverse order.
+		 */
+		~DualScopedLockT() = default;
+
+	protected:
+
+		/**
+		 * Disabled accessible copy operator.
+		 * @param object The object to copy
+		 */
+		DualScopedLockT(const DualScopedLockT<TScopedLock, TLock>& object) = delete;
+
+		/**
+		 * Disabled accessible assigns operator.
+		 * @param object The right object
+		 * @return Reference to this object
+		 */
+		DualScopedLockT& operator=(const DualScopedLockT<TScopedLock, TLock>& object) = delete;
+
+	protected:
+
+		/// Scopedlock object holding a lock on the lock with the lowest memory address.
+		TScopedLock scopedLockFirst_;
+
+		/// Scoped lock object holding a lock on the lock with the highest memory address.
+		TScopedLock scopedLockSecond_;
+};
+
+/**
  * This class implements an optional recursive scoped lock object locking the lock object only if it's defined.
  * @see Lock, ScopedLock, TemplatedScopedLock, TemporaryScopedLock.
  * @ingroup base
@@ -580,6 +630,14 @@ inline OptionalScopedLock::~OptionalScopedLock()
 inline Lock* OptionalScopedLock::lock() const
 {
 	return lock_;
+}
+
+template <typename TScopedLock, typename TLock>
+inline DualScopedLockT<TScopedLock, TLock>::DualScopedLockT(TLock& lockA, TLock& lockB) :
+	scopedLockFirst_(&lockA < &lockB ? lockA : lockB),
+	scopedLockSecond_(&lockA < &lockB ? lockB : lockA)
+{
+	// nothing to do here
 }
 
 }

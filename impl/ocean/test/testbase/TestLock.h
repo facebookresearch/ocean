@@ -89,7 +89,22 @@ class OCEAN_TEST_BASE_EXPORT TestLock
 		 */
 		static bool testTemplatedLock();
 
+		/**
+		 * Tests the dual scoped lock object.
+		 * @return True, if succeeded
+		 */
+		static bool testDualScopedLock();
+
 	private:
+
+		/**
+		 * Thread function for testing DualScopedLockT.
+		 * @param firstLock The first lock to be locked
+		 * @param secondLock The second lock to be locked
+		 * @param counter The counter to increment while holding both locks
+		 * @param iterations The number of iterations to perform
+		 */
+		static void threadFunction(Lock& firstLock, Lock& secondLock, unsigned int& counter, const unsigned int iterations);
 
 		/**
 		 * Returns the static lock object.

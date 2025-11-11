@@ -7,6 +7,8 @@
 
 #include "ocean/test/testbase/TestLock.h"
 
+#include <thread>
+
 namespace Ocean
 {
 
@@ -45,6 +47,10 @@ bool TestLock::test()
 
 	Log::info() << " ";
 
+	allSucceeded = testDualScopedLock() && allSucceeded;
+
+	Log::info() << " ";
+
 	if (allSucceeded)
 	{
 		Log::info() << "Lock test succeeded.";
@@ -77,6 +83,11 @@ TEST(TestLock, StaticScopedLock)
 TEST(TestLock, TemplatedLock)
 {
 	EXPECT_TRUE(TestLock::testTemplatedLock());
+}
+
+TEST(TestLock, DualScopedLock)
+{
+	EXPECT_TRUE(TestLock::testDualScopedLock());
 }
 
 #endif // OCEAN_USE_GTEST
@@ -161,6 +172,59 @@ bool TestLock::testTemplatedLock()
 	}
 
 	return allSucceeded;
+}
+
+void TestLock::threadFunction(Lock& firstLock, Lock& secondLock, unsigned int& counter, const unsigned int iterations)
+{
+	for (unsigned int n = 0u; n < iterations; ++n)
+	{
+		const DualScopedLockT<ScopedLock, Lock> dualLock(firstLock, secondLock);
+		counter++;
+		Thread::sleep(1u);
+	}
+}
+
+bool TestLock::testDualScopedLock()
+{
+	Log::info() << "Testing dual scoped lock object:";
+
+	Lock lockA;
+	Lock lockB;
+	unsigned int counter = 0u;
+
+	constexpr unsigned int numberThreads = 10u;
+	constexpr unsigned int iterationsPerThread = 100u;
+
+	std::vector<std::thread> threads;
+	threads.reserve(numberThreads);
+
+	for (unsigned int n = 0u; n < numberThreads; ++n)
+	{
+		if (n % 2u == 0u)
+		{
+			threads.emplace_back(threadFunction, std::ref(lockA), std::ref(lockB), std::ref(counter), iterationsPerThread);
+		}
+		else
+		{
+			threads.emplace_back(threadFunction, std::ref(lockB), std::ref(lockA), std::ref(counter), iterationsPerThread);
+		}
+	}
+
+	for (std::thread& thread : threads)
+	{
+		thread.join();
+	}
+
+	const unsigned int expectedCount = numberThreads * iterationsPerThread;
+
+	if (counter != expectedCount)
+	{
+		Log::info() << "Validation: FAILED! Expected " << expectedCount << " but got " << counter;
+		return false;
+	}
+
+	Log::info() << "Validation: succeeded.";
+	return true;
 }
 
 }
