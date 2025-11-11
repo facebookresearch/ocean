@@ -253,14 +253,19 @@ void Jacobian::calculateSphericalObjectPointJacobian3x3(T* jx, T* jy, T* jz, con
 	if (NumericT<T>::isEqualEps(angle))
 	{
 		// in the case the angle is zero we have R as the unit matrix and thus, the result is [0, 0, -radius]
+		// The Jacobian is dR/dw * [0, 0, -radius]
 
 		jx[0] = 0;
-		jy[0] = 0;
-		jz[0] = 0;
+		jx[1] = objectPointDistance;
+		jx[2] = 0;
 
-		jx[1] = 0;
+		jy[0] = -objectPointDistance;
 		jy[1] = 0;
+		jy[2] = 0;
+
+		jz[0] = 0;
 		jz[1] = 0;
+		jz[2] = 0;
 	}
 	else
 	{
@@ -1610,6 +1615,8 @@ void Jacobian::calculateObjectTransformation2nx6(Scalar* jacobian, const Pinhole
 		jacobianObject(2, 5) = 1;
 
 		const Vector3 projectedObjectPoint(transformationMatrix * objectPoint);
+
+		ocean_assert(Numeric::isNotEqualEps(projectedObjectPoint.z()));
 		const Scalar factor = Scalar(1) / projectedObjectPoint.z();
 
 		StaticMatrix<Scalar, 2, 3> jacobianDehomogenous;
@@ -1998,7 +2005,7 @@ void Jacobian::calculatePoseJacobianRodrigues2x5(Scalar* jx, Scalar* jy, const P
 	const Scalar beta = translation[1];
 
 	const Vector3 translationVector(Numeric::cos(alpha) * Numeric::sin(beta), Numeric::cos(beta), Numeric::sin(alpha) * Numeric::sin(beta));
-	Numeric::isEqual(translationVector.length(), 1);
+	ocean_assert(translationVector.isUnit());
 
 	const HomogenousMatrix4 transformationMatrix(cameraMatrix * SquareMatrix4(HomogenousMatrix4(translationVector, rotation.quaternion())));
 
@@ -2030,6 +2037,8 @@ void Jacobian::calculatePoseJacobianRodrigues2x5(Scalar* jx, Scalar* jy, const P
 	jacobianTransformation(2, 4) = Numeric::sin(alpha) * Numeric::cos(beta);
 
 	const Vector3 projectedObjectPoint(transformationMatrix * objectPoint);
+
+	ocean_assert(Numeric::isNotEqualEps(projectedObjectPoint.z()));
 	const Scalar factor = 1 / projectedObjectPoint.z();
 
 	StaticMatrix<Scalar, 2, 3> jacobianDehomogenous;
