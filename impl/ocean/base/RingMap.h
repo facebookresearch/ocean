@@ -80,6 +80,11 @@ class RingMapT
 		 */
 		using KeyMap = typename MapTyper<tOrderedKeys>::template TMap<TKey, ValuePair>;
 
+		/**
+		 * Definition of a dual scoped lock object allowing to lock two locks after each other in a deterministic order.
+		 */
+		using DualScopedLock = DualScopedLockT<TemplatedScopedLock<tThreadsafe>, TemplatedLock<tThreadsafe>>;
+
 	public:
 
 		/**
@@ -301,6 +306,8 @@ inline RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::RingMapT(const size_t capac
 template <typename TKey, typename T, bool tThreadsafe, bool tOrderedKeys>
 inline size_t RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::capacity() const
 {
+	const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
+
 	return storageCapacity_;
 }
 
@@ -535,7 +542,7 @@ bool RingMapT<TKey, T, tThreadsafe, tOrderedKeys>::lowestElement(T& element) con
 
 	if constexpr (tOrderedKeys)
 	{
-		element = keyMap_.begin()->second;
+		element = keyMap_.begin()->second.first;
 
 		return true;
 	}
@@ -672,9 +679,7 @@ RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& RingMapT<TKey, T, tThreadsafe, tOr
 {
 	if (this != &ringMap)
 	{
-		const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
-		const TemplatedScopedLock<tThreadsafe> scopedLockSecond(ringMap.lock_); // will not create a dead-lock unless both maps depend on each other
-
+		const DualScopedLock dualScopedLok(lock_, ringMap.lock_);
 		keyMap_ = std::move(ringMap.keyMap_);
 		keyList_ = std::move(ringMap.keyList_);
 		storageCapacity_ = ringMap.storageCapacity_;
@@ -690,8 +695,7 @@ RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& RingMapT<TKey, T, tThreadsafe, tOr
 {
 	if ((void*)(this) != (void*)(&ringMap))
 	{
-		const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
-		const TemplatedScopedLock<tThreadSafeSecond> scopedLockSecond(ringMap.lock_); // will not create a dead-lock unless both maps depend on each other
+		const DualScopedLock dualScopedLok(lock_, ringMap.lock_);
 
 		keyMap_ = std::move(ringMap.keyMap_);
 		keyList_ = std::move(ringMap.keyList_);
@@ -707,8 +711,7 @@ RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& RingMapT<TKey, T, tThreadsafe, tOr
 {
 	if (this != &ringMap)
 	{
-		const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
-		const TemplatedScopedLock<tThreadsafe> scopedLockSecond(ringMap.lock_); // will not create a dead-lock unless both maps depend on each other
+		const DualScopedLock dualScopedLok(lock_, ringMap.lock_);
 
 		keyMap_ = ringMap.keyMap_;
 		keyList_ = ringMap.keyList_;
@@ -724,8 +727,7 @@ RingMapT<TKey, T, tThreadsafe, tOrderedKeys>& RingMapT<TKey, T, tThreadsafe, tOr
 {
 	if ((void*)(this) != (void*)(&ringMap))
 	{
-		const TemplatedScopedLock<tThreadsafe> scopedLock(lock_);
-		const TemplatedScopedLock<tThreadSafeSecond> scopedLockSecond(ringMap.lock_); // will not create a dead-lock unless both maps depend on each other
+		const DualScopedLock dualScopedLok(lock_, ringMap.lock_);
 
 		keyMap_ = ringMap.keyMap_;
 		keyList_ = ringMap.keyList_;
