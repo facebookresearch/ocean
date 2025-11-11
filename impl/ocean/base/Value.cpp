@@ -329,6 +329,10 @@ Value& Value::operator=(const Value& value)
 					memcpy(valueUnion_.bufferStruct_.buffer_, value.valueUnion_.bufferStruct_.buffer_, value.valueUnion_.bufferStruct_.size_);
 					valueUnion_.bufferStruct_.size_ = value.valueUnion_.bufferStruct_.size_;
 				}
+				else
+				{
+					valueType_ = VT_INVALID;
+				}
 			}
 			else
 			{
@@ -564,7 +568,7 @@ Value Value::readFromBuffer(const void* buffer, const size_t size)
 				static_assert(sizeof(int32_t) == 4, "Invalid data type!");
 
 				int32_t intValue;
-				memcpy(&intValue, buffer8 + 1, sizeof(uint32_t));
+				memcpy(&intValue, buffer8 + 1, sizeof(int32_t));
 
 				return Value(intValue);
 			}
@@ -580,7 +584,7 @@ Value Value::readFromBuffer(const void* buffer, const size_t size)
 				static_assert(sizeof(int64_t) == 8, "Invalid data type!");
 
 				int64_t intValue;
-				memcpy(&intValue, buffer8 + 1, sizeof(uint64_t));
+				memcpy(&intValue, buffer8 + 1, sizeof(int64_t));
 
 				return Value(intValue);
 			}

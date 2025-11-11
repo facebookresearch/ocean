@@ -26,10 +26,10 @@ class OCEAN_BASE_EXPORT Value
 		/**
 		 * Definition of different internal value type.
 		 */
-		enum ValueType
+		enum ValueType : uint32_t
 		{
 			/// Invalid value type.
-			VT_INVALID,
+			VT_INVALID = 0u,
 			/// Boolean value type.
 			VT_BOOL,
 			/// 32 bit integer value.
@@ -65,7 +65,7 @@ class OCEAN_BASE_EXPORT Value
 		/**
 		 * Creates an empty value.
 		 */
-		inline Value() noexcept;
+		Value() noexcept = default;
 
 		/**
 		 * Move constructor.
@@ -341,14 +341,8 @@ class OCEAN_BASE_EXPORT Value
 
 			/// Possible buffer value.
 			BufferStruct bufferStruct_;
-		} valueUnion_;
+		} valueUnion_ = {};
 };
-
-inline Value::Value() noexcept :
-	valueType_(VT_INVALID)
-{
-	// nothing to do here
-}
 
 inline Value::ValueType Value::type() const
 {
