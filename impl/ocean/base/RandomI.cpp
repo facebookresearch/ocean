@@ -120,9 +120,9 @@ uint32_t RandomI::random32()
 
 uint32_t RandomI::random32(RandomGenerator& generator)
 {
-	ocean_assert(generator.randMax() == 0x7FFFu); // This implementation assumes 15 random bits.
+	ocean_assert(generator.randMax() == 0xFFFFFFFEu);
 
-	return uint32_t(generator.rand()) | uint32_t(generator.rand()) << 15u | uint32_t(generator.rand()) << 30u;
+	return generator.rand();
 }
 
 uint64_t RandomI::random64()
@@ -157,10 +157,9 @@ uint64_t RandomI::random64()
 
 uint64_t RandomI::random64(RandomGenerator& generator)
 {
-	ocean_assert(generator.randMax() == 0x7FFFu);
+	ocean_assert(generator.randMax() == 0xFFFFFFFEu);
 
-	// we have 15 random bits per rand() call
-	return uint64_t(generator.rand()) | uint64_t(generator.rand()) << 15ull | uint64_t(generator.rand()) << 30ull | uint64_t(generator.rand()) << 45ull | uint64_t(generator.rand()) << 60ull;
+	return uint64_t(generator.rand()) | (uint64_t(generator.rand()) << 32ull);
 }
 
 unsigned int RandomI::random(const unsigned int maxValue)

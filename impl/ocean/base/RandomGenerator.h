@@ -76,7 +76,7 @@ class OCEAN_BASE_EXPORT RandomGenerator
 		/**
 		 * Returns the next random number.
 		 * Beware: This function is not thread safe.
-		 * @return Random number with range [0, 32767]
+		 * @return Random number with range [0, 4294967294] == [0, 2^32-2]
 		 * @see lockedRand().
 		 */
 		inline unsigned int rand();
@@ -84,7 +84,7 @@ class OCEAN_BASE_EXPORT RandomGenerator
 		/**
 		 * Returns the next random number.
 		 * This function is thread safe.
-		 * @return Random number with range [0, 32767]
+		 * @return Random number with range [0, 4294967294] == [0, 2^32-2]
 		 * @see rand().
 		 */
 		inline unsigned int lockedRand();
@@ -111,6 +111,15 @@ class OCEAN_BASE_EXPORT RandomGenerator
 		RandomGenerator& operator=(RandomGenerator&& randomGenerator);
 
 		/**
+		 * Generates a new random number using the xorshift32 algorithm.
+		 * This function updates the seed in place and returns the new random value.
+		 * The xorshift32 algorithm produces values in the range [1, 2^32-1], so we subtract 1 to get [0, 2^32-2].
+		 * @param seed The seed value to update, with range [1, infinity)
+		 * @return The new random number in range [0, 4294967294] == [0, 2^32-2]
+		 */
+		static inline unsigned int nextRandomNumber(unsigned int& seed);
+
+		/**
 		 * Returns the maximal random value of this generator.
 		 * @return Maximal random value of this generator
 		 */
@@ -120,7 +129,7 @@ class OCEAN_BASE_EXPORT RandomGenerator
 
 		/**
 		 * Returns a seed value based on the current time, the thread id, and a random value from RandomI.
-		 * @return The combined seed value
+		 * @return The combined seed value, with range [1, infinity)
 		 */
 		static unsigned int threadAndTimeBasedSeed();
 
@@ -138,18 +147,23 @@ class OCEAN_BASE_EXPORT RandomGenerator
 
 inline RandomGenerator::RandomGenerator(RandomGenerator& generator)
 {
-	const unsigned int seedLow = generator.lockedRand() & 0xFFFFu;
-	const unsigned int seedHigh = (generator.lockedRand() & 0xFFFFu) << 16u;
+	initialSeed_ = generator.lockedRand();
 
-	initialSeed_ = seedLow | seedHigh;
+	if (initialSeed_ == 0u)
+	{
+		initialSeed_ = 1u; // Xorshift32 requires non-zero seed, ensure it's not zero
+	}
+
+	seed_ = initialSeed_;
 
 	// doing first randomization step
-	seed_ = initialSeed_ * 214013L + 2531011L;
+	nextRandomNumber(seed_);
 }
 
 inline RandomGenerator::RandomGenerator(const unsigned int seed) :
-	initialSeed_(seed)
+	initialSeed_(seed != 0u ? seed : 1u) // Xorshift32 requires non-zero seed, ensure it's not zero
 {
+
 	seed_ = initialSeed_;
 }
 
@@ -160,14 +174,14 @@ inline RandomGenerator::RandomGenerator(RandomGenerator&& randomGenerator) noexc
 
 inline unsigned int RandomGenerator::rand()
 {
-	return (unsigned int)(((seed_ = seed_ * 214013L + 2531011L) >> 16) & 0x7fff);
+	return nextRandomNumber(seed_);
 }
 
 inline unsigned int RandomGenerator::lockedRand()
 {
 	const ScopedLock scopedLock(lock_);
 
-	return (unsigned int)(((seed_ = seed_ * 214013L + 2531011L) >> 16) & 0x7fff);
+	return nextRandomNumber(seed_);
 }
 
 inline unsigned int RandomGenerator::seed() const
@@ -180,9 +194,23 @@ inline unsigned int RandomGenerator::initialSeed() const
 	return initialSeed_;
 }
 
+inline unsigned int RandomGenerator::nextRandomNumber(unsigned int& seed)
+{
+	// Xorshift32 algorithm - generates full 32-bit random numbers
+	// The seed must not be zero, otherwise the algorithm will produce infinite zeros
+	ocean_assert(seed != 0u);
+
+	seed ^= seed << 13u;
+	seed ^= seed >> 17u;
+	seed ^= seed << 5u;
+
+	// Xorshift32 produces values in [1, 2^32-1], subtract 1 to get [0, 2^32-2]
+	return seed - 1u;
+}
+
 constexpr unsigned int RandomGenerator::randMax()
 {
-	return 0x7fffu;
+	return 0xFFFFFFFEu; // 4294967294 (2^32 - 2), as xorshift32 never produces 0 or 2^32-1
 }
 
 }

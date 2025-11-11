@@ -15,6 +15,7 @@ namespace Ocean
 RandomGenerator::RandomGenerator() :
 	initialSeed_(threadAndTimeBasedSeed())
 {
+	ocean_assert(initialSeed_ != 0u);
 	seed_ = initialSeed_;
 }
 
@@ -32,6 +33,7 @@ RandomGenerator::RandomGenerator(RandomGenerator* optionalGenerator)
 		initialSeed_ = threadAndTimeBasedSeed();
 	}
 
+	ocean_assert(initialSeed_ != 0u);
 	seed_ = initialSeed_;
 }
 
@@ -43,6 +45,8 @@ RandomGenerator& RandomGenerator::operator=(RandomGenerator&& randomGenerator)
 		seed_ = randomGenerator.seed_;
 
 		randomGenerator.initialSeed_ = threadAndTimeBasedSeed();
+
+		ocean_assert(randomGenerator.initialSeed_ != 0u);
 		randomGenerator.seed_ = randomGenerator.initialSeed_;
 	}
 
@@ -60,6 +64,11 @@ unsigned int RandomGenerator::threadAndTimeBasedSeed()
 
 	seed ^= threadHashLow + 0x9e3779b9u + (seed << 6u) + (seed >> 2u);
 	seed ^= threadHashHigh + 0x9e3779b9u + (seed << 6u) + (seed >> 2u);
+
+	if (seed == 0u)
+	{
+		return 1u;
+	}
 
 	return seed;
 }
