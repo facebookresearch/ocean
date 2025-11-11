@@ -15,16 +15,28 @@
 #include <cfloat>
 #include <limits>
 
-#if !defined(OCEAN_PLATFORM_BUILD_WINDOWS) && defined(CLOCK_BOOTTIME)
-	#define OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
-#endif
+#ifndef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
+	#if !defined(OCEAN_PLATFORM_BUILD_WINDOWS) && defined(CLOCK_BOOTTIME)
+		#define OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
+	#endif
+#endif // OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
 
-#if defined(OCEAN_PLATFORM_BUILD_APPLE) && defined(CLOCK_UPTIME_RAW)
-	#define OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
-#endif
+#ifndef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
+	#if defined(OCEAN_PLATFORM_BUILD_APPLE) && defined(CLOCK_UPTIME_RAW)
+		#define OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
+	#endif
+#endif // OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
 
-#if defined(OCEAN_PLATFORM_BUILD_ANDROID) && (defined(__arm__) || defined(__aarch64__))
-	#define OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+#ifndef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+	#if defined(OCEAN_PLATFORM_BUILD_ANDROID) && (defined(__arm__) || defined(__aarch64__))
+		#define OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+	#endif
+#endif // OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+
+#ifndef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
+	#if !defined(OCEAN_PLATFORM_BUILD_WINDOWS)
+		#define OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
+	#endif
 #endif
 
 namespace Ocean
@@ -88,7 +100,12 @@ class OCEAN_BASE_EXPORT Timestamp
 #endif
 
 #ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
-					TD_VIRTUAL_COUNTER_REGISTER
+					TD_VIRTUAL_COUNTER_REGISTER,
+#endif
+
+#ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
+					/// A custom POSIX clock id specified by the user.
+					TD_CUSTOM_POSIX
 #endif
 				};
 
@@ -116,6 +133,17 @@ class OCEAN_BASE_EXPORT Timestamp
 				 * @param necessaryMeasurements The number of measurements necessary to determine the offset between the domain time and the unix time, with range [1, infinity)
 				 */
 				explicit TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements = 100);
+
+#ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
+
+				/**
+				 * Creates a new converter object for a custom POSIX clock id.
+				 * @param timeDomain The time domain for which the converter will be created, must be TD_CUSTOM_POSIX
+				 * @param customPosixClockId The custom POSIX clock id to use for time conversion
+				 * @param necessaryMeasurements The number of measurements necessary to determine the offset between the domain time and the unix time, with range [1, infinity)
+				 */
+				explicit TimestampConverter(const TimeDomain timeDomain, const int customPosixClockId, const size_t necessaryMeasurements);
+#endif
 
 				/**
 				 * Move constructor.

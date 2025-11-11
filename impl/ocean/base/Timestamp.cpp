@@ -36,6 +36,18 @@ Timestamp::TimestampConverter::TimestampConverter(const TimeDomain timeDomain, c
 #endif
 }
 
+#ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
+
+Timestamp::TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const int customPosixClockId, const size_t necessaryMeasurements) :
+	timeDomain_(TD_CUSTOM_POSIX),
+	necessaryMeasurements_(necessaryMeasurements),
+	domainPosixClockId_(customPosixClockId)
+{
+	ocean_assert_and_suppress_unused(timeDomain == TD_CUSTOM_POSIX, timeDomain);
+}
+
+#endif
+
 Timestamp Timestamp::TimestampConverter::toUnix(const int64_t domainTimestampNs)
 {
 	const int64_t domainToUnixOffsetNs = domainToUnixOffset();
@@ -84,7 +96,7 @@ bool Timestamp::TimestampConverter::isWithinRange(const int64_t domainTimestampN
 {
 	ocean_assert(maxDistance >= 0.0);
 
-	const int64_t localCurrentDomainTimestampNs = currentDomainTimestampNs(timeDomain_);
+	const int64_t localCurrentDomainTimestampNs = currentDomainTimestampNs();
 
 	const int64_t distanceNs = domainTimestampNs - localCurrentDomainTimestampNs;
 
@@ -130,6 +142,11 @@ int64_t Timestamp::TimestampConverter::currentDomainTimestampNs() const
 
 	#ifdef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
 		case TD_UPTIME_RAW:
+			[[fallthrough]];
+	#endif
+
+	#ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
+		case TD_CUSTOM_POSIX:
 			[[fallthrough]];
 	#endif
 
@@ -350,6 +367,12 @@ int64_t Timestamp::TimestampConverter::currentDomainTimestampNs(const TimeDomain
 		case TD_INVALID:
 			break;
 
+	#ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
+		case TD_CUSTOM_POSIX:
+			ocean_assert(false && "The custom POSIX clock id is unknown in this static function");
+			break;
+	#endif
+
 	#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
 		case TD_BOOTTIME:
 			[[fallthrough]];
@@ -459,6 +482,12 @@ int Timestamp::TimestampConverter::posixClockId(const TimeDomain timeDomain)
 
 #ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
 		case TD_VIRTUAL_COUNTER_REGISTER:
+			return -1;
+#endif
+
+#ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
+		case TD_CUSTOM_POSIX:
+			ocean_assert(false && "This should never happen!");
 			return -1;
 #endif
 
