@@ -6,12 +6,10 @@
  */
 
 #include "ocean/geometry/Homography.h"
-#include "ocean/geometry/NonLinearOptimization.h"
 #include "ocean/geometry/NonLinearOptimizationHomography.h"
 #include "ocean/geometry/Utilities.h"
 
 #include "ocean/math/Matrix.h"
-#include "ocean/math/StaticMatrix.h"
 
 namespace Ocean
 {
@@ -335,9 +333,53 @@ bool Homography::homographyMatrixFromPointsAndLinesSVD(const Vector2* leftPoints
 {
 	ocean_assert(pointCorrespondences + lineCorrespondences >= 4);
 
-	// **TODO** add normalization of points/lines to improve stability
-
 	const size_t correspondences = pointCorrespondences + lineCorrespondences;
+
+	SquareMatrix3 normalizedLeft_T_left(true); // identity by default, different from identity when points are defined
+	SquareMatrix3 right_T_normalizedRight(true);
+
+	SquareMatrix3 leftLineTransform(true);
+	SquareMatrix3 rightLineTransform(true);
+
+	Vectors2 bufferNormalizationLeftPoints;
+	Vectors2 bufferNormalizationRightPoints;
+
+	const Vector2* normalizationLeftPoints = leftPoints;
+	const Vector2* normalizationRightPoints = rightPoints;
+
+	if (pointCorrespondences > 0)
+	{
+		bufferNormalizationLeftPoints.assign(leftPoints, leftPoints + pointCorrespondences);
+		bufferNormalizationRightPoints.assign(rightPoints, rightPoints + pointCorrespondences);
+
+		normalizedLeft_T_left = Normalization::calculateNormalizedPoints(bufferNormalizationLeftPoints.data(), pointCorrespondences);
+		Normalization::calculateNormalizedPoints(bufferNormalizationLeftPoints.data(), pointCorrespondences, &right_T_normalizedRight);
+		ocean_assert(!right_T_normalizedRight.isSingular());
+
+		normalizationLeftPoints = bufferNormalizationLeftPoints.data();
+		normalizationRightPoints = bufferNormalizationRightPoints.data();
+
+		// for line transformation, we need the inverse transpose of the normalization matrices
+		// lines transform as: l' = (T^-1)^T * l = (T^T)^-1 * l
+		leftLineTransform = normalizedLeft_T_left.transposed();
+		if (!leftLineTransform.invert())
+		{
+			return false;
+		}
+
+		// for the right side, we have the inverse transform, so we need to invert it first
+		SquareMatrix3 normalizedRight_T_right = right_T_normalizedRight;
+		if (!normalizedRight_T_right.invert())
+		{
+			return false;
+		}
+
+		rightLineTransform = normalizedRight_T_right.transposed();
+		if (!rightLineTransform.invert())
+		{
+			return false;
+		}
+	}
 
 	MatrixD matrix(2 * correspondences, 9);
 
@@ -351,8 +393,9 @@ bool Homography::homographyMatrixFromPointsAndLinesSVD(const Vector2* leftPoints
 
 	for (size_t nPoint = 0; nPoint < pointCorrespondences; ++nPoint)
 	{
-		const VectorD2 left = VectorD2(leftPoints[nPoint]);
-		const VectorD2 right = VectorD2(rightPoints[nPoint]);
+		// Use the pre-normalized points (normalized in-place by calculateNormalizedPoints)
+		const VectorD2 left = VectorD2(normalizationLeftPoints[nPoint]);
+		const VectorD2 right = VectorD2(normalizationRightPoints[nPoint]);
 
 		double* const row0 = matrix[row++];
 
@@ -402,45 +445,50 @@ bool Homography::homographyMatrixFromPointsAndLinesSVD(const Vector2* leftPoints
 			rightLine = LineD2(rightLine.point(), rightLine.direction().normalized());
 		}
 
-		VectorD3 left = leftLine.decomposeNormalDistance();
-		VectorD3 right = rightLine.decomposeNormalDistance();
+		// transform lines into normalized space
+		// lines transform as: l' = (T^-1)^T * l
+		VectorD3 leftLineCoeffs = leftLine.decomposeNormalDistance();
+		VectorD3 rightLineCoeffs = rightLine.decomposeNormalDistance();
 
-		if (NumericD::isEqualEps(left.z()) || NumericD::isEqualEps(right.z()))
+		leftLineCoeffs = SquareMatrixD3(leftLineTransform) * leftLineCoeffs;
+		rightLineCoeffs = SquareMatrixD3(rightLineTransform) * rightLineCoeffs;
+
+		if (NumericD::isEqualEps(leftLineCoeffs.z()) || NumericD::isEqualEps(rightLineCoeffs.z()))
 		{
-			ocean_assert(false && "One of the lines intersects the origin, we need to normalize the input to avoid this!");
+			ocean_assert(false && "One of the lines intersects the origin after normalization, this should be rare!");
 			return false;
 		}
 
-		left /= left.z();
-		right /= right.z();
+		leftLineCoeffs /= leftLineCoeffs.z();
+		rightLineCoeffs /= rightLineCoeffs.z();
 
 		double* const row0 = matrix[row++];
 
-		row0[0] = right.x();
+		row0[0] = rightLineCoeffs.x();
 		row0[1] = 0;
-		row0[2] = -left.x() * right.x();
+		row0[2] = -leftLineCoeffs.x() * rightLineCoeffs.x();
 
-		row0[3] = right.y();
+		row0[3] = rightLineCoeffs.y();
 		row0[4] = 0;
-		row0[5] = -left.x() * right.y();
+		row0[5] = -leftLineCoeffs.x() * rightLineCoeffs.y();
 
 		row0[6] = 1;
 		row0[7] = 0;
-		row0[8] = -left.x();
+		row0[8] = -leftLineCoeffs.x();
 
 		double* const row1 = matrix[row++];
 
 		row1[0] = 0;
-		row1[1] = right.x();
-		row1[2] = -right.x() * left.y();
+		row1[1] = rightLineCoeffs.x();
+		row1[2] = -rightLineCoeffs.x() * leftLineCoeffs.y();
 
 		row1[3] = 0;
-		row1[4] = right.y();
-		row1[5] = -left.y() * right.y();
+		row1[4] = rightLineCoeffs.y();
+		row1[5] = -leftLineCoeffs.y() * rightLineCoeffs.y();
 
 		row1[6] = 0;
 		row1[7] = 1;
-		row1[8] = -left.y();
+		row1[8] = -leftLineCoeffs.y();
 	}
 
 	ocean_assert(row == (pointCorrespondences + lineCorrespondences) * 2);
@@ -471,6 +519,17 @@ bool Homography::homographyMatrixFromPointsAndLinesSVD(const Vector2* leftPoints
 	}
 
 	Homography::normalizeHomography(result);
+
+	// denormalize the homography if we normalized the input
+	if (pointCorrespondences > 0)
+	{
+		result = SquareMatrixD3(right_T_normalizedRight) * result * SquareMatrixD3(normalizedLeft_T_left);
+	}
+	else
+	{
+		ocean_assert(normalizedLeft_T_left.isIdentity());
+		ocean_assert(right_T_normalizedRight.isIdentity());
+	}
 
 	right_H_left = SquareMatrix3(result);
 
@@ -740,7 +799,7 @@ bool Homography::homographyMatrixLinearWithoutOptimations(const Vector2* leftPoi
 	Matrix ATb = A.transposed() * b;
 
 	Matrix x(8, 1);
-	ATA.solve(_ATb, x);
+	ATA.solve(ATb, x);
 
 	right_H_left(0, 0) = x(0);
 	right_H_left(0, 1) = x(1);
@@ -759,7 +818,7 @@ bool Homography::homographyMatrixLinearWithoutOptimations(const Vector2* leftPoi
 	return true;
 }
 
-bool Homography::affineMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& right_A_left)
+bool Homography::affineMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& right_A_left)
 {
 	ocean_assert(leftPoints != nullptr);
 	ocean_assert(rightPoints != nullptr);
@@ -843,9 +902,11 @@ bool Homography::affineMatrix(const ImagePoint* leftPoints, const ImagePoint* ri
 	}
 
 	const Scalar r00 = Numeric::sqrt(lx2Sum);
-	const Scalar r01 = lxlySum / r00;
-	const Scalar r02 = lxSum / r00;
-	const Scalar r11Sqr = ly2Sum - lxlySum * lxlySum / lx2Sum;
+	const Scalar invR00 = Scalar(1) / r00;
+	const Scalar r01 = lxlySum * invR00;
+	const Scalar r02 = lxSum * invR00;
+	const Scalar invLx2Sum = Scalar(1) / lx2Sum;
+	const Scalar r11Sqr = ly2Sum - lxlySum * lxlySum * invLx2Sum;
 
 	if (r11Sqr < Numeric::eps())
 	{
@@ -854,33 +915,35 @@ bool Homography::affineMatrix(const ImagePoint* leftPoints, const ImagePoint* ri
 	}
 
 	const Scalar r11 = Numeric::sqrt(r11Sqr);
-	const Scalar r12 = (lySum - (lxlySum * lxSum/ lx2Sum)) / r11;
-	const Scalar r22Sqr = sum - (lxSum * lxSum/ lx2Sum) - (r12 * r12);
+	const Scalar invR11 = Scalar(1) / r11;
+	const Scalar r12 = (lySum - lxlySum * lxSum * invLx2Sum) * invR11;
+	const Scalar r22Sqr = sum - (lxSum * lxSum * invLx2Sum) - (r12 * r12);
 
 	if (r22Sqr < Numeric::eps())
 	{
 		ocean_assert(false && "This should not happen for a valid equation.");
 		return false;
 	}
-	//	Scalar r22 = Numeric::sqrt(r22Sqr);
 
-	const Scalar Y0 = lxrxSum / r00;
-	const Scalar Y1 = (lyrxSum - r01 * Y0) / r11;
-	// Scalar Y2 = (rxSum - r12 * Y1 - r02 * Y0) / r22;
-	const Scalar Y3 = (lxrySum / r00);
-	const Scalar Y4 = (lyrySum - r01 * Y3) / r11;
-	// Scalar Y5 = (rySum - r12 * Y4 - r02 * Y3) / r22;
+	const Scalar invR22Sqr = Scalar(1) / r22Sqr;
+
+	const Scalar Y0 = lxrxSum * invR00;
+	const Scalar Y1 = (lyrxSum - r01 * Y0) * invR11;
+	// Scalar Y2 = (rxSum - r12 * Y1 - r02 * Y0) * invR22Sqr;
+	const Scalar Y3 = lxrySum * invR00;
+	const Scalar Y4 = (lyrySum - r01 * Y3) * invR11;
+	// Scalar Y5 = (rySum - r12 * Y4 - r02 * Y3) * invR22Sqr;
 
 	// SquareMatrix3 is column based
 	right_A_left[8] = Scalar(1); // a33
 	right_A_left[5] = Scalar(0); // a32
 	right_A_left[2] = Scalar(0); // a31
-	right_A_left[7] = (rySum - r12 * Y4 - r02 * Y3) / r22Sqr; // a23
-	right_A_left[4] = (Y4 - r12 * right_A_left[7]) / r11; // a22
-	right_A_left[1] = (Y3 - r02 * right_A_left[7] - r01 * right_A_left[4]) / r00; // a21
-	right_A_left[6] = (rxSum - r12 * Y1 - r02 * Y0) / r22Sqr; //a13
-	right_A_left[3] = (Y1 - r12 * right_A_left[6]) / r11; //a12
-	right_A_left[0] = (Y0 - r02 * right_A_left[6] - r01 * right_A_left[3]) / r00; //a11
+	right_A_left[7] = (rySum - r12 * Y4 - r02 * Y3) * invR22Sqr; // a23
+	right_A_left[4] = (Y4 - r12 * right_A_left[7]) * invR11; // a22
+	right_A_left[1] = (Y3 - r02 * right_A_left[7] - r01 * right_A_left[4]) * invR00; // a21
+	right_A_left[6] = (rxSum - r12 * Y1 - r02 * Y0) * invR22Sqr; //a13
+	right_A_left[3] = (Y1 - r12 * right_A_left[6]) * invR11; //a12
+	right_A_left[0] = (Y0 - r02 * right_A_left[6] - r01 * right_A_left[3]) * invR00; //a11
 
 #ifdef OCEAN_USE_SLOWER_IMPLEMENTATION
 	Matrix mMatrix(6, 6, false);
@@ -987,7 +1050,7 @@ bool Homography::affineMatrix(const ImagePoint* leftPoints, const ImagePoint* ri
 	return true;
 }
 
-bool Homography::similarityMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& right_S_left)
+bool Homography::similarityMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& right_S_left)
 {
 	ocean_assert(leftPoints != nullptr && rightPoints != nullptr && correspondences >= 2);
 
@@ -1068,12 +1131,6 @@ bool Homography::similarityMatrix(const ImagePoint* leftPoints, const ImagePoint
 	}
 
 	const Scalar d = Numeric::sqrt(dSqr);
-
-	if (d < 0)
-	{
-		ocean_assert(false && "This should not happen for a valid equation.");
-		return false;
-	}
 
 	// Scalar Y0 = b0 / a;
 	// Scalar Y1 = b1 / a;
@@ -1194,7 +1251,7 @@ bool Homography::similarityMatrix(const ImagePoint* leftPoints, const ImagePoint
 	return !right_S_left.isSingular();
 }
 
-bool Homography::homotheticMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& right_H_left)
+bool Homography::homotheticMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& right_H_left)
 {
 	ocean_assert(leftPoints != nullptr && rightPoints != nullptr);
 	ocean_assert(correspondences >= 2);
@@ -1277,7 +1334,7 @@ SquareMatrix3 Homography::factorizeHomographyMatrix(const SquareMatrix3& homogra
 	return (PinholeCamera::flipMatrix3() * rightCamera.invertedIntrinsic() * homography * leftCamera.intrinsic() * PinholeCamera::flipMatrix3()).inverted();
 }
 
-bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2])
+bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2])
 {
 	// See: An Invitation to 3D Vision, Y. Ma, S. Soatto, J. Kosecka, S. Sastry for details
 
@@ -1354,6 +1411,11 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, co
 	}
 
 	if (s3 > Scalar(1))
+	{
+		return false;
+	}
+
+	if (s1 < Scalar(1))
 	{
 		return false;
 	}
@@ -1456,7 +1518,7 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, co
 	return best[0] != 0 && best[1] != 0;
 }
 
-bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const HomogenousMatrix4& world_T_leftCamera, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2])
+bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const HomogenousMatrix4& world_T_leftCamera, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2])
 {
 	ocean_assert(world_T_leftCamera.rotationMatrix().isOrthonormal());
 
@@ -1474,7 +1536,7 @@ bool Homography::factorizeHomographyMatrix(const SquareMatrix3& right_H_left, co
 	return true;
 }
 
-bool Homography::homographyMatrixPlaneXY(const ObjectPoint* objectPoints, const ImagePoint* imagePoints, const size_t correspondences, SquareMatrix3& homography)
+bool Homography::homographyMatrixPlaneXY(const ObjectPoint* objectPoints, const Vector2* imagePoints, const size_t correspondences, SquareMatrix3& homography)
 {
 	ocean_assert(objectPoints && imagePoints);
 	ocean_assert(correspondences >= 10);
@@ -1484,14 +1546,14 @@ bool Homography::homographyMatrixPlaneXY(const ObjectPoint* objectPoints, const 
 
 	for (size_t n = 0; n < correspondences; ++n)
 	{
-		Numeric::isEqualEps(objectPoints[n].z());
-		objectPoints2D.push_back(ImagePoint(objectPoints[n].x(), objectPoints[n].y()));
+		ocean_assert(Numeric::isEqualEps(objectPoints[n].z()));
+		objectPoints2D.emplace_back(objectPoints[n].x(), objectPoints[n].y());
 	}
 
 	return homographyMatrixPlaneXY(objectPoints2D.data(), imagePoints, correspondences, homography);
 }
 
-bool Homography::homographyMatrixPlaneXY(const ImagePoint* objectPoints, const ImagePoint* imagePoints, const size_t correspondences, SquareMatrix3& homography)
+bool Homography::homographyMatrixPlaneXY(const Vector2* objectPoints, const Vector2* imagePoints, const size_t correspondences, SquareMatrix3& homography)
 {
 	ocean_assert(objectPoints && imagePoints);
 	ocean_assert(correspondences >= 10);
@@ -1564,16 +1626,20 @@ bool Homography::homographyMatrixPlaneXY(const ImagePoint* objectPoints, const I
 
 	Matrix u, w, v;
 	if (!matrix.singularValueDecomposition(u, w, v))
+	{
 		return false;
+	}
 
 	unsigned int lowestSingularValueIndex = (unsigned int)(-1);
 
 	for (unsigned int n = 0; n < w.rows(); ++n)
+	{
 		if (Numeric::isEqualEps(w(n)))
 		{
 			lowestSingularValueIndex = n;
 			break;
 		}
+	}
 
 	lowestSingularValueIndex = min(lowestSingularValueIndex, (unsigned int)v.columns() - 1u);
 
@@ -1581,40 +1647,7 @@ bool Homography::homographyMatrixPlaneXY(const ImagePoint* objectPoints, const I
 								v(1, lowestSingularValueIndex), v(4, lowestSingularValueIndex), v(7, lowestSingularValueIndex),
 								v(2, lowestSingularValueIndex), v(5, lowestSingularValueIndex), v(8, lowestSingularValueIndex));
 
-
-#ifdef OCEAN_DEBUG
-
-	for (unsigned int n = 0; n < correspondences; ++n)
-	{
-		const Vector3 objectPoint(normalizedObjectPoints[n], 1);
-		Vector3 imagePoint(initialMatrixNormalized * objectPoint);
-		imagePoint /= imagePoint.z();
-
-		const Vector2 deImage(imagePoint.x(), imagePoint.y());
-
-		Numeric::isWeakEqual(deImage.x(), normalizedImagePoints[n].x());
-		Numeric::isWeakEqual(deImage.y(), normalizedImagePoints[n].y());
-	}
-
-#endif
-
 	homography = imagePointsNormalization.inverted() * initialMatrixNormalized * objectPointsNormalization;
-
-#ifdef OCEAN_DEBUG
-
-	for (unsigned int n = 0; n < correspondences; ++n)
-	{
-		const Vector3 objectPoint(objectPoints[n], 1);
-		Vector3 imagePoint(homography * objectPoint);
-		imagePoint /= imagePoint.z();
-
-		const Vector2 deImage(imagePoint.x(), imagePoint.y());
-
-		Numeric::isWeakEqual(deImage.x(), imagePoints[n].x());
-		Numeric::isWeakEqual(deImage.y(), imagePoints[n].y());
-	}
-
-#endif
 
 	return true;
 }
@@ -1626,7 +1659,9 @@ bool Homography::isHomographyPlausible(unsigned int leftImageWidth, unsigned int
 
 	SquareMatrix3 invHomography;
 	if (!homography.invert(invHomography))
+	{
 		return false;
+	}
 
 	// rightPoint = H * leftPoint
 	// leftPoint = (H^-1) * rightPoint
@@ -1640,7 +1675,9 @@ bool Homography::isHomographyPlausible(unsigned int leftImageWidth, unsigned int
 	};
 
 	if (!Geometry::Utilities::isPolygonConvex(leftTransformedPoints, 4))
+	{
 		return false;
+	}
 
 	const Vector2 rightTransformedPoints[4] =
 	{
@@ -1651,7 +1688,9 @@ bool Homography::isHomographyPlausible(unsigned int leftImageWidth, unsigned int
 	};
 
 	if (!Utilities::isPolygonConvex(rightTransformedPoints, 4))
+	{
 		return false;
+	}
 
 	return true;
 }
@@ -1855,7 +1894,9 @@ bool Homography::distortionParameters(const ConstIndexedAccessor<HomogenousMatri
 {
 	ocean_assert(extrinsics.size() == objectPointGroups.size() && extrinsics.size() == imagePointGroups.size());
 	if (extrinsics.size() != objectPointGroups.size() || extrinsics.size() != imagePointGroups.size())
+	{
 		return false;
+	}
 
 	const Scalar principalPointX = intrinsic(0, 2);
 	const Scalar principalPointY = intrinsic(1, 2);
@@ -1863,7 +1904,9 @@ bool Homography::distortionParameters(const ConstIndexedAccessor<HomogenousMatri
 
 	size_t totalPoints = 0;
 	for (size_t n = 0; n < objectPointGroups.size(); ++n)
+	{
 		totalPoints += objectPointGroups[n].size();
+	}
 
 	Matrix matrix(2 * totalPoints, 2);
 	Matrix result(2 * totalPoints, 1);
@@ -1880,7 +1923,9 @@ bool Homography::distortionParameters(const ConstIndexedAccessor<HomogenousMatri
 
 		ocean_assert(oPoints.size() == iPoints.size());
 		if (oPoints.size() != iPoints.size())
+		{
 			return false;
+		}
 
 		const SquareMatrix3 combinedRotation(intrinsic * fcTw.rotationMatrix());
 		const Vector3 combinedTranslation(intrinsic * fcTw.translation());

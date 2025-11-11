@@ -215,7 +215,7 @@ class OCEAN_GEOMETRY_EXPORT Homography
 		 * @return True, if succeeded
 		 * @see homographyMatrix(), similarityMatrix().
 		 */
-		static bool affineMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& right_A_left);
+		static bool affineMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& right_A_left);
 
 		/**
 		 * Calculates the similarity transformation (4DOF - translation, rotation, scale) between two images transforming the projected planar object points between the two images.
@@ -235,7 +235,7 @@ class OCEAN_GEOMETRY_EXPORT Homography
 		 * @return True, if succeeded
 		 * @see homographyMatrix(), affineMatrix(), homotheticMatrix().
 		 */
-		static bool similarityMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& right_S_left);
+		static bool similarityMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& right_S_left);
 
 		/**
 		 * Calculates the homothetic transformation (3DOF - translation,  scale) between two sets of image points.
@@ -254,7 +254,7 @@ class OCEAN_GEOMETRY_EXPORT Homography
 		 * @return True, if succeeded
 		 * @see homographyMatrix(), affineMatrix(), similarityMatrix().
 		 */
-		static bool homotheticMatrix(const ImagePoint* leftPoints, const ImagePoint* rightPoints, const size_t correspondences, SquareMatrix3& right_H_left);
+		static bool homotheticMatrix(const Vector2* leftPoints, const Vector2* rightPoints, const size_t correspondences, SquareMatrix3& right_H_left);
 
 		/**
 		 * Factorizes a homography which contains only a rotational part into the corresponding rotation (of the right camera).
@@ -282,7 +282,7 @@ class OCEAN_GEOMETRY_EXPORT Homography
 		 * @param normals Two resulting plane normals (one for each transformation), the normals are defined in relation to the left camera coordinate system
 		 * @return True, if succeeded
 		 */
-		static bool factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2]);
+		static bool factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2]);
 
 		/**
 		 * Factorizes a planar homography into translation and rotation of the camera.
@@ -300,7 +300,7 @@ class OCEAN_GEOMETRY_EXPORT Homography
 		 * @param normals Two resulting plane normals (one for each transformation), the normals are defined in relation to the world coordinate system
 		 * @return True, if succeeded
 		 */
-		static bool factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const HomogenousMatrix4& world_T_leftCamera, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const ImagePoint* leftImagePoints, const ImagePoint* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2]);
+		static bool factorizeHomographyMatrix(const SquareMatrix3& right_H_left, const HomogenousMatrix4& world_T_leftCamera, const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, HomogenousMatrix4 world_T_rightCameras[2], Vector3 normals[2]);
 
 		/**
 		 * Calculates the homography for given 3D object points lying on the Z == 0 plane and corresponding 2D image points.
@@ -312,7 +312,7 @@ class OCEAN_GEOMETRY_EXPORT Homography
 		 * @param homography The resulting homography
 		 * @return True, if succeeded
 		 */
-		static bool homographyMatrixPlaneXY(const ObjectPoint* objectPoints, const ImagePoint* imagePoints, const size_t correspondences, SquareMatrix3& homography);
+		static bool homographyMatrixPlaneXY(const ObjectPoint* objectPoints, const Vector2* imagePoints, const size_t correspondences, SquareMatrix3& homography);
 
 		/**
 		 * Calculates the homography for given 3D object points lying on the Z == 0 plane and 2D image points.
@@ -322,7 +322,7 @@ class OCEAN_GEOMETRY_EXPORT Homography
 		 * @param homography The resulting homography
 		 * @return True, if succeeded
 		 */
-		static bool homographyMatrixPlaneXY(const ImagePoint* objectPoints, const ImagePoint* imagePoints, const size_t correspondences, SquareMatrix3& homography);
+		static bool homographyMatrixPlaneXY(const Vector2* objectPoints, const Vector2* imagePoints, const size_t correspondences, SquareMatrix3& homography);
 
 		/**
 		 * Normalizes a given homography forcing a 1 in the lower right matrix corner.
