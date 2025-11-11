@@ -635,30 +635,16 @@ inline SquareMatrixT2<T>::SquareMatrixT2(const T& m00, const T& m10, const T& m0
 template <typename T>
 SquareMatrixT2<T>::SquareMatrixT2(const T eigenValue0, const T eigenValue1, const VectorT2<T>& eigenVector0, const VectorT2<T>& eigenVector1)
 {
-	ocean_assert(NumericT<T>::isEqual(eigenVector0.length(), T(1.0)));
-	ocean_assert(NumericT<T>::isEqual(eigenVector1.length(), T(1.0)));
+	ocean_assert(eigenVector0.isUnit());
+	ocean_assert(eigenVector1.isUnit());
 
-	const T det = eigenVector0.x() * eigenVector1.y() - eigenVector1.x() * eigenVector0.y();
-	ocean_assert(NumericT<T>::isNotEqualEps(det));
+	const T determinant = eigenVector0.x() * eigenVector1.y() - eigenVector1.x() * eigenVector0.y();
+	ocean_assert(NumericT<T>::isNotEqualEps(determinant));
 
-	values_[0] = (eigenVector0.x() * eigenValue0 * eigenVector1.y() - eigenVector0.y() * eigenValue1 * eigenVector1.x()) / det;
-	values_[1] = (eigenValue0 - eigenValue1) * eigenVector0.y() * eigenVector1.y() / det;
-	values_[2] = (eigenValue1 - eigenValue0) * eigenVector0.x() * eigenVector1.x() / det;
-	values_[3] = (eigenVector0.x() * eigenValue1 * eigenVector1.y() - eigenVector0.y() * eigenValue0 * eigenVector1.x()) / det;
-
-#ifdef OCEAN_DEBUG
-	if (!std::is_same<Scalar, float>::value)
-	{
-		T debugEigenValue0, debugEigenValue1;
-		VectorT2<T> debugEigenVector0, debugEigenVector1;
-		ocean_assert(eigenSystem(debugEigenValue0, debugEigenValue1, debugEigenVector0, debugEigenVector1));
-
-		ocean_assert(NumericT<T>::isEqual(debugEigenValue0, eigenValue0, NumericT<T>::eps() * 10));
-		ocean_assert(NumericT<T>::isEqual(debugEigenValue1, eigenValue1, NumericT<T>::eps() * 10));
-		ocean_assert(debugEigenVector0.isEqual(eigenVector0, NumericT<T>::weakEps() * 10) || debugEigenVector0.isEqual(-eigenVector0, NumericT<T>::weakEps() * 10));
-		ocean_assert(debugEigenVector1.isEqual(eigenVector1, NumericT<T>::weakEps() * 10) || debugEigenVector1.isEqual(-eigenVector1, NumericT<T>::weakEps() * 10));
-	}
-#endif // OCEAN_DEBUG
+	values_[0] = (eigenVector0.x() * eigenValue0 * eigenVector1.y() - eigenVector0.y() * eigenValue1 * eigenVector1.x()) / determinant;
+	values_[1] = (eigenValue0 - eigenValue1) * eigenVector0.y() * eigenVector1.y() / determinant;
+	values_[2] = (eigenValue1 - eigenValue0) * eigenVector0.x() * eigenVector1.x() / determinant;
+	values_[3] = (eigenVector0.x() * eigenValue1 * eigenVector1.y() - eigenVector0.y() * eigenValue0 * eigenVector1.x()) / determinant;
 }
 
 template <typename T>
