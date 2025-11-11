@@ -28,9 +28,9 @@ const std::string& IOSDevice::library() const
 	return nameIOSLibrary();
 }
 
-Timestamp::TimestampConverter& IOSDevice::timestampConverter()
+TimestampConverter& IOSDevice::timestampConverter()
 {
-	static Timestamp::TimestampConverter timestampConverter(Timestamp::TimestampConverter::TD_UPTIME_RAW);
+	static TimestampConverter timestampConverter(TimestampConverter::TD_UPTIME_RAW);
 
 	return timestampConverter;
 }
@@ -38,7 +38,7 @@ Timestamp::TimestampConverter& IOSDevice::timestampConverter()
 Timestamp IOSDevice::convertTimestamp(const double cmLogItemTimestamp, Timestamp& relativeTimestamp)
 {
 	// The timestamp is the amount of time in seconds since the device booted.
-	ocean_assert(timestampConverter_.timeDomain() == Timestamp::TimestampConverter::TD_UPTIME_RAW);
+	ocean_assert(timestampConverter_.timeDomain() == TimestampConverter::TD_UPTIME_RAW);
 
 #ifdef OCEAN_DEBUG
 	double debugDistance;

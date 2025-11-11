@@ -29,7 +29,7 @@ using namespace Ocean;
 	@private Media::AVFoundation::AVFLiveVideo::OnNewSampleCallback delegateOnNewSampleCallback;
 
 	/// The timestamp converter between up-time and unix timestamp
-	Timestamp::TimestampConverter timestampConverter_;
+	TimestampConverter timestampConverter_;
 }
 
 /**
@@ -58,7 +58,7 @@ using namespace Ocean;
 	{
 		delegateOnNewSampleCallback = onNewSampleCallback;
 
-		timestampConverter_ = Timestamp::TimestampConverter(Timestamp::TimestampConverter::TD_UPTIME_RAW);
+		timestampConverter_ = TimestampConverter(TimestampConverter::TD_UPTIME_RAW);
   	}
 
 	return self;
@@ -78,7 +78,7 @@ using namespace Ocean;
 	{
 		const CMTime presentationTime = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
 
-		const int64_t presentationTimeNs = Timestamp::TimestampConverter::timestampInNs(presentationTime.value, presentationTime.timescale);
+		const int64_t presentationTimeNs = TimestampConverter::timestampInNs(presentationTime.value, presentationTime.timescale);
 
 		const Timestamp frameUnixTimestamp = timestampConverter_.toUnix(presentationTimeNs);
 		const double frameUptime = Timestamp::nanoseconds2seconds(presentationTimeNs);

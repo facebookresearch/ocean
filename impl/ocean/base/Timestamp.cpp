@@ -19,7 +19,20 @@
 namespace Ocean
 {
 
-Timestamp::TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements) :
+Timestamp::Timestamp(const bool toNow) :
+	value_(toNow ? DateTime::timestamp() : invalidTimestampValue())
+{
+	// nothing to do here
+}
+
+Timestamp& Timestamp::toNow()
+{
+	value_ = DateTime::timestamp();
+
+	return *this;
+}
+
+TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements) :
 	timeDomain_(timeDomain),
 	necessaryMeasurements_(necessaryMeasurements)
 {
@@ -38,7 +51,7 @@ Timestamp::TimestampConverter::TimestampConverter(const TimeDomain timeDomain, c
 
 #ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
 
-Timestamp::TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const int customPosixClockId, const size_t necessaryMeasurements) :
+TimestampConverter::TimestampConverter(const TimeDomain timeDomain, const int customPosixClockId, const size_t necessaryMeasurements) :
 	timeDomain_(TD_CUSTOM_POSIX),
 	necessaryMeasurements_(necessaryMeasurements),
 	domainPosixClockId_(customPosixClockId)
@@ -48,7 +61,7 @@ Timestamp::TimestampConverter::TimestampConverter(const TimeDomain timeDomain, c
 
 #endif
 
-Timestamp Timestamp::TimestampConverter::toUnix(const int64_t domainTimestampNs)
+Timestamp TimestampConverter::toUnix(const int64_t domainTimestampNs)
 {
 	const int64_t domainToUnixOffsetNs = domainToUnixOffset();
 
@@ -70,7 +83,7 @@ Timestamp Timestamp::TimestampConverter::toUnix(const int64_t domainTimestampNs)
 	return Timestamp(Timestamp::nanoseconds2seconds(unixTimestampNs));
 }
 
-Timestamp Timestamp::TimestampConverter::toUnix(const double domainTimestampSeconds)
+Timestamp TimestampConverter::toUnix(const double domainTimestampSeconds)
 {
 	const int64_t domainToUnixOffsetNs = domainToUnixOffset();
 
@@ -92,7 +105,7 @@ Timestamp Timestamp::TimestampConverter::toUnix(const double domainTimestampSeco
 	return Timestamp(unixTimestampSeconds);
 }
 
-bool Timestamp::TimestampConverter::isWithinRange(const int64_t domainTimestampNs, const double maxDistance, double* distance)
+bool TimestampConverter::isWithinRange(const int64_t domainTimestampNs, const double maxDistance, double* distance)
 {
 	ocean_assert(maxDistance >= 0.0);
 
@@ -112,7 +125,7 @@ bool Timestamp::TimestampConverter::isWithinRange(const int64_t domainTimestampN
 	return absDistanceSeconds <= maxDistance;
 }
 
-int64_t Timestamp::TimestampConverter::currentDomainTimestampNs() const
+int64_t TimestampConverter::currentDomainTimestampNs() const
 {
 	ocean_assert(isValid());
 	if (!isValid())
@@ -158,7 +171,7 @@ int64_t Timestamp::TimestampConverter::currentDomainTimestampNs() const
 			const int result = clock_gettime(clockid_t(domainPosixClockId_), &timestampSpec);
 			ocean_assert_and_suppress_unused(result == 0, result);
 
-			return timestampSpec.tv_sec * nanosecondsPerSecond_ + timestampSpec.tv_nsec;
+			return timestampSpec.tv_sec * Timestamp::nanosecondsPerSecond_ + timestampSpec.tv_nsec;
 		}
 
 	#ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
@@ -182,7 +195,7 @@ int64_t Timestamp::TimestampConverter::currentDomainTimestampNs() const
 	return invalidValue_;
 }
 
-int64_t Timestamp::TimestampConverter::domainToUnixOffset()
+int64_t TimestampConverter::domainToUnixOffset()
 {
 	ocean_assert(isValid());
 	if (!isValid())
@@ -248,7 +261,7 @@ int64_t Timestamp::TimestampConverter::domainToUnixOffset()
 	}
 
 	ocean_assert(domainNs != invalidValue_);
-	const int64_t unixNs = unixTimestampSpec.tv_sec * nanosecondsPerSecond_ + unixTimestampSpec.tv_nsec;
+	const int64_t unixNs = unixTimestampSpec.tv_sec * Timestamp::nanosecondsPerSecond_ + unixTimestampSpec.tv_nsec;
 
 #endif // OCEAN_PLATFORM_BUILD_WINDOWS
 
@@ -316,7 +329,7 @@ int64_t Timestamp::TimestampConverter::domainToUnixOffset()
 	return domainToUnixOffsetNs;
 }
 
-Timestamp::TimestampConverter& Timestamp::TimestampConverter::operator=(TimestampConverter&& converter)
+TimestampConverter& TimestampConverter::operator=(TimestampConverter&& converter) noexcept
 {
 	if (this != &converter)
 	{
@@ -350,7 +363,7 @@ Timestamp::TimestampConverter& Timestamp::TimestampConverter::operator=(Timestam
 	return *this;
 }
 
-int64_t Timestamp::TimestampConverter::currentDomainTimestampNs(const TimeDomain timeDomain)
+int64_t TimestampConverter::currentDomainTimestampNs(const TimeDomain timeDomain)
 {
 #ifdef OCEAN_PLATFORM_BUILD_WINDOWS
 
@@ -396,7 +409,7 @@ int64_t Timestamp::TimestampConverter::currentDomainTimestampNs(const TimeDomain
 			const int result = clock_gettime(clockid_t(domainPosixClockId), &timestampSpec);
 			ocean_assert_and_suppress_unused(result == 0, result);
 
-			return timestampSpec.tv_sec * nanosecondsPerSecond_ + timestampSpec.tv_nsec;
+			return timestampSpec.tv_sec * Timestamp::nanosecondsPerSecond_ + timestampSpec.tv_nsec;
 		}
 
 	#ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
@@ -421,11 +434,11 @@ int64_t Timestamp::TimestampConverter::currentDomainTimestampNs(const TimeDomain
 	return invalidValue_;
 }
 
-int64_t Timestamp::TimestampConverter::timestampInNs(const int64_t timeValue, const int64_t timeDenominator)
+int64_t TimestampConverter::timestampInNs(const int64_t timeValue, const int64_t timeDenominator)
 {
 	ocean_assert(timeDenominator != 0);
 
-	if (timeDenominator == nanosecondsPerSecond_)
+	if (timeDenominator == Timestamp::nanosecondsPerSecond_)
 	{
 		return timeValue;
 	}
@@ -433,15 +446,15 @@ int64_t Timestamp::TimestampConverter::timestampInNs(const int64_t timeValue, co
 	const int64_t seconds = timeValue / timeDenominator;
 	const int64_t remainingInTimeScale = timeValue % timeDenominator;
 
-	const int64_t adjustedSeconds = seconds * nanosecondsPerSecond_;
-	const int64_t adjustedRemainingInTimeScale = (remainingInTimeScale * nanosecondsPerSecond_) / timeDenominator;
+	const int64_t adjustedSeconds = seconds * Timestamp::nanosecondsPerSecond_;
+	const int64_t adjustedRemainingInTimeScale = (remainingInTimeScale * Timestamp::nanosecondsPerSecond_) / timeDenominator;
 
 	const int64_t timeValueNs = adjustedSeconds + adjustedRemainingInTimeScale;
 
 #ifdef OCEAN_DEBUG
 	{
 		const double input = double(timeValue) / double(timeDenominator);
-		const double output = double(timeValueNs) / double(nanosecondsPerSecond_);
+		const double output = double(timeValueNs) / double(Timestamp::nanosecondsPerSecond_);
 		const double difference = std::abs(input - output);
 		ocean_assert(difference < 0.0001);
 	}
@@ -452,7 +465,7 @@ int64_t Timestamp::TimestampConverter::timestampInNs(const int64_t timeValue, co
 
 #ifndef OCEAN_PLATFORM_BUILD_WINDOWS
 
-int64_t Timestamp::TimestampConverter::currentTimestampNs(const int posixClockId)
+int64_t TimestampConverter::currentTimestampNs(const int posixClockId)
 {
 	struct timespec timestampSpec;
 	if (clock_gettime(clockid_t(posixClockId), &timestampSpec) != 0)
@@ -460,10 +473,10 @@ int64_t Timestamp::TimestampConverter::currentTimestampNs(const int posixClockId
 		return invalidValue_;
 	}
 
-	return timestampSpec.tv_sec * nanosecondsPerSecond_ + timestampSpec.tv_nsec;
+	return timestampSpec.tv_sec * Timestamp::nanosecondsPerSecond_ + timestampSpec.tv_nsec;
 }
 
-int Timestamp::TimestampConverter::posixClockId(const TimeDomain timeDomain)
+int TimestampConverter::posixClockId(const TimeDomain timeDomain)
 {
 	switch (timeDomain)
 	{
@@ -500,18 +513,5 @@ int Timestamp::TimestampConverter::posixClockId(const TimeDomain timeDomain)
 }
 
 #endif // OCEAN_PLATFORM_BUILD_WINDOWS
-
-Timestamp::Timestamp(const bool toNow) :
-	value_(toNow ? DateTime::timestamp() : invalidTimestampValue())
-{
-	// nothing to do here
-}
-
-Timestamp& Timestamp::toNow()
-{
-	value_ = DateTime::timestamp();
-
-	return *this;
-}
 
 }

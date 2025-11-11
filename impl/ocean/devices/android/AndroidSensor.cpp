@@ -173,7 +173,7 @@ Timestamp AndroidSensor::convertTimestamp(const ASensorEvent& sensorEvent, Times
 {
 	// The time in nanoseconds at which the event happened, and its behavior is identical to SensorEvent::timestamp in Java API.
 	// The time in nanoseconds at which the event happened. For a given sensor, each new sensor event should be monotonically increasing using the same time base as SystemClock.elapsedRealtimeNanos().
-	ocean_assert(timestampConverter_.timeDomain() == Timestamp::TimestampConverter::TD_BOOTTIME);
+	ocean_assert(timestampConverter_.timeDomain() == TimestampConverter::TD_BOOTTIME);
 
 #ifdef OCEAN_DEBUG
 	double debugDistance;
@@ -188,9 +188,9 @@ Timestamp AndroidSensor::convertTimestamp(const ASensorEvent& sensorEvent, Times
 	return timestampConverter_.toUnix(sensorEvent.timestamp);
 }
 
-Timestamp::TimestampConverter& AndroidSensor::timestampConverter()
+TimestampConverter& AndroidSensor::timestampConverter()
 {
-	static Timestamp::TimestampConverter timestampConverter(Timestamp::TimestampConverter::TD_BOOTTIME);
+	static TimestampConverter timestampConverter(TimestampConverter::TD_BOOTTIME);
 
 	return timestampConverter;
 }

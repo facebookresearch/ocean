@@ -72,218 +72,6 @@ class OCEAN_BASE_EXPORT Timestamp
 		/// Definition of the number of nanoseconds in one second.
 		static constexpr int64_t nanosecondsPerSecond_ = microsecondsPerSecond_ * 1000;
 
-		/**
-		 * This class is a helper class allowing to converter timestamps defined in a specific time domain to unix timestamps.
-		 */
-		class OCEAN_BASE_EXPORT TimestampConverter
-		{
-			public:
-
-				/**
-				 * Definition of individual time domains.
-				 */
-				enum TimeDomain : uint32_t
-				{
-					/// An invalid time domain.
-					TD_INVALID = 0u,
-					/// The monotonically increasing time domain defined in nanoseconds, not increasing during system sleep.
-					TD_MONOTONIC,
-
-#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
-					/// The monotonically increasing time domain defined in nanoseconds, increasing during system sleep, not available on Windows.
-					TD_BOOTTIME,
-#endif
-
-#ifdef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
-					/// The monotonically increasing time domain defined in nanoseconds, the time the system has been awake since the last time it was restarted.
-					TD_UPTIME_RAW,
-#endif
-
-#ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
-					TD_VIRTUAL_COUNTER_REGISTER,
-#endif
-
-#ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
-					/// A custom POSIX clock id specified by the user.
-					TD_CUSTOM_POSIX
-#endif
-				};
-
-				/**
-				 * Definition of an invalid value.
-				 */
-				static constexpr int64_t invalidValue_ = std::numeric_limits<int64_t>::lowest();
-
-			public:
-
-				/**
-				 * Creates an invalid converter object.
-				 * @see isValid().
-				 */
-				TimestampConverter() = default;
-
-				/**
-				 * Default destructor.
-				 */
-				~TimestampConverter() = default;
-
-				/**
-				 * Creates a new converter object for a specific time domain.
-				 * @param timeDomain The time domain for which the converter will be created
-				 * @param necessaryMeasurements The number of measurements necessary to determine the offset between the domain time and the unix time, with range [1, infinity)
-				 */
-				explicit TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements = 100);
-
-#ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
-
-				/**
-				 * Creates a new converter object for a custom POSIX clock id.
-				 * @param timeDomain The time domain for which the converter will be created, must be TD_CUSTOM_POSIX
-				 * @param customPosixClockId The custom POSIX clock id to use for time conversion
-				 * @param necessaryMeasurements The number of measurements necessary to determine the offset between the domain time and the unix time, with range [1, infinity)
-				 */
-				explicit TimestampConverter(const TimeDomain timeDomain, const int customPosixClockId, const size_t necessaryMeasurements);
-#endif
-
-				/**
-				 * Move constructor.
-				 * @param converter The converter to be moved
-				 */
-				inline TimestampConverter(TimestampConverter&& converter);
-
-				/**
-				 * Converts a timestamp defined in the converter's time domain to a unix timestamp.
-				 * @param domainTimestampNs The timestamp in the converter's time domain, in nanoseconds, with range (-infinity, infinity)
-				 * @return The converted unix timestamp
-				 */
-				Timestamp toUnix(const int64_t domainTimestampNs);
-
-				/**
-				 * Converts a timestamp defined in the converter's time domain to a unix timestamp.
-				 * @param domainTimestampSeconds The timestamp in the converter's time domain, in seconds, with range (-infinity, infinity)
-				 * @return The converted unix timestamp
-				 */
-				Timestamp toUnix(const double domainTimestampSeconds);
-
-				/**
-				 * Returns whether a given domain timestamp is within a specified range of the current domain timestamp.
-				 * @param domainTimestampNs The domain timestamp to check, in nanoseconds, with range (-infinity, infinity)
-				 * @param maxDistance The maximal distance between the domain timestamp and the current domain timestamp, in seconds, with range [0, infinity)
-				 * @param distance Optional resulting distance between the domain timestamp and the current domain timestamp, in seconds, with range (-infinity, infinity)
-				 * @return True, if so
-				 */
-				bool isWithinRange(const int64_t domainTimestampNs, const double maxDistance = 1.0, double* distance = nullptr);
-
-				/**
-				 * Returns the current timestamp in the time domain of this converter.
-				 * @return The current timestamp in the converter's time domain, in nanoseconds, invalidValue_ in case of an error
-				 */
-				int64_t currentDomainTimestampNs() const;
-
-				/**
-				 * Returns the time domain of this converter.
-				 * @return The converter's time domain
-				 */
-				inline TimeDomain timeDomain() const;
-
-				/**
-				 * Returns the offset between the domain time and the unix time, in nanoseconds.
-				 * Unix time = domain time + domainToUnixOffset
-				 * @return The offset between the domain time and the unix time, in nanoseconds, with range (-infinity, infinity)
-				 */
-				int64_t domainToUnixOffset();
-
-				/**
-				 * Returns whether this converter has been initialized with a valid time domain.
-				 * @return True, if so
-				 */
-				inline bool isValid() const;
-
-				/**
-				 * Returns whether this converter is valid.
-				 * @return True, if so
-				 */
-				inline operator bool() const;
-
-				/**
-				 * Move operator.
-				 * @param converter The converter to be moved
-				 * @return Reference to this object
-				 */
-				TimestampConverter& operator=(TimestampConverter&& converter);
-
-				/**
-				 * Returns the current timestamp in a specified time domain.
-				 * @param timeDomain The time domain for which the current timestamp will be returned
-				 * @return The current timestamp in the specified time domain, in nanoseconds
-				 */
-				static int64_t currentDomainTimestampNs(const TimeDomain timeDomain);
-
-				/**
-				 * Converts a timestamp which is defined in seconds to a timestamp which is defined in nanoseconds.
-				 * The timestamp is defined by (timeValue / timeDenominator) * 1s.<br>
-				 * The resulting timestamp will be (newTimeValue / 1000000000) * 1s.
-				 * @param timeValue The time value, in seconds, with range (-infinity, infinity)
-				 * @param timeDenominator The denominator corresponding to the time value (sometimes call time scale), with range [1, infinity)
-				 * @return The resulting timestamp in nanoseconds, with range (-infinity, infinity)
-				 */
-				static int64_t timestampInNs(const int64_t timeValue, const int64_t timeDenominator);
-
-#ifndef OCEAN_PLATFORM_BUILD_WINDOWS
-
-				/**
-				 * Return the current timestamp in a specified POSIX clock id.
-				 * @param posixClockId The POSIX clock id for which the current timestamp will be returned
-				 * @return The current timestamp in the specified POSIX clock id, in nanoseconds
-				 */
-				static int64_t currentTimestampNs(const int posixClockId);
-
-			protected:
-
-				/**
-				 * Returns the POSIX clock id associated with a time domain.
-				 * @param timeDomain The time domain for which the associated POSIX clock id will be returned
-				 * @return The POSIX clock id associated with the specified time domain, -1 if no associated POSIX clock id exists
-				 */
-				static int posixClockId(const TimeDomain timeDomain);
-
-#endif // OCEAN_PLATFORM_BUILD_WINDOWS
-
-			protected:
-
-				/// The time domain of this converter.
-				TimeDomain timeDomain_ = TD_INVALID;
-
-				/// The offset between the domain time and the unix time, in nanoseconds.
-				std::atomic_int64_t domainToUnixOffsetNs_ = invalidValue_;
-
-				/// The initial domain timestamp, in nanoseconds.
-				int64_t initialDomainNs_ = invalidValue_;
-
-				/// The initial unix timestamp, in nanoseconds.
-				int64_t initialUnixNs_ = invalidValue_;
-
-				/// The measured sum of the domain to unix offsets, in nanoseconds.
-				int64_t sumDomainToUnixOffsetNs_ = 0;
-
-				/// The number of measurements.
-				size_t measurements_ = 0;
-
-				/// The number of necessary measurements before the converter keeps the determined offset fixed.
-				size_t necessaryMeasurements_ = 0;
-
-				/// The optional frequency of the domain time, in Hz (in case the domain time is not defined in nanoseconds).
-				uint64_t domainFrequency_ = 0ull;
-
-				/// The converter's lock.
-				Lock lock_;
-
-#ifndef OCEAN_PLATFORM_BUILD_WINDOWS
-				/// The POSIX clock id associated with the time domain.
-				int domainPosixClockId_ = -1;
-#endif
-		};
-
 	public:
 
 		/**
@@ -517,25 +305,223 @@ class OCEAN_BASE_EXPORT Timestamp
 		double value_ = invalidTimestampValue();
 };
 
-inline Timestamp::TimestampConverter::TimestampConverter(TimestampConverter&& converter)
+/**
+ * This class is a helper class allowing to converter timestamps defined in a specific time domain to unix timestamps.
+ */
+class OCEAN_BASE_EXPORT TimestampConverter
 {
-	*this = std::move(converter);
-}
+	public:
 
-inline Timestamp::TimestampConverter::TimeDomain Timestamp::TimestampConverter::timeDomain() const
-{
-	return timeDomain_;
-}
+		/**
+		 * Definition of individual time domains.
+		 */
+		enum TimeDomain : uint32_t
+		{
+			/// An invalid time domain.
+			TD_INVALID = 0u,
+			/// The monotonically increasing time domain defined in nanoseconds, not increasing during system sleep.
+			TD_MONOTONIC,
 
-inline bool Timestamp::TimestampConverter::isValid() const
-{
-	return timeDomain_ != TD_INVALID && necessaryMeasurements_ != 0;
-}
+#ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
+			/// The monotonically increasing time domain defined in nanoseconds, increasing during system sleep, not available on Windows.
+			TD_BOOTTIME,
+#endif
 
-inline Timestamp::TimestampConverter::operator bool() const
-{
-	return isValid();
-}
+#ifdef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
+			/// The monotonically increasing time domain defined in nanoseconds, the time the system has been awake since the last time it was restarted.
+			TD_UPTIME_RAW,
+#endif
+
+#ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
+			TD_VIRTUAL_COUNTER_REGISTER,
+#endif
+
+#ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
+			/// A custom POSIX clock id specified by the user.
+			TD_CUSTOM_POSIX
+#endif
+		};
+
+		/**
+		 * Definition of an invalid value.
+		 */
+		static constexpr int64_t invalidValue_ = std::numeric_limits<int64_t>::lowest();
+
+	public:
+
+		/**
+		 * Creates an invalid converter object.
+		 * @see isValid().
+		 */
+		TimestampConverter() = default;
+
+		/**
+		 * Default destructor.
+		 */
+		~TimestampConverter() = default;
+
+		/**
+		 * Creates a new converter object for a specific time domain.
+		 * @param timeDomain The time domain for which the converter will be created
+		 * @param necessaryMeasurements The number of measurements necessary to determine the offset between the domain time and the unix time, with range [1, infinity)
+		 */
+		explicit TimestampConverter(const TimeDomain timeDomain, const size_t necessaryMeasurements = 100);
+
+#ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
+
+		/**
+		 * Creates a new converter object for a custom POSIX clock id.
+		 * @param timeDomain The time domain for which the converter will be created, must be TD_CUSTOM_POSIX
+		 * @param customPosixClockId The custom POSIX clock id to use for time conversion
+		 * @param necessaryMeasurements The number of measurements necessary to determine the offset between the domain time and the unix time, with range [1, infinity)
+		 */
+		explicit TimestampConverter(const TimeDomain timeDomain, const int customPosixClockId, const size_t necessaryMeasurements);
+#endif
+
+		/**
+		 * Move constructor.
+		 * @param converter The converter to be moved
+		 */
+		inline TimestampConverter(TimestampConverter&& converter) noexcept;
+
+		/**
+		 * Converts a timestamp defined in the converter's time domain to a unix timestamp.
+		 * @param domainTimestampNs The timestamp in the converter's time domain, in nanoseconds, with range (-infinity, infinity)
+		 * @return The converted unix timestamp
+		 */
+		Timestamp toUnix(const int64_t domainTimestampNs);
+
+		/**
+		 * Converts a timestamp defined in the converter's time domain to a unix timestamp.
+		 * @param domainTimestampSeconds The timestamp in the converter's time domain, in seconds, with range (-infinity, infinity)
+		 * @return The converted unix timestamp
+		 */
+		Timestamp toUnix(const double domainTimestampSeconds);
+
+		/**
+		 * Returns whether a given domain timestamp is within a specified range of the current domain timestamp.
+		 * @param domainTimestampNs The domain timestamp to check, in nanoseconds, with range (-infinity, infinity)
+		 * @param maxDistance The maximal distance between the domain timestamp and the current domain timestamp, in seconds, with range [0, infinity)
+		 * @param distance Optional resulting distance between the domain timestamp and the current domain timestamp, in seconds, with range (-infinity, infinity)
+		 * @return True, if so
+		 */
+		bool isWithinRange(const int64_t domainTimestampNs, const double maxDistance = 1.0, double* distance = nullptr);
+
+		/**
+		 * Returns the current timestamp in the time domain of this converter.
+		 * @return The current timestamp in the converter's time domain, in nanoseconds, invalidValue_ in case of an error
+		 */
+		int64_t currentDomainTimestampNs() const;
+
+		/**
+		 * Returns the time domain of this converter.
+		 * @return The converter's time domain
+		 */
+		inline TimeDomain timeDomain() const;
+
+		/**
+		 * Returns the offset between the domain time and the unix time, in nanoseconds.
+		 * Unix time = domain time + domainToUnixOffset
+		 * @return The offset between the domain time and the unix time, in nanoseconds, with range (-infinity, infinity)
+		 */
+		int64_t domainToUnixOffset();
+
+		/**
+		 * Returns the number of measurements.
+		 * @return The converter's number of measurements
+		 */
+		inline size_t measurements() const;
+
+		/**
+		 * Returns whether this converter has been initialized with a valid time domain.
+		 * @return True, if so
+		 */
+		inline bool isValid() const;
+
+		/**
+		 * Returns whether this converter is valid.
+		 * @return True, if so
+		 */
+		inline operator bool() const;
+
+		/**
+		 * Move operator.
+		 * @param converter The converter to be moved
+		 * @return Reference to this object
+		 */
+		TimestampConverter& operator=(TimestampConverter&& converter) noexcept;
+
+		/**
+		 * Returns the current timestamp in a specified time domain.
+		 * @param timeDomain The time domain for which the current timestamp will be returned
+		 * @return The current timestamp in the specified time domain, in nanoseconds
+		 */
+		static int64_t currentDomainTimestampNs(const TimeDomain timeDomain);
+
+		/**
+		 * Converts a timestamp which is defined in seconds to a timestamp which is defined in nanoseconds.
+		 * The timestamp is defined by (timeValue / timeDenominator) * 1s.<br>
+		 * The resulting timestamp will be (newTimeValue / 1000000000) * 1s.
+		 * @param timeValue The time value, in seconds, with range (-infinity, infinity)
+		 * @param timeDenominator The denominator corresponding to the time value (sometimes call time scale), with range [1, infinity)
+		 * @return The resulting timestamp in nanoseconds, with range (-infinity, infinity)
+		 */
+		static int64_t timestampInNs(const int64_t timeValue, const int64_t timeDenominator);
+
+#ifndef OCEAN_PLATFORM_BUILD_WINDOWS
+
+		/**
+		 * Return the current timestamp in a specified POSIX clock id.
+		 * @param posixClockId The POSIX clock id for which the current timestamp will be returned
+		 * @return The current timestamp in the specified POSIX clock id, in nanoseconds
+		 */
+		static int64_t currentTimestampNs(const int posixClockId);
+
+	protected:
+
+		/**
+		 * Returns the POSIX clock id associated with a time domain.
+		 * @param timeDomain The time domain for which the associated POSIX clock id will be returned
+		 * @return The POSIX clock id associated with the specified time domain, -1 if no associated POSIX clock id exists
+		 */
+		static int posixClockId(const TimeDomain timeDomain);
+
+#endif // OCEAN_PLATFORM_BUILD_WINDOWS
+
+	protected:
+
+		/// The time domain of this converter.
+		TimeDomain timeDomain_ = TD_INVALID;
+
+		/// The offset between the domain time and the unix time, in nanoseconds.
+		std::atomic_int64_t domainToUnixOffsetNs_ = invalidValue_;
+
+		/// The initial domain timestamp, in nanoseconds.
+		int64_t initialDomainNs_ = invalidValue_;
+
+		/// The initial unix timestamp, in nanoseconds.
+		int64_t initialUnixNs_ = invalidValue_;
+
+		/// The measured sum of the domain to unix offsets, in nanoseconds.
+		int64_t sumDomainToUnixOffsetNs_ = 0;
+
+		/// The number of measurements.
+		size_t measurements_ = 0;
+
+		/// The number of necessary measurements before the converter keeps the determined offset fixed.
+		size_t necessaryMeasurements_ = 0;
+
+		/// The optional frequency of the domain time, in Hz (in case the domain time is not defined in nanoseconds).
+		uint64_t domainFrequency_ = 0ull;
+
+		/// The converter's lock.
+		mutable Lock lock_;
+
+#ifndef OCEAN_PLATFORM_BUILD_WINDOWS
+		/// The POSIX clock id associated with the time domain.
+		int domainPosixClockId_ = -1;
+#endif
+};
 
 inline Timestamp::Timestamp(const double timestamp) :
 	value_(timestamp)
@@ -738,6 +724,33 @@ constexpr double Timestamp::nanoseconds2seconds(const int64_t nanoseconds)
 constexpr double Timestamp::invalidTimestampValue()
 {
 	return -DBL_MAX;
+}
+
+inline TimestampConverter::TimestampConverter(TimestampConverter&& converter) noexcept
+{
+	*this = std::move(converter);
+}
+
+inline TimestampConverter::TimeDomain TimestampConverter::timeDomain() const
+{
+	return timeDomain_;
+}
+
+inline size_t TimestampConverter::measurements() const
+{
+	const ScopedLock scopedLock(lock_);
+
+	return measurements_;
+}
+
+inline bool TimestampConverter::isValid() const
+{
+	return timeDomain_ != TD_INVALID && necessaryMeasurements_ != 0;
+}
+
+inline TimestampConverter::operator bool() const
+{
+	return isValid();
 }
 
 }

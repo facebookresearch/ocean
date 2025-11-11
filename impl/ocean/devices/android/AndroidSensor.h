@@ -209,7 +209,7 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidSensor :
 		 * Returns the timestamp converter for all android sensors.
 		 * @return The timestamp converter
 		 */
-		static Timestamp::TimestampConverter& timestampConverter();
+		static TimestampConverter& timestampConverter();
 
 	protected:
 
@@ -229,7 +229,7 @@ class OCEAN_DEVICES_ANDROID_EXPORT AndroidSensor :
 		bool isStarted_ = false;
 
 		/// The timestamp converter of this sensor.
-		Timestamp::TimestampConverter& timestampConverter_;
+		TimestampConverter& timestampConverter_;
 };
 
 inline int AndroidSensor::onEventFunctionStatic(int fd, int events, void* data)

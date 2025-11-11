@@ -667,7 +667,7 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		HomogenousMatrixD4 device_T_camera_ = HomogenousMatrixD4(false);
 
 		/// The timestamp converter to convert timestamps from the camera to unix timestamps.
-		Timestamp::TimestampConverter timestampConverter_ = Timestamp::TimestampConverter(Timestamp::TimestampConverter::TD_BOOTTIME);
+		TimestampConverter timestampConverter_ = TimestampConverter(TimestampConverter::TD_BOOTTIME);
 
 		/// The current exposure mode of this device.
 		ControlMode exposureMode_ = CM_INVALID;

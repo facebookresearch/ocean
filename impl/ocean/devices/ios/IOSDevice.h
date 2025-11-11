@@ -56,7 +56,7 @@ class OCEAN_DEVICES_IOS_EXPORT IOSDevice : virtual public Device
 		 * Returns the timestamp converter for all android sensors.
 		 * @return The timestamp converter
 		 */
-		static Timestamp::TimestampConverter& timestampConverter();
+		static TimestampConverter& timestampConverter();
 
 	protected:
 
@@ -64,7 +64,7 @@ class OCEAN_DEVICES_IOS_EXPORT IOSDevice : virtual public Device
 		bool isStarted_ = false;
 
 		/// The timestamp converter of this sensor.
-		Timestamp::TimestampConverter& timestampConverter_;
+		TimestampConverter& timestampConverter_;
 };
 
 }

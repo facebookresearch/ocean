@@ -1162,7 +1162,7 @@ void ALiveVideo::onCaptureCompleted(ACameraCaptureSession* session, ACaptureRequ
 		 *
 		 * SystemClock::elapsedRealtimeNanos(): Returns nanoseconds since boot, including time spent in sleep.
 		 */
-		ocean_assert(timestampConverter_.timeDomain() == Timestamp::TimestampConverter::TD_BOOTTIME);
+		ocean_assert(timestampConverter_.timeDomain() == TimestampConverter::TD_BOOTTIME);
 
 		const Timestamp timestamp = timestampConverter_.toUnix(timestampNs);
 
