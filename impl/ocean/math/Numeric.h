@@ -61,67 +61,67 @@ class NumericT
 		 * Returns PI which is equivalent to 180 degree.
 		 * @return PI
 		 */
-		static constexpr T pi();
+		[[nodiscard]] static constexpr T pi();
 
 		/**
 		 * Returns 2*PI which is equivalent to 360 degree.
 		 * @return 2*PI
 		 */
-		static constexpr T pi2();
+		[[nodiscard]] static constexpr T pi2();
 
 		/**
 		 * Returns PI/2 which is equivalent to 90 degree.
 		 * @return PI/2
 		 */
-		static constexpr T pi_2();
+		[[nodiscard]] static constexpr T pi_2();
 
 		/**
 		 * Returns PI/3 which is equivalent to 60 degree.
 		 * @return PI/3
 		 */
-		static constexpr T pi_3();
+		[[nodiscard]] static constexpr T pi_3();
 
 		/**
 		 * Returns PI/4 which is equivalent to 45 degree.
 		 * @return PI/4
 		 */
-		static constexpr T pi_4();
+		[[nodiscard]] static constexpr T pi_4();
 
 		/**
 		 * Returns the square of PI i.e., PI^2.
 		 * @return PI^2
 		 */
-		static constexpr T squarePi();
+		[[nodiscard]] static constexpr T squarePi();
 
 		/**
 		 * Returns the square of two PI i.e., (2*PI)^2.
 		 * @return (2*PI)^2
 		 */
-		static constexpr T squarePi2();
+		[[nodiscard]] static constexpr T squarePi2();
 
 		/**
 		 * Returns the square of PI half i.e., (PI/2)^2.
 		 * @return (PI/2)^2
 		 */
-		static constexpr T squarePi_2();
+		[[nodiscard]] static constexpr T squarePi_2();
 
 		/**
 		 * Returns the euler's number.
 		 * @return Euler's number
 		 */
-		static constexpr T e();
+		[[nodiscard]] static constexpr T e();
 
 		/**
 		 * Returns a small epsilon.
 		 * @return Small epsilon
 		 */
-		static constexpr T eps();
+		[[nodiscard]] static constexpr T eps();
 
 		/**
 		 * Returns a weak epsilon.
 		 * @return Weak epsilon
 		 */
-		static constexpr T weakEps();
+		[[nodiscard]] static constexpr T weakEps();
 
 		/**
 		 * Returns the absolute value of a given value.
@@ -130,7 +130,7 @@ class NumericT
 		 * @return Absolute value
 		 * @see secureAbs().
 		 */
-		static inline T abs(const T value);
+		[[nodiscard]] static inline T abs(const T value);
 
 		/**
 		 * Returns the absolute value of a given value while the return value is guaranteed to be the absolute value of the input value.
@@ -139,14 +139,14 @@ class NumericT
 		 * @return Absolute value
 		 * @see abs().
 		 */
-		static inline typename UnsignedTyper<T>::Type secureAbs(const T value);
+		[[nodiscard]] static inline typename UnsignedTyper<T>::Type secureAbs(const T value);
 
 		/**
 		 * Returns the square of a given value.
 		 * @param value The value to return the square from
 		 * @return Square value
 		 */
-		static constexpr inline T sqr(const T value);
+		[[nodiscard]] static constexpr inline T sqr(const T value);
 
 		/**
 		 * Returns the sum of given values.
@@ -154,7 +154,7 @@ class NumericT
 		 * @param number The number of given values
 		 * @return Sum of elements
 		 */
-		static inline T sum(const T* values, const size_t number);
+		[[nodiscard]] static inline T sum(const T* values, const size_t number);
 
 		/**
 		 * Returns the summed squares of a given values.
@@ -162,7 +162,7 @@ class NumericT
 		 * @param number The number of given values
 		 * @return Summed squared result
 		 */
-		static inline T summedSqr(const T* values, const size_t number);
+		[[nodiscard]] static inline T summedSqr(const T* values, const size_t number);
 
 		/**
 		 * Returns the square distance between two values.
@@ -170,63 +170,63 @@ class NumericT
 		 * @param value1 Second value
 		 * @return Square distance
 		 */
-		static constexpr inline T sqrDistance(const T value0, const T value1);
+		[[nodiscard]] static constexpr inline T sqrDistance(const T value0, const T value1);
 
 		/**
 		 * Returns the square root of a given value.
 		 * @param value The value to return the square root from, with range [0, infinity)
 		 * @return Square root
 		 */
-		static inline T sqrt(const T value);
+		[[nodiscard]] static inline T sqrt(const T value);
 
 		/**
 		 * Returns the square root of a given value.
 		 * @param value The value to return the square root from
 		 * @return Square root
 		 */
-		static inline std::complex<T> sqrt(const std::complex<T>& value);
+		[[nodiscard]] static inline std::complex<T> sqrt(const std::complex<T>& value);
 
 		/**
 		 * Returns the sine of a given value.
 		 * @param value The value to return the sine from, with range (-infinity, infinity)
 		 * @return Sine value
 		 */
-		static inline T sin(const T value);
+		[[nodiscard]] static inline T sin(const T value);
 
 		/**
 		 * Returns the cosine of a given value.
 		 * @param value The value to return the cosine from, with range (-infinity, infinity)
 		 * @return Cosine value
 		 */
-		static inline T cos(const T value);
+		[[nodiscard]] static inline T cos(const T value);
 
 		/**
 		 * Returns the tangent of a given value.
 		 * @param value The value to return the tangent from, with range (-infinity, infinity)
 		 * @return Tangent value
 		 */
-		static inline T tan(const T value);
+		[[nodiscard]] static inline T tan(const T value);
 
 		/**
 		 * Returns the arcsine of a given value.
 		 * @param value The value to return the arc sine from, with range [-1, 1]
 		 * @return Arcsine value, with range [-PI/2, PI/2]
 		 */
-		static inline T asin(const T value);
+		[[nodiscard]] static inline T asin(const T value);
 
 		/**
 		 * Returns the arccosine of a given value.
 		 * @param value The value to return the arc cosine from, with range [-1, 1]
 		 * @return Arccosine value in radian, with range [0, PI]
 		 */
-		static inline T acos(const T value);
+		[[nodiscard]] static inline T acos(const T value);
 
 		/**
 		 * Returns the arctangent of a given value.
 		 * @param value The value to return the arctangent from
 		 * @return Arctangent value, with range [-PI/2, PI/2]
 		 */
-		static inline T atan(const T value);
+		[[nodiscard]] static inline T atan(const T value);
 
 		/**
 		 * Returns the arctangent of a given value in radian.
@@ -234,21 +234,21 @@ class NumericT
 		 * @param x Adjacent value, must not be zero if y is zero
 		 * @return Arctangent value, with range [-PI, PI]
 		 */
-		static inline T atan2(const T y, const T x);
+		[[nodiscard]] static inline T atan2(const T y, const T x);
 
 		/**
 		 * Returns the base-e exponential function of a given value.
 		 * @param value The value to determine the exponential value for, with range (-infinity, infinity)
 		 * @return Exponential value
 		 */
-		static inline T exp(const T value);
+		[[nodiscard]] static inline T exp(const T value);
 
 		/**
 		 * Returns the natural logarithm of a given value (the logarithm to the base e).
 		 * @param value The value to return the logarithm for, with range (0, infinity)
 		 * @return Natural logarithm
 		 */
-		static inline T log(const T value);
+		[[nodiscard]] static inline T log(const T value);
 
 		/**
 		 * Returns the natural logarithm of a given value plus 1 (the logarithm to the base e).
@@ -256,21 +256,21 @@ class NumericT
 		 * @param value Input for which logarithm of (1 + value) will be returned, with range (-1, infinity)
 		 * @return Natural logarithm
 		 */
-		static inline T log1p(const T value);
+		[[nodiscard]] static inline T log1p(const T value);
 
 		/**
 		 * Returns the logarithm to base 2 of a given value.
 		 * @param value The value to return the logarithm for, with range (0, infinity)
 		 * @return Logarithm to base 2
 		 */
-		static inline T log2(const T value);
+		[[nodiscard]] static inline T log2(const T value);
 
 		/**
 		 * Returns the logarithm to base 10 of a given value.
 		 * @param value The value to return the logarithm for, with range (0, infinity)
 		 * @return Logarithm to base 10
 		 */
-		static inline T log10(const T value);
+		[[nodiscard]] static inline T log10(const T value);
 
 		/**
 		 * Returns the floating-point remainder of a given value.
@@ -278,7 +278,7 @@ class NumericT
 		 * @param valueB Divisor value
 		 * @return Floating-point remainder
 		 */
-		static inline T fmod(const T valueA, const T valueB);
+		[[nodiscard]] static inline T fmod(const T valueA, const T valueB);
 
 		/**
 		 * Returns the dot product for two vectors.
@@ -287,28 +287,28 @@ class NumericT
 		 * @param size The size/dimension of both vector (the number of elements each vector holds), with range [0, infinity)
 		 * @return The resulting dot product
 		 */
-		static inline T dot(const T* vectorA, const T* vectorB, const size_t size);
+		[[nodiscard]] static inline T dot(const T* vectorA, const T* vectorB, const size_t size);
 
 		/**
 		 * Adjusts an arbitrary angle into the range of [0.0, 2PI).
 		 * @param angle The angle to be adjusted, defined in radian, with range (-infinity, infinity)
 		 * @return Adjusted angle with range [0.0, 2PI)
 		 */
-		static inline T angleAdjustPositive(const T angle);
+		[[nodiscard]] static inline T angleAdjustPositive(const T angle);
 
 		/**
 		 * Adjusts an arbitrary angle into the range of [0.0, PI).
 		 * @param angle The angle to be adjusted, defined in radian, with range (-infinity, infinity)
 		 * @return Adjusted angle with range [0.0, PI)
 		 */
-		static inline T angleAdjustPositiveHalf(const T angle);
+		[[nodiscard]] static inline T angleAdjustPositiveHalf(const T angle);
 
 		/**
 		 * Adjusts an arbitrary angle into the range of (-PI, PI].
 		 * @param angle The angle to be adjusted, defined in radian, with range (-infinity, infinity)
 		 * @return Adjusted angle with range (-PI, PI]
 		 */
-		static inline T angleAdjustNull(const T angle);
+		[[nodiscard]] static inline T angleAdjustNull(const T angle);
 
 		/**
 		 * Returns whether two angles represent the same angle up to a small epsilon.
@@ -316,7 +316,7 @@ class NumericT
 		 * @param angleB Second angle specified in radian, with range (-infinity, infinity)
 		 * @return True, if so
 		 */
-		static inline bool angleIsEqual(const T angleA, const T angleB);
+		[[nodiscard]] static inline bool angleIsEqual(const T angleA, const T angleB);
 
 		/**
 		 * Returns whether two angles represent the same angle up to a weak epsilon.
@@ -324,7 +324,7 @@ class NumericT
 		 * @param angleB Second angle specified in radian, with range (-infinity, infinity)
 		 * @return True, if so
 		 */
-		static inline bool angleIsWeakEqual(const T angleA, const T angleB);
+		[[nodiscard]] static inline bool angleIsWeakEqual(const T angleA, const T angleB);
 
 		/**
 		 * Returns whether two angles represent the same angle up to a given epsilon.
@@ -333,7 +333,7 @@ class NumericT
 		 * @param epsilon Accuracy epsilon in radian, with range [0, infinity)
 		 * @return True, if so
 		 */
-		static inline bool angleIsEqual(const T angleA, const T angleB, const T epsilon);
+		[[nodiscard]] static inline bool angleIsEqual(const T angleA, const T angleB, const T epsilon);
 
 		/**
 		 * Returns whether the angular difference (distance) between two angles is smaller than a specified threshold.
@@ -342,7 +342,7 @@ class NumericT
 		 * @param threshold Positive angular threshold in radian with range [0, PI)
 		 * @return True, if so
 		 */
-		static inline bool angleIsBelowThreshold(const T angleA, const T angleB, const T threshold);
+		[[nodiscard]] static inline bool angleIsBelowThreshold(const T angleA, const T angleB, const T threshold);
 
 		/**
 		 * Returns the angular difference (distance between two angles).
@@ -350,7 +350,7 @@ class NumericT
 		 * @param angleB Second angle specified in radian, with range (-infinity, infinity)
 		 * @return Absolute distance between both angles, in radian
 		 */
-		static inline T angleDistance(const T angleA, const T angleB);
+		[[nodiscard]] static inline T angleDistance(const T angleA, const T angleB);
 
 		/**
 		 * Returns x raised to the power of y.
@@ -358,7 +358,7 @@ class NumericT
 		 * @param y Y value, with range (-infinity, infinity)
 		 * @return The power result
 		 */
-		static inline T pow(const T x, const T y);
+		[[nodiscard]] static inline T pow(const T x, const T y);
 
 		/**
 		 * Returns x raised to the power of y.
@@ -366,7 +366,7 @@ class NumericT
 		 * @param y Y value
 		 * @return The power result
 		 */
-		static inline std::complex<T> pow(const std::complex<T>& x, const T y);
+		[[nodiscard]] static inline std::complex<T> pow(const std::complex<T>& x, const T y);
 
 		/**
 		 * Returns x raised to the power of y while y is an integer.
@@ -374,14 +374,14 @@ class NumericT
 		 * @param y Y value, with range (-infinity, infinity)
 		 * @return The power result
 		 */
-		static constexpr T integerPow(const T x, const unsigned int y);
+		[[nodiscard]] static constexpr T integerPow(const T x, const unsigned int y);
 
 		/**
 		 * Returns the factorial for a given value.
 		 * @param value The value for that the factorial will be determined, with range [0, infinity) for floating point types; with range [0, 12] for 32 bit integer types
 		 * @return Resulting factorial, with range [0, infinity)
 		 */
-		static constexpr inline T factorial(const T& value);
+		[[nodiscard]] static constexpr inline T factorial(const T& value);
 
 		/**
 		 * Returns the binomial coefficient for two binomial parameters.
@@ -390,21 +390,21 @@ class NumericT
 		 * @param k Lower binomial coefficient parameter, with range [0, n]
 		 * @return Resulting binomial coefficient
 		 */
-		static constexpr inline T binomialCoefficient(const T& n, const T& k);
+		[[nodiscard]] static constexpr inline T binomialCoefficient(const T& n, const T& k);
 
 		/**
 		 * Returns the smallest integer value that is not less than the given value.
 		 * @param value The value to handle, with range (-infinity, infinity)
 		 * @return Smallest integer value
 		 */
-		static inline T ceil(const T value);
+		[[nodiscard]] static inline T ceil(const T value);
 
 		/**
 		 * Returns the largest integer value that is not greater than the given value.
 		 * @param value The value to handle, with range (-infinity, infinity)
 		 * @return Largest integer value
 		 */
-		static inline T floor(const T value);
+		[[nodiscard]] static inline T floor(const T value);
 
 		/**
 		 * Returns the rounded 32 bit integer value of a given value.
@@ -422,7 +422,7 @@ class NumericT
 		 * @param value The value to handle, with range (-infinity, infinity)
 		 * @return Rounded value
 		 */
-		static constexpr inline int32_t round32(const T value);
+		[[nodiscard]] static constexpr inline int32_t round32(const T value);
 
 		/**
 		 * Returns the rounded 64 bit integer value of a given value.
@@ -440,7 +440,7 @@ class NumericT
 		 * @param value The value to handle, with range (-infinity, infinity)
 		 * @return Rounded value
 		 */
-		static constexpr inline int64_t round64(const T value);
+		[[nodiscard]] static constexpr inline int64_t round64(const T value);
 
 		/**
 		 * Returns the ratio between two values if the denominator is not equal a small epsilon.
@@ -449,63 +449,63 @@ class NumericT
 		 * @param fallback The fallback value if the denominator is equal eps()
 		 * @return The ratio between both values, the 'fallback' if the denominator is equal eps()
 		 */
-		static constexpr inline T ratio(const T nominator, const T denominator, const T fallback = T(1));
+		[[nodiscard]] static constexpr inline T ratio(const T nominator, const T denominator, const T fallback = T(1));
 
 		/**
 		 * Returns whether a value is smaller than or equal to a small epsilon.
 		 * @param value The value to check, with range (-infinity, infinity)
 		 * @return True, if so
 		 */
-		static constexpr inline bool isEqualEps(const T value);
+		[[nodiscard]] static constexpr inline bool isEqualEps(const T value);
 
 		/**
 		 * Returns whether a complex value is smaller than or equal to a small epsilon.
 		 * @param value Complex value to check
 		 * @return True, if so
 		 */
-		static constexpr inline bool isEqualEps(const std::complex<T>& value);
+		[[nodiscard]] static constexpr inline bool isEqualEps(const std::complex<T>& value);
 
 		/**
 		 * Returns whether a value is smaller than or equal to a weak epsilon.
 		 * @param value The value to check, with range (-infinity, infinity)
 		 * @return True, if so
 		 */
-		static constexpr inline bool isWeakEqualEps(const T value);
+		[[nodiscard]] static constexpr inline bool isWeakEqualEps(const T value);
 
 		/**
 		 * Returns whether a complex value is smaller than or equal to a weak epsilon.
 		 * @param value Complex value to check
 		 * @return True, if so
 		 */
-		static constexpr inline bool isWeakEqualEps(const std::complex<T>& value);
+		[[nodiscard]] static constexpr inline bool isWeakEqualEps(const std::complex<T>& value);
 
 		/**
 		 * Returns whether a value is not smaller than or equal to a small epsilon.
 		 * @param value The value to check, with range (-infinity, infinity)
 		 * @return True, if so
 		 */
-		static constexpr inline bool isNotEqualEps(const T value);
+		[[nodiscard]] static constexpr inline bool isNotEqualEps(const T value);
 
 		/**
 		 * Returns whether a complex value is not smaller than or equal to a small epsilon.
 		 * @param value Complex value to check
 		 * @return True, if so
 		 */
-		static constexpr inline bool isNotEqualEps(const std::complex<T>& value);
+		[[nodiscard]] static constexpr inline bool isNotEqualEps(const std::complex<T>& value);
 
 		/**
 		 * Returns whether a value is not smaller than or equal to a weak epsilon.
 		 * @param value The value to check, with range (-infinity, infinity)
 		 * @return True, if so
 		 */
-		static constexpr inline bool isNotWeakEqualEps(const T value);
+		[[nodiscard]] static constexpr inline bool isNotWeakEqualEps(const T value);
 
 		/**
 		 * Returns whether a complex value is not smaller than or equal to a weak epsilon.
 		 * @param value Complex value to check
 		 * @return True, if so
 		 */
-		static constexpr inline bool isNotWeakEqualEps(const std::complex<T>& value);
+		[[nodiscard]] static constexpr inline bool isNotWeakEqualEps(const std::complex<T>& value);
 
 		/**
 		 * Returns whether two values are equal up to a small epsilon.
@@ -513,7 +513,7 @@ class NumericT
 		 * @param second The second value to check, with range (-infinity, infinity)
 		 * @return True, if so
 		 */
-		static inline bool isEqual(const T first, const T second);
+		[[nodiscard]] static inline bool isEqual(const T first, const T second);
 
 		/**
 		 * Returns whether two complex values are equal up to a small epsilon.
@@ -521,7 +521,7 @@ class NumericT
 		 * @param second The second value to check
 		 * @return True, if so
 		 */
-		static inline bool isEqual(const std::complex<T>& first, const std::complex<T>& second);
+		[[nodiscard]] static inline bool isEqual(const std::complex<T>& first, const std::complex<T>& second);
 
 		/**
 		 * Returns whether two values a equal up to a weak epsilon.
@@ -529,7 +529,7 @@ class NumericT
 		 * @param second The second value to check, with range (-infinity, infinity)
 		 * @return True, if so
 		 */
-		static inline bool isWeakEqual(const T first, const T second);
+		[[nodiscard]] static inline bool isWeakEqual(const T first, const T second);
 
 		/**
 		 * Returns whether two complex values are equal up to a weak epsilon.
@@ -537,7 +537,7 @@ class NumericT
 		 * @param second The second value to check
 		 * @return True, if so
 		 */
-		static inline bool isWeakEqual(const std::complex<T>& first, const std::complex<T>& second);
+		[[nodiscard]] static inline bool isWeakEqual(const std::complex<T>& first, const std::complex<T>& second);
 
 		/**
 		 * Returns whether two values are equal up to a given epsilon.
@@ -546,7 +546,7 @@ class NumericT
 		 * @param epsilon Accuracy epsilon, with range [0, infinity)
 		 * @return True, if so
 		 */
-		static inline bool isEqual(const T first, const T second, const T epsilon);
+		[[nodiscard]] static inline bool isEqual(const T first, const T second, const T epsilon);
 
 		/**
 		 * Returns whether two complex values are equal up to a given epsilon.
@@ -555,7 +555,7 @@ class NumericT
 		 * @param epsilon Accuracy epsilon, with range [0, infinity)
 		 * @return True, if so
 		 */
-		static inline bool isEqual(const std::complex<T>& first, const std::complex<T>& second, const T epsilon);
+		[[nodiscard]] static inline bool isEqual(const std::complex<T>& first, const std::complex<T>& second, const T epsilon);
 
 		/**
 		 * Returns whether two values are equal up to a dynamic epsilon which is adjusted due to the magnitude of both values and the reference magnitude.
@@ -569,7 +569,7 @@ class NumericT
 		 * @tparam tMagnitude The reference magnitude for which the specified epsilon must hold so that both values count as equal, with range [-20, 20]
 		 */
 		template <int tMagnitude>
-		static inline bool isEqual(const T first, const T second, const T referenceEpsilon);
+		[[nodiscard]] static inline bool isEqual(const T first, const T second, const T referenceEpsilon);
 
 		/**
 		 * Returns whether two values are not equal up to a small epsilon.
@@ -577,7 +577,7 @@ class NumericT
 		 * @param second The second value to check, with range (-infinity, infinity)
 		 * @return True, if so
 		 */
-		static inline bool isNotEqual(const T first, const T second);
+		[[nodiscard]] static inline bool isNotEqual(const T first, const T second);
 
 		/**
 		 * Returns whether two complex values are not equal up to a small epsilon.
@@ -585,7 +585,7 @@ class NumericT
 		 * @param second The second value to check
 		 * @return True, if so
 		 */
-		static inline bool isNotEqual(const std::complex<T>& first, const std::complex<T>& second);
+		[[nodiscard]] static inline bool isNotEqual(const std::complex<T>& first, const std::complex<T>& second);
 
 		/**
 		 * Returns whether two values are not equal up to a weak epsilon.
@@ -593,7 +593,7 @@ class NumericT
 		 * @param second The second value to check, with range (-infinity, infinity)
 		 * @return True, if so
 		 */
-		static inline bool isNotWeakEqual(const T first, const T second);
+		[[nodiscard]] static inline bool isNotWeakEqual(const T first, const T second);
 
 		/**
 		 * Returns whether two complex values are not equal up to a weak epsilon.
@@ -601,7 +601,7 @@ class NumericT
 		 * @param second The second value to check
 		 * @return True, if so
 		 */
-		static inline bool isNotWeakEqual(const std::complex<T>& first, const std::complex<T>& second);
+		[[nodiscard]] static inline bool isNotWeakEqual(const std::complex<T>& first, const std::complex<T>& second);
 
 		/**
 		 * Returns whether two values are not equal up to a given epsilon.
@@ -610,7 +610,7 @@ class NumericT
 		 * @param epsilon Accuracy epsilon, with range [0, infinity)
 		 * @return True, if so
 		 */
-		static inline bool isNotEqual(const T first, const T second, const T epsilon);
+		[[nodiscard]] static inline bool isNotEqual(const T first, const T second, const T epsilon);
 
 		/**
 		 * Returns whether two complex values are not equal up to a given epsilon.
@@ -619,7 +619,7 @@ class NumericT
 		 * @param epsilon Accuracy epsilon, with range [0, infinity)
 		 * @return True, if so
 		 */
-		static inline bool isNotEqual(const std::complex<T>& first, const std::complex<T>& second, const T epsilon);
+		[[nodiscard]] static inline bool isNotEqual(const std::complex<T>& first, const std::complex<T>& second, const T epsilon);
 
 		/**
 		 * Returns whether a value lies between a given range up to a provided epsilon border.
@@ -629,7 +629,7 @@ class NumericT
 		 * @param epsilon Accuracy epsilon, with range [0, infinity)
 		 * @return True, if so
 		 */
-		static constexpr bool isInsideRange(const T lower, const T value, const T upper, const T epsilon = NumericT<T>::eps());
+		[[nodiscard]] static constexpr bool isInsideRange(const T lower, const T value, const T upper, const T epsilon = NumericT<T>::eps());
 
 		/**
 		 * Returns whether a value lies between a given range up to a weak epsilon border.
@@ -638,7 +638,7 @@ class NumericT
 		 * @param upper The upper border, with range [lower, infinity)
 		 * @return True, if so
 		 */
-		static constexpr bool isInsideWeakRange(const T lower, const T value, const T upper);
+		[[nodiscard]] static constexpr bool isInsideWeakRange(const T lower, const T value, const T upper);
 
 		/**
 		 * Returns whether a parameter lies on or below a given border tolerating a small epsilon.
@@ -647,7 +647,7 @@ class NumericT
 		 * @param epsilon Accuracy epsilon, with range [0, infinity)
 		 * @return True, if 'value <= upper + epsilon'
 		 */
-		static constexpr bool isBelow(const T value, const T upper, const T epsilon = NumericT<T>::eps());
+		[[nodiscard]] static constexpr bool isBelow(const T value, const T upper, const T epsilon = NumericT<T>::eps());
 
 		/**
 		 * Returns whether a parameter lies on or above a given border tolerating a small epsilon.
@@ -656,33 +656,33 @@ class NumericT
 		 * @param epsilon Accuracy epsilon, with range [0, infinity)
 		 * @return True, if 'lower - epsilon <= value'
 		 */
-		static constexpr bool isAbove(const T value, const T lower, const T epsilon = NumericT<T>::eps());
+		[[nodiscard]] static constexpr bool isAbove(const T value, const T lower, const T epsilon = NumericT<T>::eps());
 
 		/**
 		 * Returns a value which is not a number (nan).
 		 * @return The nan value
 		 */
-		static constexpr T nan();
+		[[nodiscard]] static constexpr T nan();
 
 		/**
 		 * Returns whether a given value is not a number.
 		 * @param value The value to check
 		 * @return True, if so
 		 */
-		static inline bool isNan(const T value);
+		[[nodiscard]] static inline bool isNan(const T value);
 
 		/**
 		 * Returns whether a given value is not a number.
 		 * @param value The value to check
 		 * @return True, if so
 		 */
-		static inline bool isNan(const std::complex<T>& value);
+		[[nodiscard]] static inline bool isNan(const std::complex<T>& value);
 
 		/**
 		 * Returns a value which is positive infinity.
 		 * @return Positive infinity
 		 */
-		static constexpr T inf();
+		[[nodiscard]] static constexpr T inf();
 
 		/**
 		 * Returns whether a given value is positive or negative infinity.
@@ -690,7 +690,7 @@ class NumericT
 		 * @param value The value to check
 		 * @return True, if so
 		 */
-		static inline bool isInf(const T value);
+		[[nodiscard]] static inline bool isInf(const T value);
 
 		/**
 		 * Returns whether a given value is positive or negative infinity.
@@ -698,7 +698,7 @@ class NumericT
 		 * @param value The value to check
 		 * @return True, if so
 		 */
-		static inline bool isInf(const std::complex<T>& value);
+		[[nodiscard]] static inline bool isInf(const std::complex<T>& value);
 
 		/**
 		 * Returns whether a given value of an arbitrary data type fits into the value range of 'T'.
@@ -723,40 +723,40 @@ class NumericT
 		 * @tparam TValue The data type of the given value
 		 */
 		template <typename TValue>
-		static inline bool isInsideValueRange(const TValue& value);
+		[[nodiscard]] static inline bool isInsideValueRange(const TValue& value);
 
 		/**
 		 * Converts deg to rad.
 		 * @param deg Angle in deg, with range (-infinity, infinity)
 		 * @return Angle in radian
 		 */
-		static constexpr inline T deg2rad(const T deg);
+		[[nodiscard]] static constexpr inline T deg2rad(const T deg);
 
 		/**
 		 * Converts rad to deg.
 		 * @param rad Angle in radian, with range (-infinity, infinity)
 		 * @return Angle in deg
 		 */
-		static constexpr inline T rad2deg(const T rad);
+		[[nodiscard]] static constexpr inline T rad2deg(const T rad);
 
 		/**
 		 * Returns the max scalar value.
 		 * @return Max value
 		 */
-		static constexpr inline T maxValue();
+		[[nodiscard]] static constexpr inline T maxValue();
 
 		/**
 		 * Returns the min scalar value.
 		 * @return Min value
 		 */
-		static constexpr inline T minValue();
+		[[nodiscard]] static constexpr inline T minValue();
 
 		/**
 		 * Returns the sign of a given value by either returning -1, 0, or +1.
 		 * Negative values have return value -1, 0 has return value 0, and positive values have return value +1.
 		 * @param value The value for which the sign will be returned
 		 */
-		static constexpr inline T sign(const T& value);
+		[[nodiscard]] static constexpr inline T sign(const T& value);
 
 		/**
 		 * Copies the sign of a given value to another one.
@@ -764,7 +764,7 @@ class NumericT
 		 * @param signProvider Second value providing the sign for the first one
 		 * @return First value with the sign of the second one
 		 */
-		static constexpr inline T copySign(const T signReceiver, const T signProvider);
+		[[nodiscard]] static constexpr inline T copySign(const T signReceiver, const T signProvider);
 
 		/**
 		 * Copies the inverted sign of a given value to another one.
@@ -772,7 +772,7 @@ class NumericT
 		 * @param signProvider Second value providing the inverted sign for the first one
 		 * @return First value with the inverted sign of the second one
 		 */
-		static constexpr inline T invertSign(const T signReceiver, const T signProvider);
+		[[nodiscard]] static constexpr inline T invertSign(const T signReceiver, const T signProvider);
 
 		/**
 		 * Returns the length of the hypotenuse of a given right-angled triangle.
@@ -781,7 +781,7 @@ class NumericT
 		 * @param b Length of the second leg
 		 * @return (a^2 + b^2)^0.5
 		 */
-		static T pythagoras(const T a, const T b);
+		[[nodiscard]] static T pythagoras(const T a, const T b);
 
 		/**
 		 * Returns a value of the univariate Gaussian distribution centered around the origin.
@@ -789,7 +789,7 @@ class NumericT
 		 * @param sigma The sigma parameter defining the standard deviation of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T gaussianDistribution(const T x, const T sigma);
+		[[nodiscard]] static inline T gaussianDistribution(const T x, const T sigma);
 
 		/**
 		 * Returns a value of the univariate Gaussian distribution centered around a given position x0.
@@ -798,7 +798,7 @@ class NumericT
 		 * @param sigma The sigma parameter defining the standard deviation of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T gaussianDistribution(const T x, const T x0, const T sigma);
+		[[nodiscard]] static inline T gaussianDistribution(const T x, const T x0, const T sigma);
 
 		/**
 		 * Returns a value of the normalized univariate Gaussian distribution centered around the origin.
@@ -807,7 +807,7 @@ class NumericT
 		 * @param sigma The sigma parameter defining the standard deviation of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T normalizedGaussianDistribution(const T x, const T sigma);
+		[[nodiscard]] static inline T normalizedGaussianDistribution(const T x, const T sigma);
 
 		/**
 		 * Returns a value of the normalized univariate Gaussian distribution around a given position x0.
@@ -817,7 +817,7 @@ class NumericT
 		 * @param sigma The sigma parameter defining the standard deviation of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T normalizedGaussianDistribution(const T x, const T x0, const T sigma);
+		[[nodiscard]] static inline T normalizedGaussianDistribution(const T x, const T x0, const T sigma);
 
 		/**
 		 * Returns a value of the bivariate Gaussian distribution centered around the origin.
@@ -827,7 +827,7 @@ class NumericT
 		 * @param sigmaY Sigma parameter defining the standard deviation for the y-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T gaussianDistribution2(const T x, const T y, const T sigmaX, const T sigmaY);
+		[[nodiscard]] static inline T gaussianDistribution2(const T x, const T y, const T sigmaX, const T sigmaY);
 
 		/**
 		 * Returns a value of the bivariate Gaussian distribution centered around a given position (x0, y0).
@@ -839,7 +839,7 @@ class NumericT
 		 * @param sigmaY Sigma parameter defining the standard deviation for the y-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T gaussianDistribution2(const T x, const T y, const T x0, const T y0, const T sigmaX, const T sigmaY);
+		[[nodiscard]] static inline T gaussianDistribution2(const T x, const T y, const T x0, const T y0, const T sigmaX, const T sigmaY);
 
 		/**
 		 * Returns a value of the normalized bivariate Gaussian distribution centered around the origin.
@@ -850,7 +850,7 @@ class NumericT
 		 * @param sigmaY Sigma parameter defining the standard deviation for the y-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T normalizedGaussianDistribution2(const T x, const T y, const T sigmaX, const T sigmaY);
+		[[nodiscard]] static inline T normalizedGaussianDistribution2(const T x, const T y, const T sigmaX, const T sigmaY);
 
 		/**
 		 * Returns a value of the normalized bivariate Gaussian distribution centered around a given position (x0, y0).
@@ -863,7 +863,7 @@ class NumericT
 		 * @param sigmaY Sigma parameter defining the standard deviation for the y-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T normalizedGaussianDistribution2(const T x, const T y, const T x0, const T y0, const T sigmaX, const T sigmaY);
+		[[nodiscard]] static inline T normalizedGaussianDistribution2(const T x, const T y, const T x0, const T y0, const T sigmaX, const T sigmaY);
 
 		/**
 		 * Returns a value of the trivariate Gaussian distribution centered around the origin.
@@ -875,7 +875,7 @@ class NumericT
 		 * @param sigmaZ Sigma parameter defining the standard deviation for the z-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T gaussianDistribution3(const T x, const T y, const T z, const T sigmaX, const T sigmaY, const T sigmaZ);
+		[[nodiscard]] static inline T gaussianDistribution3(const T x, const T y, const T z, const T sigmaX, const T sigmaY, const T sigmaZ);
 
 		/**
 		 * Returns a value of the trivariate Gaussian distribution centered around a given position (x0, y0, z0).
@@ -890,7 +890,7 @@ class NumericT
 		 * @param sigmaZ Sigma parameter defining the standard deviation for the z-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T gaussianDistribution3(const T x, const T y, const T z, const T x0, const T y0, const T z0, const T sigmaX, const T sigmaY, const T sigmaZ);
+		[[nodiscard]] static inline T gaussianDistribution3(const T x, const T y, const T z, const T x0, const T y0, const T z0, const T sigmaX, const T sigmaY, const T sigmaZ);
 
 		/**
 		 * Returns a value of the normalized trivariate Gaussian distribution centered around the origin.
@@ -903,7 +903,7 @@ class NumericT
 		 * @param sigmaZ Sigma parameter defining the standard deviation for the z-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T normalizedGaussianDistribution3(const T x, const T y, const T z, const T sigmaX, const T sigmaY, const T sigmaZ);
+		[[nodiscard]] static inline T normalizedGaussianDistribution3(const T x, const T y, const T z, const T sigmaX, const T sigmaY, const T sigmaZ);
 
 		/**
 		 * Returns a value of the normalized trivariate Gaussian distribution centered around a given position (x0, y0, z0).
@@ -919,7 +919,7 @@ class NumericT
 		 * @param sigmaZ Sigma parameter defining the standard deviation for the z-axis of the Gaussian distribution, with range (0, infinity)
 		 * @return Function value
 		 */
-		static inline T normalizedGaussianDistribution3(const T x, const T y, const T z, const T x0, const T y0, const T z0, const T sigmaX, const T sigmaY, const T sigmaZ);
+		[[nodiscard]] static inline T normalizedGaussianDistribution3(const T x, const T y, const T z, const T x0, const T y0, const T z0, const T sigmaX, const T sigmaY, const T sigmaZ);
 };
 
 template <typename T>
@@ -1431,8 +1431,12 @@ inline unsigned int NumericT<unsigned int>::secureAbs(const unsigned int value)
 template <>
 inline unsigned long NumericT<long>::secureAbs(const long value)
 {
-	ocean_assert((unsigned long)::llabs(std::numeric_limits<long>::max()) == (unsigned long)(-(std::numeric_limits<long>::lowest() + 1l)));
-	return (unsigned long)::llabs(value);
+	if (value == std::numeric_limits<long>::lowest())
+	{
+		return (unsigned long)(std::numeric_limits<long>::max()) + 1ul;
+	}
+
+	return (unsigned long)(::llabs(value));
 }
 
 /**
@@ -1728,6 +1732,8 @@ inline float NumericT<float>::log10(const float value)
 template <>
 inline float NumericT<float>::atan2(const float y, const float x)
 {
+	ocean_assert(NumericT<float>::isNotEqualEps(y) || NumericT<float>::isNotEqualEps(x));
+
 	return atan2f(y, x);
 }
 
@@ -3096,7 +3102,7 @@ inline bool NumericT<double>::isInf(const double value)
 
 	static_assert(sizeof(uint64_t) == sizeof(value), "Invalid value!");
 
-	// IEEE 754: all exponents are encoded as 1, and the mantissa is not zero
+	// IEEE 754: all exponents are encoded as 1, and the mantissa is zero
 
 	uint64_t tmpValue;
 	memcpy(&tmpValue, &value, sizeof(tmpValue));
