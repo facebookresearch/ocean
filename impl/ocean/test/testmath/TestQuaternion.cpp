@@ -12,6 +12,9 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -172,21 +175,16 @@ bool TestQuaternion::testConstructor(const double testDuration)
 
 	Log::info() << "Test constructor:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	{
 		// quaternion with default constructor are valid and represent a identity rotation
 
 		const Quaternion defaultConstructedQuaternion;
 
-		if (defaultConstructedQuaternion.isValid() == false)
-		{
-			allSucceeded = false;
-		}
-		if (defaultConstructedQuaternion != Quaternion(Vector3(1, 0, 0), 0))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, defaultConstructedQuaternion.isValid());
+		OCEAN_EXPECT_EQUAL(validation, defaultConstructedQuaternion, Quaternion(Vector3(1, 0, 0), 0));
 	}
 
 	{
@@ -194,14 +192,8 @@ bool TestQuaternion::testConstructor(const double testDuration)
 
 		const Quaternion booleanConstructedQuaternion(true);
 
-		if (booleanConstructedQuaternion.isValid() == false)
-		{
-			allSucceeded = false;
-		}
-		if (booleanConstructedQuaternion != Quaternion(Vector3(1, 0, 0), 0))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, booleanConstructedQuaternion.isValid());
+		OCEAN_EXPECT_EQUAL(validation, booleanConstructedQuaternion, Quaternion(Vector3(1, 0, 0), 0));
 	}
 
 	{
@@ -209,13 +201,8 @@ bool TestQuaternion::testConstructor(const double testDuration)
 
 		const Quaternion booleanConstructedQuaternion(false);
 
-		if (booleanConstructedQuaternion.isValid() == true)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, booleanConstructedQuaternion.isValid());
 	}
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -229,57 +216,50 @@ bool TestQuaternion::testConstructor(const double testDuration)
 			const float z = RandomF::scalar(randomGenerator, -10.0f, 10.0f);
 
 			const Quaternion quaternion = Quaternion(Scalar(w), Scalar(x), Scalar(y), Scalar(z));
-			const Quaternion quaternionF(w, x, y, z);
+			const QuaternionF quaternionF(w, x, y, z);
 			const QuaternionD quaternionD = QuaternionD(double(w), double(x), double(y), double(z));
 
-			if (quaternion.w() != Scalar(w) || quaternion.x() != Scalar(x) || quaternion.y() != Scalar(y) || quaternion.z() != Scalar(z))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, quaternion.w(), Scalar(w));
+			OCEAN_EXPECT_EQUAL(validation, quaternion.x(), Scalar(x));
+			OCEAN_EXPECT_EQUAL(validation, quaternion.y(), Scalar(y));
+			OCEAN_EXPECT_EQUAL(validation, quaternion.z(), Scalar(z));
 
-			if (quaternionF.w() != w || quaternionF.x() != x || quaternionF.y() != y || quaternionF.z() != z)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, quaternionF.w(), w);
+			OCEAN_EXPECT_EQUAL(validation, quaternionF.x(), x);
+			OCEAN_EXPECT_EQUAL(validation, quaternionF.y(), y);
+			OCEAN_EXPECT_EQUAL(validation, quaternionF.z(), z);
 
-			if (quaternionD.w() != double(w) || quaternionD.x() != double(x) || quaternionD.y() != double(y) || quaternionD.z() != double(z))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, quaternionD.w(), double(w));
+			OCEAN_EXPECT_EQUAL(validation, quaternionD.x(), double(x));
+			OCEAN_EXPECT_EQUAL(validation, quaternionD.y(), double(y));
+			OCEAN_EXPECT_EQUAL(validation, quaternionD.z(), double(z));
 
 			const QuaternionD quaternionF2D(quaternionF);
 			const QuaternionF quaternionD2F(quaternionD);
 
-			if (NumericD::isNotWeakEqual(quaternionF2D.w(), double(w)) || NumericD::isNotWeakEqual(quaternionF2D.x(), double(x)) || NumericD::isNotWeakEqual(quaternionF2D.y(), double(y)) || NumericD::isNotWeakEqual(quaternionF2D.z(), double(z)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(quaternionF2D.w(), double(w)));
+			OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(quaternionF2D.x(), double(x)));
+			OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(quaternionF2D.y(), double(y)));
+			OCEAN_EXPECT_TRUE(validation, NumericD::isWeakEqual(quaternionF2D.z(), double(z)));
 
-			if (NumericF::isNotWeakEqual(quaternionD2F.w(), w) || NumericF::isNotWeakEqual(quaternionD2F.x(), x) || NumericF::isNotWeakEqual(quaternionD2F.y(), y) || NumericF::isNotWeakEqual(quaternionD2F.z(), z))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(quaternionD2F.w(), w));
+			OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(quaternionD2F.x(), x));
+			OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(quaternionD2F.y(), y));
+			OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqual(quaternionD2F.z(), z));
 
 			const Quaternion quaternionCopy(quaternion);
 
-			if (quaternionCopy.w() != Scalar(w) || quaternionCopy.x() != Scalar(x) || quaternionCopy.y() != Scalar(y) || quaternionCopy.z() != Scalar(z))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, quaternionCopy.w(), Scalar(w));
+			OCEAN_EXPECT_EQUAL(validation, quaternionCopy.x(), Scalar(x));
+			OCEAN_EXPECT_EQUAL(validation, quaternionCopy.y(), Scalar(y));
+			OCEAN_EXPECT_EQUAL(validation, quaternionCopy.z(), Scalar(z));
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestQuaternion::testNormalization(const double testDuration)
@@ -288,26 +268,21 @@ bool TestQuaternion::testNormalization(const double testDuration)
 
 	Log::info() << "Test normalization:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	// first we check a quaternion which cannot be normalized
 
 	{
 		const Quaternion quaternion(0, 0, 0, 0);
-		if (quaternion.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, quaternion.isValid());
 	}
 
 	{
 		Quaternion quaternion(0, 0, 0, 0);
 		const bool result = quaternion.normalize();
 
-		if (result)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, result);
 	}
 
 	{
@@ -315,13 +290,8 @@ bool TestQuaternion::testNormalization(const double testDuration)
 		Quaternion normalizedQuaternion;
 		const bool result = quaternion.normalize(normalizedQuaternion);
 
-		if (result)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, result);
 	}
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -340,13 +310,9 @@ bool TestQuaternion::testNormalization(const double testDuration)
 			{
 				Quaternion quaternion(w, x, y, z);
 				const Quaternion normalizedQuaternion = quaternion.normalized();
-				const Scalar newLength = Numeric::sqrt(Numeric::sqr(normalizedQuaternion.w()) + Numeric::sqr(normalizedQuaternion.x())
-															+ Numeric::sqr(normalizedQuaternion.y()) + Numeric::sqr(normalizedQuaternion.z()));
+				const Scalar newLength = Numeric::sqrt(Numeric::sqr(normalizedQuaternion.w()) + Numeric::sqr(normalizedQuaternion.x()) + Numeric::sqr(normalizedQuaternion.y()) + Numeric::sqr(normalizedQuaternion.z()));
 
-				if (Numeric::isNotEqual(newLength, 1))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(newLength, 1));
 			}
 
 			{
@@ -355,25 +321,15 @@ bool TestQuaternion::testNormalization(const double testDuration)
 
 				if (result)
 				{
-					if (length <= Scalar(0))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, length > Scalar(0));
 
-					const Scalar newLength = Numeric::sqrt(Numeric::sqr(quaternion.w()) + Numeric::sqr(quaternion.x())
-															+ Numeric::sqr(quaternion.y()) + Numeric::sqr(quaternion.z()));
+					const Scalar newLength = Numeric::sqrt(Numeric::sqr(quaternion.w()) + Numeric::sqr(quaternion.x()) + Numeric::sqr(quaternion.y()) + Numeric::sqr(quaternion.z()));
 
-					if (Numeric::isNotEqual(newLength, 1))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(newLength, 1));
 				}
 				else
 				{
-					if (length > Numeric::weakEps())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_FALSE(validation, length > Numeric::weakEps());
 				}
 			}
 
@@ -384,41 +340,24 @@ bool TestQuaternion::testNormalization(const double testDuration)
 
 				if (result)
 				{
-					if (length <= Scalar(0))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, length > Scalar(0));
 
-					const Scalar newLength = Numeric::sqrt(Numeric::sqr(normalizedQuaternion.w()) + Numeric::sqr(normalizedQuaternion.x())
-															+ Numeric::sqr(normalizedQuaternion.y()) + Numeric::sqr(normalizedQuaternion.z()));
+					const Scalar newLength = Numeric::sqrt(Numeric::sqr(normalizedQuaternion.w()) + Numeric::sqr(normalizedQuaternion.x()) + Numeric::sqr(normalizedQuaternion.y()) + Numeric::sqr(normalizedQuaternion.z()));
 
-					if (Numeric::isNotEqual(newLength, 1))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(newLength, 1));
 				}
 				else
 				{
-					if (length > Numeric::weakEps())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_FALSE(validation, length > Numeric::weakEps());
 				}
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestQuaternion::testInverting(const double testDuration)
@@ -427,26 +366,21 @@ bool TestQuaternion::testInverting(const double testDuration)
 
 	Log::info() << "Test inverting:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	// first we check a quaternion which cannot be inverted
 
 	{
 		const Quaternion quaternion(0, 0, 0, 0);
-		if (quaternion.isValid())
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, quaternion.isValid());
 	}
 
 	{
 		Quaternion quaternion(0, 0, 0, 0);
 		const bool result = quaternion.invert();
 
-		if (result)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, result);
 	}
 
 	{
@@ -454,13 +388,8 @@ bool TestQuaternion::testInverting(const double testDuration)
 		Quaternion invertedQuaternion;
 		const bool result = quaternion.invert(invertedQuaternion);
 
-		if (result)
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_FALSE(validation, result);
 	}
-
-	RandomGenerator randomGenerator;
 
 	const Timestamp startTimestamp(true);
 
@@ -491,15 +420,8 @@ bool TestQuaternion::testInverting(const double testDuration)
 				const Quaternion identityQuaternionA(quaternion * invertedQuaternion);
 				const Quaternion identityQuaternionB(invertedQuaternion * quaternion);
 
-				if (identityQuaternionA != Quaternion())
-				{
-					allSucceeded = false;
-				}
-
-				if (identityQuaternionB != Quaternion())
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, identityQuaternionA, Quaternion());
+				OCEAN_EXPECT_EQUAL(validation, identityQuaternionB, Quaternion());
 			}
 
 			{
@@ -508,32 +430,19 @@ bool TestQuaternion::testInverting(const double testDuration)
 
 				if (result)
 				{
-					if (length <= Scalar(0))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, length > Scalar(0));
 
 					const Quaternion initialQuaternion(w, x, y, z);
 
 					const Quaternion identityQuaternionA(initialQuaternion * quaternion);
 					const Quaternion identityQuaternionB(quaternion * initialQuaternion);
 
-					if (identityQuaternionA != Quaternion())
-					{
-						allSucceeded = false;
-					}
-
-					if (identityQuaternionB != Quaternion())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, identityQuaternionA, Quaternion());
+					OCEAN_EXPECT_EQUAL(validation, identityQuaternionB, Quaternion());
 				}
 				else
 				{
-					if (length > Numeric::weakEps())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_FALSE(validation, length > Numeric::weakEps());
 				}
 			}
 
@@ -544,46 +453,26 @@ bool TestQuaternion::testInverting(const double testDuration)
 
 				if (result)
 				{
-					if (length <= Scalar(0))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, length > Scalar(0));
 
 					const Quaternion identityQuaternionA(quaternion * invertedQuaternion);
 					const Quaternion identityQuaternionB(invertedQuaternion * quaternion);
 
-					if (identityQuaternionA != Quaternion())
-					{
-						allSucceeded = false;
-					}
-
-					if (identityQuaternionB != Quaternion())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, identityQuaternionA, Quaternion());
+					OCEAN_EXPECT_EQUAL(validation, identityQuaternionB, Quaternion());
 				}
 				else
 				{
-					if (length > Numeric::weakEps())
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_FALSE(validation, length > Numeric::weakEps());
 				}
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestQuaternion::testConversionToRotation(const double testDuration)
@@ -592,10 +481,10 @@ bool TestQuaternion::testConversionToRotation(const double testDuration)
 
 	Log::info() << "Conversion from Quaternion to Rotation (and 3x3 matrix):";
 
-	const unsigned int constIterations = 100000u;
+	constexpr unsigned int constIterations = 100000u;
 
-	uint64_t iterations = 0ull;
-	uint64_t validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	Quaternions quaternions(constIterations);
 	Rotations rotations(constIterations);
@@ -621,6 +510,8 @@ bool TestQuaternion::testConversionToRotation(const double testDuration)
 
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Quaternion& quaternion = quaternions[n];
 			const Rotation& rotation = rotations[n];
 
@@ -630,23 +521,18 @@ bool TestQuaternion::testConversionToRotation(const double testDuration)
 			const Scalar angleY = Numeric::rad2deg((matrix * Vector3(0, 1, 0)).angle(quaternion * Vector3(0, 1, 0)));
 			const Scalar angleZ = Numeric::rad2deg((matrix * Vector3(0, 0, 1)).angle(quaternion * Vector3(0, 0, 1)));
 
-			if (Numeric::isEqual(angleX, 0, epsilon) && Numeric::isEqual(angleY, 0, epsilon) && Numeric::isEqual(angleZ, 0, epsilon))
+			if (Numeric::isNotEqual(angleX, 0, epsilon) || Numeric::isNotEqual(angleY, 0, epsilon) || Numeric::isNotEqual(angleZ, 0, epsilon))
 			{
-				validIterations++;
+				scopedIteration.setInaccurate();
 			}
 		}
-
-		iterations += constIterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance: " << performance.averageMseconds() * 1000.0 / double(constIterations) << "mys";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestQuaternion::testReferenceOffsetConstructor(const double testDuration)
@@ -655,7 +541,8 @@ bool TestQuaternion::testReferenceOffsetConstructor(const double testDuration)
 
 	Log::info() << "Reference offset constructor:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -667,84 +554,41 @@ bool TestQuaternion::testReferenceOffsetConstructor(const double testDuration)
 			const Vector3 offset(Random::vector3());
 
 			// identity test
-			if (Quaternion(Vector3(1, 0, 0), Vector3(1, 0, 0)) * reference != reference)
-			{
-				allSucceeded = false;
-			}
-			if (Quaternion(Vector3(0, 1, 0), Vector3(0, 1, 0)) * reference != reference)
-			{
-				allSucceeded = false;
-			}
-			if (Quaternion(Vector3(0, 0, 1), Vector3(0, 0, 1)) * reference != reference)
-			{
-				allSucceeded = false;
-			}
-			if (Quaternion(offset, offset) * reference != reference)
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(1, 0, 0), Vector3(1, 0, 0)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, 1, 0), Vector3(0, 1, 0)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, 0, 1), Vector3(0, 0, 1)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, Quaternion(offset, offset) * reference, reference);
 
 			Quaternion q(Rotation(1, 0, 0, Numeric::pi_2()));
 			Quaternion q2(Rotation(0, 1, 0, Numeric::pi_2()));
 			Quaternion q3(Rotation(0, 0, 1, Numeric::pi_2()));
 
 			// 180 degrees test (a)
-			if (Quaternion(Vector3(1, 0, 0), Vector3(-1, 0, 0)) * Vector3(1, 0, 0) != Vector3(-1, 0, 0))
-			{
-				allSucceeded = false;
-			}
-			if (Quaternion(Vector3(0, 1, 0), Vector3(0, -1, 0)) * Vector3(0, 1, 0) != Vector3(0, -1, 0))
-			{
-				allSucceeded = false;
-			}
-			if (Quaternion(Vector3(0, 0, 1), Vector3(0, 0, -1)) * Vector3(0, 0, 1) != Vector3(0, 0, -1))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(1, 0, 0), Vector3(-1, 0, 0)) * Vector3(1, 0, 0), Vector3(-1, 0, 0));
+			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, 1, 0), Vector3(0, -1, 0)) * Vector3(0, 1, 0), Vector3(0, -1, 0));
+			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, 0, 1), Vector3(0, 0, -1)) * Vector3(0, 0, 1), Vector3(0, 0, -1));
 
 			// 180 degrees test (b)
-			if (Quaternion(Vector3(-1, 0, 0), Vector3(1, 0, 0)) * Vector3(1, 0, 0) != Vector3(-1, 0, 0))
-			{
-				allSucceeded = false;
-			}
-			if (Quaternion(Vector3(0, -1, 0), Vector3(0, 1, 0)) * Vector3(0, 1, 0) != Vector3(0, -1, 0))
-			{
-				allSucceeded = false;
-			}
-			if (Quaternion(Vector3(0, 0, -1), Vector3(0, 0, 1)) * Vector3(0, 0, 1) != Vector3(0, 0, -1))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(-1, 0, 0), Vector3(1, 0, 0)) * Vector3(1, 0, 0), Vector3(-1, 0, 0));
+			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, -1, 0), Vector3(0, 1, 0)) * Vector3(0, 1, 0), Vector3(0, -1, 0));
+			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, 0, -1), Vector3(0, 0, 1)) * Vector3(0, 0, 1), Vector3(0, 0, -1));
 
 			const Quaternion quaternion0(reference, offset);
 			const Vector3 test0 = quaternion0 * reference;
 
-			if (!offset.isEqual(test0, Numeric::weakEps()) || offset.angle(test0) >= Numeric::deg2rad(Scalar(0.1)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, offset.isEqual(test0, Numeric::weakEps()) && offset.angle(test0) < Numeric::deg2rad(Scalar(0.1)));
 
 			const Quaternion quaternion1(reference, -reference);
 			const Vector3 test1 = quaternion1 * reference;
 
-			if (!reference.isEqual(-test1, Numeric::weakEps()) || reference.angle(test1) <= Numeric::deg2rad(Scalar(179.9)))
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_TRUE(validation, reference.isEqual(-test1, Numeric::weakEps()) && reference.angle(test1) > Numeric::deg2rad(Scalar(179.9)));
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -754,44 +598,18 @@ bool TestQuaternion::testAngle(const double testDuration)
 
 	Log::info() << "Angle for '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	// we check some fixed rotations
 
-	if (NumericT<T>::isNotEqual(QuaternionT<T>().angle(), 0))
-	{
-		allSucceeded = false;
-	}
-
-	if (NumericT<T>::isNotEqual(QuaternionT<T>(VectorT3<T>(1, 0, 0), NumericT<T>::pi_4()).angle(), NumericT<T>::pi_4()))
-	{
-		allSucceeded = false;
-	}
-
-	if (NumericT<T>::isNotEqual(QuaternionT<T>(VectorT3<T>(0, 1, 0), NumericT<T>::pi_4()).angle(), NumericT<T>::pi_4()))
-	{
-		allSucceeded = false;
-	}
-
-	if (NumericT<T>::isNotEqual(QuaternionT<T>(VectorT3<T>(0, 0, 1), NumericT<T>::pi_4()).angle(), NumericT<T>::pi_4()))
-	{
-		allSucceeded = false;
-	}
-
-	if (NumericT<T>::isNotEqual(QuaternionT<T>(VectorT3<T>(1, 0, 0), NumericT<T>::pi()).angle(), NumericT<T>::pi()))
-	{
-		allSucceeded = false;
-	}
-
-	if (NumericT<T>::isNotEqual(QuaternionT<T>(VectorT3<T>(0, 1, 0), NumericT<T>::pi()).angle(), NumericT<T>::pi()))
-	{
-		allSucceeded = false;
-	}
-
-	if (NumericT<T>::isNotEqual(QuaternionT<T>(VectorT3<T>(0, 0, 1), NumericT<T>::pi()).angle(), NumericT<T>::pi()))
-	{
-		allSucceeded = false;
-	}
+	OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(QuaternionT<T>().angle(), T(0)));
+	OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(QuaternionT<T>(VectorT3<T>(1, 0, 0), NumericT<T>::pi_4()).angle(), NumericT<T>::pi_4()));
+	OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(QuaternionT<T>(VectorT3<T>(0, 1, 0), NumericT<T>::pi_4()).angle(), NumericT<T>::pi_4()));
+	OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(QuaternionT<T>(VectorT3<T>(0, 0, 1), NumericT<T>::pi_4()).angle(), NumericT<T>::pi_4()));
+	OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(QuaternionT<T>(VectorT3<T>(1, 0, 0), NumericT<T>::pi()).angle(), NumericT<T>::pi()));
+	OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(QuaternionT<T>(VectorT3<T>(0, 1, 0), NumericT<T>::pi()).angle(), NumericT<T>::pi()));
+	OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(QuaternionT<T>(VectorT3<T>(0, 0, 1), NumericT<T>::pi()).angle(), NumericT<T>::pi()));
 
 	const T epsilon = std::is_same<T, float>::value ? T(0.1) : T(0.01);
 
@@ -808,10 +626,7 @@ bool TestQuaternion::testAngle(const double testDuration)
 
 		const QuaternionT<T> quaternion(axis, angle);
 
-		if (NumericT<T>::isNotEqual(quaternion.angle(), angle, NumericT<T>::deg2rad(epsilon)))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(quaternion.angle(), angle, NumericT<T>::deg2rad(epsilon)));
 
 		// we rotated a vector (perpendicular to the rotation axis) and check whether the angle between vector and rotated vector is correct
 
@@ -822,23 +637,13 @@ bool TestQuaternion::testAngle(const double testDuration)
 
 		const T vectorAngle = vector.angle(rotatedVector);
 
-		if (NumericT<T>::isNotEqual(vectorAngle, angle, NumericT<T>::deg2rad(epsilon)))
-		{
-			allSucceeded = false;
-		}
+		OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(vectorAngle, angle, NumericT<T>::deg2rad(epsilon)));
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -848,7 +653,8 @@ bool TestQuaternion::testSlerp(const double testDuration)
 
 	Log::info() << "Slerp for '" << TypeNamer::name<T>() << "':";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -878,17 +684,11 @@ bool TestQuaternion::testSlerp(const double testDuration)
 
 				if (nFactor == 0u)
 				{
-					if (!slerpVector.isEqual(vectorA, epsilonSimilarity))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, slerpVector.isEqual(vectorA, epsilonSimilarity));
 				}
 				else if (nFactor == 100u)
 				{
-					if (!slerpVector.isEqual(vectorB, epsilonSimilarity))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, slerpVector.isEqual(vectorB, epsilonSimilarity));
 				}
 
 				const T angleA = NumericT<T>::rad2deg(vectorA.angle(slerpVector));
@@ -899,19 +699,8 @@ bool TestQuaternion::testSlerp(const double testDuration)
 
 				constexpr T epsilonAngle = std::is_same<T, float>::value ? T(0.1) : T(0.01);
 
-				if (NumericT<T>::isNotEqual(angleA, expectedAngleA, epsilonAngle))
-				{
-					Log::info() << angleA - expectedAngleA;
-
-					allSucceeded = false;
-				}
-
-				if (NumericT<T>::isNotEqual(angleB, expectedAngleB, epsilonAngle))
-				{
-					Log::info() << angleB - expectedAngleB;
-
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(angleA, expectedAngleA, epsilonAngle));
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(angleB, expectedAngleB, epsilonAngle));
 			}
 
 			{
@@ -925,17 +714,11 @@ bool TestQuaternion::testSlerp(const double testDuration)
 
 				if (nFactor == 0u)
 				{
-					if (!slerpVector.isEqual(vectorB, epsilonSimilarity))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, slerpVector.isEqual(vectorB, epsilonSimilarity));
 				}
 				else if (nFactor == 100u)
 				{
-					if (!slerpVector.isEqual(vectorA, epsilonSimilarity))
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_TRUE(validation, slerpVector.isEqual(vectorA, epsilonSimilarity));
 				}
 
 				const T angleA = NumericT<T>::rad2deg(vectorA.angle(slerpVector));
@@ -946,34 +729,16 @@ bool TestQuaternion::testSlerp(const double testDuration)
 
 				constexpr T epsilonAngle = std::is_same<T, float>::value ? T(0.1) : T(0.01);
 
-				if (NumericT<T>::isNotEqual(angleA, expectedAngleA, epsilonAngle))
-				{
-					Log::info() << angleA - expectedAngleA;
-
-					allSucceeded = false;
-				}
-
-				if (NumericT<T>::isNotEqual(angleB, expectedAngleB, epsilonAngle))
-				{
-					Log::info() << angleB - expectedAngleB;
-
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(angleA, expectedAngleA, epsilonAngle));
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(angleB, expectedAngleB, epsilonAngle));
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
