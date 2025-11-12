@@ -61,7 +61,9 @@ class OCEAN_DEVICES_EXPORT Tracker : virtual public Measurement
 			/// Tracker using a visual input for their measurements.
 			TRACKER_VISUAL = (1u << 5u),
 			/// Tracker allowing to register tracking objects at runtime.
-			TRACKER_OBJECT = (1u << 6u)
+			TRACKER_OBJECT = (1u << 6u),
+			/// 3DOF gravity tracker.
+			TRACKER_GRAVITY_3DOF = (1u << 7u)
 		};
 
 		/**

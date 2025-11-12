@@ -127,9 +127,9 @@ class OCEAN_DEVICES_EXPORT Manager : public Singleton<Manager>
 		void release();
 
 		/**
-		 * Registes an ad-hoc device at this manager.
-		 * In general, devices should be implemented in an own decicated plugin-based library.
-		 * However, for prototyping an ad-hoc device cames with the same features as a device implemented in a dedicatd library without the overhead of writing the code for the plugin mechanisms etc.
+		 * Registers an ad-hoc device at this manager.
+		 * In general, devices should be implemented in an own dedicated plugin-based library.
+		 * However, for prototyping an ad-hoc device comes with the same features as a device implemented in a dedicated library without the overhead of writing the code for the plugin mechanisms etc.
 		 * @param deviceName Unique name of the device to register
 		 * @param deviceType Type of the device
 		 * @param deviceInstanceFunction Function creating an instance of the device

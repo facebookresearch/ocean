@@ -187,6 +187,7 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\DeviceRef.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\Factory.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\GPSTracker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\GravityTracker3DOF.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\MagneticTracker.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\Manager.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\Measurement.cpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\Devices.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\Factory.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\GPSTracker.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\GravityTracker3DOF.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\MagneticTracker.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\Manager.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\Measurement.h" />

@@ -63,6 +63,9 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\DevicePlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\devices\GravityTracker3DOF.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\Device.h">
@@ -120,6 +123,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\DevicePlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\devices\GravityTracker3DOF.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

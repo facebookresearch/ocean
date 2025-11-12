@@ -7,6 +7,7 @@
 
 #include "ocean/devices/Measurement.h"
 #include "ocean/devices/Manager.h"
+#include "ocean/devices/GravityTracker3DOF.h"
 #include "ocean/devices/OrientationTracker3DOF.h"
 #include "ocean/devices/PositionTracker3DOF.h"
 #include "ocean/devices/Tracker6DOF.h"
@@ -218,6 +219,7 @@ Measurement::SampleRef Measurement::sample(const Timestamp& timestamp, const Int
 
 		const Timestamp interpolatedTimestamp = Timestamp(Interpolation::linear(double(iLower->second->timestamp()), double(iUpper->second->timestamp()), double(interpolationFactor)));
 		ocean_assert(iLower->second->timestamp() <= interpolatedTimestamp && interpolatedTimestamp <= iUpper->second->timestamp());
+		ocean_assert(NumericD::isEqual(double(interpolatedTimestamp), double(timestamp), NumericD::weakEps()));
 
 		{
 			// let's check whether we have a 6DOF tracker
@@ -285,6 +287,37 @@ Measurement::SampleRef Measurement::sample(const Timestamp& timestamp, const Int
 				}
 
 				return OrientationTracker3DOF::OrientationTracker3DOFSampleRef(new OrientationTracker3DOF::OrientationTracker3DOFSample(interpolatedTimestamp, lowerSample->referenceSystem(), lowerSample->objectIds(), interpolatedOrientations));
+			}
+		}
+
+		{
+			// let's check whether we have a 3DOF gravity tracker
+
+			const GravityTracker3DOF::GravityTracker3DOFSampleRef lowerSample = iLower->second;
+			const GravityTracker3DOF::GravityTracker3DOFSampleRef upperSample = iUpper->second;
+
+			if (lowerSample && upperSample)
+			{
+				ocean_assert(lowerSample->gravities().size() == upperSample->gravities().size());
+				ocean_assert(lowerSample->referenceSystem() == upperSample->referenceSystem());
+
+				GravityTracker3DOF::GravityTracker3DOFSample::Gravities interpolatedGravities(lowerSample->gravities().size());
+
+				for (size_t n = 0; n < lowerSample->gravities().size(); ++n)
+				{
+					const Vector3& lowerGravity = lowerSample->gravities()[n];
+					const Vector3& upperGravity = upperSample->gravities()[n];
+
+					interpolatedGravities[n] = Interpolation::spherical(lowerGravity, upperGravity, interpolationFactor);
+
+					if (!interpolatedGravities[n].normalize())
+					{
+						ocean_assert(false && "This should never happen!");
+						interpolatedGravities[n] = lowerGravity;
+					}
+				}
+
+				return GravityTracker3DOF::GravityTracker3DOFSampleRef(new GravityTracker3DOF::GravityTracker3DOFSample(interpolatedTimestamp, lowerSample->referenceSystem(), lowerSample->objectIds(), interpolatedGravities));
 			}
 		}
 
