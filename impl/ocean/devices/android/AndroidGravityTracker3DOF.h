@@ -11,7 +11,7 @@
 #include "ocean/devices/android/Android.h"
 #include "ocean/devices/android/AndroidSensor.h"
 
-#include "ocean/devices/OrientationTracker3DOF.h"
+#include "ocean/devices/GravityTracker3DOF.h"
 
 namespace Ocean
 {
@@ -23,13 +23,13 @@ namespace Android
 {
 
 /**
- * This class implements a tracker providing the gravity direction as 3-DOF orientation.
- * The resulting transformation (3DOF orientation) is defined w.r.t. the device's coordinate system and rotates the negative y-axis so that it points towards gravity (the rotated positive y-axis points towards sky).<br>
+ * This class implements a tracker providing the gravity direction as 3-DOF gravity vector.
+ * The resulting gravity vector is defined w.r.t. the device's coordinate system and points towards the center of the Earth (normalized).
  * @ingroup devicesandroid
  */
 class OCEAN_DEVICES_EXPORT AndroidGravityTracker3DOF :
 	virtual public AndroidSensor,
-	virtual public OrientationTracker3DOF
+	virtual public GravityTracker3DOF
 {
 	friend class AndroidFactory;
 

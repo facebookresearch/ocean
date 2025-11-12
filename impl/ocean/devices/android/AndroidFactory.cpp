@@ -185,9 +185,7 @@ void AndroidFactory::registerDevices()
 				{
 					sensorGravity_ = sensor;
 
-					constexpr unsigned int priority = 50u; // orientation and gravity share the same device type, so using a lower priority for the gravity sensor
-
-					registerDevice(AndroidGravityTracker3DOF::deviceNameAndroidGravityTracker3DOF(), AndroidGravityTracker3DOF::deviceTypeOrientationTracker3DOF(), InstanceFunction::create(*this, &AndroidFactory::createAndroidGravityTracker3DOF), priority);
+					registerDevice(AndroidGravityTracker3DOF::deviceNameAndroidGravityTracker3DOF(), AndroidGravityTracker3DOF::deviceTypeGravityTracker3DOF(), InstanceFunction::create(*this, &AndroidFactory::createAndroidGravityTracker3DOF));
 				}
 
 				break;

@@ -17,13 +17,13 @@ namespace Android
 {
 
 AndroidGravityTracker3DOF::AndroidGravityTracker3DOF(const ASensor* sensor) :
-	Device(deviceNameAndroidGravityTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	AndroidDevice(deviceNameAndroidGravityTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	Measurement(deviceNameAndroidGravityTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	Sensor(deviceNameAndroidGravityTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	AndroidSensor(deviceNameAndroidGravityTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	Tracker(deviceNameAndroidGravityTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	OrientationTracker3DOF(deviceNameAndroidGravityTracker3DOF())
+	Device(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
+	AndroidDevice(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
+	Measurement(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
+	Sensor(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
+	AndroidSensor(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
+	Tracker(deviceNameAndroidGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
+	GravityTracker3DOF(deviceNameAndroidGravityTracker3DOF())
 {
 	ocean_assert(sensor != nullptr);
 
@@ -53,6 +53,35 @@ int AndroidGravityTracker3DOF::onEventFunction()
 {
 	TemporaryScopedLock scopedLock(deviceLock);
 
+	/**
+	 * Android Device Coordinate System:
+	 *
+	 *                    y (up)
+	 *                    |
+	 *                    |
+	 *       +------------+------------+
+	 *       |            |            |
+	 *       |            |            |
+	 *       |            |            |
+	 *       |            |            |
+	 *       |         Screen          |
+	 *       |       (Portrait)        |
+	 *       |            |            |
+	 *       |            +------------------ x (right)
+	 *       |           /             |
+	 *       |          /              |
+	 *       |         z (out)         |
+	 *       |                         |
+	 *       |                         |
+	 *       +-------------------------+
+	 *
+	 * X-axis: horizontal, points to the right
+	 * Y-axis: vertical, points up
+	 * Z-axis: points towards the outside of the front face of the screen
+	 *
+	 * Android's gravity vector is pointing away from the Earths center, thus we need to negate the vector.
+	 */
+
 	ASensorEvent sensorEvent;
 
 	while (ASensorEventQueue_getEvents(eventQueue_, &sensorEvent, 1) > 0)
@@ -64,8 +93,8 @@ int AndroidGravityTracker3DOF::onEventFunction()
 		Timestamp relativeTimestamp;
 		const Timestamp unixTimestamp = convertTimestamp(sensorEvent, relativeTimestamp);
 
-		// We need to negate the gravity direction as Android provides gravity vector ~(0, 9.8, 0) if device is in default position
-		Vector3 gravity(-sensorEvent.acceleration.x, -sensorEvent.acceleration.y, -sensorEvent.acceleration.z);
+		// We need to negate the gravity direction as Android provides gravity vector ~(0, 0, +9.8) if device is placed on a table with screen upwards.
+		Vector3 gravity(-sensorEvent.vector.x, -sensorEvent.vector.y, -sensorEvent.vector.z);
 
 		if (gravity.normalize())
 		{
@@ -75,12 +104,10 @@ int AndroidGravityTracker3DOF::onEventFunction()
 				waitingForFirstSample_ = false;
 			}
 
-			const Quaternion device_Q_gravity(Vector3(0, -1, 0), gravity); // negative y-axis is uses as default gravity vector
-
 			ObjectIds objectIds(1, sensorObjectId_);
-			Quaternions orientations(1, Quaternion(device_Q_gravity));
+			GravityTracker3DOFSample::Gravities gravities(1, gravity);
 
-			SampleRef sample(new OrientationTracker3DOFSample(unixTimestamp, RS_OBJECT_IN_DEVICE, std::move(objectIds), std::move(orientations)));
+			SampleRef sample(new GravityTracker3DOFSample(unixTimestamp, RS_OBJECT_IN_DEVICE, std::move(objectIds), std::move(gravities)));
 			sample->setRelativeTimestamp(relativeTimestamp);
 
 			postNewSample(sample);
