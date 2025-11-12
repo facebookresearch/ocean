@@ -33,15 +33,21 @@ bool TestRotation::test(const double testDuration)
 	Log::info() << "---   Rotation test:   ---";
 	Log::info() << " ";
 
-	allSucceeded = testConversionToQuaterion(testDuration) && allSucceeded;
+	allSucceeded = testConversionToQuaterion<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testConversionToQuaterion<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
-	allSucceeded = testConversionToHomogenousMatrix(testDuration) && allSucceeded;
+	allSucceeded = testConversionToHomogenousMatrix<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testConversionToHomogenousMatrix<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
-	allSucceeded = testReferenceOffsetConstructor(testDuration) && allSucceeded;
+	allSucceeded = testReferenceOffsetConstructor<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testReferenceOffsetConstructor<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -59,53 +65,72 @@ bool TestRotation::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestRotation, ConversionToQuaterion)
+TEST(TestRotation, ConversionToQuaterion_float)
 {
-	EXPECT_TRUE(TestRotation::testConversionToQuaterion(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestRotation::testConversionToQuaterion<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestRotation, ConversionToHomogenousMatrix)
+TEST(TestRotation, ConversionToQuaterion_double)
 {
-	EXPECT_TRUE(TestRotation::testConversionToHomogenousMatrix(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestRotation::testConversionToQuaterion<double>(GTEST_TEST_DURATION));
 }
 
-TEST(TestRotation, ReferenceOffsetConstructor)
+
+TEST(TestRotation, ConversionToHomogenousMatrix_float)
 {
-	EXPECT_TRUE(TestRotation::testReferenceOffsetConstructor(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestRotation::testConversionToHomogenousMatrix<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestRotation, ConversionToHomogenousMatrix_double)
+{
+	EXPECT_TRUE(TestRotation::testConversionToHomogenousMatrix<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestRotation, ReferenceOffsetConstructor_float)
+{
+	EXPECT_TRUE(TestRotation::testReferenceOffsetConstructor<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestRotation, ReferenceOffsetConstructor_double)
+{
+	EXPECT_TRUE(TestRotation::testReferenceOffsetConstructor<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
 
+template <typename T>
 bool TestRotation::testConversionToQuaterion(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Conversion from Rotation to Quaternion (and 3x3 matrix):";
+	Log::info() << "Conversion from Rotation to Quaternion (and 3x3 matrix) for '" << TypeNamer::name<T>() << "':";
 
+	constexpr double successThreshold = 0.95;
 	constexpr unsigned int constIterations = 100000u;
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(0.95, randomGenerator);
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
-	const Scalar epsilon = std::is_same<Scalar, float>::value ? Scalar(0.02) : Numeric::weakEps();
+	const T epsilon = std::is_same<T, float>::value ? T(0.02) : NumericT<T>::weakEps();
 
 	HighPerformanceStatistic performance;
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		Rotations rotations(constIterations);
-		Quaternions quaternions(constIterations);
+		std::vector<RotationT<T>> rotations(constIterations);
+		std::vector<QuaternionT<T>> quaternions(constIterations);
 
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
-			rotations[n] = Random::rotation();
+			rotations[n] = RandomT<T>::rotation();
 		}
 
 		performance.start();
 			for (unsigned int n = 0u; n < constIterations; ++n)
 			{
-				quaternions[n] = Quaternion(rotations[n]);
+				quaternions[n] = QuaternionT<T>(rotations[n]);
 			}
 		performance.stop();
 
@@ -113,16 +138,16 @@ bool TestRotation::testConversionToQuaterion(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Rotation& rotation = rotations[n];
-			const Quaternion& quaternion = quaternions[n];
+			const RotationT<T>& rotation = rotations[n];
+			const QuaternionT<T>& quaternion = quaternions[n];
 
-			const SquareMatrix3 matrix(rotation);
+			const SquareMatrixT3<T> matrix(rotation);
 
-			const Scalar angleX = Numeric::rad2deg((matrix * Vector3(1, 0, 0)).angle(quaternion * Vector3(1, 0, 0)));
-			const Scalar angleY = Numeric::rad2deg((matrix * Vector3(0, 1, 0)).angle(quaternion * Vector3(0, 1, 0)));
-			const Scalar angleZ = Numeric::rad2deg((matrix * Vector3(0, 0, 1)).angle(quaternion * Vector3(0, 0, 1)));
+			const T angleX = NumericT<T>::rad2deg((matrix * VectorT3<T>(1, 0, 0)).angle(quaternion * VectorT3<T>(1, 0, 0)));
+			const T angleY = NumericT<T>::rad2deg((matrix * VectorT3<T>(0, 1, 0)).angle(quaternion * VectorT3<T>(0, 1, 0)));
+			const T angleZ = NumericT<T>::rad2deg((matrix * VectorT3<T>(0, 0, 1)).angle(quaternion * VectorT3<T>(0, 0, 1)));
 
-			if (Numeric::isNotEqual(angleX, 0, epsilon) || Numeric::isNotEqual(angleY, 0, epsilon) || Numeric::isNotEqual(angleZ, 0, epsilon))
+			if (NumericT<T>::isNotEqual(angleX, 0, epsilon) || NumericT<T>::isNotEqual(angleY, 0, epsilon) || NumericT<T>::isNotEqual(angleZ, 0, epsilon))
 			{
 				scopedIteration.setInaccurate();
 			}
@@ -137,21 +162,23 @@ bool TestRotation::testConversionToQuaterion(const double testDuration)
 	return validation.succeeded();
 }
 
+template <typename T>
 bool TestRotation::testConversionToHomogenousMatrix(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Conversion from Rotation to Homogenous Matrix:";
+	Log::info() << "Conversion from Rotation to Homogenous Matrix for '" << TypeNamer::name<T>() << "':";
 
+	constexpr double successThreshold = 0.95;
 	constexpr unsigned int constIterations = 100000u;
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(0.95, randomGenerator);
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
-	Rotations rotations(constIterations);
-	HomogenousMatrices4 matrices(constIterations);
+	std::vector<RotationT<T>> rotations(constIterations);
+	std::vector<HomogenousMatrixT4<T>> matrices(constIterations);
 
-	const Scalar epsilon = std::is_same<Scalar, float>::value ? Scalar(0.02) : Numeric::weakEps();
+	const T epsilon = std::is_same<T, float>::value ? T(0.02) : NumericT<T>::weakEps();
 
 	HighPerformanceStatistic performance;
 	const Timestamp startTimestamp(true);
@@ -160,13 +187,13 @@ bool TestRotation::testConversionToHomogenousMatrix(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
-			rotations[n] = Random::rotation();
+			rotations[n] = RandomT<T>::rotation();
 		}
 
 		performance.start();
 			for (unsigned int n = 0u; n < constIterations; ++n)
 			{
-				matrices[n] = HomogenousMatrix4(rotations[n]);
+				matrices[n] = HomogenousMatrixT4<T>(rotations[n]);
 			}
 		performance.stop();
 
@@ -174,14 +201,14 @@ bool TestRotation::testConversionToHomogenousMatrix(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Rotation& rotation = rotations[n];
-			const HomogenousMatrix4& matrix = matrices[n];
+			const RotationT<T>& rotation = rotations[n];
+			const HomogenousMatrixT4<T>& matrix = matrices[n];
 
-			const Scalar angleX = Numeric::rad2deg((matrix * Vector3(1, 0, 0)).angle(rotation * Vector3(1, 0, 0)));
-			const Scalar angleY = Numeric::rad2deg((matrix * Vector3(0, 1, 0)).angle(rotation * Vector3(0, 1, 0)));
-			const Scalar angleZ = Numeric::rad2deg((matrix * Vector3(0, 0, 1)).angle(rotation * Vector3(0, 0, 1)));
+			const T angleX = NumericT<T>::rad2deg((matrix * VectorT3<T>(1, 0, 0)).angle(rotation * VectorT3<T>(1, 0, 0)));
+			const T angleY = NumericT<T>::rad2deg((matrix * VectorT3<T>(0, 1, 0)).angle(rotation * VectorT3<T>(0, 1, 0)));
+			const T angleZ = NumericT<T>::rad2deg((matrix * VectorT3<T>(0, 0, 1)).angle(rotation * VectorT3<T>(0, 0, 1)));
 
-			if (Numeric::isNotEqual(angleX, 0, epsilon) || Numeric::isNotEqual(angleY, 0, epsilon) || Numeric::isNotEqual(angleZ, 0, epsilon))
+			if (NumericT<T>::isNotEqual(angleX, 0, epsilon) || NumericT<T>::isNotEqual(angleY, 0, epsilon) || NumericT<T>::isNotEqual(angleZ, 0, epsilon))
 			{
 				scopedIteration.setInaccurate();
 			}
@@ -195,11 +222,12 @@ bool TestRotation::testConversionToHomogenousMatrix(const double testDuration)
 	return validation.succeeded();
 }
 
+template <typename T>
 bool TestRotation::testReferenceOffsetConstructor(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Reference offset constructor:";
+	Log::info() << "Reference offset constructor for '" << TypeNamer::name<T>() << "':";
 
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
@@ -210,34 +238,34 @@ bool TestRotation::testReferenceOffsetConstructor(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Vector3 reference(Random::vector3());
-			const Vector3 offset(Random::vector3());
+			const VectorT3<T> reference(RandomT<T>::vector3());
+			const VectorT3<T> offset(RandomT<T>::vector3());
 
 			// identity test
-			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(1, 0, 0), Vector3(1, 0, 0)) * reference, reference);
-			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, 1, 0), Vector3(0, 1, 0)) * reference, reference);
-			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, 0, 1), Vector3(0, 0, 1)) * reference, reference);
-			OCEAN_EXPECT_EQUAL(validation, Rotation(offset, offset) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, RotationT<T>(VectorT3<T>(1, 0, 0), VectorT3<T>(1, 0, 0)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, RotationT<T>(VectorT3<T>(0, 1, 0), VectorT3<T>(0, 1, 0)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, RotationT<T>(VectorT3<T>(0, 0, 1), VectorT3<T>(0, 0, 1)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, RotationT<T>(offset, offset) * reference, reference);
 
 			// 180 degrees test (a)
-			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(1, 0, 0), Vector3(-1, 0, 0)) * Vector3(1, 0, 0), Vector3(-1, 0, 0));
-			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, 1, 0), Vector3(0, -1, 0)) * Vector3(0, 1, 0), Vector3(0, -1, 0));
-			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, 0, 1), Vector3(0, 0, -1)) * Vector3(0, 0, 1), Vector3(0, 0, -1));
+			OCEAN_EXPECT_EQUAL(validation, RotationT<T>(VectorT3<T>(1, 0, 0), VectorT3<T>(-1, 0, 0)) * VectorT3<T>(1, 0, 0), VectorT3<T>(-1, 0, 0));
+			OCEAN_EXPECT_EQUAL(validation, RotationT<T>(VectorT3<T>(0, 1, 0), VectorT3<T>(0, -1, 0)) * VectorT3<T>(0, 1, 0), VectorT3<T>(0, -1, 0));
+			OCEAN_EXPECT_EQUAL(validation, RotationT<T>(VectorT3<T>(0, 0, 1), VectorT3<T>(0, 0, -1)) * VectorT3<T>(0, 0, 1), VectorT3<T>(0, 0, -1));
 
 			// 180 degrees test (b)
-			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(-1, 0, 0), Vector3(1, 0, 0)) * Vector3(1, 0, 0), Vector3(-1, 0, 0));
-			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, -1, 0), Vector3(0, 1, 0)) * Vector3(0, 1, 0), Vector3(0, -1, 0));
-			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, 0, -1), Vector3(0, 0, 1)) * Vector3(0, 0, 1), Vector3(0, 0, -1));
+			OCEAN_EXPECT_EQUAL(validation, RotationT<T>(VectorT3<T>(-1, 0, 0), VectorT3<T>(1, 0, 0)) * VectorT3<T>(1, 0, 0), VectorT3<T>(-1, 0, 0));
+			OCEAN_EXPECT_EQUAL(validation, RotationT<T>(VectorT3<T>(0, -1, 0), VectorT3<T>(0, 1, 0)) * VectorT3<T>(0, 1, 0), VectorT3<T>(0, -1, 0));
+			OCEAN_EXPECT_EQUAL(validation, RotationT<T>(VectorT3<T>(0, 0, -1), VectorT3<T>(0, 0, 1)) * VectorT3<T>(0, 0, 1), VectorT3<T>(0, 0, -1));
 
-			const Rotation rotation0(reference, offset);
-			const Vector3 test0 = rotation0 * reference;
+			const RotationT<T> rotation0(reference, offset);
+			const VectorT3<T> test0 = rotation0 * reference;
 
-			OCEAN_EXPECT_TRUE(validation, offset.isEqual(test0, Numeric::weakEps()) && offset.angle(test0) < Numeric::deg2rad(Scalar(0.1)));
+			OCEAN_EXPECT_TRUE(validation, offset.isEqual(test0, NumericT<T>::weakEps()) && offset.angle(test0) < NumericT<T>::deg2rad(T(0.1)));
 
-			const Rotation rotation1(reference, -reference);
-			const Vector3 test1 = rotation1 * reference;
+			const RotationT<T> rotation1(reference, -reference);
+			const VectorT3<T> test1 = rotation1 * reference;
 
-			OCEAN_EXPECT_TRUE(validation, reference.isEqual(-test1, Numeric::weakEps()) && reference.angle(test1) > Numeric::deg2rad(Scalar(179.9)));
+			OCEAN_EXPECT_TRUE(validation, reference.isEqual(-test1, NumericT<T>::weakEps()) && reference.angle(test1) > NumericT<T>::deg2rad(T(179.9)));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));

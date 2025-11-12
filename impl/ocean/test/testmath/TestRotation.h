@@ -38,21 +38,27 @@ class OCEAN_TEST_MATH_EXPORT TestRotation
 		 * Tests the conversion from a rotation to a quaternion.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
 		 */
+		template <typename T>
 		static bool testConversionToQuaterion(const double testDuration);
 
 		/**
 		 * Tests the conversion from a rotation to a homogenous matrix.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
 		 */
+		template <typename T>
 		static bool testConversionToHomogenousMatrix(const double testDuration);
 
 		/**
 		 * Tests the reference-offset constructor.
 		 * @param testDuration Number of seconds for each test
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
 		 */
+		template <typename T>
 		static bool testReferenceOffsetConstructor(const double testDuration);
 };
 
