@@ -179,11 +179,6 @@ FrameConverter::ConversionFunctionMap::ConversionFunctionMap()
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_ABGR32, FrameType::FORMAT_BGRA32), FrameConverterABGR32::convertABGR32ToBGRA32);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_ABGR32, FrameType::FORMAT_RGBA32), FrameConverterABGR32::convertABGR32ToRGBA32);
 
-	// FORMAT_ABGR32
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_ABGR32, FrameType::FORMAT_BGR24), FrameConverterABGR32::convertABGR32ToBGR24);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_ABGR32, FrameType::FORMAT_BGRA32), FrameConverterABGR32::convertABGR32ToBGRA32);
-	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_ABGR32, FrameType::FORMAT_RGBA32), FrameConverterABGR32::convertABGR32ToRGBA32);
-
 	// FORMAT_ARGB32
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_ARGB32, FrameType::FORMAT_BGRA32), FrameConverterARGB32::convertARGB32ToBGRA32);
 	formatPair2FunctionWrapperMap_.emplace(ConversionTriple(FrameType::FORMAT_ARGB32, FrameType::FORMAT_RGB24), FrameConverterARGB32::convertARGB32ToRGB24);
@@ -841,7 +836,7 @@ bool FrameConverter::Comfort::convertWithConversionFunction(const Frame& source,
 			const SpecializedFunction specializedFunction = (const SpecializedFunction)(function);
 
 			specializedFunction(source.constdata<uint8_t>(0u), source.constdata<uint8_t>(1u), target.data<uint8_t>(0u), target.data<uint8_t>(1u), source.width(), source.height(), conversionFlag, source.paddingElements(0u), source.paddingElements(1u), target.paddingElements(0u), target.paddingElements(1u), worker);
-			return true;break;
+			return true;
 		}
 
 		case ConversionFunctionMap::FT_2_UINT8_TO_3_UINT8:
@@ -1859,7 +1854,7 @@ void FrameConverter::convertOneRow_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x
 
 	const uint32_t sourcePlane0StrideElements = width + sourcePlane0PaddingElements;
 	const uint32_t sourcePlane1StrideElements = width + sourcePlane1PaddingElements; // 2x2 downsampling but 2 channels
-	const uint32_t targetPlanetrideElements = width * 3u + targetPlanePaddingElements;
+	const uint32_t targetPlaneStrideElements = width * 3u + targetPlanePaddingElements;
 
 	const int32_t factorChannel00_1024 = intOptions[3];
 	const int32_t factorChannel10_1024 = intOptions[4];
@@ -1883,7 +1878,7 @@ void FrameConverter::convertOneRow_1Plane1ChannelAnd1Plane2ChannelsDownsampled2x
 	sourcePlane0 += multipleRowIndex * sourcePlane0StrideElements;
 	sourcePlane1 += (multipleRowIndex / 2u) * sourcePlane1StrideElements;
 
-	targetPlane = flipTarget ? (targetPlane + (height - multipleRowIndex - 1u) * targetPlanetrideElements) : targetPlane + multipleRowIndex * targetPlanetrideElements;
+	targetPlane = flipTarget ? (targetPlane + (height - multipleRowIndex - 1u) * targetPlaneStrideElements) : targetPlane + multipleRowIndex * targetPlaneStrideElements;
 
 	const uint8_t* const sourcePlane0End = sourcePlane0 + width;
 
@@ -2250,6 +2245,7 @@ void FrameConverter::convertTwoRows_1Plane1ChannelAnd1Plane2ChannelsDownsampled2
 {
 	ocean_assert(sources != nullptr && targets != nullptr);
 	ocean_assert(width >= 2u && width % 2u == 0u);
+	ocean_assert(height >= 2u && height % 2u == 0u);
 
 	ocean_assert(options != nullptr);
 	const int* intOptions = reinterpret_cast<const int*>(options);
