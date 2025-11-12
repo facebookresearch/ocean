@@ -80,6 +80,14 @@ bool TestPinholeCamera::test(const double testDuration)
 	allSucceeded = testVectorDistorted<double>(640u, 480u, testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testFovDiagonal<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testFovDiagonal<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -153,6 +161,16 @@ TEST(TestPinholeCamera, VectorDistorted_float)
 TEST(TestPinholeCamera, VectorDistorted_double)
 {
 	EXPECT_TRUE(TestPinholeCamera::testVectorDistorted<double>(640u, 480u, GTEST_TEST_DURATION));
+}
+
+TEST(TestPinholeCamera, FovDiagonal_float)
+{
+	EXPECT_TRUE(TestPinholeCamera::testFovDiagonal<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestPinholeCamera, FovDiagonal_double)
+{
+	EXPECT_TRUE(TestPinholeCamera::testFovDiagonal<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -461,7 +479,9 @@ bool TestPinholeCamera::testDistortion(const unsigned int width, const unsigned 
 			T k2 = (n % 2u == 0u) ? 0 : RandomT<T>::scalar(randomGenerator, T(-0.1), T(0.1));
 
 			if (k1 * k2 > 0)
+			{
 				continue;
+			}
 
 			T p1 = (n <= 1) ? 0 : RandomT<T>::scalar(randomGenerator, T(-0.01), T(0.01));
 			T p2 = (n <= 1) ? 0 : RandomT<T>::scalar(randomGenerator, T(-0.01), T(0.01));
@@ -614,6 +634,118 @@ bool TestPinholeCamera::testVectorDistorted(const unsigned int width, const unsi
 		if (NumericT<T>::abs(distortedProjectedImagePoint.x() - distortedImagePoint.x()) > 0.05 || NumericT<T>::abs(distortedProjectedImagePoint.y() - distortedImagePoint.y()) > 0.05)
 		{
 			scopedIteration.setInaccurate();
+		}
+	}
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestPinholeCamera::testFovDiagonal(const double testDuration)
+{
+	static_assert(std::is_same<T, float>::value || std::is_same<T, double>::value, "Template parameter T must be float or double.");
+
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Diagonal field of view test (" << TypeNamer::name<T>() << "):";
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		const unsigned int width = RandomI::random(randomGenerator, 320u, 1920u);
+		const unsigned int height = RandomI::random(randomGenerator, 240u, 1080u);
+
+		const T focalLengthX = RandomT<T>::scalar(randomGenerator, T(300), T(1000));
+		const T focalLengthY = RandomT<T>::scalar(randomGenerator, T(300), T(1000));
+
+		{
+			const T principalX = RandomT<T>::scalar(randomGenerator, T(width) * T(0.3), T(width) * T(0.7));
+			const T principalY = RandomT<T>::scalar(randomGenerator, T(height) * T(0.3), T(height) * T(0.7));
+
+			const PinholeCameraT<T> pinholeCamera(width, height, focalLengthX, focalLengthY, principalX, principalY);
+
+			/*
+			 * The diagonal FOV is computed as an approximation based on the maximum sum of distances
+			 * from the principal point to opposite corners of the image:
+			 * <pre>
+			 *   Image plane (normalized coordinates, principal point at origin):
+			 *
+			 *   TL (-px, -py)        TR (w-px, -py)
+			 *    +--------------------+
+			 *    |        |           |
+			 *    |        |           |
+			 *    |--------O (0,0)     |  O = principal point
+			 *    |        |           |
+			 *    |        |           |
+			 *    +--------------------+
+			 *   BL (-px, h-py)       BR (w-px, h-py)
+			 *
+			 *   Calculation:
+			 *   1. Compute d1 = |TL| + |BR| and d2 = |TR| + |BL|
+			 *   2. maxDiagonal = max(d1, d2)
+			 *   3. avgFocalLength = (fx + fy) / 2
+			 *   4. fovDiagonal = 2 * atan(maxDiagonal / (2 * avgFocalLength))
+			 *
+			 *   Note: This is an approximation. For off-center principal points,
+			 *   the true angle between corner rays would differ from this formula.
+			 * </pre>
+			 */
+
+			const VectorT2<T> cornerTopLeft(-principalX, -principalY);
+			const VectorT2<T> cornerTopRight(T(width) - principalX, -principalY);
+			const VectorT2<T> cornerBottomLeft(-principalX, T(height) - principalY);
+			const VectorT2<T> cornerBottomRight(T(width) - principalX, T(height) - principalY);
+
+			const T lengthDiagonalTopLeftBottomRight = cornerTopLeft.length() + cornerBottomRight.length();
+			const T lengthDiagonalBottomLeftTopRight = cornerBottomLeft.length() + cornerTopRight.length();
+
+			const T maxDiagonal = std::max(lengthDiagonalTopLeftBottomRight, lengthDiagonalBottomLeftTopRight);
+			const T maxDiagonal_2 = maxDiagonal * T(0.5);
+
+			const T focalLength = (focalLengthX + focalLengthY) * T(0.5);
+			const T expectedFovDiagonal = T(2) * NumericT<T>::atan(maxDiagonal_2 / focalLength);
+
+			const T actualFovDiagonal = pinholeCamera.fovDiagonal();
+
+			if (!NumericT<T>::isEqual(actualFovDiagonal, expectedFovDiagonal, NumericT<T>::eps()))
+			{
+				scopedIteration.setInaccurate();
+			}
+
+			if (actualFovDiagonal <= T(0) || actualFovDiagonal >= NumericT<T>::pi())
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+
+		{
+			const T focalLength = (focalLengthX + focalLengthY) * T(0.5);
+
+			const PinholeCameraT<T> perfectCamera(width, height, focalLength, focalLength, T(width) * T(0.5), T(height) * T(0.5));
+
+			const T fovDiagonalPerfect = perfectCamera.fovDiagonal();
+
+			const T fovX = perfectCamera.fovX();
+			const T fovY = perfectCamera.fovY();
+
+			if (fovDiagonalPerfect <= fovX || fovDiagonalPerfect <= fovY)
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+
+			if (fovDiagonalPerfect > fovX + fovY)
+			{
+				OCEAN_SET_FAILED(validation);
+			}
 		}
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));

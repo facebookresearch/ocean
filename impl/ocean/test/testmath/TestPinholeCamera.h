@@ -38,6 +38,7 @@ class OCEAN_TEST_MATH_EXPORT TestPinholeCamera
 		 * Tests the constructors of the camera function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar, 'float' or 'double'
 		 */
 		template <typename T>
 		static bool testCameraConstructor(const double testDuration);
@@ -46,6 +47,7 @@ class OCEAN_TEST_MATH_EXPORT TestPinholeCamera
 		 * Tests the pattern camera function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar, 'float' or 'double'
 		 */
 		template <typename T>
 		static bool testPatternCamera(const double testDuration);
@@ -54,6 +56,7 @@ class OCEAN_TEST_MATH_EXPORT TestPinholeCamera
 		 * Tests the sub-frame camera function.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar, 'float' or 'double'
 		 */
 		template <typename T>
 		static bool testSubFrameCamera(const double testDuration);
@@ -64,6 +67,7 @@ class OCEAN_TEST_MATH_EXPORT TestPinholeCamera
 		 * @param height The height of the camera image in pixel
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar, 'float' or 'double'
 		 */
 		template <typename T>
 		static bool testDistortion(const unsigned int width, const unsigned int height, const double testDuration);
@@ -74,6 +78,7 @@ class OCEAN_TEST_MATH_EXPORT TestPinholeCamera
 		 * @param height The height of the camera image in pixel
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar, 'float' or 'double'
 		 */
 		template <typename T>
 		static bool testVectorDistortionFree(const unsigned int width, const unsigned int height, const double testDuration);
@@ -84,9 +89,19 @@ class OCEAN_TEST_MATH_EXPORT TestPinholeCamera
 		 * @param height The height of the camera image in pixel
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar, 'float' or 'double'
 		 */
 		template <typename T>
 		static bool testVectorDistorted(const unsigned int width, const unsigned int height, const double testDuration);
+
+		/**
+		 * Tests the diagonal field of view function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T The data type of a scalar, 'float' or 'double'
+		 */
+		template <typename T>
+		static bool testFovDiagonal(const double testDuration);
 };
 
 }

@@ -138,7 +138,7 @@ PinholeCameraT<T>::PinholeCameraT(const unsigned int width, const unsigned int h
 	width_(width),
 	height_(height),
 	intrinsics_(false),
-	invertedIntrinsics_(false),	
+	invertedIntrinsics_(false),
 	radialDistortion_(radialDistortion ? DistortionPair(parameters[4], parameters[5]) : DistortionPair(T(0), T(0))),
 	tangentialDistortion_(tangentialDistortion ? DistortionPair(parameters[6], parameters[7]) : DistortionPair(T(0), T(0)))
 {
@@ -156,7 +156,7 @@ PinholeCameraT<T>::PinholeCameraT(const SquareMatrixT3<T>& intrinsic) :
 	width_(0u),
 	height_(0u),
 	intrinsics_(intrinsic),
-	invertedIntrinsics_(false),	
+	invertedIntrinsics_(false),
 	radialDistortion_(DistortionPair(T(0), T(0))),
 	tangentialDistortion_(DistortionPair(T(0), T(0)))
 {
@@ -168,7 +168,7 @@ PinholeCameraT<T>::PinholeCameraT(const SquareMatrixT3<T>& intrinsic, unsigned i
 	width_(width),
 	height_(height),
 	intrinsics_(intrinsic),
-	invertedIntrinsics_(false),	
+	invertedIntrinsics_(false),
 	radialDistortion_(DistortionPair(T(0), T(0))),
 	tangentialDistortion_(DistortionPair(T(0), T(0)))
 {
@@ -180,7 +180,7 @@ PinholeCameraT<T>::PinholeCameraT(const SquareMatrixT3<T>& intrinsic, unsigned i
 	width_(width),
 	height_(height),
 	intrinsics_(intrinsic),
-	invertedIntrinsics_(false),	
+	invertedIntrinsics_(false),
 	radialDistortion_(radial),
 	tangentialDistortion_(tangential)
 {
@@ -371,15 +371,24 @@ T PinholeCameraT<T>::fovYBottom() const
 template <typename T>
 T PinholeCameraT<T>::fovDiagonal() const
 {
-	const VectorT2<T> topLeft(-principalPointX(), -principalPointY());
-	const VectorT2<T> bottomRight(principalPointX(), principalPointY());
+	ocean_assert(isValid());
 
-	const T diagonal = (topLeft - bottomRight).length();
-	const T halfDiagonal = diagonal * T(0.5);
+	const VectorT2<T> cornerTopLeft(-principalPointX(), -principalPointY());
+	const VectorT2<T> cornerTopRight(T(width_) - principalPointX(), -principalPointY());
+	const VectorT2<T> cornerBottomLeft(-principalPointX(), T(height_) - principalPointY());
+	const VectorT2<T> cornerBottomRight(T(width_) - principalPointX(), T(height_) - principalPointY());
+
+	const T lengthDiagonalTopLeftBottomRight = cornerTopLeft.length() + cornerBottomRight.length();
+	const T lengthDiagonalBottomLeftTopRight = cornerBottomLeft.length() + cornerTopRight.length();
+
+	const T maxDiagonal = std::max(lengthDiagonalTopLeftBottomRight, lengthDiagonalBottomLeftTopRight);
+
+	const T maxDiagonal_2 = maxDiagonal * T(0.5);
 
 	const T focalLength = (focalLengthX() + focalLengthY()) * T(0.5);
 
-	return T(2) * NumericT<T>::abs(NumericT<T>::atan(halfDiagonal / focalLength));
+	ocean_assert(NumericT<T>::isNotEqualEps(focalLength));
+	return T(2) * NumericT<T>::atan(maxDiagonal_2 / focalLength);
 }
 
 template <typename T>
