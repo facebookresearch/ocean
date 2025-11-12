@@ -234,6 +234,13 @@ class OCEAN_TEST_CV_EXPORT TestSSE
 		static bool testAddOffsetBeforeRightShiftDivisionSigned16Bit(const double testDuration);
 
 		/**
+		 * Tests the function dividing eight int16_t value by right shifts with rounding.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testRoundedDivideByRightShiftSigned16Bit(const double testDuration);
+
+		/**
 		 * Tests the function adding an offset for 32 bit signed integer right shifts to perform a division by 2.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded

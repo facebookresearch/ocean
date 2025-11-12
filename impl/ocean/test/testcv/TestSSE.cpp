@@ -230,6 +230,12 @@ bool TestSSE::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testRoundedDivideByRightShiftSigned16Bit(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testAddOffsetBeforeRightShiftDivisionByTwoSigned32Bit(testDuration) && allSucceeded;
 
 	Log::info() << " ";
@@ -409,6 +415,11 @@ TEST(TestSSE, AddOffsetBeforeRightShiftDivisionByTwoSigned16Bit)
 TEST(TestSSE, AddOffsetBeforeRightShiftDivisionSigned16Bit)
 {
 	EXPECT_TRUE(TestSSE::testAddOffsetBeforeRightShiftDivisionSigned16Bit(GTEST_TEST_DURATION));
+}
+
+TEST(TestSSE, RoundedDivideByRightShiftSigned16Bit)
+{
+	EXPECT_TRUE(TestSSE::testRoundedDivideByRightShiftSigned16Bit(GTEST_TEST_DURATION));
 }
 
 TEST(TestSSE, AddOffsetBeforeRightShiftDivisionByTwoSigned32Bit)
@@ -1654,6 +1665,68 @@ bool TestSSE::testAddOffsetBeforeRightShiftDivisionSigned16Bit(const double test
 
 				OCEAN_EXPECT_EQUAL(validation, testValue, int32_t(dividedValues[n]));
 			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestSSE::testRoundedDivideByRightShiftSigned16Bit(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Test rounded division by right shift for int16_t:";
+
+	RandomGenerator randomGenerator;
+	Validation validation;
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const unsigned int rightShifts = RandomI::random(randomGenerator, 1u, 15u);
+
+		const int32_t maximalValue = CV::SSE::maximalValueForRoundedDivisionByRightShiftSigned16Bit(rightShifts);
+
+		int16_t values[8];
+
+		for (unsigned int n = 0u; n < 8u; ++n)
+		{
+			values[n] = int16_t(RandomI::random(randomGenerator, -maximalValue, maximalValue));
+		}
+
+		const unsigned int denominator = 1u << rightShifts;
+
+		const __m128i values_s_16x8 = _mm_loadu_si128((const __m128i*)values);
+
+		const __m128i dividedValues_s_16x8 = CV::SSE::roundedDivideByRightShiftSigned16Bit(values_s_16x8, rightShifts);
+
+		int16_t dividedValues[8];
+		_mm_storeu_si128((__m128i*)(dividedValues), dividedValues_s_16x8);
+
+		const int32_t denominator_2 = int32_t(denominator) / 2;
+
+		for (unsigned int n = 0u; n < 8u; ++n)
+		{
+			int32_t testValue;
+
+			if (values[n] >= 0)
+			{
+				testValue = (int32_t(values[n]) + denominator_2) / int32_t(denominator);
+			}
+			else
+			{
+				testValue = (int32_t(values[n]) - denominator_2) / int32_t(denominator);
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, testValue, int32_t(dividedValues[n]));
+
+			const int32_t manualTest = NumericD::round32(double(values[n]) / double(denominator));
+
+			OCEAN_EXPECT_EQUAL(validation, manualTest, int32_t(dividedValues[n]));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));

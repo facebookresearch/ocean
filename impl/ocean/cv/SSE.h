@@ -12,7 +12,7 @@
 
 #include "ocean/base/Utilities.h"
 
-#include "ocean/math/Math.h"
+#include "ocean/math/Numeric.h"
 
 #if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
 
@@ -434,22 +434,43 @@ class SSE
 		static inline __m128i addOffsetBeforeRightShiftDivisionByTwoSigned16Bit(const __m128i& value);
 
 		/**
-		 * Adds 2^shifts - 1 to each negative signed 16 bit value, so they each value can be right shifted to allow a correct division by 2^shifts.
+		 * Adds 2^shifts - 1 to each negative int16_t value, so that each value can be right shifted to allow a correct division by 2^shifts.
 		 * This function must be invoked before the right shift is applied.
-		 * @param value The eight signed 16 bit values to be handled
+		 * @param value The eight int16_t values to be handled, with range (-infinity, infinity)
 		 * @param rightShifts The number of right shifts which needs to be applied, with range [0, 15]
 		 * @return The modified value for which division a shift yield equal (and correct!) results
 		 */
 		static inline __m128i addOffsetBeforeRightShiftDivisionSigned16Bit(const __m128i& value, const unsigned int rightShifts);
 
 		/**
-		 * Divides eight signed 16 bit values by applying a right shift.
-		 * This is able to determine the correct division result for positive and negative 16 bit values.
-		 * @param value The eight signed 16 bit values to be handled
+		 * Divides eight int16_t values by applying a right shift.
+		 * The function can divide positive and negative values correctly (but without rounding).
+		 * @param value The eight int16_t values to be divided, with range (-infinity, infinity)
 		 * @param rightShifts The number of right shifts which needs to be applied, with range [0, 15]
 		 * @return The divided values
 		 */
 		static inline __m128i divideByRightShiftSigned16Bit(const __m128i& value, const unsigned int rightShifts);
+
+		/**
+		 * Applies a rounded division by a right shift for eight int16_t values.
+		 * The function can divide positive and negative values correctly (and handles rounding).<br>
+		 * However, this function has a specific value range for the input values:
+		 * <pre>
+		 * maxValue = (2^15 - 1) - 2^(rightShifts - 1) = 32767 - 2^(rightShifts - 1)
+		 * </pre>
+		 * @param value The eight int16_t values to be divided, with range [-maxValue, maxValue]
+		 * @param rightShifts The number of right shifts which needs to be applied, with range [1, 15]
+		 * @return The divided values
+		 * @see maximalValueForRoundedDivisionByRightShiftSigned16Bit().
+		 */
+		static inline __m128i roundedDivideByRightShiftSigned16Bit(const __m128i& value_s16x8, const unsigned int rightShifts);
+
+		/**
+		 * Returns the maximal value for which the function roundedDivideByRightShiftSigned16Bit() can be applied.
+		 * @param rightShifts The number of right shifts which needs to be applied, with range [1, 15]
+		 * @return The maximal value, which is 32767 - 2^(rightShifts - 1).
+		 */
+		static inline int16_t maximalValueForRoundedDivisionByRightShiftSigned16Bit(const unsigned int rightShifts);
 
 		/**
 		 * Adds 1 to each signed 32 bit value which is both, negative and odd, so that each value can be right shifted by one bit to allow a correct division by two.
@@ -3083,6 +3104,33 @@ inline __m128i SSE::addOffsetBeforeRightShiftDivisionSigned16Bit(const __m128i& 
 inline __m128i SSE::divideByRightShiftSigned16Bit(const __m128i& value, const unsigned int rightShifts)
 {
 	return _mm_srai_epi16(addOffsetBeforeRightShiftDivisionSigned16Bit(value, rightShifts), int(rightShifts));
+}
+
+inline __m128i SSE::roundedDivideByRightShiftSigned16Bit(const __m128i& value_s16x8, const unsigned int rightShifts)
+{
+	ocean_assert(rightShifts >= 1 && rightShifts <= 15);
+
+	const __m128i signMask_s16x8 = _mm_srai_epi16(value_s16x8, 15); // 0x0000 for +, 0xFFFF for -
+
+	const __m128i absValue_s16x8 = _mm_abs_epi16(value_s16x8);
+	const __m128i offset_s16x8 = _mm_set1_epi16(1 << (rightShifts - 1));
+
+	const __m128i absValueWithOffset_s16x8 = _mm_add_epi16(absValue_s16x8, offset_s16x8);
+
+	const __m128i shifted_s16x8 = _mm_srai_epi16(absValueWithOffset_s16x8, rightShifts);
+
+	return _mm_sub_epi16(_mm_xor_si128(shifted_s16x8, signMask_s16x8), signMask_s16x8); // restore sign: (shifted ^ sign_mask) - sign_mask
+}
+
+inline int16_t SSE::maximalValueForRoundedDivisionByRightShiftSigned16Bit(const unsigned int rightShifts)
+{
+	ocean_assert(rightShifts >= 1 && rightShifts <= 15);
+
+	const int32_t maxValue = 32767 - (1 << (rightShifts - 1));
+
+	ocean_assert(NumericT<int16_t>::isInsideValueRange(maxValue) && NumericT<int16_t>::isInsideValueRange(-maxValue));
+
+	return int16_t(maxValue);
 }
 
 inline __m128i SSE::addOffsetBeforeRightShiftDivisionByTwoSigned32Bit(const __m128i& value)
