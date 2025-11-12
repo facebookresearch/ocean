@@ -925,8 +925,9 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performancePerfectCamera;
@@ -938,7 +939,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
@@ -1056,7 +1057,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 
 					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -1077,7 +1078,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 
 					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -1101,7 +1102,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1124,7 +1125,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1147,7 +1148,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1170,7 +1171,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1193,7 +1194,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1216,31 +1217,19 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance perfect camera: " << performancePerfectCamera.averageMseconds() << "ms";
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -1249,7 +1238,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
@@ -1262,8 +1251,9 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -1272,7 +1262,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
 
@@ -1368,7 +1358,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1391,7 +1381,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1414,7 +1404,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1437,7 +1427,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1460,7 +1450,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1483,30 +1473,18 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -1515,7 +1493,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -1769,7 +1747,7 @@ bool TestJacobian::testAnyCameraPoseJacobian2nx6(const double testDuration)
 				}
 			}
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 		Log::info() << "Performance: " << performance.averageMseconds() << "ms";
@@ -1794,8 +1772,9 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performancePerfectCamera;
@@ -1807,7 +1786,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
@@ -1931,7 +1910,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1954,7 +1933,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -1977,7 +1956,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2000,7 +1979,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2023,7 +2002,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2046,31 +2025,19 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance perfect camera: " << performancePerfectCamera.averageMseconds() << "ms";
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -2079,7 +2046,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
@@ -2092,8 +2059,11 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	constexpr double threshold = successThreshold() * 0.975; // making threshold slightly weaker
+
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performancePerfectCamera;
@@ -2105,7 +2075,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
@@ -2231,7 +2201,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 				if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2254,7 +2224,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2277,7 +2247,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2300,7 +2270,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2323,7 +2293,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2346,7 +2316,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2369,7 +2339,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2391,31 +2361,19 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance perfect camera: " << performancePerfectCamera.averageMseconds() << "ms";
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold() * 0.975; // making threshold slightly weaker
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -2424,7 +2382,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDuration)
@@ -2437,8 +2395,9 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -2447,7 +2406,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
@@ -2547,7 +2506,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 
 					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -2568,7 +2527,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 
 					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -2592,7 +2551,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2615,7 +2574,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2638,7 +2597,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2661,7 +2620,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2684,7 +2643,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2707,30 +2666,18 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -2739,7 +2686,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDuration)
@@ -2752,8 +2699,9 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -2762,7 +2710,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
 
@@ -2857,7 +2805,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2880,7 +2828,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2903,7 +2851,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2926,7 +2874,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2949,7 +2897,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -2972,30 +2920,18 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -3004,7 +2940,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
@@ -3017,8 +2953,10 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 
 	const Scalar eps = Numeric::weakEps();
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
+
 	unsigned int distortionIteration = 0u;
 
 	HighPerformanceStatistic performanceNaive;
@@ -3029,7 +2967,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
@@ -3133,7 +3071,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 
 				if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -3150,7 +3088,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOxx) && diffOxx / maxOxx > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 
 				const Scalar diffOxy = Numeric::abs(jacobianY[0] - doxy);
@@ -3158,7 +3096,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOxy) && diffOxy / maxOxy > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -3175,7 +3113,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOyx) && diffOyx / maxOyx > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 
 				const Scalar diffOyy = Numeric::abs(jacobianY[1] - doyy);
@@ -3183,7 +3121,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOyy) && diffOyy / maxOyy > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -3200,7 +3138,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOzx) && diffOzx / maxOzx > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 
 				const Scalar diffOzy = Numeric::abs(jacobianY[2] - dozy);
@@ -3208,31 +3146,19 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOzy) && diffOzy / maxOzy > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance perfect camera: " << performancePerfectCamera.averageMseconds() << "ms";
 	Log::info() << "Performance distorted camera: " << performanceDistortedCamera.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -3241,7 +3167,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
@@ -3254,8 +3180,9 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 
 	const Scalar eps = Numeric::weakEps();
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performanceOptimized;
@@ -3264,7 +3191,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
 
@@ -3339,7 +3266,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 
 				if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -3356,7 +3283,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOxx) && diffOxx / maxOxx > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 
 				const Scalar diffOxy = Numeric::abs(jacobianY[0] - doxy);
@@ -3364,7 +3291,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOxy) && diffOxy / maxOxy > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -3381,7 +3308,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOyx) && diffOyx / maxOyx > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 
 				const Scalar diffOyy = Numeric::abs(jacobianY[1] - doyy);
@@ -3389,7 +3316,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOyy) && diffOyy / maxOyy > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -3406,7 +3333,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOzx) && diffOzx / maxOzx > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 
 				const Scalar diffOzy = Numeric::abs(jacobianY[2] - dozy);
@@ -3414,30 +3341,18 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 
 				if (Numeric::isNotEqualEps(maxOzy) && diffOzy / maxOzy > 0.05)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance optimized: " << performanceOptimized.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -3446,7 +3361,7 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
@@ -3463,6 +3378,8 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 	bool allSucceeded = true;
 
+	RandomGenerator randomGenerator;
+
 	for (const AnyCameraType anyCameraType : Utilities::realisticCameraTypes())
 	{
 		Log::info().newLine(!firstCameraIteration);
@@ -3473,8 +3390,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 		const AnyCamera& anyCamera = *anyCameraShared;
 
-		uint64_t succeeded = 0ull;
-		uint64_t iterations = 0ull;
+		ValidationPrecision validation(successThreshold(), randomGenerator);
 
 		HighPerformanceStatistic performanceNaive;
 		HighPerformanceStatistic performanceOptimized;
@@ -3483,7 +3399,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 		do
 		{
-			bool accurate = true;
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 			const Vector3 translation(Random::scalar(-1, 1), Random::scalar(-1, 1), Random::scalar(-1, 1));
 			const Quaternion rotation(Random::quaternion());
@@ -3521,7 +3437,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 				for (size_t n = 0; n < objectPoints.size(); ++n)
 				{
-					const Vector3 objectPoint = objectPoints[n];
+					const Vector3& objectPoint = objectPoints[n];
 					const Vector2 imagePoint(anyCamera.projectToImageIF(flippedCamera_T_world, objectPoint));
 
 					for (unsigned int i = 0u; i < 3u; ++i)
@@ -3540,7 +3456,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
-				const Vector3 objectPoint = objectPoints[n];
+				const Vector3& objectPoint = objectPoints[n];
 				const Vector2 imagePoint(anyCamera.projectToImageIF(flippedCamera_T_world, objectPoint));
 
 				const Scalar* jacobianX = jacobian[2 * n + 0];
@@ -3556,7 +3472,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -3573,7 +3489,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxOxx) && diffOxx / maxOxx > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffOxy = Numeric::abs(jacobianY[0] - doxy);
@@ -3581,7 +3497,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxOxy) && diffOxy / maxOxy > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -3598,7 +3514,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxOyx) && diffOyx / maxOyx > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffOyy = Numeric::abs(jacobianY[1] - doyy);
@@ -3606,7 +3522,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxOyy) && diffOyy / maxOyy > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -3623,7 +3539,7 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxOzx) && diffOzx / maxOzx > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffOzy = Numeric::abs(jacobianY[2] - dozy);
@@ -3631,29 +3547,19 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxOzy) && diffOzy / maxOzy > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
-
-				if (accurate)
-				{
-					++succeeded;
-				}
-
-				++iterations;
 			}
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
-
-		ocean_assert(iterations != 0ull);
-		const double percent = double(succeeded) / double(iterations);
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Camera name: " << anyCamera.name();
 		Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 		Log::info() << "Performance optimized: " << performanceOptimized.averageMseconds() << "ms";
-		Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+		Log::info() << "Validation: " << validation;
 
-		if (percent < successThreshold())
+		if (!validation.succeeded())
 		{
 			allSucceeded = false;
 		}
@@ -3679,8 +3585,9 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 	const Scalar eps = Numeric::weakEps();
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -3689,7 +3596,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
@@ -3781,7 +3688,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWx_x) && diffWx_x / maxWx_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffWx_y = Numeric::abs(jacobianY[0] - dWx_y);
@@ -3789,7 +3696,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWx_y) && diffWx_y / maxWx_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -3808,7 +3715,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWy_x) && diffWy_x / maxWy_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffWy_y = Numeric::abs(jacobianY[1] - dWy_y);
@@ -3816,7 +3723,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWy_y) && diffWy_y / maxWy_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -3835,7 +3742,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWz_x) && diffWz_x / maxWz_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffWz_y = Numeric::abs(jacobianY[2] - dWz_y);
@@ -3843,7 +3750,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWz_y) && diffWz_y / maxWz_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -3862,7 +3769,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxTx_x) && diffTx_x / maxTx_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffTx_y = Numeric::abs(jacobianY[3] - dTx_y);
@@ -3870,7 +3777,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if ((jacobianY[3] != 0 && Numeric::isNotEqualEps(maxTx_y) && diffTx_y / maxTx_y > 0.05) || (jacobianY[3] == 0 && Numeric::abs(dTx_y) > 0.001))
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -3889,7 +3796,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if ((jacobianX[4] != 0 && Numeric::isNotEqualEps(maxTy_x) && diffTy_x / maxTy_x > 0.05) || (jacobianX[4] == 0 && Numeric::abs(dTy_x) > 0.001))
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffTy_y = Numeric::abs(jacobianY[4] - dTy_y);
@@ -3897,7 +3804,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxTy_y) && diffTy_y / maxTy_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -3916,7 +3823,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxTz_x) && diffTz_x / maxTz_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffTz_y = Numeric::abs(jacobianY[5] - dTz_y);
@@ -3924,7 +3831,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxTz_y) && diffTz_y / maxTz_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -3954,7 +3861,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWx_x) && diffWx_x / maxWx_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffWx_y = Numeric::abs(jacobianY[0] - dWx_y);
@@ -3962,7 +3869,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWx_y) && diffWx_y / maxWx_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -3981,7 +3888,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWy_x) && diffWy_x / maxWy_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffWy_y = Numeric::abs(jacobianY[1] - dWy_y);
@@ -3989,7 +3896,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWy_y) && diffWy_y / maxWy_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -4008,7 +3915,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWz_x) && diffWz_x / maxWz_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffWz_y = Numeric::abs(jacobianY[2] - dWz_y);
@@ -4016,7 +3923,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxWz_y) && diffWz_y / maxWz_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -4035,7 +3942,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxTx_x) && diffTx_x / maxTx_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffTx_y = Numeric::abs(jacobianY[3] - dTx_y);
@@ -4043,7 +3950,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if ((jacobianY[3] != 0 && Numeric::isNotEqualEps(maxTx_y) && diffTx_y / maxTx_y > 0.05) || (jacobianY[3] == 0 && Numeric::abs(dTx_y) > 0.001))
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -4062,7 +3969,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if ((jacobianX[4] != 0 && Numeric::isNotEqualEps(maxTy_x) && diffTy_x / maxTy_x > 0.05) || (jacobianX[4] == 0 && Numeric::abs(dTy_x) > 0.001))
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffTy_y = Numeric::abs(jacobianY[4] - dTy_y);
@@ -4070,7 +3977,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxTy_y) && diffTy_y / maxTy_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -4089,7 +3996,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxTz_x) && diffTz_x / maxTz_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffTz_y = Numeric::abs(jacobianY[5] - dTz_y);
@@ -4097,7 +4004,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxTz_y) && diffTz_y / maxTz_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -4127,7 +4034,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxX_x) && diffX_x / maxX_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffX_y = Numeric::abs(jacobianY[0] - dX_y);
@@ -4135,7 +4042,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxX_y) && diffX_y / maxX_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -4154,7 +4061,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxY_x) && diffY_x / maxY_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffY_y = Numeric::abs(jacobianY[1] - dY_y);
@@ -4162,7 +4069,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxY_y) && diffY_y / maxY_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -4181,7 +4088,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxZ_x) && diffZ_x / maxZ_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffZ_y = Numeric::abs(jacobianY[2] - dZ_y);
@@ -4189,7 +4096,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxZ_y) && diffZ_y / maxZ_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -4220,7 +4127,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxX_x) && diffX_x / maxX_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffX_y = Numeric::abs(jacobianY[0] - dX_y);
@@ -4228,7 +4135,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxX_y) && diffX_y / maxX_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -4247,7 +4154,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxY_x) && diffY_x / maxY_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffY_y = Numeric::abs(jacobianY[1] - dY_y);
@@ -4255,7 +4162,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxY_y) && diffY_y / maxY_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
@@ -4274,7 +4181,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxZ_x) && diffZ_x / maxZ_x > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 
 					const Scalar diffZ_y = Numeric::abs(jacobianY[2] - dZ_y);
@@ -4282,30 +4189,19 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 					if (Numeric::isNotEqualEps(maxZ_y) && diffZ_y / maxZ_y > 0.05)
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 
 			}
 
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -4314,7 +4210,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
@@ -4325,8 +4221,9 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	const Vector3 defaultRotationDirection(0, 0, -1);
 
@@ -4337,7 +4234,7 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 	const Timestamp startTimestamp(true);
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const Scalar radius = Random::scalar(Scalar(0.001), 100);
 		const Vector3 defaultObjectPoint(defaultRotationDirection * radius);
@@ -4378,7 +4275,7 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -4402,7 +4299,7 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -4426,27 +4323,15 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
-
-		if (accurate)
-		{
-			++succeeded;
-		}
-
-		++iterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -4455,7 +4340,7 @@ bool TestJacobian::testSphericalObjectPoint3x3(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -4604,7 +4489,7 @@ bool TestJacobian::testSphericalObjectPointOrientation2x3IF(const double testDur
 				}
 			}
 		}
-		while (!startTimestamp.hasTimePassed(testDuration));
+		while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 		Log::info() << "Validation: " << validation;
 
@@ -4625,14 +4510,15 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
@@ -4690,7 +4576,7 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -4714,7 +4600,7 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -4738,7 +4624,7 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -4762,27 +4648,15 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
-
-		if (accurate)
-		{
-			++succeeded;
-		}
-
-		++iterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -4791,7 +4665,7 @@ bool TestJacobian::testPinholeCameraDistortionJacobian2x4(const double testDurat
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
@@ -4802,14 +4676,15 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
@@ -4864,7 +4739,7 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -4888,7 +4763,7 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -4914,7 +4789,7 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -4940,7 +4815,7 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -4966,7 +4841,7 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -4992,28 +4867,16 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 
 		}
-
-		if (accurate)
-		{
-			++succeeded;
-		}
-
-		++iterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -5022,7 +4885,7 @@ bool TestJacobian::testPinholeCameraJacobian2x6(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
@@ -5033,14 +4896,15 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
@@ -5092,7 +4956,7 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -5116,7 +4980,7 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -5140,7 +5004,7 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -5164,7 +5028,7 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -5191,7 +5055,7 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -5217,7 +5081,7 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
 
@@ -5243,27 +5107,15 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 
 			if (!localAccuracy)
 			{
-				accurate = false;
+				scopedIteration.setInaccurate();
 			}
 		}
-
-		if (accurate)
-		{
-			++succeeded;
-		}
-
-		++iterations;
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -5272,7 +5124,7 @@ bool TestJacobian::testPinholeCameraJacobian2x7(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -5517,8 +5369,9 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -5529,7 +5382,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
@@ -5689,7 +5542,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -5714,7 +5567,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -5738,7 +5591,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -5762,7 +5615,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -5786,7 +5639,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -5810,7 +5663,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -5834,7 +5687,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -5858,7 +5711,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -5884,7 +5737,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -5910,7 +5763,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -5936,7 +5789,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -5962,30 +5815,18 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -5994,7 +5835,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
@@ -6007,8 +5848,9 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -6019,7 +5861,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		const unsigned int width = 640u;
 		const unsigned int height = 480u;
@@ -6185,7 +6027,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 					if (Numeric::isNotEqual(jacobianX[i], singleJacobianX[i], Numeric::eps() * 100) || Numeric::isNotEqual(jacobianY[i], singleJacobianY[i], Numeric::eps() * 100))
 					{
-						accurate = false;
+						scopedIteration.setInaccurate();
 					}
 				}
 			}
@@ -6210,7 +6052,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -6234,7 +6076,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -6260,7 +6102,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -6286,7 +6128,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -6312,7 +6154,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -6338,7 +6180,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -6362,7 +6204,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -6386,7 +6228,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -6410,7 +6252,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -6434,7 +6276,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -6458,7 +6300,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
@@ -6482,30 +6324,19 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -6514,7 +6345,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -6977,8 +6808,6 @@ bool TestJacobian::testPoseFisheyeCameraJacobian2x18(const double testDuration)
 				if (!localAccuracy)
 				{
 					scopedIteration.setInaccurate();
-
-					//Log::info() << "A " << nParameter;
 				}
 			}
 
@@ -7007,8 +6836,6 @@ bool TestJacobian::testPoseFisheyeCameraJacobian2x18(const double testDuration)
 				if (!localAccuracy)
 				{
 					scopedIteration.setInaccurate();
-
-					Log::info() << "B " << nPose;
 				}
 			}
 		}
@@ -7032,8 +6859,9 @@ bool TestJacobian::testHomography2x8(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -7047,7 +6875,7 @@ bool TestJacobian::testHomography2x8(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		unsigned int width = 1920u;
 		unsigned int height = 1080u;
@@ -7131,39 +6959,18 @@ bool TestJacobian::testHomography2x8(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
-	{
-		if (std::is_same<Scalar, float>::value)
-		{
-			Log::info() << "This test failed due to precision issues of 32-bit floating point numbers. This is expected and no reason to be alarmed.";
-			return true;
-		}
-	}
-
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testHomography2x9(const double testDuration)
@@ -7176,8 +6983,11 @@ bool TestJacobian::testHomography2x9(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	const double threshold = std::is_same<Scalar, float>::value ? 0.95 : successThreshold();
+
+	ValidationPrecision validation(threshold, randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -7191,7 +7001,7 @@ bool TestJacobian::testHomography2x9(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		unsigned int width = 1920u;
 		unsigned int height = 1080u;
@@ -7229,7 +7039,7 @@ bool TestJacobian::testHomography2x9(const double testDuration)
 
 			for (size_t n = 0; n < points.size(); ++n)
 			{
-				const Vector2 point = points[n];
+				const Vector2& point = points[n];
 				const Vector2 transformedPoint(homography * point);
 
 				for (unsigned int i = 0u; i < 9u; ++i)
@@ -7248,7 +7058,7 @@ bool TestJacobian::testHomography2x9(const double testDuration)
 
 		for (size_t n = 0; n < points.size(); ++n)
 		{
-			const Vector2 point = points[n];
+			const Vector2& point = points[n];
 			const Vector2 transformedPoint(homography * point);
 
 			const Scalar* jacobianX = jacobians[2u * n + 0u];
@@ -7275,30 +7085,18 @@ bool TestJacobian::testHomography2x9(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
-
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -7307,7 +7105,7 @@ bool TestJacobian::testHomography2x9(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testIdentityHomography2x8(const double testDuration)
@@ -7320,8 +7118,9 @@ bool TestJacobian::testIdentityHomography2x8(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -7335,7 +7134,7 @@ bool TestJacobian::testIdentityHomography2x8(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		unsigned int width = 1920u;
 		unsigned int height = 1080u;
@@ -7407,30 +7206,19 @@ bool TestJacobian::testIdentityHomography2x8(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -7439,7 +7227,7 @@ bool TestJacobian::testIdentityHomography2x8(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testIdentityHomography2x9(const double testDuration)
@@ -7452,8 +7240,9 @@ bool TestJacobian::testIdentityHomography2x9(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -7467,7 +7256,7 @@ bool TestJacobian::testIdentityHomography2x9(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		unsigned int width = 1920u;
 		unsigned int height = 1080u;
@@ -7493,7 +7282,7 @@ bool TestJacobian::testIdentityHomography2x9(const double testDuration)
 
 			for (size_t n = 0; n < points.size(); ++n)
 			{
-				const Vector2 point = points[n];
+				const Vector2& point = points[n];
 				const Vector2 transformedPoint(homography * point);
 
 				for (unsigned int i = 0u; i < 9u; ++i)
@@ -7512,7 +7301,7 @@ bool TestJacobian::testIdentityHomography2x9(const double testDuration)
 
 		for (size_t n = 0; n < points.size(); ++n)
 		{
-			const Vector2 point = points[n];
+			const Vector2& point = points[n];
 			const Vector2 transformedPoint(homography * point);
 
 			const Scalar* jacobianX = jacobians[2u * n + 0u];
@@ -7539,30 +7328,19 @@ bool TestJacobian::testIdentityHomography2x9(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -7571,7 +7349,7 @@ bool TestJacobian::testIdentityHomography2x9(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestJacobian::testSimilarity2x4(const double testDuration)
@@ -7584,8 +7362,9 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 
 	const Scalars epsilons = {Numeric::weakEps(), Numeric::weakEps() / Scalar(10), Numeric::weakEps() * Scalar(10), Numeric::weakEps() / Scalar(100), Numeric::weakEps() * Scalar(100)};
 
-	uint64_t succeeded = 0ull;
-	uint64_t iterations = 0ull;
+	RandomGenerator randomGenerator;
+
+	ValidationPrecision validation(successThreshold(), randomGenerator);
 
 	HighPerformanceStatistic performanceNaive;
 	HighPerformanceStatistic performance;
@@ -7599,7 +7378,7 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 
 	do
 	{
-		bool accurate = true;
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
 
 		unsigned int width = 1920u;
 		unsigned int height = 1080u;
@@ -7637,7 +7416,7 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 
 			for (size_t n = 0; n < points.size(); ++n)
 			{
-				const Vector2 point = points[n];
+				const Vector2& point = points[n];
 				const Vector2 transformedPoint(similarity * point);
 
 				for (unsigned int i = 0u; i < 4u; ++i)
@@ -7676,7 +7455,7 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 
 		for (size_t n = 0; n < points.size(); ++n)
 		{
-			const Vector2 point = points[n];
+			const Vector2& point = points[n];
 			const Vector2 transformedPoint(similarity * point);
 
 			const Scalar* jacobianX = jacobians[2u * n + 0u];
@@ -7723,30 +7502,19 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 
 				if (!localAccuracy)
 				{
-					accurate = false;
+					scopedIteration.setInaccurate();
 				}
 			}
 
-			if (accurate)
-			{
-				++succeeded;
-			}
-
-			++iterations;
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
-
-	ocean_assert(iterations != 0ull);
-	const double percent = double(succeeded) / double(iterations);
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Validation: " << validation;
 
-	const bool allSucceeded = percent >= successThreshold();
-
-	if (!allSucceeded)
+	if (!validation.succeeded())
 	{
 		if (std::is_same<Scalar, float>::value)
 		{
@@ -7755,7 +7523,7 @@ bool TestJacobian::testSimilarity2x4(const double testDuration)
 		}
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -7876,7 +7644,7 @@ bool TestJacobian::testCalculateFisheyeDistortNormalized2x2(const double testDur
 			}
 		}
 	}
-	while (!startTimestamp.hasTimePassed(testDuration));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Performance naive: " << performanceNaive.averageMseconds() << "ms";
 	Log::info() << "Performance: " << performance.averageMseconds() << "ms";
