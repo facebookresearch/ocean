@@ -95,6 +95,12 @@ class OCEAN_DEVICES_EXPORT Tracker6DOF :
 		 * Destructs a 6DOF tracker object.
 		 */
 		~Tracker6DOF() override;
+
+		/**
+		 * Interpolates between two 6DOF tracker samples.
+		 * @see Measurement::interpolateSamples().
+		 */
+		SampleRef interpolateSamples(const SampleRef& lowerSample, const SampleRef& upperSample, const double interpolationFactor, const Timestamp& interpolatedTimestamp) const override;
 };
 
 inline Tracker6DOF::DeviceType Tracker6DOF::deviceTypeTracker6DOF()

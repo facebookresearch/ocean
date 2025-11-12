@@ -9,7 +9,6 @@
 #define META_OCEAN_DEVICES_ORIENTATION_TRACKER_3DOF_H
 
 #include "ocean/devices/Devices.h"
-#include "ocean/devices/DeviceRef.h"
 #include "ocean/devices/Tracker.h"
 
 #include "ocean/math/Quaternion.h"
@@ -110,6 +109,12 @@ class OCEAN_DEVICES_EXPORT OrientationTracker3DOF : virtual public Tracker
 		 * Destructs a 3DOF orientation tracker.
 		 */
 		~OrientationTracker3DOF() override;
+
+		/**
+		 * Interpolates between two 3DOF orientation tracker samples.
+		 * @see Measurement::interpolateSamples().
+		 */
+		SampleRef interpolateSamples(const SampleRef& lowerSample, const SampleRef& upperSample, const double interpolationFactor, const Timestamp& interpolatedTimestamp) const override;
 };
 
 inline OrientationTracker3DOF::DeviceType OrientationTracker3DOF::deviceTypeOrientationTracker3DOF()

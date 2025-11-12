@@ -464,6 +464,18 @@ class OCEAN_DEVICES_EXPORT Measurement : virtual public Device
 		 */
 		void unsubscribeSampleEvent(const SubscriptionId subscriptionId);
 
+		/**
+		 * Interpolates between two samples.
+		 * This function can be overridden by derived classes to provide type-specific interpolation.
+		 * The default implementation returns the lower sample without performing interpolation.
+		 * @param lowerSample The sample with the earlier timestamp, must be valid
+		 * @param upperSample The sample with the later timestamp, must be valid
+		 * @param interpolationFactor The interpolation factor, with range [0, 1]
+		 * @param interpolatedTimestamp The timestamp for the interpolated sample
+		 * @return The interpolated sample, or the lower sample if interpolation is not supported
+		 */
+		virtual SampleRef interpolateSamples(const SampleRef& lowerSample, const SampleRef& upperSample, const double interpolationFactor, const Timestamp& interpolatedTimestamp) const;
+
 	protected:
 
 		/// Sample lock.

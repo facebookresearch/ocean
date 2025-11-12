@@ -7,6 +7,8 @@
 
 #include "ocean/devices/PositionTracker3DOF.h"
 
+#include "ocean/math/Interpolation.h"
+
 namespace Ocean
 {
 
@@ -40,6 +42,29 @@ PositionTracker3DOF::PositionTracker3DOF(const std::string& name) :
 PositionTracker3DOF::~PositionTracker3DOF()
 {
 	// nothing to do here
+}
+
+Measurement::SampleRef PositionTracker3DOF::interpolateSamples(const SampleRef& lowerSample, const SampleRef& upperSample, const double interpolationFactor, const Timestamp& interpolatedTimestamp) const
+{
+	ocean_assert(lowerSample && upperSample);
+	ocean_assert(interpolationFactor >= 0.0 && interpolationFactor <= 1.0);
+
+	const PositionTracker3DOFSampleRef lowerPositionSample = lowerSample;
+	const PositionTracker3DOFSampleRef upperPositionSample = upperSample;
+
+	ocean_assert(lowerPositionSample && upperPositionSample);
+
+	ocean_assert(lowerPositionSample->positions().size() == upperPositionSample->positions().size());
+	ocean_assert(lowerPositionSample->referenceSystem() == upperPositionSample->referenceSystem());
+
+	Vectors3 interpolatedPositions(lowerPositionSample->positions().size());
+
+	for (size_t n = 0; n < lowerPositionSample->positions().size(); ++n)
+	{
+		interpolatedPositions[n] = Interpolation::linear(lowerPositionSample->positions()[n], upperPositionSample->positions()[n], Scalar(interpolationFactor));
+	}
+
+	return PositionTracker3DOFSampleRef(new PositionTracker3DOFSample(interpolatedTimestamp, lowerPositionSample->referenceSystem(), lowerPositionSample->objectIds(), interpolatedPositions));
 }
 
 }

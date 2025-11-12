@@ -109,6 +109,12 @@ class OCEAN_DEVICES_EXPORT PositionTracker3DOF : virtual public Tracker
 		 * Destructs a 3DOF position tracker object.
 		 */
 		~PositionTracker3DOF() override;
+
+		/**
+		 * Interpolates between two 3DOF position tracker samples.
+		 * @see Measurement::interpolateSamples().
+		 */
+		SampleRef interpolateSamples(const SampleRef& lowerSample, const SampleRef& upperSample, const double interpolationFactor, const Timestamp& interpolatedTimestamp) const override;
 };
 
 inline PositionTracker3DOF::DeviceType PositionTracker3DOF::deviceTypePositionTracker3DOF()

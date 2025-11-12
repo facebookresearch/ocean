@@ -7,6 +7,8 @@
 
 #include "ocean/devices/Tracker6DOF.h"
 
+#include "ocean/math/Interpolation.h"
+
 namespace Ocean
 {
 
@@ -44,6 +46,32 @@ Tracker6DOF::Tracker6DOF(const std::string& name) :
 Tracker6DOF::~Tracker6DOF()
 {
 	// nothing to do here
+}
+
+Measurement::SampleRef Tracker6DOF::interpolateSamples(const SampleRef& lowerSample, const SampleRef& upperSample, const double interpolationFactor, const Timestamp& interpolatedTimestamp) const
+{
+	ocean_assert(lowerSample && upperSample);
+	ocean_assert(interpolationFactor >= 0.0 && interpolationFactor <= 1.0);
+
+	const Tracker6DOFSampleRef lower6DOFSample = lowerSample;
+	const Tracker6DOFSampleRef upper6DOFSample = upperSample;
+
+	ocean_assert(lower6DOFSample && upper6DOFSample);
+
+	ocean_assert(lower6DOFSample->positions().size() == upper6DOFSample->positions().size());
+	ocean_assert(lower6DOFSample->orientations().size() == upper6DOFSample->orientations().size());
+	ocean_assert(lower6DOFSample->referenceSystem() == upper6DOFSample->referenceSystem());
+
+	Vectors3 interpolatedPositions(lower6DOFSample->positions().size());
+	Quaternions interpolatedOrientations(lower6DOFSample->positions().size());
+
+	for (size_t n = 0; n < lower6DOFSample->positions().size(); ++n)
+	{
+		interpolatedPositions[n] = Interpolation::linear(lower6DOFSample->positions()[n], upper6DOFSample->positions()[n], Scalar(interpolationFactor));
+		interpolatedOrientations[n] = Interpolation::linear(lower6DOFSample->orientations()[n], upper6DOFSample->orientations()[n], Scalar(interpolationFactor));
+	}
+
+	return Tracker6DOFSampleRef(new Tracker6DOFSample(interpolatedTimestamp, lower6DOFSample->referenceSystem(), lower6DOFSample->objectIds(), interpolatedOrientations, interpolatedPositions));
 }
 
 }

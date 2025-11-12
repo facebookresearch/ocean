@@ -7,10 +7,6 @@
 
 #include "ocean/devices/Measurement.h"
 #include "ocean/devices/Manager.h"
-#include "ocean/devices/GravityTracker3DOF.h"
-#include "ocean/devices/OrientationTracker3DOF.h"
-#include "ocean/devices/PositionTracker3DOF.h"
-#include "ocean/devices/Tracker6DOF.h"
 
 #include "ocean/math/Interpolation.h"
 
@@ -202,8 +198,6 @@ Measurement::SampleRef Measurement::sample(const Timestamp& timestamp, const Int
 
 	if (interpolationStrategy == IS_TIMESTAMP_INTERPOLATE)
 	{
-		// **TODO** in general, this should be done in derived classes instead of applying the interpolation here
-
 		const double delta = lowerDelta + upperDelta;
 
 		if (NumericD::isEqualEps(delta))
@@ -214,116 +208,14 @@ Measurement::SampleRef Measurement::sample(const Timestamp& timestamp, const Int
 
 		ocean_assert(iLower->second->objectIds() == iUpper->second->objectIds()); // this is a restriction that will not hold in any case, we need to handle it if necessary
 
-		const Scalar interpolationFactor = Scalar(lowerDelta / delta);
-		ocean_assert(interpolationFactor >= Scalar(0) && interpolationFactor <= Scalar(1));
+		const double interpolationFactor = lowerDelta / delta;
+		ocean_assert(interpolationFactor >= 0.0 && interpolationFactor <= 1.0);
 
 		const Timestamp interpolatedTimestamp = Timestamp(Interpolation::linear(double(iLower->second->timestamp()), double(iUpper->second->timestamp()), double(interpolationFactor)));
 		ocean_assert(iLower->second->timestamp() <= interpolatedTimestamp && interpolatedTimestamp <= iUpper->second->timestamp());
 		ocean_assert(NumericD::isEqual(double(interpolatedTimestamp), double(timestamp), NumericD::weakEps()));
 
-		{
-			// let's check whether we have a 6DOF tracker
-
-			const Tracker6DOF::Tracker6DOFSampleRef lowerSample = iLower->second;
-			const Tracker6DOF::Tracker6DOFSampleRef upperSample = iUpper->second;
-
-			if (lowerSample && upperSample)
-			{
-				ocean_assert(lowerSample->positions().size() == upperSample->positions().size());
-				ocean_assert(lowerSample->orientations().size() == upperSample->orientations().size());
-				ocean_assert(lowerSample->referenceSystem() == upperSample->referenceSystem());
-
-				Vectors3 interpolatedPositions(lowerSample->positions().size());
-				Quaternions interpolatedOrientations(lowerSample->positions().size());
-
-				for (size_t n = 0; n < lowerSample->positions().size(); ++n)
-				{
-					interpolatedPositions[n] = Interpolation::linear(lowerSample->positions()[n], upperSample->positions()[n], interpolationFactor);
-					interpolatedOrientations[n] = Interpolation::linear(lowerSample->orientations()[n], upperSample->orientations()[n], interpolationFactor);
-				}
-
-				return Tracker6DOF::Tracker6DOFSampleRef(new Tracker6DOF::Tracker6DOFSample(interpolatedTimestamp, lowerSample->referenceSystem(), lowerSample->objectIds(), interpolatedOrientations, interpolatedPositions));
-			}
-		}
-
-		{
-			// let's check whether we have a 3DOF position tracker
-
-			const PositionTracker3DOF::PositionTracker3DOFSampleRef lowerSample = iLower->second;
-			const PositionTracker3DOF::PositionTracker3DOFSampleRef upperSample = iUpper->second;
-
-			if (lowerSample && upperSample)
-			{
-				ocean_assert(lowerSample->positions().size() == upperSample->positions().size());
-				ocean_assert(lowerSample->referenceSystem() == upperSample->referenceSystem());
-
-				Vectors3 interpolatedPositions(lowerSample->positions().size());
-
-				for (size_t n = 0; n < lowerSample->positions().size(); ++n)
-				{
-					interpolatedPositions[n] = Interpolation::linear(lowerSample->positions()[n], upperSample->positions()[n], interpolationFactor);
-				}
-
-				return PositionTracker3DOF::PositionTracker3DOFSampleRef(new PositionTracker3DOF::PositionTracker3DOFSample(interpolatedTimestamp, lowerSample->referenceSystem(), lowerSample->objectIds(), interpolatedPositions));
-			}
-		}
-
-		{
-			// let's check whether we have a 3DOF orientation tracker
-
-			const OrientationTracker3DOF::OrientationTracker3DOFSampleRef lowerSample = iLower->second;
-			const OrientationTracker3DOF::OrientationTracker3DOFSampleRef upperSample = iUpper->second;
-
-			if (lowerSample && upperSample)
-			{
-				ocean_assert(lowerSample->orientations().size() == upperSample->orientations().size());
-				ocean_assert(lowerSample->referenceSystem() == upperSample->referenceSystem());
-
-				Quaternions interpolatedOrientations(lowerSample->orientations().size());
-
-				for (size_t n = 0; n < lowerSample->orientations().size(); ++n)
-				{
-					interpolatedOrientations[n] = Interpolation::linear(lowerSample->orientations()[n], upperSample->orientations()[n], interpolationFactor);
-				}
-
-				return OrientationTracker3DOF::OrientationTracker3DOFSampleRef(new OrientationTracker3DOF::OrientationTracker3DOFSample(interpolatedTimestamp, lowerSample->referenceSystem(), lowerSample->objectIds(), interpolatedOrientations));
-			}
-		}
-
-		{
-			// let's check whether we have a 3DOF gravity tracker
-
-			const GravityTracker3DOF::GravityTracker3DOFSampleRef lowerSample = iLower->second;
-			const GravityTracker3DOF::GravityTracker3DOFSampleRef upperSample = iUpper->second;
-
-			if (lowerSample && upperSample)
-			{
-				ocean_assert(lowerSample->gravities().size() == upperSample->gravities().size());
-				ocean_assert(lowerSample->referenceSystem() == upperSample->referenceSystem());
-
-				GravityTracker3DOF::GravityTracker3DOFSample::Gravities interpolatedGravities(lowerSample->gravities().size());
-
-				for (size_t n = 0; n < lowerSample->gravities().size(); ++n)
-				{
-					const Vector3& lowerGravity = lowerSample->gravities()[n];
-					const Vector3& upperGravity = upperSample->gravities()[n];
-
-					interpolatedGravities[n] = Interpolation::spherical(lowerGravity, upperGravity, interpolationFactor);
-
-					if (!interpolatedGravities[n].normalize())
-					{
-						ocean_assert(false && "This should never happen!");
-						interpolatedGravities[n] = lowerGravity;
-					}
-				}
-
-				return GravityTracker3DOF::GravityTracker3DOFSampleRef(new GravityTracker3DOF::GravityTracker3DOFSample(interpolatedTimestamp, lowerSample->referenceSystem(), lowerSample->objectIds(), interpolatedGravities));
-			}
-		}
-
-		ocean_assert(false && "This should never happen!");
-
-		return iLower->second;
+		return interpolateSamples(iLower->second, iUpper->second, interpolationFactor, interpolatedTimestamp);
 	}
 
 	ocean_assert(interpolationStrategy == IS_TIMESTAMP_NEAREST);
@@ -461,6 +353,15 @@ void Measurement::unsubscribeSampleEvent(const SubscriptionId subscriptionId)
 		ocean_assert(sampleSubscriptionMap_.find(subscriptionId) != sampleSubscriptionMap_.end());
 		sampleSubscriptionMap_.erase(subscriptionId);
 	}
+}
+
+Measurement::SampleRef Measurement::interpolateSamples(const SampleRef& lowerSample, const SampleRef& upperSample, const double /*interpolationFactor*/, const Timestamp& /*interpolatedTimestamp*/) const
+{
+	ocean_assert(lowerSample && upperSample);
+
+	// Default implementation: no interpolation, just return the lower sample
+	// Derived classes should override this method to provide type-specific interpolation
+	return lowerSample;
 }
 
 

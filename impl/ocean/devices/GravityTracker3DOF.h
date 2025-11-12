@@ -111,6 +111,12 @@ class OCEAN_DEVICES_EXPORT GravityTracker3DOF : virtual public Tracker
 		 * Destructs a 3DOF gravity tracker object.
 		 */
 		~GravityTracker3DOF() override;
+
+		/**
+		 * Interpolates between two 3DOF gravity tracker samples.
+		 * @see Measurement::interpolateSamples().
+		 */
+		SampleRef interpolateSamples(const SampleRef& lowerSample, const SampleRef& upperSample, const double interpolationFactor, const Timestamp& interpolatedTimestamp) const override;
 };
 
 inline GravityTracker3DOF::DeviceType GravityTracker3DOF::deviceTypeGravityTracker3DOF()

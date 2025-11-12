@@ -7,6 +7,8 @@
 
 #include "ocean/devices/OrientationTracker3DOF.h"
 
+#include "ocean/math/Interpolation.h"
+
 namespace Ocean
 {
 
@@ -40,6 +42,29 @@ OrientationTracker3DOF::OrientationTracker3DOF(const std::string& name) :
 OrientationTracker3DOF::~OrientationTracker3DOF()
 {
 	// nothing to do here
+}
+
+Measurement::SampleRef OrientationTracker3DOF::interpolateSamples(const SampleRef& lowerSample, const SampleRef& upperSample, const double interpolationFactor, const Timestamp& interpolatedTimestamp) const
+{
+	ocean_assert(lowerSample && upperSample);
+	ocean_assert(interpolationFactor >= 0.0 && interpolationFactor <= 1.0);
+
+	const OrientationTracker3DOFSampleRef lowerOrientationSample = lowerSample;
+	const OrientationTracker3DOFSampleRef upperOrientationSample = upperSample;
+
+	ocean_assert(lowerOrientationSample && upperOrientationSample);
+
+	ocean_assert(lowerOrientationSample->orientations().size() == upperOrientationSample->orientations().size());
+	ocean_assert(lowerOrientationSample->referenceSystem() == upperOrientationSample->referenceSystem());
+
+	Quaternions interpolatedOrientations(lowerOrientationSample->orientations().size());
+
+	for (size_t n = 0; n < lowerOrientationSample->orientations().size(); ++n)
+	{
+		interpolatedOrientations[n] = Interpolation::linear(lowerOrientationSample->orientations()[n], upperOrientationSample->orientations()[n], Scalar(interpolationFactor));
+	}
+
+	return OrientationTracker3DOFSampleRef(new OrientationTracker3DOFSample(interpolatedTimestamp, lowerOrientationSample->referenceSystem(), lowerOrientationSample->objectIds(), interpolatedOrientations));
 }
 
 }
