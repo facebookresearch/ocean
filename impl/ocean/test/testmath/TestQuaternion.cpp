@@ -79,6 +79,14 @@ bool TestQuaternion::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
+	allSucceeded = testLeft_Q_right<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testLeft_Q_right<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testAngle<float>(testDuration) && allSucceeded;
 	Log::info() << " ";
 	allSucceeded = testAngle<double>(testDuration) && allSucceeded;
@@ -168,7 +176,18 @@ TEST(TestQuaternion, ReferenceOffsetConstructor_double)
 }
 
 
-TEST(TestQuaternion, Angle_float)
+TEST(TestQuaternion, Left_Q_right_float)
+{
+	EXPECT_TRUE(TestQuaternion::testLeft_Q_right<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestQuaternion, Left_Q_right_double)
+{
+	EXPECT_TRUE(TestQuaternion::testLeft_Q_right<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestQuaternion, AngleFloat)
 {
 	EXPECT_TRUE(TestQuaternion::testAngle<float>(GTEST_TEST_DURATION));
 }
@@ -631,6 +650,102 @@ bool TestQuaternion::testReferenceOffsetConstructor(const double testDuration)
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestQuaternion::testLeft_Q_right(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "left_Q_right for '" << TypeNamer::name<T>() << "':";
+
+	constexpr double successThreshold = std::is_same<float, T>::value ? 0.975 : 0.999;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(successThreshold, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// testing identity
+
+			const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
+
+			const QuaternionT<T> left_Q_right = QuaternionT<T>::left_Q_right(axis, axis);
+
+			if (left_Q_right != QuaternionT<T>(true))
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+
+			const VectorT3<T> vector = RandomT<T>::vector3(randomGenerator);
+
+			if (vector != left_Q_right * vector)
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+
+		{
+			// testing flipped
+
+			const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
+
+			{
+				const QuaternionT<T> left_Q_right = QuaternionT<T>::left_Q_right(axis, -axis);
+
+				if (axis != left_Q_right * -axis)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (-axis != left_Q_right * axis)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+
+			{
+				const QuaternionT<T> left_Q_right = QuaternionT<T>::left_Q_right(-axis, axis);
+
+				if (axis != left_Q_right * -axis)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (-axis != left_Q_right * axis)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+		}
+
+		for (unsigned int n = 0u; n < 100u; ++n)
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			// testing random vectors
+
+			const VectorT3<T> leftVector = RandomT<T>::vector3(randomGenerator);
+			const VectorT3<T> rightVector = RandomT<T>::vector3(randomGenerator);
+
+			const QuaternionT<T> left_Q_right = QuaternionT<T>::left_Q_right(leftVector, rightVector);
+
+			const VectorT3<T> testLeft = left_Q_right * rightVector;
+
+			if (!leftVector.isEqual(testLeft, NumericT<T>::eps()))
+			{
+				scopedIteration.setInaccurate();
+			}
+		}
+	}
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

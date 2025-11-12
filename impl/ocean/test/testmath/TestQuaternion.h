@@ -86,6 +86,15 @@ class OCEAN_TEST_MATH_EXPORT TestQuaternion
 		static bool testReferenceOffsetConstructor(const double testDuration);
 
 		/**
+		 * Tests the let_Q_right functions.
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
+		 */
+		template <typename T>
+		static bool testLeft_Q_right(const double testDuration);
+
+		/**
 		 * Tests the calculation of the Quaternion's angle.
 		 * @param testDuration Number of seconds for each test
 		 * @return True, if succeeded

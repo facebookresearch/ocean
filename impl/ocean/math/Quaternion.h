@@ -469,6 +469,18 @@ class QuaternionT
 		 */
 		inline T* operator()();
 
+		/**
+		 * Returns a quaternion object based on two given unit vectors.
+		 * The resulting rotation rotated the right vector to the left vector:
+		 * <pre>
+		 * left = Quaternion::left_Q_right(left, right) * right;
+		 * </pre>
+		 * @param left The left unit vector
+		 * @param right The right unit vector
+		 * @return The resulting quaternion rotating the right vector to the left vector
+		 */
+		static QuaternionT<T> left_Q_right(const VectorT3<T>& left, const VectorT3<T>& right);
+
 	protected:
 
 		/// The four values of the quaternion.
@@ -534,41 +546,10 @@ QuaternionT<T>::QuaternionT(const VectorT3<T>& axis, const T angle)
 }
 
 template <typename T>
-QuaternionT<T>::QuaternionT(const VectorT3<T>& reference, const VectorT3<T>& offset)
+QuaternionT<T>::QuaternionT(const VectorT3<T>& reference, const VectorT3<T>& offset) :
+	QuaternionT<T>(left_Q_right(offset, reference))
 {
-	ocean_assert_accuracy(reference.isUnit(NumericT<T>::weakEps()));
-	ocean_assert_accuracy(offset.isUnit(NumericT<T>::weakEps()));
-
-	if (reference == offset)
-	{
-		values_[0] = T(1);
-		values_[1] = T(0);
-		values_[2] = T(0);
-		values_[3] = T(0);
-	}
-	else if (reference == -offset)
-	{
-		const VectorT3<T> perpendicular(reference.perpendicular().normalized());
-
-		values_[0] = T(0);
-		values_[1] = perpendicular[0];
-		values_[2] = perpendicular[1];
-		values_[3] = perpendicular[2];
-	}
-	else
-	{
-		const VectorT3<T> axis(reference.cross(offset));
-
-		values_[0] = T(1) + reference * offset;
-		values_[1] = axis.x();
-		values_[2] = axis.y();
-		values_[3] = axis.z();
-
-		normalize();
-	}
-
-	ocean_assert(isValid());
-	ocean_assert_accuracy(offset.isEqual(*this * reference, NumericT<T>::weakEps()));
+	// nothing to do here
 }
 
 template <typename T>
@@ -1048,6 +1029,37 @@ template <typename T>
 inline T* QuaternionT<T>::operator()()
 {
 	return values_;
+}
+
+template <typename T>
+QuaternionT<T> QuaternionT<T>::left_Q_right(const VectorT3<T>& left, const VectorT3<T>& right)
+{
+	ocean_assert(left.isUnit(NumericT<T>::weakEps()));
+	ocean_assert(right.isUnit(NumericT<T>::weakEps()));
+
+	if (left == right)
+	{
+		// identity
+
+		return QuaternionT<T>(true);
+	}
+	else if (left == -right)
+	{
+		const VectorT3<T> perpendicular(right.perpendicular().normalized());
+
+		return QuaternionT<T>(T(0), perpendicular.x(), perpendicular.y(), perpendicular.z());
+	}
+
+	const VectorT3<T> axis(right.cross(left));
+
+	const T w = T(1) + right * left;
+
+	QuaternionT<T> result(w, axis.x(), axis.y(), axis.z());
+
+	result.normalize();
+	ocean_assert(result.isValid());
+
+	return result;
 }
 
 template <typename T>
