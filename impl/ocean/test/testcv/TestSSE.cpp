@@ -659,7 +659,7 @@ bool TestSSE::testDeInterleave3Channel8Bit15Elements(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -719,7 +719,7 @@ bool TestSSE::testDeInterleave3Channel8Bit24Elements(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -767,7 +767,7 @@ bool TestSSE::testDeInterleave3Channel8Bit48Elements(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -823,7 +823,7 @@ bool TestSSE::testDeInterleave3Channel8Bit45Elements(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -873,7 +873,7 @@ bool TestSSE::testInterleave3Channel8Bit48Elements(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -927,7 +927,7 @@ bool TestSSE::testReverseChannelOrder2Channel8Bit32Elements(const double testDur
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1008,7 +1008,7 @@ bool TestSSE::testReverseChannelOrder3Channel8Bit48Elements(const double testDur
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1062,7 +1062,7 @@ bool TestSSE::testReverseChannelOrder4Channel8Bit64Elements(const double testDur
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1299,7 +1299,7 @@ bool TestSSE::testSumInterleave1Channel8Bit15Elements(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1450,7 +1450,7 @@ bool TestSSE::testInterpolation1Channel8Bit15Elements(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1528,7 +1528,7 @@ bool TestSSE::testInterpolation3Channel24Bit12Elements(const double testDuration
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1584,7 +1584,7 @@ bool TestSSE::testAddOffsetBeforeRightShiftDivisionByTwoSigned16Bit(const double
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1605,18 +1605,17 @@ bool TestSSE::testAddOffsetBeforeRightShiftDivisionSigned16Bit(const double test
 	Log::info() << "Test offset adding for right shift for 16 bit integer for division:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation;
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		short values[8];
+		int16_t values[8];
 
 		for (unsigned int n = 0u; n < 8u; ++n)
 		{
-			values[n] = short(RandomI::random(randomGenerator, 0xFFFFu));
+			values[n] = int16_t(RandomI::random(randomGenerator, 0xFFFFu));
 		}
 
 		const unsigned int rightShifts = RandomI::random(randomGenerator, 15u);
@@ -1630,17 +1629,14 @@ bool TestSSE::testAddOffsetBeforeRightShiftDivisionSigned16Bit(const double test
 			const __m128i adjustedValues_s_16x8 = CV::SSE::addOffsetBeforeRightShiftDivisionSigned16Bit(values_s_16x8, rightShifts);
 			const __m128i dividedValues_s_16x8 = _mm_srai_epi16(adjustedValues_s_16x8, int(rightShifts));
 
-			short dividedValues[8];
-			_mm_storeu_si128((__m128i*)dividedValues, dividedValues_s_16x8);
+			int16_t dividedValues[8];
+			_mm_storeu_si128((__m128i*)(dividedValues), dividedValues_s_16x8);
 
 			for (unsigned int n = 0u; n < 8u; ++n)
 			{
-				const int testValue = int(values[n]) / int(denominator);
+				const int32_t testValue = int32_t(values[n]) / int32_t(denominator);
 
-				if (testValue != int(dividedValues[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, testValue, int32_t(dividedValues[n]));
 			}
 		}
 
@@ -1649,32 +1645,22 @@ bool TestSSE::testAddOffsetBeforeRightShiftDivisionSigned16Bit(const double test
 
 			const __m128i dividedValues_s_16x8 = CV::SSE::divideByRightShiftSigned16Bit(values_s_16x8, rightShifts);
 
-			short dividedValues[8];
-			_mm_storeu_si128((__m128i*)dividedValues, dividedValues_s_16x8);
+			int16_t dividedValues[8];
+			_mm_storeu_si128((__m128i*)(dividedValues), dividedValues_s_16x8);
 
 			for (unsigned int n = 0u; n < 8u; ++n)
 			{
-				const int testValue = int(values[n]) / int(denominator);
+				const int32_t testValue = int32_t(values[n]) / int32_t(denominator);
 
-				if (testValue != int(dividedValues[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, testValue, int32_t(dividedValues[n]));
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestSSE::testAddOffsetBeforeRightShiftDivisionByTwoSigned32Bit(const double testDuration)
@@ -1719,7 +1705,7 @@ bool TestSSE::testAddOffsetBeforeRightShiftDivisionByTwoSigned32Bit(const double
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1798,7 +1784,7 @@ bool TestSSE::testAddOffsetBeforeRightShiftDivisionSigned32Bit(const double test
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1856,7 +1842,7 @@ bool TestSSE::testMultiplyInt8x16ToInt32x8(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -1917,7 +1903,7 @@ bool TestSSE::testMultiplyInt8x16ToInt32x8AndAccumulate(const double testDuratio
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	if (allSucceeded)
 	{
@@ -2051,7 +2037,7 @@ bool TestSSE::testAverageElements1Channel8Bit2x2(const double testDuration, cons
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Standard performance: " << String::toAString(performance.averageMseconds()) << "ms";
 	Log::info() << "SSE performance: " << String::toAString(performanceSSE.averageMseconds()) << "ms";
@@ -2196,7 +2182,7 @@ bool TestSSE::testAverageElementsBinary1Channel8Bit2x2(const double testDuration
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Standard performance: " << String::toAString(performance.averageMseconds()) << "ms";
 	Log::info() << "SSE performance: " << String::toAString(performanceSSE.averageMseconds()) << "ms";
@@ -2299,7 +2285,7 @@ bool TestSSE::testAverageElements1Channel32Bit2x2(const double testDuration, con
 		}
 
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Standard performance: " << String::toAString(performance.averageMseconds()) << "ms";
 	Log::info() << "SSE performance: " << String::toAString(performanceSSE.averageMseconds()) << "ms";
@@ -2402,7 +2388,7 @@ bool TestSSE::testAverageElements1Channel8Bit3x3(const double testDuration, cons
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Standard performance: " << String::toAString(performance.averageMseconds()) << "ms";
 	Log::info() << "SSE performance: " << String::toAString(performanceSSE.averageMseconds()) << "ms";
@@ -2540,7 +2526,7 @@ bool TestSSE::testAverageElements2Channel16Bit2x2(const double testDuration, con
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Standard performance: " << String::toAString(performance.averageMseconds()) << "ms";
 	Log::info() << "SSE performance: " << String::toAString(performanceSSE.averageMseconds()) << "ms";
@@ -2642,7 +2628,7 @@ bool TestSSE::testAverageElements2Channel64Bit2x2(const double testDuration, con
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Standard performance: " << String::toAString(performance.averageMseconds()) << "ms";
 	Log::info() << "SSE performance: " << String::toAString(performanceSSE.averageMseconds()) << "ms";
@@ -2743,7 +2729,7 @@ bool TestSSE::testAverageElements3Channel24Bit2x2(const double testDuration, con
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Standard performance: " << String::toAString(performance.averageMseconds()) << "ms";
 	Log::info() << "SSE performance: " << String::toAString(performanceSSE.averageMseconds()) << "ms";
@@ -2845,7 +2831,7 @@ bool TestSSE::testAverageElements3Channel96Bit2x2(const double testDuration, con
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Standard performance: " << String::toAString(performance.averageMseconds()) << "ms";
 	Log::info() << "SSE performance: " << String::toAString(performanceSSE.averageMseconds()) << "ms";
@@ -2963,7 +2949,7 @@ bool TestSSE::testAverageElements4Channel32Bit2x2(const double testDuration, con
 			allSucceeded = false;
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Standard performance: " << String::toAString(performance.averageMseconds()) << "ms";
 	Log::info() << "SSE performance: " << String::toAString(performanceSSE.averageMseconds()) << "ms";
@@ -3066,7 +3052,7 @@ bool TestSSE::testAverageElements4Channel128Bit2x2(const double testDuration, co
 		}
 
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Standard performance: " << String::toAString(performance.averageMseconds()) << "ms";
 	Log::info() << "SSE performance: " << String::toAString(performanceSSE.averageMseconds()) << "ms";
