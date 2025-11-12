@@ -25,7 +25,7 @@ GPSTracker::GPSTrackerSample::GPSTrackerSample(const Timestamp& timestamp, const
 
 GPSTracker::GPSTrackerSample::GPSTrackerSample(const Timestamp& timestamp, const ReferenceSystem referenceSystem, ObjectIds&& objectIds, Locations&& locations, Metadata&& metadata) :
 	Sample(timestamp, std::move(objectIds), std::move(metadata)),
-	TrackerSample(timestamp, referenceSystem, std::move(objectIds), std::move(metadata)),
+	TrackerSample(timestamp, referenceSystem, ObjectIds(), Metadata()),
 	locations_(std::move(locations))
 {
 	ocean_assert(objectIds_.size() == locations_.size());

@@ -25,7 +25,7 @@ GravityTracker3DOF::GravityTracker3DOFSample::GravityTracker3DOFSample(const Tim
 
 GravityTracker3DOF::GravityTracker3DOFSample::GravityTracker3DOFSample(const Timestamp& timestamp, const ReferenceSystem referenceSystem, ObjectIds&& objectIds, Gravities&& gravities, Metadata&& metadata) :
 	Sample(timestamp, std::move(objectIds), std::move(metadata)),
-	TrackerSample(timestamp, referenceSystem, std::move(objectIds), std::move(metadata)),
+	TrackerSample(timestamp, referenceSystem, ObjectIds(), Metadata()),
 	gravities_(std::move(gravities))
 {
 	// nothing to do here

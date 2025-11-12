@@ -25,7 +25,7 @@ OrientationTracker3DOF::OrientationTracker3DOFSample::OrientationTracker3DOFSamp
 
 OrientationTracker3DOF::OrientationTracker3DOFSample::OrientationTracker3DOFSample(const Timestamp& timestamp, const ReferenceSystem referenceSystem, ObjectIds&& objectIds, Orientations&& orientations, Metadata&& metadata) :
 	Sample(timestamp, std::move(objectIds), std::move(metadata)),
-	TrackerSample(timestamp, referenceSystem, std::move(objectIds), std::move(metadata)),
+	TrackerSample(timestamp, referenceSystem, ObjectIds(), Metadata()),
 	orientations_(std::move(orientations))
 {
 	// nothing to do here

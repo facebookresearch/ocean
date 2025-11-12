@@ -25,7 +25,7 @@ PositionTracker3DOF::PositionTracker3DOFSample::PositionTracker3DOFSample(const 
 
 PositionTracker3DOF::PositionTracker3DOFSample::PositionTracker3DOFSample(const Timestamp& timestamp, const ReferenceSystem referenceSystem, ObjectIds&& objectIds, Positions&& positions, Metadata&& metadata) :
 	Sample(timestamp, std::move(objectIds), std::move(metadata)),
-	TrackerSample(timestamp, referenceSystem, std::move(objectIds), std::move(metadata)),
+	TrackerSample(timestamp, referenceSystem, ObjectIds(), Metadata()),
 	positions_(std::move(positions))
 {
 	// nothing to do here

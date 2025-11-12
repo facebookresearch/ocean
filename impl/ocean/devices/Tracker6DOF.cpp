@@ -26,9 +26,9 @@ Tracker6DOF::Tracker6DOFSample::Tracker6DOFSample(const Timestamp& timestamp, co
 
 Tracker6DOF::Tracker6DOFSample::Tracker6DOFSample(const Timestamp& timestamp, const ReferenceSystem referenceSystem, ObjectIds&& objectIds, Orientations&& orientations, Positions&& positions, Metadata&& metadata) :
 	Sample(timestamp, std::move(objectIds), std::move(metadata)),
-	TrackerSample(timestamp, referenceSystem, std::move(objectIds), std::move(metadata)),
-	OrientationTracker3DOFSample(timestamp, referenceSystem, std::move(objectIds), std::move(orientations), std::move(metadata)),
-	PositionTracker3DOFSample(timestamp, referenceSystem, std::move(objectIds), std::move(positions), std::move(metadata))
+	TrackerSample(timestamp, referenceSystem, ObjectIds(), Metadata()),
+	OrientationTracker3DOFSample(timestamp, referenceSystem, ObjectIds(), std::move(orientations), Metadata()),
+	PositionTracker3DOFSample(timestamp, referenceSystem, ObjectIds(), std::move(positions), Metadata())
 {
 	// nothing to do here
 }
