@@ -19,13 +19,13 @@ namespace IOS
 {
 
 IOSGravityTracker3DOF::IOSGravityTracker3DOF() :
-	Device(deviceNameIOSGravityTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	IOSDevice(deviceNameIOSGravityTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	Measurement(deviceNameIOSGravityTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	Tracker(deviceNameIOSGravityTracker3DOF(), deviceTypeOrientationTracker3DOF()),
-	OrientationTracker3DOF(deviceNameIOSGravityTracker3DOF())
+	Device(deviceNameIOSGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
+	IOSDevice(deviceNameIOSGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
+	Measurement(deviceNameIOSGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
+	Tracker(deviceNameIOSGravityTracker3DOF(), deviceTypeGravityTracker3DOF()),
+	GravityTracker3DOF(deviceNameIOSGravityTracker3DOF())
 {
-	ocean_assert(deviceType.minorType() == Tracker::TRACKER_ORIENTATION_3DOF);
+	ocean_assert(deviceType.minorType() == Tracker::TRACKER_GRAVITY_3DOF);
 
 	trackerObjectId_ = addUniqueObjectId(deviceNameIOSGravityTracker3DOF());
 }
@@ -46,7 +46,7 @@ bool IOSGravityTracker3DOF::start()
 		return true;
 	}
 
-	ocean_assert(deviceType.minorType() == Tracker::TRACKER_ORIENTATION_3DOF);
+	ocean_assert(deviceType.minorType() == Tracker::TRACKER_GRAVITY_3DOF);
 
 	deviceMotionListenerId_ = MotionManager::get().addListener(MotionManager::DeviceMotionCallback(*this, &IOSGravityTracker3DOF::onDeviceMotion));
 
@@ -69,7 +69,7 @@ bool IOSGravityTracker3DOF::stop()
 		return true;
 	}
 
-	ocean_assert(deviceType.minorType() == Tracker::TRACKER_ORIENTATION_3DOF);
+	ocean_assert(deviceType.minorType() == Tracker::TRACKER_GRAVITY_3DOF);
 
 	MotionManager::get().removeListener(deviceMotionListenerId_);
 
@@ -97,11 +97,9 @@ void IOSGravityTracker3DOF::onDeviceMotion(CMDeviceMotion* deviceMotion)
 			waitingForFirstSample_ = false;
 		}
 
-		const QuaternionD device_Q_gravity(VectorD3(0.0, -1.0, 0.0), gravity); // negative y-axis is uses as default gravity vector
+		GravityTracker3DOFSample::Gravities gravities(1, Vector3(gravity));
 
-		Quaternions orientations(1, Quaternion(device_Q_gravity));
-
-		const SampleRef sample(new OrientationTracker3DOFSample(unixTimestamp, RS_OBJECT_IN_DEVICE, std::move(objectIds), std::move(orientations)));
+		const SampleRef sample(new GravityTracker3DOFSample(unixTimestamp, RS_OBJECT_IN_DEVICE, std::move(objectIds), std::move(gravities)));
 		sample->setRelativeTimestamp(relativeTimestamp);
 
 		postNewSample(sample);

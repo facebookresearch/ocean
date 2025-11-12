@@ -78,9 +78,7 @@ void IOSFactory::registerDevices()
 
 		registerDevice(IOSOrientationTracker3DOF::deviceNameIOSOrientationTracker3DOF(), IOSOrientationTracker3DOF::deviceTypeOrientationTracker3DOF(), InstanceFunction::createStatic(createIOSOrientationTracker3DOF));
 
-		constexpr unsigned int gravityTrackerPriority = 50u; // orientation and gravity share the same device type, so using a lower priority for the gravity sensor
-
-		registerDevice(IOSGravityTracker3DOF::deviceNameIOSGravityTracker3DOF(), IOSGravityTracker3DOF::deviceTypeOrientationTracker3DOF(), InstanceFunction::createStatic(createIOSGravityTracker3DOF), gravityTrackerPriority);
+		registerDevice(IOSGravityTracker3DOF::deviceNameIOSGravityTracker3DOF(), IOSGravityTracker3DOF::deviceTypeGravityTracker3DOF(), InstanceFunction::createStatic(createIOSGravityTracker3DOF));
 
 		if ([CMMotionManager availableAttitudeReferenceFrames] & CMAttitudeReferenceFrameXMagneticNorthZVertical)
 		{
@@ -127,7 +125,7 @@ Device* IOSFactory::createIOSGPSTracker(const std::string& name, const Device::D
 Device* IOSFactory::createIOSGravityTracker3DOF(const std::string& name, const Device::DeviceType& deviceType)
 {
 	ocean_assert(name == IOSGravityTracker3DOF::deviceNameIOSGravityTracker3DOF());
-	ocean_assert(deviceType == IOSGravityTracker3DOF::deviceTypeOrientationTracker3DOF());
+	ocean_assert(deviceType == IOSGravityTracker3DOF::deviceTypeGravityTracker3DOF());
 
 	return new IOSGravityTracker3DOF();
 }
