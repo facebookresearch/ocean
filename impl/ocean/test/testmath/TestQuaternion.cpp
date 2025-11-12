@@ -33,7 +33,9 @@ bool TestQuaternion::test(const double testDuration)
 	Log::info() << "---   Quaternion test:   ---";
 	Log::info() << " ";
 
-	allSucceeded = testWriteToMessenger() && allSucceeded;
+	allSucceeded = testWriteToMessenger<float>() && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testWriteToMessenger<double>() && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -45,25 +47,33 @@ bool TestQuaternion::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testNormalization(testDuration) && allSucceeded;
+	allSucceeded = testNormalization<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testNormalization<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testInverting(testDuration) && allSucceeded;
+	allSucceeded = testInverting<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testInverting<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testConversionToRotation(testDuration) && allSucceeded;
+	allSucceeded = testConversionToRotation<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testConversionToRotation<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testReferenceOffsetConstructor(testDuration) && allSucceeded;
+	allSucceeded = testReferenceOffsetConstructor<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testReferenceOffsetConstructor<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -97,71 +107,102 @@ bool TestQuaternion::test(const double testDuration)
 
 #ifdef OCEAN_USE_GTEST
 
-TEST(TestQuaternion, WriteToMessenger)
+TEST(TestQuaternion, WriteToMessenger_float)
 {
-	EXPECT_TRUE(TestQuaternion::testWriteToMessenger());
+	EXPECT_TRUE(TestQuaternion::testWriteToMessenger<float>());
 }
+
+TEST(TestQuaternion, WriteToMessenger_double)
+{
+	EXPECT_TRUE(TestQuaternion::testWriteToMessenger<double>());
+}
+
 
 TEST(TestQuaternion, Constructor)
 {
 	EXPECT_TRUE(TestQuaternion::testConstructor(GTEST_TEST_DURATION));
 }
 
-TEST(TestQuaternion, Normalization)
+
+TEST(TestQuaternion, Normalization_float)
 {
-	EXPECT_TRUE(TestQuaternion::testNormalization(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestQuaternion::testNormalization<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestQuaternion, Inverting)
+TEST(TestQuaternion, Normalization_double)
 {
-	EXPECT_TRUE(TestQuaternion::testInverting(GTEST_TEST_DURATION));
-}
-
-TEST(TestQuaternion, ConversionToRotation)
-{
-	EXPECT_TRUE(TestQuaternion::testConversionToRotation(GTEST_TEST_DURATION));
-}
-
-TEST(TestQuaternion, ReferenceOffsetConstructor)
-{
-	EXPECT_TRUE(TestQuaternion::testReferenceOffsetConstructor(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestQuaternion::testNormalization<double>(GTEST_TEST_DURATION));
 }
 
 
-TEST(TestQuaternion, AngleFloat)
+TEST(TestQuaternion, Inverting_float)
+{
+	EXPECT_TRUE(TestQuaternion::testInverting<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestQuaternion, Inverting_double)
+{
+	EXPECT_TRUE(TestQuaternion::testInverting<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestQuaternion, ConversionToRotation_float)
+{
+	EXPECT_TRUE(TestQuaternion::testConversionToRotation<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestQuaternion, ConversionToRotation_double)
+{
+	EXPECT_TRUE(TestQuaternion::testConversionToRotation<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestQuaternion, ReferenceOffsetConstructor_float)
+{
+	EXPECT_TRUE(TestQuaternion::testReferenceOffsetConstructor<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestQuaternion, ReferenceOffsetConstructor_double)
+{
+	EXPECT_TRUE(TestQuaternion::testReferenceOffsetConstructor<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestQuaternion, Angle_float)
 {
 	EXPECT_TRUE(TestQuaternion::testAngle<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestQuaternion, AngleDouble)
+TEST(TestQuaternion, Angle_double)
 {
 	EXPECT_TRUE(TestQuaternion::testAngle<double>(GTEST_TEST_DURATION));
 }
 
 
-TEST(TestQuaternion, SlerpFloat)
+TEST(TestQuaternion, Slerp_float)
 {
 	EXPECT_TRUE(TestQuaternion::testSlerp<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestQuaternion, SlerpDouble)
+TEST(TestQuaternion, Slerp_double)
 {
 	EXPECT_TRUE(TestQuaternion::testSlerp<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
 
+template <typename T>
 bool TestQuaternion::testWriteToMessenger()
 {
-	Log::info() << "Write to messenger test:";
+	Log::info() << "Write to messenger test for '" << TypeNamer::name<T>() << "':";
 
 	// this is mainly a check whether the code does not compile or crash
 
 	Log::info() << " ";
 
-	Log::info() << Quaternion(Vector3(1, 0, 0), 0);
-	Log::info() << "Quaternion: " << Quaternion(Vector3(1, 0, 0), 0);
-	Log::info() << Quaternion(Vector3(1, 0, 0), 0) << " <- Quaternion";
+	Log::info() << QuaternionT<T>(VectorT3<T>(1, 0, 0), 0);
+	Log::info() << "Quaternion: " << QuaternionT<T>(VectorT3<T>(1, 0, 0), 0);
+	Log::info() << QuaternionT<T>(VectorT3<T>(1, 0, 0), 0) << " <- Quaternion";
 
 	Log::info() << " ";
 	Log::info() << "Validation succeeded.";
@@ -262,11 +303,12 @@ bool TestQuaternion::testConstructor(const double testDuration)
 	return validation.succeeded();
 }
 
+template <typename T>
 bool TestQuaternion::testNormalization(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Test normalization:";
+	Log::info() << "Test normalization for '" << TypeNamer::name<T>() << "':";
 
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
@@ -274,20 +316,20 @@ bool TestQuaternion::testNormalization(const double testDuration)
 	// first we check a quaternion which cannot be normalized
 
 	{
-		const Quaternion quaternion(0, 0, 0, 0);
+		const QuaternionT<T> quaternion(0, 0, 0, 0);
 		OCEAN_EXPECT_FALSE(validation, quaternion.isValid());
 	}
 
 	{
-		Quaternion quaternion(0, 0, 0, 0);
+		QuaternionT<T> quaternion(0, 0, 0, 0);
 		const bool result = quaternion.normalize();
 
 		OCEAN_EXPECT_FALSE(validation, result);
 	}
 
 	{
-		const Quaternion quaternion(0, 0, 0, 0);
-		Quaternion normalizedQuaternion;
+		const QuaternionT<T> quaternion(0, 0, 0, 0);
+		QuaternionT<T> normalizedQuaternion;
 		const bool result = quaternion.normalize(normalizedQuaternion);
 
 		OCEAN_EXPECT_FALSE(validation, result);
@@ -299,56 +341,56 @@ bool TestQuaternion::testNormalization(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Scalar w = Random::scalar(randomGenerator, -10, 10);
-			const Scalar x = Random::scalar(randomGenerator, -10, 10);
-			const Scalar y = Random::scalar(randomGenerator, -10, 10);
-			const Scalar z = Random::scalar(randomGenerator, -10, 10);
+			const T w = RandomT<T>::scalar(randomGenerator, -10, 10);
+			const T x = RandomT<T>::scalar(randomGenerator, -10, 10);
+			const T y = RandomT<T>::scalar(randomGenerator, -10, 10);
+			const T z = RandomT<T>::scalar(randomGenerator, -10, 10);
 
-			const Scalar length = Numeric::sqrt(Numeric::sqr(w) + Numeric::sqr(x) + Numeric::sqr(y) + Numeric::sqr(z));
+			const T length = NumericT<T>::sqrt(NumericT<T>::sqr(w) + NumericT<T>::sqr(x) + NumericT<T>::sqr(y) + NumericT<T>::sqr(z));
 
-			if (length > Numeric::weakEps())
+			if (length > NumericT<T>::weakEps())
 			{
-				Quaternion quaternion(w, x, y, z);
-				const Quaternion normalizedQuaternion = quaternion.normalized();
-				const Scalar newLength = Numeric::sqrt(Numeric::sqr(normalizedQuaternion.w()) + Numeric::sqr(normalizedQuaternion.x()) + Numeric::sqr(normalizedQuaternion.y()) + Numeric::sqr(normalizedQuaternion.z()));
+				QuaternionT<T> quaternion(w, x, y, z);
+				const QuaternionT<T> normalizedQuaternion = quaternion.normalized();
+				const T newLength = NumericT<T>::sqrt(NumericT<T>::sqr(normalizedQuaternion.w()) + NumericT<T>::sqr(normalizedQuaternion.x()) + NumericT<T>::sqr(normalizedQuaternion.y()) + NumericT<T>::sqr(normalizedQuaternion.z()));
 
-				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(newLength, 1));
+				OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(newLength, 1));
 			}
 
 			{
-				Quaternion quaternion(w, x, y, z);
+				QuaternionT<T> quaternion(w, x, y, z);
 				const bool result = quaternion.normalize();
 
 				if (result)
 				{
-					OCEAN_EXPECT_TRUE(validation, length > Scalar(0));
+					OCEAN_EXPECT_TRUE(validation, length > T(0));
 
-					const Scalar newLength = Numeric::sqrt(Numeric::sqr(quaternion.w()) + Numeric::sqr(quaternion.x()) + Numeric::sqr(quaternion.y()) + Numeric::sqr(quaternion.z()));
+					const T newLength = NumericT<T>::sqrt(NumericT<T>::sqr(quaternion.w()) + NumericT<T>::sqr(quaternion.x()) + NumericT<T>::sqr(quaternion.y()) + NumericT<T>::sqr(quaternion.z()));
 
-					OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(newLength, 1));
+					OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(newLength, 1));
 				}
 				else
 				{
-					OCEAN_EXPECT_FALSE(validation, length > Numeric::weakEps());
+					OCEAN_EXPECT_FALSE(validation, length > NumericT<T>::weakEps());
 				}
 			}
 
 			{
-				const Quaternion quaternion(w, x, y, z);
-				Quaternion normalizedQuaternion;
+				const QuaternionT<T> quaternion(w, x, y, z);
+				QuaternionT<T> normalizedQuaternion;
 				const bool result = quaternion.normalize(normalizedQuaternion);
 
 				if (result)
 				{
-					OCEAN_EXPECT_TRUE(validation, length > Scalar(0));
+					OCEAN_EXPECT_TRUE(validation, length > T(0));
 
-					const Scalar newLength = Numeric::sqrt(Numeric::sqr(normalizedQuaternion.w()) + Numeric::sqr(normalizedQuaternion.x()) + Numeric::sqr(normalizedQuaternion.y()) + Numeric::sqr(normalizedQuaternion.z()));
+					const T newLength = NumericT<T>::sqrt(NumericT<T>::sqr(normalizedQuaternion.w()) + NumericT<T>::sqr(normalizedQuaternion.x()) + NumericT<T>::sqr(normalizedQuaternion.y()) + NumericT<T>::sqr(normalizedQuaternion.z()));
 
-					OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(newLength, 1));
+					OCEAN_EXPECT_TRUE(validation, NumericT<T>::isEqual(newLength, 1));
 				}
 				else
 				{
-					OCEAN_EXPECT_FALSE(validation, length > Numeric::weakEps());
+					OCEAN_EXPECT_FALSE(validation, length > NumericT<T>::weakEps());
 				}
 			}
 		}
@@ -360,11 +402,12 @@ bool TestQuaternion::testNormalization(const double testDuration)
 	return validation.succeeded();
 }
 
+template <typename T>
 bool TestQuaternion::testInverting(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Test inverting:";
+	Log::info() << "Test inverting for '" << TypeNamer::name<T>() << "':";
 
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
@@ -372,20 +415,20 @@ bool TestQuaternion::testInverting(const double testDuration)
 	// first we check a quaternion which cannot be inverted
 
 	{
-		const Quaternion quaternion(0, 0, 0, 0);
+		const QuaternionT<T> quaternion(0, 0, 0, 0);
 		OCEAN_EXPECT_FALSE(validation, quaternion.isValid());
 	}
 
 	{
-		Quaternion quaternion(0, 0, 0, 0);
+		QuaternionT<T> quaternion(0, 0, 0, 0);
 		const bool result = quaternion.invert();
 
 		OCEAN_EXPECT_FALSE(validation, result);
 	}
 
 	{
-		const Quaternion quaternion(0, 0, 0, 0);
-		Quaternion invertedQuaternion;
+		const QuaternionT<T> quaternion(0, 0, 0, 0);
+		QuaternionT<T> invertedQuaternion;
 		const bool result = quaternion.invert(invertedQuaternion);
 
 		OCEAN_EXPECT_FALSE(validation, result);
@@ -397,14 +440,14 @@ bool TestQuaternion::testInverting(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			Scalar w = Random::scalar(randomGenerator, -10, 10);
-			Scalar x = Random::scalar(randomGenerator, -10, 10);
-			Scalar y = Random::scalar(randomGenerator, -10, 10);
-			Scalar z = Random::scalar(randomGenerator, -10, 10);
+			T w = RandomT<T>::scalar(randomGenerator, -10, 10);
+			T x = RandomT<T>::scalar(randomGenerator, -10, 10);
+			T y = RandomT<T>::scalar(randomGenerator, -10, 10);
+			T z = RandomT<T>::scalar(randomGenerator, -10, 10);
 
-			const Scalar length = Numeric::sqrt(Numeric::sqr(w) + Numeric::sqr(x) + Numeric::sqr(y) + Numeric::sqr(z));
+			const T length = NumericT<T>::sqrt(NumericT<T>::sqr(w) + NumericT<T>::sqr(x) + NumericT<T>::sqr(y) + NumericT<T>::sqr(z));
 
-			if (Numeric::isNotEqualEps(length))
+			if (NumericT<T>::isNotEqualEps(length))
 			{
 				w /= length;
 				x /= length;
@@ -412,58 +455,58 @@ bool TestQuaternion::testInverting(const double testDuration)
 				z /= length;
 			}
 
-			if (length > Numeric::weakEps())
+			if (length > NumericT<T>::weakEps())
 			{
-				const Quaternion quaternion(w, x, y, z);
-				const Quaternion invertedQuaternion = quaternion.inverted();
+				const QuaternionT<T> quaternion(w, x, y, z);
+				const QuaternionT<T> invertedQuaternion = quaternion.inverted();
 
-				const Quaternion identityQuaternionA(quaternion * invertedQuaternion);
-				const Quaternion identityQuaternionB(invertedQuaternion * quaternion);
+				const QuaternionT<T> identityQuaternionA(quaternion * invertedQuaternion);
+				const QuaternionT<T> identityQuaternionB(invertedQuaternion * quaternion);
 
-				OCEAN_EXPECT_EQUAL(validation, identityQuaternionA, Quaternion());
-				OCEAN_EXPECT_EQUAL(validation, identityQuaternionB, Quaternion());
+				OCEAN_EXPECT_EQUAL(validation, identityQuaternionA, QuaternionT<T>());
+				OCEAN_EXPECT_EQUAL(validation, identityQuaternionB, QuaternionT<T>());
 			}
 
 			{
-				Quaternion quaternion(w, x, y, z);
+				QuaternionT<T> quaternion(w, x, y, z);
 				const bool result = quaternion.invert();
 
 				if (result)
 				{
-					OCEAN_EXPECT_TRUE(validation, length > Scalar(0));
+					OCEAN_EXPECT_TRUE(validation, length > T(0));
 
-					const Quaternion initialQuaternion(w, x, y, z);
+					const QuaternionT<T> initialQuaternion(w, x, y, z);
 
-					const Quaternion identityQuaternionA(initialQuaternion * quaternion);
-					const Quaternion identityQuaternionB(quaternion * initialQuaternion);
+					const QuaternionT<T> identityQuaternionA(initialQuaternion * quaternion);
+					const QuaternionT<T> identityQuaternionB(quaternion * initialQuaternion);
 
-					OCEAN_EXPECT_EQUAL(validation, identityQuaternionA, Quaternion());
-					OCEAN_EXPECT_EQUAL(validation, identityQuaternionB, Quaternion());
+					OCEAN_EXPECT_EQUAL(validation, identityQuaternionA, QuaternionT<T>());
+					OCEAN_EXPECT_EQUAL(validation, identityQuaternionB, QuaternionT<T>());
 				}
 				else
 				{
-					OCEAN_EXPECT_FALSE(validation, length > Numeric::weakEps());
+					OCEAN_EXPECT_FALSE(validation, length > NumericT<T>::weakEps());
 				}
 			}
 
 			{
-				const Quaternion quaternion(w, x, y, z);
-				Quaternion invertedQuaternion;
+				const QuaternionT<T> quaternion(w, x, y, z);
+				QuaternionT<T> invertedQuaternion;
 				const bool result = quaternion.invert(invertedQuaternion);
 
 				if (result)
 				{
-					OCEAN_EXPECT_TRUE(validation, length > Scalar(0));
+					OCEAN_EXPECT_TRUE(validation, length > T(0));
 
-					const Quaternion identityQuaternionA(quaternion * invertedQuaternion);
-					const Quaternion identityQuaternionB(invertedQuaternion * quaternion);
+					const QuaternionT<T> identityQuaternionA(quaternion * invertedQuaternion);
+					const QuaternionT<T> identityQuaternionB(invertedQuaternion * quaternion);
 
-					OCEAN_EXPECT_EQUAL(validation, identityQuaternionA, Quaternion());
-					OCEAN_EXPECT_EQUAL(validation, identityQuaternionB, Quaternion());
+					OCEAN_EXPECT_EQUAL(validation, identityQuaternionA, QuaternionT<T>());
+					OCEAN_EXPECT_EQUAL(validation, identityQuaternionB, QuaternionT<T>());
 				}
 				else
 				{
-					OCEAN_EXPECT_FALSE(validation, length > Numeric::weakEps());
+					OCEAN_EXPECT_FALSE(validation, length > NumericT<T>::weakEps());
 				}
 			}
 		}
@@ -475,21 +518,23 @@ bool TestQuaternion::testInverting(const double testDuration)
 	return validation.succeeded();
 }
 
+template <typename T>
 bool TestQuaternion::testConversionToRotation(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Conversion from Quaternion to Rotation (and 3x3 matrix):";
+	Log::info() << "Conversion from Quaternion to Rotation (and 3x3 matrix) for '" << TypeNamer::name<T>() << "':";
 
+	constexpr double successThreshold = 0.95;
 	constexpr unsigned int constIterations = 100000u;
 
 	RandomGenerator randomGenerator;
-	ValidationPrecision validation(0.95, randomGenerator);
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
-	Quaternions quaternions(constIterations);
-	Rotations rotations(constIterations);
+	std::vector<QuaternionT<T>> quaternions(constIterations);
+	std::vector<RotationT<T>> rotations(constIterations);
 
-	const Scalar epsilon = std::is_same<Scalar, float>::value ? Scalar(0.02) : Numeric::weakEps();
+	const T epsilon = std::is_same<T, float>::value ? T(0.02) : NumericT<T>::weakEps();
 
 	HighPerformanceStatistic performance;
 	const Timestamp startTimestamp(true);
@@ -498,13 +543,13 @@ bool TestQuaternion::testConversionToRotation(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
-			quaternions[n] = Random::quaternion();
+			quaternions[n] = RandomT<T>::quaternion();
 		}
 
 		performance.start();
 			for (unsigned int n = 0u; n < constIterations; ++n)
 			{
-				rotations[n] = Rotation(quaternions[n]);
+				rotations[n] = RotationT<T>(quaternions[n]);
 			}
 		performance.stop();
 
@@ -512,16 +557,16 @@ bool TestQuaternion::testConversionToRotation(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Quaternion& quaternion = quaternions[n];
-			const Rotation& rotation = rotations[n];
+			const QuaternionT<T>& quaternion = quaternions[n];
+			const RotationT<T>& rotation = rotations[n];
 
-			const SquareMatrix3 matrix(rotation);
+			const SquareMatrixT3<T> matrix(rotation);
 
-			const Scalar angleX = Numeric::rad2deg((matrix * Vector3(1, 0, 0)).angle(quaternion * Vector3(1, 0, 0)));
-			const Scalar angleY = Numeric::rad2deg((matrix * Vector3(0, 1, 0)).angle(quaternion * Vector3(0, 1, 0)));
-			const Scalar angleZ = Numeric::rad2deg((matrix * Vector3(0, 0, 1)).angle(quaternion * Vector3(0, 0, 1)));
+			const T angleX = NumericT<T>::rad2deg((matrix * VectorT3<T>(1, 0, 0)).angle(quaternion * VectorT3<T>(1, 0, 0)));
+			const T angleY = NumericT<T>::rad2deg((matrix * VectorT3<T>(0, 1, 0)).angle(quaternion * VectorT3<T>(0, 1, 0)));
+			const T angleZ = NumericT<T>::rad2deg((matrix * VectorT3<T>(0, 0, 1)).angle(quaternion * VectorT3<T>(0, 0, 1)));
 
-			if (Numeric::isNotEqual(angleX, 0, epsilon) || Numeric::isNotEqual(angleY, 0, epsilon) || Numeric::isNotEqual(angleZ, 0, epsilon))
+			if (NumericT<T>::isNotEqual(angleX, 0, epsilon) || NumericT<T>::isNotEqual(angleY, 0, epsilon) || NumericT<T>::isNotEqual(angleZ, 0, epsilon))
 			{
 				scopedIteration.setInaccurate();
 			}
@@ -529,17 +574,18 @@ bool TestQuaternion::testConversionToRotation(const double testDuration)
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Performance: " << performance.averageMseconds() * 1000.0 / double(constIterations) << "mys";
+	Log::info() << "Performance: " << performance;
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
 }
 
+template <typename T>
 bool TestQuaternion::testReferenceOffsetConstructor(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
-	Log::info() << "Reference offset constructor:";
+	Log::info() << "Reference offset constructor for '" << TypeNamer::name<T>() << "':";
 
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
@@ -550,38 +596,38 @@ bool TestQuaternion::testReferenceOffsetConstructor(const double testDuration)
 	{
 		for (unsigned int n = 0u; n < 1000u; ++n)
 		{
-			const Vector3 reference(Random::vector3());
-			const Vector3 offset(Random::vector3());
+			const VectorT3<T> reference(RandomT<T>::vector3());
+			const VectorT3<T> offset(RandomT<T>::vector3());
 
 			// identity test
-			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(1, 0, 0), Vector3(1, 0, 0)) * reference, reference);
-			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, 1, 0), Vector3(0, 1, 0)) * reference, reference);
-			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, 0, 1), Vector3(0, 0, 1)) * reference, reference);
-			OCEAN_EXPECT_EQUAL(validation, Quaternion(offset, offset) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, QuaternionT<T>(VectorT3<T>(1, 0, 0), VectorT3<T>(1, 0, 0)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, QuaternionT<T>(VectorT3<T>(0, 1, 0), VectorT3<T>(0, 1, 0)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, QuaternionT<T>(VectorT3<T>(0, 0, 1), VectorT3<T>(0, 0, 1)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, QuaternionT<T>(offset, offset) * reference, reference);
 
-			Quaternion q(Rotation(1, 0, 0, Numeric::pi_2()));
-			Quaternion q2(Rotation(0, 1, 0, Numeric::pi_2()));
-			Quaternion q3(Rotation(0, 0, 1, Numeric::pi_2()));
+			QuaternionT<T> q(RotationT<T>(1, 0, 0, NumericT<T>::pi_2()));
+			QuaternionT<T> q2(RotationT<T>(0, 1, 0, NumericT<T>::pi_2()));
+			QuaternionT<T> q3(RotationT<T>(0, 0, 1, NumericT<T>::pi_2()));
 
 			// 180 degrees test (a)
-			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(1, 0, 0), Vector3(-1, 0, 0)) * Vector3(1, 0, 0), Vector3(-1, 0, 0));
-			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, 1, 0), Vector3(0, -1, 0)) * Vector3(0, 1, 0), Vector3(0, -1, 0));
-			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, 0, 1), Vector3(0, 0, -1)) * Vector3(0, 0, 1), Vector3(0, 0, -1));
+			OCEAN_EXPECT_EQUAL(validation, QuaternionT<T>(VectorT3<T>(1, 0, 0), VectorT3<T>(-1, 0, 0)) * VectorT3<T>(1, 0, 0), VectorT3<T>(-1, 0, 0));
+			OCEAN_EXPECT_EQUAL(validation, QuaternionT<T>(VectorT3<T>(0, 1, 0), VectorT3<T>(0, -1, 0)) * VectorT3<T>(0, 1, 0), VectorT3<T>(0, -1, 0));
+			OCEAN_EXPECT_EQUAL(validation, QuaternionT<T>(VectorT3<T>(0, 0, 1), VectorT3<T>(0, 0, -1)) * VectorT3<T>(0, 0, 1), VectorT3<T>(0, 0, -1));
 
 			// 180 degrees test (b)
-			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(-1, 0, 0), Vector3(1, 0, 0)) * Vector3(1, 0, 0), Vector3(-1, 0, 0));
-			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, -1, 0), Vector3(0, 1, 0)) * Vector3(0, 1, 0), Vector3(0, -1, 0));
-			OCEAN_EXPECT_EQUAL(validation, Quaternion(Vector3(0, 0, -1), Vector3(0, 0, 1)) * Vector3(0, 0, 1), Vector3(0, 0, -1));
+			OCEAN_EXPECT_EQUAL(validation, QuaternionT<T>(VectorT3<T>(-1, 0, 0), VectorT3<T>(1, 0, 0)) * VectorT3<T>(1, 0, 0), VectorT3<T>(-1, 0, 0));
+			OCEAN_EXPECT_EQUAL(validation, QuaternionT<T>(VectorT3<T>(0, -1, 0), VectorT3<T>(0, 1, 0)) * VectorT3<T>(0, 1, 0), VectorT3<T>(0, -1, 0));
+			OCEAN_EXPECT_EQUAL(validation, QuaternionT<T>(VectorT3<T>(0, 0, -1), VectorT3<T>(0, 0, 1)) * VectorT3<T>(0, 0, 1), VectorT3<T>(0, 0, -1));
 
-			const Quaternion quaternion0(reference, offset);
-			const Vector3 test0 = quaternion0 * reference;
+			const QuaternionT<T> quaternion0(reference, offset);
+			const VectorT3<T> test0 = quaternion0 * reference;
 
-			OCEAN_EXPECT_TRUE(validation, offset.isEqual(test0, Numeric::weakEps()) && offset.angle(test0) < Numeric::deg2rad(Scalar(0.1)));
+			OCEAN_EXPECT_TRUE(validation, offset.isEqual(test0, NumericT<T>::weakEps()) && offset.angle(test0) < NumericT<T>::deg2rad(T(0.1)));
 
-			const Quaternion quaternion1(reference, -reference);
-			const Vector3 test1 = quaternion1 * reference;
+			const QuaternionT<T> quaternion1(reference, -reference);
+			const VectorT3<T> test1 = quaternion1 * reference;
 
-			OCEAN_EXPECT_TRUE(validation, reference.isEqual(-test1, Numeric::weakEps()) && reference.angle(test1) > Numeric::deg2rad(Scalar(179.9)));
+			OCEAN_EXPECT_TRUE(validation, reference.isEqual(-test1, NumericT<T>::weakEps()) && reference.angle(test1) > NumericT<T>::deg2rad(T(179.9)));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));

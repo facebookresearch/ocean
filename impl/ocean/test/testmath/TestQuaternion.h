@@ -37,7 +37,9 @@ class OCEAN_TEST_MATH_EXPORT TestQuaternion
 		/**
 		 * Tests the messenger function.
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
 		 */
+		template <typename T>
 		static bool testWriteToMessenger();
 
 		/**
@@ -51,28 +53,36 @@ class OCEAN_TEST_MATH_EXPORT TestQuaternion
 		 * Tests the normalization of a quaternion.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
 		 */
+		template <typename T>
 		static bool testNormalization(const double testDuration);
 
 		/**
 		 * Tests the inverting of a quaternion.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
 		 */
+		template <typename T>
 		static bool testInverting(const double testDuration);
 
 		/**
 		 * Tests the conversion from a quaternion to a rotation.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
 		 */
+		template <typename T>
 		static bool testConversionToRotation(const double testDuration);
 
 		/**
 		 * Tests the reference-offset constructor.
 		 * @param testDuration Number of seconds for each test
 		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
 		 */
+		template <typename T>
 		static bool testReferenceOffsetConstructor(const double testDuration);
 
 		/**
