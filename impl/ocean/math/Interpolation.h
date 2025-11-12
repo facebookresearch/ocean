@@ -126,6 +126,20 @@ class Interpolation
 		static inline T cubic(const T& v0, const T& v1, const T& v2, const T& v3, const TFactor& t);
 
 		/**
+		 * Performs a spherical linear interpolation (SLERP) between two unit vectors.
+		 * The interpolation follows the great circle path on the unit sphere, maintaining unit length throughout.
+		 * This is the proper way to interpolate directional vectors (e.g., gravity, normals, orientations).
+		 * @param v0 First unit vector corresponding to the interpolation factor t = 0
+		 * @param v1 Second unit vector corresponding to the interpolation factor t = 1
+		 * @param t Interpolation factor, with range [0, 1]
+		 * @return Resulting interpolated unit vector
+		 * @tparam T Data type of the vector elements (float or double)
+		 * @tparam TFactor Data type of the interpolation value
+		 */
+		template <typename T, typename TFactor>
+		static VectorT3<T> spherical(const VectorT3<T>& v0, const VectorT3<T>& v1, const TFactor& t);
+
+		/**
 		 * Performs a Lagrange interpolation for a polynomial with degree 2.
 		 * @param x0 Position of the first supporting value, must not be identical with x1
 		 * @param y0 First supporting value
@@ -360,7 +374,7 @@ class InterpolationMap
 	protected:
 
 		/// Map mapping keys to values.
-		ValueMap interpolationValueMap;
+		ValueMap valueMap_;
 };
 
 template <typename T>
@@ -637,6 +651,29 @@ inline T Interpolation::cubic(const T& v0, const T& v1, const T& v2, const T& v3
 			+ v1;
 }
 
+template <typename T, typename TFactor>
+inline VectorT3<T> Interpolation::spherical(const VectorT3<T>& v0, const VectorT3<T>& v1, const TFactor& t)
+{
+	ocean_assert(v0.isUnit(NumericT<T>::weakEps()));
+	ocean_assert(v1.isUnit(NumericT<T>::weakEps()));
+	ocean_assert(NumericT<TFactor>::isInsideRange(TFactor(0), t, TFactor(1)));
+
+	if (t <= TFactor(0))
+	{
+		return v0;
+	}
+
+	if (t >= TFactor(1))
+	{
+		return v1;
+	}
+
+	const RotationT<T> v0_R_v1 = RotationT<T>::left_R_right(v0, v1);
+	const RotationT<T> interpolated_R_v1 = RotationT<T>(v0_R_v1.axis(), v0_R_v1.angle() * (T(1) - T(t)));
+
+	return interpolated_R_v1 * v1;
+}
+
 template <typename T, typename TKey>
 T Interpolation::lagrange2(const TKey& x0, const T& y0, const TKey& x1, const T& y1, const TKey& x)
 {
@@ -663,28 +700,28 @@ inline InterpolationMap<TKey, TValue, TFactor>::InterpolationMap()
 
 template <typename TKey, typename TValue, typename TFactor>
 inline InterpolationMap<TKey, TValue, TFactor>::InterpolationMap(const InterpolationMap<TKey, TValue, TFactor>& interpolationMap) :
-	interpolationValueMap(interpolationMap.interpolationValueMap)
+	valueMap_(interpolationMap.valueMap_)
 {
 	// nothing to do here
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline InterpolationMap<TKey, TValue, TFactor>::InterpolationMap(InterpolationMap<TKey, TValue, TFactor>&& interpolationMap) noexcept :
-	interpolationValueMap(std::move(interpolationMap.interpolationValueMap))
+	valueMap_(std::move(interpolationMap.valueMap_))
 {
 	// nothing to do here
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline InterpolationMap<TKey, TValue, TFactor>::InterpolationMap(const ValueMap& valueMap) :
-	interpolationValueMap(valueMap)
+	valueMap_(valueMap)
 {
 	// nothing to do here
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline InterpolationMap<TKey, TValue, TFactor>::InterpolationMap(ValueMap&& valueMap) :
-	interpolationValueMap(std::move(valueMap))
+	valueMap_(std::move(valueMap))
 {
 	// nothing to do here
 }
@@ -692,55 +729,55 @@ inline InterpolationMap<TKey, TValue, TFactor>::InterpolationMap(ValueMap&& valu
 template <typename TKey, typename TValue, typename TFactor>
 inline size_t InterpolationMap<TKey, TValue, TFactor>::size() const
 {
-	return interpolationValueMap.size();
+	return valueMap_.size();
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline bool InterpolationMap<TKey, TValue, TFactor>::isEmpty() const
 {
-	return interpolationValueMap.empty();
+	return valueMap_.empty();
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline void InterpolationMap<TKey, TValue, TFactor>::clear()
 {
-	interpolationValueMap.clear();
+	valueMap_.clear();
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline const typename InterpolationMap<TKey, TValue, TFactor>::ValueMap& InterpolationMap<TKey, TValue, TFactor>::interpolationMap() const
 {
-	return interpolationValueMap;
+	return valueMap_;
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline void InterpolationMap<TKey, TValue, TFactor>::setInterpolationMap(const ValueMap& interpolationMap)
 {
-	interpolationValueMap = interpolationMap;
+	valueMap_ = interpolationMap;
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline void InterpolationMap<TKey, TValue, TFactor>::setInterpolationMap(ValueMap&& interpolationMap)
 {
-	interpolationValueMap = std::move(interpolationMap);
+	valueMap_ = std::move(interpolationMap);
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline bool InterpolationMap<TKey, TValue, TFactor>::hasValue(const TKey& key) const
 {
-	return interpolationValueMap.find(key) != interpolationValueMap.end();
+	return valueMap_.find(key) != valueMap_.end();
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline TValue& InterpolationMap<TKey, TValue, TFactor>::value(const TKey& key)
 {
-	return interpolationValueMap[key];
+	return valueMap_[key];
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline bool InterpolationMap<TKey, TValue, TFactor>::remove(const TKey& key)
 {
-	return interpolationValueMap.erase(key) != 0;
+	return valueMap_.erase(key) != 0;
 }
 
 template <typename TKey, typename TValue, typename TFactor>
@@ -748,16 +785,16 @@ inline bool InterpolationMap<TKey, TValue, TFactor>::insert(const TKey& key, con
 {
 	if (forceOverwrite)
 	{
-		interpolationValueMap[key] = value;
+		valueMap_[key] = value;
 		return true;
 	}
 
-	if (interpolationValueMap.find(key) != interpolationValueMap.end())
+	if (valueMap_.find(key) != valueMap_.end())
 	{
 		return false;
 	}
 
-	interpolationValueMap[key] = value;
+	valueMap_[key] = value;
 
 	return true;
 }
@@ -767,16 +804,16 @@ inline bool InterpolationMap<TKey, TValue, TFactor>::insert(const TKey& key, TVa
 {
 	if (forceOverwrite)
 	{
-		interpolationValueMap[key] = std::move(value);
+		valueMap_[key] = std::move(value);
 		return true;
 	}
 
-	if (interpolationValueMap.find(key) != interpolationValueMap.end())
+	if (valueMap_.find(key) != valueMap_.end())
 	{
 		return false;
 	}
 
-	interpolationValueMap[key] = std::move(value);
+	valueMap_[key] = std::move(value);
 
 	return true;
 }
@@ -784,13 +821,13 @@ inline bool InterpolationMap<TKey, TValue, TFactor>::insert(const TKey& key, TVa
 template <typename TKey, typename TValue, typename TFactor>
 inline TValue InterpolationMap<TKey, TValue, TFactor>::linear(const TKey& key) const
 {
-	return linear(interpolationValueMap, key);
+	return linear(valueMap_, key);
 }
 
 template <typename TKey, typename TValue, typename TFactor>
 inline TValue InterpolationMap<TKey, TValue, TFactor>::linear(const TKey& key, const LinearInterpolationFunction interpolationFunction) const
 {
-	return linear(interpolationValueMap, key, interpolationFunction);
+	return linear(valueMap_, key, interpolationFunction);
 }
 
 template <typename TKey, typename TValue, typename TFactor>
@@ -876,7 +913,7 @@ TValue InterpolationMap<TKey, TValue, TFactor>::linear(const ValueMap& valueMap,
 template <typename TKey, typename TValue, typename TFactor>
 inline InterpolationMap<TKey, TValue, TFactor>& InterpolationMap<TKey, TValue, TFactor>::operator=(const InterpolationMap<TKey, TValue, TFactor>& object)
 {
-	interpolationValueMap = object.interpolationValueMap;
+	valueMap_ = object.valueMap_;
 	return *this;
 }
 
@@ -885,7 +922,7 @@ inline InterpolationMap<TKey, TValue, TFactor>& InterpolationMap<TKey, TValue, T
 {
 	if (this != &object)
 	{
-		interpolationValueMap = std::move(object.interpolationValueMap);
+		valueMap_ = std::move(object.valueMap_);
 	}
 
 	return *this;
@@ -894,7 +931,7 @@ inline InterpolationMap<TKey, TValue, TFactor>& InterpolationMap<TKey, TValue, T
 template <typename TKey, typename TValue, typename TFactor>
 inline bool InterpolationMap<TKey, TValue, TFactor>::operator==(const InterpolationMap<TKey, TValue, TFactor>& object) const
 {
-	return interpolationValueMap == object.interpolationValueMap;
+	return valueMap_ == object.valueMap_;
 }
 
 template <typename TKey, typename TValue, typename TFactor>

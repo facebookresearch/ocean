@@ -54,6 +54,15 @@ class OCEAN_TEST_MATH_EXPORT TestInterpolation
 		 * @return True, if succeeded
 		 */
 		static bool testBilinearSubset(const double testDuration);
+
+		/**
+		 * Tests the spherical interpolation function for unit vectors.
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 * @tparam T The data type to be used, either 'float' or 'double'
+		 */
+		template <typename T>
+		static bool testSpherical(const double testDuration);
 };
 
 }

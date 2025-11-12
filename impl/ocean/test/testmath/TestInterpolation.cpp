@@ -48,6 +48,14 @@ bool TestInterpolation::test(const double testDuration)
 	allSucceeded = testBilinearSubset(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testSpherical<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testSpherical<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -76,6 +84,16 @@ TEST(TestInterpolation, Bilinear)
 TEST(TestInterpolation, BilinearSubset)
 {
 	EXPECT_TRUE(TestInterpolation::testBilinearSubset(GTEST_TEST_DURATION));
+}
+
+TEST(TestInterpolation, Spherical_float)
+{
+	EXPECT_TRUE(TestInterpolation::testSpherical<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestInterpolation, Spherical_double)
+{
+	EXPECT_TRUE(TestInterpolation::testSpherical<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -321,6 +339,110 @@ bool TestInterpolation::testBilinearSubset(const double testDuration)
 				{
 					scopedIteration.setInaccurate();
 				}
+			}
+		}
+	}
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestInterpolation::testSpherical(const double testDuration)
+{
+	ocean_assert(testDuration >= 0.0);
+
+	Log::info() << "Spherical interpolation test for '" << TypeNamer::name<T>() << "':";
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
+
+	{
+		// boundary case
+
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		const VectorT3<T> v0(T(1), T(0), T(0));
+		const VectorT3<T> v1(T(0), T(1), T(0));
+
+		const VectorT3<T> result0 = Interpolation::spherical(v0, v1, T(0));
+		if (result0 != v0)
+		{
+			OCEAN_SET_FAILED(validation);
+		}
+
+		const VectorT3<T> result1 = Interpolation::spherical(v0, v1, T(1));
+		if (result1 != v1)
+		{
+			OCEAN_SET_FAILED(validation);
+		}
+
+		const VectorT3<T> result05 = Interpolation::spherical(v0, v1, T(0.5));
+		const VectorT3<T> expected05 = VectorT3<T>(T(1), T(1), T(0)).normalized();
+
+		if (!result05.isEqual(expected05, NumericT<T>::weakEps()))
+		{
+			OCEAN_SET_FAILED(validation);
+		}
+	}
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		for (unsigned int n = 0u; n < 100u; ++n)
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			const VectorT3<T> v0 = RandomT<T>::vector3(randomGenerator);
+			const VectorT3<T> v1 = RandomT<T>::vector3(randomGenerator);
+
+			{
+				// edge case t == 0
+
+				const VectorT3<T> result0 = Interpolation::spherical(v0, v1, T(0));
+				if (result0 != v0)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+
+			{
+				// edge case t == 1
+
+				const VectorT3<T> result1 = Interpolation::spherical(v0, v1, T(1));
+				if (result1 != v1)
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+
+			const T t = RandomT<T>::scalar(randomGenerator, T(0), T(1));
+
+			const VectorT3<T> result = Interpolation::spherical(v0, v1, t);
+
+			// result is always a unit vector
+			if (!result.isUnit())
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+
+			// the angle from v0 to result is t times the angle from v0 to v1
+
+			const T angleTotal = v0.angle(v1);
+			const T angle0 = v0.angle(result);
+			const T angle1 = v1.angle(result);
+
+			if (!NumericT<T>::isEqual(angle0, angleTotal * t, NumericT<T>::deg2rad(T(0.1))))
+			{
+				scopedIteration.setInaccurate();
+			}
+
+			if (!NumericT<T>::isEqual(angle1, angleTotal * (T(1) - t), NumericT<T>::deg2rad(T(0.1))))
+			{
+				scopedIteration.setInaccurate();
 			}
 		}
 	}
