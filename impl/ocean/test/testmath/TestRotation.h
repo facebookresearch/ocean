@@ -60,6 +60,15 @@ class OCEAN_TEST_MATH_EXPORT TestRotation
 		 */
 		template <typename T>
 		static bool testReferenceOffsetConstructor(const double testDuration);
+
+		/**
+		 * Tests the left_R_right functions.
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
+		 */
+		template <typename T>
+		static bool testLeft_R_right(const double testDuration);
 };
 
 }

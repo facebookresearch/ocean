@@ -298,6 +298,18 @@ class RotationT
 		 */
 		inline T* operator()();
 
+		/**
+		 * Returns a rotation object based on two given unit vectors.
+		 * The resulting rotation rotates the right vector to the left vector:
+		 * <pre>
+		 * left = Rotation::left_R_right(left, right) * right;
+		 * </pre>
+		 * @param left The left unit vector
+		 * @param right The right unit vector
+		 * @return The resulting rotation rotating the right vector to the left vector
+		 */
+		static RotationT<T> left_R_right(const VectorT3<T>& left, const VectorT3<T>& right);
+
 	protected:
 
 		/// The four values of the angle-axis rotation.
@@ -353,39 +365,10 @@ RotationT<T>::RotationT(const VectorT3<T>& axis, const T angle)
 }
 
 template <typename T>
-RotationT<T>::RotationT(const VectorT3<T>& reference, const VectorT3<T>& offset)
+RotationT<T>::RotationT(const VectorT3<T>& reference, const VectorT3<T>& offset) :
+	RotationT<T>(left_R_right(offset, reference))
 {
-	ocean_assert(NumericT<T>::isWeakEqual(reference.length(), 1));
-	ocean_assert(NumericT<T>::isWeakEqual(offset.length(), 1));
-
-	if (reference == offset)
-	{
-		values_[0] = 0;
-		values_[1] = 1;
-		values_[2] = 0;
-		values_[3] = 0;
-	}
-	else if (reference == -offset)
-	{
-		const VectorT3<T> perpendicular(reference.perpendicular().normalized());
-
-		values_[0] = perpendicular[0];
-		values_[1] = perpendicular[1];
-		values_[2] = perpendicular[2];
-		values_[3] = NumericT<T>::pi();
-	}
-	else
-	{
-		const VectorT3<T> axis(reference.cross(offset).normalized());
-
-		values_[0] = axis.x();
-		values_[1] = axis.y();
-		values_[2] = axis.z();
-		values_[3] = reference.angle(offset);
-	}
-
-	ocean_assert(isValid());
-	ocean_assert(offset.isEqual(*this * reference, NumericT<T>::weakEps()));
+	// nothing to do here
 }
 
 template <typename T>
@@ -796,6 +779,34 @@ template <typename T>
 inline T* RotationT<T>::operator()()
 {
 	return values_;
+}
+
+template <typename T>
+RotationT<T> RotationT<T>::left_R_right(const VectorT3<T>& left, const VectorT3<T>& right)
+{
+	ocean_assert(NumericT<T>::isWeakEqual(left.length(), 1));
+	ocean_assert(NumericT<T>::isWeakEqual(right.length(), 1));
+
+	if (left == right)
+	{
+		// identity
+
+		return RotationT<T>(VectorT3<T>(0, 1, 0), T(0));
+	}
+	else if (left == -right)
+	{
+		const VectorT3<T> perpendicular(right.perpendicular().normalized());
+
+		return RotationT<T>(perpendicular, NumericT<T>::pi());
+	}
+
+	const VectorT3<T> axis(right.cross(left).normalized());
+	const T angle = right.angle(left);
+
+	const RotationT<T> result(axis, angle);
+	ocean_assert(result.isValid());
+
+	return result;
 }
 
 }

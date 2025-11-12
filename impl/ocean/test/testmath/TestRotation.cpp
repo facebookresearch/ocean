@@ -38,16 +38,28 @@ bool TestRotation::test(const double testDuration)
 	allSucceeded = testConversionToQuaterion<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 
 	allSucceeded = testConversionToHomogenousMatrix<float>(testDuration) && allSucceeded;
 	Log::info() << " ";
 	allSucceeded = testConversionToHomogenousMatrix<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
 
 	allSucceeded = testReferenceOffsetConstructor<float>(testDuration) && allSucceeded;
 	Log::info() << " ";
 	allSucceeded = testReferenceOffsetConstructor<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testLeft_R_right<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testLeft_R_right<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 
@@ -95,6 +107,17 @@ TEST(TestRotation, ReferenceOffsetConstructor_float)
 TEST(TestRotation, ReferenceOffsetConstructor_double)
 {
 	EXPECT_TRUE(TestRotation::testReferenceOffsetConstructor<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestRotation, Left_R_right_float)
+{
+	EXPECT_TRUE(TestRotation::testLeft_R_right<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestRotation, Left_R_right_double)
+{
+	EXPECT_TRUE(TestRotation::testLeft_R_right<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -269,6 +292,104 @@ bool TestRotation::testReferenceOffsetConstructor(const double testDuration)
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestRotation::testLeft_R_right(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "left_R_right for '" << TypeNamer::name<T>() << "':";
+
+	constexpr double successThreshold = std::is_same<float, T>::value ? 0.975 : 0.999;
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(successThreshold, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// testing identity
+
+			const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
+
+			const RotationT<T> left_R_right = RotationT<T>::left_R_right(axis, axis);
+
+			const RotationT<T> identity(VectorT3<T>(0, 1, 0), T(0));
+
+			if (left_R_right != identity)
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+
+			const VectorT3<T> vector = RandomT<T>::vector3(randomGenerator);
+
+			if (!vector.isEqual(left_R_right * vector, NumericT<T>::weakEps()))
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+
+		{
+			// testing flipped
+
+			const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
+
+			{
+				const RotationT<T> left_R_right = RotationT<T>::left_R_right(axis, -axis);
+
+				if (!axis.isEqual(left_R_right * -axis, NumericT<T>::weakEps()))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (!(-axis).isEqual(left_R_right * axis, NumericT<T>::weakEps()))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+
+			{
+				const RotationT<T> left_R_right = RotationT<T>::left_R_right(-axis, axis);
+
+				if (!axis.isEqual(left_R_right * -axis, NumericT<T>::weakEps()))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+
+				if (!(-axis).isEqual(left_R_right * axis, NumericT<T>::weakEps()))
+				{
+					OCEAN_SET_FAILED(validation);
+				}
+			}
+		}
+
+		for (unsigned int n = 0u; n < 100u; ++n)
+		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+			// testing random vectors
+
+			const VectorT3<T> leftVector = RandomT<T>::vector3(randomGenerator);
+			const VectorT3<T> rightVector = RandomT<T>::vector3(randomGenerator);
+
+			const RotationT<T> left_R_right = RotationT<T>::left_R_right(leftVector, rightVector);
+
+			const VectorT3<T> testLeft = left_R_right * rightVector;
+
+			if (!leftVector.isEqual(testLeft, NumericT<T>::eps()))
+			{
+				scopedIteration.setInaccurate();
+			}
+		}
+	}
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 
