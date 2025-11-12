@@ -12,6 +12,9 @@
 
 #include "ocean/math/Random.h"
 
+#include "ocean/test/Validation.h"
+#include "ocean/test/ValidationPrecision.h"
+
 namespace Ocean
 {
 
@@ -43,15 +46,19 @@ bool TestRotation::test(const double testDuration)
 	Log::info() << " ";
 
 	if (allSucceeded)
+	{
 		Log::info() << "Rotation test succeeded.";
+	}
 	else
+	{
 		Log::info() << "Rotation test FAILED!";
+	}
 
 	return allSucceeded;
 }
-	
+
 #ifdef OCEAN_USE_GTEST
-	
+
 TEST(TestRotation, ConversionToQuaterion)
 {
 	EXPECT_TRUE(TestRotation::testConversionToQuaterion(GTEST_TEST_DURATION));
@@ -66,7 +73,7 @@ TEST(TestRotation, ReferenceOffsetConstructor)
 {
 	EXPECT_TRUE(TestRotation::testReferenceOffsetConstructor(GTEST_TEST_DURATION));
 }
-	
+
 #endif // OCEAN_USE_GTEST
 
 bool TestRotation::testConversionToQuaterion(const double testDuration)
@@ -75,33 +82,37 @@ bool TestRotation::testConversionToQuaterion(const double testDuration)
 
 	Log::info() << "Conversion from Rotation to Quaternion (and 3x3 matrix):";
 
-	const unsigned int constIterations = 100000u;
+	constexpr unsigned int constIterations = 100000u;
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
-
-	Rotations rotations(constIterations);
-	Quaternions quaternions(constIterations);
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	const Scalar epsilon = std::is_same<Scalar, float>::value ? Scalar(0.02) : Numeric::weakEps();
 
 	HighPerformanceStatistic performance;
-	Timestamp startTimestamp(true);
+	const Timestamp startTimestamp(true);
 
 	do
 	{
+		Rotations rotations(constIterations);
+		Quaternions quaternions(constIterations);
+
 		for (unsigned int n = 0u; n < constIterations; ++n)
+		{
 			rotations[n] = Random::rotation();
+		}
 
 		performance.start();
-
-		for (unsigned int n = 0u; n < constIterations; ++n)
-			quaternions[n] = Quaternion(rotations[n]);
-
+			for (unsigned int n = 0u; n < constIterations; ++n)
+			{
+				quaternions[n] = Quaternion(rotations[n]);
+			}
 		performance.stop();
 
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Rotation& rotation = rotations[n];
 			const Quaternion& quaternion = quaternions[n];
 
@@ -111,22 +122,19 @@ bool TestRotation::testConversionToQuaterion(const double testDuration)
 			const Scalar angleY = Numeric::rad2deg((matrix * Vector3(0, 1, 0)).angle(quaternion * Vector3(0, 1, 0)));
 			const Scalar angleZ = Numeric::rad2deg((matrix * Vector3(0, 0, 1)).angle(quaternion * Vector3(0, 0, 1)));
 
-			if (Numeric::isEqual(angleX, 0, epsilon) && Numeric::isEqual(angleY, 0, epsilon) && Numeric::isEqual(angleZ, 0, epsilon))
-				validIterations++;
+			if (Numeric::isNotEqual(angleX, 0, epsilon) || Numeric::isNotEqual(angleY, 0, epsilon) || Numeric::isNotEqual(angleZ, 0, epsilon))
+			{
+				scopedIteration.setInaccurate();
+			}
 		}
-
-		iterations += constIterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
-
-	Log::info() << "Performance: " << performance.averageMseconds() * 1000.0 / double(constIterations) << "mys";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 	Log::info() << " ";
 
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestRotation::testConversionToHomogenousMatrix(const double testDuration)
@@ -135,10 +143,10 @@ bool TestRotation::testConversionToHomogenousMatrix(const double testDuration)
 
 	Log::info() << "Conversion from Rotation to Homogenous Matrix:";
 
-	const unsigned int constIterations = 100000u;
+	constexpr unsigned int constIterations = 100000u;
 
-	unsigned long long iterations = 0ull;
-	unsigned long long validIterations = 0ull;
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.95, randomGenerator);
 
 	Rotations rotations(constIterations);
 	HomogenousMatrices4 matrices(constIterations);
@@ -146,22 +154,26 @@ bool TestRotation::testConversionToHomogenousMatrix(const double testDuration)
 	const Scalar epsilon = std::is_same<Scalar, float>::value ? Scalar(0.02) : Numeric::weakEps();
 
 	HighPerformanceStatistic performance;
-	Timestamp startTimestamp(true);
+	const Timestamp startTimestamp(true);
 
 	do
 	{
 		for (unsigned int n = 0u; n < constIterations; ++n)
+		{
 			rotations[n] = Random::rotation();
+		}
 
 		performance.start();
-
-		for (unsigned int n = 0u; n < constIterations; ++n)
-			matrices[n] = HomogenousMatrix4(rotations[n]);
-
+			for (unsigned int n = 0u; n < constIterations; ++n)
+			{
+				matrices[n] = HomogenousMatrix4(rotations[n]);
+			}
 		performance.stop();
 
 		for (unsigned int n = 0u; n < constIterations; ++n)
 		{
+			ValidationPrecision::ScopedIteration scopedIteration(validation);
+
 			const Rotation& rotation = rotations[n];
 			const HomogenousMatrix4& matrix = matrices[n];
 
@@ -169,21 +181,18 @@ bool TestRotation::testConversionToHomogenousMatrix(const double testDuration)
 			const Scalar angleY = Numeric::rad2deg((matrix * Vector3(0, 1, 0)).angle(rotation * Vector3(0, 1, 0)));
 			const Scalar angleZ = Numeric::rad2deg((matrix * Vector3(0, 0, 1)).angle(rotation * Vector3(0, 0, 1)));
 
-			if (Numeric::isEqual(angleX, 0, epsilon) && Numeric::isEqual(angleY, 0, epsilon) && Numeric::isEqual(angleZ, 0, epsilon))
-				validIterations++;
+			if (Numeric::isNotEqual(angleX, 0, epsilon) || Numeric::isNotEqual(angleY, 0, epsilon) || Numeric::isNotEqual(angleZ, 0, epsilon))
+			{
+				scopedIteration.setInaccurate();
+			}
 		}
-
-		iterations += constIterations;
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
 
-	ocean_assert(iterations != 0ull);
-	double percent = double(validIterations) / double(iterations);
+	Log::info() << "Performance: " << performance;
+	Log::info() << "Validation: " << validation;
 
-	Log::info() << "Performance: " << performance.averageMseconds() * 1000.0 / double(constIterations) << "mys";
-	Log::info() << "Validation: " << String::toAString(percent * 100.0, 1u) << "% succeeded.";
-
-	return percent >= 0.95;
+	return validation.succeeded();
 }
 
 bool TestRotation::testReferenceOffsetConstructor(const double testDuration)
@@ -192,7 +201,8 @@ bool TestRotation::testReferenceOffsetConstructor(const double testDuration)
 
 	Log::info() << "Reference offset constructor:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -204,52 +214,37 @@ bool TestRotation::testReferenceOffsetConstructor(const double testDuration)
 			const Vector3 offset(Random::vector3());
 
 			// identity test
-			if (Rotation(Vector3(1, 0, 0), Vector3(1, 0, 0)) * reference != reference)
-				allSucceeded = false;
-			if (Rotation(Vector3(0, 1, 0), Vector3(0, 1, 0)) * reference != reference)
-				allSucceeded = false;
-			if (Rotation(Vector3(0, 0, 1), Vector3(0, 0, 1)) * reference != reference)
-				allSucceeded = false;
-			if (Rotation(offset, offset) * reference != reference)
-				allSucceeded = false;
+			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(1, 0, 0), Vector3(1, 0, 0)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, 1, 0), Vector3(0, 1, 0)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, 0, 1), Vector3(0, 0, 1)) * reference, reference);
+			OCEAN_EXPECT_EQUAL(validation, Rotation(offset, offset) * reference, reference);
 
 			// 180 degrees test (a)
-			if (Rotation(Vector3(1, 0, 0), Vector3(-1, 0, 0)) * Vector3(1, 0, 0) != Vector3(-1, 0, 0))
-				allSucceeded = false;
-			if (Rotation(Vector3(0, 1, 0), Vector3(0, -1, 0)) * Vector3(0, 1, 0) != Vector3(0, -1, 0))
-				allSucceeded = false;
-			if (Rotation(Vector3(0, 0, 1), Vector3(0, 0, -1)) * Vector3(0, 0, 1) != Vector3(0, 0, -1))
-				allSucceeded = false;
+			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(1, 0, 0), Vector3(-1, 0, 0)) * Vector3(1, 0, 0), Vector3(-1, 0, 0));
+			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, 1, 0), Vector3(0, -1, 0)) * Vector3(0, 1, 0), Vector3(0, -1, 0));
+			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, 0, 1), Vector3(0, 0, -1)) * Vector3(0, 0, 1), Vector3(0, 0, -1));
 
 			// 180 degrees test (b)
-			if (Rotation(Vector3(-1, 0, 0), Vector3(1, 0, 0)) * Vector3(1, 0, 0) != Vector3(-1, 0, 0))
-				allSucceeded = false;
-			if (Rotation(Vector3(0, -1, 0), Vector3(0, 1, 0)) * Vector3(0, 1, 0) != Vector3(0, -1, 0))
-				allSucceeded = false;
-			if (Rotation(Vector3(0, 0, -1), Vector3(0, 0, 1)) * Vector3(0, 0, 1) != Vector3(0, 0, -1))
-				allSucceeded = false;
+			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(-1, 0, 0), Vector3(1, 0, 0)) * Vector3(1, 0, 0), Vector3(-1, 0, 0));
+			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, -1, 0), Vector3(0, 1, 0)) * Vector3(0, 1, 0), Vector3(0, -1, 0));
+			OCEAN_EXPECT_EQUAL(validation, Rotation(Vector3(0, 0, -1), Vector3(0, 0, 1)) * Vector3(0, 0, 1), Vector3(0, 0, -1));
 
 			const Rotation rotation0(reference, offset);
 			const Vector3 test0 = rotation0 * reference;
 
-			if (!offset.isEqual(test0, Numeric::weakEps()) || offset.angle(test0) >= Numeric::deg2rad(Scalar(0.1)))
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, offset.isEqual(test0, Numeric::weakEps()) && offset.angle(test0) < Numeric::deg2rad(Scalar(0.1)));
 
 			const Rotation rotation1(reference, -reference);
 			const Vector3 test1 = rotation1 * reference;
 
-			if (!reference.isEqual(-test1, Numeric::weakEps()) || reference.angle(test1) <= Numeric::deg2rad(Scalar(179.9)))
-				allSucceeded = false;
+			OCEAN_EXPECT_TRUE(validation, reference.isEqual(-test1, Numeric::weakEps()) && reference.angle(test1) > Numeric::deg2rad(Scalar(179.9)));
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-		Log::info() << "Validation: succeeded.";
-	else
-		Log::info() << "Validation: FAILED!";
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
