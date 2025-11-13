@@ -63,18 +63,18 @@ class OCEAN_SYSTEM_EXPORT OperatingSystem
 			/// Windows Server 2016 with any kind of service pack.
 			OSID_MICROSOFT_WINDOWS_SERVER_2016 = OSID_MICROSOFT_WINDOWS_SERVER | 0x00000100,
 
-			/// Macintosh operating system without specific version.
-			OSID_MACINTOSH_OS = 0x00010000,
-			/// Macintosh OS X with any kind of service pack.
-			OSID_MACINTOSH_OS_X = OSID_MACINTOSH_OS | 0x00000001,
+			/// Apple MacOS operating system without specific version.
+			OSID_APPLE_MACOS = 0x00010000,
+
+			/// Apple iOS operating system without specific version.
+			OSID_APPLE_IOS = 0x00100000,
 
 			/// Android operating system without specific version.
-			OSID_ANDROID = 0x00100000,
+			OSID_ANDROID = 0x01000000,
 
 			// Linux without any specific version.
-			OSID_LINUX = 0x01000000,
+			OSID_LINUX = 0x10000000
 		};
-
 
 	public:
 
@@ -83,14 +83,14 @@ class OCEAN_SYSTEM_EXPORT OperatingSystem
 		 * @param version Optional resulting (detailed) version of the operating system
 		 * @return The OS's id
 		 */
-		static OperatingSystemId id(std::wstring* version = nullptr);
+		static OperatingSystemId id(std::string* version = nullptr);
 
 		/**
 		 * Returns the name of the current operating system.
 		 * @param addVersion True, to add the version of the operating system
 		 * @return The OS's name
 		 */
-		static std::wstring name(const bool addVersion = true);
+		static std::string name(const bool addVersion = true);
 };
 
 }

@@ -113,7 +113,7 @@ using namespace Ocean;
 
 	Worker worker;
 
-	Log::info() << "Operating System: " << String::toAString(System::OperatingSystem::name());
+	Log::info() << "Operating System: " << System::OperatingSystem::name();
 	Log::info() << "Processor: " << Processor::brand();
 	Log::info() << "Used worker threads: " << worker.threads();
 	Log::info() << "Test with: " << String::toAString(sizeof(Scalar)) << "byte floats";

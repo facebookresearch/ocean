@@ -7,7 +7,9 @@
 
 #include "ocean/system/OperatingSystem.h"
 
-#include "ocean/base/String.h"
+#if defined(OCEAN_PLATFORM_BUILD_APPLE)
+	#include <sys/sysctl.h>
+#endif
 
 namespace Ocean
 {
@@ -15,16 +17,14 @@ namespace Ocean
 namespace System
 {
 
-#ifndef __APPLE__ // @see OperationSystemApple.mm for Apple platforms
-
-OperatingSystem::OperatingSystemId OperatingSystem::id(std::wstring* version)
+OperatingSystem::OperatingSystemId OperatingSystem::id(std::string* version)
 {
 	if (version != nullptr)
 	{
 		version->clear();
 	}
 
-#if defined(_WINDOWS)
+#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 
 	OSVERSIONINFOEXW osVersionInformationWorkstation = {sizeof(OSVERSIONINFOEXW), 0, 0, 0, 0, {0}, 0, 0, 0, VER_NT_WORKSTATION, 0};
 	const bool isServer = !VerifyVersionInfoW(&osVersionInformationWorkstation, VER_PRODUCT_TYPE, VerSetConditionMask(0, VER_PRODUCT_TYPE, VER_EQUAL));
@@ -140,104 +140,121 @@ OperatingSystem::OperatingSystemId OperatingSystem::id(std::wstring* version)
 	ocean_assert(false && "Unknown Windows Version!");
 	return OSID_MICROSOFT_WINDOWS;
 
-#elif defined(__APPLE__)
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE)
 
-    static_assert(false, "The implementation is located in OperationSystemApple.mm for Apple platforms");
+	// This works on both macOS and iOS (requires macOS 10.13.4+ / iOS 11+)
+	char versionStr[256];
+	size_t size = sizeof(versionStr);
 
-#elif defined(_ANDROID)
+	if (sysctlbyname("kern.osproductversion", versionStr, &size, nullptr, 0) == 0)
+	{
+		// versionStr contains the OS version like "15.1" (iOS) or "14.6.1" (macOS)
+		if (version != nullptr)
+		{
+			*version = std::string(versionStr);
+		}
+	}
+
+	#ifdef OCEAN_PLATFORM_BUILD_APPLE_IOS_ANY
+		return OSID_APPLE_IOS;
+	#else
+		return OSID_APPLE_MACOS;
+	#endif
+
+#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
 
 	return OSID_ANDROID;
 
-#elif defined(__linux__) || defined(__EMSCRIPTEN__)
+#elif defined(OCEAN_PLATFORM_BUILD_LINUX)
 
 	return OSID_LINUX;
 
 #else
+
 	#error Missing implementation.
+
 #endif
 }
 
-#endif // __APPLE__
-
-std::wstring OperatingSystem::name(const bool addVersion)
+std::string OperatingSystem::name(const bool addVersion)
 {
-	std::wstring osVersion;
+	std::string osVersion;
 	const OperatingSystemId osid = id(&osVersion);
 
-	std::wstring osString(L"Unknown OS");
+	std::string osString("Unknown OS");
 
 	switch (osid)
 	{
 		case OSID_MICROSOFT_WINDOWS:
-			osString = L"Windows";
+			osString = "Windows";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_CLIENT:
-			osString = L"Windows Client";
+			osString = "Windows Client";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_SERVER:
-			osString = L"Windows Server";
+			osString = "Windows Server";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_2000:
-			osString = L"Windows 2000";
+			osString = "Windows 2000";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_XP:
-			osString = L"Windows XP";
+			osString = "Windows XP";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_VISTA:
-			osString = L"Windows Vista";
+			osString = "Windows Vista";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_7:
-			osString = L"Windows 7";
+			osString = "Windows 7";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_8:
-			osString = L"Windows 8";
+			osString = "Windows 8";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_8_1:
-			osString = L"Windows 8.1";
+			osString = "Windows 8.1";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_10:
-			osString = L"Windows 10";
+			osString = "Windows 10";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_SERVER_2003:
-			osString = L"Windows Server 2003";
+			osString = "Windows Server 2003";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_SERVER_2008:
-			osString = L"Windows Server 2008";
+			osString = "Windows Server 2008";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_SERVER_2012:
-			osString = L"Windows Server 2012";
+			osString = "Windows Server 2012";
 			break;
 
 		case OSID_MICROSOFT_WINDOWS_SERVER_2016:
-			osString = L"Windows Server 2016";
+			osString = "Windows Server 2016";
 			break;
 
-		case OSID_MACINTOSH_OS:
-			osString = L"Mac OS";
+		case OSID_APPLE_MACOS:
+			osString = "MacOS";
 			break;
 
-		case OSID_MACINTOSH_OS_X:
-			osString = L"Mac OS X";
+		case OSID_APPLE_IOS:
+			osString = "iOS";
 			break;
 
 		case OSID_ANDROID:
-			osString = L"Android";
+			osString = "Android";
 			break;
 
 		case OSID_LINUX:
-			osString = L"Linux";
+			osString = "Linux";
 			break;
 
 		case OSID_UNKNOWN:
@@ -245,9 +262,9 @@ std::wstring OperatingSystem::name(const bool addVersion)
 			ocean_assert(false && "Invalid osid");
 	}
 
-	if (addVersion)
+	if (addVersion && !osVersion.empty())
 	{
-		osString += std::wstring(1, L' ') + osVersion;
+		osString += " " + osVersion;
 	}
 
 	return osString;
