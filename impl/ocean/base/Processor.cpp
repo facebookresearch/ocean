@@ -53,7 +53,7 @@ bool Processor::forceInstructions(const ProcessorInstructions instructions)
 std::string Processor::brand()
 {
 
-#if defined(_WINDOWS)
+#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 
 	static_assert(sizeof(char) == 1, "Invalid char data type!");
 	static_assert(sizeof(int) == 4, "Invalid integer data type!");
@@ -67,11 +67,21 @@ std::string Processor::brand()
 
 	return String::trimWhitespace(std::string(brandString));
 
-#elif defined(__APPLE__)
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE)
 
-	#if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE==1
+	#if defined(OCEAN_PLATFORM_BUILD_APPLE_IOS)
 
-		return deviceModelAppleIOS();
+		char model[256];
+		size_t size = sizeof(model);
+
+		// Get the hardware machine identifier (e.g., "iPhone14,2", "iPad13,1")
+		if (sysctlbyname("hw.machine", model, &size, nullptr, 0) == 0)
+		{
+			return std::string(model);
+		}
+
+		ocean_assert(false && "This should never happen!");
+		return std::string("Unknown");
 
 	#else
 
@@ -89,7 +99,7 @@ std::string Processor::brand()
 
 		return String::trimWhitespace(std::string(buffer));
 
-	#endif // TARGET_OS_IPHONE==1
+	#endif // OCEAN_PLATFORM_BUILD_APPLE_IOS
 
 #else
 
@@ -117,14 +127,14 @@ std::string Processor::brand()
 
 	return std::string("Unknown Processor");
 
-#endif
+#endif // OCEAN_PLATFORM_BUILD_WINDOWS
 
 }
 
 unsigned int Processor::realCores()
 {
 
-#if defined(_WINDOWS)
+#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 
 	SYSTEM_INFO info;
 
@@ -148,7 +158,7 @@ unsigned int Processor::realCores()
 
 	return info.dwNumberOfProcessors;
 
-#elif defined(_ANDROID)
+#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
 
 #ifdef OCEAN_SUPPORT_EXCEPTIONS
 
@@ -187,9 +197,22 @@ unsigned int Processor::realCores()
 
 #endif // OCEAN_SUPPORT_EXCEPTIONS
 
-#elif defined(__APPLE__)
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE)
 
-	return realCoresApple();
+	int32_t cores = 0;
+	size_t size = sizeof(cores);
+
+	// Get the number of available processors
+	if (sysctlbyname("hw.ncpu", &cores, &size, nullptr, 0) == 0)
+	{
+		if (cores > 0 && cores < std::numeric_limits<int32_t>::max() / 2)
+		{
+			return (unsigned int)(cores);
+		}
+	}
+
+	ocean_assert(false && "Failed to get processor count");
+	return 1u; // Fallback to 1 core
 
 #else
 
@@ -208,7 +231,7 @@ ProcessorInstructions Processor::realInstructions()
 {
 	ProcessorInstructions instructions(PI_NONE);
 
-#if defined(_WINDOWS)
+#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 
 	int info[4] = {0, 0, 0, 0};
 
@@ -285,7 +308,7 @@ ProcessorInstructions Processor::realInstructions()
 		}
 	}
 
-#elif defined(__APPLE__)
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE)
 
 	#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
@@ -354,7 +377,7 @@ ProcessorInstructions Processor::realInstructions()
 
 	#endif
 
-#elif defined(__linux__) && !defined(_ANDROID)
+#elif defined(OCEAN_PLATFORM_BUILD_LINUX)
 
 	std::ifstream stream;
 	stream.open(std::string("/proc/cpuinfo").c_str(), std::ios::binary);
@@ -415,7 +438,7 @@ ProcessorInstructions Processor::realInstructions()
 		}
 	}
 
-#elif defined(_ANDROID)
+#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
 
 	std::ifstream stream;
 	stream.open(std::string("/proc/cpuinfo").c_str(), std::ios::binary);
