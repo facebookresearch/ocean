@@ -80,6 +80,7 @@ class Median
 		 * @param number Number of values, with range [1, infinity)
 		 * @return The median value out of 'values'
 		 * @tparam T Type of the data for that the median has to be determined
+		 * @see constMedian().
 		 */
 		template <typename T>
 		static T median(T* values, const size_t number);
@@ -92,9 +93,31 @@ class Median
 		 * @param number Number of values, with range [1, infinity)
 		 * @return The median value out of 'values'
 		 * @tparam T Type of the data for that the median has to be determined
+		 * @see median().
 		 */
 		template <typename T>
 		static T constMedian(const T* values, const size_t number);
+
+		/**
+		 * Returns the percentile value in a given data array.
+		 * @param values Array with values that will be reordered during the execution, must be valid
+		 * @param number Number of values, with range [1, infinity)
+		 * @param percentile The percentile to be determined, with range [0, 1]
+		 * @return The percentile value out of 'values'
+		 * @see constPercentile().
+		 */
+		template <typename T>
+		static T percentile(T* values, const size_t number, const double percentile);
+
+		/**
+		 * Returns the percentile value in a given data array.
+		 * @param values Array with values from which the percentile will be determined, must be valid
+		 * @param number Number of values, with range [1, infinity)
+		 * @param percentile The percentile to be determined, with range [0, 1]
+		 * @return The percentile value out of 'values'
+		 */
+		template <typename T>
+		static T constPercentile(const T* values, const size_t number, const double percentile);
 };
 
 template <typename T>
@@ -1151,7 +1174,12 @@ inline T Median::median5(const T& v0, const T& v1, const T& v2, const T& v3, con
 template <typename T>
 T Median::median(T* values, const size_t number)
 {
-	ocean_assert(values && number > 0);
+	ocean_assert(values != 0 && number > 0);
+
+	if (values == nullptr || number == 0)
+	{
+		return T();
+	}
 
 	size_t low = 0;
 	size_t high = number - 1;
@@ -1239,9 +1267,14 @@ T Median::constMedian(const T* values, const size_t number)
 {
 	ocean_assert(values != nullptr && number > 0);
 
+	if (number == 1)
+	{
+		return values[0];
+	}
+
 	if (number == 0)
 	{
-		return 1;
+		return T();
 	}
 
 	Memory memory = Memory::create<T>(number);
@@ -1249,13 +1282,66 @@ T Median::constMedian(const T* values, const size_t number)
 	if (memory.data() == nullptr)
 	{
 		ocean_assert(false && "Out of memory");
-		return 1;
+		return T();
 	}
 
 	memcpy(memory.data<T>(), values, sizeof(T) * number);
 	const T result = median(memory.data<T>(), number);
 
 	return result;
+}
+
+template <typename T>
+T Median::percentile(T* values, const size_t number, const double percentile)
+{
+	ocean_assert(values != nullptr && number > 0);
+	ocean_assert(percentile >= 0.0f && percentile <= 1.0f);
+
+	if (number == 1)
+	{
+		return values[0];
+	}
+
+	if (number == 0)
+	{
+		return T();
+	}
+
+	const size_t index = std::max(size_t(0), std::min(size_t(double(number) * percentile), size_t(number - 1)));
+	ocean_assert(index < number);
+
+	std::nth_element(values, values + index, values + number);
+
+	return values[index];
+}
+
+template <typename T>
+T Median::constPercentile(const T* values, const size_t number, const double percentile)
+{
+	ocean_assert(values != nullptr && number > 0);
+	ocean_assert(percentile >= 0.0f && percentile <= 1.0f);
+
+	if (number == 1)
+	{
+		return values[0];
+	}
+
+	if (number == 0)
+	{
+		return T();
+	}
+
+	Memory memory = Memory::create<T>(number);
+
+	if (memory.data() == nullptr)
+	{
+		ocean_assert(false && "Out of memory");
+		return T();
+	}
+
+	memcpy(memory.data<T>(), values, sizeof(T) * number);
+
+	return Median::percentile<T>(memory.data<T>(), number, percentile);
 }
 
 }

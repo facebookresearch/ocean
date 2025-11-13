@@ -73,6 +73,15 @@ class OCEAN_TEST_BASE_EXPORT TestMedian
 		template <typename T>
 		static bool testMedian(const double testDuration);
 
+		/**
+		 * Tests the percentile function with a given data type.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam T The data type to be used for testing
+		 */
+		template <typename T>
+		static bool testPercentile(const double testDuration);
+
 	private:
 
 		/**

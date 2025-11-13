@@ -14,6 +14,7 @@
 #include "ocean/base/Timestamp.h"
 
 #include "ocean/math/Numeric.h"
+#include "ocean/math/Random.h"
 
 #include "ocean/test/Validation.h"
 
@@ -92,6 +93,42 @@ bool TestMedian::test(const double testDuration)
 	allSucceeded = testMedian<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testPercentile<int8_t>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testPercentile<uint16_t>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testPercentile<int32_t>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testPercentile<uint64_t>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testPercentile<float>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testPercentile<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -155,6 +192,36 @@ TEST(TestMedian, Median_float)
 TEST(TestMedian, Median_double)
 {
 	EXPECT_TRUE(TestMedian::testMedian<double>(GTEST_TEST_DURATION));
+}
+
+TEST(TestMedian, Percentile_int8)
+{
+	EXPECT_TRUE(TestMedian::testPercentile<int8_t>(GTEST_TEST_DURATION));
+}
+
+TEST(TestMedian, Percentile_uint16)
+{
+	EXPECT_TRUE(TestMedian::testPercentile<uint16_t>(GTEST_TEST_DURATION));
+}
+
+TEST(TestMedian, Percentile_int32)
+{
+	EXPECT_TRUE(TestMedian::testPercentile<int32_t>(GTEST_TEST_DURATION));
+}
+
+TEST(TestMedian, Percentile_uint64)
+{
+	EXPECT_TRUE(TestMedian::testPercentile<uint64_t>(GTEST_TEST_DURATION));
+}
+
+TEST(TestMedian, Percentile_float)
+{
+	EXPECT_TRUE(TestMedian::testPercentile<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestMedian, Percentile_double)
+{
+	EXPECT_TRUE(TestMedian::testPercentile<double>(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -442,6 +509,101 @@ bool TestMedian::testMedian(const unsigned int number, const double testDuration
 	{
 		Log::info() << "Median boost factor: ~1x";
 	}
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestMedian::testPercentile(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Percentile test with \"" << TypeNamer::name<T>() << "\":";
+
+	using Elements = std::vector<T>;
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const size_t number = RandomI::random(randomGenerator, 1u, 100000u);
+
+		Elements elements(number);
+
+		for (unsigned int n = 0; n < number; ++n)
+		{
+			if constexpr (std::is_same<T, int8_t>::value)
+			{
+				elements[n] = int8_t(RandomI::random(randomGenerator, 255u));
+			}
+			else if constexpr (std::is_same<T, uint16_t>::value)
+			{
+				elements[n] = uint16_t(RandomI::random32(randomGenerator));
+			}
+			else if constexpr (std::is_same<T, int32_t>::value)
+			{
+				elements[n] = int32_t(RandomI::random32(randomGenerator));
+			}
+			else if constexpr (std::is_same<T, uint64_t>::value)
+			{
+				elements[n] = uint64_t(RandomI::random64(randomGenerator));
+			}
+			else if constexpr (std::is_same<T, float>::value)
+			{
+				float floatValue = NumericF::nan();
+
+				while (NumericF::isNan(floatValue))
+				{
+					uint32_t value = RandomI::random32(randomGenerator);
+					memcpy(&floatValue, &value, sizeof(float));
+				}
+
+				elements[n] = floatValue;
+			}
+			else if constexpr (std::is_same<T, double>::value)
+			{
+				double doubleValue = NumericD::nan();
+
+				while (NumericD::isNan(doubleValue))
+				{
+					uint64_t value = RandomI::random64(randomGenerator);
+					memcpy(&doubleValue, &value, sizeof(double));
+				}
+
+				elements[n] = doubleValue;
+			}
+			else
+			{
+				ocean_assert(false && "This should never happen!");
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+
+		const double percentile = RandomD::scalar(randomGenerator, 0.0, 1.0);
+
+		Elements copyOcean(elements);
+		Elements copyConst(elements);
+		Elements copyStd(elements);
+
+		const T value0 = Median::constPercentile(copyConst.data(), copyConst.size(), percentile);
+		const T value1 = Median::percentile(copyOcean.data(), copyOcean.size(), percentile);
+
+		const size_t index = minmax<size_t>(0, size_t(double(number) * percentile), number - 1);
+		OCEAN_EXPECT_LESS_EQUAL(validation, size_t(0), index);
+		OCEAN_EXPECT_LESS_EQUAL(validation, index, copyStd.size() - 1);
+
+		std::nth_element(copyStd.begin(), copyStd.begin() + index, copyStd.end());
+		const T testValue = copyStd[index];
+
+		OCEAN_EXPECT_EQUAL(validation, value0, testValue);
+		OCEAN_EXPECT_EQUAL(validation, value1, testValue);
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
 }
