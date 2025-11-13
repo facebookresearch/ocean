@@ -234,7 +234,7 @@ bool AVFLiveAudio::internalStart()
 	{
 		[avAudioPlayerNode_ play];
 	}
-	@catch (id anException)
+	@catch (id)
 	{
 		Log::error() << "Failed to start AVFLiveAudio";
 		return false;
