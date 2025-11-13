@@ -84,22 +84,7 @@ class OCEAN_TEST_BASE_EXPORT TestMedian
 		 */
 		template <typename T>
 		static bool testMedian(const unsigned int number, const double testDuration);
-
-		/**
-		 * Returns whether a given parameter is a real number or value.
-		 * @param value The value to check
-		 * @return True, if so
-		 * @tparam T The data type of the parameter to check
-		 */
-		template <typename T>
-		static inline bool isNumber(const T& value);
 };
-
-template <typename T>
-inline bool TestMedian::isNumber(const T& value)
-{
-	return value != value;
-}
 
 }
 

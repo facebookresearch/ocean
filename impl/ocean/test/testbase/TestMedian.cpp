@@ -13,7 +13,9 @@
 #include "ocean/base/RandomI.h"
 #include "ocean/base/Timestamp.h"
 
-#include <algorithm>
+#include "ocean/math/Numeric.h"
+
+#include "ocean/test/Validation.h"
 
 namespace Ocean
 {
@@ -57,25 +59,25 @@ bool TestMedian::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testMedian<char>(testDuration) && allSucceeded;
+	allSucceeded = testMedian<int8_t>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testMedian<unsigned short>(testDuration) && allSucceeded;
+	allSucceeded = testMedian<uint16_t>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testMedian<int>(testDuration) && allSucceeded;
+	allSucceeded = testMedian<int32_t>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testMedian<unsigned long long>(testDuration) && allSucceeded;
+	allSucceeded = testMedian<uint64_t>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -125,32 +127,32 @@ TEST(TestMedian, Median5)
 	EXPECT_TRUE(TestMedian::testMedian5(GTEST_TEST_DURATION));
 }
 
-TEST(TestMedian, MedianChar)
+TEST(TestMedian, Median_int8)
 {
-	EXPECT_TRUE(TestMedian::testMedian<char>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestMedian::testMedian<int8_t>(GTEST_TEST_DURATION));
 }
 
-TEST(TestMedian, MedianUnsignedShort)
+TEST(TestMedian, Median_uint16)
 {
-	EXPECT_TRUE(TestMedian::testMedian<unsigned short>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestMedian::testMedian<uint16_t>(GTEST_TEST_DURATION));
 }
 
-TEST(TestMedian, MedianInt)
+TEST(TestMedian, Median_int32)
 {
-	EXPECT_TRUE(TestMedian::testMedian<int>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestMedian::testMedian<int32_t>(GTEST_TEST_DURATION));
 }
 
-TEST(TestMedian, MedianUnsignedLongLong)
+TEST(TestMedian, Median_uint64)
 {
-	EXPECT_TRUE(TestMedian::testMedian<unsigned long long>(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestMedian::testMedian<uint64_t>(GTEST_TEST_DURATION));
 }
 
-TEST(TestMedian, MedianFloat)
+TEST(TestMedian, Median_float)
 {
 	EXPECT_TRUE(TestMedian::testMedian<float>(GTEST_TEST_DURATION));
 }
 
-TEST(TestMedian, MedianDouble)
+TEST(TestMedian, Median_double)
 {
 	EXPECT_TRUE(TestMedian::testMedian<double>(GTEST_TEST_DURATION));
 }
@@ -163,15 +165,18 @@ bool TestMedian::testMedian2(const double testDuration)
 
 	Log::info() << "Median test with two parameters:";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
+
 	do
 	{
 		const unsigned int i[2] =
 		{
-			RandomI::random(100),
-			RandomI::random(100)
+			RandomI::random(randomGenerator, 100u),
+			RandomI::random(randomGenerator, 100u)
 		};
 
 		const unsigned int median = Median::median2(i[0], i[1]);
@@ -181,23 +186,13 @@ bool TestMedian::testMedian2(const double testDuration)
 
 		std::sort(values.begin(), values.end());
 
-		if (values[0] != median)
-		{
-			result = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, values[0], median);
 	}
-	while (Timestamp(true) < startTimestamp + testDuration);
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (result)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return result;
+	return validation.succeeded();
 }
 
 bool TestMedian::testMedian3(const double testDuration)
@@ -206,16 +201,19 @@ bool TestMedian::testMedian3(const double testDuration)
 
 	Log::info() << "Median test with three parameters:";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
+
 	do
 	{
 		const unsigned int i[3] =
 		{
-			RandomI::random(100),
-			RandomI::random(100),
-			RandomI::random(100)
+			RandomI::random(randomGenerator, 100u),
+			RandomI::random(randomGenerator, 100u),
+			RandomI::random(randomGenerator, 100u)
 		};
 
 		const unsigned int median = Median::median3(i[0], i[1], i[2]);
@@ -225,23 +223,13 @@ bool TestMedian::testMedian3(const double testDuration)
 
 		std::sort(values.begin(), values.end());
 
-		if (values[1] != median)
-		{
-			result = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, values[1], median);
 	}
-	while (Timestamp(true) < startTimestamp + testDuration);
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (result)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return result;
+	return validation.succeeded();
 }
 
 bool TestMedian::testMedian4(const double testDuration)
@@ -250,17 +238,20 @@ bool TestMedian::testMedian4(const double testDuration)
 
 	Log::info() << "Median test with four parameters:";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
+
 	do
 	{
 		const unsigned int i[4] =
 		{
-			RandomI::random(100),
-			RandomI::random(100),
-			RandomI::random(100),
-			RandomI::random(100)
+			RandomI::random(randomGenerator, 100u),
+			RandomI::random(randomGenerator, 100u),
+			RandomI::random(randomGenerator, 100u),
+			RandomI::random(randomGenerator, 100u)
 		};
 
 		const unsigned int median = Median::median4(i[0], i[1], i[2], i[3]);
@@ -270,23 +261,13 @@ bool TestMedian::testMedian4(const double testDuration)
 
 		std::sort(values.begin(), values.end());
 
-		if (values[1] != median)
-		{
-			result = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, values[1], median);
 	}
-	while (Timestamp(true) < startTimestamp + testDuration);
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (result)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return result;
+	return validation.succeeded();
 }
 
 bool TestMedian::testMedian5(const double testDuration)
@@ -295,18 +276,21 @@ bool TestMedian::testMedian5(const double testDuration)
 
 	Log::info() << "Median test with five parameters:";
 
-	bool result = true;
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
+
 	do
 	{
 		const unsigned int i[5] =
 		{
-			RandomI::random(100),
-			RandomI::random(100),
-			RandomI::random(100),
-			RandomI::random(100),
-			RandomI::random(100)
+			RandomI::random(randomGenerator, 100u),
+			RandomI::random(randomGenerator, 100u),
+			RandomI::random(randomGenerator, 100u),
+			RandomI::random(randomGenerator, 100u),
+			RandomI::random(randomGenerator, 100u)
 		};
 
 		const unsigned int median = Median::median5(i[0], i[1], i[2], i[3], i[4]);
@@ -316,23 +300,13 @@ bool TestMedian::testMedian5(const double testDuration)
 
 		std::sort(values.begin(), values.end());
 
-		if (values[2] != median)
-		{
-			result = false;
-		}
+		OCEAN_EXPECT_EQUAL(validation, values[2], median);
 	}
-	while (Timestamp(true) < startTimestamp + testDuration);
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (result)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return result;
+	return validation.succeeded();
 }
 
 template <typename T>
@@ -374,7 +348,9 @@ bool TestMedian::testMedian(const unsigned int number, const double testDuration
 	using Elements = std::vector<T>;
 	Elements elements(number);
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+
+	Validation validation(randomGenerator);
 
 	HighPerformanceStatistic performance;
 	HighPerformanceStatistic stdPerformance;
@@ -385,95 +361,89 @@ bool TestMedian::testMedian(const unsigned int number, const double testDuration
 	{
 		for (unsigned int n = 0; n < number; ++n)
 		{
-			if constexpr (sizeof(T) == 1)
+			if constexpr (std::is_same<T, int8_t>::value)
 			{
-				static_assert(sizeof(unsigned char) == 1, "Invalid data type!");
-
-				const unsigned char randomValue = (unsigned char)(RandomI::random(255u));
-				elements[n] = *((T*)&randomValue);
+				elements[n] = int8_t(RandomI::random(randomGenerator, 255u));
 			}
-
-			if constexpr (sizeof(T) == 2)
+			else if constexpr (std::is_same<T, uint16_t>::value)
 			{
-				static_assert(sizeof(unsigned short) == 2, "Invalid data type!");
-
-				const unsigned short randomValue = (unsigned short)(RandomI::random32());
-				elements[n] = *((T*)&randomValue);
+				elements[n] = uint16_t(RandomI::random32(randomGenerator));
 			}
-
-			if constexpr (sizeof(T) == 4)
+			else if constexpr (std::is_same<T, int32_t>::value)
 			{
-				static_assert(sizeof(unsigned int) == 4, "Invalid data type!");
+				elements[n] = int32_t(RandomI::random32(randomGenerator));
+			}
+			else if constexpr (std::is_same<T, uint64_t>::value)
+			{
+				elements[n] = uint64_t(RandomI::random64(randomGenerator));
+			}
+			else if constexpr (std::is_same<T, float>::value)
+			{
+				float floatValue = NumericF::nan();
 
-				// we explicitly create a floating point value based on random bits ensuring that the algorithm works with any value (e.g., nan, inv et.c)
-				do
+				while (NumericF::isNan(floatValue))
 				{
-					const unsigned int randomValue = RandomI::random32();
-					elements[n] = *((T*)&randomValue);
+					uint32_t value = RandomI::random32(randomGenerator);
+					memcpy(&floatValue, &value, sizeof(float));
 				}
-				while (elements[n] != elements[n]); // Check for NaN
+
+				elements[n] = floatValue;
 			}
-
-			if constexpr (sizeof(T) == 8)
+			else if constexpr (std::is_same<T, double>::value)
 			{
-				static_assert(sizeof(unsigned long long) == 8, "Invalid data type!");
+				double doubleValue = NumericD::nan();
 
-				// we explicitly create a floating point value based on random bits ensuring that the algorithm works with any value (e.g., nan, inv et.c)
-				do
+				while (NumericD::isNan(doubleValue))
 				{
-					const unsigned long long randomValue = RandomI::random64();
-					elements[n] = *((T*)&randomValue);
+					uint64_t value = RandomI::random64(randomGenerator);
+					memcpy(&doubleValue, &value, sizeof(double));
 				}
-				while (elements[n] != elements[n]); // Check for NaN
+
+				elements[n] = doubleValue;
+			}
+			else
+			{
+				ocean_assert(false && "This should never happen!");
+				OCEAN_SET_FAILED(validation);
 			}
 		}
 
-
-		Elements copy(elements);
+		Elements copyOcean(elements);
+		Elements copyStd(elements);
 
 		const T value0 = Median::constMedian(elements.data(), elements.size());
 
 		performance.start();
-		const T value1 = Median::median(copy.data(), copy.size());
+			const T value1 = Median::median(copyOcean.data(), copyOcean.size());
 		performance.stop();
 
-		copy = elements;
+		const size_t index = (copyStd.size() - 1) / 2;
+		OCEAN_EXPECT_LESS_EQUAL(validation, size_t(0), index);
+		OCEAN_EXPECT_LESS_EQUAL(validation, index, copyStd.size() - 1);
+
 		stdPerformance.start();
-		std::nth_element(copy.begin(), copy.begin() + (copy.size() - 1) / 2, copy.end());
-		const T testValue = copy[(copy.size() - 1) / 2];
+			std::nth_element(copyStd.begin(), copyStd.begin() + index, copyStd.end());
+			const T testValue = copyStd[index];
 		stdPerformance.stop();
 
-		if (value0 != testValue || value1 != testValue)
-		{
-			// we may receive a different result in the case at least one value is not a number (nan)
-
-			bool hasNan = false;
-			for (size_t n = 0; !hasNan && n < elements.size(); ++n)
-			{
-				hasNan = !isNumber(elements[n]);
-			}
-
-			if (!hasNan)
-			{
-				allSucceeded = false;
-			}
-		}
+		OCEAN_EXPECT_EQUAL(validation, value0, testValue);
+		OCEAN_EXPECT_EQUAL(validation, value1, testValue);
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	Log::info() << "Performance: Best: " << performance.bestMseconds() << "ms, worst: " << performance.worstMseconds() << "ms, average: " << performance.averageMseconds() << "ms";
-	Log::info() << "Standard performance: Best: " << stdPerformance.bestMseconds() << "ms, worst: " << stdPerformance.worstMseconds() << "ms, average: " << stdPerformance.averageMseconds() << "ms";
+	Log::info() << "Performance: Best: " << performance;
+	Log::info() << "Standard performance: Best: " << stdPerformance;
 
-	if (performance.bestMseconds() > 0)
+	if (performance.bestMseconds() > 0.0)
 	{
-		Log::info() << "Best boost factor: " << String::toAString(stdPerformance.bestMseconds() / performance.bestMseconds(), 1u) << "x";
+		Log::info() << "Median boost factor: " << String::toAString(stdPerformance.medianMseconds() / performance.medianMseconds(), 1u) << "x";
 	}
 	else
 	{
-		Log::info() << "Best boost factor: ~1x";
+		Log::info() << "Median boost factor: ~1x";
 	}
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 }
