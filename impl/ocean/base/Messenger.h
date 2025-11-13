@@ -416,17 +416,6 @@ class OCEAN_BASE_EXPORT Messenger : public Singleton<Messenger>
 
 		/// Maximum number of messages.
 		static constexpr unsigned int maxMessages_ = 5000u;
-
-#if defined(__APPLE__)
-
-		/**
-		 * Write message to Apple-specific log facility.
-		 * @sa push()
-		 * @param message The message to be written into NSLog
-		 */
-		static void writeMessageToDebugWindowApple(const std::string& message);
-
-#endif // defined(__APPLE__)
 };
 
 constexpr bool Messenger::isActive()
