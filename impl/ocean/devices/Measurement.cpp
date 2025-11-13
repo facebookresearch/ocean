@@ -357,7 +357,8 @@ void Measurement::unsubscribeSampleEvent(const SubscriptionId subscriptionId)
 
 Measurement::SampleRef Measurement::interpolateSamples(const SampleRef& lowerSample, const SampleRef& upperSample, const double /*interpolationFactor*/, const Timestamp& /*interpolatedTimestamp*/) const
 {
-	ocean_assert(lowerSample && upperSample);
+	ocean_assert(lowerSample);
+	ocean_assert_and_suppress_unused(upperSample, upperSample);
 
 	// Default implementation: no interpolation, just return the lower sample
 	// Derived classes should override this method to provide type-specific interpolation
