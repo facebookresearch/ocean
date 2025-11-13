@@ -339,12 +339,44 @@ class OCEAN_BASE_EXPORT Messenger : public Singleton<Messenger>
 		 */
 		~Messenger();
 
+		/**
+		 * Queues a message.
+		 * @param messageType The type of the message
+		 * @param locationAndTime The location and time, may be empty
+		 * @param message The message to queue, must be valid
+		 */
+		void queueMessage(const MessageType messageType, std::string&& locationAndTime, std::string&& message);
+
+#ifdef OCEAN_PLATFORM_BUILD_ANDROID
+
+		/**
+		 * Writes a message to the Android log system (logcat).
+		 * @param messageType The type of the message
+		 * @param locationAndTime The location and time, may be empty
+		 * @param message The message to write, must be valid
+		 */
+		static void writeMessageToLogAndroid(const MessageType messageType, const std::string& locationAndTime, const std::string& message);
+
+#endif // OCEAN_PLATFORM_BUILD_ANDROID
+
+#ifdef OCEAN_PLATFORM_BUILD_APPLE
+
+		/**
+		 * Writes a message to Apple's log system.
+		 * @param messageType The type of the message
+		 * @param message The message to write, must be valid
+		 */
+		static void writeMessageToLogApple(const MessageType messageType, const std::string& message);
+
+#endif // OCEAN_PLATFORM_BUILD_APPLE
+
 	protected:
 
 		/// Message output type.
 		MessageOutput outputType_ = OUTPUT_STANDARD;
 
 #ifdef OCEAN_DEBUG
+
 		/// Debug message queue.
 		MessageQueue debugMessageQueue_;
 

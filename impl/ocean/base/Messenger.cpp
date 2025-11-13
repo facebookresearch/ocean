@@ -12,8 +12,12 @@
 #include <fstream>
 #include <iostream>
 
-#if defined(_ANDROID)
+#if defined(OCEAN_PLATFORM_BUILD_ANDROID)
 	#include <android/log.h>
+#endif
+
+#if defined(OCEAN_PLATFORM_BUILD_APPLE)
+	#include <os/log.h>
 #endif
 
 namespace Ocean
@@ -128,135 +132,72 @@ void Messenger::push(const MessageType type, std::string&& location, std::string
 			Maintenance::get().send("OCEAN_MESSENGER", augmentedMessage.c_str(), augmentedMessage.length());
 		}
 
-#ifdef _ANDROID
 		if ((outputType_ & OUTPUT_STANDARD) || (outputType_ & OUTPUT_DEBUG_WINDOW))
 		{
-			// on Android platforms both output types end in the special Log system of Android
-			const char logcatTag[] = "Ocean";
-			augmentedMessage = locationAndTime + (locationAndTime.empty() ? "" : ": ") + message;
+#ifdef OCEAN_PLATFORM_BUILD_ANDROID
 
-			switch (type)
+			// on Android STANDARD and DEBUG_WINDOW goes to logcat
+			writeMessageToLogAndroid(type, locationAndTime, message);
+
+#elif defined(OCEAN_PLATFORM_BUILD_WINDOWS)
+
+			if (outputType_ & OUTPUT_DEBUG_WINDOW)
 			{
-				case TYPE_ERROR:
-					__android_log_write(ANDROID_LOG_ERROR, logcatTag, augmentedMessage.c_str());
-					break;
-
-				case TYPE_WARNING:
-					__android_log_write(ANDROID_LOG_WARN, logcatTag, augmentedMessage.c_str());
-					break;
-
-#ifdef OCEAN_DEBUG
-				case TYPE_DEBUG:
-					__android_log_write(ANDROID_LOG_DEBUG, logcatTag, augmentedMessage.c_str());
-					break;
-#endif
-
-				default:
-					__android_log_write(ANDROID_LOG_INFO, logcatTag, augmentedMessage.c_str());
-					break;
+				// on Windows, only OUTPUT_DEBUG_WINDOW goes to Windows' debug output
+				OutputDebugStringA((std::string("Ocean, ") + augmentedMessage + std::string("\n")).c_str());
 			}
-		}
-#else // _ANDROID
 
-		if (outputType_ & OUTPUT_DEBUG_WINDOW)
-		{
-#if defined(_WINDOWS)
-			OutputDebugStringA((std::string("Ocean, ") + augmentedMessage + std::string("\n")).c_str());
-#elif defined(__APPLE__)
-			writeMessageToDebugWindowApple(augmentedMessage);
+			if (outputType_ & OUTPUT_STANDARD)
+			{
+				std::cout << augmentedMessage.c_str() << std::endl;
+			}
+
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE)
+
+			if (outputType_ & OUTPUT_DEBUG_WINDOW)
+			{
+				// on Apple, only DEBUG_WINDOW goes to Apple's log system
+				writeMessageToLogApple(type, augmentedMessage);
+			}
+
+			if (outputType_ & OUTPUT_STANDARD)
+			{
+				std::cout << augmentedMessage.c_str() << std::endl;
+			}
+
 #else
+
 			std::cout << augmentedMessage.c_str() << std::endl;
-#endif
-		}
 
-		if (outputType_ & OUTPUT_STANDARD)
-		{
-			std::cout << augmentedMessage.c_str() << std::endl;
+#endif // OCEAN_PLATFORM_BUILD_ANDROID
 		}
-
-#endif // _ANDROID
 	}
 
-	if ((outputType_ & OUTPUT_QUEUED) != OUTPUT_QUEUED)
+	if (outputType_ & OUTPUT_QUEUED)
 	{
-		return;
+		queueMessage(type, std::move(locationAndTime), std::move(message));
 	}
-
-	switch (type)
-	{
-		case TYPE_UNDEFINED:
-			break;
-
-		case TYPE_DEBUG:
-		{
-#ifdef OCEAN_DEBUG
-			if (debugMessageQueue_.size() >= maxMessages_)
-			{
-				debugMessageQueue_.pop();
-			}
-
-			debugMessageQueue_.emplace(std::move(locationAndTime), std::move(message));
-#endif
-
-			return;
-		}
-
-		case TYPE_INFORMATION:
-		{
-			if (informationMessageQueue_.size() >= maxMessages_)
-			{
-				informationMessageQueue_.pop();
-			}
-
-			informationMessageQueue_.emplace(std::move(locationAndTime), std::move(message));
-			return;
-		}
-
-		case TYPE_WARNING:
-		{
-			if (warningMessageQueue_.size() >= maxMessages_)
-			{
-				warningMessageQueue_.pop();
-			}
-
-			warningMessageQueue_.emplace(std::move(locationAndTime), std::move(message));
-			return;
-		}
-
-		case TYPE_ERROR:
-		{
-			if (errorMessageQueue_.size() >= maxMessages_)
-			{
-				errorMessageQueue_.pop();
-			}
-
-			errorMessageQueue_.emplace(std::move(locationAndTime), std::move(message));
-			return;
-		}
-	}
-
-	ocean_assert(false && "Unknown message type.");
 }
 
 void Messenger::writeToDebugOutput(const std::string& message)
 {
-#if defined(_WINDOWS)
+#if defined(OCEAN_PLATFORM_BUILD_WINDOWS)
 
 	OutputDebugStringA((std::string("Ocean, ") + message + std::string("\n")).c_str());
 
-#elif defined(_ANDROID)
+#elif defined(OCEAN_PLATFORM_BUILD_ANDROID)
 
-	__android_log_write(ANDROID_LOG_INFO, "Ocean", message.c_str());
+	writeMessageToLogAndroid(TYPE_INFORMATION, "", message);
 
-#elif defined(__APPLE__)
+#elif defined(OCEAN_PLATFORM_BUILD_APPLE)
 
-	writeMessageToDebugWindowApple(message);
+	writeMessageToLogApple(TYPE_INFORMATION, message);
 
 #else
 
 	std::cout << "Ocean, " << message.c_str() << std::endl;
 
-#endif
+#endif // OCEAN_PLATFORM_BUILD_WINDOWS
 }
 
 bool Messenger::popDebug(std::string& location, std::string& message, bool* isNew)
@@ -395,7 +336,7 @@ bool Messenger::popMessage(MessageType& type, std::string& location, std::string
 
 			return popDebug(location, message, isNew);
 		}
-#endif
+#endif // OCEAN_DEBUG
 	}
 
 	return false;
@@ -440,7 +381,7 @@ std::string Messenger::popMessage(const MessageType type, bool* isNew)
 			return std::string("Debug: ") + (location.empty() ? message : (location + std::string(", ") + message));
 #else
 			ocean_assert(false && "This should never happen!");
-#endif
+#endif // OCEAN_DEBUG
 			break;
 		}
 	}
@@ -477,7 +418,7 @@ bool Messenger::setFileOutput(const std::string& filename)
 	fileOutputStream_.open(filename.c_str(), std::ios::binary);
 	return fileOutputStream_.good();
 
-#endif
+#endif // OCEAN_DEACTIVATED_MESSENGER
 }
 
 bool Messenger::setOutputStream(std::ostream& stream)
@@ -540,5 +481,150 @@ void Messenger::clearErrors()
 	const ScopedLock scopedLock(lock_);
 	errorMessageQueue_ = MessageQueue();
 }
+
+void Messenger::queueMessage(const MessageType messageType, std::string&& locationAndTime, std::string&& message)
+{
+	ocean_assert(!message.empty());
+
+	switch (messageType)
+	{
+		case TYPE_UNDEFINED:
+			break;
+
+		case TYPE_DEBUG:
+		{
+#ifdef OCEAN_DEBUG
+			if (debugMessageQueue_.size() >= maxMessages_)
+			{
+				debugMessageQueue_.pop();
+			}
+
+			debugMessageQueue_.emplace(std::move(locationAndTime), std::move(message));
+#endif // OCEAN_DEBUG
+
+			return;
+		}
+
+		case TYPE_INFORMATION:
+		{
+			if (informationMessageQueue_.size() >= maxMessages_)
+			{
+				informationMessageQueue_.pop();
+			}
+
+			informationMessageQueue_.emplace(std::move(locationAndTime), std::move(message));
+			return;
+		}
+
+		case TYPE_WARNING:
+		{
+			if (warningMessageQueue_.size() >= maxMessages_)
+			{
+				warningMessageQueue_.pop();
+			}
+
+			warningMessageQueue_.emplace(std::move(locationAndTime), std::move(message));
+			return;
+		}
+
+		case TYPE_ERROR:
+		{
+			if (errorMessageQueue_.size() >= maxMessages_)
+			{
+				errorMessageQueue_.pop();
+			}
+
+			errorMessageQueue_.emplace(std::move(locationAndTime), std::move(message));
+			return;
+		}
+	}
+
+	ocean_assert(false && "Unknown message type.");
+}
+
+#ifdef OCEAN_PLATFORM_BUILD_ANDROID
+
+void Messenger::writeMessageToLogAndroid(const MessageType messageType, const std::string& locationAndTime, const std::string& message)
+{
+	ocean_assert(!message.empty());
+
+	android_LogPriority androidPriority = ANDROID_LOG_INFO;
+
+	switch (messageType)
+	{
+		case TYPE_ERROR:
+			androidPriority = ANDROID_LOG_ERROR;
+			break;
+
+		case TYPE_WARNING:
+			androidPriority = ANDROID_LOG_WARN;
+			break;
+
+		case TYPE_DEBUG:
+#ifdef OCEAN_DEBUG
+			androidPriority = ANDROID_LOG_DEBUG;
+			break;
+#else
+			ocean_assert(false && "This should never happen!");
+			return;
+#endif // OCEAN_DEBUG
+
+		case TYPE_INFORMATION:
+			break;
+
+		case TYPE_UNDEFINED:
+			ocean_assert(false && "This should never happen!");
+			break;
+	}
+
+	constexpr char logcatTag[] = "Ocean";
+
+	if (locationAndTime.empty())
+	{
+		__android_log_write(androidPriority, logcatTag, message.c_str());
+	}
+	else
+	{
+		std::string augmentedMessage = locationAndTime +  ": " + message;
+
+		__android_log_write(androidPriority, logcatTag, augmentedMessage.c_str());
+	}
+}
+
+#endif // OCEAN_PLATFORM_BUILD_ANDROID
+
+#ifdef OCEAN_PLATFORM_BUILD_APPLE
+
+void Messenger::writeMessageToLogApple(const MessageType messageType, const std::string& message)
+{
+	static os_log_t ocean_log = os_log_create("com.meta.ocean", "logs");
+
+	switch (messageType)
+	{
+		case TYPE_ERROR:
+			os_log_fault(ocean_log, "Ocean, %{public}s", message.c_str());
+			break;
+
+		case TYPE_WARNING:
+			os_log_error(ocean_log, "Ocean, %{public}s", message.c_str());
+			break;
+
+#ifdef OCEAN_DEBUG
+		case TYPE_DEBUG:
+			os_log_debug(ocean_log, "Ocean, %{public}s", message.c_str());
+			break;
+#else
+			ocean_assert(false && "This should never happen!");
+			return;
+#endif // OCEAN_DEBUG
+
+		default:
+			ocean_assert(messageType == TYPE_INFORMATION);
+			os_log(ocean_log, "Ocean, %{public}s", message.c_str());
+			break;
+	}
+}
+
+#endif // OCEAN_PLATFORM_BUILD_APPLE
 
 } // namespace Ocean
