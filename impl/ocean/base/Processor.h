@@ -11,8 +11,6 @@
 #include "ocean/base/Base.h"
 #include "ocean/base/Singleton.h"
 
-#include <bit>
-
 namespace Ocean
 {
 
@@ -190,7 +188,7 @@ class OCEAN_BASE_EXPORT Processor : public Singleton<Processor>
 		 * Returns whether the processor/system is using the little endian convention (like e.g., x86) or whether the big endian convention is used.
 		 * @return True, if the little endian convention is used
 		 */
-		static constexpr bool isLittleEndian();
+		static inline bool isLittleEndian();
 
 		/**
 		 * Returns the current value of the ARM Generic Timer virtual counter register CNTVCT.
@@ -510,9 +508,19 @@ inline ProcessorInstructions Processor::bestInstructionGroup<false>(const Proces
 	return PI_NONE;
 }
 
-constexpr bool Processor::isLittleEndian()
+inline bool Processor::isLittleEndian()
 {
-	return std::endian::native == std::endian::little;
+	const int32_t littleEndianValue = 1;
+
+	const bool result = (*(int8_t*)(&littleEndianValue)) == int8_t(1);
+
+#ifdef OCEAN_LITTLE_ENDIAN
+	ocean_assert(result);
+#else
+	ocean_assert(!result);
+#endif
+
+	return result;
 }
 
 constexpr ProcessorInstructions Processor::invalidProcessorInstructions()
