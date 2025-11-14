@@ -154,6 +154,12 @@ class StackHeapVector
 
 		/**
 		 * Creates a new vector object.
+		 * @param size The number of default elements to be created
+		 */
+		explicit StackHeapVector(const size_t size);
+
+		/**
+		 * Creates a new vector object.
 		 * @param size The number of elements to be created
 		 * @param element The value that will be created in the first 'number' elements of this vector
 		 */
@@ -421,6 +427,12 @@ template <typename T, size_t tStackCapacity>
 StackHeapVector<T, tStackCapacity>::StackHeapVector()
 {
 	// nothing to do here
+}
+
+template <typename T, size_t tStackCapacity>
+StackHeapVector<T, tStackCapacity>::StackHeapVector(const size_t size)
+{
+	resize(size);
 }
 
 template <typename T, size_t tStackCapacity>

@@ -474,6 +474,49 @@ bool TestStackHeapVector::testConstructor(const double testDuration)
 		}
 
 		{
+			// size-only constructor (default-initialized elements)
+
+			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
+
+			const StackHeapVector<std::string, tStackCapacity> stackHeapVector(numberElements);
+
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), numberElements);
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.isEmpty(), numberElements == 0);
+
+			for (size_t n = 0; n < numberElements; ++n)
+			{
+				// Default-constructed strings should be empty
+				OCEAN_EXPECT_TRUE(validation, stackHeapVector[n].empty());
+			}
+
+			size_t counter = 0;
+
+			for (const std::string& element : stackHeapVector)
+			{
+				OCEAN_EXPECT_TRUE(validation, element.empty());
+				++counter;
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, counter, numberElements);
+		}
+
+		{
+			// size-only constructor with uint64_t (should be zero-initialized)
+
+			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
+
+			const StackHeapVector<uint64_t, tStackCapacity> stackHeapVector(numberElements);
+
+			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), numberElements);
+
+			for (size_t n = 0; n < numberElements; ++n)
+			{
+				// Default-constructed uint64_t should be zero
+				OCEAN_EXPECT_EQUAL(validation, stackHeapVector[n], uint64_t(0));
+			}
+		}
+
+		{
 			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
 
 			std::string value;
