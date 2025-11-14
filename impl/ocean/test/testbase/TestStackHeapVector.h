@@ -154,6 +154,27 @@ class OCEAN_TEST_BASE_EXPORT TestStackHeapVector
 		static bool testCopyConstructor(const double testDuration);
 
 		/**
+		 * Tests the move constructor from another StackHeapVector.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testMoveConstructor(const double testDuration);
+
+		/**
+		 * Tests the copy assignment operator.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testCopyAssignment(const double testDuration);
+
+		/**
+		 * Tests the move assignment operator.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testMoveAssignment(const double testDuration);
+
+		/**
 		 * Tests the equality operator.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -280,6 +301,33 @@ class OCEAN_TEST_BASE_EXPORT TestStackHeapVector
 		 */
 		template <size_t tStackCapacity>
 		static bool testCopyConstructor(const double testDuration);
+
+		/**
+		 * Tests the move constructor from another StackHeapVector
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testMoveConstructor(const double testDuration);
+
+		/**
+		 * Tests the copy assignment operator
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testCopyAssignment(const double testDuration);
+
+		/**
+		 * Tests the move assignment operator
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testMoveAssignment(const double testDuration);
 
 		/**
 		 * Tests the equality operator
