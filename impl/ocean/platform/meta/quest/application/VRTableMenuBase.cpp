@@ -180,7 +180,8 @@ bool VRTableMenuBase::setMenuEntries(const Groups& groups, const RGBAColor& menu
 
 			for (const Entry& entry : group.second)
 			{
-				menuEntries_.emplace_back(*engine_, entryHeight_, entry.name_, entry.url_, true, entryBackgroundColor);
+				const RGBAColor color = entry.color_.isValid() ? entry.color_ : entryBackgroundColor;
+				menuEntries_.emplace_back(*engine_, entryHeight_, entry.name_, entry.url_, true, color);
 			}
 		}
 	}

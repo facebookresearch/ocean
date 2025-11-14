@@ -58,8 +58,9 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTableMenuBase
 				 * Creates a new entry.
 				 * @param name The name of the entry (the text of the entry), must be valid
 				 * @param url The url of the entry which is necessary to identify the individual entries
+				 * @param color Optional color of the entry
 				 */
-				inline Entry(std::string name, std::string url);
+				inline Entry(std::string name, std::string url, const RGBAColor& color = RGBAColor(false));
 
 			protected:
 
@@ -68,6 +69,9 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTableMenuBase
 
 				/// The url of the entry.
 				std::string url_;
+
+				/// The optional color.
+				RGBAColor color_;
 		};
 
 		/**
@@ -101,9 +105,9 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTableMenuBase
 				 * @param name The text of the menu entry, must be valid
 				 * @param url The optional URL connected with the menu entry
 				 * @param isEntry True, if the entry is a menu entry; False, if the entry is a name of a group section
-				 * @param backgroundColor The background color of an entry
+				 * @param color The color of an entry
 				 */
-				MenuEntry(Rendering::Engine& engine, const Scalar textLineHeight, const std::string& name, const std::string& url, bool isEntry, const RGBAColor& backgroundColor = RGBAColor(0.0f, 0.0f, 0.0f, 0.0f));
+				MenuEntry(Rendering::Engine& engine, const Scalar textLineHeight, const std::string& name, const std::string& url, bool isEntry, const RGBAColor& color = RGBAColor(0.0f, 0.0f, 0.0f, 0.0f));
 
 				/**
 				 * Returns the extent of the actual text.
@@ -317,9 +321,10 @@ class OCEAN_PLATFORM_META_QUEST_APPLICATION_EXPORT VRTableMenuBase
 		static constexpr Scalar entryOffsetZ_ = Scalar(0.001);
 };
 
-inline VRTableMenuBase::Entry::Entry(std::string name, std::string url) :
+inline VRTableMenuBase::Entry::Entry(std::string name, std::string url, const RGBAColor& color) :
 	name_(std::move(name)),
-	url_(std::move(url))
+	url_(std::move(url)),
+	color_(color)
 {
 	// nothing to do here
 }
