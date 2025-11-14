@@ -51,7 +51,7 @@ bool TestStackHeapVector::test(const double testDuration)
 	Log::info() << "-";
 	Log::info() << " ";
 
-	allSucceeded = testMoveConstructor(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -70,6 +70,12 @@ bool TestStackHeapVector::test(const double testDuration)
 	Log::info() << " ";
 
 	allSucceeded = testCopyConstructor(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testEquality(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -150,9 +156,9 @@ TEST(TestStackHeapVector, SizeElementConstructor)
 	EXPECT_TRUE(TestStackHeapVector::testSizeElementConstructor(GTEST_TEST_DURATION));
 }
 
-TEST(TestStackHeapVector, MoveConstructor)
+TEST(TestStackHeapVector, MoveConstructorFromVector)
 {
-	EXPECT_TRUE(TestStackHeapVector::testMoveConstructor(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestStackHeapVector::testMoveConstructorFromVector(GTEST_TEST_DURATION));
 }
 
 TEST(TestStackHeapVector, CopyConstructorFromVector)
@@ -168,6 +174,11 @@ TEST(TestStackHeapVector, InitializerListConstructor)
 TEST(TestStackHeapVector, CopyConstructor)
 {
 	EXPECT_TRUE(TestStackHeapVector::testCopyConstructor(GTEST_TEST_DURATION));
+}
+
+TEST(TestStackHeapVector, Equality)
+{
+	EXPECT_TRUE(TestStackHeapVector::testEquality(GTEST_TEST_DURATION));
 }
 
 TEST(TestStackHeapVector, Assign)
@@ -308,7 +319,7 @@ bool TestStackHeapVector::testSizeElementConstructor(const double testDuration)
 	return allSucceeded;
 }
 
-bool TestStackHeapVector::testMoveConstructor(const double testDuration)
+bool TestStackHeapVector::testMoveConstructorFromVector(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -316,17 +327,17 @@ bool TestStackHeapVector::testMoveConstructor(const double testDuration)
 
 	bool allSucceeded = true;
 
-	allSucceeded = testMoveConstructor<1>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<2>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<3>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<4>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<5>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<6>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<7>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<8>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<31>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<32>(testDuration) && allSucceeded;
-	allSucceeded = testMoveConstructor<64>(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector<1>(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector<2>(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector<3>(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector<4>(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector<5>(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector<6>(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector<7>(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector<8>(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector<31>(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector<32>(testDuration) && allSucceeded;
+	allSucceeded = testMoveConstructorFromVector<64>(testDuration) && allSucceeded;
 
 	if (allSucceeded)
 	{
@@ -423,6 +434,38 @@ bool TestStackHeapVector::testCopyConstructor(const double testDuration)
 	allSucceeded = testCopyConstructor<31>(testDuration) && allSucceeded;
 	allSucceeded = testCopyConstructor<32>(testDuration) && allSucceeded;
 	allSucceeded = testCopyConstructor<64>(testDuration) && allSucceeded;
+
+	if (allSucceeded)
+	{
+		Log::info() << "Validation: succeeded.";
+	}
+	else
+	{
+		Log::info() << "Validation: FAILED!";
+	}
+
+	return allSucceeded;
+}
+
+bool TestStackHeapVector::testEquality(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing equality:";
+
+	bool allSucceeded = true;
+
+	allSucceeded = testEquality<1>(testDuration) && allSucceeded;
+	allSucceeded = testEquality<2>(testDuration) && allSucceeded;
+	allSucceeded = testEquality<3>(testDuration) && allSucceeded;
+	allSucceeded = testEquality<4>(testDuration) && allSucceeded;
+	allSucceeded = testEquality<5>(testDuration) && allSucceeded;
+	allSucceeded = testEquality<6>(testDuration) && allSucceeded;
+	allSucceeded = testEquality<7>(testDuration) && allSucceeded;
+	allSucceeded = testEquality<8>(testDuration) && allSucceeded;
+	allSucceeded = testEquality<31>(testDuration) && allSucceeded;
+	allSucceeded = testEquality<32>(testDuration) && allSucceeded;
+	allSucceeded = testEquality<64>(testDuration) && allSucceeded;
 
 	if (allSucceeded)
 	{
@@ -705,8 +748,6 @@ bool TestStackHeapVector::testDefaultConstructor(const double testDuration)
 	do
 	{
 		{
-			// default constructor
-
 			const StackHeapVector<uint64_t, tStackCapacity> defaultVector;
 
 			OCEAN_EXPECT_TRUE(validation, defaultVector.isEmpty());
@@ -714,8 +755,6 @@ bool TestStackHeapVector::testDefaultConstructor(const double testDuration)
 		}
 
 		{
-			// default constructor
-
 			const StackHeapVector<Frame, tStackCapacity> defaultVector;
 
 			OCEAN_EXPECT_TRUE(validation, defaultVector.isEmpty());
@@ -723,8 +762,6 @@ bool TestStackHeapVector::testDefaultConstructor(const double testDuration)
 		}
 
 		{
-			// default constructor
-
 			const StackHeapVector<std::string, tStackCapacity> defaultVector;
 
 			OCEAN_EXPECT_TRUE(validation, defaultVector.isEmpty());
@@ -808,58 +845,56 @@ bool TestStackHeapVector::testSizeElementConstructor(const double testDuration)
 
 	do
 	{
+		const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
+
+		std::string value;
+
+		if (RandomI::boolean(randomGenerator))
 		{
-			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
-
-			std::string value;
-
-			if (RandomI::boolean(randomGenerator))
-			{
-				value = String::toAString(RandomI::random64(randomGenerator));
-			}
-
-			const StackHeapVector<std::string, tStackCapacity> stackHeapVector(numberElements, value);
-
-			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), numberElements);
-			OCEAN_EXPECT_EQUAL(validation, stackHeapVector.isEmpty(), numberElements == 0);
-
-			for (size_t n = 0; n < numberElements; ++n)
-			{
-				if (stackHeapVector[n] != value)
-				{
-					OCEAN_SET_FAILED(validation);
-				}
-			}
-
-			size_t counter = 0;
-
-			for (const std::string& element : stackHeapVector)
-			{
-				OCEAN_EXPECT_EQUAL(validation, element, value);
-
-				++counter;
-			}
-
-			OCEAN_EXPECT_EQUAL(validation, counter, numberElements);
-
-			counter = 0;
-
-			StackHeapVector<std::string, tStackCapacity> copyStackHeapVector(stackHeapVector);
-
-			for (std::string& element : copyStackHeapVector)
-			{
-				OCEAN_EXPECT_EQUAL(validation, element, value);
-
-				++counter;
-			}
-
-			OCEAN_EXPECT_EQUAL(validation, counter, numberElements);
-
-			copyStackHeapVector.clear();
-
-			OCEAN_EXPECT_TRUE(validation, copyStackHeapVector.isEmpty());
-			OCEAN_EXPECT_EQUAL(validation, copyStackHeapVector.size(), size_t(0));
+			value = String::toAString(RandomI::random64(randomGenerator));
 		}
+
+		const StackHeapVector<std::string, tStackCapacity> stackHeapVector(numberElements, value);
+
+		OCEAN_EXPECT_EQUAL(validation, stackHeapVector.size(), numberElements);
+		OCEAN_EXPECT_EQUAL(validation, stackHeapVector.isEmpty(), numberElements == 0);
+
+		for (size_t n = 0; n < numberElements; ++n)
+		{
+			if (stackHeapVector[n] != value)
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+		}
+
+		size_t counter = 0;
+
+		for (const std::string& element : stackHeapVector)
+		{
+			OCEAN_EXPECT_EQUAL(validation, element, value);
+
+			++counter;
+		}
+
+		OCEAN_EXPECT_EQUAL(validation, counter, numberElements);
+
+		counter = 0;
+
+		StackHeapVector<std::string, tStackCapacity> copyStackHeapVector(stackHeapVector);
+
+		for (std::string& element : copyStackHeapVector)
+		{
+			OCEAN_EXPECT_EQUAL(validation, element, value);
+
+			++counter;
+		}
+
+		OCEAN_EXPECT_EQUAL(validation, counter, numberElements);
+
+		copyStackHeapVector.clear();
+
+		OCEAN_EXPECT_TRUE(validation, copyStackHeapVector.isEmpty());
+		OCEAN_EXPECT_EQUAL(validation, copyStackHeapVector.size(), size_t(0));
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
@@ -867,7 +902,7 @@ bool TestStackHeapVector::testSizeElementConstructor(const double testDuration)
 }
 
 template <size_t tStackCapacity>
-bool TestStackHeapVector::testMoveConstructor(const double testDuration)
+bool TestStackHeapVector::testMoveConstructorFromVector(const double testDuration)
 {
 	ocean_assert(testDuration > 0.0);
 
@@ -878,27 +913,23 @@ bool TestStackHeapVector::testMoveConstructor(const double testDuration)
 
 	do
 	{
+		const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
+
+		std::vector<TestElement> vector;
+		vector.reserve(numberElements);
+
+		for (size_t nElement = 0; nElement < numberElements; ++nElement)
 		{
-			// move constructor
+			vector.emplace_back(nElement);
+		}
 
-			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
+		const StackHeapVector<TestElement, tStackCapacity> stackHeapVector(std::move(vector));
 
-			std::vector<TestElement> vector;
-			vector.reserve(numberElements);
+		for (size_t nElement = 0; nElement < numberElements; ++nElement)
+		{
+			const size_t value = stackHeapVector[nElement].value();
 
-			for (size_t nElement = 0; nElement < numberElements; ++nElement)
-			{
-				vector.emplace_back(nElement);
-			}
-
-			const StackHeapVector<TestElement, tStackCapacity> stackHeapVector(std::move(vector));
-
-			for (size_t nElement = 0; nElement < numberElements; ++nElement)
-			{
-				const size_t value = stackHeapVector[nElement].value();
-
-				OCEAN_EXPECT_EQUAL(validation, value, nElement + 1000);
-			}
+			OCEAN_EXPECT_EQUAL(validation, value, nElement + 1000);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -918,27 +949,23 @@ bool TestStackHeapVector::testCopyConstructorFromVector(const double testDuratio
 
 	do
 	{
+		const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
+
+		std::vector<TestElement> vector;
+		vector.reserve(numberElements);
+
+		for (size_t nElement = 0; nElement < numberElements; ++nElement)
 		{
-			// copy constructor
+			vector.emplace_back(nElement);
+		}
 
-			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
+		const StackHeapVector<TestElement, tStackCapacity> stackHeapVector(vector);
 
-			std::vector<TestElement> vector;
-			vector.reserve(numberElements);
+		for (size_t nElement = 0; nElement < numberElements; ++nElement)
+		{
+			const size_t value = stackHeapVector[nElement].value();
 
-			for (size_t nElement = 0; nElement < numberElements; ++nElement)
-			{
-				vector.emplace_back(nElement);
-			}
-
-			const StackHeapVector<TestElement, tStackCapacity> stackHeapVector(vector);
-
-			for (size_t nElement = 0; nElement < numberElements; ++nElement)
-			{
-				const size_t value = stackHeapVector[nElement].value();
-
-				OCEAN_EXPECT_EQUAL(validation, value, nElement + 2000);
-			}
+			OCEAN_EXPECT_EQUAL(validation, value, nElement + 2000);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -958,17 +985,13 @@ bool TestStackHeapVector::testInitializerListConstructor(const double testDurati
 
 	do
 	{
+		const StackHeapVector<TestElement, tStackCapacity> stackHeapVector({TestElement(0), TestElement(1), TestElement(2), TestElement(3), TestElement(4), TestElement(5), TestElement(6), TestElement(7), TestElement(8), TestElement(9)});
+
+		for (size_t nElement = 0; nElement < 10; ++nElement)
 		{
-			// initializer list constructor
+			const size_t value = stackHeapVector[nElement].value();
 
-			const StackHeapVector<TestElement, tStackCapacity> stackHeapVector({TestElement(0), TestElement(1), TestElement(2), TestElement(3), TestElement(4), TestElement(5), TestElement(6), TestElement(7), TestElement(8), TestElement(9)});
-
-			for (size_t nElement = 0; nElement < 10; ++nElement)
-			{
-				const size_t value = stackHeapVector[nElement].value();
-
-				OCEAN_EXPECT_EQUAL(validation, value, nElement + 2000);
-			}
+			OCEAN_EXPECT_EQUAL(validation, value, nElement + 2000);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
@@ -989,8 +1012,6 @@ bool TestStackHeapVector::testCopyConstructor(const double testDuration)
 	do
 	{
 		{
-			// StackHeapVector copy constructor (copy from another StackHeapVector)
-
 			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
 
 			StackHeapVector<std::string, tStackCapacity> originalVector;
@@ -1000,21 +1021,12 @@ bool TestStackHeapVector::testCopyConstructor(const double testDuration)
 				originalVector.pushBack(String::toAString(nElement));
 			}
 
-			// Test copy constructor
 			const StackHeapVector<std::string, tStackCapacity> copiedVector(originalVector);
 
-			// Verify size matches
-			OCEAN_EXPECT_EQUAL(validation, copiedVector.size(), numberElements);
-			OCEAN_EXPECT_EQUAL(validation, copiedVector.size(), originalVector.size());
-
-			// Verify all elements were copied correctly
-			for (size_t nElement = 0; nElement < numberElements; ++nElement)
-			{
-				OCEAN_EXPECT_EQUAL(validation, copiedVector[nElement], String::toAString(nElement));
-				OCEAN_EXPECT_EQUAL(validation, copiedVector[nElement], originalVector[nElement]);
-			}
+			OCEAN_EXPECT_EQUAL(validation, originalVector, copiedVector);
 
 			// Verify independence: modify original and ensure copy is unchanged
+
 			if (numberElements > 0)
 			{
 				const std::string originalFirstValue = originalVector[0];
@@ -1026,8 +1038,6 @@ bool TestStackHeapVector::testCopyConstructor(const double testDuration)
 		}
 
 		{
-			// StackHeapVector copy constructor with TestElement (tests both stack and heap)
-
 			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
 
 			StackHeapVector<TestElement, tStackCapacity> originalVector;
@@ -1037,10 +1047,8 @@ bool TestStackHeapVector::testCopyConstructor(const double testDuration)
 				originalVector.emplaceBack(nElement);
 			}
 
-			// Test copy constructor
 			const StackHeapVector<TestElement, tStackCapacity> copiedVector(originalVector);
 
-			// Verify size matches
 			OCEAN_EXPECT_EQUAL(validation, copiedVector.size(), numberElements);
 
 			// Verify all elements were copied correctly
@@ -1054,6 +1062,113 @@ bool TestStackHeapVector::testCopyConstructor(const double testDuration)
 				// copiedVector will have those values + 2000 more from the copy constructor
 				OCEAN_EXPECT_EQUAL(validation, copiedValue, originalValue + TestElement::copyOffset_);
 			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	return validation.succeeded();
+}
+
+template <size_t tStackCapacity>
+bool TestStackHeapVector::testEquality(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// Test equality with identical vectors
+
+			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
+
+			StackHeapVector<uint64_t, tStackCapacity> vector1;
+			StackHeapVector<uint64_t, tStackCapacity> vector2;
+
+			for (size_t n = 0; n < numberElements; ++n)
+			{
+				const uint64_t value = RandomI::random64(randomGenerator);
+				vector1.pushBack(value);
+				vector2.pushBack(value);
+			}
+
+			OCEAN_EXPECT_TRUE(validation, vector1 == vector2);
+			OCEAN_EXPECT_TRUE(validation, vector2 == vector1);
+
+			OCEAN_EXPECT_EQUAL(validation, vector1, vector2);
+			OCEAN_EXPECT_EQUAL(validation, vector2, vector1);
+		}
+
+		{
+			// Test equality with different sizes
+
+			const size_t size1 = size_t(RandomI::random(randomGenerator, 1u, 1000u));
+			const size_t size2 = size_t(RandomI::random(randomGenerator, 1u, 1000u));
+
+			if (size1 != size2)
+			{
+				StackHeapVector<uint64_t, tStackCapacity> vector1(size1, uint64_t(0));
+				StackHeapVector<uint64_t, tStackCapacity> vector2(size2, uint64_t(0));
+
+				OCEAN_EXPECT_FALSE(validation, vector1 == vector2);
+
+				OCEAN_EXPECT_NOT_EQUAL(validation, vector1, vector2);
+			}
+		}
+
+		{
+			// Test equality with same size but different elements
+
+			const size_t numberElements = size_t(RandomI::random(randomGenerator, 10u, 1000u));
+
+			StackHeapVector<std::string, tStackCapacity> vector1;
+			StackHeapVector<std::string, tStackCapacity> vector2;
+
+			for (size_t n = 0; n < numberElements; ++n)
+			{
+				vector1.pushBack(String::toAString(n));
+				vector2.pushBack(String::toAString(n));
+			}
+
+			// Modify one element
+			const size_t modifyIndex = size_t(RandomI::random(randomGenerator, (unsigned int)(numberElements - 1)));
+			vector2[modifyIndex] = "different";
+
+			OCEAN_EXPECT_FALSE(validation, vector1 == vector2);
+
+			OCEAN_EXPECT_NOT_EQUAL(validation, vector1, vector2);
+		}
+
+		{
+			// Test equality with empty vectors
+
+			const StackHeapVector<uint64_t, tStackCapacity> emptyVector1;
+			const StackHeapVector<uint64_t, tStackCapacity> emptyVector2;
+
+			OCEAN_EXPECT_TRUE(validation, emptyVector1 == emptyVector2);
+
+			OCEAN_EXPECT_EQUAL(validation, emptyVector1, emptyVector2);
+		}
+
+		{
+			// Test self-equality
+
+			const size_t numberElements = size_t(RandomI::random(randomGenerator, 1000u));
+
+			StackHeapVector<uint64_t, tStackCapacity> vector;
+
+			for (size_t n = 0; n < numberElements; ++n)
+			{
+				vector.pushBack(RandomI::random64(randomGenerator));
+			}
+
+			OCEAN_EXPECT_TRUE(validation, vector == vector);
+
+			OCEAN_EXPECT_EQUAL(validation, vector, vector);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));

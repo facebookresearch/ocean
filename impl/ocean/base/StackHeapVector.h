@@ -332,11 +332,18 @@ class StackHeapVector
 		inline T& operator[](const size_t index);
 
 		/**
+		 * Compares two vectors for equality.
+		 * @param other The other vector to compare with
+		 * @return True if both vectors have the same size and all elements are equal
+		 */
+		bool operator==(const StackHeapVector<T, tStackCapacity>& other) const;
+
+		/**
 		 * Move assignment operator.
 		 * @param other The other vector to move
 		 * @return Reference to this vector
 		 */
-		StackHeapVector<T, tStackCapacity>& operator=(StackHeapVector<T, tStackCapacity>&& other) noexcept;
+		StackHeapVector<T, tStackCapacity>& operator=(StackHeapVector<T, tStackCapacity>&& other) noexcept;		
 
 		/**
 		 * Copy assignment operator.
@@ -809,6 +816,25 @@ inline T& StackHeapVector<T, tStackCapacity>::operator[](const size_t index)
 	}
 
 	return heapElements_[index - tStackCapacity];
+}
+
+template <typename T, size_t tStackCapacity>
+bool StackHeapVector<T, tStackCapacity>::operator==(const StackHeapVector<T, tStackCapacity>& other) const
+{
+	if (size_ != other.size_)
+	{
+		return false;
+	}
+
+	for (size_t n = 0; n < size_; ++n)
+	{
+		if ((*this)[n] != other[n])
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 template <typename T, size_t tStackCapacity>

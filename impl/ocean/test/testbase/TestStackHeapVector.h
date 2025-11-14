@@ -130,7 +130,7 @@ class OCEAN_TEST_BASE_EXPORT TestStackHeapVector
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testMoveConstructor(const double testDuration);
+		static bool testMoveConstructorFromVector(const double testDuration);
 
 		/**
 		 * Tests the copy constructor from std::vector.
@@ -152,6 +152,13 @@ class OCEAN_TEST_BASE_EXPORT TestStackHeapVector
 		 * @return True, if succeeded
 		 */
 		static bool testCopyConstructor(const double testDuration);
+
+		/**
+		 * Tests the equality operator.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testEquality(const double testDuration);
 
 		/**
 		 * Tests the assign function.
@@ -245,7 +252,7 @@ class OCEAN_TEST_BASE_EXPORT TestStackHeapVector
 		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
 		 */
 		template <size_t tStackCapacity>
-		static bool testMoveConstructor(const double testDuration);
+		static bool testMoveConstructorFromVector(const double testDuration);
 
 		/**
 		 * Tests the copy constructor from std::vector
@@ -273,6 +280,15 @@ class OCEAN_TEST_BASE_EXPORT TestStackHeapVector
 		 */
 		template <size_t tStackCapacity>
 		static bool testCopyConstructor(const double testDuration);
+
+		/**
+		 * Tests the equality operator
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testEquality(const double testDuration);
 
 		/**
 		 * Tests the assign function.
