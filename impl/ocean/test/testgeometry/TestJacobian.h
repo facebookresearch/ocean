@@ -30,6 +30,199 @@ namespace TestGeometry
  */
 class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 {
+	protected:
+
+		/**
+		 * Base class for calculating numerical derivatives using central finite differences.
+		 * @tparam T The data type of the derivative
+		 * @tparam TScalar The scalar type for epsilon, either 'float' or 'double'
+		 * @tparam TVariable The data type of a variable object which can change while while everything else is constant
+		 */
+		template <typename T, typename TScalar, typename TVariable>
+		class DerivativeCalculatorT
+		{
+			public:
+
+				/**
+				 * Default constructor.
+				 */
+				virtual ~DerivativeCalculatorT() = default;
+
+				/**
+				 * Calculates the numerical derivative using central finite differences: f'(x) ≈ [f(x + epsilon) - f(x - epsilon)] / (2 * epsilon)
+				 * @param variable The variable to calculate the derivative for
+				 * @param parameterIndex The index of the parameter to perturb
+				 * @param epsilon The epsilon value to use for the finite difference calculation
+				 * @return The calculated derivative
+				 */
+				T calculateDerivative(const TVariable& variable, const size_t parameterIndex, const TScalar epsilon = NumericT<TScalar>::weakEps() * TScalar(0.05)) const;
+
+				/**
+				 * Verifies an analytical derivative by comparing it with a numerical approximation.
+				 * Tests multiple epsilon values to find one that produces a match within tolerance.
+				 * @param variable The variable to calculate the derivative for
+				 * @param parameterIndex The index of the parameter to verify
+				 * @param analyticalDerivative The analytical derivative to verify
+				 * @return True if the analytical derivative matches the numerical approximation within tolerance
+				 * @tparam TAnalyticalDerivative The type of the analytical derivative (e.g., Vector2, Vector3)
+				 */
+				template <typename TAnalyticalDerivative>
+				bool verifyDerivative(const TVariable& variable, const size_t parameterIndex, const TAnalyticalDerivative& analyticalDerivative) const;
+
+			protected:
+
+				/**
+				 * Calculates the function value with an offset applied to a specific parameter.
+				 * Must be implemented by derived classes.
+				 * @param variable The variable to evaluate
+				 * @param parameterIndex The index of the parameter to perturb
+				 * @param offset The offset to apply
+				 * @return The calculated function value
+				 */
+				virtual T calculateValue(const TVariable& variable, const size_t parameterIndex, const TScalar offset) const = 0;
+		};
+
+		/**
+		 * Base class for calculating numerical derivatives using central finite differences.
+		 * This class is a specialization of DerivativeCalculatorT without a variable object.
+		 * @tparam T The result type (e.g., VectorT2<Scalar>, VectorT3<Scalar>)
+		 * @tparam TScalar The scalar type for epsilon, either 'float' or 'double'
+		 */
+		template <typename T, typename TScalar>
+		class DerivativeCalculatorT<T, TScalar, void>
+		{
+			public:
+
+				/**
+				 * Default constructor.
+				 */
+				virtual ~DerivativeCalculatorT() = default;
+
+				/**
+				 * Calculates the numerical derivative using central finite differences: f'(x) ≈ [f(x + epsilon) - f(x - epsilon)] / (2 * epsilon)
+				 * @param parameterIndex The index of the parameter to perturb
+				 * @param epsilon The epsilon value to use for the finite difference calculation
+				 * @return The calculated derivative
+				 */
+				T calculateDerivative(const size_t parameterIndex, const TScalar epsilon = NumericT<TScalar>::weakEps() * TScalar(0.05)) const;
+
+				/**
+				 * Verifies an analytical derivative by comparing it with a numerical approximation.
+				 * Tests multiple epsilon values to find one that produces a match within tolerance.
+				 * @param parameterIndex The index of the parameter to verify
+				 * @param analyticalDerivative The analytical derivative to verify
+				 * @return True if the analytical derivative matches the numerical approximation within tolerance
+				 * @tparam TAnalyticalDerivative The type of the analytical derivative (e.g., Vector2, Vector3)
+				 */
+				template <typename TAnalyticalDerivative>
+				bool verifyDerivative(const size_t parameterIndex, const TAnalyticalDerivative& analyticalDerivative) const;
+
+			protected:
+
+				/**
+				 * Calculates the function value with an offset applied to a specific parameter.
+				 * Must be implemented by derived classes.
+				 * @param parameterIndex The index of the parameter to perturb
+				 * @param offset The offset to apply
+				 * @return The calculated function value
+				 */
+				virtual T calculateValue(const size_t parameterIndex, const TScalar offset) const = 0;
+		};
+
+		/// Forward declaration.
+		template <typename T>
+		class DerivativeCalculatorOrientationalJacobian2x3;
+
+		/// Forward declaration.
+		template <typename T>
+		class DerivativeCalculatorOrientationJacobian2nx3;
+
+		/// Forward declaration.
+		class DerivativeCalculatorPinholeCameraPoseJacobian2nx6;
+
+		/// Forward declaration.
+		class DerivativeCalculatorFisheyeCameraPoseJacobian2x6;
+
+		/// Forward declaration.
+		template <typename T>
+		class DerivativeCalculatorAnyCameraPoseJacobian2nx6;
+
+		/// Forward declaration.
+		class DerivativeCalculatorPoseJacobianDampedDistortion2nx6;
+
+		/// Forward declaration.
+		class DerivativeCalculatorPoseZoomJacobian2nx7;
+
+		/// Forward declaration.
+		class DerivativeCalculatorPinholeCameraObjectTransformation2nx6;
+
+		/// Forward declaration.
+		class DerivativeCalculatorFisheyeCameraObjectTransformation2nx6;
+
+		/// Forward declaration.
+		class DerivativeCalculatorPinholeCameraPointJacobian2nx3;
+
+		/// Forward declaration.
+		class DerivativeCalculatorFisheyeCameraPointJacobian2x3;
+
+		/// Forward declaration.
+		class DerivativeCalculatorAnyCameraPointJacobian2x3;
+
+		/// Forward declaration.
+		class DerivativeCalculatorSphericalObjectPoint3x3;
+
+		/// Forward declaration.
+		template <typename T>
+		class DerivativeCalculatorSphericalObjectPointOrientation2x3IF;
+
+		/// Forward declaration.
+		class DerivativeCalculatorPinholeCameraDistortionJacobian2x4;
+
+		/// Forward declaration.
+		class DerivativeCalculatorPinholeCameraJacobian2x6;
+
+		/// Forward declaration.
+		class DerivativeCalculatorPinholeCameraJacobian2x7;
+
+		/// Forward declaration.
+		class DerivativeCalculatorPinholeCameraJacobian2x8;
+
+		/// Forward declaration.
+		class DerivativeCalculatorFisheyeCameraJacobian2x12;
+
+		/// Forward declaration.
+		class DerivativeCalculatorOrientationPinholeCameraJacobian2x11;
+
+		/// Forward declaration.
+		class DerivativeCalculatorPosePinholeCameraJacobian2x12;
+
+		/// Forward declaration.
+		template <typename T>
+		class DerivativeCalculatorPosePinholeCameraJacobian2x14;
+
+		/// Forward declaration.
+		template <typename T>
+		class DerivativeCalculatorPoseFisheyeCameraJacobian2x18;
+
+		/// Forward declaration.
+		class DerivativeCalculatorHomography2x8;
+
+		/// Forward declaration.
+		class DerivativeCalculatorHomography2x9;
+
+		/// Forward declaration.
+		class DerivativeCalculatorIdentityHomography2x8;
+
+		/// Forward declaration.
+		class DerivativeCalculatorIdentityHomography2x9;
+
+		/// Forward declaration.
+		class DerivativeCalculatorSimilarity2x4;
+
+		/// Forward declaration.
+		template <typename T>
+		class DerivativeCalculatorFisheyeDistortNormalized2x2;
+
 	public:
 
 		/**
@@ -273,32 +466,24 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 	private:
 
 		/**
-		 * Determines the derivative for a given 2D position and compares the accuracy with the precise derivatives.
-		 * @param original The original 2D position
-		 * @param offset The offset position (result of the epsilon offset)
-		 * @param eps The epsilon which was used to create the offset position, with range (0, infinity)
-		 * @param derivativeX The precise derivative in x-direction to verify
-		 * @param derivativeY The precise derivative in y-direction to verify
-		 * @return True, if so
-		 * @tparam T The data type of the scalar to be used, 'float' or 'double'
-		 * @tparam TDerivative The data type of the derivative, `float` or `double`
+		 * Checks if an analytical derivative matches an approximated derivative within tolerance.
+		 * @param analyticalDerivative The analytical derivative value
+		 * @param approximatedDerivative The numerically approximated derivative value
+		 * @return True if the derivatives match within tolerance
+		 * @tparam T The data type of the derivative
 		 */
-		template <typename T, typename TDerivative>
-		static inline bool checkAccuracy(const VectorT2<T>& original, const VectorT2<T>& offset, const T eps, const TDerivative derivativeX, const TDerivative derivativeY);
+		template <typename T>
+		static bool checkDerivative(const T& analyticalDerivative, const T& approximatedDerivative);
 
 		/**
-		 * Determines the derivative for a given 3D position and compares the accuracy with the precise derivatives.
-		 * @param original The original 2D position
-		 * @param offset The offset position (result of the epsilon offset)
-		 * @param eps The epsilon which was used to create the offset position, with range (0, infinity)
-		 * @param derivativeX The precise derivative in x-direction to verify
-		 * @param derivativeY The precise derivative in y-direction to verify
-		 * @param derivativeZ The precise derivative in z-direction to verify
-		 * @return True, if so
-		 * @tparam T The data type of the scalar to be used, 'float' or 'double'
+		 * Checks if an analytical derivative matches an approximated derivative within tolerance.
+		 * @param analyticalDerivative The analytical derivative value
+		 * @param approximatedDerivative The numerically approximated derivative value
+		 * @return True if the derivatives match within tolerance
+		 * @tparam T The data type of the scalar, either 'float' or 'double'
 		 */
-		template <typename T, typename TDerivative>
-		static inline bool checkAccuracy(const VectorT3<T>& original, const VectorT3<T>& offset, const T eps, const TDerivative derivativeX, const TDerivative derivativeY, const TDerivative derivativeZ);
+		template <typename T>
+		static bool checkScalarDerivative(const T analyticalDerivative, const T approximatedDerivative);
 
 		/**
 		 * Calculates the two Jacobian rows for a given pose and dynamic object point.
@@ -324,120 +509,115 @@ class OCEAN_TEST_GEOMETRY_EXPORT TestJacobian : protected Geometry::Jacobian
 		static constexpr double successThreshold();
 };
 
-template <typename T, typename TDerivative>
-bool TestJacobian::checkAccuracy(const VectorT2<T>& original, const VectorT2<T>& offset, const T eps, const TDerivative derivativeX, const TDerivative derivativeY)
+template <>
+inline bool TestJacobian::checkDerivative(const float& analyticalDerivative, const float& approximatedDerivative)
 {
-	static_assert(sizeof(TDerivative) <= sizeof(T), "The derivative should not have more precision than epsilon");
+	return checkScalarDerivative<float>(analyticalDerivative, approximatedDerivative);
+}
 
-	ocean_assert(eps > NumericT<T>::eps());
+template <>
+inline bool TestJacobian::checkDerivative(const double& analyticalDerivative, const double& approximatedDerivative)
+{
+	return checkScalarDerivative<double>(analyticalDerivative, approximatedDerivative);
+}
 
-	// approximation of the derivative:
-	// f'(x) = [f(x + e) - f(x)] / e
-
-	const T calculatedDerivativeX = (offset.x() - original.x()) / eps;
-	const T calculatedDerivativeY = (offset.y() - original.y()) / eps;
-
-	const T maxX = max(NumericT<T>::abs(T(derivativeX)), NumericT<T>::abs(calculatedDerivativeX));
-	const T maxY = max(NumericT<T>::abs(T(derivativeY)), NumericT<T>::abs(calculatedDerivativeY));
-
-	const T diffX = NumericT<T>::abs(T(derivativeX) - calculatedDerivativeX);
-	const T diffY = NumericT<T>::abs(T(derivativeY) - calculatedDerivativeY);
-
-	if (NumericT<TDerivative>::isEqualEps(derivativeX) || NumericT<T>::isEqualEps(calculatedDerivativeX))
+template <>
+inline bool TestJacobian::checkDerivative(const VectorF2& analyticalDerivative, const VectorF2& approximatedDerivative)
+{
+	if (!checkScalarDerivative<float>(analyticalDerivative.x(), approximatedDerivative.x()))
 	{
-		if (NumericT<T>::abs(diffX) > T(0.001))
-		{
-			return false;
-		}
-	}
-	else
-	{
-		if (NumericT<T>::isNotEqualEps(maxX) && diffX / maxX > T(0.05))
-		{
-			return false;
-		}
+		return false;
 	}
 
-	if (NumericT<TDerivative>::isEqualEps(derivativeY) || NumericT<T>::isEqualEps(calculatedDerivativeY))
+	if (!checkScalarDerivative<float>(analyticalDerivative.y(), approximatedDerivative.y()))
 	{
-		if (NumericT<T>::abs(diffY) > T(0.001))
-		{
-			return false;
-		}
-	}
-	else
-	{
-		if (NumericT<T>::isNotEqualEps(maxY) && diffY / maxY > T(0.05))
-		{
-			return false;
-		}
+		return false;
 	}
 
 	return true;
 }
 
-template <typename T, typename TDerivative>
-inline bool TestJacobian::checkAccuracy(const VectorT3<T>& original, const VectorT3<T>& offset, const T eps, const TDerivative derivativeX, const TDerivative derivativeY, const TDerivative derivativeZ)
+template <>
+inline bool TestJacobian::checkDerivative(const VectorD2& analyticalDerivative, const VectorD2& approximatedDerivative)
 {
-	static_assert(sizeof(TDerivative) <= sizeof(T), "The derivative should not have more precision than epsilon");
-
-	ocean_assert(eps > NumericT<T>::eps());
-
-	// approximation of the derivative:
-	// f'(x) = [f(x + e) - f(x)] / e
-
-	const T calculatedDerivativeX = (offset.x() - original.x()) / eps;
-	const T calculatedDerivativeY = (offset.y() - original.y()) / eps;
-	const T calculatedDerivativeZ = (offset.z() - original.z()) / eps;
-
-	const T maxX = max(NumericT<T>::abs(T(derivativeX)), NumericT<T>::abs(calculatedDerivativeX));
-	const T maxY = max(NumericT<T>::abs(T(derivativeY)), NumericT<T>::abs(calculatedDerivativeY));
-	const T maxZ = max(NumericT<T>::abs(T(derivativeZ)), NumericT<T>::abs(calculatedDerivativeZ));
-
-	const T diffX = NumericT<T>::abs(T(derivativeX) - calculatedDerivativeX);
-	const T diffY = NumericT<T>::abs(T(derivativeY) - calculatedDerivativeY);
-	const T diffZ = NumericT<T>::abs(T(derivativeZ) - calculatedDerivativeZ);
-
-	if (NumericT<TDerivative>::isEqualEps(derivativeX) || NumericT<T>::isEqualEps(calculatedDerivativeX))
+	if (!checkScalarDerivative<double>(analyticalDerivative.x(), approximatedDerivative.x()))
 	{
-		if (NumericT<T>::abs(diffX) > T(0.001))
+		return false;
+	}
+
+	if (!checkScalarDerivative<double>(analyticalDerivative.y(), approximatedDerivative.y()))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+template <>
+inline bool TestJacobian::checkDerivative(const VectorF3& analyticalDerivative, const VectorF3& approximatedDerivative)
+{
+	if (!checkScalarDerivative<float>(analyticalDerivative.x(), approximatedDerivative.x()))
+	{
+		return false;
+	}
+
+	if (!checkScalarDerivative<float>(analyticalDerivative.y(), approximatedDerivative.y()))
+	{
+		return false;
+	}
+
+	if (!checkScalarDerivative<float>(analyticalDerivative.z(), approximatedDerivative.z()))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+template <>
+inline bool TestJacobian::checkDerivative(const VectorD3& analyticalDerivative, const VectorD3& approximatedDerivative)
+{
+	if (!checkScalarDerivative<double>(analyticalDerivative.x(), approximatedDerivative.x()))
+	{
+		return false;
+	}
+
+	if (!checkScalarDerivative<double>(analyticalDerivative.y(), approximatedDerivative.y()))
+	{
+		return false;
+	}
+
+	if (!checkScalarDerivative<double>(analyticalDerivative.z(), approximatedDerivative.z()))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+template <typename T>
+inline bool TestJacobian::checkDerivative(const T& /*analyticalDerivative*/, const T& /*approximatedDerivative*/)
+{
+	OCEAN_WARNING_MISSING_IMPLEMENTATION;
+	return false;
+}
+
+template <typename T>
+bool TestJacobian::checkScalarDerivative(const T analyticalDerivative, const T approximatedDerivative)
+{
+	const double maxAbsValue = std::max(std::abs(analyticalDerivative), std::abs(approximatedDerivative));
+	const double absDiff = std::abs(analyticalDerivative - approximatedDerivative);
+
+	if (NumericT<T>::isEqualEps(analyticalDerivative) || NumericT<T>::isEqualEps(approximatedDerivative))
+	{
+		if (absDiff > T(0.001))
 		{
 			return false;
 		}
 	}
 	else
 	{
-		if (NumericT<T>::isNotEqualEps(maxX) && diffX / maxX > T(0.05))
-		{
-			return false;
-		}
-	}
-
-	if (NumericT<TDerivative>::isEqualEps(derivativeY) || NumericT<T>::isEqualEps(calculatedDerivativeY))
-	{
-		if (NumericT<T>::abs(diffY) > T(0.001))
-		{
-			return false;
-		}
-	}
-	else
-	{
-		if (NumericT<T>::isNotEqualEps(maxY) && diffY / maxY > T(0.05))
-		{
-			return false;
-		}
-	}
-
-	if (NumericT<TDerivative>::isEqualEps(derivativeZ) || NumericT<T>::isEqualEps(calculatedDerivativeZ))
-	{
-		if (NumericT<T>::abs(diffZ) > T(0.001))
-		{
-			return false;
-		}
-	}
-	else
-	{
-		if (NumericT<T>::isNotEqualEps(maxZ) && diffZ / maxZ > T(0.05))
+		if (NumericT<T>::isNotEqualEps(T(maxAbsValue)) && T(absDiff / maxAbsValue) > T(0.05))
 		{
 			return false;
 		}
