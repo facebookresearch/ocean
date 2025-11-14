@@ -185,6 +185,31 @@ class Validation
 		inline void expectEqual(const T& value0, const T& value1, const char* file, const int line);
 
 		/**
+		 * Informs this validation object that a value is expected to be not equal to another value.
+		 * In case the both values are equal, this validation object will not succeed.
+		 * @param value0 The first value to compare
+		 * @param value1 The second value to compare
+		 * @see succeeded().
+		 * @tparam T The data type of both values
+		 */
+		template <typename T>
+		inline void expectNotEqual(const T& value0, const T& value1);
+
+		/**
+		 * Informs this validation object that a value is expected to be not equal to another value.
+		 * In case the both values are equal, this validation object will not succeed.<br>
+		 * This function will also write a message to the error log.
+		 * @param value0 The first value to compare
+		 * @param value1 The second value to compare
+		 * @param file The source file in which the function call happens, e.g., __FILE__, must be valid
+		 * @param line The line in the source file in which the function call happens, e.g., __LINE__, must be valid
+		 * @see succeeded().
+		 * @tparam T The data type of both values
+		 */
+		template <typename T>
+		inline void expectNotEqual(const T& value0, const T& value1, const char* file, const int line);
+
+		/**
 		 * Informs this validation object that a value is expected to be less than another value.
 		 * In case 'value0 < value1' is false, the validation object will not succeed.
 		 * @param value0 The first value to compare
@@ -376,6 +401,10 @@ class Validation
 	#define OCEAN_EXPECT_EQUAL(validation, ...) validation.expectEqual(__VA_ARGS__, __FILE__, __LINE__)
 #endif
 
+#ifndef OCEAN_EXPECT_NOT_EQUAL
+	#define OCEAN_EXPECT_NOT_EQUAL(validation, ...) validation.expectNotEqual(__VA_ARGS__, __FILE__, __LINE__)
+#endif
+
 #ifndef OCEAN_EXPECT_LESS
 	#define OCEAN_EXPECT_LESS(validation, ...) validation.expectLess(__VA_ARGS__, __FILE__, __LINE__)
 #endif
@@ -514,6 +543,57 @@ inline void Validation::expectEqual(const T& value0, const T& value1, const char
 			else
 			{
 				Log::error() << "Validation::expectEqual() failed in '" << file << "', in line " << line << randomGeneratorOutput();
+			}
+#endif // OCEAN_USE_GTEST
+		}
+	}
+}
+
+template <typename T>
+inline void Validation::expectNotEqual(const T& value0, const T& value1)
+{
+	if (value0 == value1)
+	{
+		setSucceededFalse();
+
+		if constexpr (Log::isSupported<T>())
+		{
+			Log::debug() << "Validation::expectNotEqual(" << value0 << ", " << value1 <<") failed at unknown location" << randomGeneratorOutput();
+		}
+		else
+		{
+			Log::debug() << "Validation::expectNotEqual() failed at unknown location" << randomGeneratorOutput();
+		}
+	}
+}
+
+template <typename T>
+inline void Validation::expectNotEqual(const T& value0, const T& value1, const char* file, const int line)
+{
+	if (value0 == value1)
+	{
+		setSucceededFalse();
+
+		ocean_assert(file != nullptr);
+		if (file != nullptr)
+		{
+#ifdef OCEAN_USE_GTEST
+			if constexpr (Log::isSupported<T, std::ostream>())
+			{
+				std::cerr << "\nValidation::expectNotEqual(" << value0 << ", " << value1 <<") failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+			}
+			else
+			{
+				std::cerr << "\nValidation::expectNotEqual() failed in '" << file << "', in line " << line << randomGeneratorOutput() << "\n" << std::endl;
+			}
+#else
+			if constexpr (Log::isSupported<T>())
+			{
+				Log::error() << "Validation::expectNotEqual(" << value0 << ", " << value1 <<") failed in '" << file << "', in line " << line << randomGeneratorOutput();
+			}
+			else
+			{
+				Log::error() << "Validation::expectNotEqual() failed in '" << file << "', in line " << line << randomGeneratorOutput();
 			}
 #endif // OCEAN_USE_GTEST
 		}
