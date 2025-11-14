@@ -922,11 +922,11 @@ class TestJacobian::DerivativeCalculatorPinholeCameraPoseJacobian2nx6 : public D
 		/**
 		 * Creates a derivative calculator for pinhole camera pose jacobian.
 		 * @param camera The pinhole camera
-		 * @param poseIF The camera pose (inverted and flipped)
+		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
 		 */
-		DerivativeCalculatorPinholeCameraPoseJacobian2nx6(const PinholeCamera& camera, const Pose& poseIF) :
+		DerivativeCalculatorPinholeCameraPoseJacobian2nx6(const PinholeCamera& camera, const Pose& flippedCamera_P_world) :
 			camera_(camera),
-			poseIF_(poseIF)
+			flippedCamera_P_world_(flippedCamera_P_world)
 		{
 			// nothing to do here
 		}
@@ -944,10 +944,10 @@ class TestJacobian::DerivativeCalculatorPinholeCameraPoseJacobian2nx6 : public D
 		{
 			const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-			Pose posePerturbed(poseIF_);
-			posePerturbed[(unsigned int)(poseParameterIndex)] += offset;
+			Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
+			flippedCamera_P_world_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-			return camera_.projectToImageIF<false>(posePerturbed.transformation(), objectPoint, camera_.hasDistortionParameters());
+			return camera_.projectToImageIF<false>(flippedCamera_P_world_perturbed.transformation(), objectPoint, camera_.hasDistortionParameters());
 		}
 
 	protected:
@@ -956,7 +956,7 @@ class TestJacobian::DerivativeCalculatorPinholeCameraPoseJacobian2nx6 : public D
 		const PinholeCamera camera_;
 
 		/// The camera pose (inverted and flipped)
-		const Pose poseIF_;
+		const Pose flippedCamera_P_world_;
 };
 
 bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
@@ -994,14 +994,14 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
 		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 translation(Random::vector3(-10, 10));
-		const Quaternion quaternion(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(-10, 10));
+		const Quaternion world_Q_camera(Random::quaternion());
 
-		const Pose pose(translation, quaternion);
-		const HomogenousMatrix4 transformation(translation, quaternion);
+		const Pose world_P_camera(world_t_camera, world_Q_camera);
+		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 
-		const HomogenousMatrix4 transformationIF(PinholeCamera::standard2InvertedFlipped(transformation));
-		const Pose poseIF(transformationIF);
+		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
+		const Pose flippedCamera_P_world(flippedCamera_T_world);
 
 		PinholeCamera camera(width, height, fovX, principalX, principalY);
 
@@ -1029,7 +1029,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 			tmpImagePoint.x() *= Scalar(camera.width());
 			tmpImagePoint.y() *= Scalar(camera.height());
 
-			const Line3 ray(camera.ray(tmpImagePoint, translation, quaternion));
+			const Line3 ray(camera.ray(tmpImagePoint, world_t_camera, world_Q_camera));
 			const Vector3 objectPoint(ray.point(Random::scalar(1, 5)));
 
 			objectPoints.push_back(objectPoint);
@@ -1046,12 +1046,12 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 		if (camera.hasDistortionParameters())
 		{
 			const HighPerformanceStatistic::ScopedStatistic scope(performanceDistortedCamera);
-			Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(jacobian.data(), camera, poseIF, objectPoints.data(), objectPoints.size(), true);
+			Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(jacobian.data(), camera, flippedCamera_P_world, objectPoints.data(), objectPoints.size(), true);
 		}
 		else
 		{
 			const HighPerformanceStatistic::ScopedStatistic scope(performancePerfectCamera);
-			Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(jacobian.data(), camera, poseIF, objectPoints.data(), objectPoints.size(), false);
+			Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(jacobian.data(), camera, flippedCamera_P_world, objectPoints.data(), objectPoints.size(), false);
 		}
 
 		{
@@ -1062,14 +1062,14 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<false>(transformationIF, objectPoint, camera.hasDistortionParameters()));
+				const Vector2 imagePoint(camera.projectToImageIF<false>(flippedCamera_T_world, objectPoint, camera.hasDistortionParameters()));
 
 				for (unsigned int i = 0u; i < 6u; ++i)
 				{
-					Pose poseDelta(poseIF);
-					poseDelta[i] += Numeric::weakEps();
+					Pose flippedCamera_P_world_delta(flippedCamera_P_world);
+					flippedCamera_P_world_delta[i] += Numeric::weakEps();
 
-					const Vector2 imagePointDelta(camera.projectToImageIF<false>(poseDelta.transformation(), objectPoint, camera.hasDistortionParameters()));
+					const Vector2 imagePointDelta(camera.projectToImageIF<false>(flippedCamera_P_world_delta.transformation(), objectPoint, camera.hasDistortionParameters()));
 					const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
 
 					naiveJacobian[n * 2 + 0][i] = derivative.x();
@@ -1089,7 +1089,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 				// we also test the first implementation for one object point
 
 				Scalar singleJacobianX[6], singleJacobianY[6];
-				Geometry::Jacobian::calculatePoseJacobianRodrigues2x6(singleJacobianX, singleJacobianY, camera, poseIF, objectPoint, camera.hasDistortionParameters());
+				Geometry::Jacobian::calculatePoseJacobianRodrigues2x6(singleJacobianX, singleJacobianY, camera, flippedCamera_P_world, objectPoint, camera.hasDistortionParameters());
 
 				for (unsigned int i = 0u; i < 6u; ++i)
 				{
@@ -1107,10 +1107,10 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 				// we also test the second implementation for one object point
 
 				SquareMatrix3 dwx, dwy, dwz;
-				Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(poseIF[3], poseIF[4], poseIF[5]), dwx, dwy, dwz);
+				Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(flippedCamera_P_world[3], flippedCamera_P_world[4], flippedCamera_P_world[5]), dwx, dwy, dwz);
 
 				Scalar singleJacobianX[6], singleJacobianY[6];
-				Geometry::Jacobian::calculatePoseJacobianRodrigues2x6(singleJacobianX, singleJacobianY, camera, poseIF.transformation(), objectPoint, camera.hasDistortionParameters(), dwx, dwy, dwz);
+				Geometry::Jacobian::calculatePoseJacobianRodrigues2x6(singleJacobianX, singleJacobianY, camera, flippedCamera_P_world.transformation(), objectPoint, camera.hasDistortionParameters(), dwx, dwy, dwz);
 
 				for (unsigned int i = 0u; i < 6u; ++i)
 				{
@@ -1124,7 +1124,7 @@ bool TestJacobian::testPinholeCameraPoseJacobian2nx6(const double testDuration)
 				}
 			}
 
-			const DerivativeCalculatorPinholeCameraPoseJacobian2nx6 derivativeCalculator(camera, poseIF);
+			const DerivativeCalculatorPinholeCameraPoseJacobian2nx6 derivativeCalculator(camera, flippedCamera_P_world);
 
 			for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 			{
@@ -1164,11 +1164,11 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraPoseJacobian2x6 : public De
 		/**
 		 * Creates a derivative calculator for fisheye camera pose jacobian.
 		 * @param fisheyeCamera The fisheye camera
-		 * @param poseIF The camera pose (inverted and flipped)
+		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
 		 */
-		DerivativeCalculatorFisheyeCameraPoseJacobian2x6(const FisheyeCamera& fisheyeCamera, const Pose& poseIF) :
+		DerivativeCalculatorFisheyeCameraPoseJacobian2x6(const FisheyeCamera& fisheyeCamera, const Pose& flippedCamera_P_world) :
 			fisheyeCamera_(fisheyeCamera),
-			poseIF_(poseIF)
+			flippedCamera_P_world_(flippedCamera_P_world)
 		{
 			// nothing to do here
 		}
@@ -1186,10 +1186,10 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraPoseJacobian2x6 : public De
 		{
 			const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-			Pose posePerturbed(poseIF_);
-			posePerturbed[(unsigned int)(poseParameterIndex)] += offset;
+			Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
+			flippedCamera_P_world_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-			return fisheyeCamera_.projectToImageIF(posePerturbed.transformation(), objectPoint);
+			return fisheyeCamera_.projectToImageIF(flippedCamera_P_world_perturbed.transformation(), objectPoint);
 		}
 
 	protected:
@@ -1198,7 +1198,7 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraPoseJacobian2x6 : public De
 		const FisheyeCamera fisheyeCamera_;
 
 		/// The camera pose (inverted and flipped)
-		const Pose poseIF_;
+		const Pose flippedCamera_P_world_;
 };
 
 bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
@@ -1224,14 +1224,14 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 
 		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
 
-		const Vector3 translation(Random::vector3(-10, 10));
-		const Quaternion quaternion(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(-10, 10));
+		const Quaternion world_Q_camera(Random::quaternion());
 
-		const Pose pose(translation, quaternion);
-		const HomogenousMatrix4 transformation(translation, quaternion);
+		const Pose world_P_camera(world_t_camera, world_Q_camera);
+		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 
-		const HomogenousMatrix4 transformationIF(PinholeCamera::standard2InvertedFlipped(transformation));
-		const Pose poseIF(transformationIF);
+		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
+		const Pose flippedCamera_P_world(flippedCamera_T_world);
 
 		Vectors3 objectPoints;
 		objectPoints.reserve(numberPoints);
@@ -1239,7 +1239,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 		{
 			const Vector2 imagePoint(Random::vector2(Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u)));
 
-			const Line3 ray(fisheyeCamera.ray(imagePoint, transformation));
+			const Line3 ray(fisheyeCamera.ray(imagePoint, world_T_camera));
 			const Vector3 objectPoint(ray.point(Random::scalar(1, 5)));
 
 			objectPoints.push_back(objectPoint);
@@ -1257,11 +1257,11 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 			const HighPerformanceStatistic::ScopedStatistic scope(performance);
 
 			SquareMatrix3 dwx, dwy, dwz;
-			Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(poseIF[3], poseIF[4], poseIF[5]), dwx, dwy, dwz);
+			Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(flippedCamera_P_world[3], flippedCamera_P_world[4], flippedCamera_P_world[5]), dwx, dwy, dwz);
 
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
-				Geometry::Jacobian::calculatePoseJacobianRodrigues2x6(jacobian[n * 2 + 0], jacobian[n * 2 + 1], fisheyeCamera, poseIF.transformation(), objectPoints[n], dwx, dwy, dwz);
+				Geometry::Jacobian::calculatePoseJacobianRodrigues2x6(jacobian[n * 2 + 0], jacobian[n * 2 + 1], fisheyeCamera, flippedCamera_P_world.transformation(), objectPoints[n], dwx, dwy, dwz);
 			}
 		}
 
@@ -1273,14 +1273,14 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(fisheyeCamera.projectToImageIF(transformationIF, objectPoint));
+				const Vector2 imagePoint(fisheyeCamera.projectToImageIF(flippedCamera_T_world, objectPoint));
 
 				for (unsigned int i = 0u; i < 6u; ++i)
 				{
-					Pose poseDelta(poseIF);
-					poseDelta[i] += Numeric::weakEps();
+					Pose flippedCamera_P_world_delta(flippedCamera_P_world);
+					flippedCamera_P_world_delta[i] += Numeric::weakEps();
 
-					const Vector2 imagePointDelta(fisheyeCamera.projectToImageIF(poseDelta.transformation(), objectPoint));
+					const Vector2 imagePointDelta(fisheyeCamera.projectToImageIF(flippedCamera_P_world_delta.transformation(), objectPoint));
 					const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
 
 					naiveJacobian[n * 2 + 0][i] = derivative.x();
@@ -1296,7 +1296,7 @@ bool TestJacobian::testFisheyeCameraPoseJacobian2x6(const double testDuration)
 			const Scalar* jacobianX = jacobian[2 * n + 0];
 			const Scalar* jacobianY = jacobian[2 * n + 1];
 
-			const DerivativeCalculatorFisheyeCameraPoseJacobian2x6 derivativeCalculator(fisheyeCamera, poseIF);
+			const DerivativeCalculatorFisheyeCameraPoseJacobian2x6 derivativeCalculator(fisheyeCamera, flippedCamera_P_world);
 
 			for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 			{
@@ -1520,12 +1520,12 @@ class TestJacobian::DerivativeCalculatorPoseJacobianDampedDistortion2nx6 : publi
 		/**
 		 * Creates a derivative calculator for pose jacobian with damped distortion.
 		 * @param camera The pinhole camera
-		 * @param poseIF The camera pose (inverted and flipped)
+		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
 		 * @param dampingFactor The damping factor for distortion
 		 */
-		DerivativeCalculatorPoseJacobianDampedDistortion2nx6(const PinholeCamera& camera, const Pose& poseIF, const Scalar dampingFactor) :
+		DerivativeCalculatorPoseJacobianDampedDistortion2nx6(const PinholeCamera& camera, const Pose& flippedCamera_P_world, const Scalar dampingFactor) :
 			camera_(camera),
-			poseIF_(poseIF),
+			flippedCamera_P_world_(flippedCamera_P_world),
 			dampingFactor_(dampingFactor)
 		{
 			// nothing to do here
@@ -1544,10 +1544,10 @@ class TestJacobian::DerivativeCalculatorPoseJacobianDampedDistortion2nx6 : publi
 		{
 			const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-			Pose posePerturbed(poseIF_);
-			posePerturbed[(unsigned int)(poseParameterIndex)] += offset;
+			Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
+			flippedCamera_P_world_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-			return camera_.projectToImageDampedIF(posePerturbed.transformation(), Vector3(objectPoint), camera_.hasDistortionParameters(), dampingFactor_);
+			return camera_.projectToImageDampedIF(flippedCamera_P_world_perturbed.transformation(), Vector3(objectPoint), camera_.hasDistortionParameters(), dampingFactor_);
 		}
 
 	protected:
@@ -1556,7 +1556,7 @@ class TestJacobian::DerivativeCalculatorPoseJacobianDampedDistortion2nx6 : publi
 		const PinholeCamera camera_;
 
 		/// The camera pose (inverted and flipped)
-		const Pose poseIF_;
+		const Pose flippedCamera_P_world_;
 
 		/// The damping factor for distortion
 		const Scalar dampingFactor_;
@@ -1595,14 +1595,14 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
 		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 translation(Random::vector3(-10, 10));
-		const Quaternion quaternion(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(-10, 10));
+		const Quaternion world_Q_camera(Random::quaternion());
 
-		const Pose pose(translation, quaternion);
-		const HomogenousMatrix4 transformation(translation, quaternion);
+		const Pose world_P_camera(world_t_camera, world_Q_camera);
+		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 
-		const HomogenousMatrix4 transformationIF(PinholeCamera::standard2InvertedFlipped(transformation));
-		const Pose poseIF(transformationIF);
+		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
+		const Pose flippedCamera_P_world(flippedCamera_T_world);
 
 		PinholeCamera camera(width, height, fovX, principalX, principalY);
 
@@ -1628,7 +1628,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 			tmpImagePoint.x() *= Scalar(camera.width());
 			tmpImagePoint.y() *= Scalar(camera.height());
 
-			const Line3 ray(camera.ray(tmpImagePoint, translation, quaternion));
+			const Line3 ray(camera.ray(tmpImagePoint, world_t_camera, world_Q_camera));
 			const Vector3 objectPoint(ray.point(Random::scalar(1, 5)));
 
 			objectPoints.push_back(objectPoint);
@@ -1645,12 +1645,12 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 		if (camera.hasDistortionParameters())
 		{
 			const HighPerformanceStatistic::ScopedStatistic scope(performanceDistortedCamera);
-			Geometry::Jacobian::calculatePoseJacobianRodriguesDampedDistortion2nx6(jacobian.data(), camera, poseIF, Scalar(1), objectPoints.data(), objectPoints.size(), true);
+			Geometry::Jacobian::calculatePoseJacobianRodriguesDampedDistortion2nx6(jacobian.data(), camera, flippedCamera_P_world, Scalar(1), objectPoints.data(), objectPoints.size(), true);
 		}
 		else
 		{
 			const HighPerformanceStatistic::ScopedStatistic scope(performancePerfectCamera);
-			Geometry::Jacobian::calculatePoseJacobianRodriguesDampedDistortion2nx6(jacobian.data(), camera, poseIF, Scalar(1), objectPoints.data(), objectPoints.size(), false);
+			Geometry::Jacobian::calculatePoseJacobianRodriguesDampedDistortion2nx6(jacobian.data(), camera, flippedCamera_P_world, Scalar(1), objectPoints.data(), objectPoints.size(), false);
 		}
 
 		{
@@ -1661,14 +1661,14 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageDampedIF(transformationIF, objectPoint, camera.hasDistortionParameters(), Scalar(1)));
+				const Vector2 imagePoint(camera.projectToImageDampedIF(flippedCamera_T_world, objectPoint, camera.hasDistortionParameters(), Scalar(1)));
 
 				for (unsigned int i = 0u; i < 6u; ++i)
 				{
-					Pose poseDelta(poseIF);
-					poseDelta[i] += Numeric::weakEps();
+					Pose flippedCamera_P_world_delta(flippedCamera_P_world);
+					flippedCamera_P_world_delta[i] += Numeric::weakEps();
 
-					const Vector2 imagePointDelta(camera.projectToImageDampedIF(poseDelta.transformation(), objectPoint, camera.hasDistortionParameters(), Scalar(1)));
+					const Vector2 imagePointDelta(camera.projectToImageDampedIF(flippedCamera_P_world_delta.transformation(), objectPoint, camera.hasDistortionParameters(), Scalar(1)));
 					const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
 
 					naiveJacobian[n * 2 + 0][i] = derivative.x();
@@ -1684,7 +1684,7 @@ bool TestJacobian::testPoseJacobianDampedDistortion2nx6(const double testDuratio
 			const Scalar* jacobianX = jacobian[2 * n + 0];
 			const Scalar* jacobianY = jacobian[2 * n + 1];
 
-			const DerivativeCalculatorPoseJacobianDampedDistortion2nx6 derivativeCalculator(camera, poseIF, Scalar(1));
+			const DerivativeCalculatorPoseJacobianDampedDistortion2nx6 derivativeCalculator(camera, flippedCamera_P_world, Scalar(1));
 
 			for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 			{
@@ -1724,12 +1724,12 @@ class TestJacobian::DerivativeCalculatorPoseZoomJacobian2nx7 : public Derivative
 		/**
 		 * Creates a derivative calculator for pose and zoom jacobian.
 		 * @param camera The pinhole camera
-		 * @param poseIF The camera pose (inverted and flipped)
+		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
 		 * @param zoom The zoom factor
 		 */
-		DerivativeCalculatorPoseZoomJacobian2nx7(const PinholeCamera& camera, const Pose& poseIF, const Scalar zoom) :
+		DerivativeCalculatorPoseZoomJacobian2nx7(const PinholeCamera& camera, const Pose& flippedCamera_P_world, const Scalar zoom) :
 			camera_(camera),
-			poseIF_(poseIF),
+			flippedCamera_P_world_(flippedCamera_P_world),
 			zoom_(zoom)
 		{
 			// nothing to do here
@@ -1750,15 +1750,15 @@ class TestJacobian::DerivativeCalculatorPoseZoomJacobian2nx7 : public Derivative
 			{
 				const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-				Pose posePerturbed(poseIF_);
-				posePerturbed[(unsigned int)(poseParameterIndex)] += offset;
+				Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
+				flippedCamera_P_world_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-				return camera_.projectToImageIF<false>(posePerturbed.transformation(), objectPoint, camera_.hasDistortionParameters(), zoom_);
+				return camera_.projectToImageIF<false>(flippedCamera_P_world_perturbed.transformation(), objectPoint, camera_.hasDistortionParameters(), zoom_);
 			}
 			else
 			{
 				const Scalar zoomPerturbed = zoom_ + offset;
-				return camera_.projectToImageIF<false>(poseIF_.transformation(), objectPoint, camera_.hasDistortionParameters(), zoomPerturbed);
+				return camera_.projectToImageIF<false>(flippedCamera_P_world_.transformation(), objectPoint, camera_.hasDistortionParameters(), zoomPerturbed);
 			}
 		}
 
@@ -1768,7 +1768,7 @@ class TestJacobian::DerivativeCalculatorPoseZoomJacobian2nx7 : public Derivative
 		const PinholeCamera camera_;
 
 		/// The camera pose (inverted and flipped)
-		const Pose poseIF_;
+		const Pose flippedCamera_P_world_;
 
 		/// The zoom factor
 		const Scalar zoom_;
@@ -1813,14 +1813,14 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 
 		const Scalar zoom = Random::scalar(0.25, 20);
 
-		const Vector3 translation(Random::vector3(-10, 10));
-		const Quaternion quaternion(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(-10, 10));
+		const Quaternion world_Q_camera(Random::quaternion());
 
-		const Pose pose(translation, quaternion);
-		const HomogenousMatrix4 transformation(translation, quaternion);
+		const Pose world_P_camera(world_t_camera, world_Q_camera);
+		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 
-		const HomogenousMatrix4 transformationIF(PinholeCamera::standard2InvertedFlipped(transformation));
-		const Pose poseIF(transformationIF);
+		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
+		const Pose flippedCamera_P_world(flippedCamera_T_world);
 
 		PinholeCamera camera(width, height, fovX, principalX, principalY);
 
@@ -1848,7 +1848,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 			tmpImagePoint.x() *= Scalar(camera.width());
 			tmpImagePoint.y() *= Scalar(camera.height());
 
-			const Line3 ray(camera.ray(tmpImagePoint, translation, quaternion, zoom));
+			const Line3 ray(camera.ray(tmpImagePoint, world_t_camera, world_Q_camera, zoom));
 			const Vector3 objectPoint(ray.point(Random::scalar(1, 5)));
 
 			objectPoints.push_back(objectPoint);
@@ -1865,12 +1865,12 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 		if (camera.hasDistortionParameters())
 		{
 			const HighPerformanceStatistic::ScopedStatistic scope(performanceDistortedCamera);
-			Geometry::Jacobian::calculatePoseZoomJacobianRodrigues2nx7(jacobian.data(), camera, poseIF, zoom, objectPoints.data(), objectPoints.size(), true);
+			Geometry::Jacobian::calculatePoseZoomJacobianRodrigues2nx7(jacobian.data(), camera, flippedCamera_P_world, zoom, objectPoints.data(), objectPoints.size(), true);
 		}
 		else
 		{
 			const HighPerformanceStatistic::ScopedStatistic scope(performancePerfectCamera);
-			Geometry::Jacobian::calculatePoseZoomJacobianRodrigues2nx7(jacobian.data(), camera, poseIF, zoom, objectPoints.data(), objectPoints.size(), false);
+			Geometry::Jacobian::calculatePoseZoomJacobianRodrigues2nx7(jacobian.data(), camera, flippedCamera_P_world, zoom, objectPoints.data(), objectPoints.size(), false);
 		}
 
 		{
@@ -1881,23 +1881,23 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
 				const Vector3 objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<false>(transformationIF, objectPoint, camera.hasDistortionParameters(), zoom));
+				const Vector2 imagePoint(camera.projectToImageIF<false>(flippedCamera_T_world, objectPoint, camera.hasDistortionParameters(), zoom));
 
 				for (unsigned int i = 0u; i < 7u; ++i)
 				{
-					Pose poseDelta(poseIF);
+					Pose flippedCamera_P_world_delta(flippedCamera_P_world);
 					Scalar zoomDelta(zoom);
 
 					if (i < 6u)
 					{
-						poseDelta[i] += Numeric::weakEps();
+						flippedCamera_P_world_delta[i] += Numeric::weakEps();
 					}
 					else
 					{
 						zoomDelta += Numeric::weakEps();
 					}
 
-					const Vector2 imagePointDelta(camera.projectToImageIF<false>(poseDelta.transformation(), objectPoint, camera.hasDistortionParameters(), zoomDelta));
+					const Vector2 imagePointDelta(camera.projectToImageIF<false>(flippedCamera_P_world_delta.transformation(), objectPoint, camera.hasDistortionParameters(), zoomDelta));
 					const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
 
 					naiveJacobian[n * 2 + 0][i] = derivative.x();
@@ -1914,7 +1914,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 			const Scalar* jacobianY = jacobian[2 * n + 1];
 
 			Scalar singleJacobianX[7], singleJacobianY[7];
-			Geometry::Jacobian::calculatePoseZoomJacobianRodrigues2x7(singleJacobianX, singleJacobianY, camera, poseIF, zoom, objectPoint, camera.hasDistortionParameters());
+			Geometry::Jacobian::calculatePoseZoomJacobianRodrigues2x7(singleJacobianX, singleJacobianY, camera, flippedCamera_P_world, zoom, objectPoint, camera.hasDistortionParameters());
 
 			for (unsigned int i = 0u; i < 7u; ++i)
 			{
@@ -1927,7 +1927,7 @@ bool TestJacobian::testPoseZoomJacobian2nx7(const double testDuration)
 				}
 			}
 
-			const DerivativeCalculatorPoseZoomJacobian2nx7 derivativeCalculator(camera, poseIF, zoom);
+			const DerivativeCalculatorPoseZoomJacobian2nx7 derivativeCalculator(camera, flippedCamera_P_world, zoom);
 
 			for (size_t parameterIndex = 0; parameterIndex < 7; ++parameterIndex)
 			{
@@ -1968,16 +1968,16 @@ class TestJacobian::DerivativeCalculatorPinholeCameraObjectTransformation2nx6 : 
 		/**
 		 * Creates a new derivative calculator.
 		 * @param camera The pinhole camera
-		 * @param extrinsicIF The camera pose (inverted and flipped)
-		 * @param objectPose The object pose
-		 * @param objectTransformation The object transformation matrix
+		 * @param flippedCamera_T_world The camera pose (inverted and flipped)
+		 * @param world_P_object The object pose
+		 * @param world_T_object The object transformation matrix
 		 * @param distortImagePoint Whether to apply distortion
 		 */
-		DerivativeCalculatorPinholeCameraObjectTransformation2nx6(const PinholeCamera& camera, const HomogenousMatrix4& extrinsicIF, const Pose& objectPose, const HomogenousMatrix4& objectTransformation) :
+		DerivativeCalculatorPinholeCameraObjectTransformation2nx6(const PinholeCamera& camera, const HomogenousMatrix4& flippedCamera_T_world, const Pose& world_P_object, const HomogenousMatrix4& world_T_object) :
 			camera_(camera),
-			extrinsicIF_(extrinsicIF),
-			objectPose_(objectPose),
-			objectTransformation_(objectTransformation)
+			flippedCamera_T_world_(flippedCamera_T_world),
+			world_P_object_(world_P_object),
+			world_T_object_(world_T_object)
 		{
 			// nothing to do here
 		}
@@ -1993,10 +1993,10 @@ class TestJacobian::DerivativeCalculatorPinholeCameraObjectTransformation2nx6 : 
 		{
 			const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-			Pose objectPosePerturbed(objectPose_);
-			objectPosePerturbed[(unsigned int)(poseParameterIndex)] += offset;
+			Pose world_P_object_perturbed(world_P_object_);
+			world_P_object_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-			return camera_.projectToImageIF<false>(extrinsicIF_, objectPosePerturbed.transformation() * objectPoint, false);
+			return camera_.projectToImageIF<false>(flippedCamera_T_world_, world_P_object_perturbed.transformation() * objectPoint, false);
 		}
 
 	protected:
@@ -2005,13 +2005,13 @@ class TestJacobian::DerivativeCalculatorPinholeCameraObjectTransformation2nx6 : 
 		const PinholeCamera camera_;
 
 		/// The camera pose (inverted and flipped)
-		const HomogenousMatrix4 extrinsicIF_;
+		const HomogenousMatrix4 flippedCamera_T_world_;
 
 		/// The object pose
-		const Pose objectPose_;
+		const Pose world_P_object_;
 
 		/// The object transformation matrix
-		const HomogenousMatrix4 objectTransformation_;
+		const HomogenousMatrix4 world_T_object_;
 };
 
 bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDuration)
@@ -2046,19 +2046,19 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
 		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 objectTranslation(Random::vector3(-5, 5));
-		const Quaternion objectQuaternion(Random::quaternion());
+		const Vector3 world_t_object(Random::vector3(-5, 5));
+		const Quaternion world_Q_object(Random::quaternion());
 
-		const Pose objectPose(objectTranslation, objectQuaternion);
-		const HomogenousMatrix4 objectTransformation(objectTranslation, objectQuaternion);
-		const HomogenousMatrix4 objectTransformationI(objectTransformation.inverted());
+		const Pose world_P_object(world_t_object, world_Q_object);
+		const HomogenousMatrix4 world_T_object(world_t_object, world_Q_object);
+		const HomogenousMatrix4 object_T_world(world_T_object.inverted());
 
-		const Vector3 extrinsicTranslation(Random::vector3(-5, 5));
-		const Quaternion extrinsicQuaternion(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(-5, 5));
+		const Quaternion world_Q_camera(Random::quaternion());
 
-		const HomogenousMatrix4 extrinsic(extrinsicTranslation, extrinsicQuaternion);
+		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 
-		const HomogenousMatrix4 extrinsicIF(PinholeCamera::standard2InvertedFlipped(extrinsic));
+		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
 
 		const PinholeCamera camera(width, height, fovX, principalX, principalY);
 
@@ -2068,10 +2068,10 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 		{
 			const Vector2 imagePoint(Random::vector2(Scalar(0), Scalar(camera.width()), Scalar(0), Scalar(camera.height())));
 
-			const Line3 ray(camera.ray(imagePoint, extrinsic));
-			const Vector3 objectPoint = objectTransformationI * ray.point(Random::scalar(1, 5));
+			const Line3 ray(camera.ray(imagePoint, world_T_camera));
+			const Vector3 objectPoint = object_T_world * ray.point(Random::scalar(1, 5));
 
-			ocean_assert(camera.projectToImage<false>(extrinsic, objectTransformation * objectPoint, false).isEqual(imagePoint, 1));
+			ocean_assert(camera.projectToImage<false>(world_T_camera, world_T_object * objectPoint, false).isEqual(imagePoint, 1));
 
 			objectPoints.push_back(objectPoint);
 		}
@@ -2085,7 +2085,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 		Matrix jacobian(2 * objectPoints.size(), 6);
 
 		performance.start();
-		Geometry::Jacobian::calculateObjectTransformation2nx6(jacobian.data(), camera, extrinsicIF, objectPose, objectPoints.data(), objectPoints.size());
+		Geometry::Jacobian::calculateObjectTransformation2nx6(jacobian.data(), camera, flippedCamera_T_world, world_P_object, objectPoints.data(), objectPoints.size());
 		performance.stop();
 
 		{
@@ -2096,14 +2096,14 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<false>(extrinsicIF, objectTransformation * objectPoint, false));
+				const Vector2 imagePoint(camera.projectToImageIF<false>(flippedCamera_T_world, world_T_object * objectPoint, false));
 
 				for (unsigned int i = 0u; i < 6u; ++i)
 				{
-					Pose objectPoseDelta(objectPose);
-					objectPoseDelta[i] += Numeric::weakEps();
+					Pose world_P_object_delta(world_P_object);
+					world_P_object_delta[i] += Numeric::weakEps();
 
-					const Vector2 imagePointDelta(camera.projectToImageIF<false>(extrinsicIF, objectPoseDelta.transformation() * objectPoint, false));
+					const Vector2 imagePointDelta(camera.projectToImageIF<false>(flippedCamera_T_world, world_P_object_delta.transformation() * objectPoint, false));
 					const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
 
 					naiveJacobian[n * 2 + 0][i] = derivative.x();
@@ -2123,7 +2123,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 				// we also test the first implementation for one object point
 
 				Scalar singleJacobianX[6], singleJacobianY[6];
-				Geometry::Jacobian::calculateObjectTransformation2x6(singleJacobianX, singleJacobianY, camera, extrinsicIF, objectPose, objectPoint);
+				Geometry::Jacobian::calculateObjectTransformation2x6(singleJacobianX, singleJacobianY, camera, flippedCamera_T_world, world_P_object, objectPoint);
 
 				for (unsigned int i = 0u; i < 6u; ++i)
 				{
@@ -2141,10 +2141,10 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 				// we also test the second implementation for one object point
 
 				SquareMatrix3 dwx, dwy, dwz;
-				Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(objectPose[3], objectPose[4], objectPose[5]), dwx, dwy, dwz);
+				Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(world_P_object[3], world_P_object[4], world_P_object[5]), dwx, dwy, dwz);
 
 				Scalar singleJacobianX[6], singleJacobianY[6];
-				Geometry::Jacobian::calculateObjectTransformation2x6(singleJacobianX, singleJacobianY, camera, extrinsicIF, objectPose, objectPoint, dwx, dwy, dwz);
+				Geometry::Jacobian::calculateObjectTransformation2x6(singleJacobianX, singleJacobianY, camera, flippedCamera_T_world, world_P_object, objectPoint, dwx, dwy, dwz);
 
 				for (unsigned int i = 0u; i < 6u; ++i)
 				{
@@ -2158,7 +2158,7 @@ bool TestJacobian::testPinholeCameraObjectTransformation2nx6(const double testDu
 				}
 			}
 
-			const DerivativeCalculatorPinholeCameraObjectTransformation2nx6 derivativeCalculator(camera, extrinsicIF, objectPose, objectTransformation);
+			const DerivativeCalculatorPinholeCameraObjectTransformation2nx6 derivativeCalculator(camera, flippedCamera_T_world, world_P_object, world_T_object);
 
 			for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 			{
@@ -2198,15 +2198,15 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraObjectTransformation2nx6 : 
 		/**
 		 * Creates a new derivative calculator.
 		 * @param fisheyeCamera The fisheye camera
-		 * @param extrinsicIF The camera pose (inverted and flipped)
-		 * @param objectPose The object pose
-		 * @param objectTransformation The object transformation matrix
+		 * @param flippedCamera_T_world The camera pose (inverted and flipped)
+		 * @param world_P_object The object pose
+		 * @param world_T_object The object transformation matrix
 		 */
-		DerivativeCalculatorFisheyeCameraObjectTransformation2nx6(const FisheyeCamera& fisheyeCamera, const HomogenousMatrix4& extrinsicIF, const Pose& objectPose, const HomogenousMatrix4& objectTransformation) :
+		DerivativeCalculatorFisheyeCameraObjectTransformation2nx6(const FisheyeCamera& fisheyeCamera, const HomogenousMatrix4& flippedCamera_T_world, const Pose& world_P_object, const HomogenousMatrix4& world_T_object) :
 			fisheyeCamera_(fisheyeCamera),
-			extrinsicIF_(extrinsicIF),
-			objectPose_(objectPose),
-			objectTransformation_(objectTransformation)
+			flippedCamera_T_world_(flippedCamera_T_world),
+			world_P_object_(world_P_object),
+			world_T_object_(world_T_object)
 		{
 			// nothing to do here
 		}
@@ -2222,10 +2222,10 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraObjectTransformation2nx6 : 
 		{
 			const size_t poseParameterIndex = (parameterIndex + 3) % 6; // 0-2: translation, 3-5 rotation
 
-			Pose objectPosePerturbed(objectPose_);
-			objectPosePerturbed[(unsigned int)(poseParameterIndex)] += offset;
+			Pose world_P_object_perturbed(world_P_object_);
+			world_P_object_perturbed[(unsigned int)(poseParameterIndex)] += offset;
 
-			return fisheyeCamera_.projectToImageIF(extrinsicIF_, objectPosePerturbed.transformation() * objectPoint);
+			return fisheyeCamera_.projectToImageIF(flippedCamera_T_world_, world_P_object_perturbed.transformation() * objectPoint);
 		}
 
 	protected:
@@ -2234,13 +2234,13 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraObjectTransformation2nx6 : 
 		const FisheyeCamera fisheyeCamera_;
 
 		/// The camera pose (inverted and flipped)
-		const HomogenousMatrix4 extrinsicIF_;
+		const HomogenousMatrix4 flippedCamera_T_world_;
 
 		/// The object pose
-		const Pose objectPose_;
+		const Pose world_P_object_;
 
 		/// The object transformation matrix
-		const HomogenousMatrix4 objectTransformation_;
+		const HomogenousMatrix4 world_T_object_;
 };
 
 bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDuration)
@@ -2266,19 +2266,19 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 
 		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
 
-		const Vector3 objectTranslation(Random::vector3(-5, 5));
-		const Quaternion objectQuaternion(Random::quaternion());
+		const Vector3 world_t_object(Random::vector3(-5, 5));
+		const Quaternion world_Q_object(Random::quaternion());
 
-		const Pose objectPose(objectTranslation, objectQuaternion);
-		const HomogenousMatrix4 objectTransformation(objectTranslation, objectQuaternion);
-		const HomogenousMatrix4 objectTransformationI(objectTransformation.inverted());
+		const Pose world_P_object(world_t_object, world_Q_object);
+		const HomogenousMatrix4 world_T_object(world_t_object, world_Q_object);
+		const HomogenousMatrix4 object_T_world(world_T_object.inverted());
 
-		const Vector3 extrinsicTranslation(Random::vector3(-5, 5));
-		const Quaternion extrinsicQuaternion(Random::quaternion());
+		const Vector3 world_t_camera(Random::vector3(-5, 5));
+		const Quaternion world_Q_camera(Random::quaternion());
 
-		const HomogenousMatrix4 extrinsic(extrinsicTranslation, extrinsicQuaternion);
+		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 
-		const HomogenousMatrix4 extrinsicIF(PinholeCamera::standard2InvertedFlipped(extrinsic));
+		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
 
 		Vectors3 objectPoints;
 		objectPoints.reserve(numberPoints);
@@ -2286,10 +2286,10 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 		{
 			const Vector2 imagePoint(Random::vector2(Scalar(5), Scalar(fisheyeCamera.width() - 5u), Scalar(5), Scalar(fisheyeCamera.height() - 5u)));
 
-			const Line3 ray(fisheyeCamera.ray(imagePoint, extrinsic));
-			const Vector3 objectPoint = objectTransformationI * ray.point(Random::scalar(1, 5));
+			const Line3 ray(fisheyeCamera.ray(imagePoint, world_T_camera));
+			const Vector3 objectPoint = object_T_world * ray.point(Random::scalar(1, 5));
 
-			ocean_assert(fisheyeCamera.projectToImage(extrinsic, objectTransformation * objectPoint).isEqual(imagePoint, 1));
+			ocean_assert(fisheyeCamera.projectToImage(world_T_camera, world_T_object * objectPoint).isEqual(imagePoint, 1));
 
 			objectPoints.push_back(objectPoint);
 		}
@@ -2303,7 +2303,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 		Matrix jacobian(2 * objectPoints.size(), 6);
 
 		performance.start();
-		Geometry::Jacobian::calculateObjectTransformation2nx6(jacobian.data(), fisheyeCamera, extrinsicIF, objectPose, objectPoints.data(), objectPoints.size());
+		Geometry::Jacobian::calculateObjectTransformation2nx6(jacobian.data(), fisheyeCamera, flippedCamera_T_world, world_P_object, objectPoints.data(), objectPoints.size());
 		performance.stop();
 
 		{
@@ -2314,14 +2314,14 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(fisheyeCamera.projectToImageIF(extrinsicIF, objectTransformation * objectPoint));
+				const Vector2 imagePoint(fisheyeCamera.projectToImageIF(flippedCamera_T_world, world_T_object * objectPoint));
 
 				for (unsigned int i = 0u; i < 6u; ++i)
 				{
-					Pose objectPoseDelta(objectPose);
-					objectPoseDelta[i] += Numeric::weakEps();
+					Pose world_P_object_delta(world_P_object);
+					world_P_object_delta[i] += Numeric::weakEps();
 
-					const Vector2 imagePointDelta(fisheyeCamera.projectToImageIF(extrinsicIF, objectPoseDelta.transformation() * objectPoint));
+					const Vector2 imagePointDelta(fisheyeCamera.projectToImageIF(flippedCamera_T_world, world_P_object_delta.transformation() * objectPoint));
 					const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
 
 					naiveJacobian[n * 2 + 0][i] = derivative.x();
@@ -2337,7 +2337,7 @@ bool TestJacobian::testFisheyeCameraObjectTransformation2nx6(const double testDu
 			const Scalar* jacobianX = jacobian[2 * n + 0];
 			const Scalar* jacobianY = jacobian[2 * n + 1];
 
-			const DerivativeCalculatorFisheyeCameraObjectTransformation2nx6 derivativeCalculator(fisheyeCamera, extrinsicIF, objectPose, objectTransformation);
+			const DerivativeCalculatorFisheyeCameraObjectTransformation2nx6 derivativeCalculator(fisheyeCamera, flippedCamera_T_world, world_P_object, world_T_object);
 
 			for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 			{
@@ -2377,12 +2377,12 @@ class TestJacobian::DerivativeCalculatorPinholeCameraPointJacobian2nx3 : public 
 		/**
 		 * Creates a new derivative calculator.
 		 * @param camera The pinhole camera
-		 * @param iFlippedTransformation The camera transformation (inverted and flipped)
+		 * @param flippedCamera_T_world The camera transformation (inverted and flipped)
 		 * @param distortImagePoint Whether to apply distortion
 		 */
-		DerivativeCalculatorPinholeCameraPointJacobian2nx3(const PinholeCamera& camera, const HomogenousMatrix4& iFlippedTransformation, const bool distortImagePoint) :
+		DerivativeCalculatorPinholeCameraPointJacobian2nx3(const PinholeCamera& camera, const HomogenousMatrix4& flippedCamera_T_world, const bool distortImagePoint) :
 			camera_(camera),
-			iFlippedTransformation_(iFlippedTransformation),
+			flippedCamera_T_world_(flippedCamera_T_world),
 			distortImagePoint_(distortImagePoint)
 		{
 			// nothing to do here
@@ -2400,7 +2400,7 @@ class TestJacobian::DerivativeCalculatorPinholeCameraPointJacobian2nx3 : public 
 			VectorD3 objectPointPerturbed(objectPoint);
 			objectPointPerturbed[(unsigned int)(parameterIndex)] += offset;
 
-			return VectorD2(camera_.projectToImageIF<false>(iFlippedTransformation_, Vector3(objectPointPerturbed), distortImagePoint_));
+			return VectorD2(camera_.projectToImageIF<false>(flippedCamera_T_world_, Vector3(objectPointPerturbed), distortImagePoint_));
 		}
 
 	protected:
@@ -2409,7 +2409,7 @@ class TestJacobian::DerivativeCalculatorPinholeCameraPointJacobian2nx3 : public 
 		const PinholeCamera camera_;
 
 		/// The camera transformation (inverted and flipped)
-		const HomogenousMatrix4 iFlippedTransformation_;
+		const HomogenousMatrix4 flippedCamera_T_world_;
 
 		/// Whether to apply distortion
 		const bool distortImagePoint_;
@@ -2452,11 +2452,11 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
 		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 translation(Random::scalar(-1, 1), Random::scalar(-1, 1), Random::scalar(-1, 1));
-		const Quaternion rotation(Random::quaternion());
+		const Vector3 world_t_camera(Random::scalar(-1, 1), Random::scalar(-1, 1), Random::scalar(-1, 1));
+		const Quaternion world_Q_camera(Random::quaternion());
 
-		const HomogenousMatrix4 transformation(translation, rotation);
-		const HomogenousMatrix4 iFlippedTransformation(PinholeCamera::standard2InvertedFlipped(transformation));
+		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
+		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
 
 		PinholeCamera camera(width, height, fovX, principalX, principalY);
 
@@ -2482,7 +2482,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 		while (objectPoints.size() < numberPoints)
 		{
 			const Vector2 imagePoint(Random::scalar(Scalar(0u), Scalar(camera.width() - 1u)), Random::scalar(Scalar(0u), Scalar(camera.height() - 1u)));
-			const Line3 ray(camera.ray(camera.undistort<true>(imagePoint), transformation));
+			const Line3 ray(camera.ray(camera.undistort<true>(imagePoint), world_T_camera));
 			const Vector3 objectPoint(ray.point(Random::scalar(1, 100)));
 
 			objectPoints.push_back(objectPoint);
@@ -2493,12 +2493,12 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 		if (camera.hasDistortionParameters())
 		{
 			const HighPerformanceStatistic::ScopedStatistic scope(performanceDistortedCamera);
-			Geometry::Jacobian::calculatePointJacobian2nx3(jacobian.data(), camera, iFlippedTransformation, objectPoints.data(), objectPoints.size(), true);
+			Geometry::Jacobian::calculatePointJacobian2nx3(jacobian.data(), camera, flippedCamera_T_world, objectPoints.data(), objectPoints.size(), true);
 		}
 		else
 		{
 			const HighPerformanceStatistic::ScopedStatistic scope(performancePerfectCamera);
-			Geometry::Jacobian::calculatePointJacobian2nx3(jacobian.data(), camera, iFlippedTransformation, objectPoints.data(), objectPoints.size(), false);
+			Geometry::Jacobian::calculatePointJacobian2nx3(jacobian.data(), camera, flippedCamera_T_world, objectPoints.data(), objectPoints.size(), false);
 		}
 
 		{
@@ -2509,14 +2509,14 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<false>(iFlippedTransformation, objectPoint, camera.hasDistortionParameters()));
+				const Vector2 imagePoint(camera.projectToImageIF<false>(flippedCamera_T_world, objectPoint, camera.hasDistortionParameters()));
 
 				for (unsigned int i = 0u; i < 3u; ++i)
 				{
 					Vector3 objectPointDelta(objectPoint);
 					objectPointDelta[i] += eps;
 
-					const Vector2 imagePointDelta(camera.projectToImageIF<false>(iFlippedTransformation, objectPointDelta, camera.hasDistortionParameters()));
+					const Vector2 imagePointDelta(camera.projectToImageIF<false>(flippedCamera_T_world, objectPointDelta, camera.hasDistortionParameters()));
 					const Vector2 derivative = (imagePointDelta - imagePoint) / eps;
 
 					naiveJacobian[n * 2 + 0][i] = derivative.x();
@@ -2533,7 +2533,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 			const Scalar* jacobianY = jacobian[2 * n + 1];
 
 			Scalar singleJacobianX[3], singleJacobianY[3];
-			Geometry::Jacobian::calculatePointJacobian2x3(singleJacobianX, singleJacobianY, camera, iFlippedTransformation, objectPoint, camera.hasDistortionParameters());
+			Geometry::Jacobian::calculatePointJacobian2x3(singleJacobianX, singleJacobianY, camera, flippedCamera_T_world, objectPoint, camera.hasDistortionParameters());
 
 			for (unsigned int i = 0u; i < 3u; ++i)
 			{
@@ -2546,7 +2546,7 @@ bool TestJacobian::testPinholeCameraPointJacobian2nx3(const double testDuration)
 				}
 			}
 
-			const DerivativeCalculatorPinholeCameraPointJacobian2nx3 derivativeCalculator(camera, iFlippedTransformation, camera.hasDistortionParameters());
+			const DerivativeCalculatorPinholeCameraPointJacobian2nx3 derivativeCalculator(camera, flippedCamera_T_world, camera.hasDistortionParameters());
 
 			for (size_t parameterIndex = 0; parameterIndex < 3; ++parameterIndex)
 			{
@@ -2587,11 +2587,11 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraPointJacobian2x3 : public D
 		/**
 		 * Creates calculator with fisheye camera and transformation.
 		 * @param fisheyeCamera Fisheye camera model for projection
-		 * @param iFlippedTransformation Inverted and flipped camera transformation
+		 * @param flippedCamera_T_world Inverted and flipped camera transformation
 		 */
-		DerivativeCalculatorFisheyeCameraPointJacobian2x3(const FisheyeCamera& fisheyeCamera, const HomogenousMatrix4& iFlippedTransformation) :
+		DerivativeCalculatorFisheyeCameraPointJacobian2x3(const FisheyeCamera& fisheyeCamera, const HomogenousMatrix4& flippedCamera_T_world) :
 			fisheyeCamera_(fisheyeCamera),
-			iFlippedTransformation_(iFlippedTransformation)
+			flippedCamera_T_world_(flippedCamera_T_world)
 		{
 			// nothing to do here
 		}
@@ -2608,7 +2608,7 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraPointJacobian2x3 : public D
 			VectorD3 objectPointPerturbed(objectPoint);
 			objectPointPerturbed[(unsigned int)(parameterIndex)] += offset;
 
-			return VectorD2(fisheyeCamera_.projectToImageIF(iFlippedTransformation_, Vector3(objectPointPerturbed)));
+			return VectorD2(fisheyeCamera_.projectToImageIF(flippedCamera_T_world_, Vector3(objectPointPerturbed)));
 		}
 
 	protected:
@@ -2617,7 +2617,7 @@ class TestJacobian::DerivativeCalculatorFisheyeCameraPointJacobian2x3 : public D
 		const FisheyeCamera fisheyeCamera_;
 
 		/// Inverted and flipped camera transformation
-		const HomogenousMatrix4 iFlippedTransformation_;
+		const HomogenousMatrix4 flippedCamera_T_world_;
 };
 
 bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
@@ -2645,10 +2645,10 @@ bool TestJacobian::testFisheyeCameraPointJacobian2x3(const double testDuration)
 
 		const FisheyeCamera fisheyeCamera = Utilities::realisticFisheyeCamera(RandomI::random(1u));
 
-		const Vector3 translation(Random::scalar(-1, 1), Random::scalar(-1, 1), Random::scalar(-1, 1));
-		const Quaternion rotation(Random::quaternion());
+		const Vector3 world_t_camera(Random::scalar(-1, 1), Random::scalar(-1, 1), Random::scalar(-1, 1));
+		const Quaternion world_Q_camera(Random::quaternion());
 
-		const HomogenousMatrix4 world_T_camera(translation, rotation);
+		const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
 
 		Vectors3 objectPoints;
@@ -2759,11 +2759,11 @@ class TestJacobian::DerivativeCalculatorAnyCameraPointJacobian2x3 : public Deriv
 		/**
 		 * Creates calculator with any camera and transformation.
 		 * @param anyCamera Any camera model for projection
-		 * @param iFlippedTransformation Inverted and flipped camera transformation
+		 * @param flippedCamera_T_world Inverted and flipped camera transformation
 		 */
-		DerivativeCalculatorAnyCameraPointJacobian2x3(const AnyCamera& anyCamera, const HomogenousMatrix4& iFlippedTransformation) :
+		DerivativeCalculatorAnyCameraPointJacobian2x3(const AnyCamera& anyCamera, const HomogenousMatrix4& flippedCamera_T_world) :
 			anyCamera_(anyCamera),
-			iFlippedTransformation_(iFlippedTransformation)
+			flippedCamera_T_world_(flippedCamera_T_world)
 		{
 			// nothing to do here
 		}
@@ -2780,7 +2780,7 @@ class TestJacobian::DerivativeCalculatorAnyCameraPointJacobian2x3 : public Deriv
 			VectorD3 objectPointPerturbed(objectPoint);
 			objectPointPerturbed[(unsigned int)(parameterIndex)] += offset;
 
-			return VectorD2(anyCamera_.projectToImageIF(iFlippedTransformation_, Vector3(objectPointPerturbed)));
+			return VectorD2(anyCamera_.projectToImageIF(flippedCamera_T_world_, Vector3(objectPointPerturbed)));
 		}
 
 	protected:
@@ -2789,7 +2789,7 @@ class TestJacobian::DerivativeCalculatorAnyCameraPointJacobian2x3 : public Deriv
 		const AnyCamera& anyCamera_;
 
 		/// Inverted and flipped camera transformation
-		const HomogenousMatrix4 iFlippedTransformation_;
+		const HomogenousMatrix4 flippedCamera_T_world_;
 };
 
 bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
@@ -2830,10 +2830,10 @@ bool TestJacobian::testAnyCameraPointJacobian2x3(const double testDuration)
 		{
 			ValidationPrecision::ScopedIteration scopedIteration(validation);
 
-			const Vector3 translation(Random::scalar(-1, 1), Random::scalar(-1, 1), Random::scalar(-1, 1));
-			const Quaternion rotation(Random::quaternion());
+			const Vector3 world_t_camera(Random::scalar(-1, 1), Random::scalar(-1, 1), Random::scalar(-1, 1));
+			const Quaternion world_Q_camera(Random::quaternion());
 
-			const HomogenousMatrix4 world_T_camera(translation, rotation);
+			const HomogenousMatrix4 world_T_camera(world_t_camera, world_Q_camera);
 			const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
 
 			Vectors3 objectPoints;
@@ -2997,14 +2997,14 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 			objectPoints.push_back(Vector3(Random::scalar(-5, 5), 0, Random::scalar(-5, 5)));
 		}
 
-		const HomogenousMatrix4 transformationFirst(Utilities::viewPosition(camera, objectPoints));
-		const HomogenousMatrix4 transformationSecond(Utilities::viewPosition(camera, objectPoints));
+		const HomogenousMatrix4 world_T_cameraFirst(Utilities::viewPosition(camera, objectPoints));
+		const HomogenousMatrix4 world_T_cameraSecond(Utilities::viewPosition(camera, objectPoints));
 
-		const HomogenousMatrix4 transformationFirstIF(PinholeCamera::standard2InvertedFlipped(transformationFirst));
-		const Pose poseFirstIF(transformationFirstIF);
+		const HomogenousMatrix4 flippedCameraFirst_T_world(PinholeCamera::standard2InvertedFlipped(world_T_cameraFirst));
+		const Pose flippedCameraFirst_P_world(flippedCameraFirst_T_world);
 
-		const HomogenousMatrix4 transformationSecondIF(PinholeCamera::standard2InvertedFlipped(transformationSecond));
-		const Pose poseSecondIF(transformationSecondIF);
+		const HomogenousMatrix4 flippedCameraSecond_T_world(PinholeCamera::standard2InvertedFlipped(world_T_cameraSecond));
+		const Pose flippedCameraSecond_P_world(flippedCameraSecond_T_world);
 
 		/**
 		 * jacobian for two poses and one point
@@ -3020,25 +3020,25 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 		Scalar* poseJacobiansFirst = &poseJacobians[0] + numberPoints * 0u;
 		Scalar* poseJacobiansSecond = &poseJacobians[0] + numberPoints * 12u;
 
-		Geometry::Jacobian::calculatePointJacobian2nx3(pointJacobiansFirstPose, camera, transformationFirstIF, objectPoints.data(), objectPoints.size(), camera.hasDistortionParameters());
-		Geometry::Jacobian::calculatePointJacobian2nx3(pointJacobiansSecondPose, camera, transformationSecondIF, objectPoints.data(), objectPoints.size(), camera.hasDistortionParameters());
+		Geometry::Jacobian::calculatePointJacobian2nx3(pointJacobiansFirstPose, camera, flippedCameraFirst_T_world, objectPoints.data(), objectPoints.size(), camera.hasDistortionParameters());
+		Geometry::Jacobian::calculatePointJacobian2nx3(pointJacobiansSecondPose, camera, flippedCameraSecond_T_world, objectPoints.data(), objectPoints.size(), camera.hasDistortionParameters());
 
-		Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(poseJacobiansFirst, camera, Pose(transformationFirstIF), objectPoints.data(), objectPoints.size(), camera.hasDistortionParameters());
-		Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(poseJacobiansSecond, camera, Pose(transformationSecondIF), objectPoints.data(), objectPoints.size(), camera.hasDistortionParameters());
+		Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(poseJacobiansFirst, camera, Pose(flippedCameraFirst_T_world), objectPoints.data(), objectPoints.size(), camera.hasDistortionParameters());
+		Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(poseJacobiansSecond, camera, Pose(flippedCameraSecond_T_world), objectPoints.data(), objectPoints.size(), camera.hasDistortionParameters());
 
 		for (size_t n = 0; n < objectPoints.size(); ++n)
 		{
 			// first pose
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<true>(transformationFirstIF, objectPoint, camera.hasDistortionParameters()));
+				const Vector2 imagePoint(camera.projectToImageIF<true>(flippedCameraFirst_T_world, objectPoint, camera.hasDistortionParameters()));
 
 				const Scalar* jacobianX = poseJacobiansFirst + 12u * (unsigned int)n + 0u;
 				const Scalar* jacobianY = jacobianX + 6;
 
 				{
 					// df / dwx
-					Pose poseWx(poseFirstIF);
+					Pose poseWx(flippedCameraFirst_P_world);
 					poseWx.rx() += eps;
 
 					const Vector2 imagePointWx(camera.projectToImageIF<true>(poseWx.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3065,7 +3065,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				{
 					// df / dwy
-					Pose poseWy(poseFirstIF);
+					Pose poseWy(flippedCameraFirst_P_world);
 					poseWy.ry() += eps;
 
 					const Vector2 imagePointWy(camera.projectToImageIF<true>(poseWy.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3092,7 +3092,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				{
 					// df / dwz
-					Pose poseWz(poseFirstIF);
+					Pose poseWz(flippedCameraFirst_P_world);
 					poseWz.rz() += eps;
 
 					const Vector2 imagePointWz(camera.projectToImageIF<true>(poseWz.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3119,7 +3119,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				{
 					// df / dtx
-					Pose poseTx(poseFirstIF);
+					Pose poseTx(flippedCameraFirst_P_world);
 					poseTx.x() += eps;
 
 					const Vector2 imagePointTx(camera.projectToImageIF<true>(poseTx.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3146,7 +3146,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				{
 					// df / dty
-					Pose poseTy(poseFirstIF);
+					Pose poseTy(flippedCameraFirst_P_world);
 					poseTy.y() += eps;
 
 					const Vector2 imagePointTy(camera.projectToImageIF<true>(poseTy.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3173,7 +3173,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				{
 					// df / dtz
-					Pose poseTz(poseFirstIF);
+					Pose poseTz(flippedCameraFirst_P_world);
 					poseTz.z() += eps;
 
 					const Vector2 imagePointTz(camera.projectToImageIF<true>(poseTz.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3204,14 +3204,14 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 			// second pose
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<true>(transformationSecondIF, objectPoint, camera.hasDistortionParameters()));
+				const Vector2 imagePoint(camera.projectToImageIF<true>(flippedCameraSecond_T_world, objectPoint, camera.hasDistortionParameters()));
 
 				const Scalar* jacobianX = poseJacobiansSecond + 12u * (unsigned int)n + 0u;
 				const Scalar* jacobianY = jacobianX + 6;
 
 				{
 					// df / dwx
-					Pose poseWx(poseSecondIF);
+					Pose poseWx(flippedCameraSecond_P_world);
 					poseWx.rx() += eps;
 
 					const Vector2 imagePointWx(camera.projectToImageIF<true>(poseWx.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3238,7 +3238,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				{
 					// df / dwy
-					Pose poseWy(poseSecondIF);
+					Pose poseWy(flippedCameraSecond_P_world);
 					poseWy.ry() += eps;
 
 					const Vector2 imagePointWy(camera.projectToImageIF<true>(poseWy.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3265,7 +3265,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				{
 					// df / dwz
-					Pose poseWz(poseSecondIF);
+					Pose poseWz(flippedCameraSecond_P_world);
 					poseWz.rz() += eps;
 
 					const Vector2 imagePointWz(camera.projectToImageIF<true>(poseWz.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3292,7 +3292,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				{
 					// df / dtx
-					Pose poseTx(poseSecondIF);
+					Pose poseTx(flippedCameraSecond_P_world);
 					poseTx.x() += eps;
 
 					const Vector2 imagePointTx(camera.projectToImageIF<true>(poseTx.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3319,7 +3319,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				{
 					// df / dty
-					Pose poseTy(poseSecondIF);
+					Pose poseTy(flippedCameraSecond_P_world);
 					poseTy.y() += eps;
 
 					const Vector2 imagePointTy(camera.projectToImageIF<true>(poseTy.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3346,7 +3346,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 				{
 					// df / dtz
-					Pose poseTz(poseSecondIF);
+					Pose poseTz(flippedCameraSecond_P_world);
 					poseTz.z() += eps;
 
 					const Vector2 imagePointTz(camera.projectToImageIF<true>(poseTz.transformation(), objectPoint, camera.hasDistortionParameters()));
@@ -3377,7 +3377,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 			// first point
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<true>(transformationFirstIF, objectPoint, camera.hasDistortionParameters()));
+				const Vector2 imagePoint(camera.projectToImageIF<true>(flippedCameraFirst_T_world, objectPoint, camera.hasDistortionParameters()));
 
 				const Scalar* jacobianX = pointJacobiansFirstPose + 6u * (unsigned int)n + 0u;
 				const Scalar* jacobianY = jacobianX + 3;
@@ -3387,7 +3387,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 					Vector3 objectPointX(objectPoint);
 					objectPointX.x() += eps;
 
-					const Vector2 imagePointX(camera.projectToImageIF<true>(transformationFirstIF, objectPointX, camera.hasDistortionParameters()));
+					const Vector2 imagePointX(camera.projectToImageIF<true>(flippedCameraFirst_T_world, objectPointX, camera.hasDistortionParameters()));
 
 					const Scalar dX_x = (imagePointX.x() - imagePoint.x()) / eps;
 					const Scalar dX_y = (imagePointX.y() - imagePoint.y()) / eps;
@@ -3414,7 +3414,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 					Vector3 objectPointY(objectPoint);
 					objectPointY.y() += eps;
 
-					const Vector2 imagePointY(camera.projectToImageIF<true>(transformationFirstIF, objectPointY, camera.hasDistortionParameters()));
+					const Vector2 imagePointY(camera.projectToImageIF<true>(flippedCameraFirst_T_world, objectPointY, camera.hasDistortionParameters()));
 
 					const Scalar dY_x = (imagePointY.x() - imagePoint.x()) / eps;
 					const Scalar dY_y = (imagePointY.y() - imagePoint.y()) / eps;
@@ -3441,7 +3441,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 					Vector3 objectPointZ(objectPoint);
 					objectPointZ.z() += eps;
 
-					const Vector2 imagePointZ(camera.projectToImageIF<true>(transformationFirstIF, objectPointZ, camera.hasDistortionParameters()));
+					const Vector2 imagePointZ(camera.projectToImageIF<true>(flippedCameraFirst_T_world, objectPointZ, camera.hasDistortionParameters()));
 
 					const Scalar dZ_x = (imagePointZ.x() - imagePoint.x()) / eps;
 					const Scalar dZ_y = (imagePointZ.y() - imagePoint.y()) / eps;
@@ -3470,7 +3470,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 			// second point
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<true>(transformationSecondIF, objectPoint, camera.hasDistortionParameters()));
+				const Vector2 imagePoint(camera.projectToImageIF<true>(flippedCameraSecond_T_world, objectPoint, camera.hasDistortionParameters()));
 
 				const Scalar* jacobianX = pointJacobiansSecondPose + 6u * (unsigned int)n + 0u;
 				const Scalar* jacobianY = jacobianX + 3;
@@ -3480,7 +3480,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 					Vector3 objectPointX(objectPoint);
 					objectPointX.x() += eps;
 
-					const Vector2 imagePointX(camera.projectToImageIF<true>(transformationSecondIF, objectPointX, camera.hasDistortionParameters()));
+					const Vector2 imagePointX(camera.projectToImageIF<true>(flippedCameraSecond_T_world, objectPointX, camera.hasDistortionParameters()));
 
 					const Scalar dX_x = (imagePointX.x() - imagePoint.x()) / eps;
 					const Scalar dX_y = (imagePointX.y() - imagePoint.y()) / eps;
@@ -3507,7 +3507,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 					Vector3 objectPointY(objectPoint);
 					objectPointY.y() += eps;
 
-					const Vector2 imagePointY(camera.projectToImageIF<true>(transformationSecondIF, objectPointY, camera.hasDistortionParameters()));
+					const Vector2 imagePointY(camera.projectToImageIF<true>(flippedCameraSecond_T_world, objectPointY, camera.hasDistortionParameters()));
 
 					const Scalar dY_x = (imagePointY.x() - imagePoint.x()) / eps;
 					const Scalar dY_y = (imagePointY.y() - imagePoint.y()) / eps;
@@ -3534,7 +3534,7 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 					Vector3 objectPointZ(objectPoint);
 					objectPointZ.z() += eps;
 
-					const Vector2 imagePointZ(camera.projectToImageIF<true>(transformationSecondIF, objectPointZ, camera.hasDistortionParameters()));
+					const Vector2 imagePointZ(camera.projectToImageIF<true>(flippedCameraSecond_T_world, objectPointZ, camera.hasDistortionParameters()));
 
 					const Scalar dZ_x = (imagePointZ.x() - imagePoint.x()) / eps;
 					const Scalar dZ_y = (imagePointZ.y() - imagePoint.y()) / eps;
@@ -4581,12 +4581,12 @@ class TestJacobian::DerivativeCalculatorOrientationPinholeCameraJacobian2x11 : p
 		/**
 		 * Creates a derivative calculator for orientation pinhole camera jacobian 2x11.
 		 * @param camera The pinhole camera
-		 * @param poseIF The camera pose (inverted and flipped)
+		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
 		 * @param objectPoint The 3D object point
 		 */
-		DerivativeCalculatorOrientationPinholeCameraJacobian2x11(const PinholeCamera& camera, const Pose& poseIF) :
+		DerivativeCalculatorOrientationPinholeCameraJacobian2x11(const PinholeCamera& camera, const Pose& flippedCamera_P_world) :
 			camera_(camera),
-			poseIF_(poseIF)
+			flippedCamera_P_world_(flippedCamera_P_world)
 		{
 			unsigned int width = 0u;
 			unsigned int height = 0u;
@@ -4611,13 +4611,13 @@ class TestJacobian::DerivativeCalculatorOrientationPinholeCameraJacobian2x11 : p
 		 */
 		Vector2 calculateValue(const Vector3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
 		{
-			Pose posePerturbed(poseIF_);
+			Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
 			Scalars cameraParameters(cameraParameters_);
 
 			if (parameterIndex < 3)
 			{
 				// Rotation parameters (wx, wy, wz) - perturb the pose
-				posePerturbed[(unsigned int)(parameterIndex + 3)] += offset; // index 0-2 map to rx, ry, rz which are indices 3-5 in Pose
+				flippedCamera_P_world_perturbed[(unsigned int)(parameterIndex + 3)] += offset; // index 0-2 map to rx, ry, rz which are indices 3-5 in Pose
 			}
 			else
 			{
@@ -4638,7 +4638,7 @@ class TestJacobian::DerivativeCalculatorOrientationPinholeCameraJacobian2x11 : p
 
 			const PinholeCamera cameraPerturbed(camera_.width(), camera_.height(), PinholeCamera::PC_8_PARAMETERS, cameraParameters.data());
 
-			return cameraPerturbed.projectToImageIF<false>(posePerturbed.transformation(), objectPoint, cameraPerturbed.hasDistortionParameters());
+			return cameraPerturbed.projectToImageIF<false>(flippedCamera_P_world_perturbed.transformation(), objectPoint, cameraPerturbed.hasDistortionParameters());
 		}
 
 	protected:
@@ -4650,7 +4650,7 @@ class TestJacobian::DerivativeCalculatorOrientationPinholeCameraJacobian2x11 : p
 		Scalars cameraParameters_;
 
 		/// The camera pose (inverted and flipped)
-		const Pose& poseIF_;
+		const Pose& flippedCamera_P_world_;
 };
 
 bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDuration)
@@ -4687,11 +4687,11 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
 		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 translation = Random::vector3(-1, 1);
-		const Quaternion quaternion = Random::quaternion();
+		const Vector3 world_t_camera = Random::vector3(-1, 1);
+		const Quaternion world_Q_camera = Random::quaternion();
 
-		const HomogenousMatrix4 extrinsicIF(translation, quaternion);
-		const Pose poseIF(extrinsicIF);
+		const HomogenousMatrix4 flippedCamera_T_world(world_t_camera, world_Q_camera);
+		const Pose flippedCamera_P_world(flippedCamera_T_world);
 
 		PinholeCamera camera(width, height, fovX, principalX, principalY);
 
@@ -4715,7 +4715,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			objectPoints.push_back(camera.ray(Vector2(Random::scalar(40u, width - 40u), Random::scalar(40u, height - 40u)), PinholeCamera::invertedFlipped2Standard(extrinsicIF)).point(Random::scalar(1, 10)));
+			objectPoints.push_back(camera.ray(Vector2(Random::scalar(40u, width - 40u), Random::scalar(40u, height - 40u)), PinholeCamera::invertedFlipped2Standard(flippedCamera_T_world)).point(Random::scalar(1, 10)));
 		}
 
 		/**
@@ -4727,7 +4727,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 		Matrix jacobian(2 * objectPoints.size(), 11);
 
 		performance.start();
-			Geometry::Jacobian::calculateOrientationCameraJacobianRodrigues2nx11(jacobian.data(), camera, poseIF, ConstArrayAccessor<Vector3>(objectPoints));
+			Geometry::Jacobian::calculateOrientationCameraJacobianRodrigues2nx11(jacobian.data(), camera, flippedCamera_P_world, ConstArrayAccessor<Vector3>(objectPoints));
 		performance.stop();
 
 		{
@@ -4735,16 +4735,16 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 			const HighPerformanceStatistic::ScopedStatistic scope(performanceNaive);
 
-			const HomogenousMatrix4 transformationIF(poseIF.transformation());
+			const HomogenousMatrix4 flippedCamera_T_world_matrix(flippedCamera_P_world.transformation());
 
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<false>(transformationIF, objectPoint, camera.hasDistortionParameters()));
+				const Vector2 imagePoint(camera.projectToImageIF<false>(flippedCamera_T_world_matrix, objectPoint, camera.hasDistortionParameters()));
 
 				for (unsigned int i = 0u; i < 11u; ++i)
 				{
-					Pose poseDelta(poseIF);
+					Pose flippedCamera_P_world_delta(flippedCamera_P_world);
 
 					SquareMatrix3 intrinsicDelta(camera.intrinsic());
 					PinholeCamera::DistortionPair radialDistortionDelta(camera.radialDistortion());
@@ -4752,7 +4752,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 					if (i < 3u)
 					{
-						poseDelta[i + 3u] += Numeric::weakEps();
+						flippedCamera_P_world_delta[i + 3u] += Numeric::weakEps();
 					}
 					else
 					{
@@ -4797,7 +4797,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 					const PinholeCamera cameraDelta(intrinsicDelta, camera.width(), camera.height(), radialDistortionDelta, tangentialDistortionDelta);
 
-					const Vector2 imagePointDelta(cameraDelta.projectToImageIF<false>(poseDelta.transformation(), objectPoint, camera.hasDistortionParameters()));
+					const Vector2 imagePointDelta(cameraDelta.projectToImageIF<false>(flippedCamera_P_world_delta.transformation(), objectPoint, camera.hasDistortionParameters()));
 					const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
 
 					naiveJacobian[n * 2 + 0][i] = derivative.x();
@@ -4818,7 +4818,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 
 				Scalar singleJacobianX[11];
 				Scalar singleJacobianY[11];
-				Geometry::Jacobian::calculateOrientationCameraJacobianRodrigues2x11(singleJacobianX, singleJacobianY, camera, poseIF, objectPoint);
+				Geometry::Jacobian::calculateOrientationCameraJacobianRodrigues2x11(singleJacobianX, singleJacobianY, camera, flippedCamera_P_world, objectPoint);
 
 				for (unsigned int i = 0u; i < 11u; ++i)
 				{
@@ -4832,7 +4832,7 @@ bool TestJacobian::testOrientationPinholeCameraJacobian2x11(const double testDur
 				}
 			}
 
-			const DerivativeCalculatorOrientationPinholeCameraJacobian2x11 derivativeCalculator(camera, poseIF);
+			const DerivativeCalculatorOrientationPinholeCameraJacobian2x11 derivativeCalculator(camera, flippedCamera_P_world);
 
 			for (size_t parameterIndex = 0; parameterIndex < 11; ++parameterIndex)
 			{
@@ -4872,12 +4872,12 @@ class TestJacobian::DerivativeCalculatorPosePinholeCameraJacobian2x12 : public D
 		/**
 		 * Creates a derivative calculator for pose pinhole camera jacobian 2x12.
 		 * @param camera The pinhole camera
-		 * @param poseIF The camera pose (inverted and flipped)
+		 * @param flippedCamera_P_world The camera pose (inverted and flipped)
 		 * @param objectPoint The 3D object point
 		 */
-		DerivativeCalculatorPosePinholeCameraJacobian2x12(const PinholeCamera& camera, const Pose& poseIF) :
+		DerivativeCalculatorPosePinholeCameraJacobian2x12(const PinholeCamera& camera, const Pose& flippedCamera_P_world) :
 			camera_(camera),
-			poseIF_(poseIF)
+			flippedCamera_P_world_(flippedCamera_P_world)
 		{
 			unsigned int width = 0u;
 			unsigned int height = 0u;
@@ -4902,7 +4902,7 @@ class TestJacobian::DerivativeCalculatorPosePinholeCameraJacobian2x12 : public D
 		 */
 		Vector2 calculateValue(const Vector3& objectPoint, const size_t parameterIndex, const Scalar offset) const override
 		{
-			Pose posePerturbed(poseIF_);
+			Pose flippedCamera_P_world_perturbed(flippedCamera_P_world_);
 			Scalars cameraParameters(cameraParameters_);
 
 			if (parameterIndex < 6)
@@ -4925,12 +4925,12 @@ class TestJacobian::DerivativeCalculatorPosePinholeCameraJacobian2x12 : public D
 			{
 				constexpr std::array<Index32, 6u> parameterMapping = {3u, 4u, 5u, 0u, 1u, 2u};
 
-				posePerturbed[parameterMapping[parameterIndex - 6]] += offset;
+				flippedCamera_P_world_perturbed[parameterMapping[parameterIndex - 6]] += offset;
 			}
 
 			const PinholeCamera cameraPerturbed(camera_.width(), camera_.height(), PinholeCamera::PC_8_PARAMETERS, cameraParameters.data());
 
-			return cameraPerturbed.projectToImageIF<false>(posePerturbed.transformation(), objectPoint, cameraPerturbed.hasDistortionParameters());
+			return cameraPerturbed.projectToImageIF<false>(flippedCamera_P_world_perturbed.transformation(), objectPoint, cameraPerturbed.hasDistortionParameters());
 		}
 
 	protected:
@@ -4942,7 +4942,7 @@ class TestJacobian::DerivativeCalculatorPosePinholeCameraJacobian2x12 : public D
 		Scalars cameraParameters_;
 
 		/// The camera pose (inverted and flipped)
-		const Pose& poseIF_;
+		const Pose& flippedCamera_P_world_;
 };
 
 bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
@@ -4979,11 +4979,11 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 		const Scalar principalX = Random::scalar(width2 - Scalar(50), width2 + Scalar(50));
 		const Scalar principalY = Random::scalar(height2 - Scalar(50), height2 + Scalar(50));
 
-		const Vector3 translation = Random::vector3(-1, 1);
-		const Quaternion quaternion = Random::quaternion();
+		const Vector3 world_t_camera = Random::vector3(-1, 1);
+		const Quaternion world_Q_camera = Random::quaternion();
 
-		const HomogenousMatrix4 extrinsicIF(translation, quaternion);
-		const Pose poseIF(extrinsicIF);
+		const HomogenousMatrix4 flippedCamera_T_world(world_t_camera, world_Q_camera);
+		const Pose flippedCamera_P_world(flippedCamera_T_world);
 
 		PinholeCamera camera(width, height, fovX, principalX, principalY);
 
@@ -5007,7 +5007,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 		objectPoints.reserve(numberPoints);
 		while (objectPoints.size() < numberPoints)
 		{
-			objectPoints.push_back(camera.ray(Vector2(Random::scalar(40u, width - 40u), Random::scalar(40u, height - 40u)), PinholeCamera::invertedFlipped2Standard(extrinsicIF)).point(Random::scalar(1, 10)));
+			objectPoints.push_back(camera.ray(Vector2(Random::scalar(40u, width - 40u), Random::scalar(40u, height - 40u)), PinholeCamera::invertedFlipped2Standard(flippedCamera_T_world)).point(Random::scalar(1, 10)));
 		}
 
 
@@ -5020,14 +5020,14 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 		performance.start();
 
-		const Pose iFlippedPose(extrinsicIF);
+		const Pose flippedCamera_P_world_copy(flippedCamera_T_world);
 
 		SquareMatrix3 Rwx, Rwy, Rwz;
-		Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(Vector3(iFlippedPose.rx(), iFlippedPose.ry(), iFlippedPose.rz())), Rwx, Rwy, Rwz);
+		Geometry::Jacobian::calculateRotationRodriguesDerivative(ExponentialMap(Vector3(flippedCamera_P_world_copy.rx(), flippedCamera_P_world_copy.ry(), flippedCamera_P_world_copy.rz())), Rwx, Rwy, Rwz);
 
 		for (unsigned int n = 0u; n < numberPoints; ++n)
 		{
-			Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2x12(jacobian[n * 2u + 0u], jacobian[n * 2u + 1], camera, extrinsicIF, iFlippedPose, objectPoints[n], Rwx, Rwy, Rwz);
+			Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2x12(jacobian[n * 2u + 0u], jacobian[n * 2u + 1], camera, flippedCamera_T_world, flippedCamera_P_world_copy, objectPoints[n], Rwx, Rwy, Rwz);
 		}
 
 		performance.stop();
@@ -5037,16 +5037,16 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 			const HighPerformanceStatistic::ScopedStatistic scope(performanceNaive);
 
-			const HomogenousMatrix4 transformationIF(poseIF.transformation());
+			const HomogenousMatrix4 flippedCamera_T_world_matrix(flippedCamera_P_world.transformation());
 
 			for (size_t n = 0; n < objectPoints.size(); ++n)
 			{
 				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<false>(transformationIF, objectPoint, camera.hasDistortionParameters()));
+				const Vector2 imagePoint(camera.projectToImageIF<false>(flippedCamera_T_world_matrix, objectPoint, camera.hasDistortionParameters()));
 
 				for (unsigned int i = 0u; i < 12u; ++i)
 				{
-					Pose poseDelta(poseIF);
+					Pose flippedCamera_P_world_delta(flippedCamera_P_world);
 
 					SquareMatrix3 intrinsicDelta(camera.intrinsic());
 					PinholeCamera::DistortionPair radialDistortionDelta(camera.radialDistortion());
@@ -5056,11 +5056,11 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 					{
 						if (i < 6u + 3u)
 						{
-							poseDelta[i - 6u + 3u] += Numeric::weakEps();
+							flippedCamera_P_world_delta[i - 6u + 3u] += Numeric::weakEps();
 						}
 						else
 						{
-							poseDelta[i - 6u - 3u] += Numeric::weakEps();
+							flippedCamera_P_world_delta[i - 6u - 3u] += Numeric::weakEps();
 						}
 					}
 					else
@@ -5098,7 +5098,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 					const PinholeCamera cameraDelta(intrinsicDelta, camera.width(), camera.height(), radialDistortionDelta, tangentialDistortionDelta);
 
-					const Vector2 imagePointDelta(cameraDelta.projectToImageIF<false>(poseDelta.transformation(), objectPoint, camera.hasDistortionParameters()));
+					const Vector2 imagePointDelta(cameraDelta.projectToImageIF<false>(flippedCamera_P_world_delta.transformation(), objectPoint, camera.hasDistortionParameters()));
 					const Vector2 derivative = (imagePointDelta - imagePoint) / Numeric::weakEps();
 
 					naiveJacobian[n * 2u + 0u][i] = derivative.x();
@@ -5119,7 +5119,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 
 				Scalar singleJacobianX[12];
 				Scalar singleJacobianY[12];
-				Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2x12(singleJacobianX, singleJacobianY, camera, extrinsicIF, objectPoint);
+				Geometry::Jacobian::calculateJacobianCameraPoseRodrigues2x12(singleJacobianX, singleJacobianY, camera, flippedCamera_T_world, objectPoint);
 
 				for (unsigned int i = 0u; i < 12u; ++i)
 				{
@@ -5133,7 +5133,7 @@ bool TestJacobian::testPosePinholeCameraJacobian2x12(const double testDuration)
 				}
 			}
 
-			const DerivativeCalculatorPosePinholeCameraJacobian2x12 derivativeCalculator(camera, poseIF);
+			const DerivativeCalculatorPosePinholeCameraJacobian2x12 derivativeCalculator(camera, flippedCamera_P_world);
 
 			for (size_t parameterIndex = 0; parameterIndex < 12; ++parameterIndex)
 			{
