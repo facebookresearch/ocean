@@ -105,11 +105,53 @@ class OCEAN_TEST_BASE_EXPORT TestStackHeapVector
 		static bool test(const double testDuration);
 
 		/**
-		 * Tests the constructor.
+		 * Tests the default constructor.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 */
-		static bool testConstructor(const double testDuration);
+		static bool testDefaultConstructor(const double testDuration);
+
+		/**
+		 * Tests the size-only constructor.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testSizeConstructor(const double testDuration);
+
+		/**
+		 * Tests the size and element constructor.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testSizeElementConstructor(const double testDuration);
+
+		/**
+		 * Tests the move constructor from std::vector.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testMoveConstructor(const double testDuration);
+
+		/**
+		 * Tests the copy constructor from std::vector.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testCopyConstructorFromVector(const double testDuration);
+
+		/**
+		 * Tests the initializer list constructor.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testInitializerListConstructor(const double testDuration);
+
+		/**
+		 * Tests the copy constructor from another StackHeapVector.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testCopyConstructor(const double testDuration);
 
 		/**
 		 * Tests the assign function.
@@ -170,13 +212,67 @@ class OCEAN_TEST_BASE_EXPORT TestStackHeapVector
 	protected:
 
 		/**
-		 * Tests the constructor
+		 * Tests the default constructor
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
 		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
 		 */
 		template <size_t tStackCapacity>
-		static bool testConstructor(double testDuration);
+		static bool testDefaultConstructor(const double testDuration);
+
+		/**
+		 * Tests the size-only constructor
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testSizeConstructor(const double testDuration);
+
+		/**
+		 * Tests the size and element constructor
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testSizeElementConstructor(const double testDuration);
+
+		/**
+		 * Tests the move constructor from std::vector
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testMoveConstructor(const double testDuration);
+
+		/**
+		 * Tests the copy constructor from std::vector
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testCopyConstructorFromVector(const double testDuration);
+
+		/**
+		 * Tests the initializer list constructor
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testInitializerListConstructor(const double testDuration);
+
+		/**
+		 * Tests the copy constructor from another StackHeapVector
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 * @tparam tStackCapacity Size of the vector's stack memory, with range [1, infinity)
+		 */
+		template <size_t tStackCapacity>
+		static bool testCopyConstructor(const double testDuration);
 
 		/**
 		 * Tests the assign function.

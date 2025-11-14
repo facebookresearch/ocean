@@ -184,6 +184,18 @@ class StackHeapVector
 		StackHeapVector(const std::initializer_list<T> elements);
 
 		/**
+		 * Move constructor.
+		 * @param other The other vector to move
+		 */
+		StackHeapVector(StackHeapVector<T, tStackCapacity>&& other) noexcept;
+
+		/**
+		 * Copy constructor.
+		 * @param other The other vector to copy
+		 */
+		StackHeapVector(const StackHeapVector<T, tStackCapacity>& other);
+
+		/**
 		 * Pushes a new element to the end of this vector.
 		 * @param element The new element to be pushed
 		 */
@@ -318,6 +330,20 @@ class StackHeapVector
 		 * @return The element with specified index
 		 */
 		inline T& operator[](const size_t index);
+
+		/**
+		 * Move assignment operator.
+		 * @param other The other vector to move
+		 * @return Reference to this vector
+		 */
+		StackHeapVector<T, tStackCapacity>& operator=(StackHeapVector<T, tStackCapacity>&& other) noexcept;
+
+		/**
+		 * Copy assignment operator.
+		 * @param other The other vector to copy
+		 * @return Reference to this vector
+		 */
+		StackHeapVector<T, tStackCapacity>& operator=(const StackHeapVector<T, tStackCapacity>& other);
 
 	protected:
 
@@ -476,6 +502,30 @@ StackHeapVector<T, tStackCapacity>::StackHeapVector(const std::initializer_list<
 	for (const T& element : elements)
 	{
 		pushBack(element);
+	}
+}
+
+template <typename T, size_t tStackCapacity>
+StackHeapVector<T, tStackCapacity>::StackHeapVector(StackHeapVector<T, tStackCapacity>&& other) noexcept :
+	heapElements_(std::move(other.heapElements_)),
+	size_(other.size_)
+{
+	for (size_t n = 0; n < std::min(size_, tStackCapacity); ++n)
+	{
+		stackElements_[n] = std::move(other.stackElements_[n]);
+	}
+
+	other.size_ = 0;
+}
+
+template <typename T, size_t tStackCapacity>
+StackHeapVector<T, tStackCapacity>::StackHeapVector(const StackHeapVector<T, tStackCapacity>& other)
+{
+	reserve(other.size());
+
+	for (size_t n = 0; n < other.size(); ++n)
+	{
+		pushBack(other[n]);
 	}
 }
 
@@ -759,6 +809,47 @@ inline T& StackHeapVector<T, tStackCapacity>::operator[](const size_t index)
 	}
 
 	return heapElements_[index - tStackCapacity];
+}
+
+template <typename T, size_t tStackCapacity>
+StackHeapVector<T, tStackCapacity>& StackHeapVector<T, tStackCapacity>::operator=(StackHeapVector<T, tStackCapacity>&& other) noexcept
+{
+	if (this != &other)
+	{
+		heapElements_ = std::move(other.heapElements_);
+		size_ = other.size_;
+
+		for (size_t n = 0; n < std::min(size_, tStackCapacity); ++n)
+		{
+			stackElements_[n] = std::move(other.stackElements_[n]);
+		}
+
+		for (size_t n = size_; n < tStackCapacity; ++n)
+		{
+			stackElements_[n] = T();
+		}
+
+		other.size_ = 0;
+	}
+
+	return *this;
+}
+
+template <typename T, size_t tStackCapacity>
+StackHeapVector<T, tStackCapacity>& StackHeapVector<T, tStackCapacity>::operator=(const StackHeapVector<T, tStackCapacity>& other)
+{
+	if (this != &other)
+	{
+		clear();
+		reserve(other.size());
+
+		for (size_t n = 0; n < other.size(); ++n)
+		{
+			pushBack(other[n]);
+		}
+	}
+
+	return *this;
 }
 
 }
