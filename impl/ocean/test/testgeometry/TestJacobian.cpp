@@ -2946,8 +2946,6 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 
 	Log::info() << "Testing poses jacobian Rodrigues 2nx12 for several points:";
 
-	constexpr Scalar eps = Numeric::weakEps();
-
 	RandomGenerator randomGenerator;
 
 	ValidationPrecision validation(successThreshold(), randomGenerator);
@@ -3026,538 +3024,71 @@ bool TestJacobian::testPosesPointsJacobian2nx12(const double testDuration)
 		Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(poseJacobiansFirst, camera, Pose(flippedCameraFirst_T_world), objectPoints.data(), objectPoints.size(), camera.hasDistortionParameters());
 		Geometry::Jacobian::calculatePoseJacobianRodrigues2nx6(poseJacobiansSecond, camera, Pose(flippedCameraSecond_T_world), objectPoints.data(), objectPoints.size(), camera.hasDistortionParameters());
 
+		// Create derivative calculators for pose and point jacobians
+		const DerivativeCalculatorPinholeCameraPoseJacobian2nx6 derivativeCalculatorFirstPose(camera, flippedCameraFirst_P_world);
+		const DerivativeCalculatorPinholeCameraPoseJacobian2nx6 derivativeCalculatorSecondPose(camera, flippedCameraSecond_P_world);
+		const DerivativeCalculatorPinholeCameraPointJacobian2nx3 derivativeCalculatorFirstPoint(camera, flippedCameraFirst_T_world, camera.hasDistortionParameters());
+		const DerivativeCalculatorPinholeCameraPointJacobian2nx3 derivativeCalculatorSecondPoint(camera, flippedCameraSecond_T_world, camera.hasDistortionParameters());
+
 		for (size_t n = 0; n < objectPoints.size(); ++n)
 		{
-			// first pose
-			{
-				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<true>(flippedCameraFirst_T_world, objectPoint, camera.hasDistortionParameters()));
+			const Vector3& objectPoint = objectPoints[n];
 
+			// Verify first pose jacobian
+			{
 				const Scalar* jacobianX = poseJacobiansFirst + 12u * (unsigned int)n + 0u;
 				const Scalar* jacobianY = jacobianX + 6;
 
+				for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 				{
-					// df / dwx
-					Pose poseWx(flippedCameraFirst_P_world);
-					poseWx.rx() += eps;
-
-					const Vector2 imagePointWx(camera.projectToImageIF<true>(poseWx.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dWx_x = (imagePointWx.x() - imagePoint.x()) / eps;
-					const Scalar dWx_y = (imagePointWx.y() - imagePoint.y()) / eps;
-
-					const Scalar diffWx_x = Numeric::abs(jacobianX[0] - dWx_x);
-					const Scalar maxWx_x = max(Numeric::abs(jacobianX[0]), Numeric::abs(dWx_x));
-
-					if (Numeric::isNotEqualEps(maxWx_x) && diffWx_x / maxWx_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffWx_y = Numeric::abs(jacobianY[0] - dWx_y);
-					const Scalar maxWx_y = max(Numeric::abs(jacobianY[0]), Numeric::abs(dWx_y));
-
-					if (Numeric::isNotEqualEps(maxWx_y) && diffWx_y / maxWx_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dwy
-					Pose poseWy(flippedCameraFirst_P_world);
-					poseWy.ry() += eps;
-
-					const Vector2 imagePointWy(camera.projectToImageIF<true>(poseWy.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dWy_x = (imagePointWy.x() - imagePoint.x()) / eps;
-					const Scalar dWy_y = (imagePointWy.y() - imagePoint.y()) / eps;
-
-					const Scalar diffWy_x = Numeric::abs(jacobianX[1] - dWy_x);
-					const Scalar maxWy_x = max(Numeric::abs(jacobianX[1]), Numeric::abs(dWy_x));
-
-					if (Numeric::isNotEqualEps(maxWy_x) && diffWy_x / maxWy_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffWy_y = Numeric::abs(jacobianY[1] - dWy_y);
-					const Scalar maxWy_y = max(Numeric::abs(jacobianY[1]), Numeric::abs(dWy_y));
-
-					if (Numeric::isNotEqualEps(maxWy_y) && diffWy_y / maxWy_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dwz
-					Pose poseWz(flippedCameraFirst_P_world);
-					poseWz.rz() += eps;
-
-					const Vector2 imagePointWz(camera.projectToImageIF<true>(poseWz.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dWz_x = (imagePointWz.x() - imagePoint.x()) / eps;
-					const Scalar dWz_y = (imagePointWz.y() - imagePoint.y()) / eps;
-
-					const Scalar diffWz_x = Numeric::abs(jacobianX[2] - dWz_x);
-					const Scalar maxWz_x = max(Numeric::abs(jacobianX[2]), Numeric::abs(dWz_x));
-
-					if (Numeric::isNotEqualEps(maxWz_x) && diffWz_x / maxWz_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffWz_y = Numeric::abs(jacobianY[2] - dWz_y);
-					const Scalar maxWz_y = max(Numeric::abs(jacobianY[2]), Numeric::abs(dWz_y));
-
-					if (Numeric::isNotEqualEps(maxWz_y) && diffWz_y / maxWz_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dtx
-					Pose poseTx(flippedCameraFirst_P_world);
-					poseTx.x() += eps;
-
-					const Vector2 imagePointTx(camera.projectToImageIF<true>(poseTx.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dTx_x = (imagePointTx.x() - imagePoint.x()) / eps;
-					const Scalar dTx_y = (imagePointTx.y() - imagePoint.y()) / eps;
-
-					const Scalar diffTx_x = Numeric::abs(jacobianX[3] - dTx_x);
-					const Scalar maxTx_x = max(Numeric::abs(jacobianX[3]), Numeric::abs(dTx_x));
-
-					if (Numeric::isNotEqualEps(maxTx_x) && diffTx_x / maxTx_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffTx_y = Numeric::abs(jacobianY[3] - dTx_y);
-					const Scalar maxTx_y = max(Numeric::abs(jacobianY[3]), Numeric::abs(dTx_y));
-
-					if ((jacobianY[3] != 0 && Numeric::isNotEqualEps(maxTx_y) && diffTx_y / maxTx_y > 0.05) || (jacobianY[3] == 0 && Numeric::abs(dTx_y) > 0.001))
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dty
-					Pose poseTy(flippedCameraFirst_P_world);
-					poseTy.y() += eps;
-
-					const Vector2 imagePointTy(camera.projectToImageIF<true>(poseTy.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dTy_x = (imagePointTy.x() - imagePoint.x()) / eps;
-					const Scalar dTy_y = (imagePointTy.y() - imagePoint.y()) / eps;
-
-					const Scalar diffTy_x = Numeric::abs(jacobianX[4] - dTy_x);
-					const Scalar maxTy_x = max(Numeric::abs(jacobianX[4]), Numeric::abs(dTy_x));
-
-					if ((jacobianX[4] != 0 && Numeric::isNotEqualEps(maxTy_x) && diffTy_x / maxTy_x > 0.05) || (jacobianX[4] == 0 && Numeric::abs(dTy_x) > 0.001))
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffTy_y = Numeric::abs(jacobianY[4] - dTy_y);
-					const Scalar maxTy_y = max(Numeric::abs(jacobianY[4]), Numeric::abs(dTy_y));
-
-					if (Numeric::isNotEqualEps(maxTy_y) && diffTy_y / maxTy_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dtz
-					Pose poseTz(flippedCameraFirst_P_world);
-					poseTz.z() += eps;
-
-					const Vector2 imagePointTz(camera.projectToImageIF<true>(poseTz.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dTz_x = (imagePointTz.x() - imagePoint.x()) / eps;
-					const Scalar dTz_y = (imagePointTz.y() - imagePoint.y()) / eps;
-
-					const Scalar diffTz_x = Numeric::abs(jacobianX[5] - dTz_x);
-					const Scalar maxTz_x = max(Numeric::abs(jacobianX[5]), Numeric::abs(dTz_x));
-
-					if (Numeric::isNotEqualEps(maxTz_x) && diffTz_x / maxTz_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffTz_y = Numeric::abs(jacobianY[5] - dTz_y);
-					const Scalar maxTz_y = max(Numeric::abs(jacobianY[5]), Numeric::abs(dTz_y));
-
-					if (Numeric::isNotEqualEps(maxTz_y) && diffTz_y / maxTz_y > 0.05)
+					if (!derivativeCalculatorFirstPose.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
 					{
 						scopedIteration.setInaccurate();
 					}
 				}
 			}
 
-
-
-			// second pose
+			// Verify second pose jacobian
 			{
-				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<true>(flippedCameraSecond_T_world, objectPoint, camera.hasDistortionParameters()));
-
 				const Scalar* jacobianX = poseJacobiansSecond + 12u * (unsigned int)n + 0u;
 				const Scalar* jacobianY = jacobianX + 6;
 
+				for (size_t parameterIndex = 0; parameterIndex < 6; ++parameterIndex)
 				{
-					// df / dwx
-					Pose poseWx(flippedCameraSecond_P_world);
-					poseWx.rx() += eps;
-
-					const Vector2 imagePointWx(camera.projectToImageIF<true>(poseWx.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dWx_x = (imagePointWx.x() - imagePoint.x()) / eps;
-					const Scalar dWx_y = (imagePointWx.y() - imagePoint.y()) / eps;
-
-					const Scalar diffWx_x = Numeric::abs(jacobianX[0] - dWx_x);
-					const Scalar maxWx_x = max(Numeric::abs(jacobianX[0]), Numeric::abs(dWx_x));
-
-					if (Numeric::isNotEqualEps(maxWx_x) && diffWx_x / maxWx_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffWx_y = Numeric::abs(jacobianY[0] - dWx_y);
-					const Scalar maxWx_y = max(Numeric::abs(jacobianY[0]), Numeric::abs(dWx_y));
-
-					if (Numeric::isNotEqualEps(maxWx_y) && diffWx_y / maxWx_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dwy
-					Pose poseWy(flippedCameraSecond_P_world);
-					poseWy.ry() += eps;
-
-					const Vector2 imagePointWy(camera.projectToImageIF<true>(poseWy.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dWy_x = (imagePointWy.x() - imagePoint.x()) / eps;
-					const Scalar dWy_y = (imagePointWy.y() - imagePoint.y()) / eps;
-
-					const Scalar diffWy_x = Numeric::abs(jacobianX[1] - dWy_x);
-					const Scalar maxWy_x = max(Numeric::abs(jacobianX[1]), Numeric::abs(dWy_x));
-
-					if (Numeric::isNotEqualEps(maxWy_x) && diffWy_x / maxWy_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffWy_y = Numeric::abs(jacobianY[1] - dWy_y);
-					const Scalar maxWy_y = max(Numeric::abs(jacobianY[1]), Numeric::abs(dWy_y));
-
-					if (Numeric::isNotEqualEps(maxWy_y) && diffWy_y / maxWy_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dwz
-					Pose poseWz(flippedCameraSecond_P_world);
-					poseWz.rz() += eps;
-
-					const Vector2 imagePointWz(camera.projectToImageIF<true>(poseWz.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dWz_x = (imagePointWz.x() - imagePoint.x()) / eps;
-					const Scalar dWz_y = (imagePointWz.y() - imagePoint.y()) / eps;
-
-					const Scalar diffWz_x = Numeric::abs(jacobianX[2] - dWz_x);
-					const Scalar maxWz_x = max(Numeric::abs(jacobianX[2]), Numeric::abs(dWz_x));
-
-					if (Numeric::isNotEqualEps(maxWz_x) && diffWz_x / maxWz_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffWz_y = Numeric::abs(jacobianY[2] - dWz_y);
-					const Scalar maxWz_y = max(Numeric::abs(jacobianY[2]), Numeric::abs(dWz_y));
-
-					if (Numeric::isNotEqualEps(maxWz_y) && diffWz_y / maxWz_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dtx
-					Pose poseTx(flippedCameraSecond_P_world);
-					poseTx.x() += eps;
-
-					const Vector2 imagePointTx(camera.projectToImageIF<true>(poseTx.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dTx_x = (imagePointTx.x() - imagePoint.x()) / eps;
-					const Scalar dTx_y = (imagePointTx.y() - imagePoint.y()) / eps;
-
-					const Scalar diffTx_x = Numeric::abs(jacobianX[3] - dTx_x);
-					const Scalar maxTx_x = max(Numeric::abs(jacobianX[3]), Numeric::abs(dTx_x));
-
-					if (Numeric::isNotEqualEps(maxTx_x) && diffTx_x / maxTx_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffTx_y = Numeric::abs(jacobianY[3] - dTx_y);
-					const Scalar maxTx_y = max(Numeric::abs(jacobianY[3]), Numeric::abs(dTx_y));
-
-					if ((jacobianY[3] != 0 && Numeric::isNotEqualEps(maxTx_y) && diffTx_y / maxTx_y > 0.05) || (jacobianY[3] == 0 && Numeric::abs(dTx_y) > 0.001))
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dty
-					Pose poseTy(flippedCameraSecond_P_world);
-					poseTy.y() += eps;
-
-					const Vector2 imagePointTy(camera.projectToImageIF<true>(poseTy.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dTy_x = (imagePointTy.x() - imagePoint.x()) / eps;
-					const Scalar dTy_y = (imagePointTy.y() - imagePoint.y()) / eps;
-
-					const Scalar diffTy_x = Numeric::abs(jacobianX[4] - dTy_x);
-					const Scalar maxTy_x = max(Numeric::abs(jacobianX[4]), Numeric::abs(dTy_x));
-
-					if ((jacobianX[4] != 0 && Numeric::isNotEqualEps(maxTy_x) && diffTy_x / maxTy_x > 0.05) || (jacobianX[4] == 0 && Numeric::abs(dTy_x) > 0.001))
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffTy_y = Numeric::abs(jacobianY[4] - dTy_y);
-					const Scalar maxTy_y = max(Numeric::abs(jacobianY[4]), Numeric::abs(dTy_y));
-
-					if (Numeric::isNotEqualEps(maxTy_y) && diffTy_y / maxTy_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dtz
-					Pose poseTz(flippedCameraSecond_P_world);
-					poseTz.z() += eps;
-
-					const Vector2 imagePointTz(camera.projectToImageIF<true>(poseTz.transformation(), objectPoint, camera.hasDistortionParameters()));
-
-					const Scalar dTz_x = (imagePointTz.x() - imagePoint.x()) / eps;
-					const Scalar dTz_y = (imagePointTz.y() - imagePoint.y()) / eps;
-
-					const Scalar diffTz_x = Numeric::abs(jacobianX[5] - dTz_x);
-					const Scalar maxTz_x = max(Numeric::abs(jacobianX[5]), Numeric::abs(dTz_x));
-
-					if (Numeric::isNotEqualEps(maxTz_x) && diffTz_x / maxTz_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffTz_y = Numeric::abs(jacobianY[5] - dTz_y);
-					const Scalar maxTz_y = max(Numeric::abs(jacobianY[5]), Numeric::abs(dTz_y));
-
-					if (Numeric::isNotEqualEps(maxTz_y) && diffTz_y / maxTz_y > 0.05)
+					if (!derivativeCalculatorSecondPose.verifyDerivative(objectPoint, parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
 					{
 						scopedIteration.setInaccurate();
 					}
 				}
 			}
 
-
-
-			// first point
+			// Verify first point jacobian
 			{
-				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<true>(flippedCameraFirst_T_world, objectPoint, camera.hasDistortionParameters()));
-
 				const Scalar* jacobianX = pointJacobiansFirstPose + 6u * (unsigned int)n + 0u;
 				const Scalar* jacobianY = jacobianX + 3;
 
+				for (size_t parameterIndex = 0; parameterIndex < 3; ++parameterIndex)
 				{
-					// df / dpx
-					Vector3 objectPointX(objectPoint);
-					objectPointX.x() += eps;
-
-					const Vector2 imagePointX(camera.projectToImageIF<true>(flippedCameraFirst_T_world, objectPointX, camera.hasDistortionParameters()));
-
-					const Scalar dX_x = (imagePointX.x() - imagePoint.x()) / eps;
-					const Scalar dX_y = (imagePointX.y() - imagePoint.y()) / eps;
-
-					const Scalar diffX_x = Numeric::abs(jacobianX[0] - dX_x);
-					const Scalar maxX_x = max(Numeric::abs(jacobianX[0]), Numeric::abs(dX_x));
-
-					if (Numeric::isNotEqualEps(maxX_x) && diffX_x / maxX_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffX_y = Numeric::abs(jacobianY[0] - dX_y);
-					const Scalar maxX_y = max(Numeric::abs(jacobianY[0]), Numeric::abs(dX_y));
-
-					if (Numeric::isNotEqualEps(maxX_y) && diffX_y / maxX_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dpy
-					Vector3 objectPointY(objectPoint);
-					objectPointY.y() += eps;
-
-					const Vector2 imagePointY(camera.projectToImageIF<true>(flippedCameraFirst_T_world, objectPointY, camera.hasDistortionParameters()));
-
-					const Scalar dY_x = (imagePointY.x() - imagePoint.x()) / eps;
-					const Scalar dY_y = (imagePointY.y() - imagePoint.y()) / eps;
-
-					const Scalar diffY_x = Numeric::abs(jacobianX[1] - dY_x);
-					const Scalar maxY_x = max(Numeric::abs(jacobianX[1]), Numeric::abs(dY_x));
-
-					if (Numeric::isNotEqualEps(maxY_x) && diffY_x / maxY_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffY_y = Numeric::abs(jacobianY[1] - dY_y);
-					const Scalar maxY_y = max(Numeric::abs(jacobianY[1]), Numeric::abs(dY_y));
-
-					if (Numeric::isNotEqualEps(maxY_y) && diffY_y / maxY_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dpz
-					Vector3 objectPointZ(objectPoint);
-					objectPointZ.z() += eps;
-
-					const Vector2 imagePointZ(camera.projectToImageIF<true>(flippedCameraFirst_T_world, objectPointZ, camera.hasDistortionParameters()));
-
-					const Scalar dZ_x = (imagePointZ.x() - imagePoint.x()) / eps;
-					const Scalar dZ_y = (imagePointZ.y() - imagePoint.y()) / eps;
-
-					const Scalar diffZ_x = Numeric::abs(jacobianX[2] - dZ_x);
-					const Scalar maxZ_x = max(Numeric::abs(jacobianX[2]), Numeric::abs(dZ_x));
-
-					if (Numeric::isNotEqualEps(maxZ_x) && diffZ_x / maxZ_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffZ_y = Numeric::abs(jacobianY[2] - dZ_y);
-					const Scalar maxZ_y = max(Numeric::abs(jacobianY[2]), Numeric::abs(dZ_y));
-
-					if (Numeric::isNotEqualEps(maxZ_y) && diffZ_y / maxZ_y > 0.05)
+					if (!derivativeCalculatorFirstPoint.verifyDerivative(VectorD3(objectPoint), parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
 					{
 						scopedIteration.setInaccurate();
 					}
 				}
 			}
 
-
-
-
-			// second point
+			// Verify second point jacobian
 			{
-				const Vector3& objectPoint = objectPoints[n];
-				const Vector2 imagePoint(camera.projectToImageIF<true>(flippedCameraSecond_T_world, objectPoint, camera.hasDistortionParameters()));
-
 				const Scalar* jacobianX = pointJacobiansSecondPose + 6u * (unsigned int)n + 0u;
 				const Scalar* jacobianY = jacobianX + 3;
 
+				for (size_t parameterIndex = 0; parameterIndex < 3; ++parameterIndex)
 				{
-					// df / dpx
-					Vector3 objectPointX(objectPoint);
-					objectPointX.x() += eps;
-
-					const Vector2 imagePointX(camera.projectToImageIF<true>(flippedCameraSecond_T_world, objectPointX, camera.hasDistortionParameters()));
-
-					const Scalar dX_x = (imagePointX.x() - imagePoint.x()) / eps;
-					const Scalar dX_y = (imagePointX.y() - imagePoint.y()) / eps;
-
-					const Scalar diffX_x = Numeric::abs(jacobianX[0] - dX_x);
-					const Scalar maxX_x = max(Numeric::abs(jacobianX[0]), Numeric::abs(dX_x));
-
-					if (Numeric::isNotEqualEps(maxX_x) && diffX_x / maxX_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffX_y = Numeric::abs(jacobianY[0] - dX_y);
-					const Scalar maxX_y = max(Numeric::abs(jacobianY[0]), Numeric::abs(dX_y));
-
-					if (Numeric::isNotEqualEps(maxX_y) && diffX_y / maxX_y > 0.05)
+					if (!derivativeCalculatorSecondPoint.verifyDerivative(VectorD3(objectPoint), parameterIndex, Vector2(jacobianX[parameterIndex], jacobianY[parameterIndex])))
 					{
 						scopedIteration.setInaccurate();
 					}
 				}
-
-				{
-					// df / dpy
-					Vector3 objectPointY(objectPoint);
-					objectPointY.y() += eps;
-
-					const Vector2 imagePointY(camera.projectToImageIF<true>(flippedCameraSecond_T_world, objectPointY, camera.hasDistortionParameters()));
-
-					const Scalar dY_x = (imagePointY.x() - imagePoint.x()) / eps;
-					const Scalar dY_y = (imagePointY.y() - imagePoint.y()) / eps;
-
-					const Scalar diffY_x = Numeric::abs(jacobianX[1] - dY_x);
-					const Scalar maxY_x = max(Numeric::abs(jacobianX[1]), Numeric::abs(dY_x));
-
-					if (Numeric::isNotEqualEps(maxY_x) && diffY_x / maxY_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffY_y = Numeric::abs(jacobianY[1] - dY_y);
-					const Scalar maxY_y = max(Numeric::abs(jacobianY[1]), Numeric::abs(dY_y));
-
-					if (Numeric::isNotEqualEps(maxY_y) && diffY_y / maxY_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
-				{
-					// df / dpz
-					Vector3 objectPointZ(objectPoint);
-					objectPointZ.z() += eps;
-
-					const Vector2 imagePointZ(camera.projectToImageIF<true>(flippedCameraSecond_T_world, objectPointZ, camera.hasDistortionParameters()));
-
-					const Scalar dZ_x = (imagePointZ.x() - imagePoint.x()) / eps;
-					const Scalar dZ_y = (imagePointZ.y() - imagePoint.y()) / eps;
-
-					const Scalar diffZ_x = Numeric::abs(jacobianX[2] - dZ_x);
-					const Scalar maxZ_x = max(Numeric::abs(jacobianX[2]), Numeric::abs(dZ_x));
-
-					if (Numeric::isNotEqualEps(maxZ_x) && diffZ_x / maxZ_x > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-
-					const Scalar diffZ_y = Numeric::abs(jacobianY[2] - dZ_y);
-					const Scalar maxZ_y = max(Numeric::abs(jacobianY[2]), Numeric::abs(dZ_y));
-
-					if (Numeric::isNotEqualEps(maxZ_y) && diffZ_y / maxZ_y > 0.05)
-					{
-						scopedIteration.setInaccurate();
-					}
-				}
-
 			}
-
 		}
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
