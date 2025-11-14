@@ -60,9 +60,26 @@ HSVAColor::HSVAColor(const RGBAColor& color)
 	const float minValue = min(color.red(), min(color.green(), color.blue()));
 	const float diffValue = maxValue - minValue;
 
-	///  red == green == blue
-	if (NumericF::isEqualEps(diffValue))
+	values_[2] = maxValue;
+	values_[3] = color.alpha();
+
+	if (NumericF::isEqualEps(maxValue))
 	{
+		// near-black colors (value close to 0), so we set both hue and saturation to 0
+
+		values_[0] = 0.0f;
+		values_[1] = 0.0f;
+
+		ocean_assert(isValid());
+		return;
+	}
+
+	values_[1] = diffValue / maxValue; // saturation
+
+	if (values_[1] < 0.01f)
+	{
+		// for gray colors (low saturation), hue is undefined, we set it to 0
+
 		values_[0] = 0.0f;
 	}
 	else
@@ -82,23 +99,11 @@ HSVAColor::HSVAColor(const RGBAColor& color)
 
 		values_[0] = NumericF::fmod(values_[0], NumericF::pi2());
 
-		if (values_[0] < 0)
+		if (values_[0] < 0.0f)
 		{
 			values_[0] += NumericF::pi2();
 		}
 	}
-
-	if (NumericF::isEqualEps(maxValue))
-	{
-		values_[1] = 0.0f;
-	}
-	else
-	{
-		values_[1] = (maxValue - minValue) / maxValue;
-	}
-
-	values_[2] = maxValue;
-	values_[3] = color.alpha();
 
 	ocean_assert(isValid());
 }

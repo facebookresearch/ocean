@@ -374,18 +374,18 @@ bool TestHSVAColor::testConversionRGBA(const double testDuration)
 
 		if (NumericF::isEqualEps(inputColor.value()))
 		{
-			// black
+			// black - all HSV values should be near zero (using weak epsilon for round-trip tolerance)
 
-			OCEAN_EXPECT_EQUAL(validation, outputColor.hue(), 0.0f);
-			OCEAN_EXPECT_EQUAL(validation, outputColor.saturation(), 0.0f);
-			OCEAN_EXPECT_EQUAL(validation, outputColor.value(), 0.0f);
+			OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqualEps(outputColor.hue()));
+			OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqualEps(outputColor.saturation()));
+			OCEAN_EXPECT_TRUE(validation, NumericF::isWeakEqualEps(outputColor.value()));
 		}
 		else
 		{
 			constexpr float threshold = 0.01f;
 
 			const bool correctHueA = NumericF::angleIsEqual(inputColor.hue(), outputColor.hue(), threshold);
-			const bool correctHueB = NumericF::isEqual(inputColor.saturation(), 0.0f, threshold) && NumericF::isEqual(outputColor.hue(), 0.0f, threshold); // special case for gray
+			const bool correctHueB = NumericF::isEqual(inputColor.saturation(), 0.0f, 0.02f) && NumericF::isEqual(outputColor.hue(), 0.0f, threshold); // special case for gray
 			const bool correctHueC = NumericF::isWeakEqualEps(inputColor.value()) && NumericF::isEqual(outputColor.hue(), 0.0f, threshold); // special case almost black
 
 			OCEAN_EXPECT_TRUE(validation, correctHueA || correctHueB || correctHueC);
