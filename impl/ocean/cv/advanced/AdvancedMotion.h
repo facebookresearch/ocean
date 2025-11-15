@@ -1631,10 +1631,10 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 
 	ShiftVector<Vector2> intermediateRoughNextPoints(firstPoint, numberPoints);
 
-	const Scalar coarsetsWidthNextPyramid = Scalar(nextPyramid->layer(numberLayers - 1u).width());
-	const Scalar coarsetsHeightNextPyramid = Scalar(nextPyramid->layer(numberLayers - 1u).height());
-	const Scalar coarsetsLayerFactorNextPyramid = Scalar(1) / Scalar(nextPyramid->sizeFactor(numberLayers - 1u));
-	ocean_assert(coarsetsWidthNextPyramid >= 1u && coarsetsHeightNextPyramid >= 1u);
+	const Scalar coarsestWidthNextPyramid = Scalar(nextPyramid->layer(numberLayers - 1u).width());
+	const Scalar coarsestHeightNextPyramid = Scalar(nextPyramid->layer(numberLayers - 1u).height());
+	const Scalar coarsestLayerFactorNextPyramid = Scalar(1) / Scalar(nextPyramid->sizeFactor(numberLayers - 1u));
+	ocean_assert(coarsestWidthNextPyramid >= 1u && coarsestHeightNextPyramid >= 1u);
 
 	const unsigned int channels = previousPyramid->frameType().channels();
 	ocean_assert(channels >= 1u && channels <= 4u);
@@ -1643,8 +1643,8 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 	{
 		const Vector2& roughNextPoint = roughNextPoints != nullptr ? (*roughNextPoints)[n] : (*previousPoints)[n];
 
-		const Scalar x = min(roughNextPoint.x() * coarsetsLayerFactorNextPyramid, coarsetsWidthNextPyramid - Scalar(1));
-		const Scalar y = min(roughNextPoint.y() * coarsetsLayerFactorNextPyramid, coarsetsHeightNextPyramid - Scalar(1));
+		const Scalar x = min(roughNextPoint.x() * coarsestLayerFactorNextPyramid, coarsestWidthNextPyramid - Scalar(1));
+		const Scalar y = min(roughNextPoint.y() * coarsestLayerFactorNextPyramid, coarsestHeightNextPyramid - Scalar(1));
 
 		intermediateRoughNextPoints[n] = Vector2(x, y);
 	}
@@ -1797,8 +1797,8 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 
 	for (int layerIndex = int(numberLayers) - 1; layerIndex >= 0; --layerIndex)
 	{
-		const Frame previousFrame = (*previousPyramid)[layerIndex];
-		const Frame currentFrame = (*currentPyramid)[layerIndex];
+		const Frame& previousFrame = (*previousPyramid)[layerIndex];
+		const Frame& currentFrame = (*currentPyramid)[layerIndex];
 
 		const uint8_t* const previousFrameData = previousFrame.constdata<uint8_t>();
 		const uint8_t* const currentFrameData = currentFrame.constdata<uint8_t>();
