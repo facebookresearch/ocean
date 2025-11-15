@@ -14,7 +14,6 @@
 #include "ocean/cv/advanced/AdvancedZeroMeanSumSquareDifferences.h"
 
 #include "ocean/base/Frame.h"
-#include "ocean/base/RandomI.h"
 #include "ocean/base/Worker.h"
 
 #include "ocean/cv/FrameConverter.h"
@@ -26,7 +25,6 @@
 
 #include "ocean/cv/detector/HarrisCornerDetector.h"
 
-#include "ocean/geometry/Geometry.h"
 #include "ocean/geometry/SpatialDistribution.h"
 
 #include "ocean/math/Box2.h"
@@ -41,7 +39,8 @@ namespace Advanced
 {
 
 // Forward declaration.
-template <typename TMetricInteger, typename TMetricFloat> class AdvancedMotion;
+template <typename TMetricInteger, typename TMetricFloat>
+class AdvancedMotion;
 
 /**
  * Definition of an AdvancedMotion class that applies sum square difference calculations as metric.
@@ -96,7 +95,6 @@ class AdvancedMotion
 		 * @param metricIdentityResults Optional resulting matching quality of the applied metric between both frames at the identity location (the previous and rough position), nullptr if the results do not matter
 		 * @return True, if succeeded
 		 * @tparam tSize Size of the image patch that is used to determine the motion, with range [3, infinity), must be odd, recommended is 5, 7, 15, 31, or 63
-		 * @see trackPointsSubPixelMask().
 		 */
 		template <unsigned int tSize>
 		static bool trackPointsSubPixelMirroredBorder(const Frame& previousFrame, const Frame& currentFrame, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int maximalOffset, const unsigned int coarsestLayerRadius, const FramePyramid::DownsamplingMode downsamplingMode = FramePyramid::DM_FILTER_14641, const unsigned int subPixelIterations = 4u, Worker* worker = nullptr, MetricResults* metricResults = nullptr, MetricResults* metricIdentityResults = nullptr);
@@ -120,7 +118,6 @@ class AdvancedMotion
 		 * @param metricIdentityResults Optional resulting matching quality of the applied metric between both frames at the identity location (the previous and rough position), nullptr if the results do not matter
 		 * @return True, if succeeded
 		 * @tparam tSize Size of the image patch that is used to determine the motion, with range [3, infinity), must be odd, recommended is 5, 7, 15, 31, or 63
-		 * @see trackPointsSubPixelMask().
 		 */
 		template <unsigned int tSize>
 		static inline bool trackPointsSubPixelMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations = 4u, Worker* worker = nullptr, MetricResults* metricResults = nullptr, MetricResults* metricIdentityResults = nullptr);
@@ -146,53 +143,9 @@ class AdvancedMotion
 		 * @return True, if succeeded
 		 * @tparam tChannels The number of channels the frame pyramids have, with range [1, 4]
 		 * @tparam tSize Size of the image patch that is used to determine the motion, with range [3, infinity), must be odd, recommended is 5, 7, 15, 31, or 63
-		 * @see trackPointsSubPixelMask().
 		 */
 		template <unsigned int tChannels, unsigned int tSize>
 		static inline bool trackPointsSubPixelMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations = 4u, Worker* worker = nullptr, MetricResults* metricResults = nullptr, MetricResults* metricIdentityResults = nullptr);
-
-		/**
-		 * Tracks a set of given points between two frame pyramids with pixel accuracy while each pyramid layer can contain valid and invalid pixels specified by two individual (pyramid) masks.
-		 * The points are tracked unidirectional (from the previous frame to the current frame).<br>
-		 * The motion is determined by application of an image patch centered around the point to be tracked.<br>
-		 * Patch pixels outside the any of the frames will be treated as invalid mask pixels and thus will not be considered.
-		 * @param previousPyramid The frame pyramid of the previous frame which will be used for the motion detection, must be valid
-		 * @param currentPyramid The frame pyramid of the current frame which will be used for the motion detection, with same pixel origin as the first frame (pyramid), must be valid
-		 * @param previousMaskPyramid The corresponding 8 bit mask pyramid of the previous frame identifying valid pixels, pixel values not equal to 0x00 are valid, with same layer number, frame dimension and pixel origin as the previous frame (pyramid), must be valid
-		 * @param currentMaskPyramid The corresponding 8 bit mask pyramid of the current frame identifying valid pixels, pixel values not equal to 0x00 are valid, with same layer number, frame dimension and pixel origin as the current frame (pyramid), must be valid
-		 * @param previousPoints The positions to be tracked in the current frame, with range [0, previousPyramid.finestWidth())x[0, previousPyramid.finestHeight())
-		 * @param roughCurrentPoints Already known positions of the tracked points in the current frame (pyramid) one for each previous point, with range [0, currentPyramid.finestWidth())x[0, currentPyramid.finestHeight()), zero locations if no rough location is known
-		 * @param currentPoints The resulting positions of the tracked points located in the current frame, one for each previous point
-		 * @param coarsestLayerRadius The search radius on the coarsest layer, with range [2, infinity)
-		 * @param worker Optional worker object to distribute the computation
-		 * @return True, if succeeded
-		 * @tparam tSize The size of the square patch which is used for tracking in pixel, with range [1, min('finestWidth', 'finestHeight') * 2], must be odd
-		 * @see trackPointsSubPixelMask().
-		 */
-		template <unsigned int tSize>
-		static inline bool trackPointsMask(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const FramePyramid& previousMaskPyramid, const FramePyramid& currentMaskPyramid, const PixelPositions& previousPoints, const PixelPositions& roughCurrentPoints, PixelPositions& currentPoints, const unsigned int coarsestLayerRadius, Worker* worker = nullptr);
-
-		/**
-		 * Tracks a set of given points between two frame pyramids with sub-pixel accuracy while each pyramid layer can contain valid and invalid pixels specified by two individual (pyramid) masks.
-		 * The points are tracked unidirectional (from the previous frame to the current frame).<br>
-		 * The motion is determined by application of an image patch centered around the point to be tracked.<br>
-		 * Patch pixels outside the any of the frames will be treated as invalid mask pixels and thus will not be considered.
-		 * @param previousPyramid The frame pyramid of the previous frame which will be used for the motion detection, must be valid
-		 * @param currentPyramid The frame pyramid of the current frame which will be used for the motion detection, with same pixel origin as the first frame (pyramid), must be valid
-		 * @param previousMaskPyramid The corresponding 8 bit mask pyramid of the previous frame identifying valid pixels, pixel values not equal to 0x00 are valid, with same layer number, frame dimension and pixel origin as the previous frame (pyramid), must be valid
-		 * @param currentMaskPyramid The corresponding 8 bit mask pyramid of the current frame identifying valid pixels, pixel values not equal to 0x00 are valid, with same layer number, frame dimension and pixel origin as the current frame (pyramid), must be valid
-		 * @param previousPoints The positions to be tracked in the current frame, with range [0, previousPyramid.finestWidth())x[0, previousPyramid.finestHeight())
-		 * @param roughCurrentPoints Already known positions of the tracked points in the current frame (pyramid) one for each previous point, with range [0, currentPyramid.finestWidth())x[0, currentPyramid.finestHeight()), zero locations if no rough location is known
-		 * @param currentPoints The resulting positions of the tracked points located in the current frame, one for each previous point
-		 * @param coarsestLayerRadius The search radius on the coarsest layer, with range [2, infinity)
-		 * @param subPixelIterations Number of sub-pixel iterations that will be applied, each iteration doubles the sub-pixel accuracy, with range [1, infinity)
-		 * @param worker Optional worker object to distribute the computation
-		 * @tparam tSize The size of the square patch which is used for tracking in pixel, with range [1, min('finestWidth', 'finestHeight') * 2], must be odd
-		 * @return True, if succeeded
-		 * @see trackPointsMask().
-		 */
-		template <unsigned int tSize>
-		static inline bool trackPointsSubPixelMask(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const FramePyramid& previousMaskPyramid, const FramePyramid& currentMaskPyramid, const Vectors2& previousPoints, const Vectors2& roughCurrentPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations = 4u, Worker* worker = nullptr);
 
 		/**
 		 * Tracks a set of arbitrary (unknown) points between two frame pyramids with sub-pixel accuracy.
@@ -264,7 +217,6 @@ class AdvancedMotion
 		 * @param subPixelIterations Number of sub-pixel iterations that will be applied, each iteration doubles the sub-pixel accuracy, with range [1, infinity)
 		 * @return True, if succeeded
 		 * @tparam tSize Size of the image patch that is used to determine the motion, must be odd
-		 * @tparam TIndex The data type of the optional valid indices, either 'uint32_t' or 'uint8_t'
 		 * @see trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations().
 		 */
 		template <unsigned int tSize>
@@ -277,7 +229,7 @@ class AdvancedMotion
 		 * If a point is near the frame border, a mirrored image patch is applied.<br>
 		 * This function has two template parameters: a) the number of frame channels and b) the patch size, both known at compile time.
 		 * @param previousPyramid Previous frame pyramid with pixel format matching with the number of frame channels 'tChannels', must be valid
-		 * @param nextPyramid Next frame pyramid, with same frame type as the previous frame, with same frame type as the previous pyramid
+		 * @param nextPyramid Next frame pyramid, with same frame type as the previous pyramid, must be valid
 		 * @param coarsestLayerRadius The search radius on the coarsest layer, with range [2, infinity)
 		 * @param previousImagePoints A set of points that are located in the previous frame, this set may be reduced as some points may be discarded (if no validIndices parameter is specified)
 		 * @param nextImagePoints Resulting points in the next frame, each point corresponds to one previous point
@@ -288,7 +240,6 @@ class AdvancedMotion
 		 * @return True, if succeeded
 		 * @tparam tChannels The number of channels both frame pyramids have, with range [1, 4]
 		 * @tparam tSize Size of the image patch that is used to determine the motion, must be odd
-		 * @tparam TIndex The data type of the optional valid indices, either 'uint32_t' or 'uint8_t'
 		 * @see trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations().
 		 */
 		template <unsigned int tChannels, unsigned int tSize>
@@ -309,7 +260,6 @@ class AdvancedMotion
 		 * @param subPixelIterations Number of sub-pixel iterations that will be applied, each iteration doubles the sub-pixel accuracy, with range [1, infinity)
 		 * @return True, if succeeded
 		 * @tparam tSize Size of the image patch that is used to determine the motion, must be odd
-		 * @tparam TIndex The data type of the optional valid indices, either 'uint32_t' or 'uint8_t'
 		 * @see trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations().
 		 */
 		template <unsigned int tSize>
@@ -321,7 +271,7 @@ class AdvancedMotion
 		 * If a point is near the frame border, a mirrored image patch is applied.<br>
 		 * This function has two template parameters: a) the number of frame channels and b) the patch size, both known at compile time.
 		 * @param previousPyramid Previous frame pyramid with pixel format matching with the number of frame channels 'tChannels', must be valid
-		 * @param nextPyramid Next frame pyramid, with same frame type as the previous frame, with same frame type as the previous pyramid
+		 * @param nextPyramid Next frame pyramid, with same frame type as the previous pyramid, must be valid
 		 * @param coarsestLayerRadius The search radius on the coarsest layer, with range [2, infinity)
 		 * @param previousImagePoints The image points located in the previous frame
 		 * @param nextImagePoints The resulting points in the next frame, each point corresponds to one previous point
@@ -332,7 +282,6 @@ class AdvancedMotion
 		 * @return True, if succeeded
 		 * @tparam tChannels The number of channels both frame pyramids have, with range [1, 4]
 		 * @tparam tSize Size of the image patch that is used to determine the motion, must be odd
-		 * @tparam TIndex The data type of the optional valid indices, either 'uint32_t' or 'uint8_t'
 		 * @see trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations().
 		 */
 		template <unsigned int tChannels, unsigned int tSize>
@@ -468,8 +417,8 @@ class AdvancedMotion
 		 * @param radiusY The search radius in vertical direction, in pixel, with range [0, height - 1]
 		 * @param rough1 The optional rough guess of the point in the second frame, (Numeric::maxValue(), Numeric::maxValue()) if unknown
 		 * @param subPixelIterations Number of sub-pixel iterations that will be applied, each iteration doubles the sub-pixel accuracy, with range [1, infinity)
-		 * @param metricResult Optional resulting result of the applied metric, nullptr if the result does not matter
-		 * @param metricIdentityResult Optional resulting result of the applied metric in both frames at the same previous position, nullptr if the results do not matter
+		 * @param metricResult Optional resulting matching quality of the applied metric, nullptr if the result does not matter
+		 * @param metricIdentityResult Optional resulting matching quality of the applied metric in both frames at the same previous position, nullptr if the results do not matter
 		 * @return Best matching position in the second frame
 		 * @tparam tPatchSize The size of the square patch (the edge length) in pixel, with range [3, infinity), must be odd, recommended is 5, 7, 15, 31, or 63
 		 */
@@ -526,7 +475,7 @@ class AdvancedMotion
 		 * @param currentPyramid Current frame pyramid, with same pixel format and pixel orientation as the previous frame pyramid, must be valid
 		 * @param numberLayers The number of pyramid layers that will be used for tracking, with range [1, min(pyramids->layers(), 'coarsest layer that match with the patch size')]
 		 * @param previousPoints A set of points that are located in the previous frame
-		 * @param roughPoints The rough points in the current frame (if known), otherwise the prevousPoints may be provided
+		 * @param roughPoints The rough points in the current frame (if known), otherwise the previousPoints may be provided
 		 * @param currentPoints Resulting current points, that have been tracking between the two points
 		 * @param coarsestLayerRadius The search radius on the coarsest layer, with range [2, infinity)
 		 * @param subPixelIterations Number of sub-pixel iterations that will be applied, each iteration doubles the sub-pixel accuracy, with range [1, infinity)
@@ -596,17 +545,17 @@ inline bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMir
 
 	currentPoints.resize(previousPoints.size());
 
-	if (metricResults)
+	if (metricResults != nullptr)
 	{
 		metricResults->resize(previousPoints.size());
 	}
 
-	if (metricIdentityResults)
+	if (metricIdentityResults != nullptr)
 	{
 		metricIdentityResults->resize(previousPoints.size());
 	}
 
-	if (worker)
+	if (worker != nullptr)
 	{
 		worker->executeFunction(Worker::Function::createStatic(&AdvancedMotion::trackPointsSubPixelMirroredBorderSubset<tSize>, &previousPyramid, &currentPyramid, numberLayers, &previousPoints, &roughPoints, &currentPoints, coarsestLayerRadius, subPixelIterations, metricResults ? metricResults->data() : nullptr, metricIdentityResults ? metricIdentityResults->data() : nullptr, 0u, 0u), 0u, (unsigned int)(previousPoints.size()));
 	}
@@ -645,17 +594,17 @@ inline bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMir
 
 	currentPoints.resize(previousPoints.size());
 
-	if (metricResults)
+	if (metricResults != nullptr)
 	{
 		metricResults->resize(previousPoints.size());
 	}
 
-	if (metricIdentityResults)
+	if (metricIdentityResults != nullptr)
 	{
 		metricIdentityResults->resize(previousPoints.size());
 	}
 
-	if (worker)
+	if (worker != nullptr)
 	{
 		worker->executeFunction(Worker::Function::createStatic(&AdvancedMotion::trackPointsSubPixelMirroredBorderSubset<tChannels, tSize>, &previousPyramid, &currentPyramid, numberLayers, &previousPoints, &roughPoints, &currentPoints, coarsestLayerRadius, subPixelIterations, metricResults ? metricResults->data() : nullptr, metricIdentityResults ? metricIdentityResults->data() : nullptr, 0u, 0u), 0u, (unsigned int)(previousPoints.size()));
 	}
@@ -843,7 +792,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 	ocean_assert(previousPyramid && nextPyramid);
 
 	ocean_assert(!previousImagePoints.empty() && nextImagePoints.empty());
-	ocean_assert(!validIndices || validIndices->empty());
+	ocean_assert(validIndices == nullptr || validIndices->empty());
 
 	if (previousImagePoints.empty())
 	{
@@ -936,7 +885,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 	ocean_assert(nextPyramid.frameType().channels() == tChannels);
 
 	ocean_assert(!previousImagePoints.empty() && nextImagePoints.empty());
-	ocean_assert(!validIndices || validIndices->empty());
+	ocean_assert(validIndices == nullptr || validIndices->empty());
 
 	if (previousImagePoints.empty())
 	{
@@ -1105,7 +1054,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 		return false;
 	}
 
-	// backward point previousImagePoints
+	// backward point motion
 	Vectors2 backwardsPreviousImagePoints(previousImagePoints.size());
 	if (!trackPointsSubPixelMirroredBorder<tChannels, tSize>(nextPyramid, previousPyramid, nextImagePoints, nextImagePoints, backwardsPreviousImagePoints, coarsestLayerRadius, subPixelIterations, worker))
 	{
@@ -1148,7 +1097,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 	ocean_assert(previousPyramid.frameType().pixelFormat() == nextPyramid.frameType().pixelFormat() && previousPyramid.frameType().pixelOrigin() == nextPyramid.frameType().pixelOrigin());
 
 	ocean_assert(!previousImagePoints.empty() && nextImagePoints.empty());
-	ocean_assert(!validIndices || validIndices->empty());
+	ocean_assert(validIndices == nullptr || validIndices->empty());
 
 	ocean_assert(&previousImagePoints != &roughNextImagePoints);
 
@@ -1185,7 +1134,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 	nextImagePoints.clear();
 	nextImagePoints.reserve(previousPointCandidates.size());
 
-	if (validIndices)
+	if (validIndices != nullptr)
 	{
 		validIndices->clear();
 		validIndices->reserve(previousPointCandidates.size());
@@ -1241,7 +1190,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 	ocean_assert(nextPyramid.frameType().channels() == tChannels);
 
 	ocean_assert(!previousImagePoints.empty() && nextImagePoints.empty());
-	ocean_assert(!validIndices || validIndices->empty());
+	ocean_assert(validIndices == nullptr || validIndices->empty());
 
 	ocean_assert(&previousImagePoints != &roughNextImagePoints);
 
@@ -1282,7 +1231,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 	nextImagePoints.clear();
 	nextImagePoints.reserve(previousPointCandidates.size());
 
-	if (validIndices)
+	if (validIndices != nullptr)
 	{
 		validIndices->clear();
 		validIndices->reserve(previousPointCandidates.size());
@@ -1636,7 +1585,6 @@ Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointBufferSubPixelMi
 					metricBest = candidateMetric;
 					bestPosition1 = candidatePosition1;
 				}
-
 			}
 		}
 
@@ -1847,10 +1795,10 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 		intermediateRoughPoints[n] = Vector2(x, y);
 	}
 
-	for (int l = int(numberLayers) - 1; l >= 0; --l)
+	for (int layerIndex = int(numberLayers) - 1; layerIndex >= 0; --layerIndex)
 	{
-		const Frame previousFrame = (*previousPyramid)[l];
-		const Frame currentFrame = (*currentPyramid)[l];
+		const Frame previousFrame = (*previousPyramid)[layerIndex];
+		const Frame currentFrame = (*currentPyramid)[layerIndex];
 
 		const uint8_t* const previousFrameData = previousFrame.constdata<uint8_t>();
 		const uint8_t* const currentFrameData = currentFrame.constdata<uint8_t>();
@@ -1865,7 +1813,7 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 		const unsigned int currentHeight = currentFrame.height();
 
 		// if the finest layer is reached we apply a subpixel accurate determination
-		if (l == 0)
+		if (layerIndex == 0)
 		{
 			const unsigned int layerRadiusX = numberLayers == 1u ? coarsestLayerRadius : 2u;
 			const unsigned int layerRadiusY = numberLayers == 1u ? coarsestLayerRadius : 2u;
@@ -1896,10 +1844,10 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 		}
 		else // otherwise we apply a pixel accurate determination
 		{
-			ocean_assert(l > 0);
+			ocean_assert(layerIndex > 0);
 
-			const unsigned int layerRadiusX = (l == int(numberLayers) - 1) ? coarsestLayerRadius : 2u;
-			const unsigned int layerRadiusY = (l == int(numberLayers) - 1) ? coarsestLayerRadius : 2u;
+			const unsigned int layerRadiusX = (layerIndex == int(numberLayers) - 1) ? coarsestLayerRadius : 2u;
+			const unsigned int layerRadiusY = (layerIndex == int(numberLayers) - 1) ? coarsestLayerRadius : 2u;
 
 			for (unsigned int i = firstPoint; i < firstPoint + numberPoints; ++i)
 			{
@@ -1910,7 +1858,7 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 
 				unsigned int* const metricResult = metricResults ? metricResults + i : nullptr;
 
-				const Scalar layerFactor = Scalar(1) / Scalar((unsigned int)(1 << l));
+				const Scalar layerFactor = Scalar(1) / Scalar((unsigned int)(1 << layerIndex));
 				const PixelPosition previousPosition(min(Numeric::round32((*previousPoints)[i].x() * layerFactor), int(previousWidth) - 1),
 													 min(Numeric::round32((*previousPoints)[i].y() * layerFactor), int(previousHeight) - 1));
 
@@ -1920,8 +1868,8 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 
 					ocean_assert(position.x() < currentWidth && position.y() < currentHeight);
 
-					const Scalar higherWidth = Scalar((*currentPyramid)[l - 1].width());
-					const Scalar higherHeight = Scalar((*currentPyramid)[l - 1].height());
+					const Scalar higherWidth = Scalar((*currentPyramid)[layerIndex - 1].width());
+					const Scalar higherHeight = Scalar((*currentPyramid)[layerIndex - 1].height());
 
 					intermediateRoughPoints[i] = Vector2(min(Scalar(position.x() * 2u), higherWidth - 1), min(Scalar(position.y() * 2u), higherHeight - 1));
 
