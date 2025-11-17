@@ -13,6 +13,8 @@
 
 #include "ocean/cv/NEON.h"
 
+#include "ocean/test/Validation.h"
+
 #include <array>
 
 #if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
@@ -118,8 +120,6 @@ bool TestNEON::testSum16Bit4Blocks3x3(const double testDuration)
 
 	Log::info() << "Test sum of four 3x3 blocks 16 bit (" << blocks4 << " iterations):";
 
-	bool allSucceeded = true;
-
 	HighPerformanceStatistic performanceStandard;
 	HighPerformanceStatistic performanceNEON;
 
@@ -138,6 +138,7 @@ bool TestNEON::testSum16Bit4Blocks3x3(const double testDuration)
 	int* const sumsNEON = sumsNEONMemory.data<int>();
 
 	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -180,28 +181,18 @@ bool TestNEON::testSum16Bit4Blocks3x3(const double testDuration)
 
 		for (unsigned int n = 0u; n < sums; ++n)
 		{
-			if (sumsNEON[n] != sumsStandard[n])
-				{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, sumsNEON[n], sumsStandard[n]);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Standard performance: Best: " << String::toAString(performanceStandard.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceStandard.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceStandard.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceStandard.medianMseconds(), 3u) << "ms";
 	Log::info() << "NEON performance: Best: " << String::toAString(performanceNEON.bestMseconds(), 3u) << "ms, worst: " << String::toAString(performanceNEON.worstMseconds(), 3u) << "ms, average: " << String::toAString(performanceNEON.averageMseconds(), 3u) << "ms, median: " << String::toAString(performanceNEON.medianMseconds(), 3u) << "ms";
 	Log::info() << "NEON boost factor: Best: " << String::toAString(performanceStandard.best() / performanceNEON.best(), 1u) << "x, worst: " << String::toAString(performanceStandard.worst() / performanceNEON.worst(), 1u) << "x, average: " << String::toAString(performanceStandard.average() / performanceNEON.average(), 1u) << "x, median: " << String::toAString(performanceStandard.median() / performanceNEON.median(), 1u) << "x";
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNEON::testAveragingPixels2x2(const double testDuration)
@@ -211,35 +202,27 @@ bool TestNEON::testAveragingPixels2x2(const double testDuration)
 	Log::info() << "Test 2x2 averaging of pixel blocks:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
 	do
 	{
-		allSucceeded = validateAveragePixels2x2<1u, 16u>(CV::NEON::average16Elements1Channel8Bit2x2, randomGenerator) && allSucceeded;
-		allSucceeded = validateAveragePixels2x2<1u, 32u>(CV::NEON::average32Elements1Channel8Bit2x2, randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, validateAveragePixels2x2<1u, 16u>(CV::NEON::average16Elements1Channel8Bit2x2, randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, validateAveragePixels2x2<1u, 32u>(CV::NEON::average32Elements1Channel8Bit2x2, randomGenerator));
 
-		allSucceeded = validateAveragePixels2x2<2u, 16u>(CV::NEON::average32Elements2Channel16Bit2x2, randomGenerator) && allSucceeded;
-		allSucceeded = validateAveragePixels2x2<2u, 32u>(CV::NEON::average64Elements2Channel16Bit2x2, randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, validateAveragePixels2x2<2u, 16u>(CV::NEON::average32Elements2Channel16Bit2x2, randomGenerator));
+		OCEAN_EXPECT_TRUE(validation, validateAveragePixels2x2<2u, 32u>(CV::NEON::average64Elements2Channel16Bit2x2, randomGenerator));
 
-		allSucceeded = validateAveragePixels2x2<3u, 16u>(CV::NEON::average48Elements3Channel24Bit2x2, randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, validateAveragePixels2x2<3u, 16u>(CV::NEON::average48Elements3Channel24Bit2x2, randomGenerator));
 
-		allSucceeded = validateAveragePixels2x2<4u, 16u>(CV::NEON::average64Elements4Channel32Bit2x2, randomGenerator) && allSucceeded;
+		OCEAN_EXPECT_TRUE(validation, validateAveragePixels2x2<4u, 16u>(CV::NEON::average64Elements4Channel32Bit2x2, randomGenerator));
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNEON::testMultiply(const double testDuration)
@@ -249,8 +232,7 @@ bool TestNEON::testMultiply(const double testDuration)
 	Log::info() << "Test multiply functions:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -271,24 +253,14 @@ bool TestNEON::testMultiply(const double testDuration)
 		{
 			const uint64_t test = values64[n] * uint64_t(values32[n]);
 
-			if (test != results[n])
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, test, results[n]);
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNEON::testCopySign(const double testDuration)
@@ -298,8 +270,7 @@ bool TestNEON::testCopySign(const double testDuration)
 	Log::info() << "Test copySign functions:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -323,32 +294,19 @@ bool TestNEON::testCopySign(const double testDuration)
 		{
 			if (signProvider[n] < 0)
 			{
-				if (result[n] != -int32_t(signReceiver[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, result[n], -int32_t(signReceiver[n]));
 			}
 			else
 			{
-				if (result[n] != int32_t(signReceiver[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, result[n], int32_t(signReceiver[n]));
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestNEON::testCastElements(const double testDuration)
@@ -358,8 +316,7 @@ bool TestNEON::testCastElements(const double testDuration)
 	Log::info() << "Test cast elements functions:";
 
 	RandomGenerator randomGenerator;
-
-	bool allSucceeded = true;
+	Validation validation(randomGenerator);
 
 	const Timestamp startTimestamp(true);
 
@@ -386,10 +343,7 @@ bool TestNEON::testCastElements(const double testDuration)
 
 			for (size_t n = 0; n < elements_u.size(); ++n)
 			{
-				if (elements_f[n] != float(elements_u[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, elements_f[n], float(elements_u[n]));
 			}
 		}
 
@@ -411,25 +365,15 @@ bool TestNEON::testCastElements(const double testDuration)
 
 			for (size_t n = 0; n < elements_u.size(); ++n)
 			{
-				if (elements_u[n] != uint8_t(elements_f[n]))
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, elements_u[n], uint8_t(elements_f[n]));
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation: FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 template <unsigned int tChannels, unsigned int tSourcePixels>
