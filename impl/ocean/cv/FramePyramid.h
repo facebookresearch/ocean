@@ -84,7 +84,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Definition of a function allowing to downsample a frame.
 		 * @param sourceLayer The source layer to downsample
-		 * @param targetLayer The target layer reviving the downsampled image content
+		 * @param targetLayer The target layer receiving the downsampled image content
 		 * @param worker Optional worker to distribute the computation
 		 * @return True, if succeeded
 		 */
@@ -187,7 +187,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param frame The frame for which the pyramid will be created, must be valid
 		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
-		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case,
+		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exists)
 		 * @param worker Optional worker object to distribute the computation
 		 */
 		inline FramePyramid(const Frame& frame, const DownsamplingMode downsamplingMode, const unsigned int layers, const bool copyFirstLayer, Worker* worker);
@@ -198,7 +198,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param frame The frame for which the pyramid will be created, must be valid
 		 * @param downsamplingFunction The custom function used to downsample the individual pyramid layers, must be valid
 		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
-		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case,
+		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exists)
 		 * @param worker Optional worker object to distribute the computation
 		 */
 		inline FramePyramid(const Frame& frame, const DownsamplingFunction& downsamplingFunction, const unsigned int layers, const bool copyFirstLayer, Worker* worker);
@@ -235,28 +235,28 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Returns the frame of a specified layer.
 		 * @param layer Index of the layer frame to be returned, with range [0, layers())
-		 * @return Pyramid layer frame
+		 * @return The requested pyramid layer frame
 		 */
 		inline const Frame& layer(const unsigned int layer) const;
 
 		/**
 		 * Returns the frame of a specified layer.
 		 * @param layer Index of the layer frame to be returned, with range [0, layers())
-		 * @return Pyramid layer frame
+		 * @return The requested pyramid layer frame
 		 */
 		inline Frame& layer(const unsigned int layer);
 
 		/**
 		 * Returns the finest layer frame of this pyramid.
 		 * Beware: The frame will not be the owner of the frame data, if you need a copy of this frame enforce to copy the frame buffer!
-		 * @return Finest pyramid layer frame
+		 * @return The finest pyramid layer frame
 		 */
 		inline const Frame& finestLayer() const;
 
 		/**
-		 * Returns the coarsest layer frame of this pyramid.
+		 * Returns the finest layer frame of this pyramid.
 		 * Beware: The frame will not be the owner of the frame data, if you need a copy of this frame enforce to copy the frame buffer!
-		 * @return Finest pyramid layer frame
+		 * @return The finest pyramid layer frame
 		 */
 		inline Frame& finestLayer();
 
@@ -264,15 +264,15 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Returns the coarsest layer frame of this pyramid regarding to the number of valid layers.
 		 * If no valid layer is stored in this pyramid, the finest layer is used instead.<br>
 		 * Beware: The frame will not be the owner of the frame data, if you need a copy of this frame enforce to copy the frame buffer!<br>
-		 * @return Finest pyramid layer frame
+		 * @return The coarsest pyramid layer frame
 		 */
 		inline const Frame& coarsestLayer() const;
 
 		/**
-		 * Returns the finest layer frame of this pyramid regarding to the number of valid layers.
+		 * Returns the coarsest layer frame of this pyramid regarding to the number of valid layers.
 		 * If no valid layer is stored in this pyramid, the finest layer is used instead.<br>
 		 * Beware: The frame will not be the owner of the frame data, if you need a copy of this frame enforce to copy the frame buffer!<br>
-		 * @return Finest pyramid layer frame
+		 * @return The coarsest pyramid layer frame
 		 */
 		inline Frame& coarsestLayer();
 
@@ -342,7 +342,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * The resulting pyramid will contain a copy of the given frame (as finest pyramid layer) or will just use the memory, depending on 'copyFirstLayer'.
 		 * @param frame The frame for which the pyramid will be created, must be valid
 		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
+		 * @param layers The number of pyramid layers to be created, with range [1, infinity), AS_MANY_LAYERS_AS_POSSIBLE to create as many layers as possible
 		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if the frame pyramid was replaced
@@ -356,7 +356,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * The resulting pyramid will contain a copy of the given frame (as finest pyramid layer) or will just use the memory, depending on 'copyFirstLayer'.
 		 * @param frame The frame for which the pyramid will be created, must be valid
 		 * @param downsamplingFunction The custom function used to downsample the individual pyramid layers, must be valid
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
+		 * @param layers The number of pyramid layers to be created, with range [1, infinity), AS_MANY_LAYERS_AS_POSSIBLE to create as many layers as possible
 		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if the frame pyramid was replaced
@@ -370,7 +370,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * The resulting pyramid will re-used the given frame (as finest pyramid layer); thus, ensure that the frame's memory is valid as long as this pyramid exists.
 		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
 		 * @param frame The frame for which the pyramid will be created, must be valid
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
+		 * @param layers The number of pyramid layers to be created, with range [1, infinity), AS_MANY_LAYERS_AS_POSSIBLE to create as many layers as possible
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if the frame pyramid was replaced
 		 * @see replace8BitPerChannel11().
@@ -383,7 +383,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * The resulting pyramid will re-used the given frame (as finest pyramid layer); thus, ensure that the frame's memory is valid as long as this pyramid exists.
 		 * @param downsamplingFunction The custom function used to downsample the individual pyramid layers, must be valid
 		 * @param frame The frame for which the pyramid will be created, must be valid
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
+		 * @param layers The number of pyramid layers to be created, with range [1, infinity), AS_MANY_LAYERS_AS_POSSIBLE to create as many layers as possible
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if the frame pyramid was replaced
 		 * @see replace8BitPerChannel11().
@@ -400,7 +400,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param channels The number of channels the given frame has, with range [1, infinity)
 		 * @param pixelOrigin The pixel origin of the given frame
 		 * @param downsamplingMode The downsampling mode to use when creating the individual pyramid layers, must be valid
-		 * @param layers Number of pyramid layers to be created, with range [1, infinity)
+		 * @param layers Number of pyramid layers to be created, with range [1, infinity), AS_MANY_LAYERS_AS_POSSIBLE to create as many layers as possible
 		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
 		 * @param worker Optional worker object to distribute the computation
@@ -414,13 +414,13 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Replaces this frame pyramid by a new frame with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
 		 * This function is intentionally restrictive to reduce binary impact when used, use other function or the constructor in case more flexibility is needed an binary size does not matter.<br>
-		 * The function will re-used the existing pyramid's memory of possible.
+		 * The function will re-use the existing pyramid's memory if possible.
 		 * @param frame The frame for which the pyramid will be created, must be valid
 		 * @param width The width of the given frame in pixel, with range [1, infinity)
 		 * @param height The height of the given frame in pixel, with range [1, infinity)
 		 * @param channels The number of channels the given frame has, with range [1, infinity)
 		 * @param pixelOrigin The pixel origin of the given frame
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
+		 * @param layers The number of pyramid layers to be created, with range [1, infinity), AS_MANY_LAYERS_AS_POSSIBLE to create as many layers as possible
 		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
 		 * @param worker Optional worker object to distribute the computation
@@ -434,10 +434,10 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Replaces this frame pyramid by a new frame with 1 plane and data type DT_UNSIGNED_INTEGER_8 applying a 1-1 downsampling.
 		 * This function is intentionally restrictive to reduce binary impact when used, use other function or the constructor in case more flexibility is needed an binary size does not matter.<br>
-		 * The function will re-used the existing pyramid's memory of possible.<br>
+		 * The function will re-use the existing pyramid's memory if possible.<br>
 		 * This function does not provide the optimal image quality for images with alpha channel, use replace() instead.
 		 * @param frame The frame for which the pyramid will be created, with 1 plane and data type DT_UNSIGNED_INTEGER_8, should not contain an alpha channel, must be valid
-		 * @param layers The number of pyramid layers to be created, with range [1, infinity)
+		 * @param layers The number of pyramid layers to be created, with range [1, infinity), AS_MANY_LAYERS_AS_POSSIBLE to create as many layers as possible
 		 * @param copyFirstLayer True, to copy the memory of the first layer into the pyramid; False, to re-use the memory of the first layer only (in this case, ensure that the memory of the first layer exists as long as this pyramid exist)
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if the frame pyramid was replaced
@@ -449,8 +449,8 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * Replaces this frame pyramid with a new pyramid defined by the frame type of the finest layer.
 		 * The image content of the replaced frame pyramid will be uninitialized.
 		 * @param frameType The type of the finest pyramid layer, must be valid
-		 * @param layers The number of layers to be created during the resizing, the resulting layers will be as many as possible but not exceed this value, with range [1, infinity)
 		 * @param forceOwner True, to force the pyramid to be the owner of the memory afterwards; False, to allow that the pyramid is not owning the memory (because the memory is managed outside of this pyramid)
+		 * @param layers The number of layers to be created during the resizing, the resulting layers will be as many as possible but not exceed this value, with range [1, infinity), AS_MANY_LAYERS_AS_POSSIBLE to create as many layers as possible
 		 * @return True, if succeeded
 		 */
 		inline bool replace(const FrameType& frameType, const bool forceOwner, const unsigned int layers);
@@ -518,10 +518,10 @@ class OCEAN_CV_EXPORT FramePyramid
 		/**
 		 * Returns the size factor of a specified layer in relation to the finest layer.
 		 * The finest (first) layer has factor 1, the second layer has factor 2, the third layer has factor 4, ...<br>
-		 * @param layer The layer to return the size factor for, with range [1, 31]
+		 * @param layerIndex The index of the layer to return the size factor for, with range [0, 31]
 		 * @return The resulting size factor, with range [1, infinity)
 		 */
-		static constexpr unsigned int sizeFactor(const unsigned int layer);
+		static constexpr unsigned int sizeFactor(const unsigned int layerIndex);
 
 		/**
 		 * Determines the number of layers until an invalid frame size would be reached in the next layer.
@@ -588,8 +588,8 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * The image content of the replaced frame pyramid will be uninitialized.
 		 * @param frameType The type of the finest pyramid layer, must be valid
 		 * @param reserveFirstLayerMemory True, to reserve memory for the first pyramid layer (and to initialize the first layer frame); False, to reserve memory for the remaining pyramid layers only (and to skip initializing the first layer frame)
-		 * @param layers The number of layers to be created during the resizing, the resulting layers will be as many as possible but not exceed this value, with range [1, infinity)
 		 * @param forceOwner True, to force the pyramid to be the owner of the memory afterwards; False, to allow that the pyramid is not owning the memory (because the memory is managed outside of this pyramid)
+		 * @param layers The number of layers to be created during the resizing, the resulting layers will be as many as possible but not exceed this value, with range [1, infinity), AS_MANY_LAYERS_AS_POSSIBLE to create as many layers as possible
 		 * @return True, if succeeded
 		 */
 		bool replace(const FrameType& frameType, const bool reserveFirstLayerMemory, const bool forceOwner, const unsigned int layers);
@@ -599,7 +599,7 @@ class OCEAN_CV_EXPORT FramePyramid
 		 * @param width The width of the finest layer in pixel, with range [0, 65535]
 		 * @param height The height of the finest layer in pixel, with range [0, 65535]
 		 * @param pixelFormat The pixel format of each layer, must be a generic 1-plane pixel format, must be valid
-		 * @param layers Number of layers, with range [0, infinity)
+		 * @param layers Number of layers, with range [0, infinity), AS_MANY_LAYERS_AS_POSSIBLE to calculate the memory size for as many layers as possible
 		 * @param includeFirstLayer True, to determine the memory for all layers; False, to skip the first layer and only determine the memory for all remaining (coarser) layers
 		 * @param totalLayers Optional resulting number of pyramid layers that will exist (always counts the very first layer independently of 'includeFirstLayer'), with range [0, layers]
 		 * @return Resulting number of bytes, with range [0, infinity)
@@ -840,15 +840,15 @@ inline bool FramePyramid::replace(const FrameType& frameType, const bool forceOw
 	return replace(frameType, true /*reserveFirstLayerMemory*/, forceOwner, layers);
 }
 
-constexpr unsigned int FramePyramid::sizeFactor(const unsigned int layer)
+constexpr unsigned int FramePyramid::sizeFactor(const unsigned int layerIndex)
 {
-	ocean_assert(layer <= 31u);
-	if (layer > 31u)
+	ocean_assert(layerIndex <= 31u);
+	if (layerIndex > 31u)
 	{
 		return 0u;
 	}
 
-	return 1u << layer;
+	return 1u << layerIndex;
 }
 
 inline void FramePyramid::clear()
