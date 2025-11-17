@@ -83,6 +83,13 @@ class OCEAN_TEST_CV_EXPORT TestNEON
 		 */
 		static bool testCastElements(const double testDuration);
 
+		/**
+		 * Tests the NEON-based sum function for four uint32_t values.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if all result are valid
+		 */
+		static bool testSumHorizontal_u_32x4(const double testDuration);
+
 	protected:
 
 		/*

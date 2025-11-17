@@ -330,6 +330,13 @@ class NEON
 		static OCEAN_FORCE_INLINE unsigned int sum32x4ByLanes(const uint32x4_t& value);
 
 		/**
+		 * Horizontally sums the four 32 bit values and returns the result.
+		 * @param value The value holding the four 32 bit values
+		 * @return The resulting sum
+		 */
+		static OCEAN_FORCE_INLINE uint32_t sumHorizontal_u_32x4(const uint32x4_t& value);
+
+		/**
 		 * Removes (sets to zero) the high 16 bits of four 32 bit elements.
 		 * Given:  PONM-LKJI-HGFE-DCBA<br>
 		 * Result: 00NM-00JI-00FE-00BA
@@ -1085,6 +1092,20 @@ inline void NEON::gradientHorizontalVertical8Elements3Products1Channel8Bit(const
 OCEAN_FORCE_INLINE unsigned int NEON::sum32x4ByLanes(const uint32x4_t& value)
 {
 	return vgetq_lane_u32(value, 0) + vgetq_lane_u32(value, 1) + vgetq_lane_u32(value, 2) + vgetq_lane_u32(value, 3);
+}
+
+OCEAN_FORCE_INLINE uint32_t NEON::sumHorizontal_u_32x4(const uint32x4_t& value_u_32x4)
+{
+#if defined(__aarch64__)
+
+	return vaddvq_u32(value_u_32x4);
+
+#else
+
+	const uint32x2_t sum_u_32x2 = vpadd_u32(vget_low_u32(value_u_32x4), vget_high_u32(value_u_32x4));
+	return vget_lane_u32(vpadd_u32(sum_u_32x2, sum_u_32x2), 0);
+
+#endif // __aarch64__
 }
 
 OCEAN_FORCE_INLINE uint32x4_t NEON::removeHighBits32_16(const uint32x4_t& value)

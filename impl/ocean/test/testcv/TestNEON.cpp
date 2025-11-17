@@ -66,6 +66,12 @@ bool TestNEON::test(const double testDuration)
 	allSucceeded = testCastElements(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testSumHorizontal_u_32x4(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -104,6 +110,11 @@ TEST(TestNEON, CopySign)
 TEST(TestNEON, CastElements)
 {
 	EXPECT_TRUE(TestNEON::testCastElements(GTEST_TEST_DURATION));
+}
+
+TEST(TestNEON, SumHorizontal_u_32x4)
+{
+	EXPECT_TRUE(TestNEON::testSumHorizontal_u_32x4(GTEST_TEST_DURATION));
 }
 
 #endif // OCEAN_USE_GTEST
@@ -368,6 +379,39 @@ bool TestNEON::testCastElements(const double testDuration)
 				OCEAN_EXPECT_EQUAL(validation, elements_u[n], uint8_t(elements_f[n]));
 			}
 		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestNEON::testSumHorizontal_u_32x4(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Test horizontal sum four uint32_t values functions:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		uint32_t values[4];
+
+		for (unsigned int n = 0u; n < 4u; ++n)
+		{
+			values[n] = RandomI::random(randomGenerator, 100000u);
+		}
+
+		const uint32_t result = CV::NEON::sumHorizontal_u_32x4(vld1q_u32(values));
+
+		const uint32_t test = values[0] + values[1] + values[2] + values[3];
+
+		OCEAN_EXPECT_EQUAL(validation, test, result);
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
