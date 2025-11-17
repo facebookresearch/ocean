@@ -73,10 +73,10 @@ namespace Geometry
  * Therefore, the Computer Vision coordinate system is called the 'flipped' coordinate system as (compared to the default coordinate system) the Computer Vision coordinate system is flipped around the x-axis by 180 degrees.
  *
  * Whenever a coordinate system is defined, e.g., for a camera pose the name of this parameter contains the information in which coordinate system the transformation is defined.<br>
- * The parameter name for a default camera pose (defined in the default coordinate system) can be e.g., "cameraPose", 'extrinsicMatrix', 'pose', 'transformation', and so on.<br>
- * While the camera pose defined in the flipped coordinate system (the Computer Vision coordinate system) can be e.g., 'cameraPoseFlipped', 'flippedPose', 'flippedTransformation', 'cameraPoseF', 'transformationF', and so on.<br>
- * Either the prefix or suffix 'flipped/Flipped' or 'f/F' is used to identify a transformation defined in the flipped coordinate system.<br>
- * Similar to this naming convention every function expecting (or returning) a transformation defined in the flipped coordinate system will contain the suffix 'F' like e.g., determineCameraPoseF(), projectPointF().<br>
+ * The parameter name for a default camera pose (defined in the default coordinate system) uses Ocean's transformation notation, e.g., "world_T_camera", which explicitly shows the transformation direction.<br>
+ * While the camera pose defined in the flipped coordinate system (the Computer Vision coordinate system) uses names like 'flippedCamera_T_world', 'flippedCamera_R_world', and so on.<br>
+ * The transformation notation makes it explicit: 'world_T_camera' transforms from camera to world coordinates, while 'flippedCamera_T_world' transforms from world to flipped camera coordinates.<br>
+ * Similar to this naming convention, every function expecting (or returning) a transformation defined in the flipped coordinate system will contain the suffix 'IF' (Inverted and Flipped) like e.g., projectToImageIF().<br>
  * As long as this naming convention is preserved within the entire Framework no issues regarding mixed coordinate system can happen and a lot of time can be saved for debugging.<br>
  * The framework has a lot of helper functions allowing to transform coordinate systems from one interpretation to the other.<br>
  * Further, for reasons of convenience often a function is implemented twice (one function holds the actual implementation e.g., for the Computer Vision coordinate system, while the other function is implemented for the Computer Graphic coordinate system and simply transforms input and output).<br>
@@ -86,8 +86,8 @@ namespace Geometry
  * That means that camera poses must not necessarily be located in the origin of the world coordinate system which offers a lot of flexibilities.<br>
  * In this framework, a camera pose (the extrinsic camera matrix) transforms 3D object points, defined in the coordinate system of the camera, into 3D object points defined in the world coordinate system.<br>
  * In Computer Graphics, the well known Model-View-Matrix is often defined in the opposite way (the matrix is simply inverted) - here 3D object points defined in the world coordinate system would be transformed into the camera coordinate system.<br>
- * However, as a wide variety of functions in this framework also expect the inverted camera pose as input, another naming convention exists adding an 'inverted/Inverted' or 'i/I' to any parameter name of function name if the inverted matrix/transformation is expected.<br>
- * For better understanding take a look on PinholeCamera::projectToImage() and PinholeCamera::projectToImageIF().
+ * However, as a wide variety of functions in this framework also expect the inverted camera pose as input, the transformation notation clearly indicates the direction.<br>
+ * For better understanding take a look on PinholeCamera::projectToImage() (uses world_T_camera) and PinholeCamera::projectToImageIF() (uses flippedCamera_T_world).
  *
  * As coordinate systems (and their transformations between each) are very often the reason for bugs, errors and time consuming debugging sessions it is highly recommended to follow the above described rules and to document which kind of transformation is expected in every function.<br>
  * In this framework, the documentation often provides equations showing which kind of transformations are expected or returned e.g., like:

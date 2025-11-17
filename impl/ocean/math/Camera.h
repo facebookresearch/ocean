@@ -46,6 +46,50 @@ using CameraF = CameraT<float>;
  * This class implements the base class for all cameras.
  * The base class provides model independent functionalities.<br>
  * Use AnyCamera in case an entire camera model is needed.
+ *
+ * <b>Coordinate Systems and Transformations:</b><br>
+ * Ocean supports two coordinate system conventions for cameras:
+ *
+ * 1. <b>Default Camera (Computer Graphics Convention):</b><br>
+ * The camera looks into the <b>negative z-space</b> with the y-axis pointing up.
+ * <pre>
+ *     Y
+ *     ^
+ *     |
+ *     |
+ *     O --------> X
+ *    /
+ *   / Z
+ *  v
+ * </pre>
+ * - Object points in front of the camera have negative z-values<br>
+ * - This is the default coordinate system used throughout Ocean<br>
+ * - Transformations use the naming pattern: <b>world_T_camera</b>
+ *
+ * 2. <b>Flipped Camera (Computer Vision Convention):</b><br>
+ * The camera looks into the <b>positive z-space</b> with the y-axis pointing down.
+ * <pre>
+ *      Z (out of the screen, positive direction)
+ *      ^
+ *     /
+ *    /
+ *   O --------> X
+ *   |
+ *   |
+ *   v Y
+ * </pre>
+ * - Object points in front of the camera have positive z-values<br>
+ * - This coordinate system is obtained by rotating the default system 180° around the x-axis<br>
+ * - Transformations use the naming pattern: <b>flippedCamera_T_world</b>
+ *
+ * <b>Transformation Naming Convention:</b><br>
+ * Ocean uses explicit transformation notation that clearly indicates the direction:
+ * - <b>world_T_camera</b>: Transforms points from camera coordinates to world coordinates (extrinsic matrix)<br>
+ * - <b>flippedCamera_T_world</b>: Transforms points from world coordinates to flipped camera coordinates (inverted and flipped)<br>
+ * - Functions operating on flipped coordinates use the suffix <b>IF</b> (Inverted and Flipped), e.g., projectToImageIF()
+ *
+ * For more details on coordinate systems, see the Geometry library documentation.
+ *
  * @tparam T The data type of a scalar, 'float' or 'double'
  * @ingroup math
  */
