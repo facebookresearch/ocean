@@ -468,7 +468,7 @@ class NEON
 
 		/**
 		 * Returns the interpolated pixel values for one 2 channel 16 bit pixel.
-		 * @param pixel Uppler left pixel in the frame
+		 * @param pixel Upper left pixel in the frame
 		 * @param size Size of one frame row in bytes
 		 * @param fx_y_ Product of the inverse fx and the inverse fy interpolation factor
 		 * @param fxy_ Product of the fx and the inverse fy interpolation factor
@@ -480,8 +480,8 @@ class NEON
 
 		/**
 		 * Returns the interpolated sum of square difference for one 2 channel 16 bit pixel.
-		 * @param pixel0 Uppler left pixel in the first frame
-		 * @param pixel1 Uppler left pixel in the second frame
+		 * @param pixel0 Upper left pixel in the first frame
+		 * @param pixel1 Upper left pixel in the second frame
 		 * @param size0 Size of one frame row in bytes
 		 * @param size1 Size of one frame row in bytes
 		 * @param f1x_y_ Product of the inverse fx and the inverse fy interpolation factor for the second image
@@ -494,8 +494,8 @@ class NEON
 
 		/**
 		 * Returns the interpolated sum of square difference for one 2 channel 16 bit pixel.
-		 * @param pixel0 Uppler left pixel in the first frame
-		 * @param pixel1 Uppler left pixel in the second frame
+		 * @param pixel0 Upper left pixel in the first frame
+		 * @param pixel1 Upper left pixel in the second frame
 		 * @param size0 Size of one frame row in bytes
 		 * @param size1 Size of one frame row in bytes
 		 * @param f0x_y_ Product of the inverse fx and the inverse fy interpolation factor for the first image

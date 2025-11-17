@@ -84,7 +84,7 @@ class OCEAN_CV_EXPORT Canvas
 
 				/**
 				 * Returns the filter factor for a specific index.
-				 * If the index lies outside the filter size, than zero is returned.<br>
+				 * If the index lies outside the filter size, then zero is returned.<br>
 				 * @param index The index of the filter parameter, with range (-infinity, infinity)
 				 * @return Filter parameter, or zero
 				 */
@@ -138,7 +138,7 @@ class OCEAN_CV_EXPORT Canvas
 						 * The size of the frame fits with the size of the character.
 						 * @param pixelFormat The pixel format of the resulting frame, must be a generic pixel format like e.g., FORMAT_Y8 or FORMAT_RGB24
 						 * @param foregroundColor The foreground color to be used when painting the character, must be valid
-						 * @param backgroundColor The background color to be used when paining the character, must be valid
+						 * @param backgroundColor The background color to be used when painting the character, must be valid
 						 * @return The frame with character
 						 */
 						Frame frame(const FrameType::PixelFormat pixelFormat, const uint8_t* foregroundColor, const uint8_t* backgroundColor) const;
@@ -150,7 +150,7 @@ class OCEAN_CV_EXPORT Canvas
 						 * @param left The horizontal start position of the character within the frame, in pixel, with range (-infinity, infinity)
 						 * @param top The vertical start position of the character within the frame, in pixel, with range (-infinity, infinity)
 						 * @param foregroundColor The foreground color to be used when painting the character, must be valid
-						 * @param backgroundColor The optional background color to be used when paining the character, nullptr to paint the foreground pixels only
+						 * @param backgroundColor The optional background color to be used when painting the character, nullptr to paint the foreground pixels only
 						 * @return True, if succeeded
 						 */
 						bool paint(Frame& frame, const int left, const int top, const uint8_t* foregroundColor, const uint8_t* backgroundColor = nullptr) const;
@@ -193,7 +193,7 @@ class OCEAN_CV_EXPORT Canvas
 				 * @param left The horizontal start position of the text within the frame, in pixel, with range (-infinity, infinity)
 				 * @param top The vertical start position of the text within the frame, in pixel, with range (-infinity, infinity)
 				 * @param foregroundColor The foreground color to be used when painting the character, must be valid
-				 * @param backgroundColor The optional background color to be used when paining the character, nullptr to paint the foreground pixels only
+				 * @param backgroundColor The optional background color to be used when painting the character, nullptr to paint the foreground pixels only
 				 * @return True, if succeeded
 				 */
 				bool drawText(Frame& frame, const std::string& text, const int left, const int top, const uint8_t* foregroundColor, const uint8_t* backgroundColor = nullptr) const;
@@ -654,7 +654,7 @@ class OCEAN_CV_EXPORT Canvas
 		 * @param height The height of the frame in pixel, with range [1, infinity)
 		 * @param position The start position defining the color of the fill area, with range [0, width)x[0, height)
 		 * @param value Color value to be used, make sure that the provided buffer has at least as many bytes as the pixel format for one pixel, nullptr to apply 0x00 for each channel
-		 * * @param framePaddingElements Optional number of padding elements at the end of each frame row, in elements, with range [0, infinity)
+		 * @param framePaddingElements Optional number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @tparam tChannels Number of frame channels, with range [1, infinity)
 		 */
 		template <unsigned int tChannels>
@@ -698,7 +698,7 @@ class OCEAN_CV_EXPORT Canvas
 		 * @param left The horizontal start position of the text within the frame, in pixel, with range (-infinity, infinity)
 		 * @param top The vertical start position of the text within the frame, in pixel, with range (-infinity, infinity)
 		 * @param foregroundColor The foreground color to be used when painting the character, must be valid
-		 * @param backgroundColor The optional background color to be used when paining the character, nullptr to paint the foreground pixels only
+		 * @param backgroundColor The optional background color to be used when painting the character, nullptr to paint the foreground pixels only
 		 * @return True, if succeeded
 		 * @see textExtent(), CV::Fonts::Font::drawText().
 		 */
@@ -723,7 +723,7 @@ class OCEAN_CV_EXPORT Canvas
 		static const uint8_t* memoryBlock32Byte();
 
 		/**
-		 * Paints a ellipse at a specified position with specified size.
+		 * Paints an ellipse at a specified position with specified size.
 		 * @param frame The frame receiving the elliptic blob-region, must be valid
 		 * @param width The width of the mask frame in pixel, with range [1, infinity)
 		 * @param height The height of the mask frame in pixel, with range [1, infinity)

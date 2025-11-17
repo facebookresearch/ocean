@@ -637,7 +637,7 @@ class SSE
 		static inline __m128i interpolation4Channel32Bit8Elements(const __m128i& values0, const __m128i& values1, const __m128i& fx_fy_, const __m128i& fxfy_, const __m128i& fx_fy, const __m128i& fxfy);
 
 		/**
-		 * Interpolates 2x4 elements (two seperated blocks of 4 elements) of 2x2 blocks for 4 channel 32 bit frames.
+		 * Interpolates 2x4 elements (two separated blocks of 4 elements) of 2x2 blocks for 4 channel 32 bit frames.
 		 * The first interpolation element results from the first and second element of both rows.<br>
 		 * The second interpolation element results from the second and third element of both rows.<br>
 		 * ...<br>
@@ -655,8 +655,8 @@ class SSE
 
 		/**
 		 * Returns the interpolated sum of square difference for one 2 channel 16 bit pixel.
-		 * @param pixel0 Uppler left pixel in the first frame
-		 * @param pixel1 Uppler left pixel in the second frame
+		 * @param pixel0 Upper left pixel in the first frame
+		 * @param pixel1 Upper left pixel in the second frame
 		 * @param size0 Size of one frame row in bytes
 		 * @param size1 Size of one frame row in bytes
 		 * @param f1x_y_ Product of the inverse fx and the inverse fy interpolation factor for the second image
@@ -669,8 +669,8 @@ class SSE
 
 		/**
 		 * Returns the interpolated sum of square difference for one 2 channel 16 bit pixel.
-		 * @param pixel0 Uppler left pixel in the first frame
-		 * @param pixel1 Uppler left pixel in the second frame
+		 * @param pixel0 Upper left pixel in the first frame
+		 * @param pixel1 Upper left pixel in the second frame
 		 * @param size0 Size of one frame row in bytes
 		 * @param size1 Size of one frame row in bytes
 		 * @param f0x_y_ Product of the inverse fx and the inverse fy interpolation factor for the first image
@@ -694,7 +694,7 @@ class SSE
 		static inline __m128i sumAbsoluteDifferences8Bit16Elements(const uint8_t* const image0, const uint8_t* const image1);
 
 		/**
-		 * Deinterleaves 15 elements of e.g., and image with 3 channels and 8 bit per element.
+		 * Deinterleaves 15 elements of e.g., an image with 3 channels and 8 bit per element.
 		 * This functions converts X CBA CBA CBA CBA CBA to 00000000000CCCCC 000BBBBB000AAAAA.
 		 * @param interleaved The 15 elements holding the interleaved image data
 		 * @param channel01 Resulting first and second channel elements, first 8 elements of the first channel, followed by 8 elements of the second channel
@@ -703,7 +703,7 @@ class SSE
 		static OCEAN_FORCE_INLINE void deInterleave3Channel8Bit15Elements(const __m128i& interleaved, __m128i& channel01, __m128i& channel2);
 
 		/**
-		 * Deinterleaves 24 elements of e.g., and image with 3 channels and 8 bit per element.
+		 * Deinterleaves 24 elements of e.g., an image with 3 channels and 8 bit per element.
 		 * This functions converts XX XXX XXX CBA CBA CB  A CBA CBA CBA CBA CBA to 00000000CCCCCCCC BBBBBBBBAAAAAAAA.
 		 * @param interleavedA First 16 elements holding the interleaved image data
 		 * @param interleavedB Second 16 elements holding the interleaved image data, the first 8 elements will be used only
@@ -713,7 +713,7 @@ class SSE
 		static OCEAN_FORCE_INLINE void deInterleave3Channel8Bit24Elements(const __m128i& interleavedA, const __m128i& interleavedB, __m128i& channel01, __m128i& channel2);
 
 		/**
-		 * Deinterleaves 48 elements of e.g., and image with 3 channels and 8 bit per element.
+		 * Deinterleaves 48 elements of e.g., an image with 3 channels and 8 bit per element.
 		 * This functions converts CBA CBA CBA CBA CBA C  BA CBA CBA CBA CBA CB  A CBA CBA CBA CBA CBA to CCCCCCCCCCCCCCCC BBBBBBBBBBBBBBBB AAAAAAAAAAAAAAAA.
 		 * @param interleavedA First 16 elements holding the interleaved image data
 		 * @param interleavedB Second 16 elements holding the interleaved image data

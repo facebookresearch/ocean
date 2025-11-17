@@ -88,7 +88,7 @@ class OCEAN_CV_EXPORT Bresenham
 		inline Orientation orientation() const;
 
 		/**
-		 * Computes the pixel-precise border intersection (the begin and end position) of a sub-pixel-precise 2D line which needs be is visible within a specified pixel-precise frame only.
+		 * Computes the pixel-precise border intersection (the begin and end position) of a sub-pixel-precise 2D line which needs to be visible within a specified pixel-precise frame only.
 		 * The begin position will be at the left border, otherwise at the top border or bottom border (in this order).
 		 * @param line The 2D line for which the begin position and end position will be determined, must be valid
 		 * @param leftBorder Left inclusive pixel border (e.g. could be 0), with range (-infinity, infinity)
@@ -104,7 +104,7 @@ class OCEAN_CV_EXPORT Bresenham
 		static bool borderIntersection(const Line2& line, const int leftBorder, const int topBorder, const int rightBorder, const int bottomBorder, int& x0, int& y0, int& x1, int& y1);
 
 		/**
-		 * Computes the sub-pixel-precise border intersection (the begin and end position) of a sub-pixel-precise 2D line which needs be is visible within a specified pixel-precise frame only.
+		 * Computes the sub-pixel-precise border intersection (the begin and end position) of a sub-pixel-precise 2D line which needs to be visible within a specified pixel-precise frame only.
 		 * The begin position will be at the left border, otherwise at the top border or bottom border (in this order).
 		 * @param line The 2D line for which the begin position and end position will be determined, must be valid
 		 * @param leftBorder Left inclusive pixel border (e.g. could be 0), with range (-infinity, infinity)

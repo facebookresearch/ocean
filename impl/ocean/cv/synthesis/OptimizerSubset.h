@@ -23,7 +23,7 @@ namespace Synthesis
 {
 
 /**
- * This class is the base class for all optimizers that are able to optimize seperate subsets of the synthesis content.
+ * This class is the base class for all optimizers that are able to optimize separate subsets of the synthesis content.
  * @ingroup cvsynthesis
  */
 class OCEAN_CV_SYNTHESIS_EXPORT OptimizerSubset : virtual public Optimizer

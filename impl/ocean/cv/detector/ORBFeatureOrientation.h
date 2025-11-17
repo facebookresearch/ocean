@@ -34,7 +34,7 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeatureOrientation
 
 		/**
 		 * Determines the orientation for all given feature points based on the intensity centroid of a patch around the feature positions.
-		 * A image patch with size 31x31 pixels is used to calculate the orientation.
+		 * An image patch with size 31x31 pixels is used to calculate the orientation.
 		 * @param linedIntegralFrame Pointer to the lined integral frame of the frame where the feature points were detected; must be an integral frame for an 8 bit frame
 		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [31, infinity)
 		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [31, infinity)
@@ -47,7 +47,7 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeatureOrientation
 
 		/**
 		 * Determines the orientation for all given feature points based on the intensity centroid of a patch around the feature positions.
-		 * A image patch with size 31x31 pixels is used to calculate the orientation.
+		 * An image patch with size 31x31 pixels is used to calculate the orientation.
 		 * @param linedIntegralFrame Pointer to the lined integral frame of the frame where the feature points were detected; must be an integral frame for an 8 bit frame
 		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [31, infinity)
 		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [31, infinity)
@@ -59,7 +59,7 @@ class OCEAN_CV_DETECTOR_EXPORT ORBFeatureOrientation
 
 		/**
 		 * Determines the orientation for a given feature point based on the intensity centroid of a patch around the feature position.
-		 * A image patch with size 31x31 pixels is used to calculate the orientation.
+		 * An image patch with size 31x31 pixels is used to calculate the orientation.
 		 * @param linedIntegralFrame Pointer to the lined integral frame of the frame where the feature points were detected; must be an integral frame for an 8 bit frame
 		 * @param width The width of the original frame in pixel (not the width of the lined-integral frame), with range [31, infinity)
 		 * @param height The height of the original frame in pixel (not the height of the lined-integral frame), with range [31, infinity)

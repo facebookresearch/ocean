@@ -99,7 +99,7 @@ class FREAKDescriptorT
 		using MultilevelDescriptorData = std::array<SinglelevelDescriptorData, 3>;
 
 		/**
-		 * The camera data that is required to compute the FREAK descriptor of a image point
+		 * The camera data that is required to compute the FREAK descriptor of an image point
 		 */
 		struct CameraDerivativeData
 		{

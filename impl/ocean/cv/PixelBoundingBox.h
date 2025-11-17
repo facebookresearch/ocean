@@ -178,7 +178,7 @@ class PixelBoundingBoxT
 
 		/**
 		 * Returns the area (the number of including pixels) this bounding box covers.
-		 * If this bounding box is invalid, than zero is returned.
+		 * If this bounding box is invalid, then zero is returned.
 		 * @return Number of pixels or zero.
 		 */
 		inline unsigned int size() const;

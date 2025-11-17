@@ -185,7 +185,7 @@ class OCEAN_CV_DETECTOR_EXPORT HemiCube
 	protected:
 
 		/**
-		 * Given the map index of a line, compute its pixel location in a image representation of the cube map
+		 * Given the map index of a line, compute its pixel location in an image representation of the cube map
 		 * @param mapIndex The map index of a line segment with range [0, bins - 1]x[0, bins - 1]x[0, 2]
 		 * @return The pixel location of the line segment in the cube map
 		 * @sa computeMapIndex()
