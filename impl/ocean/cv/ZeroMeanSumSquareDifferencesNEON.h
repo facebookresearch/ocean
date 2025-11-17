@@ -23,7 +23,7 @@ namespace CV
 {
 
 /**
- * This class implements function to calculate zeao-mean sum square differences using NEON instructions.
+ * This class implements functions to calculate zero-mean sum square differences using NEON instructions.
  * @ingroup cv
  */
 class ZeroMeanSumSquareDifferencesNEON

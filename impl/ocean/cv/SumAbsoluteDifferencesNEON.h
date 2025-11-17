@@ -23,7 +23,7 @@ namespace CV
 {
 
 /**
- * This class implements functions calculation the sum of absolute differences with NEON instructions.
+ * This class implements functions calculating the sum of absolute differences with NEON instructions.
  * @ingroup cv
  */
 class SumAbsoluteDifferencesNEON
@@ -34,7 +34,7 @@ class SumAbsoluteDifferencesNEON
 		 * Returns the sum of absolute differences between two memory buffers.
 		 * @param buffer0 The first memory buffer, must be valid
 		 * @param buffer1 The second memory buffer, must be valid
-		 * @return The resulting sum of square differences
+		 * @return The resulting sum of absolute differences
 		 * @tparam tSize The size of the buffers in elements, with range [1, infinity)
 		 */
 		template <unsigned int tSize>
@@ -46,7 +46,7 @@ class SumAbsoluteDifferencesNEON
 		 * @param patch1 The top left start position of the second image patch, must be valid
 		 * @param patch0StrideElements The number of elements between two rows for the first patch, in elements, with range [tChannels, tPatchSize, infinity)
 		 * @param patch1StrideElements The number of elements between two rows for the second patch, in elements, with range [tChannels, tPatchSize, infinity)
-		 * @return The resulting sum of square differences
+		 * @return The resulting sum of absolute differences
 		 * @tparam tChannels The number of channels for the given frames, with range [1, infinity)
 		 * @tparam tPatchSize The size of the square patch (the edge length) in pixel, with range [1, infinity), must be odd
 		 */
@@ -58,7 +58,7 @@ class SumAbsoluteDifferencesNEON
 		 * @param patch0 The top left start position of the image patch, must be valid
 		 * @param buffer1 The memory buffer, must be valid
 		 * @param patch0StrideElements The number of elements between two rows for the image patch, in elements, with range [tChannels, tPatchSize, infinity)
-		 * @return The resulting sum of square differences
+		 * @return The resulting sum of absolute differences
 		 * @tparam tChannels The number of channels for the given frames, with range [1, infinity)
 		 * @tparam tPatchSize The size of the square patch (the edge length) in pixel, with range [1, infinity), must be odd
 		 */

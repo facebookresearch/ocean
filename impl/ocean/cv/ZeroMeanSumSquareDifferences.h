@@ -33,10 +33,10 @@ class ZeroMeanSumSquareDifferences : public ZeroMeanSumSquareDifferencesBase
 		 * @param image1 The image in which the second patch is located, must be valid
 		 * @param width0 The width of the first image, in pixels, with range [tPatchSize, infinity)
 		 * @param width1 The width of the second image, in pixels, with range [tPatchSize, infinity)
-		 * @param centerX0 Horizontal center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, width - tPatchSize/2 - 1]
-		 * @param centerY0 Vertical center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, height - tPatchSize/2 - 1]
-		 * @param centerX1 Horizontal center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, width - tPatchSize/2 - 1]
-		 * @param centerY1 Vertical center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, height - tPatchSize/2 - 1]
+		 * @param centerX0 Horizontal center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, width0 - tPatchSize/2 - 1]
+		 * @param centerY0 Vertical center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, height0 - tPatchSize/2 - 1]
+		 * @param centerX1 Horizontal center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, width1 - tPatchSize/2 - 1]
+		 * @param centerY1 Vertical center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, height1 - tPatchSize/2 - 1]
 		 * @param image0PaddingElements The number of padding elements at the end of each row of the first image, in elements, with range [0, infinity)
 		 * @param image1PaddingElements The number of padding elements at the end of each row of the second image, in elements, with range [0, infinity
 		 * @return The resulting zero-mean sum of square differences, with range [0, infinity)
@@ -65,7 +65,7 @@ class ZeroMeanSumSquareDifferences : public ZeroMeanSumSquareDifferencesBase
 		 * Returns the zero-mean sum of square differences between two memory buffers.
 		 * @param buffer0 The first memory buffer, must be valid
 		 * @param buffer1 The second memory buffer, must be valid
-		 * @return The resulting sum of square differences
+		 * @return The resulting zero-mean sum of square differences
 		 * @tparam tChannels Specifies the number of channels for the given frames
 		 * @tparam tPixels The number of pixels the buffer holds, in pixels, with range [1, infinity)
 		 */
@@ -73,17 +73,17 @@ class ZeroMeanSumSquareDifferences : public ZeroMeanSumSquareDifferencesBase
 		static inline uint32_t buffer8BitPerChannel(const uint8_t* const buffer0, const uint8_t* const buffer1);
 
 		/**
-		 * Returns the sum of zero-mean square differences between two patches within an image, patch pixels outside the image will be mirrored back into the image.
+		 * Returns the zero-mean sum of square differences between two patches within an image, patch pixels outside the image will be mirrored back into the image.
 		 * @param image0 The image in which the first patch is located, must be valid
 		 * @param image1 The image in which the second patch is located, must be valid
-		 * @param width0 The width of the first image, in pixels, with range [tPatchSize, infinity)
-		 * @param height0 The height of the first image, in pixels, with range [tPatchSize, infinity)
-		 * @param width1 The width of the second image, in pixels, with range [tPatchSize, infinity)
-		 * @param height1 The height of the second image, in pixels, with range [tPatchSize, infinity)
-		 * @param centerX0 Horizontal center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, width - tPatchSize/2 - 1]
-		 * @param centerY0 Vertical center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, height - tPatchSize/2 - 1]
-		 * @param centerX1 Horizontal center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, width - tPatchSize/2 - 1]
-		 * @param centerY1 Vertical center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, height - tPatchSize/2 - 1]
+		 * @param width0 The width of the first image, in pixels, with range [tPatchSize/2, infinity)
+		 * @param height0 The height of the first image, in pixels, with range [tPatchSize/2, infinity)
+		 * @param width1 The width of the second image, in pixels, with range [tPatchSize/2, infinity)
+		 * @param height1 The height of the second image, in pixels, with range [tPatchSize/2, infinity)
+		 * @param centerX0 Horizontal center position of the (tPatchSize x tPatchSize) block in the first frame, with range [0, width0 - 1]
+		 * @param centerY0 Vertical center position of the (tPatchSize x tPatchSize) block in the first frame, with range [0, height0 - 1]
+		 * @param centerX1 Horizontal center position of the (tPatchSize x tPatchSize) block in the second frame, with range [0, width1 - 1]
+		 * @param centerY1 Vertical center position of the (tPatchSize x tPatchSize) block in the second frame, with range [0, height1 - 1]
 		 * @param image0PaddingElements The number of padding elements at the end of each row of the first image, in elements, with range [0, infinity)
 		 * @param image1PaddingElements The number of padding elements at the end of each row of the second image, in elements, with range [0, infinity)
 		 * @return The resulting zero-mean sum of square differences, with range [0, infinity)

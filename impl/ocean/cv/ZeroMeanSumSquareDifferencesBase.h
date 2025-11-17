@@ -128,7 +128,7 @@ class ZeroMeanSumSquareDifferencesBase
 		static uint32_t patch8BitPerChannel(const uint8_t* patch0, const uint8_t* patch1, const unsigned int patchSize, const unsigned int patch0StrideElements, const unsigned int patch1StrideElements);
 
 		/**
-		 * Returns the sum of square differences between a square image patch and a buffer.
+		 * Returns the zero-mean sum of square differences between a square image patch and a buffer.
 		 * @param image0 The image in which the image patch is located, must be valid
 		 * @param patchSize The size of the square patch (the edge length) in pixel, with range [1, infinity), must be odd
 		 * @param width0 Width of the first frame in pixels, with range [tPatchSize, infinity)
@@ -143,7 +143,7 @@ class ZeroMeanSumSquareDifferencesBase
 		static OCEAN_FORCE_INLINE uint32_t patchBuffer8BitPerChannel(const uint8_t* image0, unsigned int patchSize, const unsigned int width0, const unsigned int centerX0, const unsigned int centerY0, const unsigned int image0PaddingElements, const uint8_t* buffer1);
 
 		/**
-		 * Returns the sum of square differences between a square image patch and a buffer.
+		 * Returns the zero-mean sum of square differences between a square image patch and a buffer.
 		 * @param patch0 The top left start position of the image patch, must be valid
 		 * @param buffer1 The memory buffer, must be valid
 		 * @param patchSize The size of the square patch (the edge length) in pixel, with range [1, infinity), must be odd

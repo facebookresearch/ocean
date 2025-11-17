@@ -99,14 +99,14 @@ class OCEAN_CV_EXPORT SumAbsoluteDifferencesBase
 		 * @param image0 The image in which the first patch is located, must be valid
 		 * @param image1 The image in which the second patch is located, must be valid
 		 * @param patchSize The size of the square patch (the edge length) in pixel, with range [1, infinity), must be odd
-		 * @param width0 The width of the first image, in pixels, with range [tPatchSize, infinity)
-		 * @param height0 The height of the first image, in pixels, with range [tPatchSize, infinity)
-		 * @param width1 The width of the second image, in pixels, with range [tPatchSize, infinity)
-		 * @param height1 The height of the second image, in pixels, with range [tPatchSize, infinity)
-		 * @param centerX0 Horizontal center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, width - tPatchSize/2 - 1]
-		 * @param centerY0 Vertical center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, height - tPatchSize/2 - 1]
-		 * @param centerX1 Horizontal center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, width - tPatchSize/2 - 1]
-		 * @param centerY1 Vertical center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, height - tPatchSize/2 - 1]
+		 * @param width0 The width of the first image, in pixels, with range [patchSize/2, infinity)
+		 * @param height0 The height of the first image, in pixels, with range [patchSize/2, infinity)
+		 * @param width1 The width of the second image, in pixels, with range [patchSize/2, infinity)
+		 * @param height1 The height of the second image, in pixels, with range [patchSize/2, infinity)
+		 * @param centerX0 Horizontal center position of the (tPatchSize x tPatchSize) block in the first frame, with range [0, width0 - 1]
+		 * @param centerY0 Vertical center position of the (tPatchSize x tPatchSize) block in the first frame, with range [0, height0 - 1]
+		 * @param centerX1 Horizontal center position of the (tPatchSize x tPatchSize) block in the second frame, with range [0, width1 - 1]
+		 * @param centerY1 Vertical center position of the (tPatchSize x tPatchSize) block in the second frame, with range [0, height1 - 1]
 		 * @param image0PaddingElements The number of padding elements at the end of each row of the first image, in elements, with range [0, infinity)
 		 * @param image1PaddingElements The number of padding elements at the end of each row of the second image, in elements, with range [0, infinity)
 		 * @return The resulting sum of absolute differences, with range [0, infinity)

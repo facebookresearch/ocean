@@ -24,7 +24,7 @@ namespace CV
 {
 
 /**
- * This class implements functions calculation the sum of absolute differences.
+ * This class implements functions calculating the sum of absolute differences.
  * @ingroup cv
  */
 class SumAbsoluteDifferences : public SumAbsoluteDifferencesBase
@@ -37,13 +37,13 @@ class SumAbsoluteDifferences : public SumAbsoluteDifferencesBase
 		 * @param image1 The image in which the second patch is located, must be valid
 		 * @param width0 The width of the first image, in pixels, with range [tPatchSize, infinity)
 		 * @param width1 The width of the second image, in pixels, with range [tPatchSize, infinity)
-		 * @param centerX0 Horizontal center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, width - tPatchSize/2 - 1]
-		 * @param centerY0 Vertical center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, height - tPatchSize/2 - 1]
-		 * @param centerX1 Horizontal center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, width - tPatchSize/2 - 1]
-		 * @param centerY1 Vertical center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, height - tPatchSize/2 - 1]
+		 * @param centerX0 Horizontal center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, width0 - tPatchSize/2 - 1]
+		 * @param centerY0 Vertical center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, height0 - tPatchSize/2 - 1]
+		 * @param centerX1 Horizontal center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, width1 - tPatchSize/2 - 1]
+		 * @param centerY1 Vertical center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, height1 - tPatchSize/2 - 1]
 		 * @param image0PaddingElements The number of padding elements at the end of each row of the first image, in elements, with range [0, infinity)
 		 * @param image1PaddingElements The number of padding elements at the end of each row of the second image, in elements, with range [0, infinity)
-		 * @return The resulting sum of square differences, with range [0, infinity)
+		 * @return The resulting sum of absolute differences, with range [0, infinity)
 		 * @tparam tChannels The number of frame channels, with range [1, infinity)
 		 * @tparam tPatchSize The size of the square patch (the edge length) in pixel, with range [1, infinity), must be odd
 		 */
@@ -66,10 +66,10 @@ class SumAbsoluteDifferences : public SumAbsoluteDifferencesBase
 		static inline uint32_t patchBuffer8BitPerChannel(const uint8_t* const image0, const unsigned int width0, const unsigned int centerX0, const unsigned int centerY0, const unsigned int image0PaddingElements, const uint8_t* const buffer1);
 
 		/**
-		 * Returns the sum of square differences between two memory buffers.
+		 * Returns the sum of absolute differences between two memory buffers.
 		 * @param buffer0 The first memory buffer, must be valid
 		 * @param buffer1 The second memory buffer, must be valid
-		 * @return The resulting sum of square differences
+		 * @return The resulting sum of absolute differences
 		 * @tparam tChannels The number of channels the buffers have, with range [1, infinity)
 		 * @tparam tPixels The number of pixels the buffer holds, in pixels, with range [1, infinity)
 		 */
@@ -80,14 +80,14 @@ class SumAbsoluteDifferences : public SumAbsoluteDifferencesBase
 		 * Returns the sum of absolute differences between two patches within an image, patch pixels outside the image will be mirrored back into the image.
 		 * @param image0 The image in which the first patch is located, must be valid
 		 * @param image1 The image in which the second patch is located, must be valid
-		 * @param width0 The width of the first image, in pixels, with range [tPatchSize, infinity)
-		 * @param height0 The height of the first image, in pixels, with range [tPatchSize, infinity)
-		 * @param width1 The width of the second image, in pixels, with range [tPatchSize, infinity)
-		 * @param height1 The height of the second image, in pixels, with range [tPatchSize, infinity)
-		 * @param centerX0 Horizontal center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, width - tPatchSize/2 - 1]
-		 * @param centerY0 Vertical center position of the (tPatchSize x tPatchSize) block in the first frame, with range [tPatchSize/2, height - tPatchSize/2 - 1]
-		 * @param centerX1 Horizontal center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, width - tPatchSize/2 - 1]
-		 * @param centerY1 Vertical center position of the (tPatchSize x tPatchSize) block in the second frame, with range [tPatchSize/2, height - tPatchSize/2 - 1]
+		 * @param width0 The width of the first image, in pixels, with range [tPatchSize/2, infinity)
+		 * @param height0 The height of the first image, in pixels, with range [tPatchSize/2, infinity)
+		 * @param width1 The width of the second image, in pixels, with range [tPatchSize/2, infinity)
+		 * @param height1 The height of the second image, in pixels, with range [tPatchSize/2, infinity)
+		 * @param centerX0 Horizontal center position of the (tPatchSize x tPatchSize) block in the first frame, with range [0, width0 - 1]
+		 * @param centerY0 Vertical center position of the (tPatchSize x tPatchSize) block in the first frame, with range [0, height0 - 1]
+		 * @param centerX1 Horizontal center position of the (tPatchSize x tPatchSize) block in the second frame, with range [0, width1 - 1]
+		 * @param centerY1 Vertical center position of the (tPatchSize x tPatchSize) block in the second frame, with range [0, height1 - 1]
 		 * @param image0PaddingElements The number of padding elements at the end of each row of the first image, in elements, with range [0, infinity)
 		 * @param image1PaddingElements The number of padding elements at the end of each row of the second image, in elements, with range [0, infinity)
 		 * @return The resulting sum of absolute differences, with range [0, infinity)
@@ -101,7 +101,7 @@ class SumAbsoluteDifferences : public SumAbsoluteDifferencesBase
 		 * Determines the sum of absolute differences between two individual frames, individually for each channel.
 		 * @param firstFrame The first frame for which the absolute difference will be determined, must be valid
 		 * @param secondFrame The second frame for which the absolute difference will be determined, must be valid
-		 * @param width The with of the first frame and second frame in pixel, with range [1, infinity)
+		 * @param width The width of the first frame and second frame in pixel, with range [1, infinity)
 		 * @param height The height of the first frame and second frame in pixel, with range [1, infinity)
 		 * @param absoluteDifferences The resulting absolute differences, one for each channel, must be valid, with range [0, infinity)
 		 * @param firstFramePaddingElements The number of optional padding elements at the end of each row of the first frame, in elements, with range [0, infinity)
