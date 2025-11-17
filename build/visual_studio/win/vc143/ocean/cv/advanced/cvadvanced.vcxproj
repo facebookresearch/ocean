@@ -88,6 +88,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedFrameFilterSobel.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedFrameInterpolatorBilinear.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedFrameShrinker.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedMotion.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedSumSquareDifferencesBase.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\BlackPointDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\ColorChannelCurve.cpp" />

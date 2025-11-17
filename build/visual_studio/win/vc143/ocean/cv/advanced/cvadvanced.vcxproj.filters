@@ -142,5 +142,8 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedFrameFilterGaussian.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedMotion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

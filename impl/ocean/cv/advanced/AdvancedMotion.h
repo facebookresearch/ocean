@@ -56,15 +56,7 @@ using AdvancedMotionSSD = AdvancedMotionT<SumSquareDifferences, AdvancedSumSquar
  */
 using AdvancedMotionZeroMeanSSD = AdvancedMotionT<ZeroMeanSumSquareDifferences, AdvancedZeroMeanSumSquareDifferences>;
 
-/**
- * This class implements advanced motion techniques (mainly with sub-pixel accuracy or binary masks) allowing to determine the motion (movement) of individual image points between two frames.
- * @tparam TMetricInteger The metric that is applied for measurements with pixel accuracy
- * @tparam TMetricFloat The metric that is applied for measurement with sub-pixel accuracy
- * @see AdvancedMotionSSD, AdvancedMotionZeroMeanSSD.
- * @ingroup cvadvanced
- */
-template <typename TMetricInteger = SumSquareDifferences, typename TMetricFloat = AdvancedSumSquareDifferences>
-class AdvancedMotionT
+class OCEAN_CV_ADVANCED_EXPORT AdvancedMotion
 {
 	public:
 
@@ -73,7 +65,257 @@ class AdvancedMotionT
 		 */
 		using MetricResults = std::vector<uint32_t>;
 
+		/**
+		 * This class manages point correspondences for bidirectional tracking across pyramid layers.
+		 * The class handles the state management for tracking points from a previous pyramid to a next pyramid, and then back to the previous pyramid for validation.
+		 * It manages the progression through pyramid layers (coarse-to-fine) and provides methods to access and update point positions during the tracking process.
+		 */
+		class OCEAN_CV_ADVANCED_EXPORT PointCorrespondences
+		{
+			public:
+
+				/**
+				 * Creates an invalid point correspondences object.
+				 */
+				PointCorrespondences() = default;
+
+				/**
+				 * Creates a new point correspondences object with pre-defined predicted next points.
+				 * This constructor is used when rough estimates for the next image points are already available.
+				 * @param previousPoints The previous image points, must be valid
+				 * @param predictedNextPoints The predicted next image points (rough estimates), must be valid
+				 * @param validCorrespondences The buffer to store validity flags for each correspondence, must be valid
+				 * @param correspondences The number of point correspondences, with range [1, infinity)
+				 * @param pyramidLayers The number of pyramid layers to be used for tracking, with range [1, infinity)
+				 * @param coarsestLayerRadius The search radius on the coarsest pyramid layer, with range [2, infinity)
+				 * @param maximalError Maximal error between forward and backward tracking for a valid point, with range [0, infinity)
+				 * @param subPixelIterations Number of sub-pixel iterations that will be applied, with range [1, infinity)
+				 */
+				inline PointCorrespondences(const Vector2* previousPoints, Vector2* predictedNextPoints, uint8_t* validCorrespondences, const size_t correspondences, const unsigned int pyramidLayers, const unsigned int coarsestLayerRadius, const Scalar maximalError = Scalar(0.9), const unsigned int subPixelIterations = 4u);
+
+				/**
+				 * Initializes the forward tracking from the previous pyramid to the next pyramid.
+				 * This method prepares the internal state for tracking points forward through the pyramid layers.
+				 * @param previousPyramid The previous frame pyramid, must be valid
+				 * @param nextPyramid The next frame pyramid, must be valid
+				 */
+				void startForwardTracking(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid);
+
+				/**
+				 * Initializes the backward tracking from the next pyramid back to the previous pyramid.
+				 * This method prepares the internal state for tracking points backward through the pyramid layers for validation.
+				 * @param previousPyramid The previous frame pyramid, must be valid
+				 * @param nextPyramid The next frame pyramid, must be valid
+				 */
+				void startBackwardTracking(const CV::FramePyramid& /*previousPyramid*/, const CV::FramePyramid& nextPyramid);
+
+				/**
+				 * Starts processing a specific pyramid layer.
+				 * This method sets up the internal state for tracking on the specified pyramid layer.
+				 * @param layerIndex The index of the pyramid layer to process, with range [0, pyramidLayers)
+				 * @param previousPyramid The previous frame pyramid, must be valid
+				 * @param nextPyramid The next frame pyramid, must be valid
+				 * @return True if the layer can be processed; False if the layer index is out of range
+				 */
+				bool startLayer(const unsigned int layerIndex, const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid);
+
+				/**
+				 * Returns the previous image point position at the finest pyramid layer.
+				 * This method can only be called when processing the finest layer (layer index 0).
+				 * @param pointIndex The index of the point to access, with range [0, size())
+				 * @return The previous point position in the finest layer
+				 */
+				inline const Vector2& previousPosition(const size_t pointIndex) const;
+
+				/**
+				 * Returns the previous image point position downsampled to the current pyramid layer.
+				 * This method should be called for pyramid layers other than the finest layer.
+				 * @param pointIndex The index of the point to access, with range [0, size())
+				 * @return The pixel position of the previous point at the current pyramid layer
+				 */
+				inline CV::PixelPosition previousPositionDownsampled(const size_t pointIndex) const;
+
+				/**
+				 * Returns the predicted next image point position downsampled to the current pyramid layer.
+				 * This method should be called for pyramid layers other than the finest layer.
+				 * @param pointIndex The index of the point to access, with range [0, size())
+				 * @return The pixel position of the predicted next point at the current pyramid layer
+				 */
+				inline CV::PixelPosition predictedNextPositionDownsampled(const size_t pointIndex) const;
+
+				/**
+				 * Returns the predicted next image point position at the finest pyramid layer.
+				 * This method can only be called when processing the finest layer (layer index 0).
+				 * @param pointIndex The index of the point to access, with range [0, size())
+				 * @return The predicted next point position in the finest layer
+				 */
+				inline const Vector2& predictedNextPosition(const size_t pointIndex) const;
+
+				/**
+				 * Propagates the next point position from the current pyramid layer to the finer layer below.
+				 * This method upsamples the point and updates the internal state.
+				 * During backward tracking, this also performs an early rejection test based on distance.
+				 * @param pointIndex The index of the point to propagate, with range [0, size())
+				 * @param nextPoint The next point position at the current pyramid layer
+				 */
+				void propagateNextPositionDownsampled(const size_t pointIndex, const CV::PixelPosition& nextPoint);
+
+				/**
+				 * Propagates the final next point position at the finest pyramid layer.
+				 * During forward tracking, this simply stores the final result.
+				 * During backward tracking, this validates the bidirectional tracking consistency and computes
+				 * the corrected next point position using the forward-backward offset.
+				 * @param pointIndex The index of the point to propagate, with range [0, size())
+				 * @param nextPoint The next point position at the finest layer
+				 */
+				void propagateNextPosition(const size_t pointIndex, const Vector2& nextPoint);
+
+				/**
+				 * Returns whether a specific point correspondence is still valid.
+				 * Points can be marked invalid during backward tracking if they fail validation criteria.
+				 * @param pointIndex The index of the point to check, with range [0, size())
+				 * @return True if the point correspondence is valid; False otherwise
+				 */
+				inline bool isPointValid(const size_t pointIndex) const;
+
+				/**
+				 * Returns the number of pyramid layers to be used for tracking.
+				 * @return The number of pyramid layers, with range [1, infinity)
+				 */
+				inline unsigned int pyramidLayers() const;
+
+				/**
+				 * Returns the search radius for the current pyramid layer.
+				 * @return The search radius in pixels, with range [2, infinity)
+				 */
+				inline unsigned int layerRadius() const;
+
+				/**
+				 * Returns the number of sub-pixel iterations to be applied at the finest pyramid layer.
+				 * @return The number of sub-pixel iterations, with range [1, infinity)
+				 */
+				inline unsigned int subPixelIterations() const;
+
+				/**
+				 * Returns the number of point correspondences.
+				 * @return The number of correspondences, with range [0, infinity)
+				 */
+				inline size_t size() const;
+
+				/**
+				 * Returns whether this object holds valid parameters.
+				 * @return True, if so
+				 */
+				inline bool isValid() const;
+
+				/**
+				 * Determines the coarsest pyramid layer index across multiple correspondence groups.
+				 * This static method finds the maximum coarsest layer that can be used based on
+				 * the pyramid sizes and the requested layers for all correspondence groups.
+				 * @param previousPyramid The previous frame pyramid, must be valid
+				 * @param nextPyramid The next frame pyramid, must be valid
+				 * @param pointCorrespondenceGroups The array of correspondence groups, must be valid
+				 * @param numberCorrespondenceGroups The number of correspondence groups, with range [1, infinity)
+				 * @return The coarsest pyramid layer index that can be used, with range [0, min(pyramids.layers()) - 1]
+				 */
+				static unsigned int coarsestPyramidLayer(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const PointCorrespondences* pointCorrespondenceGroups, const size_t numberCorrespondenceGroups);
+
+			protected:
+
+				/// The image points in the previous pyramid, always at finest layer resolution
+				const Vector2* previousPoints_ = nullptr;
+
+				/// The tracked next image points, progressively refined through pyramid layers (coarsest to finest)
+				Vector2* nextPoints_ = nullptr;
+
+				/// Binary validity flags for each correspondence (0x00 = invalid, 0x01 = valid)
+				uint8_t* validCorrespondences_ = nullptr;
+
+				/// The number of point correspondences to track
+				size_t correspondences_ = 0;
+
+				/// The number of pyramid layers to use for tracking
+				unsigned int pyramidLayers_ = 0u;
+
+				/// The search radius on the coarsest pyramid layer, in pixels
+				unsigned int coarsestLayerRadius_ = 0u;
+
+				/// The squared maximum error threshold for bidirectional tracking validation
+				Scalar maximalSqrError_ = Scalar(-1);
+
+				/// The squared maximum error threshold used during layer processing (includes search radius)
+				Scalar maximalSqrErrorLayer_ = Scalar(-1);
+
+				/// The number of sub-pixel iterations to apply at the finest pyramid layer
+				unsigned int subPixelIterations_ = 0u;
+
+				/// The index of the current pyramid layer being processed, (unsigned int)(-1) if not started
+				unsigned int layerIndex_ = (unsigned int)(-1);
+
+				/// The inverse scale factor for the current pyramid layer (1.0 / sizeFactor)
+				Scalar invLayerFactor_ = Scalar(-1);
+
+				/// The index of the coarsest pyramid layer that will be used for tracking
+				unsigned int coarsestLayerIndex_ = (unsigned int)(-1);
+
+				/// The width of the next pyramid's finest layer, in pixels (used for boundary checking)
+				unsigned int nextPyramidFinestLayerWidth_ = 0u;
+
+				/// The height of the next pyramid's finest layer, in pixels (used for boundary checking)
+				unsigned int nextPyramidFinestLayerHeight_ = 0u;
+
+				/// The width of the current layer being processed in the previous pyramid, in pixels
+				unsigned int previousLayerWidth_ = 0u;
+
+				/// The height of the current layer being processed in the previous pyramid, in pixels
+				unsigned int previousLayerHeight_ = 0u;
+
+				/// The width of the current layer being processed in the next pyramid, in pixels
+				unsigned int nextLayerWidth_ = 0u;
+
+				/// The height of the current layer being processed in the next pyramid, in pixels
+				unsigned int nextLayerHeight_ = 0u;
+
+				/// The search radius for the current pyramid layer being processed, in pixels
+				unsigned int layerRadius_ = 0u;
+
+				/// True during forward tracking (previous->next), False during backward tracking (next->previous)
+				bool forwardTracking_ = true;
+
+				/// Internal storage for backward tracking results used for bidirectional validation
+				Vectors2 internalBackwardNextPoints_;
+		};
+};
+
+/**
+ * This class implements advanced motion techniques (mainly with sub-pixel accuracy or binary masks) allowing to determine the motion (movement) of individual image points between two frames.
+ * @tparam TMetricInteger The metric that is applied for measurements with pixel accuracy
+ * @tparam TMetricFloat The metric that is applied for measurement with sub-pixel accuracy
+ * @see AdvancedMotionSSD, AdvancedMotionZeroMeanSSD.
+ * @ingroup cvadvanced
+ */
+template <typename TMetricInteger = SumSquareDifferences, typename TMetricFloat = AdvancedSumSquareDifferences>
+class AdvancedMotionT : public AdvancedMotion
+{
 	public:
+
+		/**
+		 * Tracks multiple groups of point correspondences bidirectionally between two frame pyramids with sub-pixel accuracy.
+		 * This function provides fine-grained control over the tracking process by accepting pre-configured PointCorrespondences groups.
+		 * Each group can have its own parameters (e.g., different pyramid layers, search radii, or sub-pixel iterations).
+		 * The points are tracked from the previous pyramid to the next pyramid (forward tracking), and then from the next pyramid back to the previous pyramid (backward tracking).
+		 * Point correspondences with inconsistent bidirectional tracking are marked as invalid.
+		 * If a point is near the frame border, a mirrored image patch is applied.
+		 * @param previousPyramid The previous frame pyramid, must be valid
+		 * @param nextPyramid The next frame pyramid, with same pixel format and pixel origin as the previous pyramid, must be valid
+		 * @param pointCorrespondenceGroups The array of point correspondence groups to track, must be valid
+		 * @param numberCorrespondenceGroups The number of correspondence groups, with range [1, infinity)
+		 * @return True if succeeded; False otherwise
+		 * @tparam tChannels The number of channels both frame pyramids have, with range [1, 4]
+		 * @tparam tSize The size of the image patch used to determine motion, with range [3, infinity), must be odd
+		 */
+		template <unsigned int tChannels, unsigned int tSize>
+		static bool trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, PointCorrespondences* pointCorrespondenceGroups, const size_t numberCorrespondenceGroups);
 
 		/**
 		 * Tracks a set of given points between two frames, with sub-pixel accuracy.
@@ -489,6 +731,327 @@ class AdvancedMotionT
 		template <unsigned int tChannels, unsigned int tSize>
 		static void trackPointsSubPixelMirroredBorderSubset(const FramePyramid* previousPyramid, const FramePyramid* currentPyramid, const unsigned int numberLayers, const Vectors2* previousPoints, const Vectors2* roughPoints, Vectors2* currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations, unsigned int* metricResults, unsigned int* metricIdentityResults, const unsigned int firstPoint, const unsigned int numberPoints);
 };
+
+inline AdvancedMotion::PointCorrespondences::PointCorrespondences(const Vector2* previousPoints, Vector2* predictedNextPoints, uint8_t* validCorrespondences, const size_t correspondences, const unsigned int pyramidLayers, const unsigned int coarsestLayerRadius, const Scalar maximalError, const unsigned int subPixelIterations) :
+	previousPoints_(previousPoints),
+	nextPoints_(predictedNextPoints),
+	validCorrespondences_(validCorrespondences),
+	correspondences_(correspondences),
+	pyramidLayers_(pyramidLayers),
+	coarsestLayerRadius_(coarsestLayerRadius),
+	subPixelIterations_(subPixelIterations)
+{
+	ocean_assert(previousPoints_ != nullptr);
+	ocean_assert(nextPoints_ != nullptr);
+	ocean_assert(validCorrespondences_ != nullptr);
+
+	ocean_assert(pyramidLayers_ != 0u);
+
+	ocean_assert(maximalError >= 0);
+	maximalSqrError_ = Numeric::sqr(maximalError);
+
+	maximalSqrErrorLayer_ = Numeric::sqr(Scalar(2) + maximalError); // search radius 2 plus maximal error
+}
+
+inline const Vector2& AdvancedMotion::PointCorrespondences::previousPosition(const size_t pointIndex) const
+{
+	ocean_assert(layerIndex_ == 0u);
+
+	ocean_assert(pointIndex < correspondences_);
+
+	const Vector2& previousPoint = forwardTracking_ ? previousPoints_[pointIndex] : nextPoints_[pointIndex];
+
+	ocean_assert(previousPoint.x() >= Scalar(0) && previousPoint.x() < Scalar(previousLayerWidth_));
+	ocean_assert(previousPoint.y() >= Scalar(0) && previousPoint.y() < Scalar(previousLayerHeight_));
+
+	return previousPoint;
+}
+
+inline CV::PixelPosition AdvancedMotion::PointCorrespondences::previousPositionDownsampled(const size_t pointIndex) const
+{
+	ocean_assert(layerIndex_ != (unsigned int)(-1));
+	ocean_assert(layerIndex_ != 0u);
+
+	ocean_assert(pointIndex < correspondences_);
+	ocean_assert(invLayerFactor_ > Scalar(0));
+
+	const Vector2& previousPoint = forwardTracking_ ? previousPoints_[pointIndex] : nextPoints_[pointIndex];
+
+	const int32_t downsampledX = Numeric::round32(previousPoint.x() * invLayerFactor_);
+	const int32_t downsampledY = Numeric::round32(previousPoint.y() * invLayerFactor_);
+
+	const int32_t clampedX = std::min(downsampledX, int32_t(previousLayerWidth_) - 1);
+	const int32_t clampedY = std::min(downsampledY, int32_t(previousLayerHeight_) - 1);
+
+	ocean_assert(clampedX >= 0 && clampedY >= 0);
+
+	return CV::PixelPosition((unsigned int)(clampedX), (unsigned int)(clampedY));
+}
+
+inline CV::PixelPosition AdvancedMotion::PointCorrespondences::predictedNextPositionDownsampled(const size_t pointIndex) const
+{
+	ocean_assert(layerIndex_ != (unsigned int)(-1));
+	ocean_assert(layerIndex_ != 0u);
+
+	ocean_assert(pointIndex < correspondences_);
+
+	const Vector2& predictedNextPoint = forwardTracking_ ? nextPoints_[pointIndex] : internalBackwardNextPoints_[pointIndex];
+
+	ocean_assert(predictedNextPoint.x() == Scalar(Numeric::round32(predictedNextPoint.x())));
+	ocean_assert(predictedNextPoint.y() == Scalar(Numeric::round32(predictedNextPoint.y())));
+
+	ocean_assert(predictedNextPoint.x() >= Scalar(0) && predictedNextPoint.x() < Scalar(nextLayerWidth_));
+	ocean_assert(predictedNextPoint.y() >= Scalar(0) && predictedNextPoint.y() < Scalar(nextLayerHeight_));
+
+	return CV::PixelPosition((unsigned int)(predictedNextPoint.x()), (unsigned int)(predictedNextPoint.y()));
+}
+
+inline const Vector2& AdvancedMotion::PointCorrespondences::predictedNextPosition(const size_t pointIndex) const
+{
+	ocean_assert(layerIndex_ == 0u);
+
+	ocean_assert(pointIndex < correspondences_);
+
+	if (forwardTracking_)
+	{
+		return nextPoints_[pointIndex];
+	}
+	else
+	{
+		return internalBackwardNextPoints_[pointIndex];
+	}
+}
+
+inline bool AdvancedMotion::PointCorrespondences::isPointValid(const size_t pointIndex) const
+{
+	ocean_assert(layerIndex_ != (unsigned int)(-1));
+
+	ocean_assert(pointIndex < correspondences_);
+
+	ocean_assert(validCorrespondences_ != nullptr);
+	return validCorrespondences_[pointIndex] != 0u;
+}
+
+inline unsigned int AdvancedMotion::PointCorrespondences::pyramidLayers() const
+{
+	ocean_assert(pyramidLayers_ != 0u);
+
+	return pyramidLayers_;
+}
+
+inline unsigned int AdvancedMotion::PointCorrespondences::layerRadius() const
+{
+	return layerRadius_;
+}
+
+inline unsigned int AdvancedMotion::PointCorrespondences::subPixelIterations() const
+{
+	ocean_assert(layerIndex_ == 0u);
+
+	return subPixelIterations_;
+}
+
+inline size_t AdvancedMotion::PointCorrespondences::size() const
+{
+	return correspondences_;
+}
+
+inline bool AdvancedMotion::PointCorrespondences::isValid() const
+{
+	return previousPoints_ != nullptr;
+}
+
+template <typename TMetricInteger, typename TMetricFloat>
+template <unsigned int tChannels, unsigned int tSize>
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, PointCorrespondences* pointCorrespondenceGroups, const size_t numberCorrespondenceGroups)
+{
+	static_assert(tChannels >= 1u, "Invalid channel number!");
+	static_assert(tSize >= 1u, "Invalid patch size!");
+
+	ocean_assert(previousPyramid && nextPyramid);
+	ocean_assert(previousPyramid.frameType().channels() == tChannels);
+	ocean_assert(previousPyramid.frameType().numberPlanes() == 1u);
+	ocean_assert(previousPyramid.frameType().isPixelFormatCompatible(nextPyramid.frameType().pixelFormat()));
+	ocean_assert(previousPyramid.frameType().pixelOrigin() == nextPyramid.frameType().pixelOrigin());
+
+	if (!previousPyramid.isValid() || !nextPyramid.isValid())
+	{
+		return false;
+	}
+
+	if (previousPyramid.frameType().channels() != tChannels || previousPyramid.frameType().numberPlanes() != 1u)
+	{
+		return false;
+	}
+
+	if (!previousPyramid.frameType().isPixelFormatCompatible(nextPyramid.frameType().pixelFormat()) || previousPyramid.frameType().pixelOrigin() != nextPyramid.frameType().pixelOrigin())
+	{
+		return false;
+	}
+
+	ocean_assert(pointCorrespondenceGroups != nullptr && numberCorrespondenceGroups >= 1);
+
+	if (pointCorrespondenceGroups == nullptr || numberCorrespondenceGroups == 0)
+	{
+		return false;
+	}
+
+	const unsigned int coarsestPyramidLayerIndex = PointCorrespondences::coarsestPyramidLayer(previousPyramid, nextPyramid, pointCorrespondenceGroups, numberCorrespondenceGroups);
+
+	ocean_assert(coarsestPyramidLayerIndex < previousPyramid.layers());
+	ocean_assert(coarsestPyramidLayerIndex < nextPyramid.layers());
+
+	// forward point tracking
+
+	for (size_t nCorrespondenceGroup = 0; nCorrespondenceGroup < numberCorrespondenceGroups; ++nCorrespondenceGroup)
+	{
+		PointCorrespondences& correspondences = pointCorrespondenceGroups[nCorrespondenceGroup];
+
+		correspondences.startForwardTracking(previousPyramid, nextPyramid);
+	}
+
+	for (unsigned int layerIndex = coarsestPyramidLayerIndex; layerIndex < previousPyramid.layers(); --layerIndex)
+	{
+		for (size_t nCorrespondenceGroup = 0; nCorrespondenceGroup < numberCorrespondenceGroups; ++nCorrespondenceGroup)
+		{
+			PointCorrespondences& correspondences = pointCorrespondenceGroups[nCorrespondenceGroup];
+
+			if (!correspondences.startLayer(layerIndex, previousPyramid, nextPyramid))
+			{
+				continue;
+			}
+
+			const Frame& previousFrame = previousPyramid[layerIndex];
+			const Frame& nextFrame = nextPyramid[layerIndex];
+
+			const uint8_t* const previousFrameData = previousFrame.constdata<uint8_t>();
+			const uint8_t* const nextFrameData = nextFrame.constdata<uint8_t>();
+
+			const unsigned int previousFramePaddingElements = previousFrame.paddingElements();
+			const unsigned int nextFramePaddingElements = nextFrame.paddingElements();
+
+			const unsigned int previousWidth = previousFrame.width();
+			const unsigned int previousHeight = previousFrame.height();
+
+			const unsigned int nextWidth = nextFrame.width();
+			const unsigned int nextHeight = nextFrame.height();
+
+			const unsigned int layerRadius = correspondences.layerRadius();
+
+			if (layerIndex == 0u)
+			{
+				// sub-pixel-precise tracking
+
+				const unsigned int subPixelIterations = correspondences.subPixelIterations();
+
+				for (size_t nPoint = 0; nPoint < correspondences.size(); ++nPoint)
+				{
+					const Vector2& previousPosition = correspondences.previousPosition(nPoint);
+					Vector2 nextPosition = correspondences.predictedNextPosition(nPoint);
+
+					const Vector2 position = trackPointSubPixelMirroredBorder<tChannels, tSize>(previousFrameData, nextFrameData, previousWidth, previousHeight, nextWidth, nextHeight, previousFramePaddingElements, nextFramePaddingElements, previousPosition, layerRadius, layerRadius, nextPosition, subPixelIterations);
+
+					correspondences.propagateNextPosition(nPoint, position);
+				}
+			}
+			else
+			{
+				// pixel-precise tracking
+
+				for (size_t nPoint = 0; nPoint < correspondences.size(); ++nPoint)
+				{
+					const CV::PixelPosition previousPosition = correspondences.previousPositionDownsampled(nPoint);
+					const CV::PixelPosition predictedNextPosition = correspondences.predictedNextPositionDownsampled(nPoint);
+
+					const PixelPosition actualNextPoint = MotionT<TMetricInteger>::template pointMotionInFrameMirroredBorder<tChannels, tSize>(previousFrameData, nextFrameData, previousWidth, previousHeight, nextWidth, nextHeight, previousPosition, layerRadius, layerRadius, previousFramePaddingElements, nextFramePaddingElements, predictedNextPosition);
+
+					correspondences.propagateNextPositionDownsampled(nPoint, actualNextPoint);
+				}
+			}
+		}
+	}
+
+	// backward point tracking
+
+	const CV::FramePyramid& backwardPreviousPyramid = nextPyramid; // an alias for the backward motion
+	const CV::FramePyramid& backwardNextPyramid = previousPyramid;
+
+	for (size_t nCorrespondenceGroup = 0; nCorrespondenceGroup < numberCorrespondenceGroups; ++nCorrespondenceGroup)
+	{
+		PointCorrespondences& correspondences = pointCorrespondenceGroups[nCorrespondenceGroup];
+
+		correspondences.startBackwardTracking(backwardPreviousPyramid, backwardNextPyramid);
+	}
+
+	for (unsigned int layerIndex = coarsestPyramidLayerIndex; layerIndex < previousPyramid.layers(); --layerIndex)
+	{
+		for (size_t nCorrespondenceGroup = 0; nCorrespondenceGroup < numberCorrespondenceGroups; ++nCorrespondenceGroup)
+		{
+			PointCorrespondences& correspondences = pointCorrespondenceGroups[nCorrespondenceGroup];
+
+			if (!correspondences.startLayer(layerIndex, backwardPreviousPyramid, backwardNextPyramid))
+			{
+				continue;
+			}
+
+			const Frame& previousFrame = backwardPreviousPyramid[layerIndex];
+			const Frame& nextFrame = backwardNextPyramid[layerIndex];
+
+			const uint8_t* const previousFrameData = previousFrame.constdata<uint8_t>();
+			const uint8_t* const nextFrameData = nextFrame.constdata<uint8_t>();
+
+			const unsigned int previousFramePaddingElements = previousFrame.paddingElements();
+			const unsigned int nextFramePaddingElements = nextFrame.paddingElements();
+
+			const unsigned int previousWidth = previousFrame.width();
+			const unsigned int previousHeight = previousFrame.height();
+
+			const unsigned int nextWidth = nextFrame.width();
+			const unsigned int nextHeight = nextFrame.height();
+
+			const unsigned int layerRadius = correspondences.layerRadius();
+
+			if (layerIndex == 0u)
+			{
+				// sub-pixel-precise tracking
+
+				const unsigned int subPixelIterations = correspondences.subPixelIterations();
+
+				for (size_t nPoint = 0; nPoint < correspondences.size(); ++nPoint)
+				{
+					if (correspondences.isPointValid(nPoint))
+					{
+						const Vector2& previousPosition = correspondences.previousPosition(nPoint);
+						Vector2 nextPosition = correspondences.predictedNextPosition(nPoint);
+
+						const Vector2 position = trackPointSubPixelMirroredBorder<tChannels, tSize>(previousFrameData, nextFrameData, previousWidth, previousHeight, nextWidth, nextHeight, previousFramePaddingElements, nextFramePaddingElements, previousPosition, layerRadius, layerRadius, nextPosition, subPixelIterations);
+
+						correspondences.propagateNextPosition(nPoint, position);
+					}
+				}
+			}
+			else
+			{
+				// pixel-precise tracking
+
+				for (size_t nPoint = 0; nPoint < correspondences.size(); ++nPoint)
+				{
+					if (correspondences.isPointValid(nPoint))
+					{
+						const CV::PixelPosition previousPosition = correspondences.previousPositionDownsampled(nPoint);
+						const CV::PixelPosition predictedNextPosition = correspondences.predictedNextPositionDownsampled(nPoint);
+
+						const PixelPosition actualNextPoint = MotionT<TMetricInteger>::template pointMotionInFrameMirroredBorder<tChannels, tSize>(previousFrameData, nextFrameData, previousWidth, previousHeight, nextWidth, nextHeight, previousPosition, layerRadius, layerRadius, previousFramePaddingElements, nextFramePaddingElements, predictedNextPosition);
+
+						correspondences.propagateNextPositionDownsampled(nPoint, actualNextPoint);
+					}
+				}
+			}
+		}
+	}
+
+	return true;
+}
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tSize>
