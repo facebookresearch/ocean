@@ -11,6 +11,8 @@
 #include "ocean/devices/Devices.h"
 #include "ocean/devices/Tracker.h"
 
+#include "ocean/base/StackHeapVector.h"
+
 #include "ocean/math/Vector2.h"
 
 namespace Ocean
@@ -156,7 +158,7 @@ class OCEAN_DEVICES_EXPORT GPSTracker : virtual public Tracker
 		/**
 			* Definition of a vector holding GPS data values.
 			*/
-		using Locations = std::vector<Location>;
+		using Locations = StackHeapVector<Location, 1>;
 
 		/**
 		 * Definition of a sample holding GPS measurements.
@@ -238,7 +240,7 @@ class OCEAN_DEVICES_EXPORT GPSTracker : virtual public Tracker
 		 * @param unescapeBackslash True, to unescape two consecutive backslash in the polyline to one backslash; False, to use the polyline as it is
 		 * @return True, if succeeded
 		 */
-		static bool decodePolyline(const std::string& polyline, const unsigned int precision, Locations& locations, const bool unescapeBackslash = false);
+		static bool decodePolyline(const std::string& polyline, const unsigned int precision, std::vector<Location>& locations, const bool unescapeBackslash = false);
 
 		/**
 		 * Calculates the distance between two GPS locations in meters, the location's latitude is not considered.

@@ -11,6 +11,8 @@
 #include "ocean/devices/Devices.h"
 #include "ocean/devices/Tracker.h"
 
+#include "ocean/base/StackHeapVector.h"
+
 #include "ocean/math/Quaternion.h"
 
 namespace Ocean
@@ -47,7 +49,7 @@ class OCEAN_DEVICES_EXPORT OrientationTracker3DOF : virtual public Tracker
 				/**
 				 * Definition of a vector holding orientation values.
 				 */
-				using Orientations = std::vector<Quaternion>;
+				using Orientations = StackHeapVector<Quaternion, 1>;
 
 			public:
 

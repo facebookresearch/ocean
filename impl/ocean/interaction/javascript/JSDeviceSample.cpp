@@ -188,7 +188,7 @@ void JSBase::function<Devices::Measurement::SampleRef, JSDeviceSample::FI_POSITI
 		}
 		else
 		{
-			if (!positions.empty())
+			if (!positions.isEmpty())
 			{
 				info.GetReturnValue().Set(createObject<JSVector3>(positions.front(), JSContext::currentContext()));
 			}
@@ -224,7 +224,7 @@ void JSBase::function<Devices::Measurement::SampleRef, JSDeviceSample::FI_ORIENT
 		}
 		else
 		{
-			if (!orientations.empty())
+			if (!orientations.isEmpty())
 			{
 				info.GetReturnValue().Set(createObject<JSQuaternion>(orientations.front(), JSContext::currentContext()));
 			}
@@ -262,7 +262,7 @@ void JSBase::function<Devices::Measurement::SampleRef, JSDeviceSample::FI_TRANSF
 		}
 		else
 		{
-			if (!positions.empty())
+			if (!positions.isEmpty())
 			{
 				info.GetReturnValue().Set(createObject<JSHomogenousMatrix4>(HomogenousMatrix4(positions.front(), orientations.front()), JSContext::currentContext()));
 			}

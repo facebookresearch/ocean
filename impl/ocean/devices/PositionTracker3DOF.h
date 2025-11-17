@@ -11,6 +11,8 @@
 #include "ocean/devices/Devices.h"
 #include "ocean/devices/Tracker.h"
 
+#include "ocean/base/StackHeapVector.h"
+
 #include "ocean/math/Vector3.h"
 
 namespace Ocean
@@ -47,7 +49,7 @@ class OCEAN_DEVICES_EXPORT PositionTracker3DOF : virtual public Tracker
 				/**
 				 * Definition of a vector holding position values.
 				 */
-				using Positions = std::vector<Vector3>;
+				using Positions = StackHeapVector<Vector3, 1>;
 
 			public:
 

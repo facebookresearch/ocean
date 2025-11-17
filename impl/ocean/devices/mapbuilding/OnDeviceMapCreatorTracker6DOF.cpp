@@ -298,7 +298,7 @@ void OnDeviceMapCreatorTracker6DOF::threadRun()
 				continue;
 			}
 
-			ocean_assert(!sample->objectIds().empty());
+			ocean_assert(!sample->objectIds().isEmpty());
 
 			if (yPreviousFramePyramid && (yPreviousFramePyramid->finestWidth() != frame->width() || yPreviousFramePyramid->finestHeight() != frame->height()))
 			{
@@ -422,7 +422,7 @@ void OnDeviceMapCreatorTracker6DOF::onWorldTrackerSample(const Measurement* /*me
 	ocean_assert(tracker6DOFSample);
 	ocean_assert(tracker6DOFSample->referenceSystem() == RS_DEVICE_IN_OBJECT);
 
-	if (tracker6DOFSample->objectIds().empty())
+	if (tracker6DOFSample->objectIds().isEmpty())
 	{
 		return;
 	}

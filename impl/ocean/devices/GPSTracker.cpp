@@ -109,7 +109,7 @@ bool GPSTracker::parseGPSLocation(const std::string& gpsString, double& latitude
 	return false;
 }
 
-bool GPSTracker::decodePolyline(const std::string& polyline, const unsigned int precision, Locations& locations, const bool unescapeBackslash)
+bool GPSTracker::decodePolyline(const std::string& polyline, const unsigned int precision, std::vector<Location>& locations, const bool unescapeBackslash)
 {
 	ocean_assert(!polyline.empty());
 	ocean_assert(precision >= 1u && precision <= 8u);

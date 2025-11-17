@@ -67,7 +67,7 @@ void AKFactory::GeoAnchorAvailabilityChecker::threadRun()
 				continue;
 			}
 
-			ocean_assert(!sample->locations().empty());
+			ocean_assert(!sample->locations().isEmpty());
 
 			const GPSTracker::Location& location = sample->locations().front();
 

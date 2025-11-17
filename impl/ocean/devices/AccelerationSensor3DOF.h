@@ -12,9 +12,10 @@
 #include "ocean/devices/DeviceRef.h"
 #include "ocean/devices/Sensor.h"
 
-#include "ocean/math/Vector3.h"
-
 #include "ocean/base/SmartObjectRef.h"
+#include "ocean/base/StackHeapVector.h"
+
+#include "ocean/math/Vector3.h"
 
 namespace Ocean
 {
@@ -52,7 +53,7 @@ class OCEAN_DEVICES_EXPORT AccelerationSensor3DOF : virtual public Sensor
 				 * Definition of a vector holding acceleration measurements.
 				 * One measurement holds three different acceleration values for three separated axis.
 				 */
-				using Measurements = std::vector<Vector3>;
+				using Measurements = StackHeapVector<Vector3, 1>;
 
 			public:
 

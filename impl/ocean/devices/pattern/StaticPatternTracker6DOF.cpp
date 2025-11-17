@@ -200,7 +200,7 @@ void StaticPatternTracker6DOF::onPatternTrackerSample(const Measurement* /*measu
 	ocean_assert(tracker6DOFSample);
 	ocean_assert(tracker6DOFSample->referenceSystem() == RS_DEVICE_IN_OBJECT);
 
-	if (tracker6DOFSample->objectIds().empty())
+	if (tracker6DOFSample->objectIds().isEmpty())
 	{
 		return;
 	}
@@ -238,7 +238,7 @@ void StaticPatternTracker6DOF::onWorldTrackerSample(const Measurement* /*measure
 	ocean_assert(tracker6DOFSample);
 	ocean_assert(tracker6DOFSample->referenceSystem() == RS_DEVICE_IN_OBJECT);
 
-	if (tracker6DOFSample->objectIds().empty())
+	if (tracker6DOFSample->objectIds().isEmpty())
 	{
 		return;
 	}
@@ -421,9 +421,9 @@ void StaticPatternTracker6DOF::reportNotAlignedPoses(const Timestamp& timestamp)
 
 			const ObjectId externalObjectId = objectIdMapper_.externalObjectIdFromInternalObjectId(internalObjectId);
 
-			externalObjectIds.emplace_back(externalObjectId);
-			positions.emplace_back(pattern_T_camera.translation());
-			orientations.emplace_back(pattern_T_camera.rotation());
+			externalObjectIds.emplaceBack(externalObjectId);
+			positions.emplaceBack(pattern_T_camera.translation());
+			orientations.emplaceBack(pattern_T_camera.rotation());
 		}
 
 		iPattern->second.pattern_T_world().toNull();
@@ -490,9 +490,9 @@ void StaticPatternTracker6DOF::reportAlignedPoses(const Timestamp& timestamp)
 
 			const ObjectId externalObjectId = objectIdMapper_.externalObjectIdFromInternalObjectId(internalObjectId);
 
-			externalObjectIds.emplace_back(externalObjectId);
-			positions.emplace_back(pattern_T_camera.translation());
-			orientations.emplace_back(pattern_T_camera.rotation());
+			externalObjectIds.emplaceBack(externalObjectId);
+			positions.emplaceBack(pattern_T_camera.translation());
+			orientations.emplaceBack(pattern_T_camera.rotation());
 		}
 	}
 

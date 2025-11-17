@@ -298,9 +298,9 @@ void AKGeoAnchorsTracker6DOF::onNewSample(const TransformationMap& anchors_T_cam
 			trackedObjectIds_.insert(objectId);
 		}
 
-		sampleObjectIds.emplace_back(objectId);
-		samplePositions.emplace_back(anchor_T_camera.translation());
-		sampleOrientations.emplace_back(anchor_T_camera.rotation());
+		sampleObjectIds.emplaceBack(objectId);
+		samplePositions.emplaceBack(anchor_T_camera.translation());
+		sampleOrientations.emplaceBack(anchor_T_camera.rotation());
 	}
 
 	for (ObjectIdSet::iterator iObject = trackedObjectIds_.begin(); iObject != trackedObjectIds_.end(); /* noop*/)
@@ -321,7 +321,7 @@ void AKGeoAnchorsTracker6DOF::onNewSample(const TransformationMap& anchors_T_cam
 
 	postFoundTrackerObjects(foundObjectIds, timestamp);
 
-	if (!sampleObjectIds.empty())
+	if (!sampleObjectIds.isEmpty())
 	{
 		postNewSample(SampleRef(new Tracker6DOFSample(timestamp, RS_DEVICE_IN_OBJECT, std::move(sampleObjectIds), std::move(sampleOrientations), std::move(samplePositions), std::move(metadata))));
 	}

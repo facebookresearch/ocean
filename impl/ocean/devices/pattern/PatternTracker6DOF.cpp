@@ -310,9 +310,9 @@ void PatternTracker6DOF::threadRun()
 
 					currentPatterns.emplace(objectId);
 
-					objectIds.push_back(objectId);
-					positions.push_back(transformSample.transformation().translation());
-					orientations.push_back(transformSample.transformation().rotation());
+					objectIds.pushBack(objectId);
+					positions.pushBack(transformSample.transformation().translation());
+					orientations.pushBack(transformSample.transformation().rotation());
 				}
 
 				postFoundTrackerObjects(determineFoundObjects(visiblePatterns_, currentPatterns), frameTimestamp_);

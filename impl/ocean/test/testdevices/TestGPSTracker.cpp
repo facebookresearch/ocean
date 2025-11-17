@@ -247,7 +247,7 @@ bool TestGPSTracker::testDecodePolyline()
 
 	bool allSucceeded = true;
 
-	Devices::GPSTracker::Locations locations;
+	std::vector<Devices::GPSTracker::Location> locations;
 	if (Devices::GPSTracker::decodePolyline("_p~iF~ps|U_ulLnnqC_mqNvxq`@", 5u, locations))
 	{
 		const VectorsD2 coordinates =

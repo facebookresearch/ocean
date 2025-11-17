@@ -12,6 +12,7 @@
 #include "ocean/devices/DeviceRef.h"
 
 #include "ocean/base/Callback.h"
+#include "ocean/base/StackHeapVector.h"
 #include "ocean/base/Value.h"
 
 namespace Ocean
@@ -43,12 +44,12 @@ class OCEAN_DEVICES_EXPORT Measurement : virtual public Device
 		/**
 		 * Definition of an object id.
 		 */
-		using ObjectId = unsigned int;
+		using ObjectId = uint32_t;
 
 		/**
 		 * Definition of a vector holding object ids.
 		 */
-		using ObjectIds = std::vector<ObjectId>;
+		using ObjectIds = StackHeapVector<ObjectId, 1>;
 
 		/**
 		 * Definition of an unordered set holding object ids.
