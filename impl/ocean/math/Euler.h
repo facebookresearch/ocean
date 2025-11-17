@@ -13,6 +13,8 @@
 #include "ocean/math/Rotation.h"
 #include "ocean/math/SquareMatrix3.h"
 
+#include "ocean/base/String.h"
+
 namespace Ocean
 {
 
@@ -171,6 +173,13 @@ class EulerT
 		 * @return True, if so
 		 */
 		bool isValid() const;
+
+		/**
+		 * Returns the euler rotation as string.
+		 * @param inDegree True, to output the angles in degree; False, to output the angles in radian
+		 * @return Euler rotation as string
+		 */
+		std::string toString(const bool inDegree = false) const;
 
 		/**
 		 * Returns whether two euler rotations are identical up to a small epsilon.
@@ -353,6 +362,23 @@ bool EulerT<T>::isValid() const
 	return NumericT<T>::isInsideRange(-NumericT<T>::pi(), values_[0], NumericT<T>::pi())
 			&& NumericT<T>::isInsideRange(-NumericT<T>::pi_2(), values_[1], NumericT<T>::pi_2())
 			&& NumericT<T>::isInsideRange(-NumericT<T>::pi(), values_[2], NumericT<T>::pi());
+}
+
+template <typename T>
+std::string EulerT<T>::toString(const bool inDegree) const
+{
+	if (inDegree)
+	{
+		const T yaw = NumericT<T>::rad2deg(values_[0]);
+		const T pitch = NumericT<T>::rad2deg(values_[1]);
+		const T roll = NumericT<T>::rad2deg(values_[2]);
+
+		return String::toAString(yaw, 1u) + ", " + String::toAString(pitch, 1u) + ", " + String::toAString(roll, 1u);
+	}
+	else
+	{
+		return String::toAString(values_[0], 4u) + ", " + String::toAString(values_[1], 4u) + ", " + String::toAString(values_[2], 4u);
+	}
 }
 
 template <typename T>
