@@ -11,8 +11,6 @@
 
 #include "ocean/math/Numeric.h"
 #include "ocean/math/PinholeCamera.h"
-#include "ocean/math/Quaternion.h"
-#include "ocean/math/Rotation.h"
 #include "ocean/math/SquareMatrix3.h"
 
 namespace Ocean
@@ -94,6 +92,27 @@ bool FrameInterpolatorBilinear::Comfort::resize(const Frame& source, Frame& targ
 
 				case 4u:
 					FrameInterpolatorBilinear::resize<uint32_t, 4u>(source.constdata<uint32_t>(), target.data<uint32_t>(), source.width(), source.height(), target.width(), target.height(), source.paddingElements(), target.paddingElements(), worker);
+					return true;
+			}
+		}
+		else if (dataType == FrameType::DT_SIGNED_INTEGER_32)
+		{
+			switch (source.channels())
+			{
+				case 1u:
+					FrameInterpolatorBilinear::resize<int32_t, 1u>(source.constdata<int32_t>(), target.data<int32_t>(), source.width(), source.height(), target.width(), target.height(), source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 2u:
+					FrameInterpolatorBilinear::resize<int32_t, 2u>(source.constdata<int32_t>(), target.data<int32_t>(), source.width(), source.height(), target.width(), target.height(), source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 3u:
+					FrameInterpolatorBilinear::resize<int32_t, 3u>(source.constdata<int32_t>(), target.data<int32_t>(), source.width(), source.height(), target.width(), target.height(), source.paddingElements(), target.paddingElements(), worker);
+					return true;
+
+				case 4u:
+					FrameInterpolatorBilinear::resize<int32_t, 4u>(source.constdata<int32_t>(), target.data<int32_t>(), source.width(), source.height(), target.width(), target.height(), source.paddingElements(), target.paddingElements(), worker);
 					return true;
 			}
 		}
