@@ -19,7 +19,6 @@
 #include "ocean/test/testcv/testadvanced/TestFrameRectification.h"
 #include "ocean/test/testcv/testadvanced/TestPanoramaFrame.h"
 #include "ocean/test/testcv/testadvanced/TestSumSquareDifferencesNoCenter.h"
-#include "ocean/test/testcv/testadvanced/TestWhitePointDetector.h"
 
 #include "ocean/base/Build.h"
 #include "ocean/base/DateTime.h"
@@ -185,15 +184,6 @@ bool testCVAdvanced(const double testDuration, Worker& worker, const unsigned in
 		Log::info() << " ";
 		Log::info() << " ";
 		allSucceeded = TestFrameRectification::test(width, height, testDuration, worker) && allSucceeded;
-	}
-
-	if (testSet.empty() || testSet.find("whitepointdetector") != testSet.end())
-	{
-		Log::info() << " ";
-		Log::info() << " ";
-		Log::info() << " ";
-		Log::info() << " ";
-		allSucceeded = TestWhitePointDetector::test(width, height, testDuration, worker) && allSucceeded;
 	}
 
 	if (testSet.empty() || testSet.find("panoramaframe") != testSet.end())

@@ -65,7 +65,6 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestFrameRectification.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestPanoramaFrame.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestSumSquareDifferencesNoCenter.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestWhitePointDetector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestAdvancedFrameChannels.h" />
@@ -82,7 +81,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestFrameRectification.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestPanoramaFrame.h" />
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestSumSquareDifferencesNoCenter.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestWhitePointDetector.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{95D2EABB-1475-4BD5-AF2C-AF080BD87076}</ProjectGuid>

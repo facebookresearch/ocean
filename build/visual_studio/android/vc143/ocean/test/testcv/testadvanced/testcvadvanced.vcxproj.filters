@@ -36,9 +36,6 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestSumSquareDifferencesNoCenter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestWhitePointDetector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestPanoramaFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -81,9 +78,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestSumSquareDifferencesNoCenter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestWhitePointDetector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\..\impl\ocean\test\testcv\testadvanced\TestPanoramaFrame.h">
