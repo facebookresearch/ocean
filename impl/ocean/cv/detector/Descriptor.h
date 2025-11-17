@@ -139,7 +139,7 @@ OCEAN_FORCE_INLINE unsigned int Descriptor::calculateHammingDistance<128u>(const
 	const uint16x8_t count_u_16x8 = vpaddlq_u8(count_u_8x16);
 	const uint32x4_t count_u_32x4 = vpaddlq_u16(count_u_16x8);
 
-	return NEON::sum32x4ByLanes(count_u_32x4);
+	return NEON::sumHorizontal_u_32x4(count_u_32x4);
 
 #else
 
@@ -229,7 +229,7 @@ OCEAN_FORCE_INLINE unsigned int Descriptor::calculateHammingDistance<256u>(const
 	const uint16x8_t count_u_16x8 = vpaddlq_u8(count_u_8x16);
 	const uint32x4_t count_u_32x4 = vpaddlq_u16(count_u_16x8);
 
-	return NEON::sum32x4ByLanes(count_u_32x4);
+	return NEON::sumHorizontal_u_32x4(count_u_32x4);
 
 #else
 
@@ -324,7 +324,7 @@ OCEAN_FORCE_INLINE unsigned int Descriptor::calculateHammingDistance(const void*
 		result_u_32x4 = vaddq_u32(result_u_32x4, count_u_32x4);
 	}
 
-	return NEON::sum32x4ByLanes(result_u_32x4);
+	return NEON::sumHorizontal_u_32x4(result_u_32x4);
 
 #else
 

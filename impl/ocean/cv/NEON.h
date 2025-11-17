@@ -322,14 +322,6 @@ class NEON
 		static inline uint32x4_t sumAbsoluteDifference8Bit16Elements(const uint8x16_t& row0, const uint8x16_t& row1);
 
 		/**
-		 * Sums the four 32 bit values and returns the result.
-		 * Beware: This function is slow due the usage of the individual lanes, providing a large target buffer is much faster.
-		 * @param value The value holding the four 32 bit values
-		 * @return Sum result
-		 */
-		static OCEAN_FORCE_INLINE unsigned int sum32x4ByLanes(const uint32x4_t& value);
-
-		/**
 		 * Horizontally sums the four 32 bit values and returns the result.
 		 * @param value The value holding the four 32 bit values
 		 * @return The resulting sum
@@ -1087,11 +1079,6 @@ inline void NEON::gradientHorizontalVertical8Elements3Products1Channel8Bit(const
 
 	// we store the determined results interleaved (h*h, v*v, h*v, h*h, v*v, h*v, ...)
 	vst3q_s16(response, result);
-}
-
-OCEAN_FORCE_INLINE unsigned int NEON::sum32x4ByLanes(const uint32x4_t& value)
-{
-	return vgetq_lane_u32(value, 0) + vgetq_lane_u32(value, 1) + vgetq_lane_u32(value, 2) + vgetq_lane_u32(value, 3);
 }
 
 OCEAN_FORCE_INLINE uint32_t NEON::sumHorizontal_u_32x4(const uint32x4_t& value_u_32x4)
