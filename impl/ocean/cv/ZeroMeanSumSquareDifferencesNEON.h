@@ -321,10 +321,7 @@ inline void ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::mean8B
 		buffer += blocks1;
 	}
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
-	const uint32_t sum = results[0] + results[1] + results[2] + results[3] + sumIndividual;
+	const uint32_t sum = NEON::sumHorizontal_u_32x4(sum_u_32x4) + sumIndividual;
 
 	meanValues[0] = uint8_t((sum + tPixels / 2u) / tPixels);
 }
@@ -426,20 +423,13 @@ inline void ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::mean8B
 		sumIndividual[2] += buffer[tChannels * n + 2u];
 	}
 
-	uint32_t results[4];
-	vst1q_u32(results, sumChannel0_u_32x4);
-
-	const uint32_t sum0 = results[0] + results[1] + results[2] + results[3] + sumIndividual[0];
+	const uint32_t sum0 = NEON::sumHorizontal_u_32x4(sumChannel0_u_32x4) + sumIndividual[0];
 	meanValues[0] = uint8_t((sum0 + tPixels / 2u) / tPixels);
 
-	vst1q_u32(results, sumChannel1_u_32x4);
-
-	const uint32_t sum1 = results[0] + results[1] + results[2] + results[3] + sumIndividual[1];
+	const uint32_t sum1 = NEON::sumHorizontal_u_32x4(sumChannel1_u_32x4) + sumIndividual[1];
 	meanValues[1] = uint8_t((sum1 + tPixels / 2u) / tPixels);
 
-	vst1q_u32(results, sumChannel2_u_32x4);
-
-	const uint32_t sum2 = results[0] + results[1] + results[2] + results[3] + sumIndividual[2];
+	const uint32_t sum2 = NEON::sumHorizontal_u_32x4(sumChannel2_u_32x4) + sumIndividual[2];
 	meanValues[2] = uint8_t((sum2 + tPixels / 2u) / tPixels);
 }
 
@@ -589,10 +579,7 @@ inline void ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::mean8B
 		patch += patchStrideElements - tPatchSize;
 	}
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
-	const uint32_t sum = results[0] + results[1] + results[2] + results[3] + sumIndividual;
+	const uint32_t sum = NEON::sumHorizontal_u_32x4(sum_u_32x4) + sumIndividual;
 
 	meanValues[0] = uint8_t((sum + tPatchSize * tPatchSize / 2u) / (tPatchSize * tPatchSize));
 }
@@ -736,20 +723,13 @@ inline void ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::mean8B
 		patch += patchStrideElements - tChannels * tPatchSize;
 	}
 
-	uint32_t results[4];
-	vst1q_u32(results, sumChannel0_u_32x4);
-
-	const uint32_t sum0 = results[0] + results[1] + results[2] + results[3] + sumIndividual[0];
+	const uint32_t sum0 = NEON::sumHorizontal_u_32x4(sumChannel0_u_32x4) + sumIndividual[0];
 	meanValues[0] = uint8_t((sum0 + tPatchSize * tPatchSize / 2u) / (tPatchSize * tPatchSize));
 
-	vst1q_u32(results, sumChannel1_u_32x4);
-
-	const uint32_t sum1 = results[0] + results[1] + results[2] + results[3] + sumIndividual[1];
+	const uint32_t sum1 = NEON::sumHorizontal_u_32x4(sumChannel1_u_32x4) + sumIndividual[1];
 	meanValues[1] = uint8_t((sum1 + tPatchSize * tPatchSize / 2u) / (tPatchSize * tPatchSize));
 
-	vst1q_u32(results, sumChannel2_u_32x4);
-
-	const uint32_t sum2 = results[0] + results[1] + results[2] + results[3] + sumIndividual[2];
+	const uint32_t sum2 = NEON::sumHorizontal_u_32x4(sumChannel2_u_32x4) + sumIndividual[2];
 	meanValues[2] = uint8_t((sum2 + tPatchSize * tPatchSize / 2u) / (tPatchSize * tPatchSize));
 }
 
@@ -893,10 +873,7 @@ inline void ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::mean8B
 		}
 	}
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
-	const uint32_t sum = results[0] + results[1] + results[2] + results[3] + sumIndividual;
+	const uint32_t sum = NEON::sumHorizontal_u_32x4(sum_u_32x4) + sumIndividual;
 
 	meanValues[0] = uint8_t((sum + tPatchSize * tPatchSize / 2u) / (tPatchSize * tPatchSize));
 }
@@ -1073,10 +1050,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::bu
 
 	const uint32x4_t sum_u_32x4 = vaddq_u32(sumA_u_32x4, sumB_u_32x4);
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
-	return results[0] + results[1] + results[2] + results[3] + sumIndividual;
+	return NEON::sumHorizontal_u_32x4(sum_u_32x4) + sumIndividual;
 }
 
 template <>
@@ -1293,10 +1267,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::bu
 
 	const uint32x4_t sum_u_32x4 = vaddq_u32(sumA_u_32x4, sumB_u_32x4);
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
-	return results[0] + results[1] + results[2] + results[3] + sumIndividual;
+	return NEON::sumHorizontal_u_32x4(sum_u_32x4) + sumIndividual;
 }
 
 template <unsigned int tChannels>
@@ -1517,10 +1488,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::pa
 
 	const uint32x4_t sum_u_32x4 = vaddq_u32(sumA_u_32x4, sumB_u_32x4);
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
-	return results[0] + results[1] + results[2] + results[3] + sumIndividual;
+	return NEON::sumHorizontal_u_32x4(sum_u_32x4) + sumIndividual;
 }
 
 template <>
@@ -1829,10 +1797,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<3u>::pa
 
 	const uint32x4_t sum_u_32x4 = vaddq_u32(sumA_u_32x4, sumB_u_32x4);
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
-	return results[0] + results[1] + results[2] + results[3] + sumIndividual;
+	return NEON::sumHorizontal_u_32x4(sum_u_32x4) + sumIndividual;
 }
 
 template <unsigned int tChannels>
@@ -2076,10 +2041,7 @@ inline uint32_t ZeroMeanSumSquareDifferencesNEON::SpecializedForChannels<1u>::pa
 
 	const uint32x4_t sum_u_32x4 = vaddq_u32(sumA_u_32x4, sumB_u_32x4);
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
-	return results[0] + results[1] + results[2] + results[3] + sumIndividual;
+	return NEON::sumHorizontal_u_32x4(sum_u_32x4) + sumIndividual;
 }
 
 template <unsigned int tChannels>

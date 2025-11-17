@@ -106,13 +106,10 @@ inline uint32_t SumAbsoluteDifferencesNEON::buffer8BitPerChannel(const uint8_t* 
 		buffer1 += 8;
 	}
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
 	constexpr unsigned int remainingElements = tSize - blocks16 * 16u - blocks8 * 8u;
 	static_assert(remainingElements < 8u, "Invalid number of remaining elements!");
 
-	uint32_t result = results[0] + results[1] + results[2] + results[3];
+	uint32_t result = NEON::sumHorizontal_u_32x4(sum_u_32x4);
 
 	// we apply the remaining elements (at most 7)
 
@@ -220,10 +217,7 @@ inline uint32_t SumAbsoluteDifferencesNEON::patch8BitPerChannel(const uint8_t* p
 		patch1 += patch1StrideElements - patchWidthElements;
 	}
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
-	return results[0] + results[1] + results[2] + results[3] + sumIndividual;
+	return NEON::sumHorizontal_u_32x4(sum_u_32x4) + sumIndividual;
 }
 
 template <unsigned int tChannels, unsigned int tPatchSize>

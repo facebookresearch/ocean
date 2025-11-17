@@ -185,13 +185,10 @@ inline uint32_t SumSquareDifferencesNEON::buffer8BitPerChannel(const uint8_t* bu
 
 	const uint32x4_t sum_u_32x4 = vaddq_u32(sumA_u_32x4, sumB_u_32x4);
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
 	constexpr unsigned int remainingElements = tSize - blocks16 * 16u - blocks8 * 8u;
 	static_assert(remainingElements < 8u, "Invalid number of remaining elements!");
 
-	uint32_t result = results[0] + results[1] + results[2] + results[3];
+	uint32_t result = NEON::sumHorizontal_u_32x4(sum_u_32x4);
 
 	// we apply the remaining elements (at most 7)
 
@@ -317,10 +314,7 @@ inline uint32_t SumSquareDifferencesNEON::patch8BitPerChannel(const uint8_t* pat
 
 	const uint32x4_t sum_u_32x4 = vaddq_u32(sumA_u_32x4, sumB_u_32x4);
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
-	return results[0] + results[1] + results[2] + results[3] + sumIndividual;
+	return NEON::sumHorizontal_u_32x4(sum_u_32x4) + sumIndividual;
 }
 
 template <unsigned int tChannels, unsigned int tPatchSize>
@@ -498,10 +492,7 @@ uint32_t SumSquareDifferencesNEON::patchMirroredBorder8BitPerChannel(const uint8
 
 	const uint32x4_t sum_u_32x4 = vaddq_u32(sumA_u_32x4, sumB_u_32x4);
 
-	uint32_t results[4];
-	vst1q_u32(results, sum_u_32x4);
-
-	return results[0] + results[1] + results[2] + results[3] + sumIndividual;
+	return NEON::sumHorizontal_u_32x4(sum_u_32x4) + sumIndividual;
 }
 
 template <unsigned int tChannels>
