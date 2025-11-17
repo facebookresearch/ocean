@@ -713,7 +713,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The viewing direction of the camera is along the negative z-axis.<br>
 		 * The extrinsic matrix will be flipped and inverted internally.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param world_T_camera The pose of the camera, must be valid
+		 * @param world_T_camera The pose of the camera, the default camera is looking into the negative z-space with y-axis up, transforming camera to world, must be valid
 		 * @param worldObjectPoint The 3D object point to project, defined in world
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param zoom The optional zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
@@ -730,7 +730,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The viewing direction of the camera is along the negative z-axis.<br>
 		 * The extrinsic matrix will be flipped and inverted internally.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param world_T_camera The pose of the camera, must be valid
+		 * @param world_T_camera The pose of the camera, the default camera is looking into the negative z-space with y-axis up, transforming camera to world, must be valid
 		 * @param worldObjectBox The 3D box to project, defined in world, must be valid
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param zoom The zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
@@ -747,7 +747,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The viewing direction of the camera is along the negative z-axis.<br>
 		 * The extrinsic matrix will be flipped and inverted internally.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param world_T_camera The pose of the camera, must be valid
+		 * @param world_T_camera The pose of the camera, the default camera is looking into the negative z-space with y-axis up, transforming camera to world, must be valid
 		 * @param worldObjectTriangle The 3D triangle to project, defined in world, must be valid
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param zoom The zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
@@ -764,7 +764,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The viewing direction of the camera is along the negative z-axis.<br>
 		 * The extrinsic matrix will be flipped and inverted internally.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param world_T_camera The pose of the camera, must be valid
+		 * @param world_T_camera The pose of the camera, the default camera is looking into the negative z-space with y-axis up, transforming camera to world, must be valid
 		 * @param worldObjectPoints The 3D object points to project, defined in world
 		 * @param numberObjectPoints The number of object points to project, with range [0, infinity)
 		 * @param distortImagePoints True, to force the distortion of the image point using the distortion parameters of this camera object
@@ -782,7 +782,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The viewing direction of the camera is along the negative z-axis.<br>
 		 * The extrinsic matrix will be flipped and inverted internally.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param world_T_camera The pose of the camera, must be valid
+		 * @param world_T_camera The pose of the camera, the default camera is looking into the negative z-space with y-axis up, transforming camera to world, must be valid
 		 * @param worldLine The 3D line to be projected, defined in world, with unit length direction
 		 * @param distortProjectedLine True, to distort the projected 3D line (a very rough approximation only)
 		 * @param zoom The zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
@@ -799,7 +799,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The coordinate system of the camera is flipped meaning that the viewing direction is along the positive z-axis.<br>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param flippedCamera_T_world The inverted and flipped extrinsic camera matrix, must be valid
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectPoint The 3D object point to project
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param zoom The optional zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
@@ -816,7 +816,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The coordinate system of the camera is flipped meaning that the viewing direction is along the positive z-axis.<br>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param flippedCamera_T_world The inverted and flipped extrinsic camera matrix, must be valid
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param worldObjectPoint The 3D object point to project, defined in world
 		 * @param zoom The optional zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
 		 * @return The 2D image plane point defined inside the camera pixel coordinate system
@@ -833,7 +833,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The coordinate system of the camera is flipped meaning that the viewing direction is along the positive z-axis.<br>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param flippedCamera_T_world The inverted and flipped extrinsic camera matrix, must be valid
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param worldObjectBox The 3D box to project, defined in world, must be valid
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param zoom The zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
@@ -850,7 +850,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The coordinate system of the camera is flipped meaning that the viewing direction is along the positive z-axis.<br>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param flippedCamera_T_world The inverted and flipped extrinsic camera matrix, must be valid
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param worldObjectTriangle The 3D triangle to project, defined in world, must be valid
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param zoom The zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
@@ -880,7 +880,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The coordinate system of the camera is flipped meaning that the viewing direction is along the positive z-axis.<br>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param flippedCamera_T_world The inverted and flipped extrinsic camera matrix, must be valid
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param worldObjectPoints The 3D object points to project, defined in world
 		 * @param numberObjectPoints The number of object points to project, with range [0, infinity)
 		 * @param distortImagePoints True, to force the distortion of the image point using the distortion parameters of this camera object
@@ -898,7 +898,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The coordinate system of the camera is flipped meaning that the viewing direction is along the positive z-axis.<br>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param flippedCamera_T_world The inverted and flipped extrinsic camera matrix, must be valid
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param worldLine The 3D line to be projected, with unit length direction, defined in world, must be valid
 		 * @param distortProjectedLine True, to distort the projected 3D line (a very rough approximation only)
 		 * @param zoom The zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
@@ -914,7 +914,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The viewing direction of the camera is along the negative z-axis.<br>
 		 * Object points projecting outside the camera frame will be distorted (if desired) by application of a damping factor.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param extrinsic The extrinsic camera matrix
+		 * @param world_T_camera The pose of the camera, the default camera is looking into the negative z-space with y-axis up, transforming camera to world, must be valid
 		 * @param objectPoint The 3D object point to project
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param dampingFactor The factor defining the boundary of the asymptotic damping behavior for normalized coordinates, with range [0, infinity)
@@ -922,7 +922,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * @return The imagePoint Resulting 2D image plane point defined inside the camera pixel coordinate system
 		 * @see projectToImageDampedIF().
 		 */
-		inline VectorT2<T> projectToImageDamped(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>& objectPoint, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
+		inline VectorT2<T> projectToImageDamped(const HomogenousMatrixT4<T>& world_T_camera, const VectorT3<T>& objectPoint, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
 
 		/**
 		 * Projects a 3D box to the 2D image plane of the camera by a given inverse extrinsic camera matrix.
@@ -931,7 +931,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.<br>
 		 * Object points projecting outside the camera frame will be distorted (if desired) by application of a damping factor.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param extrinsic The extrinsic camera matrix
+		 * @param world_T_camera The pose of the camera, the default camera is looking into the negative z-space with y-axis up, transforming camera to world, must be valid
 		 * @param objectBox The 3D box to project
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param dampingFactor The factor defining the boundary of the asymptotic damping behavior for normalized coordinates, with range [0, infinity)
@@ -939,7 +939,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * @return The 2D box defined inside the camera pixel coordinate system
 		 * @see projectToImageDampedIF().
 		 */
-		inline BoxT2<T> projectToImageDamped(const HomogenousMatrixT4<T>& extrinsic, const BoxT3<T>& objectBox, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
+		inline BoxT2<T> projectToImageDamped(const HomogenousMatrixT4<T>& world_T_camera, const BoxT3<T>& objectBox, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
 
 		/**
 		 * Projects a 3D triangle to the 2D image plane of the camera by a given extrinsic camera matrix.
@@ -948,7 +948,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The extrinsic matrix will be flipped and inverted internally.<br>
 		 * Object points projecting outside the camera frame will be distorted (if desired) by application of a damping factor.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param extrinsic The extrinsic camera matrix
+		 * @param world_T_camera The pose of the camera, the default camera is looking into the negative z-space with y-axis up, transforming camera to world, must be valid
 		 * @param objectTriangle The 3D triangle to project
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param dampingFactor The factor defining the boundary of the asymptotic damping behavior for normalized coordinates, with range [0, infinity)
@@ -956,7 +956,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * @return The 2D image triangle defined inside the camera pixel coordinate system
 		 * @see projectToImageDampedIF().
 		 */
-		inline TriangleT2<T> projectToImageDamped(const HomogenousMatrixT4<T>& extrinsic, const TriangleT3<T>& objectTriangle, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
+		inline TriangleT2<T> projectToImageDamped(const HomogenousMatrixT4<T>& world_T_camera, const TriangleT3<T>& objectTriangle, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
 
 		/**
 		 * Projects a set of 3D object points onto an image plane of the camera by a given extrinsic camera matrix.
@@ -965,7 +965,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The extrinsic matrix will be flipped and inverted internally.<br>
 		 * Object points projecting outside the camera frame will be distorted (if desired) by application of a damping factor.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param extrinsic The extrinsic camera matrix
+		 * @param world_T_camera The pose of the camera, the default camera is looking into the negative z-space with y-axis up, transforming camera to world, must be valid
 		 * @param objectPoints The set of 3D object points to project
 		 * @param numberObjectPoints The number of object points to project
 		 * @param distortImagePoints True, to force the distortion of the image point using the distortion parameters of this camera object
@@ -974,7 +974,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * @param zoom The zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
 		 * @see projectToImageIF().
 		 */
-		inline void projectToImageDamped(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints, VectorT2<T>* imagePoints, const T dampingFactor = T(1), const T zoom = T(1)) const;
+		inline void projectToImageDamped(const HomogenousMatrixT4<T>& world_T_camera, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints, VectorT2<T>* imagePoints, const T dampingFactor = T(1), const T zoom = T(1)) const;
 
 		/**
 		 * Projects a 3D object point to the 2D image plane of the camera by a given inverse extrinsic camera matrix.
@@ -983,7 +983,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.<br>
 		 * Object points projecting outside the camera frame will be distorted (if desired) by application of a damping factor.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param iFlippedExtrinsic The inverted and flipped extrinsic camera matrix
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectPoint The 3D object point to project
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param dampingFactor The factor defining the boundary of the asymptotic damping behavior for normalized coordinates, with range [0, infinity)
@@ -991,7 +991,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * @return The resulting 2D image plane point defined inside the camera pixel coordinate system
 		 * @see projectToImageDamped().
 		 */
-		VectorT2<T> projectToImageDampedIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const VectorT3<T>& objectPoint, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
+		VectorT2<T> projectToImageDampedIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
 
 		/**
 		 * Projects a 3D box to the 2D image plane of the camera by a given inverse extrinsic camera matrix.
@@ -1000,7 +1000,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.<br>
 		 * Object points projecting outside the camera frame will be distorted (if desired) by application of a damping factor.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param iFlippedExtrinsic The inverted and flipped extrinsic camera matrix
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectBox The 3D box to project
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param dampingFactor The factor defining the boundary of the asymptotic damping behavior for normalized coordinates, with range [0, infinity)
@@ -1008,7 +1008,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * @return The 2D box defined inside the camera pixel coordinate system
 		 * @see projectToImageDamped().
 		 */
-		BoxT2<T> projectToImageDampedIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const BoxT3<T>& objectBox, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
+		BoxT2<T> projectToImageDampedIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const BoxT3<T>& objectBox, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
 
 		/**
 		 * Projects a 3D triangle to the 2D image plane of the camera by a given inverse extrinsic camera matrix.
@@ -1017,7 +1017,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.<br>
 		 * Object points projecting outside the camera frame will be distorted (if desired) by application of a damping factor.<br>
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param iFlippedExtrinsic The inverted and flipped extrinsic camera matrix
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectTriangle The 3D triangle to project
 		 * @param distortImagePoint True, to force the distortion of the image point using the distortion parameters of this camera object
 		 * @param dampingFactor The factor defining the boundary of the asymptotic damping behavior for normalized coordinates, with range [0, infinity)
@@ -1025,7 +1025,7 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		 * @return The 2D triangle defined inside the camera pixel coordinate system
 		 * @see projectToImageDamped().
 		 */
-		TriangleT2<T> projectToImageDampedIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const TriangleT3<T>& objectTriangle, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
+		TriangleT2<T> projectToImageDampedIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const TriangleT3<T>& objectTriangle, const bool distortImagePoint, const T dampingFactor = T(1), const T zoom = T(1)) const;
 
 		/**
 		 * Projects a set of 3D object points onto an image plane of the camera by a given inverse extrinsic camera matrix.
@@ -1140,11 +1140,11 @@ class OCEAN_MATH_EXPORT PinholeCameraT : public CameraT<T>
 		/**
 		 * Returns a 4x4 homogeneous transformation matrix (corresponding to a 3x4 matrix) that covers an extrinsic (inverted and flipped) camera matrix and the intrinsic projection matrix of this camera object.
 		 * Further this function can apply a specific zoom to the intrinsic camera matrix.
-		 * @param iFlippedExtrinsic The inverted and flipped extrinsic camera matrix
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param zoom The zoom factor of the camera, with range (0, infinity), with 1 the default zoom factor
 		 * @return The resulting transformation matrix
 		 */
-		inline HomogenousMatrixT4<T> transformationMatrixIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const T zoom = T(1)) const;
+		inline HomogenousMatrixT4<T> transformationMatrixIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const T zoom = T(1)) const;
 
 		/**
 		 * Returns whether two camera profiles are identical up to a given epsilon.
@@ -1666,7 +1666,7 @@ inline bool PinholeCameraT<T>::isInside(const VectorT2<T>& imagePoint, const T s
 }
 
 template <typename T>
-inline HomogenousMatrixT4<T> PinholeCameraT<T>::transformationMatrixIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const T zoom) const
+inline HomogenousMatrixT4<T> PinholeCameraT<T>::transformationMatrixIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const T zoom) const
 {
 	ocean_assert(zoom > NumericT<T>::eps());
 
@@ -1676,16 +1676,16 @@ inline HomogenousMatrixT4<T> PinholeCameraT<T>::transformationMatrixIF(const Hom
 	debugCameraMatrix(1, 1) *= zoom;
 	debugCameraMatrix[15] = 1;
 
-	const SquareMatrixT4<T> debugEntireMatrix(debugCameraMatrix * (SquareMatrixT4<T>&)iFlippedExtrinsic);
+	const SquareMatrixT4<T> debugEntireMatrix(debugCameraMatrix * (SquareMatrixT4<T>&)flippedCamera_T_world);
 	const HomogenousMatrixT4<T>& debugTransformationMatrix = (const HomogenousMatrixT4<T>&)debugEntireMatrix;
 
-	const HomogenousMatrixT4<T> transformationMatrix(HomogenousMatrixT4<T>(VectorT3<T>(intrinsics_[0] * zoom, intrinsics_[1], intrinsics_[2]), VectorT3<T>(intrinsics_[3], intrinsics_[4] * zoom, intrinsics_[5]), VectorT3<T>(intrinsics_[6], intrinsics_[7], intrinsics_[8])) * iFlippedExtrinsic);
+	const HomogenousMatrixT4<T> transformationMatrix(HomogenousMatrixT4<T>(VectorT3<T>(intrinsics_[0] * zoom, intrinsics_[1], intrinsics_[2]), VectorT3<T>(intrinsics_[3], intrinsics_[4] * zoom, intrinsics_[5]), VectorT3<T>(intrinsics_[6], intrinsics_[7], intrinsics_[8])) * flippedCamera_T_world);
 	ocean_assert(transformationMatrix.isValid());
 
 	ocean_assert(transformationMatrix == debugTransformationMatrix);
 #endif
 
-	return  HomogenousMatrixT4<T>(HomogenousMatrixT4<T>(VectorT3<T>(intrinsics_[0] * zoom, intrinsics_[1], intrinsics_[2]), VectorT3<T>(intrinsics_[3], intrinsics_[4] * zoom, intrinsics_[5]), VectorT3<T>(intrinsics_[6], intrinsics_[7], intrinsics_[8])) * iFlippedExtrinsic);
+	return  HomogenousMatrixT4<T>(HomogenousMatrixT4<T>(VectorT3<T>(intrinsics_[0] * zoom, intrinsics_[1], intrinsics_[2]), VectorT3<T>(intrinsics_[3], intrinsics_[4] * zoom, intrinsics_[5]), VectorT3<T>(intrinsics_[6], intrinsics_[7], intrinsics_[8])) * flippedCamera_T_world);
 }
 
 template <typename T>
@@ -2272,42 +2272,42 @@ LineT2<T> PinholeCameraT<T>::projectToImageIF(const HomogenousMatrixT4<T>& flipp
 }
 
 template <typename T>
-inline VectorT2<T> PinholeCameraT<T>::projectToImageDamped(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>& objectPoint, const bool distortImagePoint, const T dampingFactor, const T zoom) const
+inline VectorT2<T> PinholeCameraT<T>::projectToImageDamped(const HomogenousMatrixT4<T>& world_T_camera, const VectorT3<T>& objectPoint, const bool distortImagePoint, const T dampingFactor, const T zoom) const
 {
-	ocean_assert(extrinsic.isValid() && dampingFactor >= 0 && zoom > NumericT<T>::eps());
-	return projectToImageDampedIF(CameraT<T>::standard2InvertedFlipped(extrinsic), objectPoint, distortImagePoint, dampingFactor, zoom);
+	ocean_assert(world_T_camera.isValid() && dampingFactor >= 0 && zoom > NumericT<T>::eps());
+	return projectToImageDampedIF(CameraT<T>::standard2InvertedFlipped(world_T_camera), objectPoint, distortImagePoint, dampingFactor, zoom);
 }
 
 template <typename T>
-inline BoxT2<T> PinholeCameraT<T>::projectToImageDamped(const HomogenousMatrixT4<T>& extrinsic, const BoxT3<T>& objectBox, const bool distortImagePoint, const T dampingFactor, const T zoom) const
+inline BoxT2<T> PinholeCameraT<T>::projectToImageDamped(const HomogenousMatrixT4<T>& world_T_camera, const BoxT3<T>& objectBox, const bool distortImagePoint, const T dampingFactor, const T zoom) const
 {
-	ocean_assert(extrinsic.isValid() && dampingFactor >= 0 && zoom > NumericT<T>::eps());
-	return projectToImageDampedIF(CameraT<T>::standard2InvertedFlipped(extrinsic), objectBox, distortImagePoint, dampingFactor, zoom);
+	ocean_assert(world_T_camera.isValid() && dampingFactor >= 0 && zoom > NumericT<T>::eps());
+	return projectToImageDampedIF(CameraT<T>::standard2InvertedFlipped(world_T_camera), objectBox, distortImagePoint, dampingFactor, zoom);
 }
 
 template <typename T>
-inline TriangleT2<T> PinholeCameraT<T>::projectToImageDamped(const HomogenousMatrixT4<T>& extrinsic, const TriangleT3<T>& objectTriangle, const bool distortImagePoint, const T dampingFactor, const T zoom) const
+inline TriangleT2<T> PinholeCameraT<T>::projectToImageDamped(const HomogenousMatrixT4<T>& world_T_camera, const TriangleT3<T>& objectTriangle, const bool distortImagePoint, const T dampingFactor, const T zoom) const
 {
-	ocean_assert(extrinsic.isValid() && dampingFactor >= 0 && zoom > NumericT<T>::eps());
-	return projectToImageDampedIF(CameraT<T>::standard2InvertedFlipped(extrinsic), objectTriangle, distortImagePoint, dampingFactor, zoom);
+	ocean_assert(world_T_camera.isValid() && dampingFactor >= 0 && zoom > NumericT<T>::eps());
+	return projectToImageDampedIF(CameraT<T>::standard2InvertedFlipped(world_T_camera), objectTriangle, distortImagePoint, dampingFactor, zoom);
 }
 
 template <typename T>
-inline void PinholeCameraT<T>::projectToImageDamped(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints, VectorT2<T>* imagePoints, const T dampingFactor, const T zoom) const
+inline void PinholeCameraT<T>::projectToImageDamped(const HomogenousMatrixT4<T>& world_T_camera, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, const bool distortImagePoints, VectorT2<T>* imagePoints, const T dampingFactor, const T zoom) const
 {
-	ocean_assert(extrinsic.isValid() && dampingFactor >= 0 && zoom > NumericT<T>::eps());
+	ocean_assert(world_T_camera.isValid() && dampingFactor >= 0 && zoom > NumericT<T>::eps());
 	ocean_assert(numberObjectPoints == 0u || (objectPoints && imagePoints));
 
-	return projectToImageDampedIF(CameraT<T>::standard2InvertedFlipped(extrinsic), objectPoints, numberObjectPoints, distortImagePoints, imagePoints, dampingFactor, zoom);
+	return projectToImageDampedIF(CameraT<T>::standard2InvertedFlipped(world_T_camera), objectPoints, numberObjectPoints, distortImagePoints, imagePoints, dampingFactor, zoom);
 }
 
 template <typename T>
 template <bool tDistortImagePoint, bool tUseBorderDistortionIfOutside>
-inline VectorT2<T> PinholeCameraT<T>::projectToImageIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const VectorT3<T>& objectPoint, const T zoom) const
+inline VectorT2<T> PinholeCameraT<T>::projectToImageIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, const T zoom) const
 {
-	ocean_assert(iFlippedExtrinsic.isValid() && zoom > NumericT<T>::eps());
+	ocean_assert(flippedCamera_T_world.isValid() && zoom > NumericT<T>::eps());
 
-	const VectorT3<T> transformedObjectPoint(iFlippedExtrinsic * objectPoint);
+	const VectorT3<T> transformedObjectPoint(flippedCamera_T_world * objectPoint);
 
 	ocean_assert(NumericT<T>::isNotEqualEps(transformedObjectPoint.z()));
 	const T factor = T(1) / transformedObjectPoint.z();

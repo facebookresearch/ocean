@@ -83,50 +83,50 @@ class CameraT
 		 * The extrinsic matrix transforms a 3D point given in camera coordinates into 3D world coordinates.<br>
 		 * The viewing direction of the camera is along the negative z-axis.<br>
 		 * The extrinsic matrix will be flipped and inverted internally.
-		 * @param extrinsic The extrinsic camera matrix
+		 * @param world_T_camera The pose of the camera, the default camera is looking into the negative z-space with y-axis up, transforming camera to world, must be valid
 		 * @param objectPoint The 3D object point for that the normalized image point will be calculated
 		 * @return The resulting normalized image point
 		 * @see objectPoints2normalizedImagePoints().
 		 */
-		static inline VectorT2<T> objectPoint2normalizedImagePoint(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>& objectPoint);
+		static inline VectorT2<T> objectPoint2normalizedImagePoint(const HomogenousMatrixT4<T>& world_T_camera, const VectorT3<T>& objectPoint);
 
 		/**
 		 * Calculates the normalized image point (the normalized projected object point) for a given object point with corresponding inverse and flipped extrinsic camera matrix.
 		 * The inverse extrinsic matrix transforms a 3D point given in world coordinates into 3D camera coordinates.<br>
 		 * The coordinate system of the camera is flipped meaning that the viewing direction is along the positive z-axis.<br>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.
-		 * @param iFlippedExtrinsic The inverted and flipped extrinsic camera matrix
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectPoint The 3D object point for that the normalized image point will be calculated
 		 * @return The resulting normalized image point
 		 * @see objectPoint2normalizedImagePoint().
 		 */
-		static inline VectorT2<T> objectPoint2normalizedImagePointIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const VectorT3<T>& objectPoint);
+		static inline VectorT2<T> objectPoint2normalizedImagePointIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint);
 
 		/**
 		 * Calculates the normalized image points (the normalized projected object points) for a set of given object points with corresponding extrinsic camera matrix.
 		 * The extrinsic matrix transforms a 3D point given in camera coordinates into 3D world coordinates.<br>
 		 * The viewing direction of the camera is along the negative z-axis.<br>
 		 * The extrinsic matrix will be flipped and inverted internally.
-		 * @param extrinsic The extrinsic camera matrix
+		 * @param world_T_camera The pose of the camera, the default camera is looking into the negative z-space with y-axis up, transforming camera to world, must be valid
 		 * @param objectPoints The set of 3D object points for that the normalized image points will be calculated
 		 * @param numberObjectPoints The number of object points to project
 		 * @param normalizedImagePoints The resulting normalized image points, make sure that enough memory is provided
 		 * @see objectPoint2normalizedImagePoint(), objectPoints2normalizedImagePointsIF().
 		 */
-		static inline void objectPoints2normalizedImagePoints(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, VectorT2<T>* normalizedImagePoints);
+		static inline void objectPoints2normalizedImagePoints(const HomogenousMatrixT4<T>& world_T_camera, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, VectorT2<T>* normalizedImagePoints);
 
 		/**
 		 * Calculates the normalized image points (the normalized projected object points) for a set of given object points with corresponding inverse and flipped extrinsic camera matrix.
 		 * The inverse extrinsic matrix transforms a 3D point given in world coordinates into 3D camera coordinates.<br>
 		 * The coordinate system of the camera is flipped meaning that the viewing direction is along the positive z-axis.<br>
 		 * The flipped coordinate system can be received by a rotation around the x-axis by 180 degree.
-		 * @param iFlippedExtrinsic The inverted and flipped extrinsic camera matrix
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectPoints The set of 3D object points for that the normalized image points will be calculated
 		 * @param numberObjectPoints The number of object points to project
 		 * @param normalizedImagePoints The resulting normalized image points, make sure that enough memory is provided
 		 * @see objectPoints2normalizedImagePoints().
 		 */
-		static void objectPoints2normalizedImagePointsIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, VectorT2<T>* normalizedImagePoints);
+		static void objectPoints2normalizedImagePointsIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, VectorT2<T>* normalizedImagePoints);
 
 		/**
 		 * Returns the 3x3 transformation matrix flipping a transformation around the x-axis by 180 deg.
@@ -386,8 +386,8 @@ class CameraT
 
 		/**
 		 * Determines whether a given 3D object point lies in front of a camera while the location of the camera is defined by a 6-DOF pose.
-		 * This function actually determined whether (iFlippedPose * objectPoint).z() > epsilon.
-		 * @param flippedCamera_T_world The inverted and flipped pose of the camera, must be valid
+		 * This function actually determines whether (flippedCamera_T_world * objectPoint).z() > epsilon.
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectPoint The object point to check
 		 * @param epsilon The minimal distance between camera and object point on the z-axis so that the object point counts as lying in front, with range [0, infinity)
 		 * @return True, if so
@@ -396,8 +396,8 @@ class CameraT
 
 		/**
 		 * Determines whether a given 3D object point lies in front of a camera while the location of the camera is defined by a 3-DOF orientation.
-		 * This function actually determined whether (iFlippedPose * objectPoint).z() > epsilon.
-		 * @param flippedCamera_R_world The inverted and flipped orientation of the camera, must be valid
+		 * This function actually determines whether (flippedCamera_R_world * objectPoint).z() > epsilon.
+		 * @param flippedCamera_R_world The inverted and flipped rotation of the camera, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectPoint The object point to check
 		 * @param epsilon The minimal distance between camera and object point on the z-axis so that the object point counts as lying in front, with range [0, infinity)
 		 * @return True, if so
@@ -433,19 +433,19 @@ T CameraT<T>::fieldOfViewToFocalLength(const unsigned int width, const T fovX)
 }
 
 template <typename T>
-inline VectorT2<T> CameraT<T>::objectPoint2normalizedImagePoint(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>& objectPoint)
+inline VectorT2<T> CameraT<T>::objectPoint2normalizedImagePoint(const HomogenousMatrixT4<T>& world_T_camera, const VectorT3<T>& objectPoint)
 {
-	ocean_assert(extrinsic.isValid());
+	ocean_assert(world_T_camera.isValid());
 
-	return objectPoint2normalizedImagePointIF(standard2InvertedFlipped(extrinsic), objectPoint);
+	return objectPoint2normalizedImagePointIF(standard2InvertedFlipped(world_T_camera), objectPoint);
 }
 
 template <typename T>
-inline VectorT2<T> CameraT<T>::objectPoint2normalizedImagePointIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const VectorT3<T>& objectPoint)
+inline VectorT2<T> CameraT<T>::objectPoint2normalizedImagePointIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint)
 {
-	ocean_assert(iFlippedExtrinsic.isValid());
+	ocean_assert(flippedCamera_T_world.isValid());
 
-	const VectorT3<T> transformedObjectPoint(iFlippedExtrinsic * objectPoint);
+	const VectorT3<T> transformedObjectPoint(flippedCamera_T_world * objectPoint);
 
 	ocean_assert(NumericT<T>::isNotEqualEps(transformedObjectPoint.z()));
 	if (NumericT<T>::isEqualEps(transformedObjectPoint.z()))
@@ -458,23 +458,23 @@ inline VectorT2<T> CameraT<T>::objectPoint2normalizedImagePointIF(const Homogeno
 }
 
 template <typename T>
-inline void CameraT<T>::objectPoints2normalizedImagePoints(const HomogenousMatrixT4<T>& extrinsic, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, VectorT2<T>* normalizedImagePoints)
+inline void CameraT<T>::objectPoints2normalizedImagePoints(const HomogenousMatrixT4<T>& world_T_camera, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, VectorT2<T>* normalizedImagePoints)
 {
-	ocean_assert(extrinsic.isValid());
+	ocean_assert(world_T_camera.isValid());
 	ocean_assert(numberObjectPoints == 0u || (objectPoints && normalizedImagePoints));
 
-	objectPoints2normalizedImagePointsIF(standard2InvertedFlipped(extrinsic), objectPoints, numberObjectPoints, normalizedImagePoints);
+	objectPoints2normalizedImagePointsIF(standard2InvertedFlipped(world_T_camera), objectPoints, numberObjectPoints, normalizedImagePoints);
 }
 
 template <typename T>
-void CameraT<T>::objectPoints2normalizedImagePointsIF(const HomogenousMatrixT4<T>& iFlippedExtrinsic, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, VectorT2<T>* normalizedImagePoints)
+void CameraT<T>::objectPoints2normalizedImagePointsIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>* objectPoints, const size_t numberObjectPoints, VectorT2<T>* normalizedImagePoints)
 {
-	ocean_assert(iFlippedExtrinsic.isValid());
+	ocean_assert(flippedCamera_T_world.isValid());
 	ocean_assert(numberObjectPoints == 0u || (objectPoints && normalizedImagePoints));
 
 	for (unsigned int n = 0u; n < numberObjectPoints; ++n)
 	{
-		const VectorT3<T> transformedObjectPoint(iFlippedExtrinsic * objectPoints[n]);
+		const VectorT3<T> transformedObjectPoint(flippedCamera_T_world * objectPoints[n]);
 
 		ocean_assert(NumericT<T>::isNotEqualEps(transformedObjectPoint.z()));
 

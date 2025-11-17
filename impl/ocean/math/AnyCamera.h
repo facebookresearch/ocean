@@ -301,7 +301,7 @@ class AnyCameraT : public CameraT<T>
 
 		/**
 		 * Projects a 3D object point into the camera frame.
-		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectPoint The 3D object point to project, defined in world
 		 * @return The projected 2D image point
 		 */
@@ -318,7 +318,7 @@ class AnyCameraT : public CameraT<T>
 
 		/**
 		 * Projects several 3D object points into the camera frame at once.
-		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectPoints The 3D object points to project, defined in world, must be valid
 		 * @param size The number of object points, with range [1, infinity)
 		 * @param imagePoints The resulting 2D image points, must be valid
@@ -792,7 +792,7 @@ class AnyCameraWrappingT final :
 
 		/**
 		 * Projects a 3D object point into the camera frame.
-		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectPoint The 3D object point to project, defined in world
 		 * @return The projected 2D image point
 		 */
@@ -809,7 +809,7 @@ class AnyCameraWrappingT final :
 
 		/**
 		 * Projects several 3D object points into the camera frame at once.
-		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
+		 * @param flippedCamera_T_world The inverted and flipped camera pose, the default flipped camera is looking into the positive z-space with y-axis down, transforming world to flipped camera, must be valid
 		 * @param objectPoints The 3D object points to project, defined in world, must be valid
 		 * @param size The number of object points, with range [1, infinity)
 		 * @param imagePoints The resulting 2D image points, must be valid
