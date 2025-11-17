@@ -187,7 +187,7 @@ class ResourceManager : public Singleton<ResourceManager>
 				 * Returns whether the object is valid.
 				 * @return True, if so
 				 */
-				inline operator bool() const;
+				explicit inline operator bool() const;
 
 			protected:
 

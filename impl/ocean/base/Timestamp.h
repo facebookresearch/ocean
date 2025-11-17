@@ -442,7 +442,7 @@ class OCEAN_BASE_EXPORT TimestampConverter
 		 * Returns whether this converter is valid.
 		 * @return True, if so
 		 */
-		inline operator bool() const;
+		explicit inline operator bool() const;
 
 		/**
 		 * Move operator.

@@ -323,7 +323,7 @@ class BoxT3
 		 * Returns whether this box is not a default box.
 		 * @return True, if so
 		 */
-		operator bool() const;
+		explicit operator bool() const;
 
 	protected:
 
