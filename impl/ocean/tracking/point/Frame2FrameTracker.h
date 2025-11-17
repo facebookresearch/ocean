@@ -75,7 +75,7 @@ bool Frame2FrameTracker::determinePose(const PinholeCamera& pinholeCamera, const
 
 	Vectors2 currentImagePoints;
 	Indices32 internalValidIndices;
-	if (!CV::Advanced::AdvancedMotion<>::trackPointsBidirectionalSubPixelMirroredBorder<7u>(previousFrame, currentFrame, maximalOffset, 2u, copyPreviousImagePoints, currentImagePoints, Scalar(0.9 * 0.9), CV::FramePyramid::DM_FILTER_14641, worker, &internalValidIndices))
+	if (!CV::Advanced::AdvancedMotionT<>::trackPointsBidirectionalSubPixelMirroredBorder<7u>(previousFrame, currentFrame, maximalOffset, 2u, copyPreviousImagePoints, currentImagePoints, Scalar(0.9 * 0.9), CV::FramePyramid::DM_FILTER_14641, worker, &internalValidIndices))
 	{
 		return false;
 	}

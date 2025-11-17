@@ -40,21 +40,21 @@ namespace Advanced
 
 // Forward declaration.
 template <typename TMetricInteger, typename TMetricFloat>
-class AdvancedMotion;
+class AdvancedMotionT;
 
 /**
  * Definition of an AdvancedMotion class that applies sum square difference calculations as metric.
  * @see AdvancedMotionZeroMeanSSD, AdvancedMotion.
  * @ingroup cvadvanced
  */
-using AdvancedMotionSSD = AdvancedMotion<SumSquareDifferences, AdvancedSumSquareDifferences>;
+using AdvancedMotionSSD = AdvancedMotionT<SumSquareDifferences, AdvancedSumSquareDifferences>;
 
 /**
  * Definition of an AdvancedMotion class that applies zero-mean sum square difference calculations as metric.
  * @see AdvancedMotionSSD, AdvancedMotion.
  * @ingroup cvadvanced
  */
-using AdvancedMotionZeroMeanSSD = AdvancedMotion<ZeroMeanSumSquareDifferences, AdvancedZeroMeanSumSquareDifferences>;
+using AdvancedMotionZeroMeanSSD = AdvancedMotionT<ZeroMeanSumSquareDifferences, AdvancedZeroMeanSumSquareDifferences>;
 
 /**
  * This class implements advanced motion techniques (mainly with sub-pixel accuracy or binary masks) allowing to determine the motion (movement) of individual image points between two frames.
@@ -64,7 +64,7 @@ using AdvancedMotionZeroMeanSSD = AdvancedMotion<ZeroMeanSumSquareDifferences, A
  * @ingroup cvadvanced
  */
 template <typename TMetricInteger = SumSquareDifferences, typename TMetricFloat = AdvancedSumSquareDifferences>
-class AdvancedMotion
+class AdvancedMotionT
 {
 	public:
 
@@ -492,7 +492,7 @@ class AdvancedMotion
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tSize>
-bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBorder(const Frame& previousFrame, const Frame& currentFrame, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int maximalOffset, const unsigned int coarsestLayerRadius, const FramePyramid::DownsamplingMode downsamplingMode, const unsigned int subPixelIterations, Worker* worker, MetricResults* metricResults, MetricResults* metricIdentityResults)
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBorder(const Frame& previousFrame, const Frame& currentFrame, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int maximalOffset, const unsigned int coarsestLayerRadius, const FramePyramid::DownsamplingMode downsamplingMode, const unsigned int subPixelIterations, Worker* worker, MetricResults* metricResults, MetricResults* metricIdentityResults)
 {
 	static_assert(tSize % 2u == 1u, "Invalid image patch size, must be odd!");
 	static_assert(tSize >= 3u, "Invalid image patch size, must be larger than 2!");
@@ -523,7 +523,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tSize>
-inline bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations, Worker* worker, MetricResults* metricResults, MetricResults* metricIdentityResults)
+inline bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations, Worker* worker, MetricResults* metricResults, MetricResults* metricIdentityResults)
 {
 	static_assert(tSize % 2u == 1u, "Invalid image patch size, must be odd!");
 	static_assert(tSize >= 3u, "Invalid image patch size, must be larger than 2!");
@@ -557,7 +557,7 @@ inline bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMir
 
 	if (worker != nullptr)
 	{
-		worker->executeFunction(Worker::Function::createStatic(&AdvancedMotion::trackPointsSubPixelMirroredBorderSubset<tSize>, &previousPyramid, &currentPyramid, numberLayers, &previousPoints, &roughPoints, &currentPoints, coarsestLayerRadius, subPixelIterations, metricResults ? metricResults->data() : nullptr, metricIdentityResults ? metricIdentityResults->data() : nullptr, 0u, 0u), 0u, (unsigned int)(previousPoints.size()));
+		worker->executeFunction(Worker::Function::createStatic(&AdvancedMotionT::trackPointsSubPixelMirroredBorderSubset<tSize>, &previousPyramid, &currentPyramid, numberLayers, &previousPoints, &roughPoints, &currentPoints, coarsestLayerRadius, subPixelIterations, metricResults ? metricResults->data() : nullptr, metricIdentityResults ? metricIdentityResults->data() : nullptr, 0u, 0u), 0u, (unsigned int)(previousPoints.size()));
 	}
 	else
 	{
@@ -569,7 +569,7 @@ inline bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMir
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tChannels, unsigned int tSize>
-inline bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations, Worker* worker, MetricResults* metricResults, MetricResults* metricIdentityResults)
+inline bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const Vectors2& previousPoints, const Vectors2& roughPoints, Vectors2& currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations, Worker* worker, MetricResults* metricResults, MetricResults* metricIdentityResults)
 {
 	static_assert(tSize % 2u == 1u, "Invalid image patch size, must be odd!");
 	static_assert(tSize >= 3u, "Invalid image patch size, must be larger than 2!");
@@ -606,7 +606,7 @@ inline bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMir
 
 	if (worker != nullptr)
 	{
-		worker->executeFunction(Worker::Function::createStatic(&AdvancedMotion::trackPointsSubPixelMirroredBorderSubset<tChannels, tSize>, &previousPyramid, &currentPyramid, numberLayers, &previousPoints, &roughPoints, &currentPoints, coarsestLayerRadius, subPixelIterations, metricResults ? metricResults->data() : nullptr, metricIdentityResults ? metricIdentityResults->data() : nullptr, 0u, 0u), 0u, (unsigned int)(previousPoints.size()));
+		worker->executeFunction(Worker::Function::createStatic(&AdvancedMotionT::trackPointsSubPixelMirroredBorderSubset<tChannels, tSize>, &previousPyramid, &currentPyramid, numberLayers, &previousPoints, &roughPoints, &currentPoints, coarsestLayerRadius, subPixelIterations, metricResults ? metricResults->data() : nullptr, metricIdentityResults ? metricIdentityResults->data() : nullptr, 0u, 0u), 0u, (unsigned int)(previousPoints.size()));
 	}
 	else
 	{
@@ -618,7 +618,7 @@ inline bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMir
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tSize>
-bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, const SubRegion& previousSubRegion, const unsigned int horizontalBins, const unsigned int verticalBins, const unsigned int strength, Worker* worker, const unsigned int trackingLayers)
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, const SubRegion& previousSubRegion, const unsigned int horizontalBins, const unsigned int verticalBins, const unsigned int strength, Worker* worker, const unsigned int trackingLayers)
 {
 	ocean_assert(previousPyramid && nextPyramid);
 
@@ -763,7 +763,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirecti
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tSize>
-bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirectionalSubPixelMirroredBorder(const Frame& previousFrame, const Frame& nextFrame, const unsigned int maximalOffset, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, const SubRegion& previousSubRegion, const unsigned int horizontalBins, const unsigned int verticalBins, const unsigned int strength, const FramePyramid::DownsamplingMode downsamplingMode, Worker* worker, const unsigned int trackingLayers)
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirectionalSubPixelMirroredBorder(const Frame& previousFrame, const Frame& nextFrame, const unsigned int maximalOffset, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, const SubRegion& previousSubRegion, const unsigned int horizontalBins, const unsigned int verticalBins, const unsigned int strength, const FramePyramid::DownsamplingMode downsamplingMode, Worker* worker, const unsigned int trackingLayers)
 {
 	ocean_assert(previousFrame && nextFrame);
 
@@ -787,7 +787,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackArbitraryPointsBidirecti
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tSize>
-bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, Worker* worker, Indices32* validIndices, const unsigned int subPixelIterations)
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, Worker* worker, Indices32* validIndices, const unsigned int subPixelIterations)
 {
 	ocean_assert(previousPyramid && nextPyramid);
 
@@ -878,7 +878,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tChannels, unsigned int tSize>
-bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, Worker* worker, Indices32* validIndices, const unsigned int subPixelIterations)
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, Worker* worker, Indices32* validIndices, const unsigned int subPixelIterations)
 {
 	ocean_assert(previousPyramid && nextPyramid);
 	ocean_assert(previousPyramid.frameType().channels() == tChannels);
@@ -970,7 +970,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tSize>
-bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, const Vectors2& previousImagePoints, Vectors2& nextImagePoints, std::vector<uint8_t>& validCorrespondences, const Scalar maximalSqrError, Worker* worker, const unsigned int subPixelIterations)
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, const Vectors2& previousImagePoints, Vectors2& nextImagePoints, std::vector<uint8_t>& validCorrespondences, const Scalar maximalSqrError, Worker* worker, const unsigned int subPixelIterations)
 {
 	ocean_assert(previousPyramid && nextPyramid);
 
@@ -1029,7 +1029,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tChannels, unsigned int tSize>
-bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, const Vectors2& previousImagePoints, Vectors2& nextImagePoints, std::vector<uint8_t>& validCorrespondences, const Scalar maximalSqrError, Worker* worker, const unsigned int subPixelIterations)
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, const Vectors2& previousImagePoints, Vectors2& nextImagePoints, std::vector<uint8_t>& validCorrespondences, const Scalar maximalSqrError, Worker* worker, const unsigned int subPixelIterations)
 {
 	ocean_assert(previousPyramid && nextPyramid);
 	ocean_assert(previousPyramid.frameType().channels() == tChannels);
@@ -1091,7 +1091,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tSize>
-bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, const Vectors2& roughNextImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, Worker* worker, Indices32* validIndices, const unsigned int subPixelIterations)
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, const Vectors2& roughNextImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, Worker* worker, Indices32* validIndices, const unsigned int subPixelIterations)
 {
 	ocean_assert(previousPyramid && nextPyramid);
 	ocean_assert(previousPyramid.frameType().pixelFormat() == nextPyramid.frameType().pixelFormat() && previousPyramid.frameType().pixelOrigin() == nextPyramid.frameType().pixelOrigin());
@@ -1181,7 +1181,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tChannels, unsigned int tSize>
-bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, const Vectors2& roughNextImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, Worker* worker, Indices32* validIndices, const unsigned int subPixelIterations)
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorderWithRoughLocations(const CV::FramePyramid& previousPyramid, const CV::FramePyramid& nextPyramid, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, const Vectors2& roughNextImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, Worker* worker, Indices32* validIndices, const unsigned int subPixelIterations)
 {
 	ocean_assert(previousPyramid && nextPyramid);
 	ocean_assert(FrameType::arePixelFormatsCompatible(previousPyramid.frameType().pixelFormat(), nextPyramid.frameType().pixelFormat()));
@@ -1278,7 +1278,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tSize>
-bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const Frame& previousFrame, const Frame& nextFrame, const unsigned int maximalOffset, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, const FramePyramid::DownsamplingMode downsamplingMode, Worker* worker, Indices32* validIndices, const unsigned int subPixelIterations)
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPixelMirroredBorder(const Frame& previousFrame, const Frame& nextFrame, const unsigned int maximalOffset, const unsigned int coarsestLayerRadius, Vectors2& previousImagePoints, Vectors2& nextImagePoints, const Scalar maximalSqrError, const FramePyramid::DownsamplingMode downsamplingMode, Worker* worker, Indices32* validIndices, const unsigned int subPixelIterations)
 {
 	ocean_assert(previousFrame.isValid() && nextFrame.isValid());
 
@@ -1306,7 +1306,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsBidirectionalSubPi
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tSize>
-bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackReliableReferencePoints(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, Vectors2& previousReferencePoints, Vectors2& currentReferencePoints, const unsigned int horizontalBins, const unsigned int verticalBins, const PixelBoundingBox& boundingBox, const Frame& maskFrame, Worker* worker)
+bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackReliableReferencePoints(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, Vectors2& previousReferencePoints, Vectors2& currentReferencePoints, const unsigned int horizontalBins, const unsigned int verticalBins, const PixelBoundingBox& boundingBox, const Frame& maskFrame, Worker* worker)
 {
 	ocean_assert(previousReferencePoints.empty());
 	ocean_assert(currentReferencePoints.empty());
@@ -1382,7 +1382,7 @@ bool AdvancedMotion<TMetricInteger, TMetricFloat>::trackReliableReferencePoints(
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tChannels, unsigned int tPatchSize>
-Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1, const unsigned int subPixelIterations, uint32_t* metricResult, uint32_t* metricIdentityResult)
+Vector2 AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1, const unsigned int subPixelIterations, uint32_t* metricResult, uint32_t* metricIdentityResult)
 {
 	static_assert(tChannels != 0u, "Invalid number of data channels!");
 	static_assert(tPatchSize % 2u == 1u, "Invalid size of the image patch, must be odd!");
@@ -1479,7 +1479,7 @@ Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointSubPixelMirrored
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tPatchSize>
-inline Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int channels, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1, const unsigned int subPixelIterations, uint32_t* metricResult, uint32_t* metricIdentityResult)
+inline Vector2 AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointSubPixelMirroredBorder(const uint8_t* frame0, const uint8_t* frame1, const unsigned int channels, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const Vector2& position0, const unsigned int radiusX, const unsigned int radiusY, const Vector2& rough1, const unsigned int subPixelIterations, uint32_t* metricResult, uint32_t* metricIdentityResult)
 {
 	ocean_assert(channels >= 1u);
 
@@ -1504,7 +1504,7 @@ inline Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointSubPixelM
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tChannels, unsigned int tPatchSize>
-Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointBufferSubPixelMirroredBorder(const uint8_t* buffer0, const uint8_t* frame1, const unsigned int width1, const unsigned int height1, const unsigned int frame1PaddingElements, const Vector2& roughPosition1, const unsigned int subPixelIterations, uint32_t* metricResult)
+Vector2 AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointBufferSubPixelMirroredBorder(const uint8_t* buffer0, const uint8_t* frame1, const unsigned int width1, const unsigned int height1, const unsigned int frame1PaddingElements, const Vector2& roughPosition1, const unsigned int subPixelIterations, uint32_t* metricResult)
 {
 	static_assert(tChannels >= 1u, "Invalid number of data channels!");
 	static_assert(tPatchSize % 2u == 1u, "Invalid size of the image patch, must be odd!");
@@ -1605,7 +1605,7 @@ Vector2 AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointBufferSubPixelMi
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tSize>
-void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBorderSubset(const FramePyramid* previousPyramid, const FramePyramid* nextPyramid, const unsigned int numberLayers, const Vectors2* previousPoints, const Vectors2* roughNextPoints, Vectors2* nextPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations, unsigned int* metricResults, unsigned int* metricIdentityResults, const unsigned int firstPoint, const unsigned int numberPoints)
+void AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBorderSubset(const FramePyramid* previousPyramid, const FramePyramid* nextPyramid, const unsigned int numberLayers, const Vectors2* previousPoints, const Vectors2* roughNextPoints, Vectors2* nextPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations, unsigned int* metricResults, unsigned int* metricIdentityResults, const unsigned int firstPoint, const unsigned int numberPoints)
 {
 	static_assert(tSize % 2u == 1u, "Invalid patch size, must be odd!");
 
@@ -1748,7 +1748,7 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 
 template <typename TMetricInteger, typename TMetricFloat>
 template <unsigned int tChannels, unsigned int tSize>
-void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBorderSubset(const FramePyramid* previousPyramid, const FramePyramid* currentPyramid, const unsigned int numberLayers, const Vectors2* previousPoints, const Vectors2* roughPoints, Vectors2* currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations, unsigned int* metricResults, unsigned int* metricIdentityResults, const unsigned int firstPoint, const unsigned int numberPoints)
+void AdvancedMotionT<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBorderSubset(const FramePyramid* previousPyramid, const FramePyramid* currentPyramid, const unsigned int numberLayers, const Vectors2* previousPoints, const Vectors2* roughPoints, Vectors2* currentPoints, const unsigned int coarsestLayerRadius, const unsigned int subPixelIterations, unsigned int* metricResults, unsigned int* metricIdentityResults, const unsigned int firstPoint, const unsigned int numberPoints)
 {
 	static_assert(tSize % 2u == 1u, "Invalid patch size, must be odd!");
 

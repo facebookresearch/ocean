@@ -118,7 +118,7 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 	if (!usePlanarTracking_)
 	{
 		// try to track strong feature points from the previous iterations with small image patches
-		if (!previousContourStrongest_.empty() && Advanced::AdvancedMotion<>::trackPointsSubPixelMirroredBorder<9u>(previousFramePyramid_, currentFramePyramid_, previousContourStrongest_, previousContourStrongest_, currentContourStrongest, 2u, 4u, worker))
+		if (!previousContourStrongest_.empty() && Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<9u>(previousFramePyramid_, currentFramePyramid_, previousContourStrongest_, previousContourStrongest_, currentContourStrongest, 2u, 4u, worker))
 		{
 			const bool homographyResult = Geometry::RANSAC::homographyMatrix(previousContourStrongest_.data(), currentContourStrongest.data(), currentContourStrongest.size(), randomGenerator, currentHomography, 12u, true, 50u, Scalar(2.5 * 2.5), &usedIndices, worker);
 
@@ -140,7 +140,7 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 				previousContourStrongest_.push_back(previousDenseContourSubPixel_[*i]);
 			}
 
-			if (Advanced::AdvancedMotion<>::trackPointsSubPixelMirroredBorder<31u>(previousFramePyramid_, currentFramePyramid_, previousContourStrongest_, previousContourStrongest_, currentContourStrongest, 2u, 4u, worker))
+			if (Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<31u>(previousFramePyramid_, currentFramePyramid_, previousContourStrongest_, previousContourStrongest_, currentContourStrongest, 2u, 4u, worker))
 			{
 				ocean_assert(previousContourStrongest_.size() == currentContourStrongest.size());
 				const bool homographyResult = Geometry::RANSAC::homographyMatrix(previousContourStrongest_.data(), currentContourStrongest.data(), currentContourStrongest.size(), randomGenerator, currentHomography, 12u, true, 100u, Scalar(3 * 3), &usedIndices, worker);
@@ -164,7 +164,7 @@ bool ContourTracker::trackObject(const Frame& frame, RandomGenerator& randomGene
 		const PixelBoundingBox boundingBox(40u, 40u, frame.width() - 41u, frame.height() - 41u);
 
 		Vectors2 previousReferencePoints, currentReferencePoints;
-		if (Advanced::AdvancedMotion<>::trackReliableReferencePoints<9u>(previousFramePyramid_, currentFramePyramid_, previousReferencePoints, currentReferencePoints, 20u, 20u, boundingBox, Frame(), worker) && !previousReferencePoints.empty())
+		if (Advanced::AdvancedMotionT<>::trackReliableReferencePoints<9u>(previousFramePyramid_, currentFramePyramid_, previousReferencePoints, currentReferencePoints, 20u, 20u, boundingBox, Frame(), worker) && !previousReferencePoints.empty())
 		{
 			const bool homographyResult = Geometry::RANSAC::homographyMatrix(previousReferencePoints.data(), currentReferencePoints.data(), previousReferencePoints.size(), randomGenerator, currentHomography, 12u, true, 200u, Scalar(2.0 * 2.0), &usedIndices, worker);
 

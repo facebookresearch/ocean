@@ -108,7 +108,7 @@ bool HomographyTracker::trackPoints(const Frame& yPreviousFrame, const CV::Frame
 	Vectors2 previousContourStrongest = CV::Detector::FeatureDetector::filterStrongHarrisPoints(yPreviousFrame.constdata<uint8_t>(), yPreviousFrame.width(), yPreviousFrame.height(), yPreviousFrame.paddingElements(), previousPositions, 50, Scalar(5 * 5), 100, worker);
 
 	// try to track strong feature points from the previous iterations with small image patches
-	if (!previousContourStrongest.empty() && CV::Advanced::AdvancedMotion<>::trackPointsSubPixelMirroredBorder<9u>(previousFramePyramid, currentFramePyramid, previousContourStrongest, previousContourStrongest, currentContourStrongest, 2u, 4u, worker))
+	if (!previousContourStrongest.empty() && CV::Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<9u>(previousFramePyramid, currentFramePyramid, previousContourStrongest, previousContourStrongest, currentContourStrongest, 2u, 4u, worker))
 	{
 		const bool homographyResult = Geometry::RANSAC::homographyMatrix(previousContourStrongest.data(), currentContourStrongest.data(), currentContourStrongest.size(), randomGenerator, homography, 12u, true, 50u, Scalar(2.5 * 2.5), &usedIndices, worker);
 
@@ -135,20 +135,20 @@ bool HomographyTracker::trackPoints(const Frame& yPreviousFrame, const CV::Frame
 		switch (patchSize)
 		{
 			case 5u:
-				pointTrackingSucceeded = CV::Advanced::AdvancedMotion<>::trackPointsSubPixelMirroredBorder<5u>(previousFramePyramid, currentFramePyramid, previousContourStrongest, previousContourStrongest, currentContourStrongest, 2u, 2u, worker);
+				pointTrackingSucceeded = CV::Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<5u>(previousFramePyramid, currentFramePyramid, previousContourStrongest, previousContourStrongest, currentContourStrongest, 2u, 2u, worker);
 				break;
 
 			case 7u:
-				pointTrackingSucceeded = CV::Advanced::AdvancedMotion<>::trackPointsSubPixelMirroredBorder<7u>(previousFramePyramid, currentFramePyramid, previousContourStrongest, previousContourStrongest, currentContourStrongest, 2u, 2u, worker);
+				pointTrackingSucceeded = CV::Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<7u>(previousFramePyramid, currentFramePyramid, previousContourStrongest, previousContourStrongest, currentContourStrongest, 2u, 2u, worker);
 				break;
 
 			case 15u:
-				pointTrackingSucceeded = CV::Advanced::AdvancedMotion<>::trackPointsSubPixelMirroredBorder<15u>(previousFramePyramid, currentFramePyramid, previousContourStrongest, previousContourStrongest, currentContourStrongest, 2u, 2u, worker);
+				pointTrackingSucceeded = CV::Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<15u>(previousFramePyramid, currentFramePyramid, previousContourStrongest, previousContourStrongest, currentContourStrongest, 2u, 2u, worker);
 				break;
 
 			default:
 				ocean_assert(patchSize == 31u);
-				pointTrackingSucceeded = CV::Advanced::AdvancedMotion<>::trackPointsSubPixelMirroredBorder<31u>(previousFramePyramid, currentFramePyramid, previousContourStrongest, previousContourStrongest, currentContourStrongest, 2u, 2u, worker);
+				pointTrackingSucceeded = CV::Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<31u>(previousFramePyramid, currentFramePyramid, previousContourStrongest, previousContourStrongest, currentContourStrongest, 2u, 2u, worker);
 				break;
 		}
 
@@ -167,7 +167,7 @@ bool HomographyTracker::trackPoints(const Frame& yPreviousFrame, const CV::Frame
 		const CV::PixelBoundingBox boundingBox(40u, 40u, currentFramePyramid.finestWidth() - 41u, currentFramePyramid.finestHeight() - 41u);
 
 		Vectors2 previousReferencePoints, currentReferencePoints;
-		if (CV::Advanced::AdvancedMotion<>::trackReliableReferencePoints<9u>(previousFramePyramid, currentFramePyramid, previousReferencePoints, currentReferencePoints, 20u, 20u, boundingBox, Frame(), worker) && !previousReferencePoints.empty())
+		if (CV::Advanced::AdvancedMotionT<>::trackReliableReferencePoints<9u>(previousFramePyramid, currentFramePyramid, previousReferencePoints, currentReferencePoints, 20u, 20u, boundingBox, Frame(), worker) && !previousReferencePoints.empty())
 		{
 			const bool homographyResult = Geometry::RANSAC::homographyMatrix(previousReferencePoints.data(), currentReferencePoints.data(), previousReferencePoints.size(), randomGenerator, homography, 12u, true, 200u, Scalar(2.0 * 2.0), &usedIndices, worker);
 

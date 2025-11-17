@@ -173,7 +173,7 @@ void PointMotionMainWindow::onFrame(const Frame& frame)
 			}
 
 			Vectors2 accurateCurrentPositions;
-			if (CV::Advanced::AdvancedMotion<>::trackPointsSubPixelMirroredBorder<patchSize>(initialFramePyramid_, currentFramePyramid_, accurateInitialPositions_, accuratePreviousPositions_, accurateCurrentPositions, coarsestLayerRadius, 4u, &worker_))
+			if (CV::Advanced::AdvancedMotionT<>::trackPointsSubPixelMirroredBorder<patchSize>(initialFramePyramid_, currentFramePyramid_, accurateInitialPositions_, accuratePreviousPositions_, accurateCurrentPositions, coarsestLayerRadius, 4u, &worker_))
 			{
 				for (Vectors2::const_iterator i = accurateCurrentPositions.begin(); i != accurateCurrentPositions.end(); ++i)
 				{
