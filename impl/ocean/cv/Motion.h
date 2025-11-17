@@ -25,28 +25,29 @@ namespace CV
 {
 
 // Forward declaration.
-template <typename TMetric> class Motion;
+template <typename TMetric>
+class MotionT;
 
 /**
  * Definition of a Motion class that applies sum absolute difference calculations as metric.
  * @see MotionSSD, MotionZeroMeanSSD, Motion.
  * @ingroup cv
  */
-using MotionSAD = Motion<SumAbsoluteDifferences>;
+using MotionSAD = MotionT<SumAbsoluteDifferences>;
 
 /**
  * Definition of a Motion class that applies sum square difference calculations as metric.
  * @see MotionSAD, MotionZeroMeanSSD, Motion.
  * @ingroup cv
  */
-using MotionSSD = Motion<SumSquareDifferences>;
+using MotionSSD = MotionT<SumSquareDifferences>;
 
 /**
  * Definition of a Motion class that applies zero-mean sum square difference calculations as metric.
  * @see MotionSAD, MotionSSD, Motion.
  * @ingroup cv
  */
-using MotionZeroMeanSSD = Motion<ZeroMeanSumSquareDifferences>;
+using MotionZeroMeanSSD = MotionT<ZeroMeanSumSquareDifferences>;
 
 /**
  * This class implements patch-based motion techniques.
@@ -55,7 +56,7 @@ using MotionZeroMeanSSD = Motion<ZeroMeanSumSquareDifferences>;
  * @ingroup cv
  */
 template <typename TMetric = SumSquareDifferences>
-class Motion
+class MotionT
 {
 	public:
 
@@ -178,7 +179,7 @@ class Motion
 
 template <typename TMetric>
 template <unsigned int tPatchSize>
-bool Motion<TMetric>::trackPointsInPyramidMirroredBorder(const Frame& previousFrame, const Frame& currentFrame, const PixelPositions& previousPoints, const PixelPositions& roughPoints, PixelPositions& currentPoints, const unsigned int maximalOffset, const unsigned int coarsestLayerRadiusX, const unsigned int coarsestLayerRadiusY, const FramePyramid::DownsamplingMode downsamplingMode, Worker* worker, std::vector<uint32_t>* metricResults, std::vector<uint32_t>* metricIdentityResults)
+bool MotionT<TMetric>::trackPointsInPyramidMirroredBorder(const Frame& previousFrame, const Frame& currentFrame, const PixelPositions& previousPoints, const PixelPositions& roughPoints, PixelPositions& currentPoints, const unsigned int maximalOffset, const unsigned int coarsestLayerRadiusX, const unsigned int coarsestLayerRadiusY, const FramePyramid::DownsamplingMode downsamplingMode, Worker* worker, std::vector<uint32_t>* metricResults, std::vector<uint32_t>* metricIdentityResults)
 {
 	static_assert(tPatchSize % 2u == 1u, "Invalid image patch size, must be odd!");
 	static_assert(tPatchSize >= 3u, "Invalid image patch size!");
@@ -205,7 +206,7 @@ bool Motion<TMetric>::trackPointsInPyramidMirroredBorder(const Frame& previousFr
 
 template <typename TMetric>
 template <unsigned int tPatchSize>
-bool Motion<TMetric>::trackPointsInPyramidMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const PixelPositions& previousPoints, const PixelPositions& roughPoints, PixelPositions& currentPoints, const unsigned int coarsestLayerRadiusX, const unsigned int coarsestLayerRadiusY, Worker* worker, std::vector<uint32_t>* metricResults, std::vector<uint32_t>* metricIdentityResults)
+bool MotionT<TMetric>::trackPointsInPyramidMirroredBorder(const FramePyramid& previousPyramid, const FramePyramid& currentPyramid, const PixelPositions& previousPoints, const PixelPositions& roughPoints, PixelPositions& currentPoints, const unsigned int coarsestLayerRadiusX, const unsigned int coarsestLayerRadiusY, Worker* worker, std::vector<uint32_t>* metricResults, std::vector<uint32_t>* metricIdentityResults)
 {
 	static_assert(tPatchSize % 2u == 1u, "Invalid image patch size, must be odd!");
 	static_assert(tPatchSize >= 3u, "Invalid image patch size, must be larger than 2!");
@@ -223,19 +224,19 @@ bool Motion<TMetric>::trackPointsInPyramidMirroredBorder(const FramePyramid& pre
 
 	currentPoints.resize(previousPoints.size());
 
-	if (metricResults)
+	if (metricResults != nullptr)
 	{
 		metricResults->resize(previousPoints.size());
 	}
 
-	if (metricIdentityResults)
+	if (metricIdentityResults != nullptr)
 	{
 		metricIdentityResults->resize(previousPoints.size());
 	}
 
-	if (worker)
+	if (worker != nullptr)
 	{
-		worker->executeFunction(Worker::Function::createStatic(&Motion::trackPointsInPyramidMirroredBorderSubset<tPatchSize>, &previousPyramid, &currentPyramid, numberLayers, &previousPoints, &roughPoints, &currentPoints, coarsestLayerRadiusX, coarsestLayerRadiusY, metricResults ? metricResults->data() : nullptr, metricIdentityResults ? metricIdentityResults->data() : nullptr, 0u, 0u), 0u, (unsigned int)(previousPoints.size()));
+		worker->executeFunction(Worker::Function::createStatic(&MotionT::trackPointsInPyramidMirroredBorderSubset<tPatchSize>, &previousPyramid, &currentPyramid, numberLayers, &previousPoints, &roughPoints, &currentPoints, coarsestLayerRadiusX, coarsestLayerRadiusY, metricResults ? metricResults->data() : nullptr, metricIdentityResults ? metricIdentityResults->data() : nullptr, 0u, 0u), 0u, (unsigned int)(previousPoints.size()));
 	}
 	else
 	{
@@ -247,7 +248,7 @@ bool Motion<TMetric>::trackPointsInPyramidMirroredBorder(const FramePyramid& pre
 
 template <typename TMetric>
 template <unsigned int tChannels, unsigned int tPatchSize>
-PixelPosition Motion<TMetric>::pointMotionInFrameMirroredBorder(const uint8_t* const frame0, const uint8_t* const frame1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const PixelPosition& position0, const unsigned int radiusX, const unsigned int radiusY, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const PixelPosition& rough1, uint32_t* const metricResult, uint32_t* const metricIdentityResult)
+PixelPosition MotionT<TMetric>::pointMotionInFrameMirroredBorder(const uint8_t* const frame0, const uint8_t* const frame1, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const PixelPosition& position0, const unsigned int radiusX, const unsigned int radiusY, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const PixelPosition& rough1, uint32_t* const metricResult, uint32_t* const metricIdentityResult)
 {
 	static_assert(tChannels != 0u, "Invalid number of data channels!");
 	static_assert(tPatchSize % 2u == 1u, "Invalid size of the image patch, must be odd!");
@@ -351,7 +352,7 @@ PixelPosition Motion<TMetric>::pointMotionInFrameMirroredBorder(const uint8_t* c
 
 template <typename TMetric>
 template <unsigned int tPatchSize>
-inline PixelPosition Motion<TMetric>::pointMotionInFrameMirroredBorder(const uint8_t* const frame0, const uint8_t* const frame1, const unsigned int channels, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const PixelPosition& position0, const unsigned int radiusX, const unsigned int radiusY, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const PixelPosition& rough1, uint32_t* const metricResult, uint32_t* const metricIdentityResult)
+inline PixelPosition MotionT<TMetric>::pointMotionInFrameMirroredBorder(const uint8_t* const frame0, const uint8_t* const frame1, const unsigned int channels, const unsigned int width0, const unsigned int height0, const unsigned int width1, const unsigned int height1, const PixelPosition& position0, const unsigned int radiusX, const unsigned int radiusY, const unsigned int frame0PaddingElements, const unsigned int frame1PaddingElements, const PixelPosition& rough1, uint32_t* const metricResult, uint32_t* const metricIdentityResult)
 {
 	ocean_assert(channels >= 1u);
 
@@ -376,7 +377,7 @@ inline PixelPosition Motion<TMetric>::pointMotionInFrameMirroredBorder(const uin
 
 template <typename TMetric>
 template <unsigned int tPatchSize>
-void Motion<TMetric>::trackPointsInPyramidMirroredBorderSubset(const FramePyramid* previousPyramid, const FramePyramid* currentPyramid, const unsigned int numberLayers, const PixelPositions* previousPoints, const PixelPositions* roughPoints, PixelPositions* currentPoints, const unsigned int coarsestLayerRadiusX, const unsigned int coarsestLayerRadiusY, uint32_t* metricResults, uint32_t* metricIdentityResults, const unsigned int firstPoint, const unsigned int numberPoints)
+void MotionT<TMetric>::trackPointsInPyramidMirroredBorderSubset(const FramePyramid* previousPyramid, const FramePyramid* currentPyramid, const unsigned int numberLayers, const PixelPositions* previousPoints, const PixelPositions* roughPoints, PixelPositions* currentPoints, const unsigned int coarsestLayerRadiusX, const unsigned int coarsestLayerRadiusY, uint32_t* metricResults, uint32_t* metricIdentityResults, const unsigned int firstPoint, const unsigned int numberPoints)
 {
 	static_assert(tPatchSize % 2u == 1u, "Invalid image patch size!");
 	static_assert(tPatchSize >= 3u, "Invalid image patch size!");

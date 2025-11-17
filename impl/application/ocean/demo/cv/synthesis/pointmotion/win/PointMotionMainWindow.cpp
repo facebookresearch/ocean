@@ -159,7 +159,7 @@ void PointMotionMainWindow::onFrame(const Frame& frame)
 		if (initialFramePyramid_)
 		{
 			CV::PixelPositions currentPositions;
-			if (CV::Motion<>::trackPointsInPyramidMirroredBorder<patchSize>(initialFramePyramid_, currentFramePyramid_, initialPositions_, previousPositions_, currentPositions, coarsestLayerRadius, coarsestLayerRadius, &worker_))
+			if (CV::MotionT<>::trackPointsInPyramidMirroredBorder<patchSize>(initialFramePyramid_, currentFramePyramid_, initialPositions_, previousPositions_, currentPositions, coarsestLayerRadius, coarsestLayerRadius, &worker_))
 			{
 				for (CV::PixelPositions::const_iterator i = currentPositions.begin(); i != currentPositions.end(); ++i)
 				{

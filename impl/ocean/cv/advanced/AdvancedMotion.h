@@ -1723,7 +1723,7 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 				ocean_assert(previousPoint.x() < previousLayerWidth && previousPoint.y() < previousLayerHeight);
 				if (previousPoint.x() < previousLayerWidth && previousPoint.y() < previousLayerHeight)
 				{
-					const PixelPosition nextPoint = Motion<TMetricInteger>::template pointMotionInFrameMirroredBorder<tSize>(previousLayerData, nextLayerData, channels, previousLayerWidth, previousLayerHeight, nextLayerWidth, nextLayerHeight, previousPoint, layerRadius, layerRadius, previousLayerPaddingElements, nextLayerPaddingElements, intermediateRoughNextPoint, metricResult);
+					const PixelPosition nextPoint = MotionT<TMetricInteger>::template pointMotionInFrameMirroredBorder<tSize>(previousLayerData, nextLayerData, channels, previousLayerWidth, previousLayerHeight, nextLayerWidth, nextLayerHeight, previousPoint, layerRadius, layerRadius, previousLayerPaddingElements, nextLayerPaddingElements, intermediateRoughNextPoint, metricResult);
 
 					ocean_assert(nextPoint.x() < nextLayerWidth && nextPoint.y() < nextLayerHeight);
 
@@ -1864,7 +1864,7 @@ void AdvancedMotion<TMetricInteger, TMetricFloat>::trackPointsSubPixelMirroredBo
 
 				if (previousPosition.x() < previousWidth && previousPosition.y() < previousHeight)
 				{
-					const PixelPosition position(Motion<TMetricInteger>::template pointMotionInFrameMirroredBorder<tChannels, tSize>(previousFrameData, currentFrameData, previousWidth, previousHeight, currentWidth, currentHeight, previousPosition, layerRadiusX, layerRadiusY, previousFramePaddingElements, currentFramePaddingElements, intermediateRoughPoint, metricResult));
+					const PixelPosition position(MotionT<TMetricInteger>::template pointMotionInFrameMirroredBorder<tChannels, tSize>(previousFrameData, currentFrameData, previousWidth, previousHeight, currentWidth, currentHeight, previousPosition, layerRadiusX, layerRadiusY, previousFramePaddingElements, currentFramePaddingElements, intermediateRoughPoint, metricResult));
 
 					ocean_assert(position.x() < currentWidth && position.y() < currentHeight);
 

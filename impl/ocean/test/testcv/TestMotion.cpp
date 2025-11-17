@@ -336,7 +336,7 @@ bool TestMotion::testMotionMirroredBorder(const unsigned int width0, const unsig
 
 			for (unsigned int n = 0u; n < constIterations; ++n)
 			{
-				positions1[n] = CV::Motion<TMetric>::template pointMotionInFrameMirroredBorder<tChannels, tPatchSize>(frame0.constdata<uint8_t>(), frame1.constdata<uint8_t>(), frame0.width(), frame0.height(), frame1.width(), frame1.height(), positions0[n], radiusX, radiusY, frame0.paddingElements(), frame1.paddingElements(), roughPositions1[n], &metrics[n]);
+				positions1[n] = CV::MotionT<TMetric>::template pointMotionInFrameMirroredBorder<tChannels, tPatchSize>(frame0.constdata<uint8_t>(), frame1.constdata<uint8_t>(), frame0.width(), frame0.height(), frame1.width(), frame1.height(), positions0[n], radiusX, radiusY, frame0.paddingElements(), frame1.paddingElements(), roughPositions1[n], &metrics[n]);
 			}
 
 			performance.stop();
