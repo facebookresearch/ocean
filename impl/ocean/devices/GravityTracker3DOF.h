@@ -12,6 +12,8 @@
 #include "ocean/devices/DeviceRef.h"
 #include "ocean/devices/Tracker.h"
 
+#include "ocean/base/StackHeapVector.h"
+
 #include "ocean/math/Vector3.h"
 
 namespace Ocean
@@ -49,7 +51,7 @@ class OCEAN_DEVICES_EXPORT GravityTracker3DOF : virtual public Tracker
 				/**
 				 * Definition of a vector holding gravity values.
 				 */
-				using Gravities = std::vector<Vector3>;
+				using Gravities = StackHeapVector<Vector3, 1>;
 
 			public:
 
