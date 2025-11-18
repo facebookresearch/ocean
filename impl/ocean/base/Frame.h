@@ -1237,9 +1237,19 @@ class OCEAN_BASE_EXPORT FrameType
 		 * - One pixel format is not pure generic (e.g., FORMAT_RGB24), while the other pixel format is pure generic but has the same data type and channel number
 		 * @param pixelFormat The pixel format to be checked, must be valid
 		 * @return True, if the given pixel format is compatible
-		 * @see isFrameTypeCompatible().
+		 * @see isFrameTypeCompatible(), isPixelFormatDataLayoutCompatible().
 		 */
 		inline bool isPixelFormatCompatible(const PixelFormat pixelFormat) const;
+
+		/**
+		 * Returns whether this pixel format has a compatible data layout with a given pixel format.
+		 * Two pixel formats have compatible data layouts if they have the same memory structure (data type, channels, planes, width/height multiples, packed status).<br>
+		 * This means both pixel formats can be forwarded to the same Computer Vision function without crashing, although they may produce different results.
+		 * @param pixelFormat The pixel format to be checked, must be valid
+		 * @return True, if the given pixel format has a compatible data layout
+		 * @see isPixelFormatCompatible(), isFrameTypeCompatible().
+		 */
+		inline bool isPixelFormatDataLayoutCompatible(const PixelFormat pixelFormat) const;
 
 		/**
 		 * Returns whether this frame type is compatible with a given frame type.
@@ -1728,6 +1738,20 @@ class OCEAN_BASE_EXPORT FrameType
 		 * @see arePixelFormatsCompatible().
 		 */
 		static bool areFrameTypesCompatible(const FrameType& frameTypeA, const FrameType& frameTypeB, const bool allowDifferentPixelOrigins);
+
+		/**
+		 * Returns whether two given pixel formats have compatible data layouts.
+		 * Two pixel formats have compatible data layouts if they have the same memory structure (data type, channels, planes, width/height multiples, packed status).
+		 * This means both pixel formats can be forwarded to the same Computer Vision function without crashing, although they may produce different results.
+		 * For example:
+		 * - FORMAT_RGB24 and FORMAT_BGR24 have compatible layouts (both are 3-channel uint8, non-packed, 1 plane)
+		 * - FORMAT_Y_UV12 and FORMAT_Y_VU12 have compatible layouts (both are 3-channel uint8, 2 planes, with specific width/height multiples)
+		 * @param pixelFormatA The first pixel format to be checked, must be valid
+		 * @param pixelFormatB The second pixel format to be checked, must be valid
+		 * @return True, if both pixel formats have compatible data layouts
+		 * @see arePixelFormatsCompatible(), areFrameTypesCompatible().
+		 */
+		static bool isDataLayoutCompatible(const PixelFormat pixelFormatA, const PixelFormat pixelFormatB);
 
 		/**
 		 * Returns whether a given pointer has the same byte alignment as the size of the data type the pointer is pointing to.
@@ -3251,6 +3275,11 @@ inline unsigned int FrameType::pixels() const
 inline bool FrameType::isPixelFormatCompatible(const PixelFormat pixelFormat) const
 {
 	return arePixelFormatsCompatible(this->pixelFormat(), pixelFormat);
+}
+
+inline bool FrameType::isPixelFormatDataLayoutCompatible(const PixelFormat pixelFormat) const
+{
+	return isDataLayoutCompatible(this->pixelFormat(), pixelFormat);
 }
 
 inline bool FrameType::isFrameTypeCompatible(const FrameType& frameType, const bool allowDifferentPixelOrigins) const

@@ -245,6 +245,12 @@ bool TestFrame::test(const double testDuration)
 
 	allSucceeded = testAreFrameTypesCompatible(testDuration) && allSucceeded;
 
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testIsDataLayoutCompatible(testDuration) && allSucceeded;
+
 #ifndef OCEAN_DEBUG // this test will raise a couple of asserts, so only executing in release builds
 
 	Log::info() << " ";
@@ -439,6 +445,11 @@ TEST(TestFrame, ArePixelFormatsCompatible)
 TEST(TestFrame, AreFrameTypesCompatible)
 {
 	EXPECT_TRUE(TestFrame::testAreFrameTypesCompatible(GTEST_TEST_DURATION));
+}
+
+TEST(TestFrame, IsDataLayoutCompatible)
+{
+	EXPECT_TRUE(TestFrame::testIsDataLayoutCompatible(GTEST_TEST_DURATION));
 }
 
 #ifndef OCEAN_DEBUG
@@ -6266,6 +6277,267 @@ bool TestFrame::testAreFrameTypesCompatible(const double testDuration)
 				OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, false));
 				OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, true));
 			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestFrame::testIsDataLayoutCompatible(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing isDataLayoutCompatible():";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const FrameType::DataTypes& dataTypes = FrameType::definedDataTypes();
+	const FrameType::PixelFormats& pixelFormats = definedPixelFormats();
+
+	// All identical pixel formats should have the same layout
+	for (const FrameType::PixelFormat& pixelFormat : pixelFormats)
+	{
+		OCEAN_EXPECT_TRUE(validation, FrameType::isDataLayoutCompatible(pixelFormat, pixelFormat));
+	}
+
+	// Test known pixel format pairs that have the same layout
+	{
+		// RGB24 and BGR24 have the same layout (3-channel uint8, non-packed, 1 plane)
+		OCEAN_EXPECT_TRUE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_RGB24, FrameType::FORMAT_BGR24));
+
+		// RGBA32 and BGRA32 have the same layout (4-channel uint8, non-packed, 1 plane)
+		OCEAN_EXPECT_TRUE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_RGBA32, FrameType::FORMAT_BGRA32));
+
+		// Y8_FULL_RANGE and Y8_LIMITED_RANGE
+		OCEAN_EXPECT_TRUE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_Y8_FULL_RANGE, FrameType::FORMAT_Y8_LIMITED_RANGE));
+
+		// Y_UV12 and Y_VU12 have the same layout (3-channel uint8, 2 planes, specific width/height multiples)
+		OCEAN_EXPECT_TRUE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_Y_UV12, FrameType::FORMAT_Y_VU12));
+
+		// Y_U_V12 and Y_V_U12 have the same layout (3-channel uint8, 3 planes, specific width/height multiples)
+		OCEAN_EXPECT_TRUE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_Y_U_V12, FrameType::FORMAT_Y_V_U12));
+
+		// Y_UV12_FULL_RANGE and Y_UV12_LIMITED_RANGE
+		OCEAN_EXPECT_TRUE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_Y_UV12_FULL_RANGE, FrameType::FORMAT_Y_UV12_LIMITED_RANGE));
+	}
+
+	// Test pixel format pairs that do not have the same layout
+	{
+		// RGB24 (3 channels) vs RGBA32 (4 channels)
+		OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_RGB24, FrameType::FORMAT_RGBA32));
+
+		// Y8 (1 channel, 1 plane) vs RGB24 (3 channels, 1 plane)
+		OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_Y8, FrameType::FORMAT_RGB24));
+
+		// RGB24 (1 plane) vs Y_UV12 (2 planes)
+		OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_RGB24, FrameType::FORMAT_Y_UV12));
+
+		// RGB24 (uint8) vs RGB48 (uint16)
+		OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_RGB24, FrameType::FORMAT_RGB48));
+
+		// RGBA64 (uint16) vs RGB4444 (uint16)
+		OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_RGBA64, FrameType::FORMAT_RGB4444));
+
+		// RGBA64 (uint16) vs RGBA4444 (uint16)
+		OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(FrameType::FORMAT_RGBA64, FrameType::FORMAT_RGBA4444));
+	}
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// Two different pre-defined pixel formats with the same structural properties should have the same layout
+
+			const FrameType::PixelFormat pixelFormat0 = RandomI::random(randomGenerator, pixelFormats);
+
+			FrameType::PixelFormat pixelFormat1 = pixelFormat0;
+
+			while (pixelFormat0 == pixelFormat1)
+			{
+				pixelFormat1 = RandomI::random(randomGenerator, pixelFormats);
+			}
+
+			bool shouldHaveSameLayout = true;
+
+			if (FrameType::dataType(pixelFormat0) != FrameType::dataType(pixelFormat1))
+			{
+				shouldHaveSameLayout = false;
+			}
+
+			if (FrameType::channels(pixelFormat0) != FrameType::channels(pixelFormat1))
+			{
+				shouldHaveSameLayout = false;
+			}
+
+			if (FrameType::numberPlanes(pixelFormat0) != FrameType::numberPlanes(pixelFormat1))
+			{
+				shouldHaveSameLayout = false;
+			}
+
+			if (FrameType::widthMultiple(pixelFormat0) != FrameType::widthMultiple(pixelFormat1))
+			{
+				shouldHaveSameLayout = false;
+			}
+
+			if (FrameType::heightMultiple(pixelFormat0) != FrameType::heightMultiple(pixelFormat1))
+			{
+				shouldHaveSameLayout = false;
+			}
+
+			if (FrameType::formatIsPacked(pixelFormat0) != FrameType::formatIsPacked(pixelFormat1))
+			{
+				shouldHaveSameLayout = false;
+			}
+
+			if (shouldHaveSameLayout)
+			{
+				const unsigned int widthMultiple0 = FrameType::widthMultiple(pixelFormat0);
+				const unsigned int heightMultiple0 = FrameType::heightMultiple(pixelFormat0);
+
+				const unsigned int widthMultiple1 = FrameType::widthMultiple(pixelFormat1);
+				const unsigned int heightMultiple1 = FrameType::heightMultiple(pixelFormat1);
+
+				const unsigned int width = widthMultiple0 * widthMultiple1;
+				const unsigned int height = heightMultiple0 * heightMultiple1;
+
+				const FrameType::PixelOrigin pixelOrigin0 = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+				const FrameType::PixelOrigin pixelOrigin1 = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+				const Frame frame0(FrameType(width, height, pixelFormat0, pixelOrigin0));
+				const Frame frame1(FrameType(width, height, pixelFormat1, pixelOrigin1));
+
+				ocean_assert(FrameType::numberPlanes(pixelFormat0) == FrameType::numberPlanes(pixelFormat1));
+
+				for (unsigned int planeIndex = 0u; planeIndex < frame0.numberPlanes(); ++planeIndex)
+				{
+					if (frame0.planeWidth(planeIndex) != frame1.planeWidth(planeIndex))
+					{
+						shouldHaveSameLayout = false;
+					}
+
+					if (frame0.planeHeight(planeIndex) != frame1.planeHeight(planeIndex))
+					{
+						shouldHaveSameLayout = false;
+					}
+
+					if (frame0.planeChannels(planeIndex) != frame1.planeChannels(planeIndex))
+					{
+						shouldHaveSameLayout = false;
+					}
+
+					if (frame0.planeWidthBytes(planeIndex) != frame1.planeWidthBytes(planeIndex))
+					{
+						shouldHaveSameLayout = false;
+					}
+				}
+			}
+
+			OCEAN_EXPECT_EQUAL(validation, FrameType::isDataLayoutCompatible(pixelFormat0, pixelFormat1), shouldHaveSameLayout);
+		}
+
+		{
+			// Two pure generic pixel formats with the same properties should have the same layout
+
+			const FrameType::DataType dataType = RandomI::random(randomGenerator, dataTypes);
+			const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
+			const unsigned int planes = RandomI::random(randomGenerator, 1u, 3u);
+			const unsigned int widthMultiple = RandomI::random(randomGenerator, {1u, 2u});
+			const unsigned int heightMultiple = RandomI::random(randomGenerator, {1u, 2u});
+
+			const FrameType::PixelFormat pixelFormat0 = FrameType::genericPixelFormat(dataType, channels, planes, widthMultiple, heightMultiple);
+			const FrameType::PixelFormat pixelFormat1 = FrameType::genericPixelFormat(dataType, channels, planes, widthMultiple, heightMultiple);
+
+			OCEAN_EXPECT_TRUE(validation, FrameType::isDataLayoutCompatible(pixelFormat0, pixelFormat1));
+		}
+
+		{
+			// Two generic pixel formats with different data types should NOT have the same layout
+
+			FrameType::DataType dataType0 = RandomI::random(randomGenerator, dataTypes);
+			FrameType::DataType dataType1 = dataType0;
+
+			while (dataType0 == dataType1 && dataTypes.size() > 1)
+			{
+				dataType1 = RandomI::random(randomGenerator, dataTypes);
+			}
+
+			if (dataType0 != dataType1)
+			{
+				const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
+
+				const FrameType::PixelFormat pixelFormat0 = FrameType::genericPixelFormat(dataType0, channels);
+				const FrameType::PixelFormat pixelFormat1 = FrameType::genericPixelFormat(dataType1, channels);
+
+				OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(pixelFormat0, pixelFormat1));
+			}
+		}
+
+		{
+			// Two generic pixel formats with different channel counts should NOT have the same layout
+
+			const FrameType::DataType dataType = RandomI::random(randomGenerator, dataTypes);
+
+			const unsigned int channels0 = RandomI::random(randomGenerator, 1u, 5u);
+			unsigned int channels1 = channels0;
+
+			while (channels0 == channels1)
+			{
+				channels1 = RandomI::random(randomGenerator, 1u, 5u);
+			}
+
+			const FrameType::PixelFormat pixelFormat0 = FrameType::genericPixelFormat(dataType, channels0);
+			const FrameType::PixelFormat pixelFormat1 = FrameType::genericPixelFormat(dataType, channels1);
+
+			OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(pixelFormat0, pixelFormat1));
+		}
+
+		{
+			// Two generic pixel formats with different plane counts should NOT have the same layout
+
+			const FrameType::DataType dataType = RandomI::random(randomGenerator, dataTypes);
+			const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
+
+			const unsigned int planes0 = RandomI::random(randomGenerator, 1u, 3u);
+			unsigned int planes1 = planes0;
+
+			while (planes0 == planes1)
+			{
+				planes1 = RandomI::random(randomGenerator, 1u, 3u);
+			}
+
+			const FrameType::PixelFormat pixelFormat0 = FrameType::genericPixelFormat(dataType, channels, planes0);
+			const FrameType::PixelFormat pixelFormat1 = FrameType::genericPixelFormat(dataType, channels, planes1);
+
+			OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(pixelFormat0, pixelFormat1));
+		}
+
+		{
+			// Two generic pixel formats with different width multiples should NOT have the same layout
+
+			const FrameType::DataType dataType = RandomI::random(randomGenerator, dataTypes);
+			const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
+
+			const FrameType::PixelFormat pixelFormat0 = FrameType::genericPixelFormat(dataType, channels, 1u, 1u, 1u);
+			const FrameType::PixelFormat pixelFormat1 = FrameType::genericPixelFormat(dataType, channels, 1u, 2u, 1u);
+
+			OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(pixelFormat0, pixelFormat1));
+		}
+
+		{
+			// Two generic pixel formats with different height multiples should NOT have the same layout
+
+			const FrameType::DataType dataType = RandomI::random(randomGenerator, dataTypes);
+			const unsigned int channels = RandomI::random(randomGenerator, 1u, 5u);
+
+			const FrameType::PixelFormat pixelFormat0 = FrameType::genericPixelFormat(dataType, channels, 1u, 1u, 1u);
+			const FrameType::PixelFormat pixelFormat1 = FrameType::genericPixelFormat(dataType, channels, 1u, 1u, 2u);
+
+			OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(pixelFormat0, pixelFormat1));
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));

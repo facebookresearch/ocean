@@ -1878,6 +1878,98 @@ bool FrameType::areFrameTypesCompatible(const FrameType& frameTypeA, const Frame
 	return true;
 }
 
+bool FrameType::isDataLayoutCompatible(const PixelFormat pixelFormatA, const PixelFormat pixelFormatB)
+{
+	ocean_assert(pixelFormatA != FORMAT_UNDEFINED && pixelFormatB != FORMAT_UNDEFINED);
+
+	if (pixelFormatA == pixelFormatB)
+	{
+		return true;
+	}
+
+	// data type, channels, and number of planes need to be identical
+
+	if (dataType(pixelFormatA) != dataType(pixelFormatB) || channels(pixelFormatA) != channels(pixelFormatB) || numberPlanes(pixelFormatA) != numberPlanes(pixelFormatB))
+	{
+		return false;
+	}
+
+	// width and height multiple need to be identical
+
+	if (widthMultiple(pixelFormatA) != widthMultiple(pixelFormatB) || heightMultiple(pixelFormatA) != heightMultiple(pixelFormatB))
+	{
+		return false;
+	}
+
+	// both pixel formats need to be packed or not packed
+
+	if (formatIsPacked(pixelFormatA) != formatIsPacked(pixelFormatB))
+	{
+		return false;
+	}
+
+	const unsigned int planes = numberPlanes(pixelFormatA);
+
+	if (planes == 1u)
+	{
+		if (formatIsGeneric(pixelFormatA) && formatIsGeneric(pixelFormatB))
+		{
+			// we have generic pixel formats with one plane, so they are compatible
+
+			return true;
+		}
+	}
+
+	const unsigned int testWidth = widthMultiple(pixelFormatA);
+	const unsigned int testHeight = heightMultiple(pixelFormatA);
+
+	for (unsigned int planeIndex = 0u; planeIndex < planes; ++planeIndex)
+	{
+		unsigned int planeWidthA = 0u;
+		unsigned int planeHeightA = 0u;
+		unsigned int planeChannelsA = 0u;
+		unsigned int planeWidthElementsMultipleA = 0u;
+		unsigned int planeHeightElementsMultipleA = 0u;
+
+		unsigned int planeWidthB = 0u;
+		unsigned int planeHeightB = 0u;
+		unsigned int planeChannelsB = 0u;
+		unsigned int planeWidthElementsMultipleB = 0u;
+		unsigned int planeHeightElementsMultipleB = 0u;
+
+		if (!planeLayout(pixelFormatA, testWidth, testHeight, planeIndex, planeWidthA, planeHeightA, planeChannelsA, &planeWidthElementsMultipleA, &planeHeightElementsMultipleA))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
+		if (!planeLayout(pixelFormatB, testWidth, testHeight, planeIndex, planeWidthB, planeHeightB, planeChannelsB, &planeWidthElementsMultipleB, &planeHeightElementsMultipleB))
+		{
+			ocean_assert(false && "This should never happen!");
+			return false;
+		}
+
+		// the plane resolution needs to be identical
+
+		if (planeWidthA != planeWidthB || planeHeightA != planeHeightB)
+		{
+			return false;
+		}
+
+		if (planeChannelsA != planeChannelsB)
+		{
+			return false;
+		}
+
+		if (planeWidthElementsMultipleA != planeWidthElementsMultipleB || planeHeightElementsMultipleA != planeHeightElementsMultipleB)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 unsigned int FrameType::frameTypeSize() const
 {
 	const unsigned int bytesPerElement = bytesPerDataType();
