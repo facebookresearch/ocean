@@ -6,7 +6,7 @@ sidebar_position: 6
 import React from 'react';
 import styles from '/docs/docs.css';
 
-Ocean provides several functions to resize or scale images. Each function comes with a difference execution performance and image quality.
+Ocean provides several functions to resize or scale images. Each function comes with different execution performance and image quality.
 ​
 The simplest solution to resize/down-sample an image is by usage of [`CV::FrameInterpolator::resize()`](https://github.com/facebookresearch/ocean/blob/v1.0.0/impl/ocean/cv/FrameInterpolator.h#L86-L95). This function allows to specified the desired resize algorithm via a function parameter.
 ​
