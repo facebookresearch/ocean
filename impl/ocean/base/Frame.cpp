@@ -1878,6 +1878,37 @@ bool FrameType::areFrameTypesCompatible(const FrameType& frameTypeA, const Frame
 	return true;
 }
 
+bool FrameType::areFrameTypesDataLayoutCompatible(const FrameType& frameTypeA, const FrameType& frameTypeB, const bool allowDifferentPixelOrigins)
+{
+	ocean_assert(frameTypeA.isValid() && frameTypeB.isValid());
+
+	// both frame types need the same resolution
+
+	if (frameTypeA.width() != frameTypeB.width() || frameTypeA.height() != frameTypeB.height())
+	{
+		return false;
+	}
+
+	if (!allowDifferentPixelOrigins)
+	{
+		// both frame types need the same pixel origin
+
+		if (frameTypeA.pixelOrigin() != frameTypeB.pixelOrigin())
+		{
+			return false;
+		}
+	}
+
+	// both frame types need data layout compatible pixel formats
+
+	if (!isDataLayoutCompatible(frameTypeA.pixelFormat(), frameTypeB.pixelFormat()))
+	{
+		return false;
+	}
+
+	return true;
+}
+
 bool FrameType::isDataLayoutCompatible(const PixelFormat pixelFormatA, const PixelFormat pixelFormatB)
 {
 	ocean_assert(pixelFormatA != FORMAT_UNDEFINED && pixelFormatB != FORMAT_UNDEFINED);

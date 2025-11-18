@@ -251,6 +251,12 @@ bool TestFrame::test(const double testDuration)
 
 	allSucceeded = testIsDataLayoutCompatible(testDuration) && allSucceeded;
 
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testAreFrameTypesDataLayoutCompatible(testDuration) && allSucceeded;
+
 #ifndef OCEAN_DEBUG // this test will raise a couple of asserts, so only executing in release builds
 
 	Log::info() << " ";
@@ -450,6 +456,11 @@ TEST(TestFrame, AreFrameTypesCompatible)
 TEST(TestFrame, IsDataLayoutCompatible)
 {
 	EXPECT_TRUE(TestFrame::testIsDataLayoutCompatible(GTEST_TEST_DURATION));
+}
+
+TEST(TestFrame, AreFrameTypesDataLayoutCompatible)
+{
+	EXPECT_TRUE(TestFrame::testAreFrameTypesDataLayoutCompatible(GTEST_TEST_DURATION));
 }
 
 #ifndef OCEAN_DEBUG
@@ -6538,6 +6549,193 @@ bool TestFrame::testIsDataLayoutCompatible(const double testDuration)
 			const FrameType::PixelFormat pixelFormat1 = FrameType::genericPixelFormat(dataType, channels, 1u, 1u, 2u);
 
 			OCEAN_EXPECT_FALSE(validation, FrameType::isDataLayoutCompatible(pixelFormat0, pixelFormat1));
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestFrame::testAreFrameTypesDataLayoutCompatible(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing areFrameTypesDataLayoutCompatible():";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const FrameType::PixelFormats& pixelFormats = definedPixelFormats();
+
+	// Test: All identical frame types should have compatible data layouts
+	for (const FrameType::PixelFormat& pixelFormat : pixelFormats)
+	{
+		const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
+		const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
+
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
+
+		OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameType, frameType, false));
+		OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameType, frameType, true));
+	}
+
+	// Test known frame type pairs that have compatible data layouts
+	{
+		// RGB24 and BGR24
+		const FrameType frameTypeRGB(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT);
+		const FrameType frameTypeBGR(640u, 480u, FrameType::FORMAT_BGR24, FrameType::ORIGIN_UPPER_LEFT);
+
+		OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeRGB, frameTypeBGR, false));
+		OCEAN_EXPECT_TRUE(validation, frameTypeRGB.isFrameTypeDataLayoutCompatible(frameTypeBGR, false));
+
+		// Y_UV12 and Y_VU12
+		const FrameType frameTypeYUV(640u, 480u, FrameType::FORMAT_Y_UV12, FrameType::ORIGIN_UPPER_LEFT);
+		const FrameType frameTypeYVU(640u, 480u, FrameType::FORMAT_Y_VU12, FrameType::ORIGIN_UPPER_LEFT);
+
+		OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeYUV, frameTypeYVU, false));
+		OCEAN_EXPECT_TRUE(validation, frameTypeYUV.isFrameTypeDataLayoutCompatible(frameTypeYVU, false));
+
+		// Different pixel origins with allowDifferentPixelOrigins=true
+		const FrameType frameTypeUpper(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT);
+		const FrameType frameTypeLower(640u, 480u, FrameType::FORMAT_BGR24, FrameType::ORIGIN_LOWER_LEFT);
+
+		OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeUpper, frameTypeLower, false));
+		OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeUpper, frameTypeLower, true));
+	}
+
+	// Test frame type pairs that do NOT have compatible data layouts
+	{
+		// Different dimensions
+		const FrameType frameType640(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT);
+		const FrameType frameType1920(1920u, 1080u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT);
+
+		OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameType640, frameType1920, false));
+
+		// Different pixel formats (incompatible data layouts)
+		const FrameType frameTypeRGB24(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT);
+		const FrameType frameTypeRGBA32(640u, 480u, FrameType::FORMAT_RGBA32, FrameType::ORIGIN_UPPER_LEFT);
+
+		OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeRGB24, frameTypeRGBA32, false));
+
+		// Different plane counts
+		const FrameType frameTypeRGB(640u, 480u, FrameType::FORMAT_RGB24, FrameType::ORIGIN_UPPER_LEFT);
+		const FrameType frameTypeYUV(640u, 480u, FrameType::FORMAT_Y_UV12, FrameType::ORIGIN_UPPER_LEFT);
+
+		OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeRGB, frameTypeYUV, false));
+	}
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// same dimensions, pixel format, and origin should be compatible
+
+			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+			const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
+			const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
+
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+
+			const FrameType frameTypeA(width, height, pixelFormat, pixelOrigin);
+			const FrameType frameTypeB(width, height, pixelFormat, pixelOrigin);
+
+			OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeA, frameTypeB, false));
+			OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeA, frameTypeB, true));
+
+			OCEAN_EXPECT_TRUE(validation, frameTypeA.isFrameTypeDataLayoutCompatible(frameTypeB, false));
+			OCEAN_EXPECT_TRUE(validation, frameTypeA.isFrameTypeDataLayoutCompatible(frameTypeB, true));
+		}
+
+		{
+			// different resolution should not be compatible
+
+			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+			const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
+			const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
+
+			const unsigned int width0 = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+			const unsigned int height0 = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+
+			unsigned int width1 = width0;
+			unsigned int height1 = height0;
+
+			while (width0 == width1 && height0 == height1)
+			{
+				if (RandomI::boolean(randomGenerator))
+				{
+					width1 = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+				}
+				else
+				{
+					height1 = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+				}
+			}
+
+			const FrameType frameTypeA(width0, height0, pixelFormat, pixelOrigin);
+			const FrameType frameTypeB(width1, height1, pixelFormat, pixelOrigin);
+
+			OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeA, frameTypeB, false));
+			OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeA, frameTypeB, true));
+		}
+
+		{
+			// different pixel origins should not be compatible when allowDifferentPixelOrigins = false
+
+			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+
+			const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
+			const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
+
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+
+			const FrameType frameTypeA(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
+			const FrameType frameTypeB(width, height, pixelFormat, FrameType::ORIGIN_LOWER_LEFT);
+
+			OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeA, frameTypeB, false));
+			OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeA, frameTypeB, true));
+		}
+
+		{
+			// pixel formats with compatible data layouts should be compatible
+
+			const FrameType::PixelFormat pixelFormat0 = RandomI::random(randomGenerator, pixelFormats);
+
+			FrameType::PixelFormat pixelFormat1 = pixelFormat0;
+
+			while (pixelFormat0 == pixelFormat1)
+			{
+				pixelFormat1 = RandomI::random(randomGenerator, pixelFormats);
+			}
+
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+			const unsigned int widthMultiple = std::max(FrameType::widthMultiple(pixelFormat0), FrameType::widthMultiple(pixelFormat1));
+			const unsigned int heightMultiple = std::max(FrameType::heightMultiple(pixelFormat0), FrameType::heightMultiple(pixelFormat1));
+
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+
+			const FrameType frameTypeA(width, height, pixelFormat0, pixelOrigin);
+			const FrameType frameTypeB(width, height, pixelFormat1, pixelOrigin);
+
+			const bool shouldBeCompatible = FrameType::isDataLayoutCompatible(pixelFormat0, pixelFormat1);
+
+			OCEAN_EXPECT_EQUAL(validation, FrameType::areFrameTypesDataLayoutCompatible(frameTypeA, frameTypeB, false), shouldBeCompatible);
+			OCEAN_EXPECT_EQUAL(validation, frameTypeA.isFrameTypeDataLayoutCompatible(frameTypeB, false), shouldBeCompatible);
 		}
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));

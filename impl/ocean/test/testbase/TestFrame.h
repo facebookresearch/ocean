@@ -290,6 +290,13 @@ class OCEAN_TEST_BASE_EXPORT TestFrame
 		static bool testIsDataLayoutCompatible(const double testDuration);
 
 		/**
+		 * Tests the areFrameTypesDataLayoutCompatible() function.
+		 * @param testDuration Number of seconds for each test, with range (0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool testAreFrameTypesDataLayoutCompatible(const double testDuration);
+
+		/**
 		 * Tests the creation of a frame with extreme resolutions or padding.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded

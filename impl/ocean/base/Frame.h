@@ -1264,6 +1264,17 @@ class OCEAN_BASE_EXPORT FrameType
 		inline bool isFrameTypeCompatible(const FrameType& frameType, const bool allowDifferentPixelOrigins) const;
 
 		/**
+		 * Returns whether this frame type has a compatible data layout with a given frame type.
+		 * Two frame types have compatible data layouts if they have the same dimensions and their pixel formats have compatible data layouts.
+		 * This means both frame types can be forwarded to the same Computer Vision function without crashing, although they may produce different results.
+		 * @param frameType The frame type to be checked, must be valid
+		 * @param allowDifferentPixelOrigins True, to allow different pixel origins; False, so that both frame types must have the same pixel origin
+		 * @return True, if the given frame type has a compatible data layout
+		 * @see isFrameTypeCompatible(), isPixelFormatDataLayoutCompatible().
+		 */
+		inline bool isFrameTypeDataLayoutCompatible(const FrameType& frameType, const bool allowDifferentPixelOrigins) const;
+
+		/**
 		 * Returns whether two frame types are equal.
 		 * @param right The right frame type
 		 * @return True, if so
@@ -1738,6 +1749,18 @@ class OCEAN_BASE_EXPORT FrameType
 		 * @see arePixelFormatsCompatible().
 		 */
 		static bool areFrameTypesCompatible(const FrameType& frameTypeA, const FrameType& frameTypeB, const bool allowDifferentPixelOrigins);
+
+		/**
+		 * Returns whether two given frame types have compatible data layouts.
+		 * Two frame types have compatible data layouts if they have the same dimensions and their pixel formats have compatible data layouts.
+		 * This means both frame types can be forwarded to the same Computer Vision function without crashing, although they may produce different results.
+		 * @param frameTypeA The first frame type to be checked, must be valid
+		 * @param frameTypeB The second frame type to be checked, must be valid
+		 * @param allowDifferentPixelOrigins True, to allow different pixel origins; False, so that both frame types must have the same pixel origin
+		 * @return True, if both frame types have compatible data layouts
+		 * @see isDataLayoutCompatible(), areFrameTypesCompatible().
+		 */
+		static bool areFrameTypesDataLayoutCompatible(const FrameType& frameTypeA, const FrameType& frameTypeB, const bool allowDifferentPixelOrigins);
 
 		/**
 		 * Returns whether two given pixel formats have compatible data layouts.
@@ -3285,6 +3308,11 @@ inline bool FrameType::isPixelFormatDataLayoutCompatible(const PixelFormat pixel
 inline bool FrameType::isFrameTypeCompatible(const FrameType& frameType, const bool allowDifferentPixelOrigins) const
 {
 	return areFrameTypesCompatible(*this, frameType, allowDifferentPixelOrigins);
+}
+
+inline bool FrameType::isFrameTypeDataLayoutCompatible(const FrameType& frameType, const bool allowDifferentPixelOrigins) const
+{
+	return areFrameTypesDataLayoutCompatible(*this, frameType, allowDifferentPixelOrigins);
 }
 
 inline bool FrameType::operator!=(const FrameType& right) const
