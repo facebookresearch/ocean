@@ -14,7 +14,7 @@ Mac users can either install Node.js
 * manually and enable `yarn` by typing `corepack enable` in terminal, or
 * using a package manager like [Homebrew](https://brew.sh/): `brew install yarn`
 
-Users of other operating systems can hopefully extrapolated the necessary steps from the information above.
+Users of other operating systems can hopefully extrapolate the necessary steps from the information above.
 
 ### Local Development
 
