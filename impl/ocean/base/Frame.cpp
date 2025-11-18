@@ -1809,15 +1809,73 @@ bool FrameType::arePixelFormatsCompatible(const PixelFormat pixelFormatA, const 
 {
 	ocean_assert(pixelFormatA != FORMAT_UNDEFINED && pixelFormatB != FORMAT_UNDEFINED);
 
-	return pixelFormatA == pixelFormatB
-				|| (formatIsGeneric(pixelFormatA) && formatIsGeneric(pixelFormatB) && (formatIsPureGeneric(pixelFormatA) || formatIsPureGeneric(pixelFormatB)) && dataType(pixelFormatA) == dataType(pixelFormatB) && channels(pixelFormatA) == channels(pixelFormatB));
+	if (pixelFormatA == pixelFormatB)
+	{
+		// simple case, both pixel formats are compatible if they are identical
+
+		return true;
+	}
+
+	// both pixel formats need to be generic (one plane, no special packing)
+
+	if (!formatIsGeneric(pixelFormatA) || !formatIsGeneric(pixelFormatB))
+	{
+		return false;
+	}
+
+	// at least one pixel format needs to be pure generic (not a pre-defined pixel format)
+
+	if (!formatIsPureGeneric(pixelFormatA) && !formatIsPureGeneric(pixelFormatB))
+	{
+		return false;
+	}
+
+	// both pixel formats need the same data type
+
+	if (dataType(pixelFormatA) != dataType(pixelFormatB))
+	{
+		return false;
+	}
+
+	// both pixel formats need the same channel number
+
+	if (channels(pixelFormatA) != channels(pixelFormatB))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 bool FrameType::areFrameTypesCompatible(const FrameType& frameTypeA, const FrameType& frameTypeB, const bool allowDifferentPixelOrigins)
 {
-	return frameTypeA.width() == frameTypeB.width() && frameTypeA.height() == frameTypeB.height()
-				&& (allowDifferentPixelOrigins || frameTypeA.pixelOrigin() == frameTypeB.pixelOrigin())
-				&& arePixelFormatsCompatible(frameTypeA.pixelFormat(), frameTypeB.pixelFormat());
+	ocean_assert(frameTypeA.isValid() && frameTypeB.isValid());
+
+	// both frame types need the same resolution
+
+	if (frameTypeA.width() != frameTypeB.width() || frameTypeA.height() != frameTypeB.height())
+	{
+		return false;
+	}
+
+	if (!allowDifferentPixelOrigins)
+	{
+		// both frame types need the same pixel origin
+
+		if (frameTypeA.pixelOrigin() != frameTypeB.pixelOrigin())
+		{
+			return false;
+		}
+	}
+
+	// both frame types need compatible pixel formats
+
+	if (!arePixelFormatsCompatible(frameTypeA.pixelFormat(), frameTypeB.pixelFormat()))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 unsigned int FrameType::frameTypeSize() const
