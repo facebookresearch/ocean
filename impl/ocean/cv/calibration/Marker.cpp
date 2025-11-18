@@ -294,7 +294,7 @@ CV::PixelDirection Marker::LayoutManager::isRotated(const Layout& layout, const 
 		}
 	}
 
-	// in case checkIdentity == true, the layout can still be idencial and rotated (e.g., a symmetric layout)
+	// in case checkIdentity == true, the layout can still be identical and rotated (e.g., a symmetric layout)
 
 	/**
 	 * Rotation by 90 degree to the right

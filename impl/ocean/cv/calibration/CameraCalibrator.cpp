@@ -536,7 +536,7 @@ bool CameraCalibrator::optimizeCameraPoseWithAdditionalPointsFromMarkerCandidate
 
 	const ConstArraySubsetAccessor<MarkerCandidate, Index32> useMarkerCandidates(markerCandidates_, validMarkerCandidateIndices);
 
-	CV::PixelPositions additionalMarkerCoordiates;
+	CV::PixelPositions additionalMarkerCoordinates;
 
 	HomogenousMatrix4 board_T_internalCamera(board_T_camera);
 
@@ -552,7 +552,7 @@ bool CameraCalibrator::optimizeCameraPoseWithAdditionalPointsFromMarkerCandidate
 				{
 					if (CV::Segmentation::MaskAnalyzer::hasMaskNeighbor4<true, uint8_t>(reusableMarkerCoordinateUsageFrame_.constdata<uint8_t>(), reusableMarkerCoordinateUsageFrame_.width(), reusableMarkerCoordinateUsageFrame_.height(), reusableMarkerCoordinateUsageFrame_.paddingElements(), CV::PixelPosition(x, y), 0x00u))
 					{
-						additionalMarkerCoordiates.emplace_back(x, y);
+						additionalMarkerCoordinates.emplace_back(x, y);
 
 						foundNewCoordiante = true;
 					}
@@ -565,7 +565,7 @@ bool CameraCalibrator::optimizeCameraPoseWithAdditionalPointsFromMarkerCandidate
 			break;
 		}
 
-		for (const CV::PixelPosition& additionalMarkerCoordiate : additionalMarkerCoordiates)
+		for (const CV::PixelPosition& additionalMarkerCoordiate : additionalMarkerCoordinates)
 		{
 			reusableMarkerCoordinateUsageFrame_.pixel<uint8_t>(additionalMarkerCoordiate.x(), additionalMarkerCoordiate.y())[0] = 0x00u;
 		}
@@ -575,7 +575,7 @@ bool CameraCalibrator::optimizeCameraPoseWithAdditionalPointsFromMarkerCandidate
 		objectPointIds.clear();
 		objectPoints.clear();
 		imagePoints.clear();
-		if (metricCalibrationBoard_.optimizeCameraPose(camera, board_T_internalCamera, useMarkerCandidates, additionalMarkerCoordiates, points, pointsDistributionArray, board_T_internalOptimizedCamera, maximalProjectionError, &objectPointIds, &imagePoints, &objectPoints))
+		if (metricCalibrationBoard_.optimizeCameraPose(camera, board_T_internalCamera, useMarkerCandidates, additionalMarkerCoordinates, points, pointsDistributionArray, board_T_internalOptimizedCamera, maximalProjectionError, &objectPointIds, &imagePoints, &objectPoints))
 		{
 			board_T_internalCamera = board_T_internalOptimizedCamera;
 		}
