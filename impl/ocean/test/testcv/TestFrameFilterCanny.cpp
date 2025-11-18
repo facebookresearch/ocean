@@ -200,7 +200,7 @@ bool TestFrameFilterCanny::validationCannyFilterScharr(const Frame& original, co
 	static_assert((std::is_same<uint8_t, uint8_t>::value && std::is_same<TFilter, int8_t>::value) || (std::is_same<uint8_t, uint8_t>::value && std::is_same<TFilter, int16_t>::value), "Invalid data types");
 
 	ocean_assert(original.isValid() && filtered.isValid());
-	ocean_assert(original.isPixelFormatCompatible(FrameType::FORMAT_Y8) && original.isFrameTypeCompatible(filtered, /* allowDifferentPixelOrigins */ false));
+	ocean_assert(original.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8) && original.isFrameTypeCompatible(filtered, /* allowDifferentPixelOrigins */ false));
 
 	const unsigned int width = original.width();
 	const unsigned int height = original.height();

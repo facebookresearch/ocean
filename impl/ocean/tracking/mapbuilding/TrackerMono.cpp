@@ -61,7 +61,7 @@ bool TrackerMono::track(const AnyCamera& anyCamera, const Frame& yFrame, Homogen
 {
 	ocean_assert(anyCamera.isValid() && yFrame.isValid());
 	ocean_assert(anyCamera.width() == yFrame.width() && anyCamera.height() == yFrame.height());
-	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
 	ocean_assert(minimalNumberCorrespondences >= 4u);
 	ocean_assert(maximalProjectionError >= 0);

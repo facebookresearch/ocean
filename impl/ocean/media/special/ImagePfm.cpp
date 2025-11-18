@@ -73,7 +73,7 @@ bool ImagePfm::encodeImage(const Frame& frame, std::vector<uint8_t>& buffer)
 
 	std::string header;
 
-	if (frame.isPixelFormatCompatible(FrameType::FORMAT_F32))
+	if (frame.isPixelFormatCompatible(FrameType::genericPixelFormat<float, 1u>()))
 	{
 		header = "Pf\n" + String::toAString(frame.width()) + " " + String::toAString(frame.height()) + "\n-1.0\n";
 	}

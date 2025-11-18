@@ -172,9 +172,9 @@ inline bool FeatureDetector::IntensityVector2::operator<(const IntensityVector2&
 inline Vectors2 FeatureDetector::determineHarrisPoints(const Frame& yFrame, const SubRegion& subRegion, const unsigned int horizontalBins, const unsigned int verticalBins, const unsigned int strength, Worker* worker, std::vector<int>* strengths)
 {
 	ocean_assert(yFrame.isValid());
-	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
-	if (!yFrame.isValid() || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+	if (!yFrame.isValid() || !yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8))
 	{
 		return Vectors2();
 	}

@@ -93,7 +93,7 @@ bool HomographyTracker::trackPoints(const Frame& currentFrame, const Frame& yPre
 
 bool HomographyTracker::trackPoints(const Frame& yPreviousFrame, const CV::FramePyramid& previousFramePyramid, const CV::FramePyramid& currentFramePyramid, RandomGenerator& randomGenerator, const Vectors2& previousPositions, SquareMatrix3& homography, Worker* worker, const unsigned int patchSize)
 {
-	ocean_assert(yPreviousFrame.isValid() && yPreviousFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yPreviousFrame.isValid() && yPreviousFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
 	if (previousPositions.empty())
 	{

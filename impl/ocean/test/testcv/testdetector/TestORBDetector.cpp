@@ -132,7 +132,7 @@ TEST(TestORBDetector, DescriptorMatching)
 bool TestORBDetector::testOrientationDetermination(const double testDuration, Worker& worker, const Frame& yFrameTest)
 {
 	ocean_assert(testDuration > 0.0);
-	ocean_assert(!yFrameTest.isValid() || yFrameTest.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(!yFrameTest.isValid() || yFrameTest.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 
 	constexpr size_t numberRandomFeatures = 1000;
 
@@ -212,7 +212,7 @@ bool TestORBDetector::testOrientationDetermination(const double testDuration, Wo
 bool TestORBDetector::testDescriptorDetermination(const double testDuration, Worker& worker, const Frame& yFrameTest)
 {
 	ocean_assert(testDuration > 0.0);
-	ocean_assert(!yFrameTest.isValid() || yFrameTest.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(!yFrameTest.isValid() || yFrameTest.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 
 	constexpr size_t numberRandomFeatures = 1000;
 

@@ -1892,7 +1892,7 @@ bool AdvancedMotionT<TMetricInteger, TMetricFloat>::trackReliableReferencePoints
 	ocean_assert(areaLeft + areaWidth <= width);
 	ocean_assert(areaTop + areaHeight <= height);
 
-	ocean_assert(!maskFrame.isValid() || maskFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(!maskFrame.isValid() || maskFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 
 	Detector::HarrisCorners features;
 	features.reserve(5000);

@@ -76,7 +76,7 @@ bool TestInitializerI1::InpaintingPixel::operator<(const InpaintingPixel& inpain
 
 VectorI2 TestInitializerI1::InpaintingPixel::determineBorderDirection(const Frame& mask) const
 {
-	ocean_assert(mask.isValid() && mask.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(mask.isValid() && mask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 
 	VectorI2 borderDirection = VectorI2(0, 0);
 
@@ -140,7 +140,7 @@ VectorI2 TestInitializerI1::InpaintingPixel::determineBorderDirection(const Fram
 
 VectorI2 TestInitializerI1::InpaintingPixel::determineImageOrientation(const Frame& mask, const Frame& sobel) const
 {
-	ocean_assert(mask.isValid() && mask.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(mask.isValid() && mask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 
 	ocean_assert(sobel.dataType() == FrameType::DT_SIGNED_INTEGER_16);
 	ocean_assert(sobel.width() == mask.width() && sobel.height() == mask.height());
@@ -2734,7 +2734,7 @@ unsigned int TestInitializerI1::determineSSD(const Frame& frame, const Frame& ma
 
 bool TestInitializerI1::allValueSame(const Frame& mask, const unsigned int x, const unsigned int y, const uint8_t value, const unsigned int neighborhood)
 {
-	ocean_assert(mask.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(mask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 	ocean_assert(x < mask.width() && y < mask.height());
 
 	if (neighborhood == 1u)

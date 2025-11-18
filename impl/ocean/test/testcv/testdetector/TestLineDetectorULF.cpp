@@ -1195,7 +1195,7 @@ double TestLineDetectorULF::rmsBarEdgeResponse(const Frame& yFrame, const unsign
 	constexpr unsigned int barSize = 3u;
 	constexpr unsigned int barSize_2 = barSize / 2u;
 
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 	ocean_assert(windowSize >= 1u);
 	ocean_assert(yFrame.width() >= windowSize * 2u + barSize);
 
@@ -1343,7 +1343,7 @@ double TestLineDetectorULF::rmsStepEdgeResponseWithoutNonMaximumSuppression(cons
 	constexpr unsigned int stepSize = 1u;
 	constexpr unsigned int stepSize_2 = stepSize / 2u;
 
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 	ocean_assert(windowSize >= 1u);
 	ocean_assert(yFrame.width() >= windowSize * 2u + stepSize);
 
@@ -1441,7 +1441,7 @@ double TestLineDetectorULF::sdStepEdgeResponseWithoutNonMaximumSuppression(const
 {
 	const unsigned int stepSize_2 = stepSize / 2u; // 0 in case 'stepSize == 1'
 
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 
 	ocean_assert(yFrame.width() >= windowSize * 2u + stepSize);
 

@@ -219,7 +219,7 @@ bool ContourFinder::findBorderLandmarks(const Frame& frame, const Frame& roughMa
 	ocean_assert(frame.isValid() && roughMask.isValid());
 	ocean_assert(frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8 && frame.numberPlanes() == 1u);
 
-	ocean_assert(roughMask.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(roughMask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 	ocean_assert(frame.isFrameTypeCompatible(FrameType(roughMask, frame.pixelFormat()), true));
 
 	ocean_assert(!roughContour.isEmpty());

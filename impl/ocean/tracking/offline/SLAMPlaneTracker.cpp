@@ -983,7 +983,7 @@ bool SLAMPlaneTracker::setInitialTrackingArea(const Triangles2& triangles)
 
 bool SLAMPlaneTracker::setInitialTrackingArea(const Frame& yMask)
 {
-	if (!yMask.isValid() || !yMask.isPixelFormatCompatible(FrameType::FORMAT_Y8) || yMask.pixelOrigin() != FrameType::ORIGIN_UPPER_LEFT)
+	if (!yMask.isValid() || !yMask.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8) || yMask.pixelOrigin() != FrameType::ORIGIN_UPPER_LEFT)
 	{
 		ocean_assert(false && "Invalid mask!");
 		return false;

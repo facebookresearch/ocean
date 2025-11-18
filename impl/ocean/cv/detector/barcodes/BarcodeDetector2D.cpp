@@ -41,7 +41,7 @@ const FiniteLine2& BarcodeDetector2D::Observation::location() const
 
 Barcodes BarcodeDetector2D::detectBarcodes(const Frame& yFrame, const uint32_t detectionFeatures, const BarcodeTypeSet& enabledBarcodeTypes, const unsigned int scanlineSpacing, Observations* observations, FiniteLines2* scanlines)
 {
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8) && yFrame.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8) && yFrame.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
 	ocean_assert(scanlineSpacing != 0u);
 
 	Barcodes barcodes;
@@ -317,7 +317,7 @@ FiniteLines2 BarcodeDetector2D::computeScanlines(const unsigned int frameWidth, 
 
 bool BarcodeDetector2D::extractScanlineData(const Frame& yFrame, const FiniteLine2& scanline, ScanlineData& scanlineData, CV::PixelPositionsI& scanlinePositions, const unsigned int minimumScanlineLength)
 {
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8) && yFrame.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8) && yFrame.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
 	ocean_assert(scanline.isValid());
 
 	scanlineData.clear();

@@ -20,7 +20,7 @@ namespace MapBuilding
 
 bool UnifiedDescriptorExtractorFreakMultiDescriptor256::createAndAddDescriptor(const CV::FramePyramid& yFramePyramid, const AnyCamera& anyCamera, const Vector2& imagePoint, const Index32& objectPointId, UnifiedDescriptorMap& unifiedDescriptorMap) const
 {
-	ocean_assert(yFramePyramid.isValid() && yFramePyramid.frameType().isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFramePyramid.isValid() && yFramePyramid.frameType().isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 	ocean_assert(yFramePyramid.finestWidth() == anyCamera.width());
 	ocean_assert(yFramePyramid.finestHeight() == anyCamera.height());
 

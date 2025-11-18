@@ -29,7 +29,7 @@ bool RelocalizerMono::relocalize(const AnyCamera& camera, const Frame& yFrame, H
 {
 	ocean_assert(camera.isValid() && yFrame.isValid());
 	ocean_assert(camera.width() == yFrame.width() && camera.height() == yFrame.height());
-	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
 	ocean_assert(minimalNumberCorrespondence >= 4u);
 	ocean_assert(maximalProjectionError >= Scalar(0));

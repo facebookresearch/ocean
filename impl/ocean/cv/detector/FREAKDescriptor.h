@@ -1137,7 +1137,7 @@ bool FREAKDescriptorT<tSize>::computeLocalDeformationMatrixAndOrientation(const 
 {
 	ocean_assert(pyramid.isValid());
 	ocean_assert(pointPyramidLevel < pyramid.layers());
-	ocean_assert(pyramid.frameType().isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(pyramid.frameType().isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 	ocean_assert(NumericF::isEqualEps(unprojectRayIF.norm() - 1.0f));
 	ocean_assert(inverseFocalLengthX > 0);
 	ocean_assert(projectionJacobianMatrix.IsRowMajor == false);

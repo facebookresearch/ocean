@@ -1404,7 +1404,7 @@ bool PatternTrackerCore6DOF::detectAndDescribeFeatures(const SharedAnyCamera& ca
 {
 	ocean_assert(camera && yFrame.isValid());
 	ocean_assert(camera->width() == yFrame.width() && camera->height() == yFrame.height());
-	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
 	const unsigned int maxFrameArea = yFrame.pixels();
 	const unsigned int minFrameArea = std::max(40u * 40u, maxFrameArea / 64u);

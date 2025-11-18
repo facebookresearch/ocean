@@ -149,7 +149,7 @@ bool FrameConverterColorMap::Comfort::convertInteger1ChannelToRGB24(const Frame&
 
 	Frame convertedSourceFrame;
 
-	if (source.isPixelFormatCompatible(Frame::FORMAT_Y8))
+	if (source.isPixelFormatCompatible(Frame::genericPixelFormat<uint8_t, 1u>()))
 	{
 		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
 		{
@@ -167,7 +167,7 @@ bool FrameConverterColorMap::Comfort::convertInteger1ChannelToRGB24(const Frame&
 
 		FrameConverter::cast<int8_t, float>(source.constdata<int8_t>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
-	else if (source.isPixelFormatCompatible(Frame::FORMAT_Y16))
+	else if (source.isPixelFormatCompatible(Frame::genericPixelFormat<uint16_t, 1u>()))
 	{
 		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
 		{
@@ -185,7 +185,7 @@ bool FrameConverterColorMap::Comfort::convertInteger1ChannelToRGB24(const Frame&
 
 		FrameConverter::cast<int16_t, float>(source.constdata<int16_t>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
-	else if (source.isPixelFormatCompatible(Frame::FORMAT_Y32))
+	else if (source.isPixelFormatCompatible(Frame::genericPixelFormat<uint32_t, 1u>()))
 	{
 		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
 		{
@@ -203,7 +203,7 @@ bool FrameConverterColorMap::Comfort::convertInteger1ChannelToRGB24(const Frame&
 
 		FrameConverter::cast<int32_t, float>(source.constdata<int32_t>(), convertedSourceFrame.data<float>(), source.width(), source.height(), source.channels(), source.paddingElements(), convertedSourceFrame.paddingElements());
 	}
-	else if (source.isPixelFormatCompatible(Frame::FORMAT_Y64))
+	else if (source.isPixelFormatCompatible(Frame::genericPixelFormat<uint64_t, 1u>()))
 	{
 		if (!convertedSourceFrame.set(FrameType(source, FrameType::FORMAT_F32), true /*forceOwner*/, true /*forceWritable*/))
 		{

@@ -1492,7 +1492,7 @@ bool TestFrameFilterErosion::validate8BitSquareKernel(const uint8_t* const mask,
 
 bool TestFrameFilterErosion::isMaskBorderPixel(const Frame& mask, const CV::PixelPosition& pixelPosition, const uint8_t maskValue)
 {
-	ocean_assert(mask.isValid() && mask.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(mask.isValid() && mask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 
 	if (mask.constpixel<uint8_t>(pixelPosition.x(), pixelPosition.y())[0] == maskValue)
 	{

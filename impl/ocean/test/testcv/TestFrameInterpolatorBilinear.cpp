@@ -3830,9 +3830,9 @@ bool TestFrameInterpolatorBilinear::validateRotatedFrame(const Frame& source, co
 
 bool TestFrameInterpolatorBilinear::validatePatchIntensitySum1Channel(const Frame& yFrame, const unsigned int patchWidth, const unsigned int patchHeight, const Vector2& center, const CV::PixelCenter pixelCenter, const Scalar intensity)
 {
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 
-	if (!yFrame.isValid() || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+	if (!yFrame.isValid() || !yFrame.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()))
 	{
 		return false;
 	}

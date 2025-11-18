@@ -22,7 +22,7 @@ bool FrameFilterBlur::Comfort::blurMaskRegions(Frame& image, const Frame& mask, 
 	ocean_assert(mask.isValid());
 
 	ocean_assert(image.numberPlanes() == 1u && image.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
-	ocean_assert(mask.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(mask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 
 	ocean_assert(image.width() == mask.width() && image.height() == mask.height() && image.pixelOrigin() == mask.pixelOrigin());
 	ocean_assert(!image.hasAlphaChannel());
@@ -32,7 +32,7 @@ bool FrameFilterBlur::Comfort::blurMaskRegions(Frame& image, const Frame& mask, 
 		return false;
 	}
 
-	if (!mask.isValid() || !mask.isPixelFormatCompatible(FrameType::FORMAT_Y8) || !image.isFrameTypeCompatible(FrameType(mask, image.pixelFormat()), false))
+	if (!mask.isValid() || !mask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()) || !image.isFrameTypeCompatible(FrameType(mask, image.pixelFormat()), false))
 	{
 		return false;
 	}

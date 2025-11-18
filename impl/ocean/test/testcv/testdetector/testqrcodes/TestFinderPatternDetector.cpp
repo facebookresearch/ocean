@@ -289,7 +289,7 @@ bool TestFinderPatternDetector::testDetectFinderPatternSyntheticData(const unsig
 
 void TestFinderPatternDetector::paintFinderPattern(Frame& yFrame, const Vector2& location, const Scalar& length, const Scalar& rotationAngle, const uint8_t foregroundColor, const uint8_t backgroundColor, Worker* worker)
 {
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 	ocean_assert(yFrame.width() >= 29u && yFrame.height() >= 29u);
 
 	ocean_assert(length >= Scalar(7));

@@ -1853,10 +1853,10 @@ bool TestMaskAnalyzer::testComputeDistanceTransform8Bit(const uint32_t width, co
 
 bool TestMaskAnalyzer::validateDetermineDistancesToBorder(const Frame& mask, const Frame& distance, const unsigned int maximalDistance, const bool assignFinal)
 {
-	ocean_assert(mask.isValid() && mask.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(mask.isValid() && mask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 	ocean_assert(mask.isFrameTypeCompatible(distance.frameType(), false /*allowDifferentPixelOrigins*/));
 
-	if (!mask.isValid() || !mask.isPixelFormatCompatible(FrameType::FORMAT_Y8) || !mask.isFrameTypeCompatible(distance.frameType(), false /*allowDifferentPixelOrigins*/))
+	if (!mask.isValid() || !mask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()) || !mask.isFrameTypeCompatible(distance.frameType(), false /*allowDifferentPixelOrigins*/))
 	{
 		return false;
 	}

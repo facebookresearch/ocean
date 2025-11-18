@@ -34,8 +34,8 @@ bool RelocalizerStereo::relocalize(const AnyCamera& cameraA, const AnyCamera& ca
 	ocean_assert(yFrameA.isValid() && yFrameB.isValid());
 	ocean_assert(cameraA.width() == yFrameA.width() && cameraA.height() == yFrameA.height());
 	ocean_assert(cameraB.width() == yFrameB.width() && cameraB.height() == yFrameB.height());
-	ocean_assert(yFrameA.isPixelFormatCompatible(FrameType::FORMAT_Y8));
-	ocean_assert(yFrameB.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrameA.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrameB.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
 	ocean_assert(minimalNumberCorrespondences >= 4u);
 	ocean_assert(maximalProjectionError >= Scalar(0));

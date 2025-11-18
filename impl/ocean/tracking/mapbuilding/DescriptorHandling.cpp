@@ -19,7 +19,7 @@ namespace MapBuilding
 bool DescriptorHandling::computeFreakDescriptor(const CV::FramePyramid& yFramePyramid, const AnyCamera& anyCamera, const Vector2& point, FreakMultiDescriptor256& freakDescriptor)
 {
 	ocean_assert(yFramePyramid.finestWidth() == anyCamera.width() && yFramePyramid.finestHeight() == anyCamera.height());
-	ocean_assert(yFramePyramid.frameType().isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFramePyramid.frameType().isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
 	const Vector3 unprojectRayIF = anyCamera.vectorIF(point);
 

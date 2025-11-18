@@ -61,10 +61,10 @@ bool SimilarityTracker::determineSimilarity(const Frame& yFrame, const CV::Pixel
 	ocean_assert(previousSubRegion.isValid());
 	ocean_assert(previousSubRegion.right() < yFrame.width() && previousSubRegion.bottom() < yFrame.height());
 
-	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 	ocean_assert(!keyFramePyramid_.isValid() || keyFramePyramid_.frameType().isFrameTypeCompatible(yFrame, false));
 
-	if (!yFrame.isValid() || yFrame.width() < 40u || yFrame.height() < 40u || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8) || (keyFramePyramid_ && !keyFramePyramid_.frameType().isFrameTypeCompatible(yFrame, false)) || !previousSubRegion.isValid())
+	if (!yFrame.isValid() || yFrame.width() < 40u || yFrame.height() < 40u || !yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8) || (keyFramePyramid_ && !keyFramePyramid_.frameType().isFrameTypeCompatible(yFrame, false)) || !previousSubRegion.isValid())
 	{
 		return false;
 	}

@@ -639,7 +639,7 @@ bool CalibrationBoardDetector::detectCalibrationBoard(const AnyCamera& camera, c
 		return false;
 	}
 
-	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 	ocean_assert(yFrame.width() == camera.width() && yFrame.height() == camera.height());
 	ocean_assert(yFrame.pixelOrigin() == FrameType::ORIGIN_UPPER_LEFT);
 

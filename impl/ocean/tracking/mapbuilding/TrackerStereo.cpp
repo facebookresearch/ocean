@@ -64,8 +64,8 @@ bool TrackerStereo::track(const AnyCamera& anyCameraA, const AnyCamera& anyCamer
 	ocean_assert(yFrameA.isValid() && yFrameB.isValid());
 	ocean_assert(anyCameraA.width() == yFrameA.width() && anyCameraA.height() == yFrameA.height());
 	ocean_assert(anyCameraB.width() == yFrameB.width() && anyCameraB.height() == yFrameB.height());
-	ocean_assert(yFrameA.isPixelFormatCompatible(FrameType::FORMAT_Y8));
-	ocean_assert(yFrameB.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrameA.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrameB.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
 	ocean_assert(minimalNumberCorrespondences >= 4u);
 	ocean_assert(maximalProjectionError >= 0);

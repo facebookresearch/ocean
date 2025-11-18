@@ -21,7 +21,7 @@ bool Histogram::equalization(Frame& frame, const Scalar factor, Worker* worker)
 	ocean_assert(frame.isValid());
 	ocean_assert(factor >= 0 && factor <= 1);
 
-	if (frame.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+	if (frame.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()))
 	{
 		switch (frame.channels())
 		{
@@ -48,7 +48,7 @@ bool Histogram::equalization(const Frame& source, Frame& target, const Scalar fa
 	ocean_assert(source.isValid());
 	ocean_assert(factor >= 0 && factor <= 1);
 
-	if (source.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+	if (source.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()))
 	{
 		switch (target.channels())
 		{

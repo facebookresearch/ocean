@@ -295,7 +295,7 @@ bool TestAdvancedFrameShrinker::validateDivideByTwo(const Frame& sourceFrame, co
 		return false;
 	}
 
-	if (!sourceMask.isPixelFormatCompatible(FrameType::FORMAT_Y8) || !targetMask.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+	if (!sourceMask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()) || !targetMask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()))
 	{
 		return false;
 	}

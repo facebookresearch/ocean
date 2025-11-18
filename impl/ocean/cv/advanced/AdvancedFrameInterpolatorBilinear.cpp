@@ -22,7 +22,7 @@ bool AdvancedFrameInterpolatorBilinear::Comfort::homographyFilterMask(const Fram
 	ocean_assert(input.isPixelFormatCompatible(output.pixelFormat()) && input.pixelOrigin() == output.pixelOrigin());
 
 	ocean_assert(outputFilterMask.isValid());
-	ocean_assert(outputFilterMask.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(outputFilterMask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 	ocean_assert(outputFilterMask.pixelOrigin() == input.pixelOrigin());
 
 	if (!input.isPixelFormatCompatible(output.pixelFormat()) || input.pixelOrigin() != output.pixelOrigin() || input.numberPlanes() != 1u || input.dataType() != FrameType::DT_UNSIGNED_INTEGER_8)

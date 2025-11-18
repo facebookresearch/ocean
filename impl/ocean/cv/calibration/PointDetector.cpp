@@ -58,7 +58,7 @@ bool PointDetector::PointPattern::determinePointStrength(const Frame& yFrame, co
 {
 	ocean_assert(isValid());
 
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
 	ocean_assert(frameStrideElements_ == yFrame.strideElements());
 	if (frameStrideElements_ != yFrame.strideElements())
@@ -112,7 +112,7 @@ bool PointDetector::PointPattern::determinePointStrength(const Frame& yFrame, co
 {
 	ocean_assert(isValid());
 
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
 	ocean_assert(frameStrideElements_ == yFrame.strideElements());
 	if (frameStrideElements_ != yFrame.strideElements())
@@ -270,9 +270,9 @@ bool PointDetector::PointPattern::determineOffsets(const unsigned int radius, co
 bool PointDetector::detectPoints(const Frame& yFrame, Worker* worker)
 {
 	ocean_assert(yFrame.isValid());
-	ocean_assert(yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
-	if (!yFrame.isValid() || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+	if (!yFrame.isValid() || !yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8))
 	{
 		return false;
 	}
@@ -641,9 +641,9 @@ bool PointDetector::optimizePoints(const Frame& yFrame, const Points& points, co
 
 bool PointDetector::detectPoints(const Frame& yFrame, const PointPatterns& pointPatterns, const unsigned int minDifference, const unsigned int maxVariance, Points& points, const bool suppressNonMaximum, const unsigned int detectionScaleSteps, Worker* worker)
 {
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
-	if (!yFrame.isValid() || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+	if (!yFrame.isValid() || !yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8))
 	{
 		return false;
 	}
@@ -1254,9 +1254,9 @@ void PointDetector::updatePointPatterns(PointPatterns& pointPatterns, const unsi
 
 bool PointDetector::paintPointPattern(Frame& yFrame, const unsigned int radius, const uint8_t pointColor)
 {
-	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(yFrame.isValid() && yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 
-	if (!yFrame.isValid() || !yFrame.isPixelFormatCompatible(FrameType::FORMAT_Y8))
+	if (!yFrame.isValid() || !yFrame.isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8))
 	{
 		return false;
 	}

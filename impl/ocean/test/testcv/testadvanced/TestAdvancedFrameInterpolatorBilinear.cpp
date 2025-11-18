@@ -1813,7 +1813,7 @@ bool TestAdvancedFrameInterpolatorBilinear::interpolatePatchWithMask8BitPerChann
 {
 	ocean_assert(frame.isValid() && mask.isValid());
 	ocean_assert(frame.numberPlanes() == 1u && frame.dataType() == FrameType::DT_UNSIGNED_INTEGER_8);
-	ocean_assert(mask.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(mask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 
 	ocean_assert(patchBuffer != nullptr && patchMaskBuffer != nullptr);
 
@@ -2112,7 +2112,7 @@ template <typename TScalar>
 bool TestAdvancedFrameInterpolatorBilinear::validateInterpolatePixel8BitPerChannel(const Frame& frame, const Frame& mask, const VectorT2<TScalar>& position, const CV::PixelCenter pixelCenter, const uint8_t maskValue, const uint8_t* const interpolationResult, const uint8_t maskResult, const TScalar threshold)
 {
 	ocean_assert(frame.isValid());
-	ocean_assert(mask.isValid() && mask.isPixelFormatCompatible(FrameType::FORMAT_Y8));
+	ocean_assert(mask.isValid() && mask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>()));
 	ocean_assert(threshold >= 0 && threshold < 255);
 
 	VectorT2<TScalar> shiftedPosition = position;

@@ -28,7 +28,7 @@ bool AdvancedFrameShrinker::divideByTwo(const Frame& source, Frame& target, cons
 
 	if (source.width() >= 2u && source.height() >= 2u
 			&& source.numberPlanes() == 1u
-			&& sourceMask.isPixelFormatCompatible(FrameType::FORMAT_Y8)
+			&& sourceMask.isPixelFormatCompatible(FrameType::genericPixelFormat<uint8_t, 1u>())
 			&& source.pixelOrigin() == sourceMask.pixelOrigin())
 	{
 		if (!target.set(FrameType(source, source.width() / 2u, source.height() / 2u), false /*forceOwner*/, true /*forceWritable*/))
