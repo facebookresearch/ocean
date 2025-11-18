@@ -19,9 +19,9 @@ const features = [
     title: 'Features',
     description: (
       <>
-        Image Processing<div/>
-        Photogrammetry & Computer Vision algorithms<div/>
-		    Visualization & Rendering<div/>
+        Image Processing<br/>
+        Photogrammetry & Computer Vision algorithms<br/>
+		    Visualization & Rendering<br/>
       </>
     ),
   },
@@ -29,8 +29,8 @@ const features = [
     title: 'Multi-platform',
     description: (
       <>
-        iOS/Android/Quest<div/>
-		    Windows/macOS/Linux<div/>
+        iOS/Android/Quest<br/>
+		    Windows/macOS/Linux<br/>
       </>
     ),
   },
@@ -38,9 +38,9 @@ const features = [
     title: 'Usability',
     description: (
       <>
-        High performance<div/>
-        Low binary impact<div/>
-        Detailed documentation and examples<div/>
+        High performance<br/>
+        Low binary impact<br/>
+        Detailed documentation and examples<br/>
       </>
     ),
   },
