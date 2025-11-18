@@ -108,8 +108,4 @@ This flexibility allows for a hands-on approach to understanding and optimizing 
     Alternatively, [generate a XCode project for Ocean](https://github.com/facebookresearch/ocean/blob/v1.0.0/building_for_macos.md#4-building-the-ocean-ios-demotest-apps) and search for `application_ocean_demo_cv_detector_linedetector_osx` in the schemes at the top. Then hit `CMD-R` to build and run the app.
   </TabItem>
 
-  <TabItem value="win" label="Windows">
-    TODO
-  </TabItem>
-
 </Tabs>

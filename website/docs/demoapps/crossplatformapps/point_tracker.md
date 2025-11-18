@@ -79,8 +79,4 @@ The demo utilizes a platform-independent class called [`PointTrackerWrapper`](ht
     Alternatively, [generate a XCode project for Ocean](https://github.com/facebookresearch/ocean/blob/v1.0.0/building_for_macos.md#4-building-the-ocean-ios-demotest-apps) and search for `application_ocean_tracking_pointtracker_osx` in the schemes at the top. Then hit `CMD-R` to build and run the app.
   </TabItem>
 
-  <TabItem value="win" label="Windows">
-    TODO
-  </TabItem>
-
 </Tabs>
