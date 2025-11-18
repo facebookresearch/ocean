@@ -233,6 +233,18 @@ bool TestFrame::test(const double testDuration)
 
 	allSucceeded = testTranslatePixelFormat() && allSucceeded;
 
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testArePixelFormatsCompatible(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testAreFrameTypesCompatible(testDuration) && allSucceeded;
+
 #ifndef OCEAN_DEBUG // this test will raise a couple of asserts, so only executing in release builds
 
 	Log::info() << " ";
@@ -417,6 +429,16 @@ TEST(TestFrame, FormatIsLimitedRange)
 TEST(TestFrame, TranslatePixelFormat)
 {
 	EXPECT_TRUE(TestFrame::testTranslatePixelFormat());
+}
+
+TEST(TestFrame, ArePixelFormatsCompatible)
+{
+	EXPECT_TRUE(TestFrame::testArePixelFormatsCompatible(GTEST_TEST_DURATION));
+}
+
+TEST(TestFrame, AreFrameTypesCompatible)
+{
+	EXPECT_TRUE(TestFrame::testAreFrameTypesCompatible(GTEST_TEST_DURATION));
 }
 
 #ifndef OCEAN_DEBUG
@@ -5960,6 +5982,297 @@ bool TestFrame::testTranslatePixelFormat()
 	}
 
 	return allSucceeded;
+}
+
+bool TestFrame::testArePixelFormatsCompatible(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing arePixelFormatsCompatible():";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const FrameType::DataTypes& dataTypes = FrameType::definedDataTypes();
+	const FrameType::PixelFormats& pixelFormats = definedPixelFormats();
+
+	for (const FrameType::PixelFormat& pixelFormat : pixelFormats)
+	{
+		OCEAN_EXPECT_TRUE(validation, FrameType::arePixelFormatsCompatible(pixelFormat, pixelFormat));
+	}
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// two different pre-defined pixel formats should not be compatible
+
+			const FrameType::PixelFormat pixelFormat0 = RandomI::random(randomGenerator, pixelFormats);
+
+			FrameType::PixelFormat pixelFormat1 = pixelFormat0;
+
+			while (pixelFormat0 == pixelFormat1)
+			{
+				pixelFormat1 = RandomI::random(randomGenerator, pixelFormats);
+			}
+
+			OCEAN_EXPECT_FALSE(validation, FrameType::arePixelFormatsCompatible(pixelFormat0, pixelFormat1));
+		}
+
+		{
+			// two identical pure generic pixel formats should always be compatible
+
+			const FrameType::DataType dataType = RandomI::random(randomGenerator, dataTypes);
+			const unsigned int channels = RandomI::random(randomGenerator, 1u, 31u);
+
+			const FrameType::PixelFormat pixelFormat = FrameType::genericPixelFormat(dataType, channels);
+
+			OCEAN_EXPECT_TRUE(validation, FrameType::arePixelFormatsCompatible(pixelFormat, pixelFormat));
+		}
+
+		{
+			// two different pure generic pixel formats should not be compatible
+
+			const FrameType::DataType dataType0 = RandomI::random(randomGenerator, dataTypes);
+			const unsigned int channels0 = RandomI::random(randomGenerator, 1u, 31u);
+
+			FrameType::DataType dataType1 = dataType0;
+			unsigned int channels1 = channels0;
+
+			while (dataType0 == dataType1 || channels0 == channels1)
+			{
+				dataType1 = RandomI::random(randomGenerator, dataTypes);
+				channels1 = RandomI::random(randomGenerator, 1u, 31u);
+			}
+
+			const FrameType::PixelFormat pixelFormat0 = FrameType::genericPixelFormat(dataType0, channels0);
+			const FrameType::PixelFormat pixelFormat1 = FrameType::genericPixelFormat(dataType1, channels1);
+
+			OCEAN_EXPECT_FALSE(validation, FrameType::arePixelFormatsCompatible(pixelFormat0, pixelFormat1));
+		}
+
+		{
+			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+
+			if (FrameType::formatIsGeneric(pixelFormat))
+			{
+				// a pre-defined pixel format which is (also) generic, should be compatible with the pure generic pixel format
+
+				OCEAN_EXPECT_EQUAL(validation, FrameType::numberPlanes(pixelFormat), 1u);
+				OCEAN_EXPECT_FALSE(validation, FrameType::formatIsPacked(pixelFormat));
+
+				const FrameType::DataType dataType = FrameType::dataType(pixelFormat);
+				const unsigned int channels = FrameType::formatGenericNumberChannels(pixelFormat);
+
+				// let's define a compatible pure generic pixel format
+
+				const FrameType::PixelFormat compatibleGenericPixelFormat = FrameType::genericPixelFormat(dataType, channels);
+
+				OCEAN_EXPECT_TRUE(validation, FrameType::arePixelFormatsCompatible(pixelFormat, compatibleGenericPixelFormat));
+
+				// let's define a not-compatible pure generic pixel format
+
+				FrameType::DataType otherDataType = dataType;
+				unsigned int otherChannels = channels;
+
+				while (dataType == otherDataType || channels == otherChannels)
+				{
+					otherDataType = RandomI::random(randomGenerator, dataTypes);
+					otherChannels = RandomI::random(randomGenerator, 1u, 31u);
+				}
+
+				const FrameType::PixelFormat notCompatibleGenericPixelFormat = FrameType::genericPixelFormat(otherDataType, otherChannels);
+
+				OCEAN_EXPECT_FALSE(validation, FrameType::arePixelFormatsCompatible(pixelFormat, notCompatibleGenericPixelFormat));
+			}
+			else
+			{
+				OCEAN_EXPECT_FALSE(validation, FrameType::formatIsGeneric(pixelFormat));
+
+				// any pure generic pixel format is not compatible
+
+				const FrameType::DataType dataType = RandomI::random(randomGenerator, dataTypes);
+				const unsigned int channels = RandomI::random(randomGenerator, 1u, 31u);
+
+				const FrameType::PixelFormat notCompatibleGenericPixelFormat = FrameType::genericPixelFormat(dataType, channels);
+
+				OCEAN_EXPECT_FALSE(validation, FrameType::arePixelFormatsCompatible(pixelFormat, notCompatibleGenericPixelFormat));
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestFrame::testAreFrameTypesCompatible(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing areFrameTypesCompatible():";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const FrameType::PixelFormats& pixelFormats = definedPixelFormats();
+
+	for (const FrameType::PixelFormat& pixelFormat : pixelFormats)
+	{
+		const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
+		const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
+
+		const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+		const unsigned int height = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+
+		const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+		const FrameType frameType(width, height, pixelFormat, pixelOrigin);
+
+		OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesCompatible(frameType, frameType, false));
+		OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesCompatible(frameType, frameType, true));
+	}
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// same dimensions, pixel format, and origin should be compatible
+
+			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+			const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
+			const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
+
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+
+			const FrameType frameTypeA(width, height, pixelFormat, pixelOrigin);
+			const FrameType frameTypeB(width, height, pixelFormat, pixelOrigin);
+
+			OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, false));
+			OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, true));
+		}
+
+		{
+			// different resolution should not be compatible
+
+			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+			const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
+			const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
+
+			const unsigned int width0 = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+			const unsigned int height0 = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+
+			unsigned int width1 = width0;
+			unsigned int height1 = height0;
+
+			while (width0 == width1 && height0 == height1)
+			{
+				if (RandomI::boolean(randomGenerator))
+				{
+					width1 = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+				}
+				else
+				{
+					height1 = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+				}
+			}
+
+			const FrameType frameTypeA(width0, height0, pixelFormat, pixelOrigin);
+			const FrameType frameTypeB(width1, height1, pixelFormat, pixelOrigin);
+
+			OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, false));
+			OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, true));
+		}
+
+		{
+			// different pixel origins should not be compatible when allowDifferentPixelOrigins = false
+
+			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+
+			const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
+			const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
+
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+
+			const FrameType frameTypeA(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
+			const FrameType frameTypeB(width, height, pixelFormat, FrameType::ORIGIN_LOWER_LEFT);
+
+			OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, false));
+			OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, true));
+		}
+
+		{
+			// different pixel formats should not be compatible
+
+			const FrameType::PixelFormat pixelFormat0 = RandomI::random(randomGenerator, pixelFormats);
+
+			FrameType::PixelFormat pixelFormat1 = pixelFormat0;
+
+			while (pixelFormat0 == pixelFormat1)
+			{
+				pixelFormat1 = RandomI::random(randomGenerator, pixelFormats);
+			}
+
+			const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+			const unsigned int widthMultiple = std::max(FrameType::widthMultiple(pixelFormat0), FrameType::widthMultiple(pixelFormat1));
+			const unsigned int heightMultiple = std::max(FrameType::heightMultiple(pixelFormat0), FrameType::heightMultiple(pixelFormat1));
+
+			const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+			const unsigned int height = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+
+			const FrameType frameTypeA(width, height, pixelFormat0, pixelOrigin);
+			const FrameType frameTypeB(width, height, pixelFormat1, pixelOrigin);
+
+			OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, false));
+			OCEAN_EXPECT_FALSE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, true));
+		}
+
+		{
+			// compatible pixel formats (generic) should be compatible
+
+			const FrameType::PixelFormat pixelFormat = RandomI::random(randomGenerator, pixelFormats);
+
+			if (FrameType::formatIsGeneric(pixelFormat))
+			{
+				OCEAN_EXPECT_FALSE(validation, FrameType::formatIsPacked(pixelFormat));
+				OCEAN_EXPECT_EQUAL(validation, FrameType::numberPlanes(pixelFormat), 1u);
+
+				const FrameType::PixelOrigin pixelOrigin = RandomI::random(randomGenerator, {FrameType::ORIGIN_UPPER_LEFT, FrameType::ORIGIN_LOWER_LEFT});
+
+				const unsigned int widthMultiple = FrameType::widthMultiple(pixelFormat);
+				const unsigned int heightMultiple = FrameType::heightMultiple(pixelFormat);
+
+				const unsigned int width = RandomI::random(randomGenerator, 1u, 1000u) * widthMultiple;
+				const unsigned int height = RandomI::random(randomGenerator, 1u, 1000u) * heightMultiple;
+
+				const FrameType::DataType dataType = FrameType::dataType(pixelFormat);
+				const unsigned int channels = FrameType::formatGenericNumberChannels(pixelFormat);
+
+				const FrameType::PixelFormat compatibleGenericPixelFormat = FrameType::genericPixelFormat(dataType, channels);
+
+				const FrameType frameTypeA(width, height, pixelFormat, pixelOrigin);
+				const FrameType frameTypeB(width, height, compatibleGenericPixelFormat, pixelOrigin);
+
+				OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, false));
+				OCEAN_EXPECT_TRUE(validation, FrameType::areFrameTypesCompatible(frameTypeA, frameTypeB, true));
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestFrame::testExtremeResolutions(const double testDuration)
