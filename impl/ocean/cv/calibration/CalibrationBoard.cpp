@@ -9,6 +9,7 @@
 
 #include "ocean/base/RandomGenerator.h"
 #include "ocean/base/RandomI.h"
+#include "ocean/base/String.h"
 
 namespace Ocean
 {
@@ -418,6 +419,33 @@ bool CalibrationBoard::determineUniqueness(const CalibrationBoard& calibrationBo
 	}
 
 	return true;
+}
+
+uint64_t CalibrationBoard::hash(const CalibrationBoard& calibrationBoard)
+{
+	if (!calibrationBoard.isValid())
+	{
+		return 0ull;
+	}
+
+	uint64_t hashValue = 0x9e3779b9ull;
+
+	hashValue ^= std::hash<uint64_t>{}(calibrationBoard.xMarkers_) + 0x9e3779b9ull + (hashValue << 6) + (hashValue >> 2);
+	hashValue ^= std::hash<uint64_t>{}(calibrationBoard.yMarkers_) + 0x9e3779b9ull + (hashValue << 6) + (hashValue >> 2);
+
+	for (const BoardMarker& boardMarker : calibrationBoard.boardMarkers_)
+	{
+		hashValue ^= std::hash<uint64_t>{}(boardMarker.markerId()) + 0x9e3779b9ull + (hashValue << 6) + (hashValue >> 2);
+
+		hashValue ^= std::hash<int>{}(boardMarker.sign() ? 1 : 0) + 0x9e3779b9ull + (hashValue << 6) + (hashValue >> 2);
+
+		hashValue ^= std::hash<int>{}(static_cast<int>(boardMarker.orientation())) + 0x9e3779b9ull + (hashValue << 6) + (hashValue >> 2);
+
+		hashValue ^= std::hash<unsigned int>{}(boardMarker.coordinate().x()) + 0x9e3779b9ull + (hashValue << 6) + (hashValue >> 2);
+		hashValue ^= std::hash<unsigned int>{}(boardMarker.coordinate().y()) + 0x9e3779b9ull + (hashValue << 6) + (hashValue >> 2);
+	}
+
+	return hashValue;
 }
 
 bool CalibrationBoard::containsMarkerTypeIgnoringNeighborhood(const MarkerCandidate& markerCandidate, MarkerCoordinates* markerCoordinates) const

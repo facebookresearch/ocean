@@ -363,6 +363,14 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoard
 		 */
 		static bool determineUniqueness(const CalibrationBoard& calibrationBoardA, const CalibrationBoard& calibrationBoardB, size_t& oneIdenticalNeighborCounter, size_t& twoIdenticalNeighborCounter, size_t& threeIdenticalNeighborCounter);
 
+		/**
+		 * Returns a representative hash based on the properties of the calibration board.
+		 * The hash is computed from the board dimensions and all marker properties (id, sign, orientation, coordinate).
+		 * @param calibrationBoard The calibration board for which the hash will be computed, must be valid
+		 * @return The resulting hash value
+		 */
+		static uint64_t hash(const CalibrationBoard& calibrationBoard);
+
 	protected:
 
 		/**
