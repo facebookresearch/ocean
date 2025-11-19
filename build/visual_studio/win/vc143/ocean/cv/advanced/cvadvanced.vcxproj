@@ -68,7 +68,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedSumSquareDifferencesSSE.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedZeroMeanSumSquareDifferences.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedZeroMeanSumSquareDifferencesBase.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\BlackPointDetector.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\ColorChannelCurve.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\ColorChannelMapper.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\FrameColorAdjustment.h" />
@@ -90,7 +89,6 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedFrameShrinker.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedMotion.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedSumSquareDifferencesBase.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\BlackPointDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\ColorChannelCurve.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\ColorChannelMapper.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\FrameColorAdjustment.cpp" />

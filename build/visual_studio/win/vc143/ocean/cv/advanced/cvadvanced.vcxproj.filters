@@ -68,9 +68,6 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\FrameRectification.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\BlackPointDetector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\AdvancedFrameInterpolatorBilinearSSE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -122,9 +119,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\FrameRectification.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\BlackPointDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\advanced\PanoramaFrame.cpp">
