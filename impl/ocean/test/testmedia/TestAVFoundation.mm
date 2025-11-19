@@ -77,11 +77,6 @@ bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double t
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
 
-	// an default accessor object should be invalid
-
-	const Media::AVFoundation::PixelBufferAccessor invalidAccessor;
-	OCEAN_EXPECT_FALSE(validation, bool(invalidAccessor));
-
 	using PixelFormatPair = std::pair<FrameType::PixelFormat, OSType>;
 
 	const std::vector<PixelFormatPair> pixelFormatPairs =
@@ -91,6 +86,13 @@ bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double t
 		std::make_pair(FrameType::FORMAT_RGB24, kCVPixelFormatType_24RGB),
 		std::make_pair(FrameType::FORMAT_Y8, kCVPixelFormatType_OneComponent8)
 	};
+
+	{
+		// an default accessor object should be invalid
+
+		const Media::AVFoundation::PixelBufferAccessor invalidAccessor;
+		OCEAN_EXPECT_FALSE(validation, bool(invalidAccessor));
+	}
 
 	const Timestamp startTimestamp(true);
 
@@ -124,53 +126,52 @@ bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double t
 			break;
 		}
 
-		const bool readOnly = RandomI::random(1u) == 0u;
-
-		Media::AVFoundation::PixelBufferAccessor accessor(pixelBuffer, readOnly);
-
-		if (accessor)
+		for (const bool readOnly : {true, false})
 		{
-			const FrameType frameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
+			Media::AVFoundation::PixelBufferAccessor accessor(pixelBuffer, readOnly);
 
-			if (readOnly)
+			if (accessor)
 			{
-				const Frame& frame = accessor.frame();
+				const FrameType frameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
 
-				OCEAN_EXPECT_EQUAL(validation, frame.frameType(), frameType);
-				OCEAN_EXPECT_EQUAL(validation, frame.isReadOnly(), readOnly);
+				if (readOnly)
+				{
+					const Frame& frame = accessor.frame();
+
+					OCEAN_EXPECT_EQUAL(validation, frame.frameType(), frameType);
+					OCEAN_EXPECT_EQUAL(validation, frame.isReadOnly(), readOnly);
+				}
+				else
+				{
+					Frame& frame = accessor.frame();
+
+					OCEAN_EXPECT_EQUAL(validation, frame.frameType(), frameType);
+					OCEAN_EXPECT_EQUAL(validation, frame.isReadOnly(), readOnly);
+				}
 			}
 			else
 			{
-				Frame& frame = accessor.frame();
-
-				OCEAN_EXPECT_EQUAL(validation, frame.frameType(), frameType);
-				OCEAN_EXPECT_EQUAL(validation, frame.isReadOnly(), readOnly);
+				OCEAN_SET_FAILED(validation);
 			}
-		}
-		else
-		{
-			OCEAN_SET_FAILED(validation);
-		}
 
-		if (validation.succeededSoFar())
-		{
-			// ensuring that the memory data is actually correct
-
-			const Frame& frame = accessor.frame();
-
-			const Frame testFrame(frame, Frame::ACM_USE_KEEP_LAYOUT);
-
-			for (unsigned int y = 0u; y < testFrame.height(); ++y)
+			if (validation.succeededSoFar())
 			{
-				const uint8_t* frameData = frame.constrow<uint8_t>(y);
-				const uint8_t* testFrameData = testFrame.constrow<uint8_t>(y);
+				// ensuring that the memory data is actually correct
 
-				// we ensure that the padding area is identical as well
-				OCEAN_EXPECT_EQUAL(validation, memcmp(frameData, testFrameData, frame.strideBytes()), 0);
+				const Frame& frame = accessor.frame();
+
+				const Frame testFrame(frame, Frame::ACM_USE_KEEP_LAYOUT);
+
+				for (unsigned int y = 0u; y < testFrame.height(); ++y)
+				{
+					const uint8_t* frameData = frame.constrow<uint8_t>(y);
+					const uint8_t* testFrameData = testFrame.constrow<uint8_t>(y);
+
+					// we ensure that the padding area is identical as well
+					OCEAN_EXPECT_EQUAL(validation, memcmp(frameData, testFrameData, frame.strideBytes()), 0);
+				}
 			}
 		}
-
-		accessor.release();
 
 		CVPixelBufferRelease(pixelBuffer);
 	}
@@ -189,11 +190,6 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 
 	RandomGenerator randomGenerator;
 	Validation validation(randomGenerator);
-
-	// a default accessor object should be invalid
-
-	const Media::AVFoundation::PixelBufferAccessor invalidAccessor;
-	OCEAN_EXPECT_FALSE(validation, bool(invalidAccessor));
 
 	struct PixelFormatSpecifier
 	{
@@ -239,56 +235,57 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 			break;
 		}
 
-		const bool readOnly = RandomI::random(1u) == 0u;
-		const bool accessYPlaneOnly = RandomI::random(1u) == 0u;
-
-		Media::AVFoundation::PixelBufferAccessor accessor(pixelBuffer, readOnly, accessYPlaneOnly);
-
-		if (accessor)
+		for (const bool readOnly : {true, false})
 		{
-			const FrameType::PixelFormat pixelFormat = accessYPlaneOnly ? FrameType::FORMAT_Y8 : pixelFormatSpecifier.pixelFormat;
-			const FrameType frameType(width, height, pixelFormat, FrameType::ORIGIN_UPPER_LEFT);
-
-			Frame& frame = accessor.frame();
-			ocean_assert(frame.isValid());
-
-			OCEAN_EXPECT_EQUAL(validation, frame.isReadOnly(), readOnly);
-			OCEAN_EXPECT_EQUAL(validation, pixelFormat, frameType.pixelFormat());
-
-			const size_t numberPlanesToCheck = accessYPlaneOnly ? 1 : memoryCopy.size();
-
-			for (size_t nPlane = 0; nPlane < numberPlanesToCheck; ++nPlane)
+			for (const bool accessYPlaneOnly : {true, false})
 			{
-				OCEAN_EXPECT_LESS(validation, nPlane, frame.planes().size());
+				Media::AVFoundation::PixelBufferAccessor accessor(pixelBuffer, readOnly, accessYPlaneOnly);
 
-				if (nPlane >= frame.planes().size())
+				if (accessor)
 				{
-					break;
-				}
+					const FrameType::PixelFormat expectedPixelFormat = accessYPlaneOnly ? FrameType::FORMAT_Y8 : pixelFormatSpecifier.pixelFormat;
+					const FrameType expectedFrameType(width, height, expectedPixelFormat, FrameType::ORIGIN_UPPER_LEFT);
 
-				const unsigned int strideBytes = memoryCopyStrideBytes[nPlane];
+					Frame& frame = accessor.frame();
+					ocean_assert(frame.isValid());
 
-				OCEAN_EXPECT_EQUAL(validation, frame.planes()[nPlane].strideBytes(), strideBytes);
+					OCEAN_EXPECT_EQUAL(validation, frame.isReadOnly(), readOnly);
+					OCEAN_EXPECT_EQUAL(validation, frame.frameType(), expectedFrameType);
 
-				if (frame.planes()[nPlane].strideBytes() != strideBytes)
-				{
-					break;
-				}
+					const size_t numberPlanesToCheck = accessYPlaneOnly ? 1 : memoryCopy.size();
 
-				const uint8_t* memoryCopyData = memoryCopy[nPlane].data();
-				const uint8_t* frameData = frame.planes()[nPlane].constdata<uint8_t>();
+					for (size_t nPlane = 0; nPlane < numberPlanesToCheck; ++nPlane)
+					{
+						OCEAN_EXPECT_LESS(validation, nPlane, frame.planes().size());
 
-				for (unsigned int y = 0u; y < memoryCopyHeights[nPlane]; ++y)
-				{
-					OCEAN_EXPECT_EQUAL(validation, memcmp(frameData, memoryCopyData, strideBytes), 0);
+						if (nPlane >= frame.planes().size())
+						{
+							break;
+						}
 
-					frameData += strideBytes;
-					memoryCopyData += strideBytes;
+						const unsigned int strideBytes = memoryCopyStrideBytes[nPlane];
+
+						OCEAN_EXPECT_EQUAL(validation, frame.planes()[nPlane].strideBytes(), strideBytes);
+
+						if (frame.planes()[nPlane].strideBytes() != strideBytes)
+						{
+							break;
+						}
+
+						const uint8_t* memoryCopyData = memoryCopy[nPlane].data();
+						const uint8_t* frameData = frame.planes()[nPlane].constdata<uint8_t>();
+
+						for (unsigned int y = 0u; y < memoryCopyHeights[nPlane]; ++y)
+						{
+							OCEAN_EXPECT_EQUAL(validation, memcmp(frameData, memoryCopyData, strideBytes), 0);
+
+							frameData += strideBytes;
+							memoryCopyData += strideBytes;
+						}
+					}
 				}
 			}
 		}
-
-		accessor.release();
 
 		CVPixelBufferRelease(pixelBuffer);
 	}
