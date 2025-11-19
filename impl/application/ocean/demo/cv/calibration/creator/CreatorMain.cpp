@@ -11,6 +11,7 @@
 #include "ocean/cv/calibration/SVGImage.h"
 #include "ocean/cv/calibration/Utilities.h"
 
+#include "ocean/io/Directory.h"
 #include "ocean/io/File.h"
 
 using namespace Ocean;
@@ -39,7 +40,7 @@ using namespace Ocean::CV::Calibration;
 	commandArguments.registerParameter("boardSeed", "bs", "The seed of the calibration board", Value(0));
 	commandArguments.registerParameter("paper", "p", "The paper size for the SVG image, either 'a3', 'a4', 'letter', or 'tabloid'", Value("a4"));
 	commandArguments.registerParameter("boardDimension", "bd", "The explicit marker dimension of the calibration board to create, \n\te.g., '6x9' to create a board with 6 horizontal markers and 9 vertical markers,\n\tOnly for used for image types 'board' or 'board_with_dot'");
-	commandArguments.registerParameter("output", "o", "The optional explicit output file for created image");
+	commandArguments.registerParameter("output", "o", "The optional explicit output file for the created calibration board file and image");
 	commandArguments.registerParameter("imageType", "it", "The type of the image to create, possible values are:\n\t'board' for a calibration board;\n\t'markers' for an image with all possible markers;\n\t'points' for two images with different sized points (black dots and white dots);\n'\t'board_with_dot' for a calibration board with center dot", Value("board"));
 	commandArguments.registerParameter("debugInformation", "di", "If defined, the resulting image will contain additional debug information");
 	commandArguments.registerParameter("help", "h", "Show this help output");
@@ -187,16 +188,41 @@ using namespace Ocean::CV::Calibration;
 			return 1;
 		}
 
+		const std::string filename = "calibrationBoard_" + paperTypeString + "_" + String::toAString(boardSeed) + "_" + String::toAString(calibrationBoard.xMarkers()) + "x" + String::toAString(calibrationBoard.yMarkers());
+
+		IO::File outputCalibrationBoardFile;
+		IO::File outputImageFile;
+
 		if (output.empty())
 		{
-			output = "calibrationBoard_" + paperTypeString + "_" + String::toAString(boardSeed) + "_" + String::toAString(calibrationBoard.xMarkers()) + "x" + String::toAString(calibrationBoard.yMarkers()) + ".svg";
+			outputCalibrationBoardFile = IO::File(filename + ".json");
+			outputImageFile = IO::File(filename + ".svg");
+		}
+		else
+		{
+			const IO::Directory outputDirectory = IO::Directory(output);
+
+			if (!outputDirectory.exists() && !outputDirectory.create())
+			{
+				Log::error() << "Failed to create output directory '" << outputDirectory() << "'";
+				return 1;
+			}
+
+			outputCalibrationBoardFile = outputDirectory + IO::File(filename + ".json");
+			outputImageFile = outputDirectory + IO::File(filename + ".svg");
+		}
+
+		if (!CV::Calibration::Utilities::writeCalibrationBoardToFile(calibrationBoard, outputCalibrationBoardFile(), (unsigned int)(boardSeed)))
+		{
+			Log::error() << "Failed to write calibration board file '" << outputCalibrationBoardFile() << "'";
+			return 1;
 		}
 
 		const bool debugImage = commandArguments.hasValue("debugInformation");
 
-		if (!SVGImage::writeCalibrationBoardImage(output, paperWidth, paperHeight, calibrationBoard, MetricSize::UT_MILLIMETER, 4u, debugImage, withCenterDot))
+		if (!SVGImage::writeCalibrationBoardImage(outputImageFile(), paperWidth, paperHeight, calibrationBoard, MetricSize::UT_MILLIMETER, 4u, debugImage, withCenterDot))
 		{
-			Log::error() << "Failed to write SVG image '" << output << "'";
+			Log::error() << "Failed to write SVG image '" << outputImageFile() << "'";
 			return 1;
 		}
 	}

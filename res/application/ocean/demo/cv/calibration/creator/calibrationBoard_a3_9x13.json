@@ -1,0 +1,714 @@
+{
+	"comment": "Camera Calibration Board, created by Ocean https://facebookresearch.github.io/ocean/",
+
+	"hash": "EBD09A7574DD7BF4",
+
+	"xMarkers": 9,
+	"yMarkers": 13,
+
+	"markers":
+	[
+		{
+			"markerId": 9,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 0, "y": 0}
+		},
+		{
+			"markerId": 36,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 1, "y": 0}
+		},
+		{
+			"markerId": 43,
+			"sign": true,
+			"orientation": 180,
+			"coordinate": {"x": 2, "y": 0}
+		},
+		{
+			"markerId": 35,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 3, "y": 0}
+		},
+		{
+			"markerId": 20,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 4, "y": 0}
+		},
+		{
+			"markerId": 54,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 5, "y": 0}
+		},
+		{
+			"markerId": 48,
+			"sign": true,
+			"orientation": 180,
+			"coordinate": {"x": 6, "y": 0}
+		},
+		{
+			"markerId": 18,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 7, "y": 0}
+		},
+		{
+			"markerId": 23,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 8, "y": 0}
+		},
+		{
+			"markerId": 8,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 0, "y": 1}
+		},
+		{
+			"markerId": 32,
+			"sign": true,
+			"orientation": 180,
+			"coordinate": {"x": 1, "y": 1}
+		},
+		{
+			"markerId": 54,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 2, "y": 1}
+		},
+		{
+			"markerId": 12,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 3, "y": 1}
+		},
+		{
+			"markerId": 27,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 4, "y": 1}
+		},
+		{
+			"markerId": 34,
+			"sign": true,
+			"orientation": 180,
+			"coordinate": {"x": 5, "y": 1}
+		},
+		{
+			"markerId": 9,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 6, "y": 1}
+		},
+		{
+			"markerId": 22,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 7, "y": 1}
+		},
+		{
+			"markerId": 29,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 8, "y": 1}
+		},
+		{
+			"markerId": 21,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 0, "y": 2}
+		},
+		{
+			"markerId": 34,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 1, "y": 2}
+		},
+		{
+			"markerId": 0,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 2, "y": 2}
+		},
+		{
+			"markerId": 14,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 3, "y": 2}
+		},
+		{
+			"markerId": 48,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 4, "y": 2}
+		},
+		{
+			"markerId": 39,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 5, "y": 2}
+		},
+		{
+			"markerId": 42,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 6, "y": 2}
+		},
+		{
+			"markerId": 0,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 7, "y": 2}
+		},
+		{
+			"markerId": 17,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 8, "y": 2}
+		},
+		{
+			"markerId": 41,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 0, "y": 3}
+		},
+		{
+			"markerId": 34,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 1, "y": 3}
+		},
+		{
+			"markerId": 16,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 2, "y": 3}
+		},
+		{
+			"markerId": 41,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 3, "y": 3}
+		},
+		{
+			"markerId": 32,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 4, "y": 3}
+		},
+		{
+			"markerId": 22,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 5, "y": 3}
+		},
+		{
+			"markerId": 40,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 6, "y": 3}
+		},
+		{
+			"markerId": 41,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 7, "y": 3}
+		},
+		{
+			"markerId": 39,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 8, "y": 3}
+		},
+		{
+			"markerId": 3,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 0, "y": 4}
+		},
+		{
+			"markerId": 4,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 1, "y": 4}
+		},
+		{
+			"markerId": 36,
+			"sign": true,
+			"orientation": 180,
+			"coordinate": {"x": 2, "y": 4}
+		},
+		{
+			"markerId": 7,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 3, "y": 4}
+		},
+		{
+			"markerId": 29,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 4, "y": 4}
+		},
+		{
+			"markerId": 8,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 5, "y": 4}
+		},
+		{
+			"markerId": 39,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 6, "y": 4}
+		},
+		{
+			"markerId": 1,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 7, "y": 4}
+		},
+		{
+			"markerId": 49,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 8, "y": 4}
+		},
+		{
+			"markerId": 0,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 0, "y": 5}
+		},
+		{
+			"markerId": 43,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 1, "y": 5}
+		},
+		{
+			"markerId": 10,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 2, "y": 5}
+		},
+		{
+			"markerId": 9,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 3, "y": 5}
+		},
+		{
+			"markerId": 52,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 4, "y": 5}
+		},
+		{
+			"markerId": 17,
+			"sign": true,
+			"orientation": 180,
+			"coordinate": {"x": 5, "y": 5}
+		},
+		{
+			"markerId": 6,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 6, "y": 5}
+		},
+		{
+			"markerId": 12,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 7, "y": 5}
+		},
+		{
+			"markerId": 0,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 8, "y": 5}
+		},
+		{
+			"markerId": 44,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 0, "y": 6}
+		},
+		{
+			"markerId": 28,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 1, "y": 6}
+		},
+		{
+			"markerId": 7,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 2, "y": 6}
+		},
+		{
+			"markerId": 37,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 3, "y": 6}
+		},
+		{
+			"markerId": 38,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 4, "y": 6}
+		},
+		{
+			"markerId": 22,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 5, "y": 6}
+		},
+		{
+			"markerId": 42,
+			"sign": true,
+			"orientation": 180,
+			"coordinate": {"x": 6, "y": 6}
+		},
+		{
+			"markerId": 8,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 7, "y": 6}
+		},
+		{
+			"markerId": 1,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 8, "y": 6}
+		},
+		{
+			"markerId": 48,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 0, "y": 7}
+		},
+		{
+			"markerId": 20,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 1, "y": 7}
+		},
+		{
+			"markerId": 2,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 2, "y": 7}
+		},
+		{
+			"markerId": 18,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 3, "y": 7}
+		},
+		{
+			"markerId": 26,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 4, "y": 7}
+		},
+		{
+			"markerId": 37,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 5, "y": 7}
+		},
+		{
+			"markerId": 48,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 6, "y": 7}
+		},
+		{
+			"markerId": 0,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 7, "y": 7}
+		},
+		{
+			"markerId": 11,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 8, "y": 7}
+		},
+		{
+			"markerId": 19,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 0, "y": 8}
+		},
+		{
+			"markerId": 51,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 1, "y": 8}
+		},
+		{
+			"markerId": 43,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 2, "y": 8}
+		},
+		{
+			"markerId": 3,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 3, "y": 8}
+		},
+		{
+			"markerId": 53,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 4, "y": 8}
+		},
+		{
+			"markerId": 54,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 5, "y": 8}
+		},
+		{
+			"markerId": 5,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 6, "y": 8}
+		},
+		{
+			"markerId": 18,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 7, "y": 8}
+		},
+		{
+			"markerId": 40,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 8, "y": 8}
+		},
+		{
+			"markerId": 50,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 0, "y": 9}
+		},
+		{
+			"markerId": 32,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 1, "y": 9}
+		},
+		{
+			"markerId": 52,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 2, "y": 9}
+		},
+		{
+			"markerId": 16,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 3, "y": 9}
+		},
+		{
+			"markerId": 37,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 4, "y": 9}
+		},
+		{
+			"markerId": 45,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 5, "y": 9}
+		},
+		{
+			"markerId": 46,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 6, "y": 9}
+		},
+		{
+			"markerId": 36,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 7, "y": 9}
+		},
+		{
+			"markerId": 52,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 8, "y": 9}
+		},
+		{
+			"markerId": 47,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 0, "y": 10}
+		},
+		{
+			"markerId": 28,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 1, "y": 10}
+		},
+		{
+			"markerId": 26,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 2, "y": 10}
+		},
+		{
+			"markerId": 49,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 3, "y": 10}
+		},
+		{
+			"markerId": 20,
+			"sign": true,
+			"orientation": 180,
+			"coordinate": {"x": 4, "y": 10}
+		},
+		{
+			"markerId": 41,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 5, "y": 10}
+		},
+		{
+			"markerId": 13,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 6, "y": 10}
+		},
+		{
+			"markerId": 26,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 7, "y": 10}
+		},
+		{
+			"markerId": 31,
+			"sign": true,
+			"orientation": 180,
+			"coordinate": {"x": 8, "y": 10}
+		},
+		{
+			"markerId": 10,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 0, "y": 11}
+		},
+		{
+			"markerId": 33,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 1, "y": 11}
+		},
+		{
+			"markerId": 6,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 2, "y": 11}
+		},
+		{
+			"markerId": 54,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 3, "y": 11}
+		},
+		{
+			"markerId": 38,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 4, "y": 11}
+		},
+		{
+			"markerId": 48,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 5, "y": 11}
+		},
+		{
+			"markerId": 51,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 6, "y": 11}
+		},
+		{
+			"markerId": 16,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 7, "y": 11}
+		},
+		{
+			"markerId": 2,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 8, "y": 11}
+		},
+		{
+			"markerId": 21,
+			"sign": true,
+			"orientation": 90,
+			"coordinate": {"x": 0, "y": 12}
+		},
+		{
+			"markerId": 36,
+			"sign": false,
+			"orientation": 270,
+			"coordinate": {"x": 1, "y": 12}
+		},
+		{
+			"markerId": 47,
+			"sign": true,
+			"orientation": 180,
+			"coordinate": {"x": 2, "y": 12}
+		},
+		{
+			"markerId": 42,
+			"sign": false,
+			"orientation": 90,
+			"coordinate": {"x": 3, "y": 12}
+		},
+		{
+			"markerId": 53,
+			"sign": true,
+			"orientation": 180,
+			"coordinate": {"x": 4, "y": 12}
+		},
+		{
+			"markerId": 30,
+			"sign": false,
+			"orientation": 180,
+			"coordinate": {"x": 5, "y": 12}
+		},
+		{
+			"markerId": 4,
+			"sign": true,
+			"orientation": 270,
+			"coordinate": {"x": 6, "y": 12}
+		},
+		{
+			"markerId": 16,
+			"sign": false,
+			"orientation": 0,
+			"coordinate": {"x": 7, "y": 12}
+		},
+		{
+			"markerId": 28,
+			"sign": true,
+			"orientation": 0,
+			"coordinate": {"x": 8, "y": 12}
+		}
+	]
+}
