@@ -233,7 +233,7 @@ bool MFLiveVideo::setExposureDuration(const double duration, const bool /*allowS
 
 	const ScopedLock scopedLock(lock_);
 
-	if (!sesssionStarted_)
+	if (!sessionStarted_)
 	{
 		delayedExposureDuration_ = duration;
 
@@ -376,7 +376,7 @@ void MFLiveVideo::onSessionStarted()
 
 	MFFrameMedium::onSessionStarted();
 
-	sesssionStarted_ = true;
+	sessionStarted_ = true;
 
 	if (delayedExposureDuration_ != NumericD::minValue())
 	{
@@ -392,7 +392,7 @@ void MFLiveVideo::onSessionStopped()
 
 	MFFrameMedium::onSessionStopped();
 
-	sesssionStarted_ = false;
+	sessionStarted_ = false;
 }
 
 bool MFLiveVideo::exposureRange(IKsControl* iKsControl, double& minExposure, double& maxExposure)

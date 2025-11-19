@@ -162,7 +162,7 @@ class OCEAN_MEDIA_MF_EXPORT MFLiveVideo :
 		std::string symbolicLink_;
 
 		/// True, if the session has been started.
-		bool sesssionStarted_ = false;
+		bool sessionStarted_ = false;
 
 		/// The exposure duration of the camera which will be set once the session has been started.
 		double delayedExposureDuration_ = NumericD::minValue();

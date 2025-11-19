@@ -11,6 +11,8 @@
 
 #include "ocean/cv/FrameConverter.h"
 
+#include "ocean/io/CameraCalibrationManager.h"
+
 #include "ocean/math/Numeric.h"
 
 #include "ocean/system/Performance.h"
@@ -343,13 +345,17 @@ void MFFrameMedium::onNewSample(const GUID& /*guidMajorMediaType*/, const unsign
 
 	TemporaryScopedLock scopedLock(lock_);
 
+	bool isFirstFrame = false;
+
 	// the event for a changed frame type is not synchronous with the sample event
 	// therefore the event for a changed frame type is too late for this sample
 	// here we use a workaround: for the very first frame we check the frame type again
 	if (waitingForFirstFrame_)
 	{
 		onTopologySet(*topology_);
+
 		waitingForFirstFrame_ = false;
+		isFirstFrame = true;
 	}
 
 	if (!recentFrameType_.isValid())
@@ -423,9 +429,23 @@ void MFFrameMedium::onNewSample(const GUID& /*guidMajorMediaType*/, const unsign
 
 	ocean_assert(internalFrame.isOwner());
 
+	if (!camera_ && isFirstFrame)
+	{
+		camera_ = IO::CameraCalibrationManager::get().camera(url(), internalFrame.width(), internalFrame.height());
+	}
+
 	SharedAnyCamera camera(camera_);
 
 	scopedLock.release();
+
+	if (camera)
+	{
+		if (camera->width() != internalFrame.width() || camera->height() != internalFrame.height())
+		{
+			Log::warning() << "MFFrameMedium: Camera profile has wrong image resolution " << camera->width() << "x" << camera->height() << " instead of " << internalFrame.width() << "x" << internalFrame.height();
+			camera = nullptr;
+		}
+	}
 
 	deliverNewFrame(std::move(internalFrame), std::move(camera));
 }
