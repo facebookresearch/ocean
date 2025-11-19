@@ -11,8 +11,6 @@
 
 #include "ocean/cv/FrameConverterY_U_V12.h"
 
-#include "ocean/io/LegacyCameraCalibrationManager.h"
-
 #include "ocean/math/PinholeCamera.h"
 
 #include "ocean/platform/android/NativeInterfaceManager.h"
@@ -1189,13 +1187,6 @@ void ALiveVideo::onCaptureCompleted(ACameraCaptureSession* session, ACaptureRequ
 
 bool ALiveVideo::onNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera)
 {
-	if (anyCamera && anyCamera->name() == AnyCameraPinhole::WrappedCamera::name())
-	{
-		const PinholeCamera& camera = ((const AnyCameraPinhole&)(*anyCamera)).actualCamera();
-
-		IO::LegacyCameraCalibrationManager::get().registerCalibration(url_, camera);
-	}
-
 	return deliverNewFrame(std::move(frame), std::move(anyCamera));
 }
 

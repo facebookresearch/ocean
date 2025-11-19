@@ -37,7 +37,7 @@ using UndistortedBackgroundRef = SmartObjectRef<UndistortedBackground>;
  * This class is the base class for all undistorted backgrounds.<br>
  * The undistorted background uses a frame medium object as background image<br>
  * and uses corresponding camera calibration parameters for correct visualization.<br>
- * @see FrameMedium, PinholeCamera, LegacyCameraCalibrationManager
+ * @see FrameMedium, PinholeCamera
  * @ingroup rendering
  */
 class OCEAN_RENDERING_EXPORT UndistortedBackground :
