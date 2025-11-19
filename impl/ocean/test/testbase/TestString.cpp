@@ -590,50 +590,50 @@ bool TestString::testIsHexValue64()
 	OCEAN_EXPECT_FALSE(validation, String::isHexValue64("2347", 4, true));
 	OCEAN_EXPECT_TRUE(validation, String::isHexValue64("0x2347", 6, true));
 
-	unsigned long long value = 0ull;
+	uint64_t value = uint64_t(0);
 	OCEAN_EXPECT_TRUE(validation, String::isHexValue64("123", 3, false, &value));
-	OCEAN_EXPECT_EQUAL(validation, value, 291ull);
+	OCEAN_EXPECT_EQUAL(validation, value, uint64_t(291));
 
-	value = 0ull;
+	value = uint64_t(0);
 	OCEAN_EXPECT_TRUE(validation, String::isHexValue64("0x123", 5, false, &value));
-	OCEAN_EXPECT_EQUAL(validation, value, 291ull);
+	OCEAN_EXPECT_EQUAL(validation, value, uint64_t(291));
 
-	value = 0ull;
+	value = uint64_t(0);
 	OCEAN_EXPECT_FALSE(validation, String::isHexValue64("123", 3, true, &value));
 
-	value = 0ull;
+	value = uint64_t(0);
 	OCEAN_EXPECT_TRUE(validation, String::isHexValue64("0x123", 5, true, &value));
-	OCEAN_EXPECT_EQUAL(validation, value, 291ull);
+	OCEAN_EXPECT_EQUAL(validation, value, uint64_t(291));
 
-	value = 0ull;
+	value = uint64_t(0);
 	OCEAN_EXPECT_TRUE(validation, String::isHexValue64("12373bcff00abcde", 16, false, &value));
-	OCEAN_EXPECT_EQUAL(validation, value, 1312583580673293534ull);
+	OCEAN_EXPECT_EQUAL(validation, value, uint64_t(1312583580673293534));
 
-	value = 0ull;
+	value = uint64_t(0);
 	OCEAN_EXPECT_TRUE(validation, String::isHexValue64("12373Bcff00abCDE", 16, false, &value));
-	OCEAN_EXPECT_EQUAL(validation, value, 1312583580673293534ull);
+	OCEAN_EXPECT_EQUAL(validation, value, uint64_t(1312583580673293534));
 
-	value = 0ull;
+	value = uint64_t(0);
 	OCEAN_EXPECT_TRUE(validation, String::isHexValue64("0x12373bcff00abcde", 18, false, &value));
-	OCEAN_EXPECT_EQUAL(validation, value, 1312583580673293534ull);
+	OCEAN_EXPECT_EQUAL(validation, value, uint64_t(1312583580673293534));
 
-	value = 0ull;
+	value = uint64_t(0);
 	OCEAN_EXPECT_FALSE(validation, String::isHexValue64("12373bcff00abcde", 16, true, &value));
 
-	value = 0ull;
+	value = uint64_t(0);
 	OCEAN_EXPECT_TRUE(validation, String::isHexValue64("1234567890", 10, false, &value));
-	OCEAN_EXPECT_EQUAL(validation, value, 78187493520ull);
+	OCEAN_EXPECT_EQUAL(validation, value, uint64_t(78187493520));
 
-	value = 0ull;
+	value = uint64_t(0);
 	OCEAN_EXPECT_FALSE(validation, String::isHexValue64("1234567890", 10, true, &value));
 
-	value = 0ull;
+	value = uint64_t(0);
 	OCEAN_EXPECT_TRUE(validation, String::isHexValue64("0x1234567890", 12, false, &value));
-	OCEAN_EXPECT_EQUAL(validation, value, 78187493520ull);
+	OCEAN_EXPECT_EQUAL(validation, value, uint64_t(78187493520));
 
-	value = 0ull;
+	value = uint64_t(0);
 	OCEAN_EXPECT_TRUE(validation, String::isHexValue64("0x1234567890", 12, true, &value));
-	OCEAN_EXPECT_EQUAL(validation, value, 78187493520ull);
+	OCEAN_EXPECT_EQUAL(validation, value, uint64_t(78187493520));
 
 	Log::info() << "Validation: " << validation;
 

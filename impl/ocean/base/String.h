@@ -374,7 +374,7 @@ class OCEAN_BASE_EXPORT String
 		 * @param value Optional resulting decimal value of the given hexadecimal value; nullptr, if the value is not of interest
 		 * @return True, if so
 		 */
-		static bool isHexValue64(const char* hexString, size_t length, const bool needPrefix = false, unsigned long long* value = nullptr);
+		static bool isHexValue64(const char* hexString, size_t length, const bool needPrefix = false, uint64_t* value = nullptr);
 
 		/**
 		 * Returns whether a given string stores a number value.

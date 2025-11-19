@@ -86,7 +86,7 @@ class BinaryAnalyzer : protected Ocean::Thread
 		/**
 		 * Definition of a 64 bit address.
 		 */
-		using Address64 = unsigned long long;
+		using Address64 = uint64_t;
 
 		/**
 		 * Definition of a vector holding symbol ids.

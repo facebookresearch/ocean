@@ -757,7 +757,7 @@ bool String::isUnsignedInteger64(const std::string& stringValue, uint64_t* value
 	return true;
 }
 
-bool String::isHexValue64(const char* hexString, size_t length, const bool needPrefix, unsigned long long* value)
+bool String::isHexValue64(const char* hexString, size_t length, const bool needPrefix, uint64_t* value)
 {
 	ocean_assert(hexString && length > 0 && length <= 18);
 
@@ -776,9 +776,9 @@ bool String::isHexValue64(const char* hexString, size_t length, const bool needP
 		return false;
 	}
 
-	if (value)
+	if (value != nullptr)
 	{
-		*value = 0ull;
+		*value = uint64_t(0);
 
 		for (size_t n = 0; n < length; ++n)
 		{
@@ -788,15 +788,15 @@ bool String::isHexValue64(const char* hexString, size_t length, const bool needP
 
 			if (character >= '0' && character <= '9')
 			{
-				*value |= (unsigned long long)(character - '0');
+				*value |= uint64_t(character - '0');
 			}
 			else if (character >= 'a' && character <= 'f')
 			{
-				*value |= (unsigned long long)(character - 'a' + 10);
+				*value |= uint64_t(character - 'a' + 10);
 			}
 			else if (character >= 'A' && character <= 'F')
 			{
-				*value |= (unsigned long long)(character - 'A' + 10);
+				*value |= uint64_t(character - 'A' + 10);
 			}
 			else
 			{
