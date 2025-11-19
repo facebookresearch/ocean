@@ -128,6 +128,9 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 				MetadataMap metadataMap_;
 		};
 
+		/**
+		 * Definition of a vector holding devices.
+		 */
 		using Devices = std::vector<Device>;
 
 	private:
@@ -235,6 +238,12 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 		 * @see setFocus().
 		 */
 		bool setFocus(const float position) override;
+
+		/**
+		 * Sets the known camera profile of this frame medium.
+		 * @see FrameMedium::setCamera()
+		 */
+		bool setCamera(SharedAnyCamera&& camera) override;
 
 		/**
 		 * Returns whether video stabilization is currently enabled.
@@ -707,6 +716,12 @@ class OCEAN_MEDIA_A_EXPORT ALiveVideo final :
 
 		/// The stream configurations available for this camera.
 		StreamConfigurations availableStreamConfigurations_;
+
+		/// True, if the medium waits for the first frame; False, if several frames have been received already.
+		bool waitingForFirstFrame_ = true;
+
+		/// The camera profile for all images.
+		SharedAnyCamera camera_;
 
 		/// Start timestamp.
 		Timestamp startTimestamp_;

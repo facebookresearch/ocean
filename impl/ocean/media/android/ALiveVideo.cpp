@@ -11,6 +11,8 @@
 
 #include "ocean/cv/FrameConverterY_U_V12.h"
 
+#include "ocean/io/CameraCalibrationManager.h"
+
 #include "ocean/math/PinholeCamera.h"
 
 #include "ocean/platform/android/NativeInterfaceManager.h"
@@ -469,6 +471,15 @@ bool ALiveVideo::setFocus(const float position)
 	return setRepeatingRequest();
 }
 
+bool ALiveVideo::setCamera(SharedAnyCamera&& camera)
+{
+	const ScopedLock scopedLock(lock_);
+
+	camera_ = std::move(camera);
+
+	return true;
+}
+
 bool ALiveVideo::videoStabilization() const
 {
 	const ScopedLock scopedLock(lock_);
@@ -601,6 +612,8 @@ bool ALiveVideo::start()
 	{
 		return true;
 	}
+
+	waitingForFirstFrame_ = true;
 
 	return setRepeatingRequest();
 }
@@ -1139,6 +1152,8 @@ void ALiveVideo::onCaptureCompleted(ACameraCaptureSession* session, ACaptureRequ
 			focusPosition_ = -1.0f;
 		}
 
+		SharedAnyCamera camera(camera_);
+
 	scopedLock.release();
 
 	AImage* image = nullptr;
@@ -1169,17 +1184,44 @@ void ALiveVideo::onCaptureCompleted(ACameraCaptureSession* session, ACaptureRequ
 		frame.setTimestamp(timestamp);
 		frame.setRelativeTimestamp(relativeTimestamp);
 
-		SharedAnyCamera anyCamera;
-		if (cameraSensorPhysicalSizeX_ > 0.0f)
+		if (waitingForFirstFrame_)
 		{
-			float fovX = 0.0f;
-			if (horizontalFieldOfView(cameraSensorPhysicalSizeX_, result, fovX))
+			scopedLock.relock(lock_);
+
+			waitingForFirstFrame_ = false;
+
+			if (!camera_)
 			{
-				anyCamera = std::make_shared<AnyCameraPinhole>(PinholeCamera(frame.width(), frame.height(), Scalar(fovX)));
+				camera_ = IO::CameraCalibrationManager::get().camera(url(), frame.width(), frame.height());
+
+				camera = camera_;
+			}
+
+			scopedLock.release();
+		}
+
+		if (!camera)
+		{
+			if (cameraSensorPhysicalSizeX_ > 0.0f)
+			{
+				float fovX = 0.0f;
+				if (horizontalFieldOfView(cameraSensorPhysicalSizeX_, result, fovX))
+				{
+					camera = std::make_shared<AnyCameraPinhole>(PinholeCamera(frame.width(), frame.height(), Scalar(fovX)));
+				}
 			}
 		}
 
-		onNewFrame(std::move(frame), std::move(anyCamera));
+		if (camera)
+		{
+			if (camera->width() != frame.width() || camera->height() != frame.height())
+			{
+				Log::warning() << "ALiveVideo: Camera profile has wrong image resolution " << camera->width() << "x" << camera->height() << " instead of " << frame.width() << "x" << frame.height();
+				camera = nullptr;
+			}
+		}
+
+		onNewFrame(std::move(frame), std::move(camera));
 	}
 
 	NativeMediaLibrary::get().AImage_delete(image);
