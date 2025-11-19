@@ -66,6 +66,18 @@ class OCEAN_IO_EXPORT JSONParser
 				 */
 				using ObjectMap = std::unordered_map<std::string, JSONValue>;
 
+			protected:
+
+				/**
+				 * Definition of a unique pointer holding an array.
+				 */
+				using UniqueArray = std::unique_ptr<Array>;
+
+				/**
+				 * Definition of a unique pointer holding an object.
+				 */
+				using UniqueObjectMap = std::unique_ptr<ObjectMap>;
+
 			public:
 
 				/**
@@ -212,6 +224,48 @@ class OCEAN_IO_EXPORT JSONParser
 				const ObjectMap& object() const;
 
 				/**
+				 * Extracts a string value from this object by key.
+				 * @param key The key to look up
+				 * @return Pointer to the string value, nullptr if this is not an object, key not found, or value is not a string
+				 */
+				const std::string* stringFromObject(const std::string& key) const;
+
+				/**
+				 * Extracts a number value from this object by key.
+				 * @param key The key to look up
+				 * @return Pointer to the number value, nullptr if this is not an object, key not found, or value is not a number
+				 */
+				const double* numberFromObject(const std::string& key) const;
+
+				/**
+				 * Extracts a boolean value from this object by key.
+				 * @param key The key to look up
+				 * @return Pointer to the boolean value, nullptr if this is not an object, key not found, or value is not a boolean
+				 */
+				const bool* booleanFromObject(const std::string& key) const;
+
+				/**
+				 * Extracts an array value from this object by key.
+				 * @param key The key to look up
+				 * @return Pointer to the array value, nullptr if this is not an object, key not found, or value is not an array
+				 */
+				const Array* arrayFromObject(const std::string& key) const;
+
+				/**
+				 * Extracts an object value from this object by key.
+				 * @param key The key to look up
+				 * @return Pointer to the object value, nullptr if this is not an object, key not found, or value is not an object
+				 */
+				const ObjectMap* objectFromObject(const std::string& key) const;
+
+				/**
+				 * Extracts a JSONValue from an object by key.
+				 * @param key The key to look up
+				 * @return Pointer to the JSONValue, nullptr if this is not an object or key not found
+				 */
+				const JSONValue* valueFromObject(const std::string& key) const;
+
+				/**
 				 * Returns whether this value is valid.
 				 * @return True, if so
 				 */
@@ -243,7 +297,7 @@ class OCEAN_IO_EXPORT JSONParser
 				Type type_ = TYPE_INVALID;
 
 				/// The value data.
-				std::variant<std::monostate, std::nullptr_t, bool, double, std::string, std::unique_ptr<Array>, std::unique_ptr<ObjectMap>> data_;
+				std::variant<std::monostate, std::nullptr_t, bool, double, std::string, UniqueArray, UniqueObjectMap> data_;
 		};
 
 	protected:

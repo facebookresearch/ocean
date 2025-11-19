@@ -40,11 +40,11 @@ JSONParser::JSONValue::JSONValue(const JSONValue& other) :
 			break;
 
 		case TYPE_ARRAY:
-			data_ = std::make_unique<Array>(*std::get<std::unique_ptr<Array>>(other.data_));
+			data_ = std::make_unique<Array>(*std::get<UniqueArray>(other.data_));
 			break;
 
 		case TYPE_OBJECT:
-			data_ = std::make_unique<ObjectMap>(*std::get<std::unique_ptr<ObjectMap>>(other.data_));
+			data_ = std::make_unique<ObjectMap>(*std::get<UniqueObjectMap>(other.data_));
 			break;
 	}
 }
@@ -150,7 +150,7 @@ const JSONParser::JSONValue::Array& JSONParser::JSONValue::array() const
 
 	if (type_ == TYPE_ARRAY)
 	{
-		return *std::get<std::unique_ptr<Array>>(data_);
+		return *std::get<UniqueArray>(data_);
 	}
 
 	return emptyArray;
@@ -162,10 +162,118 @@ const JSONParser::JSONValue::ObjectMap& JSONParser::JSONValue::object() const
 
 	if (type_ == TYPE_OBJECT)
 	{
-		return *std::get<std::unique_ptr<ObjectMap>>(data_);
+		return *std::get<UniqueObjectMap>(data_);
 	}
 
 	return emptyObject;
+}
+
+const std::string* JSONParser::JSONValue::stringFromObject(const std::string& key) const
+{
+	if (type_ != TYPE_OBJECT)
+	{
+		return nullptr;
+	}
+
+	const ObjectMap& objectMap = *std::get<UniqueObjectMap>(data_);
+	const ObjectMap::const_iterator iString = objectMap.find(key);
+
+	if (iString == objectMap.end() || !iString->second.isString())
+	{
+		return nullptr;
+	}
+
+	return &std::get<std::string>(iString->second.data_);
+}
+
+const double* JSONParser::JSONValue::numberFromObject(const std::string& key) const
+{
+	if (type_ != TYPE_OBJECT)
+	{
+		return nullptr;
+	}
+
+	const ObjectMap& objectMap = *std::get<UniqueObjectMap>(data_);
+	const ObjectMap::const_iterator iNumber = objectMap.find(key);
+
+	if (iNumber == objectMap.end() || !iNumber->second.isNumber())
+	{
+		return nullptr;
+	}
+
+	return std::get_if<double>(&iNumber->second.data_);
+}
+
+const bool* JSONParser::JSONValue::booleanFromObject(const std::string& key) const
+{
+	if (type_ != TYPE_OBJECT)
+	{
+		return nullptr;
+	}
+
+	const ObjectMap& objectMap = *std::get<UniqueObjectMap>(data_);
+	const ObjectMap::const_iterator iBoolean = objectMap.find(key);
+
+	if (iBoolean == objectMap.end() || !iBoolean->second.isBoolean())
+	{
+		return nullptr;
+	}
+
+	return std::get_if<bool>(&iBoolean->second.data_);
+}
+
+const JSONParser::JSONValue::Array* JSONParser::JSONValue::arrayFromObject(const std::string& key) const
+{
+	if (type_ != TYPE_OBJECT)
+	{
+		return nullptr;
+	}
+
+	const ObjectMap& objectMap = *std::get<UniqueObjectMap>(data_);
+	const ObjectMap::const_iterator iArray = objectMap.find(key);
+
+	if (iArray == objectMap.end() || !iArray->second.isArray())
+	{
+		return nullptr;
+	}
+
+	return std::get<UniqueArray>(iArray->second.data_).get();
+}
+
+const JSONParser::JSONValue::ObjectMap* JSONParser::JSONValue::objectFromObject(const std::string& key) const
+{
+	if (type_ != TYPE_OBJECT)
+	{
+		return nullptr;
+	}
+
+	const ObjectMap& objectMap = *std::get<UniqueObjectMap>(data_);
+	const ObjectMap::const_iterator iObject = objectMap.find(key);
+
+	if (iObject == objectMap.end() || !iObject->second.isObject())
+	{
+		return nullptr;
+	}
+
+	return std::get<UniqueObjectMap>(iObject->second.data_).get();
+}
+
+const JSONParser::JSONValue* JSONParser::JSONValue::valueFromObject(const std::string& key) const
+{
+	if (type_ != TYPE_OBJECT)
+	{
+		return nullptr;
+	}
+
+	const ObjectMap& objectMap = *std::get<UniqueObjectMap>(data_);
+	const ObjectMap::const_iterator iValue = objectMap.find(key);
+
+	if (iValue == objectMap.end())
+	{
+		return nullptr;
+	}
+
+	return &iValue->second;
 }
 
 JSONParser::JSONValue& JSONParser::JSONValue::operator=(const JSONValue& other)
@@ -197,11 +305,11 @@ JSONParser::JSONValue& JSONParser::JSONValue::operator=(const JSONValue& other)
 				break;
 
 			case TYPE_ARRAY:
-				data_ = std::make_unique<Array>(*std::get<std::unique_ptr<Array>>(other.data_));
+				data_ = std::make_unique<Array>(*std::get<UniqueArray>(other.data_));
 				break;
 
 			case TYPE_OBJECT:
-				data_ = std::make_unique<ObjectMap>(*std::get<std::unique_ptr<ObjectMap>>(other.data_));
+				data_ = std::make_unique<ObjectMap>(*std::get<UniqueObjectMap>(other.data_));
 				break;
 		}
 	}
