@@ -168,7 +168,7 @@ bool CameraCalibrationManager::registerCalibrations(const std::string& url)
 	}
 
 	std::string errorMessage;
-	const JSONParser::JSONValue jsonValue = JSONParser::parse(url, std::string(), &errorMessage);
+	const JSONParser::JSONValue jsonValue = JSONParser::parse(url, std::string(), false, &errorMessage);
 
 	if (!jsonValue.isValid())
 	{
@@ -189,7 +189,7 @@ bool CameraCalibrationManager::registerCalibrations(const void* buffer, const si
 	const std::string bufferString((const char*)(buffer), size);
 
 	std::string errorMessage;
-	const JSONParser::JSONValue jsonValue = JSONParser::parse(std::string(), bufferString, &errorMessage);
+	const JSONParser::JSONValue jsonValue = JSONParser::parse(std::string(), bufferString, false, &errorMessage);
 
 	if (!jsonValue.isValid())
 	{
@@ -354,7 +354,7 @@ SharedAnyCamera CameraCalibrationManager::parseCamera(const std::string& jsonCam
 	}
 
 	std::string errorMessage;
-	const JSONParser::JSONValue jsonValue = JSONParser::parse(jsonCameraCalibrationFile, jsonCameraCalibratio, &errorMessage);
+	const JSONParser::JSONValue jsonValue = JSONParser::parse(jsonCameraCalibrationFile, jsonCameraCalibratio, false, &errorMessage);
 
 	if (!jsonValue.isValid())
 	{

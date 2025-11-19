@@ -429,7 +429,7 @@ bool Utilities::writeCalibrationBoardToFile(const CalibrationBoard& calibrationB
 bool Utilities::readCalibrationBoardFromFile(const std::string& filename, CalibrationBoard& calibrationBoard)
 {
 	std::string errorMessage;
-	IO::JSONParser::JSONValue jsonRoot = IO::JSONParser::parse(filename, std::string(), &errorMessage);
+	IO::JSONParser::JSONValue jsonRoot = IO::JSONParser::parse(filename, std::string(), true /*strict*/, &errorMessage);
 
 	if (!jsonRoot.isObject())
 	{

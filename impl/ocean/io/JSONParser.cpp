@@ -351,7 +351,7 @@ void JSONParser::JSONScanner::initialize()
 	registerKeyword("null", KEYWORD_NULL);
 }
 
-JSONParser::JSONValue JSONParser::parse(const std::shared_ptr<std::istream>& stream, std::string* errorMessage)
+JSONParser::JSONValue JSONParser::parse(const std::shared_ptr<std::istream>& stream, const bool strict, std::string* errorMessage)
 {
 	JSONScanner scanner(stream);
 
@@ -365,10 +365,10 @@ JSONParser::JSONValue JSONParser::parse(const std::shared_ptr<std::istream>& str
 		return JSONValue();
 	}
 
-	return parseValue(scanner, errorMessage);
+	return parseValue(scanner, strict, errorMessage);
 }
 
-JSONParser::JSONValue JSONParser::parse(const std::string& filename, const std::string& buffer, std::string* errorMessage)
+JSONParser::JSONValue JSONParser::parse(const std::string& filename, const std::string& buffer, const bool strict, std::string* errorMessage)
 {
 	JSONScanner scanner(filename, buffer);
 
@@ -382,10 +382,10 @@ JSONParser::JSONValue JSONParser::parse(const std::string& filename, const std::
 		return JSONValue();
 	}
 
-	return parseValue(scanner, errorMessage);
+	return parseValue(scanner, strict, errorMessage);
 }
 
-JSONParser::JSONValue JSONParser::parse(const std::string& filename, std::string&& buffer, std::string* errorMessage)
+JSONParser::JSONValue JSONParser::parse(const std::string& filename, std::string&& buffer, const bool strict, std::string* errorMessage)
 {
 	JSONScanner scanner(filename, std::move(buffer));
 
@@ -399,10 +399,10 @@ JSONParser::JSONValue JSONParser::parse(const std::string& filename, std::string
 		return JSONValue();
 	}
 
-	return parseValue(scanner, errorMessage);
+	return parseValue(scanner, strict, errorMessage);
 }
 
-JSONParser::JSONValue JSONParser::parseValue(JSONScanner& scanner, std::string* errorMessage)
+JSONParser::JSONValue JSONParser::parseValue(JSONScanner& scanner, const bool strict, std::string* errorMessage)
 {
 	const Scanner::Token& currentToken = scanner.token();
 
@@ -447,13 +447,13 @@ JSONParser::JSONValue JSONParser::parseValue(JSONScanner& scanner, std::string* 
 	// Check for object
 	if (currentToken.isSymbol(JSONScanner::SYMBOL_LEFT_BRACE))
 	{
-		return parseObject(scanner, errorMessage);
+		return parseObject(scanner, strict, errorMessage);
 	}
 
 	// Check for array
 	if (currentToken.isSymbol(JSONScanner::SYMBOL_LEFT_BRACKET))
 	{
-		return parseArray(scanner, errorMessage);
+		return parseArray(scanner, strict, errorMessage);
 	}
 
 	// Check for end of file
@@ -476,7 +476,7 @@ JSONParser::JSONValue JSONParser::parseValue(JSONScanner& scanner, std::string* 
 	return JSONValue();
 }
 
-JSONParser::JSONValue JSONParser::parseObject(JSONScanner& scanner, std::string* errorMessage)
+JSONParser::JSONValue JSONParser::parseObject(JSONScanner& scanner, const bool strict, std::string* errorMessage)
 {
 	ocean_assert(scanner.token().isSymbol(JSONScanner::SYMBOL_LEFT_BRACE));
 
@@ -522,7 +522,7 @@ JSONParser::JSONValue JSONParser::parseObject(JSONScanner& scanner, std::string*
 		scanner.pop();
 
 		// Parse the value
-		JSONValue value = parseValue(scanner, errorMessage);
+		JSONValue value = parseValue(scanner, strict, errorMessage);
 
 		if (!value)
 		{
@@ -543,16 +543,25 @@ JSONParser::JSONValue JSONParser::parseObject(JSONScanner& scanner, std::string*
 		{
 			scanner.pop();
 
-			// After comma, we must have another key-value pair
-			// (no trailing commas allowed in standard JSON)
+			// After comma, we must have another key-value pair, no trailing commas allowed in strict mode
 			if (scanner.token().isSymbol(JSONScanner::SYMBOL_RIGHT_BRACE))
 			{
-				if (errorMessage != nullptr)
+				if (strict)
 				{
-					*errorMessage = createErrorMessage(scanner, "Trailing comma in object");
-				}
+					if (errorMessage != nullptr)
+					{
+						*errorMessage = createErrorMessage(scanner, "Trailing comma in object");
+					}
 
-				return JSONValue();
+					return JSONValue();
+				}
+				else
+				{
+					// allow trailing comma
+
+					scanner.pop();
+					break;
+				}
 			}
 
 			continue;
@@ -570,7 +579,7 @@ JSONParser::JSONValue JSONParser::parseObject(JSONScanner& scanner, std::string*
 	return JSONValue(std::move(objectMap));
 }
 
-JSONParser::JSONValue JSONParser::parseArray(JSONScanner& scanner, std::string* errorMessage)
+JSONParser::JSONValue JSONParser::parseArray(JSONScanner& scanner, const bool strict, std::string* errorMessage)
 {
 	ocean_assert(scanner.token().isSymbol(JSONScanner::SYMBOL_LEFT_BRACKET));
 
@@ -589,7 +598,7 @@ JSONParser::JSONValue JSONParser::parseArray(JSONScanner& scanner, std::string* 
 	while (true)
 	{
 		// Parse the value
-		JSONValue value = parseValue(scanner, errorMessage);
+		JSONValue value = parseValue(scanner, strict, errorMessage);
 
 		if (!value)
 		{
@@ -609,16 +618,25 @@ JSONParser::JSONValue JSONParser::parseArray(JSONScanner& scanner, std::string* 
 		{
 			scanner.pop();
 
-			// After comma, we must have another value
-			// (no trailing commas allowed in standard JSON)
+			// After comma, we must have another value, no trailing commas allowed in strict mode
 			if (scanner.token().isSymbol(JSONScanner::SYMBOL_RIGHT_BRACKET))
 			{
-				if (errorMessage != nullptr)
+				if (strict)
 				{
-					*errorMessage = createErrorMessage(scanner, "Trailing comma in array");
-				}
+					if (errorMessage != nullptr)
+					{
+						*errorMessage = createErrorMessage(scanner, "Trailing comma in array");
+					}
 
-				return JSONValue();
+					return JSONValue();
+				}
+				else
+				{
+					// allow trailing comma
+
+					scanner.pop();
+					break;
+				}
 			}
 
 			continue;

@@ -383,54 +383,60 @@ class OCEAN_IO_EXPORT JSONParser
 		/**
 		 * Parses JSON from a stream.
 		 * @param stream The stream containing JSON data
+		 * @param strict True, to enforce strict JSON parsing (no trailing commas); False, to allow lenient parsing
 		 * @param errorMessage Optional resulting error message
 		 * @return The parsed JSON value, invalid on error
 		 */
-		static JSONValue parse(const std::shared_ptr<std::istream>& stream, std::string* errorMessage = nullptr);
+		static JSONValue parse(const std::shared_ptr<std::istream>& stream, const bool strict = false, std::string* errorMessage = nullptr);
 
 		/**
 		 * Parses JSON from a file or buffer.
 		 * @param filename The name of the file to parse, `buffer` must be empty
 		 * @param buffer The buffer to parse, `filename` must be empty
+		 * @param strict True, to enforce strict JSON parsing (no trailing commas); False, to allow lenient parsing
 		 * @param errorMessage Optional resulting error message
 		 * @return The parsed JSON value, invalid on error
 		 */
-		static JSONValue parse(const std::string& filename, const std::string& buffer, std::string* errorMessage = nullptr);
+		static JSONValue parse(const std::string& filename, const std::string& buffer, const bool strict = false, std::string* errorMessage = nullptr);
 
 		/**
 		 * Parses JSON from a file or buffer.
 		 * @param filename The name of the file to parse, `buffer` must be empty
 		 * @param buffer The buffer to parse, `filename` must be empty
+		 * @param strict True, to enforce strict JSON parsing (no trailing commas); False, to allow lenient parsing
 		 * @param errorMessage Optional resulting error message
 		 * @return The parsed JSON value, invalid on error
 		 */
-		static JSONValue parse(const std::string& filename, std::string&& buffer, std::string* errorMessage = nullptr);
+		static JSONValue parse(const std::string& filename, std::string&& buffer, const bool strict = false, std::string* errorMessage = nullptr);
 
 	protected:
 
 		/**
 		 * Parses a JSON value.
 		 * @param scanner The JSON scanner
+		 * @param strict True, to enforce strict JSON parsing (no trailing commas); False, to allow lenient parsing
 		 * @param errorMessage Optional resulting error message
 		 * @return The parsed JSON value, invalid on error
 		 */
-		static JSONValue parseValue(JSONScanner& scanner, std::string* errorMessage);
+		static JSONValue parseValue(JSONScanner& scanner, const bool strict, std::string* errorMessage);
 
 		/**
 		 * Parses a JSON object.
 		 * @param scanner The JSON scanner
+		 * @param strict True, to enforce strict JSON parsing (no trailing commas); False, to allow lenient parsing
 		 * @param errorMessage Optional resulting error message
 		 * @return The parsed JSON object value, invalid on error
 		 */
-		static JSONValue parseObject(JSONScanner& scanner, std::string* errorMessage);
+		static JSONValue parseObject(JSONScanner& scanner, const bool strict, std::string* errorMessage);
 
 		/**
 		 * Parses a JSON array.
 		 * @param scanner The JSON scanner
+		 * @param strict True, to enforce strict JSON parsing (no trailing commas); False, to allow lenient parsing
 		 * @param errorMessage Optional resulting error message
 		 * @return The parsed JSON array value, invalid on error
 		 */
-		static JSONValue parseArray(JSONScanner& scanner, std::string* errorMessage);
+		static JSONValue parseArray(JSONScanner& scanner, const bool strict, std::string* errorMessage);
 
 		/**
 		 * Creates an error message with line and column information.

@@ -139,6 +139,13 @@ class OCEAN_TEST_IO_EXPORT TestJSONParser
 		 */
 		static bool testRandomJSON(const double testDuration);
 
+		/**
+		* Tests strict and lenient parsing modes (trailing commas).
+		* @param testDuration The number of seconds for each test
+		* @return True, if succeeded
+		*/
+		static bool testStrictAndLenientParsing(const double testDuration);
+
 	protected:
 
 		/**
