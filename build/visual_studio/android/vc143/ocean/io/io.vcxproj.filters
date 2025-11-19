@@ -15,7 +15,7 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Bitstream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\CameraCalibrationManager.h">
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\LegacyCameraCalibrationManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Compression.h">
@@ -65,7 +65,7 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Bitstream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\CameraCalibrationManager.cpp">
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\LegacyCameraCalibrationManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Compression.cpp">

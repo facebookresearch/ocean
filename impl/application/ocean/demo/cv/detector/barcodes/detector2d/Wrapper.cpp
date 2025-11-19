@@ -19,7 +19,7 @@
 #include "ocean/cv/detector/barcodes/Barcode.h"
 #include "ocean/cv/detector/barcodes/BarcodeDetector2D.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 #include "ocean/io/File.h"
 #include "ocean/io/Directory.h"
 
@@ -356,7 +356,7 @@ bool Wrapper::detectAndDecode(Frame& outputFrame, double& time, std::vector<std:
 
 		// the camera calibration manager will either provided the calibrated profile (if existing) or will provide a default profile
 
-		anyCamera = std::make_shared<AnyCameraPinhole>(IO::CameraCalibrationManager::get().camera(frameMedium_->url(), frameRef->width(), frameRef->height(), nullptr, Numeric::deg2rad(60)));
+		anyCamera = std::make_shared<AnyCameraPinhole>(IO::LegacyCameraCalibrationManager::get().camera(frameMedium_->url(), frameRef->width(), frameRef->height(), nullptr, Numeric::deg2rad(60)));
 	}
 
 	//ocean_assert(anyCamera && anyCamera->isValid());

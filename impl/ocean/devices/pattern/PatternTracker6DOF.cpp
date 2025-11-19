@@ -15,7 +15,7 @@
 
 #include "ocean/devices/Manager.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 #include "ocean/io/File.h"
 
 #include "ocean/math/AnyCamera.h"

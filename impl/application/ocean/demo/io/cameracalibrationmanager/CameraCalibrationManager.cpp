@@ -7,7 +7,7 @@
 
 #include "application/ocean/demo/io/cameracalibrationmanager/CameraCalibrationManager.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 
 #include "ocean/math/Numeric.h"
 
@@ -27,7 +27,7 @@ using namespace Ocean::IO;
 #endif
 {
 	const std::string frameworkPath(Platform::Win::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
-	CameraCalibrationManager::get().registerCalibrationFile(frameworkPath + std::string("/data/cameracalibration/cameracalibration.occ"));
+	LegacyCameraCalibrationManager::get().registerCalibrationFile(frameworkPath + std::string("/data/cameracalibration/cameracalibration.occ"));
 
 	const std::string cameraNames[] =
 	{
@@ -47,22 +47,22 @@ using namespace Ocean::IO;
 	{
 		std::cout << "Calibration \"" << cameraNames[n] << "\" with resolution " << cameraWidths[n] << "x" << cameraHeights[n] << ":" << std::endl;
 
-		CameraCalibrationManager::Quality calibrationQuality = CameraCalibrationManager::QUALITY_DEFAULT;
-		const PinholeCamera pinholeCamera = CameraCalibrationManager::get().camera(cameraNames[n], cameraWidths[n], cameraHeights[n], &calibrationQuality);
+		LegacyCameraCalibrationManager::Quality calibrationQuality = LegacyCameraCalibrationManager::QUALITY_DEFAULT;
+		const PinholeCamera pinholeCamera = LegacyCameraCalibrationManager::get().camera(cameraNames[n], cameraWidths[n], cameraHeights[n], &calibrationQuality);
 
 		std::cout << "Horizontal field of view: " << String::toAString(Numeric::rad2deg(pinholeCamera.fovX()), 1u) << "deg, vertical field of view " << String::toAString(Numeric::rad2deg(pinholeCamera.fovY()), 1u) << "deg." << std::endl;
 
-		if (calibrationQuality == CameraCalibrationManager::QUALITY_EXACT)
+		if (calibrationQuality == LegacyCameraCalibrationManager::QUALITY_EXACT)
 		{
 			std::cout << "Quality: Exact." << std::endl << std::endl;
 		}
 
-		if (calibrationQuality == CameraCalibrationManager::QUALITY_INTERPOLATED)
+		if (calibrationQuality == LegacyCameraCalibrationManager::QUALITY_INTERPOLATED)
 		{
 			std::cout << "Quality: Interpolated." << std::endl << std::endl;
 		}
 
-		if (calibrationQuality == CameraCalibrationManager::QUALITY_DEFAULT)
+		if (calibrationQuality == LegacyCameraCalibrationManager::QUALITY_DEFAULT)
 		{
 			std::cout << "Quality: Default." << std::endl << std::endl;
 		}

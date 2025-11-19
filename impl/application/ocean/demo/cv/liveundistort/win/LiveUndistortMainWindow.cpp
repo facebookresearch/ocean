@@ -14,7 +14,7 @@
 #include "ocean/cv/FrameConverter.h"
 #include "ocean/cv/FrameInterpolatorBilinear.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 
 #include "ocean/media/Manager.h"
 
@@ -67,7 +67,7 @@ void LiveUndistortMainWindow::onInitialized()
 
 		if (frame)
 		{
-			camera_ = IO::CameraCalibrationManager::get().camera(frameMedium_->url(), frame->width(), frame->height());
+			camera_ = IO::LegacyCameraCalibrationManager::get().camera(frameMedium_->url(), frame->width(), frame->height());
 		}
 	}
 }

@@ -11,7 +11,7 @@
 #include "ocean/base/Build.h"
 #include "ocean/base/PluginManager.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 #include "ocean/io/Directory.h"
 #include "ocean/io/File.h"
 
@@ -44,7 +44,7 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 
 	if (absoluteFile.exists())
 	{
-		IO::CameraCalibrationManager::get().registerCalibrationFile(absoluteFile());
+		IO::LegacyCameraCalibrationManager::get().registerCalibrationFile(absoluteFile());
 	}
 
 #ifdef OCEAN_RUNTIME_STATIC

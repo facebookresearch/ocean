@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifndef META_OCEAN_IO_CAMERA_CALIBRATION_MANAGER_H
-#define META_OCEAN_IO_CAMERA_CALIBRATION_MANAGER_H
+#ifndef META_OCEAN_IO_LEGACY_CAMERA_CALIBRATION_MANAGER_H
+#define META_OCEAN_IO_LEGACY_CAMERA_CALIBRATION_MANAGER_H
 
 #include "ocean/io/IO.h"
 
@@ -27,9 +27,9 @@ namespace IO
  * The manager organizes camera calibrations with different dimensions.<br>
  * @ingroup io
  */
-class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrationManager>
+class OCEAN_IO_EXPORT LegacyCameraCalibrationManager : public Singleton<LegacyCameraCalibrationManager>
 {
-	friend class Singleton<CameraCalibrationManager>;
+	friend class Singleton<LegacyCameraCalibrationManager>;
 
 	public:
 
@@ -68,7 +68,7 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		 */
 		class Device
 		{
-			friend class CameraCalibrationManager;
+			friend class LegacyCameraCalibrationManager;
 
 			protected:
 
@@ -185,12 +185,12 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		/**
 		 * Creates a new manager.
 		 */
-		CameraCalibrationManager();
+		LegacyCameraCalibrationManager();
 
 		/**
 		 * Destructs the manager.
 		 */
-		~CameraCalibrationManager();
+		~LegacyCameraCalibrationManager();
 
 	protected:
 
@@ -208,4 +208,4 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 
 }
 
-#endif // META_OCEAN_IO_CAMERA_CALIBRATION_MANAGER_H
+#endif // META_OCEAN_IO_LEGACY_CAMERA_CALIBRATION_MANAGER_H

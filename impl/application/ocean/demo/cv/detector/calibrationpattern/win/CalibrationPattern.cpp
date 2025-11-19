@@ -11,7 +11,7 @@
 #include "ocean/base/Build.h"
 #include "ocean/base/PluginManager.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 
 #include "ocean/platform/System.h"
 #include "ocean/platform/Utilities.h"
@@ -28,7 +28,7 @@ int __stdcall wWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR 
 	Messenger::get().setOutputType(Messenger::OUTPUT_FILE);
 
 	const std::string frameworkPath(Platform::System::environmentVariable("OCEAN_DEVELOPMENT_PATH"));
-	IO::CameraCalibrationManager::get().registerCalibrationFile(frameworkPath + std::string("/data/cameracalibration/cameracalibration.occ"));
+	IO::LegacyCameraCalibrationManager::get().registerCalibrationFile(frameworkPath + std::string("/data/cameracalibration/cameracalibration.occ"));
 
 #ifdef OCEAN_RUNTIME_STATIC
 	Media::DirectShow::registerDirectShowLibrary();

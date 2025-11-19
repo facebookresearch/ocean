@@ -13,7 +13,7 @@
 #include "ocean/base/PluginManager.h"
 #include "ocean/base/String.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 
 #include "ocean/media/ConfigMedium.h"
 #include "ocean/media/FiniteMedium.h"
@@ -1527,7 +1527,7 @@ void PropertiesWindow::onApplicationPropertyChanged(CMFCPropertyGridProperty* it
 
 		if (file.isValid())
 		{
-			if (IO::CameraCalibrationManager::get().registerCalibrationFile(file()))
+			if (IO::LegacyCameraCalibrationManager::get().registerCalibrationFile(file()))
 			{
 				Log::info() << "Successfully loaded the camera calibration file \"" << file() << "\".";
 			}

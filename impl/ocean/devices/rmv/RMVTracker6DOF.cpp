@@ -15,7 +15,7 @@
 #include "ocean/cv/FrameShrinker.h"
 #include "ocean/cv/IntegralImage.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 #include "ocean/io/File.h"
 
 #include "ocean/math/HomogenousMatrix4.h"
@@ -101,7 +101,7 @@ RMVTracker6DOF::ObjectId RMVTracker6DOF::registerObject(const std::string& descr
 
 	Log::info() << "Creating camera: " << frameMedium.url();
 
-	PinholeCamera pinholeCamera = IO::CameraCalibrationManager::get().camera(frameMedium.url(), pattern.width(), pattern.height());
+	PinholeCamera pinholeCamera = IO::LegacyCameraCalibrationManager::get().camera(frameMedium.url(), pattern.width(), pattern.height());
 
 	Log::info() << "Standard camera resolution: " << pinholeCamera.width() << "x" << pinholeCamera.height();
 

@@ -12,7 +12,7 @@
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameConverter.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 
 #include "ocean/media/Manager.h"
 

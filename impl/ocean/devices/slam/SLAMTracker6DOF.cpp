@@ -25,7 +25,7 @@
 #include "ocean/geometry/RANSAC.h"
 #include "ocean/geometry/StereoscopicGeometry.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 
 #include "ocean/math/HomogenousMatrix4.h"
 #include "ocean/math/Random.h"

@@ -14,7 +14,7 @@
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameConverter.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 #include "ocean/io/Directory.h"
 #include "ocean/io/File.h"
 
@@ -85,7 +85,7 @@ void RMVTrackerMainWindow::onInitialized()
 
 		if (frame)
 		{
-			camera_ = IO::CameraCalibrationManager::get().camera(frameMedium_->url(), frame->width(), frame->height());
+			camera_ = IO::LegacyCameraCalibrationManager::get().camera(frameMedium_->url(), frame->width(), frame->height());
 		}
 	}
 

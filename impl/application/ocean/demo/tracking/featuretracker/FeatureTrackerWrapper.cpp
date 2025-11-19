@@ -14,7 +14,7 @@
 
 #include "ocean/devices/Manager.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 #include "ocean/io/Directory.h"
 #include "ocean/io/File.h"
 
@@ -172,7 +172,7 @@ FeatureTrackerWrapper::FeatureTrackerWrapper(const std::vector<std::wstring>& se
 
 	if (cameraCalibrationFile.exists())
 	{
-		IO::CameraCalibrationManager::get().registerCalibrationFile(cameraCalibrationFile());
+		IO::LegacyCameraCalibrationManager::get().registerCalibrationFile(cameraCalibrationFile());
 	}
 
 	if (inputMedium_.isNull())
@@ -418,7 +418,7 @@ bool FeatureTrackerWrapper::trackNewFrame(Frame& resultFrame, double& time)
 
 		// the camera calibration manager will either provided the calibrated profile (if existing) or will provide a default profile
 
-		anyCamera_ = std::make_shared<AnyCameraPinhole>(IO::CameraCalibrationManager::get().camera(inputMedium_->url(), frameRef->width(), frameRef->height(), nullptr, Numeric::deg2rad(60)));
+		anyCamera_ = std::make_shared<AnyCameraPinhole>(IO::LegacyCameraCalibrationManager::get().camera(inputMedium_->url(), frameRef->width(), frameRef->height(), nullptr, Numeric::deg2rad(60)));
 	}
 
 	ocean_assert(anyCamera_ && anyCamera_->isValid());

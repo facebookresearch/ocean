@@ -11,7 +11,7 @@
 
 #include "ocean/cv/FrameConverterY_U_V12.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 
 #include "ocean/math/PinholeCamera.h"
 
@@ -1193,7 +1193,7 @@ bool ALiveVideo::onNewFrame(Frame&& frame, SharedAnyCamera&& anyCamera)
 	{
 		const PinholeCamera& camera = ((const AnyCameraPinhole&)(*anyCamera)).actualCamera();
 
-		IO::CameraCalibrationManager::get().registerCalibration(url_, camera);
+		IO::LegacyCameraCalibrationManager::get().registerCalibration(url_, camera);
 	}
 
 	return deliverNewFrame(std::move(frame), std::move(anyCamera));

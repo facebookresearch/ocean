@@ -7,7 +7,7 @@
 
 #include "application/ocean/demo/rendering/openglstereo/win/Background.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 
 #include "ocean/media/ConfigMedium.h"
 
@@ -38,7 +38,7 @@ void Background::update()
 	{
 		frameType_ = updateFrameType;
 
-		PinholeCamera camera = IO::CameraCalibrationManager::get().camera(mediumUrl_, frameType_.width(), frameType_.height());
+		PinholeCamera camera = IO::LegacyCameraCalibrationManager::get().camera(mediumUrl_, frameType_.width(), frameType_.height());
 
 		const Scalar backgroundFarClippingPlane = 100;
 		const unsigned int backgroundNumberHorizontalStrips = 100;

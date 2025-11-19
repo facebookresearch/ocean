@@ -13,7 +13,7 @@
 		503E4F7D1FA358C700AE7674 /* Directory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 503E4F791FA358C000AE7674 /* Directory.mm */; };
 		5D222A581BB16D0800298788 /* Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A471BB16D0800298788 /* Base64.h */; };
 		5D222A591BB16D0800298788 /* Bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A481BB16D0800298788 /* Bitstream.h */; };
-		5D222A5A1BB16D0800298788 /* CameraCalibrationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A491BB16D0800298788 /* CameraCalibrationManager.h */; };
+		5D222A5A1BB16D0800298788 /* LegacyCameraCalibrationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A491BB16D0800298788 /* LegacyCameraCalibrationManager.h */; };
 		5D222A5B1BB16D0800298788 /* Compression.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4A1BB16D0800298788 /* Compression.h */; };
 		5D222A5C1BB16D0800298788 /* Directory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4B1BB16D0800298788 /* Directory.h */; };
 		5D222A5D1BB16D0800298788 /* File.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4C1BB16D0800298788 /* File.h */; };
@@ -36,7 +36,7 @@
 		5D222A751BB16D2E00298788 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E71B9767D400E2498E /* File.cpp */; };
 		5D222A771BB16D2E00298788 /* Compression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E51B9767D400E2498E /* Compression.cpp */; };
 		5D222A781BB16D2E00298788 /* FileResolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5EA1B9767D400E2498E /* FileResolver.cpp */; };
-		5D222A791BB16D2E00298788 /* CameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E41B9767D400E2498E /* CameraCalibrationManager.cpp */; };
+		5D222A791BB16D2E00298788 /* LegacyCameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E41B9767D400E2498E /* LegacyCameraCalibrationManager.cpp */; };
 		5D222A7A1BB16D2E00298788 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5F01B9767D400E2498E /* Utilities.cpp */; };
 		5D222A7D1BB16D2E00298788 /* FileConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4D1BB16D0800298788 /* FileConfig.h */; };
 		5D222A7E1BB16D2E00298788 /* Bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A481BB16D0800298788 /* Bitstream.h */; };
@@ -45,7 +45,7 @@
 		5D222A811BB16D2E00298788 /* Compression.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4A1BB16D0800298788 /* Compression.h */; };
 		5D222A821BB16D2E00298788 /* FileResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4F1BB16D0800298788 /* FileResolver.h */; };
 		5D222A831BB16D2E00298788 /* Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A471BB16D0800298788 /* Base64.h */; };
-		5D222A851BB16D2E00298788 /* CameraCalibrationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A491BB16D0800298788 /* CameraCalibrationManager.h */; };
+		5D222A851BB16D2E00298788 /* LegacyCameraCalibrationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A491BB16D0800298788 /* LegacyCameraCalibrationManager.h */; };
 		5D222A861BB16D2E00298788 /* Path.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A511BB16D0800298788 /* Path.h */; };
 		5D222A871BB16D2E00298788 /* File.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4C1BB16D0800298788 /* File.h */; };
 		5D222A881BB16D2E00298788 /* FileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4E1BB16D0800298788 /* FileManager.h */; };
@@ -63,7 +63,7 @@
 		5D491D0F1D8F570600C4099B /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E71B9767D400E2498E /* File.cpp */; };
 		5D491D111D8F570600C4099B /* Compression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E51B9767D400E2498E /* Compression.cpp */; };
 		5D491D121D8F570600C4099B /* FileResolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5EA1B9767D400E2498E /* FileResolver.cpp */; };
-		5D491D131D8F570600C4099B /* CameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E41B9767D400E2498E /* CameraCalibrationManager.cpp */; };
+		5D491D131D8F570600C4099B /* LegacyCameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E41B9767D400E2498E /* LegacyCameraCalibrationManager.cpp */; };
 		5D491D141D8F570600C4099B /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5F01B9767D400E2498E /* Utilities.cpp */; };
 		5D491D171D8F570600C4099B /* FileConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4D1BB16D0800298788 /* FileConfig.h */; };
 		5D491D181D8F570600C4099B /* Bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A481BB16D0800298788 /* Bitstream.h */; };
@@ -72,7 +72,7 @@
 		5D491D1B1D8F570600C4099B /* Compression.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4A1BB16D0800298788 /* Compression.h */; };
 		5D491D1C1D8F570600C4099B /* FileResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4F1BB16D0800298788 /* FileResolver.h */; };
 		5D491D1D1D8F570600C4099B /* Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A471BB16D0800298788 /* Base64.h */; };
-		5D491D1F1D8F570600C4099B /* CameraCalibrationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A491BB16D0800298788 /* CameraCalibrationManager.h */; };
+		5D491D1F1D8F570600C4099B /* LegacyCameraCalibrationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A491BB16D0800298788 /* LegacyCameraCalibrationManager.h */; };
 		5D491D201D8F570600C4099B /* Path.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A511BB16D0800298788 /* Path.h */; };
 		5D491D211D8F570600C4099B /* File.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4C1BB16D0800298788 /* File.h */; };
 		5D491D221D8F570600C4099B /* FileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4E1BB16D0800298788 /* FileManager.h */; };
@@ -81,7 +81,7 @@
 		5D491D271D8F570600C4099B /* Directory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4B1BB16D0800298788 /* Directory.h */; };
 		5D63F5F21B9767D400E2498E /* Base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E21B9767D400E2498E /* Base64.cpp */; };
 		5D63F5F31B9767D400E2498E /* Bitstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E31B9767D400E2498E /* Bitstream.cpp */; };
-		5D63F5F41B9767D400E2498E /* CameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E41B9767D400E2498E /* CameraCalibrationManager.cpp */; };
+		5D63F5F41B9767D400E2498E /* LegacyCameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E41B9767D400E2498E /* LegacyCameraCalibrationManager.cpp */; };
 		5D63F5F51B9767D400E2498E /* Compression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E51B9767D400E2498E /* Compression.cpp */; };
 		5D63F5F61B9767D400E2498E /* Directory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E61B9767D400E2498E /* Directory.cpp */; };
 		5D63F5F71B9767D400E2498E /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E71B9767D400E2498E /* File.cpp */; };
@@ -103,7 +103,7 @@
 		5D9861F31D8B582900DEDB00 /* File.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E71B9767D400E2498E /* File.cpp */; };
 		5D9861F51D8B582900DEDB00 /* Compression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E51B9767D400E2498E /* Compression.cpp */; };
 		5D9861F61D8B582900DEDB00 /* FileResolver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5EA1B9767D400E2498E /* FileResolver.cpp */; };
-		5D9861F71D8B582900DEDB00 /* CameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E41B9767D400E2498E /* CameraCalibrationManager.cpp */; };
+		5D9861F71D8B582900DEDB00 /* LegacyCameraCalibrationManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5E41B9767D400E2498E /* LegacyCameraCalibrationManager.cpp */; };
 		5D9861F81D8B582900DEDB00 /* Utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5D63F5F01B9767D400E2498E /* Utilities.cpp */; };
 		5D9861FB1D8B582900DEDB00 /* FileConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4D1BB16D0800298788 /* FileConfig.h */; };
 		5D9861FC1D8B582900DEDB00 /* Bitstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A481BB16D0800298788 /* Bitstream.h */; };
@@ -112,7 +112,7 @@
 		5D9861FF1D8B582900DEDB00 /* Compression.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4A1BB16D0800298788 /* Compression.h */; };
 		5D9862001D8B582900DEDB00 /* FileResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4F1BB16D0800298788 /* FileResolver.h */; };
 		5D9862011D8B582900DEDB00 /* Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A471BB16D0800298788 /* Base64.h */; };
-		5D9862031D8B582900DEDB00 /* CameraCalibrationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A491BB16D0800298788 /* CameraCalibrationManager.h */; };
+		5D9862031D8B582900DEDB00 /* LegacyCameraCalibrationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A491BB16D0800298788 /* LegacyCameraCalibrationManager.h */; };
 		5D9862041D8B582900DEDB00 /* Path.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A511BB16D0800298788 /* Path.h */; };
 		5D9862051D8B582900DEDB00 /* File.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4C1BB16D0800298788 /* File.h */; };
 		5D9862061D8B582900DEDB00 /* FileManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D222A4E1BB16D0800298788 /* FileManager.h */; };
@@ -137,7 +137,7 @@
 		503E4F791FA358C000AE7674 /* Directory.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Directory.mm; path = ../../../../../impl/ocean/io/Directory.mm; sourceTree = "<group>"; };
 		5D222A471BB16D0800298788 /* Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Base64.h; path = ../../../../../impl/ocean/io/Base64.h; sourceTree = "<group>"; };
 		5D222A481BB16D0800298788 /* Bitstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bitstream.h; path = ../../../../../impl/ocean/io/Bitstream.h; sourceTree = "<group>"; };
-		5D222A491BB16D0800298788 /* CameraCalibrationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CameraCalibrationManager.h; path = ../../../../../impl/ocean/io/CameraCalibrationManager.h; sourceTree = "<group>"; };
+		5D222A491BB16D0800298788 /* LegacyCameraCalibrationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LegacyCameraCalibrationManager.h; path = ../../../../../impl/ocean/io/LegacyCameraCalibrationManager.h; sourceTree = "<group>"; };
 		5D222A4A1BB16D0800298788 /* Compression.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Compression.h; path = ../../../../../impl/ocean/io/Compression.h; sourceTree = "<group>"; };
 		5D222A4B1BB16D0800298788 /* Directory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Directory.h; path = ../../../../../impl/ocean/io/Directory.h; sourceTree = "<group>"; };
 		5D222A4C1BB16D0800298788 /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = File.h; path = ../../../../../impl/ocean/io/File.h; sourceTree = "<group>"; };
@@ -154,7 +154,7 @@
 		5D63F5D31B97678700E2498E /* libOceanIOD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libOceanIOD.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D63F5E21B9767D400E2498E /* Base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Base64.cpp; path = ../../../../../impl/ocean/io/Base64.cpp; sourceTree = "<group>"; };
 		5D63F5E31B9767D400E2498E /* Bitstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bitstream.cpp; path = ../../../../../impl/ocean/io/Bitstream.cpp; sourceTree = "<group>"; };
-		5D63F5E41B9767D400E2498E /* CameraCalibrationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CameraCalibrationManager.cpp; path = ../../../../../impl/ocean/io/CameraCalibrationManager.cpp; sourceTree = "<group>"; };
+		5D63F5E41B9767D400E2498E /* LegacyCameraCalibrationManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LegacyCameraCalibrationManager.cpp; path = ../../../../../impl/ocean/io/LegacyCameraCalibrationManager.cpp; sourceTree = "<group>"; };
 		5D63F5E51B9767D400E2498E /* Compression.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Compression.cpp; path = ../../../../../impl/ocean/io/Compression.cpp; sourceTree = "<group>"; };
 		5D63F5E61B9767D400E2498E /* Directory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Directory.cpp; path = ../../../../../impl/ocean/io/Directory.cpp; sourceTree = "<group>"; };
 		5D63F5E71B9767D400E2498E /* File.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = File.cpp; path = ../../../../../impl/ocean/io/File.cpp; sourceTree = "<group>"; };
@@ -208,7 +208,7 @@
 			children = (
 				5D222A471BB16D0800298788 /* Base64.h */,
 				5D222A481BB16D0800298788 /* Bitstream.h */,
-				5D222A491BB16D0800298788 /* CameraCalibrationManager.h */,
+				5D222A491BB16D0800298788 /* LegacyCameraCalibrationManager.h */,
 				5D222A4A1BB16D0800298788 /* Compression.h */,
 				5D222A4B1BB16D0800298788 /* Directory.h */,
 				5D222A4C1BB16D0800298788 /* File.h */,
@@ -250,7 +250,7 @@
 			children = (
 				5D63F5E21B9767D400E2498E /* Base64.cpp */,
 				5D63F5E31B9767D400E2498E /* Bitstream.cpp */,
-				5D63F5E41B9767D400E2498E /* CameraCalibrationManager.cpp */,
+				5D63F5E41B9767D400E2498E /* LegacyCameraCalibrationManager.cpp */,
 				5D63F5E51B9767D400E2498E /* Compression.cpp */,
 				5D63F5E61B9767D400E2498E /* Directory.cpp */,
 				503E4F791FA358C000AE7674 /* Directory.mm */,
@@ -282,7 +282,7 @@
 				5D222A811BB16D2E00298788 /* Compression.h in Headers */,
 				5D222A821BB16D2E00298788 /* FileResolver.h in Headers */,
 				5D222A831BB16D2E00298788 /* Base64.h in Headers */,
-				5D222A851BB16D2E00298788 /* CameraCalibrationManager.h in Headers */,
+				5D222A851BB16D2E00298788 /* LegacyCameraCalibrationManager.h in Headers */,
 				5D222A861BB16D2E00298788 /* Path.h in Headers */,
 				5D222A871BB16D2E00298788 /* File.h in Headers */,
 				5D222A881BB16D2E00298788 /* FileManager.h in Headers */,
@@ -304,7 +304,7 @@
 				5D491D1B1D8F570600C4099B /* Compression.h in Headers */,
 				5D491D1C1D8F570600C4099B /* FileResolver.h in Headers */,
 				5D491D1D1D8F570600C4099B /* Base64.h in Headers */,
-				5D491D1F1D8F570600C4099B /* CameraCalibrationManager.h in Headers */,
+				5D491D1F1D8F570600C4099B /* LegacyCameraCalibrationManager.h in Headers */,
 				5D491D201D8F570600C4099B /* Path.h in Headers */,
 				5D491D211D8F570600C4099B /* File.h in Headers */,
 				5D491D221D8F570600C4099B /* FileManager.h in Headers */,
@@ -326,7 +326,7 @@
 				5D222A5B1BB16D0800298788 /* Compression.h in Headers */,
 				5D222A601BB16D0800298788 /* FileResolver.h in Headers */,
 				5D222A581BB16D0800298788 /* Base64.h in Headers */,
-				5D222A5A1BB16D0800298788 /* CameraCalibrationManager.h in Headers */,
+				5D222A5A1BB16D0800298788 /* LegacyCameraCalibrationManager.h in Headers */,
 				5D222A621BB16D0800298788 /* Path.h in Headers */,
 				5D222A5D1BB16D0800298788 /* File.h in Headers */,
 				5D222A5F1BB16D0800298788 /* FileManager.h in Headers */,
@@ -348,7 +348,7 @@
 				5D9861FF1D8B582900DEDB00 /* Compression.h in Headers */,
 				5D9862001D8B582900DEDB00 /* FileResolver.h in Headers */,
 				5D9862011D8B582900DEDB00 /* Base64.h in Headers */,
-				5D9862031D8B582900DEDB00 /* CameraCalibrationManager.h in Headers */,
+				5D9862031D8B582900DEDB00 /* LegacyCameraCalibrationManager.h in Headers */,
 				5D9862041D8B582900DEDB00 /* Path.h in Headers */,
 				5D9862051D8B582900DEDB00 /* File.h in Headers */,
 				5D9862061D8B582900DEDB00 /* FileManager.h in Headers */,
@@ -528,7 +528,7 @@
 				5D222A771BB16D2E00298788 /* Compression.cpp in Sources */,
 				5D222A781BB16D2E00298788 /* FileResolver.cpp in Sources */,
 				5DB1041E1F60385800C745E4 /* JSONConfig.cpp in Sources */,
-				5D222A791BB16D2E00298788 /* CameraCalibrationManager.cpp in Sources */,
+				5D222A791BB16D2E00298788 /* LegacyCameraCalibrationManager.cpp in Sources */,
 				5D222A7A1BB16D2E00298788 /* Utilities.cpp in Sources */,
 				9EE8BC9B2B89987800517978 /* File.mm in Sources */,
 			);
@@ -551,7 +551,7 @@
 				5D491D111D8F570600C4099B /* Compression.cpp in Sources */,
 				5D491D121D8F570600C4099B /* FileResolver.cpp in Sources */,
 				5DB104201F60385800C745E4 /* JSONConfig.cpp in Sources */,
-				5D491D131D8F570600C4099B /* CameraCalibrationManager.cpp in Sources */,
+				5D491D131D8F570600C4099B /* LegacyCameraCalibrationManager.cpp in Sources */,
 				5D491D141D8F570600C4099B /* Utilities.cpp in Sources */,
 				9EE8BC9D2B89987800517978 /* File.mm in Sources */,
 			);
@@ -574,7 +574,7 @@
 				5D63F5F51B9767D400E2498E /* Compression.cpp in Sources */,
 				5D63F5FA1B9767D400E2498E /* FileResolver.cpp in Sources */,
 				5DB1041D1F60385800C745E4 /* JSONConfig.cpp in Sources */,
-				5D63F5F41B9767D400E2498E /* CameraCalibrationManager.cpp in Sources */,
+				5D63F5F41B9767D400E2498E /* LegacyCameraCalibrationManager.cpp in Sources */,
 				5D63F6001B9767D400E2498E /* Utilities.cpp in Sources */,
 				9EE8BC9A2B89987800517978 /* File.mm in Sources */,
 			);
@@ -597,7 +597,7 @@
 				5D9861F51D8B582900DEDB00 /* Compression.cpp in Sources */,
 				5D9861F61D8B582900DEDB00 /* FileResolver.cpp in Sources */,
 				5DB1041F1F60385800C745E4 /* JSONConfig.cpp in Sources */,
-				5D9861F71D8B582900DEDB00 /* CameraCalibrationManager.cpp in Sources */,
+				5D9861F71D8B582900DEDB00 /* LegacyCameraCalibrationManager.cpp in Sources */,
 				5D9861F81D8B582900DEDB00 /* Utilities.cpp in Sources */,
 				9EE8BC9C2B89987800517978 /* File.mm in Sources */,
 			);

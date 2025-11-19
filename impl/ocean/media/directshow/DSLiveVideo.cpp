@@ -12,7 +12,7 @@
 #include "ocean/base/ScopedFunction.h"
 #include "ocean/base/String.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 
 #include "ocean/math/PinholeCamera.h"
 
@@ -308,16 +308,16 @@ bool DSLiveVideo::configuration(const std::string& name, long long data)
 
 			if (recentFrameType_.isValid())
 			{
-				// we try to create a (static) camera profile based on the CameraCalibrationManager
+				// we try to create a (static) camera profile based on the LegacyCameraCalibrationManager
 
-				IO::CameraCalibrationManager::Quality quality = IO::CameraCalibrationManager::QUALITY_DEFAULT;
-				const PinholeCamera camera = IO::CameraCalibrationManager::get().camera(url(), recentFrameType_.width(), recentFrameType_.height(), &quality);
+				IO::LegacyCameraCalibrationManager::Quality quality = IO::LegacyCameraCalibrationManager::QUALITY_DEFAULT;
+				const PinholeCamera camera = IO::LegacyCameraCalibrationManager::get().camera(url(), recentFrameType_.width(), recentFrameType_.height(), &quality);
 
-				if (!recentAnyCamera_ || quality != IO::CameraCalibrationManager::QUALITY_DEFAULT)
+				if (!recentAnyCamera_ || quality != IO::LegacyCameraCalibrationManager::QUALITY_DEFAULT)
 				{
 					recentAnyCamera_ = std::make_shared<AnyCameraPinhole>(camera);
 
-					if (quality == IO::CameraCalibrationManager::QUALITY_DEFAULT)
+					if (quality == IO::LegacyCameraCalibrationManager::QUALITY_DEFAULT)
 					{
 						Log::warning() << "Used default camera calibration for '" << url() << "'";
 					}

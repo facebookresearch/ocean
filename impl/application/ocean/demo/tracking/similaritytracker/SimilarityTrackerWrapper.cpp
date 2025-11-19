@@ -18,7 +18,7 @@
 
 #include "ocean/geometry/Homography.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 
 #include "ocean/media/FiniteMedium.h"
 #include "ocean/media/ImageSequence.h"
@@ -257,7 +257,7 @@ bool SimilarityTrackerWrapper::trackNewFrame(Frame& frame, double& time, const V
 
 	if (camera_.width() != currentFrame.width() || camera_.height() != currentFrame.height())
 	{
-		camera_ = IO::CameraCalibrationManager::get().camera(frameMedium_->url(), currentFrame.width(), currentFrame.height());
+		camera_ = IO::LegacyCameraCalibrationManager::get().camera(frameMedium_->url(), currentFrame.width(), currentFrame.height());
 	}
 
 	frameTimestamp_ = currentFrame.timestamp();

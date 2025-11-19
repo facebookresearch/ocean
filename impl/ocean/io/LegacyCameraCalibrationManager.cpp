@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 #include "ocean/io/FileConfig.h"
 
 namespace Ocean
@@ -14,7 +14,7 @@ namespace Ocean
 namespace IO
 {
 
-PinholeCamera CameraCalibrationManager::Device::camera(const unsigned int width, const unsigned int height, Quality* quality, const Scalar defaultFovX) const
+PinholeCamera LegacyCameraCalibrationManager::Device::camera(const unsigned int width, const unsigned int height, Quality* quality, const Scalar defaultFovX) const
 {
 	ocean_assert(width != 0u && height != 0u);
 	ocean_assert(defaultFovX > Numeric::eps() && defaultFovX < Numeric::pi());
@@ -66,7 +66,7 @@ PinholeCamera CameraCalibrationManager::Device::camera(const unsigned int width,
 	return PinholeCamera(width, height, defaultFovX);
 }
 
-bool CameraCalibrationManager::Device::addResolution(const PinholeCamera& pinholeCamera, const Priority priority)
+bool LegacyCameraCalibrationManager::Device::addResolution(const PinholeCamera& pinholeCamera, const Priority priority)
 {
 	ResolutionMap::iterator i = resolutionMap_.find(Resolution(pinholeCamera.width(), pinholeCamera.height()));
 	if (i == resolutionMap_.end())
@@ -86,17 +86,17 @@ bool CameraCalibrationManager::Device::addResolution(const PinholeCamera& pinhol
 	return false;
 }
 
-CameraCalibrationManager::CameraCalibrationManager()
+LegacyCameraCalibrationManager::LegacyCameraCalibrationManager()
 {
 	// nothing to do here
 }
 
-CameraCalibrationManager::~CameraCalibrationManager()
+LegacyCameraCalibrationManager::~LegacyCameraCalibrationManager()
 {
 	// nothing to do here
 }
 
-bool CameraCalibrationManager::registerCalibration(const std::string& camera, const unsigned int width, const unsigned int height, const Scalar fovX)
+bool LegacyCameraCalibrationManager::registerCalibration(const std::string& camera, const unsigned int width, const unsigned int height, const Scalar fovX)
 {
 	ocean_assert(!camera.empty());
 	ocean_assert(width != 0u && height != 0u);
@@ -119,7 +119,7 @@ bool CameraCalibrationManager::registerCalibration(const std::string& camera, co
 	return i->second.addResolution(PinholeCamera(width, height,fovX), PRIORITY_EXPLICIT);
 }
 
-bool CameraCalibrationManager::registerCalibrationFile(const std::string& url)
+bool LegacyCameraCalibrationManager::registerCalibrationFile(const std::string& url)
 {
 	if (url.empty())
 	{
@@ -254,7 +254,7 @@ bool CameraCalibrationManager::registerCalibrationFile(const std::string& url)
 	return true;
 }
 
-bool CameraCalibrationManager::registerCalibration(const std::string& camera, const PinholeCamera& calibration)
+bool LegacyCameraCalibrationManager::registerCalibration(const std::string& camera, const PinholeCamera& calibration)
 {
 	const ScopedLock scopedLock(lock_);
 
@@ -269,7 +269,7 @@ bool CameraCalibrationManager::registerCalibration(const std::string& camera, co
 	return true;
 }
 
-bool CameraCalibrationManager::registerAlias(const std::string& camera, const std::string& alias)
+bool LegacyCameraCalibrationManager::registerAlias(const std::string& camera, const std::string& alias)
 {
 	const ScopedLock scopedLock(lock_);
 
@@ -279,7 +279,7 @@ bool CameraCalibrationManager::registerAlias(const std::string& camera, const st
 	return true;
 }
 
-PinholeCamera CameraCalibrationManager::camera(const std::string& device, const unsigned int width, const unsigned int height, Quality* quality, const Scalar defaultFovX) const
+PinholeCamera LegacyCameraCalibrationManager::camera(const std::string& device, const unsigned int width, const unsigned int height, Quality* quality, const Scalar defaultFovX) const
 {
 	ocean_assert(!device.empty());
 	ocean_assert(width != 0u && height != 0u);
@@ -311,7 +311,7 @@ PinholeCamera CameraCalibrationManager::camera(const std::string& device, const 
 	return i->second.camera(width, height, quality, defaultFovX);
 }
 
-bool CameraCalibrationManager::hasCalibration(const std::string& device) const
+bool LegacyCameraCalibrationManager::hasCalibration(const std::string& device) const
 {
 	const ScopedLock scopedLock(lock_);
 

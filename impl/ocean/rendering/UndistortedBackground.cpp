@@ -8,7 +8,7 @@
 #include "ocean/rendering/UndistortedBackground.h"
 #include "ocean/rendering/Engine.h"
 
-#include "ocean/io/CameraCalibrationManager.h"
+#include "ocean/io/LegacyCameraCalibrationManager.h"
 
 #include "ocean/math/AnyCamera.h"
 
