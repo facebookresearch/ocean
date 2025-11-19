@@ -48,11 +48,11 @@ class AVFFrameMedium :
 		/**
 		 * Called, if a new sample arrived.
 		 * @param pixelBuffer A pointer to a buffer that contains the pixel data of the sample
-		 * @param anyCamera The camera profile if known; nullptr otherwise
+		 * @param camera The camera profile if known; nullptr otherwise
 		 * @param unixTimestamp Used to set timestamp of the Frame associated to the sample (measured in seconds since 1970-01-01 00:00 UTC)
 		 * @param sampleTime The presentation time of the sample in seconds, used to set the relative timestamp of the frame associated to the sample
 		 */
-		virtual void onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera anyCamera, const double unixTimestamp, const double sampleTime);
+		virtual void onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera camera, const double unixTimestamp, const double sampleTime);
 
 	protected:
 

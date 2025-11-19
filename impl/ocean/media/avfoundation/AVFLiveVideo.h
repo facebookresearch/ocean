@@ -114,6 +114,12 @@ class AVFLiveVideo :
 		bool setFocus(const float position) override;
 
 		/**
+		 * Sets the known camera profile of this frame medium.
+		 * @see FrameMedium::setCamera()
+		 */
+		bool setCamera(SharedAnyCamera&& camera) override;
+
+		/**
 		 * Returns whether video stabilization is currently enabled.
 		 * @see videoStabilization().
 		 */
@@ -130,11 +136,11 @@ class AVFLiveVideo :
 		 * This function is intended for situations in which this live video does not receive the pixel buffers anymore from the system (e.g., when ARKit is accessing the video stream).<br>
 		 * Do not call this function in case the live video is still receiving pixel buffers from the AVFoundation system.
 		 * @param pixelBuffer A pointer to a buffer that contains the pixel data of the sample
-		 * @param anyCamera The profile of the camera, invalid if unknown
+		 * @param camera The profile of the camera, invalid if unknown
 		 * @param unixTimestamp Used to set timestamp of the Frame associated to the sample (measured in seconds since 1970-01-01 00:00 UTC)
 		 * @param sampleTime The presentation time of the sample in seconds, used to set the relative timestamp of the frame associated to the sample
 		 */
-		void feedNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera anyCamera, const double unixTimestamp, const double sampleTime);
+		void feedNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera camera, const double unixTimestamp, const double sampleTime);
 
 	protected:
 
@@ -189,7 +195,7 @@ class AVFLiveVideo :
 		 * Called, if a new sample arrived.
 		 * @see AVFFrameMedium::onNewSample(pixelBuffer, unixTimestamp, sampleTime)
 		 */
-		void onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera anyCamera, const double unixTimestamp, const double sampleTime) override;
+		void onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera camera, const double unixTimestamp, const double sampleTime) override;
 
 		/**
 		 * Returns the best matching capture device format for a specified frame dimension, pixel format and frame frequency.
@@ -255,8 +261,14 @@ class AVFLiveVideo :
 		/// The sum of exposure duration values, in seconds.
 		float exposureDurationSum_ = 0.0f;
 
+		/// The camera profile for all images.
+		SharedAnyCamera camera_;
+
 		/// The approximated camera profile of this live video.
-		SharedAnyCamera approximatedAnyCamera_;
+		SharedAnyCamera approximatedCamera_;
+	
+		/// True, if the medium waits for the first frame; False, if several frames have been received already.
+		bool waitingForFirstFrame_ = true;
 
 		/// The transformation between camera and device.
 		HomogenousMatrixD4 device_T_camera_ = HomogenousMatrixD4(true);

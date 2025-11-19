@@ -12,6 +12,8 @@
 
 #include "ocean/base/StringApple.h"
 
+#include "ocean/io/CameraCalibrationManager.h"
+
 #include "ocean/math/PinholeCamera.h"
 
 #include "ocean/system/Performance.h"
@@ -519,6 +521,15 @@ bool AVFLiveVideo::setFocus(const float position)
 	return result;
 }
 
+bool AVFLiveVideo::setCamera(SharedAnyCamera&& camera)
+{
+	const ScopedLock scopedLock(lock_);
+
+	camera_ = std::move(camera);
+
+	return true;
+}
+
 bool AVFLiveVideo::videoStabilization() const
 {
 	const ScopedLock scopedLock(lock_);
@@ -557,9 +568,9 @@ bool AVFLiveVideo::setVideoStabilization(const bool enable)
 	return true;
 }
 
-void AVFLiveVideo::feedNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera anyCamera, const double unixTimestamp, const double sampleTime)
+void AVFLiveVideo::feedNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera camera, const double unixTimestamp, const double sampleTime)
 {
-	onNewSample(pixelBuffer, std::move(anyCamera), unixTimestamp, sampleTime);
+	onNewSample(pixelBuffer, std::move(camera), unixTimestamp, sampleTime);
 }
 
 bool AVFLiveVideo::createCaptureDevice()
@@ -785,6 +796,8 @@ bool AVFLiveVideo::internalStart()
 			return false;
 		}
 	}
+	
+	waitingForFirstFrame_ = true;
 
 	ocean_assert(captureSession_ != nullptr);
 	[captureSession_ startRunning];
@@ -818,7 +831,7 @@ bool AVFLiveVideo::internalStop()
 	return true;
 }
 
-void AVFLiveVideo::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera anyCamera, const double unixTimestamp, const double frameTime)
+void AVFLiveVideo::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera camera, const double unixTimestamp, const double frameTime)
 {
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE == 1
 	isoSum_ += [captureDevice_ ISO];
@@ -843,24 +856,58 @@ void AVFLiveVideo::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera any
 	const unsigned int width = (unsigned int)(CVPixelBufferGetWidth(pixelBuffer));
 	const unsigned int height = (unsigned int)(CVPixelBufferGetHeight(pixelBuffer));
 
-	if (!anyCamera)
+	if (!camera)
 	{
-		if (!approximatedAnyCamera_ || width != approximatedAnyCamera_->width() || height != approximatedAnyCamera_->height())
+		TemporaryScopedLock scopedLock(lock_);
+		
+		if (waitingForFirstFrame_)
 		{
-			const double fovX = bestMatchingFieldOfView(captureDevice_, width, height);
+			waitingForFirstFrame_ = false;
 
-			if (fovX > 0.0)
+			if (!camera_)
 			{
-				approximatedAnyCamera_ = std::make_shared<AnyCameraPinhole>(PinholeCamera(width, height, Scalar(fovX)));
+				camera_ = IO::CameraCalibrationManager::get().camera(url(), width, height);
+
+				if (camera_)
+				{
+					Log::debug() << "AVFLiveVideo: Using precise camera calibration for '" << url() << "', camera name: " << camera_->name() << ", with fovX: " << Numeric::rad2deg(camera_->fovX()) << "deg";
+				}
+				else
+				{
+					Log::debug() << "AVFLiveVideo: No precise camera calibration found for '" << url() << "', using default as provided by Android";
+				}
 			}
 			else
 			{
-				approximatedAnyCamera_ = nullptr;
+				Log::debug() << "AVFLiveVideo: Using custom camera calibration for '" << url() << "', camera name: " << camera_->name() << ", with fovX: " << Numeric::rad2deg(camera_->fovX()) << "deg";
 			}
 		}
+		
+		camera = camera_;
+		
+		scopedLock.release();
+		
+		if (!camera)
+		{
+			if (!approximatedCamera_ || width != approximatedCamera_->width() || height != approximatedCamera_->height())
+			{
+				const double fovX = bestMatchingFieldOfView(captureDevice_, width, height);
+
+				if (fovX > 0.0)
+				{
+					approximatedCamera_ = std::make_shared<AnyCameraPinhole>(PinholeCamera(width, height, Scalar(fovX)));
+				}
+				else
+				{
+					approximatedCamera_ = nullptr;
+				}
+			}
+		
+			camera = approximatedCamera_;
+		}		
 	}
 
-	AVFFrameMedium::onNewSample(pixelBuffer, anyCamera ? std::move(anyCamera) : approximatedAnyCamera_, unixTimestamp, frameTime);
+	AVFFrameMedium::onNewSample(pixelBuffer, std::move(camera), unixTimestamp, frameTime);
 }
 
 AVCaptureDeviceFormat* AVFLiveVideo::bestMatchingCaptureDeviceFormat(AVCaptureDevice* captureDevice, const unsigned int preferredWidth, const unsigned int preferredHeight, const double preferredFrameFrequency, const FrameType::PixelFormat preferredPixelFormat, double& explicitFrameRate)

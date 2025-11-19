@@ -37,7 +37,7 @@ AVFFrameMedium::~AVFFrameMedium()
 	// nothing to do here
 }
 
-void AVFFrameMedium::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera anyCamera, const double unixTimestamp, const double sampleTime)
+void AVFFrameMedium::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera camera, const double unixTimestamp, const double sampleTime)
 {
 	ocean_assert(pixelBuffer);
 
@@ -58,10 +58,19 @@ void AVFFrameMedium::onNewSample(CVPixelBufferRef pixelBuffer, SharedAnyCamera a
 		Log::debug() << "The frame type of the medium has changed now we receive a " << recentFrameType_.width() << "x" << recentFrameType_.height() << ", " << FrameType::translatePixelFormat(recentFrameType_.pixelFormat()) << " frame";
 	}
 
+	if (camera)
+	{
+		if (camera->width() != frame.width() || camera->height() != frame.height())
+		{
+			Log::warning() << "AVFFrameMedium: Camera profile has wrong image resolution " << camera->width() << "x" << camera->height() << " instead of " << frame.width() << "x" << frame.height();
+			camera = nullptr;
+		}
+	}
+
 	frame.setTimestamp(Timestamp(unixTimestamp));
 	frame.setRelativeTimestamp(Timestamp(sampleTime));
 
-	deliverNewFrame(std::move(frame), std::move(anyCamera));
+	deliverNewFrame(std::move(frame), std::move(camera));
 }
 
 }
