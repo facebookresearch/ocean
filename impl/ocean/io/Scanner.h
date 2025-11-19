@@ -189,7 +189,7 @@ class OCEAN_IO_EXPORT Scanner
 				bool isSymbol(const uint32_t symbol) const;
 
 				/**
-				 * Returns whether this token holds a end of file.
+				 * Returns whether this token holds an end of file.
 				 * @return True, if so
 				 */
 				inline bool isEndOfFile() const;
@@ -331,7 +331,7 @@ class OCEAN_IO_EXPORT Scanner
 
 		/**
 		 * Creates a new scanner using a stream as input.
-		 * @param stream The stream to be use as input
+		 * @param stream The stream to be used as input
 		 * @param progress Optional resulting scanner progress in percent, with range [0, 1]
 		 * @param cancel Optional scanner cancel flag
 		 */
@@ -374,13 +374,13 @@ class OCEAN_IO_EXPORT Scanner
 		const Token& lineToken();
 
 		/**
-		 * Return the recent token and pops it afterwards.
+		 * Returns the recent token and pops it afterwards.
 		 * @return Recent token.
 		 */
 		Token tokenPop();
 
 		/**
-		 * Returns a lookout to the next token.
+		 * Returns a lookahead to the next token.
 		 * @return Next token
 		 */
 		const Token& look();
@@ -465,10 +465,10 @@ class OCEAN_IO_EXPORT Scanner
 		/**
 		 * Creates a new scanner.
 		 * The scanner may forward an entire progress state, if the pointer value is defined.<br>
-		 * Beware: Make sure that the value exists during the whole scanning timer!<br>
+		 * Beware: Make sure that the value exists during the whole scanning time!<br>
 		 * Further, the scanner may be canceled by an explicit flag.<br>
 		 * In the case the scanner is canceled an end of file token is returned.<br>
-		 * Beware: As for the progress value, also the cancel object must exist during the whole scanning progress, if provided
+		 * Beware: As for the progress value, also the cancel object must exist during the whole scanning progress, if provided.
 		 * @param progress Optional progress parameter to forward the scanning progress with range [0, 1], use nullptr if the progress state is not necessary
 		 * @param cancel Optional cancel state to cancel the scanner progress by setting the flag to 'true', use nullptr if the cancel state is not necessary
 		 */
@@ -896,7 +896,7 @@ inline bool Scanner::isValid() const
 
 inline bool Scanner::isWhitespace(const char& character)
 {
-	return character == ' ' || character== '\t' || character == '\n' || character == '\r';
+	return character == ' ' || character == '\t' || character == '\n' || character == '\r';
 }
 
 inline std::shared_ptr<std::istream> Scanner::createInputStream(const std::string& filename, std::string&& buffer)

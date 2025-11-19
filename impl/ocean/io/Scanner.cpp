@@ -10,6 +10,8 @@
 #include "ocean/base/Exception.h"
 #include "ocean/base/String.h"
 
+#include "ocean/math/Numeric.h"
+
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -96,7 +98,15 @@ int Scanner::Token::integer() const
 	}
 
 	ocean_assert(data_.empty() == false);
-	return atoi(data_.c_str());
+
+	int32_t value = NumericT<int32_t>::minValue();
+
+	if (String::isInteger32(data_, &value))
+	{
+		return value;
+	}
+
+	throw OceanException(std::string("Failed to parse integer: ") + data_);
 }
 
 Scalar Scanner::Token::number() const
@@ -108,7 +118,15 @@ Scalar Scanner::Token::number() const
 	}
 
 	ocean_assert(data_.empty() == false);
-	return Scalar(atof(data_.c_str()));
+
+	double value = NumericD::minValue();
+
+	if (String::isNumber(data_, true /*acceptInteger*/, &value))
+	{
+		return Scalar(value);
+	}
+
+	throw OceanException(std::string("Failed to parse number: ") + data_);
 }
 
 Scalar Scanner::Token::integerOrNumber() const
@@ -291,38 +309,41 @@ Scanner::Scanner(float* progress, bool* cancel) :
 Scanner::Scanner(const std::shared_ptr<std::istream>& stream, float* progress, bool* cancel) :
 	Scanner(progress, cancel)
 {
-	if (!stream || !stream->fail())
+	if (!stream || stream->fail())
 	{
-		// skip possible utf8 bit order mask if exists
-		if (stream->peek() == 0xEF)
-		{
-			const uint8_t value0 = uint8_t(stream->get());
-			ocean_assert_and_suppress_unused(value0 == 0xEF, value0);
+		return;
+	}
 
-			if (stream->peek() != 0xBB)
+
+	// skip possible utf8 bit order mask if exists
+	if (stream->peek() == 0xEF)
+	{
+		const uint8_t value0 = uint8_t(stream->get());
+		ocean_assert_and_suppress_unused(value0 == 0xEF, value0);
+
+		if (stream->peek() != 0xBB)
+		{
+			stream->putback(char(uint8_t(0xEF)));
+		}
+		else
+		{
+			const uint8_t value1 = uint8_t(stream->get());
+			ocean_assert_and_suppress_unused(value1 == 0xBB, value1);
+
+			if (stream->peek() != 0xBF)
 			{
+				stream->putback(char(uint8_t(0xBB)));
 				stream->putback(char(uint8_t(0xEF)));
 			}
 			else
 			{
-				const uint8_t value1 = uint8_t(stream->get());
-				ocean_assert_and_suppress_unused(value1 == 0xBB, value1);
-
-				if (stream->peek() != 0xBF)
-				{
-					stream->putback(char(uint8_t(0xBB)));
-					stream->putback(char(uint8_t(0xEF)));
-				}
-				else
-				{
-					const uint8_t value2 = uint8_t(stream->get());
-					ocean_assert_and_suppress_unused(value2 == 0xBF, value2);
-				}
+				const uint8_t value2 = uint8_t(stream->get());
+				ocean_assert_and_suppress_unused(value2 == 0xBF, value2);
 			}
 		}
-
-		stream_ = stream;
 	}
+
+	stream_ = stream;
 }
 
 Scanner::~Scanner()
@@ -579,7 +600,7 @@ bool Scanner::refillIntermediateBuffer()
 		ocean_assert(extraBufferPointer_ != nullptr);
 		ocean_assert(extraBufferSize_ != 0);
 
-		const size_t copyFromExtraBuffer = min(extraBufferSize_ - intermediateBufferSize_, extraBufferSize_);
+		const size_t copyFromExtraBuffer = min(maxBufferSize_ - intermediateBufferSize_, extraBufferSize_);
 		ocean_assert(extraBufferSize_ >= copyFromExtraBuffer);
 
 		ocean_assert(intermediateBuffer_.isInside(intermediateBuffer_.data<uint8_t>() + intermediateBufferSize_, copyFromExtraBuffer));
@@ -631,6 +652,7 @@ bool Scanner::refillExtraBuffer(const size_t minIndex)
 {
 	ocean_assert(stream_);
 
+	ocean_assert(minIndex < SIZE_MAX - maxBufferSize_);
 	size_t newExtraBufferSize = maxBufferSize_ * (1 + (minIndex + 1) / maxBufferSize_);
 	Memory newExtraBuffer(newExtraBufferSize);
 
@@ -1358,18 +1380,35 @@ bool Scanner::readString(Token& token, const bool consumeBytes)
 	{
 		uint8_t c = get(pos++);
 
-		if (c == '\"' && get(pos - 2) != '\\')
+		if (c == '\"')
 		{
-			std::string stringValue = data(pos);
+			size_t backslashCount = 0;
+			size_t checkPos = pos - 2;
 
-			token = Token(stringValue.substr(1, stringValue.length() - 2), Token::TOKEN_STRING);
-
-			if (consumeBytes)
+			while (checkPos < pos - 1 && get(checkPos) == '\\')
 			{
-				consume(pos);
+				++backslashCount;
+				if (checkPos == 0)
+				{
+					break;
+				}
+				--checkPos;
 			}
 
-			return true;
+			// if even number of backslashes (including 0), the quote is not escaped
+			if (backslashCount % 2 == 0)
+			{
+				std::string stringValue = data(pos);
+
+				token = Token(stringValue.substr(1, stringValue.length() - 2), Token::TOKEN_STRING);
+
+				if (consumeBytes)
+				{
+					consume(pos);
+				}
+
+				return true;
+			}
 		}
 
 		if (c == 0)
