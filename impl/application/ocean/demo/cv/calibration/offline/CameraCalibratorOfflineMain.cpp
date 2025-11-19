@@ -43,7 +43,7 @@ using namespace Ocean::CV::Calibration;
 
 	CommandArguments commandArguments;
 	commandArguments.registerParameter("input", "i", "The input directory in which all the png images are located.");
-	commandArguments.registerParameter("calibrationBoard", "cb", "The calibration board to be used, e.g., 'calibrationBoard_0_8x11");
+	commandArguments.registerParameter("calibrationBoard", "cb", "The calibration board to be used, either the file containing a calibration board or a seed-based definition e.g., 'calibrationBoard_0_8x11");
 	commandArguments.registerParameter("measuredWidth", "mw", "The measured width of the calibration board in millimeters.");
 	commandArguments.registerParameter("measuredHeight", "mh", "The measured height of the calibration board in millimeters.");
 	commandArguments.registerParameter("cameraModel", "cm", "The camera model to be used, e.g., 'pinhole' or 'fisheye', if not defined the model is determined automatically");
@@ -378,19 +378,35 @@ using namespace Ocean::CV::Calibration;
 
 MetricCalibrationBoard determineCalibrationBoard(const CommandArguments& commandArguments)
 {
-	std::string calibrationBoardType;
-	if (!commandArguments.hasValue("calibrationBoard", calibrationBoardType))
+	std::string calibrationBoardString;
+	if (!commandArguments.hasValue("calibrationBoard", calibrationBoardString))
 	{
 		Log::error() << "Missing calibration board definition.";
 		return MetricCalibrationBoard();
 	}
 
 	CalibrationBoard calibrationBoard;
-	if (!CV::Calibration::Utilities::createCalibrationBoardFromSeed(calibrationBoardType, calibrationBoard))
+
+	const IO::File calibrationBoardFile(calibrationBoardString);
+
+	if (calibrationBoardFile.exists())
 	{
-		Log::error() << "The calibration board type '" << calibrationBoardType << "' could not be parsed.";
-		return MetricCalibrationBoard();
+		if (!CV::Calibration::Utilities::readCalibrationBoardFromFile(calibrationBoardFile(), calibrationBoard))
+		{
+			Log::error() << "The calibration board file '" << calibrationBoardFile() << "' could not be parsed.";
+			return MetricCalibrationBoard();
+		}
 	}
+	else
+	{
+		if (!CV::Calibration::Utilities::createCalibrationBoardFromSeed(calibrationBoardString, calibrationBoard))
+		{
+			Log::error() << "The calibration board type '" << calibrationBoardString << "' could not be parsed.";
+			return MetricCalibrationBoard();
+		}
+	}
+
+	ocean_assert(calibrationBoard.isValid());
 
 	double width = 0.0;
 	if (!commandArguments.hasValue("measuredWidth", width) || width <= 0.0)
