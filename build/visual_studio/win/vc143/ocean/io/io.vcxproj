@@ -191,6 +191,7 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\FileManager.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\FileResolver.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\JSONConfig.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\JSONParser.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Path.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\ProjectFile.cpp" />
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\Scanner.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\FileResolver.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\IO.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\JSONConfig.h" />
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\JSONParser.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Path.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\ProjectFile.h" />
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Scanner.h" />

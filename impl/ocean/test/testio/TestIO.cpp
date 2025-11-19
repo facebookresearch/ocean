@@ -11,6 +11,7 @@
 #include "ocean/test/testio/TestCompression.h"
 #include "ocean/test/testio/TestDirectory.h"
 #include "ocean/test/testio/TestFile.h"
+#include "ocean/test/testio/TestJSONParser.h"
 #include "ocean/test/testio/TestUtilities.h"
 
 #include "ocean/base/Build.h"
@@ -117,6 +118,14 @@ bool testIO(const double testDuration, const std::string& testFunctions)
 		Log::info() << "-";
 		Log::info() << " ";
 		allSucceeded = TestUtilities::test(testDuration) && allSucceeded;
+	}
+
+	if (testSet.empty() || testSet.find("jsonparser") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+		allSucceeded = TestJSONParser::test(testDuration) && allSucceeded;
 	}
 
 	Log::info() << " ";

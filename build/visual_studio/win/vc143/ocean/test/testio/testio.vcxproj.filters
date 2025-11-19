@@ -32,6 +32,9 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestUtilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestJSONParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestIO.cpp">
@@ -53,6 +56,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestUtilities.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestJSONParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

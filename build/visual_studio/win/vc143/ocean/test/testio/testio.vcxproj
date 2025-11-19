@@ -57,6 +57,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestDirectory.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestFile.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestIO.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestJSONParser.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestUtilities.h" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +67,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestDirectory.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestFile.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestIO.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestJSONParser.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestUtilities.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
