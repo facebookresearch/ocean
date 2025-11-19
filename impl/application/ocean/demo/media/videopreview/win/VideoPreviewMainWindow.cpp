@@ -9,12 +9,14 @@
 
 #include "ocean/media/Manager.h"
 
+#include "ocean/io/CameraCalibrationManager.h"
+
 VideoPreviewMainWindow::VideoPreviewMainWindow(HINSTANCE instance, const std::wstring& name) :
 	Window(instance, name),
 	BitmapWindow(instance, name),
 	ApplicationWindow(instance, name)
 {
-	// nothing to do here
+	IO::CameraCalibrationManager::get().registerCalibrations("c:\\fbsource\\xplat\\ocean\\res\\camera_calibration.json");
 }
 
 VideoPreviewMainWindow::~VideoPreviewMainWindow()

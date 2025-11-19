@@ -62,6 +62,9 @@
     <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\JSONParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\impl\ocean\io\CameraCalibrationManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\Directory.h">
@@ -116,6 +119,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\JSONParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\impl\ocean\io\CameraCalibrationManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
