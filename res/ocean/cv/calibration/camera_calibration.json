@@ -65,6 +65,88 @@
 					]
 				}
 			]
+		},
+
+		{
+			"product": "iPhone 15 Pro",
+			"version": "iPhone16,1",
+
+			"cameras":
+			[
+				{
+					"name": "Back Camera",
+
+					"priority": 10,
+
+					"calibrations":
+					[
+						{
+							"resolution": {"width": 640, "height": 480},
+
+							"model": "Ocean Pinhole",
+							"configuration": "8_PARAMETERS",
+							"parameters": [469.13816646, 468.72175100, 319.57216110, 239.00766349, 0.03733663, -0.08184585, 0.00002227, -0.00054947],
+
+							"comment": "FovX: 68.6 degrees"
+						},
+						{
+							"resolution": {"width": 1280, "height": 720},
+
+							"model": "Ocean Pinhole",
+							"configuration": "8_PARAMETERS",
+							"parameters": [873.85225789, 873.19817500, 638.95890573, 361.66992561, 0.04053737, -0.07891241, -0.00014304, -0.00006315],
+
+							"comment": "FovX: 72.4 degrees"
+						},
+						{
+							"resolution": {"width": 1440, "height": 1080},
+
+							"model": "Ocean Pinhole",
+							"configuration": "8_PARAMETERS",
+							"parameters": [1045.23655588, 1045.11384185, 718.58514300, 541.49232917, 0.03311589, -0.07784683, -0.00003611, -0.00010352],
+
+							"comment": "FovX: 69.1 degrees"
+						}
+					]
+				},
+
+				{
+					"name": "Back Ultra Wide Camera",
+
+					"priority": 10,
+
+					"calibrations":
+					[
+						{
+							"resolution": {"width": 640, "height": 480},
+
+							"model": "Ocean Fisheye",
+							"configuration": "12_PARAMETERS",
+							"parameters": [250.23161979, 250.19750048, 318.43139272, 241.92847121, 0.37755443, -0.28234069, 1.61919221, -2.79553668, 2.40695519, -0.76978933, -0.00043930, -0.00039167],
+
+							"comment": "FovX: 104.0 degrees"
+						},
+						{
+							"resolution": {"width": 1280, "height": 720},
+
+							"model": "Ocean Fisheye",
+							"configuration": "12_PARAMETERS",
+							"parameters": [471.03157772, 470.65832649, 636.98377338, 364.91845113, 0.39500823, -0.39811824, 2.01418651, -3.55594848, 3.11417707, -1.01849665, -0.00035502, -0.00045665],
+
+							"comment": "FovX: 107.3 degrees"
+						},
+						{
+							"resolution": {"width": 1440, "height": 1080},
+
+							"model": "Ocean Fisheye",
+							"configuration": "12_PARAMETERS",
+							"parameters": [581.04049266, 581.39032439, 716.20570446, 541.43163951, 0.40900883, -0.48708761, 2.36003030, -4.31508410, 3.88017874, -1.30356676, -0.00020936, -0.00049123],
+
+							"comment": "FovX: 102.2 degrees"
+						}
+					]
+				}
+			]
 		}
 	],
 
