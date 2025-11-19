@@ -36,7 +36,7 @@ using namespace Ocean::CV::Calibration;
 #endif
 
 	CommandArguments commandArguments;
-	commandArguments.registerParameter("boardId", "bi", "The id of the calibration board", Value(0));
+	commandArguments.registerParameter("boardSeed", "bs", "The seed of the calibration board", Value(0));
 	commandArguments.registerParameter("paper", "p", "The paper size for the SVG image, either 'a3', 'a4', 'letter', or 'tabloid'", Value("a4"));
 	commandArguments.registerParameter("boardDimension", "bd", "The explicit marker dimension of the calibration board to create, \n\te.g., '6x9' to create a board with 6 horizontal markers and 9 vertical markers,\n\tOnly for used for image types 'board' or 'board_with_dot'");
 	commandArguments.registerParameter("output", "o", "The optional explicit output file for created image");
@@ -139,8 +139,8 @@ using namespace Ocean::CV::Calibration;
 
 		const bool withCenterDot = imageType == "board_with_dot";
 
-		int32_t boardId = -1;
-		if (!commandArguments.hasValue("boardId", boardId) || boardId < 0)
+		int32_t boardSeed = -1;
+		if (!commandArguments.hasValue("boardSeed", boardSeed) || boardSeed < 0)
 		{
 			Log::error() << "Invalid calibration board id";
 			return 1;
@@ -164,7 +164,7 @@ using namespace Ocean::CV::Calibration;
 					Log::warning() << "Creating calibration board with " << horizontalMarkers << "x" << verticalMarkers << " markers, however, the optimal marker dimension would be " << horizontalMarkers << "x" << optimalVerticalMarkers;
 				}
 
-				if (!CalibrationBoard::createCalibrationBoard((unsigned int)(boardId), size_t(horizontalMarkers), size_t(verticalMarkers), calibrationBoard))
+				if (!CalibrationBoard::createCalibrationBoard((unsigned int)(boardSeed), size_t(horizontalMarkers), size_t(verticalMarkers), calibrationBoard))
 				{
 					Log::error() << "Failed to create calibration board with custom dimension " << horizontalMarkers << "x" << verticalMarkers;
 					return 1;
@@ -178,7 +178,7 @@ using namespace Ocean::CV::Calibration;
 		}
 		else
 		{
-			calibrationBoard = CV::Calibration::Utilities::createBoardForPaper(paperType, (unsigned int)(boardId));
+			calibrationBoard = CV::Calibration::Utilities::createBoardForPaper(paperType, (unsigned int)(boardSeed));
 		}
 
 		if (!calibrationBoard.isValid())
@@ -189,7 +189,7 @@ using namespace Ocean::CV::Calibration;
 
 		if (output.empty())
 		{
-			output = "calibrationBoard_" + paperTypeString + "_" + String::toAString(boardId) + "_" + String::toAString(calibrationBoard.xMarkers()) + "x" + String::toAString(calibrationBoard.yMarkers()) + ".svg";
+			output = "calibrationBoard_" + paperTypeString + "_" + String::toAString(boardSeed) + "_" + String::toAString(calibrationBoard.xMarkers()) + "x" + String::toAString(calibrationBoard.yMarkers()) + ".svg";
 		}
 
 		const bool debugImage = commandArguments.hasValue("debugInformation");

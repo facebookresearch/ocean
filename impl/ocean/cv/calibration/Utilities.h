@@ -88,13 +88,13 @@ class OCEAN_CV_CALIBRATION_EXPORT Utilities
 		static Frame visualizeDistortionValidity(const CameraProjectionChecker& cameraProjectionChecker, const bool inPixelDomain = true);
 
 		/**
-		 * Parses the type of a calibration board from a string.
-		 * The string must have the format 'calibrationBoard_<Id>_<HorizontalMarkers>x<VerticalMarkers> - e.g., 'calibrationBoard_0_8x13'
+		 * Creates a calibration board based on a seed and the board's dimension.
+		 * The string must have the format 'calibrationBoard_<Seed>_<HorizontalMarkers>x<VerticalMarkers> - e.g., 'calibrationBoard_0_8x13'
 		 * @param calibrationBoardType The string with the calibration board type to parse
 		 * @param calibrationBoard The resulting calibration board
 		 * @return True, if succeeded
 		 */
-		static bool parseCalibrationBoard(const std::string& calibrationBoardType, CalibrationBoard& calibrationBoard);
+		static bool createCalibrationBoardFromSeed(const std::string& calibrationBoardType, CalibrationBoard& calibrationBoard);
 
 		/**
 		 * Parses the marker dimension from a string.

@@ -351,7 +351,7 @@ Frame Utilities::visualizeDistortionValidity(const CameraProjectionChecker& came
 	return yFrame;
 }
 
-bool Utilities::parseCalibrationBoard(const std::string& calibrationBoardType, CalibrationBoard& calibrationBoard)
+bool Utilities::createCalibrationBoardFromSeed(const std::string& calibrationBoardType, CalibrationBoard& calibrationBoard)
 {
 	ocean_assert(!calibrationBoardType.empty());
 
@@ -362,20 +362,20 @@ bool Utilities::parseCalibrationBoard(const std::string& calibrationBoardType, C
 		return false;
 	}
 
-	const std::string::size_type idPosition = lowerCalibrationBoardType.find('_', 17);
+	const std::string::size_type seedPosition = lowerCalibrationBoardType.find('_', 17);
 
-	int32_t calibrationBoardId = -1;
-	if (idPosition == std::string::npos)
+	int32_t calibrationBoardSeed = -1;
+	if (seedPosition == std::string::npos)
 	{
 		return false;
 	}
 
-	if (!String::isInteger32(lowerCalibrationBoardType.substr(17, idPosition - 17), &calibrationBoardId))
+	if (!String::isInteger32(lowerCalibrationBoardType.substr(17, seedPosition - 17), &calibrationBoardSeed))
 	{
 		return false;
 	}
 
-	if (calibrationBoardId < 0)
+	if (calibrationBoardSeed < 0)
 	{
 		return false;
 	}
@@ -383,14 +383,14 @@ bool Utilities::parseCalibrationBoard(const std::string& calibrationBoardType, C
 	int32_t calibrationHorizontalMarkers = -1;
 	int32_t calibrationVerticalMarkers = -1;
 
-	if (!parseMarkerDimension(lowerCalibrationBoardType.substr(idPosition + 1), calibrationHorizontalMarkers, calibrationVerticalMarkers))
+	if (!parseMarkerDimension(lowerCalibrationBoardType.substr(seedPosition + 1), calibrationHorizontalMarkers, calibrationVerticalMarkers))
 	{
 		return false;
 	}
 
 	ocean_assert(calibrationHorizontalMarkers >= 0 && calibrationVerticalMarkers >= 0);
 
-	return CalibrationBoard::createCalibrationBoard((unsigned int)(calibrationBoardId), size_t(calibrationHorizontalMarkers), size_t(calibrationVerticalMarkers), calibrationBoard);
+	return CalibrationBoard::createCalibrationBoard((unsigned int)(calibrationBoardSeed), size_t(calibrationHorizontalMarkers), size_t(calibrationVerticalMarkers), calibrationBoard);
 }
 
 bool Utilities::parseMarkerDimension(const std::string& markerDimension, int32_t& horizontalMarkers, int32_t& verticalMarkers)

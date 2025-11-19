@@ -255,18 +255,17 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoard
 
 		/**
 		 * Creates a new calibration board.
-		 * @param id The unique id of the calibration board, with range [0, infinity)
 		 * @param xMarkers The number of horizontal markers the calibration board will have, with range [1, infinity)
 		 * @param yMarkers The number of vertical markers the calibration board will have, with range [1, infinity)
 		 * @param boardMarkers The board markers of the calibration board, must be xMarkers * yMarkers markers
 		 */
-		CalibrationBoard(const unsigned int id, const size_t xMarkers, const size_t yMarkers, BoardMarkers&& boardMarkers);
+		CalibrationBoard(const size_t xMarkers, const size_t yMarkers, BoardMarkers&& boardMarkers);
 
 		/**
-		 * Returns the id of this calibration board.
-		 * @return The calibration board's id, with range [0, infinity)
+		 * Returns the hash of this calibration board.
+		 * @return The calibration board's hash
 		 */
-		inline unsigned int id() const;
+		inline uint64_t hash() const;
 
 		/**
 		 * Returns the board marker at a specific position.
@@ -324,14 +323,15 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoard
 		inline bool isValid() const;
 
 		/**
-		 * Creates a unique calibration board based on a unique board id (the seed) and the number of markers the board has.
-		 * @param id The unique board id defining the seed for the random number generator, with range [0, infinity)
+		 * Creates a unique calibration board based on a unique seed value and the number of markers the board has.
+		 * In case the underlying random generator implementation is changing, the resulting calibration board may change as well.
+		 * @param seed The seed value which is used for the random number generator to create a unique board, with range [0, infinity)
 		 * @param xMarkers The number of horizontal markers the calibration board will have, with range [1, infinity)
 		 * @param yMarkers The number of vertical markers the calibration board will have, with range [1, infinity)
 		 * @param calibrationBoard The resulting calibration board
 		 * @return True, if succeeded
 		 */
-		static bool createCalibrationBoard(const unsigned int id, const size_t xMarkers, const size_t yMarkers, CalibrationBoard& calibrationBoard);
+		static bool createCalibrationBoard(const unsigned int seed, const size_t xMarkers, const size_t yMarkers, CalibrationBoard& calibrationBoard);
 
 		/**
 		 * Determines the optimal marker grid for a calibration board with specific aspect ratio and number of markers.
@@ -412,9 +412,6 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoard
 
 	protected:
 
-		/// The id of this calibration board, with range [0, infinity)
-		unsigned int id_ = (unsigned int)(-1);
-
 		/// The number of horizontal markers of this calibration board, with range [1, infinity).
 		size_t xMarkers_ = 0;
 
@@ -426,6 +423,9 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoard
 
 		/// The map mapping marker types to marker coordinates (allows to determine the marker coordinates of all markers with specific id and sign).
 		MarkerIdMap markerIdMap_;
+
+		/// The hash of this calibration board.
+		uint64_t hash_ = 0ull;
 };
 
 inline CalibrationBoard::BoardMarker::BoardMarker(const size_t markerId, const bool sign, const CV::PixelDirection orientation, const MarkerCoordinate& coordinate) :
@@ -528,9 +528,9 @@ inline bool CalibrationBoard::ObjectPointId::operator==(const ObjectPointId& obj
 	return objectPointId.markerCoordinate_ == markerCoordinate_ && objectPointId.indexInMarker_ == indexInMarker_;
 }
 
-inline unsigned int CalibrationBoard::id() const
+inline uint64_t CalibrationBoard::hash() const
 {
-	return id_;
+	return hash_;
 }
 
 inline const CalibrationBoard::BoardMarker& CalibrationBoard::marker(const MarkerCoordinate& markerCoordinate) const
@@ -571,7 +571,7 @@ inline size_t CalibrationBoard::numberPoints() const
 
 bool CalibrationBoard::isValid() const
 {
-	return id_ != (unsigned int)(-1) && xMarkers_ >= 1 && yMarkers_ >= 1;
+	return xMarkers_ >= 1 && yMarkers_ >= 1;
 }
 
 }

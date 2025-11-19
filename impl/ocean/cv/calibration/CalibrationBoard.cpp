@@ -96,8 +96,7 @@ CalibrationBoard::MarkerCoordinate CalibrationBoard::BoardMarker::boardMarkerNei
 	return neighborCoordinate;
 }
 
-CalibrationBoard::CalibrationBoard(const unsigned int id, const size_t xMarkers, const size_t yMarkers, BoardMarkers&& boardMarkers) :
-	id_(id),
+CalibrationBoard::CalibrationBoard(const size_t xMarkers, const size_t yMarkers, BoardMarkers&& boardMarkers) :
 	xMarkers_(xMarkers),
 	yMarkers_(yMarkers),
 	boardMarkers_(std::move(boardMarkers))
@@ -105,10 +104,8 @@ CalibrationBoard::CalibrationBoard(const unsigned int id, const size_t xMarkers,
 	ocean_assert(xMarkers_ >= 1 && yMarkers_ >= 1);
 	ocean_assert(xMarkers_ * yMarkers_ == boardMarkers_.size());
 
-	if (xMarkers_ == 0 || yMarkers_ == 0 || xMarkers_ * yMarkers_ != boardMarkers_.size() || id_ == (unsigned int)(-1))
+	if (xMarkers_ == 0 || yMarkers_ == 0 || xMarkers_ * yMarkers_ != boardMarkers_.size())
 	{
-		id_ = (unsigned int)(-1);
-
 		xMarkers_ = 0;
 		yMarkers_ = 0;
 
@@ -129,6 +126,8 @@ CalibrationBoard::CalibrationBoard(const unsigned int id, const size_t xMarkers,
 			markerCoordinates.pushBack(MarkerCoordinate((unsigned int)(xMarker), (unsigned int)(yMarker)));
 		}
 	}
+
+	hash_ = hash(*this);
 }
 
 bool CalibrationBoard::containsMarkerCandidateWithNeighborhood(const MarkerCandidates& markerCandidates, const size_t markerCandidateIndex, MarkerCoordinate* markerCoordinate, NeighborMarkerCoordinateMap* neighborMarkerCoordinateMap) const
@@ -230,7 +229,7 @@ bool CalibrationBoard::containsMarkerCandidateWithNeighborhood(const MarkerCandi
 	return false;
 }
 
-bool CalibrationBoard::createCalibrationBoard(const unsigned int id, const size_t xMarkers, const size_t yMarkers, CalibrationBoard& calibrationBoard)
+bool CalibrationBoard::createCalibrationBoard(const unsigned int seed, const size_t xMarkers, const size_t yMarkers, CalibrationBoard& calibrationBoard)
 {
 	ocean_assert(xMarkers >= 1 && yMarkers >= 1);
 	if (xMarkers == 0 || yMarkers == 0)
@@ -240,14 +239,14 @@ bool CalibrationBoard::createCalibrationBoard(const unsigned int id, const size_
 
 	BoardMarkers boardMarkers;
 
-	if (!createUniqueBoardMarkers(id, xMarkers, yMarkers, boardMarkers))
+	if (!createUniqueBoardMarkers(seed, xMarkers, yMarkers, boardMarkers))
 	{
 		return false;
 	}
 
 	ocean_assert(boardMarkers.size() == xMarkers * yMarkers);
 
-	calibrationBoard = CalibrationBoard(id, xMarkers, yMarkers, std::move(boardMarkers));
+	calibrationBoard = CalibrationBoard(xMarkers, yMarkers, std::move(boardMarkers));
 
 	return true;
 }

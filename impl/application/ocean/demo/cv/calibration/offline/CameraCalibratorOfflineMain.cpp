@@ -386,7 +386,7 @@ MetricCalibrationBoard determineCalibrationBoard(const CommandArguments& command
 	}
 
 	CalibrationBoard calibrationBoard;
-	if (!CV::Calibration::Utilities::parseCalibrationBoard(calibrationBoardType, calibrationBoard))
+	if (!CV::Calibration::Utilities::createCalibrationBoardFromSeed(calibrationBoardType, calibrationBoard))
 	{
 		Log::error() << "The calibration board type '" << calibrationBoardType << "' could not be parsed.";
 		return MetricCalibrationBoard();
