@@ -209,6 +209,23 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		bool registerFactoryFunction(const std::string& modelName, FactoryFunction&& factoryFunction);
 
 		/**
+		 * Parses one camera calibration from a file or a string/buffer containing the JSON calibration object for only one camera model.
+		 * The provided JSON object must have the following structure:
+		 * <pre>
+		 * {
+		 *    "resolution": {"width": <WIDTH_IN_PIXELS>, "height": <HEIGHT_IN_PIXELS>},
+		 *    "model": "<MODEL_NAME>",
+		 *    "configuration": "<PARAMETER_CONFIGURATION>",
+		 *    "parameters": [<PARAMETER_1>, <PARAMETER_2>, ...],
+		 * }
+		 * </pre>
+		 * @param jsonCameraCalibrationFile The file path of the JSON calibration file, empty in case a buffer is provided via 'jsonCameraCalibrationBuffer'
+		 * @param jsonCameraCalibrationBuffer The JSON string/buffer containing the camera calibration, empty in case a file is provided via 'jsonCameraCalibrationFile'
+		 * @return The parsed camera object, nullptr in case of an error
+		 */
+		SharedAnyCamera parseCamera(const std::string& jsonCameraCalibrationFile, std::string&& jsonCameraCalibration = std::string()) const;
+
+		/**
 		 * Clears all registered calibrations and aliases.
 		 * This function does not remove registered factory functions.
 		 */

@@ -343,6 +343,44 @@ bool CameraCalibrationManager::registerFactoryFunction(const std::string& modelN
 	return factoryFunctionMap_.emplace(modelName, std::move(factoryFunction)).second;
 }
 
+SharedAnyCamera CameraCalibrationManager::parseCamera(const std::string& jsonCameraCalibrationFile, std::string&& jsonCameraCalibratio) const
+{
+	ocean_assert(!jsonCameraCalibrationFile.empty() || !jsonCameraCalibratio.empty());
+	ocean_assert(jsonCameraCalibrationFile.empty() || jsonCameraCalibratio.empty());
+
+	if (jsonCameraCalibrationFile.empty() && jsonCameraCalibratio.empty())
+	{
+		return nullptr;
+	}
+
+	std::string errorMessage;
+	const JSONParser::JSONValue jsonValue = JSONParser::parse(jsonCameraCalibrationFile, jsonCameraCalibratio, &errorMessage);
+
+	if (!jsonValue.isValid())
+	{
+		Log::error() << "Failed to parse camera calibration: " << errorMessage;
+		return nullptr;
+	}
+
+	const std::string* modelString = jsonValue.stringFromObject("model");
+
+	if (modelString == nullptr)
+	{
+		return nullptr;
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	const FactoryFunctionMap::const_iterator iFactory = factoryFunctionMap_.find(*modelString);
+	if (iFactory == factoryFunctionMap_.end())
+	{
+		Log::error() << "No factory registered for camera model '" << *modelString << "'";
+		return nullptr;
+	}
+
+	return iFactory->second(jsonValue);
+}
+
 void CameraCalibrationManager::clear()
 {
 	const ScopedLock scopedLock(lock_);
