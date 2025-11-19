@@ -106,31 +106,27 @@ class OCEAN_TEST_IO_EXPORT TestJSONParser
 
 		/**
 		 * Tests parsing of JSON objects.
-		 * @param testDuration The number of seconds for each test
 		 * @return True, if succeeded
 		 */
-		static bool testObjects(const double testDuration);
+		static bool testObjects();
 
 		/**
 		 * Tests parsing of nested JSON structures.
-		 * @param testDuration The number of seconds for each test
 		 * @return True, if succeeded
 		 */
-		static bool testNestedStructures(const double testDuration);
+		static bool testNestedStructures();
 
 		/**
 		 * Tests error handling with invalid JSON.
-		 * @param testDuration The number of seconds for each test
 		 * @return True, if succeeded
 		 */
-		static bool testErrorHandling(const double testDuration);
+		static bool testErrorHandling();
 
 		/**
 		 * Tests parsing from different input sources (file, buffer, stream).
-		 * @param testDuration The number of seconds for each test
 		 * @return True, if succeeded
 		 */
-		static bool testInputSources(const double testDuration);
+		static bool testInputSources();
 
 		/**
 		 * Tests parsing of randomly generated JSON structures.
@@ -141,10 +137,9 @@ class OCEAN_TEST_IO_EXPORT TestJSONParser
 
 		/**
 		* Tests strict and lenient parsing modes (trailing commas).
-		* @param testDuration The number of seconds for each test
 		* @return True, if succeeded
 		*/
-		static bool testStrictAndLenientParsing(const double testDuration);
+		static bool testStrictAndLenientParsing();
 
 	protected:
 

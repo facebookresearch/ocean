@@ -217,19 +217,19 @@ bool TestJSONParser::test(const double testDuration)
 
 	Log::info() << " ";
 
-	allSucceeded = testObjects(testDuration) && allSucceeded;
+	allSucceeded = testObjects() && allSucceeded;
 
 	Log::info() << " ";
 
-	allSucceeded = testNestedStructures(testDuration) && allSucceeded;
+	allSucceeded = testNestedStructures() && allSucceeded;
 
 	Log::info() << " ";
 
-	allSucceeded = testErrorHandling(testDuration) && allSucceeded;
+	allSucceeded = testErrorHandling() && allSucceeded;
 
 	Log::info() << " ";
 
-	allSucceeded = testInputSources(testDuration) && allSucceeded;
+	allSucceeded = testInputSources() && allSucceeded;
 
 	Log::info() << " ";
 
@@ -237,7 +237,7 @@ bool TestJSONParser::test(const double testDuration)
 
 	Log::info() << " ";
 
-	allSucceeded = testStrictAndLenientParsing(testDuration) && allSucceeded;
+	allSucceeded = testStrictAndLenientParsing() && allSucceeded;
 
 	Log::info() << " ";
 
@@ -267,27 +267,32 @@ TEST(TestJSONParser, Arrays)
 
 TEST(TestJSONParser, Objects)
 {
-	EXPECT_TRUE(TestJSONParser::testObjects(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestJSONParser::testObjects());
 }
 
 TEST(TestJSONParser, NestedStructures)
 {
-	EXPECT_TRUE(TestJSONParser::testNestedStructures(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestJSONParser::testNestedStructures());
 }
 
 TEST(TestJSONParser, ErrorHandling)
 {
-	EXPECT_TRUE(TestJSONParser::testErrorHandling(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestJSONParser::testErrorHandling());
 }
 
 TEST(TestJSONParser, InputSources)
 {
-	EXPECT_TRUE(TestJSONParser::testInputSources(GTEST_TEST_DURATION));
+	EXPECT_TRUE(TestJSONParser::testInputSources());
 }
 
 TEST(TestJSONParser, RandomJSON)
 {
 	EXPECT_TRUE(TestJSONParser::testRandomJSON(GTEST_TEST_DURATION));
+}
+
+TEST(TestJSONParser, StrictAndLenientParsing)
+{
+	EXPECT_TRUE(TestJSONParser::testStrictAndLenientParsing());
 }
 
 #endif // OCEAN_USE_GTEST
@@ -331,6 +336,18 @@ bool TestJSONParser::testPrimitives(const double testDuration)
 		OCEAN_EXPECT_TRUE(validation, value.isValid());
 		OCEAN_EXPECT_TRUE(validation, value.isBoolean());
 		OCEAN_EXPECT_FALSE(validation, value.boolean());
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+	}
+
+	{
+		// empty string
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "\"\"", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isString());
+		OCEAN_EXPECT_TRUE(validation, value.string().empty());
 		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
 	}
 
@@ -383,7 +400,11 @@ bool TestJSONParser::testPrimitives(const double testDuration)
 		{
 			// string
 
-			const std::string testString = "Hello, JSON World!";
+			std::string testString = "Hello, JSON World!";
+
+			const unsigned int randomIndex = RandomI::random(randomGenerator, 0u, (unsigned int)(testString.size() - 1u));
+			testString[randomIndex] = char('a') + char(RandomI::random(randomGenerator, 0u, 25u));
+
 			const std::string jsonData = "\"" + testString + "\"";
 
 			std::string errorMessage;
@@ -392,18 +413,6 @@ bool TestJSONParser::testPrimitives(const double testDuration)
 			OCEAN_EXPECT_TRUE(validation, value.isValid());
 			OCEAN_EXPECT_TRUE(validation, value.isString());
 			OCEAN_EXPECT_EQUAL(validation, value.string(), testString);
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-		}
-
-		{
-			// empty string
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "\"\"", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isString());
-			OCEAN_EXPECT_TRUE(validation, value.string().empty());
 			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
 		}
 	}
@@ -433,6 +442,71 @@ bool TestJSONParser::testArrays(const double testDuration)
 		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
 	}
 
+	{
+		// array with multiple elements
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1, 2, 3, 4, 5]", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isArray());
+		OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(5));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		if (value && value.isArray() && value.array().size() == 5)
+		{
+			const IO::JSONParser::JSONValue::Array& array = value.array();
+			for (size_t i = 0; i < array.size(); ++i)
+			{
+				OCEAN_EXPECT_TRUE(validation, array[i].isNumber());
+				OCEAN_EXPECT_EQUAL(validation, array[i].number(), double(i + 1));
+			}
+		}
+	}
+
+	{
+		// array with mixed types
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[null, true, false, 73, \"test\"]", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isArray());
+		OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(5));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		if (value && value.isArray() && value.array().size() == 5)
+		{
+			const IO::JSONParser::JSONValue::Array& array = value.array();
+
+			OCEAN_EXPECT_TRUE(validation, array[0].isNull());
+
+			OCEAN_EXPECT_TRUE(validation, array[1].isBoolean());
+			OCEAN_EXPECT_TRUE(validation, array[1].boolean());
+
+			OCEAN_EXPECT_TRUE(validation, array[2].isBoolean());
+			OCEAN_EXPECT_FALSE(validation, array[2].boolean());
+
+			OCEAN_EXPECT_TRUE(validation, array[3].isNumber());
+			OCEAN_EXPECT_EQUAL(validation, array[3].number(), 73.0);
+
+			OCEAN_EXPECT_TRUE(validation, array[4].isString());
+			OCEAN_EXPECT_EQUAL(validation, array[4].string(), std::string("test"));
+		}
+	}
+
+	{
+		// array with whitespace
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[ 1 , 2 , 3 ]", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isArray());
+		OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(3));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+	}
+
 	const Timestamp startTimestamp(true);
 
 	do
@@ -458,71 +532,6 @@ bool TestJSONParser::testArrays(const double testDuration)
 				OCEAN_EXPECT_TRUE(validation, NumericD::isEqual(array[0].number(), numberValue, 0.001));
 			}
 		}
-
-		{
-			// array with multiple elements
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1, 2, 3, 4, 5]", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isArray());
-			OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(5));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			if (value && value.isArray() && value.array().size() == 5)
-			{
-				const IO::JSONParser::JSONValue::Array& array = value.array();
-				for (size_t i = 0; i < array.size(); ++i)
-				{
-					OCEAN_EXPECT_TRUE(validation, array[i].isNumber());
-					OCEAN_EXPECT_EQUAL(validation, array[i].number(), double(i + 1));
-				}
-			}
-		}
-
-		{
-			// array with mixed types
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[null, true, false, 73, \"test\"]", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isArray());
-			OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(5));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			if (value && value.isArray() && value.array().size() == 5)
-			{
-				const IO::JSONParser::JSONValue::Array& array = value.array();
-
-				OCEAN_EXPECT_TRUE(validation, array[0].isNull());
-
-				OCEAN_EXPECT_TRUE(validation, array[1].isBoolean());
-				OCEAN_EXPECT_TRUE(validation, array[1].boolean());
-
-				OCEAN_EXPECT_TRUE(validation, array[2].isBoolean());
-				OCEAN_EXPECT_FALSE(validation, array[2].boolean());
-
-				OCEAN_EXPECT_TRUE(validation, array[3].isNumber());
-				OCEAN_EXPECT_EQUAL(validation, array[3].number(), 73.0);
-
-				OCEAN_EXPECT_TRUE(validation, array[4].isString());
-				OCEAN_EXPECT_EQUAL(validation, array[4].string(), std::string("test"));
-			}
-		}
-
-		{
-			// array with whitespace
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[ 1 , 2 , 3 ]", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isArray());
-			OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(3));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
 
@@ -531,12 +540,11 @@ bool TestJSONParser::testArrays(const double testDuration)
 	return validation.succeeded();
 }
 
-bool TestJSONParser::testObjects(const double testDuration)
+bool TestJSONParser::testObjects()
 {
 	Log::info() << "Objects test:";
 
-	RandomGenerator randomGenerator;
-	Validation validation(randomGenerator);
+	Validation validation;
 
 	{
 		// empty object
@@ -550,307 +558,295 @@ bool TestJSONParser::testObjects(const double testDuration)
 		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
 	}
 
-	const Timestamp startTimestamp(true);
-
-	do
 	{
+		// object with single key-value pair
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\": \"value\"}", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isObject());
+		OCEAN_EXPECT_EQUAL(validation, value.object().size(), size_t(1));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		if (value && value.isObject() && value.object().size() == 1)
 		{
-			// object with single key-value pair
+			const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iKey = object.find("key");
 
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\": \"value\"}", false, &errorMessage);
+			OCEAN_EXPECT_TRUE(validation, iKey != object.end());
 
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isObject());
-			OCEAN_EXPECT_EQUAL(validation, value.object().size(), size_t(1));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			if (value && value.isObject() && value.object().size() == 1)
+			if (iKey != object.end())
 			{
-				const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iKey = object.find("key");
-
-				OCEAN_EXPECT_TRUE(validation, iKey != object.end());
-
-				if (iKey != object.end())
-				{
-					OCEAN_EXPECT_TRUE(validation, iKey->second.isString());
-					OCEAN_EXPECT_EQUAL(validation, iKey->second.string(), std::string("value"));
-				}
+				OCEAN_EXPECT_TRUE(validation, iKey->second.isString());
+				OCEAN_EXPECT_EQUAL(validation, iKey->second.string(), std::string("value"));
 			}
-		}
-
-		{
-			// object with multiple key-value pairs
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"name\": \"test\", \"age\": 59, \"active\": true}", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isObject());
-			OCEAN_EXPECT_EQUAL(validation, value.object().size(), size_t(3));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			if (value && value.isObject() && value.object().size() == 3)
-			{
-				const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
-
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iName = object.find("name");
-				OCEAN_EXPECT_TRUE(validation, iName != object.end());
-
-				if (iName != object.end())
-				{
-					OCEAN_EXPECT_TRUE(validation, iName->second.isString());
-					OCEAN_EXPECT_EQUAL(validation, iName->second.string(), std::string("test"));
-				}
-
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iAge = object.find("age");
-				OCEAN_EXPECT_TRUE(validation, iAge != object.end());
-
-				if (iAge != object.end())
-				{
-					OCEAN_EXPECT_TRUE(validation, iAge->second.isNumber());
-					OCEAN_EXPECT_EQUAL(validation, iAge->second.number(), 59.0);
-				}
-
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iActive = object.find("active");
-				OCEAN_EXPECT_TRUE(validation, iActive != object.end());
-
-				if (iActive != object.end())
-				{
-					OCEAN_EXPECT_TRUE(validation, iActive->second.isBoolean());
-					OCEAN_EXPECT_TRUE(validation, iActive->second.boolean());
-				}
-			}
-		}
-
-		{
-			// object with whitespace
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{ \"key\" : \"value\" }", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isObject());
-			OCEAN_EXPECT_EQUAL(validation, value.object().size(), size_t(1));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+
+	{
+		// object with multiple key-value pairs
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"name\": \"test\", \"age\": 59, \"active\": true}", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isObject());
+		OCEAN_EXPECT_EQUAL(validation, value.object().size(), size_t(3));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		if (value && value.isObject() && value.object().size() == 3)
+		{
+			const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
+
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iName = object.find("name");
+			OCEAN_EXPECT_TRUE(validation, iName != object.end());
+
+			if (iName != object.end())
+			{
+				OCEAN_EXPECT_TRUE(validation, iName->second.isString());
+				OCEAN_EXPECT_EQUAL(validation, iName->second.string(), std::string("test"));
+			}
+
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iAge = object.find("age");
+			OCEAN_EXPECT_TRUE(validation, iAge != object.end());
+
+			if (iAge != object.end())
+			{
+				OCEAN_EXPECT_TRUE(validation, iAge->second.isNumber());
+				OCEAN_EXPECT_EQUAL(validation, iAge->second.number(), 59.0);
+			}
+
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iActive = object.find("active");
+			OCEAN_EXPECT_TRUE(validation, iActive != object.end());
+
+			if (iActive != object.end())
+			{
+				OCEAN_EXPECT_TRUE(validation, iActive->second.isBoolean());
+				OCEAN_EXPECT_TRUE(validation, iActive->second.boolean());
+			}
+		}
+	}
+
+	{
+		// object with whitespace
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{ \"key\" : \"value\" }", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isObject());
+		OCEAN_EXPECT_EQUAL(validation, value.object().size(), size_t(1));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+	}
 
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
 }
 
-bool TestJSONParser::testNestedStructures(const double testDuration)
+bool TestJSONParser::testNestedStructures()
 {
 	Log::info() << "Nested structures test:";
 
-	RandomGenerator randomGenerator;
-	Validation validation(randomGenerator);
+	Validation validation;
 
-	const Timestamp startTimestamp(true);
-
-	do
 	{
+		// nested arrays
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[[1, 2], [3, 4], [5, 6]]", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isArray());
+		OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(3));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		if (value && value.isArray() && value.array().size() == 3)
 		{
-			// nested arrays
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[[1, 2], [3, 4], [5, 6]]", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isArray());
-			OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(3));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			if (value && value.isArray() && value.array().size() == 3)
+			const IO::JSONParser::JSONValue::Array& array = value.array();
+			for (size_t i = 0; i < array.size(); ++i)
 			{
-				const IO::JSONParser::JSONValue::Array& array = value.array();
-				for (size_t i = 0; i < array.size(); ++i)
-				{
-					OCEAN_EXPECT_TRUE(validation, array[i].isArray());
-					OCEAN_EXPECT_EQUAL(validation, array[i].array().size(), size_t(2));
-				}
+				OCEAN_EXPECT_TRUE(validation, array[i].isArray());
+				OCEAN_EXPECT_EQUAL(validation, array[i].array().size(), size_t(2));
 			}
 		}
+	}
 
+	{
+		// nested objects
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"outer\": {\"inner\": \"value\"}}", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isObject());
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		if (value && value.isObject())
 		{
-			// nested objects
+			const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
 
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"outer\": {\"inner\": \"value\"}}", false, &errorMessage);
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iOuter = object.find("outer");
+			OCEAN_EXPECT_TRUE(validation, iOuter != object.end());
 
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isObject());
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			if (value && value.isObject())
+			if (iOuter != object.end())
 			{
-				const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
+				OCEAN_EXPECT_TRUE(validation, iOuter->second.isObject());
 
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iOuter = object.find("outer");
-				OCEAN_EXPECT_TRUE(validation, iOuter != object.end());
-
-				if (iOuter != object.end())
+				if (iOuter->second.isObject())
 				{
-					OCEAN_EXPECT_TRUE(validation, iOuter->second.isObject());
+					const IO::JSONParser::JSONValue::ObjectMap& innerObject = iOuter->second.object();
 
-					if (iOuter->second.isObject())
+					IO::JSONParser::JSONValue::ObjectMap::const_iterator iInner = innerObject.find("inner");
+					OCEAN_EXPECT_TRUE(validation, iInner != innerObject.end());
+
+					if (iInner != innerObject.end())
 					{
-						const IO::JSONParser::JSONValue::ObjectMap& innerObject = iOuter->second.object();
-
-						IO::JSONParser::JSONValue::ObjectMap::const_iterator iInner = innerObject.find("inner");
-						OCEAN_EXPECT_TRUE(validation, iInner != innerObject.end());
-
-						if (iInner != innerObject.end())
-						{
-							OCEAN_EXPECT_TRUE(validation, iInner->second.isString());
-							OCEAN_EXPECT_EQUAL(validation, iInner->second.string(), std::string("value"));
-						}
+						OCEAN_EXPECT_TRUE(validation, iInner->second.isString());
+						OCEAN_EXPECT_EQUAL(validation, iInner->second.string(), std::string("value"));
 					}
 				}
 			}
 		}
+	}
 
+	{
+		// array of objects
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[{\"id\": 1}, {\"id\": 2}, {\"id\": 3}]", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isArray());
+		OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(3));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		if (value && value.isArray() && value.array().size() == 3)
 		{
-			// array of objects
+			const IO::JSONParser::JSONValue::Array& array = value.array();
 
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[{\"id\": 1}, {\"id\": 2}, {\"id\": 3}]", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isArray());
-			OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(3));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			if (value && value.isArray() && value.array().size() == 3)
+			for (size_t i = 0; i < array.size(); ++i)
 			{
-				const IO::JSONParser::JSONValue::Array& array = value.array();
+				OCEAN_EXPECT_TRUE(validation, array[i].isObject());
 
-				for (size_t i = 0; i < array.size(); ++i)
+				if (array[i].isObject())
 				{
-					OCEAN_EXPECT_TRUE(validation, array[i].isObject());
+					const IO::JSONParser::JSONValue::ObjectMap& object = array[i].object();
 
-					if (array[i].isObject())
+					IO::JSONParser::JSONValue::ObjectMap::const_iterator iId = object.find("id");
+					OCEAN_EXPECT_TRUE(validation, iId != object.end());
+
+					if (iId != object.end())
 					{
-						const IO::JSONParser::JSONValue::ObjectMap& object = array[i].object();
-
-						IO::JSONParser::JSONValue::ObjectMap::const_iterator iId = object.find("id");
-						OCEAN_EXPECT_TRUE(validation, iId != object.end());
-
-						if (iId != object.end())
-						{
-							OCEAN_EXPECT_TRUE(validation, iId->second.isNumber());
-							OCEAN_EXPECT_EQUAL(validation, iId->second.number(), double(i + 1));
-						}
+						OCEAN_EXPECT_TRUE(validation, iId->second.isNumber());
+						OCEAN_EXPECT_EQUAL(validation, iId->second.number(), double(i + 1));
 					}
 				}
 			}
 		}
+	}
 
+	{
+		// object with arrays
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"numbers\": [1, 2, 3], \"strings\": [\"a\", \"b\", \"c\"]}", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isObject());
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		if (value && value.isObject())
 		{
-			// object with arrays
+			const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
 
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"numbers\": [1, 2, 3], \"strings\": [\"a\", \"b\", \"c\"]}", false, &errorMessage);
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iNumbers = object.find("numbers");
+			OCEAN_EXPECT_TRUE(validation, iNumbers != object.end());
 
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isObject());
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			if (value && value.isObject())
+			if (iNumbers != object.end())
 			{
-				const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
+				OCEAN_EXPECT_TRUE(validation, iNumbers->second.isArray());
+				OCEAN_EXPECT_EQUAL(validation, iNumbers->second.array().size(), size_t(3));
+			}
 
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iNumbers = object.find("numbers");
-				OCEAN_EXPECT_TRUE(validation, iNumbers != object.end());
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iStrings = object.find("strings");
+			OCEAN_EXPECT_TRUE(validation, iStrings != object.end());
 
-				if (iNumbers != object.end())
-				{
-					OCEAN_EXPECT_TRUE(validation, iNumbers->second.isArray());
-					OCEAN_EXPECT_EQUAL(validation, iNumbers->second.array().size(), size_t(3));
-				}
-
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iStrings = object.find("strings");
-				OCEAN_EXPECT_TRUE(validation, iStrings != object.end());
-
-				if (iStrings != object.end())
-				{
-					OCEAN_EXPECT_TRUE(validation, iStrings->second.isArray());
-					OCEAN_EXPECT_EQUAL(validation, iStrings->second.array().size(), size_t(3));
-				}
+			if (iStrings != object.end())
+			{
+				OCEAN_EXPECT_TRUE(validation, iStrings->second.isArray());
+				OCEAN_EXPECT_EQUAL(validation, iStrings->second.array().size(), size_t(3));
 			}
 		}
+	}
 
+	{
+		// deeply nested structure
+
+		std::string errorMessage;
+		const std::string jsonData = R"(
 		{
-			// deeply nested structure
-
-			std::string errorMessage;
-			const std::string jsonData = R"(
-			{
-				"level1": {
-					"level2": {
-						"level3": {
-							"value": 48
-						}
+			"level1": {
+				"level2": {
+					"level3": {
+						"value": 48
 					}
 				}
 			}
-			)";
+		}
+		)";
 
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", jsonData, false, &errorMessage);
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", jsonData, false, &errorMessage);
 
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isObject());
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isObject());
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
 
-			if (value && value.isObject())
+		if (value && value.isObject())
+		{
+			const IO::JSONParser::JSONValue::ObjectMap& object1 = value.object();
+
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iLevel1 = object1.find("level1");
+			OCEAN_EXPECT_TRUE(validation, iLevel1 != object1.end());
+
+			if (iLevel1 != object1.end())
 			{
-				const IO::JSONParser::JSONValue::ObjectMap& object1 = value.object();
+				OCEAN_EXPECT_TRUE(validation, iLevel1->second.isObject());
 
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iLevel1 = object1.find("level1");
-				OCEAN_EXPECT_TRUE(validation, iLevel1 != object1.end());
-
-				if (iLevel1 != object1.end())
+				if (iLevel1->second.isObject())
 				{
-					OCEAN_EXPECT_TRUE(validation, iLevel1->second.isObject());
+					const IO::JSONParser::JSONValue::ObjectMap& object2 = iLevel1->second.object();
 
-					if (iLevel1->second.isObject())
+					IO::JSONParser::JSONValue::ObjectMap::const_iterator iLevel2 = object2.find("level2");
+					OCEAN_EXPECT_TRUE(validation, iLevel2 != object2.end());
+
+					if (iLevel2 != object2.end())
 					{
-						const IO::JSONParser::JSONValue::ObjectMap& object2 = iLevel1->second.object();
+						OCEAN_EXPECT_TRUE(validation, iLevel2->second.isObject());
 
-						IO::JSONParser::JSONValue::ObjectMap::const_iterator iLevel2 = object2.find("level2");
-						OCEAN_EXPECT_TRUE(validation, iLevel2 != object2.end());
-
-						if (iLevel2 != object2.end())
+						if (iLevel2->second.isObject())
 						{
-							OCEAN_EXPECT_TRUE(validation, iLevel2->second.isObject());
+							const IO::JSONParser::JSONValue::ObjectMap& object3 = iLevel2->second.object();
 
-							if (iLevel2->second.isObject())
+							IO::JSONParser::JSONValue::ObjectMap::const_iterator iLevel3 = object3.find("level3");
+							OCEAN_EXPECT_TRUE(validation, iLevel3 != object3.end());
+
+							if (iLevel3 != object3.end())
 							{
-								const IO::JSONParser::JSONValue::ObjectMap& object3 = iLevel2->second.object();
+								OCEAN_EXPECT_TRUE(validation, iLevel3->second.isObject());
 
-								IO::JSONParser::JSONValue::ObjectMap::const_iterator iLevel3 = object3.find("level3");
-								OCEAN_EXPECT_TRUE(validation, iLevel3 != object3.end());
-
-								if (iLevel3 != object3.end())
+								if (iLevel3->second.isObject())
 								{
-									OCEAN_EXPECT_TRUE(validation, iLevel3->second.isObject());
+									const IO::JSONParser::JSONValue::ObjectMap& object4 = iLevel3->second.object();
 
-									if (iLevel3->second.isObject())
+									IO::JSONParser::JSONValue::ObjectMap::const_iterator iValue = object4.find("value");
+									OCEAN_EXPECT_TRUE(validation, iValue != object4.end());
+
+									if (iValue != object4.end())
 									{
-										const IO::JSONParser::JSONValue::ObjectMap& object4 = iLevel3->second.object();
-
-										IO::JSONParser::JSONValue::ObjectMap::const_iterator iValue = object4.find("value");
-										OCEAN_EXPECT_TRUE(validation, iValue != object4.end());
-
-										if (iValue != object4.end())
-										{
-											OCEAN_EXPECT_TRUE(validation, iValue->second.isNumber());
-											OCEAN_EXPECT_TRUE(validation, NumericD::isEqual(iValue->second.number(), 48.0, 0.001));
-										}
+										OCEAN_EXPECT_TRUE(validation, iValue->second.isNumber());
+										OCEAN_EXPECT_TRUE(validation, NumericD::isEqual(iValue->second.number(), 48.0, 0.001));
 									}
 								}
 							}
@@ -860,163 +856,146 @@ bool TestJSONParser::testNestedStructures(const double testDuration)
 			}
 		}
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
 
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
 }
 
-bool TestJSONParser::testErrorHandling(const double testDuration)
+bool TestJSONParser::testErrorHandling()
 {
 	Log::info() << "Error handling test:";
 
-	RandomGenerator randomGenerator;
+	Validation validation;
 
-	Validation validation(randomGenerator);
-
-	const Timestamp startTimestamp(true);
-
-	do
 	{
-		{
-			// invalid JSON (trailing comma in array)
+		// invalid JSON (trailing comma in array)
 
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1, 2, 3,]", true, &errorMessage);
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1, 2, 3,]", true, &errorMessage);
 
-			OCEAN_EXPECT_FALSE(validation, value.isValid());
-			OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
-		}
-
-		{
-			// invalid JSON (trailing comma in object)
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\": \"value\",}", true, &errorMessage);
-
-			OCEAN_EXPECT_FALSE(validation, value.isValid());
-			OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
-		}
-
-		{
-			// invalid JSON (missing closing bracket)
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1, 2, 3", false, &errorMessage);
-
-			OCEAN_EXPECT_FALSE(validation, value.isValid());
-			OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
-		}
-
-		{
-			// invalid JSON (missing closing brace)
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\": \"value\"", false, &errorMessage);
-
-			OCEAN_EXPECT_FALSE(validation, value.isValid());
-			OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
-		}
-
-		{
-			// invalid JSON (missing colon in object)
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\" \"value\"}", false, &errorMessage);
-
-			OCEAN_EXPECT_FALSE(validation, value.isValid());
-			OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
-		}
-
-		{
-			// invalid JSON (missing value after colon)
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\":}", false, &errorMessage);
-
-			OCEAN_EXPECT_FALSE(validation, value.isValid());
-			OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
-		}
-
-		{
-			// invalid JSON (non-string key in object)
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{33: \"value\"}", false, &errorMessage);
-
-			OCEAN_EXPECT_FALSE(validation, value.isValid());
-			OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
-		}
-
-		{
-			// whitespace-only input
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "   \t\n  ", false, &errorMessage);
-
-			OCEAN_EXPECT_FALSE(validation, value.isValid());
-			OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
-		}
+		OCEAN_EXPECT_FALSE(validation, value.isValid());
+		OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+
+	{
+		// invalid JSON (trailing comma in object)
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\": \"value\",}", true, &errorMessage);
+
+		OCEAN_EXPECT_FALSE(validation, value.isValid());
+		OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
+	}
+
+	{
+		// invalid JSON (missing closing bracket)
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1, 2, 3", false, &errorMessage);
+
+		OCEAN_EXPECT_FALSE(validation, value.isValid());
+		OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
+	}
+
+	{
+		// invalid JSON (missing closing brace)
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\": \"value\"", false, &errorMessage);
+
+		OCEAN_EXPECT_FALSE(validation, value.isValid());
+		OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
+	}
+
+	{
+		// invalid JSON (missing colon in object)
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\" \"value\"}", false, &errorMessage);
+
+		OCEAN_EXPECT_FALSE(validation, value.isValid());
+		OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
+	}
+
+	{
+		// invalid JSON (missing value after colon)
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\":}", false, &errorMessage);
+
+		OCEAN_EXPECT_FALSE(validation, value.isValid());
+		OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
+	}
+
+	{
+		// invalid JSON (non-string key in object)
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{33: \"value\"}", false, &errorMessage);
+
+		OCEAN_EXPECT_FALSE(validation, value.isValid());
+		OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
+	}
+
+	{
+		// whitespace-only input
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "   \t\n  ", false, &errorMessage);
+
+		OCEAN_EXPECT_FALSE(validation, value.isValid());
+		OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
+	}
 
 	Log::info() << "Validation: " << validation;
 
 	return validation.succeeded();
 }
 
-bool TestJSONParser::testInputSources(const double testDuration)
+bool TestJSONParser::testInputSources()
 {
 	Log::info() << "Input sources test:";
 
-	RandomGenerator randomGenerator;
+	Validation validation;
 
-	Validation validation(randomGenerator);
-
-	const Timestamp startTimestamp(true);
-
-	do
 	{
-		{
-			// parsing from string buffer
+		// parsing from string buffer
 
-			const std::string jsonData = "{\"test\": true}";
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", jsonData, false, &errorMessage);
+		const std::string jsonData = "{\"test\": true}";
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", jsonData, false, &errorMessage);
 
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isObject());
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-		}
-
-		{
-			// parsing from moved string buffer
-
-			std::string jsonData = "{\"test\": false}";
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", std::move(jsonData), false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isObject());
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-		}
-
-		{
-			// parsing from stream
-
-			const std::string jsonData = "[1, 2, 3]";
-			std::shared_ptr<std::istream> stream = std::make_shared<std::istringstream>(jsonData);
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse(stream, false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isArray());
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-		}
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isObject());
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+
+	{
+		// parsing from moved string buffer
+
+		std::string jsonData = "{\"test\": false}";
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", std::move(jsonData), false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isObject());
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+	}
+
+	{
+		// parsing from stream
+
+		const std::string jsonData = "[1, 2, 3]";
+		std::shared_ptr<std::istream> stream = std::make_shared<std::istringstream>(jsonData);
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse(stream, false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isArray());
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+	}
 
 	Log::info() << "Validation: " << validation;
 
@@ -1058,6 +1037,180 @@ bool TestJSONParser::testRandomJSON(const double testDuration)
 		}
 	}
 	while (startTimestamp + testDuration > Timestamp(true));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestJSONParser::testStrictAndLenientParsing()
+{
+	Log::info() << "Strict and lenient parsing test:";
+
+	Validation validation;
+
+	{
+		// Lenient mode: array with trailing comma should succeed
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1, 2, 3,]", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isArray());
+		OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(3));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		if (value && value.isArray() && value.array().size() == 3)
+		{
+			const IO::JSONParser::JSONValue::Array& array = value.array();
+			OCEAN_EXPECT_EQUAL(validation, array[0].number(), 1.0);
+			OCEAN_EXPECT_EQUAL(validation, array[1].number(), 2.0);
+			OCEAN_EXPECT_EQUAL(validation, array[2].number(), 3.0);
+		}
+	}
+
+	{
+		// Strict mode: array with trailing comma should fail
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1, 2, 3,]", true, &errorMessage);
+
+		OCEAN_EXPECT_FALSE(validation, value.isValid());
+		OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
+	}
+
+	{
+		// Lenient mode: object with trailing comma should succeed
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"a\": 1, \"b\": 2,}", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isObject());
+		OCEAN_EXPECT_EQUAL(validation, value.object().size(), size_t(2));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		if (value && value.isObject() && value.object().size() == 2)
+		{
+			const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
+
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iA = object.find("a");
+			OCEAN_EXPECT_TRUE(validation, iA != object.end());
+			if (iA != object.end())
+			{
+				OCEAN_EXPECT_EQUAL(validation, iA->second.number(), 1.0);
+			}
+
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iB = object.find("b");
+			OCEAN_EXPECT_TRUE(validation, iB != object.end());
+			if (iB != object.end())
+			{
+				OCEAN_EXPECT_EQUAL(validation, iB->second.number(), 2.0);
+			}
+		}
+	}
+
+	{
+		// Strict mode: object with trailing comma should fail
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"a\": 1, \"b\": 2,}", true, &errorMessage);
+
+		OCEAN_EXPECT_FALSE(validation, value.isValid());
+		OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
+	}
+
+	{
+		// Lenient mode: nested structure with trailing commas
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"arr\": [1, 2,], \"obj\": {\"x\": 10,},}", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isObject());
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		if (value && value.isObject())
+		{
+			const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
+
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iArr = object.find("arr");
+			OCEAN_EXPECT_TRUE(validation, iArr != object.end());
+			if (iArr != object.end())
+			{
+				OCEAN_EXPECT_TRUE(validation, iArr->second.isArray());
+				OCEAN_EXPECT_EQUAL(validation, iArr->second.array().size(), size_t(2));
+			}
+
+			IO::JSONParser::JSONValue::ObjectMap::const_iterator iObj = object.find("obj");
+			OCEAN_EXPECT_TRUE(validation, iObj != object.end());
+			if (iObj != object.end())
+			{
+				OCEAN_EXPECT_TRUE(validation, iObj->second.isObject());
+				OCEAN_EXPECT_EQUAL(validation, iObj->second.object().size(), size_t(1));
+			}
+		}
+	}
+
+	{
+		// Strict mode: nested structure with trailing commas should fail
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"arr\": [1, 2,], \"obj\": {\"x\": 10,},}", true, &errorMessage);
+
+		OCEAN_EXPECT_FALSE(validation, value.isValid());
+		OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
+	}
+
+	{
+		// Lenient mode (default): trailing comma
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[\"a\", \"b\", \"c\",]", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isArray());
+		OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(3));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+	}
+
+	{
+		// Lenient mode: array with only trailing comma
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1,]", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isArray());
+		OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(1));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+	}
+
+	{
+		// Lenient mode: object with only trailing comma
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\": \"value\",}", false, &errorMessage);
+
+		OCEAN_EXPECT_TRUE(validation, value.isValid());
+		OCEAN_EXPECT_TRUE(validation, value.isObject());
+		OCEAN_EXPECT_EQUAL(validation, value.object().size(), size_t(1));
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+	}
+
+	{
+		// Both modes: valid JSON without trailing commas should always succeed
+
+		std::string errorMessage;
+		IO::JSONParser::JSONValue strictValue = IO::JSONParser::parse("", "[1, 2, 3]", true, &errorMessage);
+		OCEAN_EXPECT_TRUE(validation, strictValue.isValid());
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+
+		errorMessage.clear();
+		IO::JSONParser::JSONValue lenientValue = IO::JSONParser::parse("", "[1, 2, 3]", false, &errorMessage);
+		OCEAN_EXPECT_TRUE(validation, lenientValue.isValid());
+		OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
+	}
 
 	Log::info() << "Validation: " << validation;
 
@@ -1145,187 +1298,6 @@ bool TestJSONParser::compareJSONValues(Validation& validation, const IO::JSONPar
 
 	OCEAN_SET_FAILED(validation);
 	return false;
-}
-
-bool TestJSONParser::testStrictAndLenientParsing(const double testDuration)
-{
-	Log::info() << "Strict and lenient parsing test:";
-
-	RandomGenerator randomGenerator;
-	Validation validation(randomGenerator);
-
-	const Timestamp startTimestamp(true);
-
-	do
-	{
-		{
-			// Lenient mode: array with trailing comma should succeed
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1, 2, 3,]", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isArray());
-			OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(3));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			if (value && value.isArray() && value.array().size() == 3)
-			{
-				const IO::JSONParser::JSONValue::Array& array = value.array();
-				OCEAN_EXPECT_EQUAL(validation, array[0].number(), 1.0);
-				OCEAN_EXPECT_EQUAL(validation, array[1].number(), 2.0);
-				OCEAN_EXPECT_EQUAL(validation, array[2].number(), 3.0);
-			}
-		}
-
-		{
-			// Strict mode: array with trailing comma should fail
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1, 2, 3,]", true, &errorMessage);
-
-			OCEAN_EXPECT_FALSE(validation, value.isValid());
-			OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
-		}
-
-		{
-			// Lenient mode: object with trailing comma should succeed
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"a\": 1, \"b\": 2,}", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isObject());
-			OCEAN_EXPECT_EQUAL(validation, value.object().size(), size_t(2));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			if (value && value.isObject() && value.object().size() == 2)
-			{
-				const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
-
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iA = object.find("a");
-				OCEAN_EXPECT_TRUE(validation, iA != object.end());
-				if (iA != object.end())
-				{
-					OCEAN_EXPECT_EQUAL(validation, iA->second.number(), 1.0);
-				}
-
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iB = object.find("b");
-				OCEAN_EXPECT_TRUE(validation, iB != object.end());
-				if (iB != object.end())
-				{
-					OCEAN_EXPECT_EQUAL(validation, iB->second.number(), 2.0);
-				}
-			}
-		}
-
-		{
-			// Strict mode: object with trailing comma should fail
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"a\": 1, \"b\": 2,}", true, &errorMessage);
-
-			OCEAN_EXPECT_FALSE(validation, value.isValid());
-			OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
-		}
-
-		{
-			// Lenient mode: nested structure with trailing commas
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"arr\": [1, 2,], \"obj\": {\"x\": 10,},}", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isObject());
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			if (value && value.isObject())
-			{
-				const IO::JSONParser::JSONValue::ObjectMap& object = value.object();
-
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iArr = object.find("arr");
-				OCEAN_EXPECT_TRUE(validation, iArr != object.end());
-				if (iArr != object.end())
-				{
-					OCEAN_EXPECT_TRUE(validation, iArr->second.isArray());
-					OCEAN_EXPECT_EQUAL(validation, iArr->second.array().size(), size_t(2));
-				}
-
-				IO::JSONParser::JSONValue::ObjectMap::const_iterator iObj = object.find("obj");
-				OCEAN_EXPECT_TRUE(validation, iObj != object.end());
-				if (iObj != object.end())
-				{
-					OCEAN_EXPECT_TRUE(validation, iObj->second.isObject());
-					OCEAN_EXPECT_EQUAL(validation, iObj->second.object().size(), size_t(1));
-				}
-			}
-		}
-
-		{
-			// Strict mode: nested structure with trailing commas should fail
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"arr\": [1, 2,], \"obj\": {\"x\": 10,},}", true, &errorMessage);
-
-			OCEAN_EXPECT_FALSE(validation, value.isValid());
-			OCEAN_EXPECT_FALSE(validation, errorMessage.empty());
-		}
-
-		{
-			// Lenient mode (default): trailing comma
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[\"a\", \"b\", \"c\",]", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isArray());
-			OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(3));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-		}
-
-		{
-			// Lenient mode: array with only trailing comma
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "[1,]", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isArray());
-			OCEAN_EXPECT_EQUAL(validation, value.array().size(), size_t(1));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-		}
-
-		{
-			// Lenient mode: object with only trailing comma
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue value = IO::JSONParser::parse("", "{\"key\": \"value\",}", false, &errorMessage);
-
-			OCEAN_EXPECT_TRUE(validation, value.isValid());
-			OCEAN_EXPECT_TRUE(validation, value.isObject());
-			OCEAN_EXPECT_EQUAL(validation, value.object().size(), size_t(1));
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-		}
-
-		{
-			// Both modes: valid JSON without trailing commas should always succeed
-
-			std::string errorMessage;
-			IO::JSONParser::JSONValue strictValue = IO::JSONParser::parse("", "[1, 2, 3]", true, &errorMessage);
-			OCEAN_EXPECT_TRUE(validation, strictValue.isValid());
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-
-			errorMessage.clear();
-			IO::JSONParser::JSONValue lenientValue = IO::JSONParser::parse("", "[1, 2, 3]", false, &errorMessage);
-			OCEAN_EXPECT_TRUE(validation, lenientValue.isValid());
-			OCEAN_EXPECT_TRUE(validation, errorMessage.empty());
-		}
-	}
-	while (startTimestamp + testDuration > Timestamp(true));
-
-	Log::info() << "Validation: " << validation;
-
-	return validation.succeeded();
 }
 
 } // namespace TestIO
