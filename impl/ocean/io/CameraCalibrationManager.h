@@ -28,12 +28,41 @@ namespace IO
  * This class implements a manager for camera calibrations using a modern JSON-based format.
  * The manager supports multiple camera types through a factory pattern and can be extended with custom camera types.
  *
+ * The manager supports device-specific calibrations through a device context system.
+ * Device context can be set at three specificity levels: product, version, or serial number.
+ * This allows users to specify simple camera names (e.g., "Back-facing Camera 0") and the manager
+ * automatically matches the appropriate calibration based on the current device context.
+ *
+ * Device Context Levels (from least to most specific):
+ * - Product: Broad product category (e.g., "Samsung S21 5G", "iPhone 13 Pro")
+ * - Version: Specific hardware variant (e.g., "SM-G991U", "A2483")
+ * - Serial: Individual device serial number (e.g., "ABC123456")
+ *
  * By default, the manager supports "Ocean Pinhole" and "Ocean Fisheye" camera models, an example JSON file is:
  * <pre>
  * {
+ *   "devices": [
+ *     {
+ *       "product": "Samsung S21 5G",
+ *       "version": "SM-G991U",
+ *       "serial": "ABC123456",
+ *       "cameras": [
+ *         {
+ *           "name": "Back-facing Camera 0",
+ *           "priority": 10,
+ *           "calibrations": [...]
+ *         }
+ *       ]
+ *     },
+ *     {
+ *       "product": "Samsung S21 5G",
+ *       "version": "SM-G991U",
+ *       "cameras": [...]
+ *     }
+ *   ],
  *   "cameras": [
  *     {
- *       "name": "Camera Name",
+ *       "name": "Generic Camera",
  *       "aliases": ["Optional Alias 1", "Optional Alias 2"],
  *       "priority": 10,
  *       "calibrations": [
@@ -62,6 +91,22 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 	friend class Singleton<CameraCalibrationManager>;
 
 	public:
+
+		/**
+		 * Definition of different device context levels.
+		 * The device context determines which cameras are visible during lookup operations.
+		 */
+		enum DeviceContextLevel : uint32_t
+		{
+			/// No device context is set, only global cameras (without device context) are visible.
+			DCL_NONE = 0u,
+			/// Device context is set to a product name (least specific).
+			DCL_PRODUCT,
+			/// Device context is set to a hardware version/variant.
+			DCL_VERSION,
+			/// Device context is set to a device serial number (most specific).
+			DCL_SERIAL
+		};
 
 		/**
 		 * Definition of different calibration qualities indicating how the calibration was obtained.
@@ -96,8 +141,11 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 				/**
 				 * Creates a new Calibrations object with a specific priority.
 				 * @param priority The priority of the calibrations, higher values indicate higher priority, with range (-infinity, infinity)
+				 * @param deviceProduct Optional device product for this calibration group (e.g., "Samsung S21 5G
+				 * @param deviceVersion Optional device version for this calibration group (e.g., "SM-G991U")
+				 * @param deviceSerial Optional device serial for this calibration group (e.g., "ABC123456")
 				 */
-				explicit inline CalibrationGroup(const int32_t priority = 0);
+				inline CalibrationGroup(const int32_t priority, const std::string& deviceProduct = std::string(), const std::string& deviceVersion = std::string(), const std::string& deviceSerial = std::string());
 
 				/**
 				 * Adds a camera model to this calibration group.
@@ -118,6 +166,14 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 				SharedAnyCamera camera(const unsigned int width, const unsigned int height, CalibrationQuality& calibrationQuality) const;
 
 				/**
+				 * Checks whether this calibration group matches the given device context.
+				 * @param deviceContextLevel The device context level to check against
+				 * @param deviceContextValue The device context value (product, version, or serial)
+				 * @return True if this calibration group matches the device context, false otherwise
+				 */
+				bool matchesDeviceContext(const DeviceContextLevel deviceContextLevel, const std::string& deviceContextValue) const;
+
+				/**
 				 * Returns the number of camera calibrations in this group.
 				 * @return The number of calibrations
 				 */
@@ -130,6 +186,15 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 
 				/// All camera models with individual resolutions.
 				SharedAnyCameras cameras_;
+
+				/// Optional device product for this calibration group (e.g., "Samsung S21 5G", "iPhone 13 Pro"), empty if not set.
+				std::string deviceProduct_;
+
+				/// Optional device version for this calibration group (e.g., "SM-G991U", "A2483"), empty if not set.
+				std::string deviceVersion_;
+
+				/// Optional device serial for this calibration group (e.g., "ABC123456"), empty if not set.
+				std::string deviceSerial_;
 		};
 
 		/**
@@ -159,13 +224,48 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		 * The function will find the best matching calibration for the given resolution.<br>
 		 * First, it searches for exact resolution matches. If none are found, it attempts to interpolate from calibrations with the same aspect ratio.<br>
 		 * When multiple calibrations are available, the one with the highest priority and best quality is selected.
+		 * The camera lookup is filtered based on the current device context (if set).
 		 * @param cameraName The name of the camera (or alias), must be valid
 		 * @param width The width of the camera image in pixels, with range [1, infinity)
 		 * @param height The height of the camera image in pixels, with range [1, infinity)
 		 * @param calibrationQuality Optional resulting calibration quality, nullptr if not of interest
 		 * @return The camera model, nullptr if no matching calibration was found
+		 * @see setDeviceProduct(), setDeviceVersion(), setDeviceSerial()
 		 */
 		SharedAnyCamera camera(const std::string& cameraName, unsigned int width, unsigned int height, CalibrationQuality* calibrationQuality = nullptr) const;
+
+		/**
+		 * Sets the device context to a specific product name.
+		 * When set, only cameras associated with this product (and no version/serial constraints) will be visible during lookup.
+		 * @param product The product name (e.g., "Samsung S21 5G", "iPhone 13 Pro"), must be valid
+		 * @return True if the device context was set successfully
+		 * @see clearDeviceContext()
+		 */
+		bool setDeviceProduct(const std::string& product);
+
+		/**
+		 * Sets the device context to a specific hardware version/variant.
+		 * When set, only cameras associated with this version will be visible during lookup.
+		 * @param version The hardware version/variant identifier (e.g., "SM-G991U", "A2483"), must be valid
+		 * @return True if the device context was set successfully
+		 * @see clearDeviceContext()
+		 */
+		bool setDeviceVersion(const std::string& version);
+
+		/**
+		 * Sets the device context to a specific device serial number.
+		 * When set, only cameras associated with this exact serial number will be visible during lookup.
+		 * @param serial The device serial number (e.g., "ABC123456"), must be valid
+		 * @return True if the device context was set successfully
+		 * @see clearDeviceContext()
+		 */
+		bool setDeviceSerial(const std::string& serial);
+
+		/**
+		 * Clears the device context.
+		 * After clearing, only global cameras (without device context) will be visible during lookup.
+		 */
+		void clearDeviceContext();
 
 		/**
 		 * Registers calibrations from a JSON file.
@@ -249,6 +349,16 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		CameraCalibrationManager();
 
 		/**
+		 * Registers cameras from a JSON cameras array with optional device context.
+		 * @param camerasArray The JSON array containing camera definitions, must be valid
+		 * @param deviceProduct Optional device product name, empty for global cameras
+		 * @param deviceVersion Optional device version, empty for global cameras
+		 * @param deviceSerial Optional device serial number, empty for global cameras
+		 * @return True if at least one camera was registered successfully
+		 */
+		bool registerCameras(const JSONParser::JSONValue::Array& camerasArray, const std::string& deviceProduct = std::string(), const std::string& deviceVersion = std::string(), const std::string& deviceSerial = std::string());
+
+		/**
 		 * Factory function able to create the "Ocean Pinhole" camera model from a JSON configuration.
 		 * @param modelObject The JSON object containing the camera model configuration, must be valid
 		 * @return The created camera object, nullptr if creation failed
@@ -273,12 +383,21 @@ class OCEAN_IO_EXPORT CameraCalibrationManager : public Singleton<CameraCalibrat
 		/// The map mapping camera aliases to their actual camera names.
 		AliasMap aliasMap_;
 
+		/// The current device context level.
+		DeviceContextLevel deviceContextLevel_ = DCL_NONE;
+
+		/// The current device context value (product, version, or serial depending on deviceContextLevel_).
+		std::string deviceContextValue_;
+
 		/// The lock for thread-safe access to all manager data.
 		mutable Lock lock_;
 };
 
-inline CameraCalibrationManager::CalibrationGroup::CalibrationGroup(const int32_t priority) :
-	priority_(priority)
+inline CameraCalibrationManager::CalibrationGroup::CalibrationGroup(const int32_t priority, const std::string& deviceProduct, const std::string& deviceVersion, const std::string& deviceSerial) :
+	priority_(priority),
+	deviceProduct_(std::move(deviceProduct)),
+	deviceVersion_(std::move(deviceVersion)),
+	deviceSerial_(std::move(deviceSerial))
 {
 	// nothing to do here
 }

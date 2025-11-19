@@ -1,0 +1,106 @@
+{
+	"description": "Ocean Camera Calibration File, Example",
+
+	"devices":
+	[
+		{
+			"product": "Samsung S21 5G",
+			"version": "SM-G991U",
+
+			"cameras":
+			[
+				{
+					"name": "Back-facing Camera 0",
+
+					"priority": 10,
+
+					"calibrations":
+					[
+						{
+							"resolution": {"width": 640, "height": 480},
+
+							"model": "Ocean Pinhole",
+							"configuration": "8_PARAMETERS",
+							"parameters": [487.48287035, 487.25186264, 323.56972241, 235.86136581, 0.03857196, -0.03286878, -0.00016924, 0.00066786],
+
+							"comment": "FovX: 66.6 degrees"
+						},
+						{
+							"resolution": {"width": 1280, "height": 720},
+
+							"model": "Ocean Pinhole",
+							"configuration": "8_PARAMETERS",
+							"parameters": [979.13052306, 979.33284868, 646.12111895, 355.52289878, 0.03478208, -0.02665410, -0.00000034, 0.00025959],
+
+							"comment": "FovX: 66.3 degrees"
+						}
+					]
+				},
+
+				{
+					"name": "Back-facing Camera 1",
+
+					"priority": 10,
+
+					"calibrations":
+					[
+						{
+							"resolution": {"width": 640, "height": 480},
+
+							"model": "Ocean Fisheye",
+							"configuration": "12_PARAMETERS",
+							"parameters": [260.84865841, 260.65082731, 320.72721479, 239.14646451, 0.19231929, 1.44199434, -5.22747084, 10.52266033, -9.77870544, 3.32397082, 0.00055309, -0.00055132],
+
+							"comment": "FovX: 101.6 degrees"
+						},
+						{
+							"resolution": {"width": 1280, "height": 720},
+
+							"model": "Ocean Fisheye",
+							"configuration": "12_PARAMETERS",
+							"parameters": [519.56937642, 519.28893579, 640.93888091, 359.29855350, 0.22378930, 1.08962958, -3.57988147, 6.81752997, -5.86185742, 1.76506829, 0.00052917, -0.00053183],
+
+							"comment": "FovX: 101.9 degrees"
+						}
+					]
+				}
+			]
+		}
+	],
+
+	"cameras":
+	[
+		{
+			"name": "Logitech C920 HD Pro",
+
+			"aliases":
+			[
+				"HD Pro Webcam C920"
+			],
+
+			"priority": 10,
+
+			"calibrations":
+			[
+				{
+					"resolution": {"width": 640, "height": 480},
+
+					"model": "Ocean Pinhole",
+					"configuration": "8_PARAMETERS",
+					"parameters": [644.30946632, 643.94189118, 311.74409219, 242.28568241, 0.03931290, -0.11721555, -0.00159122, 0.00149326],
+
+					"comment": "FovX: 52.8 degrees"
+				},
+				{
+					"resolution": {"width": 1280, "height": 720},
+
+					"model": "Ocean Pinhole",
+					"configuration": "8_PARAMETERS",
+					"parameters": [963.41388214, 962.93075174, 626.06391876, 362.89754465, 0.02169866, -0.06753572, -0.00146834, 0.00104655],
+
+					"comment": "FovX: 67.2 degrees"
+				}
+			]
+		}
+	]
+}

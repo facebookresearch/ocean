@@ -92,6 +92,41 @@ SharedAnyCamera CameraCalibrationManager::CalibrationGroup::camera(const unsigne
 	return nullptr;
 }
 
+bool CameraCalibrationManager::CalibrationGroup::matchesDeviceContext(const DeviceContextLevel deviceContextLevel, const std::string& deviceContextValue) const
+{
+	ocean_assert(deviceContextLevel != DCL_NONE || deviceContextValue.empty());
+
+	switch (deviceContextLevel)
+	{
+		case DCL_NONE:
+		{
+			// No device context set - only match global cameras (with no device context)
+			return deviceProduct_.empty() && deviceVersion_.empty() && deviceSerial_.empty();
+		}
+
+		case DCL_PRODUCT:
+		{
+			// Match cameras with the same product (and no version/serial constraints)
+			return deviceProduct_ == deviceContextValue && deviceVersion_.empty() && deviceSerial_.empty();
+		}
+
+		case DCL_VERSION:
+		{
+			// Match cameras with the same version (and no serial constraint)
+			return deviceVersion_ == deviceContextValue && deviceSerial_.empty();
+		}
+
+		case DCL_SERIAL:
+		{
+			// Match cameras with the same serial
+			return deviceSerial_ == deviceContextValue;
+		}
+	}
+
+	ocean_assert(false && "This should never happen!");
+	return false;
+}
+
 SharedAnyCamera CameraCalibrationManager::camera(const std::string& cameraName, unsigned int width, unsigned int height, CalibrationQuality* calibrationQuality) const
 {
 	ocean_assert(!cameraName.empty());
@@ -131,6 +166,11 @@ SharedAnyCamera CameraCalibrationManager::camera(const std::string& cameraName, 
 
 	for (const CalibrationGroup& calibrationGroup : calibrationGroups)
 	{
+		if (!calibrationGroup.matchesDeviceContext(deviceContextLevel_, deviceContextValue_))
+		{
+			continue;
+		}
+
 		CalibrationQuality candidateCalibrationQuality = CQ_UNKNOWN;
 		SharedAnyCamera candidateCamera = calibrationGroup.camera(width, height, candidateCalibrationQuality);
 
@@ -158,6 +198,65 @@ SharedAnyCamera CameraCalibrationManager::camera(const std::string& cameraName, 
 	}
 
 	return bestCamera;
+}
+
+bool CameraCalibrationManager::setDeviceProduct(const std::string& product)
+{
+	ocean_assert(!product.empty());
+
+	if (product.empty())
+	{
+		return false;
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	deviceContextLevel_ = DCL_PRODUCT;
+	deviceContextValue_ = product;
+
+	return true;
+}
+
+bool CameraCalibrationManager::setDeviceVersion(const std::string& version)
+{
+	ocean_assert(!version.empty());
+
+	if (version.empty())
+	{
+		return false;
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	deviceContextLevel_ = DCL_VERSION;
+	deviceContextValue_ = version;
+
+	return true;
+}
+
+bool CameraCalibrationManager::setDeviceSerial(const std::string& serial)
+{
+	ocean_assert(!serial.empty());
+
+	if (serial.empty())
+	{
+		return false;
+	}
+
+	const ScopedLock scopedLock(lock_);
+
+	deviceContextLevel_ = DCL_SERIAL;
+	deviceContextValue_ = serial;
+
+	return true;
+}
+
+void CameraCalibrationManager::clearDeviceContext()
+{
+	const ScopedLock scopedLock(lock_);
+
+	deviceContextLevel_ = DCL_NONE;
+	deviceContextValue_.clear();
 }
 
 bool CameraCalibrationManager::registerCalibrations(const std::string& url)
@@ -208,99 +307,71 @@ bool CameraCalibrationManager::registerCalibrations(const JSONParser::JSONValue&
 		return false;
 	}
 
-	const JSONParser::JSONValue::Array* camerasArray = jsonValue.arrayFromObject("cameras");
-	if (camerasArray == nullptr)
-	{
-		Log::error() << "Invalid camera calibration format: 'cameras' array not found";
-		return false;
-	}
-
 	const ScopedLock scopedLock(lock_);
 
 	bool anyCameraRegistered = false;
 
-	for (const JSONParser::JSONValue& cameraValue : *camerasArray)
+	// Parse device-specific cameras from the "devices" array
+	const JSONParser::JSONValue::Array* devicesArray = jsonValue.arrayFromObject("devices");
+	if (devicesArray != nullptr)
 	{
-		if (!cameraValue.isObject())
+		for (const JSONParser::JSONValue& deviceValue : *devicesArray)
 		{
-			Log::warning() << "Skipping invalid camera entry: not an object";
-			continue;
-		}
-
-		const std::string* cameraName = cameraValue.stringFromObject("name");
-		if (cameraName == nullptr)
-		{
-			Log::warning() << "Skipping camera entry: 'name' not found or invalid";
-			continue;
-		}
-
-		const JSONParser::JSONValue::Array* calibrationsArray = cameraValue.arrayFromObject("calibrations");
-		if (calibrationsArray == nullptr)
-		{
-			Log::warning() << "Skipping camera '" << *cameraName << "': 'calibrations' array not found";
-			continue;
-		}
-
-		int32_t priority = 0;
-		const double* priorityValue = cameraValue.numberFromObject("priority");
-		if (priorityValue != nullptr)
-		{
-			priority = NumericD::round32(*priorityValue);
-		}
-
-		CalibrationGroup calibrationGroup(priority);
-
-		for (const JSONParser::JSONValue& calibrationObject : *calibrationsArray)
-		{
-			if (!calibrationObject.isObject())
+			if (!deviceValue.isObject())
 			{
-				Log::warning() << "Skipping invalid calibration entry for camera '" << *cameraName << "': not an object";
+				Log::warning() << "Skipping invalid device entry: not an object";
 				continue;
 			}
 
-			const std::string* model = calibrationObject.stringFromObject("model");
-			if (model == nullptr)
+			std::string deviceProduct;
+			std::string deviceVersion;
+			std::string deviceSerial;
+
+			const std::string* productString = deviceValue.stringFromObject("product");
+			if (productString != nullptr)
 			{
-				Log::warning() << "Skipping calibration for camera '" << *cameraName << "': 'model' not found";
+				deviceProduct = *productString;
+			}
+
+			const std::string* versionString = deviceValue.stringFromObject("version");
+			if (versionString != nullptr)
+			{
+				deviceVersion = *versionString;
+			}
+
+			const std::string* serialString = deviceValue.stringFromObject("serial");
+			if (serialString != nullptr)
+			{
+				deviceSerial = *serialString;
+			}
+
+			// Parse cameras array within this device
+			const JSONParser::JSONValue::Array* camerasArray = deviceValue.arrayFromObject("cameras");
+			if (camerasArray == nullptr)
+			{
+				Log::warning() << "Skipping device entry: 'cameras' array not found";
 				continue;
 			}
 
-			const FactoryFunctionMap::const_iterator iFactory = factoryFunctionMap_.find(*model);
-			if (iFactory == factoryFunctionMap_.end())
+			if (deviceProduct.empty() && deviceVersion.empty() && deviceSerial.empty())
 			{
-				Log::error() << "No factory registered for camera model '" << *model << "'";
-				continue;
+				Log::warning() << "CameraCalibrationManager::registerCalibrations(): Device entry has no device context fields, treating as global cameras";
 			}
 
-			SharedAnyCamera camera = iFactory->second(calibrationObject);
-
-			if (camera == nullptr || !camera->isValid())
+			if (registerCameras(*camerasArray, deviceProduct, deviceVersion, deviceSerial))
 			{
-				Log::warning() << "Failed to create camera model '" << *model << "' for '" << *cameraName << "'";
-				continue;
+				anyCameraRegistered = true;
 			}
-
-			calibrationGroup.addCamera(std::move(camera));
 		}
+	}
 
-		if (calibrationGroup.size() >= 1)
+	// Parse global cameras from the "cameras" array (backward compatible)
+	const JSONParser::JSONValue::Array* camerasArray = jsonValue.arrayFromObject("cameras");
+	if (camerasArray != nullptr)
+	{
+		if (registerCameras(*camerasArray))
 		{
-			cameraMap_[*cameraName].emplace_back(std::move(calibrationGroup));
-
 			anyCameraRegistered = true;
-
-			const JSONParser::JSONValue::Array* aliasesArray = cameraValue.arrayFromObject("aliases");
-			if (aliasesArray != nullptr)
-			{
-				for (const JSONParser::JSONValue& aliasValue : *aliasesArray)
-				{
-					if (aliasValue.isString())
-					{
-						const std::string& alias = aliasValue.string();
-						aliasMap_[alias] = *cameraName;
-					}
-				}
-			}
 		}
 	}
 
@@ -423,6 +494,97 @@ bool CameraCalibrationManager::parseResolution(const JSONParser::JSONValue& cali
 	height = (unsigned int)(signedHeight);
 
 	return true;
+}
+
+bool CameraCalibrationManager::registerCameras(const JSONParser::JSONValue::Array& camerasArray, const std::string& deviceProduct, const std::string& deviceVersion, const std::string& deviceSerial)
+{
+	bool anyCameraRegistered = false;
+
+	for (const JSONParser::JSONValue& cameraValue : camerasArray)
+	{
+		if (!cameraValue.isObject())
+		{
+			Log::warning() << "Skipping invalid camera entry: not an object";
+			continue;
+		}
+
+		const std::string* cameraName = cameraValue.stringFromObject("name");
+		if (cameraName == nullptr)
+		{
+			Log::warning() << "Skipping camera entry: 'name' not found or invalid";
+			continue;
+		}
+
+		const JSONParser::JSONValue::Array* calibrationsArray = cameraValue.arrayFromObject("calibrations");
+		if (calibrationsArray == nullptr)
+		{
+			Log::warning() << "Skipping camera '" << *cameraName << "': 'calibrations' array not found";
+			continue;
+		}
+
+		int32_t priority = 0;
+		const double* priorityValue = cameraValue.numberFromObject("priority");
+		if (priorityValue != nullptr)
+		{
+			priority = NumericD::round32(*priorityValue);
+		}
+
+		CalibrationGroup calibrationGroup(priority, deviceProduct, deviceVersion, deviceSerial);
+
+		for (const JSONParser::JSONValue& calibrationObject : *calibrationsArray)
+		{
+			if (!calibrationObject.isObject())
+			{
+				Log::warning() << "Skipping invalid calibration entry for camera '" << *cameraName << "': not an object";
+				continue;
+			}
+
+			const std::string* model = calibrationObject.stringFromObject("model");
+			if (model == nullptr)
+			{
+				Log::warning() << "Skipping calibration for camera '" << *cameraName << "': 'model' not found";
+				continue;
+			}
+
+			const FactoryFunctionMap::const_iterator iFactory = factoryFunctionMap_.find(*model);
+			if (iFactory == factoryFunctionMap_.end())
+			{
+				Log::error() << "No factory registered for camera model '" << *model << "'";
+				continue;
+			}
+
+			SharedAnyCamera camera = iFactory->second(calibrationObject);
+
+			if (camera == nullptr || !camera->isValid())
+			{
+				Log::warning() << "Failed to create camera model '" << *model << "' for '" << *cameraName << "'";
+				continue;
+			}
+
+			calibrationGroup.addCamera(std::move(camera));
+		}
+
+		if (calibrationGroup.size() >= 1)
+		{
+			cameraMap_[*cameraName].emplace_back(std::move(calibrationGroup));
+			anyCameraRegistered = true;
+
+			const JSONParser::JSONValue::Array* aliasesArray = cameraValue.arrayFromObject("aliases");
+			if (aliasesArray != nullptr)
+			{
+				for (const JSONParser::JSONValue& aliasValue : *aliasesArray)
+				{
+					if (aliasValue.isString())
+					{
+						const std::string& alias = aliasValue.string();
+						aliasMap_[alias] = *cameraName;
+					}
+				}
+			}
+		}
+	}
+
+	return anyCameraRegistered;
 }
 
 SharedAnyCamera CameraCalibrationManager::createOceanPinhole(const JSONParser::JSONValue& modelObject)
