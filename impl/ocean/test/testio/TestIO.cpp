@@ -8,6 +8,7 @@
 #include "ocean/test/testio/TestIO.h"
 #include "ocean/test/testio/TestBase64.h"
 #include "ocean/test/testio/TestBitstream.h"
+#include "ocean/test/testio/TestCameraCalibrationManager.h"
 #include "ocean/test/testio/TestCompression.h"
 #include "ocean/test/testio/TestDirectory.h"
 #include "ocean/test/testio/TestFile.h"
@@ -126,6 +127,14 @@ bool testIO(const double testDuration, const std::string& testFunctions)
 		Log::info() << "-";
 		Log::info() << " ";
 		allSucceeded = TestJSONParser::test(testDuration) && allSucceeded;
+	}
+
+	if (testSet.empty() || testSet.find("cameracalibrationmanager") != testSet.end())
+	{
+		Log::info() << " ";
+		Log::info() << "-";
+		Log::info() << " ";
+		allSucceeded = TestCameraCalibrationManager::test() && allSucceeded;
 	}
 
 	Log::info() << " ";

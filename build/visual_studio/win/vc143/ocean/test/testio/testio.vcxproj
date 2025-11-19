@@ -53,6 +53,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestBase64.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestBitstream.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestCameraCalibrationManager.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestCompression.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestDirectory.h" />
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestFile.h" />
@@ -63,6 +64,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestBase64.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestBitstream.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestCameraCalibrationManager.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestCompression.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestDirectory.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\test\testio\TestFile.cpp" />

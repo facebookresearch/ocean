@@ -217,6 +217,8 @@ bool CameraCalibrationManager::registerCalibrations(const JSONParser::JSONValue&
 
 	const ScopedLock scopedLock(lock_);
 
+	bool anyCameraRegistered = false;
+
 	for (const JSONParser::JSONValue& cameraValue : *camerasArray)
 	{
 		if (!cameraValue.isObject())
@@ -285,6 +287,8 @@ bool CameraCalibrationManager::registerCalibrations(const JSONParser::JSONValue&
 		{
 			cameraMap_[*cameraName].emplace_back(std::move(calibrationGroup));
 
+			anyCameraRegistered = true;
+
 			const JSONParser::JSONValue::Array* aliasesArray = cameraValue.arrayFromObject("aliases");
 			if (aliasesArray != nullptr)
 			{
@@ -300,7 +304,7 @@ bool CameraCalibrationManager::registerCalibrations(const JSONParser::JSONValue&
 		}
 	}
 
-	return true;
+	return anyCameraRegistered;
 }
 
 bool CameraCalibrationManager::registerCamera(const std::string& cameraName, SharedAnyCamera&& camera, const int32_t priority)
