@@ -55,6 +55,18 @@ bool TestCameraCalibrationManager::test()
 
 	Log::info() << " ";
 
+	allSucceeded = testDeviceContext() && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testDeviceContextHierarchy() && allSucceeded;
+
+	Log::info() << " ";
+
+	allSucceeded = testDeviceContextIsolation() && allSucceeded;
+
+	Log::info() << " ";
+
 	if (allSucceeded)
 	{
 		Log::info() << "Entire Camera Calibration Manager test succeeded.";
@@ -102,6 +114,21 @@ TEST(TestCameraCalibrationManager, CameraModels)
 TEST(TestCameraCalibrationManager, ErrorHandling)
 {
 	EXPECT_TRUE(TestCameraCalibrationManager::testErrorHandling());
+}
+
+TEST(TestCameraCalibrationManager, DeviceContext)
+{
+	EXPECT_TRUE(TestCameraCalibrationManager::testDeviceContext());
+}
+
+TEST(TestCameraCalibrationManager, DeviceContextHierarchy)
+{
+	EXPECT_TRUE(TestCameraCalibrationManager::testDeviceContextHierarchy());
+}
+
+TEST(TestCameraCalibrationManager, DeviceContextIsolation)
+{
+	EXPECT_TRUE(TestCameraCalibrationManager::testDeviceContextIsolation());
 }
 
 #endif // OCEAN_USE_GTEST
@@ -950,6 +977,546 @@ bool TestCameraCalibrationManager::testErrorHandling()
 		const bool registered = manager.registerCalibrations(nullptr, 0);
 
 		OCEAN_EXPECT_FALSE(validation, registered);
+	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestCameraCalibrationManager::testDeviceContext()
+{
+	Log::info() << "Device context test:";
+
+	Validation validation;
+
+	{
+		// Test setting device product
+		const std::string jsonData = R"(
+		{
+			"devices": [
+				{
+					"product": "Samsung S21 5G",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"fovx": 1.0
+								}
+							]
+						}
+					]
+				}
+			]
+		})";
+
+		TestableCalibrationManager manager;
+		OCEAN_EXPECT_TRUE(validation, manager.registerCalibrations(jsonData.c_str(), jsonData.size()));
+
+		// Set device product context
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceProduct("Samsung S21 5G"));
+
+		// Should find camera with simple name
+		SharedAnyCamera camera = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, camera != nullptr);
+
+		if (camera)
+		{
+			OCEAN_EXPECT_EQUAL(validation, camera->width(), 1920u);
+			OCEAN_EXPECT_EQUAL(validation, camera->height(), 1080u);
+		}
+	}
+
+	{
+		// Test setting device version
+		const std::string jsonData = R"(
+		{
+			"devices": [
+				{
+					"product": "Samsung S21 5G",
+					"version": "SM-G991U",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"configuration": "8_PARAMETERS",
+									"parameters": [1100.0, 1100.0, 960.0, 540.0, 0.01, -0.02, 0.0, 0.0]
+								}
+							]
+						}
+					]
+				}
+			]
+		})";
+
+		TestableCalibrationManager manager;
+		OCEAN_EXPECT_TRUE(validation, manager.registerCalibrations(jsonData.c_str(), jsonData.size()));
+
+		// Set device version context
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceVersion("SM-G991U"));
+
+		// Should find camera
+		SharedAnyCamera camera = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, camera != nullptr);
+	}
+
+	{
+		// Test setting device serial
+		const std::string jsonData = R"(
+		{
+			"devices": [
+				{
+					"product": "Samsung S21 5G",
+					"version": "SM-G991U",
+					"serial": "ABC123456",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"fovx": 1.1
+								}
+							]
+						}
+					]
+				}
+			]
+		})";
+
+		TestableCalibrationManager manager;
+		OCEAN_EXPECT_TRUE(validation, manager.registerCalibrations(jsonData.c_str(), jsonData.size()));
+
+		// Set device serial context
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceSerial("ABC123456"));
+
+		// Should find camera
+		SharedAnyCamera camera = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, camera != nullptr);
+	}
+
+	{
+		// Test clearing device context
+		const std::string jsonData = R"(
+		{
+			"cameras": [
+				{
+					"name": "Generic Webcam",
+					"calibrations": [
+						{
+							"resolution": {"width": 640, "height": 480},
+							"model": "Ocean Pinhole",
+							"fovx": 1.0
+						}
+					]
+				}
+			]
+		})";
+
+		TestableCalibrationManager manager;
+		OCEAN_EXPECT_TRUE(validation, manager.registerCalibrations(jsonData.c_str(), jsonData.size()));
+
+		// Should find global camera without context
+		SharedAnyCamera camera1 = manager.camera("Generic Webcam", 640, 480);
+		OCEAN_EXPECT_TRUE(validation, camera1 != nullptr);
+
+		// Set device context
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceProduct("Some Product"));
+
+		// Should not find global camera with device context
+		SharedAnyCamera camera2 = manager.camera("Generic Webcam", 640, 480);
+		OCEAN_EXPECT_TRUE(validation, camera2 == nullptr);
+
+		// Clear context
+		manager.clearDeviceContext();
+
+		// Should find global camera again
+		SharedAnyCamera camera3 = manager.camera("Generic Webcam", 640, 480);
+		OCEAN_EXPECT_TRUE(validation, camera3 != nullptr);
+	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestCameraCalibrationManager::testDeviceContextHierarchy()
+{
+	Log::info() << "Device context hierarchy test:";
+
+	Validation validation;
+
+	{
+		// Test that product context only matches product-level cameras
+		const std::string jsonData = R"(
+		{
+			"devices": [
+				{
+					"product": "Samsung S21 5G",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"priority": 5,
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"fovx": 0.9
+								}
+							]
+						}
+					]
+				},
+				{
+					"product": "Samsung S21 5G",
+					"version": "SM-G991U",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"priority": 10,
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"fovx": 1.0
+								}
+							]
+						}
+					]
+				}
+			]
+		})";
+
+		TestableCalibrationManager manager;
+		OCEAN_EXPECT_TRUE(validation, manager.registerCalibrations(jsonData.c_str(), jsonData.size()));
+
+		// Set product context - should only see product-level camera (priority 5)
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceProduct("Samsung S21 5G"));
+
+		SharedAnyCamera camera = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, camera != nullptr);
+
+		// The product-level camera should be returned (not the version-level one)
+		// We can't directly verify the priority, but we verify a camera was found
+	}
+
+	{
+		// Test that version context only matches version-level cameras (not serial)
+		const std::string jsonData = R"(
+		{
+			"devices": [
+				{
+					"product": "Samsung S21 5G",
+					"version": "SM-G991U",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"priority": 8,
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"fovx": 1.0
+								}
+							]
+						}
+					]
+				},
+				{
+					"product": "Samsung S21 5G",
+					"version": "SM-G991U",
+					"serial": "ABC123",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"priority": 15,
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"fovx": 1.1
+								}
+							]
+						}
+					]
+				}
+			]
+		})";
+
+		TestableCalibrationManager manager;
+		OCEAN_EXPECT_TRUE(validation, manager.registerCalibrations(jsonData.c_str(), jsonData.size()));
+
+		// Set version context - should only see version-level camera (priority 8, not serial)
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceVersion("SM-G991U"));
+
+		SharedAnyCamera camera = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, camera != nullptr);
+	}
+
+	{
+		// Test that serial context matches serial-level cameras
+		const std::string jsonData = R"(
+		{
+			"devices": [
+				{
+					"product": "Samsung S21 5G",
+					"version": "SM-G991U",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"priority": 8,
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"fovx": 1.0
+								}
+							]
+						}
+					]
+				},
+				{
+					"product": "Samsung S21 5G",
+					"version": "SM-G991U",
+					"serial": "XYZ789",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"priority": 20,
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"fovx": 1.2
+								}
+							]
+						}
+					]
+				}
+			]
+		})";
+
+		TestableCalibrationManager manager;
+		OCEAN_EXPECT_TRUE(validation, manager.registerCalibrations(jsonData.c_str(), jsonData.size()));
+
+		// Set serial context - should only see serial-level camera
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceSerial("XYZ789"));
+
+		SharedAnyCamera camera = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, camera != nullptr);
+
+		// Try different serial - should not find camera
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceSerial("DIFFERENT"));
+		SharedAnyCamera camera2 = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, camera2 == nullptr);
+	}
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+bool TestCameraCalibrationManager::testDeviceContextIsolation()
+{
+	Log::info() << "Device context isolation test:";
+
+	Validation validation;
+
+	{
+		// Test that global cameras are not accessible with device context set
+		const std::string jsonData = R"(
+		{
+			"cameras": [
+				{
+					"name": "Generic Webcam",
+					"calibrations": [
+						{
+							"resolution": {"width": 640, "height": 480},
+							"model": "Ocean Pinhole",
+							"fovx": 1.0
+						}
+					]
+				}
+			],
+			"devices": [
+				{
+					"product": "Samsung S21 5G",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"fovx": 1.0
+								}
+							]
+						}
+					]
+				}
+			]
+		})";
+
+		TestableCalibrationManager manager;
+		OCEAN_EXPECT_TRUE(validation, manager.registerCalibrations(jsonData.c_str(), jsonData.size()));
+
+		// Without context, can access global camera but not device camera
+		SharedAnyCamera globalCam = manager.camera("Generic Webcam", 640, 480);
+		OCEAN_EXPECT_TRUE(validation, globalCam != nullptr);
+
+		SharedAnyCamera deviceCam1 = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, deviceCam1 == nullptr);
+
+		// With device context, can access device camera but not global camera
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceProduct("Samsung S21 5G"));
+
+		SharedAnyCamera globalCam2 = manager.camera("Generic Webcam", 640, 480);
+		OCEAN_EXPECT_TRUE(validation, globalCam2 == nullptr);
+
+		SharedAnyCamera deviceCam2 = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, deviceCam2 != nullptr);
+	}
+
+	{
+		// Test switching between different device contexts
+		const std::string jsonData = R"(
+		{
+			"devices": [
+				{
+					"product": "Samsung S21 5G",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"fovx": 1.0
+								}
+							]
+						}
+					]
+				},
+				{
+					"product": "iPhone 13 Pro",
+					"cameras": [
+						{
+							"name": "Back-facing Camera 0",
+							"calibrations": [
+								{
+									"resolution": {"width": 1920, "height": 1080},
+									"model": "Ocean Pinhole",
+									"fovx": 1.1
+								}
+							]
+						}
+					]
+				}
+			]
+		})";
+
+		TestableCalibrationManager manager;
+		OCEAN_EXPECT_TRUE(validation, manager.registerCalibrations(jsonData.c_str(), jsonData.size()));
+
+		// Set Samsung context
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceProduct("Samsung S21 5G"));
+		SharedAnyCamera samsungCam = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, samsungCam != nullptr);
+
+		// Switch to iPhone context
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceProduct("iPhone 13 Pro"));
+		SharedAnyCamera iphoneCam = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, iphoneCam != nullptr);
+
+		// Set non-existent context
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceProduct("Non-existent Product"));
+		SharedAnyCamera noCam = manager.camera("Back-facing Camera 0", 1920, 1080);
+		OCEAN_EXPECT_TRUE(validation, noCam == nullptr);
+	}
+
+	{
+		// Test that cameras from different hierarchy levels don't interfere
+		const std::string jsonData = R"(
+		{
+			"devices": [
+				{
+					"product": "Test Product",
+					"cameras": [
+						{
+							"name": "Camera A",
+							"calibrations": [
+								{
+									"resolution": {"width": 640, "height": 480},
+									"model": "Ocean Pinhole",
+									"fovx": 0.9
+								}
+							]
+						}
+					]
+				},
+				{
+					"product": "Test Product",
+					"version": "V1",
+					"cameras": [
+						{
+							"name": "Camera B",
+							"calibrations": [
+								{
+									"resolution": {"width": 640, "height": 480},
+									"model": "Ocean Pinhole",
+									"fovx": 1.0
+								}
+							]
+						}
+					]
+				},
+				{
+					"product": "Test Product",
+					"version": "V1",
+					"serial": "S123",
+					"cameras": [
+						{
+							"name": "Camera C",
+							"calibrations": [
+								{
+									"resolution": {"width": 640, "height": 480},
+									"model": "Ocean Pinhole",
+									"fovx": 1.1
+								}
+							]
+						}
+					]
+				}
+			]
+		})";
+
+		TestableCalibrationManager manager;
+		OCEAN_EXPECT_TRUE(validation, manager.registerCalibrations(jsonData.c_str(), jsonData.size()));
+
+		// Product context: should see Camera A, not B or C
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceProduct("Test Product"));
+		OCEAN_EXPECT_TRUE(validation, manager.camera("Camera A", 640, 480) != nullptr);
+		OCEAN_EXPECT_TRUE(validation, manager.camera("Camera B", 640, 480) == nullptr);
+		OCEAN_EXPECT_TRUE(validation, manager.camera("Camera C", 640, 480) == nullptr);
+
+		// Version context: should see Camera B, not A or C
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceVersion("V1"));
+		OCEAN_EXPECT_TRUE(validation, manager.camera("Camera A", 640, 480) == nullptr);
+		OCEAN_EXPECT_TRUE(validation, manager.camera("Camera B", 640, 480) != nullptr);
+		OCEAN_EXPECT_TRUE(validation, manager.camera("Camera C", 640, 480) == nullptr);
+
+		// Serial context: should see Camera C, not A or B
+		OCEAN_EXPECT_TRUE(validation, manager.setDeviceSerial("S123"));
+		OCEAN_EXPECT_TRUE(validation, manager.camera("Camera A", 640, 480) == nullptr);
+		OCEAN_EXPECT_TRUE(validation, manager.camera("Camera B", 640, 480) == nullptr);
+		OCEAN_EXPECT_TRUE(validation, manager.camera("Camera C", 640, 480) != nullptr);
 	}
 
 	Log::info() << "Validation: " << validation;

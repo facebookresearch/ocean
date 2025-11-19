@@ -92,6 +92,24 @@ class OCEAN_TEST_IO_EXPORT TestCameraCalibrationManager
 		 * @return True, if succeeded
 		 */
 		static bool testErrorHandling();
+
+		/**
+		 * Tests basic device context functionality (product, version, serial).
+		 * @return True, if succeeded
+		 */
+		static bool testDeviceContext();
+
+		/**
+		 * Tests hierarchical device context matching.
+		 * @return True, if succeeded
+		 */
+		static bool testDeviceContextHierarchy();
+
+		/**
+		 * Tests context isolation (global vs device-specific cameras).
+		 * @return True, if succeeded
+		 */
+		static bool testDeviceContextIsolation();
 };
 
 } // namespace TestIO
