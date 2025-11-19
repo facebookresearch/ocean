@@ -212,7 +212,7 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 						// both the 3D ray and its projection: t_3D * v_3D[x] = t_2D * v_2D[x].
 
 						ocean_assert(minDistance >= T(0.0));
-						if (minDistance != NumericT<T>::maxValue())
+						if (minDistance != NumericT<T>::maxValue() && minDistance != NumericT<T>::inf())
 						{
 							gtMinDistance3D = minDistance * (NumericT<T>::isWeakEqualEps(projectedDirection.x()) ? projectedDirection.y() / rayDirection.y() : projectedDirection.x() / rayDirection.x());
 							gtPoint = rayOrigin + rayDirection * gtMinDistance3D;
