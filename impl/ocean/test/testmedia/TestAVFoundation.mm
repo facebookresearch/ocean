@@ -200,7 +200,8 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 
 	const std::vector<PixelFormatSpecifier> pixelFormatSpecifiers =
 	{
-		{FrameType::FORMAT_Y_UV12, kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange, 2},
+		{FrameType::FORMAT_Y_UV12_LIMITED_RANGE, kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange, 2},
+		{FrameType::FORMAT_Y_UV12_FULL_RANGE, kCVPixelFormatType_420YpCbCr8BiPlanarFullRange, 2},
 		{FrameType::FORMAT_Y_U_V12_LIMITED_RANGE, kCVPixelFormatType_420YpCbCr8Planar, 3},
 		{FrameType::FORMAT_Y_U_V12_FULL_RANGE, kCVPixelFormatType_420YpCbCr8PlanarFullRange, 3}
 	};
@@ -243,7 +244,29 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 
 				if (accessor)
 				{
-					const FrameType::PixelFormat expectedPixelFormat = accessYPlaneOnly ? FrameType::FORMAT_Y8 : pixelFormatSpecifier.pixelFormat;
+					FrameType::PixelFormat expectedPixelFormat = pixelFormatSpecifier.pixelFormat;
+					
+					if (accessYPlaneOnly)
+					{
+						switch (pixelFormatSpecifier.pixelFormat)
+						{
+							case FrameType::FORMAT_Y_UV12_LIMITED_RANGE:
+							case FrameType::FORMAT_Y_U_V12_LIMITED_RANGE:
+								expectedPixelFormat = FrameType::FORMAT_Y8_LIMITED_RANGE;
+								break;
+								
+							case FrameType::FORMAT_Y_UV12_FULL_RANGE:
+							case FrameType::FORMAT_Y_U_V12_FULL_RANGE:
+								expectedPixelFormat = FrameType::FORMAT_Y8_FULL_RANGE;
+								break;
+								
+							default:
+								ocean_assert(false && "This should never happen!");
+								expectedPixelFormat = FrameType::FORMAT_UNDEFINED;
+								break;
+						}
+					}
+					
 					const FrameType expectedFrameType(width, height, expectedPixelFormat, FrameType::ORIGIN_UPPER_LEFT);
 
 					Frame& frame = accessor.frame();

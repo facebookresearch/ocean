@@ -45,8 +45,8 @@ PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const boo
 		return;
 	}
 
-	const unsigned int width = (unsigned int)CVPixelBufferGetWidth(pixelBuffer);
-	const unsigned int height = (unsigned int)CVPixelBufferGetHeight(pixelBuffer);
+	const unsigned int width = (unsigned int)(CVPixelBufferGetWidth(pixelBuffer));
+	const unsigned int height = (unsigned int)(CVPixelBufferGetHeight(pixelBuffer));
 
 	ocean_assert(width > 0u && height > 0u);
 	if (width == 0u || height == 0u)
@@ -100,8 +100,8 @@ PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const boo
 		void* yPlaneData = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer_, 0);
 		void* uvPlaneData = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer_, 1);
 
-		const unsigned int yPlaneStrideBytes = (unsigned int)CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer_, 0);
-		const unsigned int uvPlaneStrideBytes = (unsigned int)CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer_, 1);
+		const unsigned int yPlaneStrideBytes = (unsigned int)(CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer_, 0));
+		const unsigned int uvPlaneStrideBytes = (unsigned int)(CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer_, 1));
 
 		ocean_assert(yPlaneStrideBytes >= width);
 		ocean_assert(uvPlaneStrideBytes >= width);
@@ -116,26 +116,28 @@ PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const boo
 		{
 			if (readOnly)
 			{
-				planeInitializers.emplace_back((const uint8_t*)yPlaneData, Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
+				planeInitializers.emplace_back((const uint8_t*)(yPlaneData), Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
 			}
 			else
 			{
-				planeInitializers.emplace_back((uint8_t*)yPlaneData, Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
+				planeInitializers.emplace_back((uint8_t*)(yPlaneData), Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
 			}
+			
+			const FrameType::PixelFormat pixelFormatY8 = FrameType::formatGrayscalePixelFormat(pixelFormat); // will be either FORMAT_Y8_LIMITED_RANGE or FORMAT_Y8_FULL_RANGE
 
-			frameType = FrameType(frameType, FrameType::FORMAT_Y8);
+			frameType = FrameType(frameType, pixelFormatY8);
 		}
 		else
 		{
 			if (readOnly)
 			{
-				planeInitializers.emplace_back((const uint8_t*)yPlaneData, Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
-				planeInitializers.emplace_back((const uint8_t*)uvPlaneData, Frame::CM_USE_KEEP_LAYOUT, uvPlanePaddingElements);
+				planeInitializers.emplace_back((const uint8_t*)(yPlaneData), Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
+				planeInitializers.emplace_back((const uint8_t*)(uvPlaneData), Frame::CM_USE_KEEP_LAYOUT, uvPlanePaddingElements);
 			}
 			else
 			{
-				planeInitializers.emplace_back((uint8_t*)yPlaneData, Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
-				planeInitializers.emplace_back((uint8_t*)uvPlaneData, Frame::CM_USE_KEEP_LAYOUT, uvPlanePaddingElements);
+				planeInitializers.emplace_back((uint8_t*)(yPlaneData), Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
+				planeInitializers.emplace_back((uint8_t*)(uvPlaneData), Frame::CM_USE_KEEP_LAYOUT, uvPlanePaddingElements);
 			}
 		}
 
@@ -155,9 +157,9 @@ PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const boo
 		void* uPlaneData = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer_, 1);
 		void* vPlaneData = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer_, 2);
 
-		const unsigned int yPlaneStrideBytes = (unsigned int)CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer_, 0);
-		const unsigned int uPlaneStrideBytes = (unsigned int)CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer_, 1);
-		const unsigned int vPlaneStrideBytes = (unsigned int)CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer_, 2);
+		const unsigned int yPlaneStrideBytes = (unsigned int)(CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer_, 0));
+		const unsigned int uPlaneStrideBytes = (unsigned int)(CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer_, 1));
+		const unsigned int vPlaneStrideBytes = (unsigned int)(CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer_, 2));
 
 		ocean_assert(yPlaneStrideBytes >= width);
 		ocean_assert(uPlaneStrideBytes >= width / 2u);
@@ -174,28 +176,30 @@ PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const boo
 		{
 			if (readOnly)
 			{
-				planeInitializers.emplace_back((const uint8_t*)yPlaneData, Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
+				planeInitializers.emplace_back((const uint8_t*)(yPlaneData), Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
 			}
 			else
 			{
-				planeInitializers.emplace_back((uint8_t*)yPlaneData, Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
+				planeInitializers.emplace_back((uint8_t*)(yPlaneData), Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
 			}
+			
+			const FrameType::PixelFormat pixelFormatY8 = FrameType::formatGrayscalePixelFormat(pixelFormat);
 
-			frameType = FrameType(frameType, FrameType::FORMAT_Y8);
+			frameType = FrameType(frameType, pixelFormatY8); // will be either FORMAT_Y8_LIMITED_RANGE or FORMAT_Y8_FULL_RANGE
 		}
 		else
 		{
 			if (readOnly)
 			{
-				planeInitializers.emplace_back((const uint8_t*)yPlaneData, Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
-				planeInitializers.emplace_back((const uint8_t*)uPlaneData, Frame::CM_USE_KEEP_LAYOUT, uPlanePaddingElements);
-				planeInitializers.emplace_back((const uint8_t*)vPlaneData, Frame::CM_USE_KEEP_LAYOUT, vPlanePaddingElements);
+				planeInitializers.emplace_back((const uint8_t*)(yPlaneData), Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
+				planeInitializers.emplace_back((const uint8_t*)(uPlaneData), Frame::CM_USE_KEEP_LAYOUT, uPlanePaddingElements);
+				planeInitializers.emplace_back((const uint8_t*)(vPlaneData), Frame::CM_USE_KEEP_LAYOUT, vPlanePaddingElements);
 			}
 			else
 			{
-				planeInitializers.emplace_back((uint8_t*)yPlaneData, Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
-				planeInitializers.emplace_back((uint8_t*)uPlaneData, Frame::CM_USE_KEEP_LAYOUT, uPlanePaddingElements);
-				planeInitializers.emplace_back((uint8_t*)vPlaneData, Frame::CM_USE_KEEP_LAYOUT, vPlanePaddingElements);
+				planeInitializers.emplace_back((uint8_t*)(yPlaneData), Frame::CM_USE_KEEP_LAYOUT, yPlanePaddingElements);
+				planeInitializers.emplace_back((uint8_t*)(uPlaneData), Frame::CM_USE_KEEP_LAYOUT, uPlanePaddingElements);
+				planeInitializers.emplace_back((uint8_t*)(vPlaneData), Frame::CM_USE_KEEP_LAYOUT, vPlanePaddingElements);
 			}
 		}
 
@@ -219,7 +223,7 @@ PixelBufferAccessor::PixelBufferAccessor(CVPixelBufferRef pixelBuffer, const boo
 
 			if (readOnly)
 			{
-				planeInitializers.emplace_back((const void*)planeData, Frame::CM_USE_KEEP_LAYOUT, planePaddingElements);
+				planeInitializers.emplace_back((const void*)(planeData), Frame::CM_USE_KEEP_LAYOUT, planePaddingElements);
 			}
 			else
 			{
