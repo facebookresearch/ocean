@@ -48,7 +48,7 @@ namespace Test
  * @endcode
  *
  * The following example shows how to use Validation and calling the functions directly but also providing __FILE__ and __LINE__ macro parameters.<br>
- * In case of an error, additional in information about the location will be provided:
+ * In case of an error, additional information about the location will be provided:
  * @code
  * bool testFunction()
  * {
@@ -74,7 +74,7 @@ namespace Test
  * @endcode
  *
  * The following example shows how to use Validation while not calling the object's functions directly but using the corresponding macros.<br>
- * In case of an error, additional in information about the location will be provided:
+ * In case of an error, additional information about the location will be provided:
  * @code
  * bool testFunction()
  * {
@@ -106,12 +106,12 @@ class Validation
 	public:
 
 		/**
-		 * Default constructor, by default the verified has succeeded.
+		 * Default constructor, by default the validation has succeeded.
 		 */
 		Validation() = default;
 
 		/**
-		 * Creates a new validation object associated with a random generator, by default the verified has succeeded.
+		 * Creates a new validation object associated with a random generator, by default the validation has succeeded.
 		 * @param randomGenerator The random generator which will be used during verification
 		 */
 		explicit inline Validation(RandomGenerator& randomGenerator);
@@ -161,7 +161,7 @@ class Validation
 
 		/**
 		 * Informs this validation object that a value is expected to be equal to another value.
-		 * In case the both values are not identical, this validation object will not succeed.
+		 * In case both values are not identical, this validation object will not succeed.
 		 * @param value0 The first value to compare
 		 * @param value1 The second value to compare
 		 * @see succeeded().
@@ -172,7 +172,7 @@ class Validation
 
 		/**
 		 * Informs this validation object that a value is expected to be equal to another value.
-		 * In case the both values are not identical, this validation object will not succeed.<br>
+		 * In case both values are not identical, this validation object will not succeed.<br>
 		 * This function will also write a message to the error log.
 		 * @param value0 The first value to compare
 		 * @param value1 The second value to compare
@@ -186,7 +186,7 @@ class Validation
 
 		/**
 		 * Informs this validation object that a value is expected to be not equal to another value.
-		 * In case the both values are equal, this validation object will not succeed.
+		 * In case both values are equal, this validation object will not succeed.
 		 * @param value0 The first value to compare
 		 * @param value1 The second value to compare
 		 * @see succeeded().
@@ -197,7 +197,7 @@ class Validation
 
 		/**
 		 * Informs this validation object that a value is expected to be not equal to another value.
-		 * In case the both values are equal, this validation object will not succeed.<br>
+		 * In case both values are equal, this validation object will not succeed.<br>
 		 * This function will also write a message to the error log.
 		 * @param value0 The first value to compare
 		 * @param value1 The second value to compare
@@ -358,6 +358,15 @@ class Validation
 		[[nodiscard]] inline bool succeeded() const;
 
 		/**
+		 * Returns whether this validation has succeeded so far.
+		 * This function should not be used as a final validation check, but rather as an intermediate check to determine whether expensive or additional tests can be skipped due to an earlier failure.
+		 * Use succeeded() as the final validation step.
+		 * @return True if no failures have occurred; false if any validation has failed.
+		 * @see succeeded()
+		 */
+		[[nodiscard]] inline bool succeededSoFar() const;
+
+		/**
 		 * Returns a string containing the random generator's initial seed, if any
 		 * @return The string with initial seed test, empty if no random generator is associated with this validation object
 		 */
@@ -438,7 +447,7 @@ inline Validation::Validation(RandomGenerator& randomGenerator) :
 inline Validation::~Validation()
 {
 #ifdef OCEAN_DEBUG
-	ocean_assert(succeededChecked_ && "The validation has not been check for success");
+	ocean_assert(succeededChecked_ && "The validation has not been checked for success");
 #endif
 }
 
@@ -883,6 +892,11 @@ inline bool Validation::succeeded() const
 	succeededChecked_ = true;
 #endif
 
+	return succeeded_;
+}
+
+inline bool Validation::succeededSoFar() const
+{
 	return succeeded_;
 }
 
