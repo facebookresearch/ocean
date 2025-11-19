@@ -10,6 +10,10 @@
 #include "ocean/cv/Canvas.h"
 #include "ocean/cv/FrameInterpolatorBilinear.h"
 
+#include "ocean/io/JSONParser.h"
+
+#include <fstream>
+
 namespace Ocean
 {
 
@@ -349,6 +353,208 @@ Frame Utilities::visualizeDistortionValidity(const CameraProjectionChecker& came
 	}
 
 	return yFrame;
+}
+
+bool Utilities::writeCalibrationBoardToFile(const CalibrationBoard& calibrationBoard, const std::string& filename, const unsigned int seed)
+{
+	if (!calibrationBoard.isValid())
+	{
+		return false;
+	}
+
+	std::ofstream file(filename, std::ios::binary);
+	if (!file.is_open())
+	{
+		return false;
+	}
+
+	const size_t xMarkers = calibrationBoard.xMarkers();
+	const size_t yMarkers = calibrationBoard.yMarkers();
+
+	file << "{\n";
+
+	file << "\t\"comment\": \"Camera Calibration Board, created by Ocean https://facebookresearch.github.io/ocean/\",\n\n";
+
+	file << "\t\"hash\": \"" << String::toAStringHex(calibrationBoard.hash()) << "\",\n\n";
+
+	if (seed != (unsigned int)(-1))
+	{
+		file << "\t\"seed\": " << seed << ",\n\n";
+	}
+
+	file << "\t\"xMarkers\": " << xMarkers << ",\n";
+	file << "\t\"yMarkers\": " << yMarkers << ",\n\n";
+
+	file << "\t\"markers\":\n";
+	file << "\t[\n";
+
+	for (size_t y = 0; y < yMarkers; ++y)
+	{
+		for (size_t x = 0; x < xMarkers; ++x)
+		{
+			const CalibrationBoard::BoardMarker& boardMarker = calibrationBoard.marker(x, y);
+
+			ocean_assert(boardMarker.isValid());
+			if (!boardMarker.isValid())
+			{
+				return false;
+			}
+
+			file << "\t\t{\n";
+			file << "\t\t\t\"markerId\": " << boardMarker.markerId() << ",\n";
+			file << "\t\t\t\"sign\": " << (boardMarker.sign() ? "true" : "false") << ",\n";
+			file << "\t\t\t\"orientation\": " << int(boardMarker.orientation()) << ",\n";
+			file << "\t\t\t\"coordinate\": {\"x\": " << boardMarker.coordinate().x() << ", \"y\": " << boardMarker.coordinate().y() << "}\n";
+
+			// Add comma if not the last marker
+			if (y < yMarkers - 1 || x < xMarkers - 1)
+			{
+				file << "\t\t},\n";
+			}
+			else
+			{
+				file << "\t\t}\n";
+			}
+		}
+	}
+
+	file << "\t]\n";
+	file << "}\n";
+
+	file.close();
+
+	return !file.fail();
+}
+
+bool Utilities::readCalibrationBoardFromFile(const std::string& filename, CalibrationBoard& calibrationBoard)
+{
+	std::string errorMessage;
+	IO::JSONParser::JSONValue jsonRoot = IO::JSONParser::parse(filename, std::string(), &errorMessage);
+
+	if (!jsonRoot.isObject())
+	{
+		Log::error() << "Calibration::readCalibrationBoardFromFile(): " << errorMessage;
+		return false;
+	}
+
+	const std::string* hashString = jsonRoot.stringFromObject("hash");
+	if (hashString == nullptr)
+	{
+		return false;
+	}
+
+	uint64_t hash;
+	if (!String::isHexValue64(hashString->c_str(), hashString->size(), false, &hash))
+	{
+		return false;
+	}
+
+	const double* xMarkersNumber = jsonRoot.numberFromObject("xMarkers");
+	const double* yMarkersNumber = jsonRoot.numberFromObject("yMarkers");
+
+	if (xMarkersNumber == nullptr || yMarkersNumber == nullptr)
+	{
+		return false;
+	}
+
+	const int32_t xMarkersSigned = NumericD::round32(*xMarkersNumber);
+	const int32_t yMarkersSigned = NumericD::round32(*yMarkersNumber);
+
+	if (xMarkersSigned <= 0 || yMarkersSigned <= 0)
+	{
+		return false;
+	}
+
+	const size_t xMarkers = size_t(xMarkersSigned);
+	const size_t yMarkers = size_t(yMarkersSigned);
+
+	const IO::JSONParser::JSONValue::Array* markersArray = jsonRoot.arrayFromObject("markers");
+
+	if (markersArray == nullptr)
+	{
+		return false;
+	}
+
+	CalibrationBoard::BoardMarkers boardMarkers;
+	boardMarkers.reserve(xMarkers * yMarkers);
+
+	for (size_t i = 0; i < markersArray->size(); ++i)
+	{
+		const IO::JSONParser::JSONValue& markerValue = (*markersArray)[i];
+
+		const double* markerIdNumber = markerValue.numberFromObject("markerId");
+		const bool* signBoolean = markerValue.booleanFromObject("sign");
+		const double* orientationNumber = markerValue.numberFromObject("orientation");
+
+		if (markerIdNumber == nullptr || signBoolean == nullptr || orientationNumber == nullptr)
+		{
+			return false;
+		}
+
+		const IO::JSONParser::JSONValue* coordinateValue = markerValue.valueFromObject("coordinate");
+
+		if (coordinateValue == nullptr)
+		{
+			return false;
+		}
+
+		const double* xNumber = coordinateValue->numberFromObject("x");
+		const double* yNumber = coordinateValue->numberFromObject("y");
+
+		if (xNumber == nullptr || yNumber == nullptr)
+		{
+			return false;
+		}
+
+		const int32_t markerIdSigned = NumericD::round32(*markerIdNumber);
+
+		if (markerIdSigned < 0)
+		{
+			return false;
+		}
+
+		const int32_t orientationSigned = NumericD::round32(*orientationNumber);
+
+		if (orientationSigned < 0 || orientationSigned > int32_t(CV::PixelDirection::PD_EAST))
+		{
+			return false;
+		}
+
+		const bool sign = *signBoolean;
+
+		const int32_t xSigned = NumericD::round32(*xNumber);
+		const int32_t ySigned = NumericD::round32(*yNumber);
+
+		if (xSigned < 0 || size_t(xSigned) >= xMarkers)
+		{
+			return false;
+		}
+
+		if (ySigned < 0 || size_t(ySigned) >= yMarkers)
+		{
+			return false;
+		}
+
+		const size_t markerId = size_t(markerIdSigned);
+
+		const CV::PixelDirection orientation = CV::PixelDirection(orientationSigned);
+
+		const unsigned int x = (unsigned int)(xSigned);
+		const unsigned int y = (unsigned int)(ySigned);
+
+		const CalibrationBoard::MarkerCoordinate coordinate(x, y);
+
+		boardMarkers.emplace_back(markerId, sign, orientation, coordinate);
+	}
+
+	calibrationBoard = CalibrationBoard(xMarkers, yMarkers, std::move(boardMarkers));
+
+	if (calibrationBoard.hash() != hash)
+	{
+		Log::warning() << "Calibration::readCalibrationBoardFromFile(): Hash does not match!";
+	}
+
+	return calibrationBoard.isValid();
 }
 
 bool Utilities::createCalibrationBoardFromSeed(const std::string& calibrationBoardType, CalibrationBoard& calibrationBoard)

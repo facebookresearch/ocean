@@ -136,6 +136,11 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoard
 		};
 
 		/**
+		 * Definition of a vector holding board markers.
+		 */
+		using BoardMarkers = std::vector<BoardMarker>;
+
+		/**
 		 * Definition of a static vector allowing to store up to four marker coordinates.
 		 */
 		using MarkerCoordinates = StaticVector<MarkerCoordinate, 4u>;
@@ -224,11 +229,6 @@ class OCEAN_CV_CALIBRATION_EXPORT CalibrationBoard
 		using ObjectPointIdSet = std::unordered_set<ObjectPointId, ObjectPointId::Hash>;
 
 	protected:
-
-		/**
-		 * Definition of a vector holding board markers.
-		 */
-		using BoardMarkers = std::vector<BoardMarker>;
 
 		/**
 		 * Definition of an unordered map mapping unique values for pairs of markers to counters.

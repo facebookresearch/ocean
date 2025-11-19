@@ -88,6 +88,23 @@ class OCEAN_CV_CALIBRATION_EXPORT Utilities
 		static Frame visualizeDistortionValidity(const CameraProjectionChecker& cameraProjectionChecker, const bool inPixelDomain = true);
 
 		/**
+		 * Writes the calibration board (layout, dimension, and marker arrangement) to a file.
+		 * @param calibrationBoard The calibration board to be written, must be valid
+		 * @param filename The path to the file, must be valid
+		 * @param seed Optional the seed value which was used to create the calibration board, with range [0, infinity)
+		 * @return True, if succeeded
+		 */
+		static bool writeCalibrationBoardToFile(const CalibrationBoard& calibrationBoard, const std::string& filename, const unsigned int seed = (unsigned int)(-1));
+
+		/**
+		 * Reads a calibration board from a file.
+		 * @param filename The path to the file, must be valid
+		 * @param calibrationBoard The resulting calibration board
+		 * @return True, if succeeded
+		 */
+		static bool readCalibrationBoardFromFile(const std::string& filename, CalibrationBoard& calibrationBoard);
+
+		/**
 		 * Creates a calibration board based on a seed and the board's dimension.
 		 * The string must have the format 'calibrationBoard_<Seed>_<HorizontalMarkers>x<VerticalMarkers> - e.g., 'calibrationBoard_0_8x13'
 		 * @param calibrationBoardType The string with the calibration board type to parse
