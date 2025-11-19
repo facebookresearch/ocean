@@ -12,6 +12,8 @@
 
 #include "ocean/media/avfoundation/PixelBufferAccessor.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -64,7 +66,7 @@ TEST(TestAVFoundation, PixelBufferAccessorNonGenericPixelFormats)
 	EXPECT_TRUE(TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(GTEST_TEST_DURATION));
 }
 
-#endif // #ifdef OCEAN_USE_GTESTkCVPixelFormatType_32ARGB
+#endif // #ifdef OCEAN_USE_GTEST
 
 bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double testDuration)
 {
@@ -72,17 +74,13 @@ bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double t
 
 	Log::info() << "Pixel buffer accessor with generic pixel formats test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	// an default accessor object should be invalid
 
 	const Media::AVFoundation::PixelBufferAccessor invalidAccessor;
-	if (invalidAccessor)
-	{
-		allSucceeded = false;
-	}
-
-	RandomGenerator randomGenerator;
+	OCEAN_EXPECT_FALSE(validation, bool(invalidAccessor));
 
 	using PixelFormatPair = std::pair<FrameType::PixelFormat, OSType>;
 
@@ -101,7 +99,7 @@ bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double t
 		const unsigned int width = RandomI::random(randomGenerator, 1u, 1920u);
 		const unsigned int height = RandomI::random(randomGenerator, 1u, 1080u);
 
-		const PixelFormatPair pixelFormatPair = pixelFormatPairs[RandomI::random(randomGenerator, 0u, (unsigned int)pixelFormatPairs.size() - 1u)];
+		const PixelFormatPair pixelFormatPair = RandomI::random(randomGenerator, pixelFormatPairs);
 
 		const FrameType::PixelFormat pixelFormat = pixelFormatPair.first;
 		const OSType osPixelFormat = pixelFormatPair.second;
@@ -112,7 +110,7 @@ bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double t
 		if (createResult != kCVReturnSuccess)
 		{
 			ocean_assert(false && "This must never happen!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -122,7 +120,7 @@ bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double t
 		if (!writeRandomDataToPixelBuffer(pixelBuffer, 1, randomGenerator, memoryCopy, memoryCopyHeights, memoryCopyStrideBytes))
 		{
 			ocean_assert(false && "This must never happen!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -138,27 +136,23 @@ bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double t
 			{
 				const Frame& frame = accessor.frame();
 
-				if (frame.frameType() != frameType || frame.isReadOnly() != readOnly)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.frameType(), frameType);
+				OCEAN_EXPECT_EQUAL(validation, frame.isReadOnly(), readOnly);
 			}
 			else
 			{
 				Frame& frame = accessor.frame();
 
-				if (frame.frameType() != frameType || frame.isReadOnly() != readOnly)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, frame.frameType(), frameType);
+				OCEAN_EXPECT_EQUAL(validation, frame.isReadOnly(), readOnly);
 			}
 		}
 		else
 		{
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 		}
 
-		if (allSucceeded)
+		if (validation.succeededSoFar())
 		{
 			// ensuring that the memory data is actually correct
 
@@ -172,10 +166,7 @@ bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double t
 				const uint8_t* testFrameData = testFrame.constrow<uint8_t>(y);
 
 				// we ensure that the padding area is identical as well
-				if (memcmp(frameData, testFrameData, frame.strideBytes()) != 0)
-				{
-					allSucceeded = false;
-				}
+				OCEAN_EXPECT_EQUAL(validation, memcmp(frameData, testFrameData, frame.strideBytes()), 0);
 			}
 		}
 
@@ -183,18 +174,11 @@ bool TestAVFoundation::testPixelBufferAccessorGenericPixelFormats(const double t
 
 		CVPixelBufferRelease(pixelBuffer);
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const double testDuration)
@@ -203,17 +187,13 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 
 	Log::info() << "Pixel buffer accessor with non-generic pixel formats test:";
 
-	bool allSucceeded = true;
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
 
 	// a default accessor object should be invalid
 
 	const Media::AVFoundation::PixelBufferAccessor invalidAccessor;
-	if (invalidAccessor)
-	{
-		allSucceeded = false;
-	}
-
-	RandomGenerator randomGenerator;
+	OCEAN_EXPECT_FALSE(validation, bool(invalidAccessor));
 
 	struct PixelFormatSpecifier
 	{
@@ -237,7 +217,7 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 		const unsigned int height = RandomI::random(randomGenerator, 2u, 1080u) & 0xFFFFFFFEu;
 		ocean_assert(width % 2u == 0u && height % 2 == 0u);
 
-		const PixelFormatSpecifier pixelFormatSpecifier = pixelFormatSpecifiers[RandomI::random(randomGenerator, 0u, (unsigned int)pixelFormatSpecifiers.size() - 1u)];
+		const PixelFormatSpecifier pixelFormatSpecifier = RandomI::random(randomGenerator, pixelFormatSpecifiers);
 
 		CVPixelBufferRef pixelBuffer = nullptr;
 		const CVReturn createResult = CVPixelBufferCreate(kCFAllocatorDefault, size_t(width), size_t(height), pixelFormatSpecifier.osPixelFormat, nullptr, &pixelBuffer);
@@ -245,7 +225,7 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 		if (createResult != kCVReturnSuccess)
 		{
 			ocean_assert(false && "This must never happen!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -255,7 +235,7 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 		if (!writeRandomDataToPixelBuffer(pixelBuffer, pixelFormatSpecifier.numberPlanes, randomGenerator, memoryCopy, memoryCopyHeights, memoryCopyStrideBytes))
 		{
 			ocean_assert(false && "This must never happen!");
-			allSucceeded = false;
+			OCEAN_SET_FAILED(validation);
 			break;
 		}
 
@@ -272,30 +252,26 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 			Frame& frame = accessor.frame();
 			ocean_assert(frame.isValid());
 
-			if (frame.isReadOnly() != readOnly)
-			{
-				allSucceeded = false;
-			}
-			if (pixelFormat != frameType.pixelFormat())
-			{
-				allSucceeded = false;
-			}
+			OCEAN_EXPECT_EQUAL(validation, frame.isReadOnly(), readOnly);
+			OCEAN_EXPECT_EQUAL(validation, pixelFormat, frameType.pixelFormat());
 
 			const size_t numberPlanesToCheck = accessYPlaneOnly ? 1 : memoryCopy.size();
 
 			for (size_t nPlane = 0; nPlane < numberPlanesToCheck; ++nPlane)
 			{
+				OCEAN_EXPECT_LESS(validation, nPlane, frame.planes().size());
+
 				if (nPlane >= frame.planes().size())
 				{
-					allSucceeded = false;
 					break;
 				}
 
 				const unsigned int strideBytes = memoryCopyStrideBytes[nPlane];
 
+				OCEAN_EXPECT_EQUAL(validation, frame.planes()[nPlane].strideBytes(), strideBytes);
+
 				if (frame.planes()[nPlane].strideBytes() != strideBytes)
 				{
-					allSucceeded = false;
 					break;
 				}
 
@@ -304,10 +280,7 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 
 				for (unsigned int y = 0u; y < memoryCopyHeights[nPlane]; ++y)
 				{
-					if (memcmp(frameData, memoryCopyData, strideBytes) != 0)
-					{
-						allSucceeded = false;
-					}
+					OCEAN_EXPECT_EQUAL(validation, memcmp(frameData, memoryCopyData, strideBytes), 0);
 
 					frameData += strideBytes;
 					memoryCopyData += strideBytes;
@@ -319,18 +292,11 @@ bool TestAVFoundation::testPixelBufferAccessorNonGenericPixelFormats(const doubl
 
 		CVPixelBufferRelease(pixelBuffer);
 	}
-	while (startTimestamp + testDuration > Timestamp(true));
+	while (!startTimestamp.hasTimePassed(testDuration));
 
-	if (allSucceeded)
-	{
-		Log::info() << "Validation: succeeded.";
-	}
-	else
-	{
-		Log::info() << "Validation FAILED!";
-	}
+	Log::info() << "Validation: " << validation;
 
-	return allSucceeded;
+	return validation.succeeded();
 }
 
 bool TestAVFoundation::writeRandomDataToPixelBuffer(void* voidPixelBuffer, const size_t expectedPlanes, RandomGenerator& randomGenerator, std::vector<std::vector<uint8_t>>& memoryCopy, Indices32& heights, Indices32& strideBytes)
