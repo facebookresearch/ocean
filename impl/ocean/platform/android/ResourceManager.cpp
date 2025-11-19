@@ -135,7 +135,7 @@ bool ResourceManager::readAsset(const std::string& assetFilename, std::vector<ui
 	return succeeded;
 }
 
-std::unique_ptr<ResourceManager::ScopedResource> ResourceManager::accessAsset(const std::string& assetFilename) const
+ResourceManager::UniqueScopedResource ResourceManager::accessAsset(const std::string& assetFilename) const
 {
 	ocean_assert(!assetFilename.empty());
 
@@ -160,7 +160,7 @@ std::unique_ptr<ResourceManager::ScopedResource> ResourceManager::accessAsset(co
 		return nullptr;
 	}
 
-	return std::unique_ptr<ScopedResource>(new ScopedResource(asset, buffer, size));
+	return UniqueScopedResource(new ScopedResource(asset, buffer, size));
 }
 
 ResourceManager::ScopedFile ResourceManager::openAsset(const std::string& assetFilename) const

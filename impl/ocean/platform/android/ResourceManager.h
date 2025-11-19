@@ -119,6 +119,8 @@ class ResourceManager : public Singleton<ResourceManager>
 				const size_t size_ = 0;
 		};
 
+		using UniqueScopedResource = std::unique_ptr<ScopedResource>;
+
 		/**
 		 * This class provides access to the file descriptor of an asset file as long as the object exists.
 		 */
@@ -239,7 +241,7 @@ class ResourceManager : public Singleton<ResourceManager>
 		 * @param assetFilename The filename of the asset to read, must be valid
 		 * @return The resource object, nullptr if invalid
 		 */
-		std::unique_ptr<ScopedResource> accessAsset(const std::string& assetFilename) const;
+		UniqueScopedResource accessAsset(const std::string& assetFilename) const;
 
 		/**
 		 * Opens an asset file and returns a file object providing access to the file descriptor of the asset.

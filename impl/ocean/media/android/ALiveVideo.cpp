@@ -1194,7 +1194,20 @@ void ALiveVideo::onCaptureCompleted(ACameraCaptureSession* session, ACaptureRequ
 			{
 				camera_ = IO::CameraCalibrationManager::get().camera(url(), frame.width(), frame.height());
 
+				if (camera_)
+				{
+					Log::debug() << "ALiveVideo: Using precise camera calibration for '" << url() << "', camera name: " << camera_->name() << ", with fovX: " << Numeric::rad2deg(camera_->fovX()) << "deg";
+				}
+				else
+				{
+					Log::debug() << "ALiveVideo: No precise camera calibration found for '" << url() << "', using default as provided by Android";
+				}
+
 				camera = camera_;
+			}
+			else
+			{
+				Log::debug() << "ALiveVideo: Using custom camera calibration for '" << url() << "', camera name: " << camera_->name() << ", with fovX: " << Numeric::rad2deg(camera_->fovX()) << "deg";
 			}
 
 			scopedLock.release();
