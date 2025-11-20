@@ -811,7 +811,7 @@ class OCEAN_CV_EXPORT FrameConverter
 			protected:
 
 				/**
-				 * Converts frames with compatible formats that do not require an actual conversion, either memory is copyied or used.
+				 * Converts frames with compatible formats that do not require an actual conversion, either memory is copied or used.
 				 * @param source The source frame to convert, must be valid
 				 * @param targetType The target frame type, must be valid
 				 * @param target The resulting target frame, will be modified if conversion is supported
