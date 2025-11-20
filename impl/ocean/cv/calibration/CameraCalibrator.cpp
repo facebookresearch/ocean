@@ -600,11 +600,11 @@ bool CameraCalibrator::determineAdditionalCorrespondences(const MetricCalibratio
 	ocean_assert(observation.isValid());
 	ocean_assert(maximalProjectionError >= 0);
 
-	const CameraProjectionChecker cameraProjectionChecker(observation.camera());
+	const AnyCameraClipper cameraClipper(observation.camera());
 
 	if constexpr (CalibrationDebugElements::allowDebugging_)
 	{
-		CalibrationDebugElements::get().updateCameraCalibratorCameraBoundary(cameraProjectionChecker);
+		CalibrationDebugElements::get().updateCameraCalibratorCameraBoundary(cameraClipper);
 	}
 
 	Indices32 usedMarkerPoints(calibrationBoard.markers(), 0u);
@@ -672,7 +672,7 @@ bool CameraCalibrator::determineAdditionalCorrespondences(const MetricCalibratio
 
 				Vector2 projectedObjectPoint;
 
-				if (!cameraProjectionChecker.projectToImageIF(flippedCamera_T_board, objectPoint, &projectedObjectPoint))
+				if (!cameraClipper.projectToImageIF(flippedCamera_T_board, objectPoint, &projectedObjectPoint))
 				{
 					// the 3D object point projects outside of the camera image
 					continue;

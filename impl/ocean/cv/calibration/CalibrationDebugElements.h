@@ -187,9 +187,9 @@ class CalibrationDebugElements final :
 
 		/**
 		 * Updates a camera calibrator element visualizing the camera boundary of a camera profile.
-		 * @param cameraProjectionChecker The camera projection checker to be used, must be valid
+		 * @param cameraClipper The camera clipper to be used, must be valid
 		 */
-		void updateCameraCalibratorCameraBoundary(const CameraProjectionChecker& cameraProjectionChecker);
+		void updateCameraCalibratorCameraBoundary(const AnyCameraClipper& cameraClipper);
 
 		/**
 		 * Updates a coverage element visualizing how many observations have been used per bin.

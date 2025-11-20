@@ -282,9 +282,9 @@ using namespace Ocean::CV::Calibration;
 			}
 		}
 
-		const CameraProjectionChecker cameraProjectionChecker(cameraCalibrator.camera());
+		const AnyCameraClipper cameraClipper(cameraCalibrator.camera());
 
-		if (Frame outputFrame = CV::Calibration::Utilities::visualizeDistortionValidity(cameraProjectionChecker, true))
+		if (Frame outputFrame = CV::Calibration::Utilities::visualizeDistortionValidity(cameraClipper, true))
 		{
 			const IO::File outputFile(outputDirectory + IO::File("cameracalibrator_distortion_validity_pixel.png"));
 
@@ -294,7 +294,7 @@ using namespace Ocean::CV::Calibration;
 			}
 		}
 
-		if (Frame outputFrame = CV::Calibration::Utilities::visualizeDistortionValidity(cameraProjectionChecker, false))
+		if (Frame outputFrame = CV::Calibration::Utilities::visualizeDistortionValidity(cameraClipper, false))
 		{
 			const IO::File outputFile(outputDirectory + IO::File("cameracalibrator_distortion_validity_normalized.png"));
 

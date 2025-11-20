@@ -744,10 +744,10 @@ void Utilities::paintLineIF(Frame& frame, const HomogenousMatrix4& flippedCamera
 	}
 }
 
-void Utilities::paintLineIF(Frame& frame, const CameraProjectionChecker& cameraProjectionChecker, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& objectPoint0, const Vector3& objectPoint1, const unsigned int segments, const uint8_t* foregroundColor, const uint8_t* backgroundColor)
+void Utilities::paintLineIF(Frame& frame, const AnyCameraClipper& cameraClipper, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& objectPoint0, const Vector3& objectPoint1, const unsigned int segments, const uint8_t* foregroundColor, const uint8_t* backgroundColor)
 {
-	ocean_assert(frame && cameraProjectionChecker.isValid() && flippedCamera_T_world.isValid());
-	ocean_assert(frame.width() == cameraProjectionChecker.width() && frame.height() == cameraProjectionChecker.height());
+	ocean_assert(frame && cameraClipper.isValid() && flippedCamera_T_world.isValid());
+	ocean_assert(frame.width() == cameraClipper.width() && frame.height() == cameraClipper.height());
 	ocean_assert(segments >= 1u);
 
 	const Scalar segmentFactor = Scalar(1) / Scalar(segments);
@@ -762,7 +762,7 @@ void Utilities::paintLineIF(Frame& frame, const CameraProjectionChecker& cameraP
 		}
 
 		Vector2 previousImagePoint;
-		if (!cameraProjectionChecker.projectToImageIF(flippedCamera_T_world, objectPoint0, &previousImagePoint))
+		if (!cameraClipper.projectToImageIF(flippedCamera_T_world, objectPoint0, &previousImagePoint))
 		{
 			previousImagePoint = Vector2::minValue();
 		}
@@ -772,7 +772,7 @@ void Utilities::paintLineIF(Frame& frame, const CameraProjectionChecker& cameraP
 			const Vector3 nextObjectPoint = objectPoint0 + (objectPoint1 - objectPoint0) * Scalar(n + 1) * segmentFactor;
 
 			Vector2 nextImagePoint;
-			if (!cameraProjectionChecker.projectToImageIF(flippedCamera_T_world, nextObjectPoint, &nextImagePoint))
+			if (!cameraClipper.projectToImageIF(flippedCamera_T_world, nextObjectPoint, &nextImagePoint))
 			{
 				nextImagePoint = Vector2::minValue();
 			}
@@ -827,10 +827,10 @@ void Utilities::paintCoordinateSystemIF(Frame& frame, const HomogenousMatrix4& f
 	}
 }
 
-void Utilities::paintCoordinateSystemIF(Frame& frame, const CameraProjectionChecker& cameraProjectionChecker, const HomogenousMatrix4& flippedCamera_T_world, const HomogenousMatrix4& world_T_coordinateSystem, const Scalar length, const unsigned int segments)
+void Utilities::paintCoordinateSystemIF(Frame& frame, const AnyCameraClipper& cameraClipper, const HomogenousMatrix4& flippedCamera_T_world, const HomogenousMatrix4& world_T_coordinateSystem, const Scalar length, const unsigned int segments)
 {
-	ocean_assert(frame && cameraProjectionChecker.isValid() && flippedCamera_T_world.isValid() && world_T_coordinateSystem.isValid());
-	ocean_assert(frame.width() == cameraProjectionChecker.width() && frame.height() == cameraProjectionChecker.height());
+	ocean_assert(frame && cameraClipper.isValid() && flippedCamera_T_world.isValid() && world_T_coordinateSystem.isValid());
+	ocean_assert(frame.width() == cameraClipper.width() && frame.height() == cameraClipper.height());
 	ocean_assert(segments >= 1u);
 
 	const uint8_t* const red = CV::Canvas::red(frame.pixelFormat());
@@ -844,9 +844,9 @@ void Utilities::paintCoordinateSystemIF(Frame& frame, const CameraProjectionChec
 	const Vector3 yAxis = world_T_coordinateSystem * Vector3(0, length, 0);
 	const Vector3 zAxis = world_T_coordinateSystem * Vector3(0, 0, length);
 
-	paintLineIF(frame, cameraProjectionChecker, flippedCamera_T_world, origin, xAxis, segments, red, black);
-	paintLineIF(frame, cameraProjectionChecker, flippedCamera_T_world, origin, yAxis, segments, green, black);
-	paintLineIF(frame, cameraProjectionChecker, flippedCamera_T_world, origin, zAxis, segments, blue, black);
+	paintLineIF(frame, cameraClipper, flippedCamera_T_world, origin, xAxis, segments, red, black);
+	paintLineIF(frame, cameraClipper, flippedCamera_T_world, origin, yAxis, segments, green, black);
+	paintLineIF(frame, cameraClipper, flippedCamera_T_world, origin, zAxis, segments, blue, black);
 }
 
 bool Utilities::paintPlane(Frame& frame, const HomogenousMatrix4& world_T_camera, const AnyCamera& camera, const HomogenousMatrix4& planeTransformation, const unsigned int bins, const uint8_t* foregroundColor, const uint8_t* backgroundColor, Scalar* expansion)

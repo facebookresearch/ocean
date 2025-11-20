@@ -482,52 +482,53 @@ class AnyCameraT : public CameraT<T>
 };
 
 // Forward declaration.
-template <typename T> class CameraProjectionCheckerT;
+template <typename T>
+class AnyCameraClipperT;
 
 /**
- * Definition of an ProjectionChecker object with Scalar precision.
- * @see CameraProjectionCheckerT
+ * Definition of an AnyCamera clipper object with Scalar precision.
+ * @see AnyCameraClipperT
  * @ingroup math
  */
-using CameraProjectionChecker = CameraProjectionCheckerT<Scalar>;
+using AnyCameraClipper = AnyCameraClipperT<Scalar>;
 
 /**
- * Definition of an ProjectionChecker object with double precision.
- * @see CameraProjectionCheckerT
+ * Definition of an AnyCamera clipper object with double precision.
+ * @see AnyCameraClipperT
  * @ingroup math
  */
-using CameraProjectionCheckerD = CameraProjectionCheckerT<double>;
+using AnyCameraClipperD = AnyCameraClipperT<double>;
 
 /**
- * Definition of an ProjectionChecker object with float precision.
- * @see CameraProjectionCheckerT
+ * Definition of an AnyCamera clipper object with float precision.
+ * @see AnyCameraClipperT
  * @ingroup math
  */
-using CameraProjectionCheckerF = CameraProjectionCheckerT<float>;
+using AnyCameraClipperF = AnyCameraClipperT<float>;
 
 /**
- * This class implements a helper class allowing to check whether a 3D object point projects into the camera image.
- * The checker uses normalized coordinates when verifying the projection behavior to avoid numerical issues when object points project far outside the image area.<br>
- * In contrast to AnyCamera::projectToImageIF() + AnyCamera::isInside(), the checker is more precise but also more expensive.
+ * This class implements a helper class allowing to check whether a 3D object point projects into the camera image (i.e., clipping against the camera's field of view).
+ * The clipper uses normalized coordinates when verifying the projection behavior to avoid numerical issues when object points project far outside the image area.<br>
+ * In contrast to AnyCamera::projectToImageIF() + AnyCamera::isInside(), the clipper is more precise but also more expensive.
  * @tparam T The data type of a scalar, 'float' or 'double'
  * @ingroup math
  */
 template <typename T>
-class CameraProjectionCheckerT
+class AnyCameraClipperT
 {
 	public:
 
 		/**
 		 * Default constructor creating an invalid object.
 		 */
-		CameraProjectionCheckerT() = default;
+		AnyCameraClipperT() = default;
 
 		/**
-		 * Creates a new checker object for a specified camera model.
+		 * Creates a new clipper object for a specified camera model.
 		 * @param camera The camera model defining the projection, must be valid
 		 * @param segmentSteps The number of segments to be used to determine the camera boundary, with range [2, infinity)
 		 */
-		explicit CameraProjectionCheckerT(const SharedAnyCameraT<T>& camera, const size_t segmentSteps = 10);
+		explicit AnyCameraClipperT(const SharedAnyCameraT<T>& camera, const size_t segmentSteps = 10);
 
 		/**
 		 * Returns whether a 3D object point is located in front of the camera and projects into the camera image.
@@ -539,8 +540,8 @@ class CameraProjectionCheckerT
 		bool projectToImageIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, VectorT2<T>* imagePoint = nullptr) const;
 
 		/**
-		 * Returns the camera model of this checker.
-		 * @return The checker's camera model, nullptr if no camera model has been set
+		 * Returns the camera model of this clipper.
+		 * @return The clipper's camera model, nullptr if no camera model has been set
 		 */
 		const SharedAnyCameraT<T>& camera() const;
 
@@ -557,7 +558,7 @@ class CameraProjectionCheckerT
 		inline unsigned int height() const;
 
 		/**
-		 * Updates the checker with a new camera model.
+		 * Updates the clipper with a new camera model.
 		 * If the new camera is equal to the current camera, the function will return immediately without any updates.
 		 * @param camera The camera model defining the projection, must be valid
 		 * @param segmentSteps The number of segments to be used to determine the camera boundary, with range [1, infinity)
@@ -571,7 +572,7 @@ class CameraProjectionCheckerT
 		const FiniteLinesT2<T>& cameraBoundarySegments() const;
 
 		/**
-		 * Returns whether this checker holds a valid camera model and is ready to be used.
+		 * Returns whether this clipper holds a valid camera model and is ready to be used.
 		 * @return True, if so
 		 */
 		bool isValid() const;
@@ -608,7 +609,7 @@ class CameraProjectionCheckerT
 
 	protected:
 
-		/// The actual camera model this checker is based on.
+		/// The actual camera model this clipper is based on.
 		SharedAnyCameraT<T> camera_;
 
 		/// The 2D line segments defined in the camera's normalized image plane defining the camera's boundary, defined in the flipped camera coordinate system with y-axis down.
@@ -1715,13 +1716,13 @@ using AnyCameraInvalidD = AnyCameraInvalidT<double>;
 using AnyCameraInvalidF = AnyCameraInvalidT<float>;
 
 template <typename T>
-CameraProjectionCheckerT<T>::CameraProjectionCheckerT(const SharedAnyCameraT<T>& camera, const size_t segmentSteps)
+AnyCameraClipperT<T>::AnyCameraClipperT(const SharedAnyCameraT<T>& camera, const size_t segmentSteps)
 {
 	update(camera, segmentSteps);
 }
 
 template <typename T>
-bool CameraProjectionCheckerT<T>::projectToImageIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, VectorT2<T>* imagePoint) const
+bool AnyCameraClipperT<T>::projectToImageIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const VectorT3<T>& objectPoint, VectorT2<T>* imagePoint) const
 {
 	ocean_assert(camera_ != nullptr);
 	ocean_assert(camera_->isValid());
@@ -1754,13 +1755,13 @@ bool CameraProjectionCheckerT<T>::projectToImageIF(const HomogenousMatrixT4<T>& 
 }
 
 template <typename T>
-const SharedAnyCameraT<T>& CameraProjectionCheckerT<T>::camera() const
+const SharedAnyCameraT<T>& AnyCameraClipperT<T>::camera() const
 {
 	return camera_;
 }
 
 template <typename T>
-inline unsigned int CameraProjectionCheckerT<T>::width() const
+inline unsigned int AnyCameraClipperT<T>::width() const
 {
 	if (camera_)
 	{
@@ -1771,7 +1772,7 @@ inline unsigned int CameraProjectionCheckerT<T>::width() const
 }
 
 template <typename T>
-inline unsigned int CameraProjectionCheckerT<T>::height() const
+inline unsigned int AnyCameraClipperT<T>::height() const
 {
 	if (camera_)
 	{
@@ -1782,7 +1783,7 @@ inline unsigned int CameraProjectionCheckerT<T>::height() const
 }
 
 template <typename T>
-void CameraProjectionCheckerT<T>::update(const SharedAnyCameraT<T>& camera, const size_t segmentSteps)
+void AnyCameraClipperT<T>::update(const SharedAnyCameraT<T>& camera, const size_t segmentSteps)
 {
 	ocean_assert(camera != nullptr && camera->isValid() && segmentSteps >= 1);
 	if (camera == nullptr || !camera->isValid() || segmentSteps == 0)
@@ -1812,13 +1813,13 @@ void CameraProjectionCheckerT<T>::update(const SharedAnyCameraT<T>& camera, cons
 }
 
 template <typename T>
-const FiniteLinesT2<T>& CameraProjectionCheckerT<T>::cameraBoundarySegments() const
+const FiniteLinesT2<T>& AnyCameraClipperT<T>::cameraBoundarySegments() const
 {
 	return cameraBoundarySegments_;
 }
 
 template <typename T>
-bool CameraProjectionCheckerT<T>::isValid() const
+bool AnyCameraClipperT<T>::isValid() const
 {
 	ocean_assert(camera_ == nullptr || !cameraBoundarySegments_.empty());
 
@@ -1826,7 +1827,7 @@ bool CameraProjectionCheckerT<T>::isValid() const
 }
 
 template <typename T>
-bool CameraProjectionCheckerT<T>::determineCameraBoundary(const AnyCameraT<T>& camera, FiniteLinesT2<T>& cameraBoundarySegments, const size_t segmentSteps)
+bool AnyCameraClipperT<T>::determineCameraBoundary(const AnyCameraT<T>& camera, FiniteLinesT2<T>& cameraBoundarySegments, const size_t segmentSteps)
 {
 	ocean_assert(camera.isValid());
 	if (!camera.isValid())
@@ -1960,7 +1961,7 @@ bool CameraProjectionCheckerT<T>::determineCameraBoundary(const AnyCameraT<T>& c
 }
 
 template <typename T>
-bool CameraProjectionCheckerT<T>::isInside(const FiniteLinesT2<T>& cameraBoundarySegments, const VectorT2<T>& normalizedImagePoint)
+bool AnyCameraClipperT<T>::isInside(const FiniteLinesT2<T>& cameraBoundarySegments, const VectorT2<T>& normalizedImagePoint)
 {
 	ocean_assert(cameraBoundarySegments.size() >= 3);
 
@@ -2007,7 +2008,7 @@ bool CameraProjectionCheckerT<T>::isInside(const FiniteLinesT2<T>& cameraBoundar
 }
 
 template <typename T>
-bool CameraProjectionCheckerT<T>::isValidForPoint(const AnyCameraT<T>& camera, const VectorT2<T>& imagePoint, const T maximalReprojectionError, const unsigned int additionalChecksTowardsPrincipalPoint)
+bool AnyCameraClipperT<T>::isValidForPoint(const AnyCameraT<T>& camera, const VectorT2<T>& imagePoint, const T maximalReprojectionError, const unsigned int additionalChecksTowardsPrincipalPoint)
 {
 	ocean_assert(camera.isValid());
 	ocean_assert(camera.isInside(imagePoint, T(-1)));

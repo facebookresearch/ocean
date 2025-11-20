@@ -304,14 +304,14 @@ void CalibrationDebugElements::updateCameraCalibratorCorrespondences(const Eleme
 	updateElement(elementId, std::move(rgbFrame));
 }
 
-void CalibrationDebugElements::updateCameraCalibratorCameraBoundary(const CameraProjectionChecker& cameraProjectionChecker)
+void CalibrationDebugElements::updateCameraCalibratorCameraBoundary(const AnyCameraClipper& cameraClipper)
 {
 	if (!isElementActive(EI_CAMERA_CALIBRATOR_CAMERA_BOUNDARY))
 	{
 		return;
 	}
 
-	Frame frame = Utilities::visualizeDistortionValidity(cameraProjectionChecker);
+	Frame frame = Utilities::visualizeDistortionValidity(cameraClipper);
 
 	updateElement(EI_CAMERA_CALIBRATOR_CAMERA_BOUNDARY, std::move(frame));
 }

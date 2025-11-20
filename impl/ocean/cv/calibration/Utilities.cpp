@@ -57,7 +57,7 @@ bool Utilities::paintCalibrationBoardOutline(Frame& frame, const AnyCamera& came
 		Vector3(xBoardSize_2, 0, -zBoardSize_2),
 	};
 
-	const CameraProjectionChecker cameraProjectionChecker(camera.clone());
+	const AnyCameraClipper cameraClipper(camera.clone());
 
 	for (size_t n = 0; n < corners.size(); ++n)
 	{
@@ -67,7 +67,7 @@ bool Utilities::paintCalibrationBoardOutline(Frame& frame, const AnyCamera& came
 		constexpr size_t steps = 20;
 
 		Vector2 previousPoint;
-		if (!cameraProjectionChecker.projectToImageIF(flippedBoard_T_camera, cornerA, &previousPoint))
+		if (!cameraClipper.projectToImageIF(flippedBoard_T_camera, cornerA, &previousPoint))
 		{
 			previousPoint = Vector2::minValue();
 		}
@@ -79,7 +79,7 @@ bool Utilities::paintCalibrationBoardOutline(Frame& frame, const AnyCamera& came
 			const Vector3 nextObjectPoint = cornerA * (Scalar(1) - factor) + cornerB * factor;
 
 			Vector2 nextImagePoint;
-			if (!cameraProjectionChecker.projectToImageIF(flippedBoard_T_camera, nextObjectPoint, &nextImagePoint))
+			if (!cameraClipper.projectToImageIF(flippedBoard_T_camera, nextObjectPoint, &nextImagePoint))
 			{
 				nextImagePoint = Vector2::minValue();
 			}
@@ -270,11 +270,11 @@ Frame Utilities::visualizeDistortionVectors(const AnyCamera& camera, const unsig
 	return yFrame;
 }
 
-Frame Utilities::visualizeDistortionValidity(const CameraProjectionChecker& cameraProjectionChecker, const bool inPixelDomain)
+Frame Utilities::visualizeDistortionValidity(const AnyCameraClipper& cameraClipper, const bool inPixelDomain)
 {
-	ocean_assert(cameraProjectionChecker.isValid());
+	ocean_assert(cameraClipper.isValid());
 
-	const AnyCamera& camera = *cameraProjectionChecker.camera();
+	const AnyCamera& camera = *cameraClipper.camera();
 
 	const unsigned int width = camera.width();
 	const unsigned int height = camera.height();
@@ -282,7 +282,7 @@ Frame Utilities::visualizeDistortionValidity(const CameraProjectionChecker& came
 	const Scalar width_2 = Scalar(width) * Scalar(0.5);
 	const Scalar height_2 = Scalar(height) * Scalar(0.5);
 
-	const FiniteLines2& cameraBoundarySegments = cameraProjectionChecker.cameraBoundarySegments();
+	const FiniteLines2& cameraBoundarySegments = cameraClipper.cameraBoundarySegments();
 
 	ocean_assert(cameraBoundarySegments.size() >= 3);
 

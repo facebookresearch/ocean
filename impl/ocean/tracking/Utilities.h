@@ -480,17 +480,17 @@ class OCEAN_TRACKING_EXPORT Utilities
 
 		/**
 		 * Paints a projected 3D triangle into a given frame.
-		 * This function is using a triangle projection checker allowing to avoid re-projection issues when drawing triangles with camera profiles with strong distortions.
+		 * This function is using a triangle clipper allowing to avoid re-projection issues when drawing triangles with camera profiles with strong distortions.
 		 * @param frame The frame in which the triangles will be painted, must be valid
 		 * @param flippedCamera_T_world The transformation transforming world to the flipped camera, the flipped camera points towards the positive z-space with y-axis down, must be valid
-		 * @param cameraProjectionChecker The camera projection checker to be used to project the 3D triangle, must be valid
+		 * @param cameraClipper The camera clipper to be used to project the 3D triangle, must be valid
 		 * @param triangle The 3D triangle to point, must be valid
 		 * @param segments The number of segments each triangle edge will be composed of, with range [1, infinity)
 		 * @param color The color to be used to paint the triangle edges, nullptr to use black
 		 * @tparam tSize The thickness of the triangle outline in pixels, must be odd with range [1, infinity)
 		 */
 		template <unsigned int tSize = 1u>
-		static void paintTriangleIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const CameraProjectionChecker& cameraProjectionChecker, const Triangle3& triangle, const size_t segments = 3, const uint8_t* color = nullptr);
+		static void paintTriangleIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const AnyCameraClipper& cameraClipper, const Triangle3& triangle, const size_t segments = 3, const uint8_t* color = nullptr);
 
 		/**
 		 * Paints a (projected) 3D line into a given frame.
@@ -508,7 +508,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		/**
 		 * Paints a (projected) 3D line into a given frame.
 		 * @param frame The frame in which the line will be painted, must be valid
-		 * @param cameraProjectionChecker The camera projection checker to be used when painting the line, must be valid
+		 * @param cameraClipper The camera clipper to be used when painting the line, must be valid
 		 * @param flippedCamera_T_world The transformation transforming world to the flipped camera, the flipped camera points towards the positive z-space with y-axis down, must be valid
 		 * @param objectPoint0 The start 3D object point of the 3D line, defined in world
 		 * @param objectPoint1 The end 3D object point of the 3D line, defined in world
@@ -516,7 +516,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param foregroundColor The foreground color of the plane, nullptr to skip the painting with the foreground color
 		 * @param backgroundColor The background color of the plane, nullptr to skip the painting with the background color
 		 */
-		static void paintLineIF(Frame& frame, const CameraProjectionChecker& cameraProjectionChecker, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& objectPoint0, const Vector3& objectPoint1, const unsigned int segments, const uint8_t* foregroundColor, const uint8_t* backgroundColor);
+		static void paintLineIF(Frame& frame, const AnyCameraClipper& cameraClipper, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& objectPoint0, const Vector3& objectPoint1, const unsigned int segments, const uint8_t* foregroundColor, const uint8_t* backgroundColor);
 
 		/**
 		 * Paints a 3D coordinate system (projected) into a frame.
@@ -533,13 +533,13 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * Paints a 3D coordinate system (projected) into a frame.
 		 * In case the frame has pixel format FORMAT_RGB24, the axis are painted in red (x), green (y), and blue (z).
 		 * @param frame The frame in which the coordinate system is painted, must be valid
-		 * @param cameraProjectionChecker The camera projection checker defining the projection, must be valid
+		 * @param cameraClipper The camera clipper defining the projection, must be valid
 		 * @param flippedCamera_T_world The camera posed converting world to the flipped camera coordinate system (a camera coordinate system pointing towards the positive z-space), must be valid
 		 * @param world_T_coordinateSystem The transformation of the coordinate system transforming points defined in the local coordinate system (to be rendered) into points defined in the world coordinate system, must be valid
 		 * @param length The length of the three axis of the coordinate system, defined in the units of the local coordinate system
 		 * @param segments The number of segments to be used for each axis, with range [1, infinity)
 		 */
-		static void paintCoordinateSystemIF(Frame& frame, const CameraProjectionChecker& cameraProjectionChecker, const HomogenousMatrix4& flippedCamera_T_world, const HomogenousMatrix4& world_T_coordinateSystem, const Scalar length, const unsigned int segments = 10u);
+		static void paintCoordinateSystemIF(Frame& frame, const AnyCameraClipper& cameraClipper, const HomogenousMatrix4& flippedCamera_T_world, const HomogenousMatrix4& world_T_coordinateSystem, const Scalar length, const unsigned int segments = 10u);
 
 		/**
 		 * Paints a 3D plane into the frame, further the origin of the plane is painted.
@@ -1181,11 +1181,11 @@ void Utilities::paintTrianglesIF(Frame& frame, const HomogenousMatrix4& flippedC
 }
 
 template <unsigned int tSize>
-void Utilities::paintTriangleIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const CameraProjectionChecker& cameraProjectionChecker, const Triangle3& triangle, const size_t segments, const uint8_t* color)
+void Utilities::paintTriangleIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const AnyCameraClipper& cameraClipper, const Triangle3& triangle, const size_t segments, const uint8_t* color)
 {
 	ocean_assert(frame.isValid());
 	ocean_assert(flippedCamera_T_world.isValid());
-	ocean_assert(cameraProjectionChecker.isValid());
+	ocean_assert(cameraClipper.isValid());
 	ocean_assert(triangle.isValid());
 	ocean_assert(segments >= 1);
 
@@ -1196,7 +1196,7 @@ void Utilities::paintTriangleIF(Frame& frame, const HomogenousMatrix4& flippedCa
 
 		Vector2 previousImagePoint = Vector2::minValue();
 
-		if (!cameraProjectionChecker.projectToImageIF(flippedCamera_T_world, point0, &previousImagePoint))
+		if (!cameraClipper.projectToImageIF(flippedCamera_T_world, point0, &previousImagePoint))
 		{
 			ocean_assert(previousImagePoint == Vector2::minValue());
 		}
@@ -1208,7 +1208,7 @@ void Utilities::paintTriangleIF(Frame& frame, const HomogenousMatrix4& flippedCa
 			const Vector3 currentPoint = point0 * (Scalar(1) - factor) + point1 * factor;
 
 			Vector2 currentImagePoint = Vector2::minValue();
-			if (cameraProjectionChecker.projectToImageIF(flippedCamera_T_world, currentPoint, &currentImagePoint))
+			if (cameraClipper.projectToImageIF(flippedCamera_T_world, currentPoint, &currentImagePoint))
 			{
 				if (previousImagePoint != Vector2::minValue())
 				{

@@ -79,13 +79,13 @@ class OCEAN_CV_CALIBRATION_EXPORT Utilities
 		static Frame visualizeDistortionVectors(const AnyCamera& camera, const unsigned int horizontalBins, const unsigned int verticalBins);
 
 		/**
-		 * Visualizes the validity of a camera model based on the camera's projection checker.
+		 * Visualizes the validity of a camera model based on the camera's clipper.
 		 * The resulting image shows the area in which the camera model is well defined.
-		 * @param cameraProjectionChecker The camera projection checker to be visualized, must be valid
+		 * @param cameraClipper The camera clipper to be visualized, must be valid
 		 * @param inPixelDomain True, to visualize the validity in the pixel domain; False, to visualize the validity in the normalized image domain
 		 * @return Resulting frame showing the validity of the camera model
 		 */
-		static Frame visualizeDistortionValidity(const CameraProjectionChecker& cameraProjectionChecker, const bool inPixelDomain = true);
+		static Frame visualizeDistortionValidity(const AnyCameraClipper& cameraClipper, const bool inPixelDomain = true);
 
 		/**
 		 * Writes the calibration board (layout, dimension, and marker arrangement) to a file.
