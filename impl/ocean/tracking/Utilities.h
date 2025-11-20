@@ -39,7 +39,7 @@ namespace Tracking
 {
 
 /**
- * This class implements utility functions allowing e.g., for a more comfortable visualization of tracking data.
+ * This class implements utility functions for convenient visualization of tracking data.
  * @ingroup tracking
  */
 class OCEAN_TRACKING_EXPORT Utilities
@@ -47,24 +47,24 @@ class OCEAN_TRACKING_EXPORT Utilities
 	public:
 
 		/**
-		 * Blends two given frames having the same frame type.
-		 * The resulting frame holds pixel intensity values of fifty percent of each frame.
-		 * @param frame0 The first frame that will be blended, must be valid
-		 * @param frame1 The second frame that will be blended, with same frame type as the first frame, must be valid
+		 * Blends two given frames with the same frame type.
+		 * The resulting frame contains pixel intensity values blended at fifty percent from each frame.
+		 * @param frame0 The first frame to be blended, must be valid
+		 * @param frame1 The second frame to be blended, with same frame type as the first frame, must be valid
 		 * @param worker Optional worker object to distribute the computation
 		 * @return The resulting blended frame
 		 */
 		static Frame blendFrames(const Frame& frame0, const Frame& frame1, Worker* worker = nullptr);
 
 		/**
-		 * Blends two given frames with same pixel origin.
-		 * In case the image resolution varies, both images will be aligned at the image center and missing image content is added at the border.
-		 * The resulting frame holds pixel intensity values of fifty percent of each frame.<br>
-		 * @param frame0 The first frame that will be blended, must be valid
-		 * @param frame1 The second frame that will be blended, with same frame type as the first frame, must be valid
+		 * Blends two given frames with the same pixel origin.
+		 * If the image resolutions differ, both images will be aligned at the image center and the borders will be padded as needed.<br>
+		 * The resulting frame contains pixel intensity values blended at fifty percent from each frame.
+		 * @param frame0 The first frame to be blended, must be valid
+		 * @param frame1 The second frame to be blended, with same frame type as the first frame, must be valid
 		 * @param offset0 The location of the top-left corner of the first frame within the blended frame, with range [0, 0]x(infinity, infinity)
 		 * @param offset1 The location of the top-left corner of the second frame within the blended frame, with range [0, 0]x(infinity, infinity)
-		 * @param pixelFormat The pixel format the resulting blended image will have, FORMAT_UNDEFINED to use the pixel format of the given images (which must be identical in that case)
+		 * @param pixelFormat The pixel format of the resulting blended image, FORMAT_UNDEFINED to use the pixel format of the given images (which must be identical in that case)
 		 * @param worker Optional worker object to distribute the computation
 		 * @return The resulting blended frame
 		 */
@@ -72,90 +72,90 @@ class OCEAN_TRACKING_EXPORT Utilities
 
 		/**
 		 * Paints a line into a given frame.
-		 * @param frame The frame in which is drawn
-		 * @param startPosition Start position of line
-		 * @param stopPosition Stop position of line
-		 * @param color The color that will be used to paint the points, ensure that one value is provided for each frame channel, otherwise black is used
-		 * @param subPixel True, to paint the line with sub-pixel accuracy; False, to paint the line with pixel accuracy
+		 * @param frame The frame in which the line will be drawn
+		 * @param startPosition The start position of the line
+		 * @param stopPosition The stop position of the line
+		 * @param color The color to be used for painting, one value per frame channel, nullptr to use black
+		 * @param subPixel True to paint the line with sub-pixel accuracy; False to paint with pixel accuracy
 		 */
 		static inline void paintLine(Frame& frame, const Vector2& startPosition, const Vector2& stopPosition, const uint8_t* color = nullptr, const bool subPixel = true);
 
 		/**
 		 * Paints a set of lines into a given frame.
-		 * @param frame The frame in which is drawn
-		 * @param startPositions Start positions of the lines
-		 * @param stopPositions Stop positions of the lines, each end position must have a corresponding start position
+		 * @param frame The frame in which the lines will be drawn
+		 * @param startPositions The start positions of the lines
+		 * @param stopPositions The stop positions of the lines, each stop position must have a corresponding start position
 		 * @param numberLines The number of lines, with range [0, infinity)
-		 * @param color The color that will be used to paint the points, ensure that one value is provided for each frame channel, nullptr to apply black
+		 * @param color The color to be used for painting, one value per frame channel, nullptr to use black
 		 * @param worker Optional worker object to distribute the computation
-		 * @param subPixel True, to paint the lines with sub-pixel accuracy; False, to paint the lines with pixel accuracy
-		 * @param offsetStartPositions The offset which will be added to each start position before painting the line, with range (-infinity, infinity)x(-infinity, infinity)
-		 * @param offsetStopPositions The offset which will be added to each stop position before painting the line, with range (-infinity, infinity)x(-infinity, infinity)
+		 * @param subPixel True to paint the lines with sub-pixel accuracy; False to paint with pixel accuracy
+		 * @param offsetStartPositions The offset to be added to each start position before painting the line, with range (-infinity, infinity)x(-infinity, infinity)
+		 * @param offsetStopPositions The offset to be added to each stop position before painting the line, with range (-infinity, infinity)x(-infinity, infinity)
 		 */
 		static inline void paintLines(Frame& frame, const Vector2* startPositions, const Vector2* stopPositions, const size_t numberLines, const uint8_t* color = nullptr, Worker* worker = nullptr, const bool subPixel = true, const Vector2& offsetStartPositions = Vector2(0, 0), const Vector2& offsetStopPositions = Vector2(0, 0));
 
 		/**
 		 * Paints a set of lines into a given frame with sub-pixel accuracy.
-		 * @param frame The frame in which is drawn, must be valid
-		 * @param startPositions Start positions of the lines
-		 * @param stopPositions Stop positions of the lines, each end position must have a corresponding start position
+		 * @param frame The frame in which the lines will be drawn, must be valid
+		 * @param startPositions The start positions of the lines
+		 * @param stopPositions The stop positions of the lines, each stop position must have a corresponding start position
 		 * @param numberLines The number of lines, with range [0, infinity)
-		 * @param color The color that will be used to paint the points, ensure that one value is provided for each frame channel, nullptr to apply black
+		 * @param color The color to be used for painting, one value per frame channel, nullptr to use black
 		 * @param worker Optional worker object to distribute the computation
-		 * @tparam tSize The thickness of the lines in pixel, must be odd with range [1, infinity)
+		 * @tparam tSize The thickness of the lines in pixels, must be odd with range [1, infinity)
 		 */
 		template <unsigned int tSize>
 		static inline void paintLines(Frame& frame, const Vector2* startPositions, const Vector2* stopPositions, const size_t numberLines, const uint8_t* color = nullptr, Worker* worker = nullptr);
 
 		/**
-		 * Paints a set of lines with (foreground and) background color into a given frame with sub-pixel accuracy.
-		 * @param frame The frame in which is drawn, must be valid
-		 * @param startPositions Start positions of the lines
-		 * @param stopPositions Stop positions of the lines, each end position must have a corresponding start position
+		 * Paints a set of lines with foreground and background colors into a given frame with sub-pixel accuracy.
+		 * @param frame The frame in which the lines will be drawn, must be valid
+		 * @param startPositions The start positions of the lines
+		 * @param stopPositions The stop positions of the lines, each stop position must have a corresponding start position
 		 * @param numberLines The number of lines, with range [0, infinity)
-		 * @param colorForeground Foreground color that will be used to paint the points, ensure that one value is provided for each frame channel, nullptr to use black
-		 * @param colorBackground Background color that will be used to paint the points, ensure that one value is provided for each frame channel, nullptr to use black
+		 * @param colorForeground The foreground color to be used for painting, one value per frame channel, nullptr to use black
+		 * @param colorBackground The background color to be used for painting, one value per frame channel, nullptr to use black
 		 * @param worker Optional worker object to distribute the computation
-		 * @tparam tSizeForeground The thickness of the foreground lines in pixel, must be odd with range [1, infinity)
-		 * @tparam tSizeBackground The thickness of the background lines in pixel, must be odd with range (tSizeForeground, infinity)
+		 * @tparam tSizeForeground The thickness of the foreground lines in pixels, must be odd with range [1, infinity)
+		 * @tparam tSizeBackground The thickness of the background lines in pixels, must be odd with range (tSizeForeground, infinity)
 		 */
 		template <unsigned int tSizeForeground, unsigned int tSizeBackground>
 		static inline void paintLines(Frame& frame, const Vector2* startPositions, const Vector2* stopPositions, const size_t numberLines, const uint8_t* colorForeground = nullptr, const uint8_t* colorBackground = nullptr, Worker* worker = nullptr);
 
 		/**
 		 * Paints several paths into a given frame with sub-pixel accuracy.
-		 * A path is a chain of connected image points with arbitrary length (start and end point are not connected).
+		 * A path is a chain of connected image points with arbitrary length (start and end points are not connected).
 		 * @param frame The frame in which the paths will be painted
 		 * @param paths The individual paths to be painted
-		 * @param size The number of given paths, with range [0, infinity)
-		 * @param color The color that will be used to paint the points, ensure that one value is provided for each frame channel, nullptr to apply black
+		 * @param size The number of paths, with range [0, infinity)
+		 * @param color The color to be used for painting, one value per frame channel, nullptr to use black
 		 * @param worker Optional worker object to distribute the computation
-		 * @tparam tSize The thickness of the paths in pixel, must be odd with range [1, infinity)
+		 * @tparam tSize The thickness of the paths in pixels, must be odd with range [1, infinity)
 		 */
 		template <unsigned int tSize>
 		static inline void paintPaths(Frame& frame, const Vectors2* paths, const size_t size, const uint8_t* color = nullptr, Worker* worker = nullptr);
 
 		/**
 		 * Paints several paths into a given frame with sub-pixel accuracy.
-		 * A path is a chain of connected image points with arbitrary length (start and end point are not connected).<br>
-		 * The colors of the paths are determined by an interpolation between two separate color values.
+		 * A path is a chain of connected image points with arbitrary length (start and end points are not connected).<br>
+		 * The colors of the paths are determined by interpolation between two color values.
 		 * @param frame The frame in which the paths will be painted
 		 * @param paths The individual paths to be painted
-		 * @param size The number of given paths, with range [0, infinity)
-		 * @param color0 The first color value, ensure that one value is provided for each frame channel
-		 * @param color1 The second color value, ensure that one value is provided for each frame channel
-		 * @param factors The interpolation factor, one factor for each path, with range [0, 1]
+		 * @param size The number of paths, with range [0, infinity)
+		 * @param color0 The first color value, one value per frame channel
+		 * @param color1 The second color value, one value per frame channel
+		 * @param factors The interpolation factors, one factor per path, with range [0, 1]
 		 * @param worker Optional worker object to distribute the computation
-		 * @tparam tSize The thickness of the paths in pixel, must be odd with range [1, infinity)
+		 * @tparam tSize The thickness of the paths in pixels, must be odd with range [1, infinity)
 		 */
 		template <unsigned int tSize>
 		static inline void paintPaths(Frame& frame, const Vectors2* paths, const size_t size, const uint8_t* color0, const uint8_t* color1, const Scalar* factors, Worker* worker = nullptr);
 
 		/**
 		 * Paints a 2D triangle into a given frame with sub-pixel accuracy.
-		 * @param frame The frame receiving the triangles
-		 * @param triangle The triangle that will be painted, must be valid
-		 * @param color The color that will be used to paint the triangle edges, ensure that one value is provided for each frame channel, otherwise black is used
+		 * @param frame The frame receiving the triangle
+		 * @param triangle The triangle to be painted, must be valid
+		 * @param color The color to be used for painting the triangle edges, one value per frame channel, nullptr to use black
 		 * @tparam tSize The thickness of the triangle edges in pixels, must be odd with range [1, infinity)
 		 */
 		template <unsigned int tSize = 1u>
@@ -164,8 +164,8 @@ class OCEAN_TRACKING_EXPORT Utilities
 		/**
 		 * Paints a set of 2D triangles into a given frame with sub-pixel accuracy.
 		 * @param frame The frame receiving the triangles
-		 * @param triangles The triangles that will be painted
-		 * @param color The color that will be used to paint the triangle edges, ensure that one value is provided for each frame channel, otherwise black is used
+		 * @param triangles The triangles to be painted
+		 * @param color The color to be used for painting the triangle edges, one value per frame channel, nullptr to use black
 		 * @param worker Optional worker to distribute the computation
 		 * @tparam tSize The thickness of the triangle edges in pixels, must be odd with range [1, infinity)
 		 */
@@ -175,8 +175,8 @@ class OCEAN_TRACKING_EXPORT Utilities
 		/**
 		 * Paints a set of 2D image points into a given frame with sub-pixel accuracy.
 		 * @param frame The frame in which the image points will be painted
-		 * @param imagePoints The image points which will be painted
-		 * @param size The number of given 2D points, with range [0, infinity)
+		 * @param imagePoints The image points to be painted
+		 * @param size The number of 2D points, with range [0, infinity)
 		 * @param color The color for the image points
 		 * @param worker Optional worker object to distribute the computation
 		 * @tparam tPointSize The radius of the image points, must be odd with range [1, infinity)
@@ -185,12 +185,12 @@ class OCEAN_TRACKING_EXPORT Utilities
 		static inline void paintImagePoints(Frame& frame, const Vector2* imagePoints, const size_t size, const uint8_t* color, Worker* worker = nullptr);
 
 		/**
-		 * Paints a set of 3D object points (rather their projected 2D counterparts respectively) into a given frame with sub-pixel accuracy.
+		 * Paints a set of projected 3D object points into a given frame with sub-pixel accuracy.
 		 * @param frame The frame in which the projected object points will be painted
-		 * @param anyCamera The camera profile defining the projection between 3D object points and camera plane
-		 * @param world_T_camera The camera pose from which the 3D object points are observed with default viewing direction towards the negative z-space and y-axis as up vector, transforming camera to world, must be valid
-		 * @param objectPoints The object points which will be projected into the camera frame, defined in world
-		 * @param size The number of given 3D points, with range [0, infinity)
+		 * @param anyCamera The camera profile defining the projection from 3D object points to the camera plane
+		 * @param world_T_camera The camera pose transforming camera to world, with default viewing direction towards the negative z-space and y-axis as up vector, must be valid
+		 * @param objectPoints The object points to be projected into the camera frame, defined in world coordinates
+		 * @param size The number of 3D points, with range [0, infinity)
 		 * @param color The color for the object points
 		 * @param worker Optional worker object to distribute the computation
 		 * @tparam tPointSize The radius of the object points, must be odd with range [1, infinity)
@@ -199,26 +199,26 @@ class OCEAN_TRACKING_EXPORT Utilities
 		static inline void paintObjectPoints(Frame& frame, const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_camera, const Vector3* objectPoints, const size_t size, const uint8_t* color, Worker* worker = nullptr);
 
 		/**
-		 * Paints a feature point having a radius (a scale) and orientation.
-		 * @param frame The frame in which the projected object points will be painted, must be valid
-		 * @param position The position of the feature point defined in the pixel domain of the given frame, with range (-infinity, infinity)x(-infinity, infinity)
-		 * @param radius The radius (scale) of the feature point in pixel, with range (0, infinity)
-		 * @param orientation The orientation of the feature point as CCW angle in radian, with range [0, 2PI)
-		 * @param color The color for the feature point, one value for each frame data channel
-		 * @param shadowColor The outer color for the object points, one value for each frame data channel or nullptr to skip painting the shadow
+		 * Paints a feature point with a radius (scale) and orientation.
+		 * @param frame The frame in which the feature point will be painted, must be valid
+		 * @param position The position of the feature point in the pixel domain of the frame, with range (-infinity, infinity)x(-infinity, infinity)
+		 * @param radius The radius (scale) of the feature point in pixels, with range (0, infinity)
+		 * @param orientation The orientation of the feature point as CCW angle in radians, with range [0, 2PI)
+		 * @param color The color for the feature point, one value per frame channel
+		 * @param shadowColor The shadow color for the feature point, one value per frame channel, or nullptr to skip painting the shadow
 		 */
 		static void paintFeaturePoint(Frame& frame, const Vector2& position, const Scalar radius, const Scalar orientation, const uint8_t* color, const uint8_t* shadowColor);
 
 		/**
-		 * Paints a feature point having a radius (a scale) and orientation.
-		 * @param frame The frame in which the feature points will be painted, must be valid
-		 * @param width The width of the frame in pixel, with range (0, infinity)
-		 * @param height The height of the frame in pixel, with range (0, infinity)
-		 * @param position The position of the feature point defined in the pixel domain of the given frame, with range (-infinity, infinity)x(-infinity, infinity)
-		 * @param radius The radius (scale) of the feature point in pixel, with range (0, infinity)
-		 * @param orientation The orientation of the feature point as CCW angle in radian, with range [0, 2PI)
-		 * @param color The color for the feature point, one value for each frame data channel
-		 * @param shadowColor The outer color for the object points, one value for each frame data channel or nullptr to skip painting the shadow
+		 * Paints a feature point with a radius (scale) and orientation.
+		 * @param frame The frame in which the feature point will be painted, must be valid
+		 * @param width The width of the frame in pixels, with range (0, infinity)
+		 * @param height The height of the frame in pixels, with range (0, infinity)
+		 * @param position The position of the feature point in the pixel domain of the frame, with range (-infinity, infinity)x(-infinity, infinity)
+		 * @param radius The radius (scale) of the feature point in pixels, with range (0, infinity)
+		 * @param orientation The orientation of the feature point as CCW angle in radians, with range [0, 2PI)
+		 * @param color The color for the feature point, one value per frame channel
+		 * @param shadowColor The shadow color for the feature point, one value per frame channel, or nullptr to skip painting the shadow
 		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @tparam tChannels The number of data channels, with range [1, infinity)
 		 */
@@ -226,31 +226,31 @@ class OCEAN_TRACKING_EXPORT Utilities
 		static void paintFeaturePoint8BitPerChannel(uint8_t* frame, const unsigned int width, const unsigned int height, const Vector2& position, const Scalar radius, const Scalar orientation, const uint8_t* color, const uint8_t* shadowColor, const unsigned int framePaddingElements = 0u);
 
 		/**
-		 * Paints feature points having a radius (a scale) and orientation.
-		 * @param frame The frame in which the projected object points will be painted, must be valid
-		 * @param positions The positions of the feature points defined in the pixel domain of the given frame, with range (-infinity, infinity)x(-infinity, infinity), can be nullptr if size is 0
-		 * @param radii The radii (scale) of the feature points in pixel, with range (0, infinity), one for each position, can be nullptr if size is 0
-		 * @param orientations The orientations of the feature points as CCW angle in radian, with range [0, 2PI), one for each position, can be nullptr if size is 0
+		 * Paints feature points with radius (scale) and orientation.
+		 * @param frame The frame in which the feature points will be painted, must be valid
+		 * @param positions The positions of the feature points in the pixel domain of the frame, with range (-infinity, infinity)x(-infinity, infinity), can be nullptr if size is 0
+		 * @param radii The radii (scale) of the feature points in pixels, with range (0, infinity), one per position, can be nullptr if size is 0
+		 * @param orientations The orientations of the feature points as CCW angles in radians, with range [0, 2PI), one per position, can be nullptr if size is 0
 		 * @param size The number of feature points to be painted, with range [0, infinity)
-		 * @param color The color for the feature point, one value for each frame data channel
-		 * @param shadowColor The outer color for the object points, one value for each frame data channel or nullptr to skip painting the shadow
-		 * @param explicitOffset Optional explicit offset which will be added to every feature point location before the point is painted, with range (-infinity, infinity)x(-infinity, infinity)
+		 * @param color The color for the feature points, one value per frame channel
+		 * @param shadowColor The shadow color for the feature points, one value per frame channel, or nullptr to skip painting the shadow
+		 * @param explicitOffset Optional explicit offset to be added to every feature point location before painting, with range (-infinity, infinity)x(-infinity, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 */
 		static void paintFeaturePoints(Frame& frame, const Vector2* positions, const Scalar* radii, const Scalar* orientations, const size_t size, const uint8_t* color, const uint8_t* shadowColor, const Vector2& explicitOffset = Vector2(0, 0), Worker* worker = nullptr);
 
 		/**
-		 * Paints feature points having a radius (a scale) and orientation.
+		 * Paints feature points with radius (scale) and orientation.
 		 * @param frame The frame in which the feature points will be painted, must be valid
-		 * @param width The width of the frame in pixel, with range (0, infinity)
-		 * @param height The height of the frame in pixel, with range (0, infinity)
-		 * @param positions The positions of the feature points defined in the pixel domain of the given frame, with range (-infinity, infinity)x(-infinity, infinity), can be nullptr if size is 0
-		 * @param radii The radii (scale) of the feature points in pixel, with range (0, infinity), one for each position, can be nullptr if size is 0
-		 * @param orientations The orientations of the feature points as CCW angle in radian, with range [0, 2PI), one for each position, can be nullptr if size is 0
+		 * @param width The width of the frame in pixels, with range (0, infinity)
+		 * @param height The height of the frame in pixels, with range (0, infinity)
+		 * @param positions The positions of the feature points in the pixel domain of the frame, with range (-infinity, infinity)x(-infinity, infinity), can be nullptr if size is 0
+		 * @param radii The radii (scale) of the feature points in pixels, with range (0, infinity), one per position, can be nullptr if size is 0
+		 * @param orientations The orientations of the feature points as CCW angles in radians, with range [0, 2PI), one per position, can be nullptr if size is 0
 		 * @param size The number of feature points to be painted, with range [0, infinity)
-		 * @param color The color for the feature point, one value for each frame data channel
-		 * @param shadowColor The outer color for the object points, one value for each frame data channel or nullptr to skip painting the shadow
-		 * @param explicitOffset Optional explicit offset which will be added to every feature point location before the point is painted, with range (-infinity, infinity)x(-infinity, infinity)
+		 * @param color The color for the feature points, one value per frame channel
+		 * @param shadowColor The shadow color for the feature points, one value per frame channel, or nullptr to skip painting the shadow
+		 * @param explicitOffset Optional explicit offset to be added to every feature point location before painting, with range (-infinity, infinity)x(-infinity, infinity)
 		 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @param worker Optional worker object to distribute the computation
 		 * @tparam tChannels The number of data channels, with range [1, infinity)
@@ -259,13 +259,13 @@ class OCEAN_TRACKING_EXPORT Utilities
 		static inline void paintFeaturePoints8BitPerChannel(uint8_t* frame, const unsigned int width, const unsigned int height, const Vector2* positions, const Scalar* radii, const Scalar* orientations, const size_t size, const uint8_t* color, const uint8_t* shadowColor, const Vector2& explicitOffset, const unsigned int framePaddingElements, Worker* worker = nullptr);
 
 		/**
-		 * Paints a set of correspondences between 2D image points and 3D object points (rather their projected 2D counterparts respectively) into a given frame with sub-pixel accuracy.
+		 * Paints a set of correspondences between 2D image points and 3D object points (or their projected 2D counterparts) into a given frame with sub-pixel accuracy.
 		 * The projected object points will be painted first, followed by their corresponding image points.<br>
-		 * Further, a connection between the projected object points and the corresponding image points can be painted, which can be helpful if the given pose is not accurate.
+		 * Additionally, a connection between the projected object points and the corresponding image points can be painted, which can be helpful if the given pose is not accurate.
 		 * @param frame The frame in which the projected object points and image points will be painted
 		 * @param camera The camera profile defining the projection between 3D object points and camera plane
 		 * @param model_T_camera The camera pose transforming the camera coordinate system to the coordinate system of the object points (with viewing direction along the negative z-axis and y-axis as up vector), must be valid
-		 * @param objectPoints The object points which will be projected into the camera frame
+		 * @param objectPoints The object points to be projected into the camera frame
 		 * @param imagePoints The image points corresponding to the given object points, the smaller the distance between image points and projected object points the more accurate the camera pose
 		 * @param correspondences The number of given 2D/3D point correspondences, with range [0, infinity)
 		 * @param maxSqrError The maximal square pixel error between a projected object point and the corresponding image point to count as valid, with range [0, infinity)
@@ -291,22 +291,22 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param points0 The positions of the feature correspondences in the first frame
 		 * @param points1 The positions of the feature correspondences in the second frame, each point as a corresponding point in the first frame
 		 * @param numberPoints The number of given feature correspondences, with range [0, infinity)
-		 * @param rgbColor The color that will be used to paint the points, ensure that three values are provided (with order: R, G, B), otherwise nullptr to use black
+		 * @param color The color to be used to paint the points, one value per frame channel (order: R, G, B), otherwise nullptr to use black
 		 * @param worker Optional worker object to distribute the computation
 		 * @return Returns the resulting blend frame showing the feature correspondences, with pixel format FORMAT_RGB24
 		 */
-		static Frame paintCorrespondencesBlend(const Frame& frame0, const Frame& frame1, const Vector2* points0, const Vector2* points1, const size_t numberPoints, const uint8_t* rgbColor = nullptr, Worker* worker = nullptr);
+		static Frame paintCorrespondencesBlend(const Frame& frame0, const Frame& frame1, const Vector2* points0, const Vector2* points1, const size_t numberPoints, const uint8_t* color = nullptr, Worker* worker = nullptr);
 
 		/**
 		 * Joins two corresponding frames horizontally and paints a set of given feature correspondences.
-		 * Both frame can have individual frame dimensions (as long as the pixel origin is identical).<br>
+		 * Both frames can have individual frame dimensions (as long as the pixel origin is identical).<br>
 		 * Internally both images will be converted to FORMAT_RGB24 images.
 		 * @param frame0 The first frame, must be valid
 		 * @param frame1 The second frame, with same pixel origin as the first frame, must be valid
 		 * @param points0 The positions of the feature correspondences in the first frame
 		 * @param points1 The positions of the feature correspondences in the second frame, each point as a corresponding point in the first frame
 		 * @param numberPoints The number of given feature correspondences, with range [0, infinity)
-		 * @param color The color that will be used to paint the points, ensure that three values are provided (with order R, G, B), otherwise nullptr to use black
+		 * @param color The color to be used to paint the points, one value per frame channel (order: R, G, B), otherwise nullptr to use black
 		 * @param worker Optional worker object to distribute the computation
 		 * @return Returns the resulting joined frame showing the feature correspondences, with pixel format FORMAT_RGB24
 		 */
@@ -314,13 +314,13 @@ class OCEAN_TRACKING_EXPORT Utilities
 
 		/**
 		 * Joins two corresponding frames vertically and paints a set of given feature correspondences.
-		 * Both frame can have individual frame dimensions, while internally both images will be converted to FORMAT_RGB24 images.
+		 * Both frames can have individual frame dimensions, while internally both images will be converted to FORMAT_RGB24 images.
 		 * @param frame0 The first frame, must be valid
-		 * @param frame1 The second frame, with pixel origin as the first frame, must be valid
+		 * @param frame1 The second frame, with same pixel origin as the first frame, must be valid
 		 * @param points0 The positions of the feature correspondences in the first frame
 		 * @param points1 The positions of the feature correspondences in the second frame, each point as a corresponding point in the first frame
 		 * @param numberPoints The number of given feature correspondences, with range [0, infinity)
-		 * @param color The color that will be used to paint the points, ensure that three values are provided (with order: R, G, B), otherwise nullptr to use black
+		 * @param color The color to be used to paint the points, one value per frame channel (order: R, G, B), otherwise nullptr to use black
 		 * @param worker Optional worker object to distribute the computation
 		 * @return Returns the resulting joined frame showing the feature correspondences, with pixel format FORMAT_RGB24
 		 */
@@ -328,8 +328,8 @@ class OCEAN_TRACKING_EXPORT Utilities
 
 		/**
 		 * Joins two corresponding frames by application of a homography and paints a set of given feature correspondences.
-		 * The second frame will be aligned so that it matches with the first frame (by application of the homography).<br>
-		 * Both frame can have individual frame dimensions.
+		 * The second frame will be aligned so that it matches the first frame (by application of the homography).<br>
+		 * Both frames can have individual frame dimensions.
 		 * @param frame0 The first frame, must be valid
 		 * @param frame1 The second frame, with pixel origin as the first frame, must be valid
 		 * @param points1_H_points0 The homography transforming points defined in the first frame to points defined in the second frame, must be valid
@@ -338,9 +338,9 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param numberPoints The number of given feature correspondences, with range [0, infinity)
 		 * @param fullCoverage True, to create a frame fully covering both frames; False, to create a frame covering the first frame only
 		 * @param result Returns the resulting joined frame showing the feature correspondences
-		 * @param foregroundColor The foreground color that will be used to paint the lines, ensure that one value is provided for each frame channel, nullptr to use black
-		 * @param backgroundColor Optional background color that will used for each line, nullptr to avoid the usage of a background color
-		 * @param startColor Optional color of the start points of each line, nullptr to avoid the usage of a color for the start point
+		 * @param foregroundColor The foreground color to be used to paint the lines, one value per frame channel, nullptr to use black
+		 * @param backgroundColor Optional background color to be used for each line, nullptr to avoid the usage of a background color
+		 * @param startColor Optional color for the start points of each line, nullptr to avoid the usage of a color for the start point
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if succeeded
 		 */
@@ -357,9 +357,9 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param points1 The positions of the feature correspondences in the second frame, each point as a corresponding point in the first frame, with range [0, frame1.width())x[0, frame1.height())
 		 * @param numberPoints The number of given feature correspondences, with range [0, infinity)
 		 * @param result Returns the resulting joined frame showing the feature correspondences
-		 * @param foregroundColor The foreground color that will be used to paint the lines, ensure that one value is provided for each frame channel, nullptr to use black
-		 * @param backgroundColor Optional background color that will used for each line, nullptr to avoid the usage of a background color
-		 * @param startColor Optional color of the start points of each line, nullptr to avoid the usage of a color for the start point
+		 * @param foregroundColor The foreground color to be used to paint the lines, one value per frame channel, nullptr to use black
+		 * @param backgroundColor Optional background color to be used for each line, nullptr to avoid the usage of a background color
+		 * @param startColor Optional color for the start points of each line, nullptr to avoid the usage of a color for the start point
 		 * @param worker Optional worker object to distribute the computation
 		 * @return True, if succeeded
 		 */
@@ -368,11 +368,11 @@ class OCEAN_TRACKING_EXPORT Utilities
 		/**
 		 * Paints a set of image points into a given frame.
 		 * @param frame The frame receiving the points
-		 * @param imagePoints Image points that will be painted
+		 * @param imagePoints Image points to be painted
 		 * @param number The number of provided image points, with range [0, infinity)
-		 * @param radius The radius of the paintings in pixel, with range [0, infinity)
-		 * @param colorInner Inner color that will be used, ensure that one value is provided for each frame channel, otherwise white is used
-		 * @param colorOuter Outer color that will be used, ensure that one value is provided for each frame channel, otherwise black is used
+		 * @param radius The radius of the paintings in pixels, with range [0, infinity)
+		 * @param colorInner Inner color to be used, one value per frame channel, otherwise white is used
+		 * @param colorOuter Outer color to be used, one value per frame channel, otherwise black is used
 		 */
 		static void paintPoints(Frame& frame, const Vector2* imagePoints, const size_t number, const unsigned int radius, const uint8_t* colorInner = nullptr, const uint8_t* colorOuter = nullptr);
 
@@ -381,15 +381,15 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param frame The frame receiving the points
 		 * @param world_T_camera The transformations between camera and the world, must be valid
 		 * @param pinholeCamera The pinhole camera profile defining the projection, with dimension equal to the frame dimension
-		 * @param objectPoints The object points that will be painted, defined in world
+		 * @param objectPoints The object points to be painted, defined in world
 		 * @param numberObjectPoints Number of provided object points, with range [0, infinity)
-		 * @param imagePoints Image points that will be painted
+		 * @param imagePoints Image points to be painted
 		 * @param numberImagePoints Number of provided image points, with range [0, infinity)
 		 * @param distortProjectedObjectPoints True, to apply the distortion parameters of the camera to the projected object points
-		 * @param radiusObjectPoints Radius of the object point paintings in pixel
-		 * @param radiusImagePoints Radius of the image point paintings in pixel
-		 * @param colorObjectPoints Color that will be used to paint the object points, ensure that one value is provided for each frame channel, otherwise white is used
-		 * @param colorImagePoints Color that will be used to paint the image points, ensure that one value is provided for each frame channel, otherwise white is used
+		 * @param radiusObjectPoints Radius of the object point paintings in pixels
+		 * @param radiusImagePoints Radius of the image point paintings in pixels
+		 * @param colorObjectPoints Color to be used to paint the object points, one value per frame channel, otherwise white is used
+		 * @param colorImagePoints Color to be used to paint the image points, one value per frame channel, otherwise white is used
 		 */
 		static inline void paintPoints(Frame& frame, const HomogenousMatrix4& world_T_camera, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const bool distortProjectedObjectPoints, const unsigned int radiusObjectPoints, const unsigned int radiusImagePoints, const uint8_t* colorObjectPoints = nullptr, const uint8_t* colorImagePoints = nullptr);
 
@@ -398,15 +398,15 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param frame The frame receiving the points, must be valid
 		 * @param flippedCamera_T_world The transformation between the world and the flipped camera, must be valid
 		 * @param pinholeCamera The pinhole camera profile defining the projection, with dimension equal to the frame dimension
-		 * @param objectPoints The object points that will be painted, defined in world
+		 * @param objectPoints The object points to be painted, defined in world
 		 * @param numberObjectPoints Number of provided object points, with range [0, infinity)
-		 * @param imagePoints Image points that will be painted
+		 * @param imagePoints Image points to be painted
 		 * @param numberImagePoints Number of provided image points, with range [0, infinity)
 		 * @param distortProjectedObjectPoints True, to apply the distortion parameters of the camera to the projected object points
-		 * @param radiusObjectPoints Radius of the object point paintings in pixel
-		 * @param radiusImagePoints Radius of the image point paintings in pixel
-		 * @param colorObjectPoints Color that will be used to paint the object points, ensure that one value is provided for each frame channel, otherwise white is used
-		 * @param colorImagePoints Color that will be used to paint the image points, ensure that one value is provided for each frame channel, otherwise white is used
+		 * @param radiusObjectPoints Radius of the object point paintings in pixels
+		 * @param radiusImagePoints Radius of the image point paintings in pixels
+		 * @param colorObjectPoints Color to be used to paint the object points, one value per frame channel, otherwise white is used
+		 * @param colorImagePoints Color to be used to paint the image points, one value per frame channel, otherwise white is used
 		 */
 		static void paintPointsIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const PinholeCamera& pinholeCamera, const Vector3* objectPoints, const size_t numberObjectPoints, const Vector2* imagePoints, const size_t numberImagePoints, const bool distortProjectedObjectPoints, const unsigned int radiusObjectPoints, const unsigned int radiusImagePoints, const uint8_t* colorObjectPoints = nullptr, const uint8_t* colorImagePoints = nullptr);
 
@@ -415,7 +415,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param frame The frame receiving the points, must be valid
 		 * @param flippedCamera_T_world The transformation between world and the flipped camera, must be valid
 		 * @param anyCamera The camera profile defining the projection, with dimension equal to the frame dimension
-		 * @param boundingBox The bounding box that will be painted, defined in world
+		 * @param boundingBox The bounding box to be painted, defined in world
 		 * @param foregroundColor The foreground color of the plane, nullptr to skip the painting with the foreground color
 		 * @param backgroundColor The background color of the plane, nullptr to skip the painting with the background color
 		 * @param edgesOnly True, to paint the edges of the bounding box only; False, to paint also the diagonal connections
@@ -427,7 +427,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param frame The frame being drawn to, must be valid
 		 * @param flippedCamera_T_cone Inverted and flipped pose of the camera w.r.t the cone
 		 * @param pinholeCamera The pinhole camera profile defining the projection, with dimension equal to the frame dimension
-		 * @param cone The cone that will be painted
+		 * @param cone The cone to be painted
 		 * @param distortProjectedObjectPoints True, to apply the distortion parameters of the camera to the projected object points
 		 * @param worker Optional worker to distribute the computation
 		 * @param color The color for the drawn lines
@@ -442,7 +442,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param frame The frame being drawn to, must be valid
 		 * @param flippedCamera_T_cylinder Inverted and flipped pose of the camera w.r.t the cylinder
 		 * @param pinholeCamera The pinhole camera profile defining the projection, with dimension equal to the frame dimension
-		 * @param cylinder The cylinder that will be painted
+		 * @param cylinder The cylinder to be painted
 		 * @param distortProjectedObjectPoints True, to apply the distortion parameters of the camera to the projected object points
 		 * @param worker Optional worker to distribute the computation
 		 * @param color The color for the drawn lines
@@ -457,7 +457,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param frame The frame in which the triangle will be painted, must be valid
 		 * @param flippedCamera_T_world The transformation transforming world to the flipped camera, the flipped camera points towards the positive z-space with y-axis down, must be valid
 		 * @param anyCamera The camera profile defining the projection, must be valid
-		 * @param triangle The triangle that will be painted
+		 * @param triangle The triangle to be painted
 		 * @param color The color to be used to paint the triangle edges, nullptr to use black
 		 * @tparam tSize The thickness of the triangle outline in pixels, must be odd with range [1, infinity)
 		 */
@@ -469,8 +469,8 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param frame The frame in which the triangles will be painted, must be valid
 		 * @param flippedCamera_T_world The transformation transforming world to the flipped camera, the flipped camera points towards the positive z-space with y-axis down, must be valid
 		 * @param anyCamera The camera profile defining the projection, must be valid
-		 * @param triangles The 3D triangles that will be painted, defined in world, can be nullptr if 'numberTriangles == 0'
-		 * @param numberTriangles Number of triangles that will be painted, with range [0, infinity)
+		 * @param triangles The 3D triangles to be painted, defined in world, can be nullptr if 'numberTriangles == 0'
+		 * @param numberTriangles Number of triangles to be painted, with range [0, infinity)
 		 * @param color The color to be used to paint the triangle edges, nullptr to use black
 		 * @param worker Optional worker to distribute the computation
 		 * @tparam tSize The thickness of the triangle outline in pixels, must be odd with range [1, infinity)
@@ -524,7 +524,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param frame The frame in which the coordinate system is painted, must be valid
 		 * @param flippedCamera_T_world The camera posed converting world to the flipped camera coordinate system (a camera coordinate system pointing towards the positive z-space), must be valid
 		 * @param anyCamera The camera profile that is used to render the coordinate system
-		 * @param world_T_coordinateSystem The transformation of the coordinate system which transformed points defined in the local coordinate system (which will be rendered) into points defined in the world coordinate system, must be valid
+		 * @param world_T_coordinateSystem The transformation of the coordinate system transforming points defined in the local coordinate system (to be rendered) into points defined in the world coordinate system, must be valid
 		 * @param length The length of the three axis of the coordinate system, defined in the units of the local coordinate system
 		 */
 		static void paintCoordinateSystemIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_coordinateSystem, const Scalar length);
@@ -535,7 +535,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param frame The frame in which the coordinate system is painted, must be valid
 		 * @param cameraProjectionChecker The camera projection checker defining the projection, must be valid
 		 * @param flippedCamera_T_world The camera posed converting world to the flipped camera coordinate system (a camera coordinate system pointing towards the positive z-space), must be valid
-		 * @param world_T_coordinateSystem The transformation of the coordinate system which transformed points defined in the local coordinate system (which will be rendered) into points defined in the world coordinate system, must be valid
+		 * @param world_T_coordinateSystem The transformation of the coordinate system transforming points defined in the local coordinate system (to be rendered) into points defined in the world coordinate system, must be valid
 		 * @param length The length of the three axis of the coordinate system, defined in the units of the local coordinate system
 		 * @param segments The number of segments to be used for each axis, with range [1, infinity)
 		 */
@@ -548,7 +548,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param world_T_camera The camera pose from which the 3D object points are observed with default viewing direction towards the negative z-space and y-axis as up vector, transforming camera to world, must be valid
 		 * @param camera The camera profile defining the project, must be valid
 		 * @param planeTransformation The transformation having the origin on the plane and the z-axis parallel to the plane's normal
-		 * @param bins The number of bins in both direction that will be painted, with range [1, infinity)
+		 * @param bins The number of bins in both directions to be painted, with range [1, infinity)
 		 * @param foregroundColor The foreground color of the plane, nullptr to skip the painting with the foreground color
 		 * @param backgroundColor The background color of the plane, nullptr to skip the painting with the background color
 		 * @param expansion Optional resulting plane's expansion in the scene in x-axis and y-axis defined in world coordinates, with range (0, infinity)
@@ -563,7 +563,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param camera The camera profile defining the project, must be valid
 		 * @param planeTransformation The transformation having the origin on the plane and the z-axis parallel to the plane's normal
 		 * @param expansion The plane's expansion for the scene in x-axis and y-axis defined in world coordinates, with range (0, infinity)
-		 * @param bins The number of bins in both direction that will be painted, with range [1, infinity)
+		 * @param bins The number of bins in both directions to be painted, with range [1, infinity)
 		 * @param foregroundColor The foreground color of the plane, nullptr to skip the painting with the foreground color
 		 * @param backgroundColor The background color of the plane, nullptr to skip the painting with the background color
 		 * @return True, if the plane is perpendicular to the given camera frame
@@ -578,9 +578,9 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param quadOrigin Origin of the upper left quad position, defined in world
 		 * @param quadHorizontal Vector starting at the quad origin and defining the horizontal direction of the quads, defined in world
 		 * @param quadVertical Vector starting at the quad origin and defining the vertical direction of the quads, defined in world
-		 * @param horizontalBins Number of horizontal bins that will be painted
-		 * @param verticalBins Number of vertical bins that will be painted
-		 * @param color The color that will be used to paint the points, ensure that one value is provided for each frame channel, otherwise black is used
+		 * @param horizontalBins Number of horizontal bins to be painted
+		 * @param verticalBins Number of vertical bins to be painted
+		 * @param color The color to be used to paint the points, one value per frame channel, otherwise black is used
 		 */
 		static inline void paintQuads(Frame& frame, const HomogenousMatrix4& world_T_camera, const AnyCamera& camera, const Vector3& quadOrigin, const Vector3& quadHorizontal, const Vector3& quadVertical, const unsigned int horizontalBins, const unsigned int verticalBins, const uint8_t* color = nullptr);
 
@@ -594,7 +594,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * Paints / blends a binary 8 bit mask into a given frame with identical frame dimension.
 		 * @param frame The frame in which the mask will be painted, must be valid
 		 * @param mask The binary mask frame, with frame dimension matching with the given frame, must be valid
-		 * @param maskValue The mask value defining pixels which will be painted as masked, may be 0x00 or 0xFF
+		 * @param maskValue The mask value defining pixels to be painted as masked, may be 0x00 or 0xFF
 		 * @param worker Optional worker object to distribute the computation
 		 * @return The resulting frame with blended mask
 		 */
@@ -616,7 +616,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param gravity The gravity unit vector, defined in the coordinate system of the camera, with default camera pointing towards the negative z-space and y-axis upwards, must be valid
 		 * @param thickness The thickness of the gravity vector, possible values are {1, 3, 5, 7}
 		 * @param color The color to be used to paint the gravity vector, nullptr to use black
-		 * @param segments The number of segments the gravity vector will be separated, to cameras with distortion, with range [1, infinity)
+		 * @param segments The number of segments the gravity vector will be separated into, for cameras with distortion, with range [1, infinity)
 		 * @param position The starting position of the gravity vector, defined in the camera coordinate system
 		 * @param length The length of the gravity to be painted, defined in units of the camera coordinate system, with range (0, infinity)
 		 * @return True, if succeeded
@@ -643,8 +643,8 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param result The resulting frame with aligned frames converting the image content of both frames, the frame type will be adjusted/set internally
 		 * @param blend True, to blend both frames; False, to overwrite each pixel for which a corresponding pixel in the dynamic frame exist
 		 * @param worker Optional worker object to distribute the computation
-		 * @param maximalWidth The maximal width of the resulting frame to ensure that an extreme homography does not create an extreme large result, in pixel with range [1, infinity)
-		 * @param maximalHeight The maximal height of the resulting frame to ensure that an extreme homography does not create an extreme large result, in pixel with range [1, infinity)
+		 * @param maximalWidth The maximal width of the resulting frame to ensure that an extreme homography does not create an extremely large result, in pixels with range [1, infinity)
+		 * @param maximalHeight The maximal height of the resulting frame to ensure that an extreme homography does not create an extremely large result, in pixels with range [1, infinity)
 		 * @param fixedFrameLeft Optional resulting horizontal location of the top left pixel of the fixed frame in the resulting aligned frame, with range [0, result.width() - fixedFrame.width()]
 		 * @param fixedFrameTop Optional resulting vertical location of the top left pixel of the fixed frame in the resulting aligned frame, with range [0, result.height() - fixedFrame.height()]
 		 * @param dynamicFrameLeft Optional resulting horizontal location of the top left pixel of the dynamic frame in relation to 'fixedFrameLeft', with range (-infinity, infinity)
@@ -660,9 +660,9 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param database The database holding the tracking information to be visualized
 		 * @param poseId The id of the pose for which the visualization will be created
 		 * @param frame The frame receiving the visualization of the database
-		 * @param colorImagePoints The color for feature points, ensure that one value is provided for each frame channel
-		 * @param colorImagePointsInstable The color for instable paths, ensure that one value is provided for each frame channel
-		 * @param colorImagePointsStable The color for stable paths, ensure that one value is provided for each frame channel
+		 * @param colorImagePoints The color for feature points, one value per frame channel
+		 * @param colorImagePointsInstable The color for instable paths, one value per frame channel
+		 * @param colorImagePointsStable The color for stable paths, one value per frame channel
 		 * @param maximalPathLength The maximal length (number of concurrent frames) of paths of feature points that will be visualized, with range [0, infinity)
 		 * @param stablePathLength The length (number of concurrent frames) of paths so that they count as stable, with range [1, infinity)
 		 * @param transformation The transformation matrix which will be applied to each feature point position before the position is visualized
@@ -699,14 +699,14 @@ class OCEAN_TRACKING_EXPORT Utilities
 		/**
 		 * Reads a database information from a binary input stream.
 		 * @param inputStream The input stream providing the information
-		 * @param database The database receiving the information, the given database will cleared before the information is assigned
+		 * @param database The database receiving the information, the given database will be cleared before the information is assigned
 		 * @return True, if succeeded
 		 * @see writeDatabase(), readCamera().
 		 */
 		static bool readDatabase(IO::InputBitstream& inputStream, Database& database);
 
 		/**
-		 * Encodes the tracking environment composes of a frame mesh (a frame with correspondences of 2D image points and 3D object points), a camera pose from which the frame has been captured and an independent set of 3D object points.<br>
+		 * Encodes the tracking environment composed of a frame mesh (a frame with correspondences of 2D image points and 3D object points), a camera pose from which the frame has been captured, and an independent set of 3D object points.
 		 * @param frame The frame to encode
 		 * @param frameImagePoints The image points located in the given frame
 		 * @param frameObjectPoints The object points, one object point for each image point
@@ -720,10 +720,10 @@ class OCEAN_TRACKING_EXPORT Utilities
 
 		/**
 		 * Paints a subset of a set of lines into a given frame.
-		 * @param frame The frame in which is drawn
+		 * @param frame The frame in which the lines are drawn
 		 * @param startPositions Start positions of the lines
 		 * @param stopPositions Stop positions of the lines, each end position must have a corresponding start position
-		 * @param color The color that will be used to paint the lines, ensure that one value is provided for each frame channel, nullptr to use black
+		 * @param color The color to be used to paint the lines, one value per frame channel, nullptr to use black
 		 * @param subPixel True, to paint the lines with sub-pixel accuracy; False, to paint the lines with pixel accuracy
 		 * @param offsetStartPositions The offset which will be added to each start position before painting the line, with range (-infinity, infinity)x(-infinity, infinity)
 		 * @param offsetStopPositions The offset which will be added to each stop position before painting the line, with range (-infinity, infinity)x(-infinity, infinity)
@@ -734,28 +734,28 @@ class OCEAN_TRACKING_EXPORT Utilities
 
 		/**
 		 * Paints a subset of a set of lines into a given frame with sub-pixel accuracy.
-		 * @param frame The frame in which is drawn, must be valid
+		 * @param frame The frame in which the lines are drawn, must be valid
 		 * @param startPositions Start positions of the lines
 		 * @param stopPositions Stop positions of the lines, each end position must have a corresponding start position
-		 * @param color The color that will be used to paint the lines, ensure that one value is provided for each frame channel, nullptr to use black
+		 * @param color The color to be used to paint the lines, one value per frame channel, nullptr to use black
 		 * @param firstLine First line to be handled
 		 * @param numberLines The number of lines to be handled
-		 * @tparam tSize The thickness of the lines in pixel, must be odd with range [1, infinity)
+		 * @tparam tSize The thickness of the lines in pixels, must be odd with range [1, infinity)
 		 */
 		template <unsigned int tSize>
 		static inline void paintLinesSubset(Frame* frame, const Vector2* startPositions, const Vector2* stopPositions, const uint8_t* color, const unsigned int firstLine, const unsigned int numberLines);
 
 		/**
 		 * Paints a subset of a set of lines into a given frame with sub-pixel accuracy.
-		 * @param frame The frame in which is drawn, must be valid
+		 * @param frame The frame in which the lines are drawn, must be valid
 		 * @param startPositions Start positions of the lines
 		 * @param stopPositions Stop positions of the lines, each end position must have a corresponding start position
-		 * @param colorForeground Foreground color that will be used to paint the points, ensure that one value is provided for each frame channel, nullptr to use black
-		 * @param colorBackground Background color that will be used to paint the points, ensure that one value is provided for each frame channel, nullptr to use black
+		 * @param colorForeground Foreground color to be used to paint the points, one value per frame channel, nullptr to use black
+		 * @param colorBackground Background color to be used to paint the points, one value per frame channel, nullptr to use black
 		 * @param firstLine First line to be handled
 		 * @param numberLines The number of lines to be handled
-		 * @tparam tSizeForeground The thickness of the foreground lines in pixel, must be odd with range [1, infinity)
-		 * @tparam tSizeBackground The thickness of the background lines in pixel, must be odd with range (tSizeForeground, infinity)
+		 * @tparam tSizeForeground The thickness of the foreground lines in pixels, must be odd with range [1, infinity)
+		 * @tparam tSizeBackground The thickness of the background lines in pixels, must be odd with range (tSizeForeground, infinity)
 		 */
 		template <unsigned int tSizeForeground, unsigned int tSizeBackground>
 		static inline void paintLinesSubset(Frame* frame, const Vector2* startPositions, const Vector2* stopPositions, const uint8_t* colorForeground, const uint8_t* colorBackground, const unsigned int firstLine, const unsigned int numberLines);
@@ -764,10 +764,10 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * Paints a subset of several paths into a given frame with sub-pixel accuracy.
 		 * @param frame The frame in which the paths will be painted
 		 * @param paths The individual paths to be painted
-		 * @param color The color that will be used to paint the points, ensure that one value is provided for each frame channel, nullptr to apply black
-		 * @param firstPath The first path to handled
+		 * @param color The color to be used to paint the points, one value per frame channel, nullptr to apply black
+		 * @param firstPath The first path to be handled
 		 * @param numberPaths The number of paths to handle
-		 * @tparam tSize The thickness of the paths in pixel, must be odd with range [1, infinity)
+		 * @tparam tSize The thickness of the paths in pixels, must be odd with range [1, infinity)
 		 * @see paintPaths().
 		 */
 		template <unsigned int tSize>
@@ -778,12 +778,12 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * The colors of the paths are determined by an interpolation between two separate color values.
 		 * @param frame The frame in which the paths will be painted
 		 * @param paths The individual paths to be painted
-		 * @param color0 The first color value, ensure that one value is provided for each frame channel
-		 * @param color1 The second color value, ensure that one value is provided for each frame channel
+		 * @param color0 The first color value, one value per frame channel
+		 * @param color1 The second color value, one value per frame channel
 		 * @param factors The interpolation factor, one factor for each path, with range [0, 1]
-		 * @param firstPath The first path to handled
+		 * @param firstPath The first path to be handled
 		 * @param numberPaths The number of paths to handle
-		 * @tparam tSize The thickness of the paths in pixel, must be odd with range [1, infinity)
+		 * @tparam tSize The thickness of the paths in pixels, must be odd with range [1, infinity)
 		 * @see paintPaths().
 		 */
 		template <unsigned int tSize>
@@ -792,9 +792,9 @@ class OCEAN_TRACKING_EXPORT Utilities
 		/**
 		 * Paints a subset of 2D triangles into a given frame with sub-pixel accuracy.
 		 * @param frame The frame receiving the triangles
-		 * @param triangles The triangles that will be painted
-		 * @param color The color that will be used to paint the triangle points, ensure that one value is provided for each frame channel, otherwise black is used
-		 * @param firstTriangle The first triangle to handled
+		 * @param triangles The triangles to be painted
+		 * @param color The color to be used to paint the triangle points, one value per frame channel, otherwise black is used
+		 * @param firstTriangle The first triangle to be handled
 		 * @param numberTriangles The number of triangle to handle
 		 * @tparam tSize The thickness of the triangle edges in pixels, must be odd with range [1, infinity)
 		 */
@@ -806,9 +806,9 @@ class OCEAN_TRACKING_EXPORT Utilities
 		 * @param frame The frame in which the triangle will be painted, must be valid
 		 * @param flippedCamera_T_world The transformation transforming world to the flipped camera, the flipped camera points towards the positive z-space with y-axis down, must be valid
 		 * @param anyCamera The camera profile defining the projection, must be valid
-		 * @param triangles The triangles that will be painted, defined in world, must be valid
+		 * @param triangles The triangles to be painted, defined in world, must be valid
 		 * @param color The color to be used to paint the triangle edges, nullptr to use black
-		 * @param firstTriangle The first triangle to handled
+		 * @param firstTriangle The first triangle to be handled
 		 * @param numberTriangles The number of triangle to handle
 		 * @tparam tSize The thickness of the triangle edges in pixels, must be odd with range [1, infinity)
 		 */
@@ -818,7 +818,7 @@ class OCEAN_TRACKING_EXPORT Utilities
 		/**
 		 * Paints subset of a set of 2D image points into a given frame with sub-pixel accuracy.
 		 * @param frame The frame in which the image points will be painted
-		 * @param imagePoints The image points which will be painted
+		 * @param imagePoints The image points to be painted
 		 * @param color The color for the image points
 		 * @param firstImagePoint The first image point to handle
 		 * @param numberImagePoints The number of image points to handle
@@ -828,11 +828,11 @@ class OCEAN_TRACKING_EXPORT Utilities
 		static inline void paintImagePointsSubset(Frame* frame, const Vector2* imagePoints, const uint8_t* color, const unsigned int firstImagePoint, const unsigned int numberImagePoints);
 
 		/**
-		 * Paints a subset of set of 3D object points (rather their projected 2D counterparts respectively) into a given frame with sub-pixel accuracy.
+		 * Paints a subset of a set of projected 3D object points into a given frame with sub-pixel accuracy.
 		 * @param frame The frame in which the projected object points will be painted
 		 * @param anyCamera The camera profile defining the projection between 3D object points and camera plane, must be valid
 		 * @param flippedCamera_T_world The inverted and flipped camera pose from which the 3D object points are observed, with default camera pointing towards the positive z-space with y-axis down, must be valid
-		 * @param objectPoints The object points which will be projected into the camera frame
+		 * @param objectPoints The object points to be projected into the camera frame
 		 * @param color The color for the object points
 		 * @param firstObjectPoint The first object point to handle
 		 * @param numberObjectPoints The number of object points to handle
@@ -842,13 +842,13 @@ class OCEAN_TRACKING_EXPORT Utilities
 		static inline void paintObjectPointsSubset(Frame* frame, const AnyCamera* anyCamera, const HomogenousMatrix4* flippedCamera_T_world, const Vector3* objectPoints, const uint8_t* color, const unsigned int firstObjectPoint, const unsigned int numberObjectPoints);
 
 		/**
-		 * Paints a subset of feature points having a radius (a scale) and orientation.
+		 * Paints a subset of feature points with radius (scale) and orientation.
 		 * @param frame The frame in which the feature points will be painted, must be valid
-		 * @param width The width of the frame in pixel, with range (0, infinity)
-		 * @param height The height of the frame in pixel, with range (0, infinity)
-		 * @param positions The positions of the feature points defined in the pixel domain of the given frame, with range (-infinity, infinity)x(-infinity, infinity)
-		 * @param radii The radii (scale) of the feature points in pixel, with range (0, infinity), one for each position
-		 * @param orientations The orientations of the feature points as CCW angle in radian, with range [0, 2PI), one for each position
+		 * @param width The width of the frame in pixels, with range (0, infinity)
+		 * @param height The height of the frame in pixels, with range (0, infinity)
+		 * @param positions The positions of the feature points in the pixel domain of the frame, with range (-infinity, infinity)x(-infinity, infinity)
+		 * @param radii The radii (scale) of the feature points in pixels, with range (0, infinity), one for each position
+		 * @param orientations The orientations of the feature points as CCW angle in radians, with range [0, 2PI), one for each position
 		 * @param color The color for the feature point, one value for each frame data channel
 		 * @param shadowColor The outer color for the object points, one value for each frame data channel or nullptr to skip painting the shadow
 		 * @param offsetX Explicit horizontal offset which will be added to every feature point location before the point is painted, with range (-infinity, infinity)
@@ -862,13 +862,13 @@ class OCEAN_TRACKING_EXPORT Utilities
 		static inline void paintFeaturePoints8BitPerChannelSubset(uint8_t* frame, const unsigned int width, const unsigned int height, const Vector2* positions, const Scalar* radii, const Scalar* orientations, const uint8_t* color, const uint8_t* shadowColor, const Scalar offsetX, const Scalar offsetY, const unsigned int framePaddingElements, const unsigned int firstFeaturePoint, const unsigned int numberFeaturePoints);
 
 		/**
-		 * Paints a subset of a set of correspondences between 2D image points and 3D object points (rather their projected 2D counterparts respectively) into a given frame with sub-pixel accuracy.
+		 * Paints a subset of a set of correspondences between 2D image points and 3D object points (or their projected 2D counterparts) into a given frame with sub-pixel accuracy.
 		 * The projected object points will be painted first, followed by their corresponding image points.<br>
-		 * Further, a connection between the projected object points and the corresponding image points can be painted, which can be helpful if the given pose is not accurate.
+		 * Additionally, a connection between the projected object points and the corresponding image points can be painted, which can be helpful if the given pose is not accurate.
 		 * @param frame The frame in which the projected object points and image points will be painted
 		 * @param camera The camera profile defining the projection between 3D object points and camera plane
 		 * @param flippedCamera_T_model The inverted and flipped camera pose transforming points located in coordinate system of the model to points located in the coordinate system of the flipped camera, must be valid
-		 * @param objectPoints The object points which will be projected into the camera frame
+		 * @param objectPoints The object points to be projected into the camera frame
 		 * @param imagePoints The image points corresponding to the given object points, the smaller the distance between image points and projected object points the more accurate the camera pose
 		 * @param maxSqrError The maximal square pixel error between a projected object point and the corresponding image point to count as valid, with range [0, infinity)
 		 * @param colorValidObjectPoints The color for valid object points

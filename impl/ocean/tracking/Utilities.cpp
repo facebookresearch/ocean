@@ -393,7 +393,7 @@ bool Utilities::paintCorrespondencesOrientations(const PinholeCamera& pinholeCam
 
 	CV::Advanced::PanoramaFrame panoramaFrame(panoramaWidth, panoramaWidth / 2u, 0xFF, CV::Advanced::PanoramaFrame::UM_AVERAGE_LOCAL);
 
-	// we set the orientation of the first frame to a identity orientation and adjust the second orientation accordingly
+	// we set the orientation of the first frame to an identity orientation and adjust the second orientation accordingly
 
 	SquareMatrix3 invOrientation0;
 	if (!orientation0.invert(invOrientation0))
@@ -560,7 +560,7 @@ void Utilities::paintWireframeConeIF(Frame& frame, const HomogenousMatrix4& flip
 	ocean_assert(frame.width() == pinholeCamera.width() && frame.height() == pinholeCamera.height());
 	ocean_assert(numCircles >= 2u && numSamples >= 3u);
 
-	// The drawing procedure below assumes that the pose is given w.r.t a cone with the axis [0, 0, 1].
+	// The drawing procedure below assumes that the pose is given with respect to a cone with the axis [0, 0, 1].
 	// If this isn't the case, we'll first compute a corrected pose.
 	HomogenousMatrix4 flippedCamera_T_canonicalCone = flippedCamera_T_cone;
 	Vector3 apex = cone.apex();
@@ -638,7 +638,7 @@ void Utilities::paintWireframeCylinderIF(Frame& frame, const HomogenousMatrix4& 
 	ocean_assert(frame.width() == pinholeCamera.width() && frame.height() == pinholeCamera.height());
 	ocean_assert(numCircles >= 2u && numSamples >= 3u);
 
-	// The drawing procedure below assumes that the pose is given w.r.t a cylinder with the axis [0, 0, 1].
+	// The drawing procedure below assumes that the pose is given with respect to a cylinder with the axis [0, 0, 1].
 	// If this isn't the case, we'll first compute a corrected pose.
 	HomogenousMatrix4 flippedCamera_T_canonicalCylinder = flippedCamera_T_cylinder;
 	Vector3 origin = cylinder.origin();
