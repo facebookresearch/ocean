@@ -49,8 +49,8 @@ std::string StringApple::toUTF8(NSString* object)
 
 	const char* value = [object UTF8String];
 
-	ocean_assert(value != nullptr || stringLength == 0u);
-	if (value == nullptr)
+	ocean_assert(value != nullptr);
+	if (value == nullptr || stringLength == 0u)
 	{
 		return std::string();
 	}
