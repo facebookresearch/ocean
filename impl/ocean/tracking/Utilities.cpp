@@ -744,10 +744,60 @@ void Utilities::paintLineIF(Frame& frame, const HomogenousMatrix4& flippedCamera
 	}
 }
 
-void Utilities::paintCoordinateSystemIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const AnyCamera& anyCamera, const HomogenousMatrix4& world_T_coordinateSystem, const Scalar length)
+void Utilities::paintLineIF(Frame& frame, const CameraProjectionChecker& cameraProjectionChecker, const HomogenousMatrix4& flippedCamera_T_world, const Vector3& objectPoint0, const Vector3& objectPoint1, const unsigned int segments, const uint8_t* foregroundColor, const uint8_t* backgroundColor)
 {
-	ocean_assert(frame && flippedCamera_T_world.isValid() && anyCamera.isValid() && world_T_coordinateSystem.isValid());
-	ocean_assert(frame.width() == anyCamera.width() && frame.height() == frame.height());
+	ocean_assert(frame && cameraProjectionChecker.isValid() && flippedCamera_T_world.isValid());
+	ocean_assert(frame.width() == cameraProjectionChecker.width() && frame.height() == cameraProjectionChecker.height());
+	ocean_assert(segments >= 1u);
+
+	const Scalar segmentFactor = Scalar(1) / Scalar(segments);
+
+	for (const bool backgroundIteration : {true, false})
+	{
+		const uint8_t* color = backgroundIteration ? backgroundColor : foregroundColor;
+
+		if (color == nullptr)
+		{
+			continue;
+		}
+
+		Vector2 previousImagePoint;
+		if (!cameraProjectionChecker.projectToImageIF(flippedCamera_T_world, objectPoint0, &previousImagePoint))
+		{
+			previousImagePoint = Vector2::minValue();
+		}
+
+		for (unsigned int n = 0u; n < segments; ++n)
+		{
+			const Vector3 nextObjectPoint = objectPoint0 + (objectPoint1 - objectPoint0) * Scalar(n + 1) * segmentFactor;
+
+			Vector2 nextImagePoint;
+			if (!cameraProjectionChecker.projectToImageIF(flippedCamera_T_world, nextObjectPoint, &nextImagePoint))
+			{
+				nextImagePoint = Vector2::minValue();
+			}
+
+			if (previousImagePoint.x() != Numeric::minValue() && nextImagePoint.x() != Numeric::minValue())
+			{
+				if (backgroundIteration)
+				{
+					CV::Canvas::line<3u>(frame, previousImagePoint.x(), previousImagePoint.y(), nextImagePoint.x(), nextImagePoint.y(), color);
+				}
+				else
+				{
+					CV::Canvas::line<1u>(frame, previousImagePoint.x(), previousImagePoint.y(), nextImagePoint.x(), nextImagePoint.y(), color);
+				}
+			}
+
+			previousImagePoint = nextImagePoint;
+		}
+	}
+}
+
+void Utilities::paintCoordinateSystemIF(Frame& frame, const HomogenousMatrix4& flippedCamera_T_world, const AnyCamera& camera, const HomogenousMatrix4& world_T_coordinateSystem, const Scalar length)
+{
+	ocean_assert(frame && flippedCamera_T_world.isValid() && camera.isValid() && world_T_coordinateSystem.isValid());
+	ocean_assert(frame.width() == camera.width() && frame.height() == camera.height());
 
 	const uint8_t* const red = CV::Canvas::red(frame.pixelFormat());
 	const uint8_t* const green = CV::Canvas::green(frame.pixelFormat());
@@ -762,19 +812,41 @@ void Utilities::paintCoordinateSystemIF(Frame& frame, const HomogenousMatrix4& f
 
 		if (AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, xAxis))
 		{
-			paintLineIF(frame, flippedCamera_T_world, anyCamera, world_T_coordinateSystem.translation(), xAxis, /* segments */ 5u, red, black);
+			paintLineIF(frame, flippedCamera_T_world, camera, world_T_coordinateSystem.translation(), xAxis, /* segments */ 5u, red, black);
 		}
 
 		if (AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, yAxis))
 		{
-			paintLineIF(frame, flippedCamera_T_world, anyCamera, world_T_coordinateSystem.translation(), yAxis, /* segments */ 5u, green, black);
+			paintLineIF(frame, flippedCamera_T_world, camera, world_T_coordinateSystem.translation(), yAxis, /* segments */ 5u, green, black);
 		}
 
 		if (AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, zAxis))
 		{
-			paintLineIF(frame, flippedCamera_T_world, anyCamera, world_T_coordinateSystem.translation(), zAxis, /* segments */ 5u, blue, black);
+			paintLineIF(frame, flippedCamera_T_world, camera, world_T_coordinateSystem.translation(), zAxis, /* segments */ 5u, blue, black);
 		}
 	}
+}
+
+void Utilities::paintCoordinateSystemIF(Frame& frame, const CameraProjectionChecker& cameraProjectionChecker, const HomogenousMatrix4& flippedCamera_T_world, const HomogenousMatrix4& world_T_coordinateSystem, const Scalar length, const unsigned int segments)
+{
+	ocean_assert(frame && cameraProjectionChecker.isValid() && flippedCamera_T_world.isValid() && world_T_coordinateSystem.isValid());
+	ocean_assert(frame.width() == cameraProjectionChecker.width() && frame.height() == cameraProjectionChecker.height());
+	ocean_assert(segments >= 1u);
+
+	const uint8_t* const red = CV::Canvas::red(frame.pixelFormat());
+	const uint8_t* const green = CV::Canvas::green(frame.pixelFormat());
+	const uint8_t* const blue = CV::Canvas::blue(frame.pixelFormat());
+	const uint8_t* const black = CV::Canvas::black(frame.pixelFormat());
+
+	const Vector3 origin = world_T_coordinateSystem.translation();
+
+	const Vector3 xAxis = world_T_coordinateSystem * Vector3(length, 0, 0);
+	const Vector3 yAxis = world_T_coordinateSystem * Vector3(0, length, 0);
+	const Vector3 zAxis = world_T_coordinateSystem * Vector3(0, 0, length);
+
+	paintLineIF(frame, cameraProjectionChecker, flippedCamera_T_world, origin, xAxis, segments, red, black);
+	paintLineIF(frame, cameraProjectionChecker, flippedCamera_T_world, origin, yAxis, segments, green, black);
+	paintLineIF(frame, cameraProjectionChecker, flippedCamera_T_world, origin, zAxis, segments, blue, black);
 }
 
 bool Utilities::paintPlane(Frame& frame, const HomogenousMatrix4& world_T_camera, const AnyCamera& camera, const HomogenousMatrix4& planeTransformation, const unsigned int bins, const uint8_t* foregroundColor, const uint8_t* backgroundColor, Scalar* expansion)
