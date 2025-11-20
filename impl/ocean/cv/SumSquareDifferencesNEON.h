@@ -518,7 +518,7 @@ inline unsigned int SumSquareDifferencesNEON::mirrorIndex(const int elementIndex
 	}
 	else
 	{
-		ocean_assert(elementIndex >= elements);
+		ocean_assert((unsigned int)(elementIndex) >= elements);
 
 		const unsigned int rightElements = elementIndex - elements;
 

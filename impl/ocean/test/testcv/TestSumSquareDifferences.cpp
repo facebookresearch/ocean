@@ -1099,7 +1099,7 @@ bool TestSumSquareDifferences::testBuffer8BitPerChannel(const unsigned int width
 		// Add valid locations nearest to buffer boundaries to test for memory access violation bugs
 		offsets0[0] = 0u;
 		offsets1[0] = 0u;
-		
+
 		offsets0[1] = height * frame0.strideElements() - tBufferSize;
 		offsets1[1] = height * frame1.strideElements() - tBufferSize;
 
@@ -1789,6 +1789,7 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const unsig
 	RandomGenerator randomGenerator;
 
 	HighPerformanceStatistic performanceTemplate;
+	HighPerformanceStatistic performanceSSE;
 	HighPerformanceStatistic performanceNEON;
 	HighPerformanceStatistic performanceDefault;
 
@@ -1800,6 +1801,7 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const unsig
 	Indices32 centersY1(locations);
 
 	Indices32 resultsTemplate;
+	Indices32 resultsSSE;
 	Indices32 resultsNEON;
 	Indices32 resultsDefault;
 
@@ -1845,7 +1847,7 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const unsig
 		const uint8_t* const data0 = frame0.constdata<uint8_t>();
 		const uint8_t* const data1 = frame1.constdata<uint8_t>();
 
-		for (const ImplementationType implementationType : {IT_TEMPLATE, IT_NEON, IT_DEFAULT})
+		for (const ImplementationType implementationType : {IT_TEMPLATE, IT_SSE, IT_NEON, IT_DEFAULT})
 		{
 			switch (implementationType)
 			{
@@ -1859,6 +1861,25 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const unsig
 					{
 						resultsTemplate[n] = CV::SumSquareDifferencesBase::patchMirroredBorder8BitPerChannelTemplate<tChannels>(data0, data1, tPatchSize, width0, height0, width1, height1, centersX0[n], centersY0[n], centersX1[n], centersY1[n], paddingElements0, paddingElements1);
 					}
+
+					break;
+				}
+
+				case IT_SSE:
+				{
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+					if constexpr (tPatchSize >= 5u)
+					{
+						resultsSSE.resize(locations);
+
+						const HighPerformanceStatistic::ScopedStatistic scopedStatistic(performanceSSE);
+
+						for (size_t n = 0; n < locations; ++n)
+						{
+							resultsSSE[n] = CV::SumSquareDifferencesSSE::patchMirroredBorder8BitPerChannel<tChannels, tPatchSize>(data0, data1, width0, height0, width1, height1, centersX0[n], centersY0[n], centersX1[n], centersY1[n], paddingElements0, paddingElements1);
+						}
+					}
+#endif // defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
 
 					break;
 				}
@@ -1938,6 +1959,11 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const unsig
 				allSucceeded = false;
 			}
 
+			if (!resultsSSE.empty() && resultsSSE[n] != ssdTest)
+			{
+				allSucceeded = false;
+			}
+
 			if (!resultsNEON.empty() && resultsNEON[n] != ssdTest)
 			{
 				allSucceeded = false;
@@ -1956,6 +1982,11 @@ bool TestSumSquareDifferences::testPatchMirroredBorder8BitPerChannel(const unsig
 	if (performanceTemplate.measurements() != 0u)
 	{
 		Log::info() << "Template: [" << performanceTemplate.bestMseconds() << ", " << performanceTemplate.medianMseconds() << ", " << performanceTemplate.worstMseconds() << "] ms";
+	}
+
+	if (performanceSSE.measurements() != 0u)
+	{
+		Log::info() << "     SSE: [" << performanceSSE.bestMseconds() << ", " << performanceSSE.medianMseconds() << ", " << performanceSSE.worstMseconds() << "] ms";
 	}
 
 	if (performanceNEON.measurements() != 0u)

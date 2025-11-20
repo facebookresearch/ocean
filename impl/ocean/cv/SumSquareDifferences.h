@@ -242,7 +242,14 @@ uint32_t SumSquareDifferences::patchMirroredBorder8BitPerChannel(const uint8_t* 
 	static_assert(tChannels >= 1u, "Invalid channel number!");
 	static_assert(tPatchSize % 2u == 1u, "Invalid patch size!");
 
-#if defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
+#if defined(OCEAN_HARDWARE_SSE_VERSION) && OCEAN_HARDWARE_SSE_VERSION >= 41
+
+	if constexpr (tPatchSize >= 5u)
+	{
+		return SumSquareDifferencesSSE::patchMirroredBorder8BitPerChannel<tChannels, tPatchSize>(image0, image1, width0, height0, width1, height1, centerX0, centerY0, centerX1, centerY1, image0PaddingElements, image1PaddingElements);
+	}
+
+#elif defined(OCEAN_HARDWARE_NEON_VERSION) && OCEAN_HARDWARE_NEON_VERSION >= 10
 
 	if constexpr (tPatchSize >= 5u)
 	{
