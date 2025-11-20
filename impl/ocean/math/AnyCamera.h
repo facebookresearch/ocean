@@ -20,7 +20,8 @@ namespace Ocean
 {
 
 // Forward declaration.
-template <typename T> class AnyCameraT;
+template <typename T>
+class AnyCameraT;
 
 /**
  * Definition of an AnyCamera object with Scalar precision.
@@ -542,6 +543,26 @@ class CameraProjectionCheckerT
 		 * @return The checker's camera model, nullptr if no camera model has been set
 		 */
 		const SharedAnyCameraT<T>& camera() const;
+
+		/**
+		 * Returns the width of the camera profile.
+		 * @return The camera image width in pixel, with range [0, infinity), 0 if no camera has been set
+		 */
+		inline unsigned int width() const;
+
+		/**
+		 * Returns the height of the camera profile.
+		 * @return The camera image height in pixel, with range [0, infinity), 0 if no camera has been set
+		 */
+		inline unsigned int height() const;
+
+		/**
+		 * Updates the checker with a new camera model.
+		 * If the new camera is equal to the current camera, the function will return immediately without any updates.
+		 * @param camera The camera model defining the projection, must be valid
+		 * @param segmentSteps The number of segments to be used to determine the camera boundary, with range [1, infinity)
+		 */
+		void update(const SharedAnyCameraT<T>& camera, const size_t segmentSteps = 10);
 
 		/**
 		 * Returns the 2D line segments defined in the camera's normalized image plane defining the camera's boundary.
@@ -1696,18 +1717,7 @@ using AnyCameraInvalidF = AnyCameraInvalidT<float>;
 template <typename T>
 CameraProjectionCheckerT<T>::CameraProjectionCheckerT(const SharedAnyCameraT<T>& camera, const size_t segmentSteps)
 {
-	ocean_assert(camera != nullptr && camera->isValid() && segmentSteps >= 1);
-
-	if (camera != nullptr && camera->isValid() && segmentSteps >= 1)
-	{
-		FiniteLinesT2<T> cameraBoundarySegments;
-
-		if (determineCameraBoundary(*camera, cameraBoundarySegments, segmentSteps))
-		{
-			camera_ = camera;
-			cameraBoundarySegments_ = std::move(cameraBoundarySegments);
-		}
-	}
+	update(camera, segmentSteps);
 }
 
 template <typename T>
@@ -1747,6 +1757,58 @@ template <typename T>
 const SharedAnyCameraT<T>& CameraProjectionCheckerT<T>::camera() const
 {
 	return camera_;
+}
+
+template <typename T>
+inline unsigned int CameraProjectionCheckerT<T>::width() const
+{
+	if (camera_)
+	{
+		return camera_->width();
+	}
+
+	return 0u;
+}
+
+template <typename T>
+inline unsigned int CameraProjectionCheckerT<T>::height() const
+{
+	if (camera_)
+	{
+		return camera_->height();
+	}
+
+	return 0u;
+}
+
+template <typename T>
+void CameraProjectionCheckerT<T>::update(const SharedAnyCameraT<T>& camera, const size_t segmentSteps)
+{
+	ocean_assert(camera != nullptr && camera->isValid() && segmentSteps >= 1);
+	if (camera == nullptr || !camera->isValid() || segmentSteps == 0)
+	{
+		return;
+	}
+
+	if (camera_ && camera_->isEqual(*camera))
+	{
+		ocean_assert(isValid());
+		return;
+	}
+
+	cameraBoundarySegments_.clear();
+
+	if (determineCameraBoundary(*camera, cameraBoundarySegments_, segmentSteps))
+	{
+		camera_ = camera;
+	}
+	else
+	{
+		camera_ = nullptr;
+		cameraBoundarySegments_.clear();
+	}
+
+	ocean_assert(isValid());
 }
 
 template <typename T>
