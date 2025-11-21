@@ -78,7 +78,7 @@ class BoxT2
 		/**
 		 * Creates an invalid box object.
 		 */
-		BoxT2();
+		BoxT2() = default;
 
 		/**
 		 * Creates a new box object by two opposite corner positions.
@@ -169,13 +169,13 @@ class BoxT2
 
 		/**
 		 * Returns the horizontal position of the higher corner of this box.
-		 * @return Left position
+		 * @return Right position
 		 */
 		inline const T& right() const;
 
 		/**
 		 * Returns the vertical position of the higher corner of this box.
-		 * @return Top position
+		 * @return Bottom position
 		 */
 		inline const T& bottom() const;
 
@@ -205,9 +205,9 @@ class BoxT2
 		inline T xDimension() const;
 
 		/**
-		 * Returns the dimension in x axis, which could e.g. be the height of this box.
+		 * Returns the dimension in y axis, which could e.g. be the height of this box.
 		 * Beware: The result is undefined for an invalid box.
-		 * @return Dimension in x axis
+		 * @return Dimension in y axis
 		 */
 		inline T yDimension() const;
 
@@ -406,7 +406,7 @@ class BoxT2
 		/**
 		 * Calculates the intersection of this bounding box (with floating point accuracy) and a second bounding box (with integer accuracy).
 		 * The resulting intersection (with integer accuracy) will entirely enclose this floating point bounding box - unless not possible due to the given constraints e.g., 'constraintLeft', 'constraintTop', ...<br>
-		 * If this box is invalid, than the provided integer bounding box will be returned.
+		 * If this box is invalid, then the provided integer bounding box will be returned.
 		 * @param constraintLeft Most left (including) position of the resulting intersection, with range (-infinity, infinity)
 		 * @param constraintTop Most top (including) position of the resulting intersection, with range (-infinity, infinity)
 		 * @param constraintRight Most right (including) position of the resulting intersection, with range [left, infinity)
@@ -422,7 +422,7 @@ class BoxT2
 		/**
 		 * Calculates the intersection of this bounding box (with floating point accuracy) and a second bounding box (with integer accuracy).
 		 * The resulting intersection (with integer accuracy) will entirely enclose this floating point bounding box - unless not possible due to the given constraints e.g., 'maximalWidth', 'maximalHeight', ...<br>
-		 * If this box is invalid, than the provided integer bounding box will be returned.<br>
+		 * If this box is invalid, then the provided integer bounding box will be returned.<br>
 		 * Actually, this function returns box2integer(0, 0, maximalWidth - 1, maximalHeight - 1, intersectionLeft, intersectionTop, intersectionWidth, intersectionHeight)
 		 * @param maximalWidth Maximal width of the resulting intersection, with range [0, infinity)
 		 * @param maximalHeight Maximal height of the resulting intersection, with range [0, infinity)
@@ -437,7 +437,7 @@ class BoxT2
 		/**
 		 * Calculates the intersection of this bounding box (with floating point accuracy) and a second bounding box (with integer accuracy).
 		 * The resulting intersection (with integer accuracy) will entirely enclose this floating point bounding box - unless not possible due to the given constraints e.g., 'maximalWidth', 'maximalHeight', ...<br>
-		 * If this box is invalid, than the provided integer bounding box will be returned.
+		 * If this box is invalid, then the provided integer bounding box will be returned.
 		 * @param maximalWidth Maximal width of the sub-region, with range [0, infinity)
 		 * @param maximalHeight Maximal height of the sub-region, with range [0, infinity)
 		 * @param extraBorder Explicit border that will be added to the left, top, right and bottom borders of the resulting intersection (as long as the specified constraints 'maximalWidth' and 'maximalHeight' parameters are not violated)
@@ -452,19 +452,11 @@ class BoxT2
 	protected:
 
 		/// Lower box corner.
-		VectorT2<T> lower_;
+		VectorT2<T> lower_ = VectorT2<T>::maxValue();
 
 		/// Higher box corner.
-		VectorT2<T> higher_;
+		VectorT2<T> higher_ = VectorT2<T>::minValue();
 };
-
-template <typename T>
-BoxT2<T>::BoxT2() :
-	lower_(NumericT<T>::maxValue(), NumericT<T>::maxValue()),
-	higher_(NumericT<T>::minValue(), NumericT<T>::minValue())
-{
-	ocean_assert(!isValid());
-}
 
 template <typename T>
 BoxT2<T>::BoxT2(const VectorT2<T>& first, const VectorT2<T>& second) :
@@ -1025,7 +1017,7 @@ bool BoxT2<T>::box2integer(const unsigned int maximalWidth, const unsigned int m
 	unsigned int intersectionBottom = intersectionTop + intersectionHeight - 1u;
 
 	ocean_assert(intersectionRight < maximalWidth);
-	ocean_assert(intersectionTop < maximalHeight);
+	ocean_assert(intersectionBottom < maximalHeight);
 
 	intersectionRight = min(intersectionRight + extraBorder, maximalWidth - 1u);
 	intersectionBottom = min(intersectionBottom + extraBorder, maximalHeight - 1u);
