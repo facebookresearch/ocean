@@ -126,9 +126,10 @@ class FREAKDescriptorT
 				 * Purely virtual function to compute the camera derivative data; has to be implemented in any derived class
 				 * @param point A 2D point in the image plane of a camera
 				 * @param pointPyramidLevel Level of the frame pyramid at which the input point is located, range: [0, supportedPyramidLevels())
+				 * @param inverseFocalLength The resulting inverse focal length of the camera associated with the specified pyramid level
 				 * @return The 2x3 Jacobian matrix of the projection matrix and the unprojection ray (normalized to length 1)
 				 */
-				virtual FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel = 0u) const = 0;
+				virtual FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const = 0;
 
 				/**
 				 * Returns the maximum number of pyramid levels for which camera derivative data can be computed
@@ -153,23 +154,19 @@ class FREAKDescriptorT
 
 				/**
 				 * Computes the point Jacobian of the projection matrix and unprojection ray for a specified point
-				 * @param point A 2D point in the image plane of a camera
-				 * @param pointPyramidLevel Level of the frame pyramid at which the input point is located, range: [0, supportedPyramidLevels())
-				 * @return The 2x3 Jacobian matrix of the projection matrix and the unprojection ray (normalized to length 1)
+				 * @see CameraDerivativeFunctor::computeCameraDerivativeData().
 				 */
-				FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel) const override;
+				FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const override;
 
 				/**
 				 * Returns the maximum number of pyramid levels for which camera derivative data can be computed
-				 * @return Number of pyramid levels for which camera derivative data can be computed, range: [1, infinity)
+				 * @see CameraDerivativeFunctor::supportedPyramidLevels().
 				 */
 				unsigned int supportedPyramidLevels() const override;
 
 				/**
 				 * Computes the point Jacobian of the projection matrix and unprojection ray for a specified point
-				 * @param pinholeCamera The pinhole camera which is used to compute the 2x3 Jacobian of its projection matrix
-				 * @param point A 2D point in the image plane of the camera
-				 * @return The 2x3 Jacobian matrix of the projection matrix and the unprojection ray (normalized to length 1)
+				 * @see CameraDerivativeFunctor::computeCameraDerivativeData().
 				 */
 				static typename FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const PinholeCamera& pinholeCamera, const Eigen::Vector2f& point);
 
@@ -195,23 +192,19 @@ class FREAKDescriptorT
 
 				/**
 				 * Computes the point Jacobian of the projection matrix and unprojection ray for a specified point
-				 * @param point A 2D point in the image plane of a camera
-				 * @param pointPyramidLevel Level of the frame pyramid at which the input point is located, range: [0, supportedPyramidLevels())
-				 * @return The 2x3 Jacobian matrix of the projection matrix and the unprojection ray (normalized to length 1)
+				 * @see CameraDerivativeFunctor::computeCameraDerivativeData().
 				 */
-				FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel) const override;
+				FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const override;
 
 				/**
 				 * Returns the maximum number of pyramid levels for which camera derivative data can be computed
-				 * @return Number of pyramid levels for which camera derivative data can be computed, range: [1, infinity)
+				 * @see CameraDerivativeFunctor::supportedPyramidLevels().
 				 */
 				unsigned int supportedPyramidLevels() const override;
 
 				/**
 				 * Computes the point Jacobian of the projection matrix and unprojection ray for a specified point
-				 * @param camera The camera which is used to compute the 2x3 Jacobian of its projection matrix
-				 * @param point A 2D point in the image plane of the camera
-				 * @return The 2x3 Jacobian matrix of the projection matrix and the unprojection ray (normalized to length 1)
+				 * @see CameraDerivativeFunctor::computeCameraDerivativeData().
 				 */
 				static typename FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const AnyCamera& camera, const Eigen::Vector2f& point);
 
@@ -219,6 +212,9 @@ class FREAKDescriptorT
 
 				/// The camera instance used to compute the Jacobian matrix and unprojection ray at the finest layer of an image pyramid
 				SharedAnyCameras cameras_;
+
+				/// The inverse focal length of the cameras, one for each pyramid level
+				std::vector<float> inverseFocalLengths_;
 		};
 
 	public:
@@ -314,10 +310,11 @@ class FREAKDescriptorT
 		 * @code
 		 * class YourCameraDerivativeFunctor : public CameraDerivativeFunctor
 		 * {
-		 *     typename FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel)
+		 *     typename FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) override
 		 *     {
 		 *         FREAKDescriptorT<tSize>::CameraDerivativeData data;
 		 *
+		 *         inverseFocalLength = ... // Compute inverse focal length for the camera at pointPyramidLevel
 		 *         data.pointJacobianMatrixIF = ... // Add your computation here
 		 *         data.unprojectRayIF = ... // Add your computation here
 		 *
@@ -334,11 +331,11 @@ class FREAKDescriptorT
 		 * @param pointsSize The number of elements in 'points', range: [0, infinity)
 		 * @param pointsPyramidLevel Level of the frame pyramid at which the input points are located, range: [0, framePyramid.layers() - 1)
 		 * @param freakDescriptors Pointer to the FREAK descriptors that will be computed for the input points, must be valid and have 'pointsSize' elements. Final descriptors can be invalid, e.g., if they are too close to the image border
-		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths) defined at pyramid level 'pointsPyramidLevel', with range (0, infinity)
+		 * @param unusedInverseFocalLength Unused parameter
 		 * @param cameraDerivativeFunctor A functor that is called for each input point and which must return its corresponding 2x3 Jacobian of the projection matrix and normalized unprojection ray.
 		 * @param worker Optional worker instance for parallelization
 		 */
-		static inline void computeDescriptors(const FramePyramid& framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const float inverseFocalLength, const CameraDerivativeFunctor& cameraDerivativeFunctor, Worker* worker = nullptr);
+		static inline void computeDescriptors(const FramePyramid& framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const float unusedInverseFocalLength, const CameraDerivativeFunctor& cameraDerivativeFunctor, Worker* worker = nullptr);
 
 		/**
 		 * Extract Harris corners from an image pyramid and compute FREAK descriptors
@@ -348,7 +345,7 @@ class FREAKDescriptorT
 		 * @param expectedHarrisCorners640x480 Expected number of Harris corners if the resolution of the image were 640 x 480 pixels. The actual number of expected corners is scaled to the size of the first layer in the image pyramid that is used for the extraction and then distributed over the range of pyramid layers that is used, range: [1, infinity)
 		 * @param harrisCornersReductionScale Scale factor that determines the rate with which the number of corners is reduced as the function climbs through the image pyramid, range: (0, 1)
 		 * @param harrisCornerThreshold Threshold value for the Harris corner detector, range: [0, 512]
-		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths), defined at the finest pyramid level (level 0), with range (0, infinity)
+		 * @param unusedInverseFocalLength Unused parameter
 		 * @param cameraDerivativeFunctor A functor that is called for each input point and which must return its corresponding 2x3 Jacobian of the projection matrix and normalized unprojection ray
 		 * @param corners The Harris corners that have been extracted from the frame pyramid, will be initialized by this function, will have the same size as 'cornerPyramidLevels' and 'descriptors'
 		 * @param cornerPyramidLevels Will hold for each Harris corner the level index of the pyramid level where it was extracted, will have the same size as 'corners' and 'descriptors'
@@ -359,7 +356,7 @@ class FREAKDescriptorT
 		 * @param yFrameIsUndistorted If true the original input frame is undistorted and all extracted 2D feature positions will be marked as undistorted, too
 		 * @param worker Optional worker instance for parallelization
 		 */
-		static bool extractHarrisCornersAndComputeDescriptors(const Frame& yFrame, const unsigned int maxFrameArea, const unsigned int minFrameArea, const unsigned int expectedHarrisCorners640x480, const Scalar harrisCornersReductionScale, const unsigned int harrisCornerThreshold, const float inverseFocalLength, const CameraDerivativeFunctor& cameraDerivativeFunctor, HarrisCorners& corners, Indices32& cornerPyramidLevels, std::vector<FREAKDescriptorT<tSize>>& descriptors, const bool removeInvalid = false, const Scalar border = Scalar(20), const bool determineExactHarrisCornerPositions = false, const bool yFrameIsUndistorted = true, Worker* worker = nullptr);
+		static bool extractHarrisCornersAndComputeDescriptors(const Frame& yFrame, const unsigned int maxFrameArea, const unsigned int minFrameArea, const unsigned int expectedHarrisCorners640x480, const Scalar harrisCornersReductionScale, const unsigned int harrisCornerThreshold, const float unusedInverseFocalLength, const CameraDerivativeFunctor& cameraDerivativeFunctor, HarrisCorners& corners, Indices32& cornerPyramidLevels, std::vector<FREAKDescriptorT<tSize>>& descriptors, const bool removeInvalid = false, const Scalar border = Scalar(20), const bool determineExactHarrisCornerPositions = false, const bool yFrameIsUndistorted = true, Worker* worker = nullptr);
 
 	protected:
 
@@ -370,12 +367,11 @@ class FREAKDescriptorT
 		 * @param pointsSize The number of elements in 'points', range: [1, infinity)
 		 * @param pointPyramidLevel Level of the frame pyramid at which the input points are located, range: [0, framePyramid.layers() - 1)
 		 * @param freakDescriptors Pointer to the FREAK descriptors that will be computed for the input points, must be valid and have 'pointsSize' elements. Final descriptors can be invalid, e.g., if they are too close to the image border
-		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths), defined at pyramid level 'pointPyramidLevel', with range (0, infinity)
 		 * @param cameraDerivativeFunctor A callback function that is called for each input point and which must return its corresponding 2x3 Jacobian of the projection matrix and normalized unprojection ray
 		 * @param firstPoint The index of the first point that will be processed by this function, range: [0, pointsSize)
 		 * @param numberOfPoints Number of points that should be processed in this function starting at 'firstIndex', range: [1, pointsSize - firstIndex]
 		 */
-		static void computeDescriptorsSubset(const FramePyramid* framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const float inverseFocalLength, const CameraDerivativeFunctor* cameraDerivativeFunctor, const unsigned int firstPoint, const unsigned int numberOfPoints);
+		static void computeDescriptorsSubset(const FramePyramid* framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const CameraDerivativeFunctor* cameraDerivativeFunctor, const unsigned int firstPoint, const unsigned int numberOfPoints);
 
 		/**
 		 * Computes the transformation to deform receptive fields and the orientation of the descriptor
@@ -523,9 +519,12 @@ inline FREAKDescriptorT<tSize>::PinholeCameraDerivativeFunctor::PinholeCameraDer
 }
 
 template <size_t tSize>
-typename FREAKDescriptorT<tSize>::CameraDerivativeData FREAKDescriptorT<tSize>::PinholeCameraDerivativeFunctor::computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel) const
+typename FREAKDescriptorT<tSize>::CameraDerivativeData FREAKDescriptorT<tSize>::PinholeCameraDerivativeFunctor::computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const
 {
 	ocean_assert(pointPyramidLevel < cameras_.size());
+
+	inverseFocalLength = (cameras_[pointPyramidLevel].inverseFocalLengthX() + cameras_[pointPyramidLevel].inverseFocalLengthY()) * 0.5f;
+
 	return FREAKDescriptorT<tSize>::PinholeCameraDerivativeFunctor::computeCameraDerivativeData(cameras_[pointPyramidLevel], point);
 }
 
@@ -583,12 +582,26 @@ inline FREAKDescriptorT<tSize>::AnyCameraDerivativeFunctor::AnyCameraDerivativeF
 
 		cameras_.emplace_back(cameras_.back()->clone(width, height));
 	}
+
+	inverseFocalLengths_.reserve(pyramidLevels);
+	for (const SharedAnyCamera& levelCamera : cameras_)
+	{
+		ocean_assert(levelCamera && levelCamera->isValid());
+
+		const float inverseFocalLength = (levelCamera->inverseFocalLengthX() + levelCamera->inverseFocalLengthY()) * 0.5f;
+
+		inverseFocalLengths_.emplace_back(inverseFocalLength);
+	}
 }
 
 template <size_t tSize>
-typename FREAKDescriptorT<tSize>::CameraDerivativeData FREAKDescriptorT<tSize>::AnyCameraDerivativeFunctor::computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel) const
+typename FREAKDescriptorT<tSize>::CameraDerivativeData FREAKDescriptorT<tSize>::AnyCameraDerivativeFunctor::computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const
 {
 	ocean_assert(pointPyramidLevel < cameras_.size());
+	ocean_assert(cameras_.size() == inverseFocalLengths_.size());
+
+	inverseFocalLength = inverseFocalLengths_[pointPyramidLevel];
+
 	return FREAKDescriptorT<tSize>::AnyCameraDerivativeFunctor::computeCameraDerivativeData(*cameras_[pointPyramidLevel], point);
 }
 
@@ -696,21 +709,20 @@ constexpr size_t FREAKDescriptorT<tSize>::size()
 }
 
 template <size_t tSize>
-inline void FREAKDescriptorT<tSize>::computeDescriptors(const FramePyramid& framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const float inverseFocalLength, const CameraDerivativeFunctor& projectionDerivativeDataCallback, Worker* worker)
+inline void FREAKDescriptorT<tSize>::computeDescriptors(const FramePyramid& framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const float /*unusedInverseFocalLength*/, const CameraDerivativeFunctor& projectionDerivativeDataCallback, Worker* worker)
 {
 	ocean_assert(framePyramid.isValid());
 	ocean_assert(points != nullptr && pointsSize != 0u);
 	ocean_assert(pointsPyramidLevel < framePyramid.layers());
 	ocean_assert(freakDescriptors != nullptr);
-	ocean_assert(inverseFocalLength > 0.0f);
 
 	if (worker)
 	{
-		worker->executeFunction(Worker::Function::createStatic(&FREAKDescriptorT<tSize>::computeDescriptorsSubset, &framePyramid, points, pointsSize, pointsPyramidLevel, freakDescriptors, inverseFocalLength, &projectionDerivativeDataCallback, 0u, 0u), 0u, (unsigned int)pointsSize);
+		worker->executeFunction(Worker::Function::createStatic(&FREAKDescriptorT<tSize>::computeDescriptorsSubset, &framePyramid, points, pointsSize, pointsPyramidLevel, freakDescriptors, &projectionDerivativeDataCallback, 0u, 0u), 0u, (unsigned int)(pointsSize));
 	}
 	else
 	{
-		FREAKDescriptorT<tSize>::computeDescriptorsSubset(&framePyramid, points, pointsSize, pointsPyramidLevel, freakDescriptors, inverseFocalLength, &projectionDerivativeDataCallback, 0u, (unsigned int)pointsSize);
+		FREAKDescriptorT<tSize>::computeDescriptorsSubset(&framePyramid, points, pointsSize, pointsPyramidLevel, freakDescriptors, &projectionDerivativeDataCallback, 0u, (unsigned int)(pointsSize));
 	}
 }
 
@@ -1113,38 +1125,40 @@ bool FREAKDescriptorT<tSize>::computeAverageCellIntensity(const Frame& framePyra
 }
 
 template <size_t tSize>
-void FREAKDescriptorT<tSize>::computeDescriptorsSubset(const FramePyramid* framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptor, const float inverseFocalLength, const CameraDerivativeFunctor* cameraDerivativeFunctor, const unsigned int firstPoint, const unsigned int numberOfPoints)
+void FREAKDescriptorT<tSize>::computeDescriptorsSubset(const FramePyramid* framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptor, const CameraDerivativeFunctor* cameraDerivativeFunctor, const unsigned int firstPoint, const unsigned int numberOfPoints)
 {
 	ocean_assert(framePyramid != nullptr && framePyramid->isValid());
 	ocean_assert(points != nullptr && pointsSize != 0u);
 	ocean_assert(pointsPyramidLevel < framePyramid->layers());
 	ocean_assert(freakDescriptor != nullptr);
-	ocean_assert(inverseFocalLength > 0.0f);
 	ocean_assert(cameraDerivativeFunctor != nullptr);
 	ocean_assert_and_suppress_unused(firstPoint + numberOfPoints <= pointsSize && numberOfPoints != 0u, pointsSize);
 
 	for (unsigned int i = firstPoint; i < firstPoint + numberOfPoints; ++i)
 	{
 		ocean_assert(i < pointsSize);
-		const CameraDerivativeData data = cameraDerivativeFunctor->computeCameraDerivativeData(points[i], pointsPyramidLevel);
+
+		float inverseFocalLength;
+		const CameraDerivativeData data = cameraDerivativeFunctor->computeCameraDerivativeData(points[i], pointsPyramidLevel, inverseFocalLength);
+
 		computeDescriptor(*framePyramid, points[i], pointsPyramidLevel, freakDescriptor[i], data.unprojectRayIF, inverseFocalLength, data.pointJacobianMatrixIF);
 	}
 }
 
 template <size_t tSize>
-bool FREAKDescriptorT<tSize>::computeLocalDeformationMatrixAndOrientation(const FramePyramid& pyramid, const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, const Eigen::Vector3f& unprojectRayIF, const float inverseFocalLengthX, const PointJacobianMatrix2x3& projectionJacobianMatrix, Eigen::Matrix<float, 2, 2> & deformationMatrix, float& orientation)
+bool FREAKDescriptorT<tSize>::computeLocalDeformationMatrixAndOrientation(const FramePyramid& pyramid, const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, const Eigen::Vector3f& unprojectRayIF, const float inverseFocalLength, const PointJacobianMatrix2x3& projectionJacobianMatrix, Eigen::Matrix<float, 2, 2> & deformationMatrix, float& orientation)
 {
 	ocean_assert(pyramid.isValid());
 	ocean_assert(pointPyramidLevel < pyramid.layers());
 	ocean_assert(pyramid.frameType().isPixelFormatDataLayoutCompatible(FrameType::FORMAT_Y8));
 	ocean_assert(NumericF::isEqualEps(unprojectRayIF.norm() - 1.0f));
-	ocean_assert(inverseFocalLengthX > 0);
+	ocean_assert(inverseFocalLength > 0.0f);
 	ocean_assert(projectionJacobianMatrix.IsRowMajor == false);
 
 	// In the plane perpendicular to the unprojection ray, determine two arbitrary but perpendicular vectors
 
 	const Eigen::Vector3f directionY(0, 1, 0);
-	const Eigen::Vector3f nx = directionY.cross(unprojectRayIF).normalized() * inverseFocalLengthX;
+	const Eigen::Vector3f nx = directionY.cross(unprojectRayIF).normalized() * inverseFocalLength;
 	const Eigen::Vector3f ny = unprojectRayIF.cross(nx);
 
 	// Compute an initial warping matrix from the perpendicular vectors
@@ -1202,7 +1216,7 @@ bool FREAKDescriptorT<tSize>::computeLocalDeformationMatrixAndOrientation(const 
 
 	// Compute axes aligned with keypoint orientation and use them to compute the deformation matrix
 
-	const Eigen::Vector3f gy = (nx * float(magnitudeX) + ny * float(magnitudeY)).normalized() * inverseFocalLengthX;
+	const Eigen::Vector3f gy = (nx * float(magnitudeX) + ny * float(magnitudeY)).normalized() * inverseFocalLength;
 	const Eigen::Vector3f gx = gy.cross(unprojectRayIF);
 
 	Eigen::Matrix<float, 3, 2> G;
@@ -1280,14 +1294,13 @@ bool FREAKDescriptorT<tSize>::blurAndDownsampleByTwo11(const Frame& finerLayer, 
 }
 
 template <size_t tSize>
-bool FREAKDescriptorT<tSize>::extractHarrisCornersAndComputeDescriptors(const Frame& yFrame, const unsigned int maxFrameArea, const unsigned int minFrameArea, const unsigned int expectedHarrisCorners640x480, const Scalar harrisCornersReductionScale, const unsigned int harrisCornerThreshold, const float inverseFocalLength, const CameraDerivativeFunctor& cameraDerivativeFunctor, HarrisCorners& corners, Indices32& cornerPyramidLevels, std::vector<FREAKDescriptorT<tSize>>& descriptors, const bool removeInvalid, const Scalar border, const bool determineExactHarrisCornerPositions, const bool yFrameIsUndistorted, Worker* worker)
+bool FREAKDescriptorT<tSize>::extractHarrisCornersAndComputeDescriptors(const Frame& yFrame, const unsigned int maxFrameArea, const unsigned int minFrameArea, const unsigned int expectedHarrisCorners640x480, const Scalar harrisCornersReductionScale, const unsigned int harrisCornerThreshold, const float /*unusedInverseFocalLength*/, const CameraDerivativeFunctor& cameraDerivativeFunctor, HarrisCorners& corners, Indices32& cornerPyramidLevels, std::vector<FREAKDescriptorT<tSize>>& descriptors, const bool removeInvalid, const Scalar border, const bool determineExactHarrisCornerPositions, const bool yFrameIsUndistorted, Worker* worker)
 {
 	ocean_assert(yFrame.isValid() && FrameType::arePixelFormatsCompatible(yFrame.pixelFormat(), FrameType::genericPixelFormat<std::uint8_t, 1u>()));
 	ocean_assert(minFrameArea != 0u && minFrameArea <= maxFrameArea);
 	ocean_assert(expectedHarrisCorners640x480 != 0u);
 	ocean_assert(harrisCornersReductionScale > Scalar(0) && harrisCornersReductionScale < Scalar(1));
 	ocean_assert(harrisCornerThreshold <= 512u);
-	ocean_assert(inverseFocalLength > 0.0f);
 	ocean_assert(border > Scalar(0) && Scalar(2) * border < Scalar(yFrame.width()) && Scalar(2) * border < Scalar(yFrame.height()));
 
 	corners.clear();
@@ -1421,16 +1434,7 @@ bool FREAKDescriptorT<tSize>::extractHarrisCornersAndComputeDescriptors(const Fr
 			observations.emplace_back(float(corners[i].observation().x()), float(corners[i].observation().y()));
 		}
 
-		// Scale inverse focal length defined at the finest pyramid layer to current pyramid layer:
-		//
-		// f - focal length at finest level of the image pyramid
-		// l - current pyramid level
-		// scale_l = 2^l - pyramid scale
-		// f_l - scaled focal length at pyramid level l
-		//
-		//     f_l = f / scale_l
-		// <=> 1 / f_l = scale_l * (1 / f)
-		const float inverseFocalLengthAtLayer = float(1u << layer) * inverseFocalLength;
+		constexpr float unusedInverseFocalLength = -1.0f; // unused
 
 		// Compute the descriptors (and directly append them to the return value)
 
@@ -1438,7 +1442,7 @@ bool FREAKDescriptorT<tSize>::extractHarrisCornersAndComputeDescriptors(const Fr
 		descriptors.resize(corners.size());
 
 		ocean_assert(descriptors.begin() + size_t(firstNewCornerIndex) + observations.size() == descriptors.end());
-		FREAKDescriptorT<tSize>::computeDescriptors(pyramid, observations.data(), observations.size(), layer, descriptors.data() + firstNewCornerIndex, inverseFocalLengthAtLayer, cameraDerivativeFunctor, worker);
+		FREAKDescriptorT<tSize>::computeDescriptors(pyramid, observations.data(), observations.size(), layer, descriptors.data() + firstNewCornerIndex, unusedInverseFocalLength, cameraDerivativeFunctor, worker);
 
 		expectedHarrisCornersOnLevel = (unsigned int)Numeric::round32(Scalar(expectedHarrisCornersOnLevel) * harrisCornersReductionScale);
 
