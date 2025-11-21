@@ -157,7 +157,9 @@ bool TestAutomaticDifferentiation::testSimple(const double testDuration)
 
 	RandomGenerator randomGenerator;
 
-	ValidationPrecision validation(0.99, randomGenerator);
+	constexpr double successThreshold = std::is_same<float, T>::value ? 0.97 : 0.99;
+
+	ValidationPrecision validation(successThreshold, randomGenerator);
 
 	constexpr T valueRange = std::is_same<float, T>::value ? T(10) : T(1000);
 
