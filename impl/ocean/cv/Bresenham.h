@@ -20,7 +20,7 @@ namespace CV
 {
 
 /**
- * This class implements bresenham line algorithms.
+ * This class implements Bresenham's line algorithms.
  * @ingroup cv
  */
 class OCEAN_CV_EXPORT Bresenham
@@ -57,7 +57,7 @@ class OCEAN_CV_EXPORT Bresenham
 		/**
 		 * Creates an invalid object.
 		 */
-		inline Bresenham();
+		Bresenham() = default;
 
 		/**
 		 * Creates a new Bresenham line.
@@ -76,16 +76,16 @@ class OCEAN_CV_EXPORT Bresenham
 		void findNext(int& x, int& y);
 
 		/**
-		 * Returns whether this object holds a valid line.
-		 * @return True, if so
-		 */
-		inline bool isValid() const;
-
-		/**
 		 * Returns the current orientation of the bresenham line.
 		 * @return The current orientation
 		 */
 		inline Orientation orientation() const;
+
+		/**
+		 * Returns whether this object holds a valid line.
+		 * @return True, if so
+		 */
+		inline bool isValid() const;
 
 		/**
 		 * Computes the pixel-precise border intersection (the begin and end position) of a sub-pixel-precise 2D line which needs to be visible within a specified pixel-precise frame only.
@@ -141,32 +141,26 @@ class OCEAN_CV_EXPORT Bresenham
 	protected:
 
 		/// Orientation parameter.
-		Orientation orientation_;
+		Orientation orientation_ = ORIENTATION_INVALID;
 
 		/// Control parameter.
-		int control_;
+		int control_ = 0;
 
 		/// Horizontal update value.
-		int updateX_;
+		int updateX_ = 0;
 
 		/// Horizontal and vertical update value.
-		int updateXY_;
+		int updateXY_ = 0;
 };
 
-inline Bresenham::Bresenham() :
-	orientation_(ORIENTATION_INVALID)
+inline Bresenham::Orientation Bresenham::orientation() const
 {
-	// control_, updateX_, and updateXY_ are not initialized as we use `orientation_` to check for a valid object
+	return orientation_;
 }
 
 inline bool Bresenham::isValid() const
 {
 	return orientation_ != ORIENTATION_INVALID;
-}
-
-inline Bresenham::Orientation Bresenham::orientation() const
-{
-	return orientation_;
 }
 
 }
