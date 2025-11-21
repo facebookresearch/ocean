@@ -128,5 +128,8 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeatureDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FREAKDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

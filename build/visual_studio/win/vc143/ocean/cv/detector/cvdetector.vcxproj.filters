@@ -53,6 +53,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FrameChangeDetector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FREAKDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\Detector.h">

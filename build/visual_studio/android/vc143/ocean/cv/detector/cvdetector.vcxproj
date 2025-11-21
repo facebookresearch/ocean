@@ -102,6 +102,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FASTFeatureDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FeatureDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FrameChangeDetector.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\FREAKDescriptor.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HarrisCornerDetector.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\HemiCube.cpp" />
     <ClCompile Include="..\..\..\..\..\..\..\impl\ocean\cv\detector\LineDetectorHough.cpp" />

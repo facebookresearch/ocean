@@ -75,15 +75,11 @@ using FREAKDescriptor64 = FREAKDescriptorT<64>;
 using FREAKDescriptors64 = std::vector<FREAKDescriptor64>;
 
 /**
- * Implementation of the Fast Retina Keypoint descriptors (FREAK).
- * @tparam tSize The length of the FREAK descriptor in bytes. Set of valid values: {32, 64}
+ * Implementation the template-free base class for the FREAK descriptors.
  * @ingroup cvdetector
  */
-template <size_t tSize>
-class FREAKDescriptorT
+class FREAKDescriptor
 {
-	static_assert(tSize == 32 || tSize == 64, "Invalid size!");
-
 	public:
 
 		/// Typedef for the selected pixel type. This might be turned into a template parameter at some point.
@@ -91,12 +87,6 @@ class FREAKDescriptorT
 
 		/// The Jacobian of the projection matrix at a specific 3D location (ray from projection center to pixel in image plane)
 		using PointJacobianMatrix2x3 = Eigen::Matrix<float, 2, 3>;
-
-		/// Single-level FREAK descriptor.
-		using SinglelevelDescriptorData = std::array<PixelType, tSize>;
-
-		/// Multi-level FREAK descriptor data; if possible, this implementation computes the descriptor at three different scales: 1.0, 1.2599, and 1.5874, cf. 'descriptorLevels()'
-		using MultilevelDescriptorData = std::array<SinglelevelDescriptorData, 3>;
 
 		/**
 		 * The camera data that is required to compute the FREAK descriptor of an image point
@@ -129,7 +119,7 @@ class FREAKDescriptorT
 				 * @param inverseFocalLength The resulting inverse focal length of the camera associated with the specified pyramid level
 				 * @return The 2x3 Jacobian matrix of the projection matrix and the unprojection ray (normalized to length 1)
 				 */
-				virtual FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const = 0;
+				virtual CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const = 0;
 
 				/**
 				 * Returns the maximum number of pyramid levels for which camera derivative data can be computed
@@ -139,7 +129,9 @@ class FREAKDescriptorT
 		};
 
 		/**
-		 * Functor that can be used to obtain the 2x3 Jacobian of the camera projection matrix wrt. to a 2D point and the corresponding unprojection ray of a pinhole camera
+		 * Deprecated.
+		 *
+		 * Functor that can be used to obtain the 2x3 Jacobian of the camera projection matrix wrt. to a 2D point and the corresponding unprojection ray of a pinhole camera.
 		 */
 		class PinholeCameraDerivativeFunctor : public CameraDerivativeFunctor
 		{
@@ -150,13 +142,13 @@ class FREAKDescriptorT
 				 * @param pinholeCamera A pinhole camera that is defined at the finest layer of an image pyramid, must be valid
 				 * @param pyramidLevels Number of pyramid levels that this functor instance will be prepared for, range: [1, infinity), note: actual supported number may be lower depending on the image resolution
 				 */
-				inline PinholeCameraDerivativeFunctor(const PinholeCamera& pinholeCamera, const unsigned int pyramidLevels = 1u);
+				PinholeCameraDerivativeFunctor(const PinholeCamera& pinholeCamera, const unsigned int pyramidLevels = 1u);
 
 				/**
 				 * Computes the point Jacobian of the projection matrix and unprojection ray for a specified point
 				 * @see CameraDerivativeFunctor::computeCameraDerivativeData().
 				 */
-				FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const override;
+				CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const override;
 
 				/**
 				 * Returns the maximum number of pyramid levels for which camera derivative data can be computed
@@ -168,7 +160,7 @@ class FREAKDescriptorT
 				 * Computes the point Jacobian of the projection matrix and unprojection ray for a specified point
 				 * @see CameraDerivativeFunctor::computeCameraDerivativeData().
 				 */
-				static typename FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const PinholeCamera& pinholeCamera, const Eigen::Vector2f& point);
+				static CameraDerivativeData computeCameraDerivativeData(const PinholeCamera& pinholeCamera, const Eigen::Vector2f& point);
 
 			protected:
 
@@ -188,13 +180,13 @@ class FREAKDescriptorT
 				 * @param camera A pinhole camera that is defined at the finest layer of an image pyramid, must be valid
 				 * @param pyramidLevels Number of pyramid levels that this functor instance will be prepared for, range: [1, infinity), note: actual supported number may be lower depending on the image resolution
 				 */
-				inline AnyCameraDerivativeFunctor(const SharedAnyCamera& camera, const unsigned int pyramidLevels = 1u);
+				AnyCameraDerivativeFunctor(const SharedAnyCamera& camera, const unsigned int pyramidLevels = 1u);
 
 				/**
 				 * Computes the point Jacobian of the projection matrix and unprojection ray for a specified point
 				 * @see CameraDerivativeFunctor::computeCameraDerivativeData().
 				 */
-				FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const override;
+				CameraDerivativeData computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const override;
 
 				/**
 				 * Returns the maximum number of pyramid levels for which camera derivative data can be computed
@@ -206,7 +198,7 @@ class FREAKDescriptorT
 				 * Computes the point Jacobian of the projection matrix and unprojection ray for a specified point
 				 * @see CameraDerivativeFunctor::computeCameraDerivativeData().
 				 */
-				static typename FREAKDescriptorT<tSize>::CameraDerivativeData computeCameraDerivativeData(const AnyCamera& camera, const Eigen::Vector2f& point);
+				static CameraDerivativeData computeCameraDerivativeData(const AnyCamera& camera, const Eigen::Vector2f& point);
 
 			protected:
 
@@ -216,6 +208,25 @@ class FREAKDescriptorT
 				/// The inverse focal length of the cameras, one for each pyramid level
 				std::vector<float> inverseFocalLengths_;
 		};
+};
+
+/**
+ * Implementation of the Fast Retina Keypoint descriptors (FREAK).
+ * @tparam tSize The length of the FREAK descriptor in bytes. Set of valid values: {32, 64}
+ * @ingroup cvdetector
+ */
+template <size_t tSize>
+class FREAKDescriptorT : public FREAKDescriptor
+{
+	static_assert(tSize == 32 || tSize == 64, "Invalid size!");
+
+	public:
+
+		/// Single-level FREAK descriptor.
+		using SinglelevelDescriptorData = std::array<PixelType, tSize>;
+
+		/// Multi-level FREAK descriptor data; if possible, this implementation computes the descriptor at three different scales: 1.0, 1.2599, and 1.5874, cf. 'descriptorLevels()'
+		using MultilevelDescriptorData = std::array<SinglelevelDescriptorData, 3>;
 
 	public:
 
@@ -489,147 +500,6 @@ class FREAKDescriptorT
 		/// Number of valid levels in the multi-level descriptor data above, range: [0, 3]
 		unsigned int dataLevels_ = 0u;
 };
-
-template <size_t tSize>
-inline FREAKDescriptorT<tSize>::PinholeCameraDerivativeFunctor::PinholeCameraDerivativeFunctor(const PinholeCamera& pinholeCamera, const unsigned int pyramidLevels)
-{
-	ocean_assert(pinholeCamera.isValid());
-	ocean_assert(pyramidLevels != 0u);
-
-	cameras_.reserve(pyramidLevels);
-	cameras_.emplace_back(pinholeCamera);
-
-	unsigned int width = pinholeCamera.width();
-	unsigned int height = pinholeCamera.height();
-
-	for (unsigned int level = 1u; level < pyramidLevels; ++level)
-	{
-		width /= 2u;
-		height /= 2u;
-
-		if (width == 0u || height == 0u)
-		{
-			break;
-		}
-
-		cameras_.emplace_back(width, height, pinholeCamera);
-	}
-
-	cameras_.shrink_to_fit();
-}
-
-template <size_t tSize>
-typename FREAKDescriptorT<tSize>::CameraDerivativeData FREAKDescriptorT<tSize>::PinholeCameraDerivativeFunctor::computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const
-{
-	ocean_assert(pointPyramidLevel < cameras_.size());
-
-	inverseFocalLength = (cameras_[pointPyramidLevel].inverseFocalLengthX() + cameras_[pointPyramidLevel].inverseFocalLengthY()) * 0.5f;
-
-	return FREAKDescriptorT<tSize>::PinholeCameraDerivativeFunctor::computeCameraDerivativeData(cameras_[pointPyramidLevel], point);
-}
-
-template <size_t tSize>
-unsigned int FREAKDescriptorT<tSize>::PinholeCameraDerivativeFunctor::supportedPyramidLevels() const
-{
-	return (unsigned int)(cameras_.size());
-}
-
-template <size_t tSize>
-typename FREAKDescriptorT<tSize>::CameraDerivativeData FREAKDescriptorT<tSize>::PinholeCameraDerivativeFunctor::computeCameraDerivativeData(const PinholeCamera& pinholeCamera, const Eigen::Vector2f& point)
-{
-	const Vector3 unprojectRayIF = pinholeCamera.vectorIF(Vector2(point.x(), point.y()));
-	ocean_assert(Numeric::isEqualEps((Vector3((Scalar(point.x()) - pinholeCamera.principalPointX()) * pinholeCamera.inverseFocalLengthX(), (Scalar(point.y()) - pinholeCamera.principalPointY()) * pinholeCamera.inverseFocalLengthY(), 1.0f).normalized() - unprojectRayIF).length()));
-
-	// TODOX Revisit this when enabling camera distortions
-	ocean_assert(pinholeCamera.hasDistortionParameters() == false);
-
-	Scalar jacobianX[3];
-	Scalar jacobianY[3];
-	Geometry::Jacobian::calculatePointJacobian2x3(jacobianX, jacobianY, pinholeCamera, HomogenousMatrix4(true), unprojectRayIF, /* distort */ false);
-
-	typename FREAKDescriptorT<tSize>::CameraDerivativeData data;
-
-	data.unprojectRayIF = Eigen::Vector3f(float(unprojectRayIF.x()), float(unprojectRayIF.y()), float(unprojectRayIF.z()));
-
-	// Note: the assignment below is row-major order but Eigen memory will be column-major. I know ...
-	data.pointJacobianMatrixIF << float(jacobianX[0]), float(jacobianX[1]), float(jacobianX[2]), float(jacobianY[0]), float(jacobianY[1]), float(jacobianY[2]);
-	ocean_assert(data.pointJacobianMatrixIF.IsRowMajor == false);
-
-	return data;
-}
-
-template <size_t tSize>
-inline FREAKDescriptorT<tSize>::AnyCameraDerivativeFunctor::AnyCameraDerivativeFunctor(const SharedAnyCamera& camera, const unsigned int pyramidLevels)
-{
-	ocean_assert(camera && camera->isValid());
-	ocean_assert(pyramidLevels != 0u);
-
-	cameras_.reserve(pyramidLevels);
-	cameras_.emplace_back(camera);
-
-	unsigned int width = camera->width();
-	unsigned int height = camera->height();
-
-	for (unsigned int level = 1u; level < pyramidLevels; ++level)
-	{
-		width /= 2u;
-		height /= 2u;
-
-		if (width == 0u || height == 0u)
-		{
-			break;
-		}
-
-		cameras_.emplace_back(cameras_.back()->clone(width, height));
-	}
-
-	inverseFocalLengths_.reserve(pyramidLevels);
-	for (const SharedAnyCamera& levelCamera : cameras_)
-	{
-		ocean_assert(levelCamera && levelCamera->isValid());
-
-		const float inverseFocalLength = (levelCamera->inverseFocalLengthX() + levelCamera->inverseFocalLengthY()) * 0.5f;
-
-		inverseFocalLengths_.emplace_back(inverseFocalLength);
-	}
-}
-
-template <size_t tSize>
-typename FREAKDescriptorT<tSize>::CameraDerivativeData FREAKDescriptorT<tSize>::AnyCameraDerivativeFunctor::computeCameraDerivativeData(const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, float& inverseFocalLength) const
-{
-	ocean_assert(pointPyramidLevel < cameras_.size());
-	ocean_assert(cameras_.size() == inverseFocalLengths_.size());
-
-	inverseFocalLength = inverseFocalLengths_[pointPyramidLevel];
-
-	return FREAKDescriptorT<tSize>::AnyCameraDerivativeFunctor::computeCameraDerivativeData(*cameras_[pointPyramidLevel], point);
-}
-
-template <size_t tSize>
-unsigned int FREAKDescriptorT<tSize>::AnyCameraDerivativeFunctor::supportedPyramidLevels() const
-{
-	return (unsigned int)(cameras_.size());
-}
-
-template <size_t tSize>
-typename FREAKDescriptorT<tSize>::CameraDerivativeData FREAKDescriptorT<tSize>::AnyCameraDerivativeFunctor::computeCameraDerivativeData(const AnyCamera& camera, const Eigen::Vector2f& point)
-{
-	const Vector3 unprojectRayIF = camera.vectorIF(Vector2(point.x(), point.y()));
-
-	Scalar jacobianX[3];
-	Scalar jacobianY[3];
-	camera.pointJacobian2x3IF(unprojectRayIF, jacobianX, jacobianY);
-
-	typename FREAKDescriptorT<tSize>::CameraDerivativeData data;
-
-	data.unprojectRayIF = Eigen::Vector3f(float(unprojectRayIF.x()), float(unprojectRayIF.y()), float(unprojectRayIF.z()));
-
-	// Note: the assignment below is row-major order but Eigen memory will be column-major. I know ...
-	data.pointJacobianMatrixIF << float(jacobianX[0]), float(jacobianX[1]), float(jacobianX[2]), float(jacobianY[0]), float(jacobianY[1]), float(jacobianY[2]);
-	ocean_assert(data.pointJacobianMatrixIF.IsRowMajor == false);
-
-	return data;
-}
 
 template <size_t tSize>
 FREAKDescriptorT<tSize>::FREAKDescriptorT(MultilevelDescriptorData&& data, const unsigned int levels, const float orientation) noexcept :
