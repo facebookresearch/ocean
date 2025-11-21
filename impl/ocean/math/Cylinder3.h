@@ -283,7 +283,7 @@ bool CylinderT3<T>::nearestIntersection(const LineT3<T>& ray, VectorT3<T>& inter
 
 	T minDistance = T(-1.), maxDistance = T(-1.);
 
-	if (EquationT<T>::solveQuadratic(a, b, c, minDistance, maxDistance))
+	if (NumericT<T>::isNotEqualEps(a) && EquationT<T>::solveQuadratic(a, b, c, minDistance, maxDistance))
 	{
 		minDistance = min(minDistance, maxDistance);
 	}
@@ -317,4 +317,3 @@ inline bool CylinderT3<T>::isValid() const
 } // namespace Ocean
 
 #endif // META_OCEAN_MATH_CYLINDER_3_H
-

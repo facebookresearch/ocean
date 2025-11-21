@@ -190,7 +190,7 @@ bool TestCylinder3::testNearestIntersection(const double testDuration)
 						const T a = projectedDirection.sqr();
 						const T b = T(2.0) * (projectedDirection * projectedOrigin);
 						const T c = projectedOrigin.sqr() - T(1.0);
-						if (EquationT<T>::solveQuadratic(a, b, c, minDistance, maxDistance))
+						if (NumericT<T>::isNotEqualEps(a) && EquationT<T>::solveQuadratic(a, b, c, minDistance, maxDistance))
 						{
 							if (minDistance < T(0.0))
 							{
