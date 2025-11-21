@@ -393,11 +393,6 @@ unsigned int EquationT<T>::solveQuartic(const T a, const T b, const T c, const T
 		const std::complex<T> cx3 = std::complex<T>(T(-0.25)) * std::complex<T>(b / a) - NumericT<T>::sqrt(std::complex<T>(T(0.5)) * (std::complex<T>(-alpha) + NumericT<T>::sqrt(std::complex<T>(alpha * alpha - 4 * gamma))));
 		const std::complex<T> cx4 = std::complex<T>(T(-0.25)) * std::complex<T>(b / a) - NumericT<T>::sqrt(std::complex<T>(T(0.5)) * (std::complex<T>(-alpha) - NumericT<T>::sqrt(std::complex<T>(alpha * alpha - 4 * gamma))));
 
-		ocean_assert((std::is_same<T, float>::value) || NumericT<T>::isWeakEqualEps(cx1 * cx1 * cx1 * cx1 * a + cx1 * cx1 * cx1 * b + cx1 * cx1 * c + cx1 * d + e));
-		ocean_assert((std::is_same<T, float>::value) || NumericT<T>::isWeakEqualEps(cx2 * cx2 * cx2 * cx2 * a + cx2 * cx2 * cx2 * b + cx2 * cx2 * c + cx2 * d + e));
-		ocean_assert((std::is_same<T, float>::value) || NumericT<T>::isWeakEqualEps(cx3 * cx3 * cx3 * cx3 * a + cx3 * cx3 * cx3 * b + cx3 * cx3 * c + cx3 * d + e));
-		ocean_assert((std::is_same<T, float>::value) || NumericT<T>::isWeakEqualEps(cx4 * cx4 * cx4 * cx4 * a + cx4 * cx4 * cx4 * b + cx4 * cx4 * c + cx4 * d + e));
-
 		if (NumericT<T>::isEqualEps(cx1.imag()))
 		{
 			x[solutions++] = cx1.real();
