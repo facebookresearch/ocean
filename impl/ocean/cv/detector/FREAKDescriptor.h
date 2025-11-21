@@ -95,7 +95,7 @@ class FREAKDescriptorT
 		/// Single-level FREAK descriptor.
 		using SinglelevelDescriptorData = std::array<PixelType, tSize>;
 
-		/// Multi-level FREAK descriptor data; if possible, this implementation computes the descriptor at three different scales: 1.0, 1.2599, and 1.5874, cf. `descriptorLevels()`
+		/// Multi-level FREAK descriptor data; if possible, this implementation computes the descriptor at three different scales: 1.0, 1.2599, and 1.5874, cf. 'descriptorLevels()'
 		using MultilevelDescriptorData = std::array<SinglelevelDescriptorData, 3>;
 
 		/**
@@ -261,7 +261,7 @@ class FREAKDescriptorT
 
 		/**
 		 * Returns the number of levels stored in the multi-level descriptor
-		 * @return The index of the descriptor level, range: [0, 2]
+		 * @return The number of valid descriptor levels, range: [0, 3]
 		 */
 		inline unsigned int descriptorLevels() const;
 
@@ -281,7 +281,7 @@ class FREAKDescriptorT
 
 		/**
 		 * Returns the length of this descriptor in bytes.
-		 * @reutrn The descriptor's length in bytes
+		 * @return The descriptor's length in bytes
 		 */
 		static constexpr size_t size();
 
@@ -292,23 +292,22 @@ class FREAKDescriptorT
 		inline FREAKDescriptorT& operator=(const FREAKDescriptorT<tSize>&) noexcept = default;
 
 		/**
-		 * Compute a FREAK descriptor for a single point
-		 * @param framePyramid Frame pyramid in which the location `point` has been defined, must be valid
-		 * @param point Point defined at level `pointPyramidLevel` in `framePyramid` for which a descriptor will be computed, must be valid
+		 * Compute a FREAK descriptor for a single image point.
+		 * @param framePyramid Frame pyramid in which the location 'point' has been defined, must be valid
+		 * @param point Point defined at level 'pointPyramidLevel' in 'framePyramid' for which a descriptor will be computed, must be valid
 		 * @param pointPyramidLevel Level of the frame pyramid at which the input point is located, range: [0, framePyramid.layers() - 1)
 		 * @param freakDescriptor The FREAK descriptor that will be computed for the input point, will be valid only if this function returns true
-		 * @param unprojectRayIF This is the 3D vector that connects the projection center of the camera with image point `point` in the image plane, must be valid
-		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths), range: (0, infinity)
-		 * @param pointJacobianMatrix2x3 The 2-by-3 Jacobian of the camera projection matrix, cf. `Geometry::Jacobian::calculatePointJacobian2x3()`, must be valid
+		 * @param unprojectRayIF This is the 3D vector that connects the projection center of the camera with image point 'point' in the image plane, must be valid
+		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths), defined at pyramid level 'pointPyramidLevel', with range (0, infinity)
+		 * @param pointJacobianMatrix2x3 The 2-by-3 Jacobian of the camera projection matrix, cf. 'Geometry::Jacobian::calculatePointJacobian2x3()', must be valid
 		 * @return True if the descriptor was successfully computed, otherwise false
 		 */
 		static bool computeDescriptor(const FramePyramid& framePyramid, const Eigen::Vector2f& point, const unsigned int pointPyramidLevel, FREAKDescriptorT<tSize>& freakDescriptor, const Eigen::Vector3f& unprojectRayIF, const float inverseFocalLength, const PointJacobianMatrix2x3& pointJacobianMatrix2x3);
 
 		/**
-		 * Compute a FREAK descriptor for a single point
+		 * Compute FREAK descriptors for multiple image points.
 		 * This function requires a callback function which is used internally to determine the (normalized) ray from the
-		 * camera projection center to a 2D image location in the image plane and the corresponding 2-by-3 Jacobian matrix
-		 * of projection matrix wrt. to the 2D image location.
+		 * camera projection center to a 2D image location in the image plane and the corresponding 2-by-3 Jacobian matrix of the projection matrix wrt. to the 2D image location.
 		 *
 		 * Example usage:
 		 *
@@ -330,12 +329,12 @@ class FREAKDescriptorT
 		 * FREAKDescriptorT<tSize>::computeDescriptors(yFramePyramid, points.data(), points.size(), level, oceanFreakDescriptorsMulticore.data(), inverseFocalLengthX, yourCameraDerivativeFunctor, &worker);
 		 * @endcode
 		 *
-		 * @param framePyramid Frame pyramid in which the location `point` has been defined, must be valid
-		 * @param points A pointer to the 2D image points which are defined at level `pointPyramidLevel` in `framePyramid` for which descriptors will be computed, must be valid
-		 * @param pointsSize The number of elements in `points`, range: [0, infinity)
-		 * @param pointsPyramidLevel Level of the frame pyramid at which the input point is located, range: [0, framePyramid.layers() - 1)
-		 * @param freakDescriptors Pointer to the FREAK descriptors that will be computed for the input point, must be valid and have `pointsSize` elements. Final descriptors can be invalid, e.g., if they are too close to the image border
-		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths), range: (0, infinity)
+		 * @param framePyramid Frame pyramid in which the location 'points' has been defined, must be valid
+		 * @param points A pointer to the 2D image points which are defined at level 'pointsPyramidLevel' in 'framePyramid' for which descriptors will be computed, must be valid
+		 * @param pointsSize The number of elements in 'points', range: [0, infinity)
+		 * @param pointsPyramidLevel Level of the frame pyramid at which the input points are located, range: [0, framePyramid.layers() - 1)
+		 * @param freakDescriptors Pointer to the FREAK descriptors that will be computed for the input points, must be valid and have 'pointsSize' elements. Final descriptors can be invalid, e.g., if they are too close to the image border
+		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths) defined at pyramid level 'pointsPyramidLevel', with range (0, infinity)
 		 * @param cameraDerivativeFunctor A functor that is called for each input point and which must return its corresponding 2x3 Jacobian of the projection matrix and normalized unprojection ray.
 		 * @param worker Optional worker instance for parallelization
 		 */
@@ -346,15 +345,15 @@ class FREAKDescriptorT
 		 * @param yFrame The 8-bit grayscale image for which Harris corners and FREAK descriptors will be computed, must be valid
 		 * @param maxFrameArea This value determines the first layer of the frame pyramid for which corners and descriptors will be computed, range: (minFrameArea, infinity)
 		 * @param minFrameArea This value determines the last layer of the frame pyramid for which corners and descriptors will be computed, range: [0, maxFrameArea)
-		 * @param expectedHarrisCorners640x480 Expected number of Harris corners if the resolution of the image were 640 x 480 pixels. The actual number of expected corners is scaled to the size first layer in the image pyramid that is used for the extraction and then distributed over the range of pyramid layers that is used, range: [1, infinity)
+		 * @param expectedHarrisCorners640x480 Expected number of Harris corners if the resolution of the image were 640 x 480 pixels. The actual number of expected corners is scaled to the size of the first layer in the image pyramid that is used for the extraction and then distributed over the range of pyramid layers that is used, range: [1, infinity)
 		 * @param harrisCornersReductionScale Scale factor that determines the rate with which the number of corners is reduced as the function climbs through the image pyramid, range: (0, 1)
 		 * @param harrisCornerThreshold Threshold value for the Harris corner detector, range: [0, 512]
-		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths) , range: (0, infinity)
+		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths), defined at the finest pyramid level (level 0), with range (0, infinity)
 		 * @param cameraDerivativeFunctor A functor that is called for each input point and which must return its corresponding 2x3 Jacobian of the projection matrix and normalized unprojection ray
-		 * @param corners The Harris corners that have been extracted from the frame pyramid, will be initialized by this function, will have the same size as `cornerPyramidLevels` and `descriptors`
-		 * @param cornerPyramidLevels Will hold for each Harris corner the level index of the pyramid level where it was extracted, will have the same size as `corners` and `descriptors`
-		 * @param descriptors Will hold the FREAK descriptors of each Harris corners. Descriptors may be invalid. Will have the same size as `corners` and `cornerPyramidLevels`
-		 * @param removeInvalid If true, all invalid descriptors (and corresponding corners and entries of pyramid levels) will be removed, otherwise all results will be remain as-is
+		 * @param corners The Harris corners that have been extracted from the frame pyramid, will be initialized by this function, will have the same size as 'cornerPyramidLevels' and 'descriptors'
+		 * @param cornerPyramidLevels Will hold for each Harris corner the level index of the pyramid level where it was extracted, will have the same size as 'corners' and 'descriptors'
+		 * @param descriptors Will hold the FREAK descriptors of each Harris corner. Descriptors may be invalid. Will have the same size as 'corners' and 'cornerPyramidLevels'
+		 * @param removeInvalid If true, all invalid descriptors (and corresponding corners and entries of pyramid levels) will be removed, otherwise all results will remain as-is
 		 * @param border Minimum distance in pixels from the image border (same value on all levels of the pyramid) that all Harris corners must have in order to be accepted, otherwise they will be discarded, range: [0, min(yFrame.width(), yFrame.height())/2)
 		 * @param determineExactHarrisCornerPositions If true, force the subpixel interpolation to determine the exact position of the extracted Harris corners
 		 * @param yFrameIsUndistorted If true the original input frame is undistorted and all extracted 2D feature positions will be marked as undistorted, too
@@ -365,27 +364,27 @@ class FREAKDescriptorT
 	protected:
 
 		/**
-		 * Compute a FREAK descriptor for a single point
-		 * @param framePyramid Frame pyramid in which the location `point` has been defined, must be valid
-		 * @param points A pointer to the 2D image points which are defined at level `pointPyramidLevel` in `framePyramid` for which descriptors will be computed, must be valid
-		 * @param pointsSize The number of elements in `points`, range: [1, infinity)
-		 * @param pointPyramidLevel Level of the frame pyramid at which the input point is located, range: [0, framePyramid.layers() - 1)
-		 * @param freakDescriptors Pointer to the FREAK descriptors that will be computed for the input point, must be valid and have `pointsSize` elements. Final descriptors can be invalid, e.g., if they are too close to the image border
-		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths), range: (0, infinity)
+		 * Compute FREAK descriptors for a subset of points
+		 * @param framePyramid Frame pyramid in which the location 'points' has been defined, must be valid
+		 * @param points A pointer to the 2D image points which are defined at level 'pointPyramidLevel' in 'framePyramid' for which descriptors will be computed, must be valid
+		 * @param pointsSize The number of elements in 'points', range: [1, infinity)
+		 * @param pointPyramidLevel Level of the frame pyramid at which the input points are located, range: [0, framePyramid.layers() - 1)
+		 * @param freakDescriptors Pointer to the FREAK descriptors that will be computed for the input points, must be valid and have 'pointsSize' elements. Final descriptors can be invalid, e.g., if they are too close to the image border
+		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths), defined at pyramid level 'pointPyramidLevel', with range (0, infinity)
 		 * @param cameraDerivativeFunctor A callback function that is called for each input point and which must return its corresponding 2x3 Jacobian of the projection matrix and normalized unprojection ray
-		 * @param firstPoint The index of the first point that will be processed by this function, rand: [0, pointsSize)
-		 * @param numberOfPoints Number of points that should be processed in this function starting at `firstIndex`, range: [1, pointsSize - firstIndex]
+		 * @param firstPoint The index of the first point that will be processed by this function, range: [0, pointsSize)
+		 * @param numberOfPoints Number of points that should be processed in this function starting at 'firstIndex', range: [1, pointsSize - firstIndex]
 		 */
 		static void computeDescriptorsSubset(const FramePyramid* framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const float inverseFocalLength, const CameraDerivativeFunctor* cameraDerivativeFunctor, const unsigned int firstPoint, const unsigned int numberOfPoints);
 
 		/**
 		 * Computes the transformation to deform receptive fields and the orientation of the descriptor
-		 * @param framePyramid Frame pyramid in which the location `point` has been defined, must be valid
-		 * @param point The point defined at level `pointPyramidLevel` in `framePyramid` for which a descriptor will be computed, must be valid
+		 * @param framePyramid Frame pyramid in which the location 'point' has been defined, must be valid
+		 * @param point The point defined at level 'pointPyramidLevel' in 'framePyramid' for which a descriptor will be computed, must be valid
 		 * @param pointPyramidLevel Level of the frame pyramid at which the input point is located, range: [0, framePyramid.layers() - 1)
-		 * @param unprojectRayIF This is the 3D vector that connects the projection center of the camera with image point `point` in the image plane, must be valid and inside the image
-		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths), range: (0, infinity)
-		 * @param pointJacobianMatrix2x3 The 2-by-3 Jacobian of the camera projection matrix, cf. `Geometry::Jacobian::calculatePointJacobian2x3()`, must be valid
+		 * @param unprojectRayIF This is the 3D vector that connects the projection center of the camera with image point 'point' in the image plane, must be valid and inside the image
+		 * @param inverseFocalLength The inverse focal length (assumes identical vertical and horizontal focal lengths), defined at pyramid level 'pointPyramidLevel', with range (0, infinity)
+		 * @param pointJacobianMatrix2x3 The 2-by-3 Jacobian of the camera projection matrix, cf. 'Geometry::Jacobian::calculatePointJacobian2x3()', must be valid
 		 * @param deformationMatrix The deformation transformation is a 2-by-2 matrix that is computed from the Jacobian of the camera projection matrix, the unprojection ray and the (inverse of the) focal length
 		 * @param orientation The orientation of this descriptor in radian, range: [-pi, pi]
 		 * @return True if this is a valid descriptor, otherwise false
@@ -394,11 +393,11 @@ class FREAKDescriptorT
 
 		/**
 		 * Computes the average intensity of a cell
-		 * @param framePyramidLayer Layer of a frame pyramid in which the location `(x, y)` has been defined, must be valid
-		 * @param x The pixel-accurate horizontal coordinate of the cell, range: [0 + u, width - u), u = kernel_radius / 2 if `tEnableBorderChecks == true`, otherwise u = kernel_radius
-		 * @param y The pixel-accurate vertical coordinate of the cell, range: [0 + v, height - v), v = kernel_radius / 2 if `tEnableBorderChecks == true`, otherwise v = kernel_radius
-		 * @param kernelX Pointer to the horizontal offsets of the kernel elements (relative to `x`), must be valid and have `kernelElements` elements
-		 * @param kernelY Pointer to the vertical offsets of the kernel elements (relative to `y`), must be valid and have `kernelElements` elements
+		 * @param framePyramidLayer Layer of a frame pyramid in which the location '(x, y)' has been defined, must be valid
+		 * @param x The pixel-accurate horizontal coordinate of the cell, range: [0 + u, width - u), u = kernel_radius / 2 if 'tEnableBorderChecks == true', otherwise u = kernel_radius
+		 * @param y The pixel-accurate vertical coordinate of the cell, range: [0 + v, height - v), v = kernel_radius / 2 if 'tEnableBorderChecks == true', otherwise v = kernel_radius
+		 * @param kernelX Pointer to the horizontal offsets of the kernel elements (relative to 'x'), must be valid and have 'kernelElements' elements
+		 * @param kernelY Pointer to the vertical offsets of the kernel elements (relative to 'y'), must be valid and have 'kernelElements' elements
 		 * @param kernelElements Number of elements in the kernel, range: [1, infinity]
 		 * @param averageIntensity The average intensity of the selected cell
 		 * @tparam tEnableBorderChecks If true, only kernel values inside the input image will be added, otherwise the check will be disabled and the entire kernel is assumed to fit inside the image (for performance)
