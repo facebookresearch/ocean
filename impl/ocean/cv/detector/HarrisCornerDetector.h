@@ -78,7 +78,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 				/**
 				 * Creates a new object.
 				 * @param frame The 8 bit frame on which the Harris corners are detected, must be valid
-				 * @param width The width of the given frame in pixel, with range [7, infinity)
+				 * @param width The width of the given frame in pixel, with range [10, infinity)
 				 * @param height The height of the given frame in pixel, with range [7, infinity)
 				 * @param framePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 				 */
@@ -101,7 +101,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 				/// The frame in which the Harris corners are detected.
 				const uint8_t* const frameData_;
 
-				/// The frame width in pixel, with range [7, infinity)
+				/// The frame width in pixel, with range [10, infinity)
 				const unsigned int frameWidth_;
 
 				/// The frame height in pixel, with range [7, infinity)
@@ -164,8 +164,8 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		 * Detects Harris corners inside a sub-region of a given frame.
 		 * If the given frame is not an 8 bit grayscale frame with pixel origin in the upper left corner, the frame will be converted internally.
 		 * @param frame The frame to be used for corner detection, with resolution [10, infinity)x[7, infinity), must be valid
-		 * @param subFrameLeft Left position of the sub frame defined in the original image in pixel, with range [0, frame.width() - 7]
-		 * @param subFrameTop Top position of the sub frame defined in the original image in pixel, with range [0, frame.height() - 7]
+		 * @param subFrameLeft Left position of the sub frame defined in the original image in pixel, with range [0, frame.width() - subFrameWidth]
+		 * @param subFrameTop Top position of the sub frame defined in the original image in pixel, with range [0, frame.height() - subFrameHeight]
 		 * @param subFrameWidth Width of the sub frame in pixel, with range [10, frame.width() - subFrameLeft]
 		 * @param subFrameHeight Height of the sub frame in pixel, with range [7, frame.height() - subFrameTop]
 		 * @param threshold Minimal strength value all detected corners must exceed to count as corner, with range [0, 512]
@@ -194,8 +194,8 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		/**
 		 * Creates the Harris corner votes for the horizontal and vertical sobel responses for an entire frame (and therefore for each pixel of the original frame) without applying a maximum suppression.
 		 * The resulting votes may have an invalid 2 pixel wide frame border (depending on 'setBorderPixels').
-		 * @param sobelResponse 16 bit sobel filter responses (8 bit for the horizontal response and 8 bit for the vertical response) to be used for Harris application, with minimal size 5x5
-		 * @param width The width of the original frame in pixel, with range [5, infinity)
+		 * @param sobelResponse 16 bit sobel filter responses (8 bit for the horizontal response and 8 bit for the vertical response) to be used for Harris application, with minimal size 10x5
+		 * @param width The width of the original frame in pixel, with range [10, infinity)
 		 * @param height The height of the original frame in pixel, with range [5, infinity)
 		 * @param sobelResponsePaddingElements The number of padding elements at the end of each sobel response row, in elements, with range [0, infinity)
 		 * @param votes Resulting Harris votes values, make sure that the buffer is large enough
@@ -207,9 +207,9 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 
 		/**
 		 * Calculates the Harris corner votes for several given positions in a frame only.
-		 * @param yFrame The 8 bit (grayscale) frame to be used for Harris application, with minimal size 5x5
+		 * @param yFrame The 8 bit (grayscale) frame to be used for Harris application, with minimal size 10x5
 		 * @param width The width of the given frame in pixel, with range [10, infinity)
-		 * @param height The height of the given frame in pixel, with range [7, infinity)
+		 * @param height The height of the given frame in pixel, with range [5, infinity)
 		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @param positions Pixel positions inside the given frame to determine the responses for
 		 * @param numberPositions Number of given pixel positions
@@ -232,7 +232,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		/**
 		 * Calculates the Harris corner vote for one specific sub-pixel position from an 8 bit grayscale frame.
 		 * @param yFrame The 8 bit grayscale frame that is used to determine the vote, must be valid
-		 * @param width The width of the given frame in pixel, with range [10, infinity)
+		 * @param width The width of the given frame in pixel, with range [7, infinity)
 		 * @param x Horizontal position in pixel, with range [3, width - 3)
 		 * @param y Vertical position in pixel, with range [3, height - 3)
 		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
@@ -243,7 +243,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		/**
 		 * Calculates the Harris corner votes for specified sub-pixel positions from an 8 bit grayscale frame.
 		 * @param yFrame The 8 bit grayscale frame that is used to determine the vote
-		 * @param width The width of the given frame in pixel, with range [10, infinity)
+		 * @param width The width of the given frame in pixel, with range [7, infinity)
 		 * @param positions The sub-pixel positions for which the Harris votes will be determined
 		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @param worker Optional worker object to distribute the computation
@@ -325,7 +325,7 @@ class OCEAN_CV_DETECTOR_EXPORT HarrisCornerDetector
 		/**
 		 * Creates the Harris corner votes for a subset of specified sub-pixel positions from an 8 bit grayscale frame.
 		 * @param yFrame The 8 bit grayscale frame that is used to determine the vote
-		 * @param width The width of the given frame in pixel, with range [10, infinity)
+		 * @param width The width of the given frame in pixel, with range [7, infinity)
 		 * @param yFramePaddingElements The number of padding elements at the end of each frame row, in elements, with range [0, infinity)
 		 * @param positions The sub-pixel positions for which the Harris votes will be determined
 		 * @param votes The resulting votes, one vote for each position
@@ -391,7 +391,7 @@ inline HarrisCornerDetector::PreciseCornerPosition::PreciseCornerPosition(const 
 	framePaddingElements_(framePaddingElements)
 {
 	ocean_assert(frameData_ != nullptr);
-	ocean_assert(frameWidth_ >= 7u && frameHeight_ >= 7u);
+	ocean_assert(frameWidth_ >= 10u && frameHeight_ >= 7u);
 }
 
 inline bool HarrisCornerDetector::detectCorners(const uint8_t* yFrame, const unsigned int width, const unsigned int height, const unsigned int yFramePaddingElements, const unsigned int threshold, const bool frameIsUndistorted, HarrisCorners& corners, const bool determineExactPosition, Worker* worker)
