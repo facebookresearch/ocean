@@ -33,6 +33,38 @@ bool TestRotation::test(const double testDuration)
 	Log::info() << "---   Rotation test:   ---";
 	Log::info() << " ";
 
+	allSucceeded = testConstructors<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testConstructors<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testMatrixConstructors<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testMatrixConstructors<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testArrayConstructor<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testArrayConstructor<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testAngleNormalization<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testAngleNormalization<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
 	allSucceeded = testConversionToQuaterion<float>(testDuration) && allSucceeded;
 	Log::info() << " ";
 	allSucceeded = testConversionToQuaterion<double>(testDuration) && allSucceeded;
@@ -62,6 +94,38 @@ bool TestRotation::test(const double testDuration)
 	allSucceeded = testLeft_R_right<double>(testDuration) && allSucceeded;
 
 	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testInversion<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testInversion<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testComparisonOperators<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testComparisonOperators<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testMultiplicationOperators<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testMultiplicationOperators<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testElementAccess<float>(testDuration) && allSucceeded;
+	Log::info() << " ";
+	allSucceeded = testElementAccess<double>(testDuration) && allSucceeded;
+
+	Log::info() << " ";
 
 	if (allSucceeded)
 	{
@@ -76,6 +140,50 @@ bool TestRotation::test(const double testDuration)
 }
 
 #ifdef OCEAN_USE_GTEST
+
+TEST(TestRotation, Constructors_float)
+{
+	EXPECT_TRUE(TestRotation::testConstructors<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestRotation, Constructors_double)
+{
+	EXPECT_TRUE(TestRotation::testConstructors<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestRotation, MatrixConstructors_float)
+{
+	EXPECT_TRUE(TestRotation::testMatrixConstructors<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestRotation, MatrixConstructors_double)
+{
+	EXPECT_TRUE(TestRotation::testMatrixConstructors<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestRotation, ArrayConstructor_float)
+{
+	EXPECT_TRUE(TestRotation::testArrayConstructor<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestRotation, ArrayConstructor_double)
+{
+	EXPECT_TRUE(TestRotation::testArrayConstructor<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestRotation, AngleNormalization_float)
+{
+	EXPECT_TRUE(TestRotation::testAngleNormalization<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestRotation, AngleNormalization_double)
+{
+	EXPECT_TRUE(TestRotation::testAngleNormalization<double>(GTEST_TEST_DURATION));
+}
+
 
 TEST(TestRotation, ConversionToQuaterion_float)
 {
@@ -120,7 +228,472 @@ TEST(TestRotation, Left_R_right_double)
 	EXPECT_TRUE(TestRotation::testLeft_R_right<double>(GTEST_TEST_DURATION));
 }
 
+
+TEST(TestRotation, Inversion_float)
+{
+	EXPECT_TRUE(TestRotation::testInversion<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestRotation, Inversion_double)
+{
+	EXPECT_TRUE(TestRotation::testInversion<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestRotation, ComparisonOperators_float)
+{
+	EXPECT_TRUE(TestRotation::testComparisonOperators<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestRotation, ComparisonOperators_double)
+{
+	EXPECT_TRUE(TestRotation::testComparisonOperators<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestRotation, MultiplicationOperators_float)
+{
+	EXPECT_TRUE(TestRotation::testMultiplicationOperators<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestRotation, MultiplicationOperators_double)
+{
+	EXPECT_TRUE(TestRotation::testMultiplicationOperators<double>(GTEST_TEST_DURATION));
+}
+
+
+TEST(TestRotation, ElementAccess_float)
+{
+	EXPECT_TRUE(TestRotation::testElementAccess<float>(GTEST_TEST_DURATION));
+}
+
+TEST(TestRotation, ElementAccess_double)
+{
+	EXPECT_TRUE(TestRotation::testElementAccess<double>(GTEST_TEST_DURATION));
+}
+
 #endif // OCEAN_USE_GTEST
+
+template <typename T>
+bool TestRotation::testConstructors(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing constructors for '" << TypeNamer::name<T>() << "':";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// default constructor
+
+			const RotationT<T> rotation;
+
+			OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+			OCEAN_EXPECT_EQUAL(validation, rotation.axis(), VectorT3<T>(0, 1, 0));
+			OCEAN_EXPECT_EQUAL(validation, rotation.angle(), T(0));
+		}
+
+		{
+			// constructor with x, y, z, angle
+
+			const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
+			const T angle = RandomT<T>::scalar(randomGenerator, T(-10.0) * NumericT<T>::pi(), T(10.0) * NumericT<T>::pi());
+
+			const RotationT<T> rotation(axis.x(), axis.y(), axis.z(), angle);
+
+			OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+			OCEAN_EXPECT_EQUAL(validation, rotation.axis(), axis);
+
+#if 0
+			// angle should be normalized to [0, 2*PI)
+			const T normalizedAngle = rotation.angle();
+			OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
+			OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
+#endif
+		}
+
+		{
+			// constructor with axis and angle
+
+			const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
+			const T angle = RandomT<T>::scalar(randomGenerator, T(-10.0) * NumericT<T>::pi(), T(10.0) * NumericT<T>::pi());
+
+			const RotationT<T> rotation(axis, angle);
+
+			OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+			OCEAN_EXPECT_EQUAL(validation, rotation.axis(), axis);
+
+#if 0
+			// angle should be normalized to [0, 2*PI)
+			const T normalizedAngle = rotation.angle();
+			OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
+			OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
+#endif
+		}
+
+		{
+			// Euler constructor
+
+			const EulerT<T> euler = RandomT<T>::euler(randomGenerator);
+			const RotationT<T> rotation(euler);
+
+			OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+
+			// verify the rotation is equivalent
+			const QuaternionT<T> quaternionFromEuler(euler);
+			const QuaternionT<T> quaternionFromRotation(rotation);
+
+			const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator);
+			const VectorT3<T> result1 = quaternionFromEuler * testVector;
+			const VectorT3<T> result2 = quaternionFromRotation * testVector;
+
+			OCEAN_EXPECT_TRUE(validation, result1.isEqual(result2, NumericT<T>::weakEps()));
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestRotation::testMatrixConstructors(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing matrix constructors for '" << TypeNamer::name<T>() << "':";
+
+	RandomGenerator randomGenerator;
+	ValidationPrecision validation(0.99, randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		ValidationPrecision::ScopedIteration scopedIteration(validation);
+
+		{
+			// SquareMatrix3 constructor
+
+			const RotationT<T> originalRotation = RandomT<T>::rotation(randomGenerator);
+			const SquareMatrixT3<T> matrix(originalRotation);
+			const RotationT<T> reconstructedRotation(matrix);
+
+			if (!reconstructedRotation.isValid())
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+
+			// verify that the rotations produce the same result
+
+			const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator);
+			const VectorT3<T> result1 = originalRotation * testVector;
+			const VectorT3<T> result2 = reconstructedRotation * testVector;
+
+			if (!result1.isEqual(result2, NumericT<T>::weakEps()))
+			{
+				scopedIteration.setInaccurate();
+			}
+		}
+
+		{
+			// HomogenousMatrix4 constructor
+
+			const RotationT<T> originalRotation = RandomT<T>::rotation(randomGenerator);
+			const HomogenousMatrixT4<T> matrix(originalRotation);
+			const RotationT<T> reconstructedRotation(matrix);
+
+			if (!reconstructedRotation.isValid())
+			{
+				OCEAN_SET_FAILED(validation);
+			}
+
+			// verify that the rotations produce the same result
+
+			const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator);
+			const VectorT3<T> result1 = originalRotation * testVector;
+			const VectorT3<T> result2 = reconstructedRotation * testVector;
+
+			if (!result1.isEqual(result2, NumericT<T>::weakEps()))
+			{
+				scopedIteration.setInaccurate();
+			}
+		}
+
+		{
+			// special test: 180-degree rotation around different axes
+
+			for (unsigned int axisIndex = 0u; axisIndex < 3u; ++axisIndex)
+			{
+				VectorT3<T> axis(0, 0, 0);
+				axis[axisIndex] = T(1);
+
+				for (const bool tinyOffset : {false, true})
+				{
+					if (tinyOffset)
+					{
+						axis + RandomT<T>::vector3(randomGenerator, T(-0.01), T(0.01));
+
+						axis.normalize();
+					}
+
+					const RotationT<T> originalRotation(axis, NumericT<T>::pi());
+
+					const SquareMatrixT3<T> matrix(originalRotation);
+					const RotationT<T> reconstructedRotation(matrix);
+
+					if (!reconstructedRotation.isValid())
+					{
+						OCEAN_SET_FAILED(validation);
+					}
+
+					// verify that the rotations produce the same result
+
+					const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator);
+					const VectorT3<T> result1 = originalRotation * testVector;
+					const VectorT3<T> result2 = reconstructedRotation * testVector;
+
+					if (!result1.isEqual(result2, NumericT<T>::weakEps()))
+					{
+						scopedIteration.setInaccurate();
+					}
+				}
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestRotation::testArrayConstructor(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing array constructor for '" << TypeNamer::name<T>() << "':";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// normalized angle [0, 2*PI)
+
+			const T eps = NumericT<T>::eps() * T(100);
+
+			const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
+			const T angle = RandomT<T>::scalar(randomGenerator, T(0), NumericT<T>::pi2() - eps);
+
+			const T values[4] = {axis.x(), axis.y(), axis.z(), angle};
+
+			const RotationT<T> rotation(values);
+
+			OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+
+			OCEAN_EXPECT_EQUAL(validation, rotation.axis(), axis);
+			OCEAN_EXPECT_EQUAL(validation, rotation.angle(), angle);
+		}
+
+#if 0
+		{
+			// angle outside [0, 2*PI) - this should be normalized according to documentation
+
+			const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
+			const T angle = RandomT<T>::scalar(randomGenerator, T(-10.0) * NumericT<T>::pi(), T(10.0) * NumericT<T>::pi());
+
+			const T values[4] = {axis.x(), axis.y(), axis.z(), angle};
+
+			const RotationT<T> rotation(values);
+
+			OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+
+			const T normalizedAngle = rotation.angle();
+
+			OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
+			OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
+		}
+#endif
+
+		{
+			// data() accessor consistency
+
+			const T eps = NumericT<T>::eps() * T(100);
+
+			const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
+			const T angle = RandomT<T>::scalar(randomGenerator, T(0), NumericT<T>::pi2() - eps);
+
+			const T values[4] = {axis.x(), axis.y(), axis.z(), angle};
+			const RotationT<T> rotation(values);
+
+			const T* data = rotation.data();
+
+			OCEAN_EXPECT_EQUAL(validation, data[0], axis.x());
+			OCEAN_EXPECT_EQUAL(validation, data[1], axis.y());
+			OCEAN_EXPECT_EQUAL(validation, data[2], axis.z());
+			OCEAN_EXPECT_EQUAL(validation, data[3], angle);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestRotation::testAngleNormalization(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing angle normalization for '" << TypeNamer::name<T>() << "':";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
+
+		{
+			// setAngle with various angles
+
+			RotationT<T> rotation;
+			rotation.setAxis(axis);
+
+			{
+				// normal angles
+
+				const T eps = NumericT<T>::eps() * T(100);
+
+				const T angle = RandomT<T>::scalar(randomGenerator, T(0), NumericT<T>::pi2() - eps);
+				rotation.setAngle(angle);
+
+				OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+				OCEAN_EXPECT_EQUAL(validation, rotation.angle(), angle);
+			}
+
+#if 0
+			{
+				// negative angles
+
+				const T angle = RandomT<T>::scalar(randomGenerator, T(-10.0) * NumericT<T>::pi(), T(0));
+				rotation.setAngle(angle);
+
+				OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+
+				const T normalizedAngle = rotation.angle();
+
+				OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
+				OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
+			}
+
+			{
+				// angles > 2*PI
+
+				const T angle = RandomT<T>::scalar(randomGenerator, NumericT<T>::pi2(), T(10.0) * NumericT<T>::pi());
+				rotation.setAngle(angle);
+
+				OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+
+				const T normalizedAngle = rotation.angle();
+
+				OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
+				OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
+			}
+
+			{
+				// special case 2*PI
+
+				rotation.setAngle(NumericT<T>::pi2());
+
+				OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+
+				const T normalizedAngle = rotation.angle();
+
+				OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
+				OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
+			}
+		}
+
+		{
+			// constructor angle normalization
+
+			{
+				const RotationT<T> rotation(axis, NumericT<T>::pi2());
+
+				OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+
+				const T normalizedAngle = rotation.angle();
+
+				OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
+				OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
+			}
+
+			{
+				const RotationT<T> rotation(axis, T(2) * NumericT<T>::pi2());
+
+				OCEAN_EXPECT_TRUE(validation, rotation.isValid());
+
+				const T normalizedAngle = rotation.angle();
+
+				OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
+				OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
+
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(rotation.angle(), T(0)) || Numeric::isEqual(rotation.angle(), NumericT<T>::pi2()));
+			}
+
+			{
+				const RotationT<T> rotation(axis, -NumericT<T>::pi2());
+
+				const T normalizedAngle = rotation.angle();
+
+				OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
+				OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
+
+				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(rotation.angle(), T(0)) || Numeric::isEqual(rotation.angle(), NumericT<T>::pi2()));
+			}
+#endif
+		}
+
+		{
+			// that rotations with angles differing by 2*PI are equivalent
+
+			const T baseAngle = RandomT<T>::scalar(randomGenerator, T(0), NumericT<T>::pi2());
+
+			const RotationT<T> rotation1(axis, baseAngle);
+			const RotationT<T> rotation2(axis, baseAngle + NumericT<T>::pi2());
+			const RotationT<T> rotation3(axis, baseAngle - NumericT<T>::pi2());
+
+			const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator);
+
+			const VectorT3<T> result1 = rotation1 * testVector;
+			const VectorT3<T> result2 = rotation2 * testVector;
+			const VectorT3<T> result3 = rotation3 * testVector;
+
+			OCEAN_EXPECT_TRUE(validation, result1.isEqual(result2, NumericT<T>::weakEps()));
+			OCEAN_EXPECT_TRUE(validation, result1.isEqual(result3, NumericT<T>::weakEps()));
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
 
 template <typename T>
 bool TestRotation::testConversionToQuaterion(const double testDuration)
@@ -390,6 +963,405 @@ bool TestRotation::testLeft_R_right(const double testDuration)
 		}
 	}
 	while (validation.needMoreIterations() || !startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestRotation::testInversion(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing inversion for '" << TypeNamer::name<T>() << "':";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const RotationT<T> rotation = RandomT<T>::rotation(randomGenerator);
+
+		{
+			// inverted()
+
+			const RotationT<T> inverse = rotation.inverted();
+
+			OCEAN_EXPECT_TRUE(validation, inverse.isValid());
+
+			// axis should be negated, angle should be the same
+			OCEAN_EXPECT_EQUAL(validation, inverse.axis(), -rotation.axis());
+			OCEAN_EXPECT_EQUAL(validation, inverse.angle(), rotation.angle());
+
+			// that rotation * inverse = identity
+			const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator);
+			const VectorT3<T> rotated = rotation * testVector;
+			const VectorT3<T> restored = inverse * rotated;
+
+			OCEAN_EXPECT_TRUE(validation, testVector.isEqual(restored, NumericT<T>::weakEps()));
+		}
+
+		{
+			// invert()
+
+			RotationT<T> rotationCopy = rotation;
+			rotationCopy.invert();
+
+			OCEAN_EXPECT_TRUE(validation, rotationCopy.isValid());
+
+			// axis should be negated, angle should be the same
+			OCEAN_EXPECT_EQUAL(validation, rotationCopy.axis(), -rotation.axis());
+			OCEAN_EXPECT_EQUAL(validation, rotationCopy.angle(), rotation.angle());
+
+			// Should be the same as inverted()
+			OCEAN_EXPECT_TRUE(validation, rotationCopy == rotation.inverted());
+		}
+
+		{
+			// operator-() (should be the same as inverted())
+
+			const RotationT<T> inverse = -rotation;
+
+			OCEAN_EXPECT_TRUE(validation, inverse.isValid());
+			OCEAN_EXPECT_TRUE(validation, inverse == rotation.inverted());
+		}
+
+		{
+			// double inversion
+
+			const RotationT<T> doubleInverted = rotation.inverted().inverted();
+
+			OCEAN_EXPECT_TRUE(validation, doubleInverted == rotation);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestRotation::testComparisonOperators(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing comparison operators for '" << TypeNamer::name<T>() << "':";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const RotationT<T> rotation1 = RandomT<T>::rotation(randomGenerator);
+		const RotationT<T> rotation2 = RandomT<T>::rotation(randomGenerator);
+
+		{
+			// operator==
+
+			OCEAN_EXPECT_EQUAL(validation, rotation1, rotation1);
+
+			const RotationT<T> equivalent(rotation1.axis(), rotation1.angle());
+			OCEAN_EXPECT_EQUAL(validation, rotation1, equivalent);
+
+			const RotationT<T> flipped(-rotation1.axis(), NumericT<T>::pi2() - rotation1.angle());
+			OCEAN_EXPECT_EQUAL(validation, rotation1, flipped);
+		}
+
+		{
+			// operator!=
+
+			OCEAN_EXPECT_FALSE(validation, rotation1 != rotation1);
+
+			const RotationT<T> equivalent(rotation1.axis(), rotation1.angle());
+			OCEAN_EXPECT_FALSE(validation, rotation1 != equivalent);
+		}
+
+		{
+			// reflexivity: a == a
+
+			OCEAN_EXPECT_EQUAL(validation, rotation1, rotation1);
+		}
+
+		{
+			// symmetry: if a == b, then b == a
+
+			if (rotation1 == rotation2)
+			{
+				OCEAN_EXPECT_EQUAL(validation, rotation2, rotation1);
+			}
+		}
+
+		{
+			// consistency with !=: if a == b, then !(a != b)
+
+			if (rotation1 == rotation2)
+			{
+				OCEAN_EXPECT_FALSE(validation, rotation1 != rotation2);
+			}
+			else
+			{
+				OCEAN_EXPECT_TRUE(validation, rotation1 != rotation2);
+			}
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestRotation::testMultiplicationOperators(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing multiplication operators for '" << TypeNamer::name<T>() << "':";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const RotationT<T> rotation1 = RandomT<T>::rotation(randomGenerator);
+		const RotationT<T> rotation2 = RandomT<T>::rotation(randomGenerator);
+
+		const QuaternionT<T> quaternion = RandomT<T>::quaternion(randomGenerator);
+
+		OCEAN_EXPECT_TRUE(validation, rotation1.isValid());
+		OCEAN_EXPECT_TRUE(validation, rotation2.isValid());
+		OCEAN_EXPECT_TRUE(validation, quaternion.isValid());
+
+		{
+			// operator*(Rotation)
+
+			const RotationT<T> result = rotation1 * rotation2;
+
+			OCEAN_EXPECT_TRUE(validation, result.isValid());
+
+			const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator);
+			const VectorT3<T> result1 = result * testVector;
+			const VectorT3<T> result2 = rotation1 * (rotation2 * testVector);
+
+			OCEAN_EXPECT_TRUE(validation, result1.isEqual(result2, NumericT<T>::weakEps()));
+		}
+
+		{
+			// operator*=(Rotation)
+
+			RotationT<T> rotationCopy = rotation1;
+			rotationCopy *= rotation2;
+
+			OCEAN_EXPECT_TRUE(validation, rotationCopy.isValid());
+			OCEAN_EXPECT_TRUE(validation, rotationCopy == (rotation1 * rotation2));
+		}
+
+		{
+			// operator*(Quaternion)
+
+			const RotationT<T> result = rotation1 * quaternion;
+
+			OCEAN_EXPECT_TRUE(validation, result.isValid());
+
+			const VectorT3<T> testVector = RandomT<T>::vector3(randomGenerator);
+			const VectorT3<T> result1 = result * testVector;
+			const VectorT3<T> result2 = rotation1 * (quaternion * testVector);
+
+			OCEAN_EXPECT_TRUE(validation, result1.isEqual(result2, NumericT<T>::weakEps()));
+		}
+
+		{
+			// operator*=(Quaternion)
+
+			RotationT<T> rotationCopy = rotation1;
+			rotationCopy *= quaternion;
+
+			OCEAN_EXPECT_TRUE(validation, rotationCopy.isValid());
+
+			const RotationT<T> rotationCopy2 = rotation1 * quaternion;
+
+			OCEAN_EXPECT_EQUAL(validation, rotationCopy, rotationCopy2);
+		}
+
+		{
+			// operator*(Vector3)
+
+			const VectorT3<T> vector = RandomT<T>::vector3(randomGenerator);
+			const VectorT3<T> rotated = rotation1 * vector;
+
+			const QuaternionT<T> quat(rotation1);
+			const VectorT3<T> rotated2 = quat * vector;
+
+			OCEAN_EXPECT_TRUE(validation, rotated.isEqual(rotated2, NumericT<T>::weakEps()));
+		}
+
+		{
+			// associativity: (r1 * r2) * v == r1 * (r2 * v)
+
+			const VectorT3<T> vector = RandomT<T>::vector3(randomGenerator);
+			const RotationT<T> combined = rotation1 * rotation2;
+
+			const VectorT3<T> result1 = combined * vector;
+			const VectorT3<T> result2 = rotation1 * (rotation2 * vector);
+
+			OCEAN_EXPECT_TRUE(validation, result1.isEqual(result2, NumericT<T>::weakEps()));
+		}
+
+#if 0
+		{
+			// identity: rotation * rotation^-1 * v == v
+
+			const VectorT3<T> vector = RandomT<T>::vector3(randomGenerator);
+
+			const RotationT<T> inverse = rotation1.inverted();
+			const RotationT<T> identity = rotation1 * inverse;
+
+			const VectorT3<T> result = identity * vector;
+
+			OCEAN_EXPECT_TRUE(validation, vector.isEqual(result, NumericT<T>::weakEps()));
+		}
+#endif
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
+}
+
+template <typename T>
+bool TestRotation::testElementAccess(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing element access operators for '" << TypeNamer::name<T>() << "':";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
+		const T angle = RandomT<T>::scalar(randomGenerator, T(0), NumericT<T>::pi2());
+
+		const RotationT<T> rotation(axis, angle);
+
+		{
+			// operator()(index) const
+
+			OCEAN_EXPECT_EQUAL(validation, rotation(0), axis.x());
+			OCEAN_EXPECT_EQUAL(validation, rotation(1), axis.y());
+			OCEAN_EXPECT_EQUAL(validation, rotation(2), axis.z());
+			OCEAN_EXPECT_EQUAL(validation, rotation(3), angle);
+		}
+
+		{
+			// operator[](index) const
+
+			OCEAN_EXPECT_EQUAL(validation, rotation[0], axis.x());
+			OCEAN_EXPECT_EQUAL(validation, rotation[1], axis.y());
+			OCEAN_EXPECT_EQUAL(validation, rotation[2], axis.z());
+			OCEAN_EXPECT_EQUAL(validation, rotation[3], angle);
+		}
+
+		{
+			// operator()(index) non-const
+
+			RotationT<T> rotationCopy = rotation;
+
+			const T newValue = RandomT<T>::scalar(randomGenerator, T(-1), T(1));
+			rotationCopy(0) = newValue;
+
+			OCEAN_EXPECT_EQUAL(validation, rotationCopy(0), newValue);
+		}
+
+		{
+			// operator[](index) non-const
+
+			RotationT<T> rotationCopy = rotation;
+
+			const T newValue = RandomT<T>::scalar(randomGenerator, T(-1), T(1));
+			rotationCopy[1] = newValue;
+
+			OCEAN_EXPECT_EQUAL(validation, rotationCopy[1], newValue);
+		}
+
+		{
+			// operator()() const
+
+			const T* data = rotation();
+
+			OCEAN_EXPECT_EQUAL(validation, data[0], axis.x());
+			OCEAN_EXPECT_EQUAL(validation, data[1], axis.y());
+			OCEAN_EXPECT_EQUAL(validation, data[2], axis.z());
+			OCEAN_EXPECT_EQUAL(validation, data[3], angle);
+		}
+
+		{
+			// operator()() non-const
+
+			RotationT<T> rotationCopy = rotation;
+			T* data = rotationCopy();
+
+			const T newValue = RandomT<T>::scalar(randomGenerator, T(-1), T(1));
+			data[2] = newValue;
+
+			OCEAN_EXPECT_EQUAL(validation, rotationCopy[2], newValue);
+		}
+
+		{
+			// data() const
+
+			const T* data = rotation.data();
+
+			OCEAN_EXPECT_EQUAL(validation, data[0], axis.x());
+			OCEAN_EXPECT_EQUAL(validation, data[1], axis.y());
+			OCEAN_EXPECT_EQUAL(validation, data[2], axis.z());
+			OCEAN_EXPECT_EQUAL(validation, data[3], angle);
+		}
+
+		{
+			// data() non-const
+
+			RotationT<T> rotationCopy = rotation;
+			T* data = rotationCopy.data();
+
+			const T newValue = RandomT<T>::scalar(randomGenerator, T(-1), T(1));
+			data[3] = newValue;
+
+			OCEAN_EXPECT_EQUAL(validation, rotationCopy.angle(), newValue);
+		}
+
+		{
+			// consistency between different access methods
+
+			OCEAN_EXPECT_EQUAL(validation, rotation(0), rotation[0]);
+			OCEAN_EXPECT_EQUAL(validation, rotation(1), rotation[1]);
+			OCEAN_EXPECT_EQUAL(validation, rotation(2), rotation[2]);
+			OCEAN_EXPECT_EQUAL(validation, rotation(3), rotation[3]);
+
+			OCEAN_EXPECT_EQUAL(validation, rotation[0], rotation.data()[0]);
+			OCEAN_EXPECT_EQUAL(validation, rotation[1], rotation.data()[1]);
+			OCEAN_EXPECT_EQUAL(validation, rotation[2], rotation.data()[2]);
+			OCEAN_EXPECT_EQUAL(validation, rotation[3], rotation.data()[3]);
+
+			OCEAN_EXPECT_EQUAL(validation, rotation.data()[0], rotation()[0]);
+			OCEAN_EXPECT_EQUAL(validation, rotation.data()[1], rotation()[1]);
+			OCEAN_EXPECT_EQUAL(validation, rotation.data()[2], rotation()[2]);
+			OCEAN_EXPECT_EQUAL(validation, rotation.data()[3], rotation()[3]);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
 
 	Log::info() << "Validation: " << validation;
 

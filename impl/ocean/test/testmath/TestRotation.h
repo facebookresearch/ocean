@@ -35,6 +35,43 @@ class OCEAN_TEST_MATH_EXPORT TestRotation
 		static bool test(const double testDuration);
 
 		/**
+		 * Tests the default and basic constructors.
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
+		 */
+		template <typename T>
+		static bool testConstructors(const double testDuration);
+
+		/**
+		 * Tests the matrix constructors (SquareMatrix3 and HomogenousMatrix4).
+		 * This test is critical for finding the maximum-finding bug.
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
+		 */
+		template <typename T>
+		static bool testMatrixConstructors(const double testDuration);
+
+		/**
+		 * Tests the array constructor.
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
+		 */
+		template <typename T>
+		static bool testArrayConstructor(const double testDuration);
+
+		/**
+		 * Tests angle normalization (setAngle and constructors).
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
+		 */
+		template <typename T>
+		static bool testAngleNormalization(const double testDuration);
+
+		/**
 		 * Tests the conversion from a rotation to a quaternion.
 		 * @param testDuration Number of seconds for each test, with range (0, infinity)
 		 * @return True, if succeeded
@@ -69,6 +106,42 @@ class OCEAN_TEST_MATH_EXPORT TestRotation
 		 */
 		template <typename T>
 		static bool testLeft_R_right(const double testDuration);
+
+		/**
+		 * Tests the invert and inverted functions.
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
+		 */
+		template <typename T>
+		static bool testInversion(const double testDuration);
+
+		/**
+		 * Tests the comparison operators (== and !=).
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
+		 */
+		template <typename T>
+		static bool testComparisonOperators(const double testDuration);
+
+		/**
+		 * Tests the multiplication operators.
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
+		 */
+		template <typename T>
+		static bool testMultiplicationOperators(const double testDuration);
+
+		/**
+		 * Tests the element access operators.
+		 * @param testDuration Number of seconds for each test
+		 * @return True, if succeeded
+		 * @tparam T The data type of the scalar value to be used
+		 */
+		template <typename T>
+		static bool testElementAccess(const double testDuration);
 };
 
 }
