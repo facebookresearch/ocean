@@ -1474,6 +1474,9 @@ bool FrameInterpolatorBilinear::Comfort::interpolatePixel8BitPerChannel(const ui
 			case 8u:
 				FrameInterpolatorBilinear::interpolatePixel8BitPerChannel<8u, PC_TOP_LEFT, TScalar>(frame, width, height, framePaddingElements, position, result);
 				return true;
+
+			default:
+				break;
 		}
 	}
 	else
@@ -1513,6 +1516,9 @@ bool FrameInterpolatorBilinear::Comfort::interpolatePixel8BitPerChannel(const ui
 			case 8u:
 				FrameInterpolatorBilinear::interpolatePixel8BitPerChannel<8u, PC_CENTER, TScalar>(frame, width, height, framePaddingElements, position, result);
 				return true;
+
+			default:
+				break;
 		}
 	}
 
@@ -1561,6 +1567,9 @@ bool FrameInterpolatorBilinear::Comfort::interpolatePixel(const TSource* frame, 
 			case 8u:
 				FrameInterpolatorBilinear::interpolatePixel<TSource, TTarget, 8u, PC_TOP_LEFT, TScalar, TIntermediate>(frame, width, height, framePaddingElements, position, result, resultBias);
 				return true;
+
+			default:
+				break;
 		}
 	}
 	else
@@ -1600,6 +1609,9 @@ bool FrameInterpolatorBilinear::Comfort::interpolatePixel(const TSource* frame, 
 			case 8u:
 				FrameInterpolatorBilinear::interpolatePixel<TSource, TTarget, 8u, PC_CENTER, TScalar, TIntermediate>(frame, width, height, framePaddingElements, position, result, resultBias);
 				return true;
+
+			default:
+				break;
 		}
 	}
 

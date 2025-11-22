@@ -946,6 +946,9 @@ bool Canvas::line(Frame& frame, const Vector2& start, const Vector2& end, const 
 			case 4u:
 				line8BitPerChannel<4u, tSize>(frame.data<uint8_t>(), frame.width(), frame.height(), start, end, value, frame.paddingElements());
 				return true;
+
+			default:
+				break;
 		}
 	}
 
@@ -1046,6 +1049,9 @@ bool Canvas::line(Frame& frame, const Line2& line, const uint8_t* value)
 			case 4u:
 				line8BitPerChannel<4u, tSize>(frame.data<uint8_t>(), frame.width(), frame.height(), line, value, frame.paddingElements());
 				return true;
+
+			default:
+				break;
 		}
 	}
 
@@ -1110,6 +1116,9 @@ bool Canvas::box(Frame& frame, const Box2& box, const uint8_t* value)
 			case 4u:
 				box8BitPerChannel<4u, tSize>(frame.data<uint8_t>(), frame.width(), frame.height(), box, value, frame.paddingElements());
 				return true;
+
+			default:
+				break;
 		}
 	}
 
@@ -1234,6 +1243,9 @@ bool Canvas::point(Frame& frame, const Vector2& position, const uint8_t* value)
 			case 4u:
 				point8BitPerChannel<4u, tSize, tPixelCenter>(frame.data<uint8_t>(), frame.width(), frame.height(), position, value, frame.paddingElements());
 				return true;
+
+			default:
+				break;
 		}
 	}
 
@@ -1283,6 +1295,9 @@ bool Canvas::points(Frame& frame, const Vectors2& positions, const uint8_t* valu
 			case 4u:
 				points8BitPerChannel<4u, tSize, tPixelCenter>(frame.data<uint8_t>(), frame.width(), frame.height(), positions, value, frame.paddingElements());
 				return true;
+
+			default:
+				break;
 		}
 	}
 
@@ -1630,6 +1645,9 @@ bool Canvas::polygon(Frame& frame, const Vector2* points, size_t numberPoints, c
 			case 4u:
 				polygon8BitPerChannel<4u, tSize>(frame.data<uint8_t>(), frame.width(), frame.height(), points, numberPoints, value, closeLoop);
 				return true;
+
+			default:
+				break;
 		}
 	}
 
