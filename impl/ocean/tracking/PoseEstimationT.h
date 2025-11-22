@@ -19,7 +19,6 @@
 
 #include "ocean/math/AnyCamera.h"
 #include "ocean/math/HomogenousMatrix4.h"
-#include "ocean/math/PinholeCamera.h"
 #include "ocean/math/Vector2.h"
 #include "ocean/math/Vector3.h"
 
@@ -125,7 +124,7 @@ class OCEAN_TRACKING_EXPORT PoseEstimationT
 		static void determineUnguidedBruteForceMatchings(const TObjectPointDescriptor* objectPointDescriptors, const size_t numberObjectPointDescriptors, const TImagePointDescriptor* imagePointDescriptors, const size_t numberImagePointDescriptors, TDescriptorDistance maximalDescriptorDistance, Index32* objectPointDescriptorIndices, Worker* worker, TDescriptorDistance* distances = nullptr);
 
 		/**
-		 * Determines the guided matching (without known rough camera pose) between image point and object point features applying a brute-force search.
+		 * Determines the guided matching (with known rough camera pose) between image point and object point features applying a brute-force search.
 		 * @param camera The camera profile defining the projection, must be valid
 		 * @param world_T_roughCamera The known rough camera pose transforming camera to world, must be valid
 		 * @param objectPoints The 3D object points to be used, must be valid
@@ -284,8 +283,6 @@ bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vec
 	{
 		determineUnguidedBruteForceMatchings<TImagePointDescriptor, TObjectPointDescriptor, TDescriptorDistance, tImageObjectDistanceFunction>(objectPointDescriptors, numberObjectPoints, imagePointDescriptors, numberImagePoints, maximalDescriptorDistance, matchedObjectPointIds.data(), worker);
 
-		ocean_assert(matchedImagePoints.size() == matchedObjectPoints.size());
-
 		for (size_t imagePointIndex = 0; imagePointIndex < numberImagePoints; ++imagePointIndex)
 		{
 			const Index32& matchedObjectPointIndex = matchedObjectPointIds[imagePointIndex];
@@ -296,6 +293,8 @@ bool PoseEstimationT::determinePoseBruteForce(const AnyCamera& camera, const Vec
 				matchedObjectPoints.emplace_back(objectPoints[matchedObjectPointIndex]);
 			}
 		}
+
+		ocean_assert(matchedImagePoints.size() == matchedObjectPoints.size());
 
 		if (matchedImagePoints.size() < size_t(minimalNumberCorrespondences))
 		{
@@ -513,7 +512,7 @@ bool PoseEstimationT::determinePoseBruteForceWithArbitraryDescriptorOrder(const 
 		matchedImagePoints.clear();
 		matchedObjectPoints.clear();
 
-		const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
+		const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
 
 		for (size_t imagePointIndex = 0; imagePointIndex < numberImagePoints; ++imagePointIndex)
 		{
@@ -533,7 +532,9 @@ bool PoseEstimationT::determinePoseBruteForceWithArbitraryDescriptorOrder(const 
 
 					const Vector3& objectPoint = objectPoints[objectPointIndex];
 
-					if (PinholeCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint) && camera.projectToImageIF(flippedCamera_T_world, objectPoint).sqrDistance(imagePoint) <= Scalar(20 * 20))
+					constexpr Scalar generousSqrProjectionError = Scalar(20 * 20);
+
+					if (Camera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint) && camera.projectToImageIF(flippedCamera_T_world, objectPoint).sqrDistance(imagePoint) <= generousSqrProjectionError)
 					{
 						bestDistance = distance;
 						bestObjectPointDescriptorIndex = Index32(nObjectPoint);
@@ -715,7 +716,7 @@ void PoseEstimationT::determineGuidedBruteForceMatchingsSubset(const AnyCamera* 
 			{
 				const Vector3& objectPoint = objectPoints[objectPointIndex];
 
-				if (PinholeCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint) && camera->projectToImageIF(flippedCamera_T_world, objectPoint).sqrDistance(imagePoint) <= maximalSqrProjectionError)
+				if (Camera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint) && camera->projectToImageIF(flippedCamera_T_world, objectPoint).sqrDistance(imagePoint) <= maximalSqrProjectionError)
 				{
 					bestDistance = distance;
 					bestObjectPointIndex = Index32(objectPointIndex);
@@ -812,14 +813,14 @@ void PoseEstimationT::determineGuidedMatchingsSubset(const AnyCamera* camera, co
 	localMatchedImagePointIndices.reserve(numberImagePoints);
 	localMatchedObjectPointIds.reserve(numberImagePoints);
 
-	const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(*world_T_camera));
+	const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(*world_T_camera));
 
 	const Scalar tanHalfAngle = Numeric::tan(Numeric::deg2rad(Scalar(0.2)));
 
 	std::vector<const Indices32*> leaves;
 	leaves.reserve(32);
 
-	constexpr Scalar maximalSqrProjectionError = Scalar(20 * 20);
+	constexpr Scalar generousSqrProjectionError = Scalar(20 * 20);
 
 	Geometry::Octree::ReusableData reusableData;
 
@@ -844,7 +845,7 @@ void PoseEstimationT::determineGuidedMatchingsSubset(const AnyCamera* camera, co
 			{
 				const Vector3& objectPoint = objectPoints[objectPointIndex];
 
-				if (PinholeCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint) && camera->projectToImageIF(flippedCamera_T_world, objectPoint).sqrDistance(imagePoint) <= maximalSqrProjectionError)
+				if (Camera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoint) && camera->projectToImageIF(flippedCamera_T_world, objectPoint).sqrDistance(imagePoint) <= generousSqrProjectionError)
 				{
 					const Index32 objectPointId = objectPointIds[objectPointIndex];
 					const typename UnorderedDescriptorMap<TObjectPointDescriptor>::const_iterator iObjectPointDescriptor = objectPointDescriptorMap->find(objectPointId);
