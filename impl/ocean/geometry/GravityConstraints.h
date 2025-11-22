@@ -31,21 +31,21 @@ class GravityConstraintsT;
 /**
  * Definition of the GravityConstraints object, depending on the OCEAN_MATH_USE_SINGLE_PRECISION either with single or double precision float data type.
  * @see GravityConstraintsT
- * @ingroup math
+ * @ingroup geometry
  */
 using GravityConstraints = GravityConstraintsT<Scalar>;
 
 /**
  * Definition of the GravityConstraints object, using double floating point precision.
  * @see GravityConstraintsT
- * @ingroup math
+ * @ingroup geometry
  */
 using GravityConstraintsD = GravityConstraintsT<double>;
 
 /**
  * Definition of the GravityConstraints object, using single floating point precision.
  * @see GravityConstraintsT
- * @ingroup math
+ * @ingroup geometry
  */
 using GravityConstraintsF = GravityConstraintsT<float>;
 
@@ -80,7 +80,7 @@ class GravityConstraintsT
 		 * @param gravityInCamera The camera gravity vector (which is known for a camera pose), defined in the camera coordinate system, with default camera pointing towards the negative z-space and y-axis pointing upwards.
 		 * @param worldGravityInWorld The world gravity vector in the world coordinate system, mainly defining how the world coordinate system is oriented/aligned wrt gravity
 		 * @param weightFactor The weight factor to be used during a non-linear optimization of a camera pose; 0 to skip any gravity correction, 1 to apply a normal/default gravity correction, larger values to apply a stronger gravity correction, with range [0, infinity)
-		 * @param maximalAngle The maximal angle between world and camera gravity vector (when converted into the same coordinate system), can be used e.g., when the camera pose is determined e.g., with RANSAC or a PnP algorithm, in radian, with range [0, PI/2).
+		 * @param maximalAngle The maximal angle between world and camera gravity vector (when converted into the same coordinate system), can be used e.g., when the camera pose is determined e.g., with RANSAC or a PnP algorithm, basically specifying how accurate the gravity vector is, in radian, with range [0, PI/2)
 		 */
 		explicit inline GravityConstraintsT(const VectorT3<T>& cameraGravityInCamera, const VectorT3<T>& worldGravityInWorld = VectorT3<T>(0, -1, 0), const T weightFactor = T(1), const T maximalAngle = NumericT<T>::deg2rad(5));
 
@@ -89,7 +89,7 @@ class GravityConstraintsT
 		 * @param gravityInCameras The camera gravity vectors (which are known for several camera poses), defined in the camera coordinate system, with default camera pointing towards the negative z-space and y-axis pointing upwards.
 		 * @param worldGravityInWorld The world gravity vector in the world coordinate system, mainly defining how the world coordinate system is oriented/aligned wrt gravity
 		 * @param weightFactor The weight factor to be used during a non-linear optimization of a camera pose; 0 to skip any gravity correction, 1 to apply a normal/default gravity correction, larger values to apply a stronger gravity correction, with range [0, infinity)
-		 * @param maximalAngle The maximal angle between world and camera gravity vectors (when converted into the same coordinate system), can be used e.g., when the camera pose is determined e.g., with RANSAC or a PnP algorithm, in radian, with range [0, PI/2).
+		 * @param maximalAngle The maximal angle between world and camera gravity vectors (when converted into the same coordinate system), can be used e.g., when the camera pose is determined e.g., with RANSAC or a PnP algorithm, basically specifying how accurate the gravity vector is, in radian, with range [0, PI/2)
 		 */
 		explicit inline GravityConstraintsT(VectorsT3<T>&& cameraGravityInCameras, const VectorT3<T>& worldGravityInWorld = VectorT3<T>(0, -1, 0), const T weightFactor = T(1), const T maximalAngle = NumericT<T>::deg2rad(5));
 
@@ -99,7 +99,7 @@ class GravityConstraintsT
 		 * @param world_T_camera The transformation transforming camera to world, with default camera pointing towards the negative z-space and y-axis pointing upwards, must be valid
 		 * @param worldGravityInWorld The world gravity vector in the world coordinate system, mainly defining how the world coordinate system is oriented/aligned wrt gravity
 		 * @param weightFactor The weight factor to be used during a non-linear optimization of a camera pose; 0 to skip any gravity correction, 1 to apply a normal/default gravity correction, larger values to apply a stronger gravity correction, with range [0, infinity)
-		 * @param maximalAngle The maximal angle between world and camera gravity vector (when converted into the same coordinate system), can be used e.g., when the camera pose is determined e.g., with RANSAC or a PnP algorithm, in radian, with range [0, PI/2).
+		 * @param maximalAngle The maximal angle between world and camera gravity vector (when converted into the same coordinate system), can be used e.g., when the camera pose is determined e.g., with RANSAC or a PnP algorithm, basically specifying how accurate the gravity vector is, in radian, with range [0, PI/2)
 		 */
 		explicit inline GravityConstraintsT(const HomogenousMatrixT4<T>& world_T_camera, const VectorT3<T>& worldGravityInWorld = VectorT3<T>(0, -1, 0), const T weightFactor = T(1), const T maximalAngle = NumericT<T>::deg2rad(5));
 
@@ -109,7 +109,7 @@ class GravityConstraintsT
 		 * @param world_T_cameras The transformations transforming camera to world, with default camera pointing towards the negative z-space and y-axis pointing upwards, must be valid
 		 * @param worldGravityInWorld The world gravity vector in the world coordinate system, mainly defining how the world coordinate system is oriented/aligned wrt gravity
 		 * @param weightFactor The weight factor to be used during a non-linear optimization of a camera pose; 0 to skip any gravity correction, 1 to apply a normal/default gravity correction, larger values to apply a stronger gravity correction, with range [0, infinity)
-		 * @param maximalAngle The maximal angle between world and camera gravity vectors (when converted into the same coordinate system), can be used e.g., when the camera pose is determined e.g., with RANSAC or a PnP algorithm, in radian, with range [0, PI/2).
+		 * @param maximalAngle The maximal angle between world and camera gravity vectors (when converted into the same coordinate system), can be used e.g., when the camera pose is determined e.g., with RANSAC or a PnP algorithm, basically specifying how accurate the gravity vector is, in radian, with range [0, PI/2)
 		 */
 		explicit inline GravityConstraintsT(const HomogenousMatricesT4<T>& world_T_cameras, const VectorT3<T>& worldGravityInWorld = VectorT3<T>(0, -1, 0), const T weightFactor = T(1), const T maximalAngle = NumericT<T>::deg2rad(5));
 
@@ -244,7 +244,7 @@ class GravityConstraintsT
 		inline T alignmentCosine(const QuaternionT<T>& world_Q_camera, const size_t cameraIndex = 0) const;
 
 		/**
-		 * Returns the cosine between the world gravity vector and the camera gravity vector (after converting into the same coordinate system), in radian
+		 * Returns the cosine between the world gravity vector and the camera gravity vector (after converting into the same coordinate system).
 		 * @param world_T_camera The transformation transforming camera to world, with a default camera pointing towards the negative z-space and y-axis pointing upwards, must be valid
 		 * @param cameraIndex The index of the camera for which the cosine will be returned, with range [0, numberCameras() - 1]
 		 * @return The cosine of the angle between the world gravity vector and the camera gravity vector, with range [-1, 1]
@@ -252,7 +252,7 @@ class GravityConstraintsT
 		inline T alignmentCosine(const HomogenousMatrixT4<T>& world_T_camera, const size_t cameraIndex = 0) const;
 
 		/**
-		 * Returns the cosine between the world gravity vector and the camera gravity vector (after converting into the same coordinate system), in radian
+		 * Returns the cosine between the world gravity vector and the camera gravity vector (after converting into the same coordinate system).
 		 * @param flippedCamera_Q_world The rotation rotating world to flipped camera, with a default flipped camera pointing towards the positive z-space and y-axis pointing downwards, must be valid
 		 * @param cameraIndex The index of the camera for which the cosine will be returned, with range [0, numberCameras() - 1]
 		 * @return The cosine of the angle between the world gravity vector and the camera gravity vector, with range [-1, 1]
@@ -260,7 +260,7 @@ class GravityConstraintsT
 		inline T alignmentCosineIF(const QuaternionT<T>& flippedCamera_Q_world, const size_t cameraIndex = 0) const;
 
 		/**
-		 * Returns the cosine between the world gravity vector and the camera gravity vector (after converting into the same coordinate system), in radian
+		 * Returns the cosine between the world gravity vector and the camera gravity vector (after converting into the same coordinate system).
 		 * @param flippedCamera_T_world The transformation transforming world to flipped camera, with a default flipped camera pointing towards the positive z-space and y-axis pointing downwards, must be valid
 		 * @param cameraIndex The index of the camera for which the cosine will be returned, with range [0, numberCameras() - 1]
 		 * @return The cosine of the angle between the world gravity vector and the camera gravity vector, with range [-1, 1]
@@ -378,10 +378,10 @@ class GravityConstraintsT
 		HomogenousMatrixT4<T> alignCameraWithGravity(const HomogenousMatrixT4<T>& world_T_camera, const size_t cameraIndex = 0) const;
 
 		/**
-		 * Rotates a inverted and flipped camera pose so that the flipped camera is aligned with the gravity constraints.
+		 * Rotates an inverted and flipped camera pose so that the flipped camera is aligned with the gravity constraints.
 		 * @param flippedCamera_T_world The transformation transforming world to flipped camera, with a default flipped camera pointing towards the positive z-space and y-axis pointing downwards, must be valid
 		 * @param cameraIndex The index of the camera for which the alignment will be performed, with range [0, numberCameras() - 1]
-		 * @return The flipped inverted and flipped camera pose aligned with the gravity constraints (alignedFlippedCamera_T_world)
+		 * @return The inverted and flipped camera pose aligned with the gravity constraints (alignedFlippedCamera_T_world)
 		 */
 		HomogenousMatrixT4<T> alignCameraWithGravityIF(const HomogenousMatrixT4<T>& flippedCamera_T_world, const size_t cameraIndex = 0) const;
 
@@ -418,7 +418,7 @@ class GravityConstraintsT
 
 		/**
 		 * Helper function returning the camera gravity vector in the camera coordinate system based on a given camera pose and the world gravity vector.
-		 * The resulting camera gravity vector is obtained by converting the world gravity vector into the camera coordinate system.,br>
+		 * The resulting camera gravity vector is obtained by converting the world gravity vector into the camera coordinate system.<br>
 		 * This function return the same gravity vector as cameraGravityInCamera(), but uses the flipped camera pose as input parameter.
 		 * @param flippedCamera_T_world The transformation transforming world to flipped camera, with default camera pointing towards the positive z-space and y-axis pointing downwards, must be valid
 		 * @param worldGravityInWorld The world gravity vector defined in the world coordinate system, must be a unit vector
@@ -444,7 +444,7 @@ class GravityConstraintsT
 		/// The world gravity vector defined in the world coordinate system, mainly defining how the world coordinate system is oriented/aligned wrt gravity.
 		VectorT3<T> worldGravityInWorld_ = VectorT3<T>(0, -1, 0);
 
-		/// The weight factor to be used during a non-linear optimization of a camera pose; 0 to skip any gravity correction, 1 to apply a full gravity correction; with range [0, 1).
+		/// The weight factor to be used during a non-linear optimization of a camera pose; 0 to skip any gravity correction, 1 to apply a full gravity correction; with range [0, infinity).
 		T weightFactor_ = T(-1);
 
 		/// The maximal angle between world and camera gravity vectors (when converted into the same coordinate system), can be used e.g., when the camera pose is determined e.g., with RANSAC or a PnP algorithm, in radian, with range [0, PI/2).
@@ -773,7 +773,7 @@ bool GravityConstraintsT<T>::isCameraAlignedWithGravityIF(const QuaternionT<T>& 
 {
 	ocean_assert(isValid());
 
-	return isCameraAlignedWithGravityIF(flippedCamera_Q_world, cameraIndex) >= minimalAngleCos_;
+	return alignmentCosineIF(flippedCamera_Q_world, cameraIndex) >= minimalAngleCos_;
 }
 
 template <typename T>
@@ -873,7 +873,7 @@ template <typename T>
 inline bool GravityConstraintsT<T>::isValid() const
 {
 	const bool valid = weightFactor_ >= T(0)
-		&& maximalAngle_ >= NumericT<T>::rad2deg(0) && maximalAngle_ <= NumericT<T>::rad2deg(90)
+		&& maximalAngle_ >= NumericT<T>::deg2rad(0) && maximalAngle_ <= NumericT<T>::deg2rad(90)
 		&& !cameraGravityInCameras_.isEmpty() && !worldGravityInWorld_.isNull();
 
 #ifdef OCEAN_DEBUG
