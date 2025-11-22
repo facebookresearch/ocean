@@ -679,8 +679,6 @@ void MultiViewMapCreator::determineImageFeaturesSubset(const Frame* yFrames, con
 		constexpr Scalar harrisCornersReductionScale = Scalar(0.4);
 		constexpr unsigned int harrisCornerThreshold = 5u;
 
-		const float inverseFocalLength = float(camera->inverseFocalLengthX());
-
 		const CV::Detector::FREAKDescriptor32::AnyCameraDerivativeFunctor cameraFunctor(camera, 8u); // **TODO** avoid fixed layer number
 
 		CV::Detector::HarrisCorners harrisCorners;
@@ -696,7 +694,7 @@ void MultiViewMapCreator::determineImageFeaturesSubset(const Frame* yFrames, con
 		constexpr bool determineExactHarrisCornerPositions = true;
 		const bool yFrameIsUndistorted = false;
 
-		CV::Detector::FREAKDescriptor32::extractHarrisCornersAndComputeDescriptors(yFrame, maxFrameArea, minFrameArea, expectedHarrisCorners640x480, harrisCornersReductionScale, harrisCornerThreshold, inverseFocalLength, cameraFunctor, harrisCorners, cornerPyramidLevels, descriptors, removeInvalid, border, determineExactHarrisCornerPositions, yFrameIsUndistorted);
+		CV::Detector::FREAKDescriptor32::extractHarrisCornersAndComputeDescriptors(yFrame, maxFrameArea, minFrameArea, expectedHarrisCorners640x480, harrisCornersReductionScale, harrisCornerThreshold, cameraFunctor, harrisCorners, cornerPyramidLevels, descriptors, removeInvalid, border, determineExactHarrisCornerPositions, yFrameIsUndistorted);
 
 		ocean_assert(harrisCorners.size() == cornerPyramidLevels.size());
 

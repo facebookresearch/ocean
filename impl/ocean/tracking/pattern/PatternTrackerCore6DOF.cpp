@@ -1412,8 +1412,6 @@ bool PatternTrackerCore6DOF::detectAndDescribeFeatures(const SharedAnyCamera& ca
 	constexpr unsigned int expectedHarrisCorners640x480 = 1000u;
 	constexpr Scalar harrisCornersReductionScale = Scalar(0.4);
 
-	const float inverseFocalLength = float(camera->inverseFocalLengthX());
-
 	const CV::Detector::FREAKDescriptor32::AnyCameraDerivativeFunctor cameraFunctor(camera, 8u); // **TODO** avoid fixed layer number
 
 	CV::Detector::HarrisCorners harrisCorners;
@@ -1426,7 +1424,7 @@ bool PatternTrackerCore6DOF::detectAndDescribeFeatures(const SharedAnyCamera& ca
 
 	imagePointDescriptors.clear();
 
-	if (!CV::Detector::FREAKDescriptor32::extractHarrisCornersAndComputeDescriptors(yFrame, maxFrameArea, minFrameArea, expectedHarrisCorners640x480, harrisCornersReductionScale, harrisCornerThreshold, inverseFocalLength, cameraFunctor, harrisCorners, cornerPyramidLevels, imagePointDescriptors, removeInvalid, border, determineExactHarrisCornerPositions, yFrameIsUndistorted, worker))
+	if (!CV::Detector::FREAKDescriptor32::extractHarrisCornersAndComputeDescriptors(yFrame, maxFrameArea, minFrameArea, expectedHarrisCorners640x480, harrisCornersReductionScale, harrisCornerThreshold, cameraFunctor, harrisCorners, cornerPyramidLevels, imagePointDescriptors, removeInvalid, border, determineExactHarrisCornerPositions, yFrameIsUndistorted, worker))
 	{
 		return false;
 	}

@@ -61,8 +61,6 @@ bool Relocalizer::detectFreakFeatures(const AnyCamera& camera, const Frame& yFra
 	constexpr Scalar harrisCornersReductionScale = Scalar(0.4);
 	constexpr unsigned int harrisCornerThreshold = 10u;
 
-	const float inverseFocalLength = float(camera.inverseFocalLengthX());
-
 	const CV::Detector::FREAKDescriptor32::AnyCameraDerivativeFunctor cameraFunctor(camera.clone(), 8u); // **TODO** avoid fixed layer number
 
 	CV::Detector::HarrisCorners harrisCorners;
@@ -75,7 +73,7 @@ bool Relocalizer::detectFreakFeatures(const AnyCamera& camera, const Frame& yFra
 	constexpr bool determineExactHarrisCornerPositions = true;
 	const bool yFrameIsUndistorted = false;
 
-	if (!CV::Detector::FREAKDescriptor32::extractHarrisCornersAndComputeDescriptors(yFrame, maxFrameArea, minFrameArea, expectedHarrisCorners640x480, harrisCornersReductionScale, harrisCornerThreshold, inverseFocalLength, cameraFunctor, harrisCorners, cornerPyramidLevels, freakImagePointDescriptors, removeInvalid, border, determineExactHarrisCornerPositions, yFrameIsUndistorted))
+	if (!CV::Detector::FREAKDescriptor32::extractHarrisCornersAndComputeDescriptors(yFrame, maxFrameArea, minFrameArea, expectedHarrisCorners640x480, harrisCornersReductionScale, harrisCornerThreshold, cameraFunctor, harrisCorners, cornerPyramidLevels, freakImagePointDescriptors, removeInvalid, border, determineExactHarrisCornerPositions, yFrameIsUndistorted))
 	{
 		return false;
 	}
