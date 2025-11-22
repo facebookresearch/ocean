@@ -309,12 +309,10 @@ bool TestRotation::testConstructors(const double testDuration)
 			OCEAN_EXPECT_TRUE(validation, rotation.isValid());
 			OCEAN_EXPECT_EQUAL(validation, rotation.axis(), axis);
 
-#if 0
 			// angle should be normalized to [0, 2*PI)
 			const T normalizedAngle = rotation.angle();
 			OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
 			OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
-#endif
 		}
 
 		{
@@ -328,12 +326,10 @@ bool TestRotation::testConstructors(const double testDuration)
 			OCEAN_EXPECT_TRUE(validation, rotation.isValid());
 			OCEAN_EXPECT_EQUAL(validation, rotation.axis(), axis);
 
-#if 0
 			// angle should be normalized to [0, 2*PI)
 			const T normalizedAngle = rotation.angle();
 			OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
 			OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
-#endif
 		}
 
 		{
@@ -506,7 +502,6 @@ bool TestRotation::testArrayConstructor(const double testDuration)
 			OCEAN_EXPECT_EQUAL(validation, rotation.angle(), angle);
 		}
 
-#if 0
 		{
 			// angle outside [0, 2*PI) - this should be normalized according to documentation
 
@@ -524,7 +519,6 @@ bool TestRotation::testArrayConstructor(const double testDuration)
 			OCEAN_EXPECT_GREATER_EQUAL(validation, normalizedAngle, T(0));
 			OCEAN_EXPECT_LESS(validation, normalizedAngle, NumericT<T>::pi2());
 		}
-#endif
 
 		{
 			// data() accessor consistency
@@ -586,7 +580,6 @@ bool TestRotation::testAngleNormalization(const double testDuration)
 				OCEAN_EXPECT_EQUAL(validation, rotation.angle(), angle);
 			}
 
-#if 0
 			{
 				// negative angles
 
@@ -666,7 +659,6 @@ bool TestRotation::testAngleNormalization(const double testDuration)
 
 				OCEAN_EXPECT_TRUE(validation, Numeric::isEqual(rotation.angle(), T(0)) || Numeric::isEqual(rotation.angle(), NumericT<T>::pi2()));
 			}
-#endif
 		}
 
 		{
@@ -1161,7 +1153,10 @@ bool TestRotation::testMultiplicationOperators(const double testDuration)
 			rotationCopy *= rotation2;
 
 			OCEAN_EXPECT_TRUE(validation, rotationCopy.isValid());
-			OCEAN_EXPECT_TRUE(validation, rotationCopy == (rotation1 * rotation2));
+
+			const RotationT<T> rotationCopy2 = rotation1 * rotation2;
+
+			OCEAN_EXPECT_TRUE(validation, rotationCopy.isEqual(rotationCopy2, NumericT<T>::weakEps()));
 		}
 
 		{
@@ -1215,7 +1210,6 @@ bool TestRotation::testMultiplicationOperators(const double testDuration)
 			OCEAN_EXPECT_TRUE(validation, result1.isEqual(result2, NumericT<T>::weakEps()));
 		}
 
-#if 0
 		{
 			// identity: rotation * rotation^-1 * v == v
 
@@ -1228,7 +1222,6 @@ bool TestRotation::testMultiplicationOperators(const double testDuration)
 
 			OCEAN_EXPECT_TRUE(validation, vector.isEqual(result, NumericT<T>::weakEps()));
 		}
-#endif
 	}
 	while (!startTimestamp.hasTimePassed(testDuration));
 
@@ -1251,8 +1244,10 @@ bool TestRotation::testElementAccess(const double testDuration)
 
 	do
 	{
+		const T eps = NumericT<T>::eps() * T(100);
+
 		const VectorT3<T> axis = RandomT<T>::vector3(randomGenerator);
-		const T angle = RandomT<T>::scalar(randomGenerator, T(0), NumericT<T>::pi2());
+		const T angle = RandomT<T>::scalar(randomGenerator, T(0), NumericT<T>::pi2() - eps);
 
 		const RotationT<T> rotation(axis, angle);
 

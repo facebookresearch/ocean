@@ -88,7 +88,7 @@ class RotationT
 
 		/**
 		 * Creates a rotation object by four given values.
-		 * The axis must have length 1.
+		 * The axis must be a unit vector with length 1.
 		 * @param x X value of the rotation axis
 		 * @param y Y value of the rotation axis
 		 * @param z Z value of the rotation axis
@@ -202,6 +202,14 @@ class RotationT
 		 * @return True, if so
 		 */
 		bool isValid() const;
+
+		/**
+		 * Returns whether two rotations are equal up to a specified epsilon.
+		 * @param rotation The second rotation to compare
+		 * @param eps Epsilon to be used, with range [0, infinity)
+		 * @return True, if so
+		 */
+		inline bool isEqual(const RotationT<T>& rotation, const T eps = NumericT<T>::eps()) const;
 
 		/**
 		 * Returns whether two rotations are identical up to a small epsilon.
@@ -323,45 +331,16 @@ RotationT<T>::RotationT(const T x, const T y, const T z, const T angle)
 	values_[1] = y;
 	values_[2] = z;
 
-	if (angle > NumericT<T>::pi2())
-	{
-		values_[3] = NumericT<T>::fmod(angle, NumericT<T>::pi2());
-	}
-	else if (angle < T(0.0))
-	{
-		ocean_assert(NumericT<T>::fmod(angle, NumericT<T>::pi2()) < T(0.0));
-		values_[3] = NumericT<T>::pi2() + NumericT<T>::fmod(angle, NumericT<T>::pi2());
-	}
-	else
-	{
-		values_[3] = angle;
-	}
+	values_[3] = NumericT<T>::angleAdjustPositive(angle);
 
 	ocean_assert(isValid());
 }
 
 template <typename T>
-RotationT<T>::RotationT(const VectorT3<T>& axis, const T angle)
+RotationT<T>::RotationT(const VectorT3<T>& axis, const T angle) :
+	RotationT<T>(axis.x(), axis.y(), axis.z(), angle)
 {
-	values_[0] = axis[0];
-	values_[1] = axis[1];
-	values_[2] = axis[2];
-
-	if (angle > NumericT<T>::pi2())
-	{
-		values_[3] = NumericT<T>::fmod(angle, NumericT<T>::pi2());
-	}
-	else if (angle < T(0.0))
-	{
-		ocean_assert(NumericT<T>::fmod(angle, NumericT<T>::pi2()) < T(0.0));
-		values_[3] = NumericT<T>::pi2() + NumericT<T>::fmod(angle, NumericT<T>::pi2());
-	}
-	else
-	{
-		values_[3] = angle;
-	}
-
-	ocean_assert(isValid());
+	// nothing to do here
 }
 
 template <typename T>
@@ -440,6 +419,7 @@ RotationT<T>::RotationT(const SquareMatrixT3<T>& matrix)
 			if (maximum < matrix(1, 1))
 			{
 				select = 1;
+				maximum = matrix(1, 1);
 			}
 			if (maximum < matrix(2, 2))
 			{
@@ -509,87 +489,7 @@ RotationT<T>::RotationT(const HomogenousMatrixT4<T>& transformation)
 	const SquareMatrixT3<T> matrix(transformation.orthonormalRotationMatrix());
 	ocean_assert(NumericT<T>::isEqual(matrix.determinant(), T(1.0)));
 
-	const T cosValue = (matrix.trace() - T(1.0)) * T(0.5);
-	ocean_assert(NumericT<T>::isInsideRange(T(-1.0), cosValue, T(1.0)));
-
-	if (NumericT<T>::isEqual(cosValue, T(1.0)))
-	{
-		values_[0] = T(0.0);
-		values_[1] = T(1.0);
-		values_[2] = T(0.0);
-		values_[3] = T(0.0);
-	}
-	else
-	{
-		VectorT3<T> axis;
-
-		if (NumericT<T>::isEqual(cosValue, T(-1.0)))
-		{
-			unsigned int select = 0;
-			T maximum = matrix(0, 0);
-
-			if (maximum < matrix(1, 1))
-			{
-				select = 1;
-			}
-			if (maximum < matrix(2, 2))
-			{
-				select = 2;
-			}
-
-			switch (select)
-			{
-				case 0:
-				{
-					axis(0) = T(0.5) * NumericT<T>::sqrt(matrix(0, 0) - matrix(1, 1) - matrix(2, 2) + T(1.0));
-					T factor = T(0.5) / axis(0);
-
-					axis(1) = matrix(0, 1) * factor;
-					axis(2) = matrix(0, 2) * factor;
-					break;
-				}
-
-				case 1:
-				{
-					axis(1) = T(0.5) * NumericT<T>::sqrt(matrix(1, 1) - matrix(0, 0) - matrix(2, 2) + T(1.0));
-					T factor = T(0.5) / axis(1);
-
-					axis(0) = matrix(0, 1) * factor;
-					axis(2) = matrix(1, 2) * factor;
-					break;
-				}
-
-				case 2:
-				{
-					axis(2) = T(0.5) * NumericT<T>::sqrt(matrix(2, 2) - matrix(0, 0) - matrix(1, 1) + T(1.0));
-					T factor = T(0.5) / axis(2);
-
-					axis(0) = matrix(0, 2) * factor;
-					axis(1) = matrix(1, 2) * factor;
-					break;
-				}
-
-				default:
-					ocean_assert(false);
-					break;
-			}
-
-			values_[3] = NumericT<T>::pi();
-		}
-		else
-		{
-			axis = VectorT3<T>(matrix(2, 1) - matrix(1, 2), matrix(0, 2) - matrix(2, 0), matrix(1, 0) - matrix(0, 1));
-			values_[3] = NumericT<T>::acos(cosValue);
-		}
-
-		axis.normalize();
-
-		values_[0] = axis(0);
-		values_[1] = axis(1);
-		values_[2] = axis(2);
-	}
-
-	ocean_assert(isValid());
+	*this = RotationT<T>(matrix);
 }
 
 template <typename T>
@@ -597,7 +497,11 @@ RotationT<T>::RotationT(const T* valueArray)
 {
 	ocean_assert(valueArray != nullptr);
 
-	memcpy(values_, valueArray, sizeof(T) * 4);
+	values_[0] = valueArray[0];
+	values_[1] = valueArray[1];
+	values_[2] = valueArray[2];
+
+	values_[3] = NumericT<T>::angleAdjustPositive(valueArray[3]);
 
 	ocean_assert(isValid());
 }
@@ -605,9 +509,11 @@ RotationT<T>::RotationT(const T* valueArray)
 template <typename T>
 void RotationT<T>::setAxis(const VectorT3<T>& axis)
 {
-	ocean_assert(NumericT<T>::isEqual(axis.length(), T(1.0)));
+	ocean_assert(axis.isUnit());
 
-	memcpy(values_, axis(), sizeof(T) * 3);
+	values_[0] = axis[0];
+	values_[1] = axis[1];
+	values_[2] = axis[2];
 
 	ocean_assert(isValid());
 }
@@ -615,19 +521,7 @@ void RotationT<T>::setAxis(const VectorT3<T>& axis)
 template <typename T>
 void RotationT<T>::setAngle(const T angle)
 {
-	if (angle > NumericT<T>::pi2())
-	{
-		values_[3] = NumericT<T>::fmod(angle, NumericT<T>::pi2());
-	}
-	else if (angle < T(0.0))
-	{
-		ocean_assert(NumericT<T>::fmod(angle, NumericT<T>::pi2()) < T(0.0));
-		values_[3] = NumericT<T>::pi2() + NumericT<T>::fmod(angle, NumericT<T>::pi2());
-	}
-	else
-	{
-		values_[3] = angle;
-	}
+	values_[3] = NumericT<T>::angleAdjustPositive(angle);
 
 	ocean_assert(isValid());
 }
@@ -643,6 +537,7 @@ template <typename T>
 void RotationT<T>::invert()
 {
 	ocean_assert(isValid());
+
 	values_[0] = -values_[0];
 	values_[1] = -values_[1];
 	values_[2] = -values_[2];
@@ -651,7 +546,17 @@ void RotationT<T>::invert()
 template <typename T>
 bool RotationT<T>::isValid() const
 {
-	return NumericT<T>::isEqual(axis().length(), T(1.0)) && NumericT<T>::isInsideRange(T(0.0), angle(), NumericT<T>::pi2());
+	return axis().isUnit() && NumericT<T>::isInsideRange(T(0.0), angle(), NumericT<T>::pi2());
+}
+
+template <typename T>
+inline bool RotationT<T>::isEqual(const RotationT<T>& rotation, const T eps) const
+{
+	ocean_assert(isValid() && rotation.isValid());
+	ocean_assert(eps >= T(0.0));
+
+	return (NumericT<T>::isEqual(values_[0], rotation.values_[0], eps) && NumericT<T>::isEqual(values_[1], rotation.values_[1], eps) && NumericT<T>::isEqual(values_[2], rotation.values_[2], eps) && NumericT<T>::isEqual(values_[3], rotation.values_[3], eps))
+		|| (NumericT<T>::isEqual(values_[0], -rotation.values_[0], eps) && NumericT<T>::isEqual(values_[1], -rotation.values_[1], eps) && NumericT<T>::isEqual(values_[2], -rotation.values_[2], eps) && NumericT<T>::angleIsEqual(values_[3] + rotation.values_[3], NumericT<T>::pi2(), eps));
 }
 
 template <typename T>
@@ -659,16 +564,14 @@ bool RotationT<T>::operator==(const RotationT<T>& right) const
 {
 	ocean_assert(isValid() && right.isValid());
 
-	return (NumericT<T>::isEqual(values_[0], right.values_[0]) && NumericT<T>::isEqual(values_[1], right.values_[1])
-		&& NumericT<T>::isEqual(values_[2], right.values_[2]) && NumericT<T>::isEqual(values_[3], right.values_[3]))
-		|| (NumericT<T>::isEqual(values_[0], -right.values_[0]) && NumericT<T>::isEqual(values_[1], -right.values_[1])
-		&& NumericT<T>::isEqual(values_[2], -right.values_[2]) && NumericT<T>::isEqual(values_[3] + right.values_[3], NumericT<T>::pi2()));
+	return isEqual(right);
 }
 
 template <typename T>
 RotationT<T> RotationT<T>::operator-() const
 {
 	ocean_assert(isValid());
+
 	return RotationT<T>(-values_[0], -values_[1], -values_[2], values_[3]);
 }
 
@@ -676,14 +579,20 @@ template <typename T>
 RotationT<T> RotationT<T>::operator*(const QuaternionT<T>& quaternion) const
 {
 	ocean_assert(isValid() && quaternion.isValid());
-	return RotationT<T>(QuaternionT<T>(*this) * quaternion);
+
+	const QuaternionT<T> result(QuaternionT<T>(*this) * quaternion);
+
+	return RotationT<T>(result.normalized());
 }
 
 template <typename T>
 RotationT<T>& RotationT<T>::operator*=(const QuaternionT<T>& quaternion)
 {
 	ocean_assert(isValid() && quaternion.isValid());
-	*this = RotationT<T>(QuaternionT<T>(*this) * quaternion);
+
+	const QuaternionT<T> result(QuaternionT<T>(*this) * quaternion);
+
+	*this = RotationT<T>(result.normalized());
 
 	return *this;
 }
@@ -692,14 +601,20 @@ template <typename T>
 RotationT<T> RotationT<T>::operator*(const RotationT<T>& right) const
 {
 	ocean_assert(isValid() && right.isValid());
-	return RotationT<T>(QuaternionT<T>(*this) * QuaternionT<T>(right));
+
+	const QuaternionT<T> result(QuaternionT<T>(*this) * QuaternionT<T>(right));
+
+	return RotationT<T>(result.normalized());
 }
 
 template <typename T>
 RotationT<T>& RotationT<T>::operator*=(const RotationT<T>& right)
 {
 	ocean_assert(isValid() && right.isValid());
-	*this = RotationT<T>(QuaternionT<T>(*this) * QuaternionT<T>(right));
+
+	const QuaternionT<T> result(QuaternionT<T>(*this) * QuaternionT<T>(right));
+
+	*this = RotationT<T>(result.normalized());
 
 	return *this;
 }
@@ -708,6 +623,7 @@ template <typename T>
 VectorT3<T> RotationT<T>::operator*(const VectorT3<T>& vector) const
 {
 	ocean_assert(isValid());
+
 	return QuaternionT<T>(*this) * vector;
 }
 
@@ -745,6 +661,7 @@ template <typename T>
 inline T RotationT<T>::operator()(unsigned int index) const
 {
 	ocean_assert(index < 4u);
+
 	return values_[index];
 }
 
@@ -752,6 +669,7 @@ template <typename T>
 inline T& RotationT<T>::operator()(unsigned int index)
 {
 	ocean_assert(index < 4u);
+
 	return values_[index];
 }
 
@@ -759,6 +677,7 @@ template <typename T>
 inline T RotationT<T>::operator[](unsigned int index) const
 {
 	ocean_assert(index < 4u);
+
 	return values_[index];
 }
 
@@ -766,6 +685,7 @@ template <typename T>
 inline T& RotationT<T>::operator[](unsigned int index)
 {
 	ocean_assert(index < 4u);
+
 	return values_[index];
 }
 
@@ -784,8 +704,8 @@ inline T* RotationT<T>::operator()()
 template <typename T>
 RotationT<T> RotationT<T>::left_R_right(const VectorT3<T>& left, const VectorT3<T>& right)
 {
-	ocean_assert(NumericT<T>::isWeakEqual(left.length(), 1));
-	ocean_assert(NumericT<T>::isWeakEqual(right.length(), 1));
+	ocean_assert(left.isUnit(NumericT<T>::weakEps()));
+	ocean_assert(right.isUnit(NumericT<T>::weakEps()));
 
 	if (left == right)
 	{
