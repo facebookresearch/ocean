@@ -81,17 +81,17 @@ bool StereoscopicGeometry::cameraPose(const AnyCamera& camera, const ConstIndexe
 		world_T_roughCamera1 = HomogenousMatrix4(world_R_camera1);
 
 		Scalar sqrAverageError = Numeric::maxValue();
-		Quaternion world_R_optimizedCamera1_(false);
-		if (NonLinearOptimizationOrientation::optimizeOrientation(camera, world_R_camera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), usedIndices), world_R_optimizedCamera1_, 10u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &sqrAverageError))
+		Quaternion world_R_optimizedCamera1(false);
+		if (NonLinearOptimizationOrientation::optimizeOrientation(camera, world_R_camera1, ConstArraySubsetAccessor<Vector3, Index32>(initialBadObjectPoints, usedIndices), ConstArraySubsetAccessor<Vector2, Index32>(imagePoints1.data(), usedIndices), world_R_optimizedCamera1, 10u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &sqrAverageError))
 		{
-			ocean_assert(world_R_optimizedCamera1_.isValid());
+			ocean_assert(world_R_optimizedCamera1.isValid());
 
-			world_T_roughCamera1 = HomogenousMatrix4(world_R_optimizedCamera1_);
+			world_T_roughCamera1 = HomogenousMatrix4(world_R_optimizedCamera1);
 
 			if (sqrAverageError <= maxRotationalSqrError)
 			{
 				// we take only the determined orientation as pose for the second frame
-				world_T_camera1 = HomogenousMatrix4(world_R_optimizedCamera1_);
+				world_T_camera1 = HomogenousMatrix4(world_R_optimizedCamera1);
 
 				if (validIndices != nullptr || objectPoints != nullptr)
 				{
