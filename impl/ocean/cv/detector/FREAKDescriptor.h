@@ -320,8 +320,10 @@ class FREAKDescriptorT : public FREAKDescriptor
 		 * @param pointsPyramidLevel Level of the frame pyramid at which the input points are located, range: [0, framePyramid.layers() - 1)
 		 * @param freakDescriptors Pointer to the FREAK descriptors that will be computed for the input points, must be valid and have 'pointsSize' elements. Final descriptors can be invalid, e.g., if they are too close to the image border
 		 * @param worker Optional worker instance for parallelization
+		 * @tparam TImagePoint The data type of the image points, with defined TImagePoint::x() and TImagePoint::y()
 		 */
-		static inline void computeDescriptors(const SharedAnyCamera& camera, const FramePyramid& framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, Worker* worker = nullptr);
+		template <typename TImagePoint>
+		static inline void computeDescriptors(const SharedAnyCamera& camera, const FramePyramid& framePyramid, const TImagePoint* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, Worker* worker = nullptr);
 
 		/**
 		 * Compute FREAK descriptors for multiple image points.
@@ -356,8 +358,10 @@ class FREAKDescriptorT : public FREAKDescriptor
 		 * @param freakDescriptors Pointer to the FREAK descriptors that will be computed for the input points, must be valid and have 'pointsSize' elements. Final descriptors can be invalid, e.g., if they are too close to the image border
 		 * @param cameraDerivativeFunctor A functor that is called for each input point and which must return its corresponding 2x3 Jacobian of the projection matrix and normalized unprojection ray.
 		 * @param worker Optional worker instance for parallelization
+		 * @tparam TImagePoint The data type of the image points, with defined TImagePoint::x() and TImagePoint::y()
 		 */
-		static inline void computeDescriptors(const FramePyramid& framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const CameraDerivativeFunctor& cameraDerivativeFunctor, Worker* worker = nullptr);
+		template <typename TImagePoint>
+		static inline void computeDescriptors(const FramePyramid& framePyramid, const TImagePoint* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const CameraDerivativeFunctor& cameraDerivativeFunctor, Worker* worker = nullptr);
 
 		/**
 		 * Extract Harris corners from an image pyramid and compute FREAK descriptors
@@ -391,8 +395,10 @@ class FREAKDescriptorT : public FREAKDescriptor
 		 * @param cameraDerivativeFunctor A callback function that is called for each input point and which must return its corresponding 2x3 Jacobian of the projection matrix and normalized unprojection ray
 		 * @param firstPoint The index of the first point that will be processed by this function, range: [0, pointsSize)
 		 * @param numberOfPoints Number of points that should be processed in this function starting at 'firstIndex', range: [1, pointsSize - firstIndex]
+		 * @tparam TImagePoint The data type of the image points, with defined TImagePoint::x() and TImagePoint::y()
 		 */
-		static void computeDescriptorsSubset(const FramePyramid* framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const CameraDerivativeFunctor* cameraDerivativeFunctor, const unsigned int firstPoint, const unsigned int numberOfPoints);
+		template <typename TImagePoint>
+		static void computeDescriptorsSubset(const FramePyramid* framePyramid, const TImagePoint* points, const size_t pointsSize, const unsigned int pointPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const CameraDerivativeFunctor* cameraDerivativeFunctor, const unsigned int firstPoint, const unsigned int numberOfPoints);
 
 		/**
 		 * Computes the transformation to deform receptive fields and the orientation of the descriptor
@@ -589,18 +595,20 @@ constexpr size_t FREAKDescriptorT<tSize>::size()
 }
 
 template <size_t tSize>
-inline void FREAKDescriptorT<tSize>::computeDescriptors(const SharedAnyCamera& camera, const FramePyramid& framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, Worker* worker)
+template <typename TImagePoint>
+inline void FREAKDescriptorT<tSize>::computeDescriptors(const SharedAnyCamera& camera, const FramePyramid& framePyramid, const TImagePoint* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, Worker* worker)
 {
 	ocean_assert(camera && camera->isValid());
 	ocean_assert(camera->width() == framePyramid.finestWidth() && camera->height() == framePyramid.finestHeight());
 
 	const AnyCameraDerivativeFunctor cameraDerivativeFunctor(camera, framePyramid.layers());
 
-	return computeDescriptors(framePyramid, points, pointsSize, pointsPyramidLevel, freakDescriptors, cameraDerivativeFunctor, worker);
+	return computeDescriptors<TImagePoint>(framePyramid, points, pointsSize, pointsPyramidLevel, freakDescriptors, cameraDerivativeFunctor, worker);
 }
 
 template <size_t tSize>
-inline void FREAKDescriptorT<tSize>::computeDescriptors(const FramePyramid& framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const CameraDerivativeFunctor& projectionDerivativeDataCallback, Worker* worker)
+template <typename TImagePoint>
+inline void FREAKDescriptorT<tSize>::computeDescriptors(const FramePyramid& framePyramid, const TImagePoint* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, const CameraDerivativeFunctor& projectionDerivativeDataCallback, Worker* worker)
 {
 	ocean_assert(framePyramid.isValid());
 	ocean_assert(points != nullptr && pointsSize != 0u);
@@ -609,11 +617,11 @@ inline void FREAKDescriptorT<tSize>::computeDescriptors(const FramePyramid& fram
 
 	if (worker)
 	{
-		worker->executeFunction(Worker::Function::createStatic(&FREAKDescriptorT<tSize>::computeDescriptorsSubset, &framePyramid, points, pointsSize, pointsPyramidLevel, freakDescriptors, &projectionDerivativeDataCallback, 0u, 0u), 0u, (unsigned int)(pointsSize));
+		worker->executeFunction(Worker::Function::createStatic(&FREAKDescriptorT<tSize>::computeDescriptorsSubset<TImagePoint>, &framePyramid, points, pointsSize, pointsPyramidLevel, freakDescriptors, &projectionDerivativeDataCallback, 0u, 0u), 0u, (unsigned int)(pointsSize));
 	}
 	else
 	{
-		FREAKDescriptorT<tSize>::computeDescriptorsSubset(&framePyramid, points, pointsSize, pointsPyramidLevel, freakDescriptors, &projectionDerivativeDataCallback, 0u, (unsigned int)(pointsSize));
+		FREAKDescriptorT<tSize>::computeDescriptorsSubset<TImagePoint>(&framePyramid, points, pointsSize, pointsPyramidLevel, freakDescriptors, &projectionDerivativeDataCallback, 0u, (unsigned int)(pointsSize));
 	}
 }
 
@@ -1016,7 +1024,8 @@ bool FREAKDescriptorT<tSize>::computeAverageCellIntensity(const Frame& framePyra
 }
 
 template <size_t tSize>
-void FREAKDescriptorT<tSize>::computeDescriptorsSubset(const FramePyramid* framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptor, const CameraDerivativeFunctor* cameraDerivativeFunctor, const unsigned int firstPoint, const unsigned int numberOfPoints)
+template <typename TImagePoint>
+void FREAKDescriptorT<tSize>::computeDescriptorsSubset(const FramePyramid* framePyramid, const TImagePoint* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptor, const CameraDerivativeFunctor* cameraDerivativeFunctor, const unsigned int firstPoint, const unsigned int numberOfPoints)
 {
 	ocean_assert(framePyramid != nullptr && framePyramid->isValid());
 	ocean_assert(points != nullptr && pointsSize != 0u);
@@ -1029,10 +1038,14 @@ void FREAKDescriptorT<tSize>::computeDescriptorsSubset(const FramePyramid* frame
 	{
 		ocean_assert(i < pointsSize);
 
-		float inverseFocalLength;
-		const CameraDerivativeData data = cameraDerivativeFunctor->computeCameraDerivativeData(points[i], pointsPyramidLevel, inverseFocalLength);
+		const TImagePoint& point = points[i];
 
-		computeDescriptor(*framePyramid, points[i], pointsPyramidLevel, freakDescriptor[i], data.unprojectRayIF, inverseFocalLength, data.pointJacobianMatrixIF);
+		const Eigen::Vector2f eigenPoint(float(point.x()), float(point.y()));
+
+		float inverseFocalLength;
+		const CameraDerivativeData data = cameraDerivativeFunctor->computeCameraDerivativeData(eigenPoint, pointsPyramidLevel, inverseFocalLength);
+
+		computeDescriptor(*framePyramid, eigenPoint, pointsPyramidLevel, freakDescriptor[i], data.unprojectRayIF, inverseFocalLength, data.pointJacobianMatrixIF);
 	}
 }
 
