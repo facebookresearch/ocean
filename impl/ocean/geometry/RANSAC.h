@@ -95,7 +95,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param imagePointAccessor The accessor providing the 2D image points, one image point for each object point
 		 * @param randomGenerator A random generator object
 		 * @param useDistortionParameters True, if the provided image points are distorted and if the camera's distortion parameters should be applied during the pose determination
-		 * @param pose Resulting pose
+		 * @param world_T_camera Resulting camera pose
 		 * @param minimalValidCorrespondences Minimal number of valid correspondences
 		 * @param refine Determines whether a not linear least square algorithm is used to increase the pose accuracy after the RANSAC step
 		 * @param iterations Number of maximal RANSAC iterations, with range [1, infinity)
@@ -105,7 +105,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param weights Optional explicit weights to weight the point correspondences individually
 		 * @return True, if succeeded
 		 */
-		static inline bool p3p(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights);
+		static inline bool p3p(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights);
 
 		/**
 		 * Calculates a camera pose using the perspective pose problem with three point correspondences.
@@ -142,7 +142,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param imagePointAccessor The accessor providing the 2D image points, one image point for each object point
 		 * @param randomGenerator A random generator object
 		 * @param useDistortionParameters True, if the provided image points are distorted and if the camera's distortion parameters should be applied during the pose determination
-		 * @param pose Resulting pose
+		 * @param world_T_camera Resulting camera pose
 		 * @param maxPositionOffset Maximal position offset between initial and final pose for three axis
 		 * @param maxOrientationOffset Maximal orientation offset between initial and final pose in radian angle
 		 * @param minValidCorrespondences Minimal number of valid correspondences
@@ -154,7 +154,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param weights Optional explicit weights to weight the point correspondences individually
 		 * @return True, if succeeded
 		 */
-		static inline bool p3p(const HomogenousMatrix4& initialPose, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const Vector3& maxPositionOffset = Vector3(Scalar(0.1), Scalar(0.1), Scalar(0.1)), const Scalar maxOrientationOffset = Numeric::deg2rad(10), const unsigned int minValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr, const Scalar* weights = nullptr);
+		static inline bool p3p(const HomogenousMatrix4& initialPose, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, const Vector3& maxPositionOffset = Vector3(Scalar(0.1), Scalar(0.1), Scalar(0.1)), const Scalar maxOrientationOffset = Numeric::deg2rad(10), const unsigned int minValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr, const Scalar* weights = nullptr);
 
 		/**
 		 * Calculates a pose including zoom factor using the perspective pose problem with three point correspondences.
@@ -165,7 +165,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param imagePointAccessor The accessor providing the 2D image points, one image point for each object point
 		 * @param randomGenerator A random generator object
 		 * @param useDistortionParameters True, if the provided image points are distorted and if the camera's distortion parameters should be applied during the pose determination
-		 * @param pose Resulting pose
+		 * @param world_T_camera Resulting camera pose
 		 * @param zoom Resulting zoom factor matching to the resulting pose, with range (0, infinity)
 		 * @param minimalValidCorrespondences Minimal number of valid correspondences
 		 * @param refine Determines whether a not linear least square algorithm is used to increase the pose accuracy after the RANSAC step
@@ -176,7 +176,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param weights Optional explicit weights to weight the point correspondences individually
 		 * @return True, if succeeded
 		 */
-		static inline bool p3pZoom(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, Scalar& zoom, const unsigned int minimalValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr, const Scalar* weights = nullptr);
+		static inline bool p3pZoom(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, Scalar& zoom, const unsigned int minimalValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr, const Scalar* weights = nullptr);
 
 		/**
 		 * Calculates a pose including zoom factor, using the perspective pose problem with three point correspondences.
@@ -190,7 +190,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param imagePointAccessor The accessor providing the 2D image points, one image point for each object point
 		 * @param randomGenerator A random generator object
 		 * @param useDistortionParameters True, if the provided image points are distorted and if the camera's distortion parameters should be applied during the pose determination
-		 * @param pose Resulting pose
+		 * @param world_T_camera Resulting camera pose
 		 * @param zoom Resulting zoom factor matching to the resulting pose, with range (0, infinity)
 		 * @param maxPositionOffset Maximal position offset between initial and final pose for three axis
 		 * @param maxOrientationOffset Maximal orientation offset between initial and final pose in radian angle
@@ -203,7 +203,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param weights Optional explicit weights to weight the point correspondences individually
 		 * @return True, if succeeded
 		 */
-		static inline bool p3pZoom(const HomogenousMatrix4& initialPose, const Scalar initialZoom, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, Scalar& zoom, const Vector3& maxPositionOffset = Vector3(Scalar(0.1), Scalar(0.1), Scalar(0.1)), const Scalar maxOrientationOffset = Numeric::deg2rad(10), const unsigned int minValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr, const Scalar* weights = nullptr);
+		static inline bool p3pZoom(const HomogenousMatrix4& initialPose, const Scalar initialZoom, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, Scalar& zoom, const Vector3& maxPositionOffset = Vector3(Scalar(0.1), Scalar(0.1), Scalar(0.1)), const Scalar maxOrientationOffset = Numeric::deg2rad(10), const unsigned int minValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr, const Scalar* weights = nullptr);
 
 		/**
 		 * Determines the 2D line best fitting to a set of given 2D positions.
@@ -370,16 +370,16 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		static bool fundamentalMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& right_F_left, const size_t testCandidates = 8, const unsigned int iterations = 20u, const Scalar maxScalarProduct = Scalar(0.001), Indices32* usedIndices = nullptr);
 
 		/**
-		 * Calculates the extrinsic camera matrix by given point correspondences for two stereo images.
-		 * The extrinsic matrix can be determined up to a scale factor for the translation vector.<br>
+		 * Calculates the transformation between left and right camera by given point correspondences for two stereo images.
+		 * The transformation can be determined up to a scale factor for the translation vector.<br>
 		 * The left camera is expected to be located in the origin while looking towards the negative z-axis with y-axis as up vector.<br>
-		 * The resulting transformation defines the extrinsic camera matrix for the right camera.
+		 * The resulting transformation transforms right camera points to left camera points.
 		 * @param leftCamera Left camera corresponding to the left image points
 		 * @param rightCamera Right camera corresponding to the right image points
 		 * @param leftImagePoints Left image points (each point corresponds to a right image point)
 		 * @param rightImagePoints Right image points (each point corresponds to a left image point)
 		 * @param correspondences Number of point correspondences, with range [testCandidates, infinity)
-		 * @param transformation Resulting extrinsic camera transformation matrix which transforms points lying in the right camera coordinate system into points lying in the left camera coordinate system
+		 * @param leftCamera_T_rightCamera Resulting camera transformation which transforms right camera points to left camera points
 		 * @param testCandidates Number of candidates used in each RANSAC iteration, with range [8, correspondences]
 		 * @param iterations Number of RANSAC iterations, with range [1, infinity)
 		 * @param squarePixelErrorThreshold Maximal square pixel error of a valid projection of a 3D point onto the 2D image plane, with range (0, infinity)
@@ -389,7 +389,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @return True, if succeeded
 		 * @see fundamentalMatrix().
 		 */
-		static bool extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, HomogenousMatrix4& transformation, const unsigned int testCandidates = 8u, const unsigned int iterations = 20u, const Scalar squarePixelErrorThreshold = Scalar(9), const Box3& maxTranslation = Box3(), const Scalar maxRotation = Numeric::pi(), Indices32* usedIndices = nullptr);
+		static bool extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, HomogenousMatrix4& leftCamera_T_rightCamera, const unsigned int testCandidates = 8u, const unsigned int iterations = 20u, const Scalar squarePixelErrorThreshold = Scalar(9), const Box3& maxTranslation = Box3(), const Scalar maxRotation = Numeric::pi(), Indices32* usedIndices = nullptr);
 
 		/**
 		 * Calculates the homography between two images transforming the given image points between two images.
@@ -511,7 +511,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		/**
 		 * Calculates inverted flipped camera poses (up to a common 3d projection transformation) for image point corresponds between images from multiple views.
 		 * @param imagePointsPerPose Image points per view (at least 3 views and at least 6 point correspondences)
-		 * @param posesIF Resulting camera projection matrices per view (inverted flipped)
+		 * @param flippedCameras_T_world Resulting camera projection matrices per view (inverted flipped)
 		 * @param iterations Number of RANSAC iterations, with range [1, infinity)
 		 * @param squarePixelErrorThreshold Maximal square pixel error of a valid projection of a 3D point onto the 2D image plane, with range (0, infinity)
 		 * @param objectPointsIF Optional vector which will receive the object points of the image point correspondences, if defined
@@ -520,7 +520,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @return True, if succeeded
 		 * @see Geometry::MultipleViewGeometry::projectiveReconstructionFrom6PointsIF().
 		 */
-		static bool projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const unsigned int iterations = 20u, const Scalar squarePixelErrorThreshold = Scalar(9), NonconstArrayAccessor<Vector3>* objectPointsIF = nullptr, Indices32* usedIndices = nullptr, Worker* worker = nullptr);
+		static bool projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* flippedCameras_T_world, const unsigned int iterations = 20u, const Scalar squarePixelErrorThreshold = Scalar(9), NonconstArrayAccessor<Vector3>* objectPointsIF = nullptr, Indices32* usedIndices = nullptr, Worker* worker = nullptr);
 
 		/**
 		 * Determines the camera calibration for several given camera calibration patterns, each pattern object holds the 2D/3D point correspondences for a planar calibration pattern observed from an individual viewing position.
@@ -576,12 +576,12 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 
 		/**
 		 * Calculates the similarity transformation (4DOF - translation, rotation, scale) between two images transforming the given image points between two images.
-		 * The resulting similarity transforms image points defined in the left image to image points defined in the right image (rightPoint = S * leftPoint).
+		 * The resulting similarity transforms image points defined in the left image to image points defined in the right image (rightPoint = right_S_left * leftPoint).
 		 * @param leftImagePoints Image points in the left camera, each point corresponds to one point in the right image
 		 * @param rightImagePoints Image points in the right camera
 		 * @param correspondences Number of points correspondences
 		 * @param randomGenerator Random generator object to be used for creating random numbers
-		 * @param similarity Resulting similarity for the given image points so that (rightPoint = S * leftPoint) holds
+		 * @param right_S_left Resulting similarity transformation for the given image points so that (rightPoint = right_S_left * leftPoint) holds
 		 * @param testCandidates Number of candidates used in each RANSAC iterations, with range [2, correspondences]
 		 * @param iterations Number of RANSAC iterations, with range [1, infinity)
 		 * @param squarePixelErrorThreshold The maximal square pixel error, with range (0, infinity)
@@ -590,7 +590,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @return True, if succeeded
 		 * @see Geometry::Homography::similarityMatrix().
 		 */
-		static bool similarityMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& similarity, const unsigned int testCandidates = 4u, const unsigned int iterations = 20u, const Scalar squarePixelErrorThreshold = Scalar(9), Indices32* usedIndices = nullptr, Worker* worker = nullptr);
+		static bool similarityMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& right_S_left, const unsigned int testCandidates = 4u, const unsigned int iterations = 20u, const Scalar squarePixelErrorThreshold = Scalar(9), Indices32* usedIndices = nullptr, Worker* worker = nullptr);
 
 		/**
 		 * Determines the 6-DOF object transformation between world and object so that the transformation fits with two observations in two images (left and right stereo image).
@@ -652,7 +652,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param imagePointAccessor The accessor providing the 2D image points, each corresponding to one object point, at least four
 		 * @param randomGenerator A random generator object
 		 * @param useDistortionParameters True, to use the distortion parameters of the camera profile; False, otherwise
-		 * @param pose Resulting pose
+		 * @param world_T_camera Resulting camera pose
 		 * @param zoom Resulting zoom factor
 		 * @param maxPositionOffset Optional maximal position offset between initial and final pose for three axis
 		 * @param maxOrientationOffset Optional maximal orientation offset between initial and final pose in radian angle
@@ -665,7 +665,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param weights Optional weights for each point correspondence
 		 * @return True, if succeeded
 		 */
-		static bool p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initialZoom, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, Scalar& zoom, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr, const Scalar* weights = nullptr);
+		static bool p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initialZoom, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, Scalar& zoom, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences = 5u, const bool refine = true, const unsigned int iterations = 20u, const Scalar sqrPixelErrorThreshold = Scalar(5 * 5), Indices32* usedIndices = nullptr, Scalar* sqrAccuracy = nullptr, const Scalar* weights = nullptr);
 
 		/**
 		 * Calculates the geometry transformation between two images transforming the given image points between two images.
@@ -754,7 +754,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param imagePointsPerPose Image points per view (at least 3 views and at least 6 point correspondences)
 		 * @param views Count of views
 		 * @param randomGenerator Random generator object to be used for creating random numbers
-		 * @param posesIF Resulting camera projection matrices per view (inverted flipped)
+		 * @param flippedCameras_T_world Resulting camera projection matrices per view (inverted flipped)
 		 * @param squarePixelErrorThreshold Maximal square pixel error of a valid projection of a 3D point onto the 2D image plane, with range (0, infinity)
 		 * @param objectPointsIF Optional vector which will receive the object points of the image point correspondences, if defined
 		 * @param usedIndices Optional vector which will receive the indices of the used image correspondences, if defined
@@ -764,7 +764,7 @@ class OCEAN_GEOMETRY_EXPORT RANSAC
 		 * @param numberIterations Number of iterations to be applied
 		 * @see Geometry::MultipleViewGeometry::projectiveReconstructionFrom6PointsIF().
 		 */
-		static void projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAccessor<Vectors2>* imagePointsPerPose, const size_t views, RandomGenerator* randomGenerator, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const Scalar squarePixelErrorThreshold, NonconstArrayAccessor<Vector3>* objectPointsIF, Indices32* usedIndices, Scalar* minSquareErrors, Lock* lock, const unsigned int firstIteration, const unsigned int numberIterations);
+		static void projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAccessor<Vectors2>* imagePointsPerPose, const size_t views, RandomGenerator* randomGenerator, NonconstIndexedAccessor<HomogenousMatrix4>* flippedCameras_T_world, const Scalar squarePixelErrorThreshold, NonconstArrayAccessor<Vector3>* objectPointsIF, Indices32* usedIndices, Scalar* minSquareErrors, Lock* lock, const unsigned int firstIteration, const unsigned int numberIterations);
 
 		/**
 		 * Selects random indices from a given vector of indices.
@@ -1032,11 +1032,11 @@ bool RANSAC::homographyMatrixForNonBijectiveCorrespondences(const Vector2* leftI
 	return true;
 }
 
-inline bool RANSAC::p3p(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
+inline bool RANSAC::p3p(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
 {
 	const AnyCameraPinhole anyCameraPinhole(PinholeCamera(pinholeCamera, useDistortionParameters));
 
-	return p3p(nullptr, anyCameraPinhole, objectPointAccessor, imagePointAccessor, randomGenerator, pose, nullptr, nullptr, minimalValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
+	return p3p(nullptr, anyCameraPinhole, objectPointAccessor, imagePointAccessor, randomGenerator, world_T_camera, nullptr, nullptr, minimalValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
 }
 
 inline bool RANSAC::p3p(const HomogenousMatrix4& world_T_roughCamera, const AnyCamera& camera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_camera, const Vector3& maxPositionOffset, const Scalar maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
@@ -1044,22 +1044,22 @@ inline bool RANSAC::p3p(const HomogenousMatrix4& world_T_roughCamera, const AnyC
 	return p3p(&world_T_roughCamera, camera, objectPointAccessor, imagePointAccessor, randomGenerator, world_T_camera, &maxPositionOffset, &maxOrientationOffset, minValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
 }
 
-inline bool RANSAC::p3p(const HomogenousMatrix4& initialPose, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, const Vector3& maxPositionOffset, const Scalar maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
+inline bool RANSAC::p3p(const HomogenousMatrix4& initialPose, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, const Vector3& maxPositionOffset, const Scalar maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
 {
 	const AnyCameraPinhole anyCameraPinhole(PinholeCamera(pinholeCamera, useDistortionParameters));
 
-	return p3p(&initialPose, anyCameraPinhole, objectPointAccessor, imagePointAccessor, randomGenerator, pose, &maxPositionOffset, &maxOrientationOffset, minValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
+	return p3p(&initialPose, anyCameraPinhole, objectPointAccessor, imagePointAccessor, randomGenerator, world_T_camera, &maxPositionOffset, &maxOrientationOffset, minValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
 }
 
-inline bool RANSAC::p3pZoom(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, Scalar& zoom, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
+inline bool RANSAC::p3pZoom(const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, Scalar& zoom, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
 {
-	return p3pZoom(nullptr, nullptr, pinholeCamera, objectPointAccessor, imagePointAccessor, randomGenerator, useDistortionParameters, pose, zoom, nullptr, nullptr, minimalValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
+	return p3pZoom(nullptr, nullptr, pinholeCamera, objectPointAccessor, imagePointAccessor, randomGenerator, useDistortionParameters, world_T_camera, zoom, nullptr, nullptr, minimalValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
 }
 
-inline bool RANSAC::p3pZoom(const HomogenousMatrix4& initialPose, const Scalar initialZoom, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, Scalar& zoom, const Vector3& maxPositionOffset, const Scalar maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
+inline bool RANSAC::p3pZoom(const HomogenousMatrix4& initialPose, const Scalar initialZoom, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, Scalar& zoom, const Vector3& maxPositionOffset, const Scalar maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
 {
 	ocean_assert(initialZoom > Numeric::eps());
-	return p3pZoom(&initialPose, &initialZoom, pinholeCamera, objectPointAccessor, imagePointAccessor, randomGenerator, useDistortionParameters, pose, zoom, &maxPositionOffset, &maxOrientationOffset, minValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
+	return p3pZoom(&initialPose, &initialZoom, pinholeCamera, objectPointAccessor, imagePointAccessor, randomGenerator, useDistortionParameters, world_T_camera, zoom, &maxPositionOffset, &maxOrientationOffset, minValidCorrespondences, refine, iterations, sqrPixelErrorThreshold, usedIndices, sqrAccuracy, weights);
 }
 
 inline bool RANSAC::objectPoint(const AnyCamera& camera, const ConstIndexedAccessor<HomogenousMatrix4>& world_T_cameras, const ConstIndexedAccessor<Vector2>& imagePoints, RandomGenerator& randomGenerator, Vector3& objectPoint, const unsigned int iterations, const Scalar maximalSqrError, const unsigned int minValidCorrespondences, const bool onlyFrontObjectPoint, const Estimator::EstimatorType refinementEstimator, Scalar* finalRobustError, Indices32* usedIndices)

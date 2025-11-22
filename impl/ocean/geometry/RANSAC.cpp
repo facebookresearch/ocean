@@ -178,17 +178,17 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 
 			Scalar sqrErrors = 0;
 
-			const HomogenousMatrix4 flippedCandidateCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_candidateCamera));
+			const HomogenousMatrix4 flippedCandidateCamera_T_world(Camera::standard2InvertedFlipped(world_T_candidateCamera));
 
-			ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCandidateCamera_T_world, objectPoints[index0]));
-			ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCandidateCamera_T_world, objectPoints[index1]));
-			ocean_assert(AnyCamera::isObjectPointInFrontIF(flippedCandidateCamera_T_world, objectPoints[index2]));
+			ocean_assert(Camera::isObjectPointInFrontIF(flippedCandidateCamera_T_world, objectPoints[index0]));
+			ocean_assert(Camera::isObjectPointInFrontIF(flippedCandidateCamera_T_world, objectPoints[index1]));
+			ocean_assert(Camera::isObjectPointInFrontIF(flippedCandidateCamera_T_world, objectPoints[index2]));
 
 			// now we test each 2D/3D point correspondences and check whether the accuracy of the pose is good enough, we can stop if we cannot reach a better configuration than we have already
 			for (unsigned int c = 0u; indices.size() + (correspondences - c) >= bestIndices.size() && c < correspondences; ++c)
 			{
 				// we accept only object points lying in front of the camera
-				if (AnyCamera::isObjectPointInFrontIF(flippedCandidateCamera_T_world, objectPoints[c]))
+				if (Camera::isObjectPointInFrontIF(flippedCandidateCamera_T_world, objectPoints[c]))
 				{
 					const Vector2 projectedImagePoint(anyCamera.projectToImageIF(flippedCandidateCamera_T_world, objectPoints[c]));
 					const Vector2& imagePoint = imagePoints[c];
@@ -223,7 +223,7 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 		}
 	}
 
-	if (bestIndices.size() < minimalValidCorrespondences)
+	if (bestIndices.empty() || bestIndices.size() < minimalValidCorrespondences)
 	{
 		return false;
 	}
@@ -232,7 +232,7 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 
 	if (sqrAccuracy != nullptr)
 	{
-		*sqrAccuracy = bestSqrErrors /= Scalar(bestIndices.size());
+		*sqrAccuracy = bestSqrErrors / Scalar(bestIndices.size());
 	}
 
 	// non linear least square refinement step
@@ -248,13 +248,13 @@ bool RANSAC::p3p(const AnyCamera& anyCamera, const ConstIndexedAccessor<Vector3>
 		// check whether we need to determine the indices for the optimized pose followed by another final optimization step
 		if (usedIndices != nullptr && bestIndices.size() != correspondences)
 		{
-			const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
+			const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
 
 			bestIndices.clear();
 			for (unsigned int c = 0; c < correspondences; ++c)
 			{
 				// we accept only object points lying in front of the camera
-				if (PinholeCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[c]))
+				if (Camera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[c]))
 				{
 					if (imagePoints[c].sqrDistance(anyCamera.projectToImageIF(flippedCamera_T_world, objectPoints[c])) <= sqrPixelErrorThreshold)
 				 	{
@@ -306,7 +306,7 @@ bool RANSAC::objectPoint(const ConstIndexedAccessor<const AnyCamera*>& cameras, 
 	for (size_t n = 0; n < world_T_cameras.size(); ++n)
 	{
 		rays[n] = cameras[n]->ray(imagePoints[n], world_T_cameras[n]);
-		flippedCamera_T_world[n] = AnyCamera::standard2InvertedFlipped(world_T_cameras[n]);
+		flippedCamera_T_world[n] = Camera::standard2InvertedFlipped(world_T_cameras[n]);
 	}
 
 	Scalar bestSqrError = Numeric::maxValue();
@@ -331,7 +331,7 @@ bool RANSAC::objectPoint(const ConstIndexedAccessor<const AnyCamera*>& cameras, 
 
 			for (size_t n = 0; n < flippedCamera_T_world.size(); ++n)
 			{
-				if (!onlyFrontObjectPoint || AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world[n], candidate))
+				if (!onlyFrontObjectPoint || Camera::isObjectPointInFrontIF(flippedCamera_T_world[n], candidate))
 				{
 					const Scalar localSqrError = imagePoints[n].sqrDistance(cameras[n]->projectToImageIF(flippedCamera_T_world[n], candidate));
 
@@ -358,7 +358,7 @@ bool RANSAC::objectPoint(const ConstIndexedAccessor<const AnyCamera*>& cameras, 
 		return false;
 	}
 
-	if (finalRobustError)
+	if (finalRobustError != nullptr)
 	{
 		*finalRobustError = bestSqrError;
 	}
@@ -410,7 +410,7 @@ bool RANSAC::objectPoint(const AnyCamera& camera, const ConstIndexedAccessor<Squ
 
 	for (size_t n = 0; n < world_R_cameras.size(); ++n)
 	{
-		flippedCameras_R_world.emplace_back(PinholeCamera::standard2InvertedFlipped(world_R_cameras[n]));
+		flippedCameras_R_world.emplace_back(Camera::standard2InvertedFlipped(world_R_cameras[n]));
 	}
 
 	Scalar bestError = Numeric::maxValue();
@@ -432,7 +432,7 @@ bool RANSAC::objectPoint(const AnyCamera& camera, const ConstIndexedAccessor<Squ
 
 		for (size_t n = 0; n < flippedCameras_R_world.size(); ++n)
 		{
-			if (!onlyFrontObjectPoint || AnyCamera::isObjectPointInFrontIF(flippedCameras_R_world[n], candidateObjectPoint))
+			if (!onlyFrontObjectPoint || Camera::isObjectPointInFrontIF(flippedCameras_R_world[n], candidateObjectPoint))
 			{
 				const Scalar localError = imagePoints[n].sqrDistance(camera.projectToImageIF(HomogenousMatrix4(flippedCameras_R_world[n]), candidateObjectPoint));
 
@@ -1146,7 +1146,7 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vec
 
 		// the determination of the orientation is based on two point correspondences
 		// we take two rays (targetVectors) between two individual 3D object points and the camera's point of projection
-		// further we take two viewing rays (referenceVectors) of the corresponding image points (starting at the camera's point of projection and intersecting the image plane at the positions of the image points) for a default extrinsic camera matrix
+		// further we take two viewing rays (referenceVectors) of the corresponding image points (starting at the camera's point of projection and intersecting the image plane at the positions of the image points) for a default camera pose
 		// we determine the orientation of the camera by determination of the rotation between the two pairs of rays
 
 		Vector3 targetVector0(objectPoints[index0]);
@@ -1202,7 +1202,7 @@ bool RANSAC::orientation(const AnyCamera& camera, const ConstIndexedAccessor<Vec
 
 		indices.clear();
 
-		const HomogenousMatrix4 flippedCandidateCamera_T_world(AnyCamera::standard2InvertedFlipped(HomogenousMatrix4(world_R_candidateCamera)));
+		const HomogenousMatrix4 flippedCandidateCamera_T_world(Camera::standard2InvertedFlipped(HomogenousMatrix4(world_R_candidateCamera)));
 
 		Scalar error = 0;
 		unsigned int validCorrespondences = 0u;
@@ -1342,7 +1342,7 @@ bool RANSAC::fundamentalMatrix(const Vector2* leftImagePoints, const Vector2* ri
 	return true;
 }
 
-bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, HomogenousMatrix4& transformation, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, const Box3& maxTranslation, const Scalar maxRotation, Indices32* usedIndices)
+bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamera& rightCamera, const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, HomogenousMatrix4& leftCamera_T_rightCamera, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, const Box3& maxTranslation, const Scalar maxRotation, Indices32* usedIndices)
 {
 	ocean_assert(squarePixelErrorThreshold > 0);
 	ocean_assert(leftImagePoints && rightImagePoints);
@@ -1361,7 +1361,7 @@ bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamer
 	unsigned int maxValidCorrespondences = testCandidates - 1u;
 	Scalar minSquareErrors = Numeric::maxValue();
 
-	HomogenousMatrix4 bestTransformation;
+	HomogenousMatrix4 bestLeftCamera_T_bestRightCamera;
 
 	const Box2 boundingBoxLeft(leftImagePoints, correspondences);
 	ocean_assert(boundingBoxLeft);
@@ -1372,6 +1372,11 @@ bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamer
 	const SpatialDistribution::DistributionArray indexArray(SpatialDistribution::distributeToArray(leftImagePoints, correspondences, boundingBoxLeft.left(), boundingBoxLeft.top(), boundingBoxLeft.width(), boundingBoxLeft.height(), 4u, 10u, 10u, horizontalBins, verticalBins));
 
 	const unsigned int arrayBins = horizontalBins * verticalBins;
+
+	if (arrayBins == 0u)
+	{
+		return false;
+	}
 
 	for (unsigned int i = 0; i < iterations; ++i)
 	{
@@ -1402,11 +1407,11 @@ bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamer
 		{
 			const SquareMatrix3 candidateEssential(EpipolarGeometry::fundamental2essential(candidateFundamental, leftCamera, rightCamera));
 
-			HomogenousMatrix4 candidateTransformation;
-			if (EpipolarGeometry::factorizeEssential(candidateEssential, leftCamera, rightCamera, permutationLeftImagePoints.data(), permutationRightImagePoints.data(), permutationLeftImagePoints.size(), candidateTransformation) == permutationLeftImagePoints.size())
+			HomogenousMatrix4 candidateLeftCamera_T_candidateRightCamera;
+			if (EpipolarGeometry::factorizeEssential(candidateEssential, leftCamera, rightCamera, permutationLeftImagePoints.data(), permutationRightImagePoints.data(), permutationLeftImagePoints.size(), candidateLeftCamera_T_candidateRightCamera) == permutationLeftImagePoints.size())
 			{
-				const Scalar candidateRotationAngle = candidateTransformation.rotation().angle();
-				const Vector3 candidateTranslation = candidateTransformation.translation();
+				const Scalar candidateRotationAngle = candidateLeftCamera_T_candidateRightCamera.rotation().angle();
+				const Vector3 candidateTranslation = candidateLeftCamera_T_candidateRightCamera.translation();
 
 				if ((!maxTranslation.isValid() || maxTranslation.isInside(candidateTranslation)) && candidateRotationAngle < maxRotation)
 				{
@@ -1415,26 +1420,26 @@ bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamer
 					Indices32 indices;
 					indices.reserve(correspondences);
 
-					const HomogenousMatrix4 leftTransformation(true);
-					const HomogenousMatrix4& rightTransformation = candidateTransformation;
+					const HomogenousMatrix4 world_T_leftCamera(true);
+					const HomogenousMatrix4& world_T_rightCamera = candidateLeftCamera_T_candidateRightCamera;
 
-					const HomogenousMatrix4 invertedFlippedLeft(PinholeCamera::standard2InvertedFlipped(leftTransformation));
-					const HomogenousMatrix4 invertedFlippedRight(PinholeCamera::standard2InvertedFlipped(rightTransformation));
+					const HomogenousMatrix4 flippedLeftCamera_T_world(Camera::standard2InvertedFlipped(world_T_leftCamera));
+					const HomogenousMatrix4 flippedRightCamera_T_world(Camera::standard2InvertedFlipped(world_T_rightCamera));
 
 					for (unsigned int n = 0u; n < correspondences; ++n)
 					{
 						const Vector2& leftImagePoint = leftImagePoints[n];
 						const Vector2& rightImagePoint = rightImagePoints[n];
 
-						const Line3 leftRay(leftCamera.ray(leftImagePoint, leftTransformation));
-						const Line3 rightRay(rightCamera.ray(rightImagePoint, rightTransformation));
+						const Line3 leftRay(leftCamera.ray(leftImagePoint, world_T_leftCamera));
+						const Line3 rightRay(rightCamera.ray(rightImagePoint, world_T_rightCamera));
 
 						Vector3 center;
 						if (leftRay.nearestPoint(rightRay, center) && center.z() < 0)
 						{
 							// project the object point to both image planes
-							const Vector2 leftProjectedImagePoint = leftCamera.projectToImageIF<true>(invertedFlippedLeft, center, false);
-							const Vector2 rightProjectedImagePoint = rightCamera.projectToImageIF<true>(invertedFlippedRight, center, false);
+							const Vector2 leftProjectedImagePoint = leftCamera.projectToImageIF<true>(flippedLeftCamera_T_world, center, false);
+							const Vector2 rightProjectedImagePoint = rightCamera.projectToImageIF<true>(flippedRightCamera_T_world, center, false);
 
 							const Scalar leftSquareError = leftImagePoint.sqrDistance(leftProjectedImagePoint);
 							const Scalar rightSquareError = rightImagePoint.sqrDistance(rightProjectedImagePoint);
@@ -1453,7 +1458,7 @@ bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamer
 					{
 						minSquareErrors = squareErrors;
 						maxValidCorrespondences = validCorrespondences;
-						bestTransformation = rightTransformation;
+						bestLeftCamera_T_bestRightCamera = world_T_rightCamera;
 
 						*usedIndices = std::move(indices);
 					}
@@ -1467,7 +1472,7 @@ bool RANSAC::extrinsicMatrix(const PinholeCamera& leftCamera, const PinholeCamer
 		return false;
 	}
 
-	transformation = bestTransformation;
+	leftCamera_T_rightCamera = bestLeftCamera_T_bestRightCamera;
 	return true;
 }
 
@@ -1555,7 +1560,7 @@ bool RANSAC::homographyMatrices(const Vector2* leftImagePoints, const Vector2* r
 	return true;
 }
 
-bool RANSAC::projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const unsigned int iterations, const Scalar squarePixelErrorThreshold, NonconstArrayAccessor<Vector3>* objectPointsIF, Indices32* usedIndices, Worker* worker)
+bool RANSAC::projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<Vectors2>& imagePointsPerPose, NonconstIndexedAccessor<HomogenousMatrix4>* flippedCameras_T_world, const unsigned int iterations, const Scalar squarePixelErrorThreshold, NonconstArrayAccessor<Vector3>* objectPointsIF, Indices32* usedIndices, Worker* worker)
 {
 	ocean_assert(squarePixelErrorThreshold > 0);
 	ocean_assert(imagePointsPerPose.size() > 2);
@@ -1573,10 +1578,10 @@ bool RANSAC::projectiveReconstructionFrom6PointsIF(const ConstIndexedAccessor<Ve
 	if (worker != nullptr)
 	{
 		Lock lock;
-		worker->executeFunction(Worker::Function::createStatic(&projectiveReconstructionFrom6PointsIFSubset, &imagePointsPerPose, imagePointsPerPose.size(), &randomGenerator, posesIF, squarePixelErrorThreshold, objectPointsIF, &indices, &minSquareErrors, (Lock*)&lock, 0u, 0u), 0u, iterations, 9u, 10u, 5u);
+		worker->executeFunction(Worker::Function::createStatic(&projectiveReconstructionFrom6PointsIFSubset, &imagePointsPerPose, imagePointsPerPose.size(), &randomGenerator, flippedCameras_T_world, squarePixelErrorThreshold, objectPointsIF, &indices, &minSquareErrors, (Lock*)&lock, 0u, 0u), 0u, iterations, 9u, 10u, 5u);
 	}
 	else
-		projectiveReconstructionFrom6PointsIFSubset(&imagePointsPerPose, imagePointsPerPose.size(), &randomGenerator, posesIF, squarePixelErrorThreshold, objectPointsIF, &indices, &minSquareErrors, nullptr, 0u, iterations);
+		projectiveReconstructionFrom6PointsIFSubset(&imagePointsPerPose, imagePointsPerPose.size(), &randomGenerator, flippedCameras_T_world, squarePixelErrorThreshold, objectPointsIF, &indices, &minSquareErrors, nullptr, 0u, iterations);
 
 	if (usedIndices != nullptr)
 	{
@@ -1701,7 +1706,7 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 
 	ObjectPointGroups finalObjectPointGroups;
 	ImagePointGroups finalImagePointGroups;
-	HomogenousMatrices4 finalExtrinsics;
+	HomogenousMatrices4 world_T_finalCameras;
 
 	ocean_assert(!usedIndices || usedIndices->empty());
 
@@ -1712,8 +1717,8 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 		Vectors3& objectPoints = objectPointGroups[n];
 		Vectors2& imagePoints = imagePointGroups[n];
 
-		HomogenousMatrix4 roughPose;
-		const bool result = RANSAC::p3p(AnyCameraPinhole(finalCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, roughPose);
+		HomogenousMatrix4 world_T_roughCamera;
+		const bool result = RANSAC::p3p(AnyCameraPinhole(finalCamera), ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), randomGenerator, world_T_roughCamera);
 
 		ocean_assert(result);
 		if (!result)
@@ -1721,8 +1726,8 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 			continue;
 		}
 
-		HomogenousMatrix4 pose;
-		if (!NonLinearOptimizationPose::optimizePose(finalCamera, roughPose, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), true, pose))
+		HomogenousMatrix4 world_T_camera;
+		if (!NonLinearOptimizationPose::optimizePose(finalCamera, world_T_roughCamera, ConstArrayAccessor<Vector3>(objectPoints), ConstArrayAccessor<Vector2>(imagePoints), true, world_T_camera))
 		{
 			ocean_assert(false && "Should always succeed!");
 			continue;
@@ -1731,13 +1736,13 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 		Scalar averageSqrError = 0;
 		Scalar minimalSqrError = Numeric::maxValue();
 		Scalar maximalSqrError = 0;
-		Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(pose, finalCamera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints), true, averageSqrError, minimalSqrError, maximalSqrError);
+		Error::determinePoseError<ConstTemplateArrayAccessor<Vector3>, ConstTemplateArrayAccessor<Vector2>, true>(world_T_camera, finalCamera, ConstTemplateArrayAccessor<Vector3>(objectPoints), ConstTemplateArrayAccessor<Vector2>(imagePoints), true, averageSqrError, minimalSqrError, maximalSqrError);
 
 		if (averageSqrError < 4 * 4 && maximalSqrError < 8 * 8)
 		{
 			finalObjectPointGroups.push_back(std::move(objectPoints));
 			finalImagePointGroups.push_back(std::move(imagePoints));
-			finalExtrinsics.push_back(pose);
+			world_T_finalCameras.push_back(world_T_camera);
 
 			if (usedIndices != nullptr)
 			{
@@ -1746,7 +1751,7 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 		}
 	}
 
-	if (finalExtrinsics.empty())
+	if (world_T_finalCameras.empty())
 	{
 		return false;
 	}
@@ -1755,7 +1760,7 @@ bool RANSAC::determineCameraCalibrationPlanar(const unsigned int width, const un
 	Scalar initialSqrError = 0;
 	Scalar finalSqrError = 0;
 
-	if (!NonLinearOptimizationCamera::optimizeCameraPoses(finalCamera, ConstArrayAccessor<HomogenousMatrix4>(finalExtrinsics), ConstArrayAccessor<Vectors3>(finalObjectPointGroups), ConstArrayAccessor<Vectors2>(finalImagePointGroups), finalOptimizedCamera, nullptr, 50u, Estimator::ET_SQUARE, Scalar(0.001), 10, true, &initialSqrError, &finalSqrError))
+	if (!NonLinearOptimizationCamera::optimizeCameraPoses(finalCamera, ConstArrayAccessor<HomogenousMatrix4>(world_T_finalCameras), ConstArrayAccessor<Vectors3>(finalObjectPointGroups), ConstArrayAccessor<Vectors2>(finalImagePointGroups), finalOptimizedCamera, nullptr, 50u, Estimator::ET_SQUARE, Scalar(0.001), 10, true, &initialSqrError, &finalSqrError))
 	{
 		return false;
 	}
@@ -1791,14 +1796,14 @@ bool RANSAC::affineMatrix(const Vector2* leftImagePoints, const Vector2* rightIm
 	return geometricTransform(Geometry::Homography::affineMatrix, leftImagePoints, rightImagePoints, correspondences, randomGenerator, right_A_left, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
 }
 
-bool RANSAC::similarityMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& similarity, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
+bool RANSAC::similarityMatrix(const Vector2* leftImagePoints, const Vector2* rightImagePoints, const size_t correspondences, RandomGenerator& randomGenerator, SquareMatrix3& right_S_left, const unsigned int testCandidates, const unsigned int iterations, const Scalar squarePixelErrorThreshold, Indices32* usedIndices, Worker* worker)
 {
 	if (testCandidates < 2u || correspondences < testCandidates)
 	{
 		return false;
 	}
 
-	return geometricTransform(Geometry::Homography::similarityMatrix, leftImagePoints, rightImagePoints, correspondences, randomGenerator, similarity, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
+	return geometricTransform(Geometry::Homography::similarityMatrix, leftImagePoints, rightImagePoints, correspondences, randomGenerator, right_S_left, testCandidates, iterations, squarePixelErrorThreshold, usedIndices, worker);
 }
 
 bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCamera& anyCameraB, const HomogenousMatrix4& world_T_cameraA, const HomogenousMatrix4& world_T_cameraB, const ConstIndexedAccessor<Vector3>& objectPointsA, const ConstIndexedAccessor<Vector3>& objectPointsB, const ConstIndexedAccessor<Vector2>& imagePointsA, const ConstIndexedAccessor<Vector2>& imagePointsB, RandomGenerator& randomGenerator, HomogenousMatrix4& world_T_object, const unsigned int minimalValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndicesA, Indices32* usedIndicesB, Scalar* sqrAccuracy, const bool allowMonoObservation)
@@ -1841,11 +1846,11 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 	Vector2 permutationImagePoints[3];
 
 	unsigned int numberPoses = 0u;
-	HomogenousMatrix4 cameraPoses_object_T_camera[4];
+	HomogenousMatrix4 object_T_camera[4];
 	HomogenousMatrix4 flippedCamerasA_T_object[4];
 	HomogenousMatrix4 flippedCamerasB_T_object[4];
 
-	HomogenousMatrix4 internal_world_T_object;
+	HomogenousMatrix4 world_T_internalObject;
 
 	Scalar bestSqrErrors = Numeric::maxValue();
 
@@ -1873,12 +1878,12 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 			permutationImagePoints[1] = memoryImagePointsA[index1];
 			permutationImagePoints[2] = memoryImagePointsA[index2];
 
-			numberPoses = P3P::poses(anyCameraA, permutationObjectPoints, permutationImagePoints, cameraPoses_object_T_camera);
+			numberPoses = P3P::poses(anyCameraA, permutationObjectPoints, permutationImagePoints, object_T_camera);
 
 			for (unsigned int n = 0u; n < numberPoses; ++n)
 			{
-				flippedCamerasA_T_object[n] = PinholeCamera::standard2InvertedFlipped(cameraPoses_object_T_camera[n]);
-				flippedCamerasB_T_object[n] = PinholeCamera::standard2InvertedFlipped(cameraPoses_object_T_camera[n] * cameraA_T_cameraB);
+				flippedCamerasA_T_object[n] = Camera::standard2InvertedFlipped(object_T_camera[n]);
+				flippedCamerasB_T_object[n] = Camera::standard2InvertedFlipped(object_T_camera[n] * cameraA_T_cameraB);
 			}
 		}
 		else
@@ -1899,12 +1904,12 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 			permutationImagePoints[1] = memoryImagePointsB[index1];
 			permutationImagePoints[2] = memoryImagePointsB[index2];
 
-			numberPoses = P3P::poses(anyCameraB, permutationObjectPoints, permutationImagePoints, cameraPoses_object_T_camera);
+			numberPoses = P3P::poses(anyCameraB, permutationObjectPoints, permutationImagePoints, object_T_camera);
 
 			for (unsigned int n = 0u; n < numberPoses; ++n)
 			{
-				flippedCamerasB_T_object[n] = PinholeCamera::standard2InvertedFlipped(cameraPoses_object_T_camera[n]);
-				flippedCamerasA_T_object[n] = PinholeCamera::standard2InvertedFlipped(cameraPoses_object_T_camera[n] * cameraB_T_cameraA);
+				flippedCamerasB_T_object[n] = Camera::standard2InvertedFlipped(object_T_camera[n]);
+				flippedCamerasA_T_object[n] = Camera::standard2InvertedFlipped(object_T_camera[n] * cameraB_T_cameraA);
 			}
 		}
 
@@ -1927,7 +1932,7 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 			for (unsigned int nCandidateA = 0u; indicesA.size() + (correspondencesA - nCandidateA) + correspondencesB >= bestCorrespondences && nCandidateA < correspondencesA; ++nCandidateA)
 			{
 				// we accept only object points lying in front of the camera
-				if (PinholeCamera::isObjectPointInFrontIF(flippedCameraA_T_object, memoryObjectPointsA[nCandidateA]))
+				if (Camera::isObjectPointInFrontIF(flippedCameraA_T_object, memoryObjectPointsA[nCandidateA]))
 				{
 					const Vector2 projectedImagePoint(anyCameraA.projectToImageIF(flippedCameraA_T_object, memoryObjectPointsA[nCandidateA]));
 					const Vector2& imagePoint = memoryImagePointsA[nCandidateA];
@@ -1947,7 +1952,7 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 			for (unsigned int nCandidateB = 0u; indicesA.size() + indicesB.size() + (correspondencesB - nCandidateB) >= bestCorrespondences && nCandidateB < correspondencesB; ++nCandidateB)
 			{
 				// we accept only object points lying in front of the camera
-				if (PinholeCamera::isObjectPointInFrontIF(flippedCameraB_T_object, memoryObjectPointsB[nCandidateB]))
+				if (Camera::isObjectPointInFrontIF(flippedCameraB_T_object, memoryObjectPointsB[nCandidateB]))
 				{
 					const Vector2 projectedImagePoint(anyCameraB.projectToImageIF(flippedCameraB_T_object, memoryObjectPointsB[nCandidateB]));
 					const Vector2& imagePoint = memoryImagePointsB[nCandidateB];
@@ -1968,7 +1973,7 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 				{
 					bestSqrErrors = sqrErrors;
 
-					internal_world_T_object = world_T_cameraA * PinholeCamera::flippedTransformationLeftSide(flippedCameraA_T_object);
+					world_T_internalObject = world_T_cameraA * Camera::flippedTransformationLeftSide(flippedCameraA_T_object);
 
 					std::swap(bestIndicesA, indicesA);
 					std::swap(bestIndicesB, indicesB);
@@ -1994,7 +1999,7 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 		return false;
 	}
 
-	world_T_object = internal_world_T_object;
+	world_T_object = world_T_internalObject;
 
 	if (sqrAccuracy)
 	{
@@ -2020,26 +2025,26 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 
 			if (bestIndicesA.empty())
 			{
-				flippedCameras_T_world = HomogenousMatrices4(1, PinholeCamera::standard2InvertedFlipped(world_T_cameraB));
+				flippedCameras_T_world = HomogenousMatrices4(1, Camera::standard2InvertedFlipped(world_T_cameraB));
 				objectPointGroups = std::vector<Vectors3>(1, Subset::subset(memoryObjectPointsB.data(), memoryObjectPointsB.size(), bestIndicesB));
 				imagePointGroups = std::vector<Vectors2>(1, Subset::subset(memoryImagePointsB.data(), memoryImagePointsB.size(), bestIndicesB));
 			}
 			else
 			{
-				flippedCameras_T_world = HomogenousMatrices4(1, PinholeCamera::standard2InvertedFlipped(world_T_cameraA));
+				flippedCameras_T_world = HomogenousMatrices4(1, Camera::standard2InvertedFlipped(world_T_cameraA));
 				objectPointGroups = std::vector<Vectors3>(1, Subset::subset(memoryObjectPointsA.data(), memoryObjectPointsA.size(), bestIndicesA));
 				imagePointGroups = std::vector<Vectors2>(1, Subset::subset(memoryImagePointsA.data(), memoryImagePointsA.size(), bestIndicesA));
 			}
 
-			if (!NonLinearOptimizationTransformation::optimizeObjectTransformationIF(anyCamera, flippedCameras_T_world, internal_world_T_object, objectPointGroups, imagePointGroups, world_T_object, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy))
+			if (!NonLinearOptimizationTransformation::optimizeObjectTransformationIF(anyCamera, flippedCameras_T_world, world_T_internalObject, objectPointGroups, imagePointGroups, world_T_object, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy))
 			{
 				return false;
 			}
 		}
 		else
 		{
-			const HomogenousMatrices4 flippedCamerasA_T_world(1, PinholeCamera::standard2InvertedFlipped(world_T_cameraA));
-			const HomogenousMatrices4 flippedCamerasB_T_world(1, PinholeCamera::standard2InvertedFlipped(world_T_cameraB));
+			const HomogenousMatrices4 flippedCamerasA_T_world(1, Camera::standard2InvertedFlipped(world_T_cameraA));
+			const HomogenousMatrices4 flippedCamerasB_T_world(1, Camera::standard2InvertedFlipped(world_T_cameraB));
 
 			const std::vector<Vectors3> objectPointGroupsA(1, Subset::subset(memoryObjectPointsA.data(), memoryObjectPointsA.size(), bestIndicesA));
 			const std::vector<Vectors3> objectPointGroupsB(1, Subset::subset(memoryObjectPointsB.data(), memoryObjectPointsB.size(), bestIndicesB));
@@ -2047,7 +2052,7 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 			const std::vector<Vectors2> imagePointGroupsA(1, Subset::subset(memoryImagePointsA.data(), memoryImagePointsA.size(), bestIndicesA));
 			const std::vector<Vectors2> imagePointGroupsB(1, Subset::subset(memoryImagePointsB.data(), memoryImagePointsB.size(), bestIndicesB));
 
-			if (!NonLinearOptimizationTransformation::optimizeObjectTransformationStereoIF(anyCameraA, anyCameraB, flippedCamerasA_T_world, flippedCamerasB_T_world, internal_world_T_object, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, world_T_object, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy))
+			if (!NonLinearOptimizationTransformation::optimizeObjectTransformationStereoIF(anyCameraA, anyCameraB, flippedCamerasA_T_world, flippedCamerasB_T_world, world_T_internalObject, objectPointGroupsA, objectPointGroupsB, imagePointGroupsA, imagePointGroupsB, world_T_object, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy))
 			{
 				return false;
 			}
@@ -2057,7 +2062,7 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 
 		if (usedIndicesA)
 		{
-			const HomogenousMatrix4 flippedCameraA_T_object(PinholeCamera::flippedTransformationLeftSide(world_T_cameraA.inverted() * world_T_object));
+			const HomogenousMatrix4 flippedCameraA_T_object(Camera::flippedTransformationLeftSide(world_T_cameraA.inverted() * world_T_object));
 
 			bestIndicesA.clear();
 
@@ -2067,7 +2072,7 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 				const Vector2& imagePoint = memoryImagePointsA[nCandidateA];
 
 				// we accept only object points lying in front of the camera
-				if (PinholeCamera::isObjectPointInFrontIF(flippedCameraA_T_object, objectPoint) && imagePoint.sqrDistance(anyCameraA.projectToImageIF(flippedCameraA_T_object, objectPoint)) <= sqrPixelErrorThreshold)
+				if (Camera::isObjectPointInFrontIF(flippedCameraA_T_object, objectPoint) && imagePoint.sqrDistance(anyCameraA.projectToImageIF(flippedCameraA_T_object, objectPoint)) <= sqrPixelErrorThreshold)
 				{
 					bestIndicesA.push_back(nCandidateA);
 				}
@@ -2076,7 +2081,7 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 
 		if (usedIndicesB)
 		{
-			const HomogenousMatrix4 flippedCameraB_T_object(PinholeCamera::flippedTransformationLeftSide(world_T_cameraB.inverted() * world_T_object));
+			const HomogenousMatrix4 flippedCameraB_T_object(Camera::flippedTransformationLeftSide(world_T_cameraB.inverted() * world_T_object));
 
 			bestIndicesB.clear();
 
@@ -2086,7 +2091,7 @@ bool RANSAC::objectTransformationStereo(const AnyCamera& anyCameraA, const AnyCa
 				const Vector2& imagePoint = memoryImagePointsB[nCandidateB];
 
 				// we accept only object points lying in front of the camera
-				if (PinholeCamera::isObjectPointInFrontIF(flippedCameraB_T_object, objectPoint) && imagePoint.sqrDistance(anyCameraB.projectToImageIF(flippedCameraB_T_object, objectPoint)) <= sqrPixelErrorThreshold)
+				if (Camera::isObjectPointInFrontIF(flippedCameraB_T_object, objectPoint) && imagePoint.sqrDistance(anyCameraB.projectToImageIF(flippedCameraB_T_object, objectPoint)) <= sqrPixelErrorThreshold)
 				{
 					bestIndicesB.push_back(nCandidateB);
 				}
@@ -2175,13 +2180,13 @@ bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& 
 
 			Scalar sqrErrors = 0;
 
-			const HomogenousMatrix4 candidateFlippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_candidateCameras[n]));
+			const HomogenousMatrix4 candidateFlippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_candidateCameras[n]));
 
 			// now we test each 2D/3D point correspondences and check whether the accuracy of the pose is good enough
 			for (unsigned int c = 0u; c < correspondences; ++c)
 			{
 				// we accept only object points lying in front of the camera
-				if (AnyCamera::isObjectPointInFrontIF(candidateFlippedCamera_T_world, objectPoints[c]))
+				if (Camera::isObjectPointInFrontIF(candidateFlippedCamera_T_world, objectPoints[c]))
 				{
 					const Vector2 projectedImagePoint(camera.projectToImageIF(candidateFlippedCamera_T_world, objectPoints[c]));
 					const Vector2& imagePoint = imagePoints[c];
@@ -2209,7 +2214,7 @@ bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& 
 		}
 	}
 
-	if (bestIndices.size() < minValidCorrespondences)
+	if (bestIndices.empty() || bestIndices.size() < minValidCorrespondences)
 	{
 		return false;
 	}
@@ -2218,7 +2223,7 @@ bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& 
 
 	if (sqrAccuracy != nullptr)
 	{
-		*sqrAccuracy = bestSqrErrors /= Scalar(bestIndices.size());
+		*sqrAccuracy = bestSqrErrors / Scalar(bestIndices.size());
 	}
 
 	// non linear least square refinement step
@@ -2247,14 +2252,14 @@ bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& 
 		// check whether we need to determine the indices for the optimized pose followed by another final optimization step
 		if (usedIndices != nullptr && bestIndices.size() != correspondences)
 		{
-			const HomogenousMatrix4 flippedCamera_T_world(PinholeCamera::standard2InvertedFlipped(world_T_camera));
+			const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
 
 			bestIndices.clear();
 
 			for (unsigned int c = 0u; c < correspondences; ++c)
 			{
 				// we accept only object points lying in front of the camera
-				if (AnyCamera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[c]))
+				if (Camera::isObjectPointInFrontIF(flippedCamera_T_world, objectPoints[c]))
 				{
 					const Vector2 projectedImagePoint(camera.projectToImageIF(flippedCamera_T_world, objectPoints[c]));
 					const Vector2& imagePoint = imagePoints[c];
@@ -2298,7 +2303,7 @@ bool RANSAC::p3p(const HomogenousMatrix4* world_T_roughCamera, const AnyCamera& 
 	return true;
 }
 
-bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initialZoom, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& pose, Scalar& zoom, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
+bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initialZoom, const PinholeCamera& pinholeCamera, const ConstIndexedAccessor<Vector3>& objectPointAccessor, const ConstIndexedAccessor<Vector2>& imagePointAccessor, RandomGenerator& randomGenerator, const bool useDistortionParameters, HomogenousMatrix4& world_T_camera, Scalar& zoom, const Vector3* maxPositionOffset, const Scalar* maxOrientationOffset, const unsigned int minValidCorrespondences, const bool refine, const unsigned int iterations, const Scalar sqrPixelErrorThreshold, Indices32* usedIndices, Scalar* sqrAccuracy, const Scalar* weights)
 {
 	ocean_assert((initialPose && initialZoom) || (!initialPose && !initialZoom));
 
@@ -2321,9 +2326,9 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 
 	Vector3 permutationObjectPoints[4];
 	Vector2 permutationImagePoints[4];
-	HomogenousMatrix4 poses[4];
+	HomogenousMatrix4 world_T_cameras[4];
 
-	HomogenousMatrix4 internalPose;
+	HomogenousMatrix4 world_T_internalCamera;
 	Scalar internalZoom = Numeric::minValue();
 
 	PinholeCamera initialZoomedCamera(pinholeCamera);
@@ -2356,7 +2361,7 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 		permutationImagePoints[1] = useDistortionParameters ? initialZoomedCamera.undistort<true>(imagePoints[index1]) : imagePoints[index1];
 		permutationImagePoints[2] = useDistortionParameters ? initialZoomedCamera.undistort<true>(imagePoints[index2]) : imagePoints[index2];
 
-		const unsigned int numberPoses = P3P::poses(initialAnyCamera, permutationObjectPoints, permutationImagePoints, poses);
+		const unsigned int numberPoses = P3P::poses(initialAnyCamera, permutationObjectPoints, permutationImagePoints, world_T_cameras);
 		ocean_assert(numberPoses <= 4u);
 
 		// test which of the (at most four) poses is valid for most remaining point correspondences
@@ -2365,7 +2370,7 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 			indices.clear();
 
 			// as we used the 'initialZoomedCamera' we can directly compare the pose with the 'initialPose'
-			if (initialPose && !Error::posesAlmostEqual(*initialPose, poses[n], *maxPositionOffset, *maxOrientationOffset))
+			if (initialPose && !Error::posesAlmostEqual(*initialPose, world_T_cameras[n], *maxPositionOffset, *maxOrientationOffset))
 			{
 				continue;
 			}
@@ -2377,7 +2382,7 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 			unsigned int zoomIteration = 0u;
 			Scalar sqrErrors = 0;
 
-			HomogenousMatrix4 optimizedPoseIF;
+			HomogenousMatrix4 optimizedFlippedCamera_T_world;
 			Scalar optimizedZoom = 0;
 
 			while (zoomIteration++ < 3u && indices.size() <= 3)
@@ -2391,7 +2396,7 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 					index3 = Random::random(randomGenerator, (unsigned int)correspondences - 1u);
 				}
 
-				const HomogenousMatrix4 poseIF(PinholeCamera::standard2InvertedFlipped(poses[n]));
+				const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_cameras[n]));
 
 				permutationObjectPoints[3] = objectPoints[index3];
 
@@ -2403,13 +2408,13 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 				const Scalar startZoom = initialZoom ? *initialZoom : Scalar(1);
 				Scalar finalSqrError = Numeric::maxValue();
 
-				if (!PinholeCamera::isObjectPointInFrontIF(poseIF, permutationObjectPoints[0]) || !PinholeCamera::isObjectPointInFrontIF(poseIF, permutationObjectPoints[1])
-						|| !PinholeCamera::isObjectPointInFrontIF(poseIF, permutationObjectPoints[2]) || !PinholeCamera::isObjectPointInFrontIF(poseIF, permutationObjectPoints[3]))
+				if (!Camera::isObjectPointInFrontIF(flippedCamera_T_world, permutationObjectPoints[0]) || !Camera::isObjectPointInFrontIF(flippedCamera_T_world, permutationObjectPoints[1])
+						|| !Camera::isObjectPointInFrontIF(flippedCamera_T_world, permutationObjectPoints[2]) || !Camera::isObjectPointInFrontIF(flippedCamera_T_world, permutationObjectPoints[3]))
 				{
 					continue;
 				}
 
-				if (!NonLinearOptimizationPose::optimizePoseZoomIF(pinholeCamera, poseIF, startZoom, ConstArrayAccessor<Vector3>(permutationObjectPoints, 4), ConstArrayAccessor<Vector2>(permutationImagePoints, 4), true, optimizedPoseIF, optimizedZoom, 10u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &finalSqrError) || finalSqrError > Scalar(10 * 10))
+				if (!NonLinearOptimizationPose::optimizePoseZoomIF(pinholeCamera, flippedCamera_T_world, startZoom, ConstArrayAccessor<Vector3>(permutationObjectPoints, 4), ConstArrayAccessor<Vector2>(permutationImagePoints, 4), true, optimizedFlippedCamera_T_world, optimizedZoom, 10u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, &finalSqrError) || finalSqrError > Scalar(10 * 10))
 				{
 					continue;
 				}
@@ -2418,9 +2423,9 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 				for (unsigned int c = 0; c < correspondences; ++c)
 				{
 					// we accept only object points lying in front of the camera
-					if ((optimizedPoseIF * objectPoints[c]).z() > Numeric::eps())
+					if ((optimizedFlippedCamera_T_world * objectPoints[c]).z() > Numeric::eps())
 					{
-						const Vector2 projectedImagePoint(pinholeCamera.projectToImageIF<true>(optimizedPoseIF, objectPoints[c], useDistortionParameters, optimizedZoom));
+						const Vector2 projectedImagePoint(pinholeCamera.projectToImageIF<true>(optimizedFlippedCamera_T_world, objectPoints[c], useDistortionParameters, optimizedZoom));
 						const Vector2& imagePoint = imagePoints[c];
 
 						const Scalar sqrError = imagePoint.sqrDistance(projectedImagePoint);
@@ -2438,7 +2443,7 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 			{
 				bestSqrErrors = sqrErrors;
 
-				internalPose = PinholeCamera::invertedFlipped2Standard(optimizedPoseIF);
+				world_T_internalCamera = Camera::invertedFlipped2Standard(optimizedFlippedCamera_T_world);
 				internalZoom = optimizedZoom;
 				std::swap(bestIndices, indices);
 			}
@@ -2450,12 +2455,12 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 		return false;
 	}
 
-	pose = internalPose;
+	world_T_camera = world_T_internalCamera;
 	zoom = internalZoom;
 
 	if (sqrAccuracy != nullptr)
 	{
-		*sqrAccuracy = bestSqrErrors /= Scalar(bestIndices.size());
+		*sqrAccuracy = bestSqrErrors / Scalar(bestIndices.size());
 	}
 
 	// non linear least square refinement step
@@ -2473,10 +2478,10 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 			}
 		}
 
-		internalPose = pose;
+		world_T_internalCamera = world_T_camera;
 		internalZoom = zoom;
 
-		if (!NonLinearOptimizationPose::optimizePoseZoom(pinholeCamera, internalPose, internalZoom, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), useDistortionParameters, pose, zoom, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy, invertedCovariances ? &invertedCovariances : nullptr))
+		if (!NonLinearOptimizationPose::optimizePoseZoom(pinholeCamera, world_T_internalCamera, internalZoom, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), useDistortionParameters, world_T_camera, zoom, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy, invertedCovariances ? &invertedCovariances : nullptr))
 		{
 			return false;
 		}
@@ -2484,13 +2489,13 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 		// check whether we need to determine the indices for the optimized pose followed by another final optimization step
 		if (usedIndices && bestIndices.size() != correspondences)
 		{
-			const HomogenousMatrix4 poseIF(PinholeCamera::standard2InvertedFlipped(pose));
+			const HomogenousMatrix4 flippedCamera_T_world(Camera::standard2InvertedFlipped(world_T_camera));
 
 			bestIndices.clear();
 			for (unsigned int c = 0; c < correspondences; ++c)
 			{
 				// we accept only object points lying in front of the camera
-				if ((poseIF * objectPoints[c]).z() > Numeric::eps() && imagePoints[c].sqrDistance(pinholeCamera.projectToImageIF<true>(poseIF, objectPoints[c], useDistortionParameters, zoom)) <= sqrPixelErrorThreshold)
+				if ((flippedCamera_T_world * objectPoints[c]).z() > Numeric::eps() && imagePoints[c].sqrDistance(pinholeCamera.projectToImageIF<true>(flippedCamera_T_world, objectPoints[c], useDistortionParameters, zoom)) <= sqrPixelErrorThreshold)
 				{
 					bestIndices.push_back(c);
 				}
@@ -2508,10 +2513,10 @@ bool RANSAC::p3pZoom(const HomogenousMatrix4* initialPose, const Scalar* initial
 				}
 			}
 
-			internalPose = pose;
+			world_T_internalCamera = world_T_camera;
 			internalZoom = zoom;
 
-			if (!NonLinearOptimizationPose::optimizePoseZoom(pinholeCamera, internalPose, internalZoom, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), useDistortionParameters, pose, zoom, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy, invertedCovariances ? &invertedCovariances : nullptr))
+			if (!NonLinearOptimizationPose::optimizePoseZoom(pinholeCamera, world_T_internalCamera, internalZoom, ConstArraySubsetAccessor<Vector3, unsigned int>(objectPoints.data(), bestIndices), ConstArraySubsetAccessor<Vector2, unsigned int>(imagePoints.data(), bestIndices), useDistortionParameters, world_T_camera, zoom, 20u, Estimator::ET_SQUARE, Scalar(0.001), Scalar(5), nullptr, sqrAccuracy, invertedCovariances ? &invertedCovariances : nullptr))
 			{
 				return false;
 			}
@@ -2850,13 +2855,13 @@ void RANSAC::geometricTransformForNonBijectiveCorrespondencesSubset(const Geomet
 	}
 }
 
-void RANSAC::projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAccessor<Vectors2>* imagePointsPerPose, const size_t views, RandomGenerator* randomGenerator, NonconstIndexedAccessor<HomogenousMatrix4>* posesIF, const Scalar squarePixelErrorThreshold, NonconstArrayAccessor<Vector3>* objectPointsIF, Indices32* usedIndices, Scalar* minSquareErrors, Lock* lock, const unsigned int /*firstIteration*/, const unsigned int numberIterations)
+void RANSAC::projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAccessor<Vectors2>* imagePointsPerPose, const size_t views, RandomGenerator* randomGenerator, NonconstIndexedAccessor<HomogenousMatrix4>* flippedCameras_T_world, const Scalar squarePixelErrorThreshold, NonconstArrayAccessor<Vector3>* objectPointsIF, Indices32* usedIndices, Scalar* minSquareErrors, Lock* lock, const unsigned int /*firstIteration*/, const unsigned int numberIterations)
 {
 	ocean_assert(squarePixelErrorThreshold > 0);
 	ocean_assert(views >= 2);
 	ocean_assert(imagePointsPerPose);
 	ocean_assert(randomGenerator);
-	ocean_assert(posesIF);
+	ocean_assert(flippedCameras_T_world);
 	ocean_assert(minSquareErrors);
 
 	size_t correspondences = (*imagePointsPerPose)[0].size();
@@ -2922,9 +2927,9 @@ void RANSAC::projectiveReconstructionFrom6PointsIFSubset(const ConstIndexedAcces
 				maxCountInliers = indices.size();
 				*minSquareErrors = squareErrors;
 
-				for (size_t n = 0; n < posesIF->size(); ++n)
+				for (size_t n = 0; n < flippedCameras_T_world->size(); ++n)
 				{
-					(*posesIF)[n] = std::move(candidateModels[n]);
+					(*flippedCameras_T_world)[n] = std::move(candidateModels[n]);
 				}
 
 				if (usedIndices != nullptr)
