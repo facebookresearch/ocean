@@ -320,25 +320,25 @@ class OCEAN_BASE_EXPORT TimestampConverter
 			/// An invalid time domain.
 			TD_INVALID = 0u,
 			/// The monotonically increasing time domain defined in nanoseconds, not increasing during system sleep.
-			TD_MONOTONIC,
+			TD_MONOTONIC = 1u,
 
 #ifdef OCEAN_BASE_TIMESTAMP_BOOTTIME_AVAILABLE
 			/// The monotonically increasing time domain defined in nanoseconds, increasing during system sleep, not available on Windows.
-			TD_BOOTTIME,
+			TD_BOOTTIME = 2u,
 #endif
 
 #ifdef OCEAN_BASE_TIMESTAMP_UPTIMERAW_AVAILABLE
 			/// The monotonically increasing time domain defined in nanoseconds, the time the system has been awake since the last time it was restarted.
-			TD_UPTIME_RAW,
+			TD_UPTIME_RAW = 3u,
 #endif
 
 #ifdef OCEAN_BASE_TIMESTAMP_VIRTUAL_COUNTER_REGISTER_AVAILABLE
-			TD_VIRTUAL_COUNTER_REGISTER,
+			TD_VIRTUAL_COUNTER_REGISTER = 4u,
 #endif
 
 #ifdef OCEAN_BASE_TIMESTAMP_CUSTOM_POSIX_AVAILABLE
 			/// A custom POSIX clock id specified by the user.
-			TD_CUSTOM_POSIX
+			TD_CUSTOM_POSIX = 5u
 #endif
 		};
 
