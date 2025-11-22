@@ -166,7 +166,7 @@ class SquareMatrixT2
 		 * Returns the transposed of this matrix.
 		 * @return Transposed matrix
 		 */
-		inline SquareMatrixT2<T> transposed() const;
+		[[nodiscard]] inline SquareMatrixT2<T> transposed() const;
 
 		/**
 		 * Transposes the matrix.
@@ -183,7 +183,7 @@ class SquareMatrixT2
 		 * @return The inverted matrix
 		 * @see invert(), isSingular().
 		 */
-		inline SquareMatrixT2<T> inverted() const;
+		[[nodiscard]] inline SquareMatrixT2<T> inverted() const;
 
 		/**
 		 * Inverts this matrix in place.

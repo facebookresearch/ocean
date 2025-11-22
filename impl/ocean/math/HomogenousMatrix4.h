@@ -390,13 +390,13 @@ class HomogenousMatrixT4
 		 * All vectors of the resulting rotation matrix have unit length.
 		 * @return The normalized rotation matrix
 		 */
-		SquareMatrixT3<T> orthonormalRotationMatrix() const;
+		[[nodiscard]] SquareMatrixT3<T> orthonormalRotationMatrix() const;
 
 		/**
 		 * Returns the transposed of this matrix.
 		 * @return Transposed matrix as square 4x4 matrix
 		 */
-		SquareMatrixT4<T> transposed() const;
+		[[nodiscard]] SquareMatrixT4<T> transposed() const;
 
 		/**
 		 * Returns the inverted of this matrix.
@@ -406,7 +406,7 @@ class HomogenousMatrixT4
 		 * @return The inverted matrix
 		 * see invert().
 		 */
-		HomogenousMatrixT4<T> inverted() const noexcept;
+		[[nodiscard]] HomogenousMatrixT4<T> inverted() const noexcept;
 
 		/**
 		 * Inverts the matrix.

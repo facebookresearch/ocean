@@ -189,7 +189,7 @@ class RotationT
 		 * @return Inverted rotation
 		 * @see isValid(), invert().
 		 */
-		RotationT inverted() const;
+		[[nodiscard]] RotationT inverted() const;
 
 		/**
 		 * Inverts this rotation, this rotation must be valid.

@@ -173,7 +173,7 @@ class SquareMatrixT4
 		 * Returns the transposed of this matrix.
 		 * @return Transposed matrix
 		 */
-		SquareMatrixT4<T> transposed() const;
+		[[nodiscard]] SquareMatrixT4<T> transposed() const;
 
 		/**
 		 * Transposes the matrix.
@@ -190,7 +190,7 @@ class SquareMatrixT4
 		 * @return The inverted matrix
 		 * @see invert(), isSingular().
 		 */
-		SquareMatrixT4<T> inverted() const;
+		[[nodiscard]] SquareMatrixT4<T> inverted() const;
 
 		/**
 		 * Inverts this matrix in place.

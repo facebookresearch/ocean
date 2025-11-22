@@ -223,7 +223,7 @@ class QuaternionT
 		 * @return Inverted quaternion
 		 * @see isValid(), invert().
 		 */
-		QuaternionT<T> inverted() const;
+		[[nodiscard]] QuaternionT<T> inverted() const;
 
 		/**
 		 * Inverts this quaternion in place.

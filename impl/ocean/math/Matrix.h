@@ -194,7 +194,7 @@ class MatrixT
 		 * @return Inverted matrix
 		 * @see invert(), rank().
 		 */
-		inline MatrixT<T> inverted() const;
+		[[nodiscard]] inline MatrixT<T> inverted() const;
 
 		/**
 		 * Inverts this matrix.
