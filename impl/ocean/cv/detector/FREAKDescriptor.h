@@ -313,6 +313,18 @@ class FREAKDescriptorT : public FREAKDescriptor
 
 		/**
 		 * Compute FREAK descriptors for multiple image points.
+		 * @param camera The camera profile defining the projection (of the finest pyramid layer), must be valid
+		 * @param framePyramid Frame pyramid in which the location 'points' has been defined, must be valid
+		 * @param points The 2D image points which are defined at level 'pointsPyramidLevel' in 'framePyramid' for which descriptors will be computed, must be valid
+		 * @param pointsSize The number of elements in 'points', range: [0, infinity)
+		 * @param pointsPyramidLevel Level of the frame pyramid at which the input points are located, range: [0, framePyramid.layers() - 1)
+		 * @param freakDescriptors Pointer to the FREAK descriptors that will be computed for the input points, must be valid and have 'pointsSize' elements. Final descriptors can be invalid, e.g., if they are too close to the image border
+		 * @param worker Optional worker instance for parallelization
+		 */
+		static inline void computeDescriptors(const SharedAnyCamera& camera, const FramePyramid& framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, Worker* worker = nullptr);
+
+		/**
+		 * Compute FREAK descriptors for multiple image points.
 		 * This function requires a callback function which is used internally to determine the (normalized) ray from the
 		 * camera projection center to a 2D image location in the image plane and the corresponding 2-by-3 Jacobian matrix of the projection matrix wrt. to the 2D image location.
 		 *
@@ -574,6 +586,17 @@ template <size_t tSize>
 constexpr size_t FREAKDescriptorT<tSize>::size()
 {
 	return tSize;
+}
+
+template <size_t tSize>
+inline void FREAKDescriptorT<tSize>::computeDescriptors(const SharedAnyCamera& camera, const FramePyramid& framePyramid, const Eigen::Vector2f* points, const size_t pointsSize, const unsigned int pointsPyramidLevel, FREAKDescriptorT<tSize>* freakDescriptors, Worker* worker)
+{
+	ocean_assert(camera && camera->isValid());
+	ocean_assert(camera->width() == framePyramid.finestWidth() && camera->height() == framePyramid.finestHeight());
+
+	const AnyCameraDerivativeFunctor cameraDerivativeFunctor(camera, framePyramid.layers());
+
+	return computeDescriptors(framePyramid, points, pointsSize, pointsPyramidLevel, freakDescriptors, cameraDerivativeFunctor, worker);
 }
 
 template <size_t tSize>
