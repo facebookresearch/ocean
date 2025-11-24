@@ -656,6 +656,42 @@ unsigned int FramePyramid::idealLayers(const unsigned int width, const unsigned 
 	return layers;
 }
 
+unsigned int FramePyramid::idealCoarsestLayerRadius(const unsigned int maximalRadius, const unsigned int layers, const unsigned int layerFactor)
+{
+	ocean_assert(maximalRadius >= 1u && layers >= 1u);
+	ocean_assert(layerFactor >= 2u);
+
+	if (maximalRadius == 0u || layers == 0u || layerFactor < 2u)
+	{
+		return 0u;
+	}
+
+	unsigned int coarsestSizeFactor;
+
+	if (layerFactor == 2u)
+	{
+		// optimization for the common case: 2^(layers - 1)
+
+		coarsestSizeFactor = 1u << (layers - 1u);
+	}
+	else
+	{
+		coarsestSizeFactor = 1u;
+
+		for (unsigned int n = 1u; n < layers; ++n)
+		{
+			coarsestSizeFactor *= layerFactor;
+		}
+	}
+
+	const unsigned int coarsestLayerRadius = std::max(1u, (maximalRadius + coarsestSizeFactor - 1u) / coarsestSizeFactor);
+
+	ocean_assert(coarsestLayerRadius * coarsestSizeFactor >= maximalRadius);
+	ocean_assert(coarsestLayerRadius == 1u || (coarsestLayerRadius - 1u) * coarsestSizeFactor < maximalRadius);
+
+	return coarsestLayerRadius;
+}
+
 FramePyramid& FramePyramid::operator=(FramePyramid&& right) noexcept
 {
 	if (this != &right)

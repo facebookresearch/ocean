@@ -15,6 +15,8 @@
 
 #include "ocean/math/Numeric.h"
 
+#include "ocean/test/Validation.h"
+
 namespace Ocean
 {
 
@@ -34,6 +36,12 @@ bool TestFramePyramid::test(const double testDuration, Worker& worker)
 	Log::info() << " ";
 
 	allSucceeded = testIdealLayers(testDuration) && allSucceeded;
+
+	Log::info() << " ";
+	Log::info() << "-";
+	Log::info() << " ";
+
+	allSucceeded = testIdealCoarsestLayerRadius(testDuration) && allSucceeded;
 
 	Log::info() << " ";
 	Log::info() << "-";
@@ -126,6 +134,11 @@ bool TestFramePyramid::test(const double testDuration, Worker& worker)
 TEST(TestFramePyramid, IdealLayers)
 {
 	EXPECT_TRUE(TestFramePyramid::testIdealLayers(GTEST_TEST_DURATION));
+}
+
+TEST(TestFramePyramid, IdealCoarsestLayerRadius)
+{
+	EXPECT_TRUE(TestFramePyramid::testIdealCoarsestLayerRadius(GTEST_TEST_DURATION));
 }
 
 
@@ -549,6 +562,85 @@ bool TestFramePyramid::testIdealLayers(const double testDuration)
 	}
 
 	return allSucceeded;
+}
+
+bool TestFramePyramid::testIdealCoarsestLayerRadius(const double testDuration)
+{
+	ocean_assert(testDuration > 0.0);
+
+	Log::info() << "Testing ideal coarsest layer radius:";
+
+	RandomGenerator randomGenerator;
+	Validation validation(randomGenerator);
+
+	const Timestamp startTimestamp(true);
+
+	do
+	{
+		{
+			// testing with random parameters
+
+			const unsigned int layers = RandomI::random(randomGenerator, 1u, 10u);
+			const unsigned int layerFactor = RandomI::random(randomGenerator, 2u, 4u);
+			const unsigned int maximalRadius = RandomI::random(randomGenerator, 1u, 1000u);
+
+			const unsigned int coarsestLayerRadius = CV::FramePyramid::idealCoarsestLayerRadius(maximalRadius, layers, layerFactor);
+
+			OCEAN_EXPECT_NOT_EQUAL(validation, coarsestLayerRadius, 0u);
+
+			// calculate the expected coarsest size factor: layerFactor ^ (layers - 1)
+			unsigned int expectedCoarsestSizeFactor = 1u;
+
+			for (unsigned int n = 1u; n < layers; ++n)
+			{
+				expectedCoarsestSizeFactor *= layerFactor;
+			}
+
+			const unsigned int expectedCoarsestLayerRadius = std::max(1u, (maximalRadius + expectedCoarsestSizeFactor - 1u) / expectedCoarsestSizeFactor);
+
+			OCEAN_EXPECT_EQUAL(validation, coarsestLayerRadius, expectedCoarsestLayerRadius);
+
+			// verify the inverse relationship with idealLayers
+			const unsigned int resultingRadius = coarsestLayerRadius * expectedCoarsestSizeFactor;
+
+			if (resultingRadius < maximalRadius)
+			{
+				// we could have used a larger coarsest layer radius only if the next radius would not exceed maximalRadius
+				OCEAN_EXPECT_GREATER(validation, (coarsestLayerRadius + 1u) * expectedCoarsestSizeFactor, maximalRadius);
+			}
+		}
+
+		{
+			// testing edge case: single layer should return the same radius
+
+			const unsigned int layerFactor = RandomI::random(randomGenerator, 2u, 4u);
+			const unsigned int maximalRadius = RandomI::random(randomGenerator, 1u, 1000u);
+
+			const unsigned int singleLayerRadius = CV::FramePyramid::idealCoarsestLayerRadius(maximalRadius, 1u, layerFactor);
+
+			OCEAN_EXPECT_EQUAL(validation, singleLayerRadius, maximalRadius);
+		}
+
+		{
+			// testing edge case: very small maximal radius
+
+			const unsigned int layers = RandomI::random(randomGenerator, 2u, 10u);
+			const unsigned int layerFactor = RandomI::random(randomGenerator, 2u, 4u);
+			const unsigned int smallRadius = RandomI::random(randomGenerator, 1u, 10u);
+
+			const unsigned int resultRadius = CV::FramePyramid::idealCoarsestLayerRadius(smallRadius, layers, layerFactor);
+
+			OCEAN_EXPECT_NOT_EQUAL(validation, resultRadius, 0u);
+
+			// the result should always be at least 1
+			OCEAN_EXPECT_GREATER_EQUAL(validation, resultRadius, 1u);
+		}
+	}
+	while (!startTimestamp.hasTimePassed(testDuration));
+
+	Log::info() << "Validation: " << validation;
+
+	return validation.succeeded();
 }
 
 bool TestFramePyramid::testIsOwner(const double testDuration)

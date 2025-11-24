@@ -561,6 +561,20 @@ class OCEAN_CV_EXPORT FramePyramid
 		 */
 		static unsigned int idealLayers(const unsigned int width, const unsigned int height, const unsigned int invalidCoarsestWidth, const unsigned int invalidCoarsestHeight, const unsigned int layerFactor, const unsigned int maximalRadius = (unsigned int)(-1), const unsigned int coarsestLayerRadius = 2u, unsigned int* coarsestLayerWidth = nullptr, unsigned int* coarsestLayerHeight = nullptr);
 
+		/**
+		 * Determines the ideal coarsest layer radius based on the maximal tracking distance and the number of pyramid layers.
+		 * This function is the inverse of idealLayers() with respect to the radius calculation.
+		 * The relationship is:
+		 * <pre>
+		 * maximalRadius = coarsestLayerRadius * (layerFactor ^ (layers - 1))
+		 * </pre>
+		 * @param maximalRadius Maximal tracking distance in the finest layer in pixel (the maximal expected motion between two pixels in the finest pyramid layer), with range [1, infinity)
+		 * @param layers The number of pyramid layers, with range [1, infinity)
+		 * @param layerFactor Size factor on each layer (a factor of 2 means that the layer dimension is halved on each layer), with range [2, infinity)
+		 * @return The ideal search radius on the coarsest layer in pixel, with range [1, infinity)
+		 */
+		static unsigned int idealCoarsestLayerRadius(const unsigned int maximalRadius, const unsigned int layers, const unsigned int layerFactor = 2u);
+
 	protected:
 
 		/**
